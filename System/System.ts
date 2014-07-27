@@ -5,6 +5,8 @@
 
 module System {
 
+	"use strict";
+
 	export var Functions = {
 		Identity: function <T>(x: T): T { return x; },
 		True: function (): boolean { return true; },
@@ -20,11 +22,11 @@ module System {
 		Object: typeof {},
 		Null:typeof null,
 		Undefined: typeof undefined,
-		Function: typeof function () { }
+		Function: typeof Functions.Blank
 	};
 
 	export function isEqualToNaN(n: any): boolean {
-		return typeof n == Types.Number && isNaN(n);
+		return typeof n === Types.Number && isNaN(n);
 	}
 
 	// Used for special equals cases like NaN.
@@ -63,7 +65,7 @@ module System {
 			}
 		} else {
 			result = {};
-			if (depth > 0) for (var k in source) { //noinspection JSUnfilteredForInLoop
+			if (depth > 0) for (var k in source) { // noinspection JSUnfilteredForInLoop
 				result[k] = clone(source[k], depth - 1);
 			}
 		}
@@ -73,7 +75,7 @@ module System {
 	}
 
 	export function copyTo(source: any, target: any): void {
-		for (var k in source) { //noinspection JSUnfilteredForInLoop
+		for (var k in source) { // noinspection JSUnfilteredForInLoop
 			target[k] = source[k];
 		}
 	}
@@ -83,9 +85,7 @@ module System {
 			baseCtor => {
 				Object.getOwnPropertyNames(baseCtor.prototype).forEach(
 					name => {
-						derivedCtor.prototype[name] = baseCtor.prototype[name];
-					}
-				)
+						derivedCtor.prototype[name] = baseCtor.prototype[name]; } );
 			}
 		);
 	}

@@ -81,11 +81,6 @@
     <TypeScriptCompile Include="Lazy.ts" />
     <TypeScriptCompile Include="System.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\build\System.js">
-      <Link>System.js</Link>
-    </Content>
-  </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
   </PropertyGroup>

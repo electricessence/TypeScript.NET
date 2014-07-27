@@ -66,10 +66,5 @@
   <ItemGroup>
     <TypeScriptCompile Include="Enumerable.ts" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\build\System.Linq.js">
-      <Link>System.Linq.js</Link>
-    </Content>
-  </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>

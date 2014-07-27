@@ -187,6 +187,8 @@ declare module System {
         wasDisposed: boolean;
     }
     class DisposableBase implements IDisposable {
+        private _finalizer;
+        constructor(_finalizer?: () => void);
         public _wasDisposed: boolean;
         public wasDisposed : boolean;
         public dispose(): void;

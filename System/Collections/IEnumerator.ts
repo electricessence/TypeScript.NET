@@ -6,6 +6,8 @@
 
 module System.Collections {
 
+	"use strict";
+
 	export interface IEnumerator<T> {
 		current: T;
 		moveNext(): boolean;
@@ -24,7 +26,7 @@ module System.Collections {
 		private _current: T;
 		get current(): T { return this._current; }
 
-		yieldReturn(value): boolean {
+		yieldReturn(value:T): boolean {
 			this._current = value;
 			return true;
 		}
@@ -91,7 +93,7 @@ module System.Collections {
 			}
 		}
 
-		_onDispose() {
+		_onDispose():void {
 			var _ = this, disposer = _.disposer;
 
 			_.initializer = null;
@@ -126,7 +128,7 @@ module System.Collections {
 				() => {
 					source = sourceFactory();
 				},
-				(yielder) => {
+				yielder => {
 					var current = source.pointer++;
 					return current < length ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
 				},
@@ -143,7 +145,7 @@ module System.Collections {
 		constructor(arrayFactory:()=>T[], start:number = 0) {
 			super(() => {
 				var array = arrayFactory();
-				return { source: array, pointer: start, length: array.length }
+				return { source: array, pointer: start, length: array.length };
 			});
 		}
 	}

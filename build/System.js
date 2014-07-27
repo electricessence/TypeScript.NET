@@ -576,6 +576,8 @@ var System;
 var System;
 (function (System) {
     (function (Collections) {
+        "use strict";
+
         var Yielder = (function () {
             function Yielder() {
             }
@@ -913,7 +915,8 @@ var System;
     System.using = using;
 
     var DisposableBase = (function () {
-        function DisposableBase() {
+        function DisposableBase(_finalizer) {
+            this._finalizer = _finalizer;
             this._wasDisposed = false;
         }
         Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
@@ -925,9 +928,15 @@ var System;
         });
 
         DisposableBase.prototype.dispose = function () {
-            if (!this._wasDisposed) {
-                this._wasDisposed = true;
-                this._onDispose();
+            var _ = this;
+            if (!_._wasDisposed) {
+                _._wasDisposed = true;
+                try  {
+                    _._onDispose();
+                } finally {
+                    if (_._finalizer)
+                        _._finalizer();
+                }
             }
         };
 
@@ -1158,6 +1167,8 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
+    "use strict";
+
     System.Functions = {
         Identity: function (x) {
             return x;
@@ -1179,12 +1190,11 @@ var System;
         Object: typeof {},
         Null: typeof null,
         Undefined: typeof undefined,
-        Function: typeof function () {
-        }
+        Function: typeof System.Functions.Blank
     };
 
     function isEqualToNaN(n) {
-        return typeof n == System.Types.Number && isNaN(n);
+        return typeof n === System.Types.Number && isNaN(n);
     }
     System.isEqualToNaN = isEqualToNaN;
 
