@@ -9,6 +9,7 @@
     function applyTo(target: number[], fn: (a: number) => number): number[];
     function removeIndex<T>(array: T[], index: number): boolean;
     function remove<T>(array: T[], value: T, max?: number): number;
+    function repeat<T>(element: T, count: number): T[];
 }
 declare module System.Collections {
     class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue> {
@@ -110,11 +111,10 @@ declare module System.Collections {
         reset(): void;
         dispose(): void;
     }
-    class Yielder<T> {
-        private _current;
-        public current : T;
-        public yieldReturn(value: any): boolean;
-        public yieldBreak(): boolean;
+    interface IYield<T> {
+        current: T;
+        yieldReturn(value: T): boolean;
+        yieldBreak(): boolean;
     }
     class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T> {
         private initializer;
@@ -123,10 +123,22 @@ declare module System.Collections {
         private _yielder;
         private _state;
         public current : T;
-        constructor(initializer: () => void, tryGetNext: (yielder: Yielder<T>) => boolean, disposer?: () => void);
+        constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: () => void);
         public reset(): void;
         public moveNext(): boolean;
         public _onDispose(): void;
+    }
+    class IndexEnumerator<T> extends EnumeratorBase<T> {
+        constructor(sourceFactory: () => {
+            source: {
+                [index: number]: T;
+            };
+            pointer: number;
+            length: number;
+        });
+    }
+    class ArrayEnumerator<T> extends IndexEnumerator<T> {
+        constructor(arrayFactory: () => T[], start?: number);
     }
 }
 declare module System.Collections {
@@ -168,6 +180,8 @@ declare module System.Collections {
     }
 }
 declare module System {
+    function dispose(obj: any): void;
+    function using<TDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
     interface IDisposable {
         dispose(): void;
         wasDisposed: boolean;
@@ -202,16 +216,13 @@ declare module System {
     }
 }
 declare module ObjectX.Core {
-    interface ICloneable {
-        clone(): any;
-    }
-    interface ICloneableTyped<T> extends ICloneable {
+    interface ICloneable<T> {
         clone(): T;
     }
 }
 declare module System {
-    interface IEquatable<T> {
-        equals(other: T): boolean;
+    interface IEquatable {
+        equals(other: any): boolean;
     }
 }
 declare module System {
@@ -233,6 +244,7 @@ declare module System {
     var Functions: {
         Identity: <T>(x: T) => T;
         True: () => boolean;
+        False: () => boolean;
         Blank: () => void;
     };
     var Types: {
@@ -246,6 +258,7 @@ declare module System {
     };
     function isEqualToNaN(n: any): boolean;
     function areEqual(a: any, b: any, strict?: boolean): boolean;
+    function compare(a: any, b: any, strict?: boolean): number;
     function clone(source: any, depth?: number): any;
     function copyTo(source: any, target: any): void;
     function applyMixins(derivedCtor: any, baseCtors: any[]): void;

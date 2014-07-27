@@ -169,22 +169,22 @@ module System.Collections {
 
 		getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>> {
 			var _ = this;
-			var keys: TKey[], i: number;
+			var keys: TKey[], len: number, i = 0;
 			return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 				() => {
 					keys = _.keys;
-					i = keys.length
-					},
+					len = keys.length
+				},
 				yielder => {
-					while (i) {
-						var key = keys[--i], value = _.get(key);
+					while (i<len) {
+						var key = keys[i++], value = _.get(key);
 						if (value !== undefined) // Still valid?
 							return yielder.yieldReturn({ key: key, value: value });
 					}
 
 					return yielder.yieldBreak();
 				}
-				);
+			);
 		}
 
 

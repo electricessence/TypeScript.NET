@@ -5,7 +5,7 @@
 
 module System {
 
-	export interface IEquatable<T> {
-		equals(other:T): boolean;
+	export interface IEquatable {
+		equals(other:any): boolean;
 	}
 } 

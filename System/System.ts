@@ -8,6 +8,7 @@ module System {
 	export var Functions = {
 		Identity: function <T>(x: T): T { return x; },
 		True: function (): boolean { return true; },
+		False: function (): boolean { return false; },
 		Blank: function (): void { }
 	};
 
@@ -27,9 +28,16 @@ module System {
 	}
 
 	// Used for special equals cases like NaN.
-	export function areEqual(a: any, b: any, strict?: boolean): boolean {
+	export function areEqual(a: any, b: any, strict: boolean = true): boolean {
 		return a === b || !strict && a == b || isEqualToNaN(a) && isEqualToNaN(b);
 	}
+
+	export function compare(a: any, b: any, strict: boolean = true): number {
+		return areEqual(a,b,strict) ? 0
+			: (a > b) ? 1
+			: -1;
+	}
+
 
 	export function clone(source: any, depth: number = 0): any {
 		if (depth < 0)

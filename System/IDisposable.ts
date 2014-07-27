@@ -5,6 +5,22 @@
 
 module System {
 
+	export function dispose(obj: any) {
+		if (obj && typeof obj.dispose == Types.Function) obj.dispose();
+	}
+
+	export function using<TDisposable,TReturn>(
+		disposable: TDisposable,
+		closure: (disposable: TDisposable) => TReturn): TReturn
+	{
+		try {
+			return closure(disposable);
+		}
+		finally {
+			dispose(disposable);
+		}
+	}
+
 	export interface IDisposable {
 		dispose(): void;
 		wasDisposed: boolean;

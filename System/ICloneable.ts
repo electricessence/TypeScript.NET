@@ -5,11 +5,8 @@
 
 module ObjectX.Core {
 
-	export interface ICloneable {
-		clone(): any;
-	}
-
-	export interface ICloneableTyped<T> extends ICloneable {
+	export interface ICloneable<T> {
 		clone(): T;
 	}
+
 }

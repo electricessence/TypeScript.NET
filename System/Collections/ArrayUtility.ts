@@ -100,4 +100,13 @@
 
 		return count;
 	}
+
+	export function repeat<T>(element: T, count: number): T[]{
+
+		var result: T[] = [];
+		while (count--)
+			result.push(element);
+
+		return result;
+	}
 }

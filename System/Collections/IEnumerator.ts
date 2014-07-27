@@ -13,7 +13,13 @@ module System.Collections {
 		dispose(): void;
 	}
 
-	export class Yielder<T>
+	export interface IYield<T> {
+		current: T;
+		yieldReturn(value: T): boolean;
+		yieldBreak(): boolean;
+	}
+
+	class Yielder<T> implements IYield<T>
 	{
 		private _current: T;
 		get current(): T { return this._current; }
@@ -45,10 +51,11 @@ module System.Collections {
 
 		// "Enumerator" is conflict JScript's "Enumerator"
 		constructor(
-			private initializer: () => void, private tryGetNext: (yielder: Yielder<T>) => boolean, private disposer?: () => void) {
+			private initializer: () => void, private tryGetNext: (yielder: IYield<T>) => boolean, private disposer?: () => void) {
 			super();
 			this.reset();
 		}
+
 
 		reset(): void {
 			var _ = this;
@@ -107,5 +114,37 @@ module System.Collections {
 			}
 		}
 
+	}
+
+	export class IndexEnumerator<T> extends EnumeratorBase<T> {
+
+		constructor(
+			sourceFactory: () => { source: { [index: number]: T }; pointer: number; length: number }) {
+
+			var source: { source: { [index: number]: T }; pointer: number; length: number };
+			super(
+				() => {
+					source = sourceFactory();
+				},
+				(yielder) => {
+					var current = source.pointer++;
+					return current < length ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
+				},
+				() => {
+					source.source = null;
+					source = null;
+				});
+		}
+	}
+
+
+
+	export class ArrayEnumerator<T> extends IndexEnumerator<T> {
+		constructor(arrayFactory:()=>T[], start:number = 0) {
+			super(() => {
+				var array = arrayFactory();
+				return { source: array, pointer: start, length: array.length }
+			});
+		}
 	}
 }

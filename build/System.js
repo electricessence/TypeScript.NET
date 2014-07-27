@@ -112,6 +112,15 @@
                 return count;
             }
             ArrayUtility.remove = remove;
+
+            function repeat(element, count) {
+                var result = [];
+                while (count--)
+                    result.push(element);
+
+                return result;
+            }
+            ArrayUtility.repeat = repeat;
         })(Collections.ArrayUtility || (Collections.ArrayUtility = {}));
         var ArrayUtility = Collections.ArrayUtility;
     })(System.Collections || (System.Collections = {}));
@@ -544,13 +553,13 @@ var System;
 
             DictionaryAbstractBase.prototype.getEnumerator = function () {
                 var _ = this;
-                var keys, i;
+                var keys, len, i = 0;
                 return new Collections.EnumeratorBase(function () {
                     keys = _.keys;
-                    i = keys.length;
+                    len = keys.length;
                 }, function (yielder) {
-                    while (i) {
-                        var key = keys[--i], value = _.get(key);
+                    while (i < len) {
+                        var key = keys[i++], value = _.get(key);
                         if (value !== undefined)
                             return yielder.yieldReturn({ key: key, value: value });
                     }
@@ -589,7 +598,6 @@ var System;
             };
             return Yielder;
         })();
-        Collections.Yielder = Yielder;
 
         var EnumeratorState;
         (function (EnumeratorState) {
@@ -668,6 +676,37 @@ var System;
             return EnumeratorBase;
         })(System.DisposableBase);
         Collections.EnumeratorBase = EnumeratorBase;
+
+        var IndexEnumerator = (function (_super) {
+            __extends(IndexEnumerator, _super);
+            function IndexEnumerator(sourceFactory) {
+                var source;
+                _super.call(this, function () {
+                    source = sourceFactory();
+                }, function (yielder) {
+                    var current = source.pointer++;
+                    return current < length ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
+                }, function () {
+                    source.source = null;
+                    source = null;
+                });
+            }
+            return IndexEnumerator;
+        })(EnumeratorBase);
+        Collections.IndexEnumerator = IndexEnumerator;
+
+        var ArrayEnumerator = (function (_super) {
+            __extends(ArrayEnumerator, _super);
+            function ArrayEnumerator(arrayFactory, start) {
+                if (typeof start === "undefined") { start = 0; }
+                _super.call(this, function () {
+                    var array = arrayFactory();
+                    return { source: array, pointer: start, length: array.length };
+                });
+            }
+            return ArrayEnumerator;
+        })(IndexEnumerator);
+        Collections.ArrayEnumerator = ArrayEnumerator;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));
@@ -858,6 +897,21 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
+    function dispose(obj) {
+        if (obj && typeof obj.dispose == System.Types.Function)
+            obj.dispose();
+    }
+    System.dispose = dispose;
+
+    function using(disposable, closure) {
+        try  {
+            return closure(disposable);
+        } finally {
+            dispose(disposable);
+        }
+    }
+    System.using = using;
+
     var DisposableBase = (function () {
         function DisposableBase() {
             this._wasDisposed = false;
@@ -1111,6 +1165,9 @@ var System;
         True: function () {
             return true;
         },
+        False: function () {
+            return false;
+        },
         Blank: function () {
         }
     };
@@ -1132,9 +1189,16 @@ var System;
     System.isEqualToNaN = isEqualToNaN;
 
     function areEqual(a, b, strict) {
+        if (typeof strict === "undefined") { strict = true; }
         return a === b || !strict && a == b || isEqualToNaN(a) && isEqualToNaN(b);
     }
     System.areEqual = areEqual;
+
+    function compare(a, b, strict) {
+        if (typeof strict === "undefined") { strict = true; }
+        return areEqual(a, b, strict) ? 0 : (a > b) ? 1 : -1;
+    }
+    System.compare = compare;
 
     function clone(source, depth) {
         if (typeof depth === "undefined") { depth = 0; }
