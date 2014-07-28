@@ -50,7 +50,7 @@
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptOutDir>..\build</TypeScriptOutDir>
     <TypeScriptOutFile>..\build\System.Linq.js</TypeScriptOutFile>
-    <TypeScriptSourceRoot>$(ProjectDir)</TypeScriptSourceRoot>
+    <TypeScriptSourceRoot>..\System.Linq</TypeScriptSourceRoot>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
@@ -60,7 +60,7 @@
     <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
     <TypeScriptOutDir>..\build</TypeScriptOutDir>
     <TypeScriptOutFile>..\build\System.Linq.js</TypeScriptOutFile>
-    <TypeScriptSourceRoot>$(ProjectDir)</TypeScriptSourceRoot>
+    <TypeScriptSourceRoot>..\System.Linq</TypeScriptSourceRoot>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
