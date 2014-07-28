@@ -121,20 +121,39 @@ module System.Collections {
 	export class IndexEnumerator<T> extends EnumeratorBase<T> {
 
 		constructor(
-			sourceFactory: () => { source: { [index: number]: T }; pointer: number; length: number }) {
+			sourceFactory: () => { source: { [index: number]: T }; pointer: number; length: number; step: number }) {
 
-			var source: { source: { [index: number]: T }; pointer: number; length: number };
+			var source: { source: { [index: number]: T }; pointer: number; length: number; step:number };
 			super(
 				() => {
 					source = sourceFactory();
+					if (source && source.source) {
+						if (source.length && source.step === 0)
+							throw new Error("Invalid IndexEnumerator step value (0).");
+						if (!source.pointer)
+							source.pointer = 0;
+						var step = source.step;
+						if (!step)
+							source.step = 1;
+						else if (step != Math.floor(step))
+							throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
+					}
 				},
 				yielder => {
-					var current = source.pointer++;
-					return current < length ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
+					var len = (source && source.source) ? source.length : 0;
+					if (!len)
+						return yielder.yieldBreak();
+					var current = source.pointer;
+					source.pointer += source.step;
+					return (current < len && current >= 0)
+						? yielder.yieldReturn(source.source[current])
+						: yielder.yieldBreak();
 				},
 				() => {
-					source.source = null;
-					source = null;
+					if (source) {
+						source.source = null;
+						source = null;
+					}
 				});
 		}
 	}
@@ -142,10 +161,10 @@ module System.Collections {
 
 
 	export class ArrayEnumerator<T> extends IndexEnumerator<T> {
-		constructor(arrayFactory:()=>T[], start:number = 0) {
+		constructor(arrayFactory:()=>T[], start:number = 0, step:number = 1) {
 			super(() => {
 				var array = arrayFactory();
-				return { source: array, pointer: start, length: array.length };
+				return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
 			});
 		}
 	}

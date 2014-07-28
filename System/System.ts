@@ -69,7 +69,7 @@ module System {
 				result[k] = clone(source[k], depth - 1);
 			}
 		}
-
+ 
 		return result;
 
 	}

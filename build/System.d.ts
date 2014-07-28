@@ -135,10 +135,11 @@ declare module System.Collections {
             };
             pointer: number;
             length: number;
+            step: number;
         });
     }
     class ArrayEnumerator<T> extends IndexEnumerator<T> {
-        constructor(arrayFactory: () => T[], start?: number);
+        constructor(arrayFactory: () => T[], start?: number, step?: number);
     }
 }
 declare module System.Collections {
@@ -191,6 +192,8 @@ declare module System {
         constructor(_finalizer?: () => void);
         public _wasDisposed: boolean;
         public wasDisposed : boolean;
+        static assertIsNotDisposed(disposed: boolean, errorMessage?: string): boolean;
+        public assertIsNotDisposed(errorMessage?: string): boolean;
         public dispose(): void;
         public _onDispose(): void;
     }

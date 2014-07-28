@@ -64,7 +64,13 @@
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="ArrayEnumerable.ts" />
     <TypeScriptCompile Include="Enumerable.ts" />
+    <TypeScriptCompile Include="Grouping.ts" />
+    <TypeScriptCompile Include="Lookup.ts" />
+    <TypeScriptCompile Include="OrderedEnumerable.ts" />
+    <TypeScriptCompile Include="WhereEnumerable.ts" />
+    <TypeScriptCompile Include="WhereSelectEnumerable.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>

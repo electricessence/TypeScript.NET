@@ -2,6 +2,7 @@
 
 /*
  * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
  * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
@@ -22,10 +23,7 @@ module System.Linq {
 
 	// This allows for the use of a boolean instead of calling this.assertIsNotDisposed() since there is a strong chance of introducing a circular reference.
 	function assertIsNotDisposed(disposed: boolean): boolean {
-		if (disposed)
-			throw new Error("Enumerable was disposed.");
-
-		return true;
+		return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
 	}
 
 	export class Enumerable<T> extends DisposableBase implements System.Collections.IEnumerable<T> {
@@ -196,6 +194,28 @@ module System.Linq {
 			});
 		}
 
+		// TODO: Needs review.  I don't think this does what it's intended.
+		static matches(input: string, pattern: any, flags: string = ""): Enumerable<RegExpExecArray> {
+
+			if (pattern instanceof RegExp) {
+				flags += (pattern.ignoreCase) ? "i" : "";
+				flags += (pattern.multiline) ? "m" : "";
+				pattern = pattern.source;
+			}
+
+			if (flags.indexOf("g") === -1) flags += "g";
+
+			return new Enumerable<RegExpExecArray>(() => {
+				var regex;
+				return new EnumeratorBase<RegExpExecArray>(
+					() => { regex = new RegExp(pattern, flags); },
+					yielder => {
+						var match = regex.exec(input);
+						return (match) ? yielder.yieldReturn(match) : false;
+					});
+			});
+		}
+
 		static generate<T>(factory: () => T, count?: number): Enumerable<T> {
 
 			if (typeof count == Types.Number && (count <= 0 || isNaN(count)))
@@ -251,14 +271,6 @@ module System.Linq {
 					);
 			});
 		}
-		// #endregion
-
-		//////////////////////////////////////////
-		// #region Instance methods...
-
-		private assertIsNotDisposed(): boolean {
-			return assertIsNotDisposed(this.wasDisposed);
-		}
 
 		static forEach<T>(enumerable: System.Collections.IEnumerable<T>, action: (element: T, index?: number) => any): void {
 			var _ = enumerable;
@@ -268,6 +280,16 @@ module System.Linq {
 			System.using(_.getEnumerator(), e=> {
 				while (e.moveNext() && action(e.current, index++) !== false) { }
 			});
+		}
+
+
+		// #endregion
+
+		//////////////////////////////////////////
+		// #region Instance methods...
+
+		assertIsNotDisposed(errorMessage: string = "Enumerable was disposed."): boolean {
+			return super.assertIsNotDisposed(errorMessage);
 		}
 
 		forEach(action: (element: T, index?: number) => boolean): void;
@@ -285,6 +307,7 @@ module System.Linq {
 			});
 		}
 
+		// #region Conversion Methods
 		toArray(predicate?: (value: T, index?: number) => boolean): T[] {
 			var result: T[] = [];
 
@@ -294,6 +317,82 @@ module System.Linq {
 
 			return result;
 		}
+
+		// Return a default (unfiltered) enumerable.
+		asEnumerable(): Enumerable<T> {
+			var _ = this;
+			return new Enumerable<T>(() => _.getEnumerator());
+		}
+
+		/*
+		// Overload:function(keySelector)
+		// Overload:function(keySelector, elementSelector)
+		// Overload:function(keySelector, elementSelector, compareSelector)
+		toLookup(keySelector, elementSelector, compareSelector) {
+			keySelector = Utils.createLambda(keySelector);
+			elementSelector = Utils.createLambda(elementSelector);
+			compareSelector = Utils.createLambda(compareSelector);
+
+			var dict = new Dictionary(compareSelector);
+			this.forEach(function (x) {
+				var key = keySelector(x);
+				var element = elementSelector(x);
+
+				var array = dict.get(key);
+				if (array !== undefined) array.push(element);
+				else dict.add(key, [element]);
+			});
+			return new Lookup(dict);
+		}
+
+		toObject(keySelector, elementSelector) {
+			keySelector = Utils.createLambda(keySelector);
+			elementSelector = Utils.createLambda(elementSelector);
+
+			var obj = {};
+			this.forEach(function (x) {
+				obj[keySelector(x)] = elementSelector(x);
+			});
+			return obj;
+		}
+
+		// Overload:function(keySelector, elementSelector)
+		// Overload:function(keySelector, elementSelector, compareSelector)
+		toDictionary(keySelector, elementSelector, compareSelector) {
+			keySelector = Utils.createLambda(keySelector);
+			elementSelector = Utils.createLambda(elementSelector);
+			compareSelector = Utils.createLambda(compareSelector);
+
+			var dict = new Dictionary(compareSelector);
+			this.forEach(function (x) {
+				dict.add(keySelector(x), elementSelector(x));
+			});
+			return dict;
+		}
+
+		// Overload:function()
+		// Overload:function(replacer)
+		// Overload:function(replacer, space)
+		toJSONString(replacer, space) {
+			if (typeof JSON === Types.Undefined || JSON.stringify == null) {
+				throw new Error("toJSONString can't find JSON.stringify. This works native JSON support Browser or include json2.js");
+			}
+			return JSON.stringify(this.toArray(), replacer, space);
+		}
+
+		// Overload:function()
+		// Overload:function(separator)
+		// Overload:function(separator,selector)
+		toJoinedString(separator, selector) {
+			if (separator == null) separator = "";
+			if (selector == null) selector = Functions.Identity;
+
+			return this.select(selector).toArray().join(separator);
+		}/* */
+
+		// #endregion
+
+
 
 		// Similar to forEach, but execute's an action for each time a value is enumerated.
 		// If the action explicitly returns false or 0 (EnumerationAction.Break), the enumeration will complete.
@@ -352,7 +451,9 @@ module System.Linq {
 
 			this.assertIsNotDisposed();
 
-			return this.doAction(
+			return (!count || count < 0) // Out of bounds? Simply return a unfiltered enumerable.
+				? this.asEnumerable()
+				: this.doAction(
 				(element:T, index:number)
 					=> index < count
 					? EnumerableAction.Skip
@@ -379,8 +480,260 @@ module System.Linq {
 			this.assertIsNotDisposed();
 
 			// Once action returns false, the enumeration will stop.
-			return this.doAction((element: T, index: number) => index < count);
+			return (!count || count < 0)  // Out of bounds? Simply return an empty enumerable.
+				? Enumerable.empty<T>()
+				: this.doAction((element: T, index: number) => index < count);
 		}
+
+		/** /
+				// Overload:function()
+		// Overload:function(count)
+		takeExceptLast(count): Enumerable<T> {
+			if (count == null) count = 1;
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				if (count <= 0) return source.getEnumerator(); // do nothing
+
+				var enumerator;
+				var q = [];
+
+				return new EnumeratorBase<T>(
+					() => { enumerator = source.getEnumerator(); },
+					() => {
+						while (enumerator.moveNext()) {
+							if (q.length == count) {
+								q.push(enumerator.current);
+								return (<any>this).yieldReturn(q.shift());
+							}
+							q.push(enumerator.current);
+						}
+						return false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+		takeFromLast(count): Enumerable<T> {
+			if (count <= 0 || count == null) return Enumerable.empty<T>();
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var sourceEnumerator;
+				var enumerator;
+				var q = [];
+
+				return new EnumeratorBase<T>(
+					() => { sourceEnumerator = source.getEnumerator(); },
+					() => {
+						while (sourceEnumerator.moveNext()) {
+							if (q.length == count) q.shift();
+							q.push(sourceEnumerator.current);
+						}
+						if (enumerator == null) {
+							enumerator = Enumerable.from(q).getEnumerator();
+						}
+						return (enumerator.moveNext())
+							? (<any>this).yieldReturn(enumerator.current)
+							: false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+		/**/
+
+		// #region Projection and Filtering Methods
+		/*
+
+		// Overload:function(func)
+		// Overload:function(func, resultSelector<element>)
+		// Overload:function(func, resultSelector<element, nestLevel>)
+		traverseBreadthFirst(func, resultSelector): Enumerable<T> {
+			var source = this;
+			func = Utils.createLambda(func);
+			resultSelector = Utils.createLambda(resultSelector);
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+				var nestLevel = 0;
+				var buffer = [];
+
+				return new EnumeratorBase<T>(
+					() => { enumerator = source.getEnumerator(); },
+					() => {
+						while (true) {
+							if (enumerator.moveNext()) {
+								buffer.push(enumerator.current);
+								return (<any>this).yieldReturn(resultSelector(enumerator.current, nestLevel));
+							}
+
+							var next = Enumerable.from<T>(buffer).selectMany(function (x) { return func(x); });
+							if (!next.any()) {
+								return false;
+							}
+							else {
+								nestLevel++;
+								buffer = [];
+								Utils.dispose(enumerator);
+								enumerator = next.getEnumerator();
+							}
+						}
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+		// Overload:function(func)
+		// Overload:function(func, resultSelector<element>)
+		// Overload:function(func, resultSelector<element, nestLevel>)
+		traverseDepthFirst(func, resultSelector): Enumerable<T> {
+			var source = this;
+			func = Utils.createLambda(func);
+			resultSelector = Utils.createLambda(resultSelector);
+
+			return new Enumerable<T>(() => {
+				var enumeratorStack = [];
+				var enumerator;
+
+				return new EnumeratorBase<T>(
+					() => { enumerator = source.getEnumerator(); },
+					() => {
+						while (true) {
+							if (enumerator.moveNext()) {
+								var value = resultSelector(enumerator.current, enumeratorStack.length);
+								enumeratorStack.push(enumerator);
+								enumerator = Enumerable.from(func(enumerator.current)).getEnumerator();
+								return (<any>this).yieldReturn(value);
+							}
+
+							if (enumeratorStack.length <= 0) return false;
+							Utils.dispose(enumerator);
+							enumerator = enumeratorStack.pop();
+						}
+					},
+					() => {
+						try {
+							Utils.dispose(enumerator);
+						}
+						finally {
+							Enumerable.from(enumeratorStack).forEach(function (s) { s.dispose(); });
+						}
+					});
+			});
+		}
+
+		flatten(): Enumerable<T> {
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+				var middleEnumerator = null;
+
+				return new EnumeratorBase<T>(
+					() => { enumerator = source.getEnumerator(); },
+					() => {
+						while (true) {
+							if (middleEnumerator != null) {
+								if (middleEnumerator.moveNext()) {
+									return (<any>this).yieldReturn(middleEnumerator.current);
+								}
+								else {
+									middleEnumerator = null;
+								}
+							}
+
+							if (enumerator.moveNext()) {
+								if (enumerator.current instanceof Array) {
+									Utils.dispose(middleEnumerator);
+									middleEnumerator = Enumerable.from<T>(enumerator.current)
+										.selectMany(Functions.Identity)
+										.flatten()
+										.getEnumerator();
+									continue;
+								}
+								else {
+									return (<any>this).yieldReturn(enumerator.current);
+								}
+							}
+
+							return false;
+						}
+					},
+					() => {
+						try {
+							Utils.dispose(enumerator);
+						}
+						finally {
+							Utils.dispose(middleEnumerator);
+						}
+					});
+			});
+		}
+
+		pairwise(selector): Enumerable<T> {
+			var source = this;
+			selector = Utils.createLambda(selector);
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+
+				return new EnumeratorBase<T>(
+					() => {
+						enumerator = source.getEnumerator();
+						enumerator.moveNext();
+					},
+					() => {
+						var prev = enumerator.current;
+						return (enumerator.moveNext())
+							? (<any>this).yieldReturn(selector(prev, enumerator.current))
+							: false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+		// Overload:function(func)
+		// Overload:function(seed,func<value,element>)
+		scan(seed, func): Enumerable<T> {
+			var isUseSeed;
+			if (func == null) {
+				func = Utils.createLambda(seed); // arguments[0]
+				isUseSeed = false;
+			} else {
+				func = Utils.createLambda(func);
+				isUseSeed = true;
+			}
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+				var value;
+				var isFirst = true;
+
+				return new EnumeratorBase<T>(
+					() => { enumerator = source.getEnumerator(); },
+					() => {
+						if (isFirst) {
+							isFirst = false;
+							if (!isUseSeed) {
+								if (enumerator.moveNext()) {
+									return (<any>this).yieldReturn(value = enumerator.current);
+								}
+							}
+							else {
+								return (<any>this).yieldReturn(value = seed);
+							}
+						}
+
+						return (enumerator.moveNext())
+							? (<any>this).yieldReturn(value = func(value, enumerator.current))
+							: false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		} /**/
+		// #endregion
+
 
 		select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult> {
 
@@ -409,6 +762,52 @@ module System.Linq {
 			},
 				() => disposed = true);
 		}
+
+		/*
+		// Overload:function(collectionSelector<element>)
+		// Overload:function(collectionSelector<element,index>)
+		// Overload:function(collectionSelector<element>,resultSelector)
+		// Overload:function(collectionSelector<element,index>,resultSelector)
+		selectMany(collectionSelector, resultSelector?): Enumerable<T> {
+			var source = this;
+			collectionSelector = Utils.createLambda(collectionSelector);
+			if (resultSelector == null) resultSelector = function (a, b) { return b; }
+        resultSelector = Utils.createLambda(resultSelector);
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+				var middleEnumerator = undefined;
+				var index = 0;
+
+				return new EnumeratorBase<T>(
+					() => { enumerator = source.getEnumerator(); },
+					() => {
+						if (middleEnumerator === undefined) {
+							if (!enumerator.moveNext()) return false;
+						}
+						do {
+							if (middleEnumerator == null) {
+								var middleSeq = collectionSelector(enumerator.current, index++);
+								middleEnumerator = Enumerable.from(middleSeq).getEnumerator();
+							}
+							if (middleEnumerator.moveNext()) {
+								return (<any>this).yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
+							}
+							Utils.dispose(middleEnumerator);
+							middleEnumerator = null;
+						} while (enumerator.moveNext());
+						return false;
+					},
+					() => {
+						try {
+							Utils.dispose(enumerator);
+						}
+						finally {
+							Utils.dispose(middleEnumerator);
+						}
+					});
+			});
+		}/**/
 
 		choose<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult> {
 
@@ -471,6 +870,30 @@ module System.Linq {
 			},
 				() => disposed = true);
 
+		}
+
+		ofType<TType>(type: any): Enumerable<TType> {
+			var typeName;
+			switch (type) {
+				case Number:
+					typeName = Types.Number;
+					break;
+				case String:
+					typeName = Types.String;
+					break;
+				case Boolean:
+					typeName = Types.Boolean;
+					break;
+				case Function:
+					typeName = Types.Function;
+					break;
+				default:
+					typeName = null;
+					break;
+			}
+			return <Enumerable<any>>((typeName === null)
+				? this.where(x=> { return x instanceof type; })
+				: this.where(x=> { return typeof x === typeName; }));
 		}
 
 		except(second: System.Collections.IEnumerable<T>, compareSelector?: (value: T) => T): Enumerable<T> {
@@ -657,6 +1080,54 @@ module System.Linq {
 				: this.any(v=> v === value);
 		}
 
+		/** /
+				// Overload:function(item)
+		// Overload:function(predicate)
+		indexOf(item): number {
+			var found = null;
+
+			// item as predicate
+			if (typeof (item) === Types.Function) {
+				this.forEach(function (x, i) {
+					if (item(x, i)) {
+						found = i;
+						return false;
+					}
+				});
+			}
+			else {
+				this.forEach(function (x, i) {
+					if (x === item) {
+						found = i;
+						return false;
+					}
+				});
+			}
+
+			return (found !== null) ? found : -1;
+		}
+
+		// Overload:function(item)
+		// Overload:function(predicate)
+		lastIndexOf(item):number {
+			var result = -1;
+
+			// item as predicate
+			if (typeof (item) === Types.Function) {
+				this.forEach(function (x, i) {
+					if (item(x, i)) result = i;
+				});
+			}
+			else {
+				this.forEach(function (x, i) {
+					if (x === item) result = i;
+				});
+			}
+
+			return result;
+		}
+		/**/
+
 		defaultIfEmpty(defaultValue: T = null): Enumerable<T> {
 			var _ = this, disposed: boolean = !_.assertIsNotDisposed();
 
@@ -686,6 +1157,688 @@ module System.Linq {
 					);
 			});
 		}
+
+		/* * /
+		// mutiple arguments, last one is selector, others are enumerable
+		zip(...args): Enumerable<T> {
+			var selector = Utils.createLambda(arguments[arguments.length - 1]);
+
+			var source = this;
+			// optimized case:argument is 2
+			if (arguments.length == 2) {
+				var second = arguments[0];
+
+				return new Enumerable<T>(() => {
+					var firstEnumerator;
+					var secondEnumerator;
+					var index = 0;
+
+					return new EnumeratorBase<T>(
+						() => {
+							firstEnumerator = source.getEnumerator();
+							secondEnumerator = Enumerable.from(second).getEnumerator();
+						},
+						() => {
+							if (firstEnumerator.moveNext() && secondEnumerator.moveNext()) {
+								return (<any>this).yieldReturn(selector(firstEnumerator.current, secondEnumerator.current, index++));
+							}
+							return false;
+						},
+						() => {
+							try {
+								Utils.dispose(firstEnumerator);
+							} finally {
+								Utils.dispose(secondEnumerator);
+							}
+						});
+				});
+			}
+			else {
+				return new Enumerable<T>(() => {
+					var enumerators;
+					var index = 0;
+
+					return new EnumeratorBase<T>(
+						() => {
+							var array = Enumerable.make<T>(source)
+								.concat(Enumerable.from<T>(args).takeExceptLast().select(Enumerable.from))
+								.select(function (x) { return x.getEnumerator() })
+								.toArray();
+							enumerators = Enumerable.from(array);
+						},
+						() => {
+							if (enumerators.all(function (x) { return x.moveNext() })) {
+								var array = enumerators
+									.select(function (x) { return x.current })
+									.toArray();
+								array.push(index++);
+								return (<any>this).yieldReturn(selector.apply(null, array));
+							}
+							else {
+								return (<any>this).yieldBreak();
+							}
+						},
+						() => {
+							Enumerable.from(enumerators).forEach(Utils.dispose);
+						});
+				});
+			}
+		}
+
+		// mutiple arguments
+		merge() {
+			var args = arguments;
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var enumerators;
+				var index = -1;
+
+				return new EnumeratorBase<T>(
+					() => {
+						enumerators = Enumerable.make(source)
+							.concat(Enumerable.from(args).select(Enumerable.from))
+							.select(function (x) { return x.getEnumerator() })
+							.toArray();
+					},
+					() => {
+						while (enumerators.length > 0) {
+							index = (index >= enumerators.length - 1) ? 0 : index + 1;
+							var enumerator = enumerators[index];
+
+							if (enumerator.moveNext()) {
+								return (<any>this).yieldReturn(enumerator.current);
+							}
+							else {
+								enumerator.dispose();
+								enumerators.splice(index--, 1);
+							}
+						}
+						return (<any>this).yieldBreak();
+					},
+					() => {
+						Enumerable.from(enumerators).forEach(Utils.dispose);
+					});
+			});
+		}
+
+		// Join Methods
+
+		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
+		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
+		join(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
+			outerKeySelector = Utils.createLambda(outerKeySelector);
+			innerKeySelector = Utils.createLambda(innerKeySelector);
+			resultSelector = Utils.createLambda(resultSelector);
+			compareSelector = Utils.createLambda(compareSelector);
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var outerEnumerator;
+				var lookup;
+				var innerElements = null;
+				var innerCount = 0;
+
+				return new EnumeratorBase<T>(
+					() => {
+						outerEnumerator = source.getEnumerator();
+						lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+					},
+					() => {
+						while (true) {
+							if (innerElements != null) {
+								var innerElement = innerElements[innerCount++];
+								if (innerElement !== undefined) {
+									return (<any>this).yieldReturn(resultSelector(outerEnumerator.current, innerElement));
+								}
+
+								innerElement = null;
+								innerCount = 0;
+							}
+
+							if (outerEnumerator.moveNext()) {
+								var key = outerKeySelector(outerEnumerator.current);
+								innerElements = lookup.get(key).toArray();
+							} else {
+								return false;
+							}
+						}
+					},
+					() => { Utils.dispose(outerEnumerator); });
+			});
+		}
+
+		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
+		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
+		groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
+			outerKeySelector = Utils.createLambda(outerKeySelector);
+			innerKeySelector = Utils.createLambda(innerKeySelector);
+			resultSelector = Utils.createLambda(resultSelector);
+			compareSelector = Utils.createLambda(compareSelector);
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var enumerator = source.getEnumerator();
+				var lookup = null;
+
+				return new EnumeratorBase<T>(
+					() => {
+						enumerator = source.getEnumerator();
+						lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+					},
+					() => {
+						if (enumerator.moveNext()) {
+							var innerElement = lookup.get(outerKeySelector(enumerator.current));
+							return (<any>this).yieldReturn(resultSelector(enumerator.current, innerElement));
+						}
+						return false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+		    // multiple arguments
+    concat(){
+			var source = this;
+
+			if (arguments.length == 1) {
+				var second = arguments[0];
+
+				return new Enumerable<T>(() => {
+					var firstEnumerator;
+					var secondEnumerator;
+
+					return new EnumeratorBase<T>(
+						() => { firstEnumerator = source.getEnumerator(); },
+						() => {
+							if (secondEnumerator == null) {
+								if (firstEnumerator.moveNext()) return (<any>this).yieldReturn(firstEnumerator.current);
+								secondEnumerator = Enumerable.from(second).getEnumerator();
+							}
+							if (secondEnumerator.moveNext()) return (<any>this).yieldReturn(secondEnumerator.current);
+							return false;
+						},
+						() => {
+							try {
+								Utils.dispose(firstEnumerator);
+							}
+							finally {
+								Utils.dispose(secondEnumerator);
+							}
+						});
+				});
+			}
+			else {
+				var args = arguments;
+
+				return new Enumerable<T>(() => {
+					var enumerators;
+
+					return new EnumeratorBase<T>(
+						() => {
+							enumerators = Enumerable.make(source)
+								.concat(Enumerable.from(args).select(Enumerable.from))
+								.select(function (x) { return x.getEnumerator() })
+								.toArray();
+						},
+						() => {
+							while (enumerators.length > 0) {
+								var enumerator = enumerators[0];
+
+								if (enumerator.moveNext()) {
+									return (<any>this).yieldReturn(enumerator.current);
+								}
+								else {
+									enumerator.dispose();
+									enumerators.splice(0, 1);
+								}
+							}
+							return (<any>this).yieldBreak();
+						},
+						() => {
+							Enumerable.from(enumerators).forEach(Utils.dispose);
+						});
+				});
+			}
+		}
+
+    insert(index, second) {
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var firstEnumerator;
+				var secondEnumerator;
+				var count = 0;
+				var isEnumerated = false;
+
+				return new EnumeratorBase<T>(
+					() => {
+						firstEnumerator = source.getEnumerator();
+						secondEnumerator = Enumerable.from(second).getEnumerator();
+					},
+					() => {
+						if (count == index && secondEnumerator.moveNext()) {
+							isEnumerated = true;
+							return (<any>this).yieldReturn(secondEnumerator.current);
+						}
+						if (firstEnumerator.moveNext()) {
+							count++;
+							return (<any>this).yieldReturn(firstEnumerator.current);
+						}
+						if (!isEnumerated && secondEnumerator.moveNext()) {
+							return (<any>this).yieldReturn(secondEnumerator.current);
+						}
+						return false;
+					},
+					() => {
+						try {
+							Utils.dispose(firstEnumerator);
+						}
+						finally {
+							Utils.dispose(secondEnumerator);
+						}
+					});
+			});
+		}
+
+		alternate(alternateValueOrSequence) {
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var buffer;
+				var enumerator;
+				var alternateSequence;
+				var alternateEnumerator;
+
+				return new EnumeratorBase<T>(
+					() => {
+						if (alternateValueOrSequence instanceof Array || alternateValueOrSequence.getEnumerator != null) {
+							alternateSequence = Enumerable.from(Enumerable.from(alternateValueOrSequence).toArray()); // freeze
+						}
+						else {
+							alternateSequence = Enumerable.make(alternateValueOrSequence);
+						}
+						enumerator = source.getEnumerator();
+						if (enumerator.moveNext()) buffer = enumerator.current;
+					},
+					() => {
+						while (true) {
+							if (alternateEnumerator != null) {
+								if (alternateEnumerator.moveNext()) {
+									return (<any>this).yieldReturn(alternateEnumerator.current);
+								}
+								else {
+									alternateEnumerator = null;
+								}
+							}
+
+							if (buffer == null && enumerator.moveNext()) {
+								buffer = enumerator.current; // hasNext
+								alternateEnumerator = alternateSequence.getEnumerator();
+								continue; // GOTO
+							}
+							else if (buffer != null) {
+								var retVal = buffer;
+								buffer = null;
+								return (<any>this).yieldReturn(retVal);
+							}
+
+							return (<any>this).yieldBreak();
+						}
+					},
+					() => {
+						try {
+							Utils.dispose(enumerator);
+						}
+						finally {
+							Utils.dispose(alternateEnumerator);
+						}
+					});
+			});
+		}
+
+				// Overload:function(second)
+		// Overload:function(second, compareSelector)
+		intersect(second, compareSelector) {
+			compareSelector = Utils.createLambda(compareSelector);
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+				var keys;
+				var outs;
+
+				return new EnumeratorBase<T>(
+					() => {
+						enumerator = source.getEnumerator();
+
+						keys = new Dictionary(compareSelector);
+						Enumerable.from(second).forEach(function (key) { keys.add(key); });
+						outs = new Dictionary(compareSelector);
+					},
+					() => {
+						while (enumerator.moveNext()) {
+							var current = enumerator.current;
+							if (!outs.contains(current) && keys.contains(current)) {
+								outs.add(current);
+								return (<any>this).yieldReturn(current);
+							}
+						}
+						return false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+		// Overload:function(second)
+		// Overload:function(second, compareSelector)
+		sequenceEqual(second, compareSelector) {
+			compareSelector = Utils.createLambda(compareSelector);
+
+			var firstEnumerator = this.getEnumerator();
+			try {
+				var secondEnumerator = Enumerable.from(second).getEnumerator();
+				try {
+					while (firstEnumerator.moveNext()) {
+						if (!secondEnumerator.moveNext()
+							|| compareSelector(firstEnumerator.current) !== compareSelector(secondEnumerator.current)) {
+							return false;
+						}
+					}
+
+					if (secondEnumerator.moveNext()) return false;
+					return true;
+				}
+				finally {
+					Utils.dispose(secondEnumerator);
+				}
+			}
+			finally {
+				Utils.dispose(firstEnumerator);
+			}
+		}
+
+		union(second, compareSelector) {
+			compareSelector = Utils.createLambda(compareSelector);
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var firstEnumerator;
+				var secondEnumerator;
+				var keys;
+
+				return new EnumeratorBase<T>(
+					() => {
+						firstEnumerator = source.getEnumerator();
+						keys = new Dictionary(compareSelector);
+					},
+					() => {
+						var current;
+						if (secondEnumerator === undefined) {
+							while (firstEnumerator.moveNext()) {
+								current = firstEnumerator.current;
+								if (!keys.contains(current)) {
+									keys.add(current);
+									return (<any>this).yieldReturn(current);
+								}
+							}
+							secondEnumerator = Enumerable.from(second).getEnumerator();
+						}
+						while (secondEnumerator.moveNext()) {
+							current = secondEnumerator.current;
+							if (!keys.contains(current)) {
+								keys.add(current);
+								return (<any>this).yieldReturn(current);
+							}
+						}
+						return false;
+					},
+					() => {
+						try {
+							Utils.dispose(firstEnumerator);
+						}
+						finally {
+							Utils.dispose(secondEnumerator);
+						}
+					});
+			});
+		}
+
+		// Ordering Methods
+
+		orderBy(keySelector) {
+			return new OrderedEnumerable(this, keySelector, false);
+		}
+
+		orderByDescending(keySelector) {
+			return new OrderedEnumerable(this, keySelector, true);
+		}
+
+		   weightedSample(weightSelector) {
+			weightSelector = Utils.createLambda(weightSelector);
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var sortedByBound;
+				var totalWeight = 0;
+
+				return new EnumeratorBase<T>(
+					() => {
+						sortedByBound = source
+							.choose(function (x) {
+								var weight = weightSelector(x);
+								if (weight <= 0) return null; // ignore 0
+
+								totalWeight += weight;
+                            return { value: x, bound: totalWeight }
+                        })
+							.toArray();
+					},
+					() => {
+						if (sortedByBound.length > 0) {
+							var draw = Math.floor(Math.random() * totalWeight) + 1;
+
+							var lower = -1;
+							var upper = sortedByBound.length;
+							while (upper - lower > 1) {
+								var index = Math.floor((lower + upper) / 2);
+								if (sortedByBound[index].bound >= draw) {
+									upper = index;
+								}
+								else {
+									lower = index;
+								}
+							}
+
+							return (<any>this).yieldReturn(sortedByBound[upper].value);
+						}
+
+						return (<any>this).yieldBreak();
+					},
+					Functions.Blank);
+			});
+		}
+
+		// Grouping Methods
+
+		// Overload:function(keySelector)
+		// Overload:function(keySelector,elementSelector)
+		// Overload:function(keySelector,elementSelector,resultSelector)
+		// Overload:function(keySelector,elementSelector,resultSelector,compareSelector)
+		groupBy(keySelector, elementSelector, resultSelector, compareSelector) {
+			var source = this;
+			keySelector = Utils.createLambda(keySelector);
+			elementSelector = Utils.createLambda(elementSelector);
+			if (resultSelector != null) resultSelector = Utils.createLambda(resultSelector);
+			compareSelector = Utils.createLambda(compareSelector);
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+
+				return new EnumeratorBase<T>(
+					() => {
+						enumerator = source.toLookup(keySelector, elementSelector, compareSelector)
+							.toEnumerable()
+							.getEnumerator();
+					},
+					() => {
+						while (enumerator.moveNext()) {
+							return (resultSelector == null)
+								? (<any>this).yieldReturn(enumerator.current)
+								: (<any>this).yieldReturn(resultSelector(enumerator.current.key(), enumerator.current));
+						}
+						return false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+		// Overload:function(keySelector)
+		// Overload:function(keySelector,elementSelector)
+		// Overload:function(keySelector,elementSelector,resultSelector)
+		// Overload:function(keySelector,elementSelector,resultSelector,compareSelector)
+		partitionBy(keySelector, elementSelector, resultSelector, compareSelector) {
+
+			var source = this;
+			keySelector = Utils.createLambda(keySelector);
+			elementSelector = Utils.createLambda(elementSelector);
+			compareSelector = Utils.createLambda(compareSelector);
+			var hasResultSelector;
+			if (resultSelector == null) {
+				hasResultSelector = false;
+				resultSelector = function (key, group) { return new Grouping(key, group); }
+        }
+			else {
+				hasResultSelector = true;
+				resultSelector = Utils.createLambda(resultSelector);
+			}
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+				var key;
+				var compareKey;
+				var group = [];
+
+				return new EnumeratorBase<T>(
+					() => {
+						enumerator = source.getEnumerator();
+						if (enumerator.moveNext()) {
+							key = keySelector(enumerator.current);
+							compareKey = compareSelector(key);
+							group.push(elementSelector(enumerator.current));
+						}
+					},
+					() => {
+						var hasNext;
+						while ((hasNext = enumerator.moveNext()) == true) {
+							if (compareKey === compareSelector(keySelector(enumerator.current))) {
+								group.push(elementSelector(enumerator.current));
+							}
+							else break;
+						}
+
+						if (group.length > 0) {
+							var result = (hasResultSelector)
+								? resultSelector(key, Enumerable.from(group))
+								: resultSelector(key, group);
+							if (hasNext) {
+								key = keySelector(enumerator.current);
+								compareKey = compareSelector(key);
+								group = [elementSelector(enumerator.current)];
+							}
+							else group = [];
+
+							return (<any>this).yieldReturn(result);
+						}
+
+						return false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+
+		buffer(count) {
+			var source = this;
+
+			return new Enumerable<T>(() => {
+				var enumerator;
+
+				return new EnumeratorBase<T>(
+					() => { enumerator = source.getEnumerator(); },
+					() => {
+						var array = [];
+						var index = 0;
+						while (enumerator.moveNext()) {
+							array.push(enumerator.current);
+							if (++index >= count) return (<any>this).yieldReturn(array);
+						}
+						if (array.length > 0) return (<any>this).yieldReturn(array);
+						return false;
+					},
+					() => { Utils.dispose(enumerator); });
+			});
+		}
+
+		// Aggregate Methods 
+
+		// Overload:function(func)
+		// Overload:function(seed,func)
+		// Overload:function(seed,func,resultSelector)
+		aggregate(seed, func, resultSelector) {
+			resultSelector = Utils.createLambda(resultSelector);
+			return resultSelector(this.scan(seed, func, resultSelector).last());
+		}
+
+		// Overload:function()
+		// Overload:function(selector)
+		average(selector) {
+			selector = Utils.createLambda(selector);
+
+			var sum = 0;
+			var count = 0;
+			this.forEach(function (x) {
+				sum += selector(x);
+				++count;
+			});
+
+			return sum / count;
+		}
+
+		
+		// Overload:function()
+		// Overload:function(selector)
+		max(selector) {
+			if (selector == null) selector = Functions.Identity;
+			return this.select(selector).aggregate(function (a, b) { return (a > b) ? a : b; });
+		}
+
+		// Overload:function()
+		// Overload:function(selector)
+		min(selector) {
+			if (selector == null) selector = Functions.Identity;
+			return this.select(selector).aggregate(function (a, b) { return (a < b) ? a : b; });
+		}
+
+		maxBy(keySelector) {
+			keySelector = Utils.createLambda(keySelector);
+			return this.aggregate(function (a, b) { return (keySelector(a) > keySelector(b)) ? a : b; });
+		}
+
+		minBy(keySelector) {
+			keySelector = Utils.createLambda(keySelector);
+			return this.aggregate(function (a, b) { return (keySelector(a) < keySelector(b)) ? a : b; });
+		}
+
+		// Overload:function()
+		// Overload:function(selector)
+		sum(selector) {
+			if (selector == null) selector = Functions.Identity;
+			return this.select(selector).aggregate(0, function (a, b) { return a + b; });
+		}
+
+
+/**/
 
 		// #region Single Value Return...
 
