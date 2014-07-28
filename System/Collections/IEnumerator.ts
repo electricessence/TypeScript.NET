@@ -165,7 +165,6 @@ module System.Collections {
 				() => {
 					if (source) {
 						source.source = null;
-						source = null;
 					}
 				});
 		}

@@ -98,8 +98,8 @@ module System.Collections {
 
 
 		private setKV(key: TKey, value: TValue, allowOverwrite: boolean): boolean {
-			var _ = this, buckets = _._buckets, entries = _._entries, compare = _.compareSelector;
-			var compareKey = compare(key);
+			var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
+			var compareKey = comparer(key);
 			var hash = computeHashCode(compareKey), entry: HashEntry<TKey, TValue>;
 
 			if (callHasOwnProperty(buckets, hash)) {
@@ -107,7 +107,7 @@ module System.Collections {
 				var array = buckets[hash];
 				for (var i = 0; i < array.length; i++) {
 					var old = array[i];
-					if (compare(old.key) === compareKey) {
+					if (comparer(old.key) === compareKey) {
 						if (!allowOverwrite)
 							throw new Error("Key already exists.");
 
@@ -152,15 +152,15 @@ module System.Collections {
 		}
 
 		get(key: TKey): TValue {
-			var _ = this, buckets = _._buckets, compare = _.compareSelector;
-			var compareKey = compare(key);
+			var buckets = this._buckets, comparer = this.compareSelector;
+			var compareKey = comparer(key);
 			var hash = computeHashCode(compareKey);
 			if (!callHasOwnProperty(buckets, hash)) return undefined;
 
 			var array = buckets[hash];
 			for (var i = 0, len = array.length; i < len; i++) {
 				var entry = array[i];
-				if (compare(entry.key) === compareKey) return entry.value;
+				if (comparer(entry.key) === compareKey) return entry.value;
 			}
 			return undefined;
 		}
@@ -170,14 +170,14 @@ module System.Collections {
 		}
 
 		containsKey(key: TKey): boolean {
-			var _ = this, buckets = _._buckets, compare = _.compareSelector;
-			var compareKey = compare(key);
+			var _ = this, buckets = _._buckets, comparer = _.compareSelector;
+			var compareKey = comparer(key);
 			var hash = computeHashCode(compareKey);
 			if (!callHasOwnProperty(buckets, hash)) return false;
 
 			var array = buckets[hash];
 			for (var i = 0, len = array.length; i < len; i++)
-				if (compare(array[i].key) === compareKey) return true;
+				if (comparer(array[i].key) === compareKey) return true;
 
 			return false;
 		}

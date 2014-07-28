@@ -14,7 +14,7 @@ module System {
 		addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number);//, useWeakReference?: boolean);
 		dispatchEvent(event: Event): boolean;
 		hasEventListener(type: string): boolean;
-		removeEventListener(type: string, listener: EventListener, useCapture: boolean): void;
+		removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
 		//willTrigger(type: string);
 		//toString(): string;
 
@@ -48,18 +48,18 @@ module System {
 		}
 
 		matches(type: string, listener: EventListener, useCapture: boolean = false): boolean {
-			return
-				this.type == type &&
-			this.listener == listener &&
-			this.useCapture == useCapture
+			var _ = this;
+			return _.type == type
+				&& _.listener == listener
+				&& _.useCapture == useCapture;
 		}
 
 		equals(other: EventDispatcherEntry): boolean {
-			return
-				this.type == other.type
-				&& this.listener == other.listener
-				&& this.useCapture == other.useCapture
-				&& this.priority == other.priority
+			var _ = this;
+			return _.type == other.type
+				&& _.listener == other.listener
+				&& _.useCapture == other.useCapture
+				&& _.priority == other.priority
 				//&& this.useWeakReference == other.useWeakReference
 			;
 		}
@@ -71,13 +71,13 @@ module System {
 
 		addEventListener(type: string, listener: EventListener, useCapture: boolean = false, priority: number= 0)//, useWeakReference: boolean= false)
 		{
-			var listeners = this._listeners;
-			if (!listeners)
-				this._listeners = listeners = new Array<EventDispatcherEntry>();
+			var l:EventDispatcherEntry[] = this._listeners;
+			if (!l)
+				this._listeners = l = [];
 
 			// flash/vibejs means of adding is indiscriminant and will double add listeners...
 			// we can then avoid double adds by including a 'registerEventListener' method.
-			listeners.push(new EventDispatcherEntry(type, listener, useCapture, priority));//, useWeakReference));
+			l.push(new EventDispatcherEntry(type, listener, useCapture, priority));//, useWeakReference));
 		}
 
 		// Allow for simple add once mechanism.
@@ -114,8 +114,7 @@ module System {
 		dispatchEvent(event: Event): boolean;
 		dispatchEvent(e: any, params?:any): boolean {
 
-			var _ = this;
-			var l = _._listeners
+			var _ = this, l = _._listeners;
 			if (!l || !l.length)
 				return false;
 
@@ -134,7 +133,8 @@ module System {
 
 			var type = event.type;
 
-			var entries = new Array<EventDispatcherEntry>(), propagate = true, prevent = false;
+			// noinspection JSMismatchedCollectionQueryUpdate
+			var entries:EventDispatcherEntry[] = [];//, propagate = true, prevent = false;
 			l.forEach((e: EventDispatcherEntry): void => { if (e.type == type) entries.push(e); });
 			if (!entries.length)
 				return false;
