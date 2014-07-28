@@ -35,6 +35,10 @@ module System.Linq {
 			super(finalizer);
 		}
 
+		static fromArray<T>(array:T[]):ArrayEnumerable<T>{
+			return new ArrayEnumerable<T>(array);
+		}
+
 		// #region IEnumerable<T> Implementation...
 		getEnumerator(): System.Collections.IEnumerator<T> {
 

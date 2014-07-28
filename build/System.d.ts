@@ -10,6 +10,7 @@
     function removeIndex<T>(array: T[], index: number): boolean;
     function remove<T>(array: T[], value: T, max?: number): number;
     function repeat<T>(element: T, count: number): T[];
+		function sum(source:number[]):number;
 }
 declare module System.Collections {
     class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue> {
@@ -207,7 +208,7 @@ declare module System {
         addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): any;
         dispatchEvent(event: Event): boolean;
         hasEventListener(type: string): boolean;
-        removeEventListener(type: string, listener: EventListener, useCapture: boolean): void;
+        removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
     }
     class EventDispatcher extends DisposableBase implements IEventDispatcher {
         private _listeners;

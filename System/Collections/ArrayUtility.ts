@@ -109,4 +109,11 @@
 
 		return result;
 	}
+
+	export function sum(source:number[]):number {
+		var result = 0;
+		source.forEach(n=>result+=n);
+		return result;
+	}
+
 }
