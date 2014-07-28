@@ -28,6 +28,15 @@ module System {
 			return this._isValueCreated;
 		}
 
+		reset():void {
+			var _ = this;
+			if(!_._closure)
+				throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");
+
+			_._isValueCreated = false;
+			_._value = null;
+		}
+
 		get value():T
 		{
 			var _ = this;
@@ -36,13 +45,21 @@ module System {
 				var v = _._closure();
 				_._value = v;
 				_._isValueCreated = true;
-				// Release the closure to avoid possible referencing.
-				_._closure = null;
 				return v;
 			}
 
 			return _._value;
 		}
+
+		valueOnce():T {
+			try {
+				return this.value;
+			}
+			finally {
+				this._closure = null;
+			}
+		}
+
 
 		_onDispose():void {
 			this._closure = null;

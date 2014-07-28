@@ -246,7 +246,9 @@ declare module System {
         private _value;
         constructor(_closure: () => T);
         public isValueCreated : boolean;
+	      public reset():void;
         public value : T;
+	      public valueOnce():T;
         public _onDispose(): void;
     }
 }
