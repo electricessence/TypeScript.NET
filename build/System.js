@@ -1,4 +1,11 @@
-﻿var System;
+﻿var __extends = this.__extends || function (d, b) {
+	for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	function __() { this.constructor = d; }
+	__.prototype = b.prototype;
+	d.prototype = new __();
+};
+
+var System;
 (function (System) {
     (function (Collections) {
         (function (ArrayUtility) {
@@ -126,13 +133,265 @@
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var System;
+
+
+(function (System) {
+	function dispose(obj) {
+		if (obj && typeof obj.dispose == System.Types.Function)
+			obj.dispose();
+	}
+	System.dispose = dispose;
+
+	function using(disposable, closure) {
+		try  {
+			return closure(disposable);
+		} finally {
+			dispose(disposable);
+		}
+	}
+	System.using = using;
+
+	var DisposableBase = (function () {
+		function DisposableBase(_finalizer) {
+			this._finalizer = _finalizer;
+			this._wasDisposed = false;
+		}
+		Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
+			get: function () {
+				return this._wasDisposed;
+			},
+			enumerable: true,
+			configurable: true
+		});
+
+		DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
+			if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
+			if (disposed)
+				throw new Error(errorMessage);
+
+			return true;
+		};
+
+		DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
+			if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
+			return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
+		};
+
+		DisposableBase.prototype.dispose = function () {
+			var _ = this;
+			if (!_._wasDisposed) {
+				_._wasDisposed = true;
+				try  {
+					_._onDispose();
+				} finally {
+					if (_._finalizer)
+						_._finalizer();
+				}
+			}
+		};
+
+		DisposableBase.prototype._onDispose = function () {
+		};
+		return DisposableBase;
+	})();
+	System.DisposableBase = DisposableBase;
+})(System || (System = {}));
+
+
+(function (System) {
+	(function (Collections) {
+		var DictionaryAbstractBase = (function () {
+			function DictionaryAbstractBase() {
+				this._updateRecursion = 0;
+			}
+			DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
+				if (!System.areEqual(value, old, true)) {
+					var _ = this;
+					if (_.onValueChanged)
+						_.onValueChanged(key, value, old);
+
+					if (_._updateRecursion == 0)
+						_._onUpdated();
+				}
+			};
+
+			DictionaryAbstractBase.prototype._onUpdated = function () {
+				var _ = this;
+				if (_.onUpdated)
+					_.onUpdated();
+			};
+
+			DictionaryAbstractBase.prototype.handleUpdate = function (closure) {
+				var _ = this, result;
+				if (closure) {
+					_._updateRecursion++;
+
+					try  {
+						result = closure();
+					} finally {
+						_._updateRecursion--;
+					}
+				} else
+					result = _._updateRecursion == 0;
+
+				if (result && _._updateRecursion == 0)
+					_._onUpdated();
+
+				return result;
+			};
+
+			Object.defineProperty(DictionaryAbstractBase.prototype, "isReadOnly", {
+				get: function () {
+					return false;
+				},
+				enumerable: true,
+				configurable: true
+			});
+			Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
+				get: function () {
+					throw new Error("Not implemented.");
+				},
+				enumerable: true,
+				configurable: true
+			});
+
+			DictionaryAbstractBase.prototype.add = function (item) {
+				this.addByKeyValue(item.key, item.value);
+			};
+
+			DictionaryAbstractBase.prototype.clear = function () {
+				var _ = this, keys = _.keys, count = keys.length;
+
+				if (count)
+					_.handleUpdate(function () {
+						keys.forEach(function (key) {
+							return _.removeByKey(key);
+						});
+						return true;
+					});
+
+				if (count != _.count)
+					console.warn("Dictioary clear() results in mismatched count.");
+
+				return count;
+			};
+
+			DictionaryAbstractBase.prototype.contains = function (item) {
+				var value = this.get(item.key);
+				return System.areEqual(value, item.value);
+			};
+
+			DictionaryAbstractBase.prototype.copyTo = function (array, index) {
+				if (typeof index === "undefined") { index = 0; }
+				var e = this.getEnumerator();
+				while (e.moveNext())
+					array[index++] = e.current;
+			};
+
+			DictionaryAbstractBase.prototype.remove = function (item) {
+				var key = item.key, value = this.get(key);
+				return (System.areEqual(value, item.value) && this.removeByKey(key)) ? 1 : 0;
+			};
+
+			Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
+				get: function () {
+					throw new Error("Not implemented.");
+				},
+				enumerable: true,
+				configurable: true
+			});
+
+			Object.defineProperty(DictionaryAbstractBase.prototype, "values", {
+				get: function () {
+					throw new Error("Not implemented.");
+				},
+				enumerable: true,
+				configurable: true
+			});
+
+			DictionaryAbstractBase.prototype.addByKeyValue = function (key, value) {
+				var _ = this;
+				if (_.containsKey(key))
+					throw new Error("Adding key/value when one already exists.");
+
+				_.set(key, value);
+			};
+
+			DictionaryAbstractBase.prototype.get = function (key) {
+				throw new Error("Not implemented.");
+			};
+
+			DictionaryAbstractBase.prototype.set = function (key, value) {
+				throw new Error("Not implemented.");
+			};
+
+			DictionaryAbstractBase.prototype.containsKey = function (key) {
+				var value = this.get(key);
+				return value !== undefined;
+			};
+
+			DictionaryAbstractBase.prototype.containsValue = function (value) {
+				var e = this.getEnumerator(), equal = System.areEqual;
+
+				while (e.moveNext()) {
+					if (equal(e.current, value, true)) {
+						e.dispose();
+						return true;
+					}
+				}
+				return false;
+			};
+
+			DictionaryAbstractBase.prototype.removeByKey = function (key) {
+				return this.set(key, undefined);
+			};
+
+			DictionaryAbstractBase.prototype.removeByValue = function (value) {
+				var _ = this, count = 0, equal = System.areEqual;
+				_.keys.forEach(function (key) {
+					if (equal(_.get(key), value, true)) {
+						_.removeByKey(key);
+						++count;
+					}
+				});
+				return count;
+			};
+
+			DictionaryAbstractBase.prototype.importPairs = function (pairs) {
+				var _ = this;
+				return _.handleUpdate(function () {
+					var changed = false;
+					pairs.forEach(function (pair) {
+						_.set(pair.key, pair.value);
+						changed = true;
+					});
+					return changed;
+				});
+			};
+
+			DictionaryAbstractBase.prototype.getEnumerator = function () {
+				var _ = this;
+				var keys, len, i = 0;
+				return new Collections.EnumeratorBase(function () {
+					keys = _.keys;
+					len = keys.length;
+				}, function (yielder) {
+					while (i < len) {
+						var key = keys[i++], value = _.get(key);
+						if (value !== undefined)
+							return yielder.yieldReturn({ key: key, value: value });
+					}
+
+					return yielder.yieldBreak();
+				});
+			};
+			return DictionaryAbstractBase;
+		})();
+		Collections.DictionaryAbstractBase = DictionaryAbstractBase;
+	})(System.Collections || (System.Collections = {}));
+	var Collections = System.Collections;
+})(System || (System = {}));
+
 (function (System) {
     (function (Collections) {
         var HashEntry = (function () {
@@ -379,201 +638,7 @@ var System;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));
-var System;
-(function (System) {
-    (function (Collections) {
-        var DictionaryAbstractBase = (function () {
-            function DictionaryAbstractBase() {
-                this._updateRecursion = 0;
-            }
-            DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
-                if (!System.areEqual(value, old, true)) {
-                    var _ = this;
-                    if (_.onValueChanged)
-                        _.onValueChanged(key, value, old);
 
-                    if (_._updateRecursion == 0)
-                        _._onUpdated();
-                }
-            };
-
-            DictionaryAbstractBase.prototype._onUpdated = function () {
-                var _ = this;
-                if (_.onUpdated)
-                    _.onUpdated();
-            };
-
-            DictionaryAbstractBase.prototype.handleUpdate = function (closure) {
-                var _ = this, result;
-                if (closure) {
-                    _._updateRecursion++;
-
-                    try  {
-                        result = closure();
-                    } finally {
-                        _._updateRecursion--;
-                    }
-                } else
-                    result = _._updateRecursion == 0;
-
-                if (result && _._updateRecursion == 0)
-                    _._onUpdated();
-
-                return result;
-            };
-
-            Object.defineProperty(DictionaryAbstractBase.prototype, "isReadOnly", {
-                get: function () {
-                    return false;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
-                get: function () {
-                    throw new Error("Not implemented.");
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            DictionaryAbstractBase.prototype.add = function (item) {
-                this.addByKeyValue(item.key, item.value);
-            };
-
-            DictionaryAbstractBase.prototype.clear = function () {
-                var _ = this, keys = _.keys, count = keys.length;
-
-                if (count)
-                    _.handleUpdate(function () {
-                        keys.forEach(function (key) {
-                            return _.removeByKey(key);
-                        });
-                        return true;
-                    });
-
-                if (count != _.count)
-                    console.warn("Dictioary clear() results in mismatched count.");
-
-                return count;
-            };
-
-            DictionaryAbstractBase.prototype.contains = function (item) {
-                var value = this.get(item.key);
-                return System.areEqual(value, item.value);
-            };
-
-            DictionaryAbstractBase.prototype.copyTo = function (array, index) {
-                if (typeof index === "undefined") { index = 0; }
-                var e = this.getEnumerator();
-                while (e.moveNext())
-                    array[index++] = e.current;
-            };
-
-            DictionaryAbstractBase.prototype.remove = function (item) {
-                var key = item.key, value = this.get(key);
-                return (System.areEqual(value, item.value) && this.removeByKey(key)) ? 1 : 0;
-            };
-
-            Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
-                get: function () {
-                    throw new Error("Not implemented.");
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(DictionaryAbstractBase.prototype, "values", {
-                get: function () {
-                    throw new Error("Not implemented.");
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            DictionaryAbstractBase.prototype.addByKeyValue = function (key, value) {
-                var _ = this;
-                if (_.containsKey(key))
-                    throw new Error("Adding key/value when one already exists.");
-
-                _.set(key, value);
-            };
-
-            DictionaryAbstractBase.prototype.get = function (key) {
-                throw new Error("Not implemented.");
-            };
-
-            DictionaryAbstractBase.prototype.set = function (key, value) {
-                throw new Error("Not implemented.");
-            };
-
-            DictionaryAbstractBase.prototype.containsKey = function (key) {
-                var value = this.get(key);
-                return value !== undefined;
-            };
-
-            DictionaryAbstractBase.prototype.containsValue = function (value) {
-                var e = this.getEnumerator(), equal = System.areEqual;
-
-                while (e.moveNext()) {
-                    if (equal(e.current, value, true)) {
-                        e.dispose();
-                        return true;
-                    }
-                }
-                return false;
-            };
-
-            DictionaryAbstractBase.prototype.removeByKey = function (key) {
-                return this.set(key, undefined);
-            };
-
-            DictionaryAbstractBase.prototype.removeByValue = function (value) {
-                var _ = this, count = 0, equal = System.areEqual;
-                _.keys.forEach(function (key) {
-                    if (equal(_.get(key), value, true)) {
-                        _.removeByKey(key);
-                        ++count;
-                    }
-                });
-                return count;
-            };
-
-            DictionaryAbstractBase.prototype.importPairs = function (pairs) {
-                var _ = this;
-                return _.handleUpdate(function () {
-                    var changed = false;
-                    pairs.forEach(function (pair) {
-                        _.set(pair.key, pair.value);
-                        changed = true;
-                    });
-                    return changed;
-                });
-            };
-
-            DictionaryAbstractBase.prototype.getEnumerator = function () {
-                var _ = this;
-                var keys, len, i = 0;
-                return new Collections.EnumeratorBase(function () {
-                    keys = _.keys;
-                    len = keys.length;
-                }, function (yielder) {
-                    while (i < len) {
-                        var key = keys[i++], value = _.get(key);
-                        if (value !== undefined)
-                            return yielder.yieldReturn({ key: key, value: value });
-                    }
-
-                    return yielder.yieldBreak();
-                });
-            };
-            return DictionaryAbstractBase;
-        })();
-        Collections.DictionaryAbstractBase = DictionaryAbstractBase;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
-var System;
 (function (System) {
     (function (Collections) {
         "use strict";
@@ -743,81 +808,7 @@ var System;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));
-var System;
-(function (System) {
-    (function (Collections) {
-        var OrderedStringKeyDictionary = (function (_super) {
-            __extends(OrderedStringKeyDictionary, _super);
-            function OrderedStringKeyDictionary() {
-                _super.call(this);
-                this._order = [];
-            }
-            OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
-                return this._order.indexOf(key);
-            };
 
-            OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
-                return this.get(this._order[index]);
-            };
-
-            OrderedStringKeyDictionary.prototype.set = function (key, value, keepIndex) {
-                var _ = this, exists = _.indexOfKey(key) != -1;
-                if (!exists && (value !== undefined || keepIndex))
-                    _._order.push(key);
-                else if (exists && value === undefined && !keepIndex)
-                    Collections.ArrayUtility.remove(_._order, key);
-
-                return _super.prototype.set.call(this, key, value);
-            };
-
-            OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
-                var _ = this, order = _._order;
-                if (index < 0 || index >= order.length)
-                    throw new Error("IndexOutOfRange Exception.");
-
-                return _.set(order[index], value);
-            };
-
-            OrderedStringKeyDictionary.prototype.importValues = function (values) {
-                var _ = this;
-                return _.handleUpdate(function () {
-                    var changed = false;
-                    for (var i = 0; i < values.length; i++)
-                        if (_.setByIndex(i, values[i]))
-                            changed = true;
-                    return changed;
-                });
-            };
-
-            OrderedStringKeyDictionary.prototype.setValues = function () {
-                var values = [];
-                for (var _i = 0; _i < (arguments.length - 0); _i++) {
-                    values[_i] = arguments[_i + 0];
-                }
-                return this.importValues(values);
-            };
-
-            OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
-                return this.setByIndex(index, undefined);
-            };
-
-            Object.defineProperty(OrderedStringKeyDictionary.prototype, "keys", {
-                get: function () {
-                    var _ = this;
-                    return _._order.filter(function (key) {
-                        return _.containsKey(key);
-                    });
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return OrderedStringKeyDictionary;
-        })(Collections.StringKeyDictionary);
-        Collections.OrderedStringKeyDictionary = OrderedStringKeyDictionary;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
-var System;
 (function (System) {
     (function (Collections) {
         var StringKeyDictionary = (function (_super) {
@@ -928,69 +919,82 @@ var System;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));
-var System;
+
+
 (function (System) {
-    function dispose(obj) {
-        if (obj && typeof obj.dispose == System.Types.Function)
-            obj.dispose();
-    }
-    System.dispose = dispose;
+	(function (Collections) {
+		var OrderedStringKeyDictionary = (function (_super) {
+			__extends(OrderedStringKeyDictionary, _super);
+			function OrderedStringKeyDictionary() {
+				_super.call(this);
+				this._order = [];
+			}
+			OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
+				return this._order.indexOf(key);
+			};
 
-    function using(disposable, closure) {
-        try  {
-            return closure(disposable);
-        } finally {
-            dispose(disposable);
-        }
-    }
-    System.using = using;
+			OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
+				return this.get(this._order[index]);
+			};
 
-    var DisposableBase = (function () {
-        function DisposableBase(_finalizer) {
-            this._finalizer = _finalizer;
-            this._wasDisposed = false;
-        }
-        Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
-            get: function () {
-                return this._wasDisposed;
-            },
-            enumerable: true,
-            configurable: true
-        });
+			OrderedStringKeyDictionary.prototype.set = function (key, value, keepIndex) {
+				var _ = this, exists = _.indexOfKey(key) != -1;
+				if (!exists && (value !== undefined || keepIndex))
+					_._order.push(key);
+				else if (exists && value === undefined && !keepIndex)
+					Collections.ArrayUtility.remove(_._order, key);
 
-        DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
-            if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
-            if (disposed)
-                throw new Error(errorMessage);
+				return _super.prototype.set.call(this, key, value);
+			};
 
-            return true;
-        };
+			OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
+				var _ = this, order = _._order;
+				if (index < 0 || index >= order.length)
+					throw new Error("IndexOutOfRange Exception.");
 
-        DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
-            if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
-            return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
-        };
+				return _.set(order[index], value);
+			};
 
-        DisposableBase.prototype.dispose = function () {
-            var _ = this;
-            if (!_._wasDisposed) {
-                _._wasDisposed = true;
-                try  {
-                    _._onDispose();
-                } finally {
-                    if (_._finalizer)
-                        _._finalizer();
-                }
-            }
-        };
+			OrderedStringKeyDictionary.prototype.importValues = function (values) {
+				var _ = this;
+				return _.handleUpdate(function () {
+					var changed = false;
+					for (var i = 0; i < values.length; i++)
+						if (_.setByIndex(i, values[i]))
+							changed = true;
+					return changed;
+				});
+			};
 
-        DisposableBase.prototype._onDispose = function () {
-        };
-        return DisposableBase;
-    })();
-    System.DisposableBase = DisposableBase;
+			OrderedStringKeyDictionary.prototype.setValues = function () {
+				var values = [];
+				for (var _i = 0; _i < (arguments.length - 0); _i++) {
+					values[_i] = arguments[_i + 0];
+				}
+				return this.importValues(values);
+			};
+
+			OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
+				return this.setByIndex(index, undefined);
+			};
+
+			Object.defineProperty(OrderedStringKeyDictionary.prototype, "keys", {
+				get: function () {
+					var _ = this;
+					return _._order.filter(function (key) {
+						return _.containsKey(key);
+					});
+				},
+				enumerable: true,
+				configurable: true
+			});
+			return OrderedStringKeyDictionary;
+		})(Collections.StringKeyDictionary);
+		Collections.OrderedStringKeyDictionary = OrderedStringKeyDictionary;
+	})(System.Collections || (System.Collections = {}));
+	var Collections = System.Collections;
 })(System || (System = {}));
-var System;
+
 (function (System) {
     var AU = System.Collections.ArrayUtility;
 
@@ -1167,7 +1171,7 @@ var System;
     })(System.DisposableBase);
     System.EventDispatcher = EventDispatcher;
 })(System || (System = {}));
-var System;
+
 (function (System) {
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
@@ -1209,7 +1213,7 @@ var System;
     })(System.DisposableBase);
     System.Lazy = Lazy;
 })(System || (System = {}));
-var System;
+
 (function (System) {
     "use strict";
 
@@ -1305,4 +1309,3 @@ var System;
     }
     System.applyMixins = applyMixins;
 })(System || (System = {}));
-//# sourceMappingURL=System.js.map
