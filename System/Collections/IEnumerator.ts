@@ -26,7 +26,7 @@ module System.Collections {
 		private _current: T;
 		get current(): T { return this._current; }
 
-		yieldReturn(value:T): boolean {
+		yieldReturn(value: T): boolean {
 			this._current = value;
 			return true;
 		}
@@ -39,6 +39,19 @@ module System.Collections {
 
 	// IEnumerator State
 	enum EnumeratorState { Before, Running, After }
+
+	// Statics only...  No constructor...
+	export module Enumerator {
+		// Could be array, or IEnumerable...
+		export function from<T>(source: any): IEnumerator<T> {
+			if (source instanceof Array)
+				return new ArrayEnumerator<T>(source);
+			if (source["getEnumerator"])
+				return source.getEnumerator();
+
+			throw new Error("Unknown enumerable.");
+		}
+	}
 
 	// Naming this class EnumeratorBase to avoid collision with IE.
 	export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
@@ -93,7 +106,7 @@ module System.Collections {
 			}
 		}
 
-		_onDispose():void {
+		_onDispose(): void {
 			var _ = this, disposer = _.disposer;
 
 			_.initializer = null;
@@ -123,7 +136,7 @@ module System.Collections {
 		constructor(
 			sourceFactory: () => { source: { [index: number]: T }; pointer: number; length: number; step: number }) {
 
-			var source: { source: { [index: number]: T }; pointer: number; length: number; step:number };
+			var source: { source: { [index: number]: T }; pointer: number; length: number; step: number };
 			super(
 				() => {
 					source = sourceFactory();
@@ -161,9 +174,11 @@ module System.Collections {
 
 
 	export class ArrayEnumerator<T> extends IndexEnumerator<T> {
-		constructor(arrayFactory:()=>T[], start:number = 0, step:number = 1) {
+		constructor(arrayFactory: () => T[], start?: number, step?: number);
+		constructor(array: T[], start?: number, step?: number);
+		constructor(arrayOrFactory: any, start: number = 0, step: number = 1) {
 			super(() => {
-				var array = arrayFactory();
+				var array = arrayOrFactory instanceof Array ? arrayOrFactory : arrayOrFactory();
 				return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
 			});
 		}

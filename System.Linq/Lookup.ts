@@ -10,19 +10,19 @@ module System.Linq {
 
 	export interface ILookup<TKey, TElement> extends System.Collections.IEnumerable<IGrouping<TKey, TElement>> {
 		count: number;
-		get(key: TKey): System.Collections.IEnumerable<TElement>;
+		get(key: TKey): TElement[];
 		contains(key: TKey): boolean;
 	}
 
 	export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
 
-		constructor(private _dictionary:System.Collections.Dictionary<TKey,IEnumerable<TElement>>) { }
+		constructor(private _dictionary: System.Collections.Dictionary<TKey, TElement[]>) { }
 
 		get count():number {
 			return this._dictionary.count;
 		}
 
-		get(key: TKey): System.Collections.IEnumerable<TElement> {
+		get(key: TKey): TElement[] {
 			return this._dictionary.get(key);
 		}
 
@@ -30,11 +30,24 @@ module System.Linq {
 			return this._dictionary.containsKey(key);
 		}
 
-		getEnumerator(): System.Collections.IEnumerator<IGrouping<TKey, TElement>> {
-			return this.dictionary
-				.toEnumerable()
-				.select(
-				(kvp) => new Grouping(kvp.key, kvp.value));
+		getEnumerator(): System.Collections.IEnumerator<Grouping<TKey, TElement>> {
+
+			var _ = this;
+			var enumerator: System.Collections.IEnumerator<System.Collections.IKeyValuePair<TKey, TElement[]>>;
+
+			return new System.Collections.EnumeratorBase<Grouping<TKey, TElement>>(
+				() => enumerator = _._dictionary.getEnumerator(),
+				yielder => {
+
+					if (!enumerator.moveNext())
+						return false;
+
+					var current = enumerator.current;
+
+					return yielder.yieldReturn(new Grouping<TKey, TElement>(current.key, current.value));
+				},
+				() => enumerator.dispose()
+			);
 		}
 
 	}

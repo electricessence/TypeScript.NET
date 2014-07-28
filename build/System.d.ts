@@ -116,6 +116,9 @@ declare module System.Collections {
         yieldReturn(value: T): boolean;
         yieldBreak(): boolean;
     }
+    module Enumerator {
+        function from<T>(source: any): IEnumerator<T>;
+    }
     class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T> {
         private initializer;
         private tryGetNext;
@@ -140,6 +143,7 @@ declare module System.Collections {
     }
     class ArrayEnumerator<T> extends IndexEnumerator<T> {
         constructor(arrayFactory: () => T[], start?: number, step?: number);
+        constructor(array: T[], start?: number, step?: number);
     }
 }
 declare module System.Collections {

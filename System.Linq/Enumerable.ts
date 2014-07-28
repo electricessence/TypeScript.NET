@@ -272,6 +272,8 @@ module System.Linq {
 			});
 		}
 
+
+		// TODO Contemplating making this take both array and IEnumerable...
 		static forEach<T>(enumerable: System.Collections.IEnumerable<T>, action: (element: T, index?: number) => any): void {
 			var _ = enumerable;
 
@@ -454,10 +456,10 @@ module System.Linq {
 			return (!count || count < 0) // Out of bounds? Simply return a unfiltered enumerable.
 				? this.asEnumerable()
 				: this.doAction(
-				(element:T, index:number)
-					=> index < count
-					? EnumerableAction.Skip
-					: EnumerableAction.Return);
+					(element: T, index: number)
+						=> index < count
+						? EnumerableAction.Skip
+						: EnumerableAction.Return);
 		}
 
 		skipWhile(predicate: (element: T, index?: number) => boolean) {
@@ -739,6 +741,9 @@ module System.Linq {
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
+			if (selector.length < 2)
+				return new WhereSelectEnumerable(_, null, selector);
+
 			return new Enumerable<TResult>(() => {
 				var enumerator: System.Collections.IEnumerator<T>;
 				var index: number;
@@ -767,47 +772,90 @@ module System.Linq {
 		// Overload:function(collectionSelector<element>)
 		// Overload:function(collectionSelector<element,index>)
 		// Overload:function(collectionSelector<element>,resultSelector)
-		// Overload:function(collectionSelector<element,index>,resultSelector)
-		selectMany(collectionSelector, resultSelector?): Enumerable<T> {
-			var source = this;
-			collectionSelector = Utils.createLambda(collectionSelector);
-			if (resultSelector == null) resultSelector = function (a, b) { return b; }
-        resultSelector = Utils.createLambda(resultSelector);
+		// Overload:function(collectionSelector<element,index>,resultSelector)*/
 
-			return new Enumerable<T>(() => {
-				var enumerator;
-				var middleEnumerator = undefined;
-				var index = 0;
+		selectMany<TResult>(
+			collectionSelector: (element: T, index?: number) => System.Collections.IEnumerable<TResult>
+			): Enumerable<TResult>;
 
-				return new EnumeratorBase<T>(
-					() => { enumerator = source.getEnumerator(); },
+		selectMany<TResult>(
+			collectionSelector: (element: T, index?: number) => TResult[]
+			): Enumerable<TResult>;
+
+		selectMany<TElement, TResult>(
+			collectionSelector: (collection: T, index?: number) => System.Collections.IEnumerable<TElement>,
+			resultSelector?: (collection: T, element: TElement) => TResult
+			): Enumerable<TResult>;
+
+		selectMany<TElement, TResult>(
+			collectionSelector: (collection: T, index?: number) => TElement[],
+			resultSelector?: (collection: T, element: TElement) => TResult
+			): Enumerable<TResult>;
+
+		selectMany<TResult>(
+			collectionSelector: (element: T, index?: number) => any,
+			resultSelector?: (collection: any, middle: any) => TResult
+			): Enumerable<TResult> {
+			var _ = this;
+			if (!resultSelector)
+				resultSelector = (a, b) => b;
+
+			return new Enumerable<TResult>(() => {
+				var enumerator: System.Collections.IEnumerator<T>;
+				var middleEnumerator: System.Collections.IEnumerator<any>;
+				var index: number;
+
+				return new EnumeratorBase<TResult>(
 					() => {
-						if (middleEnumerator === undefined) {
-							if (!enumerator.moveNext()) return false;
-						}
+						enumerator = _.getEnumerator();
+						middleEnumerator = undefined;
+						index = 0;
+					},
+					yielder => {
+
+						// Just started, and nothing to enumerate? End.
+						if (middleEnumerator === undefined && !enumerator.moveNext())
+							return false;
+
+						// moveNext has been called at least once...
 						do {
-							if (middleEnumerator == null) {
+
+							// Initialize middle if there isn't one.
+							if (!middleEnumerator) {
 								var middleSeq = collectionSelector(enumerator.current, index++);
-								middleEnumerator = Enumerable.from(middleSeq).getEnumerator();
+
+								// Collection is null?  Skip it...
+								if (!middleSeq)
+									continue;
+
+								middleEnumerator = System.Collections.Enumerator.from(middleSeq);
 							}
-							if (middleEnumerator.moveNext()) {
-								return (<any>this).yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
-							}
-							Utils.dispose(middleEnumerator);
+
+							if (middleEnumerator.moveNext())
+								return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
+
+							// else no more in this middle?  Then clear and reset for next...
+
+							middleEnumerator.dispose();
 							middleEnumerator = null;
+
 						} while (enumerator.moveNext());
+
 						return false;
 					},
 					() => {
 						try {
-							Utils.dispose(enumerator);
+							enumerator.dispose();
+							enumerator = null;
 						}
 						finally {
-							Utils.dispose(middleEnumerator);
+							if (middleEnumerator)
+								middleEnumerator.dispose();
+							middleEnumerator = null;
 						}
 					});
 			});
-		}/**/
+		}
 
 		choose<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult> {
 
@@ -844,6 +892,9 @@ module System.Linq {
 		where(predicate: (value: T, index?: number) => boolean): Enumerable<T> {
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
+
+			if (predicate.length < 2)
+				return new WhereEnumerable(_, predicate);
 
 			return new Enumerable<T>(() => {
 				var enumerator: System.Collections.IEnumerator<T>;
@@ -1337,8 +1388,8 @@ module System.Linq {
 			});
 		}
 
-		    // multiple arguments
-    concat(){
+			// multiple arguments
+	concat(){
 			var source = this;
 
 			if (arguments.length == 1) {
@@ -1402,7 +1453,7 @@ module System.Linq {
 			}
 		}
 
-    insert(index, second) {
+	insert(index, second) {
 			var source = this;
 
 			return new Enumerable<T>(() => {
@@ -1630,8 +1681,8 @@ module System.Linq {
 								if (weight <= 0) return null; // ignore 0
 
 								totalWeight += weight;
-                            return { value: x, bound: totalWeight }
-                        })
+							return { value: x, bound: totalWeight }
+						})
 							.toArray();
 					},
 					() => {
@@ -1707,7 +1758,7 @@ module System.Linq {
 			if (resultSelector == null) {
 				hasResultSelector = false;
 				resultSelector = function (key, group) { return new Grouping(key, group); }
-        }
+		}
 			else {
 				hasResultSelector = true;
 				resultSelector = Utils.createLambda(resultSelector);

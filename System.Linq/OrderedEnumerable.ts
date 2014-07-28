@@ -11,85 +11,110 @@ module System.Linq {
 	export class OrderedEnumerable<T> extends Enumerable<T>
 	{
 
-		constructor(public source, public keySelector, public descending, public parent) {
+		constructor(
+			private source:System.Collections.IEnumerable<T>,
+			public keySelector:(value:T)=>any,
+			public descending:boolean,
+			public parent:OrderedEnumerable<T>) {
 			super(null);
 		}
 
-		create(keySelector, descending) {
-			return new OrderedEnumerable(this.source, keySelector, descending, this);
+		createOrderedEnumerable(keySelector:(value:T)=>any, descending:boolean):OrderedEnumerable<T> {
+			return new OrderedEnumerable<T>(this.source, keySelector, descending, this);
 		}
 
-		thenBy(keySelector) {
-			return this.create(keySelector, false);
+		thenBy(keySelector:(value:T)=>any): OrderedEnumerable<T> {
+			return this.createOrderedEnumerable(keySelector, false);
 		}
-		thenByDescending(keySelector) {
-			return this.create(keySelector, true);
+		thenByDescending(keySelector:(value:T)=>any): OrderedEnumerable<T> {
+			return this.createOrderedEnumerable(keySelector, true);
 		}
 		getEnumerator():System.Collections.EnumeratorBase<T> {
-			var self = this;
-			var buffer;
-			var indexes;
+			var _ = this;
+			var buffer:T[];
+			var indexes:number[];
 			var index = 0;
 
 			return new System.Collections.EnumeratorBase<T>(
 				() => {
 					buffer = [];
 					indexes = [];
-					self.source.forEach(function (item, index) {
+					Enumerable.forEach(_.source, (item, index) => {
 						buffer.push(item);
 						indexes.push(index);
 					});
-					var sortContext = SortContext.create(self, null);
-					sortContext.GenerateKeys(buffer);
+					var sortContext = SortContext.create(_);
+					sortContext.generateKeys(buffer);
 
-					indexes.sort(function (a, b) { return sortContext.compare(a, b); });
+					indexes.sort((a, b) => sortContext.compare(a, b));
 				},
 				yielder => {
 					return (index < indexes.length)
 						? yielder.yieldReturn(buffer[indexes[index++]])
 						: false;
 				},
-				Functions.Blank
+				() => {
+					if (buffer)
+						buffer.length = 0;
+					buffer = null;
+					if (indexes)
+						indexes.length = 0;
+					indexes = null;
+				}
 				);
+		}
+		_onDispose(): void {
+			super._onDispose();
+			this.source = null;
+			this.keySelector = null;
+			this.descending = null;
+			this.parent = null;
 		}
 	}
 
-	class SortContext {
+	class SortContext<T> {
 
-		keys;
+		keys:any[];
 
 		constructor(
-			public keySelector,
-			public descending,
-			public child) {
+			public keySelector:(value:T)=>any,
+			public descending:boolean,
+			public child: SortContext<T>) {
 			this.keys = null;
 		}
 
-		static create(orderedEnumerable, currentContext) {
-			var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
-			if (orderedEnumerable.parent != null) return SortContext.create(orderedEnumerable.parent, context);
+		static create<T>(orderedEnumerable: OrderedEnumerable<T>, currentContext: SortContext<T> = null): SortContext<T> {
+			var context:SortContext<T> = new SortContext<T>(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+			if (orderedEnumerable.parent)
+				return SortContext.create(orderedEnumerable.parent, context);
 			return context;
 		}
 
-		generateKeys(source) {
+		generateKeys(source): void {
+			var _ = this;
 			var len = source.length;
-			var keySelector = this.keySelector;
-			var keys = new Array(len);
-			for (var i = 0; i < len; i++) keys[i] = keySelector(source[i]);
-			this.keys = keys;
+			var keySelector:(value:T)=>any = _.keySelector;
+			var keys = new Array<any>(len);
+			for (var i = 0; i < len; ++i)
+				keys[i] = keySelector(source[i]);
+			_.keys = keys;
 
-			if (this.child != null) this.child.GenerateKeys(source);
+			if (_.child)
+				_.child.generateKeys(source);
 		}
 
-		compare(index1, index2) {
-			var comparison = System.compare(this.keys[index1], this.keys[index2]);
+		compare(index1, index2):number {
+			var _ = this, keys = _.keys;
+			var comparison = System.compare(keys[index1], keys[index2]);
 
 			if (comparison == 0) {
-				if (this.child != null) return this.child.compare(index1, index2);
-				return System.compare(index1, index2);
+				var child = _.child;
+				return child
+					? child.compare(index1, index2)
+					: System.compare(index1, index2);
 			}
 
-			return (this.descending) ? -comparison : comparison;
+			return _.descending ? -comparison : comparison;
 		}
 	}
 

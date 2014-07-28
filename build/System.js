@@ -608,6 +608,19 @@ var System;
             EnumeratorState[EnumeratorState["After"] = 2] = "After";
         })(EnumeratorState || (EnumeratorState = {}));
 
+        (function (Enumerator) {
+            function from(source) {
+                if (source instanceof Array)
+                    return new ArrayEnumerator(source);
+                if (source["getEnumerator"])
+                    return source.getEnumerator();
+
+                throw new Error("Unknown enumerable.");
+            }
+            Enumerator.from = from;
+        })(Collections.Enumerator || (Collections.Enumerator = {}));
+        var Enumerator = Collections.Enumerator;
+
         var EnumeratorBase = (function (_super) {
             __extends(EnumeratorBase, _super);
             function EnumeratorBase(initializer, tryGetNext, disposer) {
@@ -716,11 +729,11 @@ var System;
 
         var ArrayEnumerator = (function (_super) {
             __extends(ArrayEnumerator, _super);
-            function ArrayEnumerator(arrayFactory, start, step) {
+            function ArrayEnumerator(arrayOrFactory, start, step) {
                 if (typeof start === "undefined") { start = 0; }
                 if (typeof step === "undefined") { step = 1; }
                 _super.call(this, function () {
-                    var array = arrayFactory();
+                    var array = arrayOrFactory instanceof Array ? arrayOrFactory : arrayOrFactory();
                     return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
                 });
             }

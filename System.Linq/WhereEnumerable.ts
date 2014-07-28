@@ -8,48 +8,54 @@
 
 module System.Linq {
 
-	class WhereEnumerable<T> extends Enumerable<T> {
-		constructor(public prevSource, public prevPredicate) {
-			// predicate.length always <= 1
-		}
-		where(predicate) {
-			predicate = Utils.createLambda(predicate);
-
-			if (predicate.length <= 1) {
-				var prevPredicate = this.prevPredicate;
-				var composedPredicate = function (x) { return prevPredicate(x) && predicate(x); }
-            return new WhereEnumerable(this.prevSource, composedPredicate);
-			}
-			else {
-				// if predicate use index, can't compose
-				return Enumerable.prototype.where.call(this, predicate);
-			}
+	export class WhereEnumerable<T> extends Enumerable<T> {
+		constructor(
+			private prevSource:System.Collections.IEnumerable<T>,
+			private prevPredicate: (value: T, index?: number) => boolean  // predicate.length always <= 1
+			) {
+			super(null);
 		}
 
-		select(selector) {
-			selector = Utils.createLambda(selector);
+		where(predicate: (value: T, index?: number) => boolean): Enumerable<T> {
 
-			return (selector.length <= 1)
-				? new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector)
-				: Enumerable.prototype.select.call(this, selector);
+			if (predicate.length > 1)
+				return super.where(predicate);
+
+			var prevPredicate = this.prevPredicate;
+			var composedPredicate = x => prevPredicate(x) && predicate(x);
+			return new WhereEnumerable<T>(this.prevSource, composedPredicate);
 		}
 
-		getEnumerator() {
+		select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult> {
+
+			if (selector.length > 1)
+				return super.select<TResult>(selector);
+
+			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
+		}
+
+		getEnumerator():System.Collections.IEnumerator<T> {
 			var predicate = this.prevPredicate;
 			var source = this.prevSource;
 			var enumerator;
 
-			return new EnumeratorBase<T>(
+			return new System.Collections.EnumeratorBase<T>(
 				() => { enumerator = source.getEnumerator(); },
-				() => {
-					while (enumerator.moveNext()) {
-						if (predicate(enumerator.current)) {
-							return (<any>this).yieldReturn(enumerator.current);
-						}
-					}
+				yielder => {
+					while (enumerator.moveNext())
+						if (predicate(enumerator.current))
+							return yielder.yieldReturn(enumerator.current);
+
 					return false;
 				},
-				() => { Utils.dispose(enumerator); });
+				() => enumerator.dispose()
+				);
+		}
+
+		_onDispose(): void {
+			super._onDispose();
+			this.prevPredicate = null;
+			this.prevSource = null;
 		}
 	}
 
