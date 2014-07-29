@@ -1,30 +1,5 @@
 ﻿/// <reference path="System.d.ts" />
 declare module System.Linq {
-    class ArrayEnumerable<T> extends Enumerable<T> {
-        private _source;
-        constructor(source: T[]);
-        public _onDispose(): void;
-        public source : T[];
-        public toArray(): T[];
-        public asEnumerable(): ArrayEnumerable<T>;
-        public forEach(action: (element: T, index?: number) => boolean): void;
-        public forEach(action: (element: T, index?: number) => void): void;
-        public any(predicate?: (value: T, index?: number) => boolean): boolean;
-        public count(predicate?: (value: T, index?: number) => boolean): number;
-        public elementAt(index: number): T;
-        public elementAtOrDefault(index: number, defaultValue?: T): T;
-        public first(predicate?: (value: T, index?: number) => boolean): T;
-        public firstOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
-        public last(predicate?: (value: T, index?: number) => boolean): T;
-        public lastOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
-        public skip(count: number): Enumerable<T>;
-        public takeExceptLast(count?: number): Enumerable<T>;
-        public takeFromLast(count: number): Enumerable<T>;
-        public reverse(): Enumerable<T>;
-        public memoize(): ArrayEnumerable<T>;
-    }
-}
-declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
         Return = 1,
@@ -33,6 +8,7 @@ declare module System.Linq {
     class Enumerable<T> extends DisposableBase implements Collections.IEnumerable<T> {
         private enumeratorFactory;
         constructor(enumeratorFactory: () => Collections.IEnumerator<T>, finalizer?: () => void);
+        static fromArray<T>(array: T[]): ArrayEnumerable<T>;
         public getEnumerator(): Collections.IEnumerator<T>;
         public _onDispose(): void;
         static choice<T>(values: T[]): Enumerable<T>;
@@ -98,6 +74,31 @@ declare module System.Linq {
     }
 }
 declare module System.Linq {
+    class ArrayEnumerable<T> extends Enumerable<T> {
+        private _source;
+        constructor(source: T[]);
+        public _onDispose(): void;
+        public source : T[];
+        public toArray(): T[];
+        public asEnumerable(): ArrayEnumerable<T>;
+        public forEach(action: (element: T, index?: number) => boolean): void;
+        public forEach(action: (element: T, index?: number) => void): void;
+        public any(predicate?: (value: T, index?: number) => boolean): boolean;
+        public count(predicate?: (value: T, index?: number) => boolean): number;
+        public elementAt(index: number): T;
+        public elementAtOrDefault(index: number, defaultValue?: T): T;
+        public first(predicate?: (value: T, index?: number) => boolean): T;
+        public firstOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
+        public last(predicate?: (value: T, index?: number) => boolean): T;
+        public lastOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
+        public skip(count: number): Enumerable<T>;
+        public takeExceptLast(count?: number): Enumerable<T>;
+        public takeFromLast(count: number): Enumerable<T>;
+        public reverse(): Enumerable<T>;
+        public memoize(): ArrayEnumerable<T>;
+    }
+}
+declare module System.Linq {
     interface IGrouping<TKey, TElement> extends Collections.IEnumerable<TElement> {
         key: TKey;
     }
@@ -123,20 +124,6 @@ declare module System.Linq {
     }
 }
 declare module System.Linq {
-    class OrderedEnumerable<T> extends Enumerable<T> {
-        private source;
-        public keySelector: (value: T) => any;
-        public descending: boolean;
-        public parent: OrderedEnumerable<T>;
-        constructor(source: Collections.IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent: OrderedEnumerable<T>);
-        public createOrderedEnumerable(keySelector: (value: T) => any, descending: boolean): OrderedEnumerable<T>;
-        public thenBy(keySelector: (value: T) => any): OrderedEnumerable<T>;
-        public thenByDescending(keySelector: (value: T) => any): OrderedEnumerable<T>;
-        public getEnumerator(): Collections.EnumeratorBase<T>;
-        public _onDispose(): void;
-    }
-}
-declare module System.Linq {
     class WhereEnumerable<T> extends Enumerable<T> {
         private prevSource;
         private prevPredicate;
@@ -156,6 +143,20 @@ declare module System.Linq {
         public where(predicate: (value: TSelect, index?: number) => boolean): Enumerable<TSelect>;
         public select<TResult>(selector: (value: TSelect, index?: number) => TResult): Enumerable<TResult>;
         public getEnumerator(): Collections.IEnumerator<TSelect>;
+        public _onDispose(): void;
+    }
+}
+declare module System.Linq {
+    class OrderedEnumerable<T> extends Enumerable<T> {
+        private source;
+        public keySelector: (value: T) => any;
+        public descending: boolean;
+        public parent: OrderedEnumerable<T>;
+        constructor(source: Collections.IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent: OrderedEnumerable<T>);
+        public createOrderedEnumerable(keySelector: (value: T) => any, descending: boolean): OrderedEnumerable<T>;
+        public thenBy(keySelector: (value: T) => any): OrderedEnumerable<T>;
+        public thenByDescending(keySelector: (value: T) => any): OrderedEnumerable<T>;
+        public getEnumerator(): Collections.EnumeratorBase<T>;
         public _onDispose(): void;
     }
 }

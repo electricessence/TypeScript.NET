@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System", "System\System.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Linq", "System.Linq\System.Linq.csproj", "{5962EA16-6C20-455F-A07E-64D51C73EC4C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{846D4BC7-9E27-4653-A307-74FE6E3B99AD}"
+	ProjectSection(SolutionItems) = preProject
+		build\loadtest.html = build\loadtest.html
+		build\loadtest.min.html = build\loadtest.min.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

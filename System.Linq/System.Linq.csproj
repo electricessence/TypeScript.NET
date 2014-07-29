@@ -29,16 +29,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>51581</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:51581/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
@@ -47,7 +38,7 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptOutDir>..\build</TypeScriptOutDir>
     <TypeScriptOutFile>..\build\System.Linq.js</TypeScriptOutFile>
     <TypeScriptSourceRoot>..\System.Linq</TypeScriptSourceRoot>
@@ -57,20 +48,38 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptOutDir>..\build</TypeScriptOutDir>
     <TypeScriptOutFile>..\build\System.Linq.js</TypeScriptOutFile>
     <TypeScriptSourceRoot>..\System.Linq</TypeScriptSourceRoot>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="ArrayEnumerable.ts" />
     <TypeScriptCompile Include="Enumerable.ts" />
+    <TypeScriptCompile Include="ArrayEnumerable.ts" />
     <TypeScriptCompile Include="Grouping.ts" />
     <TypeScriptCompile Include="Lookup.ts" />
-    <TypeScriptCompile Include="OrderedEnumerable.ts" />
     <TypeScriptCompile Include="WhereEnumerable.ts" />
     <TypeScriptCompile Include="WhereSelectEnumerable.ts" />
+    <TypeScriptCompile Include="OrderedEnumerable.ts" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\build\System.Linq.js">
+      <Link>build\System.Linq.js</Link>
+    </Content>
+    <Content Include="..\build\System.Linq.min.js">
+      <Link>build\System.Linq.min.js</Link>
+      <DependentUpon>System.Linq.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\build\System.Linq.min.js.map">
+      <Link>build\System.Linq.min.js.map</Link>
+      <DependentUpon>System.Linq.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+  </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>

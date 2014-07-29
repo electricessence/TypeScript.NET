@@ -21,7 +21,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup>
-    <RootNamespace>TypeScript.NET</RootNamespace>
+    <RootNamespace>System</RootNamespace>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -29,16 +29,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>53211</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:53211/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
@@ -47,7 +38,7 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptOutDir>..\build</TypeScriptOutDir>
     <TypeScriptOutFile>..\build\System.js</TypeScriptOutFile>
     <TypeScriptSourceRoot>..\System</TypeScriptSourceRoot>
@@ -57,32 +48,52 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
-    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptOutDir>..\build</TypeScriptOutDir>
     <TypeScriptOutFile>..\build\System.js</TypeScriptOutFile>
     <TypeScriptSourceRoot>..\System</TypeScriptSourceRoot>
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="Collections\ArrayUtility.ts" />
-    <TypeScriptCompile Include="Collections\Dictionary.ts" />
-    <TypeScriptCompile Include="Collections\DictionaryAbstractBase.ts" />
-    <TypeScriptCompile Include="Collections\ICollection.ts" />
-    <TypeScriptCompile Include="Collections\IDictionary.ts" />
-    <TypeScriptCompile Include="Collections\IEnumerable.ts" />
-    <TypeScriptCompile Include="Collections\IEnumerator.ts" />
-    <TypeScriptCompile Include="Collections\IList.ts" />
-    <TypeScriptCompile Include="Collections\OrderedStringKeyDictionary.ts" />
-    <TypeScriptCompile Include="Collections\StringKeyDictionary.ts" />
+    <TypeScriptCompile Include="System.ts" />
     <TypeScriptCompile Include="IDisposable.ts" />
-    <TypeScriptCompile Include="EventDispatcher.ts" />
     <TypeScriptCompile Include="ICloneable.ts" />
     <TypeScriptCompile Include="IEquatable.ts" />
     <TypeScriptCompile Include="Lazy.ts" />
-    <TypeScriptCompile Include="System.ts" />
+    <TypeScriptCompile Include="Collections\ArrayUtility.ts" />
+    <TypeScriptCompile Include="EventDispatcher.ts" />
+    <TypeScriptCompile Include="Collections\IEnumerator.ts" />
+    <TypeScriptCompile Include="Collections\IEnumerable.ts" />
+    <TypeScriptCompile Include="Collections\ICollection.ts" />
+    <TypeScriptCompile Include="Collections\IList.ts" />
+    <TypeScriptCompile Include="Collections\IDictionary.ts" />
+    <TypeScriptCompile Include="Collections\Enumerator.ts" />
+    <TypeScriptCompile Include="Collections\DictionaryAbstractBase.ts" />
+    <TypeScriptCompile Include="Collections\Dictionary.ts" />
+    <TypeScriptCompile Include="Collections\StringKeyDictionary.ts" />
+    <TypeScriptCompile Include="Collections\OrderedStringKeyDictionary.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\build\System.js">
+      <Link>build\System.js</Link>
+    </Content>
+    <Content Include="..\build\System.min.js">
+      <Link>build\System.min.js</Link>
+      <DependentUpon>System.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\build\System.min.js.map">
+      <Link>build\System.min.js.map</Link>
+      <DependentUpon>System.min.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
