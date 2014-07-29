@@ -22,7 +22,7 @@ module System.Linq {
 				return super.where(predicate);
 
 			var prevPredicate = this.prevPredicate;
-			var composedPredicate = x => prevPredicate(x) && predicate(x);
+			var composedPredicate = (x:T) => prevPredicate(x) && predicate(x);
 			return new WhereEnumerable<T>(this.prevSource, composedPredicate);
 		}
 
@@ -37,7 +37,7 @@ module System.Linq {
 		getEnumerator():System.Collections.IEnumerator<T> {
 			var predicate = this.prevPredicate;
 			var source = this.prevSource;
-			var enumerator;
+			var enumerator:System.Collections.IEnumerator<T>;
 
 			return new System.Collections.EnumeratorBase<T>(
 				() => { enumerator = source.getEnumerator(); },

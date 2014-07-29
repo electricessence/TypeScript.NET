@@ -210,7 +210,7 @@ module System.Linq {
 			if (flags.indexOf("g") === -1) flags += "g";
 
 			return new Enumerable<RegExpExecArray>(() => {
-				var regex;
+				var regex:RegExp;
 				return new EnumeratorBase<RegExpExecArray>(
 					() => { regex = new RegExp(pattern, flags); },
 					yielder => {
@@ -928,7 +928,7 @@ module System.Linq {
 		}
 
 		ofType<TType>(type: any): Enumerable<TType> {
-			var typeName;
+			var typeName:string;
 			switch (type) {
 				case Number:
 					typeName = Types.Number;
@@ -2106,7 +2106,7 @@ module System.Linq {
 		catchError(handler: (e: Error) => void): Enumerable<T> {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 			return new Enumerable<T>(() => {
-				var enumerator;
+				var enumerator: System.Collections.IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() => {
@@ -2136,7 +2136,7 @@ module System.Linq {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
-				var enumerator;
+				var enumerator: System.Collections.IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() => {

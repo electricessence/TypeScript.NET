@@ -20,10 +20,10 @@ module System.Collections {
 		*/
 
 		get(index: number): T;
-		set(index: number, value: T);
+		set(index: number, value: T):boolean;
 
 		indexOf(item: T): number;
-		insert(index: number, value: T);
+		insert(index: number, value: T):void;
 
 		removeAt(index: number): void;
 

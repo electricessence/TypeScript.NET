@@ -82,7 +82,7 @@ declare module System.Collections.ArrayUtility {
 }
 declare module System {
     interface IEventDispatcher extends EventTarget, IDisposable {
-        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): any;
+        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
         dispatchEvent(event: Event): boolean;
         hasEventListener(type: string): boolean;
         removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
@@ -129,9 +129,9 @@ declare module System.Collections {
 declare module System.Collections {
     interface IList<T> extends ICollection<T> {
         get(index: number): T;
-        set(index: number, value: T): any;
+        set(index: number, value: T): boolean;
         indexOf(item: T): number;
-        insert(index: number, value: T): any;
+        insert(index: number, value: T): void;
         removeAt(index: number): void;
     }
 }
@@ -158,7 +158,7 @@ declare module System.Collections {
         importPairs(pairs: IKeyValuePair<TKey, TValue>[]): boolean;
     }
     interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<IStringKeyValuePair<TValue>> {
-        importMap(map: IMap<TValue>): any;
+        importMap(map: IMap<TValue>): boolean;
     }
     interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue> {
         indexOfKey(key: TKey): number;

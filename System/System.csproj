@@ -90,6 +90,12 @@
       <DependentUpon>System.min.js</DependentUpon>
     </Content>
   </ItemGroup>
+  <ItemGroup />
+  <!-- <Target Name="BeforeBuild">
+    <Message Text="Compiling TypeScript files to AMD" />
+    <Message Text="Executing tsc - -out $(TypeScriptOutFile)amd.js @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+    <Exec Command="tsc - -out $(TypeScriptOutFile)amd.js - -module AMD - -target ES5 - -removeComments @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />
+  </Target> -->
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
   <PropertyGroup>
     <PostBuildEvent>

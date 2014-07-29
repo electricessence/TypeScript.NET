@@ -72,29 +72,29 @@ module System.Linq {
 		}
 	}
 
-	class SortContext<T> {
+	class SortContext<T,TOrderBy> {
 
-		keys:any[];
+		keys: TOrderBy[];
 
 		constructor(
-			public keySelector:(value:T)=>any,
+			public keySelector: (value: T) => TOrderBy,
 			public descending:boolean,
-			public child: SortContext<T>) {
+			public child: SortContext<T, TOrderBy>) {
 			this.keys = null;
 		}
 
-		static create<T>(orderedEnumerable: OrderedEnumerable<T>, currentContext: SortContext<T> = null): SortContext<T> {
-			var context:SortContext<T> = new SortContext<T>(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+		static create<T, TOrderBy>(orderedEnumerable: OrderedEnumerable<T>, currentContext: SortContext<T, TOrderBy> = null): SortContext<T, TOrderBy> {
+			var context: SortContext<T, TOrderBy> = new SortContext<T, TOrderBy>(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
 			if (orderedEnumerable.parent)
 				return SortContext.create(orderedEnumerable.parent, context);
 			return context;
 		}
 
-		generateKeys(source): void {
+		generateKeys(source:T[]): void {
 			var _ = this;
 			var len = source.length;
-			var keySelector:(value:T)=>any = _.keySelector;
-			var keys = new Array<any>(len);
+			var keySelector: (value: T) => TOrderBy = _.keySelector;
+			var keys = new Array<TOrderBy>(len);
 			for (var i = 0; i < len; ++i)
 				keys[i] = keySelector(source[i]);
 			_.keys = keys;
@@ -103,7 +103,7 @@ module System.Linq {
 				_.child.generateKeys(source);
 		}
 
-		compare(index1, index2):number {
+		compare(index1:number, index2:number):number {
 			var _ = this, keys = _.keys;
 			var comparison = System.compare(keys[index1], keys[index2]);
 

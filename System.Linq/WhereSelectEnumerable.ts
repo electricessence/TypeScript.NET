@@ -32,7 +32,7 @@ module System.Linq {
 				return super.select(selector);
 
 			var prevSelector = this.prevSelector;
-			var composedSelector = x => selector(prevSelector(x));
+			var composedSelector = (x:T) => selector(prevSelector(x));
 			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, composedSelector);
 		}
 
@@ -40,7 +40,7 @@ module System.Linq {
 			var predicate = this.prevPredicate;
 			var selector = this.prevSelector;
 			var source = this.prevSource;
-			var enumerator;
+			var enumerator: System.Collections.IEnumerator<T>;
 
 			return new System.Collections.EnumeratorBase<TSelect>(
 				() => { enumerator = source.getEnumerator(); },

@@ -37,7 +37,7 @@ module System.Collections {
 
 
 	export interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<IStringKeyValuePair<TValue>> {
-		importMap(map: IMap<TValue>);
+		importMap(map: IMap<TValue>):boolean;
 	}
 
 	export interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue> {

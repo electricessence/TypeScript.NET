@@ -13,6 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{846D4BC7
 		build\loadtest.min.html = build\loadtest.min.html
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "amd", "amd", "{6AEB8896-3A49-4136-8F1C-9067CD72EB69}"
+	ProjectSection(SolutionItems) = preProject
+		build\amd\System.js = build\amd\System.js
+		build\amd\System.Linq.js = build\amd\System.Linq.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6AEB8896-3A49-4136-8F1C-9067CD72EB69} = {846D4BC7-9E27-4653-A307-74FE6E3B99AD}
 	EndGlobalSection
 EndGlobal

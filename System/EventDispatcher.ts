@@ -11,7 +11,7 @@ module System {
 
 	export interface IEventDispatcher extends EventTarget, IDisposable {
 
-		addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number);//, useWeakReference?: boolean);
+		addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number):void;//, useWeakReference?: boolean);
 		dispatchEvent(event: Event): boolean;
 		hasEventListener(type: string): boolean;
 		removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
@@ -69,7 +69,7 @@ module System {
 
 		private _listeners: EventDispatcherEntry[];
 
-		addEventListener(type: string, listener: EventListener, useCapture: boolean = false, priority: number= 0)//, useWeakReference: boolean= false)
+		addEventListener(type: string, listener: EventListener, useCapture: boolean = false, priority: number= 0): void//, useWeakReference: boolean= false)
 		{
 			var l:EventDispatcherEntry[] = this._listeners;
 			if (!l)
@@ -81,13 +81,13 @@ module System {
 		}
 
 		// Allow for simple add once mechanism.
-		registerEventListener(type: string, listener: EventListener, useCapture: boolean = false, priority: number= 0)//, useWeakReference: boolean= false)
+		registerEventListener(type: string, listener: EventListener, useCapture: boolean = false, priority: number= 0): void//, useWeakReference: boolean= false)
 		{
 			if (!this.hasEventListener(type, listener, useCapture))
 				this.addEventListener(type, listener, useCapture, priority);
 		}
 
-		hasEventListener(type: string, listener?: EventListener, useCapture: boolean = false) {
+		hasEventListener(type: string, listener?: EventListener, useCapture: boolean = false):boolean {
 			var l = this._listeners;
 			return l && l.some(
 				(value: EventDispatcherEntry): boolean =>
