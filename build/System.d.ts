@@ -78,7 +78,11 @@ declare module System.Collections.ArrayUtility {
     function removeIndex<T>(array: T[], index: number): boolean;
     function remove<T>(array: T[], value: T, max?: number): number;
     function repeat<T>(element: T, count: number): T[];
-    function sum(source: number[]): number;
+    function sum(source: number[], ignoreNaN?: boolean): number;
+    function average(source: number[], ignoreNaN?: boolean): number;
+    function product(source: number[], ignoreNaN?: boolean): number;
+    function min(source: number[], ignoreNaN?: boolean): number;
+    function max(source: number[], ignoreNaN?: boolean): number;
 }
 declare module System {
     interface IEventDispatcher extends EventTarget, IDisposable {
