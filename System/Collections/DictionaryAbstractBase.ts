@@ -9,6 +9,7 @@ module System.Collections {
 	{
 		// This allows for batch updates in order to improve the efficiency of responsive systems.
 		private _updateRecursion: number = 0;
+		get isUpdating(): boolean { return this._updateRecursion != 0; }
 
 		// Could implement an event dispatcher pattern here easily...
 		public onValueChanged: (key: TKey, value: TValue, old: TValue) => void;

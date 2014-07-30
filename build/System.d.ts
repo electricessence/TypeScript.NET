@@ -208,6 +208,7 @@ declare module System.Collections {
 declare module System.Collections {
     class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue> {
         private _updateRecursion;
+        public isUpdating : boolean;
         public onValueChanged: (key: TKey, value: TValue, old: TValue) => void;
         public _onValueUpdate(key: TKey, value: TValue, old: TValue): void;
         public onUpdated: () => void;

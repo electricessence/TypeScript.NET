@@ -831,6 +831,14 @@ var System;
             function DictionaryAbstractBase() {
                 this._updateRecursion = 0;
             }
+            Object.defineProperty(DictionaryAbstractBase.prototype, "isUpdating", {
+                get: function () {
+                    return this._updateRecursion != 0;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
             DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
                 if (!System.areEqual(value, old, true)) {
                     var _ = this;
