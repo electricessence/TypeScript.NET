@@ -1,18 +1,4 @@
-﻿declare module System.Linq {
-    interface ILookup<TKey, TElement> extends Collections.IEnumerable<IGrouping<TKey, TElement>> {
-        count: number;
-        get(key: TKey): TElement[];
-        contains(key: TKey): boolean;
-    }
-    class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
-        private _dictionary;
-        constructor(_dictionary: Collections.Dictionary<TKey, TElement[]>);
-        public count : number;
-        public get(key: TKey): TElement[];
-        public contains(key: TKey): boolean;
-        public getEnumerator(): Collections.IEnumerator<Grouping<TKey, TElement>>;
-    }
-}
+﻿/// <reference path="System.d.ts" />
 declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
@@ -42,52 +28,50 @@ declare module System.Linq {
         static defer<T>(enumerableFactory: () => Collections.IEnumerable<T>): Enumerable<T>;
         static forEach<T>(enumerable: Collections.IEnumerable<T>, action: (element: T, index?: number) => any): void;
         public assertIsNotDisposed(errorMessage?: string): boolean;
-        public forEach(action: (element: T, index?: number) => boolean): void;
-        public forEach(action: (element: T, index?: number) => void): void;
-        public toArray(predicate?: (value: T, index?: number) => boolean): T[];
+        public forEach(action: Predicate<T>): void;
+        public forEach(action: Action<T>): void;
+        public toArray(predicate?: Predicate<T>): T[];
         public asEnumerable(): Enumerable<T>;
-        public doAction(action: (element: T, index?: number) => EnumerableAction): Enumerable<T>;
-        public doAction(action: (element: T, index?: number) => number): Enumerable<T>;
-        public doAction(action: (element: T, index?: number) => boolean): Enumerable<T>;
-        public doAction(action: (element: T, index?: number) => void): Enumerable<T>;
+        public doAction(action: Selector<T, EnumerableAction>): Enumerable<T>;
+        public doAction(action: Selector<T, number>): Enumerable<T>;
+        public doAction(action: Predicate<T>): Enumerable<T>;
+        public doAction(action: Action<T>): Enumerable<T>;
         public force(): void;
         public skip(count: number): Enumerable<T>;
-        public skipWhile(predicate: (element: T, index?: number) => boolean): Enumerable<T>;
+        public skipWhile(predicate: Predicate<T>): Enumerable<T>;
         public take(count: number): Enumerable<T>;
         public select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>;
-        public selectMany<TResult>(collectionSelector: (element: T, index?: number) => Collections.IEnumerable<TResult>): Enumerable<TResult>;
-        public selectMany<TResult>(collectionSelector: (element: T, index?: number) => TResult[]): Enumerable<TResult>;
-        public selectMany<TElement, TResult>(collectionSelector: (collection: T, index?: number) => Collections.IEnumerable<TElement>, resultSelector?: (collection: T, element: TElement) => TResult): Enumerable<TResult>;
-        public selectMany<TElement, TResult>(collectionSelector: (collection: T, index?: number) => TElement[], resultSelector?: (collection: T, element: TElement) => TResult): Enumerable<TResult>;
-        public choose<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>;
-        public where(predicate: (value: T, index?: number) => boolean): Enumerable<T>;
-        public ofType<TType>(type: any): Enumerable<TType>;
-        public except(second: Collections.IEnumerable<T>, compareSelector?: (value: T) => T): Enumerable<T>;
+        public selectMany<TResult>(collectionSelector: Selector<T, Collections.IEnumerable<TResult>>): Enumerable<TResult>;
+        public selectMany<TResult>(collectionSelector: Selector<T, TResult[]>): Enumerable<TResult>;
+        public selectMany<TElement, TResult>(collectionSelector: Selector<T, Collections.IEnumerable<TElement>>, resultSelector?: (collection: T, element: TElement) => TResult): Enumerable<TResult>;
+        public selectMany<TElement, TResult>(collectionSelector: Selector<T, TElement[]>, resultSelector?: (collection: T, element: TElement) => TResult): Enumerable<TResult>;
+        public choose<TResult>(selector: Selector<T, TResult>): Enumerable<TResult>;
+        public where(predicate: Predicate<T>): Enumerable<T>;
+        public ofType<TType>(type: new() => TType): Enumerable<TType>;
+        public except<TCompare>(second: Collections.IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
         public distinct(compareSelector?: (value: T) => T): Enumerable<T>;
-        public distinctUntilChanged(compareSelector?: (value: T) => T): Enumerable<T>;
+        public distinctUntilChanged<TCompare>(compareSelector?: Selector<T, TCompare>): Enumerable<T>;
         public reverse(): Enumerable<T>;
         public shuffle(): Enumerable<T>;
-        public count(predicate?: (value: T, index?: number) => boolean): number;
-        public all(predicate: (value: T) => boolean): boolean;
-        public any(predicate?: (value: T) => boolean): boolean;
+        public count(predicate?: Predicate<T>): number;
+        public all(predicate: Predicate<T>): boolean;
+        public any(predicate?: Predicate<T>): boolean;
         public isEmpty(): boolean;
-        public contains(value: T, compareSelector?: (value: T) => T): boolean;
+        public contains<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): boolean;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;
-        public first(predicate?: (value: T, index?: number) => boolean): T;
-        public firstOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
-        public last(predicate?: (value: T, index?: number) => boolean): T;
-        public lastOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
-        public single(predicate?: (value: T, index?: number) => boolean): T;
-        public singleOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
+        public first(predicate?: Predicate<T>): T;
+        public firstOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
+        public last(predicate?: Predicate<T>): T;
+        public lastOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
+        public single(predicate?: Predicate<T>): T;
+        public singleOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
         public share(): Enumerable<T>;
         public memoize(): Enumerable<T>;
         public catchError(handler: (e: Error) => void): Enumerable<T>;
         public finallyAction(action: () => void): Enumerable<T>;
     }
-}
-declare module System.Linq {
     class ArrayEnumerable<T> extends Enumerable<T> {
         private _source;
         constructor(source: T[]);
@@ -97,32 +81,39 @@ declare module System.Linq {
         public asEnumerable(): ArrayEnumerable<T>;
         public forEach(action: (element: T, index?: number) => boolean): void;
         public forEach(action: (element: T, index?: number) => void): void;
-        public any(predicate?: (value: T, index?: number) => boolean): boolean;
-        public count(predicate?: (value: T, index?: number) => boolean): number;
+        public any(predicate?: Predicate<T>): boolean;
+        public count(predicate?: Predicate<T>): number;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;
-        public first(predicate?: (value: T, index?: number) => boolean): T;
-        public firstOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
-        public last(predicate?: (value: T, index?: number) => boolean): T;
-        public lastOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue?: T): T;
+        public first(predicate?: Predicate<T>): T;
+        public firstOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
+        public last(predicate?: Predicate<T>): T;
+        public lastOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
         public skip(count: number): Enumerable<T>;
         public takeExceptLast(count?: number): Enumerable<T>;
         public takeFromLast(count: number): Enumerable<T>;
         public reverse(): Enumerable<T>;
         public memoize(): ArrayEnumerable<T>;
     }
-}
-declare module System.Linq {
-    interface IGrouping<TKey, TElement> extends Collections.IEnumerable<TElement> {
-        key: TKey;
+    class WhereEnumerable<T> extends Enumerable<T> {
+        private prevSource;
+        private prevPredicate;
+        constructor(prevSource: Collections.IEnumerable<T>, prevPredicate: Predicate<T>);
+        public where(predicate: Predicate<T>): Enumerable<T>;
+        public select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>;
+        public getEnumerator(): Collections.IEnumerator<T>;
+        public _onDispose(): void;
     }
-    class Grouping<TKey, TElement> extends ArrayEnumerable<TElement> implements IGrouping<TKey, TElement> {
-        private _groupKey;
-        constructor(_groupKey: TKey, elements: TElement[]);
-        public key : TKey;
+    class WhereSelectEnumerable<T, TSelect> extends Enumerable<TSelect> {
+        private prevSource;
+        private prevPredicate;
+        private prevSelector;
+        constructor(prevSource: Collections.IEnumerable<T>, prevPredicate: Predicate<T>, prevSelector: (value: T, index?: number) => TSelect);
+        public where(predicate: (value: TSelect, index?: number) => boolean): Enumerable<TSelect>;
+        public select<TResult>(selector: (value: TSelect, index?: number) => TResult): Enumerable<TResult>;
+        public getEnumerator(): Collections.IEnumerator<TSelect>;
+        public _onDispose(): void;
     }
-}
-declare module System.Linq {
     class OrderedEnumerable<T> extends Enumerable<T> {
         private source;
         public keySelector: (value: T) => any;
@@ -135,27 +126,25 @@ declare module System.Linq {
         public getEnumerator(): Collections.EnumeratorBase<T>;
         public _onDispose(): void;
     }
-}
-declare module System.Linq {
-    class WhereEnumerable<T> extends Enumerable<T> {
-        private prevSource;
-        private prevPredicate;
-        constructor(prevSource: Collections.IEnumerable<T>, prevPredicate: (value: T, index?: number) => boolean);
-        public where(predicate: (value: T, index?: number) => boolean): Enumerable<T>;
-        public select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>;
-        public getEnumerator(): Collections.IEnumerator<T>;
-        public _onDispose(): void;
+    interface ILookup<TKey, TElement> extends Collections.IEnumerable<IGrouping<TKey, TElement>> {
+        count: number;
+        get(key: TKey): TElement[];
+        contains(key: TKey): boolean;
     }
-}
-declare module System.Linq {
-    class WhereSelectEnumerable<T, TSelect> extends Enumerable<TSelect> {
-        private prevSource;
-        private prevPredicate;
-        private prevSelector;
-        constructor(prevSource: Collections.IEnumerable<T>, prevPredicate: (value: T, index?: number) => boolean, prevSelector: (value: T, index?: number) => TSelect);
-        public where(predicate: (value: TSelect, index?: number) => boolean): Enumerable<TSelect>;
-        public select<TResult>(selector: (value: TSelect, index?: number) => TResult): Enumerable<TResult>;
-        public getEnumerator(): Collections.IEnumerator<TSelect>;
-        public _onDispose(): void;
+    class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
+        private _dictionary;
+        constructor(_dictionary: Collections.Dictionary<TKey, TElement[]>);
+        public count : number;
+        public get(key: TKey): TElement[];
+        public contains(key: TKey): boolean;
+        public getEnumerator(): Collections.IEnumerator<Grouping<TKey, TElement>>;
+    }
+    interface IGrouping<TKey, TElement> extends Collections.IEnumerable<TElement> {
+        key: TKey;
+    }
+    class Grouping<TKey, TElement> extends ArrayEnumerable<TElement> implements IGrouping<TKey, TElement> {
+        private _groupKey;
+        constructor(_groupKey: TKey, elements: TElement[]);
+        public key : TKey;
     }
 }

@@ -1,13 +1,14 @@
 ﻿///<reference path="../build/System.d.ts"/>
-///<reference path="Lookup.ts"/>
-///<reference path="Grouping.ts"/>
-
 
 /*
  * @author electricessence / https://github.com/electricessence/
  * Original: http://linqjs.codeplex.com/
  * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
+
+import Predicate = System.Predicate;
+import Selector = System.Selector;
+import Action = System.Action;
 
 module System.Linq {
 
@@ -301,8 +302,8 @@ module System.Linq {
 			return super.assertIsNotDisposed(errorMessage);
 		}
 
-		forEach(action: (element: T, index?: number) => boolean): void;
-		forEach(action: (element: T, index?: number) => void): void;
+		forEach(action: Predicate<T>): void;
+		forEach(action: Action<T>): void;
 		forEach(action: (element: T, index?: number) => any): void {
 
 			var _ = this;
@@ -317,7 +318,7 @@ module System.Linq {
 		}
 
 		// #region Conversion Methods
-		toArray(predicate?: (value: T, index?: number) => boolean): T[] {
+		toArray(predicate?: Predicate<T>): T[] {
 			var result: T[] = [];
 
 			if (predicate) return this.where(predicate).toArray();
@@ -407,10 +408,10 @@ module System.Linq {
 		// If the action explicitly returns false or 0 (EnumerationAction.Break), the enumeration will complete.
 		// If it returns a 2 (EnumerationAction.Skip) it will move on to the next item.
 		// This also automatically handles disposing the enumerator.
-		doAction(action: (element: T, index?: number) => EnumerableAction): Enumerable<T>;
-		doAction(action: (element: T, index?: number) => number): Enumerable<T>;
-		doAction(action: (element: T, index?: number) => boolean): Enumerable<T>;
-		doAction(action: (element: T, index?: number) => void): Enumerable<T>;
+		doAction(action: Selector<T, EnumerableAction>): Enumerable<T>;
+		doAction(action: Selector<T, number>): Enumerable<T>;
+		doAction(action: Predicate<T>): Enumerable<T>;
+		doAction(action: Action<T>): Enumerable<T>;
 		doAction(action: (element: T, index?: number) => any): Enumerable<T> {
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
@@ -469,7 +470,7 @@ module System.Linq {
 						: EnumerableAction.Return);
 		}
 
-		skipWhile(predicate: (element: T, index?: number) => boolean) {
+		skipWhile(predicate: Predicate<T>) {
 
 			this.assertIsNotDisposed();
 
@@ -782,25 +783,25 @@ module System.Linq {
 		// Overload:function(collectionSelector<element,index>,resultSelector)*/
 
 		selectMany<TResult>(
-			collectionSelector: (element: T, index?: number) => System.Collections.IEnumerable<TResult>
+			collectionSelector: Selector<T,System.Collections.IEnumerable<TResult>>
 			): Enumerable<TResult>;
 
 		selectMany<TResult>(
-			collectionSelector: (element: T, index?: number) => TResult[]
+			collectionSelector: Selector<T,TResult[]>
 			): Enumerable<TResult>;
 
 		selectMany<TElement, TResult>(
-			collectionSelector: (collection: T, index?: number) => System.Collections.IEnumerable<TElement>,
+			collectionSelector: Selector<T,System.Collections.IEnumerable<TElement>>,
 			resultSelector?: (collection: T, element: TElement) => TResult
 			): Enumerable<TResult>;
 
 		selectMany<TElement, TResult>(
-			collectionSelector: (collection: T, index?: number) => TElement[],
+			collectionSelector: Selector<T,TElement[]>,
 			resultSelector?: (collection: T, element: TElement) => TResult
 			): Enumerable<TResult>;
 
 		selectMany<TResult>(
-			collectionSelector: (element: T, index?: number) => any,
+			collectionSelector: Selector<T,any>,
 			resultSelector?: (collection: any, middle: any) => TResult
 			): Enumerable<TResult> {
 			var _ = this;
@@ -864,7 +865,7 @@ module System.Linq {
 			});
 		}
 
-		choose<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult> {
+		choose<TResult>(selector: Selector<T,TResult>): Enumerable<TResult> {
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
@@ -896,7 +897,7 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		where(predicate: (value: T, index?: number) => boolean): Enumerable<T> {
+		where(predicate: Predicate<T>): Enumerable<T> {
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
@@ -930,9 +931,10 @@ module System.Linq {
 
 		}
 
+		ofType<TType>(type: { new (): TType }): Enumerable<TType>
 		ofType<TType>(type: any): Enumerable<TType> {
 			var typeName:string;
-			switch (type) {
+			switch (<any>type) {
 				case Number:
 					typeName = Types.Number;
 					break;
@@ -954,7 +956,7 @@ module System.Linq {
 				: this.where(x=> { return typeof x === typeName; }));
 		}
 
-		except(second: System.Collections.IEnumerable<T>, compareSelector?: (value: T) => T): Enumerable<T> {
+		except<TCompare>(second: System.Collections.IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T> {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
@@ -993,13 +995,13 @@ module System.Linq {
 		}
 
 		// [0,0,0,1,1,1,2,2,2,0,0,0] results in [0,1,2,0];
-		distinctUntilChanged(compareSelector?: (value: T) => T): Enumerable<T> {
+		distinctUntilChanged<TCompare>(compareSelector?: Selector<T,TCompare>): Enumerable<T> {
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
 				var enumerator: System.Collections.IEnumerator<T>;
-				var compareKey: T;
+				var compareKey: TCompare;
 				var initial: boolean = true;
 
 				return new EnumeratorBase<T>(
@@ -1077,7 +1079,7 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		count(predicate?: (value: T, index?: number) => boolean): number {
+		count(predicate?: Predicate<T>): number {
 
 			var _ = this;
 			_.assertIsNotDisposed();
@@ -1097,7 +1099,7 @@ module System.Linq {
 			return count;
 		}
 
-		all(predicate: (value: T) => boolean): boolean {
+		all(predicate: Predicate<T>): boolean {
 			var result = true;
 			this.forEach(x => {
 				if (!predicate(x)) {
@@ -1108,7 +1110,7 @@ module System.Linq {
 			return result;
 		}
 
-		any(predicate?: (value: T) => boolean): boolean {
+		any(predicate?: Predicate<T>): boolean {
 			var result = false;
 
 			// Splitting the forEach up this way reduces iterative processing.
@@ -1132,9 +1134,9 @@ module System.Linq {
 			return !this.any();
 		}
 
-		contains(value: T, compareSelector?: (value: T) => T): boolean {
+		contains<TCompare>(value: T, compareSelector?: Selector<T,TCompare>): boolean {
 			return compareSelector
-				? this.any(v=> compareSelector(v) === value)
+				? this.any(v=> compareSelector(v) === compareSelector(value))
 				: this.any(v=> v === value);
 		}
 
@@ -1935,7 +1937,7 @@ module System.Linq {
 			return (!found) ? defaultValue : value;
 		}
 
-		first(predicate?: (value: T, index?: number) => boolean): T {
+		first(predicate?: Predicate<T>): T {
 			var _ = this;
 			_.assertIsNotDisposed();
 
@@ -1953,7 +1955,7 @@ module System.Linq {
 			return value;
 		}
 
-		firstOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue: T = null): T {
+		firstOrDefault(predicate: Predicate<T>, defaultValue: T = null): T {
 			var _ = this;
 			_.assertIsNotDisposed();
 
@@ -1969,7 +1971,7 @@ module System.Linq {
 			return (!found) ? defaultValue : value;
 		}
 
-		last(predicate?: (value: T, index?: number) => boolean): T {
+		last(predicate?: Predicate<T>): T {
 			var _ = this;
 			_.assertIsNotDisposed();
 
@@ -1986,7 +1988,7 @@ module System.Linq {
 			return value;
 		}
 
-		lastOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue: T = null): T {
+		lastOrDefault(predicate: Predicate<T>, defaultValue: T = null): T {
 			var _ = this;
 			_.assertIsNotDisposed();
 
@@ -2001,7 +2003,7 @@ module System.Linq {
 			return (!found) ? defaultValue : value;
 		}
 
-		single(predicate?: (value: T, index?: number) => boolean): T {
+		single(predicate?: Predicate<T>): T {
 			var _ = this;
 			_.assertIsNotDisposed();
 
@@ -2020,7 +2022,7 @@ module System.Linq {
 			return value;
 		}
 
-		singleOrDefault(predicate: (value: T, index?: number) => boolean, defaultValue: T = null): T {
+		singleOrDefault(predicate: Predicate<T>, defaultValue: T = null): T {
 
 			var _ = this;
 			_.assertIsNotDisposed();
@@ -2166,6 +2168,536 @@ module System.Linq {
 		// #endregion
 	}
 
+	// #region Supporting Classes
+	// The following classes have to be inside the same module definition since they reference eachother.
+
+	export class ArrayEnumerable<T> extends Enumerable<T> {
+
+		private _source: T[]
+
+		constructor(source: T[])
+		{
+			var _ = this;
+			_._source = source;
+			super(() =>
+			{
+				_.assertIsNotDisposed();
+				return new System.Collections.ArrayEnumerator<T>(() =>
+				{
+					_.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
+
+					return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
+				});
+			});
+		}
+
+		_onDispose(): void
+		{
+			super._onDispose
+				this._source = null;
+		}
+
+		get source(): T[] { return this._source; }
+
+		toArray(): T[]
+		{
+			return this.source ? this.source.slice() : [];
+		}
+
+		asEnumerable(): ArrayEnumerable<T>
+		{
+			return new ArrayEnumerable<T>(this._source);
+		}
+
+		// Optimize forEach so that subsequent usage is optimized.
+		forEach(action: (element: T, index?: number) => boolean): void;
+		forEach(action: (element: T, index?: number) => void): void;
+		forEach(action: (element: T, index?: number) => any): void
+		{
+
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source = _._source;
+			if (source)
+			{
+
+				// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+				for (var i = 0; i < source.length; ++i)
+				{
+					// _.assertIsNotDisposed(); // Assertion here is unncessary since we already have a reference to the source array.
+					if (action(source[i], i) === false)
+						break;
+				}
+			}
+		}
+
+		// These methods should ALWAYS check for array length before attempting anything.
+
+		any(predicate?: Predicate<T>): boolean
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = _._source, len: number = source ? source.length : 0;
+			return len && (!predicate || super.any(predicate));
+		}
+
+		count(predicate?: Predicate<T>): number
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = _._source, len: number = source ? source.length : 0;
+			return len && (predicate ? super.count(predicate) : len);
+		}
+
+		elementAt(index: number): T
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = this._source;
+			return (index < source.length && index >= 0)
+				? source[index]
+				: super.elementAt(index);
+		}
+
+		elementAtOrDefault(index: number, defaultValue: T = null): T
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = this._source;
+			return (index < source.length && index >= 0)
+				? source[index]
+				: defaultValue;
+		}
+
+		first(predicate?: Predicate<T>): T
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = this._source;
+			return (source && source.length && !predicate)
+				? source[0]
+				: super.first(predicate);
+		}
+
+		firstOrDefault(predicate: Predicate<T>, defaultValue: T= null): T
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = this._source;
+			return (source && source.length)
+				? (predicate ? super.firstOrDefault(predicate, defaultValue) : source[0])
+				: defaultValue;
+		}
+
+		last(predicate?: Predicate<T>): T
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = this._source, len: number = source.length;
+			return (len && !predicate)
+				? source[len - 1]
+				: super.last(predicate);
+		}
+
+		lastOrDefault(predicate: Predicate<T>, defaultValue: T= null): T
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = this._source, len: number = source.length;
+			return len
+				? (predicate ? super.firstOrDefault(predicate, defaultValue) : source[len - 1])
+				: defaultValue;
+		}
+
+		skip(count: number): Enumerable<T>
+		{
+
+			var _ = this;
+
+			return (!count || count < 0) // Out of bounds? Simply return a unfiltered enumerable.
+				? _.asEnumerable()
+				: new Enumerable<T>(
+					() => new System.Collections.ArrayEnumerator<T>(
+						() => _._source, count));
+		}
+
+		takeExceptLast(count: number = 1): Enumerable<T>
+		{
+			var _ = this, len = _._source ? _._source.length : 0;
+			return _.take(len - count);
+		}
+
+		takeFromLast(count: number): Enumerable<T>
+		{
+			var _ = this, len = _._source ? _._source.length : 0;
+			return _.skip(len - count);
+		}
+
+		reverse(): Enumerable<T>
+		{
+			var _ = this;
+
+			return new Enumerable<T>(
+				() => new System.Collections.ArrayEnumerator<T>(
+					() => _._source, _._source ? (_._source.length - 1) : 0, -1));
+		}
+
+		memoize(): ArrayEnumerable<T>
+		{
+			return new ArrayEnumerable<T>(this._source);
+		}
+
+		/*sequenceEqual(second, compareSelector) {
+			if ((second instanceof ArrayEnumerable || second instanceof Array)
+				&& compareSelector == null
+				&& Enumerable.from(second).count() != this.count()) {
+				return false;
+			}
+
+			return Enumerable.prototype.sequenceEqual.apply(this, arguments);
+		}
+
+		toJoinedString(separator, selector) {
+			var source = this._source;
+			if (selector != null || !(source instanceof Array)) {
+				return Enumerable.prototype.toJoinedString.apply(this, arguments);
+			}
+
+			if (separator == null) separator = "";
+			return source.join(separator);
+		}*/
+
+	}
+
+
+	export class WhereEnumerable<T> extends Enumerable<T> {
+		constructor(
+			private prevSource: System.Collections.IEnumerable<T>,
+			private prevPredicate: Predicate<T>  // predicate.length always <= 1
+			)
+		{
+			super(null);
+		}
+
+		where(predicate: Predicate<T>): Enumerable<T>
+		{
+
+			if (predicate.length > 1)
+				return super.where(predicate);
+
+			var prevPredicate = this.prevPredicate;
+			var composedPredicate = (x: T) => prevPredicate(x) && predicate(x);
+			return new WhereEnumerable<T>(this.prevSource, composedPredicate);
+		}
+
+		select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>
+		{
+
+			if (selector.length > 1)
+				return super.select<TResult>(selector);
+
+			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
+		}
+
+		getEnumerator(): System.Collections.IEnumerator<T>
+		{
+			var predicate = this.prevPredicate;
+			var source = this.prevSource;
+			var enumerator: System.Collections.IEnumerator<T>;
+
+			return new System.Collections.EnumeratorBase<T>(
+				() => { enumerator = source.getEnumerator(); },
+				yielder =>
+				{
+					while (enumerator.moveNext())
+						if (predicate(enumerator.current))
+							return yielder.yieldReturn(enumerator.current);
+
+					return false;
+				},
+				() => enumerator.dispose()
+				);
+		}
+
+		_onDispose(): void
+		{
+			super._onDispose();
+			this.prevPredicate = null;
+			this.prevSource = null;
+		}
+	}
+
+
+	export class WhereSelectEnumerable<T, TSelect> extends Enumerable<TSelect> {
+		constructor(
+			private prevSource: System.Collections.IEnumerable<T>,
+			private prevPredicate: Predicate<T>,  // predicate.length always <= 1
+			private prevSelector: (value: T, index?: number) => TSelect // selector.length always <= 1
+			)
+		{
+			super(null);
+		}
+
+		where(predicate: (value: TSelect, index?: number) => boolean): Enumerable<TSelect>
+		{
+			if (predicate.length > 1)
+				return super.where(predicate);
+
+			return new WhereEnumerable<TSelect>(this, predicate);
+		}
+
+		select<TResult>(selector: (value: TSelect, index?: number) => TResult): Enumerable<TResult>
+		{
+
+			if (selector.length > 1)
+				// if selector use index, can't compose
+				return super.select(selector);
+
+			var prevSelector = this.prevSelector;
+			var composedSelector = (x: T) => selector(prevSelector(x));
+			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, composedSelector);
+		}
+
+		getEnumerator(): System.Collections.IEnumerator<TSelect>
+		{
+			var predicate = this.prevPredicate;
+			var selector = this.prevSelector;
+			var source = this.prevSource;
+			var enumerator: System.Collections.IEnumerator<T>;
+
+			return new System.Collections.EnumeratorBase<TSelect>(
+				() => { enumerator = source.getEnumerator(); },
+				yielder =>
+				{
+					while (enumerator.moveNext())
+					{
+						if (predicate == null || predicate(enumerator.current))
+						{
+							return yielder.yieldReturn(selector(enumerator.current));
+						}
+					}
+					return false;
+				},
+				() => enumerator.dispose()
+				);
+		}
+
+		_onDispose(): void
+		{
+			super._onDispose();
+			this.prevPredicate = null;
+			this.prevSource = null;
+			this.prevSelector = null;
+		}
+	}
+
+
+	export class OrderedEnumerable<T> extends Enumerable<T>
+	{
+
+		constructor(
+			private source: System.Collections.IEnumerable<T>,
+			public keySelector: (value: T) => any,
+			public descending: boolean,
+			public parent: OrderedEnumerable<T>)
+		{
+			super(null);
+		}
+
+		createOrderedEnumerable(keySelector: (value: T) => any, descending: boolean): OrderedEnumerable<T>
+		{
+			return new OrderedEnumerable<T>(this.source, keySelector, descending, this);
+		}
+
+		thenBy(keySelector: (value: T) => any): OrderedEnumerable<T>
+		{
+			return this.createOrderedEnumerable(keySelector, false);
+		}
+		thenByDescending(keySelector: (value: T) => any): OrderedEnumerable<T>
+		{
+			return this.createOrderedEnumerable(keySelector, true);
+		}
+		getEnumerator(): System.Collections.EnumeratorBase<T>
+		{
+			var _ = this;
+			var buffer: T[];
+			var indexes: number[];
+			var index = 0;
+
+			return new System.Collections.EnumeratorBase<T>(
+				() =>
+				{
+					buffer = [];
+					indexes = [];
+					Enumerable.forEach(_.source, (item, index) =>
+					{
+						buffer.push(item);
+						indexes.push(index);
+					});
+					var sortContext = SortContext.create(_);
+					sortContext.generateKeys(buffer);
+
+					indexes.sort((a, b) => sortContext.compare(a, b));
+				},
+				yielder =>
+				{
+					return (index < indexes.length)
+						? yielder.yieldReturn(buffer[indexes[index++]])
+						: false;
+				},
+				() =>
+				{
+					if (buffer)
+						buffer.length = 0;
+					buffer = null;
+					if (indexes)
+						indexes.length = 0;
+					indexes = null;
+				}
+				);
+		}
+		_onDispose(): void
+		{
+			super._onDispose();
+			this.source = null;
+			this.keySelector = null;
+			this.descending = null;
+			this.parent = null;
+		}
+	}
+
+	class SortContext<T, TOrderBy> {
+
+		keys: TOrderBy[];
+
+		constructor(
+			public keySelector: (value: T) => TOrderBy,
+			public descending: boolean,
+			public child: SortContext<T, TOrderBy>)
+		{
+			this.keys = null;
+		}
+
+		static create<T, TOrderBy>(orderedEnumerable: OrderedEnumerable<T>, currentContext: SortContext<T, TOrderBy> = null): SortContext<T, TOrderBy>
+		{
+			var context: SortContext<T, TOrderBy> = new SortContext<T, TOrderBy>(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+			if (orderedEnumerable.parent)
+				return SortContext.create(orderedEnumerable.parent, context);
+			return context;
+		}
+
+		generateKeys(source: T[]): void
+		{
+			var _ = this;
+			var len = source.length;
+			var keySelector: (value: T) => TOrderBy = _.keySelector;
+			var keys = new Array<TOrderBy>(len);
+			for (var i = 0; i < len; ++i)
+				keys[i] = keySelector(source[i]);
+			_.keys = keys;
+
+			if (_.child)
+				_.child.generateKeys(source);
+		}
+
+		compare(index1: number, index2: number): number
+		{
+			var _ = this, keys = _.keys;
+			var comparison = System.compare(keys[index1], keys[index2]);
+
+			if (comparison == 0)
+			{
+				var child = _.child;
+				return child
+					? child.compare(index1, index2)
+					: System.compare(index1, index2);
+			}
+
+			return _.descending ? -comparison : comparison;
+		}
+	}
+
+
+	export interface ILookup<TKey, TElement> extends System.Collections.IEnumerable<IGrouping<TKey, TElement>>
+	{
+		count: number;
+		get(key: TKey): TElement[];
+		contains(key: TKey): boolean;
+	}
+
+	export class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
+
+		constructor(private _dictionary: System.Collections.Dictionary<TKey, TElement[]>) { }
+
+		get count(): number
+		{
+			return this._dictionary.count;
+		}
+
+		get(key: TKey): TElement[]
+		{
+			return this._dictionary.get(key);
+		}
+
+		contains(key: TKey): boolean
+		{
+			return this._dictionary.containsKey(key);
+		}
+
+		getEnumerator(): System.Collections.IEnumerator<Grouping<TKey, TElement>>
+		{
+
+			var _ = this;
+			var enumerator: System.Collections.IEnumerator<System.Collections.IKeyValuePair<TKey, TElement[]>>;
+
+			return new System.Collections.EnumeratorBase<Grouping<TKey, TElement>>(
+				() => enumerator = _._dictionary.getEnumerator(),
+				yielder =>
+				{
+
+					if (!enumerator.moveNext())
+						return false;
+
+					var current = enumerator.current;
+
+					return yielder.yieldReturn(new Grouping<TKey, TElement>(current.key, current.value));
+				},
+				() => enumerator.dispose()
+				);
+		}
+
+	}
+
+
+	export interface IGrouping<TKey, TElement> extends System.Collections.IEnumerable<TElement>
+	{
+		key: TKey;
+	}
+
+	export class Grouping<TKey, TElement> extends ArrayEnumerable<TElement> implements IGrouping<TKey, TElement>
+	{
+
+		constructor(private _groupKey: TKey, elements: TElement[])
+		{
+			super(elements);
+		}
+
+		get key(): TKey
+		{
+			return this._groupKey;
+		}
+	}
+
+	// #endregion
 
 }
 

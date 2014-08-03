@@ -8,10 +8,10 @@ module System {
 	"use strict";
 
 	export var Functions = {
-		Identity: function <T>(x: T): T { return x; },
-		True: function (): boolean { return true; },
-		False: function (): boolean { return false; },
-		Blank: function (): void { }
+		Identity: <T>(x: T) => { return x; },
+		True: () => true,
+		False: () => false,
+		Blank: () => { }
 	};
 
 	// const Type
@@ -20,10 +20,33 @@ module System {
 		Number: typeof 0,
 		String: typeof "",
 		Object: typeof {},
-		Null:typeof null,
+		Null: typeof null,
 		Undefined: typeof undefined,
 		Function: typeof Functions.Blank
 	};
+
+	// #region Function Signatures.
+	export interface Action<T>
+	{
+		(object: T, index?: number): void;
+	}
+
+	export interface Predicate<T>
+	{
+		(object: T, index?:number): boolean;
+	}
+
+	export interface Comparison<T>
+	{
+		(a: T, b :T): number;
+	}
+
+	export interface Selector<TSource, TResult>
+	{
+		(source: TSource, index?:number): TResult;
+	}
+	// #endregion
+
 
 	export function isEqualToNaN(n: any): boolean {
 		return typeof n === Types.Number && isNaN(n);

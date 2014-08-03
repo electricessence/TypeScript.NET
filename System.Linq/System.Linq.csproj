@@ -58,12 +58,6 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Enumerable.ts" />
-    <TypeScriptCompile Include="ArrayEnumerable.ts" />
-    <TypeScriptCompile Include="Grouping.ts" />
-    <TypeScriptCompile Include="Lookup.ts" />
-    <TypeScriptCompile Include="WhereEnumerable.ts" />
-    <TypeScriptCompile Include="WhereSelectEnumerable.ts" />
-    <TypeScriptCompile Include="OrderedEnumerable.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\build\System.Linq.js">

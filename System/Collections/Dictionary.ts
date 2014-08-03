@@ -95,7 +95,7 @@ module System.Collections {
 		private _entries = new EntryList<TKey, TValue>();
 		private _buckets: IMap<HashEntry<TKey, TValue>[]> = {};
 
-		constructor(private compareSelector: <Tv, Tk>(value: Tv) => Tk = Functions.Identity) {
+		constructor(private compareSelector: Selector<TKey,any> = Functions.Identity) {
 			super();
 		}
 

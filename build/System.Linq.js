@@ -1,50 +1,4 @@
-﻿var System;
-(function (System) {
-    (function (Linq) {
-        var Lookup = (function () {
-            function Lookup(_dictionary) {
-                this._dictionary = _dictionary;
-            }
-            Object.defineProperty(Lookup.prototype, "count", {
-                get: function () {
-                    return this._dictionary.count;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Lookup.prototype.get = function (key) {
-                return this._dictionary.get(key);
-            };
-
-            Lookup.prototype.contains = function (key) {
-                return this._dictionary.containsKey(key);
-            };
-
-            Lookup.prototype.getEnumerator = function () {
-                var _ = this;
-                var enumerator;
-
-                return new System.Collections.EnumeratorBase(function () {
-                    return enumerator = _._dictionary.getEnumerator();
-                }, function (yielder) {
-                    if (!enumerator.moveNext())
-                        return false;
-
-                    var current = enumerator.current;
-
-                    return yielder.yieldReturn(new Linq.Grouping(current.key, current.value));
-                }, function () {
-                    return enumerator.dispose();
-                });
-            };
-            return Lookup;
-        })();
-        Linq.Lookup = Lookup;
-    })(System.Linq || (System.Linq = {}));
-    var Linq = System.Linq;
-})(System || (System = {}));
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -78,7 +32,7 @@ var System;
                 this.enumeratorFactory = enumeratorFactory;
             }
             Enumerable.fromArray = function (array) {
-                return new Linq.ArrayEnumerable(array);
+                return new ArrayEnumerable(array);
             };
 
             Enumerable.prototype.getEnumerator = function () {
@@ -412,7 +366,7 @@ var System;
                 var _ = this, disposed = !_.assertIsNotDisposed();
 
                 if (selector.length < 2)
-                    return new Linq.WhereSelectEnumerable(_, null, selector);
+                    return new WhereSelectEnumerable(_, null, selector);
 
                 return new Enumerable(function () {
                     var enumerator;
@@ -520,7 +474,7 @@ var System;
                 var _ = this, disposed = !_.assertIsNotDisposed();
 
                 if (predicate.length < 2)
-                    return new Linq.WhereEnumerable(_, predicate);
+                    return new WhereEnumerable(_, predicate);
 
                 return new Enumerable(function () {
                     var enumerator;
@@ -743,7 +697,7 @@ var System;
 
             Enumerable.prototype.contains = function (value, compareSelector) {
                 return compareSelector ? this.any(function (v) {
-                    return compareSelector(v) === value;
+                    return compareSelector(v) === compareSelector(value);
                 }) : this.any(function (v) {
                     return v === value;
                 });
@@ -1034,12 +988,7 @@ var System;
             return Enumerable;
         })(System.DisposableBase);
         Linq.Enumerable = Enumerable;
-    })(System.Linq || (System.Linq = {}));
-    var Linq = System.Linq;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Linq) {
+
         var ArrayEnumerable = (function (_super) {
             __extends(ArrayEnumerable, _super);
             function ArrayEnumerable(source) {
@@ -1158,7 +1107,7 @@ var System;
             ArrayEnumerable.prototype.skip = function (count) {
                 var _ = this;
 
-                return (!count || count < 0) ? _.asEnumerable() : new Linq.Enumerable(function () {
+                return (!count || count < 0) ? _.asEnumerable() : new Enumerable(function () {
                     return new System.Collections.ArrayEnumerator(function () {
                         return _._source;
                     }, count);
@@ -1179,7 +1128,7 @@ var System;
             ArrayEnumerable.prototype.reverse = function () {
                 var _ = this;
 
-                return new Linq.Enumerable(function () {
+                return new Enumerable(function () {
                     return new System.Collections.ArrayEnumerator(function () {
                         return _._source;
                     }, _._source ? (_._source.length - 1) : 0, -1);
@@ -1190,36 +1139,117 @@ var System;
                 return new ArrayEnumerable(this._source);
             };
             return ArrayEnumerable;
-        })(Linq.Enumerable);
+        })(Enumerable);
         Linq.ArrayEnumerable = ArrayEnumerable;
-    })(System.Linq || (System.Linq = {}));
-    var Linq = System.Linq;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Linq) {
-        var Grouping = (function (_super) {
-            __extends(Grouping, _super);
-            function Grouping(_groupKey, elements) {
-                _super.call(this, elements);
-                this._groupKey = _groupKey;
+
+        var WhereEnumerable = (function (_super) {
+            __extends(WhereEnumerable, _super);
+            function WhereEnumerable(prevSource, prevPredicate) {
+                _super.call(this, null);
+                this.prevSource = prevSource;
+                this.prevPredicate = prevPredicate;
             }
-            Object.defineProperty(Grouping.prototype, "key", {
-                get: function () {
-                    return this._groupKey;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return Grouping;
-        })(Linq.ArrayEnumerable);
-        Linq.Grouping = Grouping;
-    })(System.Linq || (System.Linq = {}));
-    var Linq = System.Linq;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Linq) {
+            WhereEnumerable.prototype.where = function (predicate) {
+                if (predicate.length > 1)
+                    return _super.prototype.where.call(this, predicate);
+
+                var prevPredicate = this.prevPredicate;
+                var composedPredicate = function (x) {
+                    return prevPredicate(x) && predicate(x);
+                };
+                return new WhereEnumerable(this.prevSource, composedPredicate);
+            };
+
+            WhereEnumerable.prototype.select = function (selector) {
+                if (selector.length > 1)
+                    return _super.prototype.select.call(this, selector);
+
+                return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
+            };
+
+            WhereEnumerable.prototype.getEnumerator = function () {
+                var predicate = this.prevPredicate;
+                var source = this.prevSource;
+                var enumerator;
+
+                return new System.Collections.EnumeratorBase(function () {
+                    enumerator = source.getEnumerator();
+                }, function (yielder) {
+                    while (enumerator.moveNext())
+                        if (predicate(enumerator.current))
+                            return yielder.yieldReturn(enumerator.current);
+
+                    return false;
+                }, function () {
+                    return enumerator.dispose();
+                });
+            };
+
+            WhereEnumerable.prototype._onDispose = function () {
+                _super.prototype._onDispose.call(this);
+                this.prevPredicate = null;
+                this.prevSource = null;
+            };
+            return WhereEnumerable;
+        })(Enumerable);
+        Linq.WhereEnumerable = WhereEnumerable;
+
+        var WhereSelectEnumerable = (function (_super) {
+            __extends(WhereSelectEnumerable, _super);
+            function WhereSelectEnumerable(prevSource, prevPredicate, prevSelector) {
+                _super.call(this, null);
+                this.prevSource = prevSource;
+                this.prevPredicate = prevPredicate;
+                this.prevSelector = prevSelector;
+            }
+            WhereSelectEnumerable.prototype.where = function (predicate) {
+                if (predicate.length > 1)
+                    return _super.prototype.where.call(this, predicate);
+
+                return new WhereEnumerable(this, predicate);
+            };
+
+            WhereSelectEnumerable.prototype.select = function (selector) {
+                if (selector.length > 1)
+                    return _super.prototype.select.call(this, selector);
+
+                var prevSelector = this.prevSelector;
+                var composedSelector = function (x) {
+                    return selector(prevSelector(x));
+                };
+                return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, composedSelector);
+            };
+
+            WhereSelectEnumerable.prototype.getEnumerator = function () {
+                var predicate = this.prevPredicate;
+                var selector = this.prevSelector;
+                var source = this.prevSource;
+                var enumerator;
+
+                return new System.Collections.EnumeratorBase(function () {
+                    enumerator = source.getEnumerator();
+                }, function (yielder) {
+                    while (enumerator.moveNext()) {
+                        if (predicate == null || predicate(enumerator.current)) {
+                            return yielder.yieldReturn(selector(enumerator.current));
+                        }
+                    }
+                    return false;
+                }, function () {
+                    return enumerator.dispose();
+                });
+            };
+
+            WhereSelectEnumerable.prototype._onDispose = function () {
+                _super.prototype._onDispose.call(this);
+                this.prevPredicate = null;
+                this.prevSource = null;
+                this.prevSelector = null;
+            };
+            return WhereSelectEnumerable;
+        })(Enumerable);
+        Linq.WhereSelectEnumerable = WhereSelectEnumerable;
+
         var OrderedEnumerable = (function (_super) {
             __extends(OrderedEnumerable, _super);
             function OrderedEnumerable(source, keySelector, descending, parent) {
@@ -1248,7 +1278,7 @@ var System;
                 return new System.Collections.EnumeratorBase(function () {
                     buffer = [];
                     indexes = [];
-                    Linq.Enumerable.forEach(_.source, function (item, index) {
+                    Enumerable.forEach(_.source, function (item, index) {
                         buffer.push(item);
                         indexes.push(index);
                     });
@@ -1277,7 +1307,7 @@ var System;
                 this.parent = null;
             };
             return OrderedEnumerable;
-        })(Linq.Enumerable);
+        })(Enumerable);
         Linq.OrderedEnumerable = OrderedEnumerable;
 
         var SortContext = (function () {
@@ -1321,124 +1351,64 @@ var System;
             };
             return SortContext;
         })();
-    })(System.Linq || (System.Linq = {}));
-    var Linq = System.Linq;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Linq) {
-        var WhereEnumerable = (function (_super) {
-            __extends(WhereEnumerable, _super);
-            function WhereEnumerable(prevSource, prevPredicate) {
-                _super.call(this, null);
-                this.prevSource = prevSource;
-                this.prevPredicate = prevPredicate;
+
+        var Lookup = (function () {
+            function Lookup(_dictionary) {
+                this._dictionary = _dictionary;
             }
-            WhereEnumerable.prototype.where = function (predicate) {
-                if (predicate.length > 1)
-                    return _super.prototype.where.call(this, predicate);
+            Object.defineProperty(Lookup.prototype, "count", {
+                get: function () {
+                    return this._dictionary.count;
+                },
+                enumerable: true,
+                configurable: true
+            });
 
-                var prevPredicate = this.prevPredicate;
-                var composedPredicate = function (x) {
-                    return prevPredicate(x) && predicate(x);
-                };
-                return new WhereEnumerable(this.prevSource, composedPredicate);
+            Lookup.prototype.get = function (key) {
+                return this._dictionary.get(key);
             };
 
-            WhereEnumerable.prototype.select = function (selector) {
-                if (selector.length > 1)
-                    return _super.prototype.select.call(this, selector);
-
-                return new Linq.WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
+            Lookup.prototype.contains = function (key) {
+                return this._dictionary.containsKey(key);
             };
 
-            WhereEnumerable.prototype.getEnumerator = function () {
-                var predicate = this.prevPredicate;
-                var source = this.prevSource;
+            Lookup.prototype.getEnumerator = function () {
+                var _ = this;
                 var enumerator;
 
                 return new System.Collections.EnumeratorBase(function () {
-                    enumerator = source.getEnumerator();
+                    return enumerator = _._dictionary.getEnumerator();
                 }, function (yielder) {
-                    while (enumerator.moveNext())
-                        if (predicate(enumerator.current))
-                            return yielder.yieldReturn(enumerator.current);
+                    if (!enumerator.moveNext())
+                        return false;
 
-                    return false;
+                    var current = enumerator.current;
+
+                    return yielder.yieldReturn(new Grouping(current.key, current.value));
                 }, function () {
                     return enumerator.dispose();
                 });
             };
+            return Lookup;
+        })();
+        Linq.Lookup = Lookup;
 
-            WhereEnumerable.prototype._onDispose = function () {
-                _super.prototype._onDispose.call(this);
-                this.prevPredicate = null;
-                this.prevSource = null;
-            };
-            return WhereEnumerable;
-        })(Linq.Enumerable);
-        Linq.WhereEnumerable = WhereEnumerable;
-    })(System.Linq || (System.Linq = {}));
-    var Linq = System.Linq;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Linq) {
-        var WhereSelectEnumerable = (function (_super) {
-            __extends(WhereSelectEnumerable, _super);
-            function WhereSelectEnumerable(prevSource, prevPredicate, prevSelector) {
-                _super.call(this, null);
-                this.prevSource = prevSource;
-                this.prevPredicate = prevPredicate;
-                this.prevSelector = prevSelector;
+        var Grouping = (function (_super) {
+            __extends(Grouping, _super);
+            function Grouping(_groupKey, elements) {
+                _super.call(this, elements);
+                this._groupKey = _groupKey;
             }
-            WhereSelectEnumerable.prototype.where = function (predicate) {
-                if (predicate.length > 1)
-                    return _super.prototype.where.call(this, predicate);
-
-                return new Linq.WhereEnumerable(this, predicate);
-            };
-
-            WhereSelectEnumerable.prototype.select = function (selector) {
-                if (selector.length > 1)
-                    return _super.prototype.select.call(this, selector);
-
-                var prevSelector = this.prevSelector;
-                var composedSelector = function (x) {
-                    return selector(prevSelector(x));
-                };
-                return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, composedSelector);
-            };
-
-            WhereSelectEnumerable.prototype.getEnumerator = function () {
-                var predicate = this.prevPredicate;
-                var selector = this.prevSelector;
-                var source = this.prevSource;
-                var enumerator;
-
-                return new System.Collections.EnumeratorBase(function () {
-                    enumerator = source.getEnumerator();
-                }, function (yielder) {
-                    while (enumerator.moveNext()) {
-                        if (predicate == null || predicate(enumerator.current)) {
-                            return yielder.yieldReturn(selector(enumerator.current));
-                        }
-                    }
-                    return false;
-                }, function () {
-                    return enumerator.dispose();
-                });
-            };
-
-            WhereSelectEnumerable.prototype._onDispose = function () {
-                _super.prototype._onDispose.call(this);
-                this.prevPredicate = null;
-                this.prevSource = null;
-                this.prevSelector = null;
-            };
-            return WhereSelectEnumerable;
-        })(Linq.Enumerable);
-        Linq.WhereSelectEnumerable = WhereSelectEnumerable;
+            Object.defineProperty(Grouping.prototype, "key", {
+                get: function () {
+                    return this._groupKey;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Grouping;
+        })(ArrayEnumerable);
+        Linq.Grouping = Grouping;
     })(System.Linq || (System.Linq = {}));
     var Linq = System.Linq;
 })(System || (System = {}));
