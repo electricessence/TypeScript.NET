@@ -1,4 +1,6 @@
-﻿module System.Collections.ArrayUtility
+﻿///<reference path="../System.ts"/>
+
+module System.Collections.ArrayUtility
 {
 
 	export function copy<T>(array: T[]): T[] { return array ? array.slice() : array }

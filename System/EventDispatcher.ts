@@ -1,4 +1,6 @@
-﻿///<reference path="IDisposable.ts"/>
+﻿///<reference path="System.ts"/>
+///<reference path="IDisposable.ts"/>
+///<reference path="Collections/ArrayUtility.ts"/>
 
 /*
  * @author electricessence / https://github.com/electricessence/

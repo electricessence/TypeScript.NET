@@ -1,4 +1,7 @@
 ﻿///<reference path="../build/System.d.ts"/>
+///<reference path="Lookup.ts"/>
+///<reference path="Grouping.ts"/>
+
 
 /*
  * @author electricessence / https://github.com/electricessence/

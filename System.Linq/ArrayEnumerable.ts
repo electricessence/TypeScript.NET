@@ -1,4 +1,5 @@
 ﻿///<reference path="../build/System.d.ts"/>
+///<reference path="Enumerable.ts"/>
 
 /*
  * @author electricessence / https://github.com/electricessence/

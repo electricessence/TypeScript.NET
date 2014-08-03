@@ -1,4 +1,18 @@
-﻿/// <reference path="System.d.ts" />
+﻿declare module System.Linq {
+    interface ILookup<TKey, TElement> extends Collections.IEnumerable<IGrouping<TKey, TElement>> {
+        count: number;
+        get(key: TKey): TElement[];
+        contains(key: TKey): boolean;
+    }
+    class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
+        private _dictionary;
+        constructor(_dictionary: Collections.Dictionary<TKey, TElement[]>);
+        public count : number;
+        public get(key: TKey): TElement[];
+        public contains(key: TKey): boolean;
+        public getEnumerator(): Collections.IEnumerator<Grouping<TKey, TElement>>;
+    }
+}
 declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
@@ -109,18 +123,17 @@ declare module System.Linq {
     }
 }
 declare module System.Linq {
-    interface ILookup<TKey, TElement> extends Collections.IEnumerable<IGrouping<TKey, TElement>> {
-        count: number;
-        get(key: TKey): TElement[];
-        contains(key: TKey): boolean;
-    }
-    class Lookup<TKey, TElement> implements ILookup<TKey, TElement> {
-        private _dictionary;
-        constructor(_dictionary: Collections.Dictionary<TKey, TElement[]>);
-        public count : number;
-        public get(key: TKey): TElement[];
-        public contains(key: TKey): boolean;
-        public getEnumerator(): Collections.IEnumerator<Grouping<TKey, TElement>>;
+    class OrderedEnumerable<T> extends Enumerable<T> {
+        private source;
+        public keySelector: (value: T) => any;
+        public descending: boolean;
+        public parent: OrderedEnumerable<T>;
+        constructor(source: Collections.IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent: OrderedEnumerable<T>);
+        public createOrderedEnumerable(keySelector: (value: T) => any, descending: boolean): OrderedEnumerable<T>;
+        public thenBy(keySelector: (value: T) => any): OrderedEnumerable<T>;
+        public thenByDescending(keySelector: (value: T) => any): OrderedEnumerable<T>;
+        public getEnumerator(): Collections.EnumeratorBase<T>;
+        public _onDispose(): void;
     }
 }
 declare module System.Linq {
@@ -143,20 +156,6 @@ declare module System.Linq {
         public where(predicate: (value: TSelect, index?: number) => boolean): Enumerable<TSelect>;
         public select<TResult>(selector: (value: TSelect, index?: number) => TResult): Enumerable<TResult>;
         public getEnumerator(): Collections.IEnumerator<TSelect>;
-        public _onDispose(): void;
-    }
-}
-declare module System.Linq {
-    class OrderedEnumerable<T> extends Enumerable<T> {
-        private source;
-        public keySelector: (value: T) => any;
-        public descending: boolean;
-        public parent: OrderedEnumerable<T>;
-        constructor(source: Collections.IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent: OrderedEnumerable<T>);
-        public createOrderedEnumerable(keySelector: (value: T) => any, descending: boolean): OrderedEnumerable<T>;
-        public thenBy(keySelector: (value: T) => any): OrderedEnumerable<T>;
-        public thenByDescending(keySelector: (value: T) => any): OrderedEnumerable<T>;
-        public getEnumerator(): Collections.EnumeratorBase<T>;
         public _onDispose(): void;
     }
 }
