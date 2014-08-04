@@ -883,7 +883,7 @@ var System;
                         return enumerator = _.getEnumerator();
                     }, function (yielder) {
                         var array = [];
-                        while (array.length < size - 1 && enumerator.moveNext())
+                        while (array.length < size && enumerator.moveNext())
                             array.push(enumerator.current);
 
                         return array.length && yielder.yieldReturn(array);
