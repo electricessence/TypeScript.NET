@@ -45,6 +45,7 @@
         public take(count: number): Enumerable<T>;
         public takeExceptLast(count?: number): Enumerable<T>;
         public takeFromLast(count?: number): Enumerable<T>;
+        public scan(func: (a: T, b: T) => T, seed?: T): Enumerable<T>;
         public select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>;
         public selectMany<TResult>(collectionSelector: Selector<T, Collections.IEnumerable<TResult>>): Enumerable<TResult>;
         public selectMany<TResult>(collectionSelector: Selector<T, TResult[]>): Enumerable<TResult>;
@@ -70,6 +71,14 @@
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
         public groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
         public buffer(size: number): Collections.IEnumerable<T[]>;
+        public aggregate(func: (a: T, b: T) => T, seed?: T): T;
+        public average(selector?: Selector<T, number>): number;
+        public max(): T;
+        public min(): T;
+        public maxBy<TCompare>(keySelector?: Selector<T, TCompare>): T;
+        public minBy<TCompare>(keySelector?: Selector<T, TCompare>): T;
+        public sum(selector?: Selector<T, number>): number;
+        public product(selector?: Selector<T, number>): number;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;
         public first(predicate?: Predicate<T>): T;

@@ -4,6 +4,8 @@
         True: () => boolean;
         False: () => boolean;
         Blank: () => void;
+        Greater: <T>(a: T, b: T) => T;
+        Lesser: <T>(a: T, b: T) => T;
     };
     var Types: {
         Boolean: string;
@@ -33,51 +35,6 @@
     function copyTo(source: any, target: any): void;
     function applyMixins(derivedCtor: any, baseCtors: any[]): void;
 }
-declare module System {
-    function dispose(obj: any): void;
-    function using<TDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
-    interface IDisposable {
-        dispose(): void;
-        wasDisposed: boolean;
-    }
-    class DisposableBase implements IDisposable {
-        private _finalizer;
-        constructor(_finalizer?: () => void);
-        public _wasDisposed: boolean;
-        public wasDisposed : boolean;
-        static assertIsNotDisposed(disposed: boolean, errorMessage?: string): boolean;
-        public assertIsNotDisposed(errorMessage?: string): boolean;
-        public dispose(): void;
-        public _onDispose(): void;
-    }
-}
-declare module ObjectX.Core {
-    interface ICloneable<T> {
-        clone(): T;
-    }
-}
-declare module System {
-    interface IEquatable {
-        equals(other: any): boolean;
-    }
-}
-declare module System {
-    interface ILazy<T> extends IDisposable {
-        value: T;
-        isValueCreated: boolean;
-    }
-    class Lazy<T> extends DisposableBase implements ILazy<T> {
-        private _closure;
-        private _isValueCreated;
-        private _value;
-        constructor(_closure: () => T);
-        public isValueCreated : boolean;
-        public reset(): void;
-        public value : T;
-        public valueOnce(): T;
-        public _onDispose(): void;
-    }
-}
 declare module System.Collections.ArrayUtility {
     function copy<T>(array: T[]): T[];
     function contains<T>(array: T[], item: T): boolean;
@@ -95,127 +52,6 @@ declare module System.Collections.ArrayUtility {
     function product(source: number[], ignoreNaN?: boolean): number;
     function min(source: number[], ignoreNaN?: boolean): number;
     function max(source: number[], ignoreNaN?: boolean): number;
-}
-declare module System {
-    interface IEventDispatcher extends EventTarget, IDisposable {
-        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
-        dispatchEvent(event: Event): boolean;
-        hasEventListener(type: string): boolean;
-        removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
-    }
-    class EventDispatcher extends DisposableBase implements IEventDispatcher {
-        private _listeners;
-        public addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
-        public registerEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
-        public hasEventListener(type: string, listener?: EventListener, useCapture?: boolean): boolean;
-        public removeEventListener(type: string, listener: EventListener, userCapture?: boolean): void;
-        public dispatchEvent(type: string, params?: any): boolean;
-        public dispatchEvent(event: Event): boolean;
-        static DISPOSING : string;
-        static DISPOSED : string;
-        public _isDisposing: boolean;
-        public isDisposing : boolean;
-        public dispose(): void;
-    }
-}
-declare module System.Collections {
-    interface IEnumerator<T> {
-        current: T;
-        moveNext(): boolean;
-        reset(): void;
-        dispose(): void;
-    }
-}
-declare module System.Collections {
-    interface IEnumerable<T> {
-        getEnumerator(): IEnumerator<T>;
-    }
-}
-declare module System.Collections {
-    interface ICollection<T> extends IEnumerable<T> {
-        count: number;
-        isReadOnly: boolean;
-        add(item: T): void;
-        clear(): number;
-        contains(item: T): boolean;
-        copyTo(array: T[], index?: number): void;
-        remove(item: T): number;
-    }
-}
-declare module System.Collections {
-    interface IList<T> extends ICollection<T> {
-        get(index: number): T;
-        set(index: number, value: T): boolean;
-        indexOf(item: T): number;
-        insert(index: number, value: T): void;
-        removeAt(index: number): void;
-    }
-}
-declare module System.Collections {
-    interface IMap<TValue> {
-        [key: string]: TValue;
-    }
-    interface IKeyValuePair<TKey, TValue> {
-        key: TKey;
-        value: TValue;
-    }
-    interface IStringKeyValuePair<TValue> extends IKeyValuePair<string, TValue> {
-    }
-    interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TValue>> {
-        keys: TKey[];
-        values: TValue[];
-        addByKeyValue(key: TKey, value: TValue): void;
-        get(key: TKey): TValue;
-        set(key: TKey, value: TValue): boolean;
-        containsKey(key: TKey): boolean;
-        containsValue(value: TValue): boolean;
-        removeByKey(key: TKey): boolean;
-        removeByValue(value: TValue): number;
-        importPairs(pairs: IKeyValuePair<TKey, TValue>[]): boolean;
-    }
-    interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<IStringKeyValuePair<TValue>> {
-        importMap(map: IMap<TValue>): boolean;
-    }
-    interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue> {
-        indexOfKey(key: TKey): number;
-        getValueByIndex(index: number): TValue;
-    }
-}
-declare module System.Collections {
-    interface IYield<T> {
-        current: T;
-        yieldReturn(value: T): boolean;
-        yieldBreak(): boolean;
-    }
-    module Enumerator {
-        function from<T>(source: any): IEnumerator<T>;
-    }
-    class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T> {
-        private initializer;
-        private tryGetNext;
-        private disposer;
-        private _yielder;
-        private _state;
-        public current : T;
-        constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: () => void);
-        public reset(): void;
-        public moveNext(): boolean;
-        public _onDispose(): void;
-    }
-    class IndexEnumerator<T> extends EnumeratorBase<T> {
-        constructor(sourceFactory: () => {
-            source: {
-                [index: number]: T;
-            };
-            pointer: number;
-            length: number;
-            step: number;
-        });
-    }
-    class ArrayEnumerator<T> extends IndexEnumerator<T> {
-        constructor(arrayFactory: () => T[], start?: number, step?: number);
-        constructor(array: T[], start?: number, step?: number);
-    }
 }
 declare module System.Collections {
     class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue> {
@@ -266,6 +102,105 @@ declare module System.Collections {
     }
 }
 declare module System.Collections {
+    interface IYield<T> {
+        current: T;
+        yieldReturn(value: T): boolean;
+        yieldBreak(): boolean;
+    }
+    module Enumerator {
+        function from<T>(source: any): IEnumerator<T>;
+    }
+    class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T> {
+        private initializer;
+        private tryGetNext;
+        private disposer;
+        private _yielder;
+        private _state;
+        public current : T;
+        constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: () => void);
+        public reset(): void;
+        public moveNext(): boolean;
+        public _onDispose(): void;
+    }
+    class IndexEnumerator<T> extends EnumeratorBase<T> {
+        constructor(sourceFactory: () => {
+            source: {
+                [index: number]: T;
+            };
+            pointer: number;
+            length: number;
+            step: number;
+        });
+    }
+    class ArrayEnumerator<T> extends IndexEnumerator<T> {
+        constructor(arrayFactory: () => T[], start?: number, step?: number);
+        constructor(array: T[], start?: number, step?: number);
+    }
+}
+declare module System.Collections {
+    interface ICollection<T> extends IEnumerable<T> {
+        count: number;
+        isReadOnly: boolean;
+        add(item: T): void;
+        clear(): number;
+        contains(item: T): boolean;
+        copyTo(array: T[], index?: number): void;
+        remove(item: T): number;
+    }
+}
+declare module System.Collections {
+    interface IMap<TValue> {
+        [key: string]: TValue;
+    }
+    interface IKeyValuePair<TKey, TValue> {
+        key: TKey;
+        value: TValue;
+    }
+    interface IStringKeyValuePair<TValue> extends IKeyValuePair<string, TValue> {
+    }
+    interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TValue>> {
+        keys: TKey[];
+        values: TValue[];
+        addByKeyValue(key: TKey, value: TValue): void;
+        get(key: TKey): TValue;
+        set(key: TKey, value: TValue): boolean;
+        containsKey(key: TKey): boolean;
+        containsValue(value: TValue): boolean;
+        removeByKey(key: TKey): boolean;
+        removeByValue(value: TValue): number;
+        importPairs(pairs: IKeyValuePair<TKey, TValue>[]): boolean;
+    }
+    interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<IStringKeyValuePair<TValue>> {
+        importMap(map: IMap<TValue>): boolean;
+    }
+    interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue> {
+        indexOfKey(key: TKey): number;
+        getValueByIndex(index: number): TValue;
+    }
+}
+declare module System.Collections {
+    interface IEnumerable<T> {
+        getEnumerator(): IEnumerator<T>;
+    }
+}
+declare module System.Collections {
+    interface IEnumerator<T> {
+        current: T;
+        moveNext(): boolean;
+        reset(): void;
+        dispose(): void;
+    }
+}
+declare module System.Collections {
+    interface IList<T> extends ICollection<T> {
+        get(index: number): T;
+        set(index: number, value: T): boolean;
+        indexOf(item: T): number;
+        insert(index: number, value: T): void;
+        removeAt(index: number): void;
+    }
+}
+declare module System.Collections {
     class StringKeyDictionary<TValue> extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<TValue> {
         private _count;
         private _map;
@@ -292,5 +227,72 @@ declare module System.Collections {
         public setValues(...values: TValue[]): boolean;
         public removeByIndex(index: number): boolean;
         public keys : string[];
+    }
+}
+declare module System {
+    function dispose(obj: any): void;
+    function using<TDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
+    interface IDisposable {
+        dispose(): void;
+        wasDisposed: boolean;
+    }
+    class DisposableBase implements IDisposable {
+        private _finalizer;
+        constructor(_finalizer?: () => void);
+        public _wasDisposed: boolean;
+        public wasDisposed : boolean;
+        static assertIsNotDisposed(disposed: boolean, errorMessage?: string): boolean;
+        public assertIsNotDisposed(errorMessage?: string): boolean;
+        public dispose(): void;
+        public _onDispose(): void;
+    }
+}
+declare module System {
+    interface IEventDispatcher extends EventTarget, IDisposable {
+        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
+        dispatchEvent(event: Event): boolean;
+        hasEventListener(type: string): boolean;
+        removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
+    }
+    class EventDispatcher extends DisposableBase implements IEventDispatcher {
+        private _listeners;
+        public addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
+        public registerEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
+        public hasEventListener(type: string, listener?: EventListener, useCapture?: boolean): boolean;
+        public removeEventListener(type: string, listener: EventListener, userCapture?: boolean): void;
+        public dispatchEvent(type: string, params?: any): boolean;
+        public dispatchEvent(event: Event): boolean;
+        static DISPOSING : string;
+        static DISPOSED : string;
+        public _isDisposing: boolean;
+        public isDisposing : boolean;
+        public dispose(): void;
+    }
+}
+declare module ObjectX.Core {
+    interface ICloneable<T> {
+        clone(): T;
+    }
+}
+declare module System {
+    interface IEquatable {
+        equals(other: any): boolean;
+    }
+}
+declare module System {
+    interface ILazy<T> extends IDisposable {
+        value: T;
+        isValueCreated: boolean;
+    }
+    class Lazy<T> extends DisposableBase implements ILazy<T> {
+        private _closure;
+        private _isValueCreated;
+        private _value;
+        constructor(_closure: () => T);
+        public isValueCreated : boolean;
+        public reset(): void;
+        public value : T;
+        public valueOnce(): T;
+        public _onDispose(): void;
     }
 }

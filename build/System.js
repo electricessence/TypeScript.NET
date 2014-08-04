@@ -13,6 +13,12 @@
             return false;
         },
         Blank: function () {
+        },
+        Greater: function (a, b) {
+            return a > b ? a : b;
+        },
+        Lesser: function (a, b) {
+            return a < b ? a : b;
         }
     };
 
@@ -95,131 +101,6 @@
         });
     }
     System.applyMixins = applyMixins;
-})(System || (System = {}));
-var System;
-(function (System) {
-    function dispose(obj) {
-        if (obj && typeof obj.dispose == System.Types.Function)
-            obj.dispose();
-    }
-    System.dispose = dispose;
-
-    function using(disposable, closure) {
-        try  {
-            return closure(disposable);
-        } finally {
-            dispose(disposable);
-        }
-    }
-    System.using = using;
-
-    var DisposableBase = (function () {
-        function DisposableBase(_finalizer) {
-            this._finalizer = _finalizer;
-            this._wasDisposed = false;
-        }
-        Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
-            get: function () {
-                return this._wasDisposed;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
-            if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
-            if (disposed)
-                throw new Error(errorMessage);
-
-            return true;
-        };
-
-        DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
-            if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
-            return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
-        };
-
-        DisposableBase.prototype.dispose = function () {
-            var _ = this;
-            if (!_._wasDisposed) {
-                _._wasDisposed = true;
-                try  {
-                    _._onDispose();
-                } finally {
-                    if (_._finalizer)
-                        _._finalizer();
-                }
-            }
-        };
-
-        DisposableBase.prototype._onDispose = function () {
-        };
-        return DisposableBase;
-    })();
-    System.DisposableBase = DisposableBase;
-})(System || (System = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var System;
-(function (System) {
-    var Lazy = (function (_super) {
-        __extends(Lazy, _super);
-        function Lazy(_closure) {
-            _super.call(this);
-            this._closure = _closure;
-        }
-        Object.defineProperty(Lazy.prototype, "isValueCreated", {
-            get: function () {
-                return this._isValueCreated;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Lazy.prototype.reset = function () {
-            var _ = this;
-            if (!_._closure)
-                throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");
-
-            _._isValueCreated = false;
-            _._value = null;
-        };
-
-        Object.defineProperty(Lazy.prototype, "value", {
-            get: function () {
-                var _ = this;
-                if (!_._isValueCreated && _._closure) {
-                    var v = _._closure();
-                    _._value = v;
-                    _._isValueCreated = true;
-                    return v;
-                }
-
-                return _._value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Lazy.prototype.valueOnce = function () {
-            try  {
-                return this.value;
-            } finally {
-                this._closure = null;
-            }
-        };
-
-        Lazy.prototype._onDispose = function () {
-            this._closure = null;
-            this._value = null;
-        };
-        return Lazy;
-    })(System.DisposableBase);
-    System.Lazy = Lazy;
 })(System || (System = {}));
 var System;
 (function (System) {
@@ -483,351 +364,6 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
-    var AU = System.Collections.ArrayUtility;
-
-    var EventDispatcherEntry = (function (_super) {
-        __extends(EventDispatcherEntry, _super);
-        function EventDispatcherEntry(type, listener, useCapture, priority) {
-            if (typeof useCapture === "undefined") { useCapture = false; }
-            if (typeof priority === "undefined") { priority = 0; }
-            _super.call(this);
-
-            this.type = type;
-            this.listener = listener;
-            this.useCapture = useCapture;
-            this.priority = priority;
-        }
-        EventDispatcherEntry.prototype.dispose = function () {
-            this.listener = null;
-        };
-
-        Object.defineProperty(EventDispatcherEntry.prototype, "wasDisposed", {
-            get: function () {
-                return this.listener == null;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        EventDispatcherEntry.prototype.matches = function (type, listener, useCapture) {
-            if (typeof useCapture === "undefined") { useCapture = false; }
-            var _ = this;
-            return _.type == type && _.listener == listener && _.useCapture == useCapture;
-        };
-
-        EventDispatcherEntry.prototype.equals = function (other) {
-            var _ = this;
-            return _.type == other.type && _.listener == other.listener && _.useCapture == other.useCapture && _.priority == other.priority;
-        };
-        return EventDispatcherEntry;
-    })(System.DisposableBase);
-
-    var EventDispatcher = (function (_super) {
-        __extends(EventDispatcher, _super);
-        function EventDispatcher() {
-            _super.apply(this, arguments);
-            this._isDisposing = false;
-        }
-        EventDispatcher.prototype.addEventListener = function (type, listener, useCapture, priority) {
-            if (typeof useCapture === "undefined") { useCapture = false; }
-            if (typeof priority === "undefined") { priority = 0; }
-            var l = this._listeners;
-            if (!l)
-                this._listeners = l = [];
-
-            l.push(new EventDispatcherEntry(type, listener, useCapture, priority));
-        };
-
-        EventDispatcher.prototype.registerEventListener = function (type, listener, useCapture, priority) {
-            if (typeof useCapture === "undefined") { useCapture = false; }
-            if (typeof priority === "undefined") { priority = 0; }
-            if (!this.hasEventListener(type, listener, useCapture))
-                this.addEventListener(type, listener, useCapture, priority);
-        };
-
-        EventDispatcher.prototype.hasEventListener = function (type, listener, useCapture) {
-            if (typeof useCapture === "undefined") { useCapture = false; }
-            var l = this._listeners;
-            return l && l.some(function (value) {
-                return type == value.type && (!listener || listener == value.listener && useCapture == value.useCapture);
-            });
-        };
-
-        EventDispatcher.prototype.removeEventListener = function (type, listener, userCapture) {
-            if (typeof userCapture === "undefined") { userCapture = false; }
-            var l = this._listeners;
-
-            if (l) {
-                var i = AU.findIndex(l, function (entry) {
-                    return entry.matches(type, listener, userCapture);
-                });
-                if (i != -1) {
-                    var e = l[i];
-                    l.splice(i, 1);
-                    e.dispose();
-                }
-            }
-        };
-
-        EventDispatcher.prototype.dispatchEvent = function (e, params) {
-            var _this = this;
-            var _ = this, l = _._listeners;
-            if (!l || !l.length)
-                return false;
-
-            var event;
-
-            if (typeof e == "string") {
-                event = new Event();
-                if (!params)
-                    params = {};
-                event.cancelable = !!params.cancelable;
-                event.target = _;
-                event.type = e;
-            } else
-                event = e;
-
-            var type = event.type;
-
-            var entries = [];
-            l.forEach(function (e) {
-                if (e.type == type)
-                    entries.push(e);
-            });
-            if (!entries.length)
-                return false;
-
-            entries.sort(function (a, b) {
-                return b.priority - a.priority;
-            });
-
-            entries.forEach(function (entry) {
-                var newEvent = new Event();
-                System.copyTo(event, newEvent);
-                newEvent.target = _this;
-                entry.listener(newEvent);
-            });
-
-            return true;
-        };
-
-        Object.defineProperty(EventDispatcher, "DISPOSING", {
-            get: function () {
-                return "disposing";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EventDispatcher, "DISPOSED", {
-            get: function () {
-                return "disposed";
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Object.defineProperty(EventDispatcher.prototype, "isDisposing", {
-            get: function () {
-                return this._isDisposing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        EventDispatcher.prototype.dispose = function () {
-            var _ = this;
-            if (!_.wasDisposed && !_._isDisposing) {
-                _._isDisposing = true;
-                _.dispatchEvent(EventDispatcher.DISPOSING);
-
-                _super.prototype.dispose.call(this);
-
-                _.dispatchEvent(EventDispatcher.DISPOSED);
-
-                var l = _._listeners;
-                if (l) {
-                    this._listeners = null;
-                    l.forEach(function (e) {
-                        return e.dispose();
-                    });
-                }
-            }
-        };
-        return EventDispatcher;
-    })(System.DisposableBase);
-    System.EventDispatcher = EventDispatcher;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Collections) {
-        "use strict";
-
-        var Yielder = (function () {
-            function Yielder() {
-            }
-            Object.defineProperty(Yielder.prototype, "current", {
-                get: function () {
-                    return this._current;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Yielder.prototype.yieldReturn = function (value) {
-                this._current = value;
-                return true;
-            };
-
-            Yielder.prototype.yieldBreak = function () {
-                this._current = null;
-                return false;
-            };
-            return Yielder;
-        })();
-
-        var EnumeratorState;
-        (function (EnumeratorState) {
-            EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
-            EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
-            EnumeratorState[EnumeratorState["After"] = 2] = "After";
-        })(EnumeratorState || (EnumeratorState = {}));
-
-        (function (Enumerator) {
-            function from(source) {
-                if (source instanceof Array)
-                    return new ArrayEnumerator(source);
-                if (source["getEnumerator"])
-                    return source.getEnumerator();
-
-                throw new Error("Unknown enumerable.");
-            }
-            Enumerator.from = from;
-        })(Collections.Enumerator || (Collections.Enumerator = {}));
-        var Enumerator = Collections.Enumerator;
-
-        var EnumeratorBase = (function (_super) {
-            __extends(EnumeratorBase, _super);
-            function EnumeratorBase(initializer, tryGetNext, disposer) {
-                _super.call(this);
-                this.initializer = initializer;
-                this.tryGetNext = tryGetNext;
-                this.disposer = disposer;
-                this.reset();
-            }
-            Object.defineProperty(EnumeratorBase.prototype, "current", {
-                get: function () {
-                    return this._yielder.current;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            EnumeratorBase.prototype.reset = function () {
-                var _ = this;
-                _._yielder = new Yielder();
-                _._state = 0 /* Before */;
-            };
-
-            EnumeratorBase.prototype.moveNext = function () {
-                var _ = this;
-                try  {
-                    switch (_._state) {
-                        case 0 /* Before */:
-                            _._state = 1 /* Running */;
-                            var initializer = _.initializer;
-                            if (initializer)
-                                initializer();
-
-                        case 1 /* Running */:
-                            if (_.tryGetNext(_._yielder)) {
-                                return true;
-                            } else {
-                                this.dispose();
-                                return false;
-                            }
-                        case 2 /* After */:
-                            return false;
-                    }
-                } catch (e) {
-                    this.dispose();
-                    throw e;
-                }
-            };
-
-            EnumeratorBase.prototype._onDispose = function () {
-                var _ = this, disposer = _.disposer;
-
-                _.initializer = null;
-                _.disposer = null;
-
-                var yielder = _._yielder;
-                _._yielder = null;
-                if (yielder)
-                    yielder.yieldBreak();
-
-                try  {
-                    if (disposer)
-                        disposer();
-                } finally {
-                    this._state = 2 /* After */;
-                }
-            };
-            return EnumeratorBase;
-        })(System.DisposableBase);
-        Collections.EnumeratorBase = EnumeratorBase;
-
-        var IndexEnumerator = (function (_super) {
-            __extends(IndexEnumerator, _super);
-            function IndexEnumerator(sourceFactory) {
-                var source;
-                _super.call(this, function () {
-                    source = sourceFactory();
-                    if (source && source.source) {
-                        if (source.length && source.step === 0)
-                            throw new Error("Invalid IndexEnumerator step value (0).");
-                        if (!source.pointer)
-                            source.pointer = 0;
-                        var step = source.step;
-                        if (!step)
-                            source.step = 1;
-                        else if (step != Math.floor(step))
-                            throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
-                    }
-                }, function (yielder) {
-                    var len = (source && source.source) ? source.length : 0;
-                    if (!len)
-                        return yielder.yieldBreak();
-                    var current = source.pointer;
-                    source.pointer += source.step;
-                    return (current < len && current >= 0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
-                }, function () {
-                    if (source) {
-                        source.source = null;
-                    }
-                });
-            }
-            return IndexEnumerator;
-        })(EnumeratorBase);
-        Collections.IndexEnumerator = IndexEnumerator;
-
-        var ArrayEnumerator = (function (_super) {
-            __extends(ArrayEnumerator, _super);
-            function ArrayEnumerator(arrayOrFactory, start, step) {
-                if (typeof start === "undefined") { start = 0; }
-                if (typeof step === "undefined") { step = 1; }
-                _super.call(this, function () {
-                    var array = arrayOrFactory instanceof Array ? arrayOrFactory : arrayOrFactory();
-                    return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
-                });
-            }
-            return ArrayEnumerator;
-        })(IndexEnumerator);
-        Collections.ArrayEnumerator = ArrayEnumerator;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
-var System;
-(function (System) {
     (function (Collections) {
         var DictionaryAbstractBase = (function () {
             function DictionaryAbstractBase() {
@@ -1028,6 +564,12 @@ var System;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var System;
 (function (System) {
     (function (Collections) {
@@ -1278,6 +820,175 @@ var System;
 var System;
 (function (System) {
     (function (Collections) {
+        "use strict";
+
+        var Yielder = (function () {
+            function Yielder() {
+            }
+            Object.defineProperty(Yielder.prototype, "current", {
+                get: function () {
+                    return this._current;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Yielder.prototype.yieldReturn = function (value) {
+                this._current = value;
+                return true;
+            };
+
+            Yielder.prototype.yieldBreak = function () {
+                this._current = null;
+                return false;
+            };
+            return Yielder;
+        })();
+
+        var EnumeratorState;
+        (function (EnumeratorState) {
+            EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
+            EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
+            EnumeratorState[EnumeratorState["After"] = 2] = "After";
+        })(EnumeratorState || (EnumeratorState = {}));
+
+        (function (Enumerator) {
+            function from(source) {
+                if (source instanceof Array)
+                    return new ArrayEnumerator(source);
+                if (source["getEnumerator"])
+                    return source.getEnumerator();
+
+                throw new Error("Unknown enumerable.");
+            }
+            Enumerator.from = from;
+        })(Collections.Enumerator || (Collections.Enumerator = {}));
+        var Enumerator = Collections.Enumerator;
+
+        var EnumeratorBase = (function (_super) {
+            __extends(EnumeratorBase, _super);
+            function EnumeratorBase(initializer, tryGetNext, disposer) {
+                _super.call(this);
+                this.initializer = initializer;
+                this.tryGetNext = tryGetNext;
+                this.disposer = disposer;
+                this.reset();
+            }
+            Object.defineProperty(EnumeratorBase.prototype, "current", {
+                get: function () {
+                    return this._yielder.current;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            EnumeratorBase.prototype.reset = function () {
+                var _ = this;
+                _._yielder = new Yielder();
+                _._state = 0 /* Before */;
+            };
+
+            EnumeratorBase.prototype.moveNext = function () {
+                var _ = this;
+                try  {
+                    switch (_._state) {
+                        case 0 /* Before */:
+                            _._state = 1 /* Running */;
+                            var initializer = _.initializer;
+                            if (initializer)
+                                initializer();
+
+                        case 1 /* Running */:
+                            if (_.tryGetNext(_._yielder)) {
+                                return true;
+                            } else {
+                                this.dispose();
+                                return false;
+                            }
+                        case 2 /* After */:
+                            return false;
+                    }
+                } catch (e) {
+                    this.dispose();
+                    throw e;
+                }
+            };
+
+            EnumeratorBase.prototype._onDispose = function () {
+                var _ = this, disposer = _.disposer;
+
+                _.initializer = null;
+                _.disposer = null;
+
+                var yielder = _._yielder;
+                _._yielder = null;
+                if (yielder)
+                    yielder.yieldBreak();
+
+                try  {
+                    if (disposer)
+                        disposer();
+                } finally {
+                    this._state = 2 /* After */;
+                }
+            };
+            return EnumeratorBase;
+        })(System.DisposableBase);
+        Collections.EnumeratorBase = EnumeratorBase;
+
+        var IndexEnumerator = (function (_super) {
+            __extends(IndexEnumerator, _super);
+            function IndexEnumerator(sourceFactory) {
+                var source;
+                _super.call(this, function () {
+                    source = sourceFactory();
+                    if (source && source.source) {
+                        if (source.length && source.step === 0)
+                            throw new Error("Invalid IndexEnumerator step value (0).");
+                        if (!source.pointer)
+                            source.pointer = 0;
+                        var step = source.step;
+                        if (!step)
+                            source.step = 1;
+                        else if (step != Math.floor(step))
+                            throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
+                    }
+                }, function (yielder) {
+                    var len = (source && source.source) ? source.length : 0;
+                    if (!len)
+                        return yielder.yieldBreak();
+                    var current = source.pointer;
+                    source.pointer += source.step;
+                    return (current < len && current >= 0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
+                }, function () {
+                    if (source) {
+                        source.source = null;
+                    }
+                });
+            }
+            return IndexEnumerator;
+        })(EnumeratorBase);
+        Collections.IndexEnumerator = IndexEnumerator;
+
+        var ArrayEnumerator = (function (_super) {
+            __extends(ArrayEnumerator, _super);
+            function ArrayEnumerator(arrayOrFactory, start, step) {
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof step === "undefined") { step = 1; }
+                _super.call(this, function () {
+                    var array = arrayOrFactory instanceof Array ? arrayOrFactory : arrayOrFactory();
+                    return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
+                });
+            }
+            return ArrayEnumerator;
+        })(IndexEnumerator);
+        Collections.ArrayEnumerator = ArrayEnumerator;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Collections) {
         var StringKeyDictionary = (function (_super) {
             __extends(StringKeyDictionary, _super);
             function StringKeyDictionary() {
@@ -1459,5 +1170,300 @@ var System;
         Collections.OrderedStringKeyDictionary = OrderedStringKeyDictionary;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    function dispose(obj) {
+        if (obj && typeof obj.dispose == System.Types.Function)
+            obj.dispose();
+    }
+    System.dispose = dispose;
+
+    function using(disposable, closure) {
+        try  {
+            return closure(disposable);
+        } finally {
+            dispose(disposable);
+        }
+    }
+    System.using = using;
+
+    var DisposableBase = (function () {
+        function DisposableBase(_finalizer) {
+            this._finalizer = _finalizer;
+            this._wasDisposed = false;
+        }
+        Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
+            get: function () {
+                return this._wasDisposed;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
+            if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
+            if (disposed)
+                throw new Error(errorMessage);
+
+            return true;
+        };
+
+        DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
+            if (typeof errorMessage === "undefined") { errorMessage = "ObjectDisposedException"; }
+            return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
+        };
+
+        DisposableBase.prototype.dispose = function () {
+            var _ = this;
+            if (!_._wasDisposed) {
+                _._wasDisposed = true;
+                try  {
+                    _._onDispose();
+                } finally {
+                    if (_._finalizer)
+                        _._finalizer();
+                }
+            }
+        };
+
+        DisposableBase.prototype._onDispose = function () {
+        };
+        return DisposableBase;
+    })();
+    System.DisposableBase = DisposableBase;
+})(System || (System = {}));
+var System;
+(function (System) {
+    var AU = System.Collections.ArrayUtility;
+
+    var EventDispatcherEntry = (function (_super) {
+        __extends(EventDispatcherEntry, _super);
+        function EventDispatcherEntry(type, listener, useCapture, priority) {
+            if (typeof useCapture === "undefined") { useCapture = false; }
+            if (typeof priority === "undefined") { priority = 0; }
+            _super.call(this);
+
+            this.type = type;
+            this.listener = listener;
+            this.useCapture = useCapture;
+            this.priority = priority;
+        }
+        EventDispatcherEntry.prototype.dispose = function () {
+            this.listener = null;
+        };
+
+        Object.defineProperty(EventDispatcherEntry.prototype, "wasDisposed", {
+            get: function () {
+                return this.listener == null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        EventDispatcherEntry.prototype.matches = function (type, listener, useCapture) {
+            if (typeof useCapture === "undefined") { useCapture = false; }
+            var _ = this;
+            return _.type == type && _.listener == listener && _.useCapture == useCapture;
+        };
+
+        EventDispatcherEntry.prototype.equals = function (other) {
+            var _ = this;
+            return _.type == other.type && _.listener == other.listener && _.useCapture == other.useCapture && _.priority == other.priority;
+        };
+        return EventDispatcherEntry;
+    })(System.DisposableBase);
+
+    var EventDispatcher = (function (_super) {
+        __extends(EventDispatcher, _super);
+        function EventDispatcher() {
+            _super.apply(this, arguments);
+            this._isDisposing = false;
+        }
+        EventDispatcher.prototype.addEventListener = function (type, listener, useCapture, priority) {
+            if (typeof useCapture === "undefined") { useCapture = false; }
+            if (typeof priority === "undefined") { priority = 0; }
+            var l = this._listeners;
+            if (!l)
+                this._listeners = l = [];
+
+            l.push(new EventDispatcherEntry(type, listener, useCapture, priority));
+        };
+
+        EventDispatcher.prototype.registerEventListener = function (type, listener, useCapture, priority) {
+            if (typeof useCapture === "undefined") { useCapture = false; }
+            if (typeof priority === "undefined") { priority = 0; }
+            if (!this.hasEventListener(type, listener, useCapture))
+                this.addEventListener(type, listener, useCapture, priority);
+        };
+
+        EventDispatcher.prototype.hasEventListener = function (type, listener, useCapture) {
+            if (typeof useCapture === "undefined") { useCapture = false; }
+            var l = this._listeners;
+            return l && l.some(function (value) {
+                return type == value.type && (!listener || listener == value.listener && useCapture == value.useCapture);
+            });
+        };
+
+        EventDispatcher.prototype.removeEventListener = function (type, listener, userCapture) {
+            if (typeof userCapture === "undefined") { userCapture = false; }
+            var l = this._listeners;
+
+            if (l) {
+                var i = AU.findIndex(l, function (entry) {
+                    return entry.matches(type, listener, userCapture);
+                });
+                if (i != -1) {
+                    var e = l[i];
+                    l.splice(i, 1);
+                    e.dispose();
+                }
+            }
+        };
+
+        EventDispatcher.prototype.dispatchEvent = function (e, params) {
+            var _this = this;
+            var _ = this, l = _._listeners;
+            if (!l || !l.length)
+                return false;
+
+            var event;
+
+            if (typeof e == "string") {
+                event = new Event();
+                if (!params)
+                    params = {};
+                event.cancelable = !!params.cancelable;
+                event.target = _;
+                event.type = e;
+            } else
+                event = e;
+
+            var type = event.type;
+
+            var entries = [];
+            l.forEach(function (e) {
+                if (e.type == type)
+                    entries.push(e);
+            });
+            if (!entries.length)
+                return false;
+
+            entries.sort(function (a, b) {
+                return b.priority - a.priority;
+            });
+
+            entries.forEach(function (entry) {
+                var newEvent = new Event();
+                System.copyTo(event, newEvent);
+                newEvent.target = _this;
+                entry.listener(newEvent);
+            });
+
+            return true;
+        };
+
+        Object.defineProperty(EventDispatcher, "DISPOSING", {
+            get: function () {
+                return "disposing";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventDispatcher, "DISPOSED", {
+            get: function () {
+                return "disposed";
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(EventDispatcher.prototype, "isDisposing", {
+            get: function () {
+                return this._isDisposing;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        EventDispatcher.prototype.dispose = function () {
+            var _ = this;
+            if (!_.wasDisposed && !_._isDisposing) {
+                _._isDisposing = true;
+                _.dispatchEvent(EventDispatcher.DISPOSING);
+
+                _super.prototype.dispose.call(this);
+
+                _.dispatchEvent(EventDispatcher.DISPOSED);
+
+                var l = _._listeners;
+                if (l) {
+                    this._listeners = null;
+                    l.forEach(function (e) {
+                        return e.dispose();
+                    });
+                }
+            }
+        };
+        return EventDispatcher;
+    })(System.DisposableBase);
+    System.EventDispatcher = EventDispatcher;
+})(System || (System = {}));
+var System;
+(function (System) {
+    var Lazy = (function (_super) {
+        __extends(Lazy, _super);
+        function Lazy(_closure) {
+            _super.call(this);
+            this._closure = _closure;
+        }
+        Object.defineProperty(Lazy.prototype, "isValueCreated", {
+            get: function () {
+                return this._isValueCreated;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Lazy.prototype.reset = function () {
+            var _ = this;
+            if (!_._closure)
+                throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");
+
+            _._isValueCreated = false;
+            _._value = null;
+        };
+
+        Object.defineProperty(Lazy.prototype, "value", {
+            get: function () {
+                var _ = this;
+                if (!_._isValueCreated && _._closure) {
+                    var v = _._closure();
+                    _._value = v;
+                    _._isValueCreated = true;
+                    return v;
+                }
+
+                return _._value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Lazy.prototype.valueOnce = function () {
+            try  {
+                return this.value;
+            } finally {
+                this._closure = null;
+            }
+        };
+
+        Lazy.prototype._onDispose = function () {
+            this._closure = null;
+            this._value = null;
+        };
+        return Lazy;
+    })(System.DisposableBase);
+    System.Lazy = Lazy;
 })(System || (System = {}));
 //# sourceMappingURL=System.js.map

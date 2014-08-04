@@ -29,6 +29,10 @@ var System;
             return System.DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
         }
 
+        function numberOrNaN(value) {
+            return isNaN(value) ? NaN : value;
+        }
+
         var Enumerable = (function (_super) {
             __extends(Enumerable, _super);
             function Enumerable(enumeratorFactory, finalizer) {
@@ -456,6 +460,31 @@ var System;
                         enumerator = Enumerable.fromArray(q).getEnumerator();
                     }, function (yielder) {
                         return enumerator.moveNext() && yielder.yieldReturn(enumerator.current);
+                    }, function () {
+                        return enumerator.dispose();
+                    });
+                });
+            };
+
+            Enumerable.prototype.scan = function (func, seed) {
+                var isUseSeed = seed !== undefined;
+                var source = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+                    var value;
+                    var isFirst;
+
+                    return new EnumeratorBase(function () {
+                        enumerator = source.getEnumerator();
+                        isFirst = true;
+                    }, function (yielder) {
+                        if (isFirst) {
+                            isFirst = false;
+                            return isUseSeed ? yielder.yieldReturn(value = seed) : enumerator.moveNext() && yielder.yieldReturn(value = enumerator.current);
+                        }
+
+                        return (enumerator.moveNext()) ? yielder.yieldReturn(value = func(value, enumerator.current)) : false;
                     }, function () {
                         return enumerator.dispose();
                     });
@@ -891,6 +920,83 @@ var System;
                         return enumerator.dispose();
                     });
                 });
+            };
+
+            Enumerable.prototype.aggregate = function (func, seed) {
+                return this.scan(func, seed).last();
+            };
+
+            Enumerable.prototype.average = function (selector) {
+                if (typeof selector === "undefined") { selector = numberOrNaN; }
+                var sum = 0;
+                var count = 0;
+
+                this.forEach(function (x) {
+                    var value = selector(x);
+                    if (!isNaN(value)) {
+                        sum = NaN;
+                        return false;
+                    }
+                    sum += value;
+                    ++count;
+                });
+
+                return (isNaN(sum) || !count) ? NaN : (sum / count);
+            };
+
+            Enumerable.prototype.max = function () {
+                return this.aggregate(Functions.Greater);
+            };
+
+            Enumerable.prototype.min = function () {
+                return this.aggregate(Functions.Lesser);
+            };
+
+            Enumerable.prototype.maxBy = function (keySelector) {
+                if (typeof keySelector === "undefined") { keySelector = Functions.Identity; }
+                return this.aggregate(function (a, b) {
+                    return (keySelector(a) > keySelector(b)) ? a : b;
+                });
+            };
+
+            Enumerable.prototype.minBy = function (keySelector) {
+                if (typeof keySelector === "undefined") { keySelector = Functions.Identity; }
+                return this.aggregate(function (a, b) {
+                    return (keySelector(a) < keySelector(b)) ? a : b;
+                });
+            };
+
+            Enumerable.prototype.sum = function (selector) {
+                if (typeof selector === "undefined") { selector = numberOrNaN; }
+                var sum = 0;
+
+                this.forEach(function (x) {
+                    var value = selector(x);
+                    if (!isNaN(value)) {
+                        sum = NaN;
+                        return false;
+                    }
+                    sum += value;
+                });
+
+                return isNaN(sum) ? NaN : sum;
+            };
+
+            Enumerable.prototype.product = function (selector) {
+                if (typeof selector === "undefined") { selector = numberOrNaN; }
+                var result = 1, exists = false;
+
+                this.forEach(function (x) {
+                    exists = true;
+                    var value = selector(x);
+                    if (!isNaN(value)) {
+                        result = NaN;
+                        return false;
+                    }
+                    result *= value;
+                });
+
+                return (exists && isNaN(result)) ? NaN : result;
             };
 
             Enumerable.prototype.elementAt = function (index) {

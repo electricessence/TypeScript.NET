@@ -38,21 +38,29 @@ module System.Linq {
 		return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
 	}
 
+	function numberOrNaN(value: any): number
+	{
+		return isNaN(value) ? NaN : value;
+	}
+
 	export class Enumerable<T> extends System.DisposableBase implements IEnumerable<T> {
 
 		// Enumerable<T> is an instance class that has useful statics.
 		// In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
 		// In this case, we use Enumerable<T> as the underlying class that is being chained.
-		constructor(private enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void) {
+		constructor(private enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void)
+		{
 			super(finalizer);
 		}
 
-		static fromArray<T>(array:T[]):ArrayEnumerable<T>{
+		static fromArray<T>(array: T[]): ArrayEnumerable<T>
+		{
 			return new ArrayEnumerable<T>(array);
 		}
 
 		// #region IEnumerable<T> Implementation...
-		getEnumerator(): IEnumerator<T> {
+		getEnumerator(): IEnumerator<T>
+		{
 
 			this.assertIsNotDisposed();
 
@@ -61,7 +69,8 @@ module System.Linq {
 		// #endregion
 
 		// #region IDisposable override...
-		_onDispose(): void {
+		_onDispose(): void
+		{
 			super._onDispose();
 			this.enumeratorFactory = null;
 		}
@@ -69,7 +78,8 @@ module System.Linq {
 
 		//////////////////////////////////////////
 		// #region Static Methods...
-		static choice<T>(values: T[]): Enumerable<T> 		{
+		static choice<T>(values: T[]): Enumerable<T>
+		{
 			return new Enumerable<T>(() =>
 				new EnumeratorBase<T>(
 					null,
@@ -79,39 +89,47 @@ module System.Linq {
 				);
 		}
 
-		static cycle<T>(values: T[]): Enumerable<T> {
-			return new Enumerable<T>(() => {
+		static cycle<T>(values: T[]): Enumerable<T>
+		{
+			return new Enumerable<T>(() =>
+			{
 				var index: number;
 				return new EnumeratorBase<T>(
 					() => index = 0,
-					yielder => {
+					yielder =>
+					{
 						if (index >= values.length) index = 0;
 						return yielder.yieldReturn(values[index++]);
 					});
 			});
 		}
 
-		static empty<T>():Enumerable<T> {
-			return new Enumerable<T>(() => {
+		static empty<T>(): Enumerable<T>
+		{
+			return new Enumerable<T>(() =>
+			{
 				return new EnumeratorBase<T>(
 					null,
 					Functions.False);
 			});
 		}
 
-		static repeat<T>(element: T, count?: number): Enumerable<T> {
+		static repeat<T>(element: T, count?: number): Enumerable<T>
+		{
 			if (typeof count == Types.Number && (count <= 0 || isNaN(count)))
 				return Enumerable.empty<T>();
 
 			if (!count)
 				count = Infinity;
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var index: number;
 
 				return new EnumeratorBase<T>(
 					() => index = 0,
-					yielder => {
+					yielder =>
+					{
 						return (index++ < count)
 							? yielder.yieldReturn(element)
 							: false;
@@ -124,13 +142,16 @@ module System.Linq {
 			finalizer: (element: T) => void): Enumerable<T>
 		{
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var element: T;
 				return new EnumeratorBase<T>(
 					() => element = initializer(),
 					yielder => { return yielder.yieldReturn(element); },
-					() => {
-						if (element != null) {
+					() =>
+					{
+						if (element != null)
+						{
 							finalizer(element);
 							element = null;
 						}
@@ -138,7 +159,8 @@ module System.Linq {
 			});
 		}
 
-		static make<T>(element: T): Enumerable<T> {
+		static make<T>(element: T): Enumerable<T>
+		{
 			return Enumerable.repeat<T>(element, 1);
 		}
 
@@ -154,16 +176,19 @@ module System.Linq {
 			if (!step)
 				step = 1;
 
-			return new Enumerable<number>(() => {
+			return new Enumerable<number>(() =>
+			{
 				var value: number;
 				var index: number;
 
 				return new EnumeratorBase<number>(
-					() => {
+					() =>
+					{
 						index = 0;
 						value = start - step;
 					},
-					yielder => {
+					yielder =>
+					{
 						return (index++ < count)
 							? yielder.yieldReturn(value += step)
 							: yielder.yieldBreak();
@@ -182,11 +207,13 @@ module System.Linq {
 			return Enumerable.range(start, count, step);
 		}
 
-		static toInfinity(start?: number, step?: number): Enumerable<number> {
+		static toInfinity(start?: number, step?: number): Enumerable<number>
+		{
 			return Enumerable.rangeTo(start, Infinity, step);
 		}
 
-		static toNegativeInfinity(start?: number, step?: number): Enumerable<number> {
+		static toNegativeInfinity(start?: number, step?: number): Enumerable<number>
+		{
 			return Enumerable.rangeTo(start, -Infinity, step);
 		}
 
@@ -199,13 +226,15 @@ module System.Linq {
 			if (!step) step = 1;
 			step = Math.abs(step);
 
-			return new Enumerable<number>(() => {
+			return new Enumerable<number>(() =>
+			{
 				var value: number;
 
 				return start < to
 					? new EnumeratorBase<number>(
 						() => value = start - step,
-						yielder => {
+						yielder =>
+						{
 							var next = value += step;
 							return (next <= to)
 								? yielder.yieldReturn(next)
@@ -214,7 +243,8 @@ module System.Linq {
 						)
 					: new EnumeratorBase<number>(
 						() => value = start + step,
-						yielder => {
+						yielder =>
+						{
 							var next = value -= step;
 							return (next >= to)
 								? yielder.yieldReturn(next)
@@ -224,13 +254,15 @@ module System.Linq {
 			});
 		}
 
-		static matches(input: string, pattern: any, flags: string = ""): Enumerable<RegExpExecArray> {
+		static matches(input: string, pattern: any, flags: string = ""): Enumerable<RegExpExecArray>
+		{
 
 			var type = typeof input;
 			if (type != Types.String)
 				throw new Error("Cannot exec RegExp matches on type " + type);
 
-			if (pattern instanceof RegExp) {
+			if (pattern instanceof RegExp)
+			{
 				flags += (pattern.ignoreCase) ? "i" : "";
 				flags += (pattern.multiline) ? "m" : "";
 				pattern = pattern.source;
@@ -240,19 +272,22 @@ module System.Linq {
 
 			var len = input.length;
 
-			return new Enumerable<RegExpExecArray>(() => {
+			return new Enumerable<RegExpExecArray>(() =>
+			{
 				var regex: RegExp;
 				return new EnumeratorBase<RegExpExecArray>(
 					() => regex = new RegExp(pattern, flags),
-					yielder => {
+					yielder =>
+					{
 						// Calling regex.exec concecutively on the same input uses the lastIndex to start the next match.
 						var match = regex.exec(input);
-						return (match!==null) ? yielder.yieldReturn(match) : false;
+						return (match !== null) ? yielder.yieldReturn(match) : false;
 					});
 			});
 		}
 
-		static generate<T>(factory: (index?:number) => T, count?: number): Enumerable<T> {
+		static generate<T>(factory: (index?: number) => T, count?: number): Enumerable<T>
+		{
 
 			if (typeof count == Types.Number && (count <= 0 || isNaN(count)))
 				return Enumerable.empty<T>();
@@ -260,7 +295,8 @@ module System.Linq {
 			if (!count)
 				count = Infinity;
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var index: number;
 
 				return new EnumeratorBase<T>(
@@ -275,8 +311,10 @@ module System.Linq {
 			});
 		}
 
-		static unfold<T>(seed: T, valueFactory: Selector<T,T>): Enumerable<T> {
-			return new Enumerable<T>(() => {
+		static unfold<T>(seed: T, valueFactory: Selector<T, T>): Enumerable<T>
+		{
+			return new Enumerable<T>(() =>
+			{
 				var index: number;
 				var value: T;
 				return new EnumeratorBase<T>(
@@ -285,21 +323,25 @@ module System.Linq {
 						index = 0;
 						value = seed;
 					},
-					yielder => {
-						value = valueFactory(value,index++);
+					yielder =>
+					{
+						value = valueFactory(value, index++);
 						return yielder.yieldReturn(value);
 					});
 			});
 		}
 
-		static defer<T>(enumerableFactory: () => IEnumerable<T>): Enumerable<T> {
+		static defer<T>(enumerableFactory: () => IEnumerable<T>): Enumerable<T>
+		{
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() => enumerator = enumerableFactory().getEnumerator(),
-					yielder => {
+					yielder =>
+					{
 						return (enumerator.moveNext())
 							? yielder.yieldReturn(enumerator.current)
 							: yielder.yieldBreak();
@@ -319,7 +361,8 @@ module System.Linq {
 
 			var index = 0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			using(_.getEnumerator(), e=> {
+			using(_.getEnumerator(), e=>
+			{
 				while (e.moveNext() && action(e.current, index++) !== false) { }
 			});
 		}
@@ -330,27 +373,31 @@ module System.Linq {
 		//////////////////////////////////////////
 		// #region Instance methods...
 
-		assertIsNotDisposed(errorMessage: string = "Enumerable was disposed."): boolean {
+		assertIsNotDisposed(errorMessage: string = "Enumerable was disposed."): boolean
+		{
 			return super.assertIsNotDisposed(errorMessage);
 		}
 
 		forEach(action: Predicate<T>): void;
 		forEach(action: Action<T>): void;
-		forEach(action: (element: T, index?: number) => any): void {
+		forEach(action: (element: T, index?: number) => any): void
+		{
 
 			var _ = this;
 			_.assertIsNotDisposed();
 
 			var index = 0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			using(_.getEnumerator(), e=> {
+			using(_.getEnumerator(), e=>
+			{
 				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
 				while (_.assertIsNotDisposed() && e.moveNext() && action(e.current, index++) !== false) { }
 			});
 		}
 
 		// #region Conversion Methods
-		toArray(predicate?: Predicate<T>): T[] {
+		toArray(predicate?: Predicate<T>): T[]
+		{
 			var result: T[] = [];
 
 			if (predicate) return this.where(predicate).toArray();
@@ -361,7 +408,8 @@ module System.Linq {
 		}
 
 		// Return a default (unfiltered) enumerable.
-		asEnumerable(): Enumerable<T> {
+		asEnumerable(): Enumerable<T>
+		{
 			var _ = this;
 			return new Enumerable<T>(() => _.getEnumerator());
 		}
@@ -374,7 +422,8 @@ module System.Linq {
 		{
 
 			var dict = new Dictionary<TKey, TValue[]>(compareSelector);
-			this.forEach(x=>{
+			this.forEach(x=>
+			{
 				var key = keySelector(x);
 				var element = elementSelector(x);
 
@@ -387,13 +436,13 @@ module System.Linq {
 
 		toMap<TResult>(
 			keySelector: Selector<T, string>,
-			elementSelector: Selector<T,TResult>): IMap<TResult>
+			elementSelector: Selector<T, TResult>): IMap<TResult>
 		{
-			var obj:IMap<TResult> = {};
-			this.forEach(x=>obj[keySelector(x)] = elementSelector(x))
+			var obj: IMap<TResult> = {};
+			this.forEach(x=> obj[keySelector(x)] = elementSelector(x))
 			return obj;
 		}
-		
+
 		toDictionary<TKey, TValue, TCompare>(
 			keySelector: Selector<T, TKey>,
 			elementSelector: Selector<T, TValue>,
@@ -404,7 +453,8 @@ module System.Linq {
 			return dict;
 		}
 
-		toJoinedString(separator:string="", selector:Selector<T,string> = Functions.Identity) {
+		toJoinedString(separator: string= "", selector: Selector<T, string> = Functions.Identity)
+		{
 			return this.select(selector).toArray().join(separator);
 		}
 
@@ -420,24 +470,29 @@ module System.Linq {
 		doAction(action: Selector<T, number>): Enumerable<T>;
 		doAction(action: Predicate<T>): Enumerable<T>;
 		doAction(action: Action<T>): Enumerable<T>;
-		doAction(action: (element: T, index?: number) => any): Enumerable<T> {
+		doAction(action: (element: T, index?: number) => any): Enumerable<T>
+		{
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 
 						index = 0; enumerator = _.getEnumerator();
 					},
-					yielder => {
+					yielder =>
+					{
 						assertIsNotDisposed(disposed);
 
-						while (enumerator.moveNext()) {
+						while (enumerator.moveNext())
+						{
 							var actionResult = action(enumerator.current, index++);
 
 							if (actionResult === false || actionResult === EnumerableAction)
@@ -458,7 +513,8 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		force(defaultAction:EnumerableAction = EnumerableAction.Break): void {
+		force(defaultAction: EnumerableAction = EnumerableAction.Break): void
+		{
 
 			this.assertIsNotDisposed();
 
@@ -466,7 +522,8 @@ module System.Linq {
 		}
 
 		// #region Indexing/Paging methods.
-		skip(count: number): Enumerable<T> {
+		skip(count: number): Enumerable<T>
+		{
 
 			this.assertIsNotDisposed();
 
@@ -479,7 +536,8 @@ module System.Linq {
 						: EnumerableAction.Return);
 		}
 
-		skipWhile(predicate: Predicate<T>) {
+		skipWhile(predicate: Predicate<T>)
+		{
 
 			this.assertIsNotDisposed();
 
@@ -487,7 +545,8 @@ module System.Linq {
 
 			return this.doAction(
 				(element: T, index: number)
-					=> {
+					=>
+				{
 					if (skipping)
 						skipping = predicate(element, index);
 
@@ -495,7 +554,8 @@ module System.Linq {
 				});
 		}
 
-		take(count: number): Enumerable<T> {
+		take(count: number): Enumerable<T>
+		{
 			this.assertIsNotDisposed();
 
 			// Once action returns false, the enumeration will stop.
@@ -504,14 +564,16 @@ module System.Linq {
 				: this.doAction((element: T, index: number) => index < count);
 		}
 
-		takeExceptLast(count:number = 1): Enumerable<T> {
+		takeExceptLast(count: number = 1): Enumerable<T>
+		{
 			var _ = this;
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				if (count <= 0) return _.getEnumerator(); // do nothing different.
 
-				var enumerator:IEnumerator<T>;
-				var q:T[];
+				var enumerator: IEnumerator<T>;
+				var q: T[];
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -536,18 +598,20 @@ module System.Linq {
 					() => enumerator.dispose());
 			});
 		}
-		
-		takeFromLast(count?:number): Enumerable<T> {
-			if (!count || count <0) return Enumerable.empty<T>();
+
+		takeFromLast(count?: number): Enumerable<T>
+		{
+			if (!count || count < 0) return Enumerable.empty<T>();
 			var _ = this;
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						var q:T[] = [];
+						var q: T[] = [];
 						using(_.getEnumerator(), e=>
 						{
 							// Enumerate to the end of the source collection and queue the results up to length-count.
@@ -713,70 +777,67 @@ module System.Linq {
 					},
 					() => { Utils.dispose(enumerator); });
 			});
-		}
+		} */
 
-		// Overload:function(func)
-		// Overload:function(seed,func<value,element>)
-		scan(seed, func): Enumerable<T> {
-			var isUseSeed;
-			if (func == null) {
-				func = Utils.createLambda(seed); // arguments[0]
-				isUseSeed = false;
-			} else {
-				func = Utils.createLambda(func);
-				isUseSeed = true;
-			}
+		scan(func: (a: T, b: T) => T, seed?: T): Enumerable<T> {
+
+			var isUseSeed = seed!==undefined; // For now...
 			var source = this;
 
 			return new Enumerable<T>(() => {
-				var enumerator;
-				var value;
-				var isFirst = true;
+				var enumerator:IEnumerator<T>;
+				var value:T;
+				var isFirst:boolean;
 
 				return new EnumeratorBase<T>(
-					() => { enumerator = source.getEnumerator(); },
-					() => {
-						if (isFirst) {
+					() =>
+					{
+						enumerator = source.getEnumerator();
+						isFirst = true;
+					},
+					yielder =>
+					{
+						if (isFirst)
+						{
 							isFirst = false;
-							if (!isUseSeed) {
-								if (enumerator.moveNext()) {
-									return (<any>this).yieldReturn(value = enumerator.current);
-								}
-							}
-							else {
-								return (<any>this).yieldReturn(value = seed);
-							}
+							return isUseSeed
+								? yielder.yieldReturn(value = seed)
+								: enumerator.moveNext() && yielder.yieldReturn(value = enumerator.current);
 						}
 
 						return (enumerator.moveNext())
-							? (<any>this).yieldReturn(value = func(value, enumerator.current))
+							? yielder.yieldReturn(value = func(value, enumerator.current))
 							: false;
 					},
-					() => { Utils.dispose(enumerator); });
+					() => enumerator.dispose());
 			});
-		} /**/
+		} 
 		// #endregion
 
 
-		select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult> {
+		select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>
+		{
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			if (selector.length < 2)
 				return new WhereSelectEnumerable(_, null, selector);
 
-			return new Enumerable<TResult>(() => {
+			return new Enumerable<TResult>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<TResult>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 
 						index = 0;
 						enumerator = _.getEnumerator();
 					},
-					yielder => {
+					yielder =>
+					{
 						assertIsNotDisposed(disposed);
 
 						return enumerator.moveNext()
@@ -791,53 +852,59 @@ module System.Linq {
 
 
 		selectMany<TResult>(
-			collectionSelector: Selector<T,IEnumerable<TResult>>
+			collectionSelector: Selector<T, IEnumerable<TResult>>
 			): Enumerable<TResult>;
 
 		selectMany<TResult>(
-			collectionSelector: Selector<T,TResult[]>
+			collectionSelector: Selector<T, TResult[]>
 			): Enumerable<TResult>;
 
 		selectMany<TElement, TResult>(
-			collectionSelector: Selector<T,IEnumerable<TElement>>,
+			collectionSelector: Selector<T, IEnumerable<TElement>>,
 			resultSelector?: (collection: T, element: TElement) => TResult
 			): Enumerable<TResult>;
 
 		selectMany<TElement, TResult>(
-			collectionSelector: Selector<T,TElement[]>,
+			collectionSelector: Selector<T, TElement[]>,
 			resultSelector?: (collection: T, element: TElement) => TResult
 			): Enumerable<TResult>;
 
 		selectMany<TResult>(
-			collectionSelector: Selector<T,any>,
+			collectionSelector: Selector<T, any>,
 			resultSelector?: (collection: any, middle: any) => TResult
-			): Enumerable<TResult> {
+			): Enumerable<TResult>
+		{
 			var _ = this;
 			if (!resultSelector)
 				resultSelector = (a, b) => b;
 
-			return new Enumerable<TResult>(() => {
+			return new Enumerable<TResult>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var middleEnumerator: IEnumerator<any>;
 				var index: number;
 
 				return new EnumeratorBase<TResult>(
-					() => {
+					() =>
+					{
 						enumerator = _.getEnumerator();
 						middleEnumerator = undefined;
 						index = 0;
 					},
-					yielder => {
+					yielder =>
+					{
 
 						// Just started, and nothing to enumerate? End.
 						if (middleEnumerator === undefined && !enumerator.moveNext())
 							return false;
 
 						// moveNext has been called at least once...
-						do {
+						do
+						{
 
 							// Initialize middle if there isn't one.
-							if (!middleEnumerator) {
+							if (!middleEnumerator)
+							{
 								var middleSeq = collectionSelector(enumerator.current, index++);
 
 								// Collection is null?  Skip it...
@@ -859,12 +926,15 @@ module System.Linq {
 
 						return false;
 					},
-					() => {
-						try {
+					() =>
+					{
+						try
+						{
 							enumerator.dispose();
 							enumerator = null;
 						}
-						finally {
+						finally
+						{
 							if (middleEnumerator)
 								middleEnumerator.dispose();
 							middleEnumerator = null;
@@ -873,25 +943,30 @@ module System.Linq {
 			});
 		}
 
-		choose<TResult>(selector: Selector<T,TResult>): Enumerable<TResult> {
+		choose<TResult>(selector: Selector<T, TResult>): Enumerable<TResult>
+		{
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
-			return new Enumerable<TResult>(() => {
+			return new Enumerable<TResult>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<TResult>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 
 						index = 0;
 						enumerator = _.getEnumerator();
 					},
-					yielder => {
+					yielder =>
+					{
 						assertIsNotDisposed(disposed);
 
-						while (enumerator.moveNext()) {
+						while (enumerator.moveNext())
+						{
 							var result = selector(enumerator.current, index++);
 							if (result !== null && result !== undefined)
 								return yielder.yieldReturn(result);
@@ -905,28 +980,33 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		where(predicate: Predicate<T>): Enumerable<T> {
+		where(predicate: Predicate<T>): Enumerable<T>
+		{
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			if (predicate.length < 2)
 				return new WhereEnumerable(_, predicate);
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 
 						index = 0;
 						enumerator = _.getEnumerator();
 					},
-					yielder => {
+					yielder =>
+					{
 						assertIsNotDisposed(disposed);
 
-						while (enumerator.moveNext()) {
+						while (enumerator.moveNext())
+						{
 							if (predicate(enumerator.current, index++))
 								return yielder.yieldReturn(enumerator.current);
 						}
@@ -940,9 +1020,11 @@ module System.Linq {
 		}
 
 		ofType<TType>(type: { new (): TType }): Enumerable<TType>
-		ofType<TType>(type: any): Enumerable<TType> {
-			var typeName:string;
-			switch (<any>type) {
+		ofType<TType>(type: any): Enumerable<TType>
+		{
+			var typeName: string;
+			switch (<any>type)
+			{
 				case Number:
 					typeName = Types.Number;
 					break;
@@ -970,30 +1052,36 @@ module System.Linq {
 		{
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var keys: System.Collections.Dictionary<T, boolean>;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
 						keys = new System.Collections.Dictionary<T, boolean>(compareSelector);
 						if (second)
 							Enumerable.forEach(second, key => keys.addByKeyValue(key, true));
 					},
-					yielder => {
+					yielder =>
+					{
 						assertIsNotDisposed(disposed);
-						while (enumerator.moveNext()) {
+						while (enumerator.moveNext())
+						{
 							var current = enumerator.current;
-							if (!keys.containsKey(current)) {
+							if (!keys.containsKey(current))
+							{
 								keys.addByKeyValue(current, true);
 								return yielder.yieldReturn(current);
 							}
 						}
 						return false;
 					},
-					() => {
+					() =>
+					{
 						enumerator.dispose();
 						keys.clear();
 					});
@@ -1001,34 +1089,42 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		distinct(compareSelector?: (value: T) => T): Enumerable<T> {
+		distinct(compareSelector?: (value: T) => T): Enumerable<T>
+		{
 			return this.except(null, compareSelector);
 		}
 
 		// [0,0,0,1,1,1,2,2,2,0,0,0] results in [0,1,2,0];
-		distinctUntilChanged<TCompare>(compareSelector?: Selector<T,TCompare>): Enumerable<T> {
+		distinctUntilChanged<TCompare>(compareSelector?: Selector<T, TCompare>): Enumerable<T>
+		{
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var compareKey: TCompare;
 				var initial: boolean = true;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
 					},
-					yielder => {
+					yielder =>
+					{
 						assertIsNotDisposed(disposed);
-						while (enumerator.moveNext()) {
+						while (enumerator.moveNext())
+						{
 							var key = compareSelector(enumerator.current);
 
-							if (initial) {
+							if (initial)
+							{
 								initial = false;
 							}
-							else if (compareKey === key) {
+							else if (compareKey === key)
+							{
 								continue;
 							}
 
@@ -1043,15 +1139,18 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		reverse(): Enumerable<T> {
+		reverse(): Enumerable<T>
+		{
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var buffer: T[];
 				var index: number;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 						buffer = _.toArray();
 						index = buffer.length;
@@ -1067,20 +1166,25 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		shuffle(): Enumerable<T> {
+		shuffle(): Enumerable<T>
+		{
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var buffer: T[];
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						assertIsNotDisposed(disposed);
 						buffer = _.toArray();
 					},
-					yielder => {
+					yielder =>
+					{
 						var len = buffer.length;
-						if (len) {
+						if (len)
+						{
 							var i = Math.floor(Math.random() * len);
 							return yielder.yieldReturn(buffer.splice(i, 1).pop());
 						}
@@ -1092,19 +1196,24 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		count(predicate?: Predicate<T>): number {
+		count(predicate?: Predicate<T>): number
+		{
 
 			var _ = this;
 			_.assertIsNotDisposed();
 
 			var count: number = 0;
-			if (predicate) {
-				_.forEach((x, i) => {
-					if (predicate(x, i)) ++count;
+			if (predicate)
+			{
+				_.forEach((x, i) =>
+				{
+					if (predicate(x, i))++count;
 				});
 			}
-			else {
-				_.forEach((x, i) => {
+			else
+			{
+				_.forEach((x, i) =>
+				{
 					++count;
 				});
 			}
@@ -1113,10 +1222,13 @@ module System.Linq {
 		}
 
 		// Akin to '.every' on an array.
-		all(predicate: Predicate<T>): boolean {
+		all(predicate: Predicate<T>): boolean
+		{
 			var result = true;
-			this.forEach(x => {
-				if (!predicate(x)) {
+			this.forEach(x =>
+			{
+				if (!predicate(x))
+				{
 					result = false;
 					return false; // break
 				}
@@ -1130,18 +1242,23 @@ module System.Linq {
 		}
 
 		// Akin to '.some' on an array.
-		any(predicate?: Predicate<T>): boolean {
+		any(predicate?: Predicate<T>): boolean
+		{
 			var result = false;
 
 			// Splitting the forEach up this way reduces iterative processing.
 			// forEach handles the generation and disposal of the enumerator.
-			if (predicate) {
-				this.forEach(x => {
+			if (predicate)
+			{
+				this.forEach(x =>
+				{
 					result = predicate(x); // false = not found and therefore it should continue.  true = found and break;
 					return !result;
 				});
-			} else {
-				this.forEach(x=> {
+			} else
+			{
+				this.forEach(x=>
+				{
 					result = true;
 					return false;
 				});
@@ -1155,11 +1272,13 @@ module System.Linq {
 			return this.any(predicate);
 		}
 
-		isEmpty(): boolean {
+		isEmpty(): boolean
+		{
 			return !this.any();
 		}
 
-		contains<TCompare>(value: T, compareSelector?: Selector<T,TCompare>): boolean {
+		contains<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): boolean
+		{
 			return compareSelector
 				? this.any(v=> compareSelector(v) === compareSelector(value))
 				: this.any(v=> v === value);
@@ -1169,10 +1288,12 @@ module System.Linq {
 		// Better to chain a where statement first to be more explicit.
 		indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number
 		{
-			var found:number = -1;
+			var found: number = -1;
 
-			this.forEach((x, i)=> {
-				if (x === value) {
+			this.forEach((x, i) =>
+			{
+				if (x === value)
+				{
 					found = i;
 					return false;
 				}
@@ -1181,12 +1302,12 @@ module System.Linq {
 			return found;
 		}
 
-		lastIndexOf<TCompare>(value: T, compareSelector?: Selector < T, TCompare>): number
+		lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number
 		{
 			var result = -1;
 
 
-			this.forEach((x, i)=>
+			this.forEach((x, i) =>
 			{
 				if (x === value) result = i;
 			});
@@ -1194,10 +1315,12 @@ module System.Linq {
 			return result;
 		}
 
-		defaultIfEmpty(defaultValue: T = null): Enumerable<T> {
+		defaultIfEmpty(defaultValue: T = null): Enumerable<T>
+		{
 			var _ = this, disposed: boolean = !_.assertIsNotDisposed();
 
-			return new Enumerable<T>(() => {
+			return new Enumerable<T>(() =>
+			{
 				var enumerator: IEnumerator<T>;
 				var isFirst: boolean;
 
@@ -1208,14 +1331,17 @@ module System.Linq {
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
 					},
-					yielder => {
+					yielder =>
+					{
 						assertIsNotDisposed(disposed);
 
-						if (enumerator.moveNext()) {
+						if (enumerator.moveNext())
+						{
 							isFirst = false;
 							return yielder.yieldReturn(enumerator.current);
 						}
-						else if (isFirst) {
+						else if (isFirst)
+						{
 							isFirst = false;
 							return yielder.yieldReturn(defaultValue);
 						}
@@ -1732,9 +1858,9 @@ module System.Linq {
 		// Originally contained a result selector (not common use), but this could be done simply by a select statement after.
 
 		groupBy<TKey, TElement, TCompare>(
-			keySelector:Selector<T,TKey>,
+			keySelector: Selector<T, TKey>,
 			elementSelector: Selector<T, TElement> = Functions.Identity,
-			compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey,TElement>>
+			compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>
 		{
 			var _ = this;
 			return new Enumerable<IGrouping<TKey, TElement>>(
@@ -1814,11 +1940,13 @@ module System.Linq {
 				throw new Error("Invalid buffer size.");
 			var _ = this;
 
-			return new Enumerable<T[]>(() => {
-				var enumerator:IEnumerator<T>;
+			return new Enumerable<T[]>(() =>
+			{
+				var enumerator: IEnumerator<T>;
 				return new EnumeratorBase<T[]>(
 					() => enumerator = _.getEnumerator(),
-					yielder => {
+					yielder =>
+					{
 						var array: T[] = [];
 						while (array.length < size && enumerator.moveNext())
 							array.push(enumerator.current);
@@ -1829,66 +1957,95 @@ module System.Linq {
 			});
 		}
 
-		/*
 		// Aggregate Methods 
 
-		// Overload:function(func)
-		// Overload:function(seed,func)
-		// Overload:function(seed,func,resultSelector)
-		aggregate(seed, func, resultSelector) {
-			resultSelector = Utils.createLambda(resultSelector);
-			return resultSelector(this.scan(seed, func, resultSelector).last());
+		aggregate(
+			func: (a: T, b: T) => T,
+			seed?: T)
+		{
+			return this.scan(func, seed).last();
 		}
 
-		// Overload:function()
-		// Overload:function(selector)
-		average(selector) {
-			selector = Utils.createLambda(selector);
-
+		average(selector: Selector<T, number> = numberOrNaN): number
+		{
 			var sum = 0;
 			var count = 0;
-			this.forEach(function (x) {
-				sum += selector(x);
+
+			this.forEach(function (x)
+			{
+				var value = selector(x);
+				if (!isNaN(value))
+				{
+					sum = NaN;
+					return false;
+				}
+				sum += value;
 				++count;
 			});
 
-			return sum / count;
-		}
-
-		
-		// Overload:function()
-		// Overload:function(selector)
-		max(selector) {
-			if (selector == null) selector = Functions.Identity;
-			return this.select(selector).aggregate(function (a, b) { return (a > b) ? a : b; });
-		}
-
-		// Overload:function()
-		// Overload:function(selector)
-		min(selector) {
-			if (selector == null) selector = Functions.Identity;
-			return this.select(selector).aggregate(function (a, b) { return (a < b) ? a : b; });
-		}
-
-		maxBy(keySelector) {
-			keySelector = Utils.createLambda(keySelector);
-			return this.aggregate(function (a, b) { return (keySelector(a) > keySelector(b)) ? a : b; });
-		}
-
-		minBy(keySelector) {
-			keySelector = Utils.createLambda(keySelector);
-			return this.aggregate(function (a, b) { return (keySelector(a) < keySelector(b)) ? a : b; });
-		}
-
-		// Overload:function()
-		// Overload:function(selector)
-		sum(selector) {
-			if (selector == null) selector = Functions.Identity;
-			return this.select(selector).aggregate(0, function (a, b) { return a + b; });
+			return (isNaN(sum) || !count) ? NaN : (sum / count);
 		}
 
 
-/**/
+		max(): T
+		{
+			return this.aggregate(Functions.Greater);
+		}
+
+		min(): T
+		{
+			return this.aggregate(Functions.Lesser);
+		}
+
+		maxBy<TCompare>(keySelector: Selector<T, TCompare> = Functions.Identity): T
+		{
+			return this.aggregate((a: T, b: T) => (keySelector(a) > keySelector(b)) ? a : b );
+		}
+
+		minBy<TCompare>(keySelector: Selector<T, TCompare> = Functions.Identity): T
+		{
+			return this.aggregate((a: T, b: T) => (keySelector(a) < keySelector(b)) ? a : b);
+		}
+
+		// Addition...
+		sum(selector: Selector<T, number> = numberOrNaN): number
+		{
+			var sum = 0;
+
+			this.forEach(x=>
+			{
+				var value = selector(x);
+				if (!isNaN(value))
+				{
+					sum = NaN;
+					return false;
+				}
+				sum += value;
+			});
+
+			return isNaN(sum) ? NaN : sum;
+		}
+
+		// Multiplication...
+		product(selector: Selector<T, number> = numberOrNaN): number
+		{
+			var result = 1, exists:boolean = false;
+
+			this.forEach(x=>
+			{
+				exists = true;
+				var value = selector(x);
+				if (!isNaN(value))
+				{
+					result = NaN;
+					return false;
+				}
+				result *= value;
+			});
+
+			return (exists && isNaN(result)) ? NaN : result;
+		}
+
 
 		// #region Single Value Return...
 

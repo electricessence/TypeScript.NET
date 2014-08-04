@@ -7,14 +7,18 @@ module System {
 
 	"use strict";
 
+	// TODO: Might want to make a safer way to expose this set.
 	export var Functions = {
 		Identity: <T>(x: T) => { return x; },
 		True: () => true,
 		False: () => false,
-		Blank: () => { }
+		Blank: () => { },
+		Greater: <T>(a: T, b: T) => a > b ? a : b,
+		Lesser: <T>(a: T, b: T) => a < b ? a : b
 	};
 
 	// const Type
+	// TODO: Might want to make a safer way to expose this set.
 	export var Types = {
 		Boolean: typeof true,
 		Number: typeof 0,
