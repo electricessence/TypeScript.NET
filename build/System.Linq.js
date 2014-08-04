@@ -9,21 +9,31 @@ var System;
     (function (Linq) {
         "use strict";
 
-        var EnumeratorBase = System.Collections.EnumeratorBase;
+        var ArrayUtility = System.Collections.ArrayUtility;
 
-        var Functions = System.Functions;
-        var Types = System.Types;
+        var EnumeratorBase = System.Collections.EnumeratorBase;
 
         var Dictionary = System.Collections.Dictionary;
 
         var using = System.using;
 
-        (function (EnumerableAction) {
-            EnumerableAction[EnumerableAction["Break"] = 0] = "Break";
-            EnumerableAction[EnumerableAction["Return"] = 1] = "Return";
-            EnumerableAction[EnumerableAction["Skip"] = 2] = "Skip";
-        })(Linq.EnumerableAction || (Linq.EnumerableAction = {}));
-        var EnumerableAction = Linq.EnumerableAction;
+        var LinqFunctions = (function (_super) {
+            __extends(LinqFunctions, _super);
+            function LinqFunctions() {
+                _super.apply(this, arguments);
+            }
+            LinqFunctions.prototype.Greater = function (a, b) {
+                return a > b ? a : b;
+            };
+            LinqFunctions.prototype.Lesser = function (a, b) {
+                return a < b ? a : b;
+            };
+            return LinqFunctions;
+        })(System.Functions);
+
+        var Functions = new LinqFunctions();
+
+        var Types = new System.Types();
 
         function assertIsNotDisposed(disposed) {
             return System.DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
@@ -32,6 +42,13 @@ var System;
         function numberOrNaN(value) {
             return isNaN(value) ? NaN : value;
         }
+
+        (function (EnumerableAction) {
+            EnumerableAction[EnumerableAction["Break"] = 0] = "Break";
+            EnumerableAction[EnumerableAction["Return"] = 1] = "Return";
+            EnumerableAction[EnumerableAction["Skip"] = 2] = "Skip";
+        })(Linq.EnumerableAction || (Linq.EnumerableAction = {}));
+        var EnumerableAction = Linq.EnumerableAction;
 
         var Enumerable = (function (_super) {
             __extends(Enumerable, _super);
@@ -82,11 +99,9 @@ var System;
             };
 
             Enumerable.repeat = function (element, count) {
-                if (typeof count == Types.Number && (count <= 0 || isNaN(count)))
+                if (typeof count === "undefined") { count = Infinity; }
+                if (isNaN(count) || count <= 0)
                     return Enumerable.empty();
-
-                if (!count)
-                    count = Infinity;
 
                 return new Enumerable(function () {
                     var index;
@@ -184,7 +199,7 @@ var System;
                 if (typeof flags === "undefined") { flags = ""; }
                 var type = typeof input;
                 if (type != Types.String)
-                    throw new Error("Cannot exec RegExp matches on type " + type);
+                    throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
                 if (pattern instanceof RegExp) {
                     flags += (pattern.ignoreCase) ? "i" : "";
@@ -893,6 +908,30 @@ var System;
                 });
             };
 
+            Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
+                if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
+                return using(this.getEnumerator(), function (e1) {
+                    return using(second.getEnumerator(), function (e2) {
+                        while (e1.moveNext()) {
+                            if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
+                                return false;
+                        }
+
+                        return !e2.moveNext();
+                    });
+                });
+            };
+
+            Enumerable.prototype.orderBy = function (keySelector) {
+                if (typeof keySelector === "undefined") { keySelector = Functions.Identity; }
+                return new OrderedEnumerable(this, keySelector, false);
+            };
+
+            Enumerable.prototype.orderByDescending = function (keySelector) {
+                if (typeof keySelector === "undefined") { keySelector = Functions.Identity; }
+                return new OrderedEnumerable(this, keySelector, true);
+            };
+
             Enumerable.prototype.groupBy = function (keySelector, elementSelector, compareSelector) {
                 if (typeof elementSelector === "undefined") { elementSelector = Functions.Identity; }
                 var _ = this;
@@ -923,7 +962,7 @@ var System;
             };
 
             Enumerable.prototype.aggregate = function (func, seed) {
-                return this.scan(func, seed).last();
+                return this.scan(func, seed).lastOrDefault();
             };
 
             Enumerable.prototype.average = function (selector) {
@@ -1036,12 +1075,9 @@ var System;
                 return (!found) ? defaultValue : value;
             };
 
-            Enumerable.prototype.first = function (predicate) {
+            Enumerable.prototype.first = function () {
                 var _ = this;
                 _.assertIsNotDisposed();
-
-                if (predicate)
-                    return _.where(predicate).first();
 
                 var value;
                 var found = false;
@@ -1056,13 +1092,10 @@ var System;
                 return value;
             };
 
-            Enumerable.prototype.firstOrDefault = function (predicate, defaultValue) {
+            Enumerable.prototype.firstOrDefault = function (defaultValue) {
                 if (typeof defaultValue === "undefined") { defaultValue = null; }
                 var _ = this;
                 _.assertIsNotDisposed();
-
-                if (predicate)
-                    return _.where(predicate).firstOrDefault(null, defaultValue);
 
                 var value;
                 var found = false;
@@ -1074,12 +1107,9 @@ var System;
                 return (!found) ? defaultValue : value;
             };
 
-            Enumerable.prototype.last = function (predicate) {
+            Enumerable.prototype.last = function () {
                 var _ = this;
                 _.assertIsNotDisposed();
-
-                if (predicate)
-                    return _.where(predicate).last();
 
                 var value;
                 var found = false;
@@ -1093,13 +1123,10 @@ var System;
                 return value;
             };
 
-            Enumerable.prototype.lastOrDefault = function (predicate, defaultValue) {
+            Enumerable.prototype.lastOrDefault = function (defaultValue) {
                 if (typeof defaultValue === "undefined") { defaultValue = null; }
                 var _ = this;
                 _.assertIsNotDisposed();
-
-                if (predicate)
-                    return _.where(predicate).lastOrDefault(null, defaultValue);
 
                 var value;
                 var found = false;
@@ -1110,12 +1137,9 @@ var System;
                 return (!found) ? defaultValue : value;
             };
 
-            Enumerable.prototype.single = function (predicate) {
+            Enumerable.prototype.single = function () {
                 var _ = this;
                 _.assertIsNotDisposed();
-
-                if (predicate)
-                    return _.where(predicate).single();
 
                 var value;
                 var found = false;
@@ -1132,13 +1156,10 @@ var System;
                 return value;
             };
 
-            Enumerable.prototype.singleOrDefault = function (predicate, defaultValue) {
+            Enumerable.prototype.singleOrDefault = function (defaultValue) {
                 if (typeof defaultValue === "undefined") { defaultValue = null; }
                 var _ = this;
                 _.assertIsNotDisposed();
-
-                if (predicate)
-                    return _.where(predicate).singleOrDefault(null, defaultValue);
 
                 var value;
                 var found = false;
@@ -1338,38 +1359,38 @@ var System;
                 return (index < source.length && index >= 0) ? source[index] : defaultValue;
             };
 
-            ArrayEnumerable.prototype.first = function (predicate) {
+            ArrayEnumerable.prototype.first = function () {
                 var _ = this;
                 _.assertIsNotDisposed();
 
                 var source = this._source;
-                return (source && source.length && !predicate) ? source[0] : _super.prototype.first.call(this, predicate);
+                return (source && source.length) ? source[0] : _super.prototype.first.call(this);
             };
 
-            ArrayEnumerable.prototype.firstOrDefault = function (predicate, defaultValue) {
+            ArrayEnumerable.prototype.firstOrDefault = function (defaultValue) {
                 if (typeof defaultValue === "undefined") { defaultValue = null; }
                 var _ = this;
                 _.assertIsNotDisposed();
 
                 var source = this._source;
-                return (source && source.length) ? (predicate ? _super.prototype.firstOrDefault.call(this, predicate, defaultValue) : source[0]) : defaultValue;
+                return (source && source.length) ? source[0] : defaultValue;
             };
 
-            ArrayEnumerable.prototype.last = function (predicate) {
+            ArrayEnumerable.prototype.last = function () {
                 var _ = this;
                 _.assertIsNotDisposed();
 
                 var source = this._source, len = source.length;
-                return (len && !predicate) ? source[len - 1] : _super.prototype.last.call(this, predicate);
+                return (len) ? source[len - 1] : _super.prototype.last.call(this);
             };
 
-            ArrayEnumerable.prototype.lastOrDefault = function (predicate, defaultValue) {
+            ArrayEnumerable.prototype.lastOrDefault = function (defaultValue) {
                 if (typeof defaultValue === "undefined") { defaultValue = null; }
                 var _ = this;
                 _.assertIsNotDisposed();
 
                 var source = this._source, len = source.length;
-                return len ? (predicate ? _super.prototype.firstOrDefault.call(this, predicate, defaultValue) : source[len - 1]) : defaultValue;
+                return len ? source[len - 1] : defaultValue;
             };
 
             ArrayEnumerable.prototype.skip = function (count) {
@@ -1405,6 +1426,23 @@ var System;
 
             ArrayEnumerable.prototype.memoize = function () {
                 return new ArrayEnumerable(this._source);
+            };
+
+            ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
+                if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
+                if (second instanceof Array)
+                    return ArrayUtility.areEqual(this.source, second, true, equalityComparer);
+
+                if (second instanceof ArrayEnumerable)
+                    return second.sequenceEqual(this.source, equalityComparer);
+
+                return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
+            };
+
+            ArrayEnumerable.prototype.toJoinedString = function (separator, selector) {
+                if (typeof separator === "undefined") { separator = ""; }
+                if (typeof selector === "undefined") { selector = Functions.Identity; }
+                return selector ? _super.prototype.toJoinedString.call(this, separator, selector) : this._source.join(separator);
             };
             return ArrayEnumerable;
         })(Enumerable);

@@ -57,6 +57,7 @@
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Functions.ts" />
     <TypeScriptCompile Include="System.ts" />
     <TypeScriptCompile Include="IDisposable.ts" />
     <TypeScriptCompile Include="ICloneable.ts" />
@@ -74,6 +75,7 @@
     <TypeScriptCompile Include="Collections\Dictionary.ts" />
     <TypeScriptCompile Include="Collections\StringKeyDictionary.ts" />
     <TypeScriptCompile Include="Collections\OrderedStringKeyDictionary.ts" />
+    <TypeScriptCompile Include="Types.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\build\System.js">

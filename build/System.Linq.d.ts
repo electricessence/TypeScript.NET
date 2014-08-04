@@ -69,6 +69,9 @@
         public indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
+        public sequenceEqual(second: Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+        public orderBy<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
+        public orderByDescending<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         public groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
         public buffer(size: number): Collections.IEnumerable<T[]>;
         public aggregate(func: (a: T, b: T) => T, seed?: T): T;
@@ -81,12 +84,12 @@
         public product(selector?: Selector<T, number>): number;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;
-        public first(predicate?: Predicate<T>): T;
-        public firstOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
-        public last(predicate?: Predicate<T>): T;
-        public lastOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
-        public single(predicate?: Predicate<T>): T;
-        public singleOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
+        public first(): T;
+        public firstOrDefault(defaultValue?: T): T;
+        public last(): T;
+        public lastOrDefault(defaultValue?: T): T;
+        public single(): T;
+        public singleOrDefault(defaultValue?: T): T;
         public share(): Enumerable<T>;
         public memoize(): Enumerable<T>;
         public catchError(handler: (e: Error) => void): Enumerable<T>;
@@ -105,15 +108,18 @@
         public count(predicate?: Predicate<T>): number;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;
-        public first(predicate?: Predicate<T>): T;
-        public firstOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
-        public last(predicate?: Predicate<T>): T;
-        public lastOrDefault(predicate: Predicate<T>, defaultValue?: T): T;
+        public first(): T;
+        public firstOrDefault(defaultValue?: T): T;
+        public last(): T;
+        public lastOrDefault(defaultValue?: T): T;
         public skip(count: number): Enumerable<T>;
         public takeExceptLast(count?: number): Enumerable<T>;
         public takeFromLast(count: number): Enumerable<T>;
         public reverse(): Enumerable<T>;
         public memoize(): ArrayEnumerable<T>;
+        public sequenceEqual(second: Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+        public sequenceEqual(second: T[], equalityComparer?: (a: T, b: T) => boolean): boolean;
+        public toJoinedString(separator?: string, selector?: Selector<T, string>): string;
     }
     class WhereEnumerable<T> extends Enumerable<T> {
         private prevSource;
@@ -139,7 +145,7 @@
         public keySelector: (value: T) => any;
         public descending: boolean;
         public parent: OrderedEnumerable<T>;
-        constructor(source: Collections.IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent: OrderedEnumerable<T>);
+        constructor(source: Collections.IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent?: OrderedEnumerable<T>);
         public createOrderedEnumerable(keySelector: (value: T) => any, descending: boolean): OrderedEnumerable<T>;
         public thenBy(keySelector: (value: T) => any): OrderedEnumerable<T>;
         public thenByDescending(keySelector: (value: T) => any): OrderedEnumerable<T>;

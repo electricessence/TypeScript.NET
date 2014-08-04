@@ -2,40 +2,162 @@
 (function (System) {
     "use strict";
 
-    System.Functions = {
-        Identity: function (x) {
-            return x;
-        },
-        True: function () {
-            return true;
-        },
-        False: function () {
-            return false;
-        },
-        Blank: function () {
-        },
-        Greater: function (a, b) {
-            return a > b ? a : b;
-        },
-        Lesser: function (a, b) {
-            return a < b ? a : b;
+    var Functions = (function () {
+        function Functions() {
         }
-    };
+        Functions.prototype.Identity = function (x) {
+            return x;
+        };
+        Functions.prototype.True = function () {
+            return true;
+        };
+        Functions.prototype.False = function () {
+            return false;
+        };
+        Functions.prototype.Blank = function () {
+        };
 
-    System.Types = {
-        Boolean: typeof true,
-        Number: typeof 0,
-        String: typeof "",
-        Object: typeof {},
-        Null: typeof null,
-        Undefined: typeof undefined,
-        Function: typeof System.Functions.Blank
-    };
+        Object.defineProperty(Functions, "Identity", {
+            get: function () {
+                return rootFunctions.Identity;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Functions, "True", {
+            get: function () {
+                return rootFunctions.True;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Functions, "False", {
+            get: function () {
+                return rootFunctions.False;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Functions, "Blank", {
+            get: function () {
+                return rootFunctions.Blank;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Functions;
+    })();
+    System.Functions = Functions;
+
+    var rootFunctions = new Functions();
+})(System || (System = {}));
+var System;
+(function (System) {
+    "use strict";
+
+    var Types = (function () {
+        function Types() {
+            this.Boolean = typeof true;
+            this.Number = typeof 0;
+            this.String = typeof "";
+            this.Object = typeof {};
+            this.Null = typeof null;
+            this.Undefined = typeof undefined;
+            this.Function = typeof System.Functions.Blank;
+        }
+        Object.defineProperty(Types, "Boolean", {
+            get: function () {
+                return typeof true;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Types, "Number", {
+            get: function () {
+                return typeof 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Types, "String", {
+            get: function () {
+                return typeof "";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Types, "Object", {
+            get: function () {
+                return typeof {};
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Types, "Null", {
+            get: function () {
+                return typeof null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Types, "Undefined", {
+            get: function () {
+                return typeof undefined;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Types, "Function", {
+            get: function () {
+                return typeof System.Functions.Blank;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Types.prototype.isBoolean = function (type) {
+            return typeof type === this.Boolean;
+        };
+
+        Types.isBoolean = function (type) {
+            return typeof type === Types.Boolean;
+        };
+
+        Types.prototype.isNumber = function (type) {
+            return typeof type === this.Number;
+        };
+
+        Types.isNumber = function (type) {
+            return typeof type === Types.Number;
+        };
+
+        Types.prototype.isString = function (type) {
+            return typeof type === this.String;
+        };
+
+        Types.isString = function (type) {
+            return typeof type === Types.String;
+        };
+
+        Types.prototype.isFunction = function (type) {
+            return typeof type === this.Function;
+        };
+
+        Types.isFunction = function (type) {
+            return typeof type === Types.Function;
+        };
+        return Types;
+    })();
+    System.Types = Types;
+})(System || (System = {}));
+var System;
+(function (System) {
+    var Types = new System.Types();
 
     
 
     function isEqualToNaN(n) {
-        return typeof n === System.Types.Number && isNaN(n);
+        return typeof n === Types.Number && isNaN(n);
     }
     System.isEqualToNaN = isEqualToNaN;
 
@@ -57,12 +179,12 @@
             return source;
 
         switch (typeof source) {
-            case System.Types.Undefined:
-            case System.Types.Null:
-            case System.Types.String:
-            case System.Types.Boolean:
-            case System.Types.Number:
-            case System.Types.Function:
+            case Types.Undefined:
+            case Types.Null:
+            case Types.String:
+            case Types.Boolean:
+            case Types.Number:
+            case Types.Function:
                 return source;
         }
 
@@ -165,7 +287,8 @@ var System;
             }
             ArrayUtility.areAllEqual = areAllEqual;
 
-            function areEqual(a, b, strict) {
+            function areEqual(a, b, strict, equalityComparer) {
+                if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
                 if (a === b)
                     return true;
 
@@ -173,10 +296,8 @@ var System;
                 if (len != b.length)
                     return false;
 
-                var equal = System.areEqual;
-
                 for (var i = 0; i < len; ++i)
-                    if (!equal(a[i], b[i], strict))
+                    if (!equalityComparer(a[i], b[i], strict))
                         return false;
 
                 return true;

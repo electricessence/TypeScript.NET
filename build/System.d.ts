@@ -1,21 +1,42 @@
 ﻿declare module System {
-    var Functions: {
-        Identity: <T>(x: T) => T;
-        True: () => boolean;
-        False: () => boolean;
-        Blank: () => void;
-        Greater: <T>(a: T, b: T) => T;
-        Lesser: <T>(a: T, b: T) => T;
-    };
-    var Types: {
-        Boolean: string;
-        Number: string;
-        String: string;
-        Object: string;
-        Null: string;
-        Undefined: string;
-        Function: string;
-    };
+    class Functions {
+        public Identity<T>(x: T): T;
+        public True(): boolean;
+        public False(): boolean;
+        public Blank(): void;
+        static Identity : <T>(x: T) => T;
+        static True : () => boolean;
+        static False : () => boolean;
+        static Blank : () => void;
+    }
+}
+declare module System {
+    class Types {
+        public Boolean: string;
+        public Number: string;
+        public String: string;
+        public Object: string;
+        public Null: string;
+        public Undefined: string;
+        public Function: string;
+        static Boolean : string;
+        static Number : string;
+        static String : string;
+        static Object : string;
+        static Null : string;
+        static Undefined : string;
+        static Function : string;
+        public isBoolean(type: any): boolean;
+        static isBoolean(type: any): boolean;
+        public isNumber(type: any): boolean;
+        static isNumber(type: any): boolean;
+        public isString(type: any): boolean;
+        static isString(type: any): boolean;
+        public isFunction(type: any): boolean;
+        static isFunction(type: any): boolean;
+    }
+}
+declare module System {
     interface Action<T> {
         (object: T, index?: number): void;
     }
@@ -42,7 +63,7 @@ declare module System.Collections.ArrayUtility {
     function register<T>(array: T[], item: T): boolean;
     function findIndex<T>(array: T[], predicate: (item: T) => boolean): number;
     function areAllEqual(arrays: any[][], strict?: boolean): boolean;
-    function areEqual(a: any[], b: any[], strict?: boolean): boolean;
+    function areEqual<T>(a: T[], b: T[], strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
     function applyTo(target: number[], fn: (a: number) => number): number[];
     function removeIndex<T>(array: T[], index: number): boolean;
     function remove<T>(array: T[], value: T, max?: number): number;

@@ -61,9 +61,8 @@ module System.Collections.ArrayUtility
 		return true;
 	}
 
-	export function areEqual(a: any[], b: any[], strict?: boolean): boolean
+	export function areEqual<T>(a: T[], b: T[], strict?: boolean, equalityComparer: (a: T, b: T, strict?: boolean) => boolean = System.areEqual): boolean
 	{
-
 		if (a === b)
 			return true;
 
@@ -71,10 +70,8 @@ module System.Collections.ArrayUtility
 		if (len != b.length)
 			return false;
 
-		var equal: (a: any, b: any, strict?: boolean) => boolean = System.areEqual;
-
 		for (var i = 0; i < len; ++i)
-			if (!equal(a[i], b[i], strict))
+			if (!equalityComparer(a[i], b[i], strict))
 				return false;
 
 		return true;

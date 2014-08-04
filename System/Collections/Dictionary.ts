@@ -9,7 +9,6 @@
 
 module System.Collections {
 
-
 	// LinkedList for Dictionary
 	class HashEntry<TKey, TValue>
 	{

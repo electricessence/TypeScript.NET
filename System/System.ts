@@ -1,33 +1,14 @@
-﻿/*
+﻿///<reference path="Functions.ts"/>
+///<reference path="Types.ts"/>
+
+/*
  * @author electricessence / https://github.com/electricessence/
  * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
 module System {
 
-	"use strict";
-
-	// TODO: Might want to make a safer way to expose this set.
-	export var Functions = {
-		Identity: <T>(x: T) => { return x; },
-		True: () => true,
-		False: () => false,
-		Blank: () => { },
-		Greater: <T>(a: T, b: T) => a > b ? a : b,
-		Lesser: <T>(a: T, b: T) => a < b ? a : b
-	};
-
-	// const Type
-	// TODO: Might want to make a safer way to expose this set.
-	export var Types = {
-		Boolean: typeof true,
-		Number: typeof 0,
-		String: typeof "",
-		Object: typeof {},
-		Null: typeof null,
-		Undefined: typeof undefined,
-		Function: typeof Functions.Blank
-	};
+	var Types = new System.Types();
 
 	// #region Function Signatures.
 	export interface Action<T>

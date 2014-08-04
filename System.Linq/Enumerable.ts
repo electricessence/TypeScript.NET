@@ -10,29 +10,38 @@ module System.Linq {
 
 	"use strict";
 
+	// #region Imports
 	import Predicate = System.Predicate;
 	import Selector = System.Selector;
 	import Action = System.Action;
+
+	import ArrayUtility = System.Collections.ArrayUtility;
 
 	import IEnumerator = System.Collections.IEnumerator;
 	import EnumeratorBase = System.Collections.EnumeratorBase;
 
 	import IEnumerable = System.Collections.IEnumerable;
 
-	import Functions = System.Functions;
-	import Types = System.Types;
-
 	import IMap = System.Collections.IMap;
 	import Dictionary = System.Collections.Dictionary;
 
 	import using = System.using;
+	// #endregion
 
-	export enum EnumerableAction {
-		Break,
-		Return,
-		Skip
+	// #region Local Constants.
+	// Leave internal to avoid accidental overwritting.  
+	class LinqFunctions extends System.Functions
+	{
+		Greater<T>(a: T, b: T) { return a > b ? a : b; }
+		Lesser<T>(a: T, b: T) { return a < b ? a : b; }
 	}
 
+	var Functions = new LinqFunctions();
+
+	var Types = new System.Types();
+	// #endregion
+
+	// #region Helper Functions...
 	// This allows for the use of a boolean instead of calling this.assertIsNotDisposed() since there is a strong chance of introducing a circular reference.
 	function assertIsNotDisposed(disposed: boolean): boolean {
 		return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
@@ -42,6 +51,15 @@ module System.Linq {
 	{
 		return isNaN(value) ? NaN : value;
 	}
+	// #endregion
+
+	export enum EnumerableAction
+	{
+		Break,
+		Return,
+		Skip
+	}
+
 
 	export class Enumerable<T> extends System.DisposableBase implements IEnumerable<T> {
 
@@ -114,13 +132,10 @@ module System.Linq {
 			});
 		}
 
-		static repeat<T>(element: T, count?: number): Enumerable<T>
+		static repeat<T>(element: T, count: number = Infinity): Enumerable<T>
 		{
-			if (typeof count == Types.Number && (count <= 0 || isNaN(count)))
+			if (isNaN(count) || count <= 0)
 				return Enumerable.empty<T>();
-
-			if (!count)
-				count = Infinity;
 
 			return new Enumerable<T>(() =>
 			{
@@ -136,7 +151,7 @@ module System.Linq {
 					});
 			});
 		}
-
+		// Note: this enumeration does not break.
 		static repeatWithFinalize<T>(
 			initializer: () => T,
 			finalizer: (element: T) => void): Enumerable<T>
@@ -147,7 +162,7 @@ module System.Linq {
 				var element: T;
 				return new EnumeratorBase<T>(
 					() => element = initializer(),
-					yielder => { return yielder.yieldReturn(element); },
+					yielder => yielder.yieldReturn(element),
 					() =>
 					{
 						if (element != null)
@@ -259,7 +274,7 @@ module System.Linq {
 
 			var type = typeof input;
 			if (type != Types.String)
-				throw new Error("Cannot exec RegExp matches on type " + type);
+				throw new Error("Cannot exec RegExp matches of type '" + type+"'.");
 
 			if (pattern instanceof RegExp)
 			{
@@ -1723,35 +1738,24 @@ module System.Linq {
 					() => { Utils.dispose(enumerator); });
 			});
 		}
-
-		// Overload:function(second)
-		// Overload:function(second, compareSelector)
-		sequenceEqual(second, compareSelector) {
-			compareSelector = Utils.createLambda(compareSelector);
-
-			var firstEnumerator = this.getEnumerator();
-			try {
-				var secondEnumerator = Enumerable.from(second).getEnumerator();
-				try {
-					while (firstEnumerator.moveNext()) {
-						if (!secondEnumerator.moveNext()
-							|| compareSelector(firstEnumerator.current) !== compareSelector(secondEnumerator.current)) {
-							return false;
+		*/
+		sequenceEqual(second: IEnumerable<T>, equalityComparer: (a: T, b: T) => boolean = System.areEqual): boolean
+		{
+			return using(this.getEnumerator(),
+				e1=> using(second.getEnumerator(),
+					e2=>
+					{
+						while (e1.moveNext())
+						{
+							if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
+								return false;
 						}
-					}
 
-					if (secondEnumerator.moveNext()) return false;
-					return true;
-				}
-				finally {
-					Utils.dispose(secondEnumerator);
-				}
-			}
-			finally {
-				Utils.dispose(firstEnumerator);
-			}
+						return !e2.moveNext();
+					})
+				);
 		}
-
+		/*
 		union(second, compareSelector) {
 			compareSelector = Utils.createLambda(compareSelector);
 			var source = this;
@@ -1797,18 +1801,21 @@ module System.Linq {
 					});
 			});
 		}
+		*/
 
-		// Ordering Methods
+		// #region Ordering Methods
 
-		orderBy(keySelector) {
-			return new OrderedEnumerable(this, keySelector, false);
+		orderBy<TKey>(keySelector:Selector<T,TKey> = Functions.Identity):OrderedEnumerable<T> {
+			return new OrderedEnumerable<T>(this, keySelector, false);
 		}
 
-		orderByDescending(keySelector) {
-			return new OrderedEnumerable(this, keySelector, true);
+		orderByDescending<TKey>(keySelector: Selector<T, TKey> = Functions.Identity): OrderedEnumerable<T>
+		{
+			return new OrderedEnumerable<T>(this, keySelector, true);
 		}
 
-		   weightedSample(weightSelector) {
+		/*
+		weightedSample(weightSelector) {
 			weightSelector = Utils.createLambda(weightSelector);
 			var source = this;
 
@@ -1853,7 +1860,9 @@ module System.Linq {
 			});
 		}
 		*/
-		// Grouping Methods
+		// #endregion
+
+		// #region Grouping Methods
 
 		// Originally contained a result selector (not common use), but this could be done simply by a select statement after.
 
@@ -1933,6 +1942,7 @@ module System.Linq {
 			});
 		}
 		*/
+		// #endregion
 
 		buffer(size: number): IEnumerable<T[]>
 		{
@@ -1957,13 +1967,13 @@ module System.Linq {
 			});
 		}
 
-		// Aggregate Methods 
+		// #region Aggregate Methods 
 
 		aggregate(
 			func: (a: T, b: T) => T,
 			seed?: T)
 		{
-			return this.scan(func, seed).last();
+			return this.scan(func, seed).lastOrDefault();
 		}
 
 		average(selector: Selector<T, number> = numberOrNaN): number
@@ -2045,7 +2055,7 @@ module System.Linq {
 
 			return (exists && isNaN(result)) ? NaN : result;
 		}
-
+		// #endregion
 
 		// #region Single Value Return...
 
@@ -2084,11 +2094,17 @@ module System.Linq {
 			return (!found) ? defaultValue : value;
 		}
 
-		first(predicate?: Predicate<T>): T {
+		/* Note: Unlike previous implementations, you could pass a predicate into these methods.
+		 * But since under the hood it ends up calling .where(predicate) anyway, it may be better to remove this to allow for a cleaner signature/override.
+		 * JavaScript/TypeScript does not easily allow for a strict method interface like C#.
+		 * Having to write extra override logic is error prone and confusing to the consumer.
+		 * Removing the predicate here may also cause the consumer of this method to think more about how they structure their query.
+		 * The end all difference is that the user must declare .where(predicate) before .first().
+		 * */
+
+		first(): T {
 			var _ = this;
 			_.assertIsNotDisposed();
-
-			if (predicate) return _.where(predicate).first();
 
 			var value: T;
 			var found: boolean = false;
@@ -2102,11 +2118,9 @@ module System.Linq {
 			return value;
 		}
 
-		firstOrDefault(predicate: Predicate<T>, defaultValue: T = null): T {
+		firstOrDefault(defaultValue: T = null): T {
 			var _ = this;
 			_.assertIsNotDisposed();
-
-			if (predicate) return _.where(predicate).firstOrDefault(null, defaultValue);
 
 			var value: T;
 			var found = false;
@@ -2118,11 +2132,9 @@ module System.Linq {
 			return (!found) ? defaultValue : value;
 		}
 
-		last(predicate?: Predicate<T>): T {
+		last(): T {
 			var _ = this;
 			_.assertIsNotDisposed();
-
-			if (predicate) return _.where(predicate).last();
 
 			var value: T;
 			var found: boolean = false;
@@ -2135,11 +2147,9 @@ module System.Linq {
 			return value;
 		}
 
-		lastOrDefault(predicate: Predicate<T>, defaultValue: T = null): T {
+		lastOrDefault(defaultValue: T = null): T {
 			var _ = this;
 			_.assertIsNotDisposed();
-
-			if (predicate) return _.where(predicate).lastOrDefault(null, defaultValue);
 
 			var value: T;
 			var found: boolean = false;
@@ -2150,11 +2160,9 @@ module System.Linq {
 			return (!found) ? defaultValue : value;
 		}
 
-		single(predicate?: Predicate<T>): T {
+		single(): T {
 			var _ = this;
 			_.assertIsNotDisposed();
-
-			if (predicate) return _.where(predicate).single();
 
 			var value: T;
 			var found: boolean = false;
@@ -2169,12 +2177,10 @@ module System.Linq {
 			return value;
 		}
 
-		singleOrDefault(predicate: Predicate<T>, defaultValue: T = null): T {
+		singleOrDefault(defaultValue: T = null): T {
 
 			var _ = this;
 			_.assertIsNotDisposed();
-
-			if (predicate) return _.where(predicate).singleOrDefault(null, defaultValue);
 
 			var value: T;
 			var found: boolean = false;
@@ -2421,47 +2427,47 @@ module System.Linq {
 				: defaultValue;
 		}
 
-		first(predicate?: Predicate<T>): T
-		{
-			var _ = this;
-			_.assertIsNotDisposed();
-
-			var source: T[] = this._source;
-			return (source && source.length && !predicate)
-				? source[0]
-				: super.first(predicate);
-		}
-
-		firstOrDefault(predicate: Predicate<T>, defaultValue: T= null): T
+		first(): T
 		{
 			var _ = this;
 			_.assertIsNotDisposed();
 
 			var source: T[] = this._source;
 			return (source && source.length)
-				? (predicate ? super.firstOrDefault(predicate, defaultValue) : source[0])
+				? source[0]
+				: super.first();
+		}
+
+		firstOrDefault(defaultValue: T= null): T
+		{
+			var _ = this;
+			_.assertIsNotDisposed();
+
+			var source: T[] = this._source;
+			return (source && source.length)
+				? source[0]
 				: defaultValue;
 		}
 
-		last(predicate?: Predicate<T>): T
+		last(): T
 		{
 			var _ = this;
 			_.assertIsNotDisposed();
 
 			var source: T[] = this._source, len: number = source.length;
-			return (len && !predicate)
+			return (len)
 				? source[len - 1]
-				: super.last(predicate);
+				: super.last();
 		}
 
-		lastOrDefault(predicate: Predicate<T>, defaultValue: T= null): T
+		lastOrDefault(defaultValue: T= null): T
 		{
 			var _ = this;
 			_.assertIsNotDisposed();
 
 			var source: T[] = this._source, len: number = source.length;
 			return len
-				? (predicate ? super.firstOrDefault(predicate, defaultValue) : source[len - 1])
+				? source[len - 1]
 				: defaultValue;
 		}
 
@@ -2503,25 +2509,26 @@ module System.Linq {
 			return new ArrayEnumerable<T>(this._source);
 		}
 
-		/*sequenceEqual(second, compareSelector) {
-			if ((second instanceof ArrayEnumerable || second instanceof Array)
-				&& compareSelector == null
-				&& Enumerable.from(second).count() != this.count()) {
-				return false;
-			}
+		sequenceEqual(second: IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean):boolean;
+		sequenceEqual(second: T[], equalityComparer?: (a: T, b: T) => boolean):boolean;
+		sequenceEqual(second: any, equalityComparer: (a: T, b: T) => boolean = System.areEqual):boolean
+		{
+			if (second instanceof Array)
+				return ArrayUtility.areEqual(this.source, <T[]>second, true, equalityComparer);
 
-			return Enumerable.prototype.sequenceEqual.apply(this, arguments);
+			if (second instanceof ArrayEnumerable)
+				return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
+
+			return super.sequenceEqual(second, equalityComparer );
 		}
 
-		toJoinedString(separator, selector) {
-			var source = this._source;
-			if (selector != null || !(source instanceof Array)) {
-				return Enumerable.prototype.toJoinedString.apply(this, arguments);
-			}
 
-			if (separator == null) separator = "";
-			return source.join(separator);
-		}*/
+		toJoinedString(separator: string = "", selector: Selector<T, string> = Functions.Identity)
+		{
+			return selector
+				? super.toJoinedString(separator, selector)
+				: this._source.join(separator);
+		}
 
 	}
 
@@ -2655,7 +2662,7 @@ module System.Linq {
 			private source: IEnumerable<T>,
 			public keySelector: (value: T) => any,
 			public descending: boolean,
-			public parent: OrderedEnumerable<T>)
+			public parent?: OrderedEnumerable<T>)
 		{
 			super(null);
 		}
