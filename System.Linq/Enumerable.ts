@@ -1199,10 +1199,12 @@ module System.Linq {
 
 			return new Enumerable<T>(() => {
 				var enumerator: IEnumerator<T>;
-				var isFirst: boolean = true;
+				var isFirst: boolean;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
+						isFirst = true;
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
 					},

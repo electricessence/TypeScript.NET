@@ -840,9 +840,10 @@ var System;
 
                 return new Enumerable(function () {
                     var enumerator;
-                    var isFirst = true;
+                    var isFirst;
 
                     return new EnumeratorBase(function () {
+                        isFirst = true;
                         assertIsNotDisposed(disposed);
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
