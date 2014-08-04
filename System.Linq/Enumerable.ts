@@ -465,6 +465,7 @@ module System.Linq {
 			this.doAction(element => defaultAction);
 		}
 
+		// #region Indexing/Paging methods.
 		skip(count: number): Enumerable<T> {
 
 			this.assertIsNotDisposed();
@@ -562,7 +563,7 @@ module System.Linq {
 					() => enumerator.dispose());
 			});
 		}
-
+		// #endregion
 
 		// #region Projection and Filtering Methods
 		/*
