@@ -25,6 +25,8 @@ module System.Linq {
 	import IMap = System.Collections.IMap;
 	import Dictionary = System.Collections.Dictionary;
 
+	import using = System.using;
+
 	export enum EnumerableAction {
 		Break,
 		Return,
@@ -317,7 +319,7 @@ module System.Linq {
 
 			var index = 0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			System.using(_.getEnumerator(), e=> {
+			using(_.getEnumerator(), e=> {
 				while (e.moveNext() && action(e.current, index++) !== false) { }
 			});
 		}
@@ -341,7 +343,7 @@ module System.Linq {
 
 			var index = 0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			System.using(_.getEnumerator(), e=> {
+			using(_.getEnumerator(), e=> {
 				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
 				while (_.assertIsNotDisposed() && e.moveNext() && action(e.current, index++) !== false) { }
 			});
@@ -505,7 +507,7 @@ module System.Linq {
 			var _ = this;
 
 			return new Enumerable<T>(() => {
-				if (count <= 0) return _.getEnumerator(); // do nothing
+				if (count <= 0) return _.getEnumerator(); // do nothing different.
 
 				var enumerator:IEnumerator<T>;
 				var q:T[];
@@ -516,50 +518,51 @@ module System.Linq {
 						enumerator = _.getEnumerator();
 						q = [];
 					},
-					() =>
+					yielder =>
 					{
 						while (enumerator.moveNext())
 						{
-							if (q.length == count)
-							{
-								q.push(enumerator.current);
-								return (<any>this).yieldReturn(q.shift());
-							}
+							// Add the next one to the queue.
 							q.push(enumerator.current);
+
+							// Did we reach our quota?
+							if (q.length > count)
+								// Okay then, start returning results.
+								return yielder.yieldReturn(q.shift());
 						}
 						return false;
 					},
 					() => enumerator.dispose());
 			});
 		}
-		/*
-		takeFromLast(count): Enumerable<T> {
-			if (count <= 0 || count == null) return Enumerable.empty<T>();
-			var source = this;
+		
+		takeFromLast(count?:number): Enumerable<T> {
+			if (!count || count <0) return Enumerable.empty<T>();
+			var _ = this;
 
 			return new Enumerable<T>(() => {
-				var sourceEnumerator;
-				var enumerator;
-				var q = [];
+				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
-					() => { sourceEnumerator = source.getEnumerator(); },
-					() => {
-						while (sourceEnumerator.moveNext()) {
-							if (q.length == count) q.shift();
-							q.push(sourceEnumerator.current);
-						}
-						if (enumerator == null) {
-							enumerator = Enumerable.from(q).getEnumerator();
-						}
-						return (enumerator.moveNext())
-							? (<any>this).yieldReturn(enumerator.current)
-							: false;
+					() =>
+					{
+						var q:T[] = [];
+						using(_.getEnumerator(), e=>
+						{
+							// Enumerate to the end of the source collection and queue the results up to length-count.
+							while (e.moveNext())
+							{
+								if (q.length == count) q.shift();
+								q.push(e.current);
+							}
+						});
+						enumerator = Enumerable.fromArray(q).getEnumerator();
 					},
-					() => { Utils.dispose(enumerator); });
+					yielder => enumerator.moveNext() && yielder.yieldReturn(enumerator.current),
+					() => enumerator.dispose());
 			});
 		}
-		/**/
+
 
 		// #region Projection and Filtering Methods
 		/*
