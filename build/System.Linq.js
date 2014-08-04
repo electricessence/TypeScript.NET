@@ -773,6 +773,10 @@ var System;
                 return result;
             };
 
+            Enumerable.prototype.every = function (predicate) {
+                return this.all(predicate);
+            };
+
             Enumerable.prototype.any = function (predicate) {
                 var result = false;
 
@@ -788,6 +792,10 @@ var System;
                     });
                 }
                 return result;
+            };
+
+            Enumerable.prototype.some = function (predicate) {
+                return this.any(predicate);
             };
 
             Enumerable.prototype.isEmpty = function () {

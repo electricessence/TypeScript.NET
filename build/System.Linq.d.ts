@@ -60,7 +60,9 @@
         public shuffle(): Enumerable<T>;
         public count(predicate?: Predicate<T>): number;
         public all(predicate: Predicate<T>): boolean;
+        public every(predicate: Predicate<T>): boolean;
         public any(predicate?: Predicate<T>): boolean;
+        public some(predicate: Predicate<T>): boolean;
         public isEmpty(): boolean;
         public contains<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): boolean;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;

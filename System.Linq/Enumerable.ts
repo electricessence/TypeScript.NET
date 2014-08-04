@@ -789,11 +789,6 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		/*
-		// Overload:function(collectionSelector<element>)
-		// Overload:function(collectionSelector<element,index>)
-		// Overload:function(collectionSelector<element>,resultSelector)
-		// Overload:function(collectionSelector<element,index>,resultSelector)*/
 
 		selectMany<TResult>(
 			collectionSelector: Selector<T,IEnumerable<TResult>>
@@ -969,7 +964,10 @@ module System.Linq {
 				: this.where(x=> { return typeof x === typeName; }));
 		}
 
-		except<TCompare>(second: IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T> {
+		except<TCompare>(
+			second: IEnumerable<T>,
+			compareSelector?: Selector<T, TCompare>): Enumerable<T>
+		{
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
@@ -1058,9 +1056,11 @@ module System.Linq {
 						buffer = _.toArray();
 						index = buffer.length;
 					},
+
 					yielder =>
 						index > 0
 						&& yielder.yieldReturn(buffer[--index]),
+
 					() => buffer.length = 0
 					);
 			},
@@ -1100,7 +1100,7 @@ module System.Linq {
 			var count: number = 0;
 			if (predicate) {
 				_.forEach((x, i) => {
-					if (predicate(x, i))++count;
+					if (predicate(x, i)) ++count;
 				});
 			}
 			else {
@@ -1112,6 +1112,7 @@ module System.Linq {
 			return count;
 		}
 
+		// Akin to '.every' on an array.
 		all(predicate: Predicate<T>): boolean {
 			var result = true;
 			this.forEach(x => {
@@ -1122,7 +1123,13 @@ module System.Linq {
 			});
 			return result;
 		}
+		// 'every' has been added here for parity/compatibility with an array.
+		every(predicate: Predicate<T>): boolean
+		{
+			return this.all(predicate);
+		}
 
+		// Akin to '.some' on an array.
 		any(predicate?: Predicate<T>): boolean {
 			var result = false;
 
@@ -1141,6 +1148,11 @@ module System.Linq {
 			}
 			return result;
 
+		}
+		// 'some' has been added here for parity/compatibility with an array.
+		some(predicate: Predicate<T>): boolean
+		{
+			return this.any(predicate);
 		}
 
 		isEmpty(): boolean {
