@@ -300,6 +300,7 @@ var System;
             };
 
             Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
+                if (typeof elementSelector === "undefined") { elementSelector = Functions.Identity; }
                 var dict = new Dictionary(compareSelector);
                 this.forEach(function (x) {
                     var key = keySelector(x);
@@ -860,6 +861,14 @@ var System;
                     }, function () {
                         return enumerator.dispose();
                     });
+                });
+            };
+
+            Enumerable.prototype.groupBy = function (keySelector, elementSelector, compareSelector) {
+                if (typeof elementSelector === "undefined") { elementSelector = Functions.Identity; }
+                var _ = this;
+                return new Enumerable(function () {
+                    return _.toLookup(keySelector, elementSelector, compareSelector).getEnumerator();
                 });
             };
 

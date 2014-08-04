@@ -369,7 +369,7 @@ module System.Linq {
 
 		toLookup<TKey, TValue, TCompare>(
 			keySelector: Selector<T, TKey>,
-			elementSelector: Selector<T, TValue>,
+			elementSelector: Selector<T, TValue> = Functions.Identity,
 			compareSelector?: Selector<TKey, TCompare>): Lookup<TKey, TValue>
 		{
 
@@ -1726,41 +1726,23 @@ module System.Linq {
 					Functions.Blank);
 			});
 		}
-
+		*/
 		// Grouping Methods
 
-		// Overload:function(keySelector)
-		// Overload:function(keySelector,elementSelector)
-		// Overload:function(keySelector,elementSelector,resultSelector)
-		// Overload:function(keySelector,elementSelector,resultSelector,compareSelector)
-		groupBy(keySelector, elementSelector, resultSelector, compareSelector) {
-			var source = this;
-			keySelector = Utils.createLambda(keySelector);
-			elementSelector = Utils.createLambda(elementSelector);
-			if (resultSelector != null) resultSelector = Utils.createLambda(resultSelector);
-			compareSelector = Utils.createLambda(compareSelector);
+		// Originally contained a result selector (not common use), but this could be done simply by a select statement after.
 
-			return new Enumerable<T>(() => {
-				var enumerator;
-
-				return new EnumeratorBase<T>(
-					() => {
-						enumerator = source.toLookup(keySelector, elementSelector, compareSelector)
-							.toEnumerable()
-							.getEnumerator();
-					},
-					() => {
-						while (enumerator.moveNext()) {
-							return (resultSelector == null)
-								? (<any>this).yieldReturn(enumerator.current)
-								: (<any>this).yieldReturn(resultSelector(enumerator.current.key(), enumerator.current));
-						}
-						return false;
-					},
-					() => { Utils.dispose(enumerator); });
-			});
+		groupBy<TKey, TElement, TCompare>(
+			keySelector:Selector<T,TKey>,
+			elementSelector: Selector<T, TElement> = Functions.Identity,
+			compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey,TElement>>
+		{
+			var _ = this;
+			return new Enumerable<IGrouping<TKey, TElement>>(
+				() => _.toLookup(keySelector, elementSelector, compareSelector)
+					.getEnumerator());
 		}
 
+		/*
 		// Overload:function(keySelector)
 		// Overload:function(keySelector,elementSelector)
 		// Overload:function(keySelector,elementSelector,resultSelector)

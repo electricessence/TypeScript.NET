@@ -31,7 +31,7 @@
         public forEach(action: Action<T>): void;
         public toArray(predicate?: Predicate<T>): T[];
         public asEnumerable(): Enumerable<T>;
-        public toLookup<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): Lookup<TKey, TValue>;
+        public toLookup<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): Lookup<TKey, TValue>;
         public toMap<TResult>(keySelector: Selector<T, string>, elementSelector: Selector<T, TResult>): Collections.IMap<TResult>;
         public toDictionary<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): Collections.Dictionary<TKey, TValue>;
         public toJoinedString(separator?: string, selector?: Selector<T, string>): string;
@@ -68,6 +68,7 @@
         public indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
+        public groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;
         public first(predicate?: Predicate<T>): T;
