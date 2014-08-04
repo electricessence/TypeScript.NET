@@ -310,6 +310,14 @@ var System;
                 return new Lookup(dict);
             };
 
+            Enumerable.prototype.toMap = function (keySelector, elementSelector) {
+                var obj = {};
+                this.forEach(function (x) {
+                    return obj[keySelector(x)] = elementSelector(x);
+                });
+                return obj;
+            };
+
             Enumerable.prototype.doAction = function (action) {
                 var _ = this, disposed = !_.assertIsNotDisposed();
 

@@ -380,17 +380,15 @@ module System.Linq {
 			return new Lookup<TKey,TElement>(dict);
 		}
 
-		/*		toObject(keySelector, elementSelector) {
-			keySelector = Utils.createLambda(keySelector);
-			elementSelector = Utils.createLambda(elementSelector);
-
-			var obj = {};
-			this.forEach(function (x) {
-				obj[keySelector(x)] = elementSelector(x);
-			});
+		toMap<TResult>(
+			keySelector: Selector<T, string>,
+			elementSelector: Selector<T,TResult>): System.Collections.IMap<TResult>
+		{
+			var obj:System.Collections.IMap<TResult> = {};
+			this.forEach(x=>obj[keySelector(x)] = elementSelector(x))
 			return obj;
 		}
-
+		/*
 		// Overload:function(keySelector, elementSelector)
 		// Overload:function(keySelector, elementSelector, compareSelector)
 		toDictionary(keySelector, elementSelector, compareSelector) {
