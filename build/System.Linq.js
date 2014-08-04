@@ -405,6 +405,36 @@ var System;
                 });
             };
 
+            Enumerable.prototype.takeExceptLast = function (count) {
+                var _this = this;
+                if (typeof count === "undefined") { count = 1; }
+                var _ = this;
+
+                return new Enumerable(function () {
+                    if (count <= 0)
+                        return _.getEnumerator();
+
+                    var enumerator;
+                    var q;
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                        q = [];
+                    }, function () {
+                        while (enumerator.moveNext()) {
+                            if (q.length == count) {
+                                q.push(enumerator.current);
+                                return _this.yieldReturn(q.shift());
+                            }
+                            q.push(enumerator.current);
+                        }
+                        return false;
+                    }, function () {
+                        return enumerator.dispose();
+                    });
+                });
+            };
+
             Enumerable.prototype.select = function (selector) {
                 var _ = this, disposed = !_.assertIsNotDisposed();
 

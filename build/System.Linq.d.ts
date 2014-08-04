@@ -43,6 +43,7 @@
         public skip(count: number): Enumerable<T>;
         public skipWhile(predicate: Predicate<T>): Enumerable<T>;
         public take(count: number): Enumerable<T>;
+        public takeExceptLast(count?: number): Enumerable<T>;
         public select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>;
         public selectMany<TResult>(collectionSelector: Selector<T, Collections.IEnumerable<TResult>>): Enumerable<TResult>;
         public selectMany<TResult>(collectionSelector: Selector<T, TResult[]>): Enumerable<TResult>;

@@ -501,24 +501,27 @@ module System.Linq {
 				: this.doAction((element: T, index: number) => index < count);
 		}
 
-		/** /
-				// Overload:function()
-		// Overload:function(count)
-		takeExceptLast(count): Enumerable<T> {
-			if (count == null) count = 1;
-			var source = this;
+		takeExceptLast(count:number = 1): Enumerable<T> {
+			var _ = this;
 
 			return new Enumerable<T>(() => {
-				if (count <= 0) return source.getEnumerator(); // do nothing
+				if (count <= 0) return _.getEnumerator(); // do nothing
 
-				var enumerator;
-				var q = [];
+				var enumerator:IEnumerator<T>;
+				var q:T[];
 
 				return new EnumeratorBase<T>(
-					() => { enumerator = source.getEnumerator(); },
-					() => {
-						while (enumerator.moveNext()) {
-							if (q.length == count) {
+					() =>
+					{
+						enumerator = _.getEnumerator();
+						q = [];
+					},
+					() =>
+					{
+						while (enumerator.moveNext())
+						{
+							if (q.length == count)
+							{
 								q.push(enumerator.current);
 								return (<any>this).yieldReturn(q.shift());
 							}
@@ -526,10 +529,10 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => { Utils.dispose(enumerator); });
+					() => enumerator.dispose());
 			});
 		}
-
+		/*
 		takeFromLast(count): Enumerable<T> {
 			if (count <= 0 || count == null) return Enumerable.empty<T>();
 			var source = this;
