@@ -401,18 +401,7 @@ module System.Linq {
 			this.forEach(x=> dict.addByKeyValue(keySelector(x), elementSelector(x)))
 			return dict;
 		}
-
-		/*
-		// Overload:function()
-		// Overload:function(replacer)
-		// Overload:function(replacer, space)
-		toJSONString(replacer, space) {
-			if (typeof JSON === Types.Undefined || JSON.stringify == null) {
-				throw new Error("toJSONString can't find JSON.stringify. This works native JSON support Browser or include json2.js");
-			}
-			return JSON.stringify(this.toArray(), replacer, space);
-		}
-
+/*
 		// Overload:function()
 		// Overload:function(separator)
 		// Overload:function(separator,selector)
