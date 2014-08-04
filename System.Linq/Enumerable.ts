@@ -361,28 +361,26 @@ module System.Linq {
 			return new Enumerable<T>(() => _.getEnumerator());
 		}
 
-		/*
-		// Overload:function(keySelector)
-		// Overload:function(keySelector, elementSelector)
-		// Overload:function(keySelector, elementSelector, compareSelector)
-		toLookup(keySelector, elementSelector, compareSelector) {
-			keySelector = Utils.createLambda(keySelector);
-			elementSelector = Utils.createLambda(elementSelector);
-			compareSelector = Utils.createLambda(compareSelector);
 
-			var dict = new Dictionary(compareSelector);
-			this.forEach(function (x) {
+		toLookup<TKey, TElement, TCompare>(
+			keySelector: Selector<T, TKey>,
+			elementSelector?: Selector<T, TElement>,
+			compareSelector?: Selector<TKey, TCompare>) : Lookup<TKey,TElement>
+		{
+
+			var dict = new System.Collections.Dictionary<TKey,TElement[]>(compareSelector);
+			this.forEach(x=>{
 				var key = keySelector(x);
 				var element = elementSelector(x);
 
 				var array = dict.get(key);
 				if (array !== undefined) array.push(element);
-				else dict.add(key, [element]);
+				else dict.addByKeyValue(key, [element]);
 			});
-			return new Lookup(dict);
+			return new Lookup<TKey,TElement>(dict);
 		}
 
-		toObject(keySelector, elementSelector) {
+		/*		toObject(keySelector, elementSelector) {
 			keySelector = Utils.createLambda(keySelector);
 			elementSelector = Utils.createLambda(elementSelector);
 

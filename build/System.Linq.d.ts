@@ -31,6 +31,7 @@
         public forEach(action: Action<T>): void;
         public toArray(predicate?: Predicate<T>): T[];
         public asEnumerable(): Enumerable<T>;
+        public toLookup<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Lookup<TKey, TElement>;
         public doAction(action: Selector<T, EnumerableAction>): Enumerable<T>;
         public doAction(action: Selector<T, number>): Enumerable<T>;
         public doAction(action: Predicate<T>): Enumerable<T>;

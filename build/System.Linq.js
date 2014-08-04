@@ -295,6 +295,21 @@ var System;
                 });
             };
 
+            Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
+                var dict = new System.Collections.Dictionary(compareSelector);
+                this.forEach(function (x) {
+                    var key = keySelector(x);
+                    var element = elementSelector(x);
+
+                    var array = dict.get(key);
+                    if (array !== undefined)
+                        array.push(element);
+                    else
+                        dict.addByKeyValue(key, [element]);
+                });
+                return new Lookup(dict);
+            };
+
             Enumerable.prototype.doAction = function (action) {
                 var _ = this, disposed = !_.assertIsNotDisposed();
 
