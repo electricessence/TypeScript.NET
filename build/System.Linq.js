@@ -14,6 +14,8 @@ var System;
         var Functions = System.Functions;
         var Types = System.Types;
 
+        var Dictionary = System.Collections.Dictionary;
+
         (function (EnumerableAction) {
             EnumerableAction[EnumerableAction["Break"] = 0] = "Break";
             EnumerableAction[EnumerableAction["Return"] = 1] = "Return";
@@ -296,7 +298,7 @@ var System;
             };
 
             Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
-                var dict = new System.Collections.Dictionary(compareSelector);
+                var dict = new Dictionary(compareSelector);
                 this.forEach(function (x) {
                     var key = keySelector(x);
                     var element = elementSelector(x);
@@ -316,6 +318,14 @@ var System;
                     return obj[keySelector(x)] = elementSelector(x);
                 });
                 return obj;
+            };
+
+            Enumerable.prototype.toDictionary = function (keySelector, elementSelector, compareSelector) {
+                var dict = new Dictionary(compareSelector);
+                this.forEach(function (x) {
+                    return dict.addByKeyValue(keySelector(x), elementSelector(x));
+                });
+                return dict;
             };
 
             Enumerable.prototype.doAction = function (action) {

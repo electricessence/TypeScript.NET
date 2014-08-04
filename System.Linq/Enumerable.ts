@@ -22,6 +22,9 @@ module System.Linq {
 	import Functions = System.Functions;
 	import Types = System.Types;
 
+	import IMap = System.Collections.IMap;
+	import Dictionary = System.Collections.Dictionary;
+
 	export enum EnumerableAction {
 		Break,
 		Return,
@@ -362,13 +365,13 @@ module System.Linq {
 		}
 
 
-		toLookup<TKey, TElement, TCompare>(
+		toLookup<TKey, TValue, TCompare>(
 			keySelector: Selector<T, TKey>,
-			elementSelector?: Selector<T, TElement>,
-			compareSelector?: Selector<TKey, TCompare>) : Lookup<TKey,TElement>
+			elementSelector: Selector<T, TValue>,
+			compareSelector?: Selector<TKey, TCompare>): Lookup<TKey, TValue>
 		{
 
-			var dict = new System.Collections.Dictionary<TKey,TElement[]>(compareSelector);
+			var dict = new Dictionary<TKey, TValue[]>(compareSelector);
 			this.forEach(x=>{
 				var key = keySelector(x);
 				var element = elementSelector(x);
@@ -377,32 +380,29 @@ module System.Linq {
 				if (array !== undefined) array.push(element);
 				else dict.addByKeyValue(key, [element]);
 			});
-			return new Lookup<TKey,TElement>(dict);
+			return new Lookup<TKey, TValue>(dict);
 		}
 
 		toMap<TResult>(
 			keySelector: Selector<T, string>,
-			elementSelector: Selector<T,TResult>): System.Collections.IMap<TResult>
+			elementSelector: Selector<T,TResult>): IMap<TResult>
 		{
-			var obj:System.Collections.IMap<TResult> = {};
+			var obj:IMap<TResult> = {};
 			this.forEach(x=>obj[keySelector(x)] = elementSelector(x))
 			return obj;
 		}
-		/*
-		// Overload:function(keySelector, elementSelector)
-		// Overload:function(keySelector, elementSelector, compareSelector)
-		toDictionary(keySelector, elementSelector, compareSelector) {
-			keySelector = Utils.createLambda(keySelector);
-			elementSelector = Utils.createLambda(elementSelector);
-			compareSelector = Utils.createLambda(compareSelector);
-
-			var dict = new Dictionary(compareSelector);
-			this.forEach(function (x) {
-				dict.add(keySelector(x), elementSelector(x));
-			});
+		
+		toDictionary<TKey, TValue, TCompare>(
+			keySelector: Selector<T, TKey>,
+			elementSelector: Selector<T, TValue>,
+			compareSelector?: Selector<TKey, TCompare>): Dictionary<TKey, TValue>
+		{
+			var dict = new Dictionary<TKey, TValue>(compareSelector);
+			this.forEach(x=> dict.addByKeyValue(keySelector(x), elementSelector(x)))
 			return dict;
 		}
 
+		/*
 		// Overload:function()
 		// Overload:function(replacer)
 		// Overload:function(replacer, space)
