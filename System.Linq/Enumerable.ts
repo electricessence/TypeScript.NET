@@ -6,18 +6,21 @@
  * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import Predicate = System.Predicate;
-import Selector = System.Selector;
-import Action = System.Action;
-
 module System.Linq {
 
 	"use strict";
 
-	var EnumeratorBase = System.Collections.EnumeratorBase;
+	import Predicate = System.Predicate;
+	import Selector = System.Selector;
+	import Action = System.Action;
 
-	var Functions = System.Functions;
-	var Types = System.Types;
+	import IEnumerator = System.Collections.IEnumerator;
+	import EnumeratorBase = System.Collections.EnumeratorBase;
+
+	import IEnumerable = System.Collections.IEnumerable;
+
+	import Functions = System.Functions;
+	import Types = System.Types;
 
 	export enum EnumerableAction {
 		Break,
@@ -30,12 +33,12 @@ module System.Linq {
 		return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
 	}
 
-	export class Enumerable<T> extends DisposableBase implements System.Collections.IEnumerable<T> {
+	export class Enumerable<T> extends System.DisposableBase implements IEnumerable<T> {
 
 		// Enumerable<T> is an instance class that has useful statics.
 		// In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
 		// In this case, we use Enumerable<T> as the underlying class that is being chained.
-		constructor(private enumeratorFactory: () => System.Collections.IEnumerator<T>, finalizer?: () => void) {
+		constructor(private enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void) {
 			super(finalizer);
 		}
 
@@ -44,7 +47,7 @@ module System.Linq {
 		}
 
 		// #region IEnumerable<T> Implementation...
-		getEnumerator(): System.Collections.IEnumerator<T> {
+		getEnumerator(): IEnumerator<T> {
 
 			this.assertIsNotDisposed();
 
@@ -61,7 +64,7 @@ module System.Linq {
 
 		//////////////////////////////////////////
 		// #region Static Methods...
-		static choice<T>(values: T[]): Enumerable<T> {
+		static choice<T>(values: T[]): Enumerable<T> 		{
 			return new Enumerable<T>(() =>
 				new EnumeratorBase<T>(
 					null,
@@ -71,8 +74,7 @@ module System.Linq {
 				);
 		}
 
-		static cycle<T>(values: T[]): Enumerable<T> // variable argument
-		{
+		static cycle<T>(values: T[]): Enumerable<T> {
 			return new Enumerable<T>(() => {
 				var index: number;
 				return new EnumeratorBase<T>(
@@ -84,7 +86,7 @@ module System.Linq {
 			});
 		}
 
-		static empty<T>() {
+		static empty<T>():Enumerable<T> {
 			return new Enumerable<T>(() => {
 				return new EnumeratorBase<T>(
 					null,
@@ -112,7 +114,10 @@ module System.Linq {
 			});
 		}
 
-		static repeatWithFinalize<T>(initializer: () => T, finalizer: (element: T) => void): Enumerable<T> {
+		static repeatWithFinalize<T>(
+			initializer: () => T,
+			finalizer: (element: T) => void): Enumerable<T>
+		{
 
 			return new Enumerable<T>(() => {
 				var element: T;
@@ -132,7 +137,11 @@ module System.Linq {
 			return Enumerable.repeat<T>(element, 1);
 		}
 
-		static range(start: number, count: number, step?: number): Enumerable<number> {
+		static range(
+			start: number,
+			count: number,
+			step?: number): Enumerable<number>
+		{
 
 			if (!count)
 				return Enumerable.empty<number>();
@@ -157,7 +166,11 @@ module System.Linq {
 			});
 		}
 
-		static rangeDown(start: number, count: number, step?: number): Enumerable<number> {
+		static rangeDown(
+			start: number,
+			count: number,
+			step?: number): Enumerable<number>
+		{
 			if (!step) step = -1;
 			else step *= -1;
 
@@ -172,7 +185,11 @@ module System.Linq {
 			return Enumerable.rangeTo(start, -Infinity, step);
 		}
 
-		static rangeTo(start: number, to: number, step?: number): Enumerable<number> {
+		static rangeTo(
+			start: number,
+			to: number,
+			step?: number): Enumerable<number>
+		{
 			if (!start) start = 0;
 			if (!step) step = 1;
 			step = Math.abs(step);
@@ -202,8 +219,11 @@ module System.Linq {
 			});
 		}
 
-		// TODO: Needs review.  I don't think this does what it's intended.
 		static matches(input: string, pattern: any, flags: string = ""): Enumerable<RegExpExecArray> {
+
+			var type = typeof input;
+			if (type != Types.String)
+				throw new Error("Cannot exec RegExp matches on type " + type);
 
 			if (pattern instanceof RegExp) {
 				flags += (pattern.ignoreCase) ? "i" : "";
@@ -213,18 +233,21 @@ module System.Linq {
 
 			if (flags.indexOf("g") === -1) flags += "g";
 
+			var len = input.length;
+
 			return new Enumerable<RegExpExecArray>(() => {
-				var regex:RegExp;
+				var regex: RegExp;
 				return new EnumeratorBase<RegExpExecArray>(
-					() => { regex = new RegExp(pattern, flags); },
+					() => regex = new RegExp(pattern, flags),
 					yielder => {
+						// Calling regex.exec concecutively on the same input uses the lastIndex to start the next match.
 						var match = regex.exec(input);
-						return (match) ? yielder.yieldReturn(match) : false;
+						return (match!==null) ? yielder.yieldReturn(match) : false;
 					});
 			});
 		}
 
-		static generate<T>(factory: () => T, count?: number): Enumerable<T> {
+		static generate<T>(factory: (index?:number) => T, count?: number): Enumerable<T> {
 
 			if (typeof count == Types.Number && (count <= 0 || isNaN(count)))
 				return Enumerable.empty<T>();
@@ -237,36 +260,37 @@ module System.Linq {
 
 				return new EnumeratorBase<T>(
 					() => index = 0,
-					yielder => {
-						return (index++ < count)
-							? yielder.yieldReturn(factory())
+					yielder =>
+					{
+						var current = index++;
+						return (current < count)
+							? yielder.yieldReturn(factory(current))
 							: false;
 					});
 			});
 		}
 
-		static unfold<T>(seed: T, valueFactory: (value: T) => T): Enumerable<T> {
+		static unfold<T>(seed: T, valueFactory: Selector<T,T>): Enumerable<T> {
 			return new Enumerable<T>(() => {
-				var isFirst: boolean;
+				var index: number;
 				var value: T;
 				return new EnumeratorBase<T>(
-					() => isFirst = true,
+					() =>
+					{
+						index = 0;
+						value = seed;
+					},
 					yielder => {
-						if (isFirst) {
-							isFirst = false;
-							value = seed;
-							return yielder.yieldReturn(value);
-						}
-						value = valueFactory(value);
+						value = valueFactory(value,index++);
 						return yielder.yieldReturn(value);
 					});
 			});
 		}
 
-		static defer<T>(enumerableFactory: () => System.Collections.IEnumerable<T>): Enumerable<T> {
+		static defer<T>(enumerableFactory: () => IEnumerable<T>): Enumerable<T> {
 
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() => enumerator = enumerableFactory().getEnumerator(),
@@ -281,8 +305,11 @@ module System.Linq {
 		}
 
 
-		// TODO Contemplating making this take both array and IEnumerable...
-		static forEach<T>(enumerable: System.Collections.IEnumerable<T>, action: (element: T, index?: number) => any): void {
+		// ES5: Array's have forEach and if an Enumerable version is necessary, then call Enumerable.fromArray([]) first.
+		static forEach<T>(
+			enumerable: IEnumerable<T>,
+			action: (element: T, index?: number) => any): void
+		{
 			var _ = enumerable;
 
 			var index = 0;
@@ -417,7 +444,7 @@ module System.Linq {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<T>(
@@ -753,7 +780,7 @@ module System.Linq {
 				return new WhereSelectEnumerable(_, null, selector);
 
 			return new Enumerable<TResult>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<TResult>(
@@ -783,7 +810,7 @@ module System.Linq {
 		// Overload:function(collectionSelector<element,index>,resultSelector)*/
 
 		selectMany<TResult>(
-			collectionSelector: Selector<T,System.Collections.IEnumerable<TResult>>
+			collectionSelector: Selector<T,IEnumerable<TResult>>
 			): Enumerable<TResult>;
 
 		selectMany<TResult>(
@@ -791,7 +818,7 @@ module System.Linq {
 			): Enumerable<TResult>;
 
 		selectMany<TElement, TResult>(
-			collectionSelector: Selector<T,System.Collections.IEnumerable<TElement>>,
+			collectionSelector: Selector<T,IEnumerable<TElement>>,
 			resultSelector?: (collection: T, element: TElement) => TResult
 			): Enumerable<TResult>;
 
@@ -809,8 +836,8 @@ module System.Linq {
 				resultSelector = (a, b) => b;
 
 			return new Enumerable<TResult>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
-				var middleEnumerator: System.Collections.IEnumerator<any>;
+				var enumerator: IEnumerator<T>;
+				var middleEnumerator: IEnumerator<any>;
 				var index: number;
 
 				return new EnumeratorBase<TResult>(
@@ -870,7 +897,7 @@ module System.Linq {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<TResult>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<TResult>(
@@ -905,7 +932,7 @@ module System.Linq {
 				return new WhereEnumerable(_, predicate);
 
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<T>(
@@ -956,11 +983,11 @@ module System.Linq {
 				: this.where(x=> { return typeof x === typeName; }));
 		}
 
-		except<TCompare>(second: System.Collections.IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T> {
+		except<TCompare>(second: IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T> {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var keys: System.Collections.Dictionary<T, boolean>;
 
 				return new EnumeratorBase<T>(
@@ -1000,7 +1027,7 @@ module System.Linq {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var compareKey: TCompare;
 				var initial: boolean = true;
 
@@ -1192,7 +1219,7 @@ module System.Linq {
 			var _ = this, disposed: boolean = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var isFirst: boolean = true;
 
 				return new EnumeratorBase<T>(
@@ -2046,7 +2073,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var sharedEnumerator: System.Collections.IEnumerator<T>;
+			var sharedEnumerator: IEnumerator<T>;
 			return new Enumerable<T>(() => {
 				return new EnumeratorBase<T>(
 					() => {
@@ -2072,7 +2099,7 @@ module System.Linq {
 			var cache: T[];
 			return new Enumerable<T>(() => {
 
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 				var index: number;
 
 				return new EnumeratorBase<T>(
@@ -2111,7 +2138,7 @@ module System.Linq {
 		catchError(handler: (e: Error) => void): Enumerable<T> {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() => {
@@ -2141,7 +2168,7 @@ module System.Linq {
 			var _ = this, disposed = !_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
-				var enumerator: System.Collections.IEnumerator<T>;
+				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() => {
@@ -2381,7 +2408,7 @@ module System.Linq {
 
 	export class WhereEnumerable<T> extends Enumerable<T> {
 		constructor(
-			private prevSource: System.Collections.IEnumerable<T>,
+			private prevSource: IEnumerable<T>,
 			private prevPredicate: Predicate<T>  // predicate.length always <= 1
 			)
 		{
@@ -2408,11 +2435,11 @@ module System.Linq {
 			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
 		}
 
-		getEnumerator(): System.Collections.IEnumerator<T>
+		getEnumerator(): IEnumerator<T>
 		{
 			var predicate = this.prevPredicate;
 			var source = this.prevSource;
-			var enumerator: System.Collections.IEnumerator<T>;
+			var enumerator: IEnumerator<T>;
 
 			return new System.Collections.EnumeratorBase<T>(
 				() => { enumerator = source.getEnumerator(); },
@@ -2439,7 +2466,7 @@ module System.Linq {
 
 	export class WhereSelectEnumerable<T, TSelect> extends Enumerable<TSelect> {
 		constructor(
-			private prevSource: System.Collections.IEnumerable<T>,
+			private prevSource: IEnumerable<T>,
 			private prevPredicate: Predicate<T>,  // predicate.length always <= 1
 			private prevSelector: (value: T, index?: number) => TSelect // selector.length always <= 1
 			)
@@ -2467,12 +2494,12 @@ module System.Linq {
 			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, composedSelector);
 		}
 
-		getEnumerator(): System.Collections.IEnumerator<TSelect>
+		getEnumerator(): IEnumerator<TSelect>
 		{
 			var predicate = this.prevPredicate;
 			var selector = this.prevSelector;
 			var source = this.prevSource;
-			var enumerator: System.Collections.IEnumerator<T>;
+			var enumerator: IEnumerator<T>;
 
 			return new System.Collections.EnumeratorBase<TSelect>(
 				() => { enumerator = source.getEnumerator(); },
@@ -2505,7 +2532,7 @@ module System.Linq {
 	{
 
 		constructor(
-			private source: System.Collections.IEnumerable<T>,
+			private source: IEnumerable<T>,
 			public keySelector: (value: T) => any,
 			public descending: boolean,
 			public parent: OrderedEnumerable<T>)
@@ -2627,7 +2654,7 @@ module System.Linq {
 	}
 
 
-	export interface ILookup<TKey, TElement> extends System.Collections.IEnumerable<IGrouping<TKey, TElement>>
+	export interface ILookup<TKey, TElement> extends IEnumerable<IGrouping<TKey, TElement>>
 	{
 		count: number;
 		get(key: TKey): TElement[];
@@ -2653,11 +2680,11 @@ module System.Linq {
 			return this._dictionary.containsKey(key);
 		}
 
-		getEnumerator(): System.Collections.IEnumerator<Grouping<TKey, TElement>>
+		getEnumerator(): IEnumerator<Grouping<TKey, TElement>>
 		{
 
 			var _ = this;
-			var enumerator: System.Collections.IEnumerator<System.Collections.IKeyValuePair<TKey, TElement[]>>;
+			var enumerator: IEnumerator<System.Collections.IKeyValuePair<TKey, TElement[]>>;
 
 			return new System.Collections.EnumeratorBase<Grouping<TKey, TElement>>(
 				() => enumerator = _._dictionary.getEnumerator(),
@@ -2678,7 +2705,7 @@ module System.Linq {
 	}
 
 
-	export interface IGrouping<TKey, TElement> extends System.Collections.IEnumerable<TElement>
+	export interface IGrouping<TKey, TElement> extends IEnumerable<TElement>
 	{
 		key: TKey;
 	}

@@ -1,5 +1,4 @@
-﻿/// <reference path="System.d.ts" />
-declare module System.Linq {
+﻿declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
         Return = 1,
@@ -23,8 +22,8 @@ declare module System.Linq {
         static toNegativeInfinity(start?: number, step?: number): Enumerable<number>;
         static rangeTo(start: number, to: number, step?: number): Enumerable<number>;
         static matches(input: string, pattern: any, flags?: string): Enumerable<RegExpExecArray>;
-        static generate<T>(factory: () => T, count?: number): Enumerable<T>;
-        static unfold<T>(seed: T, valueFactory: (value: T) => T): Enumerable<T>;
+        static generate<T>(factory: (index?: number) => T, count?: number): Enumerable<T>;
+        static unfold<T>(seed: T, valueFactory: Selector<T, T>): Enumerable<T>;
         static defer<T>(enumerableFactory: () => Collections.IEnumerable<T>): Enumerable<T>;
         static forEach<T>(enumerable: Collections.IEnumerable<T>, action: (element: T, index?: number) => any): void;
         public assertIsNotDisposed(errorMessage?: string): boolean;

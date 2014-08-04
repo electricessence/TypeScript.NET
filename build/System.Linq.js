@@ -174,6 +174,10 @@ var System;
 
             Enumerable.matches = function (input, pattern, flags) {
                 if (typeof flags === "undefined") { flags = ""; }
+                var type = typeof input;
+                if (type != Types.String)
+                    throw new Error("Cannot exec RegExp matches on type " + type);
+
                 if (pattern instanceof RegExp) {
                     flags += (pattern.ignoreCase) ? "i" : "";
                     flags += (pattern.multiline) ? "m" : "";
@@ -183,13 +187,15 @@ var System;
                 if (flags.indexOf("g") === -1)
                     flags += "g";
 
+                var len = input.length;
+
                 return new Enumerable(function () {
                     var regex;
                     return new EnumeratorBase(function () {
-                        regex = new RegExp(pattern, flags);
+                        return regex = new RegExp(pattern, flags);
                     }, function (yielder) {
                         var match = regex.exec(input);
-                        return (match) ? yielder.yieldReturn(match) : false;
+                        return (match !== null) ? yielder.yieldReturn(match) : false;
                     });
                 });
             };
@@ -207,24 +213,21 @@ var System;
                     return new EnumeratorBase(function () {
                         return index = 0;
                     }, function (yielder) {
-                        return (index++ < count) ? yielder.yieldReturn(factory()) : false;
+                        var current = index++;
+                        return (current < count) ? yielder.yieldReturn(factory(current)) : false;
                     });
                 });
             };
 
             Enumerable.unfold = function (seed, valueFactory) {
                 return new Enumerable(function () {
-                    var isFirst;
+                    var index;
                     var value;
                     return new EnumeratorBase(function () {
-                        return isFirst = true;
+                        index = 0;
+                        value = seed;
                     }, function (yielder) {
-                        if (isFirst) {
-                            isFirst = false;
-                            value = seed;
-                            return yielder.yieldReturn(value);
-                        }
-                        value = valueFactory(value);
+                        value = valueFactory(value, index++);
                         return yielder.yieldReturn(value);
                     });
                 });
