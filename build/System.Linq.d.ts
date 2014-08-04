@@ -69,6 +69,7 @@
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
         public groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
+        public buffer(size: number): Collections.IEnumerable<T[]>;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;
         public first(predicate?: Predicate<T>): T;

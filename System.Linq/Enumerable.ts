@@ -1806,30 +1806,30 @@ module System.Linq {
 					() => { Utils.dispose(enumerator); });
 			});
 		}
+		*/
 
+		buffer(size: number): IEnumerable<T[]>
+		{
+			if (size < 1)
+				throw new Error("Invalid buffer size.");
+			var _ = this;
 
-		buffer(count) {
-			var source = this;
-
-			return new Enumerable<T>(() => {
-				var enumerator;
-
-				return new EnumeratorBase<T>(
-					() => { enumerator = source.getEnumerator(); },
-					() => {
-						var array = [];
-						var index = 0;
-						while (enumerator.moveNext()) {
+			return new Enumerable<T[]>(() => {
+				var enumerator:IEnumerator<T>;
+				return new EnumeratorBase<T[]>(
+					() => enumerator = _.getEnumerator(),
+					yielder => {
+						var array: T[] = [];
+						while (array.length < size && enumerator.moveNext())
 							array.push(enumerator.current);
-							if (++index >= count) return (<any>this).yieldReturn(array);
-						}
-						if (array.length > 0) return (<any>this).yieldReturn(array);
-						return false;
+
+						return array.length && yielder.yieldReturn(array);
 					},
-					() => { Utils.dispose(enumerator); });
+					() => enumerator.dispose());
 			});
 		}
 
+		/*
 		// Aggregate Methods 
 
 		// Overload:function(func)

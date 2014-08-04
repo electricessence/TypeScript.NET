@@ -872,6 +872,27 @@ var System;
                 });
             };
 
+            Enumerable.prototype.buffer = function (size) {
+                if (size < 1)
+                    throw new Error("Invalid buffer size.");
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+                    return new EnumeratorBase(function () {
+                        return enumerator = _.getEnumerator();
+                    }, function (yielder) {
+                        var array = [];
+                        while (array.length < size - 1 && enumerator.moveNext())
+                            array.push(enumerator.current);
+
+                        return array.length && yielder.yieldReturn(array);
+                    }, function () {
+                        return enumerator.dispose();
+                    });
+                });
+            };
+
             Enumerable.prototype.elementAt = function (index) {
                 var _ = this;
                 _.assertIsNotDisposed();
