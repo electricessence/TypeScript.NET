@@ -34,11 +34,12 @@
         public toLookup<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): Lookup<TKey, TValue>;
         public toMap<TResult>(keySelector: Selector<T, string>, elementSelector: Selector<T, TResult>): Collections.IMap<TResult>;
         public toDictionary<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): Collections.Dictionary<TKey, TValue>;
+        public toJoinedString(separator?: string, selector?: Selector<T, string>): string;
         public doAction(action: Selector<T, EnumerableAction>): Enumerable<T>;
         public doAction(action: Selector<T, number>): Enumerable<T>;
         public doAction(action: Predicate<T>): Enumerable<T>;
         public doAction(action: Action<T>): Enumerable<T>;
-        public force(): void;
+        public force(defaultAction?: EnumerableAction): void;
         public skip(count: number): Enumerable<T>;
         public skipWhile(predicate: Predicate<T>): Enumerable<T>;
         public take(count: number): Enumerable<T>;

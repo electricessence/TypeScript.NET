@@ -328,6 +328,12 @@ var System;
                 return dict;
             };
 
+            Enumerable.prototype.toJoinedString = function (separator, selector) {
+                if (typeof separator === "undefined") { separator = ""; }
+                if (typeof selector === "undefined") { selector = Functions.Identity; }
+                return this.select(selector).toArray().join(separator);
+            };
+
             Enumerable.prototype.doAction = function (action) {
                 var _ = this, disposed = !_.assertIsNotDisposed();
 
@@ -361,11 +367,12 @@ var System;
                 });
             };
 
-            Enumerable.prototype.force = function () {
+            Enumerable.prototype.force = function (defaultAction) {
+                if (typeof defaultAction === "undefined") { defaultAction = 0 /* Break */; }
                 this.assertIsNotDisposed();
 
                 this.doAction(function (element) {
-                    return false;
+                    return defaultAction;
                 });
             };
 

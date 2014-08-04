@@ -456,11 +456,11 @@ module System.Linq {
 				() => disposed = true);
 		}
 
-		force(): void {
+		force(defaultAction:EnumerableAction = EnumerableAction.Break): void {
 
 			this.assertIsNotDisposed();
 
-			this.doAction(element=> false);
+			this.doAction(element => defaultAction);
 		}
 
 		skip(count: number): Enumerable<T> {
