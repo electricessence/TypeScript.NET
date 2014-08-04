@@ -1165,53 +1165,34 @@ module System.Linq {
 				: this.any(v=> v === value);
 		}
 
-		/** /
-				// Overload:function(item)
-		// Overload:function(predicate)
-		indexOf(item): number {
-			var found = null;
+		// Originally has an overload for a predicate, but that's a bad idea since this could be an enumeration of functions and therefore fail the intent.
+		// Better to chain a where statement first to be more explicit.
+		indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number
+		{
+			var found:number = -1;
 
-			// item as predicate
-			if (typeof (item) === Types.Function) {
-				this.forEach(function (x, i) {
-					if (item(x, i)) {
-						found = i;
-						return false;
-					}
-				});
-			}
-			else {
-				this.forEach(function (x, i) {
-					if (x === item) {
-						found = i;
-						return false;
-					}
-				});
-			}
+			this.forEach((x, i)=> {
+				if (x === value) {
+					found = i;
+					return false;
+				}
+			});
 
-			return (found !== null) ? found : -1;
+			return found;
 		}
 
-		// Overload:function(item)
-		// Overload:function(predicate)
-		lastIndexOf(item):number {
+		lastIndexOf<TCompare>(value: T, compareSelector?: Selector < T, TCompare>): number
+		{
 			var result = -1;
 
-			// item as predicate
-			if (typeof (item) === Types.Function) {
-				this.forEach(function (x, i) {
-					if (item(x, i)) result = i;
-				});
-			}
-			else {
-				this.forEach(function (x, i) {
-					if (x === item) result = i;
-				});
-			}
+
+			this.forEach((x, i)=>
+			{
+				if (x === value) result = i;
+			});
 
 			return result;
 		}
-		/**/
 
 		defaultIfEmpty(defaultValue: T = null): Enumerable<T> {
 			var _ = this, disposed: boolean = !_.assertIsNotDisposed();

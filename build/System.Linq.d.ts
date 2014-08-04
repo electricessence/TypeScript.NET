@@ -65,6 +65,8 @@
         public some(predicate: Predicate<T>): boolean;
         public isEmpty(): boolean;
         public contains<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): boolean;
+        public indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
+        public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
         public elementAt(index: number): T;
         public elementAtOrDefault(index: number, defaultValue?: T): T;

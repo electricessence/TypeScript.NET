@@ -810,6 +810,30 @@ var System;
                 });
             };
 
+            Enumerable.prototype.indexOf = function (value, compareSelector) {
+                var found = -1;
+
+                this.forEach(function (x, i) {
+                    if (x === value) {
+                        found = i;
+                        return false;
+                    }
+                });
+
+                return found;
+            };
+
+            Enumerable.prototype.lastIndexOf = function (value, compareSelector) {
+                var result = -1;
+
+                this.forEach(function (x, i) {
+                    if (x === value)
+                        result = i;
+                });
+
+                return result;
+            };
+
             Enumerable.prototype.defaultIfEmpty = function (defaultValue) {
                 if (typeof defaultValue === "undefined") { defaultValue = null; }
                 var _ = this, disposed = !_.assertIsNotDisposed();
