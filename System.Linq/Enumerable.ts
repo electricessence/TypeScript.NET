@@ -401,16 +401,10 @@ module System.Linq {
 			this.forEach(x=> dict.addByKeyValue(keySelector(x), elementSelector(x)))
 			return dict;
 		}
-/*
-		// Overload:function()
-		// Overload:function(separator)
-		// Overload:function(separator,selector)
-		toJoinedString(separator, selector) {
-			if (separator == null) separator = "";
-			if (selector == null) selector = Functions.Identity;
 
+		toJoinedString(separator:string="", selector:Selector<T,string> = Functions.Identity) {
 			return this.select(selector).toArray().join(separator);
-		}/* */
+		}
 
 		// #endregion
 
