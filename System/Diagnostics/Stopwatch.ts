@@ -38,18 +38,17 @@ module System.Diagnostics
 
 		static measure(closure:()=>void):number
 		{
-			var s = Stopwatch.startNew();
+			var start = Stopwatch.getTimestampMilliseconds();
 			closure();
-			s.stop();
-			return s.elapsedMilliseconds;
+			return Stopwatch.getTimestampMilliseconds() - start;
 		}
 
-		measure(closure:()=>void):number
+		record(closure:()=>void):number
 		{
-			var s = Stopwatch.startNew();
-			closure();
-			s.stop();
-			return s.elapsedMilliseconds;
+			// Although a thread safe way to record, it may not correctly represent time in an async scenario.
+			var e = Stopwatch.measure(closure);
+			this._elapsed += e;
+			return e;
 		}
 
 		start():void
@@ -82,7 +81,7 @@ module System.Diagnostics
 
 		get currentLap():number
 		{
-			return _._isRunning
+			return this._isRunning
 				? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp)
 				: 0;
 		}
