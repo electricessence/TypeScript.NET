@@ -645,159 +645,157 @@ module System.Linq {
 		// #endregion
 
 		// #region Projection and Filtering Methods
-		/*
 
-		// Overload:function(func)
-		// Overload:function(func, resultSelector<element>)
-		// Overload:function(func, resultSelector<element, nestLevel>)
-		traverseBreadthFirst(func, resultSelector): Enumerable<T> {
-			var source = this;
-			func = Utils.createLambda(func);
-			resultSelector = Utils.createLambda(resultSelector);
+		traverseBreadthFirst(func: (element: any) => IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any> {
+			var _ = this;
 
-			return new Enumerable<T>(() => {
-				var enumerator;
-				var nestLevel = 0;
-				var buffer = [];
+			return new Enumerable<any>(() => {
+				var enumerator: IEnumerator<any>;
+				var nestLevel:number = 0;
+				var buffer:any[] = [];
 
-				return new EnumeratorBase<T>(
-					() => { enumerator = source.getEnumerator(); },
-					() => {
+				return new EnumeratorBase<any>(
+					() => { enumerator = _.getEnumerator(); },
+					yielder => {
 						while (true) {
 							if (enumerator.moveNext()) {
 								buffer.push(enumerator.current);
-								return (<any>this).yieldReturn(resultSelector(enumerator.current, nestLevel));
+								return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
 							}
 
-							var next = Enumerable.from<T>(buffer).selectMany(function (x) { return func(x); });
+							var next = Enumerable.fromArray<T>(buffer)
+								.selectMany( (x:any) => func(x) );
 							if (!next.any()) {
 								return false;
 							}
 							else {
 								nestLevel++;
 								buffer = [];
-								Utils.dispose(enumerator);
+								enumerator.dispose();
 								enumerator = next.getEnumerator();
 							}
 						}
 					},
-					() => { Utils.dispose(enumerator); });
+					() => enumerator.dispose());
 			});
 		}
 
-		// Overload:function(func)
-		// Overload:function(func, resultSelector<element>)
-		// Overload:function(func, resultSelector<element, nestLevel>)
-		traverseDepthFirst(func, resultSelector): Enumerable<T> {
-			var source = this;
-			func = Utils.createLambda(func);
-			resultSelector = Utils.createLambda(resultSelector);
 
-			return new Enumerable<T>(() => {
-				var enumeratorStack = [];
-				var enumerator;
+		traverseDepthFirst(func: (element: any) => IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any> {
+			var _ = this;
+
+			return new Enumerable<any>(() => {
+				var enumeratorStack: IEnumerator<any>[] = [];
+				var enumerator:IEnumerator<any>;
 
 				return new EnumeratorBase<T>(
-					() => { enumerator = source.getEnumerator(); },
-					() => {
+					() => { enumerator = _.getEnumerator(); },
+					yielder => {
 						while (true) {
 							if (enumerator.moveNext()) {
 								var value = resultSelector(enumerator.current, enumeratorStack.length);
 								enumeratorStack.push(enumerator);
-								enumerator = Enumerable.from(func(enumerator.current)).getEnumerator();
-								return (<any>this).yieldReturn(value);
+								enumerator = func(enumerator.current).getEnumerator();
+								return yielder.yieldReturn(value);
 							}
 
-							if (enumeratorStack.length <= 0) return false;
-							Utils.dispose(enumerator);
+							if (enumeratorStack.length == 0) return false;
+
+							enumerator.dispose();
 							enumerator = enumeratorStack.pop();
 						}
 					},
 					() => {
 						try {
-							Utils.dispose(enumerator);
+							enumerator.dispose();
 						}
 						finally {
-							Enumerable.from(enumeratorStack).forEach(function (s) { s.dispose(); });
+							enumeratorStack.forEach(s => s.dispose() );
 						}
 					});
 			});
 		}
+		
 
-		flatten(): Enumerable<T> {
-			var source = this;
+		flatten(): Enumerable<any> {
+			var _ = this;
 
-			return new Enumerable<T>(() => {
-				var enumerator;
-				var middleEnumerator = null;
+			return new Enumerable<any>(() => {
+				var enumerator:IEnumerator<any>;
+				var middleEnumerator: IEnumerator<any> = null;
 
 				return new EnumeratorBase<T>(
-					() => { enumerator = source.getEnumerator(); },
-					() => {
+					() => { enumerator = _.getEnumerator(); },
+					yielder => {
 						while (true) {
 							if (middleEnumerator != null) {
 								if (middleEnumerator.moveNext()) {
-									return (<any>this).yieldReturn(middleEnumerator.current);
+									return yielder.yieldReturn(middleEnumerator.current);
 								}
 								else {
 									middleEnumerator = null;
 								}
 							}
 
-							if (enumerator.moveNext()) {
-								if (enumerator.current instanceof Array) {
-									Utils.dispose(middleEnumerator);
-									middleEnumerator = Enumerable.from<T>(enumerator.current)
+							if (enumerator.moveNext())
+							{
+								var c = enumerator.current;
+								if (c instanceof Array) {
+									middleEnumerator.dispose();
+									middleEnumerator = Enumerable.fromArray<any>(c)
 										.selectMany(Functions.Identity)
 										.flatten()
 										.getEnumerator();
 									continue;
 								}
 								else {
-									return (<any>this).yieldReturn(enumerator.current);
+									return yielder.yieldReturn(enumerator.current);
 								}
 							}
 
 							return false;
 						}
 					},
-					() => {
-						try {
-							Utils.dispose(enumerator);
+					() =>
+					{
+						try
+						{
+							enumerator.dispose();
 						}
-						finally {
-							Utils.dispose(middleEnumerator);
+						finally
+						{
+							middleEnumerator.dispose();
 						}
+
 					});
 			});
 		}
+		
 
-		pairwise(selector): Enumerable<T> {
-			var source = this;
-			selector = Utils.createLambda(selector);
+		pairwise<TSelect>(selector: (prev: T, current: T) => TSelect): Enumerable<TSelect> {
+			var _ = this;
 
-			return new Enumerable<T>(() => {
-				var enumerator;
+			return new Enumerable<TSelect>(() => {
+				var enumerator : IEnumerator<T>;
 
-				return new EnumeratorBase<T>(
+				return new EnumeratorBase<TSelect>(
 					() => {
-						enumerator = source.getEnumerator();
+						enumerator = _.getEnumerator();
 						enumerator.moveNext();
 					},
-					() => {
+					yielder => {
 						var prev = enumerator.current;
-						return (enumerator.moveNext())
-							? (<any>this).yieldReturn(selector(prev, enumerator.current))
-							: false;
+						return enumerator.moveNext()
+							&& yielder.yieldReturn(selector(prev, enumerator.current));
 					},
-					() => { Utils.dispose(enumerator); });
+					() => enumerator.dispose());
 			});
-		} */
+		}
 
 		scan(func: (a: T, b: T) => T, seed?: T): Enumerable<T> {
 
 			var isUseSeed = seed!==undefined; // For now...
-			var source = this;
+			var _ = this;
 
 			return new Enumerable<T>(() => {
 				var enumerator:IEnumerator<T>;
@@ -807,7 +805,7 @@ module System.Linq {
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						enumerator = source.getEnumerator();
+						enumerator = _.getEnumerator();
 						isFirst = true;
 					},
 					yielder =>

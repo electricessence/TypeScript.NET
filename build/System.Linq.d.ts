@@ -1,4 +1,5 @@
-﻿declare module System.Linq {
+﻿/// <reference path="System.d.ts" />
+declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
         Return = 1,
@@ -45,6 +46,10 @@
         public take(count: number): Enumerable<T>;
         public takeExceptLast(count?: number): Enumerable<T>;
         public takeFromLast(count?: number): Enumerable<T>;
+        public traverseBreadthFirst(func: (element: any) => Collections.IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any>;
+        public traverseDepthFirst(func: (element: any) => Collections.IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any>;
+        public flatten(): Enumerable<any>;
+        public pairwise<TSelect>(selector: (prev: T, current: T) => TSelect): Enumerable<TSelect>;
         public scan(func: (a: T, b: T) => T, seed?: T): Enumerable<T>;
         public select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>;
         public selectMany<TResult>(collectionSelector: Selector<T, Collections.IEnumerable<TResult>>): Enumerable<TResult>;

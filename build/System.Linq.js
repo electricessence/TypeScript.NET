@@ -10,7 +10,7 @@ var System;
         "use strict";
 
         var ArrayUtility = System.Collections.ArrayUtility;
-
+		 
         var EnumeratorBase = System.Collections.EnumeratorBase;
 
         var Dictionary = System.Collections.Dictionary;
@@ -481,9 +481,140 @@ var System;
                 });
             };
 
+            Enumerable.prototype.traverseBreadthFirst = function (func, resultSelector) {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+                    var nestLevel = 0;
+                    var buffer = [];
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                    }, function (yielder) {
+                        while (true) {
+                            if (enumerator.moveNext()) {
+                                buffer.push(enumerator.current);
+                                return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
+                            }
+
+                            var next = Enumerable.fromArray(buffer).selectMany(function (x) {
+                                return func(x);
+                            });
+                            if (!next.any()) {
+                                return false;
+                            } else {
+                                nestLevel++;
+                                buffer = [];
+                                enumerator.dispose();
+                                enumerator = next.getEnumerator();
+                            }
+                        }
+                    }, function () {
+                        return enumerator.dispose();
+                    });
+                });
+            };
+
+            Enumerable.prototype.traverseDepthFirst = function (func, resultSelector) {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumeratorStack = [];
+                    var enumerator;
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                    }, function (yielder) {
+                        while (true) {
+                            if (enumerator.moveNext()) {
+                                var value = resultSelector(enumerator.current, enumeratorStack.length);
+                                enumeratorStack.push(enumerator);
+                                enumerator = func(enumerator.current).getEnumerator();
+                                return yielder.yieldReturn(value);
+                            }
+
+                            if (enumeratorStack.length == 0)
+                                return false;
+
+                            enumerator.dispose();
+                            enumerator = enumeratorStack.pop();
+                        }
+                    }, function () {
+                        try  {
+                            enumerator.dispose();
+                        } finally {
+                            enumeratorStack.forEach(function (s) {
+                                return s.dispose();
+                            });
+                        }
+                    });
+                });
+            };
+
+            Enumerable.prototype.flatten = function () {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+                    var middleEnumerator = null;
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                    }, function (yielder) {
+                        while (true) {
+                            if (middleEnumerator != null) {
+                                if (middleEnumerator.moveNext()) {
+                                    return yielder.yieldReturn(middleEnumerator.current);
+                                } else {
+                                    middleEnumerator = null;
+                                }
+                            }
+
+                            if (enumerator.moveNext()) {
+                                var c = enumerator.current;
+                                if (c instanceof Array) {
+                                    middleEnumerator.dispose();
+                                    middleEnumerator = Enumerable.fromArray(c).selectMany(Functions.Identity).flatten().getEnumerator();
+                                    continue;
+                                } else {
+                                    return yielder.yieldReturn(enumerator.current);
+                                }
+                            }
+
+                            return false;
+                        }
+                    }, function () {
+                        try  {
+                            enumerator.dispose();
+                        } finally {
+                            middleEnumerator.dispose();
+                        }
+                    });
+                });
+            };
+
+            Enumerable.prototype.pairwise = function (selector) {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                        enumerator.moveNext();
+                    }, function (yielder) {
+                        var prev = enumerator.current;
+                        return enumerator.moveNext() && yielder.yieldReturn(selector(prev, enumerator.current));
+                    }, function () {
+                        return enumerator.dispose();
+                    });
+                });
+            };
+
             Enumerable.prototype.scan = function (func, seed) {
                 var isUseSeed = seed !== undefined;
-                var source = this;
+                var _ = this;
 
                 return new Enumerable(function () {
                     var enumerator;
@@ -491,7 +622,7 @@ var System;
                     var isFirst;
 
                     return new EnumeratorBase(function () {
-                        enumerator = source.getEnumerator();
+                        enumerator = _.getEnumerator();
                         isFirst = true;
                     }, function (yielder) {
                         if (isFirst) {
