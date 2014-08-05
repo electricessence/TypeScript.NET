@@ -79,6 +79,23 @@ module System.Diagnostics
 			_._startTimeStamp = NaN;
 		}
 
+		// Effectively calls a stop start and continues timing...
+		lap():number
+		{
+			var _ = this;
+			if(_._isRunning)
+			{
+				var t = Stopwatch.getTimestampMilliseconds();
+				var s = _._startTimeStamp;
+				var e = t - s;
+				_._startTimeStamp = t;
+				_._elapsed += e;
+				return e;
+			}
+			else
+				return 0;
+		}
+
 		get currentLap():number
 		{
 			return this._isRunning
@@ -97,5 +114,12 @@ module System.Diagnostics
 			return timeElapsed;
 		}
 
+		// TODO: Convert these elapsed methods to "TimeSpan".
+		get elapsedSeconds():number
+		{
+			return this.elapsedMilliseconds / 1000;
+		}
+
 	}
+
 } 
