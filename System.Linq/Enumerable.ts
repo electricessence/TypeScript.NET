@@ -2324,12 +2324,9 @@ module System.Linq {
 
 	export class ArrayEnumerable<T> extends Enumerable<T> {
 
-		private _source: T[]
-
-		constructor(source: T[])
+		constructor(private _source: T[])
 		{
 			var _ = this;
-			_._source = source;
 			super(() =>
 			{
 				_.assertIsNotDisposed();
@@ -2608,49 +2605,52 @@ module System.Linq {
 			return new WhereEnumerable<TSelect>(this, predicate);
 		}
 
-		select<TResult>(selector: (value: TSelect, index?: number) => TResult): Enumerable<TResult>
+		select<TResult>(selector: Selector<T,TSelect>): Enumerable<TResult>
 		{
 
 			if (selector.length > 1)
 				// if selector use index, can't compose
 				return super.select(selector);
 
-			var prevSelector = this.prevSelector;
+			var _ = this;
+			var prevSelector = _.prevSelector;
 			var composedSelector = (x: T) => selector(prevSelector(x));
-			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, composedSelector);
+			return new WhereSelectEnumerable(_.prevSource, _.prevPredicate, composedSelector);
 		}
 
 		getEnumerator(): IEnumerator<TSelect>
 		{
 			var _ = this,
-				predicate:Predicate<T> = _.prevPredicate,
+				predicate = _.prevPredicate,
+				source = _.prevSource,
 				selector:Selector<T,TSelect> = _.prevSelector,
-				source:IEnumerable<T> = _.prevSource,
 				enumerator: IEnumerator<T>;
 
-			return new System.Collections.EnumeratorBase<TSelect>(
-				() => { enumerator = source.getEnumerator(); },
+			return new EnumeratorBase<TSelect>(
+				() => enumerator = source.getEnumerator(),
 				yielder =>
 				{
 					while (enumerator.moveNext())
 					{
-						if (predicate == null || predicate(enumerator.current))
+						var c = enumerator.current;
+						if (predicate == null || predicate(c))
 						{
-							return yielder.yieldReturn(selector(enumerator.current));
+							return yielder.yieldReturn(selector(c));
 						}
 					}
 					return false;
 				},
 				() => enumerator.dispose()
-				);
+			);
 		}
 
 		_onDispose(): void
 		{
+			var _ = this;
 			super._onDispose();
-			this.prevPredicate = null;
-			this.prevSource = null;
-			this.prevSelector = null;
+			_.prevPredicate = null;
+			_.prevSource = null;
+			_.prevSelector = null;
 		}
 	}
 
