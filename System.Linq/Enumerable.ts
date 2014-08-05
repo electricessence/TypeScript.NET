@@ -614,7 +614,7 @@ module System.Linq {
 			});
 		}
 
-		takeFromLast(count?: number): Enumerable<T>
+		takeFromLast(count: number): Enumerable<T>
 		{
 			if (!count || count < 0) return Enumerable.empty<T>();
 			var _ = this;
@@ -1032,7 +1032,7 @@ module System.Linq {
 
 		}
 
-		ofType<TType>(type: { new (): TType }): Enumerable<TType>
+		ofType<TType>(type: { new (): TType }): Enumerable<TType>;
 		ofType<TType>(type: any): Enumerable<TType>
 		{
 			var typeName: string;
@@ -2489,6 +2489,7 @@ module System.Linq {
 
 		takeFromLast(count: number): Enumerable<T>
 		{
+			if (!count || count < 0) return Enumerable.empty<T>();
 			var _ = this, len = _._source ? _._source.length : 0;
 			return _.skip(len - count);
 		}
@@ -2593,7 +2594,7 @@ module System.Linq {
 		constructor(
 			private prevSource: IEnumerable<T>,
 			private prevPredicate: Predicate<T>,  // predicate.length always <= 1
-			private prevSelector: (value: T, index?: number) => TSelect // selector.length always <= 1
+			private prevSelector: Selector<T,TSelect> // selector.length always <= 1
 			)
 		{
 			super(null);
@@ -2621,10 +2622,11 @@ module System.Linq {
 
 		getEnumerator(): IEnumerator<TSelect>
 		{
-			var predicate = this.prevPredicate;
-			var selector = this.prevSelector;
-			var source = this.prevSource;
-			var enumerator: IEnumerator<T>;
+			var _ = this,
+				predicate:Predicate<T> = _.prevPredicate,
+				selector:Selector<T,TSelect> = _.prevSelector,
+				source:IEnumerable<T> = _.prevSource,
+				enumerator: IEnumerator<T>;
 
 			return new System.Collections.EnumeratorBase<TSelect>(
 				() => { enumerator = source.getEnumerator(); },
