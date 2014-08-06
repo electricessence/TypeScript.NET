@@ -21,7 +21,7 @@ See http://www.typescriptlang.org/ for more information.
 3) Most IDE's and text editors now support TypeScript either built in, or via a plug-in:
 * Visual Studio 2013 (or greater)
 * WebStorm (recommended!)
-* Submlime Text
+* Sublime Text
 
 To name a few.
 
