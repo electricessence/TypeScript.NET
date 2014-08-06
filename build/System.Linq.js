@@ -10,7 +10,7 @@ var System;
         "use strict";
 
         var ArrayUtility = System.Collections.ArrayUtility;
-		 
+
         var EnumeratorBase = System.Collections.EnumeratorBase;
 
         var Dictionary = System.Collections.Dictionary;

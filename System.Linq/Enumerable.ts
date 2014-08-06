@@ -1366,6 +1366,18 @@ module System.Linq {
 		}
 
 		/* * /
+
+		zip(second: any[], resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        zip(second: Enumerable, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        zip(second: { length: number;[x: number]: any; }, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        zip(...params: any[]): Enumerable; // last one is selector
+        merge(second: any[], resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        merge(second: Enumerable, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        merge(second: { length: number;[x: number]: any; }, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        merge(...params: any[]): Enumerable; // last one is selector
+        join(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumerable;
+        groupJoin(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumer
+
 		// mutiple arguments, last one is selector, others are enumerable
 		zip(...args): Enumerable<T> {
 			var selector = Utils.createLambda(arguments[arguments.length - 1]);
