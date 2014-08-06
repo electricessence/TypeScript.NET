@@ -45,3 +45,4 @@ For example, System has the following files in the build directory:
 
 # Future
 Planning to make this a bower (and possibly NPM) install.
+Full documentation and references (dreaming).
