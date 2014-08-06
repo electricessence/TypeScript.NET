@@ -1,6 +1,7 @@
+///<reference path="../TimeSpan.ts"/>
+
 /*
  * @author electricessence / https://github.com/electricessence/
- * Origin: .NET System C# Source
  * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
@@ -36,18 +37,18 @@ module System.Diagnostics
 			return s;
 		}
 
-		static measure(closure:()=>void):number
+		static measure(closure:()=>void):TimeSpan
 		{
 			var start = Stopwatch.getTimestampMilliseconds();
 			closure();
-			return Stopwatch.getTimestampMilliseconds() - start;
+			return new TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
 		}
 
-		record(closure:()=>void):number
+		record(closure: () => void): TimeSpan
 		{
-			// Although a thread safe way to record, it may not correctly represent time in an async scenario.
+			// Although a reasonably thread safe way to record, it may not correctly represent time in an async scenario.
 			var e = Stopwatch.measure(closure);
-			this._elapsed += e;
+			this._elapsed += e.milliseconds;
 			return e;
 		}
 
@@ -66,7 +67,7 @@ module System.Diagnostics
 			var _ = this;
 			if(_._isRunning)
 			{
-				_._elapsed += _.currentLap;
+				_._elapsed += _.currentLapMilliseconds;
 				_._isRunning = false;
 			}
 		}
@@ -80,7 +81,8 @@ module System.Diagnostics
 		}
 
 		// Effectively calls a stop start and continues timing...
-		lap():number
+		// Can also be called to effectively start a lap before calling it again to get the elapsed lap time.
+		lap():TimeSpan
 		{
 			var _ = this;
 			if(_._isRunning)
@@ -90,17 +92,24 @@ module System.Diagnostics
 				var e = t - s;
 				_._startTimeStamp = t;
 				_._elapsed += e;
-				return e;
+				return new TimeSpan(e);
 			}
 			else
-				return 0;
+				return TimeSpan.zero;
 		}
 
-		get currentLap():number
+		get currentLapMilliseconds(): number
 		{
 			return this._isRunning
 				? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp)
 				: 0;
+		}
+
+		get currentLap(): TimeSpan
+		{
+			return this._isRunning
+				? new TimeSpan(this.currentLapMilliseconds)
+				: TimeSpan.zero;
 		}
 
 		get elapsedMilliseconds():number
@@ -109,15 +118,14 @@ module System.Diagnostics
 			var timeElapsed = _._elapsed;
 
 			if(_._isRunning)
-				timeElapsed += _.currentLap;
+				timeElapsed += _.currentLapMilliseconds;
 
 			return timeElapsed;
 		}
 
-		// TODO: Convert these elapsed methods to "TimeSpan".
-		get elapsedSeconds():number
+		get elapsed(): System.TimeSpan
 		{
-			return this.elapsedMilliseconds / 1000;
+			return new System.TimeSpan(this.elapsedMilliseconds);
 		}
 
 	}
