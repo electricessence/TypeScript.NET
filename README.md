@@ -16,8 +16,6 @@ If you have a .NET Library class that you want to see represented in TypeScript,
 
 2) The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It's still JavaScript, but with many bonuses including a growing community. :)
 
-See http://www.typescriptlang.org/ for more information.
-
 3) Most IDE's and text editors now support TypeScript either built in, or via a plug-in:
 * Visual Studio 2013 (or greater)
 * WebStorm (recommended!)
@@ -26,6 +24,8 @@ See http://www.typescriptlang.org/ for more information.
 To name a few.
 
 In my case, I use both Visual Studio and Web Storm to ensure quality.  
+
+See http://www.typescriptlang.org/ for more information.
 
 # Usage
 This library is meant to be flexible. So for a single project/package there are multiple versions of the result.
