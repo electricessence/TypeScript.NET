@@ -12,7 +12,7 @@ There is of course some variance away from .NET's convention (camelCase methods 
 If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contriubte it yourself! :)
 
 ## Why should I use this, let alone TypeScript?
-1) **It's 100% compatible with JavaScript.**  Although the current target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target it.
+1) **It's 100% compatible with JavaScript.**  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :)
 
 2) The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It's still JavaScript, but with many bonuses including a growing community. :)
 
