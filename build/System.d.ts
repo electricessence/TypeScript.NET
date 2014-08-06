@@ -57,6 +57,96 @@ declare module System {
     function applyMixins(derivedCtor: any, baseCtors: any[]): void;
 }
 declare module System {
+    enum TimeUnit {
+        Ticks = 0,
+        Milliseconds = 1,
+        Seconds = 2,
+        Minutes = 3,
+        Hours = 4,
+        Days = 5,
+    }
+    interface IMeasureTime {
+        ticks: number;
+        milliseconds: number;
+        seconds: number;
+        minutes: number;
+        hours: number;
+        days: number;
+    }
+    class ClockTime implements IMeasureTime {
+        private _milliseconds;
+        constructor(milliseconds: number);
+        constructor(hours: number, minutes: number, seconds?: number, milliseconds?: number);
+        public ticks : number;
+        public milliseconds : number;
+        public seconds : number;
+        public minutes : number;
+        public hours : number;
+        public days : number;
+        public toTimeSpan(): TimeSpan;
+        static from(hours: number, minutes: number, seconds?: number, milliseconds?: number): ClockTime;
+    }
+    class TimeUnitValue {
+        public value: number;
+        private _type;
+        constructor(value: number, _type: TimeUnit);
+        public type : TimeUnit;
+        public toTimeSpan(): TimeSpan;
+        public to(units?: TimeUnit): TimeUnitValue;
+    }
+    class TimeSpan implements IMeasureTime {
+        private _milliseconds;
+        constructor(value: number, units?: TimeUnit);
+        public equals(other: TimeSpan): boolean;
+        public toTimeUnitValue(units?: TimeUnit): TimeUnitValue;
+        static convertToMilliseconds(value: number, units?: TimeUnit): number;
+        public total(units: TimeUnit): number;
+        public ticks : number;
+        public milliseconds : number;
+        public seconds : number;
+        public minutes : number;
+        public hours : number;
+        public days : number;
+        public time : ClockTime;
+        public add(other: ClockTime): TimeSpan;
+        public add(other: TimeUnitValue): TimeSpan;
+        public add(other: TimeSpan): TimeSpan;
+        public addUnit(value: number, units?: TimeUnit): TimeSpan;
+        static from(value: number, units: TimeUnit): TimeSpan;
+        static fromDays(value: number): TimeSpan;
+        static fromHours(value: number): TimeSpan;
+        static fromMinutes(value: number): TimeSpan;
+        static fromSeconds(value: number): TimeSpan;
+        static fromMilliseconds(value: number): TimeSpan;
+        static fromTicks(value: number): TimeSpan;
+        static fromTime(hours: number, minutes: number, seconds?: number, milliseconds?: number): TimeSpan;
+        static millisecondsFromTime(hours: number, minutes: number, seconds?: number, milliseconds?: number): number;
+        static between(first: Date, last: Date): TimeSpan;
+        static zero : TimeSpan;
+    }
+}
+declare module System.Diagnostics {
+    class Stopwatch {
+        static getTimestampMilliseconds(): number;
+        private _elapsed;
+        private _startTimeStamp;
+        private _isRunning;
+        public isRunning : boolean;
+        constructor();
+        static startNew(): Stopwatch;
+        static measure(closure: () => void): TimeSpan;
+        public record(closure: () => void): TimeSpan;
+        public start(): void;
+        public stop(): void;
+        public reset(): void;
+        public lap(): TimeSpan;
+        public currentLapMilliseconds : number;
+        public currentLap : TimeSpan;
+        public elapsedMilliseconds : number;
+        public elapsed : TimeSpan;
+    }
+}
+declare module System {
     function dispose(obj: any): void;
     function using<TDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
     interface IDisposable {

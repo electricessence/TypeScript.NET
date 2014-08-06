@@ -1541,6 +1541,8 @@ var System;
             };
 
             ArrayEnumerable.prototype.takeFromLast = function (count) {
+                if (!count || count < 0)
+                    return Enumerable.empty();
                 var _ = this, len = _._source ? _._source.length : 0;
                 return _.skip(len - count);
             };
@@ -1650,25 +1652,24 @@ var System;
                 if (selector.length > 1)
                     return _super.prototype.select.call(this, selector);
 
-                var prevSelector = this.prevSelector;
+                var _ = this;
+                var prevSelector = _.prevSelector;
                 var composedSelector = function (x) {
                     return selector(prevSelector(x));
                 };
-                return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, composedSelector);
+                return new WhereSelectEnumerable(_.prevSource, _.prevPredicate, composedSelector);
             };
 
             WhereSelectEnumerable.prototype.getEnumerator = function () {
-                var predicate = this.prevPredicate;
-                var selector = this.prevSelector;
-                var source = this.prevSource;
-                var enumerator;
+                var _ = this, predicate = _.prevPredicate, source = _.prevSource, selector = _.prevSelector, enumerator;
 
-                return new System.Collections.EnumeratorBase(function () {
-                    enumerator = source.getEnumerator();
+                return new EnumeratorBase(function () {
+                    return enumerator = source.getEnumerator();
                 }, function (yielder) {
                     while (enumerator.moveNext()) {
-                        if (predicate == null || predicate(enumerator.current)) {
-                            return yielder.yieldReturn(selector(enumerator.current));
+                        var c = enumerator.current;
+                        if (predicate == null || predicate(c)) {
+                            return yielder.yieldReturn(selector(c));
                         }
                     }
                     return false;
@@ -1678,10 +1679,11 @@ var System;
             };
 
             WhereSelectEnumerable.prototype._onDispose = function () {
+                var _ = this;
                 _super.prototype._onDispose.call(this);
-                this.prevPredicate = null;
-                this.prevSource = null;
-                this.prevSelector = null;
+                _.prevPredicate = null;
+                _.prevSource = null;
+                _.prevSelector = null;
             };
             return WhereSelectEnumerable;
         })(Enumerable);

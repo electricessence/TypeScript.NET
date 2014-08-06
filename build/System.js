@@ -226,6 +226,424 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
+    var ticksPerMillisecond = 10000, msPerSecond = 1000, secondsPerMinute = 60, minutesPerHour = 60, earthHoursPerDay = 24;
+
+    (function (TimeUnit) {
+        TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
+        TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
+        TimeUnit[TimeUnit["Seconds"] = 2] = "Seconds";
+        TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
+        TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
+        TimeUnit[TimeUnit["Days"] = 5] = "Days";
+    })(System.TimeUnit || (System.TimeUnit = {}));
+    var TimeUnit = System.TimeUnit;
+
+    function assertValidUnit(unit) {
+        if (isNaN(unit) || unit > 5 /* Days */ || unit < 0 /* Ticks */ || Math.floor(unit) != unit)
+            throw new Error("Invalid TimeUnit.");
+
+        return true;
+    }
+
+    var ClockTime = (function () {
+        function ClockTime() {
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                args[_i] = arguments[_i + 0];
+            }
+            this._milliseconds = args.length > 1 ? TimeSpan.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0) : (args.length > 0 && args[0] || 0);
+        }
+        Object.defineProperty(ClockTime.prototype, "ticks", {
+            get: function () {
+                return (this._milliseconds - Math.floor(this._milliseconds)) * ticksPerMillisecond;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(ClockTime.prototype, "milliseconds", {
+            get: function () {
+                return Math.floor(this._milliseconds) % msPerSecond;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(ClockTime.prototype, "seconds", {
+            get: function () {
+                return Math.floor(this._milliseconds / msPerSecond) % secondsPerMinute;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(ClockTime.prototype, "minutes", {
+            get: function () {
+                return Math.floor(this._milliseconds / msPerSecond / secondsPerMinute) % minutesPerHour;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(ClockTime.prototype, "hours", {
+            get: function () {
+                return Math.floor(this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour) % earthHoursPerDay;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(ClockTime.prototype, "days", {
+            get: function () {
+                return Math.floor(this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ClockTime.prototype.toTimeSpan = function () {
+            return new TimeSpan(this._milliseconds);
+        };
+
+        ClockTime.from = function (hours, minutes, seconds, milliseconds) {
+            if (typeof seconds === "undefined") { seconds = 0; }
+            if (typeof milliseconds === "undefined") { milliseconds = 0; }
+            return new ClockTime(hours, minutes, seconds, milliseconds);
+        };
+        return ClockTime;
+    })();
+    System.ClockTime = ClockTime;
+
+    var TimeUnitValue = (function () {
+        function TimeUnitValue(value, _type) {
+            this.value = value;
+            this._type = _type;
+            assertValidUnit(_type);
+        }
+        Object.defineProperty(TimeUnitValue.prototype, "type", {
+            get: function () {
+                return this._type;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        TimeUnitValue.prototype.toTimeSpan = function () {
+            return new TimeSpan(this.value, this.type);
+        };
+
+        TimeUnitValue.prototype.to = function (units) {
+            if (typeof units === "undefined") { units = this.type; }
+            return this.toTimeSpan().toTimeUnitValue(units);
+        };
+        return TimeUnitValue;
+    })();
+    System.TimeUnitValue = TimeUnitValue;
+
+    var TimeSpan = (function () {
+        function TimeSpan(value, units) {
+            if (typeof units === "undefined") { units = 1 /* Milliseconds */; }
+            this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+        }
+        TimeSpan.prototype.equals = function (other) {
+            return System.areEqual(this._milliseconds, other.milliseconds, false);
+        };
+
+        TimeSpan.prototype.toTimeUnitValue = function (units) {
+            if (typeof units === "undefined") { units = 1 /* Milliseconds */; }
+            return new TimeUnitValue(this.total(units), units);
+        };
+
+        TimeSpan.convertToMilliseconds = function (value, units) {
+            if (typeof units === "undefined") { units = 1 /* Milliseconds */; }
+            switch (units) {
+                case 5 /* Days */:
+                    value *= earthHoursPerDay;
+                case 4 /* Hours */:
+                    value *= minutesPerHour;
+                case 3 /* Minutes */:
+                    value *= secondsPerMinute;
+                case 2 /* Seconds */:
+                    value *= msPerSecond;
+                case 1 /* Milliseconds */:
+                    return value;
+                case 0 /* Ticks */:
+                    value / ticksPerMillisecond;
+                default:
+                    throw new Error("Invalid TimeUnit.");
+            }
+        };
+
+        TimeSpan.prototype.total = function (units) {
+            var _ = this;
+            switch (units) {
+                case 5 /* Days */:
+                    return _.days;
+                case 4 /* Hours */:
+                    return _.hours;
+                case 3 /* Minutes */:
+                    return _.minutes;
+                case 2 /* Seconds */:
+                    return _.seconds;
+                case 1 /* Milliseconds */:
+                    return _._milliseconds;
+                case 0 /* Ticks */:
+                    return _._milliseconds * ticksPerMillisecond;
+                default:
+                    throw new Error("Invalid TimeUnit.");
+            }
+        };
+
+        Object.defineProperty(TimeSpan.prototype, "ticks", {
+            get: function () {
+                return this._milliseconds * ticksPerMillisecond;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(TimeSpan.prototype, "milliseconds", {
+            get: function () {
+                return this._milliseconds;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(TimeSpan.prototype, "seconds", {
+            get: function () {
+                return this._milliseconds / msPerSecond;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(TimeSpan.prototype, "minutes", {
+            get: function () {
+                return this.seconds / secondsPerMinute;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(TimeSpan.prototype, "hours", {
+            get: function () {
+                return this.minutes / minutesPerHour;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(TimeSpan.prototype, "days", {
+            get: function () {
+                return this.hours / earthHoursPerDay;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(TimeSpan.prototype, "time", {
+            get: function () {
+                return new ClockTime(this._milliseconds);
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        TimeSpan.prototype.add = function (other) {
+            if (System.Types.isNumber(other))
+                throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+            if (other instanceof TimeUnitValue || other instanceof ClockTime)
+                other = other.toTimeSpan();
+            return new TimeSpan(this._milliseconds + other.totalMilliseconds);
+        };
+
+        TimeSpan.prototype.addUnit = function (value, units) {
+            if (typeof units === "undefined") { units = 1 /* Milliseconds */; }
+            return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+        };
+
+        TimeSpan.from = function (value, units) {
+            return new TimeSpan(value, units);
+        };
+
+        TimeSpan.fromDays = function (value) {
+            return new TimeSpan(value, 5 /* Days */);
+        };
+
+        TimeSpan.fromHours = function (value) {
+            return new TimeSpan(value, 4 /* Hours */);
+        };
+
+        TimeSpan.fromMinutes = function (value) {
+            return new TimeSpan(value, 3 /* Minutes */);
+        };
+
+        TimeSpan.fromSeconds = function (value) {
+            return new TimeSpan(value, 2 /* Seconds */);
+        };
+
+        TimeSpan.fromMilliseconds = function (value) {
+            return new TimeSpan(value, 1 /* Milliseconds */);
+        };
+
+        TimeSpan.fromTicks = function (value) {
+            return new TimeSpan(value, 0 /* Ticks */);
+        };
+
+        TimeSpan.fromTime = function (hours, minutes, seconds, milliseconds) {
+            if (typeof seconds === "undefined") { seconds = 0; }
+            if (typeof milliseconds === "undefined") { milliseconds = 0; }
+            return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+        };
+
+        TimeSpan.millisecondsFromTime = function (hours, minutes, seconds, milliseconds) {
+            if (typeof seconds === "undefined") { seconds = 0; }
+            if (typeof milliseconds === "undefined") { milliseconds = 0; }
+            var value = hours;
+            value *= minutesPerHour;
+            value += minutes;
+            value *= secondsPerMinute;
+            value += seconds;
+            value *= msPerSecond;
+            value += milliseconds;
+            return value;
+        };
+
+        TimeSpan.between = function (first, last) {
+            return new TimeSpan(last.getTime() - first.getTime());
+        };
+
+        Object.defineProperty(TimeSpan, "zero", {
+            get: function () {
+                return timeSpanZero;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return TimeSpan;
+    })();
+    System.TimeSpan = TimeSpan;
+
+    var timeSpanZero = new TimeSpan(0);
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Diagnostics) {
+        var Stopwatch = (function () {
+            function Stopwatch() {
+                this.reset();
+            }
+            Stopwatch.getTimestampMilliseconds = function () {
+                return (new Date()).getTime();
+            };
+
+            Object.defineProperty(Stopwatch.prototype, "isRunning", {
+                get: function () {
+                    return this._isRunning;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Stopwatch.startNew = function () {
+                var s = new Stopwatch();
+                s.start();
+                return s;
+            };
+
+            Stopwatch.measure = function (closure) {
+                var start = Stopwatch.getTimestampMilliseconds();
+                closure();
+                return new System.TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
+            };
+
+            Stopwatch.prototype.record = function (closure) {
+                var e = Stopwatch.measure(closure);
+                this._elapsed += e.milliseconds;
+                return e;
+            };
+
+            Stopwatch.prototype.start = function () {
+                var _ = this;
+                if (!_._isRunning) {
+                    _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+                    _._isRunning = true;
+                }
+            };
+
+            Stopwatch.prototype.stop = function () {
+                var _ = this;
+                if (_._isRunning) {
+                    _._elapsed += _.currentLapMilliseconds;
+                    _._isRunning = false;
+                }
+            };
+
+            Stopwatch.prototype.reset = function () {
+                var _ = this;
+                _._elapsed = 0;
+                _._isRunning = false;
+                _._startTimeStamp = NaN;
+            };
+
+            Stopwatch.prototype.lap = function () {
+                var _ = this;
+                if (_._isRunning) {
+                    var t = Stopwatch.getTimestampMilliseconds();
+                    var s = _._startTimeStamp;
+                    var e = t - s;
+                    _._startTimeStamp = t;
+                    _._elapsed += e;
+                    return new System.TimeSpan(e);
+                } else
+                    return System.TimeSpan.zero;
+            };
+
+            Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
+                get: function () {
+                    return this._isRunning ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp) : 0;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Stopwatch.prototype, "currentLap", {
+                get: function () {
+                    return this._isRunning ? new System.TimeSpan(this.currentLapMilliseconds) : System.TimeSpan.zero;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Stopwatch.prototype, "elapsedMilliseconds", {
+                get: function () {
+                    var _ = this;
+                    var timeElapsed = _._elapsed;
+
+                    if (_._isRunning)
+                        timeElapsed += _.currentLapMilliseconds;
+
+                    return timeElapsed;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Stopwatch.prototype, "elapsed", {
+                get: function () {
+                    return new System.TimeSpan(this.elapsedMilliseconds);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Stopwatch;
+        })();
+        Diagnostics.Stopwatch = Stopwatch;
+    })(System.Diagnostics || (System.Diagnostics = {}));
+    var Diagnostics = System.Diagnostics;
+})(System || (System = {}));
+var System;
+(function (System) {
     function dispose(obj) {
         if (obj && typeof obj.dispose == System.Types.Function)
             obj.dispose();
