@@ -828,7 +828,7 @@ module System.Linq {
 		// #endregion
 
 
-		select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>
+		select<TResult>(selector: Selector<T,TResult>): Enumerable<TResult>
 		{
 
 			var _ = this, disposed = !_.assertIsNotDisposed();
@@ -2336,9 +2336,12 @@ module System.Linq {
 
 	export class ArrayEnumerable<T> extends Enumerable<T> {
 
-		constructor(private _source: T[])
+		private _source: T[];
+
+		constructor(source: T[])
 		{
 			var _ = this;
+			_._source = source;
 			super(() =>
 			{
 				_.assertIsNotDisposed();
@@ -2561,13 +2564,16 @@ module System.Linq {
 			return new WhereEnumerable<T>(this.prevSource, composedPredicate);
 		}
 
-		select<TResult>(selector: (value: T, index?: number) => TResult): Enumerable<TResult>
+		select<TSelect>(selector: Selector<T, TSelect>): Enumerable<TSelect>
 		{
 
 			if (selector.length > 1)
-				return super.select<TResult>(selector);
+				return super.select(selector);
 
-			return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
+			return new WhereSelectEnumerable<T,TSelect>(
+				this.prevSource,
+				this.prevPredicate,
+				selector);
 		}
 
 		getEnumerator(): IEnumerator<T>
@@ -2599,25 +2605,25 @@ module System.Linq {
 	}
 
 
-	export class WhereSelectEnumerable<T, TSelect> extends Enumerable<TSelect> {
+	export class WhereSelectEnumerable<TSource, T> extends Enumerable<T> {
 		constructor(
-			private prevSource: IEnumerable<T>,
-			private prevPredicate: Predicate<T>,  // predicate.length always <= 1
-			private prevSelector: Selector<T,TSelect> // selector.length always <= 1
+			private prevSource: IEnumerable<TSource>,
+			private prevPredicate: Predicate<TSource>,  // predicate.length always <= 1
+			private prevSelector: Selector<TSource,T> // selector.length always <= 1
 			)
 		{
 			super(null);
 		}
 
-		where(predicate: (value: TSelect, index?: number) => boolean): Enumerable<TSelect>
+		where(predicate: (value: T, index?: number) => boolean): Enumerable<T>
 		{
 			if (predicate.length > 1)
 				return super.where(predicate);
 
-			return new WhereEnumerable<TSelect>(this, predicate);
+			return new WhereEnumerable<T>(this, predicate);
 		}
 
-		select<TResult>(selector: Selector<T,TSelect>): Enumerable<TResult>
+		select<TSelect>(selector: Selector<T, TSelect>): Enumerable<TSelect>
 		{
 
 			if (selector.length > 1)
@@ -2626,19 +2632,19 @@ module System.Linq {
 
 			var _ = this;
 			var prevSelector = _.prevSelector;
-			var composedSelector = (x: T) => selector(prevSelector(x));
+			var composedSelector = (x: TSource) => selector(prevSelector(x));
 			return new WhereSelectEnumerable(_.prevSource, _.prevPredicate, composedSelector);
 		}
 
-		getEnumerator(): IEnumerator<TSelect>
+		getEnumerator(): IEnumerator<T>
 		{
 			var _ = this,
 				predicate = _.prevPredicate,
 				source = _.prevSource,
-				selector:Selector<T,TSelect> = _.prevSelector,
-				enumerator: IEnumerator<T>;
+				selector = _.prevSelector,
+				enumerator: IEnumerator<TSource>;
 
-			return new EnumeratorBase<TSelect>(
+			return new EnumeratorBase<T>(
 				() => enumerator = source.getEnumerator(),
 				yielder =>
 				{
