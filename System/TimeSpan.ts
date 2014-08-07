@@ -20,8 +20,8 @@ module System
 		Seconds,
 		Minutes,
 		Hours,
-		Days // Earth days.
-	}
+		Days
+	} // Earth Days
 
 	function assertValidUnit(unit: TimeUnit): boolean
 	{
@@ -118,9 +118,9 @@ module System
 		private _days: number;
 		get days(): number
 		{
-			var _ = this, r = _._hours;
+			var _ = this, r = _._days;
 			if (r === undefined)
-				_._hours = r =
+				_._days = r =
 				(this._milliseconds
 					/ msPerSecond
 					/ secondsPerMinute
@@ -191,6 +191,7 @@ module System
 
 		static convertToMilliseconds(value: number, units: TimeUnit = TimeUnit.Milliseconds): number
 		{
+			//noinspection FallThroughInSwitchStatementJS
 			switch (units)
 			{
 				case TimeUnit.Days:
@@ -204,7 +205,7 @@ module System
 				case TimeUnit.Milliseconds:
 					return value;
 				case TimeUnit.Ticks:
-					value / ticksPerMillisecond;
+					return value / ticksPerMillisecond;
 				default:
 					throw new Error("Invalid TimeUnit.");
 			}
@@ -277,7 +278,7 @@ module System
 				throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
 			if (other instanceof TimeUnitValue || other instanceof ClockTime)
 				other = other.toTimeSpan();
-			return new TimeSpan(this._milliseconds + other.totalMilliseconds);
+			return new TimeSpan(this._milliseconds + other.milliseconds);
 		}
 
 		addUnit(value: number, units: TimeUnit = TimeUnit.Milliseconds): TimeSpan

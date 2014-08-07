@@ -5,6 +5,11 @@
 
 module System.Collections {
 
+	function notImplementedException<T>(name:string, log:string = ""):any {
+		console.log("DictionaryAbstractBase sub-class has not overridden "+name+". " + log);
+		throw new Error("DictionaryAbstractBase."+name+": Not implemented.");
+	}
+
 	export class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	{
 		// This allows for batch updates in order to improve the efficiency of responsive systems.
@@ -65,7 +70,7 @@ module System.Collections {
 		// ICollection<T>
 		/////////////////////////////////////////
 		get isReadOnly(): boolean { return false; }
-		get count(): number { throw new Error("Not implemented."); }
+		get count(): number { return notImplementedException("count"); }
 
 		add(item: IKeyValuePair<TKey, TValue>): void {
 			this.addByKeyValue(item.key, item.value);
@@ -104,9 +109,9 @@ module System.Collections {
 		/////////////////////////////////////////
 		// IDictionary<TKey,TValue>
 		/////////////////////////////////////////
-		get keys(): TKey[] { throw new Error("Not implemented."); }
+		get keys(): TKey[] { return notImplementedException("keys"); }
 
-		get values(): TValue[] { throw new Error("Not implemented."); }
+		get values(): TValue[] { return notImplementedException("values"); }
 
 
 		addByKeyValue(key: TKey, value: TValue): void {
@@ -117,9 +122,9 @@ module System.Collections {
 			_.set(key, value);
 		}
 
-		get(key: TKey): TValue { throw new Error("Not implemented."); }
+		get(key: TKey): TValue { return notImplementedException("get(key: TKey): TValue","When calling for key: "+key); }
 
-		set(key: TKey, value: TValue): boolean { throw new Error("Not implemented."); }
+		set(key: TKey, value: TValue): boolean { return notImplementedException("set(key: TKey, value: TValue): boolean","When setting "+key+":"+value+"."); }
 
 		containsKey(key: TKey): boolean {
 			var value = this.get(key);

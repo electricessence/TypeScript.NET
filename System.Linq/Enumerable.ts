@@ -550,7 +550,7 @@ module System.Linq {
 			return (!count || count < 0) // Out of bounds? Simply return a unfiltered enumerable.
 				? this.asEnumerable()
 				: this.doAction(
-					(element: T, index: number)
+					(element: T, index?: number)
 						=> index < count
 						? EnumerableAction.Skip
 						: EnumerableAction.Return);
@@ -564,7 +564,7 @@ module System.Linq {
 			var skipping: boolean = true;
 
 			return this.doAction(
-				(element: T, index: number)
+				(element: T, index?: number)
 					=>
 				{
 					if (skipping)
@@ -581,7 +581,7 @@ module System.Linq {
 			// Once action returns false, the enumeration will stop.
 			return (!count || count < 0)  // Out of bounds? Simply return an empty enumerable.
 				? Enumerable.empty<T>()
-				: this.doAction((element: T, index: number) => index < count);
+				: this.doAction((element: T, index?: number) => index < count);
 		}
 
 		takeExceptLast(count: number = 1): Enumerable<T>
@@ -1306,19 +1306,19 @@ module System.Linq {
 			var found: number = -1;
 
 			if (compareSelector)
-				this.forEach((x, i) =>
+				this.forEach((element:T, i?:number) =>
 				{
-					if (compareSelector(x) === compareSelector(value))
+					if (System.areEqual(compareSelector(element),compareSelector(value),true))
 					{
 						found = i;
 						return false;
 					}
 				});
 			else
-				this.forEach((x, i) =>
+				this.forEach((element:T, i?:number) =>
 				{
 					// Why?  Because NaN doens't equal NaN. :P
-					if (System.areEqual(x, value, true)) 
+					if (System.areEqual(element, value, true))
 					{
 						found = i;
 						return false;
@@ -1333,14 +1333,14 @@ module System.Linq {
 			var result = -1;
 
 			if (compareSelector)
-				this.forEach((x, i) =>
+				this.forEach((element:T, i?:number) =>
 				{
-					if (compareSelector(x) === compareSelector(value)) result = i;
+					if (System.areEqual(compareSelector(element),compareSelector(value),true)) result = i;
 				});
 			else
-				this.forEach((x, i) =>
+				this.forEach((element:T, i?:number) =>
 				{
-					if (System.areEqual(x,value,true)) result = i;
+					if (System.areEqual(element,value,true)) result = i;
 				});
 
 			return result;
@@ -2377,8 +2377,8 @@ module System.Linq {
 
 		_onDispose(): void
 		{
-			super._onDispose
-				this._source = null;
+			super._onDispose();
+			this._source = <any>null;
 		}
 
 		get source(): IArray<T> { return this._source; }
@@ -2675,7 +2675,7 @@ module System.Linq {
 			var _ = this,
 				predicate = _.prevPredicate,
 				source = _.prevSource,
-				selector = _.prevSelector,
+				selector:Selector<TSource,T> = _.prevSelector, // Type definition needed for correct inferrence.
 				enumerator: IEnumerator<TSource>;
 
 			return new EnumeratorBase<T>(
