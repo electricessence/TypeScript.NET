@@ -78,6 +78,7 @@ declare module System.Linq {
         public orderBy<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         public orderByDescending<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         public groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
+        public partitionBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, resultSelector?: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
         public buffer(size: number): Collections.IEnumerable<T[]>;
         public aggregate(func: (a: T, b: T) => T, seed?: T): T;
         public average(selector?: Selector<T, number>): number;

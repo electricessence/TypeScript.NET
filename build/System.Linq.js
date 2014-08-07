@@ -320,6 +320,7 @@ var System;
 
             Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
                 if (typeof elementSelector === "undefined") { elementSelector = Functions.Identity; }
+                if (typeof compareSelector === "undefined") { compareSelector = Functions.Identity; }
                 var dict = new Dictionary(compareSelector);
                 this.forEach(function (x) {
                     var key = keySelector(x);
@@ -343,6 +344,7 @@ var System;
             };
 
             Enumerable.prototype.toDictionary = function (keySelector, elementSelector, compareSelector) {
+                if (typeof compareSelector === "undefined") { compareSelector = Functions.Identity; }
                 var dict = new Dictionary(compareSelector);
                 this.forEach(function (x) {
                     return dict.addByKeyValue(keySelector(x), elementSelector(x));
@@ -1068,6 +1070,57 @@ var System;
                 var _ = this;
                 return new Enumerable(function () {
                     return _.toLookup(keySelector, elementSelector, compareSelector).getEnumerator();
+                });
+            };
+
+            Enumerable.prototype.partitionBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
+                if (typeof elementSelector === "undefined") { elementSelector = Functions.Identity; }
+                if (typeof resultSelector === "undefined") { resultSelector = function (key, elements) {
+                    return new Grouping(key, elements);
+                }; }
+                if (typeof compareSelector === "undefined") { compareSelector = Functions.Identity; }
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+                    var key;
+                    var compareKey;
+                    var group = [];
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                        if (enumerator.moveNext()) {
+                            key = keySelector(enumerator.current);
+                            compareKey = compareSelector(key);
+                            group.push(elementSelector(enumerator.current));
+                        }
+                    }, function (yielder) {
+                        var hasNext;
+
+                        while ((hasNext = enumerator.moveNext())) {
+                            if (compareKey === compareSelector(keySelector(enumerator.current)))
+                                group.push(elementSelector(enumerator.current));
+                            else
+                                break;
+                        }
+
+                        if (group.length > 0) {
+                            var result = resultSelector(key, group);
+
+                            if (hasNext) {
+                                key = keySelector(enumerator.current);
+                                compareKey = compareSelector(key);
+                                group = [elementSelector(enumerator.current)];
+                            } else
+                                group = [];
+
+                            return yielder.yieldReturn(result);
+                        }
+
+                        return false;
+                    }, function () {
+                        return enumerator.dispose();
+                    });
                 });
             };
 

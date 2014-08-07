@@ -13,7 +13,9 @@ module System.Collections {
 	class HashEntry<TKey, TValue>
 	{
 		constructor(
-			public key?: TKey, public value?: TValue, public prev?: HashEntry<TKey, TValue>,
+			public key?: TKey,
+			public value?: TValue,
+			public prev?: HashEntry<TKey, TValue>,
 			public next?: HashEntry<TKey, TValue>)
 		{ }
 	}
@@ -21,7 +23,8 @@ module System.Collections {
 	class EntryList<TKey, TValue>
 	{
 		constructor(
-			public first?: HashEntry<TKey, TValue>, public last?: HashEntry<TKey, TValue>)
+			public first?: HashEntry<TKey, TValue>,
+			public last?: HashEntry<TKey, TValue>)
 		{ }
 
 		addLast(entry: HashEntry<TKey, TValue>): void {

@@ -433,7 +433,7 @@ module System.Linq {
 		toLookup<TKey, TValue, TCompare>(
 			keySelector: Selector<T, TKey>,
 			elementSelector: Selector<T, TValue> = Functions.Identity,
-			compareSelector?: Selector<TKey, TCompare>): Lookup<TKey, TValue>
+			compareSelector: Selector<TKey, TCompare> = Functions.Identity): Lookup<TKey, TValue>
 		{
 
 			var dict = new Dictionary<TKey, TValue[]>(compareSelector);
@@ -461,7 +461,7 @@ module System.Linq {
 		toDictionary<TKey, TValue, TCompare>(
 			keySelector: Selector<T, TKey>,
 			elementSelector: Selector<T, TValue>,
-			compareSelector?: Selector<TKey, TCompare>): Dictionary<TKey, TValue>
+			compareSelector: Selector<TKey, TCompare> = Functions.Identity): Dictionary<TKey, TValue>
 		{
 			var dict = new Dictionary<TKey, TValue>(compareSelector);
 			this.forEach(x=> dict.addByKeyValue(keySelector(x), elementSelector(x)))
@@ -1887,71 +1887,62 @@ module System.Linq {
 					.getEnumerator());
 		}
 
-		/*
-		// Overload:function(keySelector)
-		// Overload:function(keySelector,elementSelector)
-		// Overload:function(keySelector,elementSelector,resultSelector)
-		// Overload:function(keySelector,elementSelector,resultSelector,compareSelector)
-		partitionBy(keySelector, elementSelector, resultSelector, compareSelector) {
+		
+		partitionBy<TKey, TElement, TCompare>(
+			keySelector: Selector<T, TKey>,
+			elementSelector: Selector<T, TElement> = Functions.Identity,
+			resultSelector: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>
+				= (key: TKey, elements: TElement[]) => new Grouping<TKey, TElement>(key, elements),
+			compareSelector: Selector<TKey, TCompare> = Functions.Identity): Enumerable<IGrouping<TKey, TElement>> {
 
-			var source = this;
-			keySelector = Utils.createLambda(keySelector);
-			elementSelector = Utils.createLambda(elementSelector);
-			compareSelector = Utils.createLambda(compareSelector);
-			var hasResultSelector;
-			if (resultSelector == null) {
-				hasResultSelector = false;
-				resultSelector = function (key, group) { return new Grouping(key, group); }
-		}
-			else {
-				hasResultSelector = true;
-				resultSelector = Utils.createLambda(resultSelector);
-			}
+			var _ = this;
 
-			return new Enumerable<T>(() => {
-				var enumerator;
-				var key;
-				var compareKey;
-				var group = [];
+			return new Enumerable<IGrouping<TKey, TElement>>(() => {
+				var enumerator: IEnumerator<T>;
+				var key:TKey;
+				var compareKey:TCompare;
+				var group: TElement[] = [];
 
-				return new EnumeratorBase<T>(
+				return new EnumeratorBase<IGrouping<TKey, TElement>>(
 					() => {
-						enumerator = source.getEnumerator();
+						enumerator = _.getEnumerator();
 						if (enumerator.moveNext()) {
 							key = keySelector(enumerator.current);
 							compareKey = compareSelector(key);
 							group.push(elementSelector(enumerator.current));
 						}
 					},
-					() => {
-						var hasNext;
-						while ((hasNext = enumerator.moveNext()) == true) {
-							if (compareKey === compareSelector(keySelector(enumerator.current))) {
+					yielder => {
+						var hasNext: boolean;
+
+						while ((hasNext = enumerator.moveNext())) {
+							if (compareKey === compareSelector(keySelector(enumerator.current)))
 								group.push(elementSelector(enumerator.current));
-							}
 							else break;
 						}
 
-						if (group.length > 0) {
-							var result = (hasResultSelector)
-								? resultSelector(key, Enumerable.from(group))
-								: resultSelector(key, group);
+						if (group.length > 0)
+						{
+							var result: IGrouping<TKey, TElement>
+								= resultSelector(key, group);
+
 							if (hasNext) {
 								key = keySelector(enumerator.current);
 								compareKey = compareSelector(key);
 								group = [elementSelector(enumerator.current)];
 							}
-							else group = [];
+							else
+								group = [];
 
-							return (<any>this).yieldReturn(result);
+							return yielder.yieldReturn(result);
 						}
 
 						return false;
 					},
-					() => { Utils.dispose(enumerator); });
+					() => enumerator.dispose());
 			});
 		}
-		*/
+		
 		// #endregion
 
 		buffer(size: number): IEnumerable<T[]>
