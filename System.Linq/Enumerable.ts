@@ -21,6 +21,7 @@ module System.Linq {
 	import EnumeratorBase = System.Collections.EnumeratorBase;
 
 	import IEnumerable = System.Collections.IEnumerable;
+	import IArray = System.Collections.IArray;
 
 	import IMap = System.Collections.IMap;
 	import Dictionary = System.Collections.Dictionary;
@@ -71,9 +72,20 @@ module System.Linq {
 			super(finalizer);
 		}
 
-		static fromArray<T>(array: T[]): ArrayEnumerable<T>
+		static fromArray<T>(array: IArray<T>): ArrayEnumerable<T>
 		{
 			return new ArrayEnumerable<T>(array);
+		}
+
+		static from<T>(source: any): Enumerable<T>
+		{
+			if ("getEnumerator" in source)
+				return source;
+
+			if (source instanceof Array || typeof source == System.Types.Object && "length" in source)
+				return Enumerable.fromArray<T>(source);
+
+			throw new Error("Unsupported enumerable.");
 		}
 
 		// #region IEnumerable<T> Implementation...
@@ -96,24 +108,24 @@ module System.Linq {
 
 		//////////////////////////////////////////
 		// #region Static Methods...
-		static choice<T>(values: T[]): Enumerable<T>
+		static choice<T>(values: IArray<T>): Enumerable<T>
 		{
 			return new Enumerable<T>(() =>
 				new EnumeratorBase<T>(
 					null,
 					yielder =>
-						yielder.yieldReturn(values[Math.floor(Math.random() * values.length)])
+						yielder.yieldReturn(values[(Math.random() * values.length) | 0])
 					)
 				);
 		}
 
-		static cycle<T>(values: T[]): Enumerable<T>
+		static cycle<T>(values: IArray<T>): Enumerable<T>
 		{
 			return new Enumerable<T>(() =>
 			{
 				var index: number;
 				return new EnumeratorBase<T>(
-					() => index = 0,
+					() => { index = 0 },
 					yielder =>
 					{
 						if (index >= values.length) index = 0;
@@ -142,7 +154,7 @@ module System.Linq {
 				var index: number;
 
 				return new EnumeratorBase<T>(
-					() => index = 0,
+					() => { index = 0 },
 					yielder =>
 					{
 						return (index++ < count)
@@ -161,16 +173,9 @@ module System.Linq {
 			{
 				var element: T;
 				return new EnumeratorBase<T>(
-					() => element = initializer(),
+					() => { element = initializer(); },
 					yielder => yielder.yieldReturn(element),
-					() =>
-					{
-						if (element != null)
-						{
-							finalizer(element);
-							element = null;
-						}
-					});
+					() => { finalizer(element); });
 			});
 		}
 
@@ -247,7 +252,7 @@ module System.Linq {
 
 				return start < to
 					? new EnumeratorBase<number>(
-						() => value = start - step,
+						() => { value = start - step },
 						yielder =>
 						{
 							var next = value += step;
@@ -257,7 +262,7 @@ module System.Linq {
 						}
 						)
 					: new EnumeratorBase<number>(
-						() => value = start + step,
+						() => { value = start + step },
 						yielder =>
 						{
 							var next = value -= step;
@@ -291,7 +296,7 @@ module System.Linq {
 			{
 				var regex: RegExp;
 				return new EnumeratorBase<RegExpExecArray>(
-					() => regex = new RegExp(pattern, flags),
+					() => { regex = new RegExp(pattern, flags); },
 					yielder =>
 					{
 						// Calling regex.exec concecutively on the same input uses the lastIndex to start the next match.
@@ -315,7 +320,7 @@ module System.Linq {
 				var index: number;
 
 				return new EnumeratorBase<T>(
-					() => index = 0,
+					() => { index = 0; },
 					yielder =>
 					{
 						var current = index++;
@@ -354,14 +359,14 @@ module System.Linq {
 				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
-					() => enumerator = enumerableFactory().getEnumerator(),
+					() => { enumerator = enumerableFactory().getEnumerator(); },
 					yielder =>
 					{
 						return (enumerator.moveNext())
 							? yielder.yieldReturn(enumerator.current)
 							: yielder.yieldBreak();
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 			});
 		}
@@ -454,7 +459,7 @@ module System.Linq {
 			elementSelector: Selector<T, TResult>): IMap<TResult>
 		{
 			var obj: IMap<TResult> = {};
-			this.forEach(x=> obj[keySelector(x)] = elementSelector(x))
+			this.forEach(x=> { obj[keySelector(x)] = elementSelector(x); });
 			return obj;
 		}
 
@@ -520,12 +525,12 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 
 			},
 				// Using a finalizer value reduces the chance of a circular reference since we could simply reference the enueration and check e.wasDisposed.
-				() => disposed = true);
+				() => { disposed = true; });
 		}
 
 		force(defaultAction: EnumerableAction = EnumerableAction.Break): void
@@ -610,7 +615,7 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => enumerator.dispose());
+					() => { enumerator.dispose(); });
 			});
 		}
 
@@ -639,7 +644,7 @@ module System.Linq {
 						enumerator = Enumerable.fromArray(q).getEnumerator();
 					},
 					yielder => enumerator.moveNext() && yielder.yieldReturn(enumerator.current),
-					() => enumerator.dispose());
+					() => { enumerator.dispose(); });
 			});
 		}
 		// #endregion
@@ -676,7 +681,7 @@ module System.Linq {
 							}
 						}
 					},
-					() => enumerator.dispose());
+					() => { enumerator.dispose(); });
 			});
 		}
 
@@ -788,7 +793,7 @@ module System.Linq {
 						return enumerator.moveNext()
 							&& yielder.yieldReturn(selector(prev, enumerator.current));
 					},
-					() => enumerator.dispose());
+					() => { enumerator.dispose(); });
 			});
 		}
 
@@ -822,7 +827,7 @@ module System.Linq {
 							? yielder.yieldReturn(value = func(value, enumerator.current))
 							: false;
 					},
-					() => enumerator.dispose());
+					() => { enumerator.dispose(); });
 			});
 		} 
 		// #endregion
@@ -857,10 +862,10 @@ module System.Linq {
 							? yielder.yieldReturn(selector(enumerator.current, index++))
 							: false;
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 			},
-				() => disposed = true);
+				() => { disposed = true; });
 		}
 
 
@@ -987,10 +992,10 @@ module System.Linq {
 
 						return false;
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 			},
-				() => disposed = true);
+				() => { disposed = true; });
 		}
 
 		where(predicate: Predicate<T>): Enumerable<T>
@@ -1025,10 +1030,10 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 			},
-				() => disposed = true);
+				() => { disposed = true; });
 
 		}
 
@@ -1099,7 +1104,7 @@ module System.Linq {
 						keys.clear();
 					});
 			},
-				() => disposed = true);
+				() => { disposed = true; });
 		}
 
 		distinct(compareSelector?: (value: T) => T): Enumerable<T>
@@ -1146,10 +1151,10 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 			},
-				() => disposed = true);
+				() => { disposed = true; });
 		}
 
 		reverse(): Enumerable<T>
@@ -1173,10 +1178,10 @@ module System.Linq {
 						index > 0
 						&& yielder.yieldReturn(buffer[--index]),
 
-					() => buffer.length = 0
+					() => { buffer.length = 0; }
 					);
 			},
-				() => disposed = true);
+				() => { disposed = true; });
 		}
 
 		shuffle(): Enumerable<T>
@@ -1196,17 +1201,14 @@ module System.Linq {
 					yielder =>
 					{
 						var len = buffer.length;
-						if (len)
-						{
-							var i = Math.floor(Math.random() * len);
-							return yielder.yieldReturn(buffer.splice(i, 1).pop());
-						}
-						return false;
+						return len && yielder.yieldReturn(
+							buffer.splice(
+								(Math.random() * len) | 0, 1 | 0).pop());
 					},
-					() => buffer.length = 0
+					() => { buffer.length = 0; }
 					);
 			},
-				() => disposed = true);
+			() => { disposed = true; });
 		}
 
 		count(predicate?: Predicate<T>): number
@@ -1225,7 +1227,7 @@ module System.Linq {
 			}
 			else
 			{
-				_.forEach((x, i) =>
+				_.forEach(() =>
 				{
 					++count;
 				});
@@ -1270,7 +1272,7 @@ module System.Linq {
 				});
 			} else
 			{
-				this.forEach(x=>
+				this.forEach(()=>
 				{
 					result = true;
 					return false;
@@ -1303,14 +1305,25 @@ module System.Linq {
 		{
 			var found: number = -1;
 
-			this.forEach((x, i) =>
-			{
-				if (x === value)
+			if (compareSelector)
+				this.forEach((x, i) =>
 				{
-					found = i;
-					return false;
-				}
-			});
+					if (compareSelector(x) === compareSelector(value))
+					{
+						found = i;
+						return false;
+					}
+				});
+			else
+				this.forEach((x, i) =>
+				{
+					// Why?  Because NaN doens't equal NaN. :P
+					if (System.areEqual(x, value, true)) 
+					{
+						found = i;
+						return false;
+					}
+				});
 
 			return found;
 		}
@@ -1319,11 +1332,16 @@ module System.Linq {
 		{
 			var result = -1;
 
-
-			this.forEach((x, i) =>
-			{
-				if (x === value) result = i;
-			});
+			if (compareSelector)
+				this.forEach((x, i) =>
+				{
+					if (compareSelector(x) === compareSelector(value)) result = i;
+				});
+			else
+				this.forEach((x, i) =>
+				{
+					if (System.areEqual(x,value,true)) result = i;
+				});
 
 			return result;
 		}
@@ -1360,7 +1378,7 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 			});
 		}
@@ -1765,53 +1783,65 @@ module System.Linq {
 					})
 				);
 		}
-		/*
-		union(second, compareSelector) {
-			compareSelector = Utils.createLambda(compareSelector);
+		
+
+		union<TCompare>(
+			second: IArray<T>,
+			compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+		union<TCompare>(
+			second: IEnumerable<T>,
+			compareSelector: Selector<T, TCompare>): Enumerable<T>;
+		union<TCompare>(
+			second: any,
+			compareSelector: Selector<T, TCompare> = Functions.Identity): Enumerable<T>
+		{
 			var source = this;
+			
 
 			return new Enumerable<T>(() => {
-				var firstEnumerator;
-				var secondEnumerator;
-				var keys;
+				var firstEnumerator: IEnumerator<T>;
+				var secondEnumerator: IEnumerator<T>;
+				var keys: Dictionary<T, any>;
 
 				return new EnumeratorBase<T>(
 					() => {
 						firstEnumerator = source.getEnumerator();
-						keys = new Dictionary(compareSelector);
+						keys = new Dictionary<T,any>(compareSelector);
 					},
-					() => {
-						var current;
+					yielder => {
+						var current:T;
 						if (secondEnumerator === undefined) {
 							while (firstEnumerator.moveNext()) {
 								current = firstEnumerator.current;
-								if (!keys.contains(current)) {
-									keys.add(current);
-									return (<any>this).yieldReturn(current);
+								if (!keys.containsKey(current)) {
+									keys.addByKeyValue(current,null);
+									return yielder.yieldReturn(current);
 								}
 							}
-							secondEnumerator = Enumerable.from(second).getEnumerator();
+							secondEnumerator = "getEnumerator" in second
+							? second
+							: Enumerable.fromArray(second).getEnumerator();
 						}
 						while (secondEnumerator.moveNext()) {
 							current = secondEnumerator.current;
-							if (!keys.contains(current)) {
-								keys.add(current);
-								return (<any>this).yieldReturn(current);
+							if (!keys.containsKey(current)) {
+								keys.addByKeyValue(current,null);
+								return yielder.yieldReturn(current);
 							}
 						}
 						return false;
 					},
 					() => {
 						try {
-							Utils.dispose(firstEnumerator);
+							firstEnumerator.dispose();
 						}
 						finally {
-							Utils.dispose(secondEnumerator);
+							secondEnumerator.dispose();
 						}
 					});
 			});
 		}
-		*/
+		
 
 		// #region Ordering Methods
 
@@ -1847,12 +1877,12 @@ module System.Linq {
 					},
 					() => {
 						if (sortedByBound.length > 0) {
-							var draw = Math.floor(Math.random() * totalWeight) + 1;
+							var draw = (Math.random() * totalWeight)|0 + 1;
 
 							var lower = -1;
 							var upper = sortedByBound.length;
 							while (upper - lower > 1) {
-								var index = Math.floor((lower + upper) / 2);
+								var index = ((lower + upper) / 2)|0;
 								if (sortedByBound[index].bound >= draw) {
 									upper = index;
 								}
@@ -1939,7 +1969,7 @@ module System.Linq {
 
 						return false;
 					},
-					() => enumerator.dispose());
+					() => { enumerator.dispose(); });
 			});
 		}
 		
@@ -1955,7 +1985,7 @@ module System.Linq {
 			{
 				var enumerator: IEnumerator<T>;
 				return new EnumeratorBase<T[]>(
-					() => enumerator = _.getEnumerator(),
+					() => { enumerator = _.getEnumerator(); },
 					yielder =>
 					{
 						var array: T[] = [];
@@ -1964,7 +1994,7 @@ module System.Linq {
 
 						return array.length && yielder.yieldReturn(array);
 					},
-					() => enumerator.dispose());
+					() => { enumerator.dispose(); });
 			});
 		}
 
@@ -2286,7 +2316,7 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => enumerator.dispose()
+					() => { enumerator.dispose(); }
 					);
 			});
 		}
@@ -2327,9 +2357,9 @@ module System.Linq {
 
 	export class ArrayEnumerable<T> extends Enumerable<T> {
 
-		private _source: T[];
+		private _source: { length: number;[x: number]: T; };
 
-		constructor(source: T[])
+		constructor(source: System.Collections.IArray<T>)
 		{
 			var _ = this;
 			_._source = source;
@@ -2351,11 +2381,22 @@ module System.Linq {
 				this._source = null;
 		}
 
-		get source(): T[] { return this._source; }
+		get source(): IArray<T> { return this._source; }
 
 		toArray(): T[]
 		{
-			return this.source ? this.source.slice() : [];
+			var s = this.source;
+			if (!s)
+				return [];
+
+			if (s instanceof Array)
+				return (<Array<T>>s).slice();
+
+			var len = s.length, result: T[] = new Array<T>(len);
+			for (var i = 0|0; i < len; ++i)
+				result[i] = s[i];
+
+			return result;
 		}
 
 		asEnumerable(): ArrayEnumerable<T>
@@ -2377,7 +2418,7 @@ module System.Linq {
 			{
 
 				// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-				for (var i = 0; i < source.length; ++i)
+				for (var i = 0 | 0; i < source.length; ++i)
 				{
 					// _.assertIsNotDisposed(); // Assertion here is unncessary since we already have a reference to the source array.
 					if (action(source[i], i) === false)
@@ -2393,7 +2434,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = _._source, len: number = source ? source.length : 0;
+			var source = _._source, len = source ? source.length : 0;
 			return len && (!predicate || super.any(predicate));
 		}
 
@@ -2402,7 +2443,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = _._source, len: number = source ? source.length : 0;
+			var source = _._source, len = source ? source.length : 0;
 			return len && (predicate ? super.count(predicate) : len);
 		}
 
@@ -2411,7 +2452,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = this._source;
+			var source = _._source;
 			return (index < source.length && index >= 0)
 				? source[index]
 				: super.elementAt(index);
@@ -2422,7 +2463,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = this._source;
+			var source = _._source;
 			return (index < source.length && index >= 0)
 				? source[index]
 				: defaultValue;
@@ -2433,7 +2474,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = this._source;
+			var source = _._source;
 			return (source && source.length)
 				? source[0]
 				: super.first();
@@ -2444,7 +2485,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = this._source;
+			var source = _._source;
 			return (source && source.length)
 				? source[0]
 				: defaultValue;
@@ -2455,7 +2496,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = this._source, len: number = source.length;
+			var source = _._source, len = source.length;
 			return (len)
 				? source[len - 1]
 				: super.last();
@@ -2466,7 +2507,7 @@ module System.Linq {
 			var _ = this;
 			_.assertIsNotDisposed();
 
-			var source: T[] = this._source, len: number = source.length;
+			var source = _._source, len = source.length;
 			return len
 				? source[len - 1]
 				: defaultValue;
@@ -2477,11 +2518,12 @@ module System.Linq {
 
 			var _ = this;
 
-			return (!count || count < 0) // Out of bounds? Simply return a unfiltered enumerable.
-				? _.asEnumerable()
-				: new Enumerable<T>(
-					() => new System.Collections.ArrayEnumerator<T>(
-						() => _._source, count));
+			if (!count || count < 0) // Out of bounds? Simply return a unfiltered enumerable.
+				return _.asEnumerable();
+
+			return new Enumerable<T>(
+				() => new System.Collections.ArrayEnumerator<T>(
+					() => _._source, count));
 		}
 
 		takeExceptLast(count: number = 1): Enumerable<T>
@@ -2512,11 +2554,11 @@ module System.Linq {
 		}
 
 		sequenceEqual(second: IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean):boolean;
-		sequenceEqual(second: T[], equalityComparer?: (a: T, b: T) => boolean):boolean;
+		sequenceEqual(second: IArray<T>, equalityComparer?: (a: T, b: T) => boolean):boolean;
 		sequenceEqual(second: any, equalityComparer: (a: T, b: T) => boolean = System.areEqual):boolean
 		{
 			if (second instanceof Array)
-				return ArrayUtility.areEqual(this.source, <T[]>second, true, equalityComparer);
+				return ArrayUtility.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
 
 			if (second instanceof ArrayEnumerable)
 				return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
@@ -2527,9 +2569,10 @@ module System.Linq {
 
 		toJoinedString(separator: string = "", selector: Selector<T, string> = Functions.Identity)
 		{
-			return selector
-				? super.toJoinedString(separator, selector)
-				: this._source.join(separator);
+			var s = this._source;
+			return !selector && s instanceof Array
+				? (<Array<T>>s).join(separator)
+				: super.toJoinedString(separator, selector);
 		}
 
 	}
@@ -2583,7 +2626,7 @@ module System.Linq {
 
 					return false;
 				},
-				() => enumerator.dispose()
+				() => { enumerator.dispose(); }
 				);
 		}
 
@@ -2636,7 +2679,7 @@ module System.Linq {
 				enumerator: IEnumerator<TSource>;
 
 			return new EnumeratorBase<T>(
-				() => enumerator = source.getEnumerator(),
+				() => { enumerator = source.getEnumerator(); },
 				yielder =>
 				{
 					while (enumerator.moveNext())
@@ -2649,7 +2692,7 @@ module System.Linq {
 					}
 					return false;
 				},
-				() => enumerator.dispose()
+				() => { enumerator.dispose(); }
 			);
 		}
 
@@ -2758,13 +2801,13 @@ module System.Linq {
 			return context;
 		}
 
-		generateKeys(source: T[]): void
+		generateKeys(source: IArray<T>): void
 		{
 			var _ = this;
 			var len = source.length;
 			var keySelector: (value: T) => TOrderBy = _.keySelector;
 			var keys = new Array<TOrderBy>(len);
-			for (var i = 0; i < len; ++i)
+			for (var i = 0 | 0; i < len; ++i)
 				keys[i] = keySelector(source[i]);
 			_.keys = keys;
 
@@ -2823,7 +2866,7 @@ module System.Linq {
 			var enumerator: IEnumerator<System.Collections.IKeyValuePair<TKey, TElement[]>>;
 
 			return new System.Collections.EnumeratorBase<Grouping<TKey, TElement>>(
-				() => enumerator = _._dictionary.getEnumerator(),
+				() => { enumerator = _._dictionary.getEnumerator() },
 				yielder =>
 				{
 
@@ -2834,7 +2877,7 @@ module System.Linq {
 
 					return yielder.yieldReturn(new Grouping<TKey, TElement>(current.key, current.value));
 				},
-				() => enumerator.dispose()
+				() => { enumerator.dispose(); }
 				);
 		}
 

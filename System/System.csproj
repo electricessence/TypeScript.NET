@@ -57,6 +57,7 @@
     <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Collections\IArray.ts" />
     <TypeScriptCompile Include="Diagnostics\Stopwatch.ts" />
     <TypeScriptCompile Include="Functions.ts" />
     <TypeScriptCompile Include="System.ts" />

@@ -59,48 +59,74 @@ module System
 			: (args.length > 0 && args[0] || 0);
 		}
 
+		private _ticks: number;
 		get ticks(): number
 		{
-			return (this._milliseconds - Math.floor(this._milliseconds)) * ticksPerMillisecond;
+			var _ = this, r = _._ticks;
+			if (r === undefined)
+				_._ticks = r = (_._milliseconds - Math.floor(_._milliseconds)) * ticksPerMillisecond;
+			return r;
 		}
 
+		private _ms: number;
 		get milliseconds(): number
 		{
-			return Math.floor(this._milliseconds) % msPerSecond;
+			var _ = this, r = _._ms;
+			if (r === undefined)
+				_._ms = r =
+				(this._milliseconds | 0) % msPerSecond;
+			return r;
 		}
 
+		private _seconds: number;
 		get seconds(): number
 		{
-			return Math.floor(
-				this._milliseconds
-				/ msPerSecond) % secondsPerMinute;
+			var _ = this, r = _._seconds;
+			if (r === undefined)
+				_._seconds = r =
+				((this._milliseconds / msPerSecond) | 0) % secondsPerMinute;
+			return r;
 		}
 
+		private _minutes: number;
 		get minutes(): number
 		{
-			return Math.floor(
-				this._milliseconds
-				/ msPerSecond
-				/ secondsPerMinute) % minutesPerHour;
+			var _ = this, r = _._minutes;
+			if (r === undefined)
+				_._minutes = r =
+				((this._milliseconds
+					/ msPerSecond
+					/ secondsPerMinute) | 0) % minutesPerHour;
+
+			return r;
 		}
 
+		private _hours: number;
 		get hours(): number
 		{
-			return Math.floor(
-				this._milliseconds
-				/ msPerSecond
-				/ secondsPerMinute
-				/ minutesPerHour) % earthHoursPerDay;
+			var _ = this, r = _._hours;
+			if (r === undefined)
+				_._hours = r =
+				((this._milliseconds
+					/ msPerSecond
+					/ secondsPerMinute
+					/ minutesPerHour) | 0) % earthHoursPerDay;
+			return r;
+
 		}
 
+		private _days: number;
 		get days(): number
 		{
-			return Math.floor(
-				this._milliseconds
-				/ msPerSecond
-				/ secondsPerMinute
-				/ minutesPerHour
-				/ earthHoursPerDay);
+			var _ = this, r = _._hours;
+			if (r === undefined)
+				_._hours = r =
+				(this._milliseconds
+					/ msPerSecond
+					/ secondsPerMinute
+					/ minutesPerHour
+					/ earthHoursPerDay) | 0;
+			return r;
 		}
 		toTimeSpan(): TimeSpan
 		{

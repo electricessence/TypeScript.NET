@@ -255,7 +255,10 @@ var System;
         }
         Object.defineProperty(ClockTime.prototype, "ticks", {
             get: function () {
-                return (this._milliseconds - Math.floor(this._milliseconds)) * ticksPerMillisecond;
+                var _ = this, r = _._ticks;
+                if (r === undefined)
+                    _._ticks = r = (_._milliseconds - Math.floor(_._milliseconds)) * ticksPerMillisecond;
+                return r;
             },
             enumerable: true,
             configurable: true
@@ -263,7 +266,10 @@ var System;
 
         Object.defineProperty(ClockTime.prototype, "milliseconds", {
             get: function () {
-                return Math.floor(this._milliseconds) % msPerSecond;
+                var _ = this, r = _._ms;
+                if (r === undefined)
+                    _._ms = r = (this._milliseconds | 0) % msPerSecond;
+                return r;
             },
             enumerable: true,
             configurable: true
@@ -271,7 +277,10 @@ var System;
 
         Object.defineProperty(ClockTime.prototype, "seconds", {
             get: function () {
-                return Math.floor(this._milliseconds / msPerSecond) % secondsPerMinute;
+                var _ = this, r = _._seconds;
+                if (r === undefined)
+                    _._seconds = r = ((this._milliseconds / msPerSecond) | 0) % secondsPerMinute;
+                return r;
             },
             enumerable: true,
             configurable: true
@@ -279,7 +288,11 @@ var System;
 
         Object.defineProperty(ClockTime.prototype, "minutes", {
             get: function () {
-                return Math.floor(this._milliseconds / msPerSecond / secondsPerMinute) % minutesPerHour;
+                var _ = this, r = _._minutes;
+                if (r === undefined)
+                    _._minutes = r = ((this._milliseconds / msPerSecond / secondsPerMinute) | 0) % minutesPerHour;
+
+                return r;
             },
             enumerable: true,
             configurable: true
@@ -287,7 +300,10 @@ var System;
 
         Object.defineProperty(ClockTime.prototype, "hours", {
             get: function () {
-                return Math.floor(this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour) % earthHoursPerDay;
+                var _ = this, r = _._hours;
+                if (r === undefined)
+                    _._hours = r = ((this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour) | 0) % earthHoursPerDay;
+                return r;
             },
             enumerable: true,
             configurable: true
@@ -295,7 +311,10 @@ var System;
 
         Object.defineProperty(ClockTime.prototype, "days", {
             get: function () {
-                return Math.floor(this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay);
+                var _ = this, r = _._hours;
+                if (r === undefined)
+                    _._hours = r = (this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
+                return r;
             },
             enumerable: true,
             configurable: true
@@ -782,12 +801,12 @@ var System;
             ArrayUtility.contains = contains;
 
             function replace(array, old, newValue, max) {
-                var count = 0;
+                var count = 0 | 0;
                 if (max !== 0) {
                     if (!max)
                         max = Infinity;
 
-                    for (var i = array.length - 1; i >= 0; --i)
+                    for (var i = (array.length - 1) | 0; i >= 0; --i)
                         if (array[i] === old) {
                             array[i] = newValue;
                             ++count;
@@ -809,8 +828,8 @@ var System;
             ArrayUtility.register = register;
 
             function findIndex(array, predicate) {
-                var len = array.length;
-                for (var i = 0; i < len; ++i)
+                var len = array.length | 0;
+                for (var i = 0 | 0; i < len; ++i)
                     if (i in array && predicate(array[i]))
                         return i;
 
@@ -822,7 +841,7 @@ var System;
                 if (arrays.length < 2)
                     throw new Error("Cannot compare a set of arrays less than 2.");
                 var first = arrays[0];
-                for (var i = 0, l = arrays.length; i < l; ++i) {
+                for (var i = 0 | 0, l = arrays.length | 0; i < l; ++i) {
                     if (!areEqual(first, arrays[i], strict))
                         return false;
                 }
@@ -835,11 +854,11 @@ var System;
                 if (a === b)
                     return true;
 
-                var len = a.length;
-                if (len != b.length)
+                var len = a.length | 0;
+                if (len != (b.length | 0))
                     return false;
 
-                for (var i = 0; i < len; ++i)
+                for (var i = 0 | 0; i < len; ++i)
                     if (!equalityComparer(a[i], b[i], strict))
                         return false;
 
@@ -848,7 +867,7 @@ var System;
             ArrayUtility.areEqual = areEqual;
 
             function applyTo(target, fn) {
-                for (var i = 0; i < target.length; ++i)
+                for (var i = 0 | 0; i < target.length; ++i)
                     target[i] = fn(target[i]);
                 return target;
             }
@@ -868,7 +887,7 @@ var System;
                     if (!max)
                         max = Infinity;
 
-                    for (var i = array.length - 1; i >= 0; --i)
+                    for (var i = (array.length - 1) | 0; i >= 0; --i)
                         if (array[i] === value) {
                             array.splice(i, 1);
                             ++count;
@@ -1330,19 +1349,26 @@ var System;
                     if (source && source.source) {
                         if (source.length && source.step === 0)
                             throw new Error("Invalid IndexEnumerator step value (0).");
-                        if (!source.pointer)
-                            source.pointer = 0;
+
+                        var pointer = source.pointer;
+                        if (!pointer)
+                            source.pointer = 0 | 0;
+                        else if (pointer != Math.floor(pointer))
+                            throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
+                        source.pointer = pointer | 0;
+
                         var step = source.step;
                         if (!step)
                             source.step = 1;
                         else if (step != Math.floor(step))
                             throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
+                        source.step = step | 0;
                     }
                 }, function (yielder) {
                     var len = (source && source.source) ? source.length : 0;
                     if (!len)
                         return yielder.yieldBreak();
-                    var current = source.pointer;
+                    var current = source.pointer | 0;
                     source.pointer += source.step;
                     return (current < len && current >= 0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
                 }, function () {
@@ -1361,7 +1387,7 @@ var System;
                 if (typeof start === "undefined") { start = 0; }
                 if (typeof step === "undefined") { step = 1; }
                 _super.call(this, function () {
-                    var array = arrayOrFactory instanceof Array ? arrayOrFactory : arrayOrFactory();
+                    var array = System.Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
                     return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
                 });
             }

@@ -1,4 +1,10 @@
-﻿declare module System {
+﻿declare module System.Collections {
+    interface IArray<T> {
+        length: number;
+        [index: number]: T;
+    }
+}
+declare module System {
     class Functions {
         public Identity<T>(x: T): T;
         public True(): boolean;
@@ -77,11 +83,17 @@ declare module System {
         private _milliseconds;
         constructor(milliseconds: number);
         constructor(hours: number, minutes: number, seconds?: number, milliseconds?: number);
+        private _ticks;
         public ticks : number;
+        private _ms;
         public milliseconds : number;
+        private _seconds;
         public seconds : number;
+        private _minutes;
         public minutes : number;
+        private _hours;
         public hours : number;
+        private _days;
         public days : number;
         public toTimeSpan(): TimeSpan;
         static from(hours: number, minutes: number, seconds?: number, milliseconds?: number): ClockTime;
@@ -196,10 +208,10 @@ declare module System.Collections.ArrayUtility {
     function contains<T>(array: T[], item: T): boolean;
     function replace<T>(array: T[], old: T, newValue: T, max?: number): number;
     function register<T>(array: T[], item: T): boolean;
-    function findIndex<T>(array: T[], predicate: (item: T) => boolean): number;
+    function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number;
     function areAllEqual(arrays: any[][], strict?: boolean): boolean;
-    function areEqual<T>(a: T[], b: T[], strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
-    function applyTo(target: number[], fn: (a: number) => number): number[];
+    function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
+    function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T;
     function removeIndex<T>(array: T[], index: number): boolean;
     function remove<T>(array: T[], value: T, max?: number): number;
     function repeat<T>(element: T, count: number): T[];
@@ -326,8 +338,8 @@ declare module System.Collections {
         });
     }
     class ArrayEnumerator<T> extends IndexEnumerator<T> {
-        constructor(arrayFactory: () => T[], start?: number, step?: number);
-        constructor(array: T[], start?: number, step?: number);
+        constructor(arrayFactory: () => IArray<T>, start?: number, step?: number);
+        constructor(array: IArray<T>, start?: number, step?: number);
     }
 }
 declare module System.Collections {

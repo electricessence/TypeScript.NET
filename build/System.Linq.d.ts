@@ -8,11 +8,12 @@ declare module System.Linq {
     class Enumerable<T> extends DisposableBase implements Collections.IEnumerable<T> {
         private enumeratorFactory;
         constructor(enumeratorFactory: () => Collections.IEnumerator<T>, finalizer?: () => void);
-        static fromArray<T>(array: T[]): ArrayEnumerable<T>;
+        static fromArray<T>(array: Collections.IArray<T>): ArrayEnumerable<T>;
+        static from<T>(source: any): Enumerable<T>;
         public getEnumerator(): Collections.IEnumerator<T>;
         public _onDispose(): void;
-        static choice<T>(values: T[]): Enumerable<T>;
-        static cycle<T>(values: T[]): Enumerable<T>;
+        static choice<T>(values: Collections.IArray<T>): Enumerable<T>;
+        static cycle<T>(values: Collections.IArray<T>): Enumerable<T>;
         static empty<T>(): Enumerable<T>;
         static repeat<T>(element: T, count?: number): Enumerable<T>;
         static repeatWithFinalize<T>(initializer: () => T, finalizer: (element: T) => void): Enumerable<T>;
@@ -75,6 +76,8 @@ declare module System.Linq {
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
         public sequenceEqual(second: Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+        public union<TCompare>(second: Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+        public union<TCompare>(second: Collections.IEnumerable<T>, compareSelector: Selector<T, TCompare>): Enumerable<T>;
         public orderBy<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         public orderByDescending<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         public groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
@@ -103,9 +106,9 @@ declare module System.Linq {
     }
     class ArrayEnumerable<T> extends Enumerable<T> {
         private _source;
-        constructor(source: T[]);
+        constructor(source: Collections.IArray<T>);
         public _onDispose(): void;
-        public source : T[];
+        public source : Collections.IArray<T>;
         public toArray(): T[];
         public asEnumerable(): ArrayEnumerable<T>;
         public forEach(action: (element: T, index?: number) => boolean): void;
@@ -124,7 +127,7 @@ declare module System.Linq {
         public reverse(): Enumerable<T>;
         public memoize(): ArrayEnumerable<T>;
         public sequenceEqual(second: Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
-        public sequenceEqual(second: T[], equalityComparer?: (a: T, b: T) => boolean): boolean;
+        public sequenceEqual(second: Collections.IArray<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
         public toJoinedString(separator?: string, selector?: Selector<T, string>): string;
     }
     class WhereEnumerable<T> extends Enumerable<T> {

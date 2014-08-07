@@ -10,13 +10,13 @@ module System.Collections.ArrayUtility
 	export function replace<T>(array: T[], old: T, newValue: T, max?: number): number
 	{
 
-		var count = 0;
+		var count = 0 | 0;
 		if (max !== 0)
 		{
 			if (!max)
 				max = Infinity;
 
-			for (var i = array.length - 1; i >= 0; --i) if (array[i] === old)
+			for (var i = (array.length - 1) | 0; i >= 0; --i) if (array[i] === old)
 			{
 				array[i] = newValue;
 				++count;
@@ -36,11 +36,11 @@ module System.Collections.ArrayUtility
 		return ok;
 	}
 
-	export function findIndex<T>(array: T[], predicate: (item: T) => boolean): number
+	export function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number
 	{
 
-		var len = array.length;
-		for (var i = 0; i < len; ++i)
+		var len = array.length | 0;
+		for (var i = 0 | 0; i < len; ++i)
 			if (i in array && predicate(array[i]))
 				return i;
 
@@ -53,7 +53,7 @@ module System.Collections.ArrayUtility
 		if (arrays.length < 2)
 			throw new Error("Cannot compare a set of arrays less than 2.");
 		var first = arrays[0];
-		for (var i = 0, l = arrays.length; i < l; ++i)
+		for (var i = 0 | 0, l = arrays.length | 0; i < l; ++i)
 		{
 			if (!areEqual(first, arrays[i], strict))
 				return false;
@@ -61,16 +61,16 @@ module System.Collections.ArrayUtility
 		return true;
 	}
 
-	export function areEqual<T>(a: T[], b: T[], strict?: boolean, equalityComparer: (a: T, b: T, strict?: boolean) => boolean = System.areEqual): boolean
+	export function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer: (a: T, b: T, strict?: boolean) => boolean = System.areEqual): boolean
 	{
 		if (a === b)
 			return true;
 
-		var len = a.length;
-		if (len != b.length)
+		var len = a.length | 0;
+		if (len != (b.length | 0))
 			return false;
 
-		for (var i = 0; i < len; ++i)
+		for (var i = 0 | 0; i < len; ++i)
 			if (!equalityComparer(a[i], b[i], strict))
 				return false;
 
@@ -79,9 +79,9 @@ module System.Collections.ArrayUtility
 	}
 
 
-	export function applyTo(target: number[], fn: (a: number) => number): number[]
+	export function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T
 	{
-		for (var i = 0; i < target.length; ++i)
+		for (var i = 0 | 0; i < target.length; ++i)
 			target[i] = fn(target[i]);
 		return target;
 	}
@@ -102,7 +102,7 @@ module System.Collections.ArrayUtility
 			if (!max)
 				max = Infinity;
 
-			for (var i = array.length - 1; i >= 0; --i) if (array[i] === value)
+			for (var i = (array.length - 1) | 0; i >= 0; --i) if (array[i] === value)
 			{
 				array.splice(i, 1);
 				++count;
