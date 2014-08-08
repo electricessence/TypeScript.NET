@@ -995,15 +995,15 @@ var System;
                 var found = -1;
 
                 if (compareSelector)
-                    this.forEach(function (x, i) {
-                        if (compareSelector(x) === compareSelector(value)) {
+                    this.forEach(function (element, i) {
+                        if (System.areEqual(compareSelector(element), compareSelector(value), true)) {
                             found = i;
                             return false;
                         }
                     });
                 else
-                    this.forEach(function (x, i) {
-                        if (System.areEqual(x, value, true)) {
+                    this.forEach(function (element, i) {
+                        if (System.areEqual(element, value, true)) {
                             found = i;
                             return false;
                         }
@@ -1016,13 +1016,13 @@ var System;
                 var result = -1;
 
                 if (compareSelector)
-                    this.forEach(function (x, i) {
-                        if (compareSelector(x) === compareSelector(value))
+                    this.forEach(function (element, i) {
+                        if (System.areEqual(compareSelector(element), compareSelector(value), true))
                             result = i;
                     });
                 else
-                    this.forEach(function (x, i) {
-                        if (System.areEqual(x, value, true))
+                    this.forEach(function (element, i) {
+                        if (System.areEqual(element, value, true))
                             result = i;
                     });
 
@@ -1536,7 +1536,7 @@ var System;
                 });
             }
             ArrayEnumerable.prototype._onDispose = function () {
-                _super.prototype._onDispose;
+                _super.prototype._onDispose.call(this);
                 this._source = null;
             };
 

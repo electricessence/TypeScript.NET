@@ -311,9 +311,9 @@ var System;
 
         Object.defineProperty(ClockTime.prototype, "days", {
             get: function () {
-                var _ = this, r = _._hours;
+                var _ = this, r = _._days;
                 if (r === undefined)
-                    _._hours = r = (this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
+                    _._days = r = (this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
                 return r;
             },
             enumerable: true,
@@ -386,7 +386,7 @@ var System;
                 case 1 /* Milliseconds */:
                     return value;
                 case 0 /* Ticks */:
-                    value / ticksPerMillisecond;
+                    return value / ticksPerMillisecond;
                 default:
                     throw new Error("Invalid TimeUnit.");
             }
@@ -473,7 +473,7 @@ var System;
                 throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
             if (other instanceof TimeUnitValue || other instanceof ClockTime)
                 other = other.toTimeSpan();
-            return new TimeSpan(this._milliseconds + other.totalMilliseconds);
+            return new TimeSpan(this._milliseconds + other.milliseconds);
         };
 
         TimeSpan.prototype.addUnit = function (value, units) {
@@ -1400,6 +1400,12 @@ var System;
 var System;
 (function (System) {
     (function (Collections) {
+        function notImplementedException(name, log) {
+            if (typeof log === "undefined") { log = ""; }
+            console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
+            throw new Error("DictionaryAbstractBase." + name + ": Not implemented.");
+        }
+
         var DictionaryAbstractBase = (function () {
             function DictionaryAbstractBase() {
                 this._updateRecursion = 0;
@@ -1457,7 +1463,7 @@ var System;
             });
             Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
                 get: function () {
-                    throw new Error("Not implemented.");
+                    return notImplementedException("count");
                 },
                 enumerable: true,
                 configurable: true
@@ -1503,7 +1509,7 @@ var System;
 
             Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
                 get: function () {
-                    throw new Error("Not implemented.");
+                    return notImplementedException("keys");
                 },
                 enumerable: true,
                 configurable: true
@@ -1511,7 +1517,7 @@ var System;
 
             Object.defineProperty(DictionaryAbstractBase.prototype, "values", {
                 get: function () {
-                    throw new Error("Not implemented.");
+                    return notImplementedException("values");
                 },
                 enumerable: true,
                 configurable: true
@@ -1526,11 +1532,11 @@ var System;
             };
 
             DictionaryAbstractBase.prototype.get = function (key) {
-                throw new Error("Not implemented.");
+                return notImplementedException("get(key: TKey): TValue", "When calling for key: " + key);
             };
 
             DictionaryAbstractBase.prototype.set = function (key, value) {
-                throw new Error("Not implemented.");
+                return notImplementedException("set(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + ".");
             };
 
             DictionaryAbstractBase.prototype.containsKey = function (key) {
