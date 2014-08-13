@@ -11,6 +11,7 @@ module System.Collections {
 	export class OrderedStringKeyDictionary<TValue> extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue>
 	{
 
+		// noinspection JSMismatchedCollectionQueryUpdate
 		private _order: string[] = []; // Maintains indexes.
 
 		constructor() {
@@ -18,7 +19,7 @@ module System.Collections {
 		}
 
 		indexOfKey(key: string): number {
-			return this._order.indexOf(key);
+			return this._order.indexOf(key,0);
 		}
 
 		getValueByIndex(index: number): TValue {

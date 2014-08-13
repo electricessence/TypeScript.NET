@@ -261,7 +261,7 @@ module System
 					other = other.to(type);
 			}
 			else
-				return null
+				return null;
 
 			return other;
 		}

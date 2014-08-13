@@ -1,5 +1,3836 @@
-﻿define("TypeScript.NET/System",
-function () {
-	var __extends,System;(function(n){"use strict";var i=function(){function n(){}return n.prototype.Identity=function(n){return n},n.prototype.True=function(){return!0},n.prototype.False=function(){return!1},n.prototype.Blank=function(){},Object.defineProperty(n,"Identity",{get:function(){return t.Identity},enumerable:!0,configurable:!0}),Object.defineProperty(n,"True",{get:function(){return t.True},enumerable:!0,configurable:!0}),Object.defineProperty(n,"False",{get:function(){return t.False},enumerable:!0,configurable:!0}),Object.defineProperty(n,"Blank",{get:function(){return t.Blank},enumerable:!0,configurable:!0}),n}(),t;n.Functions=i;t=new i})(System||(System={})),function(n){"use strict";var t=function(){function t(){this.Boolean="boolean";this.Number="number";this.String="string";this.Object="object";this.Null="object";this.Undefined=typeof undefined;this.Function=typeof n.Functions.Blank}return Object.defineProperty(t,"Boolean",{get:function(){return"boolean"},enumerable:!0,configurable:!0}),Object.defineProperty(t,"Number",{get:function(){return"number"},enumerable:!0,configurable:!0}),Object.defineProperty(t,"String",{get:function(){return"string"},enumerable:!0,configurable:!0}),Object.defineProperty(t,"Object",{get:function(){return"object"},enumerable:!0,configurable:!0}),Object.defineProperty(t,"Null",{get:function(){return"object"},enumerable:!0,configurable:!0}),Object.defineProperty(t,"Undefined",{get:function(){return typeof undefined},enumerable:!0,configurable:!0}),Object.defineProperty(t,"Function",{get:function(){return typeof n.Functions.Blank},enumerable:!0,configurable:!0}),t.prototype.isBoolean=function(n){return typeof n===this.Boolean},t.isBoolean=function(n){return typeof n===t.Boolean},t.prototype.isNumber=function(n){return typeof n===this.Number},t.isNumber=function(n){return typeof n===t.Number},t.prototype.isString=function(n){return typeof n===this.String},t.isString=function(n){return typeof n===t.String},t.prototype.isFunction=function(n){return typeof n===this.Function},t.isFunction=function(n){return typeof n===t.Function},t}();n.Types=t}(System||(System={})),function(n){function i(n){return typeof n===t.Number&&isNaN(n)}function u(n,t,r){return typeof r=="undefined"&&(r=!0),n===t||!r&&n==t||i(n)&&i(t)}function f(n,t,i){return typeof i=="undefined"&&(i=!0),u(n,t,i)?0:n>t?1:-1}function r(n,i){var u,f,e;if(typeof i=="undefined"&&(i=0),i<0)return n;switch(typeof n){case t.Undefined:case t.Null:case t.String:case t.Boolean:case t.Number:case t.Function:return n}if(n instanceof Array){if(u=n.slice(),i>0)for(f=0;f<u.length;f++)f in u&&(u[f]=r(u[f],i-1))}else if(u={},i>0)for(e in n)u[e]=r(n[e],i-1);return u}function e(n,t){for(var i in n)t[i]=n[i]}function o(n,t){t.forEach(function(t){Object.getOwnPropertyNames(t.prototype).forEach(function(i){n.prototype[i]=t.prototype[i]})})}var t=new n.Types;n.isEqualToNaN=i;n.areEqual=u;n.compare=f;n.clone=r;n.copyTo=e;n.applyMixins=o}(System||(System={})),function(n){function l(n){if(isNaN(n)||n>5||n<0||Math.floor(n)!=n)throw new Error("Invalid TimeUnit.");return!0}var f=1e4,t=1e3,i=60,r=60,e=24,c,o,s,u,h;(function(n){n[n.Ticks=0]="Ticks";n[n.Milliseconds=1]="Milliseconds";n[n.Seconds=2]="Seconds";n[n.Minutes=3]="Minutes";n[n.Hours=4]="Hours";n[n.Days=5]="Days"})(n.TimeUnit||(n.TimeUnit={}));c=n.TimeUnit;o=function(){function n(){for(var n=[],t=0;t<arguments.length-0;t++)n[t]=arguments[t+0];this._milliseconds=n.length>1?u.millisecondsFromTime(n[0]||0,n[1]||0,n.length>2&&n[2]||0,n.length>3&&n[3]||0):n.length>0&&n[0]||0}return Object.defineProperty(n.prototype,"ticks",{get:function(){var n=this,t=n._ticks;return t===undefined&&(n._ticks=t=(n._milliseconds-Math.floor(n._milliseconds))*f),t},enumerable:!0,configurable:!0}),Object.defineProperty(n.prototype,"milliseconds",{get:function(){var i=this,n=i._ms;return n===undefined&&(i._ms=n=(this._milliseconds|0)%t),n},enumerable:!0,configurable:!0}),Object.defineProperty(n.prototype,"seconds",{get:function(){var r=this,n=r._seconds;return n===undefined&&(r._seconds=n=(this._milliseconds/t|0)%i),n},enumerable:!0,configurable:!0}),Object.defineProperty(n.prototype,"minutes",{get:function(){var u=this,n=u._minutes;return n===undefined&&(u._minutes=n=(this._milliseconds/t/i|0)%r),n},enumerable:!0,configurable:!0}),Object.defineProperty(n.prototype,"hours",{get:function(){var u=this,n=u._hours;return n===undefined&&(u._hours=n=(this._milliseconds/t/i/r|0)%e),n},enumerable:!0,configurable:!0}),Object.defineProperty(n.prototype,"days",{get:function(){var u=this,n=u._hours;return n===undefined&&(u._hours=n=this._milliseconds/t/i/r/e|0),n},enumerable:!0,configurable:!0}),n.prototype.toTimeSpan=function(){return new u(this._milliseconds)},n.from=function(t,i,r,u){return typeof r=="undefined"&&(r=0),typeof u=="undefined"&&(u=0),new n(t,i,r,u)},n}();n.ClockTime=o;s=function(){function n(n,t){this.value=n;this._type=t;l(t)}return Object.defineProperty(n.prototype,"type",{get:function(){return this._type},enumerable:!0,configurable:!0}),n.prototype.toTimeSpan=function(){return new u(this.value,this.type)},n.prototype.to=function(n){return typeof n=="undefined"&&(n=this.type),this.toTimeSpan().toTimeUnitValue(n)},n}();n.TimeUnitValue=s;u=function(){function u(n,t){typeof t=="undefined"&&(t=1);this._milliseconds=u.convertToMilliseconds(n,t)}return u.prototype.equals=function(t){return n.areEqual(this._milliseconds,t.milliseconds,!1)},u.prototype.toTimeUnitValue=function(n){return typeof n=="undefined"&&(n=1),new s(this.total(n),n)},u.convertToMilliseconds=function(n,u){typeof u=="undefined"&&(u=1);switch(u){case 5:n*=e;case 4:n*=r;case 3:n*=i;case 2:n*=t;case 1:return n;case 0:n/f;default:throw new Error("Invalid TimeUnit.");}},u.prototype.total=function(n){var t=this;switch(n){case 5:return t.days;case 4:return t.hours;case 3:return t.minutes;case 2:return t.seconds;case 1:return t._milliseconds;case 0:return t._milliseconds*f;default:throw new Error("Invalid TimeUnit.");}},Object.defineProperty(u.prototype,"ticks",{get:function(){return this._milliseconds*f},enumerable:!0,configurable:!0}),Object.defineProperty(u.prototype,"milliseconds",{get:function(){return this._milliseconds},enumerable:!0,configurable:!0}),Object.defineProperty(u.prototype,"seconds",{get:function(){return this._milliseconds/t},enumerable:!0,configurable:!0}),Object.defineProperty(u.prototype,"minutes",{get:function(){return this.seconds/i},enumerable:!0,configurable:!0}),Object.defineProperty(u.prototype,"hours",{get:function(){return this.minutes/r},enumerable:!0,configurable:!0}),Object.defineProperty(u.prototype,"days",{get:function(){return this.hours/e},enumerable:!0,configurable:!0}),Object.defineProperty(u.prototype,"time",{get:function(){return new o(this._milliseconds)},enumerable:!0,configurable:!0}),u.prototype.add=function(t){if(n.Types.isNumber(t))throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");return(t instanceof s||t instanceof o)&&(t=t.toTimeSpan()),new u(this._milliseconds+t.totalMilliseconds)},u.prototype.addUnit=function(n,t){return typeof t=="undefined"&&(t=1),new u(this._milliseconds+u.convertToMilliseconds(n,t))},u.from=function(n,t){return new u(n,t)},u.fromDays=function(n){return new u(n,5)},u.fromHours=function(n){return new u(n,4)},u.fromMinutes=function(n){return new u(n,3)},u.fromSeconds=function(n){return new u(n,2)},u.fromMilliseconds=function(n){return new u(n,1)},u.fromTicks=function(n){return new u(n,0)},u.fromTime=function(n,t,i,r){return typeof i=="undefined"&&(i=0),typeof r=="undefined"&&(r=0),new u(u.millisecondsFromTime(n,t,i,r))},u.millisecondsFromTime=function(n,u,f,e){typeof f=="undefined"&&(f=0);typeof e=="undefined"&&(e=0);var o=n;return o*=r,o+=u,o*=i,o+=f,o*=t,o+e},u.between=function(n,t){return new u(t.getTime()-n.getTime())},Object.defineProperty(u,"zero",{get:function(){return h},enumerable:!0,configurable:!0}),u}();n.TimeSpan=u;h=new u(0)}(System||(System={})),function(n){(function(t){var i=function(){function t(){this.reset()}return t.getTimestampMilliseconds=function(){return(new Date).getTime()},Object.defineProperty(t.prototype,"isRunning",{get:function(){return this._isRunning},enumerable:!0,configurable:!0}),t.startNew=function(){var n=new t;return n.start(),n},t.measure=function(i){var r=t.getTimestampMilliseconds();return i(),new n.TimeSpan(t.getTimestampMilliseconds()-r)},t.prototype.record=function(n){var i=t.measure(n);return this._elapsed+=i.milliseconds,i},t.prototype.start=function(){var n=this;n._isRunning||(n._startTimeStamp=t.getTimestampMilliseconds(),n._isRunning=!0)},t.prototype.stop=function(){var n=this;n._isRunning&&(n._elapsed+=n.currentLapMilliseconds,n._isRunning=!1)},t.prototype.reset=function(){var n=this;n._elapsed=0;n._isRunning=!1;n._startTimeStamp=NaN},t.prototype.lap=function(){var i=this;if(i._isRunning){var r=t.getTimestampMilliseconds(),f=i._startTimeStamp,u=r-f;return i._startTimeStamp=r,i._elapsed+=u,new n.TimeSpan(u)}return n.TimeSpan.zero},Object.defineProperty(t.prototype,"currentLapMilliseconds",{get:function(){return this._isRunning?t.getTimestampMilliseconds()-this._startTimeStamp:0},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"currentLap",{get:function(){return this._isRunning?new n.TimeSpan(this.currentLapMilliseconds):n.TimeSpan.zero},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"elapsedMilliseconds",{get:function(){var n=this,t=n._elapsed;return n._isRunning&&(t+=n.currentLapMilliseconds),t},enumerable:!0,configurable:!0}),Object.defineProperty(t.prototype,"elapsed",{get:function(){return new n.TimeSpan(this.elapsedMilliseconds)},enumerable:!0,configurable:!0}),t}();t.Stopwatch=i})(n.Diagnostics||(n.Diagnostics={}));var t=n.Diagnostics}(System||(System={})),function(n){function t(t){t&&typeof t.dispose==n.Types.Function&&t.dispose()}function i(n,i){try{return i(n)}finally{t(n)}}n.dispose=t;n.using=i;var r=function(){function n(n){this._finalizer=n;this._wasDisposed=!1}return Object.defineProperty(n.prototype,"wasDisposed",{get:function(){return this._wasDisposed},enumerable:!0,configurable:!0}),n.assertIsNotDisposed=function(n,t){if(typeof t=="undefined"&&(t="ObjectDisposedException"),n)throw new Error(t);return!0},n.prototype.assertIsNotDisposed=function(t){return typeof t=="undefined"&&(t="ObjectDisposedException"),n.assertIsNotDisposed(this._wasDisposed,t)},n.prototype.dispose=function(){var n=this;if(!n._wasDisposed){n._wasDisposed=!0;try{n._onDispose()}finally{n._finalizer&&n._finalizer()}}},n.prototype._onDispose=function(){},n}();n.DisposableBase=r}(System||(System={}));__extends=this.__extends||function(n,t){function r(){this.constructor=n}for(var i in t)t.hasOwnProperty(i)&&(n[i]=t[i]);r.prototype=t.prototype;n.prototype=new r},function(n){var t=function(n){function t(t){n.call(this);this._closure=t}return __extends(t,n),Object.defineProperty(t.prototype,"isValueCreated",{get:function(){return this._isValueCreated},enumerable:!0,configurable:!0}),t.prototype.reset=function(){var n=this;if(!n._closure)throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");n._isValueCreated=!1;n._value=null},Object.defineProperty(t.prototype,"value",{get:function(){var n=this,t;return!n._isValueCreated&&n._closure?(t=n._closure(),n._value=t,n._isValueCreated=!0,t):n._value},enumerable:!0,configurable:!0}),t.prototype.valueOnce=function(){try{return this.value}finally{this._closure=null}},t.prototype._onDispose=function(){this._closure=null;this._value=null},t}(n.DisposableBase);n.Lazy=t}(System||(System={})),function(n){(function(t){(function(t){function f(n){return n?n.slice():n}function i(n,t){return n?n.indexOf(t)!=-1:!1}function e(n,t,i,r){var f=0,u;if(r!==0)for(r||(r=Infinity),u=n.length-1|0;u>=0;--u)if(n[u]===t&&(n[u]=i,++f,!--r))break;return f}function o(n,t){var r=n&&(!n.length||!i(n,t));return r&&n.push(t),r}function s(n,t){for(var r=n.length|0,i=0;i<r;++i)if(i in n&&t(n[i]))return i;return-1}function h(n,t){var u,i,f;if(n.length<2)throw new Error("Cannot compare a set of arrays less than 2.");for(u=n[0],i=0,f=n.length|0;i<f;++i)if(!r(u,n[i],t))return!1;return!0}function r(t,i,r,u){var e,f;if(typeof u=="undefined"&&(u=n.areEqual),t===i)return!0;if(e=t.length|0,e!=(i.length|0))return!1;for(f=0;f<e;++f)if(!u(t[f],i[f],r))return!1;return!0}function c(n,t){for(var i=0;i<n.length;++i)n[i]=t(n[i]);return n}function l(n,t){var i=t<n.length;return i&&n.splice(t,1),i}function a(n,t,i){var u=0,r;if(n&&n.length&&i!==0)for(i||(i=Infinity),r=n.length-1|0;r>=0;--r)if(n[r]===t&&(n.splice(r,1),++u,!--i))break;return u}function v(n,t){for(var i=[];t--;)i.push(n);return i}function y(n,t){if(typeof t=="undefined"&&(t=!1),!n.length)return 0;var i=0;return t?n.forEach(function(n){isNaN(n)||(i+=n)}):n.every(function(n){return i+=n,!isNaN(i)}),i}function p(n,t){if(typeof t=="undefined"&&(t=!1),!n.length)return NaN;var i=0,r;return t?(r=0,n.forEach(function(n){isNaN(n)||(i+=n,r++)})):(r=n.length,n.every(function(n){return i+=n,!isNaN(i)})),!r||isNaN(i)?NaN:i/r}function w(n,t){var i,r;return(typeof t=="undefined"&&(t=!1),!n.length)?NaN:(i=1,t?(r=!1,n.forEach(function(n){isNaN(n)||(i*=n,r||(r=!0))}),r||(i=NaN)):n.every(function(n){return isNaN(n)?(i=NaN,!1):(i*=n,!0)}),i)}function u(n,t,i,r){var u,f;return n.length?(u=t,i?(f=!1,n.forEach(function(n){isNaN(n)||(r(n,u)&&(u=n),f||(f=!0))}),f||(u=NaN)):n.every(function(n){return isNaN(n)?(u=NaN,!1):(r(n,u)&&(u=n),!0)}),u):NaN}function b(n,t){return typeof t=="undefined"&&(t=!1),u(n,+Infinity,t,function(n,t){return n<t})}function k(n,t){return typeof t=="undefined"&&(t=!1),u(n,-Infinity,t,function(n,t){return n>t})}t.copy=f;t.contains=i;t.replace=e;t.register=o;t.findIndex=s;t.areAllEqual=h;t.areEqual=r;t.applyTo=c;t.removeIndex=l;t.remove=a;t.repeat=v;t.sum=y;t.average=p;t.product=w;t.min=b;t.max=k})(t.ArrayUtility||(t.ArrayUtility={}));var i=t.ArrayUtility})(n.Collections||(n.Collections={}));var t=n.Collections}(System||(System={})),function(n){var t=n.Collections.ArrayUtility,i=function(n){function t(t,i,r,u){typeof r=="undefined"&&(r=!1);typeof u=="undefined"&&(u=0);n.call(this);this.type=t;this.listener=i;this.useCapture=r;this.priority=u}return __extends(t,n),t.prototype.dispose=function(){this.listener=null},Object.defineProperty(t.prototype,"wasDisposed",{get:function(){return this.listener==null},enumerable:!0,configurable:!0}),t.prototype.matches=function(n,t,i){typeof i=="undefined"&&(i=!1);var r=this;return r.type==n&&r.listener==t&&r.useCapture==i},t.prototype.equals=function(n){var t=this;return t.type==n.type&&t.listener==n.listener&&t.useCapture==n.useCapture&&t.priority==n.priority},t}(n.DisposableBase),r=function(r){function u(){r.apply(this,arguments);this._isDisposing=!1}return __extends(u,r),u.prototype.addEventListener=function(n,t,r,u){typeof r=="undefined"&&(r=!1);typeof u=="undefined"&&(u=0);var f=this._listeners;f||(this._listeners=f=[]);f.push(new i(n,t,r,u))},u.prototype.registerEventListener=function(n,t,i,r){typeof i=="undefined"&&(i=!1);typeof r=="undefined"&&(r=0);this.hasEventListener(n,t,i)||this.addEventListener(n,t,i,r)},u.prototype.hasEventListener=function(n,t,i){typeof i=="undefined"&&(i=!1);var r=this._listeners;return r&&r.some(function(r){return n==r.type&&(!t||t==r.listener&&i==r.useCapture)})},u.prototype.removeEventListener=function(n,i,r){var u,f,e;typeof r=="undefined"&&(r=!1);u=this._listeners;u&&(f=t.findIndex(u,function(t){return t.matches(n,i,r)}),f!=-1&&(e=u[f],u.splice(f,1),e.dispose()))},u.prototype.dispatchEvent=function(t,i){var s=this,e=this,f=e._listeners,r,o,u;return!f||!f.length?!1:(typeof t=="string"?(r=new Event,i||(i={}),r.cancelable=!!i.cancelable,r.target=e,r.type=t):r=t,o=r.type,u=[],f.forEach(function(n){n.type==o&&u.push(n)}),!u.length)?!1:(u.sort(function(n,t){return t.priority-n.priority}),u.forEach(function(t){var i=new Event;n.copyTo(r,i);i.target=s;t.listener(i)}),!0)},Object.defineProperty(u,"DISPOSING",{get:function(){return"disposing"},enumerable:!0,configurable:!0}),Object.defineProperty(u,"DISPOSED",{get:function(){return"disposed"},enumerable:!0,configurable:!0}),Object.defineProperty(u.prototype,"isDisposing",{get:function(){return this._isDisposing},enumerable:!0,configurable:!0}),u.prototype.dispose=function(){var n=this,t;n.wasDisposed||n._isDisposing||(n._isDisposing=!0,n.dispatchEvent(u.DISPOSING),r.prototype.dispose.call(this),n.dispatchEvent(u.DISPOSED),t=n._listeners,t&&(this._listeners=null,t.forEach(function(n){return n.dispose()})))},u}(n.DisposableBase);n.EventDispatcher=r}(System||(System={})),function(n){(function(t){"use strict";var e=function(){function n(){}return Object.defineProperty(n.prototype,"current",{get:function(){return this._current},enumerable:!0,configurable:!0}),n.prototype.yieldReturn=function(n){return this._current=n,!0},n.prototype.yieldBreak=function(){return this._current=null,!1},n}(),f,o,i,r,u;(function(n){n[n.Before=0]="Before";n[n.Running=1]="Running";n[n.After=2]="After"})(f||(f={})),function(n){function t(n){if(n instanceof Array)return new u(n);if(n.getEnumerator)return n.getEnumerator();throw new Error("Unknown enumerable.");}n.from=t}(t.Enumerator||(t.Enumerator={}));o=t.Enumerator;i=function(n){function t(t,i,r){n.call(this);this.initializer=t;this.tryGetNext=i;this.disposer=r;this.reset()}return __extends(t,n),Object.defineProperty(t.prototype,"current",{get:function(){return this._yielder.current},enumerable:!0,configurable:!0}),t.prototype.reset=function(){var n=this;n._yielder=new e;n._state=0},t.prototype.moveNext=function(){var n=this,t;try{switch(n._state){case 0:n._state=1;t=n.initializer;t&&t();case 1:return n.tryGetNext(n._yielder)?!0:(this.dispose(),!1);case 2:return!1}}catch(i){this.dispose();throw i;}},t.prototype._onDispose=function(){var n=this,i=n.disposer,t;n.initializer=null;n.disposer=null;t=n._yielder;n._yielder=null;t&&t.yieldBreak();try{i&&i()}finally{this._state=2}},t}(n.DisposableBase);t.EnumeratorBase=i;r=function(n){function t(t){var i;n.call(this,function(){var n,r;if(i=t(),i&&i.source){if(i.length&&i.step===0)throw new Error("Invalid IndexEnumerator step value (0).");if(n=i.pointer,n){if(n!=Math.floor(n))throw new Error("Invalid IndexEnumerator pointer value ("+n+") has decimal.");}else i.pointer=0;if(i.pointer=n|0,r=i.step,r){if(r!=Math.floor(r))throw new Error("Invalid IndexEnumerator step value ("+r+") has decimal.");}else i.step=1;i.step=r|0}},function(n){var r=i&&i.source?i.length:0,t;return r?(t=i.pointer|0,i.pointer+=i.step,t<r&&t>=0?n.yieldReturn(i.source[t]):n.yieldBreak()):n.yieldBreak()},function(){i&&(i.source=null)})}return __extends(t,n),t}(i);t.IndexEnumerator=r;u=function(t){function i(i,r,u){typeof r=="undefined"&&(r=0);typeof u=="undefined"&&(u=1);t.call(this,function(){var t=n.Types.isFunction(i)?i():i;return{source:t,pointer:r,length:t?t.length:0,step:u}})}return __extends(i,t),i}(r);t.ArrayEnumerator=u})(n.Collections||(n.Collections={}));var t=n.Collections}(System||(System={})),function(n){(function(t){var i=function(){function i(){this._updateRecursion=0}return Object.defineProperty(i.prototype,"isUpdating",{get:function(){return this._updateRecursion!=0},enumerable:!0,configurable:!0}),i.prototype._onValueUpdate=function(t,i,r){if(!n.areEqual(i,r,!0)){var u=this;if(u.onValueChanged)u.onValueChanged(t,i,r);u._updateRecursion==0&&u._onUpdated()}},i.prototype._onUpdated=function(){var n=this;n.onUpdated&&n.onUpdated()},i.prototype.handleUpdate=function(n){var t=this,i;if(n){t._updateRecursion++;try{i=n()}finally{t._updateRecursion--}}else i=t._updateRecursion==0;return i&&t._updateRecursion==0&&t._onUpdated(),i},Object.defineProperty(i.prototype,"isReadOnly",{get:function(){return!1},enumerable:!0,configurable:!0}),Object.defineProperty(i.prototype,"count",{get:function(){throw new Error("Not implemented.");},enumerable:!0,configurable:!0}),i.prototype.add=function(n){this.addByKeyValue(n.key,n.value)},i.prototype.clear=function(){var n=this,i=n.keys,t=i.length;return t&&n.handleUpdate(function(){return i.forEach(function(t){return n.removeByKey(t)}),!0}),t!=n.count&&console.warn("Dictioary clear() results in mismatched count."),t},i.prototype.contains=function(t){var i=this.get(t.key);return n.areEqual(i,t.value)},i.prototype.copyTo=function(n,t){typeof t=="undefined"&&(t=0);for(var i=this.getEnumerator();i.moveNext();)n[t++]=i.current},i.prototype.remove=function(t){var i=t.key,r=this.get(i);return n.areEqual(r,t.value)&&this.removeByKey(i)?1:0},Object.defineProperty(i.prototype,"keys",{get:function(){throw new Error("Not implemented.");},enumerable:!0,configurable:!0}),Object.defineProperty(i.prototype,"values",{get:function(){throw new Error("Not implemented.");},enumerable:!0,configurable:!0}),i.prototype.addByKeyValue=function(n,t){var i=this;if(i.containsKey(n))throw new Error("Adding key/value when one already exists.");i.set(n,t)},i.prototype.get=function(){throw new Error("Not implemented.");},i.prototype.set=function(){throw new Error("Not implemented.");},i.prototype.containsKey=function(n){var t=this.get(n);return t!==undefined},i.prototype.containsValue=function(t){for(var i=this.getEnumerator(),r=n.areEqual;i.moveNext();)if(r(i.current,t,!0))return i.dispose(),!0;return!1},i.prototype.removeByKey=function(n){return this.set(n,undefined)},i.prototype.removeByValue=function(t){var i=this,r=0,u=n.areEqual;return i.keys.forEach(function(n){u(i.get(n),t,!0)&&(i.removeByKey(n),++r)}),r},i.prototype.importPairs=function(n){var t=this;return t.handleUpdate(function(){var i=!1;return n.forEach(function(n){t.set(n.key,n.value);i=!0}),i})},i.prototype.getEnumerator=function(){var i=this,n,r,u=0;return new t.EnumeratorBase(function(){n=i.keys;r=n.length},function(t){while(u<r){var f=n[u++],e=i.get(f);if(e!==undefined)return t.yieldReturn({key:f,value:e})}return t.yieldBreak()})},i}();t.DictionaryAbstractBase=i})(n.Collections||(n.Collections={}));var t=n.Collections}(System||(System={})),function(n){(function(t){function r(n,t){return Object.prototype.hasOwnProperty.call(n,t)}function u(t){return t===null?"null":t===undefined?"undefined":typeof t.toString===n.Types.Function?t.toString():Object.prototype.toString.call(t)}var i=function(){function n(n,t,i,r){this.key=n;this.value=t;this.prev=i;this.next=r}return n}(),f=function(){function n(n,t){this.first=n;this.last=t}return n.prototype.addLast=function(n){var t=this;t.last!=null?(t.last.next=n,n.prev=t.last,t.last=n):t.first=t.last=n},n.prototype.replace=function(n,t){var i=this;n.prev!=null?(n.prev.next=t,t.prev=n.prev):i.first=t;n.next!=null?(n.next.prev=t,t.next=n.next):i.last=t},n.prototype.remove=function(n){var t=this;n.prev!=null?n.prev.next=n.next:t.first=n.next;n.next!=null?n.next.prev=n.prev:t.last=n.prev},n.prototype.clear=function(){for(var n=this;n.last;)n.remove(n.last)},n.prototype.forEach=function(n){for(var i=this,t=i.first;t;)n(t),t=t.next},n}(),e=function(e){function o(t){typeof t=="undefined"&&(t=n.Functions.Identity);e.call(this);this.compareSelector=t;this._count=0;this._entries=new f;this._buckets={}}return __extends(o,e),o.prototype.setKV=function(t,f,e){var o=this,a=o._buckets,y=o._entries,w=o.compareSelector,b=w(t),v=u(b),s,k,h,c,l,p;if(r(a,v)){for(k=n.areEqual,h=a[v],c=0;c<h.length;c++)if(l=h[c],w(l.key)===b){if(!e)throw new Error("Key already exists.");return p=!k(l.value,f),p&&(f===undefined?(y.remove(l),h.splice(c,1),h.length||delete a[v],--o._count):(s=new i(t,f),y.replace(l,s),h[c]=s),o._onValueUpdate(t,f,l.value)),p}h.push(s=s||new i(t,f))}else{if(f===undefined){if(e)return!1;throw new Error("Cannot add 'undefined' value.");}a[v]=[s=new i(t,f)]}return++o._count,y.addLast(s),o._onValueUpdate(t,f,undefined),!0},o.prototype.addByKeyValue=function(n,t){this.setKV(n,t,!1)},o.prototype.get=function(n){var e=this._buckets,o=this.compareSelector,s=o(n),h=u(s),i,t,c,f;if(!r(e,h))return undefined;for(i=e[h],t=0,c=i.length;t<c;t++)if(f=i[t],o(f.key)===s)return f.value;return undefined},o.prototype.set=function(n,t){return this.setKV(n,t,!0)},o.prototype.containsKey=function(n){var f=this,e=f._buckets,o=f.compareSelector,s=o(n),h=u(s),i,t,c;if(!r(e,h))return!1;for(i=e[h],t=0,c=i.length;t<c;t++)if(o(i[t].key)===s)return!0;return!1},o.prototype.clear=function(){var n=this,t=n._buckets,r=e.prototype.clear.call(this),i;n._count=0;for(i in t)delete t[i];return n._entries.clear(),r},Object.defineProperty(o.prototype,"count",{get:function(){return this._count},enumerable:!0,configurable:!0}),o.prototype.getEnumerator=function(){var i=this,n;return new t.EnumeratorBase(function(){n=i._entries.first},function(t){if(n!=null){var i={key:n.key,value:n.value};return n=n.next,t.yieldReturn(i)}return t.yieldBreak()})},Object.defineProperty(o.prototype,"keys",{get:function(){var t=this,n=[];return t._entries.forEach(function(t){return n.push(t.key)}),n},enumerable:!0,configurable:!0}),Object.defineProperty(o.prototype,"values",{get:function(){var t=this,n=[];return t._entries.forEach(function(t){return n.push(t.value)}),n},enumerable:!0,configurable:!0}),o}(t.DictionaryAbstractBase);t.Dictionary=e})(n.Collections||(n.Collections={}));var t=n.Collections}(System||(System={})),function(n){(function(t){var i=function(t){function i(){t.apply(this,arguments);this._count=0;this._map={}}return __extends(i,t),i.prototype.containsKey=function(n){return n in this._map},i.prototype.containsValue=function(t){var i=this._map,u=n.areEqual;for(var r in i)if(i.hasOwnProperty(r)&&u(i[r],t))return!0;return!1},i.prototype.get=function(n){return this._map[n]},i.prototype.set=function(n,t){var r=this,i=r._map,u=i[n];return u!==t?(t===undefined?n in i&&(delete i[n],--r._count):(n in i||++r._count,i[n]=t),r._onValueUpdate(n,t,u),!0):!1},i.prototype.importMap=function(n){var t=this;return t.handleUpdate(function(){var r=!1;for(var i in n)n.hasOwnProperty(i)&&t.set(i,n[i])&&(r=!0);return r})},i.prototype.toMap=function(n){var r=this,u={},t,i;for(t in r._map)r._map.hasOwnProperty(t)&&(i=r._map[t],n&&(i=n(t,i)),i!==undefined&&(u[t]=i));return u},Object.defineProperty(i.prototype,"keys",{get:function(){var n=this,t=[];for(var i in n._map)n._map.hasOwnProperty(i)&&t.push(i);return t},enumerable:!0,configurable:!0}),Object.defineProperty(i.prototype,"values",{get:function(){var n=this,t=[];for(var i in n._map)n._map.hasOwnProperty(i)&&t.push(n._map[i]);return t},enumerable:!0,configurable:!0}),Object.defineProperty(i.prototype,"count",{get:function(){return this._count},enumerable:!0,configurable:!0}),i}(t.DictionaryAbstractBase);t.StringKeyDictionary=i})(n.Collections||(n.Collections={}));var t=n.Collections}(System||(System={})),function(n){(function(n){var t=function(t){function i(){t.call(this);this._order=[]}return __extends(i,t),i.prototype.indexOfKey=function(n){return this._order.indexOf(n)},i.prototype.getValueByIndex=function(n){return this.get(this._order[n])},i.prototype.set=function(i,r,u){var f=this,e=f.indexOfKey(i)!=-1;return!e&&(r!==undefined||u)?f._order.push(i):e&&r===undefined&&!u&&n.ArrayUtility.remove(f._order,i),t.prototype.set.call(this,i,r)},i.prototype.setByIndex=function(n,t){var i=this,r=i._order;if(n<0||n>=r.length)throw new Error("IndexOutOfRange Exception.");return i.set(r[n],t)},i.prototype.importValues=function(n){var t=this;return t.handleUpdate(function(){for(var r=!1,i=0;i<n.length;i++)t.setByIndex(i,n[i])&&(r=!0);return r})},i.prototype.setValues=function(){for(var t=[],n=0;n<arguments.length-0;n++)t[n]=arguments[n+0];return this.importValues(t)},i.prototype.removeByIndex=function(n){return this.setByIndex(n,undefined)},Object.defineProperty(i.prototype,"keys",{get:function(){var n=this;return n._order.filter(function(t){return n.containsKey(t)})},enumerable:!0,configurable:!0}),i}(n.StringKeyDictionary);n.OrderedStringKeyDictionary=t})(n.Collections||(n.Collections={}));var t=n.Collections}(System||(System={}));
-	return System;
-});
+﻿define(
+	"TypeScript.NET/System",
+	function() {
+		var System, __extends = __extends || function(d, b) {
+			for(var p in b) if(b.hasOwnProperty(p)) d[p] = b[p];
+			function __() { this.constructor = d; }
+
+			__.prototype = b.prototype;
+			d.prototype = new __();
+		};
+
+		"use strict";
+
+		//noinspection JSUnusedAssignment
+		(function(System) {
+
+			var Functions = (function() {
+				function Functions() {
+				}
+
+				Functions.prototype.Identity = function(x) {
+					return x;
+				};
+				/**
+				 * @return {boolean}
+				 */
+				Functions.prototype.True = function() {
+					return true;
+				};
+				/**
+				 * @return {boolean}
+				 */
+				Functions.prototype.False = function() {
+					return false;
+				};
+				Functions.prototype.Blank = function() {
+				};
+
+				Object.defineProperty(
+					Functions, "Identity", {
+						get: function() {
+							return rootFunctions.Identity;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Functions, "True", {
+						get: function() {
+							return rootFunctions.True;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Functions, "False", {
+						get: function() {
+							return rootFunctions.False;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Functions, "Blank", {
+						get: function() {
+							return rootFunctions.Blank;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				return Functions;
+			})();
+			System.Functions = Functions;
+
+			var rootFunctions = new Functions();
+		})(System || (System = {}));
+
+		(function(System) {
+
+			System.Types = (function() {
+				function Types() {
+					this.Boolean = typeof true;
+					this.Number = typeof 0;
+					this.String = typeof "";
+					this.Object = typeof {};
+					this.Null = typeof null;
+					this.Undefined = typeof undefined;
+					this.Function = typeof System.Functions.Blank;
+				}
+
+				Object.defineProperty(
+					Types, "Boolean", {
+						get: function() {
+							return typeof true;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Types, "Number", {
+						get: function() {
+							return typeof 0;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Types, "String", {
+						get: function() {
+							return typeof "";
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Types, "Object", {
+						get: function() {
+							return typeof {};
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Types, "Null", {
+						get: function() {
+							return typeof null;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Types, "Undefined", {
+						get: function() {
+							return typeof undefined;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					Types, "Function", {
+						get: function() {
+							return typeof System.Functions.Blank;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Types.prototype.isBoolean = function(type) {
+					return typeof type===this.Boolean;
+				};
+
+				Types.isBoolean = function(type) {
+					return typeof type===Types.Boolean;
+				};
+
+				Types.prototype.isNumber = function(type) {
+					return typeof type===this.Number;
+				};
+
+				Types.isNumber = function(type) {
+					return typeof type===Types.Number;
+				};
+
+				Types.prototype.isString = function(type) {
+					return typeof type===this.String;
+				};
+
+				Types.isString = function(type) {
+					return typeof type===Types.String;
+				};
+
+				Types.prototype.isFunction = function(type) {
+					return typeof type===this.Function;
+				};
+
+				Types.isFunction = function(type) {
+					return typeof type===Types.Function;
+				};
+				return Types;
+			})();
+		})(System || (System = {}));
+
+		(function(System) {
+			var Types = new System.Types();
+
+
+
+			function isEqualToNaN(n) {
+				return typeof n===Types.Number && isNaN(n);
+			}
+
+			System.isEqualToNaN = isEqualToNaN;
+
+			function areEqual(a, b, strict) {
+				if(typeof strict==="undefined")
+				{ strict = true; }
+				return a===b || !strict && a==b || isEqualToNaN(a) && isEqualToNaN(b);
+			}
+
+			System.areEqual = areEqual;
+
+			function compare(a, b, strict) {
+				if(typeof strict==="undefined")
+				{ strict = true; }
+				if(areEqual(a, b, strict))
+					return 0 | 0;
+
+				if(a>b)
+					return (+1) | 0;
+
+				if(b<a)
+					return (-1) | 0;
+
+				return NaN;
+			}
+
+			System.compare = compare;
+
+			function clone(source, depth) {
+				if(typeof depth==="undefined")
+				{ depth = 0; }
+				if(depth<0)
+					return source;
+
+				switch(typeof source)
+				{
+					case Types.Undefined:
+					case Types.Null:
+					case Types.String:
+					case Types.Boolean:
+					case Types.Number:
+					case Types.Function:
+						return source;
+				}
+
+				var result;
+				if(source instanceof Array)
+				{
+					result = source.slice();
+					if(depth>0)
+					{
+						for(var i = 0; i<result.length; i++)
+							if(i in result)
+								result[i] = clone(result[i], depth - 1);
+					}
+				} else
+				{
+					result = {};
+					if(depth>0)
+					{
+						for(var k in source)
+						{
+							//noinspection JSUnfilteredForInLoop
+							result[k] = clone(source[k], depth - 1);
+						}
+					}
+				}
+
+				return result;
+			}
+
+			System.clone = clone;
+
+			function copyTo(source, target) {
+				for(var k in source)
+				{
+					// noinspection JSUnfilteredForInLoop
+					target[k] = source[k];
+				}
+			}
+
+			System.copyTo = copyTo;
+
+			function applyMixins(derivedCtor, baseCtors) {
+				baseCtors.forEach(
+					function(baseCtor) {
+						Object.getOwnPropertyNames(baseCtor.prototype).forEach(
+							function(name) {
+								derivedCtor.prototype[name] = baseCtor.prototype[name];
+							});
+					});
+			}
+
+			System.applyMixins = applyMixins;
+		})(System || (System = {}));
+
+		(function(System) {
+
+			var ticksPerMillisecond = 10000, msPerSecond = 1000, secondsPerMinute = 60, minutesPerHour = 60, earthHoursPerDay = 24;
+
+			function pluralize(value, label) {
+				if(Math.abs(value)!==1)
+					label += "s";
+
+				return label;
+			}
+
+			(function(TimeUnit) {
+				TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
+				TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
+				TimeUnit[TimeUnit["Seconds"] = 2] = "Seconds";
+				TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
+				TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
+				TimeUnit[TimeUnit["Days"] = 5] = "Days";
+			})(System.TimeUnit || (System.TimeUnit = {}));
+			var TimeUnit = System.TimeUnit;
+
+			function assertValidUnit(unit) {
+				if(isNaN(unit) || unit>5 /* Days */ || unit<0 /* Ticks */ || Math.floor(unit)!==unit)
+					throw new Error("Invalid TimeUnit.");
+
+				return true;
+			}
+
+			var ClockTime = (function() {
+				function ClockTime() {
+					var args = [];
+					for(var _i = 0; _i<(arguments.length - 0); _i++)
+					{
+						args[_i] = arguments[_i + 0];
+					}
+					this._totalMilliseconds = args.length>1
+						? (function() {
+						function TimeSpan(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+						}
+
+						TimeSpan.prototype.equals = function(other) {
+							var otherms = getMilliseconds(other);
+
+							if(other===undefined)
+								return false;
+
+							return System.areEqual(this._milliseconds, otherms);
+						};
+
+						TimeSpan.prototype.compareTo = function(other) {
+							if(other==null)
+								return 1 | 0;
+
+							assertComparisonType(other);
+
+							return System.compare(this._milliseconds, getMilliseconds(other));
+						};
+
+						TimeSpan.prototype.toTimeUnitValue = function(units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeUnitValue(this.total(units), units);
+						};
+
+						TimeSpan.convertToMilliseconds = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							//noinspection FallThroughInSwitchStatementJS
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									value *= earthHoursPerDay;
+								case 4 /* Hours */
+								:
+									value *= minutesPerHour;
+								case 3 /* Minutes */
+								:
+									value *= secondsPerMinute;
+								case 2 /* Seconds */
+								:
+									value *= msPerSecond;
+								case 1 /* Milliseconds */
+								:
+									return value;
+								case 0 /* Ticks */
+								:
+									return value / ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						TimeSpan.prototype.total = function(units) {
+							var _ = this;
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									return _.days;
+								case 4 /* Hours */
+								:
+									return _.hours;
+								case 3 /* Minutes */
+								:
+									return _.minutes;
+								case 2 /* Seconds */
+								:
+									return _.seconds;
+								case 1 /* Milliseconds */
+								:
+									return _._milliseconds;
+								case 0 /* Ticks */
+								:
+									return _._milliseconds * ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						Object.defineProperty(
+							TimeSpan.prototype, "ticks", {
+								get: function() {
+									return this._milliseconds * ticksPerMillisecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "milliseconds", {
+								get: function() {
+									return this._milliseconds;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "seconds", {
+								get: function() {
+									return this._milliseconds / msPerSecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "minutes", {
+								get: function() {
+									return this.seconds / secondsPerMinute;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "hours", {
+								get: function() {
+									return this.minutes / minutesPerHour;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "days", {
+								get: function() {
+									return this.hours / earthHoursPerDay;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "time", {
+								get: function() {
+									return new ClockTime(this._milliseconds);
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						TimeSpan.prototype.add = function(other) {
+							if(System.Types.isNumber(other))
+								throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+							if(other instanceof TimeUnitValue || other instanceof ClockTime)
+								other = other.toTimeSpan();
+							return new TimeSpan(this._milliseconds + other.milliseconds);
+						};
+
+						TimeSpan.prototype.addUnit = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+						};
+
+						TimeSpan.from = function(value, units) {
+							return new TimeSpan(value, units);
+						};
+
+						TimeSpan.fromDays = function(value) {
+							return new TimeSpan(value, 5 /* Days */);
+						};
+
+						TimeSpan.fromHours = function(value) {
+							return new TimeSpan(value, 4 /* Hours */);
+						};
+
+						TimeSpan.fromMinutes = function(value) {
+							return new TimeSpan(value, 3 /* Minutes */);
+						};
+
+						TimeSpan.fromSeconds = function(value) {
+							return new TimeSpan(value, 2 /* Seconds */);
+						};
+
+						TimeSpan.fromMilliseconds = function(value) {
+							return new TimeSpan(value, 1 /* Milliseconds */);
+						};
+
+						TimeSpan.fromTicks = function(value) {
+							return new TimeSpan(value, 0 /* Ticks */);
+						};
+
+						TimeSpan.fromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+						};
+
+						TimeSpan.millisecondsFromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							var value = hours;
+							value *= minutesPerHour;
+							value += minutes;
+							value *= secondsPerMinute;
+							value += seconds;
+							value *= msPerSecond;
+							value += milliseconds;
+							return value;
+						};
+
+						TimeSpan.between = function(first, last) {
+							return new TimeSpan(last.getTime() - first.getTime());
+						};
+
+						Object.defineProperty(
+							TimeSpan, "zero", {
+								get: function() {
+									return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+								},
+								enumerable: true,
+								configurable: true
+							});
+						return TimeSpan;
+					})().millisecondsFromTime(args[0] || 0, args[1] || 0, args.length>2 && args[2] || 0, args.length>3 && args[3] || 0)
+						: (args.length>0 && args[0] || 0);
+				}
+
+				Object.defineProperty(
+					ClockTime.prototype, "totalMilliseconds", {
+						get: function() {
+							return this._totalMilliseconds;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					ClockTime.prototype, "direction", {
+						get: function() {
+							return System.compare(this._totalMilliseconds, 0);
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				ClockTime.prototype.equals = function(other) {
+					return System.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+				};
+
+				ClockTime.prototype.compareTo = function(other) {
+					if(other==null)
+						return 1 | 0;
+
+					return System.compare(this._totalMilliseconds, other.totalMilliseconds);
+				};
+
+				Object.defineProperty(
+					ClockTime.prototype, "ticks", {
+						get: function() {
+							var _ = this, r = _._ticks;
+							if(r===undefined)
+							{
+								var ms = Math.abs(_._totalMilliseconds);
+								_._ticks = r = (ms - Math.floor(ms)) * ticksPerMillisecond;
+							}
+							return r;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					ClockTime.prototype, "milliseconds", {
+						get: function() {
+							var _ = this, r = _._ms;
+							if(r===undefined)
+								_._ms = r = (this._totalMilliseconds % msPerSecond) | 0;
+							return r;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					ClockTime.prototype, "seconds", {
+						get: function() {
+							var _ = this, r = _._seconds;
+							if(r===undefined)
+								_._seconds = r = ((this._totalMilliseconds / msPerSecond) % secondsPerMinute) | 0;
+							return r;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					ClockTime.prototype, "minutes", {
+						get: function() {
+							var _ = this, r = _._minutes;
+							if(r===undefined)
+								_._minutes = r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute) % minutesPerHour) | 0;
+
+							return r;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					ClockTime.prototype, "hours", {
+						get: function() {
+							var _ = this, r = _._hours;
+							if(r===undefined)
+								_._hours =
+									r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour) % earthHoursPerDay) | 0;
+							return r;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					ClockTime.prototype, "days", {
+						get: function() {
+							var _ = this, r = _._days;
+							if(r===undefined)
+								_._days =
+									r = (this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
+							return r;
+						},
+						enumerable: true,
+						configurable: true
+					});
+				ClockTime.prototype.toTimeSpan = function() {
+					return new (function() {
+						function TimeSpan(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+						}
+
+						TimeSpan.prototype.equals = function(other) {
+							var otherms = getMilliseconds(other);
+
+							if(other===undefined)
+								return false;
+
+							return System.areEqual(this._milliseconds, otherms);
+						};
+
+						TimeSpan.prototype.compareTo = function(other) {
+							if(other==null)
+								return 1 | 0;
+
+							assertComparisonType(other);
+
+							return System.compare(this._milliseconds, getMilliseconds(other));
+						};
+
+						TimeSpan.prototype.toTimeUnitValue = function(units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeUnitValue(this.total(units), units);
+						};
+
+						TimeSpan.convertToMilliseconds = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							//noinspection FallThroughInSwitchStatementJS
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									value *= earthHoursPerDay;
+								case 4 /* Hours */
+								:
+									value *= minutesPerHour;
+								case 3 /* Minutes */
+								:
+									value *= secondsPerMinute;
+								case 2 /* Seconds */
+								:
+									value *= msPerSecond;
+								case 1 /* Milliseconds */
+								:
+									return value;
+								case 0 /* Ticks */
+								:
+									return value / ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						TimeSpan.prototype.total = function(units) {
+							var _ = this;
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									return _.days;
+								case 4 /* Hours */
+								:
+									return _.hours;
+								case 3 /* Minutes */
+								:
+									return _.minutes;
+								case 2 /* Seconds */
+								:
+									return _.seconds;
+								case 1 /* Milliseconds */
+								:
+									return _._milliseconds;
+								case 0 /* Ticks */
+								:
+									return _._milliseconds * ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						Object.defineProperty(
+							TimeSpan.prototype, "ticks", {
+								get: function() {
+									return this._milliseconds * ticksPerMillisecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "milliseconds", {
+								get: function() {
+									return this._milliseconds;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "seconds", {
+								get: function() {
+									return this._milliseconds / msPerSecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "minutes", {
+								get: function() {
+									return this.seconds / secondsPerMinute;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "hours", {
+								get: function() {
+									return this.minutes / minutesPerHour;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "days", {
+								get: function() {
+									return this.hours / earthHoursPerDay;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "time", {
+								get: function() {
+									return new ClockTime(this._milliseconds);
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						TimeSpan.prototype.add = function(other) {
+							if(System.Types.isNumber(other))
+								throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+							if(other instanceof TimeUnitValue || other instanceof ClockTime)
+								other = other.toTimeSpan();
+							return new TimeSpan(this._milliseconds + other.milliseconds);
+						};
+
+						TimeSpan.prototype.addUnit = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+						};
+
+						TimeSpan.from = function(value, units) {
+							return new TimeSpan(value, units);
+						};
+
+						TimeSpan.fromDays = function(value) {
+							return new TimeSpan(value, 5 /* Days */);
+						};
+
+						TimeSpan.fromHours = function(value) {
+							return new TimeSpan(value, 4 /* Hours */);
+						};
+
+						TimeSpan.fromMinutes = function(value) {
+							return new TimeSpan(value, 3 /* Minutes */);
+						};
+
+						TimeSpan.fromSeconds = function(value) {
+							return new TimeSpan(value, 2 /* Seconds */);
+						};
+
+						TimeSpan.fromMilliseconds = function(value) {
+							return new TimeSpan(value, 1 /* Milliseconds */);
+						};
+
+						TimeSpan.fromTicks = function(value) {
+							return new TimeSpan(value, 0 /* Ticks */);
+						};
+
+						TimeSpan.fromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+						};
+
+						TimeSpan.millisecondsFromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							var value = hours;
+							value *= minutesPerHour;
+							value += minutes;
+							value *= secondsPerMinute;
+							value += seconds;
+							value *= msPerSecond;
+							value += milliseconds;
+							return value;
+						};
+
+						TimeSpan.between = function(first, last) {
+							return new TimeSpan(last.getTime() - first.getTime());
+						};
+
+						Object.defineProperty(
+							TimeSpan, "zero", {
+								get: function() {
+									return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+								},
+								enumerable: true,
+								configurable: true
+							});
+						return TimeSpan;
+					})()(this._totalMilliseconds);
+				};
+
+				ClockTime.from = function(hours, minutes, seconds, milliseconds) {
+					if(typeof seconds==="undefined")
+					{ seconds = 0; }
+					if(typeof milliseconds==="undefined")
+					{ milliseconds = 0; }
+					return new ClockTime(hours, minutes, seconds, milliseconds);
+				};
+
+				//noinspection JSUnusedLocalSymbols
+				ClockTime.prototype.toString = function(format, formatProvider) {
+					var _ = this, a = [];
+
+					if(_.days)
+						a.push(pluralize(_.days, "day"));
+
+					if(_.hours)
+						a.push(pluralize(_.hours, "hour"));
+
+					if(_.minutes)
+						a.push(pluralize(_.minutes, "minute"));
+
+					if(_.seconds)
+						a.push(pluralize(_.seconds, "second"));
+
+					if(a.length>1)
+						a.splice(a.length - 1, 0, "and");
+
+					return a.join(", ").replace(", and, ", " and ");
+				};
+				return ClockTime;
+			})();
+			System.ClockTime = ClockTime;
+
+			function assertComparisonType(other) {
+				if(!(other instanceof TimeUnitValue || other instanceof (function() {
+					function TimeSpan(value, units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+					}
+
+					TimeSpan.prototype.equals = function(other) {
+						var otherms = getMilliseconds(other);
+
+						if(other===undefined)
+							return false;
+
+						return System.areEqual(this._milliseconds, otherms);
+					};
+
+					TimeSpan.prototype.compareTo = function(other) {
+						if(other==null)
+							return 1 | 0;
+
+						assertComparisonType(other);
+
+						return System.compare(this._milliseconds, getMilliseconds(other));
+					};
+
+					TimeSpan.prototype.toTimeUnitValue = function(units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						return new TimeUnitValue(this.total(units), units);
+					};
+
+					TimeSpan.convertToMilliseconds = function(value, units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						//noinspection FallThroughInSwitchStatementJS
+						switch(units)
+						{
+							case 5 /* Days */
+							:
+								value *= earthHoursPerDay;
+							case 4 /* Hours */
+							:
+								value *= minutesPerHour;
+							case 3 /* Minutes */
+							:
+								value *= secondsPerMinute;
+							case 2 /* Seconds */
+							:
+								value *= msPerSecond;
+							case 1 /* Milliseconds */
+							:
+								return value;
+							case 0 /* Ticks */
+							:
+								return value / ticksPerMillisecond;
+							default:
+								throw new Error("Invalid TimeUnit.");
+						}
+					};
+
+					TimeSpan.prototype.total = function(units) {
+						var _ = this;
+						switch(units)
+						{
+							case 5 /* Days */
+							:
+								return _.days;
+							case 4 /* Hours */
+							:
+								return _.hours;
+							case 3 /* Minutes */
+							:
+								return _.minutes;
+							case 2 /* Seconds */
+							:
+								return _.seconds;
+							case 1 /* Milliseconds */
+							:
+								return _._milliseconds;
+							case 0 /* Ticks */
+							:
+								return _._milliseconds * ticksPerMillisecond;
+							default:
+								throw new Error("Invalid TimeUnit.");
+						}
+					};
+
+					Object.defineProperty(
+						TimeSpan.prototype, "ticks", {
+							get: function() {
+								return this._milliseconds * ticksPerMillisecond;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "milliseconds", {
+							get: function() {
+								return this._milliseconds;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "seconds", {
+							get: function() {
+								return this._milliseconds / msPerSecond;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "minutes", {
+							get: function() {
+								return this.seconds / secondsPerMinute;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "hours", {
+							get: function() {
+								return this.minutes / minutesPerHour;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "days", {
+							get: function() {
+								return this.hours / earthHoursPerDay;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "time", {
+							get: function() {
+								return new ClockTime(this._milliseconds);
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					TimeSpan.prototype.add = function(other) {
+						if(System.Types.isNumber(other))
+							throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+						if(other instanceof TimeUnitValue || other instanceof ClockTime)
+							other = other.toTimeSpan();
+						return new TimeSpan(this._milliseconds + other.milliseconds);
+					};
+
+					TimeSpan.prototype.addUnit = function(value, units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+					};
+
+					TimeSpan.from = function(value, units) {
+						return new TimeSpan(value, units);
+					};
+
+					TimeSpan.fromDays = function(value) {
+						return new TimeSpan(value, 5 /* Days */);
+					};
+
+					TimeSpan.fromHours = function(value) {
+						return new TimeSpan(value, 4 /* Hours */);
+					};
+
+					TimeSpan.fromMinutes = function(value) {
+						return new TimeSpan(value, 3 /* Minutes */);
+					};
+
+					TimeSpan.fromSeconds = function(value) {
+						return new TimeSpan(value, 2 /* Seconds */);
+					};
+
+					TimeSpan.fromMilliseconds = function(value) {
+						return new TimeSpan(value, 1 /* Milliseconds */);
+					};
+
+					TimeSpan.fromTicks = function(value) {
+						return new TimeSpan(value, 0 /* Ticks */);
+					};
+
+					TimeSpan.fromTime = function(hours, minutes, seconds, milliseconds) {
+						if(typeof seconds==="undefined")
+						{ seconds = 0; }
+						if(typeof milliseconds==="undefined")
+						{ milliseconds = 0; }
+						return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+					};
+
+					TimeSpan.millisecondsFromTime = function(hours, minutes, seconds, milliseconds) {
+						if(typeof seconds==="undefined")
+						{ seconds = 0; }
+						if(typeof milliseconds==="undefined")
+						{ milliseconds = 0; }
+						var value = hours;
+						value *= minutesPerHour;
+						value += minutes;
+						value *= secondsPerMinute;
+						value += seconds;
+						value *= msPerSecond;
+						value += milliseconds;
+						return value;
+					};
+
+					TimeSpan.between = function(first, last) {
+						return new TimeSpan(last.getTime() - first.getTime());
+					};
+
+					Object.defineProperty(
+						TimeSpan, "zero", {
+							get: function() {
+								return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+							},
+							enumerable: true,
+							configurable: true
+						});
+					return TimeSpan;
+				})()))
+					throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
+			}
+
+			function getMilliseconds(other) {
+				if(other instanceof TimeUnitValue)
+				{
+					var o = other;
+					return o.type===1 /* Milliseconds */ ? o.value : o.toTimeSpan().milliseconds;
+				} else if(other instanceof (function() {
+					function TimeSpan(value, units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+					}
+
+					TimeSpan.prototype.equals = function(other) {
+						var otherms = getMilliseconds(other);
+
+						if(other===undefined)
+							return false;
+
+						return System.areEqual(this._milliseconds, otherms);
+					};
+
+					TimeSpan.prototype.compareTo = function(other) {
+						if(other==null)
+							return 1 | 0;
+
+						assertComparisonType(other);
+
+						return System.compare(this._milliseconds, getMilliseconds(other));
+					};
+
+					TimeSpan.prototype.toTimeUnitValue = function(units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						return new TimeUnitValue(this.total(units), units);
+					};
+
+					TimeSpan.convertToMilliseconds = function(value, units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						//noinspection FallThroughInSwitchStatementJS
+						switch(units)
+						{
+							case 5 /* Days */
+							:
+								value *= earthHoursPerDay;
+							case 4 /* Hours */
+							:
+								value *= minutesPerHour;
+							case 3 /* Minutes */
+							:
+								value *= secondsPerMinute;
+							case 2 /* Seconds */
+							:
+								value *= msPerSecond;
+							case 1 /* Milliseconds */
+							:
+								return value;
+							case 0 /* Ticks */
+							:
+								return value / ticksPerMillisecond;
+							default:
+								throw new Error("Invalid TimeUnit.");
+						}
+					};
+
+					TimeSpan.prototype.total = function(units) {
+						var _ = this;
+						switch(units)
+						{
+							case 5 /* Days */
+							:
+								return _.days;
+							case 4 /* Hours */
+							:
+								return _.hours;
+							case 3 /* Minutes */
+							:
+								return _.minutes;
+							case 2 /* Seconds */
+							:
+								return _.seconds;
+							case 1 /* Milliseconds */
+							:
+								return _._milliseconds;
+							case 0 /* Ticks */
+							:
+								return _._milliseconds * ticksPerMillisecond;
+							default:
+								throw new Error("Invalid TimeUnit.");
+						}
+					};
+
+					Object.defineProperty(
+						TimeSpan.prototype, "ticks", {
+							get: function() {
+								return this._milliseconds * ticksPerMillisecond;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "milliseconds", {
+							get: function() {
+								return this._milliseconds;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "seconds", {
+							get: function() {
+								return this._milliseconds / msPerSecond;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "minutes", {
+							get: function() {
+								return this.seconds / secondsPerMinute;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "hours", {
+							get: function() {
+								return this.minutes / minutesPerHour;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "days", {
+							get: function() {
+								return this.hours / earthHoursPerDay;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						TimeSpan.prototype, "time", {
+							get: function() {
+								return new ClockTime(this._milliseconds);
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					TimeSpan.prototype.add = function(other) {
+						if(System.Types.isNumber(other))
+							throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+						if(other instanceof TimeUnitValue || other instanceof ClockTime)
+							other = other.toTimeSpan();
+						return new TimeSpan(this._milliseconds + other.milliseconds);
+					};
+
+					TimeSpan.prototype.addUnit = function(value, units) {
+						if(typeof units==="undefined")
+						{ units = 1 /* Milliseconds */; }
+						return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+					};
+
+					TimeSpan.from = function(value, units) {
+						return new TimeSpan(value, units);
+					};
+
+					TimeSpan.fromDays = function(value) {
+						return new TimeSpan(value, 5 /* Days */);
+					};
+
+					TimeSpan.fromHours = function(value) {
+						return new TimeSpan(value, 4 /* Hours */);
+					};
+
+					TimeSpan.fromMinutes = function(value) {
+						return new TimeSpan(value, 3 /* Minutes */);
+					};
+
+					TimeSpan.fromSeconds = function(value) {
+						return new TimeSpan(value, 2 /* Seconds */);
+					};
+
+					TimeSpan.fromMilliseconds = function(value) {
+						return new TimeSpan(value, 1 /* Milliseconds */);
+					};
+
+					TimeSpan.fromTicks = function(value) {
+						return new TimeSpan(value, 0 /* Ticks */);
+					};
+
+					TimeSpan.fromTime = function(hours, minutes, seconds, milliseconds) {
+						if(typeof seconds==="undefined")
+						{ seconds = 0; }
+						if(typeof milliseconds==="undefined")
+						{ milliseconds = 0; }
+						return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+					};
+
+					TimeSpan.millisecondsFromTime = function(hours, minutes, seconds, milliseconds) {
+						if(typeof seconds==="undefined")
+						{ seconds = 0; }
+						if(typeof milliseconds==="undefined")
+						{ milliseconds = 0; }
+						var value = hours;
+						value *= minutesPerHour;
+						value += minutes;
+						value *= secondsPerMinute;
+						value += seconds;
+						value *= msPerSecond;
+						value += milliseconds;
+						return value;
+					};
+
+					TimeSpan.between = function(first, last) {
+						return new TimeSpan(last.getTime() - first.getTime());
+					};
+
+					Object.defineProperty(
+						TimeSpan, "zero", {
+							get: function() {
+								return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+							},
+							enumerable: true,
+							configurable: true
+						});
+					return TimeSpan;
+				})())
+				{
+					return other._milliseconds;
+				}
+
+				return undefined;
+			}
+
+			var TimeUnitValue = (function() {
+				function TimeUnitValue(value, _type) {
+					this.value = value;
+					this._type = _type;
+					assertValidUnit(_type);
+				}
+
+				TimeUnitValue.prototype.coerce = function(other) {
+					var type = this._type;
+					assertValidUnit(type);
+
+					if(other instanceof (function() {
+						function TimeSpan(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+						}
+
+						TimeSpan.prototype.equals = function(other) {
+							var otherms = getMilliseconds(other);
+
+							if(other===undefined)
+								return false;
+
+							return System.areEqual(this._milliseconds, otherms);
+						};
+
+						TimeSpan.prototype.compareTo = function(other) {
+							if(other==null)
+								return 1 | 0;
+
+							assertComparisonType(other);
+
+							return System.compare(this._milliseconds, getMilliseconds(other));
+						};
+
+						TimeSpan.prototype.toTimeUnitValue = function(units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeUnitValue(this.total(units), units);
+						};
+
+						TimeSpan.convertToMilliseconds = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							//noinspection FallThroughInSwitchStatementJS
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									value *= earthHoursPerDay;
+								case 4 /* Hours */
+								:
+									value *= minutesPerHour;
+								case 3 /* Minutes */
+								:
+									value *= secondsPerMinute;
+								case 2 /* Seconds */
+								:
+									value *= msPerSecond;
+								case 1 /* Milliseconds */
+								:
+									return value;
+								case 0 /* Ticks */
+								:
+									return value / ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						TimeSpan.prototype.total = function(units) {
+							var _ = this;
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									return _.days;
+								case 4 /* Hours */
+								:
+									return _.hours;
+								case 3 /* Minutes */
+								:
+									return _.minutes;
+								case 2 /* Seconds */
+								:
+									return _.seconds;
+								case 1 /* Milliseconds */
+								:
+									return _._milliseconds;
+								case 0 /* Ticks */
+								:
+									return _._milliseconds * ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						Object.defineProperty(
+							TimeSpan.prototype, "ticks", {
+								get: function() {
+									return this._milliseconds * ticksPerMillisecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "milliseconds", {
+								get: function() {
+									return this._milliseconds;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "seconds", {
+								get: function() {
+									return this._milliseconds / msPerSecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "minutes", {
+								get: function() {
+									return this.seconds / secondsPerMinute;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "hours", {
+								get: function() {
+									return this.minutes / minutesPerHour;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "days", {
+								get: function() {
+									return this.hours / earthHoursPerDay;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "time", {
+								get: function() {
+									return new ClockTime(this._milliseconds);
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						TimeSpan.prototype.add = function(other) {
+							if(System.Types.isNumber(other))
+								throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+							if(other instanceof TimeUnitValue || other instanceof ClockTime)
+								other = other.toTimeSpan();
+							return new TimeSpan(this._milliseconds + other.milliseconds);
+						};
+
+						TimeSpan.prototype.addUnit = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+						};
+
+						TimeSpan.from = function(value, units) {
+							return new TimeSpan(value, units);
+						};
+
+						TimeSpan.fromDays = function(value) {
+							return new TimeSpan(value, 5 /* Days */);
+						};
+
+						TimeSpan.fromHours = function(value) {
+							return new TimeSpan(value, 4 /* Hours */);
+						};
+
+						TimeSpan.fromMinutes = function(value) {
+							return new TimeSpan(value, 3 /* Minutes */);
+						};
+
+						TimeSpan.fromSeconds = function(value) {
+							return new TimeSpan(value, 2 /* Seconds */);
+						};
+
+						TimeSpan.fromMilliseconds = function(value) {
+							return new TimeSpan(value, 1 /* Milliseconds */);
+						};
+
+						TimeSpan.fromTicks = function(value) {
+							return new TimeSpan(value, 0 /* Ticks */);
+						};
+
+						TimeSpan.fromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+						};
+
+						TimeSpan.millisecondsFromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							var value = hours;
+							value *= minutesPerHour;
+							value += minutes;
+							value *= secondsPerMinute;
+							value += seconds;
+							value *= msPerSecond;
+							value += milliseconds;
+							return value;
+						};
+
+						TimeSpan.between = function(first, last) {
+							return new TimeSpan(last.getTime() - first.getTime());
+						};
+
+						Object.defineProperty(
+							TimeSpan, "zero", {
+								get: function() {
+									return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+								},
+								enumerable: true,
+								configurable: true
+							});
+						return TimeSpan;
+					})())
+					{
+						other = other.toTimeUnitValue(type);
+					} else if(other instanceof TimeUnitValue)
+					{
+						if(type!==other.type)
+							other = other.to(type);
+					} else
+						return null;
+
+					return other;
+				};
+
+				TimeUnitValue.prototype.equals = function(other) {
+					var o = this.coerce(other);
+					if(o==null)
+						return false;
+
+					return System.areEqual(this.value, o.value);
+				};
+
+				TimeUnitValue.prototype.compareTo = function(other) {
+					if(other==null)
+						return 1 | 0;
+
+					assertComparisonType(other);
+
+					return System.compare(this.value, this.coerce(other).value);
+				};
+
+				Object.defineProperty(
+					TimeUnitValue.prototype, "type", {
+						get: function() {
+							return this._type;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				TimeUnitValue.prototype.toTimeSpan = function() {
+					return new (function() {
+						function TimeSpan(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+						}
+
+						TimeSpan.prototype.equals = function(other) {
+							var otherms = getMilliseconds(other);
+
+							if(other===undefined)
+								return false;
+
+							return System.areEqual(this._milliseconds, otherms);
+						};
+
+						TimeSpan.prototype.compareTo = function(other) {
+							if(other==null)
+								return 1 | 0;
+
+							assertComparisonType(other);
+
+							return System.compare(this._milliseconds, getMilliseconds(other));
+						};
+
+						TimeSpan.prototype.toTimeUnitValue = function(units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeUnitValue(this.total(units), units);
+						};
+
+						TimeSpan.convertToMilliseconds = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							//noinspection FallThroughInSwitchStatementJS
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									value *= earthHoursPerDay;
+								case 4 /* Hours */
+								:
+									value *= minutesPerHour;
+								case 3 /* Minutes */
+								:
+									value *= secondsPerMinute;
+								case 2 /* Seconds */
+								:
+									value *= msPerSecond;
+								case 1 /* Milliseconds */
+								:
+									return value;
+								case 0 /* Ticks */
+								:
+									return value / ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						TimeSpan.prototype.total = function(units) {
+							var _ = this;
+							switch(units)
+							{
+								case 5 /* Days */
+								:
+									return _.days;
+								case 4 /* Hours */
+								:
+									return _.hours;
+								case 3 /* Minutes */
+								:
+									return _.minutes;
+								case 2 /* Seconds */
+								:
+									return _.seconds;
+								case 1 /* Milliseconds */
+								:
+									return _._milliseconds;
+								case 0 /* Ticks */
+								:
+									return _._milliseconds * ticksPerMillisecond;
+								default:
+									throw new Error("Invalid TimeUnit.");
+							}
+						};
+
+						Object.defineProperty(
+							TimeSpan.prototype, "ticks", {
+								get: function() {
+									return this._milliseconds * ticksPerMillisecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "milliseconds", {
+								get: function() {
+									return this._milliseconds;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "seconds", {
+								get: function() {
+									return this._milliseconds / msPerSecond;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "minutes", {
+								get: function() {
+									return this.seconds / secondsPerMinute;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "hours", {
+								get: function() {
+									return this.minutes / minutesPerHour;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "days", {
+								get: function() {
+									return this.hours / earthHoursPerDay;
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						Object.defineProperty(
+							TimeSpan.prototype, "time", {
+								get: function() {
+									return new ClockTime(this._milliseconds);
+								},
+								enumerable: true,
+								configurable: true
+							});
+
+						TimeSpan.prototype.add = function(other) {
+							if(System.Types.isNumber(other))
+								throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+							if(other instanceof TimeUnitValue || other instanceof ClockTime)
+								other = other.toTimeSpan();
+							return new TimeSpan(this._milliseconds + other.milliseconds);
+						};
+
+						TimeSpan.prototype.addUnit = function(value, units) {
+							if(typeof units==="undefined")
+							{ units = 1 /* Milliseconds */; }
+							return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+						};
+
+						TimeSpan.from = function(value, units) {
+							return new TimeSpan(value, units);
+						};
+
+						TimeSpan.fromDays = function(value) {
+							return new TimeSpan(value, 5 /* Days */);
+						};
+
+						TimeSpan.fromHours = function(value) {
+							return new TimeSpan(value, 4 /* Hours */);
+						};
+
+						TimeSpan.fromMinutes = function(value) {
+							return new TimeSpan(value, 3 /* Minutes */);
+						};
+
+						TimeSpan.fromSeconds = function(value) {
+							return new TimeSpan(value, 2 /* Seconds */);
+						};
+
+						TimeSpan.fromMilliseconds = function(value) {
+							return new TimeSpan(value, 1 /* Milliseconds */);
+						};
+
+						TimeSpan.fromTicks = function(value) {
+							return new TimeSpan(value, 0 /* Ticks */);
+						};
+
+						TimeSpan.fromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+						};
+
+						TimeSpan.millisecondsFromTime = function(hours, minutes, seconds, milliseconds) {
+							if(typeof seconds==="undefined")
+							{ seconds = 0; }
+							if(typeof milliseconds==="undefined")
+							{ milliseconds = 0; }
+							var value = hours;
+							value *= minutesPerHour;
+							value += minutes;
+							value *= secondsPerMinute;
+							value += seconds;
+							value *= msPerSecond;
+							value += milliseconds;
+							return value;
+						};
+
+						TimeSpan.between = function(first, last) {
+							return new TimeSpan(last.getTime() - first.getTime());
+						};
+
+						Object.defineProperty(
+							TimeSpan, "zero", {
+								get: function() {
+									return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+								},
+								enumerable: true,
+								configurable: true
+							});
+						return TimeSpan;
+					})()(this.value, this.type);
+				};
+
+				TimeUnitValue.prototype.to = function(units) {
+					if(typeof units==="undefined")
+					{ units = this.type; }
+					return this.toTimeSpan().toTimeUnitValue(units);
+				};
+				return TimeUnitValue;
+			})();
+			System.TimeUnitValue = TimeUnitValue;
+
+			var timeSpanZero;
+
+			System.TimeSpan = (function() {
+				function TimeSpan(value, units) {
+					if(typeof units==="undefined")
+					{ units = 1 /* Milliseconds */; }
+					this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+				}
+
+				TimeSpan.prototype.equals = function(other) {
+					var otherms = getMilliseconds(other);
+
+					if(other===undefined)
+						return false;
+
+					return System.areEqual(this._milliseconds, otherms);
+				};
+
+				TimeSpan.prototype.compareTo = function(other) {
+					if(other==null)
+						return 1 | 0;
+
+					assertComparisonType(other);
+
+					return System.compare(this._milliseconds, getMilliseconds(other));
+				};
+
+				TimeSpan.prototype.toTimeUnitValue = function(units) {
+					if(typeof units==="undefined")
+					{ units = 1 /* Milliseconds */; }
+					return new TimeUnitValue(this.total(units), units);
+				};
+
+				TimeSpan.convertToMilliseconds = function(value, units) {
+					if(typeof units==="undefined")
+					{ units = 1 /* Milliseconds */; }
+					//noinspection FallThroughInSwitchStatementJS
+					switch(units)
+					{
+						case 5 /* Days */
+						:
+							value *= earthHoursPerDay;
+						case 4 /* Hours */
+						:
+							value *= minutesPerHour;
+						case 3 /* Minutes */
+						:
+							value *= secondsPerMinute;
+						case 2 /* Seconds */
+						:
+							value *= msPerSecond;
+						case 1 /* Milliseconds */
+						:
+							return value;
+						case 0 /* Ticks */
+						:
+							return value / ticksPerMillisecond;
+						default:
+							throw new Error("Invalid TimeUnit.");
+					}
+				};
+
+				TimeSpan.prototype.total = function(units) {
+					var _ = this;
+					switch(units)
+					{
+						case 5 /* Days */
+						:
+							return _.days;
+						case 4 /* Hours */
+						:
+							return _.hours;
+						case 3 /* Minutes */
+						:
+							return _.minutes;
+						case 2 /* Seconds */
+						:
+							return _.seconds;
+						case 1 /* Milliseconds */
+						:
+							return _._milliseconds;
+						case 0 /* Ticks */
+						:
+							return _._milliseconds * ticksPerMillisecond;
+						default:
+							throw new Error("Invalid TimeUnit.");
+					}
+				};
+
+				Object.defineProperty(
+					TimeSpan.prototype, "ticks", {
+						get: function() {
+							return this._milliseconds * ticksPerMillisecond;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					TimeSpan.prototype, "milliseconds", {
+						get: function() {
+							return this._milliseconds;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					TimeSpan.prototype, "seconds", {
+						get: function() {
+							return this._milliseconds / msPerSecond;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					TimeSpan.prototype, "minutes", {
+						get: function() {
+							return this.seconds / secondsPerMinute;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					TimeSpan.prototype, "hours", {
+						get: function() {
+							return this.minutes / minutesPerHour;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					TimeSpan.prototype, "days", {
+						get: function() {
+							return this.hours / earthHoursPerDay;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					TimeSpan.prototype, "time", {
+						get: function() {
+							return new ClockTime(this._milliseconds);
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				TimeSpan.prototype.add = function(other) {
+					if(System.Types.isNumber(other))
+						throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+					if(other instanceof TimeUnitValue || other instanceof ClockTime)
+						other = other.toTimeSpan();
+					return new TimeSpan(this._milliseconds + other.milliseconds);
+				};
+
+				TimeSpan.prototype.addUnit = function(value, units) {
+					if(typeof units==="undefined")
+					{ units = 1 /* Milliseconds */; }
+					return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+				};
+
+				TimeSpan.from = function(value, units) {
+					return new TimeSpan(value, units);
+				};
+
+				TimeSpan.fromDays = function(value) {
+					return new TimeSpan(value, 5 /* Days */);
+				};
+
+				TimeSpan.fromHours = function(value) {
+					return new TimeSpan(value, 4 /* Hours */);
+				};
+
+				TimeSpan.fromMinutes = function(value) {
+					return new TimeSpan(value, 3 /* Minutes */);
+				};
+
+				TimeSpan.fromSeconds = function(value) {
+					return new TimeSpan(value, 2 /* Seconds */);
+				};
+
+				TimeSpan.fromMilliseconds = function(value) {
+					return new TimeSpan(value, 1 /* Milliseconds */);
+				};
+
+				TimeSpan.fromTicks = function(value) {
+					return new TimeSpan(value, 0 /* Ticks */);
+				};
+
+				TimeSpan.fromTime = function(hours, minutes, seconds, milliseconds) {
+					if(typeof seconds==="undefined")
+					{ seconds = 0; }
+					if(typeof milliseconds==="undefined")
+					{ milliseconds = 0; }
+					return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+				};
+
+				TimeSpan.millisecondsFromTime = function(hours, minutes, seconds, milliseconds) {
+					if(typeof seconds==="undefined")
+					{ seconds = 0; }
+					if(typeof milliseconds==="undefined")
+					{ milliseconds = 0; }
+					var value = hours;
+					value *= minutesPerHour;
+					value += minutes;
+					value *= secondsPerMinute;
+					value += seconds;
+					value *= msPerSecond;
+					value += milliseconds;
+					return value;
+				};
+
+				TimeSpan.between = function(first, last) {
+					return new TimeSpan(last.getTime() - first.getTime());
+				};
+
+				Object.defineProperty(
+					TimeSpan, "zero", {
+						get: function() {
+							return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+						},
+						enumerable: true,
+						configurable: true
+					});
+				return TimeSpan;
+			})();
+		})(System || (System = {}));
+
+		(function(System) {
+			(function(Diagnostics) {
+				Diagnostics.Stopwatch = (function() {
+					function Stopwatch() {
+						this.reset();
+					}
+
+					Stopwatch.getTimestampMilliseconds = function() {
+						return (new Date()).getTime();
+					};
+
+					Object.defineProperty(
+						Stopwatch.prototype, "isRunning", {
+							get: function() {
+								return this._isRunning;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Stopwatch.startNew = function() {
+						var s = new Stopwatch();
+						s.start();
+						return s;
+					};
+
+					Stopwatch.measure = function(closure) {
+						var start = Stopwatch.getTimestampMilliseconds();
+						closure();
+						return new System.TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
+					};
+
+					Stopwatch.prototype.record = function(closure) {
+						var e = Stopwatch.measure(closure);
+						this._elapsed += e.milliseconds;
+						return e;
+					};
+
+					Stopwatch.prototype.start = function() {
+						var _ = this;
+						if(!_._isRunning)
+						{
+							_._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+							_._isRunning = true;
+						}
+					};
+
+					Stopwatch.prototype.stop = function() {
+						var _ = this;
+						if(_._isRunning)
+						{
+							_._elapsed += _.currentLapMilliseconds;
+							_._isRunning = false;
+						}
+					};
+
+					Stopwatch.prototype.reset = function() {
+						var _ = this;
+						_._elapsed = 0;
+						_._isRunning = false;
+						_._startTimeStamp = NaN;
+					};
+
+					Stopwatch.prototype.lap = function() {
+						var _ = this;
+						if(_._isRunning)
+						{
+							var t = Stopwatch.getTimestampMilliseconds();
+							var s = _._startTimeStamp;
+							var e = t - s;
+							_._startTimeStamp = t;
+							_._elapsed += e;
+							return new System.TimeSpan(e);
+						} else
+							return System.TimeSpan.zero;
+					};
+
+					Object.defineProperty(
+						Stopwatch.prototype, "currentLapMilliseconds", {
+							get: function() {
+								return this._isRunning ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp) : 0;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						Stopwatch.prototype, "currentLap", {
+							get: function() {
+								return this._isRunning ? new System.TimeSpan(this.currentLapMilliseconds) : System.TimeSpan.zero;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						Stopwatch.prototype, "elapsedMilliseconds", {
+							get: function() {
+								var _ = this;
+								var timeElapsed = _._elapsed;
+
+								if(_._isRunning)
+									timeElapsed += _.currentLapMilliseconds;
+
+								return timeElapsed;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						Stopwatch.prototype, "elapsed", {
+							get: function() {
+								return new System.TimeSpan(this.elapsedMilliseconds);
+							},
+							enumerable: true,
+							configurable: true
+						});
+					return Stopwatch;
+				})();
+			})(System.Diagnostics || (System.Diagnostics = {}));
+
+		})(System || (System = {}));
+
+		(function(System) {
+			function dispose(obj) {
+				if(obj && typeof obj.dispose==System.Types.Function)
+					obj.dispose();
+			}
+
+			System.dispose = dispose;
+
+			function using(disposable, closure) {
+				try
+				{
+					return closure(disposable);
+				} finally
+				{
+					dispose(disposable);
+				}
+			}
+
+			System.using = using;
+
+			System.DisposableBase = (function() {
+				function DisposableBase(_finalizer) {
+					this._finalizer = _finalizer;
+					this._wasDisposed = false;
+				}
+
+				Object.defineProperty(
+					DisposableBase.prototype, "wasDisposed", {
+						get: function() {
+							return this._wasDisposed;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				DisposableBase.assertIsNotDisposed = function(disposed, errorMessage) {
+					if(typeof errorMessage==="undefined")
+					{ errorMessage = "ObjectDisposedException"; }
+					if(disposed)
+						throw new Error(errorMessage);
+
+					return true;
+				};
+
+				DisposableBase.prototype.assertIsNotDisposed = function(errorMessage) {
+					if(typeof errorMessage==="undefined")
+					{ errorMessage = "ObjectDisposedException"; }
+					return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
+				};
+
+				DisposableBase.prototype.dispose = function() {
+					var _ = this;
+					if(!_._wasDisposed)
+					{
+						_._wasDisposed = true;
+						try
+						{
+							_._onDispose();
+						} finally
+						{
+							if(_._finalizer)
+								_._finalizer();
+						}
+					}
+				};
+
+				DisposableBase.prototype._onDispose = function() {
+				};
+				return DisposableBase;
+			})();
+		})(System || (System = {}));
+
+		(function(System) {
+			System.Lazy = (function(_super) {
+				__extends(Lazy, _super);
+				function Lazy(_closure) {
+					_super.call(this);
+					this._closure = _closure;
+				}
+
+				Object.defineProperty(
+					Lazy.prototype, "isValueCreated", {
+						get: function() {
+							return this._isValueCreated;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Lazy.prototype.reset = function() {
+					var _ = this;
+					if(!_._closure)
+						throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");
+
+					_._isValueCreated = false;
+					_._value = null;
+				};
+
+				Object.defineProperty(
+					Lazy.prototype, "value", {
+						get: function() {
+							var _ = this;
+							if(!_._isValueCreated && _._closure)
+							{
+								var v = _._closure();
+								_._value = v;
+								_._isValueCreated = true;
+								return v;
+							}
+
+							return _._value;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Lazy.prototype.valueOnce = function() {
+					try
+					{
+						return this.value;
+					} finally
+					{
+						this._closure = null;
+					}
+				};
+
+				Lazy.prototype._onDispose = function() {
+					this._closure = null;
+					this._value = null;
+				};
+				return Lazy;
+			})(System.DisposableBase);
+		})(System || (System = {}));
+
+		(function(System) {
+			(function(Collections) {
+				(function(ArrayUtility) {
+					function copy(array) {
+						return array ? array.slice() : array;
+					}
+
+					ArrayUtility.copy = copy;
+
+					function contains(array, item) {
+						return !array ? false : array.indexOf(item)!= -1;
+					}
+
+					ArrayUtility.contains = contains;
+
+					function replace(array, old, newValue, max) {
+						var count = 0 | 0;
+						if(max!==0)
+						{
+							if(!max)
+								max = Infinity;
+
+							for(var i = (array.length - 1) | 0; i>=0; --i)
+								if(array[i]===old)
+								{
+									array[i] = newValue;
+									++count;
+									if(!--max)
+										break;
+								}
+						}
+
+						return count;
+					}
+
+					ArrayUtility.replace = replace;
+
+					function register(array, item) {
+						var ok = array && (!array.length || !contains(array, item));
+						if(ok)
+							array.push(item);
+						return ok;
+					}
+
+					ArrayUtility.register = register;
+
+					function findIndex(array, predicate) {
+						var len = array.length | 0;
+						for(var i = 0 | 0; i<len; ++i)
+							if(i in array && predicate(array[i]))
+								return i;
+
+						return -1;
+					}
+
+					ArrayUtility.findIndex = findIndex;
+
+					function areAllEqual(arrays, strict) {
+						if(arrays.length<2)
+							throw new Error("Cannot compare a set of arrays less than 2.");
+						var first = arrays[0];
+						for(var i = 0 | 0, l = arrays.length | 0; i<l; ++i)
+						{
+							if(!areEqual(first, arrays[i], strict))
+								return false;
+						}
+						return true;
+					}
+
+					ArrayUtility.areAllEqual = areAllEqual;
+
+					function areEqual(a, b, strict, equalityComparer) {
+						if(typeof equalityComparer==="undefined")
+						{ equalityComparer = System.areEqual; }
+						if(a===b)
+							return true;
+
+						var len = a.length | 0;
+						if(len!=(b.length | 0))
+							return false;
+
+						for(var i = 0 | 0; i<len; ++i)
+							if(!equalityComparer(a[i], b[i], strict))
+								return false;
+
+						return true;
+					}
+
+					ArrayUtility.areEqual = areEqual;
+
+					function applyTo(target, fn) {
+						for(var i = 0 | 0; i<target.length; ++i)
+							target[i] = fn(target[i]);
+						return target;
+					}
+
+					ArrayUtility.applyTo = applyTo;
+
+					function removeIndex(array, index) {
+						var exists = index<array.length;
+						if(exists)
+							array.splice(index, 1);
+						return exists;
+					}
+
+					ArrayUtility.removeIndex = removeIndex;
+
+					function remove(array, value, max) {
+						var count = 0;
+						if(array && array.length && max!==0)
+						{
+							if(!max)
+								max = Infinity;
+
+							for(var i = (array.length - 1) | 0; i>=0; --i)
+								if(array[i]===value)
+								{
+									array.splice(i, 1);
+									++count;
+									if(!--max)
+										break;
+								}
+						}
+
+						return count;
+					}
+
+					ArrayUtility.remove = remove;
+
+					function repeat(element, count) {
+						var result = [];
+						while(count--)
+							result.push(element);
+
+						return result;
+					}
+
+					ArrayUtility.repeat = repeat;
+
+					function sum(source, ignoreNaN) {
+						if(typeof ignoreNaN==="undefined")
+						{ ignoreNaN = false; }
+						if(!source.length)
+							return 0;
+
+						var result = 0;
+						if(ignoreNaN)
+							source.forEach(
+								function(n) {
+									if(!isNaN(n))
+										result += n;
+								});
+						else
+							source.every(
+								function(n) {
+									result += n;
+									return !isNaN(result);
+								});
+
+						return result;
+					}
+
+					ArrayUtility.sum = sum;
+
+					function average(source, ignoreNaN) {
+						if(typeof ignoreNaN==="undefined")
+						{ ignoreNaN = false; }
+						if(!source.length)
+							return NaN;
+
+						var result = 0, count;
+						if(ignoreNaN)
+						{
+							count = 0;
+							source.forEach(
+								function(n) {
+									if(!isNaN(n))
+									{
+										result += n;
+										count++;
+									}
+								});
+						} else
+						{
+							count = source.length;
+							source.every(
+								function(n) {
+									result += n;
+									return !isNaN(result);
+								});
+						}
+
+						return (!count || isNaN(result)) ? NaN : (result / count);
+					}
+
+					ArrayUtility.average = average;
+
+					function product(source, ignoreNaN) {
+						if(typeof ignoreNaN==="undefined")
+						{ ignoreNaN = false; }
+						if(!source.length)
+							return NaN;
+
+						var result = 1;
+						if(ignoreNaN)
+						{
+							var found = false;
+							source.forEach(
+								function(n) {
+									if(!isNaN(n))
+									{
+										result *= n;
+										if(!found)
+											found = true;
+									}
+								});
+
+							if(!found)
+								result = NaN;
+						} else
+						{
+							source.every(
+								function(n) {
+									if(isNaN(n))
+									{
+										result = NaN;
+										return false;
+									}
+
+									result *= n;
+
+									return true;
+								});
+						}
+
+						return result;
+					}
+
+					ArrayUtility.product = product;
+
+					function ifSet(source, start, ignoreNaN, predicate) {
+						if(!source.length)
+							return NaN;
+
+						var result = start;
+						if(ignoreNaN)
+						{
+							var found = false;
+							source.forEach(
+								function(n) {
+									if(!isNaN(n))
+									{
+										if(predicate(n, result))
+											result = n;
+										if(!found)
+											found = true;
+									}
+								});
+
+							if(!found)
+								result = NaN;
+						} else
+						{
+							source.every(
+								function(n) {
+									if(isNaN(n))
+									{
+										result = NaN;
+										return false;
+									}
+
+									if(predicate(n, result))
+										result = n;
+
+									return true;
+								});
+						}
+						return result;
+					}
+
+					function min(source, ignoreNaN) {
+						if(typeof ignoreNaN==="undefined")
+						{ ignoreNaN = false; }
+						return ifSet(
+							source, +Infinity, ignoreNaN, function(n, result) {
+								return n<result;
+							});
+					}
+
+					ArrayUtility.min = min;
+
+					function max(source, ignoreNaN) {
+						if(typeof ignoreNaN==="undefined")
+						{ ignoreNaN = false; }
+						return ifSet(
+							source, -Infinity, ignoreNaN, function(n, result) {
+								return n>result;
+							});
+					}
+
+					ArrayUtility.max = max;
+				})(Collections.ArrayUtility || (Collections.ArrayUtility = {}));
+
+			})(System.Collections || (System.Collections = {}));
+
+		})(System || (System = {}));
+
+		(function(System) {
+			var AU = System.Collections.ArrayUtility;
+
+			var EventDispatcherEntry = (function(_super) {
+				__extends(EventDispatcherEntry, _super);
+				function EventDispatcherEntry(type, listener, useCapture, priority) {
+					if(typeof useCapture==="undefined")
+					{ useCapture = false; }
+					if(typeof priority==="undefined")
+					{ priority = 0; }
+					_super.call(this);
+
+					this.type = type;
+					this.listener = listener;
+					this.useCapture = useCapture;
+					this.priority = priority;
+				}
+
+				EventDispatcherEntry.prototype.dispose = function() {
+					this.listener = null;
+				};
+
+				Object.defineProperty(
+					EventDispatcherEntry.prototype, "wasDisposed", {
+						get: function() {
+							return this.listener==null;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				EventDispatcherEntry.prototype.matches = function(type, listener, useCapture) {
+					if(typeof useCapture==="undefined")
+					{ useCapture = false; }
+					var _ = this;
+					return _.type==type && _.listener==listener && _.useCapture==useCapture;
+				};
+
+				EventDispatcherEntry.prototype.equals = function(other) {
+					var _ = this;
+					return _.type==other.type && _.listener==other.listener && _.useCapture==other.useCapture && _.priority==other.priority;
+				};
+				return EventDispatcherEntry;
+			})(System.DisposableBase);
+
+			System.EventDispatcher = (function(_super) {
+				__extends(EventDispatcher, _super);
+				function EventDispatcher() {
+					_super.apply(this, arguments);
+					this._isDisposing = false;
+				}
+
+				EventDispatcher.prototype.addEventListener = function(type, listener, useCapture, priority) {
+					if(typeof useCapture==="undefined")
+					{ useCapture = false; }
+					if(typeof priority==="undefined")
+					{ priority = 0; }
+					var l = this._listeners;
+					if(!l)
+						this._listeners = l = [];
+
+					l.push(new EventDispatcherEntry(type, listener, useCapture, priority));
+				};
+
+				EventDispatcher.prototype.registerEventListener = function(type, listener, useCapture, priority) {
+					if(typeof useCapture==="undefined")
+					{ useCapture = false; }
+					if(typeof priority==="undefined")
+					{ priority = 0; }
+					if(!this.hasEventListener(type, listener, useCapture))
+						this.addEventListener(type, listener, useCapture, priority);
+				};
+
+				EventDispatcher.prototype.hasEventListener = function(type, listener, useCapture) {
+					if(typeof useCapture==="undefined")
+					{ useCapture = false; }
+					var l = this._listeners;
+					return l && l.some(
+						function(value) {
+							return type==value.type && (!listener || listener==value.listener && useCapture==value.useCapture);
+						});
+				};
+
+				EventDispatcher.prototype.removeEventListener = function(type, listener, userCapture) {
+					if(typeof userCapture==="undefined")
+					{ userCapture = false; }
+					var l = this._listeners;
+
+					if(l)
+					{
+						var i = AU.findIndex(
+							l, function(entry) {
+								return entry.matches(type, listener, userCapture);
+							});
+						if(i!= -1)
+						{
+							var e = l[i];
+							l.splice(i, 1);
+							e.dispose();
+						}
+					}
+				};
+
+				EventDispatcher.prototype.dispatchEvent = function(e, params) {
+					var _this = this;
+					var _ = this, l = _._listeners;
+					if(!l || !l.length)
+						return false;
+
+					var event;
+
+					if(typeof e=="string")
+					{
+						//noinspection JSClosureCompilerSyntax
+						event = new Event();
+						if(!params)
+							params = {};
+						event.cancelable = !!params.cancelable;
+						event.target = _;
+					} else
+						event = e;
+
+					var type = event.type;
+
+					var entries = [];
+					l.forEach(
+						function(e) {
+							if(e.type==type)
+								entries.push(e);
+						});
+					if(!entries.length)
+						return false;
+
+					entries.sort(
+						function(a, b) {
+							return b.priority - a.priority;
+						});
+
+					entries.forEach(
+						function(entry) {
+							//noinspection JSClosureCompilerSyntax
+							var newEvent = new Event();
+							System.copyTo(event, newEvent);
+							newEvent.target = _this;
+							entry.listener(newEvent);
+						});
+
+					return true;
+				};
+
+				Object.defineProperty(
+					EventDispatcher, "DISPOSING", {
+						get: function() {
+							return "disposing";
+						},
+						enumerable: true,
+						configurable: true
+					});
+				Object.defineProperty(
+					EventDispatcher, "DISPOSED", {
+						get: function() {
+							return "disposed";
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				Object.defineProperty(
+					EventDispatcher.prototype, "isDisposing", {
+						get: function() {
+							return this._isDisposing;
+						},
+						enumerable: true,
+						configurable: true
+					});
+
+				EventDispatcher.prototype.dispose = function() {
+					var _ = this;
+					if(!_.wasDisposed && !_._isDisposing)
+					{
+						_._isDisposing = true;
+						_.dispatchEvent(EventDispatcher.DISPOSING);
+
+						_super.prototype.dispose.call(this);
+
+						_.dispatchEvent(EventDispatcher.DISPOSED);
+
+						var l = _._listeners;
+						if(l)
+						{
+							this._listeners = null;
+							l.forEach(
+								function(e) {
+									return e.dispose();
+								});
+						}
+					}
+				};
+				return EventDispatcher;
+			})(System.DisposableBase);
+		})(System || (System = {}));
+
+		(function(System) {
+			(function(Collections) {
+
+				var Yielder = (function() {
+					function Yielder() {
+					}
+
+					Object.defineProperty(
+						Yielder.prototype, "current", {
+							get: function() {
+								return this._current;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Yielder.prototype.yieldReturn = function(value) {
+						this._current = value;
+						return true;
+					};
+
+					Yielder.prototype.yieldBreak = function() {
+						this._current = null;
+						return false;
+					};
+					return Yielder;
+				})();
+
+				var EnumeratorState;
+				//noinspection JSUnusedAssignment
+				(function(EnumeratorState) {
+					EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
+					EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
+					EnumeratorState[EnumeratorState["After"] = 2] = "After";
+				})(EnumeratorState || (EnumeratorState = {}));
+
+				(function(Enumerator) {
+					function from(source) {
+						if(source instanceof Array)
+							return new (function(_super) {
+								__extends(ArrayEnumerator, _super);
+								function ArrayEnumerator(arrayOrFactory, start, step) {
+									if(typeof start==="undefined")
+									{ start = 0; }
+									if(typeof step==="undefined")
+									{ step = 1; }
+									_super.call(
+										this, function() {
+											var array = System.Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+											return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
+										});
+								}
+
+								return ArrayEnumerator;
+							})(IndexEnumerator)(source);
+						if(source["getEnumerator"])
+							return source.getEnumerator();
+
+						throw new Error("Unknown enumerable.");
+					}
+
+					Enumerator.from = from;
+				})(Collections.Enumerator || (Collections.Enumerator = {}));
+
+
+				var EnumeratorBase = (function(_super) {
+					__extends(EnumeratorBase, _super);
+					function EnumeratorBase(initializer, tryGetNext, disposer) {
+						_super.call(this);
+						this.initializer = initializer;
+						this.tryGetNext = tryGetNext;
+						this.disposer = disposer;
+						this.reset();
+					}
+
+					Object.defineProperty(
+						EnumeratorBase.prototype, "current", {
+							get: function() {
+								return this._yielder.current;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					EnumeratorBase.prototype.reset = function() {
+						var _ = this;
+						_._yielder = new Yielder();
+						_._state = 0 /* Before */;
+					};
+
+					EnumeratorBase.prototype.moveNext = function() {
+						var _ = this;
+						try
+						{
+							//noinspection FallThroughInSwitchStatementJS
+							switch(_._state)
+							{
+								case 0 /* Before */
+								:
+									_._state = 1 /* Running */;
+									var initializer = _.initializer;
+									if(initializer)
+										initializer();
+
+								case 1 /* Running */
+								:
+									if(_.tryGetNext(_._yielder))
+									{
+										return true;
+									} else
+									{
+										this.dispose();
+										return false;
+									}
+								case 2 /* After */
+								:
+									return false;
+							}
+						} catch(e)
+						{
+							this.dispose();
+							throw e;
+						}
+					};
+
+					EnumeratorBase.prototype._onDispose = function() {
+						var _ = this, disposer = _.disposer;
+
+						_.initializer = null;
+						_.disposer = null;
+
+						var yielder = _._yielder;
+						_._yielder = null;
+						if(yielder)
+							yielder.yieldBreak();
+
+						try
+						{
+							if(disposer)
+								disposer();
+						} finally
+						{
+							this._state = 2 /* After */;
+						}
+					};
+					return EnumeratorBase;
+				})(System.DisposableBase);
+				Collections.EnumeratorBase = EnumeratorBase;
+
+				var IndexEnumerator = (function(_super) {
+					__extends(IndexEnumerator, _super);
+					function IndexEnumerator(sourceFactory) {
+						var source;
+						_super.call(
+							this, function() {
+								source = sourceFactory();
+								if(source && source.source)
+								{
+									if(source.length && source.step===0)
+										throw new Error("Invalid IndexEnumerator step value (0).");
+
+									var pointer = source.pointer;
+									if(!pointer)
+										source.pointer = 0 | 0;
+									else if(pointer!=Math.floor(pointer))
+										throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
+									source.pointer = pointer | 0;
+
+									var step = source.step;
+									if(!step)
+										source.step = 1;
+									else if(step!=Math.floor(step))
+										throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
+									source.step = step | 0;
+								}
+							}, function(yielder) {
+								var len = (source && source.source) ? source.length : 0;
+								if(!len)
+									return yielder.yieldBreak();
+								var current = source.pointer | 0;
+								source.pointer += source.step;
+								return (current<len && current>=0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
+							}, function() {
+								if(source)
+								{
+									source.source = null;
+								}
+							});
+					}
+
+					return IndexEnumerator;
+				})(EnumeratorBase);
+				Collections.IndexEnumerator = IndexEnumerator;
+
+				Collections.ArrayEnumerator = (function(_super) {
+					__extends(ArrayEnumerator, _super);
+					function ArrayEnumerator(arrayOrFactory, start, step) {
+						if(typeof start==="undefined")
+						{ start = 0; }
+						if(typeof step==="undefined")
+						{ step = 1; }
+						_super.call(
+							this, function() {
+								var array = System.Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+								return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
+							});
+					}
+
+					return ArrayEnumerator;
+				})(IndexEnumerator);
+			})(System.Collections || (System.Collections = {}));
+
+		})(System || (System = {}));
+
+		(function(System) {
+			(function(Collections) {
+				function notImplementedException(name, log) {
+					if(typeof log==="undefined")
+					{ log = ""; }
+					console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
+					throw new Error("DictionaryAbstractBase." + name + ": Not implemented.");
+				}
+
+				Collections.DictionaryAbstractBase = (function() {
+					function DictionaryAbstractBase() {
+						this._updateRecursion = 0;
+					}
+
+					Object.defineProperty(
+						DictionaryAbstractBase.prototype, "isUpdating", {
+							get: function() {
+								return this._updateRecursion!=0;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					DictionaryAbstractBase.prototype._onValueUpdate = function(key, value, old) {
+						if(!System.areEqual(value, old, true))
+						{
+							var _ = this;
+							if(_.onValueChanged)
+								_.onValueChanged(key, value, old);
+
+							if(_._updateRecursion==0)
+								_._onUpdated();
+						}
+					};
+
+					DictionaryAbstractBase.prototype._onUpdated = function() {
+						var _ = this;
+						if(_.onUpdated)
+							_.onUpdated();
+					};
+
+					DictionaryAbstractBase.prototype.handleUpdate = function(closure) {
+						var _ = this, result;
+						if(closure)
+						{
+							_._updateRecursion++;
+
+							try
+							{
+								result = closure();
+							} finally
+							{
+								_._updateRecursion--;
+							}
+						} else
+							result = _._updateRecursion==0;
+
+						if(result && _._updateRecursion==0)
+							_._onUpdated();
+
+						return result;
+					};
+
+					Object.defineProperty(
+						DictionaryAbstractBase.prototype, "isReadOnly", {
+							get: function() {
+								return false;
+							},
+							enumerable: true,
+							configurable: true
+						});
+					Object.defineProperty(
+						DictionaryAbstractBase.prototype, "count", {
+							get: function() {
+								return notImplementedException("count");
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					DictionaryAbstractBase.prototype.add = function(item) {
+						this.addByKeyValue(item.key, item.value);
+					};
+
+					DictionaryAbstractBase.prototype.clear = function() {
+						var _ = this, keys = _.keys, count = keys.length;
+
+						if(count)
+							_.handleUpdate(
+								function() {
+									keys.forEach(
+										function(key) {
+											return _.removeByKey(key);
+										});
+									return true;
+								});
+
+						if(count!=_.count)
+							console.warn("Dictioary clear() results in mismatched count.");
+
+						return count;
+					};
+
+					DictionaryAbstractBase.prototype.contains = function(item) {
+						var value = this.get(item.key);
+						return System.areEqual(value, item.value);
+					};
+
+					DictionaryAbstractBase.prototype.copyTo = function(array, index) {
+						if(typeof index==="undefined")
+						{ index = 0; }
+						var e = this.getEnumerator();
+						while(e.moveNext())
+							array[index++] = e.current;
+					};
+
+					DictionaryAbstractBase.prototype.remove = function(item) {
+						var key = item.key, value = this.get(key);
+						return (System.areEqual(value, item.value) && this.removeByKey(key)) ? 1 : 0;
+					};
+
+					Object.defineProperty(
+						DictionaryAbstractBase.prototype, "keys", {
+							get: function() {
+								return notImplementedException("keys");
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						DictionaryAbstractBase.prototype, "values", {
+							get: function() {
+								return notImplementedException("values");
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					DictionaryAbstractBase.prototype.addByKeyValue = function(key, value) {
+						var _ = this;
+						if(_.containsKey(key))
+							throw new Error("Adding key/value when one already exists.");
+
+						_.set(key, value);
+					};
+
+					DictionaryAbstractBase.prototype.get = function(key) {
+						return notImplementedException("get(key: TKey): TValue", "When calling for key: " + key);
+					};
+
+					DictionaryAbstractBase.prototype.set = function(key, value) {
+						return notImplementedException("set(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + ".");
+					};
+
+					DictionaryAbstractBase.prototype.containsKey = function(key) {
+						var value = this.get(key);
+						return value!==undefined;
+					};
+
+					DictionaryAbstractBase.prototype.containsValue = function(value) {
+						var e = this.getEnumerator(), equal = System.areEqual;
+
+						while(e.moveNext())
+						{
+							if(equal(e.current, value, true))
+							{
+								e.dispose();
+								return true;
+							}
+						}
+						return false;
+					};
+
+					DictionaryAbstractBase.prototype.removeByKey = function(key) {
+						return this.set(key, undefined);
+					};
+
+					DictionaryAbstractBase.prototype.removeByValue = function(value) {
+						var _ = this, count = 0, equal = System.areEqual;
+						_.keys.forEach(
+							function(key) {
+								if(equal(_.get(key), value, true))
+								{
+									_.removeByKey(key);
+									++count;
+								}
+							});
+						return count;
+					};
+
+					DictionaryAbstractBase.prototype.importPairs = function(pairs) {
+						var _ = this;
+						return _.handleUpdate(
+							function() {
+								var changed = false;
+								pairs.forEach(
+									function(pair) {
+										_.set(pair.key, pair.value);
+										changed = true;
+									});
+								return changed;
+							});
+					};
+
+					DictionaryAbstractBase.prototype.getEnumerator = function() {
+						var _ = this;
+						var keys, len, i = 0;
+						return new Collections.EnumeratorBase(
+							function() {
+								keys = _.keys;
+								len = keys.length;
+							}, function(yielder) {
+								while(i<len)
+								{
+									var key = keys[i++], value = _.get(key);
+									if(value!==undefined)
+										return yielder.yieldReturn({ key: key, value: value });
+								}
+
+								return yielder.yieldBreak();
+							});
+					};
+					return DictionaryAbstractBase;
+				})();
+			})(System.Collections || (System.Collections = {}));
+
+		})(System || (System = {}));
+
+		(function(System) {
+			(function(Collections) {
+				var HashEntry = (function() {
+					function HashEntry(key, value, prev, next) {
+						this.key = key;
+						this.value = value;
+						this.prev = prev;
+						this.next = next;
+					}
+
+					return HashEntry;
+				})();
+
+				var EntryList = (function() {
+					function EntryList(first, last) {
+						this.first = first;
+						this.last = last;
+					}
+
+					EntryList.prototype.addLast = function(entry) {
+						var _ = this;
+						if(_.last!=null)
+						{
+							_.last.next = entry;
+							entry.prev = _.last;
+							_.last = entry;
+						} else
+							_.first = _.last = entry;
+					};
+
+					EntryList.prototype.replace = function(entry, newEntry) {
+						var _ = this;
+						if(entry.prev!=null)
+						{
+							entry.prev.next = newEntry;
+							newEntry.prev = entry.prev;
+						} else
+							_.first = newEntry;
+
+						if(entry.next!=null)
+						{
+							entry.next.prev = newEntry;
+							newEntry.next = entry.next;
+						} else
+							_.last = newEntry;
+					};
+
+					EntryList.prototype.remove = function(entry) {
+						var _ = this;
+						if(entry.prev!=null)
+							entry.prev.next = entry.next;
+						else
+							_.first = entry.next;
+
+						if(entry.next!=null)
+							entry.next.prev = entry.prev;
+						else
+							_.last = entry.prev;
+					};
+
+					EntryList.prototype.clear = function() {
+						var _ = this;
+						while(_.last)
+							_.remove(_.last);
+					};
+
+					EntryList.prototype.forEach = function(closure) {
+						var _ = this, currentEntry = _.first;
+						while(currentEntry)
+						{
+							closure(currentEntry);
+							currentEntry = currentEntry.next;
+						}
+					};
+					return EntryList;
+				})();
+
+				function callHasOwnProperty(target, key) {
+					return Object.prototype.hasOwnProperty.call(target, key);
+				}
+
+				function computeHashCode(obj) {
+					if(obj===null)
+						return "null";
+					if(obj===undefined)
+						return "undefined";
+
+					return (typeof obj.toString===System.Types.Function) ? obj.toString() : Object.prototype.toString.call(obj);
+				}
+
+				Collections.Dictionary = (function(_super) {
+					__extends(Dictionary, _super);
+					function Dictionary(compareSelector) {
+						if(typeof compareSelector==="undefined")
+						{ compareSelector = System.Functions.Identity; }
+						_super.call(this);
+						this.compareSelector = compareSelector;
+						this._count = 0;
+						this._entries = new EntryList();
+						this._buckets = {};
+					}
+
+					Dictionary.prototype.setKV = function(key, value, allowOverwrite) {
+						var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
+						var compareKey = comparer(key);
+						var hash = computeHashCode(compareKey), entry;
+
+						if(callHasOwnProperty(buckets, hash))
+						{
+							var equal = System.areEqual;
+							var array = buckets[hash];
+							for(var i = 0; i<array.length; i++)
+							{
+								var old = array[i];
+								if(comparer(old.key)===compareKey)
+								{
+									if(!allowOverwrite)
+										throw new Error("Key already exists.");
+
+									var changed = !equal(old.value, value);
+									if(changed)
+									{
+										if(value===undefined)
+										{
+											entries.remove(old);
+											array.splice(i, 1);
+											if(!array.length)
+												delete buckets[hash];
+											--_._count;
+										} else
+										{
+											entry = new HashEntry(key, value);
+											entries.replace(old, entry);
+											array[i] = entry;
+										}
+
+										_._onValueUpdate(key, value, old.value);
+									}
+									return changed;
+								}
+							}
+							array.push(entry = entry || new HashEntry(key, value));
+						} else
+						{
+							if(value===undefined)
+							{
+								if(allowOverwrite)
+									return false;
+								else
+									throw new Error("Cannot add 'undefined' value.");
+							}
+							buckets[hash] = [entry = new HashEntry(key, value)];
+						}
+						++_._count;
+						entries.addLast(entry);
+						_._onValueUpdate(key, value, undefined);
+						return true;
+					};
+
+					Dictionary.prototype.addByKeyValue = function(key, value) {
+						this.setKV(key, value, false);
+					};
+
+					Dictionary.prototype.get = function(key) {
+						var buckets = this._buckets, comparer = this.compareSelector;
+						var compareKey = comparer(key);
+						var hash = computeHashCode(compareKey);
+						if(!callHasOwnProperty(buckets, hash))
+							return undefined;
+
+						var array = buckets[hash];
+						for(var i = 0, len = array.length; i<len; i++)
+						{
+							var entry = array[i];
+							if(comparer(entry.key)===compareKey)
+								return entry.value;
+						}
+						return undefined;
+					};
+
+					Dictionary.prototype.set = function(key, value) {
+						return this.setKV(key, value, true);
+					};
+
+					Dictionary.prototype.containsKey = function(key) {
+						var _ = this, buckets = _._buckets, comparer = _.compareSelector;
+						var compareKey = comparer(key);
+						var hash = computeHashCode(compareKey);
+						if(!callHasOwnProperty(buckets, hash))
+							return false;
+
+						var array = buckets[hash];
+						for(var i = 0, len = array.length; i<len; i++)
+							if(comparer(array[i].key)===compareKey)
+								return true;
+
+						return false;
+					};
+
+					Dictionary.prototype.clear = function() {
+						var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this);
+
+						_._count = 0;
+						for(var key in buckets)
+						{ //noinspection JSUnfilteredForInLoop
+							delete buckets[key];
+						}
+
+						_._entries.clear();
+
+						return count;
+					};
+
+					Object.defineProperty(
+						Dictionary.prototype, "count", {
+							get: function() {
+								return this._count;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Dictionary.prototype.getEnumerator = function() {
+						var _ = this, currentEntry;
+
+						return new Collections.EnumeratorBase(
+							function() {
+								currentEntry = _._entries.first;
+							}, function(yielder) {
+								if(currentEntry!=null)
+								{
+									var result = { key: currentEntry.key, value: currentEntry.value };
+									currentEntry = currentEntry.next;
+									return yielder.yieldReturn(result);
+								}
+								return yielder.yieldBreak();
+							});
+					};
+
+					Object.defineProperty(
+						Dictionary.prototype, "keys", {
+							get: function() {
+								var _ = this, result = [];
+								_._entries.forEach(
+									function(entry) {
+										return result.push(entry.key);
+									});
+								return result;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						Dictionary.prototype, "values", {
+							get: function() {
+								var _ = this, result = [];
+								_._entries.forEach(
+									function(entry) {
+										return result.push(entry.value);
+									});
+								return result;
+							},
+							enumerable: true,
+							configurable: true
+						});
+					return Dictionary;
+				})(Collections.DictionaryAbstractBase);
+			})(System.Collections || (System.Collections = {}));
+
+		})(System || (System = {}));
+
+		(function(System) {
+			(function(Collections) {
+				Collections.StringKeyDictionary = (function(_super) {
+					__extends(StringKeyDictionary, _super);
+					function StringKeyDictionary() {
+						_super.apply(this, arguments);
+						this._count = 0;
+						this._map = {};
+					}
+
+					StringKeyDictionary.prototype.containsKey = function(key) {
+						return key in this._map;
+					};
+
+					StringKeyDictionary.prototype.containsValue = function(value) {
+						var map = this._map, equal = System.areEqual;
+						for(var key in map)
+							if(map.hasOwnProperty(key) && equal(map[key], value))
+								return true;
+						return false;
+					};
+
+					StringKeyDictionary.prototype.get = function(key) {
+						return this._map[key];
+					};
+
+					StringKeyDictionary.prototype.set = function(key, value) {
+						var _ = this, map = _._map, old = map[key];
+						if(old!==value)
+						{
+							if(value===undefined)
+							{
+								if(key in map)
+								{
+									delete map[key];
+									--_._count;
+								}
+							} else
+							{
+								if(!(key in map))
+									++_._count;
+								map[key] = value;
+							}
+
+							_._onValueUpdate(key, value, old);
+							return true;
+						}
+						return false;
+					};
+
+					StringKeyDictionary.prototype.importMap = function(values) {
+						var _ = this;
+						return _.handleUpdate(
+							function() {
+								var changed = false;
+								for(var key in values)
+								{
+									if(values.hasOwnProperty(key) && _.set(key, values[key]))
+										changed = true;
+								}
+								return changed;
+							});
+					};
+
+					StringKeyDictionary.prototype.toMap = function(selector) {
+						var _ = this, result = {};
+						for(var key in _._map)
+						{
+							if(_._map.hasOwnProperty(key))
+							{
+								var value = _._map[key];
+								if(selector)
+									value = selector(key, value);
+								if(value!==undefined)
+									result[key] = value;
+							}
+						}
+						return result;
+					};
+
+					Object.defineProperty(
+						StringKeyDictionary.prototype, "keys", {
+							get: function() {
+								var _ = this, result = [];
+								for(var key in _._map)
+									if(_._map.hasOwnProperty(key))
+										result.push(key);
+
+								return result;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						StringKeyDictionary.prototype, "values", {
+							get: function() {
+								var _ = this, result = [];
+								for(var key in _._map)
+									if(_._map.hasOwnProperty(key))
+										result.push(_._map[key]);
+
+								return result;
+							},
+							enumerable: true,
+							configurable: true
+						});
+
+					Object.defineProperty(
+						StringKeyDictionary.prototype, "count", {
+							get: function() {
+								return this._count;
+							},
+							enumerable: true,
+							configurable: true
+						});
+					return StringKeyDictionary;
+				})(Collections.DictionaryAbstractBase);
+			})(System.Collections || (System.Collections = {}));
+
+		})(System || (System = {}));
+
+		(function(System) {
+			(function(Collections) {
+				Collections.OrderedStringKeyDictionary = (function(_super) {
+					__extends(OrderedStringKeyDictionary, _super);
+					function OrderedStringKeyDictionary() {
+						_super.call(this);
+						this._order = [];
+					}
+
+					OrderedStringKeyDictionary.prototype.indexOfKey = function(key) {
+						return this._order.indexOf(key,0);
+					};
+
+					OrderedStringKeyDictionary.prototype.getValueByIndex = function(index) {
+						return this.get(this._order[index]);
+					};
+
+					OrderedStringKeyDictionary.prototype.set = function(key, value, keepIndex) {
+						var _ = this, exists = _.indexOfKey(key)!= -1;
+						if(!exists && (value!==undefined || keepIndex))
+							_._order.push(key);
+						else if(exists && value===undefined && !keepIndex)
+							Collections.ArrayUtility.remove(_._order, key);
+
+						return _super.prototype.set.call(this, key, value);
+					};
+
+					OrderedStringKeyDictionary.prototype.setByIndex = function(index, value) {
+						var _ = this, order = _._order;
+						if(index<0 || index>=order.length)
+							throw new Error("IndexOutOfRange Exception.");
+
+						return _.set(order[index], value);
+					};
+
+					OrderedStringKeyDictionary.prototype.importValues = function(values) {
+						var _ = this;
+						return _.handleUpdate(
+							function() {
+								var changed = false;
+								for(var i = 0; i<values.length; i++)
+									if(_.setByIndex(i, values[i]))
+										changed = true;
+								return changed;
+							});
+					};
+
+					OrderedStringKeyDictionary.prototype.setValues = function() {
+						var values = [];
+						for(var _i = 0; _i<(arguments.length - 0); _i++)
+						{
+							values[_i] = arguments[_i + 0];
+						}
+						return this.importValues(values);
+					};
+
+					OrderedStringKeyDictionary.prototype.removeByIndex = function(index) {
+						return this.setByIndex(index, undefined);
+					};
+
+					Object.defineProperty(
+						OrderedStringKeyDictionary.prototype, "keys", {
+							get: function() {
+								var _ = this;
+								return _._order.filter(
+									function(key) {
+										return _.containsKey(key);
+									});
+							},
+							enumerable: true,
+							configurable: true
+						});
+					return OrderedStringKeyDictionary;
+				})(Collections.StringKeyDictionary);
+			})(System.Collections || (System.Collections = {}));
+
+		})(System || (System = {}));
+
+		return System;
+	}
+);
