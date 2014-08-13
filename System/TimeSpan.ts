@@ -1,17 +1,30 @@
 ﻿///<reference path="System.ts"/>
 
 /*
- * @author electricessence / https://github.com/electricessence/
- * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
- */
+* @author electricessence / https://github.com/electricessence/
+* Originally based upon .NET source but with many additions and improvements.
+* Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+* Contains: ITimeMeasurement, ClockTime, TimeUnit, TimeUnitValue, and TimeSpan
+*/
 
 module System
 {
+	"use strict";
+
 	var ticksPerMillisecond = 10000,
 		msPerSecond = 1000,
 		secondsPerMinute = 60,
 		minutesPerHour = 60,
 		earthHoursPerDay = 24;
+
+	// Temporary until the full TimeSpanFormat is available.
+	function pluralize(value: number, label: string): string
+	{
+		if (Math.abs(value) !== 1)
+			label += "s";
+
+		return label;
+	}
 
 	export enum TimeUnit
 	{
@@ -25,13 +38,13 @@ module System
 
 	function assertValidUnit(unit: TimeUnit): boolean
 	{
-		if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) != unit)
+		if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit)
 			throw new Error("Invalid TimeUnit.");
 
 		return true;
 	}
 
-	export interface IMeasureTime
+	export interface ITimeMeasurement
 	{
 		ticks: number;
 		milliseconds: number;
@@ -41,15 +54,26 @@ module System
 		days: number;
 	}
 
-	export class ClockTime implements IMeasureTime
+	export class ClockTime
+		implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable
 	{
-		private _milliseconds: number;
+		private _totalMilliseconds: number;
+		get totalMilliseconds(): number
+		{
+			return this._totalMilliseconds;
+		}
+
+		// Could be in reverse or negative...
+		get direction(): number
+		{
+			return System.compare(this._totalMilliseconds, 0);
+		}
 
 		constructor(milliseconds: number);
 		constructor(hours: number, minutes: number, seconds?: number, milliseconds?: number);
 		constructor(...args: number[])
 		{
-			this._milliseconds =
+			this._totalMilliseconds =
 			args.length > 1
 			? TimeSpan.millisecondsFromTime(
 				args[0] || 0,
@@ -59,12 +83,29 @@ module System
 			: (args.length > 0 && args[0] || 0);
 		}
 
+
+		equals(other: ClockTime): boolean
+		{
+			return System.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+		}
+
+		compareTo(other: ClockTime): number
+		{
+			if (other == null) return 1 | 0;
+
+			return System.compare(this._totalMilliseconds, other.totalMilliseconds);
+		}
+
+
 		private _ticks: number;
 		get ticks(): number
 		{
 			var _ = this, r = _._ticks;
 			if (r === undefined)
-				_._ticks = r = (_._milliseconds - Math.floor(_._milliseconds)) * ticksPerMillisecond;
+			{
+				var ms = Math.abs(_._totalMilliseconds);
+				_._ticks = r = (ms - Math.floor(ms)) * ticksPerMillisecond;
+			}
 			return r;
 		}
 
@@ -74,9 +115,10 @@ module System
 			var _ = this, r = _._ms;
 			if (r === undefined)
 				_._ms = r =
-				(this._milliseconds | 0) % msPerSecond;
+				(this._totalMilliseconds % msPerSecond) | 0;
 			return r;
 		}
+
 
 		private _seconds: number;
 		get seconds(): number
@@ -84,7 +126,7 @@ module System
 			var _ = this, r = _._seconds;
 			if (r === undefined)
 				_._seconds = r =
-				((this._milliseconds / msPerSecond) | 0) % secondsPerMinute;
+				((this._totalMilliseconds / msPerSecond) % secondsPerMinute) | 0;
 			return r;
 		}
 
@@ -94,9 +136,9 @@ module System
 			var _ = this, r = _._minutes;
 			if (r === undefined)
 				_._minutes = r =
-				((this._milliseconds
+				((this._totalMilliseconds
 					/ msPerSecond
-					/ secondsPerMinute) | 0) % minutesPerHour;
+					/ secondsPerMinute) % minutesPerHour) | 0;
 
 			return r;
 		}
@@ -107,10 +149,10 @@ module System
 			var _ = this, r = _._hours;
 			if (r === undefined)
 				_._hours = r =
-				((this._milliseconds
+				((this._totalMilliseconds
 					/ msPerSecond
 					/ secondsPerMinute
-					/ minutesPerHour) | 0) % earthHoursPerDay;
+					/ minutesPerHour) % earthHoursPerDay) | 0;
 			return r;
 
 		}
@@ -121,7 +163,7 @@ module System
 			var _ = this, r = _._days;
 			if (r === undefined)
 				_._days = r =
-				(this._milliseconds
+				(this._totalMilliseconds
 					/ msPerSecond
 					/ secondsPerMinute
 					/ minutesPerHour
@@ -130,24 +172,122 @@ module System
 		}
 		toTimeSpan(): TimeSpan
 		{
-			return new TimeSpan(this._milliseconds);
+			return new TimeSpan(this._totalMilliseconds);
 		}
 
 		// Static version for relative consistency.  Constructor does allow this format.
-		static from(hours: number, minutes: number, seconds: number= 0, milliseconds: number= 0): ClockTime
+		static from(hours: number, minutes: number, seconds: number = 0, milliseconds: number= 0): ClockTime
 		{
 			return new ClockTime(hours, minutes, seconds, milliseconds);
 		}
 
+		toString(format?: string, formatProvider?: System.IFormatProvider): string
+		{
+			/* INSERT CUSTOM FORMATTING CODE HERE */
+
+
+			var _ = this, a: string[] = [];
+
+			if (_.days)
+				a.push(pluralize(_.days, "day"));
+
+			if (_.hours)
+				a.push(pluralize(_.hours, "hour"));
+
+			if (_.minutes)
+				a.push(pluralize(_.minutes, "minute"));
+
+			if (_.seconds)
+				a.push(pluralize(_.seconds, "second"));
+
+			if (a.length > 1)
+				a.splice(a.length - 1, 0, "and");
+
+			return a.join(", ").replace(", and, ", " and ");
+		}
+
 	}
-	
+
+
+	function assertComparisonType(other:any): void 
+	{
+		if(!(other instanceof TimeUnitValue || other instanceof TimeSpan))
+			throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
+	}
+
+	function getMilliseconds(other: any): number
+	{
+		if (other instanceof TimeUnitValue)
+		{
+			var o: TimeUnitValue = other;
+			return o.type === TimeUnit.Milliseconds
+			? o.value
+			: o.toTimeSpan().milliseconds;
+		}
+		else if (other instanceof TimeSpan)
+		{
+			return other._milliseconds;
+		}
+
+		return undefined;
+	}
+
 	// This class allows for passing around a specific measure of time coerced by its unit type.
-	export class TimeUnitValue
+	export class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue>
 	{
 
 		constructor(public value: number, private _type: TimeUnit)
 		{
 			assertValidUnit(_type);
+		}
+
+
+		// Atempts to convert value to current unit type.
+		// If not coercable, it returns null.
+		coerce(other: TimeSpan): TimeUnitValue;
+		coerce(other: TimeUnitValue): TimeUnitValue;
+		coerce(other: any): TimeUnitValue
+		{
+			var type = this._type;
+			assertValidUnit(type);
+
+			if (other instanceof TimeSpan)
+			{
+				other = other.toTimeUnitValue(type);
+			}
+			else if (other instanceof TimeUnitValue)
+			{
+				if (type !== other.type)
+					other = other.to(type);
+			}
+			else
+				return null
+
+			return other;
+		}
+
+		equals(other: TimeSpan): boolean;
+		equals(other: TimeUnitValue): boolean;
+		equals(other: any): boolean
+		{
+			var o:TimeUnitValue = this.coerce(other);
+			if (o == null)
+				return false;
+
+			return System.areEqual(this.value, o.value);
+		}
+
+
+		compareTo(other: TimeSpan): number;
+		compareTo(other: TimeUnitValue): number;
+		compareTo(other:any):number
+		{
+			if (other == null) return 1 | 0;
+
+			assertComparisonType(other);
+
+			return System.compare(this.value, this.coerce(other).value);
+
 		}
 
 		// To avoid confusion, the unit type can only be set once at construction.
@@ -168,7 +308,10 @@ module System
 
 	}
 
-	export class TimeSpan implements IMeasureTime
+	var timeSpanZero: TimeSpan;
+
+	export class TimeSpan
+		implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>
 	{
 
 		private _milliseconds: number;
@@ -179,9 +322,29 @@ module System
 			this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
 		}
 
-		equals(other: TimeSpan): boolean
+		equals(other: TimeUnitValue): boolean;
+		equals(other: TimeSpan): boolean;
+		equals(other: any): boolean
 		{
-			return System.areEqual(this._milliseconds, other.milliseconds, false);
+			var otherms: number = getMilliseconds(other);
+
+			if (other === undefined) // undefined is used instead of NaN since NaN could be a valid value.
+				return false;
+
+			return System.areEqual(this._milliseconds, otherms);
+		}
+
+
+		compareTo(other: TimeUnitValue): number;
+		compareTo(other: TimeSpan): number;
+		compareTo(other: any): number
+		{
+			if (other == null) return 1 | 0;
+
+			assertComparisonType(other);
+
+			return System.compare(this._milliseconds, getMilliseconds(other));
+
 		}
 
 		toTimeUnitValue(units: TimeUnit = TimeUnit.Milliseconds): TimeUnitValue
@@ -191,7 +354,7 @@ module System
 
 		static convertToMilliseconds(value: number, units: TimeUnit = TimeUnit.Milliseconds): number
 		{
-			//noinspection FallThroughInSwitchStatementJS
+			// noinspection FallThroughInSwitchStatementJS
 			switch (units)
 			{
 				case TimeUnit.Days:
@@ -347,9 +510,8 @@ module System
 
 		static get zero(): TimeSpan
 		{
-			return timeSpanZero;
+			return timeSpanZero || (timeSpanZero = new TimeSpan(0));
 		}
 	}
 
-	var timeSpanZero = new TimeSpan(0);
 }

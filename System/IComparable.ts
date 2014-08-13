@@ -4,10 +4,12 @@
 * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
 */
 
-module System {
+module System
+{
 
-	export interface ICloneable<T> {
-		clone(): T;
+	export interface IComparable<T>
+	{
+		compareTo(other: T): number;
 	}
 
-}
+} 

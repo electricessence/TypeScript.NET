@@ -71,7 +71,7 @@ declare module System {
         Hours = 4,
         Days = 5,
     }
-    interface IMeasureTime {
+    interface ITimeMeasurement {
         ticks: number;
         milliseconds: number;
         seconds: number;
@@ -79,10 +79,14 @@ declare module System {
         hours: number;
         days: number;
     }
-    class ClockTime implements IMeasureTime {
-        private _milliseconds;
+    class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable {
+        private _totalMilliseconds;
+        public totalMilliseconds : number;
+        public direction : number;
         constructor(milliseconds: number);
         constructor(hours: number, minutes: number, seconds?: number, milliseconds?: number);
+        public equals(other: ClockTime): boolean;
+        public compareTo(other: ClockTime): number;
         private _ticks;
         public ticks : number;
         private _ms;
@@ -97,19 +101,29 @@ declare module System {
         public days : number;
         public toTimeSpan(): TimeSpan;
         static from(hours: number, minutes: number, seconds?: number, milliseconds?: number): ClockTime;
+        public toString(format?: string, formatProvider?: IFormatProvider): string;
     }
-    class TimeUnitValue {
+    class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue> {
         public value: number;
         private _type;
         constructor(value: number, _type: TimeUnit);
+        public coerce(other: TimeSpan): TimeUnitValue;
+        public coerce(other: TimeUnitValue): TimeUnitValue;
+        public equals(other: TimeSpan): boolean;
+        public equals(other: TimeUnitValue): boolean;
+        public compareTo(other: TimeSpan): number;
+        public compareTo(other: TimeUnitValue): number;
         public type : TimeUnit;
         public toTimeSpan(): TimeSpan;
         public to(units?: TimeUnit): TimeUnitValue;
     }
-    class TimeSpan implements IMeasureTime {
+    class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan> {
         private _milliseconds;
         constructor(value: number, units?: TimeUnit);
+        public equals(other: TimeUnitValue): boolean;
         public equals(other: TimeSpan): boolean;
+        public compareTo(other: TimeUnitValue): number;
+        public compareTo(other: TimeSpan): number;
         public toTimeUnitValue(units?: TimeUnit): TimeUnitValue;
         static convertToMilliseconds(value: number, units?: TimeUnit): number;
         public total(units: TimeUnit): number;
@@ -159,6 +173,32 @@ declare module System.Diagnostics {
     }
 }
 declare module System {
+    interface IComparable<T> {
+        compareTo(other: T): number;
+    }
+}
+declare module System {
+    interface IConvertible {
+        toBoolean(provider: IFormatProvider): boolean;
+        toNumber(provider: IFormatProvider): number;
+        toString(provider: IFormatProvider): string;
+    }
+}
+declare module System {
+    interface IFormatProvider {
+        getFormat(formatType: Object): Object;
+    }
+}
+declare module System {
+    interface IFormattable {
+        toString(format?: string, formatProvider?: IFormatProvider): string;
+    }
+}
+declare module System.Runtime.Serialization {
+    interface ISerializable {
+    }
+}
+declare module System {
     function dispose(obj: any): void;
     function using<TDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
     interface IDisposable {
@@ -176,14 +216,14 @@ declare module System {
         public _onDispose(): void;
     }
 }
-declare module ObjectX.Core {
+declare module System {
     interface ICloneable<T> {
         clone(): T;
     }
 }
 declare module System {
-    interface IEquatable {
-        equals(other: any): boolean;
+    interface IEquatable<T> {
+        equals(other: T): boolean;
     }
 }
 declare module System {

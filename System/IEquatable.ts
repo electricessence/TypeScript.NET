@@ -1,11 +1,14 @@
-﻿/**
- * @author electricessence / https://github.com/electricessence/
- * Liscensing: GNU.v3 https://github.com/electricessence/ObjectX/blob/master/LICENSE
- */
+﻿/*
+* @author electricessence / https://github.com/electricessence/
+* Based upon .NET source.
+* Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+*/
 
 module System {
 
-	export interface IEquatable {
-		equals(other:any): boolean;
+	// http://referencesource.microsoft.com/#mscorlib/system/iequatable.cs
+	export interface IEquatable<T> {
+		equals(other:T): boolean;
 	}
+	
 } 

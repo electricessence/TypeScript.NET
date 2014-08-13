@@ -169,7 +169,16 @@ var System;
 
     function compare(a, b, strict) {
         if (typeof strict === "undefined") { strict = true; }
-        return areEqual(a, b, strict) ? 0 : (a > b) ? 1 : -1;
+        if (areEqual(a, b, strict))
+            return 0 | 0;
+
+        if (a > b)
+            return (+1) | 0;
+
+        if (b < a)
+            return (-1) | 0;
+
+        return NaN;
     }
     System.compare = compare;
 
@@ -226,7 +235,16 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
+    "use strict";
+
     var ticksPerMillisecond = 10000, msPerSecond = 1000, secondsPerMinute = 60, minutesPerHour = 60, earthHoursPerDay = 24;
+
+    function pluralize(value, label) {
+        if (Math.abs(value) !== 1)
+            label += "s";
+
+        return label;
+    }
 
     (function (TimeUnit) {
         TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
@@ -239,7 +257,7 @@ var System;
     var TimeUnit = System.TimeUnit;
 
     function assertValidUnit(unit) {
-        if (isNaN(unit) || unit > 5 /* Days */ || unit < 0 /* Ticks */ || Math.floor(unit) != unit)
+        if (isNaN(unit) || unit > 5 /* Days */ || unit < 0 /* Ticks */ || Math.floor(unit) !== unit)
             throw new Error("Invalid TimeUnit.");
 
         return true;
@@ -251,13 +269,42 @@ var System;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
             }
-            this._milliseconds = args.length > 1 ? TimeSpan.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0) : (args.length > 0 && args[0] || 0);
+            this._totalMilliseconds = args.length > 1 ? TimeSpan.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0) : (args.length > 0 && args[0] || 0);
         }
+        Object.defineProperty(ClockTime.prototype, "totalMilliseconds", {
+            get: function () {
+                return this._totalMilliseconds;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(ClockTime.prototype, "direction", {
+            get: function () {
+                return System.compare(this._totalMilliseconds, 0);
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        ClockTime.prototype.equals = function (other) {
+            return System.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+        };
+
+        ClockTime.prototype.compareTo = function (other) {
+            if (other == null)
+                return 1 | 0;
+
+            return System.compare(this._totalMilliseconds, other.totalMilliseconds);
+        };
+
         Object.defineProperty(ClockTime.prototype, "ticks", {
             get: function () {
                 var _ = this, r = _._ticks;
-                if (r === undefined)
-                    _._ticks = r = (_._milliseconds - Math.floor(_._milliseconds)) * ticksPerMillisecond;
+                if (r === undefined) {
+                    var ms = Math.abs(_._totalMilliseconds);
+                    _._ticks = r = (ms - Math.floor(ms)) * ticksPerMillisecond;
+                }
                 return r;
             },
             enumerable: true,
@@ -268,7 +315,7 @@ var System;
             get: function () {
                 var _ = this, r = _._ms;
                 if (r === undefined)
-                    _._ms = r = (this._milliseconds | 0) % msPerSecond;
+                    _._ms = r = (this._totalMilliseconds % msPerSecond) | 0;
                 return r;
             },
             enumerable: true,
@@ -279,7 +326,7 @@ var System;
             get: function () {
                 var _ = this, r = _._seconds;
                 if (r === undefined)
-                    _._seconds = r = ((this._milliseconds / msPerSecond) | 0) % secondsPerMinute;
+                    _._seconds = r = ((this._totalMilliseconds / msPerSecond) % secondsPerMinute) | 0;
                 return r;
             },
             enumerable: true,
@@ -290,7 +337,7 @@ var System;
             get: function () {
                 var _ = this, r = _._minutes;
                 if (r === undefined)
-                    _._minutes = r = ((this._milliseconds / msPerSecond / secondsPerMinute) | 0) % minutesPerHour;
+                    _._minutes = r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute) % minutesPerHour) | 0;
 
                 return r;
             },
@@ -302,7 +349,7 @@ var System;
             get: function () {
                 var _ = this, r = _._hours;
                 if (r === undefined)
-                    _._hours = r = ((this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour) | 0) % earthHoursPerDay;
+                    _._hours = r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour) % earthHoursPerDay) | 0;
                 return r;
             },
             enumerable: true,
@@ -313,14 +360,14 @@ var System;
             get: function () {
                 var _ = this, r = _._days;
                 if (r === undefined)
-                    _._days = r = (this._milliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
+                    _._days = r = (this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
                 return r;
             },
             enumerable: true,
             configurable: true
         });
         ClockTime.prototype.toTimeSpan = function () {
-            return new TimeSpan(this._milliseconds);
+            return new TimeSpan(this._totalMilliseconds);
         };
 
         ClockTime.from = function (hours, minutes, seconds, milliseconds) {
@@ -328,9 +375,46 @@ var System;
             if (typeof milliseconds === "undefined") { milliseconds = 0; }
             return new ClockTime(hours, minutes, seconds, milliseconds);
         };
+
+        ClockTime.prototype.toString = function (format, formatProvider) {
+            var _ = this, a = [];
+
+            if (_.days)
+                a.push(pluralize(_.days, "day"));
+
+            if (_.hours)
+                a.push(pluralize(_.hours, "hour"));
+
+            if (_.minutes)
+                a.push(pluralize(_.minutes, "minute"));
+
+            if (_.seconds)
+                a.push(pluralize(_.seconds, "second"));
+
+            if (a.length > 1)
+                a.splice(a.length - 1, 0, "and");
+
+            return a.join(", ").replace(", and, ", " and ");
+        };
         return ClockTime;
     })();
     System.ClockTime = ClockTime;
+
+    function assertComparisonType(other) {
+        if (!(other instanceof TimeUnitValue || other instanceof TimeSpan))
+            throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
+    }
+
+    function getMilliseconds(other) {
+        if (other instanceof TimeUnitValue) {
+            var o = other;
+            return o.type === 1 /* Milliseconds */ ? o.value : o.toTimeSpan().milliseconds;
+        } else if (other instanceof TimeSpan) {
+            return other._milliseconds;
+        }
+
+        return undefined;
+    }
 
     var TimeUnitValue = (function () {
         function TimeUnitValue(value, _type) {
@@ -338,6 +422,38 @@ var System;
             this._type = _type;
             assertValidUnit(_type);
         }
+        TimeUnitValue.prototype.coerce = function (other) {
+            var type = this._type;
+            assertValidUnit(type);
+
+            if (other instanceof TimeSpan) {
+                other = other.toTimeUnitValue(type);
+            } else if (other instanceof TimeUnitValue) {
+                if (type !== other.type)
+                    other = other.to(type);
+            } else
+                return null;
+
+            return other;
+        };
+
+        TimeUnitValue.prototype.equals = function (other) {
+            var o = this.coerce(other);
+            if (o == null)
+                return false;
+
+            return System.areEqual(this.value, o.value);
+        };
+
+        TimeUnitValue.prototype.compareTo = function (other) {
+            if (other == null)
+                return 1 | 0;
+
+            assertComparisonType(other);
+
+            return System.compare(this.value, this.coerce(other).value);
+        };
+
         Object.defineProperty(TimeUnitValue.prototype, "type", {
             get: function () {
                 return this._type;
@@ -358,13 +474,29 @@ var System;
     })();
     System.TimeUnitValue = TimeUnitValue;
 
+    var timeSpanZero;
+
     var TimeSpan = (function () {
         function TimeSpan(value, units) {
             if (typeof units === "undefined") { units = 1 /* Milliseconds */; }
             this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
         }
         TimeSpan.prototype.equals = function (other) {
-            return System.areEqual(this._milliseconds, other.milliseconds, false);
+            var otherms = getMilliseconds(other);
+
+            if (other === undefined)
+                return false;
+
+            return System.areEqual(this._milliseconds, otherms);
+        };
+
+        TimeSpan.prototype.compareTo = function (other) {
+            if (other == null)
+                return 1 | 0;
+
+            assertComparisonType(other);
+
+            return System.compare(this._milliseconds, getMilliseconds(other));
         };
 
         TimeSpan.prototype.toTimeUnitValue = function (units) {
@@ -534,7 +666,7 @@ var System;
 
         Object.defineProperty(TimeSpan, "zero", {
             get: function () {
-                return timeSpanZero;
+                return timeSpanZero || (timeSpanZero = new TimeSpan(0));
             },
             enumerable: true,
             configurable: true
@@ -542,8 +674,6 @@ var System;
         return TimeSpan;
     })();
     System.TimeSpan = TimeSpan;
-
-    var timeSpanZero = new TimeSpan(0);
 })(System || (System = {}));
 var System;
 (function (System) {

@@ -42,10 +42,19 @@ module System {
 		return a === b || !strict && a == b || isEqualToNaN(a) && isEqualToNaN(b);
 	}
 
-	export function compare(a: any, b: any, strict: boolean = true): number {
-		return areEqual(a,b,strict) ? 0
-			: (a > b) ? 1
-			: -1;
+	export function compare(a: any, b: any, strict: boolean = true): number
+	{
+
+		if (areEqual(a, b, strict))
+			return 0 | 0;
+
+		if (a > b)
+			return (+1) | 0;
+
+		if (b < a)
+			return (-1) | 0;
+
+		return NaN;
 	}
 
 

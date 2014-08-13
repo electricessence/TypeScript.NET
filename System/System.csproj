@@ -60,6 +60,11 @@
     <TypeScriptCompile Include="Collections\IArray.ts" />
     <TypeScriptCompile Include="Diagnostics\Stopwatch.ts" />
     <TypeScriptCompile Include="Functions.ts" />
+    <TypeScriptCompile Include="IComparable.ts" />
+    <TypeScriptCompile Include="IConvertable.ts" />
+    <TypeScriptCompile Include="IFormatProvider.ts" />
+    <TypeScriptCompile Include="IFormattable.ts" />
+    <TypeScriptCompile Include="Runtime\Serialization\ISerializable.ts" />
     <TypeScriptCompile Include="System.ts" />
     <TypeScriptCompile Include="IDisposable.ts" />
     <TypeScriptCompile Include="ICloneable.ts" />
@@ -95,7 +100,9 @@
       <DependentUpon>System.min.js</DependentUpon>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Globalization\" />
+  </ItemGroup>
   <!-- <Target Name="BeforeBuild">
     <Message Text="Compiling TypeScript files to AMD" />
     <Message Text="Executing tsc - -out $(TypeScriptOutFile)amd.js @(TypeScriptCompile ->'&quot;%(fullpath)&quot;', ' ')" />

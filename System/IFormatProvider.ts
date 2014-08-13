@@ -4,10 +4,12 @@
 * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
 */
 
-module System {
+module System
+{
 
-	export interface ICloneable<T> {
-		clone(): T;
-	}
-
+	// http://referencesource.microsoft.com/#mscorlib/system/iformatprovider.cs
+	export interface IFormatProvider
+	{
+		getFormat(formatType: Object): Object;
+	} 
 }
