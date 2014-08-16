@@ -793,11 +793,55 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
-    function dispose(obj) {
-        if (obj && typeof obj.dispose == System.Types.Function)
-            obj.dispose();
+    function dispose() {
+        var disposables = [];
+        for (var _i = 0; _i < (arguments.length - 0); _i++) {
+            disposables[_i] = arguments[_i + 0];
+        }
+        disposeTheseInternal(disposables, false);
     }
     System.dispose = dispose;
+
+    function disposeWithoutException() {
+        var disposables = [];
+        for (var _i = 0; _i < (arguments.length - 0); _i++) {
+            disposables[_i] = arguments[_i + 0];
+        }
+        disposeTheseInternal(disposables, true);
+    }
+    System.disposeWithoutException = disposeWithoutException;
+
+    function disposeSingle(disposable, ignoreExceptions) {
+        if (disposable && typeof disposable.dispose == System.Types.Function) {
+            if (ignoreExceptions) {
+                try  {
+                    disposable.dispose();
+                } catch (ex) {
+                }
+            } else
+                disposable.dispose();
+        }
+    }
+
+    function disposeTheseInternal(disposables, ignoreExceptions) {
+        var next;
+
+        while (disposables.length && !(next = disposables.shift())) {
+        }
+        if (next) {
+            try  {
+                disposeSingle(next, ignoreExceptions);
+            } finally {
+                disposeTheseInternal(disposables, ignoreExceptions);
+            }
+        }
+    }
+
+    function disposeThese(disposables, ignoreExceptions) {
+        if (disposables && disposables.length)
+            disposeTheseInternal(disposables.slice(), ignoreExceptions);
+    }
+    System.disposeThese = disposeThese;
 
     function using(disposable, closure) {
         try  {
@@ -807,6 +851,8 @@ var System;
         }
     }
     System.using = using;
+
+    
 
     var DisposableBase = (function () {
         function DisposableBase(_finalizer) {

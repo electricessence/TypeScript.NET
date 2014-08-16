@@ -561,9 +561,7 @@ var System;
                         try  {
                             enumerator.dispose();
                         } finally {
-                            enumeratorStack.forEach(function (s) {
-                                return s.dispose();
-                            });
+                            System.disposeThese(enumeratorStack);
                         }
                     });
                 });
@@ -602,11 +600,7 @@ var System;
                             return false;
                         }
                     }, function () {
-                        try  {
-                            enumerator.dispose();
-                        } finally {
-                            middleEnumerator.dispose();
-                        }
+                        System.dispose(enumerator, middleEnumerator);
                     });
                 });
             };
@@ -720,14 +714,9 @@ var System;
 
                         return false;
                     }, function () {
-                        try  {
-                            enumerator.dispose();
-                            enumerator = null;
-                        } finally {
-                            if (middleEnumerator)
-                                middleEnumerator.dispose();
-                            middleEnumerator = null;
-                        }
+                        System.dispose(enumerator, middleEnumerator);
+                        enumerator = null;
+                        middleEnumerator = null;
                     });
                 });
             };
@@ -1066,6 +1055,28 @@ var System;
                 });
             };
 
+            Enumerable.prototype.zip = function (second, resultSelector) {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var firstEnumerator;
+                    var secondEnumerator;
+                    var index = 0 | 0;
+
+                    return new EnumeratorBase(function () {
+                        firstEnumerator = _.getEnumerator();
+                        secondEnumerator = Enumerable.from(second).getEnumerator();
+                    }, function (yielder) {
+                        if (firstEnumerator.moveNext() && secondEnumerator.moveNext()) {
+                            return yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
+                        }
+                        return false;
+                    }, function () {
+                        System.dispose(firstEnumerator, secondEnumerator);
+                    });
+                });
+            };
+
             Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
                 if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
                 return using(this.getEnumerator(), function (e1) {
@@ -1113,11 +1124,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        try  {
-                            firstEnumerator.dispose();
-                        } finally {
-                            secondEnumerator.dispose();
-                        }
+                        System.dispose(firstEnumerator, secondEnumerator);
                     });
                 });
             };

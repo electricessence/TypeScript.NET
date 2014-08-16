@@ -724,8 +724,9 @@ module System.Linq {
 						try {
 							enumerator.dispose();
 						}
-						finally {
-							enumeratorStack.forEach(s => s.dispose() );
+						finally
+						{
+							System.disposeThese(enumeratorStack);
 						}
 					});
 			});
@@ -773,15 +774,7 @@ module System.Linq {
 					},
 					() =>
 					{
-						try
-						{
-							enumerator.dispose();
-						}
-						finally
-						{
-							middleEnumerator.dispose();
-						}
-
+						System.dispose(enumerator, middleEnumerator);
 					});
 			});
 		}
@@ -956,17 +949,9 @@ module System.Linq {
 					},
 					() =>
 					{
-						try
-						{
-							enumerator.dispose();
-							enumerator = null;
-						}
-						finally
-						{
-							if (middleEnumerator)
-								middleEnumerator.dispose();
-							middleEnumerator = null;
-						}
+						System.dispose(enumerator, middleEnumerator);
+						enumerator = null;
+						middleEnumerator = null;
 					});
 			});
 		}
@@ -1393,53 +1378,36 @@ module System.Linq {
 			});
 		}
 
-		/* * /
+		zip<TSelect>(second: Enumerable<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>;
+		zip<TSelect>(second: IArray<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
+		zip<TSelect>(second: any, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
+		{
+			var _ = this;
 
-		zip(second: any[], resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        zip(second: Enumerable, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        zip(second: { length: number;[x: number]: any; }, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        zip(...params: any[]): Enumerable; // last one is selector
-        merge(second: any[], resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        merge(second: Enumerable, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        merge(second: { length: number;[x: number]: any; }, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        merge(...params: any[]): Enumerable; // last one is selector
-        join(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumerable;
-        groupJoin(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumer
+			return new Enumerable<TSelect>(() => {
+				var firstEnumerator:IEnumerator<T>;
+				var secondEnumerator: IEnumerator<T>;
+				var index:number = 0 | 0;
 
-		// mutiple arguments, last one is selector, others are enumerable
-		zip(...args): Enumerable<T> {
-			var selector = Utils.createLambda(arguments[arguments.length - 1]);
-
-			var source = this;
-			// optimized case:argument is 2
-			if (arguments.length == 2) {
-				var second = arguments[0];
-
-				return new Enumerable<T>(() => {
-					var firstEnumerator;
-					var secondEnumerator;
-					var index = 0;
-
-					return new EnumeratorBase<T>(
-						() => {
-							firstEnumerator = source.getEnumerator();
-							secondEnumerator = Enumerable.from(second).getEnumerator();
-						},
-						() => {
-							if (firstEnumerator.moveNext() && secondEnumerator.moveNext()) {
-								return (<any>this).yieldReturn(selector(firstEnumerator.current, secondEnumerator.current, index++));
-							}
-							return false;
-						},
-						() => {
-							try {
-								Utils.dispose(firstEnumerator);
-							} finally {
-								Utils.dispose(secondEnumerator);
-							}
-						});
-				});
-			}
+				return new EnumeratorBase<TSelect>(
+					() => {
+						firstEnumerator = _.getEnumerator();
+						secondEnumerator = Enumerable.from<T>(second).getEnumerator();
+					},
+					yielder => {
+						if (firstEnumerator.moveNext() && secondEnumerator.moveNext()) {
+							return yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
+						}
+						return false;
+					},
+					() =>
+					{
+						System.dispose(firstEnumerator, secondEnumerator);
+					});
+			});
+			/*}
+			// The following is the original code from linqjs, but it doesn't make sense when not using arguments.
+			// Please someone correct this if I am mistaken.
 			else {
 				return new Enumerable<T>(() => {
 					var enumerators;
@@ -1469,10 +1437,16 @@ module System.Linq {
 							Enumerable.from(enumerators).forEach(Utils.dispose);
 						});
 				});
-			}
+			}*/
 		}
 
+		/* * /
 		// mutiple arguments
+        merge(second: any[], resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        merge(second: Enumerable, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        merge(second: { length: number;[x: number]: any; }, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
+        merge(...params: any[]): Enumerable; // last one is selector
+
 		merge() {
 			var args = arguments;
 			var source = this;
@@ -1510,6 +1484,7 @@ module System.Linq {
 		}
 
 		// Join Methods
+        join(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumerable;
 
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
@@ -1554,6 +1529,8 @@ module System.Linq {
 					() => { Utils.dispose(outerEnumerator); });
 			});
 		}
+
+        groupJoin(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumer
 
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
@@ -1841,13 +1818,9 @@ module System.Linq {
 						}
 						return false;
 					},
-					() => {
-						try {
-							firstEnumerator.dispose();
-						}
-						finally {
-							secondEnumerator.dispose();
-						}
+					() =>
+					{
+						System.dispose(firstEnumerator, secondEnumerator);
 					});
 			});
 		}

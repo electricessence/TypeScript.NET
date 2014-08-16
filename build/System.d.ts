@@ -199,13 +199,17 @@ declare module System.Runtime.Serialization {
     }
 }
 declare module System {
-    function dispose(obj: any): void;
-    function using<TDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
+    function dispose(...disposables: IDisposable[]): void;
+    function disposeWithoutException(...disposables: IDisposable[]): void;
+    function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void;
+    function using<TDisposable extends IDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
     interface IDisposable {
         dispose(): void;
+    }
+    interface IDisposableAware extends IDisposable {
         wasDisposed: boolean;
     }
-    class DisposableBase implements IDisposable {
+    class DisposableBase implements IDisposableAware {
         private _finalizer;
         constructor(_finalizer?: () => void);
         public _wasDisposed: boolean;
