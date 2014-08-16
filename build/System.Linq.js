@@ -436,6 +436,14 @@ var System;
                 });
             };
 
+            Enumerable.prototype.takeWhile = function (predicate) {
+                this.assertIsNotDisposed();
+
+                return this.doAction(function (element, index) {
+                    return predicate(element, index) ? 1 /* Return */ : 0 /* Break */;
+                });
+            };
+
             Enumerable.prototype.takeExceptLast = function (count) {
                 if (typeof count === "undefined") { count = 1; }
                 var _ = this;

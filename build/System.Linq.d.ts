@@ -45,6 +45,7 @@ declare module System.Linq {
         public skip(count: number): Enumerable<T>;
         public skipWhile(predicate: Predicate<T>): Enumerable<T>;
         public take(count: number): Enumerable<T>;
+        public takeWhile(predicate: Predicate<T>): Enumerable<T>;
         public takeExceptLast(count?: number): Enumerable<T>;
         public takeFromLast(count: number): Enumerable<T>;
         public traverseBreadthFirst(func: (element: any) => Collections.IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any>;

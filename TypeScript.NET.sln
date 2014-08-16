@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{846D4BC7
 	ProjectSection(SolutionItems) = preProject
 		build\loadtest.html = build\loadtest.html
 		build\loadtest.min.html = build\loadtest.min.html
+		build\System.d.ts = build\System.d.ts
+		build\System.Linq.d.ts = build\System.Linq.d.ts
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "amd", "amd", "{6AEB8896-3A49-4136-8F1C-9067CD72EB69}"

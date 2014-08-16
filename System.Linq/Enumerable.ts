@@ -556,7 +556,7 @@ module System.Linq {
 						: EnumerableAction.Return);
 		}
 
-		skipWhile(predicate: Predicate<T>)
+		skipWhile(predicate: Predicate<T>):Enumerable<T>
 		{
 
 			this.assertIsNotDisposed();
@@ -582,6 +582,16 @@ module System.Linq {
 			return (!count || count < 0)  // Out of bounds? Simply return an empty enumerable.
 				? Enumerable.empty<T>()
 				: this.doAction((element: T, index?: number) => index < count);
+		}
+
+		takeWhile(predicate: Predicate<T>): Enumerable<T>
+		{
+
+			this.assertIsNotDisposed();
+
+			return this.doAction(
+				(element: T, index?: number)
+					=> predicate(element, index) ? EnumerableAction.Return : EnumerableAction.Break);
 		}
 
 		takeExceptLast(count: number = 1): Enumerable<T>
