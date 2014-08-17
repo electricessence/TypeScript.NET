@@ -1,5 +1,4 @@
-﻿/// <reference path="System.d.ts" />
-declare module System.Linq {
+﻿declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
         Return = 1,
@@ -18,16 +17,18 @@ declare module System.Linq {
         static repeat<T>(element: T, count?: number): Enumerable<T>;
         static repeatWithFinalize<T>(initializer: () => T, finalizer: (element: T) => void): Enumerable<T>;
         static make<T>(element: T): Enumerable<T>;
-        static range(start: number, count: number, step?: number): Enumerable<number>;
-        static rangeDown(start: number, count: number, step?: number): Enumerable<number>;
+        static range(start?: number, count?: number, step?: number): Enumerable<number>;
+        static rangeDown(start?: number, count?: number, step?: number): Enumerable<number>;
         static toInfinity(start?: number, step?: number): Enumerable<number>;
         static toNegativeInfinity(start?: number, step?: number): Enumerable<number>;
-        static rangeTo(start: number, to: number, step?: number): Enumerable<number>;
+        static rangeTo(start?: number, to?: number, step?: number): Enumerable<number>;
         static matches(input: string, pattern: any, flags?: string): Enumerable<RegExpExecArray>;
         static generate<T>(factory: (index?: number) => T, count?: number): Enumerable<T>;
-        static unfold<T>(seed: T, valueFactory: Selector<T, T>): Enumerable<T>;
+        static unfold<T>(seed: T, valueFactory: Selector<T, T>, skipSeed?: Boolean): Enumerable<T>;
         static defer<T>(enumerableFactory: () => Collections.IEnumerable<T>): Enumerable<T>;
         static forEach<T>(enumerable: Collections.IEnumerable<T>, action: (element: T, index?: number) => any): void;
+        static max(values: Enumerable<number>): number;
+        static min(values: Enumerable<number>): number;
         public assertIsNotDisposed(errorMessage?: string): boolean;
         public forEach(action: Predicate<T>): void;
         public forEach(action: Action<T>): void;
@@ -46,6 +47,7 @@ declare module System.Linq {
         public skipWhile(predicate: Predicate<T>): Enumerable<T>;
         public take(count: number): Enumerable<T>;
         public takeWhile(predicate: Predicate<T>): Enumerable<T>;
+        public takeUntil(predicate: Predicate<T>, includeUntilValue?: boolean): Enumerable<T>;
         public takeExceptLast(count?: number): Enumerable<T>;
         public takeFromLast(count: number): Enumerable<T>;
         public traverseBreadthFirst(func: (element: any) => Collections.IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any>;
@@ -76,6 +78,8 @@ declare module System.Linq {
         public indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
+        public zipWith<TSecond, TResult>(second: Enumerable<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        public zipWith<TSecond, TResult>(second: Collections.IArray<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
         public concatWith(other: Collections.IEnumerable<T>): Enumerable<T>;
         public concatWith(other: Collections.IArray<T>): Enumerable<T>;
         public concatMultiple(enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;

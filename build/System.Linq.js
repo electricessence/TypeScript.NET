@@ -35,12 +35,20 @@ var System;
 
         var Types = new System.Types();
 
+        var INT_0 = 0 | 0, INT_NEGATTIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
+
         function assertIsNotDisposed(disposed) {
             return System.DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
         }
 
         function numberOrNaN(value) {
             return isNaN(value) ? NaN : value;
+        }
+
+        function assertInteger(value, variable) {
+            if (typeof value === Types.Number && !isNaN(value) && value != (value | 0))
+                throw new Error("'" + variable + "'" + " must be an integer.");
+            return true;
         }
 
         (function (EnumerableAction) {
@@ -64,7 +72,7 @@ var System;
                 if ("getEnumerator" in source)
                     return source;
 
-                if (source instanceof Array || typeof source == System.Types.Object && "length" in source)
+                if (source instanceof Array || typeof source === System.Types.Object && "length" in source)
                     return Enumerable.fromArray(source);
 
                 throw new Error("Unsupported enumerable.");
@@ -91,12 +99,12 @@ var System;
 
             Enumerable.cycle = function (values) {
                 return new Enumerable(function () {
-                    var index;
+                    var index = INT_0;
                     return new EnumeratorBase(function () {
-                        index = 0;
+                        index = INT_0;
                     }, function (yielder) {
                         if (index >= values.length)
-                            index = 0;
+                            index = INT_0;
                         return yielder.yieldReturn(values[index++]);
                     });
                 });
@@ -113,13 +121,18 @@ var System;
                 if (isNaN(count) || count <= 0)
                     return Enumerable.empty();
 
-                return new Enumerable(function () {
-                    var index;
+                return isFinite(count) && assertInteger(count, "count") ? new Enumerable(function () {
+                    var c = count | 0;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
-                        index = 0;
+                        index = INT_0;
                     }, function (yielder) {
-                        return (index++ < count) ? yielder.yieldReturn(element) : false;
+                        return (index++ < c) && yielder.yieldReturn(element);
+                    });
+                }) : new Enumerable(function () {
+                    return new EnumeratorBase(null, function (yielder) {
+                        return yielder.yieldReturn(element);
                     });
                 });
             };
@@ -138,66 +151,111 @@ var System;
             };
 
             Enumerable.make = function (element) {
-                return Enumerable.repeat(element, 1);
+                return Enumerable.repeat(element, INT_POSITIVE_1);
             };
 
             Enumerable.range = function (start, count, step) {
-                if (!count)
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof count === "undefined") { count = Infinity; }
+                if (typeof step === "undefined") { step = 1; }
+                if (!isFinite(start))
+                    throw new Error("Must have a valid 'start' value.");
+
+                if (isNaN(count) || count <= 0)
                     return Enumerable.empty();
 
-                if (!step)
-                    step = 1;
+                if (!isFinite(step))
+                    throw new Error("Must have a valid 'step' value.");
 
-                return new Enumerable(function () {
+                return isFinite(count) && assertInteger(count, "count") ? new Enumerable(function () {
                     var value;
-                    var index;
+                    var c = count | 0;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
-                        index = 0;
-                        value = start - step;
+                        index = INT_0;
+                        value = start;
                     }, function (yielder) {
-                        return (index++ < count) ? yielder.yieldReturn(value += step) : yielder.yieldBreak();
+                        var result = index++ < c && yielder.yieldReturn(value);
+
+                        if (result && index < count)
+                            value += step;
+
+                        return result;
+                    });
+                }) : new Enumerable(function () {
+                    var value;
+
+                    return new EnumeratorBase(function () {
+                        value = start;
+                    }, function (yielder) {
+                        var current = value;
+                        value += step;
+                        return yielder.yieldReturn(current);
                     });
                 });
             };
 
             Enumerable.rangeDown = function (start, count, step) {
-                if (!step)
-                    step = -1;
-                else
-                    step *= -1;
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof count === "undefined") { count = Infinity; }
+                if (typeof step === "undefined") { step = 1; }
+                step = Math.abs(step) * -1;
 
                 return Enumerable.range(start, count, step);
             };
 
             Enumerable.toInfinity = function (start, step) {
-                return Enumerable.rangeTo(start, Infinity, step);
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof step === "undefined") { step = 1; }
+                return Enumerable.range(start, Infinity, step);
             };
 
             Enumerable.toNegativeInfinity = function (start, step) {
-                return Enumerable.rangeTo(start, -Infinity, step);
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof step === "undefined") { step = 1; }
+                return Enumerable.rangeDown(start, Infinity, step);
             };
 
             Enumerable.rangeTo = function (start, to, step) {
-                if (!start)
-                    start = 0;
-                if (!step)
-                    step = 1;
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof to === "undefined") { to = Infinity; }
+                if (typeof step === "undefined") { step = 1; }
+                if (!isFinite(start))
+                    throw new Error("Must have a valid 'start' value.");
+
+                if (isNaN(to))
+                    throw new Error("Must have a valid 'to' value.");
+
+                if (!isFinite(step))
+                    throw new Error("Must have a valid 'step' value.");
+
                 step = Math.abs(step);
+
+                if (!isFinite(to))
+                    return Enumerable.range(start, Infinity, (start < to) ? (+step) : (-step));
 
                 return new Enumerable(function () {
                     var value;
 
                     return start < to ? new EnumeratorBase(function () {
-                        value = start - step;
+                        value = start;
                     }, function (yielder) {
-                        var next = value += step;
-                        return (next <= to) ? yielder.yieldReturn(next) : yielder.yieldBreak();
+                        var result = value <= to && yielder.yieldReturn(value);
+
+                        if (result)
+                            value += step;
+
+                        return result;
                     }) : new EnumeratorBase(function () {
-                        value = start + step;
+                        value = start;
                     }, function (yielder) {
-                        var next = value -= step;
-                        return (next >= to) ? yielder.yieldReturn(next) : yielder.yieldBreak();
+                        var result = value >= to && yielder.yieldReturn(value);
+
+                        if (result)
+                            value -= step;
+
+                        return result;
                     });
                 });
             };
@@ -217,8 +275,6 @@ var System;
                 if (flags.indexOf("g") === -1)
                     flags += "g";
 
-                var len = input.length;
-
                 return new Enumerable(function () {
                     var regex;
                     return new EnumeratorBase(function () {
@@ -231,33 +287,46 @@ var System;
             };
 
             Enumerable.generate = function (factory, count) {
-                if (typeof count == Types.Number && (count <= 0 || isNaN(count)))
+                if (typeof count === "undefined") { count = Infinity; }
+                if (isNaN(count) || count <= 0)
                     return Enumerable.empty();
 
-                if (!count)
-                    count = Infinity;
-
-                return new Enumerable(function () {
-                    var index;
+                return isFinite(count) && assertInteger(count, "count") ? new Enumerable(function () {
+                    var c = count | 0;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
-                        index = 0;
+                        index = INT_0;
                     }, function (yielder) {
                         var current = index++;
-                        return (current < count) ? yielder.yieldReturn(factory(current)) : false;
+                        return current < c && yielder.yieldReturn(factory(current));
+                    });
+                }) : new Enumerable(function () {
+                    var index = INT_0;
+                    return new EnumeratorBase(function () {
+                        index = INT_0;
+                    }, function (yielder) {
+                        return yielder.yieldReturn(factory(index++));
                     });
                 });
             };
 
-            Enumerable.unfold = function (seed, valueFactory) {
+            Enumerable.unfold = function (seed, valueFactory, skipSeed) {
+                if (typeof skipSeed === "undefined") { skipSeed = false; }
                 return new Enumerable(function () {
-                    var index;
+                    var index = INT_0;
                     var value;
+                    var isFirst;
                     return new EnumeratorBase(function () {
-                        index = 0;
+                        index = INT_0;
                         value = seed;
+                        isFirst = !skipSeed;
                     }, function (yielder) {
-                        value = valueFactory(value, index++);
+                        var i = index++;
+                        if (isFirst)
+                            isFirst = false;
+                        else
+                            value = valueFactory(value, i);
                         return yielder.yieldReturn(value);
                     });
                 });
@@ -270,7 +339,7 @@ var System;
                     return new EnumeratorBase(function () {
                         enumerator = enumerableFactory().getEnumerator();
                     }, function (yielder) {
-                        return (enumerator.moveNext()) ? yielder.yieldReturn(enumerator.current) : yielder.yieldBreak();
+                        return enumerator.moveNext() && yielder.yieldReturn(enumerator.current);
                     }, function () {
                         enumerator.dispose();
                     });
@@ -288,6 +357,18 @@ var System;
                 });
             };
 
+            Enumerable.max = function (values) {
+                return values.takeUntil(function (v) {
+                    return v == +Infinity;
+                }, true).aggregate(Functions.Greater);
+            };
+
+            Enumerable.min = function (values) {
+                return values.takeUntil(function (v) {
+                    return v == -Infinity;
+                }, true).aggregate(Functions.Lesser);
+            };
+
             Enumerable.prototype.assertIsNotDisposed = function (errorMessage) {
                 if (typeof errorMessage === "undefined") { errorMessage = "Enumerable was disposed."; }
                 return _super.prototype.assertIsNotDisposed.call(this, errorMessage);
@@ -297,7 +378,7 @@ var System;
                 var _ = this;
                 _.assertIsNotDisposed();
 
-                var index = 0;
+                var index = INT_0;
 
                 using(_.getEnumerator(), function (e) {
                     while (_.assertIsNotDisposed() && e.moveNext() && action(e.current, index++) !== false) {
@@ -370,12 +451,12 @@ var System;
 
                 return new Enumerable(function () {
                     var enumerator;
-                    var index;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
 
-                        index = 0;
+                        index = INT_0;
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
                         assertIsNotDisposed(disposed);
@@ -408,10 +489,22 @@ var System;
             };
 
             Enumerable.prototype.skip = function (count) {
-                this.assertIsNotDisposed();
+                var _ = this;
 
-                return (!count || count < 0) ? this.asEnumerable() : this.doAction(function (element, index) {
-                    return index < count ? 2 /* Skip */ : 1 /* Return */;
+                _.assertIsNotDisposed();
+
+                if (!count || isNaN(count) || count < 0)
+                    return _;
+
+                if (!isFinite(count))
+                    return Enumerable.empty();
+
+                assertInteger(count, "count");
+
+                var c = count | 0;
+
+                return this.doAction(function (element, index) {
+                    return index < c ? 2 /* Skip */ : 1 /* Return */;
                 });
             };
 
@@ -429,10 +522,20 @@ var System;
             };
 
             Enumerable.prototype.take = function (count) {
-                this.assertIsNotDisposed();
+                if (!count || isNaN(count) || count < 0)
+                    return Enumerable.empty();
 
-                return (!count || count < 0) ? Enumerable.empty() : this.doAction(function (element, index) {
-                    return index < count;
+                var _ = this;
+                _.assertIsNotDisposed();
+
+                if (!isFinite(count))
+                    return _;
+
+                assertInteger(count, "count");
+                var c = count | 0;
+
+                return _.doAction(function (element, index) {
+                    return index < c;
                 });
             };
 
@@ -444,14 +547,39 @@ var System;
                 });
             };
 
+            Enumerable.prototype.takeUntil = function (predicate, includeUntilValue) {
+                this.assertIsNotDisposed();
+
+                if (!includeUntilValue)
+                    return this.doAction(function (element, index) {
+                        return predicate(element, index) ? 0 /* Break */ : 1 /* Return */;
+                    });
+
+                var found = false;
+                return this.doAction(function (element, index) {
+                    if (found)
+                        return 0 /* Break */;
+
+                    found = predicate(element, index);
+
+                    return 1 /* Return */;
+                });
+            };
+
             Enumerable.prototype.takeExceptLast = function (count) {
                 if (typeof count === "undefined") { count = 1; }
                 var _ = this;
 
-                return new Enumerable(function () {
-                    if (count <= 0)
-                        return _.getEnumerator();
+                if (!count || isNaN(count) || count <= 0)
+                    return _;
 
+                if (!isFinite(count))
+                    return Enumerable.empty();
+
+                assertInteger(count, "count");
+                var c = count | 0;
+
+                return new Enumerable(function () {
                     var enumerator;
                     var q;
 
@@ -462,7 +590,7 @@ var System;
                         while (enumerator.moveNext()) {
                             q.push(enumerator.current);
 
-                            if (q.length > count)
+                            if (q.length > c)
                                 return yielder.yieldReturn(q.shift());
                         }
                         return false;
@@ -473,29 +601,17 @@ var System;
             };
 
             Enumerable.prototype.takeFromLast = function (count) {
-                if (!count || count < 0)
+                if (!count || isNaN(count) || count <= 0)
                     return Enumerable.empty();
+
                 var _ = this;
 
-                return new Enumerable(function () {
-                    var enumerator;
+                if (!isFinite(count))
+                    return _.reverse();
 
-                    return new EnumeratorBase(function () {
-                        var q = [];
-                        using(_.getEnumerator(), function (e) {
-                            while (e.moveNext()) {
-                                if (q.length == count)
-                                    q.shift();
-                                q.push(e.current);
-                            }
-                        });
-                        enumerator = Enumerable.fromArray(q).getEnumerator();
-                    }, function (yielder) {
-                        return enumerator.moveNext() && yielder.yieldReturn(enumerator.current);
-                    }, function () {
-                        enumerator.dispose();
-                    });
-                });
+                assertInteger(count, "count");
+
+                return _.reverse().take(count | 0);
             };
 
             Enumerable.prototype.traverseBreadthFirst = function (func, resultSelector) {
@@ -503,10 +619,12 @@ var System;
 
                 return new Enumerable(function () {
                     var enumerator;
-                    var nestLevel = 0;
-                    var buffer = [];
+                    var nestLevel = INT_0;
+                    var buffer;
 
                     return new EnumeratorBase(function () {
+                        nestLevel = INT_0;
+                        buffer = [];
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
                         while (true) {
@@ -656,12 +774,12 @@ var System;
 
                 return new Enumerable(function () {
                     var enumerator;
-                    var index;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
 
-                        index = 0;
+                        index = INT_0;
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
                         assertIsNotDisposed(disposed);
@@ -685,12 +803,12 @@ var System;
                 return new Enumerable(function () {
                     var enumerator;
                     var middleEnumerator;
-                    var index;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         enumerator = _.getEnumerator();
                         middleEnumerator = undefined;
-                        index = 0;
+                        index = INT_0;
                     }, function (yielder) {
                         if (middleEnumerator === undefined && !enumerator.moveNext())
                             return false;
@@ -726,12 +844,12 @@ var System;
 
                 return new Enumerable(function () {
                     var enumerator;
-                    var index;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
 
-                        index = 0;
+                        index = INT_0;
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
                         assertIsNotDisposed(disposed);
@@ -759,12 +877,12 @@ var System;
 
                 return new Enumerable(function () {
                     var enumerator;
-                    var index;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
 
-                        index = 0;
+                        index = INT_0;
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
                         assertIsNotDisposed(disposed);
@@ -885,14 +1003,14 @@ var System;
 
                 return new Enumerable(function () {
                     var buffer;
-                    var index;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
                         buffer = _.toArray();
-                        index = buffer.length;
+                        index = buffer.length | 0;
                     }, function (yielder) {
-                        return index > 0 && yielder.yieldReturn(buffer[--index]);
+                        return index > INT_0 && yielder.yieldReturn(buffer[--index]);
                     }, function () {
                         buffer.length = 0;
                     });
@@ -912,7 +1030,7 @@ var System;
                         buffer = _.toArray();
                     }, function (yielder) {
                         var len = buffer.length;
-                        return len && yielder.yieldReturn(buffer.splice((Math.random() * len) | 0, 1 | 0).pop());
+                        return len && yielder.yieldReturn(buffer.splice((Math.random() * len) | 0, INT_POSITIVE_1).pop());
                     }, function () {
                         buffer.length = 0;
                     });
@@ -925,7 +1043,7 @@ var System;
                 var _ = this;
                 _.assertIsNotDisposed();
 
-                var count = 0;
+                var count = INT_0;
                 if (predicate) {
                     _.forEach(function (x, i) {
                         if (predicate(x, i))
@@ -989,7 +1107,7 @@ var System;
             };
 
             Enumerable.prototype.indexOf = function (value, compareSelector) {
-                var found = -1;
+                var found = INT_NEGATTIVE_1;
 
                 if (compareSelector)
                     this.forEach(function (element, i) {
@@ -1010,7 +1128,7 @@ var System;
             };
 
             Enumerable.prototype.lastIndexOf = function (value, compareSelector) {
-                var result = -1;
+                var result = INT_NEGATTIVE_1;
 
                 if (compareSelector)
                     this.forEach(function (element, i) {
@@ -1055,6 +1173,26 @@ var System;
                 });
             };
 
+            Enumerable.prototype.zipWith = function (second, resultSelector) {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var firstEnumerator;
+                    var secondEnumerator;
+                    var index = INT_0;
+
+                    return new EnumeratorBase(function () {
+                        index = INT_0;
+                        firstEnumerator = _.getEnumerator();
+                        secondEnumerator = Enumerable.from(second).getEnumerator();
+                    }, function (yielder) {
+                        return firstEnumerator.moveNext() && secondEnumerator.moveNext() && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
+                    }, function () {
+                        System.dispose(firstEnumerator, secondEnumerator);
+                    });
+                });
+            };
+
             Enumerable.prototype.concatWith = function (other) {
                 var _ = this;
 
@@ -1082,7 +1220,7 @@ var System;
             Enumerable.prototype.concatMultiple = function (enumerables) {
                 var _ = this;
 
-                if (enumerables.length == 0)
+                if (!enumerables.length)
                     return _;
 
                 if (enumerables.length == 1)
@@ -1094,8 +1232,9 @@ var System;
                     var enumerator;
 
                     return new EnumeratorBase(null, function (yielder) {
-                        while (!enumerator && enumerables.length)
+                        while (!enumerator && enumerables.length) {
                             enumerator = enumerables.shift();
+                        }
 
                         if (enumerator && enumerator.moveNext())
                             return yielder.yieldReturn(enumerator.current);
@@ -1226,7 +1365,7 @@ var System;
                                 break;
                         }
 
-                        if (group.length > 0) {
+                        if (group.length) {
                             var result = resultSelector(key, group);
 
                             if (hasNext) {
@@ -1247,8 +1386,11 @@ var System;
             };
 
             Enumerable.prototype.buffer = function (size) {
-                if (size < 1)
+                if (size < 1 || !isFinite(size))
                     throw new Error("Invalid buffer size.");
+
+                assertInteger(size, "size");
+
                 var _ = this;
 
                 return new Enumerable(function () {
@@ -1257,8 +1399,9 @@ var System;
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
                         var array = [];
-                        while (array.length < size && enumerator.moveNext())
+                        while (array.length < size && enumerator.moveNext) {
                             array.push(enumerator.current);
+                        }
 
                         return array.length && yielder.yieldReturn(array);
                     }, function () {
@@ -1274,6 +1417,9 @@ var System;
             Enumerable.prototype.average = function (selector) {
                 if (typeof selector === "undefined") { selector = numberOrNaN; }
                 var sum = 0;
+
+                var sumInfinite = 0;
+
                 var count = 0;
 
                 this.forEach(function (x) {
@@ -1282,9 +1428,15 @@ var System;
                         sum = NaN;
                         return false;
                     }
-                    sum += value;
+                    if (isFinite(value))
+                        sum += value;
+                    else
+                        sumInfinite += value > 0 ? (+1) : (-1);
                     ++count;
                 });
+
+                if (sumInfinite)
+                    return sumInfinite * Infinity;
 
                 return (isNaN(sum) || !count) ? NaN : (sum / count);
             };
@@ -1315,16 +1467,21 @@ var System;
                 if (typeof selector === "undefined") { selector = numberOrNaN; }
                 var sum = 0;
 
+                var sumInfinite = 0;
+
                 this.forEach(function (x) {
                     var value = selector(x);
                     if (!isNaN(value)) {
                         sum = NaN;
                         return false;
                     }
-                    sum += value;
+                    if (isFinite(value))
+                        sum += value;
+                    else
+                        sumInfinite += value > 0 ? (+1) : (-1);
                 });
 
-                return isNaN(sum) ? NaN : sum;
+                return isNaN(sum) ? NaN : (sumInfinite ? sum : (sumInfinite * Infinity));
             };
 
             Enumerable.prototype.product = function (selector) {
@@ -1338,6 +1495,7 @@ var System;
                         result = NaN;
                         return false;
                     }
+
                     result *= value;
                 });
 
@@ -1345,13 +1503,19 @@ var System;
             };
 
             Enumerable.prototype.elementAt = function (index) {
+                if (isNaN(index) || index < 0 || !isFinite(index))
+                    throw new Error("'index' is invalid or out of bounds.");
+
+                assertInteger(index, "index");
+                var n = index | 0;
+
                 var _ = this;
                 _.assertIsNotDisposed();
 
                 var value;
                 var found = false;
                 _.forEach(function (x, i) {
-                    if (i == index) {
+                    if (i == n) {
                         value = x;
                         found = true;
                         return false;
@@ -1365,13 +1529,19 @@ var System;
 
             Enumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
                 if (typeof defaultValue === "undefined") { defaultValue = null; }
+                if (isNaN(index) || index < 0 || !isFinite(index))
+                    throw new Error("'index' is invalid or out of bounds.");
+
+                assertInteger(index, "index");
+                var n = index | 0;
+
                 var _ = this;
                 _.assertIsNotDisposed();
 
                 var value;
                 var found = false;
                 _.forEach(function (x, i) {
-                    if (i == index) {
+                    if (i == n) {
                         value = x;
                         found = true;
                         return false;
@@ -1493,8 +1663,7 @@ var System;
                         return sharedEnumerator.moveNext() && yielder.yieldReturn(sharedEnumerator.current);
                     });
                 }, function () {
-                    if (sharedEnumerator)
-                        sharedEnumerator.dispose();
+                    System.dispose(sharedEnumerator);
                 });
             };
 
@@ -1504,7 +1673,7 @@ var System;
                 var cache;
                 return new Enumerable(function () {
                     var enumerator;
-                    var index;
+                    var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
@@ -1513,17 +1682,17 @@ var System;
                             enumerator = _.getEnumerator();
                         if (!cache)
                             cache = [];
-                        index = -1;
+                        index = INT_0;
                     }, function (yielder) {
                         assertIsNotDisposed(disposed);
 
-                        index++;
+                        var i = index++;
 
-                        if (index >= cache.length) {
-                            return (enumerator.moveNext()) ? yielder.yieldReturn(cache[index] = enumerator.current) : false;
+                        if (i >= cache.length) {
+                            return (enumerator.moveNext()) ? yielder.yieldReturn(cache[i] = enumerator.current) : false;
                         }
 
-                        return yielder.yieldReturn(cache[index]);
+                        return yielder.yieldReturn(cache[i]);
                     });
                 }, function () {
                     disposed = true;
@@ -1620,8 +1789,9 @@ var System;
                     return s.slice();
 
                 var len = s.length, result = new Array(len);
-                for (var i = 0 | 0; i < len; ++i)
+                for (var i = INT_0; i < len; ++i) {
                     result[i] = s[i];
+                }
 
                 return result;
             };
@@ -1636,7 +1806,7 @@ var System;
 
                 var source = _._source;
                 if (source) {
-                    for (var i = 0 | 0; i < source.length; ++i) {
+                    for (var i = INT_0; i < source.length; ++i) {
                         if (action(source[i], i) === false)
                             break;
                     }
@@ -1804,9 +1974,10 @@ var System;
                 return new System.Collections.EnumeratorBase(function () {
                     enumerator = source.getEnumerator();
                 }, function (yielder) {
-                    while (enumerator.moveNext())
+                    while (enumerator.moveNext()) {
                         if (predicate(enumerator.current))
                             return yielder.yieldReturn(enumerator.current);
+                    }
 
                     return false;
                 }, function () {
@@ -1902,7 +2073,7 @@ var System;
                 var _ = this;
                 var buffer;
                 var indexes;
-                var index = 0;
+                var index = INT_0;
 
                 return new System.Collections.EnumeratorBase(function () {
                     buffer = [];
@@ -1949,18 +2120,21 @@ var System;
             SortContext.create = function (orderedEnumerable, currentContext) {
                 if (typeof currentContext === "undefined") { currentContext = null; }
                 var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+
                 if (orderedEnumerable.parent)
                     return SortContext.create(orderedEnumerable.parent, context);
+
                 return context;
             };
 
             SortContext.prototype.generateKeys = function (source) {
                 var _ = this;
-                var len = source.length;
+                var len = source.length | 0;
                 var keySelector = _.keySelector;
                 var keys = new Array(len);
-                for (var i = 0 | 0; i < len; ++i)
+                for (var i = INT_0; i < len; ++i) {
                     keys[i] = keySelector(source[i]);
+                }
                 _.keys = keys;
 
                 if (_.child)
