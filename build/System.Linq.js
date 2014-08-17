@@ -1055,7 +1055,7 @@ var System;
                 });
             };
 
-            Enumerable.prototype.concat = function (other) {
+            Enumerable.prototype.concatWith = function (other) {
                 var _ = this;
 
                 return new Enumerable(function () {
@@ -1077,6 +1077,52 @@ var System;
                         System.dispose(firstEnumerator, secondEnumerator);
                     });
                 });
+            };
+
+            Enumerable.prototype.concatMultiple = function (enumerables) {
+                var _ = this;
+
+                if (enumerables.length == 0)
+                    return _;
+
+                if (enumerables.length == 1)
+                    return _.concatWith(enumerables[0]);
+
+                enumerables = enumerables.slice();
+
+                return new Enumerable(function () {
+                    var enumerator;
+
+                    return new EnumeratorBase(null, function (yielder) {
+                        while (!enumerator && enumerables.length)
+                            enumerator = enumerables.shift();
+
+                        if (enumerator && enumerator.moveNext())
+                            return yielder.yieldReturn(enumerator.current);
+
+                        if (enumerator) {
+                            enumerator.dispose();
+                            enumerator = null;
+                        }
+
+                        return yielder.yieldBreak();
+                    });
+                });
+            };
+
+            Enumerable.prototype.concat = function () {
+                var enumerables = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    enumerables[_i] = arguments[_i + 0];
+                }
+                var _ = this;
+                if (enumerables.length == 0)
+                    return _;
+
+                if (enumerables.length == 1)
+                    return _.concatWith(enumerables[0]);
+
+                return _.concatMultiple(enumerables);
             };
 
             Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {

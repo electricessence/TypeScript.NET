@@ -1561,9 +1561,9 @@ module System.Linq {
 
 		// multiple arguments
 
-		concat(other:IEnumerable<T>):Enumerable<T>
-		concat(other:IArray<T>) :Enumerable<T>
-		concat(other: any): Enumerable<T>
+		concatWith(other: IEnumerable<T>): Enumerable<T>;
+		concatWith(other: IArray<T>): Enumerable<T>;
+		concatWith(other: any): Enumerable<T>
 		{
 			var _ = this;
 
@@ -1590,70 +1590,60 @@ module System.Linq {
 					});
 			});
 		}
-		/** /
-		concat(...enumerables:any[]):Enumerable<T>{
+
+		concatMultiple(enumerables: IEnumerable<T>[]): Enumerable<T>;
+		concatMultiple(enumerables: IArray<T>[]): Enumerable<T>;
+		concatMultiple(enumerables: any[]):Enumerable<T>{
 			var _ = this;
 
-			if (arguments.length == 1) {
-				var second = arguments[0];
+			if (enumerables.length == 0)
+				return _;
 
-				return new Enumerable<T>(() => {
-					var firstEnumerator;
-					var secondEnumerator;
+			if (enumerables.length == 1)
+				return _.concatWith(enumerables[0]);
 
-					return new EnumeratorBase<T>(
-						() => { firstEnumerator = _.getEnumerator(); },
-						() => {
-							if (secondEnumerator == null) {
-								if (firstEnumerator.moveNext()) return (<any>this).yieldReturn(firstEnumerator.current);
-								secondEnumerator = Enumerable.from(second).getEnumerator();
-							}
-							if (secondEnumerator.moveNext()) return (<any>this).yieldReturn(secondEnumerator.current);
-							return false;
-						},
-						() => {
-							try {
-								Utils.dispose(firstEnumerator);
-							}
-							finally {
-								Utils.dispose(secondEnumerator);
-							}
-						});
-				});
-			}
-			else {
-				var args = arguments;
+			enumerables = enumerables.slice();
 
-				return new Enumerable<T>(() => {
-					var enumerators;
+			return new Enumerable<T>(() =>
+			{
+				var enumerator:IEnumerator<T>;
 
-					return new EnumeratorBase<T>(
-						() => {
-							enumerators = Enumerable.make(_)
-								.concat(Enumerable.from(args).select(Enumerable.from))
-								.select(function (x) { return x.getEnumerator() })
-								.toArray();
-						},
-						() => {
-							while (enumerators.length > 0) {
-								var enumerator = enumerators[0];
+				return new EnumeratorBase<T>(
+					null,
+					yielder =>
+					{
 
-								if (enumerator.moveNext()) {
-									return (<any>this).yieldReturn(enumerator.current);
-								}
-								else {
-									enumerator.dispose();
-									enumerators.splice(0, 1);
-								}
-							}
-							return (<any>this).yieldBreak();
-						},
-						() => {
-							Enumerable.from(enumerators).forEach(Utils.dispose);
-						});
-				});
-			}
+						while (!enumerator && enumerables.length)
+							enumerator = enumerables.shift();
+
+						if (enumerator && enumerator.moveNext())
+							return yielder.yieldReturn(enumerator.current);
+
+						if (enumerator)
+						{
+							enumerator.dispose();
+							enumerator = null;
+						}
+
+						return yielder.yieldBreak();
+					});
+			});
 		}
+
+		concat(...enumerables: IEnumerable<T>[]): Enumerable<T>;
+		concat(...enumerables: IArray<T>[]): Enumerable<T>;
+		concat(...enumerables: any[]): Enumerable<T>
+		{
+			var _ = this;
+			if (enumerables.length == 0)
+				return _;
+
+			if (enumerables.length == 1)
+				return _.concatWith(enumerables[0]);
+
+			return _.concatMultiple(enumerables);
+		}
+
 		/** /
 	insert(index, second) {
 			var source = this;

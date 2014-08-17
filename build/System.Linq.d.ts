@@ -76,8 +76,12 @@ declare module System.Linq {
         public indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
-        public concat(other: Collections.IEnumerable<T>): Enumerable<T>;
-        public concat(other: Collections.IArray<T>): Enumerable<T>;
+        public concatWith(other: Collections.IEnumerable<T>): Enumerable<T>;
+        public concatWith(other: Collections.IArray<T>): Enumerable<T>;
+        public concatMultiple(enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;
+        public concatMultiple(enumerables: Collections.IArray<T>[]): Enumerable<T>;
+        public concat(...enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;
+        public concat(...enumerables: Collections.IArray<T>[]): Enumerable<T>;
         public sequenceEqual(second: Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
         public union<TCompare>(second: Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
         public union<TCompare>(second: Collections.IEnumerable<T>, compareSelector: Selector<T, TCompare>): Enumerable<T>;
