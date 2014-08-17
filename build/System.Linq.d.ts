@@ -1,5 +1,4 @@
-﻿/// <reference path="System.d.ts" />
-declare module System.Linq {
+﻿declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
         Return = 1,
@@ -76,8 +75,8 @@ declare module System.Linq {
         public indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
-        public zip<TSelect>(second: Enumerable<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>;
-        public zip<TSelect>(second: Collections.IArray<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>;
+        public concat(other: Collections.IEnumerable<T>): Enumerable<T>;
+        public concat(other: Collections.IArray<T>): Enumerable<T>;
         public sequenceEqual(second: Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
         public union<TCompare>(second: Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
         public union<TCompare>(second: Collections.IEnumerable<T>, compareSelector: Selector<T, TCompare>): Enumerable<T>;

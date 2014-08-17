@@ -1055,21 +1055,23 @@ var System;
                 });
             };
 
-            Enumerable.prototype.zip = function (second, resultSelector) {
+            Enumerable.prototype.concat = function (other) {
                 var _ = this;
 
                 return new Enumerable(function () {
                     var firstEnumerator;
                     var secondEnumerator;
-                    var index = 0 | 0;
 
                     return new EnumeratorBase(function () {
                         firstEnumerator = _.getEnumerator();
-                        secondEnumerator = Enumerable.from(second).getEnumerator();
                     }, function (yielder) {
-                        if (firstEnumerator.moveNext() && secondEnumerator.moveNext()) {
-                            return yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
+                        if (secondEnumerator == null) {
+                            if (firstEnumerator.moveNext())
+                                return yielder.yieldReturn(firstEnumerator.current);
+                            secondEnumerator = Enumerable.from(other).getEnumerator();
                         }
+                        if (secondEnumerator.moveNext())
+                            return yielder.yieldReturn(secondEnumerator.current);
                         return false;
                     }, function () {
                         System.dispose(firstEnumerator, secondEnumerator);

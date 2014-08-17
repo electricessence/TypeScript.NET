@@ -1377,7 +1377,7 @@ module System.Linq {
 					);
 			});
 		}
-
+		/* * 
 		zip<TSelect>(second: Enumerable<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>;
 		zip<TSelect>(second: IArray<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
 		zip<TSelect>(second: any, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
@@ -1437,32 +1437,27 @@ module System.Linq {
 							Enumerable.from(enumerators).forEach(Utils.dispose);
 						});
 				});
-			}*/
+			}
 		}
+		
+		merge<TSelect>(second: Enumerable<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>;
+		merge<TSelect>(second: IArray<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
+		merge<TSelect>(second: any, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
+		{
+			var _ = this;
 
-		/* * /
-		// mutiple arguments
-        merge(second: any[], resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        merge(second: Enumerable, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        merge(second: { length: number;[x: number]: any; }, resultSelector: (first: any, second: any, index: number) => any): Enumerable;
-        merge(...params: any[]): Enumerable; // last one is selector
-
-		merge() {
-			var args = arguments;
-			var source = this;
-
-			return new Enumerable<T>(() => {
-				var enumerators;
+			return new Enumerable<TSelect>(() => {
+				var enumerators:IEnumerable<IEnumerable<TSelect>>;
 				var index = -1;
 
-				return new EnumeratorBase<T>(
+				return new EnumeratorBase<TSelect>(
 					() => {
-						enumerators = Enumerable.make(source)
+						enumerators = _
 							.concat(Enumerable.from(args).select(Enumerable.from))
 							.select(function (x) { return x.getEnumerator() })
 							.toArray();
 					},
-					() => {
+					yielder => {
 						while (enumerators.length > 0) {
 							index = (index >= enumerators.length - 1) ? 0 : index + 1;
 							var enumerator = enumerators[index];
@@ -1475,16 +1470,18 @@ module System.Linq {
 								enumerators.splice(index--, 1);
 							}
 						}
-						return (<any>this).yieldBreak();
+						return yielder.yieldBreak();
 					},
-					() => {
-						Enumerable.from(enumerators).forEach(Utils.dispose);
+					() =>
+					{
+						System.dispose(enumerators);
 					});
 			});
 		}
 
+		/
 		// Join Methods
-        join(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumerable;
+		join(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumerable;
 
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
@@ -1530,7 +1527,7 @@ module System.Linq {
 			});
 		}
 
-        groupJoin(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumer
+		groupJoin(inner: Enumerable, outerKeySelector: (outer: any) =>any, innerKeySelector: (inner: any) =>any, resultSelector: (outer: any, inner: any) => any, compareSelector?: (obj: any) => any): Enumer
 
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
 		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
@@ -1560,10 +1557,42 @@ module System.Linq {
 					() => { Utils.dispose(enumerator); });
 			});
 		}
+		/* */
 
-			// multiple arguments
-	concat(){
-			var source = this;
+		// multiple arguments
+
+		concat(other:IEnumerable<T>):Enumerable<T>
+		concat(other:IArray<T>) :Enumerable<T>
+		concat(other: any): Enumerable<T>
+		{
+			var _ = this;
+
+			return new Enumerable<T>(() =>
+			{
+				var firstEnumerator:IEnumerator<T>;
+				var secondEnumerator:IEnumerator<T>;
+
+				return new EnumeratorBase<T>(
+					() => { firstEnumerator = _.getEnumerator(); },
+					yielder =>
+					{
+						if (secondEnumerator == null)
+						{
+							if (firstEnumerator.moveNext()) return yielder.yieldReturn(firstEnumerator.current);
+							secondEnumerator = Enumerable.from<T>(other).getEnumerator();
+						}
+						if (secondEnumerator.moveNext()) return yielder.yieldReturn(secondEnumerator.current);
+						return false;
+					},
+					() =>
+					{
+						System.dispose(firstEnumerator,secondEnumerator);
+					});
+			});
+		}
+		/** /
+		concat(...enumerables:any[]):Enumerable<T>{
+			var _ = this;
 
 			if (arguments.length == 1) {
 				var second = arguments[0];
@@ -1573,7 +1602,7 @@ module System.Linq {
 					var secondEnumerator;
 
 					return new EnumeratorBase<T>(
-						() => { firstEnumerator = source.getEnumerator(); },
+						() => { firstEnumerator = _.getEnumerator(); },
 						() => {
 							if (secondEnumerator == null) {
 								if (firstEnumerator.moveNext()) return (<any>this).yieldReturn(firstEnumerator.current);
@@ -1600,7 +1629,7 @@ module System.Linq {
 
 					return new EnumeratorBase<T>(
 						() => {
-							enumerators = Enumerable.make(source)
+							enumerators = Enumerable.make(_)
 								.concat(Enumerable.from(args).select(Enumerable.from))
 								.select(function (x) { return x.getEnumerator() })
 								.toArray();
@@ -1625,7 +1654,7 @@ module System.Linq {
 				});
 			}
 		}
-
+		/** /
 	insert(index, second) {
 			var source = this;
 
