@@ -10,6 +10,8 @@ module System.Collections {
 		throw new Error("DictionaryAbstractBase."+name+": Not implemented.");
 	}
 
+	// Design Note: Should DictionaryAbstractBase be IDisposable?
+
 	export class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	{
 		// This allows for batch updates in order to improve the efficiency of responsive systems.

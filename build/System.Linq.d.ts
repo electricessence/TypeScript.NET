@@ -1,4 +1,5 @@
-﻿declare module System.Linq {
+﻿/// <reference path="System.d.ts" />
+declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
         Return = 1,
@@ -86,9 +87,18 @@
         public concatMultiple(enumerables: Collections.IArray<T>[]): Enumerable<T>;
         public concat(...enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;
         public concat(...enumerables: Collections.IArray<T>[]): Enumerable<T>;
+        public insertAt(index: number, other: Collections.IEnumerable<T>): Enumerable<T>;
+        public insertAt(index: number, other: Collections.IArray<T>): Enumerable<T>;
+        public alternateMultiple(sequence: Collections.IEnumerable<T>): Enumerable<T>;
+        public alternateMultiple(sequence: Collections.IArray<T>): Enumerable<T>;
+        public alternateSingle(value: T): Enumerable<T>;
+        public alternate(...sequence: T[]): Enumerable<T>;
+        public intersect<TCompare>(second: Collections.IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+        public intersect<TCompare>(second: Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
         public sequenceEqual(second: Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
-        public union<TCompare>(second: Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+        public sequenceEqual(second: Collections.IArray<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
         public union<TCompare>(second: Collections.IEnumerable<T>, compareSelector: Selector<T, TCompare>): Enumerable<T>;
+        public union<TCompare>(second: Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
         public orderBy<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         public orderByDescending<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         public groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;

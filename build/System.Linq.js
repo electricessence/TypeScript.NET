@@ -1264,10 +1264,139 @@ var System;
                 return _.concatMultiple(enumerables);
             };
 
+            Enumerable.prototype.insertAt = function (index, other) {
+                if (isNaN(index) || index < 0 || !isFinite(index))
+                    throw new Error("'index' is invalid or out of bounds.");
+
+                assertInteger(index, "index");
+                var n = index | 0;
+
+                var _ = this;
+                _.assertIsNotDisposed();
+
+                return new Enumerable(function () {
+                    var firstEnumerator;
+                    var secondEnumerator;
+
+                    var count = INT_0;
+                    var isEnumerated = false;
+
+                    return new EnumeratorBase(function () {
+                        count = INT_0;
+                        firstEnumerator = _.getEnumerator();
+                        secondEnumerator = Enumerable.from(other).getEnumerator();
+                        isEnumerated = false;
+                    }, function (yielder) {
+                        if (count == n) {
+                            isEnumerated = true;
+                            if (secondEnumerator.moveNext())
+                                return yielder.yieldReturn(secondEnumerator.current);
+                        }
+
+                        if (firstEnumerator.moveNext()) {
+                            count++;
+                            return yielder.yieldReturn(firstEnumerator.current);
+                        }
+
+                        return !isEnumerated && secondEnumerator.moveNext() && yielder.yieldReturn(secondEnumerator.current);
+                    }, function () {
+                        System.dispose(firstEnumerator, secondEnumerator);
+                    });
+                });
+            };
+
+            Enumerable.prototype.alternateMultiple = function (sequence) {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var buffer, mode, enumerator, alternateEnumerator;
+
+                    return new EnumeratorBase(function () {
+                        alternateEnumerator = new System.Collections.ArrayEnumerator(Enumerable.from(sequence).toArray());
+
+                        enumerator = _.getEnumerator();
+
+                        var hasAtLeastOne = enumerator.moveNext();
+                        mode = hasAtLeastOne ? 1 /* Return */ : 0 /* Break */;
+
+                        if (hasAtLeastOne)
+                            buffer = enumerator.current;
+                    }, function (yielder) {
+                        switch (mode) {
+                            case 0 /* Break */:
+                                return yielder.yieldBreak();
+
+                            case 2 /* Skip */:
+                                if (alternateEnumerator.moveNext())
+                                    return yielder.yieldReturn(alternateEnumerator.current);
+                                alternateEnumerator.reset();
+                                mode = 1 /* Return */;
+                                break;
+                        }
+
+                        var latest = buffer;
+
+                        var another = enumerator.moveNext();
+                        mode = another ? 2 /* Skip */ : 0 /* Break */;
+
+                        if (another)
+                            buffer = enumerator.current;
+
+                        return yielder.yieldReturn(latest);
+                    }, function () {
+                        System.dispose(enumerator, alternateEnumerator);
+                    });
+                });
+            };
+
+            Enumerable.prototype.alternateSingle = function (value) {
+                return this.alternateMultiple(Enumerable.make(value));
+            };
+
+            Enumerable.prototype.alternate = function () {
+                var sequence = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    sequence[_i] = arguments[_i + 0];
+                }
+                return this.alternateMultiple(sequence);
+            };
+
+            Enumerable.prototype.intersect = function (second, compareSelector) {
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+                    var keys;
+                    var outs;
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+
+                        keys = new Dictionary(compareSelector);
+                        outs = new Dictionary(compareSelector);
+
+                        Enumerable.from(second).forEach(function (key) {
+                            keys.addByKeyValue(key, true);
+                        });
+                    }, function (yielder) {
+                        while (enumerator.moveNext()) {
+                            var current = enumerator.current;
+                            if (!outs.containsKey(current) && keys.containsKey(current)) {
+                                outs.addByKeyValue(current, true);
+                                return yielder.yieldReturn(current);
+                            }
+                        }
+                        return yielder.yieldBreak();
+                    }, function () {
+                        enumerator.dispose();
+                    });
+                });
+            };
+
             Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
                 if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
                 return using(this.getEnumerator(), function (e1) {
-                    return using(second.getEnumerator(), function (e2) {
+                    return using(Enumerable.from(second).getEnumerator(), function (e2) {
                         while (e1.moveNext()) {
                             if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
                                 return false;
@@ -1300,7 +1429,7 @@ var System;
                                     return yielder.yieldReturn(current);
                                 }
                             }
-                            secondEnumerator = "getEnumerator" in second ? second : Enumerable.fromArray(second).getEnumerator();
+                            secondEnumerator = Enumerable.from(second).getEnumerator();
                         }
                         while (secondEnumerator.moveNext()) {
                             current = secondEnumerator.current;

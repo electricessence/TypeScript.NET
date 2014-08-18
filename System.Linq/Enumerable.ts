@@ -1833,139 +1833,181 @@ module System.Linq
 			return _.concatMultiple(enumerables);
 		}
 
-		/*
-		insert(index, second) {
-			var source = this;
+		
+		insertAt(index: number, other: IEnumerable<T>): Enumerable<T>;
+		insertAt(index: number, other: IArray<T>): Enumerable<T>;
+		insertAt(index: number, other: any): Enumerable<T>
+		{
+			if (isNaN(index) || index < 0 || !isFinite(index))
+				throw new Error("'index' is invalid or out of bounds.");
+
+			assertInteger(index, "index");
+			var n: number = index | 0;
+
+			var _ = this;
+			_.assertIsNotDisposed();
 
 			return new Enumerable<T>(() => {
-				var firstEnumerator;
-				var secondEnumerator;
-				var count = 0;
-				var isEnumerated = false;
+
+				var firstEnumerator: IEnumerator<T>;
+				var secondEnumerator: IEnumerator<T>;
+
+				var count:number = INT_0;
+				var isEnumerated:boolean = false;
 
 				return new EnumeratorBase<T>(
-					() => {
-						firstEnumerator = source.getEnumerator();
-						secondEnumerator = Enumerable.from(second).getEnumerator();
+					() =>
+					{
+						count = INT_0;
+						firstEnumerator = _.getEnumerator();
+						secondEnumerator = Enumerable.from<T>(other).getEnumerator();
+						isEnumerated = false;
 					},
-					() => {
-						if (count == index && secondEnumerator.moveNext()) {
+					yielder => {
+						if (count == n)
+						{ // Inserting?
 							isEnumerated = true;
-							return (<any>this).yieldReturn(secondEnumerator.current);
+							if (secondEnumerator.moveNext())
+								return yielder.yieldReturn(secondEnumerator.current);
 						}
-						if (firstEnumerator.moveNext()) {
+
+						if (firstEnumerator.moveNext())
+						{
 							count++;
-							return (<any>this).yieldReturn(firstEnumerator.current);
+							return yielder.yieldReturn(firstEnumerator.current);
 						}
-						if (!isEnumerated && secondEnumerator.moveNext()) {
-							return (<any>this).yieldReturn(secondEnumerator.current);
-						}
-						return false;
+
+						return !isEnumerated
+							&& secondEnumerator.moveNext()
+							&& yielder.yieldReturn(secondEnumerator.current);
 					},
-					() => {
-						try {
-							Utils.dispose(firstEnumerator);
-						}
-						finally {
-							Utils.dispose(secondEnumerator);
-						}
+					() =>
+					{
+						System.dispose(firstEnumerator, secondEnumerator);
 					});
 			});
 		}
 
-		alternate(alternateValueOrSequence) {
-			var source = this;
+		
+		alternateMultiple(sequence: IEnumerable<T>): Enumerable<T>;
+		alternateMultiple(sequence: IArray<T>): Enumerable<T>;
+		alternateMultiple(sequence: any): Enumerable<T>
+		{
+			var _ = this;
 
 			return new Enumerable<T>(() => {
-				var buffer;
-				var enumerator;
-				var alternateSequence;
-				var alternateEnumerator;
+				var buffer: T,
+					mode: EnumerableAction,
+					enumerator: IEnumerator<T>,
+					alternateEnumerator:IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
-					() => {
-						if (alternateValueOrSequence instanceof Array || alternateValueOrSequence.getEnumerator != null) {
-							alternateSequence = Enumerable.from(Enumerable.from(alternateValueOrSequence).toArray()); // freeze
-						}
-						else {
-							alternateSequence = Enumerable.make(alternateValueOrSequence);
-						}
-						enumerator = source.getEnumerator();
-						if (enumerator.moveNext()) buffer = enumerator.current;
-					},
-					() => {
-						while (true) {
-							if (alternateEnumerator != null) {
-								if (alternateEnumerator.moveNext()) {
-									return (<any>this).yieldReturn(alternateEnumerator.current);
-								}
-								else {
-									alternateEnumerator = null;
-								}
-							}
+					() =>
+					{
+						// Instead of recalling getEnumerator every time, just reset the existing one.
+						alternateEnumerator = new System.Collections.ArrayEnumerator(
+							Enumerable.from<T>(sequence).toArray()); // Freeze 
 
-							if (buffer == null && enumerator.moveNext()) {
-								buffer = enumerator.current; // hasNext
-								alternateEnumerator = alternateSequence.getEnumerator();
-								continue; // GOTO
-							}
-							else if (buffer != null) {
-								var retVal = buffer;
-								buffer = null;
-								return (<any>this).yieldReturn(retVal);
-							}
+						enumerator = _.getEnumerator();
 
-							return (<any>this).yieldBreak();
-						}
+						var hasAtLeastOne = enumerator.moveNext();
+						mode = hasAtLeastOne
+							? EnumerableAction.Return
+							: EnumerableAction.Break;
+
+						if (hasAtLeastOne)
+							buffer = enumerator.current;
 					},
-					() => {
-						try {
-							Utils.dispose(enumerator);
+					yielder =>
+					{
+						switch (mode)
+						{
+							case EnumerableAction.Break: // We're done?
+								return yielder.yieldBreak();
+
+							case EnumerableAction.Skip:
+								if (alternateEnumerator.moveNext())
+									return yielder.yieldReturn(alternateEnumerator.current);
+								alternateEnumerator.reset();
+								mode = EnumerableAction.Return;
+								break;
 						}
-						finally {
-							Utils.dispose(alternateEnumerator);
-						}
+
+						var latest = buffer;
+
+						// Set up the next round...
+
+						// Is there another one?  Set the buffer and setup instruct for the next one to be the alternate.
+						var another = enumerator.moveNext();
+						mode = another
+							? EnumerableAction.Skip
+							: EnumerableAction.Break;
+
+						if (another)
+							buffer = enumerator.current;
+
+						return yielder.yieldReturn(latest);
+
+					},
+					() =>
+					{
+						System.dispose(enumerator, alternateEnumerator);
 					});
 			});
 		}
 
-				// Overload:function(second)
-		// Overload:function(second, compareSelector)
-		intersect(second, compareSelector) {
-			compareSelector = Utils.createLambda(compareSelector);
-			var source = this;
+		alternateSingle(value: T): Enumerable<T>
+		{
+			return this.alternateMultiple(Enumerable.make(value));
+		}
+
+		alternate(...sequence: T[]): Enumerable<T>
+		{
+			return this.alternateMultiple(sequence);
+		}
+
+
+		intersect<TCompare>(second: IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+		intersect<TCompare>(second: IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+		intersect<TCompare>(second: any, compareSelector?: Selector<T, TCompare>): Enumerable<T>
+		{
+			var _ = this;
 
 			return new Enumerable<T>(() => {
-				var enumerator;
-				var keys;
-				var outs;
+				var enumerator:IEnumerator<T>;
+				var keys:Dictionary<T,boolean>;
+				var outs:Dictionary<T,boolean>;
 
 				return new EnumeratorBase<T>(
 					() => {
-						enumerator = source.getEnumerator();
+						enumerator = _.getEnumerator();
 
-						keys = new Dictionary(compareSelector);
-						Enumerable.from(second).forEach(function (key) { keys.add(key); });
-						outs = new Dictionary(compareSelector);
+						keys = new Dictionary<T, boolean>(compareSelector);
+						outs = new Dictionary<T, boolean>(compareSelector);
+
+						Enumerable.from<T>(second)
+							.forEach(key=> { keys.addByKeyValue(key, true); });
 					},
-					() => {
+					yielder => {
 						while (enumerator.moveNext()) {
 							var current = enumerator.current;
-							if (!outs.contains(current) && keys.contains(current)) {
-								outs.add(current);
-								return (<any>this).yieldReturn(current);
+							if (!outs.containsKey(current) && keys.containsKey(current)) {
+								outs.addByKeyValue(current,true);
+								return yielder.yieldReturn(current);
 							}
 						}
-						return false;
+						return yielder.yieldBreak();
 					},
-					() => { Utils.dispose(enumerator); });
+					() => { enumerator.dispose(); });  // Should Dictionary be IDisposable?
 			});
 		}
-		*/
-		sequenceEqual(second: IEnumerable<T>, equalityComparer: (a: T, b: T) => boolean = System.areEqual): boolean
+
+		sequenceEqual(second: IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+		sequenceEqual(second: IArray<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+		sequenceEqual(second: any, equalityComparer: (a: T, b: T) => boolean = System.areEqual): boolean
 		{
 			return using(this.getEnumerator(),
-				e1=> using(second.getEnumerator(),
+				e1=> using(Enumerable.from<T>(second).getEnumerator(),
 					e2=>
 					{
 						while (e1.moveNext())
@@ -1981,11 +2023,11 @@ module System.Linq
 
 
 		union<TCompare>(
-			second: IArray<T>,
-			compareSelector?: Selector<T, TCompare>): Enumerable<T>;
-		union<TCompare>(
 			second: IEnumerable<T>,
 			compareSelector: Selector<T, TCompare>): Enumerable<T>;
+		union<TCompare>(
+			second: IArray<T>,
+			compareSelector?: Selector<T, TCompare>): Enumerable<T>;
 		union<TCompare>(
 			second: any,
 			compareSelector: Selector<T, TCompare> = Functions.Identity): Enumerable<T>
@@ -2019,9 +2061,7 @@ module System.Linq
 									return yielder.yieldReturn(current);
 								}
 							}
-							secondEnumerator = "getEnumerator" in second
-							? second
-							: Enumerable.fromArray(second).getEnumerator();
+							secondEnumerator = Enumerable.from<T>(second).getEnumerator();
 						}
 						while (secondEnumerator.moveNext())
 						{
