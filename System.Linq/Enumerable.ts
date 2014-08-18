@@ -1539,15 +1539,15 @@ module System.Linq
 			});
 		}
 
-		zipWith<TSecond, TResult>(
+		zip<TSecond, TResult>(
 			second: Enumerable<TSecond>,
 			resultSelector: (first: T, second: TSecond, index?: number) => TResult)
 			: Enumerable<TResult>;
-		zipWith<TSecond, TResult>(
+		zip<TSecond, TResult>(
 			second: IArray<TSecond>,
 			resultSelector: (first: T, second: TSecond, index?: number) => TResult
 			): Enumerable<TResult>;
-		zipWith<TSecond, TResult>(
+		zip<TSecond, TResult>(
 			second: any,
 			resultSelector: (first: T, second: TSecond, index?: number) => TResult)
 			: Enumerable<TResult>
@@ -1576,86 +1576,75 @@ module System.Linq
 					});
 			});
 		}
-		/* * /
-		zipMultiple<TSelect>(second: Enumerable<T>[], resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>;
-		zipMultiple<TSelect>(second: IArray<T>[], resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
-		zipMultiple<TSelect>(second: any[], resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
+
+		zipMultiple<TSecond, TResult>(second: Enumerable<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+		zipMultiple<TSecond, TResult>(second: IArray<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+		zipMultiple<TSecond, TResult>(second: any[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>
 		{
 			var _ = this;
 
-			return new Enumerable<TSelect>(() =>
-			{
-					var enumerators:IEnumerator<T>;
-					var index:number;
+			if (!second.length)
+				return Enumerable.empty<TResult>();
 
-				return new EnumeratorBase<TSelect>(
+			return new Enumerable<TResult>(() =>
+			{
+				var secondTemp: any[];
+				var firstEnumerator: IEnumerator<T>;
+				var secondEnumerator: IEnumerator<TSecond>;
+				var index: number = INT_0;
+
+				var getNext = () =>
+				{
+					while (!secondEnumerator)
+					{
+						secondEnumerator = secondTemp.shift();
+						if (!secondEnumerator && !secondTemp.length)
+							break;
+					}
+				}
+
+				return new EnumeratorBase<TResult>(
 					() =>
 					{
+						secondTemp = second.slice();
 						index = INT_0;
-							var array = Enumerable.make<T>(_)
-								.concat(Enumerable.from<T>(args).takeExceptLast().select(Enumerable.from))
-								.select(function (x) { return x.getEnumerator() })
-								.toArray();
-							enumerators = Enumerable.from(array);
-						},
-						yielder => {
-							if (enumerators.all(function (x) { return x.moveNext() })) {
-								var array = enumerators
-									.select(function (x) { return x.current })
-									.toArray();
-								array.push(index++);
-								return (<any>this).yieldReturn(selector.apply(null, array));
-							}
-							else {
-								return (<any>this).yieldBreak();
-							}
-						},
-						() => {
-							Enumerable.from(enumerators).forEach(Utils.dispose);
-						});
-				});
-			}
-		}
-		/* * /
-		merge<TSelect>(second: Enumerable<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>;
-		merge<TSelect>(second: IArray<T>, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
-		merge<TSelect>(second: any, resultSelector: (first: T, second: T, index?: number) => TSelect): Enumerable<TSelect>
-		{
-			var _ = this;
-
-			return new Enumerable<TSelect>(() => {
-				var enumerators:IEnumerable<IEnumerable<TSelect>>;
-				var index = -1;
-
-				return new EnumeratorBase<TSelect>(
-					() => {
-						enumerators = _
-							.concat(Enumerable.from(args).select(Enumerable.from))
-							.select(function (x) { return x.getEnumerator() })
-							.toArray();
+						firstEnumerator = _.getEnumerator();
+						secondEnumerator = null;
 					},
-					yielder => {
-						while (enumerators.length > 0) {
-							index = (index >= enumerators.length - 1) ? 0 : index + 1;
-							var enumerator = enumerators[index];
 
-							if (enumerator.moveNext()) {
-								return (<any>this).yieldReturn(enumerator.current);
-							}
-							else {
-								enumerator.dispose();
-								enumerators.splice(index--, 1);
+					yielder =>
+					{
+						if (firstEnumerator.moveNext())
+						{
+							while (true)
+							{
+								while (!secondEnumerator)
+								{
+									var next = secondTemp.shift();
+									if(next)
+										secondEnumerator = Enumerable.from<TSecond>(next).getEnumerator();
+									else if (!secondTemp.length)
+										return yielder.yieldBreak();
+								}
+
+								if (secondEnumerator.moveNext())
+									return yielder.yieldReturn(
+										resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
+
+								secondEnumerator.dispose();
+								secondEnumerator = null;
 							}
 						}
+
 						return yielder.yieldBreak();
 					},
 					() =>
 					{
-						System.dispose(enumerators);
+						System.dispose(firstEnumerator);
 					});
 			});
 		}
-
+			
 		/* * /
 		// Join Methods
 		join(inner: Enumerable,
@@ -1777,9 +1766,9 @@ module System.Linq
 			});
 		}
 
-		concatMultiple(enumerables: IEnumerable<T>[]): Enumerable<T>;
-		concatMultiple(enumerables: IArray<T>[]): Enumerable<T>;
-		concatMultiple(enumerables: any[]): Enumerable<T>
+		merge(enumerables: IEnumerable<T>[]): Enumerable<T>;
+		merge(enumerables: IArray<T>[]): Enumerable<T>;
+		merge(enumerables: any[]): Enumerable<T>
 		{
 			var _ = this;
 
@@ -1830,7 +1819,7 @@ module System.Linq
 			if (enumerables.length == 1)
 				return _.concatWith(enumerables[0]);
 
-			return _.concatMultiple(enumerables);
+			return _.merge(enumerables);
 		}
 
 		

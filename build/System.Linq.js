@@ -1173,7 +1173,7 @@ var System;
                 });
             };
 
-            Enumerable.prototype.zipWith = function (second, resultSelector) {
+            Enumerable.prototype.zip = function (second, resultSelector) {
                 var _ = this;
 
                 return new Enumerable(function () {
@@ -1189,6 +1189,57 @@ var System;
                         return firstEnumerator.moveNext() && secondEnumerator.moveNext() && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
                     }, function () {
                         System.dispose(firstEnumerator, secondEnumerator);
+                    });
+                });
+            };
+
+            Enumerable.prototype.zipMultiple = function (second, resultSelector) {
+                var _ = this;
+
+                if (!second.length)
+                    return Enumerable.empty();
+
+                return new Enumerable(function () {
+                    var secondTemp;
+                    var firstEnumerator;
+                    var secondEnumerator;
+                    var index = INT_0;
+
+                    var getNext = function () {
+                        while (!secondEnumerator) {
+                            secondEnumerator = secondTemp.shift();
+                            if (!secondEnumerator && !secondTemp.length)
+                                break;
+                        }
+                    };
+
+                    return new EnumeratorBase(function () {
+                        secondTemp = second.slice();
+                        index = INT_0;
+                        firstEnumerator = _.getEnumerator();
+                        secondEnumerator = null;
+                    }, function (yielder) {
+                        if (firstEnumerator.moveNext()) {
+                            while (true) {
+                                while (!secondEnumerator) {
+                                    var next = secondTemp.shift();
+                                    if (next)
+                                        secondEnumerator = Enumerable.from(next).getEnumerator();
+                                    else if (!secondTemp.length)
+                                        return yielder.yieldBreak();
+                                }
+
+                                if (secondEnumerator.moveNext())
+                                    return yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
+
+                                secondEnumerator.dispose();
+                                secondEnumerator = null;
+                            }
+                        }
+
+                        return yielder.yieldBreak();
+                    }, function () {
+                        System.dispose(firstEnumerator);
                     });
                 });
             };
@@ -1217,7 +1268,7 @@ var System;
                 });
             };
 
-            Enumerable.prototype.concatMultiple = function (enumerables) {
+            Enumerable.prototype.merge = function (enumerables) {
                 var _ = this;
 
                 if (!enumerables.length)
@@ -1261,7 +1312,7 @@ var System;
                 if (enumerables.length == 1)
                     return _.concatWith(enumerables[0]);
 
-                return _.concatMultiple(enumerables);
+                return _.merge(enumerables);
             };
 
             Enumerable.prototype.insertAt = function (index, other) {

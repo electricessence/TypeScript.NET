@@ -79,12 +79,14 @@ declare module System.Linq {
         public indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         public defaultIfEmpty(defaultValue?: T): Enumerable<T>;
-        public zipWith<TSecond, TResult>(second: Enumerable<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
-        public zipWith<TSecond, TResult>(second: Collections.IArray<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        public zip<TSecond, TResult>(second: Enumerable<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        public zip<TSecond, TResult>(second: Collections.IArray<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        public zipMultiple<TSecond, TResult>(second: Enumerable<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        public zipMultiple<TSecond, TResult>(second: Collections.IArray<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
         public concatWith(other: Collections.IEnumerable<T>): Enumerable<T>;
         public concatWith(other: Collections.IArray<T>): Enumerable<T>;
-        public concatMultiple(enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;
-        public concatMultiple(enumerables: Collections.IArray<T>[]): Enumerable<T>;
+        public merge(enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;
+        public merge(enumerables: Collections.IArray<T>[]): Enumerable<T>;
         public concat(...enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;
         public concat(...enumerables: Collections.IArray<T>[]): Enumerable<T>;
         public insertAt(index: number, other: Collections.IEnumerable<T>): Enumerable<T>;
