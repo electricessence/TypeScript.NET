@@ -352,7 +352,9 @@ var System;
                 var index = 0;
 
                 using(_.getEnumerator(), function (e) {
-                    while (e.moveNext() && action(e.current, index++) !== false) {
+                    while (e.moveNext()) {
+                        if (action(e.current, index++) === false)
+                            break;
                     }
                 });
             };
@@ -381,7 +383,9 @@ var System;
                 var index = INT_0;
 
                 using(_.getEnumerator(), function (e) {
-                    while (_.assertIsNotDisposed() && e.moveNext() && action(e.current, index++) !== false) {
+                    while (_.assertIsNotDisposed() && e.moveNext()) {
+                        if (action(e.current, index++) === false)
+                            break;
                     }
                 });
             };
@@ -1204,14 +1208,6 @@ var System;
                     var firstEnumerator;
                     var secondEnumerator;
                     var index = INT_0;
-
-                    var getNext = function () {
-                        while (!secondEnumerator) {
-                            secondEnumerator = secondTemp.shift();
-                            if (!secondEnumerator && !secondTemp.length)
-                                break;
-                        }
-                    };
 
                     return new EnumeratorBase(function () {
                         secondTemp = second.slice();

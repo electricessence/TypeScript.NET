@@ -455,7 +455,11 @@ module System.Linq
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
 			using(_.getEnumerator(), e=>
 			{
-				while (e.moveNext() && action(e.current, index++) !== false) { }
+				while (e.moveNext())
+				{
+					if (action(e.current, index++) === false)
+						break;
+				}
 			});
 		}
 
@@ -497,7 +501,11 @@ module System.Linq
 			using(_.getEnumerator(), e=>
 			{
 				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
-				while (_.assertIsNotDisposed() && e.moveNext() && action(e.current, index++) !== false) { }
+				while (_.assertIsNotDisposed() && e.moveNext())
+				{
+					if (action(e.current, index++) === false)
+						break;
+				}
 			});
 		}
 
@@ -1577,9 +1585,18 @@ module System.Linq
 			});
 		}
 
-		zipMultiple<TSecond, TResult>(second: Enumerable<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
-		zipMultiple<TSecond, TResult>(second: IArray<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
-		zipMultiple<TSecond, TResult>(second: any[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>
+		zipMultiple<TSecond, TResult>(
+			second: Enumerable<TSecond>[],
+			resultSelector: (first: T, second: TSecond, index?: number) => TResult)
+			: Enumerable<TResult>;
+		zipMultiple<TSecond, TResult>(
+			second: IArray<TSecond>[],
+			resultSelector: (first: T, second: TSecond, index?: number) => TResult)
+			: Enumerable<TResult>;
+		zipMultiple<TSecond, TResult>(
+			second: any[],
+			resultSelector: (first: T, second: TSecond, index?: number) => TResult)
+			: Enumerable<TResult>
 		{
 			var _ = this;
 
@@ -1592,16 +1609,6 @@ module System.Linq
 				var firstEnumerator: IEnumerator<T>;
 				var secondEnumerator: IEnumerator<TSecond>;
 				var index: number = INT_0;
-
-				var getNext = () =>
-				{
-					while (!secondEnumerator)
-					{
-						secondEnumerator = secondTemp.shift();
-						if (!secondEnumerator && !secondTemp.length)
-							break;
-					}
-				}
 
 				return new EnumeratorBase<TResult>(
 					() =>
