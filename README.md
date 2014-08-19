@@ -48,4 +48,3 @@ Planning to make this a bower (and possibly NPM) install.
 
 Full documentation and references (dreaming).
 
-ASM.js!!!  Because of typing, TypeScript is perfect for use as a ASM compiler.  If they don't integrate ASM as a target, then let's write one!  If you don't know what ASM is, think "JavaScript performance mind-blow".  http://asmjs.org/
