@@ -83,6 +83,8 @@ declare module System.Linq {
         public zip<TSecond, TResult>(second: Collections.IArray<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
         public zipMultiple<TSecond, TResult>(second: Enumerable<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
         public zipMultiple<TSecond, TResult>(second: Collections.IArray<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        public join<TInner, TKey, TResult, TCompare>(inner: Enumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner) => TResult, compareSelector?: Selector<TKey, TCompare>): Enumerable<TResult>;
+        public groupJoin<TInner, TKey, TResult, TCompare>(inner: Enumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner[]) => TResult, compareSelector?: Selector<TKey, TCompare>): Enumerable<TResult>;
         public concatWith(other: Collections.IEnumerable<T>): Enumerable<T>;
         public concatWith(other: Collections.IArray<T>): Enumerable<T>;
         public merge(enumerables: Collections.IEnumerable<T>[]): Enumerable<T>;

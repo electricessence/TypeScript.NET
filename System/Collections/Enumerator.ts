@@ -59,7 +59,10 @@ module System.Collections {
 
 		// "Enumerator" is conflict JScript's "Enumerator"
 		constructor(
-			private initializer: () => void, private tryGetNext: (yielder: IYield<T>) => boolean, private disposer?: () => void) {
+			private initializer: () => void,
+			private tryGetNext: (yielder: IYield<T>) => boolean,
+			private disposer?: () => void)
+		{
 			super();
 			this.reset();
 		}

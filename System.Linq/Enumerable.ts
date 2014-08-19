@@ -438,7 +438,7 @@ module System.Linq
 				return new EnumeratorBase<T>(
 					() => { enumerator = enumerableFactory().getEnumerator(); },
 					yielder => enumerator.moveNext() && yielder.yieldReturn(enumerator.current),
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 			});
 		}
@@ -619,7 +619,7 @@ module System.Linq
 						}
 						return false;
 					},
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 
 			},
@@ -769,7 +769,7 @@ module System.Linq
 						}
 						return false;
 					},
-					() => { enumerator.dispose(); });
+					() => { System.dispose(enumerator); });
 			});
 		}
 
@@ -835,7 +835,7 @@ module System.Linq
 							}
 						}
 					},
-					() => { enumerator.dispose(); });
+					() => { System.dispose(enumerator); });
 			});
 		}
 
@@ -875,7 +875,7 @@ module System.Linq
 					{
 						try
 						{
-							enumerator.dispose();
+							System.dispose(enumerator);
 						}
 						finally
 						{
@@ -962,7 +962,7 @@ module System.Linq
 						return enumerator.moveNext()
 							&& yielder.yieldReturn(selector(prev, enumerator.current));
 					},
-					() => { enumerator.dispose(); });
+					() => { System.dispose(enumerator); });
 			});
 		}
 
@@ -998,7 +998,7 @@ module System.Linq
 							? yielder.yieldReturn(value = func(value, enumerator.current))
 							: false;
 					},
-					() => { enumerator.dispose(); });
+					() => { System.dispose(enumerator); });
 			});
 		}
 		// #endregion
@@ -1033,7 +1033,7 @@ module System.Linq
 							? yielder.yieldReturn(selector(enumerator.current, index++))
 							: false;
 					},
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 			},
 				() => { disposed = true; });
@@ -1155,7 +1155,7 @@ module System.Linq
 
 						return false;
 					},
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 			},
 				() => { disposed = true; });
@@ -1193,7 +1193,7 @@ module System.Linq
 						}
 						return false;
 					},
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 			},
 				() => { disposed = true; });
@@ -1263,7 +1263,7 @@ module System.Linq
 					},
 					() =>
 					{
-						enumerator.dispose();
+						System.dispose(enumerator);
 						keys.clear();
 					});
 			},
@@ -1314,7 +1314,7 @@ module System.Linq
 						}
 						return false;
 					},
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 			},
 				() => { disposed = true; });
@@ -1542,7 +1542,7 @@ module System.Linq
 						}
 						return false;
 					},
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 			});
 		}
@@ -1652,96 +1652,92 @@ module System.Linq
 			});
 		}
 			
-		/* * /
-		// Join Methods
-		join(inner: Enumerable,
-			outerKeySelector: (outer: any) =>any,
-			innerKeySelector: (inner: any) =>any,
-			resultSelector: (outer: any, inner: any) => any,
-			compareSelector?: (obj: any) => any): Enumerable;
+		// #region Join Methods
 
-		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
-		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
-		join(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
-			outerKeySelector = Utils.createLambda(outerKeySelector);
-			innerKeySelector = Utils.createLambda(innerKeySelector);
-			resultSelector = Utils.createLambda(resultSelector);
-			compareSelector = Utils.createLambda(compareSelector);
-			var source = this;
+		/*
+		public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
+		this IEnumerable<TOuter> outer,
+		IEnumerable<TInner> inner,
+		Func<TOuter, TKey> outerKeySelector,
+		Func<TInner, TKey> innerKeySelector,
+		Func<TOuter, TInner, TResult> resultSelector,
+		IEqualityComparer<TKey> comparer)
+		 */
 
-			return new Enumerable<T>(() => {
-				var outerEnumerator;
-				var lookup;
-				var innerElements = null;
-				var innerCount = 0;
+		join<TInner, TKey, TResult, TCompare>(
+			inner: Enumerable<TInner>,
+			outerKeySelector: Selector<T, TKey>,
+			innerKeySelector: Selector<TInner, TKey>,
+			resultSelector: (outer: T, inner: TInner) => TResult,
+			compareSelector: Selector<TKey, TCompare> = Functions.Identity)
+			: Enumerable<TResult>
+		{
 
-				return new EnumeratorBase<T>(
+			var _ = this;
+			return new Enumerable<TResult>(() => {
+				var outerEnumerator:IEnumerator<T>;
+				var lookup:Lookup<TKey,TInner>;
+				var innerElements:TInner[] = null;
+				var innerCount:number = INT_0;
+
+				return new EnumeratorBase<TResult>(
 					() => {
-						outerEnumerator = source.getEnumerator();
-						lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+						outerEnumerator = _.getEnumerator();
+						lookup = Enumerable.from<TInner>(inner)
+							.toLookup(innerKeySelector, Functions.Identity, compareSelector);
 					},
-					() => {
+					yielder => {
 						while (true) {
 							if (innerElements != null) {
 								var innerElement = innerElements[innerCount++];
-								if (innerElement !== undefined) {
-									return (<any>this).yieldReturn(resultSelector(outerEnumerator.current, innerElement));
-								}
+								if (innerElement !== undefined)
+									return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
 
 								innerElement = null;
-								innerCount = 0;
+								innerCount = INT_0;
 							}
 
 							if (outerEnumerator.moveNext()) {
 								var key = outerKeySelector(outerEnumerator.current);
-								innerElements = lookup.get(key).toArray();
+								innerElements = lookup.get(key);
 							} else {
-								return false;
+								return yielder.yieldBreak();
 							}
 						}
 					},
-					() => { Utils.dispose(outerEnumerator); });
+					() => { System.dispose(outerEnumerator); });
 			});
 		}
 
-		groupJoin(
-			inner: Enumerable,
-			outerKeySelector: (outer: any) =>any,
-			innerKeySelector: (inner: any) =>any,
-			resultSelector: (outer: any, inner: any) => any,
-			compareSelector?: (obj: any) => any): Enumer
+		groupJoin<TInner, TKey, TResult, TCompare>(
+			inner: Enumerable<TInner>,
+			outerKeySelector: Selector<T, TKey>,
+			innerKeySelector: Selector<TInner, TKey>,
+			resultSelector: (outer: T, inner: TInner[]) => TResult,
+			compareSelector: Selector<TKey, TCompare> = Functions.Identity)
+			: Enumerable<TResult>
+		{
+			var _ = this;
 
-		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector)
-		// Overload:function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
-		groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
-			outerKeySelector = Utils.createLambda(outerKeySelector);
-			innerKeySelector = Utils.createLambda(innerKeySelector);
-			resultSelector = Utils.createLambda(resultSelector);
-			compareSelector = Utils.createLambda(compareSelector);
-			var source = this;
+			return new Enumerable<TResult>(() => {
+				var enumerator: IEnumerator<T>;
+				var lookup: Lookup<TKey, TInner> = null;
 
-			return new Enumerable<T>(() => {
-				var enumerator = source.getEnumerator();
-				var lookup = null;
-
-				return new EnumeratorBase<T>(
+				return new EnumeratorBase<TResult>(
 					() => {
-						enumerator = source.getEnumerator();
-						lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+						enumerator = _.getEnumerator();
+						lookup = Enumerable.from<TInner>(inner)
+							.toLookup(innerKeySelector, Functions.Identity, compareSelector);
 					},
-					() => {
-						if (enumerator.moveNext()) {
-							var innerElement = lookup.get(outerKeySelector(enumerator.current));
-							return (<any>this).yieldReturn(resultSelector(enumerator.current, innerElement));
-						}
-						return false;
-					},
-					() => { Utils.dispose(enumerator); });
+					yielder =>
+						enumerator.moveNext()
+						&& yielder.yieldReturn(
+							resultSelector(
+								enumerator.current,
+								lookup.get(outerKeySelector(enumerator.current)))),
+					() => { System.dispose(enumerator); });
 			});
 		}
-		/* */
-
-		// multiple arguments
 
 		concatWith(other: IEnumerable<T>): Enumerable<T>;
 		concatWith(other: IArray<T>): Enumerable<T>;
@@ -1994,7 +1990,7 @@ module System.Linq
 						}
 						return yielder.yieldBreak();
 					},
-					() => { enumerator.dispose(); });  // Should Dictionary be IDisposable?
+					() => { System.dispose(enumerator); });  // Should Dictionary be IDisposable?
 			});
 		}
 
@@ -2076,7 +2072,7 @@ module System.Linq
 					});
 			});
 		}
-
+		// #endregion
 
 		// #region Ordering Methods
 
@@ -2212,7 +2208,7 @@ module System.Linq
 
 						return false;
 					},
-					() => { enumerator.dispose(); });
+					() => { System.dispose(enumerator); });
 			});
 		}
 
@@ -2242,7 +2238,7 @@ module System.Linq
 
 						return array.length && yielder.yieldReturn(array);
 					},
-					() => { enumerator.dispose(); });
+					() => { System.dispose(enumerator); });
 			});
 		}
 
@@ -2635,7 +2631,7 @@ module System.Linq
 						}
 						return false;
 					},
-					() => { enumerator.dispose(); }
+					() => { System.dispose(enumerator); }
 					);
 			});
 		}
@@ -2665,7 +2661,7 @@ module System.Linq
 					{
 						try
 						{
-							enumerator.dispose();
+							System.dispose(enumerator);
 						} finally
 						{
 							action();
@@ -2956,7 +2952,7 @@ module System.Linq
 
 					return false;
 				},
-				() => { enumerator.dispose(); }
+				() => { System.dispose(enumerator); }
 				);
 		}
 
@@ -3022,7 +3018,7 @@ module System.Linq
 					}
 					return false;
 				},
-				() => { enumerator.dispose(); }
+				() => { System.dispose(enumerator); }
 				);
 		}
 
@@ -3218,7 +3214,7 @@ module System.Linq
 
 					return yielder.yieldReturn(new Grouping<TKey, TElement>(current.key, current.value));
 				},
-				() => { enumerator.dispose(); }
+				() => { System.dispose(enumerator); }
 				);
 		}
 

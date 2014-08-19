@@ -341,7 +341,7 @@ var System;
                     }, function (yielder) {
                         return enumerator.moveNext() && yielder.yieldReturn(enumerator.current);
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -476,7 +476,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 }, function () {
                     disposed = true;
@@ -599,7 +599,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -650,7 +650,7 @@ var System;
                             }
                         }
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -681,7 +681,7 @@ var System;
                         }
                     }, function () {
                         try  {
-                            enumerator.dispose();
+                            System.dispose(enumerator);
                         } finally {
                             System.disposeThese(enumeratorStack);
                         }
@@ -740,7 +740,7 @@ var System;
                         var prev = enumerator.current;
                         return enumerator.moveNext() && yielder.yieldReturn(selector(prev, enumerator.current));
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -765,7 +765,7 @@ var System;
 
                         return (enumerator.moveNext()) ? yielder.yieldReturn(value = func(value, enumerator.current)) : false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -790,7 +790,7 @@ var System;
 
                         return enumerator.moveNext() ? yielder.yieldReturn(selector(enumerator.current, index++)) : false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 }, function () {
                     disposed = true;
@@ -866,7 +866,7 @@ var System;
 
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 }, function () {
                     disposed = true;
@@ -897,7 +897,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 }, function () {
                     disposed = true;
@@ -956,7 +956,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                         keys.clear();
                     });
                 }, function () {
@@ -995,7 +995,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 }, function () {
                     disposed = true;
@@ -1172,7 +1172,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -1236,6 +1236,61 @@ var System;
                         return yielder.yieldBreak();
                     }, function () {
                         System.dispose(firstEnumerator);
+                    });
+                });
+            };
+
+            Enumerable.prototype.join = function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
+                if (typeof compareSelector === "undefined") { compareSelector = Functions.Identity; }
+                var _ = this;
+                return new Enumerable(function () {
+                    var outerEnumerator;
+                    var lookup;
+                    var innerElements = null;
+                    var innerCount = INT_0;
+
+                    return new EnumeratorBase(function () {
+                        outerEnumerator = _.getEnumerator();
+                        lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+                    }, function (yielder) {
+                        while (true) {
+                            if (innerElements != null) {
+                                var innerElement = innerElements[innerCount++];
+                                if (innerElement !== undefined)
+                                    return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
+
+                                innerElement = null;
+                                innerCount = INT_0;
+                            }
+
+                            if (outerEnumerator.moveNext()) {
+                                var key = outerKeySelector(outerEnumerator.current);
+                                innerElements = lookup.get(key);
+                            } else {
+                                return yielder.yieldBreak();
+                            }
+                        }
+                    }, function () {
+                        System.dispose(outerEnumerator);
+                    });
+                });
+            };
+
+            Enumerable.prototype.groupJoin = function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
+                if (typeof compareSelector === "undefined") { compareSelector = Functions.Identity; }
+                var _ = this;
+
+                return new Enumerable(function () {
+                    var enumerator;
+                    var lookup = null;
+
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                        lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+                    }, function (yielder) {
+                        return enumerator.moveNext() && yielder.yieldReturn(resultSelector(enumerator.current, lookup.get(outerKeySelector(enumerator.current))));
+                    }, function () {
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -1435,7 +1490,7 @@ var System;
                         }
                         return yielder.yieldBreak();
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -1556,7 +1611,7 @@ var System;
 
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -1581,7 +1636,7 @@ var System;
 
                         return array.length && yielder.yieldReturn(array);
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -1899,7 +1954,7 @@ var System;
                         }
                         return false;
                     }, function () {
-                        enumerator.dispose();
+                        System.dispose(enumerator);
                     });
                 });
             };
@@ -1918,7 +1973,7 @@ var System;
                         return (enumerator.moveNext()) ? yielder.yieldReturn(enumerator.current) : false;
                     }, function () {
                         try  {
-                            enumerator.dispose();
+                            System.dispose(enumerator);
                         } finally {
                             action();
                         }
@@ -2157,7 +2212,7 @@ var System;
 
                     return false;
                 }, function () {
-                    enumerator.dispose();
+                    System.dispose(enumerator);
                 });
             };
 
@@ -2211,7 +2266,7 @@ var System;
                     }
                     return false;
                 }, function () {
-                    enumerator.dispose();
+                    System.dispose(enumerator);
                 });
             };
 
@@ -2365,7 +2420,7 @@ var System;
 
                     return yielder.yieldReturn(new Grouping(current.key, current.value));
                 }, function () {
-                    enumerator.dispose();
+                    System.dispose(enumerator);
                 });
             };
             return Lookup;
