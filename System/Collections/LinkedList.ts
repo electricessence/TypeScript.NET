@@ -207,7 +207,7 @@ module System.Collections
 			var result = this._findFirst(entry);
 
 			return result
-				? new PublicNode<T>(this, result)
+				? new LinkedListNode<T>(this, result)
 				: null;
 		}
 
@@ -216,18 +216,18 @@ module System.Collections
 			var result = this._findLast(entry);
 
 			return result
-				? new PublicNode<T>(this, result)
+				? new LinkedListNode<T>(this, result)
 				: null;
 		}
 
 		addLast(entry: T): ILinkedListNode<T>
 		{
-			return new PublicNode<T>(this, this._addLast(entry));
+			return new LinkedListNode<T>(this, this._addLast(entry));
 		}
 
 		addFirst(entry: T): ILinkedListNode<T>
 		{
-			return new PublicNode<T>(this, this._addFirst(entry));
+			return new LinkedListNode<T>(this, this._addFirst(entry));
 		}
 
 		removeFirst(): void
@@ -298,7 +298,7 @@ module System.Collections
 	}
 
 	// Use an internal node class to prevent mucking up the LinkedList.
-	class PublicNode<T> implements ILinkedListNode<T>
+	class LinkedListNode<T> //implements ILinkedListNode<T>
 	{
 		constructor(
 			private _list: System.Collections.LinkedList<T>,
@@ -316,7 +316,7 @@ module System.Collections
 			var external: ILinkedListNode<T> = null;
 			var prev: Node<T> = this._node.prev;
 			if (prev && !(external = prev.external))
-				prev.external = external = new PublicNode<T>(this._list, prev);
+				prev.external = external = new LinkedListNode<T>(this._list, prev);
 
 			return external;
 		}
@@ -325,7 +325,7 @@ module System.Collections
 			var external: ILinkedListNode<T> = null;
 			var next: Node<T> = this._node.next;
 			if (next && !(external = next.external))
-				next.external = external = new PublicNode<T>(this._list, next);
+				next.external = external = new LinkedListNode<T>(this._list, next);
 
 			return external;
 		}
