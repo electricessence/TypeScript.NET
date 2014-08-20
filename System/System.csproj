@@ -58,6 +58,8 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Collections\IArray.ts" />
+    <TypeScriptCompile Include="Collections\IEnumerateEach.ts" />
+    <TypeScriptCompile Include="Collections\LinkedList.ts" />
     <TypeScriptCompile Include="Diagnostics\Stopwatch.ts" />
     <TypeScriptCompile Include="Functions.ts" />
     <TypeScriptCompile Include="IComparable.ts" />
@@ -82,6 +84,8 @@
     <TypeScriptCompile Include="Collections\Dictionary.ts" />
     <TypeScriptCompile Include="Collections\StringKeyDictionary.ts" />
     <TypeScriptCompile Include="Collections\OrderedStringKeyDictionary.ts" />
+    <TypeScriptCompile Include="Text\StringBuilder.ts" />
+    <TypeScriptCompile Include="Text\Text.ts" />
     <TypeScriptCompile Include="TimeSpan.ts" />
     <TypeScriptCompile Include="Types.ts" />
   </ItemGroup>

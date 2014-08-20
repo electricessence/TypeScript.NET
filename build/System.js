@@ -235,6 +235,1384 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
+    (function (Collections) {
+        (function (ArrayUtility) {
+            function copy(array) {
+                return array ? array.slice() : array;
+            }
+            ArrayUtility.copy = copy;
+
+            function contains(array, item) {
+                return !array ? false : array.indexOf(item) != -1;
+            }
+            ArrayUtility.contains = contains;
+
+            function replace(array, old, newValue, max) {
+                var count = 0 | 0;
+                if (max !== 0) {
+                    if (!max)
+                        max = Infinity;
+
+                    for (var i = (array.length - 1) | 0; i >= 0; --i)
+                        if (array[i] === old) {
+                            array[i] = newValue;
+                            ++count;
+                            if (!--max)
+                                break;
+                        }
+                }
+
+                return count;
+            }
+            ArrayUtility.replace = replace;
+
+            function register(array, item) {
+                var ok = array && (!array.length || !contains(array, item));
+                if (ok)
+                    array.push(item);
+                return ok;
+            }
+            ArrayUtility.register = register;
+
+            function findIndex(array, predicate) {
+                var len = array.length | 0;
+                for (var i = 0 | 0; i < len; ++i)
+                    if (i in array && predicate(array[i]))
+                        return i;
+
+                return -1;
+            }
+            ArrayUtility.findIndex = findIndex;
+
+            function areAllEqual(arrays, strict) {
+                if (arrays.length < 2)
+                    throw new Error("Cannot compare a set of arrays less than 2.");
+                var first = arrays[0];
+                for (var i = 0 | 0, l = arrays.length | 0; i < l; ++i) {
+                    if (!areEqual(first, arrays[i], strict))
+                        return false;
+                }
+                return true;
+            }
+            ArrayUtility.areAllEqual = areAllEqual;
+
+            function areEqual(a, b, strict, equalityComparer) {
+                if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
+                if (a === b)
+                    return true;
+
+                var len = a.length | 0;
+                if (len != (b.length | 0))
+                    return false;
+
+                for (var i = 0 | 0; i < len; ++i)
+                    if (!equalityComparer(a[i], b[i], strict))
+                        return false;
+
+                return true;
+            }
+            ArrayUtility.areEqual = areEqual;
+
+            function applyTo(target, fn) {
+                for (var i = 0 | 0; i < target.length; ++i)
+                    target[i] = fn(target[i]);
+                return target;
+            }
+            ArrayUtility.applyTo = applyTo;
+
+            function removeIndex(array, index) {
+                var exists = index < array.length;
+                if (exists)
+                    array.splice(index, 1);
+                return exists;
+            }
+            ArrayUtility.removeIndex = removeIndex;
+
+            function remove(array, value, max) {
+                var count = 0;
+                if (array && array.length && max !== 0) {
+                    if (!max)
+                        max = Infinity;
+
+                    for (var i = (array.length - 1) | 0; i >= 0; --i)
+                        if (array[i] === value) {
+                            array.splice(i, 1);
+                            ++count;
+                            if (!--max)
+                                break;
+                        }
+                }
+
+                return count;
+            }
+            ArrayUtility.remove = remove;
+
+            function repeat(element, count) {
+                var result = [];
+                while (count--)
+                    result.push(element);
+
+                return result;
+            }
+            ArrayUtility.repeat = repeat;
+
+            function sum(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                if (!source.length)
+                    return 0;
+
+                var result = 0;
+                if (ignoreNaN)
+                    source.forEach(function (n) {
+                        if (!isNaN(n))
+                            result += n;
+                    });
+                else
+                    source.every(function (n) {
+                        result += n;
+                        return !isNaN(result);
+                    });
+
+                return result;
+            }
+            ArrayUtility.sum = sum;
+
+            function average(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                if (!source.length)
+                    return NaN;
+
+                var result = 0, count;
+                if (ignoreNaN) {
+                    count = 0;
+                    source.forEach(function (n) {
+                        if (!isNaN(n)) {
+                            result += n;
+                            count++;
+                        }
+                    });
+                } else {
+                    count = source.length;
+                    source.every(function (n) {
+                        result += n;
+                        return !isNaN(result);
+                    });
+                }
+
+                return (!count || isNaN(result)) ? NaN : (result / count);
+            }
+            ArrayUtility.average = average;
+
+            function product(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                if (!source.length)
+                    return NaN;
+
+                var result = 1;
+                if (ignoreNaN) {
+                    var found = false;
+                    source.forEach(function (n) {
+                        if (!isNaN(n)) {
+                            result *= n;
+                            if (!found)
+                                found = true;
+                        }
+                    });
+
+                    if (!found)
+                        result = NaN;
+                } else {
+                    source.every(function (n) {
+                        if (isNaN(n)) {
+                            result = NaN;
+                            return false;
+                        }
+
+                        result *= n;
+
+                        return true;
+                    });
+                }
+
+                return result;
+            }
+            ArrayUtility.product = product;
+
+            function ifSet(source, start, ignoreNaN, predicate) {
+                if (!source.length)
+                    return NaN;
+
+                var result = start;
+                if (ignoreNaN) {
+                    var found = false;
+                    source.forEach(function (n) {
+                        if (!isNaN(n)) {
+                            if (predicate(n, result))
+                                result = n;
+                            if (!found)
+                                found = true;
+                        }
+                    });
+
+                    if (!found)
+                        result = NaN;
+                } else {
+                    source.every(function (n) {
+                        if (isNaN(n)) {
+                            result = NaN;
+                            return false;
+                        }
+
+                        if (predicate(n, result))
+                            result = n;
+
+                        return true;
+                    });
+                }
+                return result;
+            }
+
+            function min(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                return ifSet(source, +Infinity, ignoreNaN, function (n, result) {
+                    return n < result;
+                });
+            }
+            ArrayUtility.min = min;
+
+            function max(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                return ifSet(source, -Infinity, ignoreNaN, function (n, result) {
+                    return n > result;
+                });
+            }
+            ArrayUtility.max = max;
+        })(Collections.ArrayUtility || (Collections.ArrayUtility = {}));
+        var ArrayUtility = Collections.ArrayUtility;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Collections) {
+        function notImplementedException(name, log) {
+            if (typeof log === "undefined") { log = ""; }
+            console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
+            throw new Error("DictionaryAbstractBase." + name + ": Not implemented.");
+        }
+
+        var DictionaryAbstractBase = (function () {
+            function DictionaryAbstractBase() {
+                this._updateRecursion = 0;
+            }
+            Object.defineProperty(DictionaryAbstractBase.prototype, "isUpdating", {
+                get: function () {
+                    return this._updateRecursion != 0;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
+                if (!System.areEqual(value, old, true)) {
+                    var _ = this;
+                    if (_.onValueChanged)
+                        _.onValueChanged(key, value, old);
+
+                    if (_._updateRecursion == 0)
+                        _._onUpdated();
+                }
+            };
+
+            DictionaryAbstractBase.prototype._onUpdated = function () {
+                var _ = this;
+                if (_.onUpdated)
+                    _.onUpdated();
+            };
+
+            DictionaryAbstractBase.prototype.handleUpdate = function (closure) {
+                var _ = this, result;
+                if (closure) {
+                    _._updateRecursion++;
+
+                    try  {
+                        result = closure();
+                    } finally {
+                        _._updateRecursion--;
+                    }
+                } else
+                    result = _._updateRecursion == 0;
+
+                if (result && _._updateRecursion == 0)
+                    _._onUpdated();
+
+                return result;
+            };
+
+            Object.defineProperty(DictionaryAbstractBase.prototype, "isReadOnly", {
+                get: function () {
+                    return false;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
+                get: function () {
+                    return notImplementedException("count");
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            DictionaryAbstractBase.prototype.add = function (item) {
+                this.addByKeyValue(item.key, item.value);
+            };
+
+            DictionaryAbstractBase.prototype.clear = function () {
+                var _ = this, keys = _.keys, count = keys.length;
+
+                if (count)
+                    _.handleUpdate(function () {
+                        keys.forEach(function (key) {
+                            return _.removeByKey(key);
+                        });
+                        return true;
+                    });
+
+                if (count != _.count)
+                    console.warn("Dictioary clear() results in mismatched count.");
+
+                return count;
+            };
+
+            DictionaryAbstractBase.prototype.contains = function (item) {
+                var value = this.get(item.key);
+                return System.areEqual(value, item.value);
+            };
+
+            DictionaryAbstractBase.prototype.copyTo = function (array, index) {
+                if (typeof index === "undefined") { index = 0; }
+                var e = this.getEnumerator();
+                while (e.moveNext())
+                    array[index++] = e.current;
+            };
+
+            DictionaryAbstractBase.prototype.remove = function (item) {
+                var key = item.key, value = this.get(key);
+                return (System.areEqual(value, item.value) && this.removeByKey(key)) ? 1 : 0;
+            };
+
+            Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
+                get: function () {
+                    return notImplementedException("keys");
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(DictionaryAbstractBase.prototype, "values", {
+                get: function () {
+                    return notImplementedException("values");
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            DictionaryAbstractBase.prototype.addByKeyValue = function (key, value) {
+                var _ = this;
+                if (_.containsKey(key))
+                    throw new Error("Adding key/value when one already exists.");
+
+                _.set(key, value);
+            };
+
+            DictionaryAbstractBase.prototype.get = function (key) {
+                return notImplementedException("get(key: TKey): TValue", "When calling for key: " + key);
+            };
+
+            DictionaryAbstractBase.prototype.set = function (key, value) {
+                return notImplementedException("set(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + ".");
+            };
+
+            DictionaryAbstractBase.prototype.containsKey = function (key) {
+                var value = this.get(key);
+                return value !== undefined;
+            };
+
+            DictionaryAbstractBase.prototype.containsValue = function (value) {
+                var e = this.getEnumerator(), equal = System.areEqual;
+
+                while (e.moveNext()) {
+                    if (equal(e.current, value, true)) {
+                        e.dispose();
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            DictionaryAbstractBase.prototype.removeByKey = function (key) {
+                return this.set(key, undefined);
+            };
+
+            DictionaryAbstractBase.prototype.removeByValue = function (value) {
+                var _ = this, count = 0, equal = System.areEqual;
+                _.keys.forEach(function (key) {
+                    if (equal(_.get(key), value, true)) {
+                        _.removeByKey(key);
+                        ++count;
+                    }
+                });
+                return count;
+            };
+
+            DictionaryAbstractBase.prototype.importPairs = function (pairs) {
+                var _ = this;
+                return _.handleUpdate(function () {
+                    var changed = false;
+                    pairs.forEach(function (pair) {
+                        _.set(pair.key, pair.value);
+                        changed = true;
+                    });
+                    return changed;
+                });
+            };
+
+            DictionaryAbstractBase.prototype.getEnumerator = function () {
+                var _ = this;
+                var keys, len, i = 0;
+                return new Collections.EnumeratorBase(function () {
+                    keys = _.keys;
+                    len = keys.length;
+                }, function (yielder) {
+                    while (i < len) {
+                        var key = keys[i++], value = _.get(key);
+                        if (value !== undefined)
+                            return yielder.yieldReturn({ key: key, value: value });
+                    }
+
+                    return yielder.yieldBreak();
+                });
+            };
+            return DictionaryAbstractBase;
+        })();
+        Collections.DictionaryAbstractBase = DictionaryAbstractBase;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var System;
+(function (System) {
+    (function (Collections) {
+        var HashEntry = (function () {
+            function HashEntry(key, value, prev, next) {
+                this.key = key;
+                this.value = value;
+                this.prev = prev;
+                this.next = next;
+            }
+            return HashEntry;
+        })();
+
+        var EntryList = (function () {
+            function EntryList(first, last) {
+                this.first = first;
+                this.last = last;
+            }
+            EntryList.prototype.addLast = function (entry) {
+                var _ = this;
+                if (_.last != null) {
+                    _.last.next = entry;
+                    entry.prev = _.last;
+                    _.last = entry;
+                } else
+                    _.first = _.last = entry;
+            };
+
+            EntryList.prototype.replace = function (entry, newEntry) {
+                var _ = this;
+                if (entry.prev != null) {
+                    entry.prev.next = newEntry;
+                    newEntry.prev = entry.prev;
+                } else
+                    _.first = newEntry;
+
+                if (entry.next != null) {
+                    entry.next.prev = newEntry;
+                    newEntry.next = entry.next;
+                } else
+                    _.last = newEntry;
+            };
+
+            EntryList.prototype.remove = function (entry) {
+                var _ = this;
+                if (entry.prev != null)
+                    entry.prev.next = entry.next;
+                else
+                    _.first = entry.next;
+
+                if (entry.next != null)
+                    entry.next.prev = entry.prev;
+                else
+                    _.last = entry.prev;
+            };
+
+            EntryList.prototype.clear = function () {
+                var _ = this;
+                while (_.last)
+                    _.remove(_.last);
+            };
+
+            EntryList.prototype.forEach = function (closure) {
+                var _ = this, currentEntry = _.first;
+                while (currentEntry) {
+                    closure(currentEntry);
+                    currentEntry = currentEntry.next;
+                }
+            };
+            return EntryList;
+        })();
+
+        function callHasOwnProperty(target, key) {
+            return Object.prototype.hasOwnProperty.call(target, key);
+        }
+
+        function computeHashCode(obj) {
+            if (obj === null)
+                return "null";
+            if (obj === undefined)
+                return "undefined";
+
+            return (typeof obj.toString === System.Types.Function) ? obj.toString() : Object.prototype.toString.call(obj);
+        }
+
+        var Dictionary = (function (_super) {
+            __extends(Dictionary, _super);
+            function Dictionary(compareSelector) {
+                if (typeof compareSelector === "undefined") { compareSelector = System.Functions.Identity; }
+                _super.call(this);
+                this.compareSelector = compareSelector;
+                this._count = 0;
+                this._entries = new EntryList();
+                this._buckets = {};
+            }
+            Dictionary.prototype.setKV = function (key, value, allowOverwrite) {
+                var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
+                var compareKey = comparer(key);
+                var hash = computeHashCode(compareKey), entry;
+
+                if (callHasOwnProperty(buckets, hash)) {
+                    var equal = System.areEqual;
+                    var array = buckets[hash];
+                    for (var i = 0; i < array.length; i++) {
+                        var old = array[i];
+                        if (comparer(old.key) === compareKey) {
+                            if (!allowOverwrite)
+                                throw new Error("Key already exists.");
+
+                            var changed = !equal(old.value, value);
+                            if (changed) {
+                                if (value === undefined) {
+                                    entries.remove(old);
+                                    array.splice(i, 1);
+                                    if (!array.length)
+                                        delete buckets[hash];
+                                    --_._count;
+                                } else {
+                                    entry = new HashEntry(key, value);
+                                    entries.replace(old, entry);
+                                    array[i] = entry;
+                                }
+
+                                _._onValueUpdate(key, value, old.value);
+                            }
+                            return changed;
+                        }
+                    }
+                    array.push(entry = entry || new HashEntry(key, value));
+                } else {
+                    if (value === undefined) {
+                        if (allowOverwrite)
+                            return false;
+                        else
+                            throw new Error("Cannot add 'undefined' value.");
+                    }
+                    buckets[hash] = [entry = new HashEntry(key, value)];
+                }
+                ++_._count;
+                entries.addLast(entry);
+                _._onValueUpdate(key, value, undefined);
+                return true;
+            };
+
+            Dictionary.prototype.addByKeyValue = function (key, value) {
+                this.setKV(key, value, false);
+            };
+
+            Dictionary.prototype.get = function (key) {
+                var buckets = this._buckets, comparer = this.compareSelector;
+                var compareKey = comparer(key);
+                var hash = computeHashCode(compareKey);
+                if (!callHasOwnProperty(buckets, hash))
+                    return undefined;
+
+                var array = buckets[hash];
+                for (var i = 0, len = array.length; i < len; i++) {
+                    var entry = array[i];
+                    if (comparer(entry.key) === compareKey)
+                        return entry.value;
+                }
+                return undefined;
+            };
+
+            Dictionary.prototype.set = function (key, value) {
+                return this.setKV(key, value, true);
+            };
+
+            Dictionary.prototype.containsKey = function (key) {
+                var _ = this, buckets = _._buckets, comparer = _.compareSelector;
+                var compareKey = comparer(key);
+                var hash = computeHashCode(compareKey);
+                if (!callHasOwnProperty(buckets, hash))
+                    return false;
+
+                var array = buckets[hash];
+                for (var i = 0, len = array.length; i < len; i++)
+                    if (comparer(array[i].key) === compareKey)
+                        return true;
+
+                return false;
+            };
+
+            Dictionary.prototype.clear = function () {
+                var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this);
+
+                _._count = 0;
+                for (var key in buckets)
+                    if (buckets.hasOwnProperty(key))
+                        delete buckets[key];
+
+                _._entries.clear();
+
+                return count;
+            };
+
+            Object.defineProperty(Dictionary.prototype, "count", {
+                get: function () {
+                    return this._count;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Dictionary.prototype.getEnumerator = function () {
+                var _ = this, currentEntry;
+
+                return new Collections.EnumeratorBase(function () {
+                    currentEntry = _._entries.first;
+                }, function (yielder) {
+                    if (currentEntry != null) {
+                        var result = { key: currentEntry.key, value: currentEntry.value };
+                        currentEntry = currentEntry.next;
+                        return yielder.yieldReturn(result);
+                    }
+                    return yielder.yieldBreak();
+                });
+            };
+
+            Object.defineProperty(Dictionary.prototype, "keys", {
+                get: function () {
+                    var _ = this, result = [];
+                    _._entries.forEach(function (entry) {
+                        return result.push(entry.key);
+                    });
+                    return result;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(Dictionary.prototype, "values", {
+                get: function () {
+                    var _ = this, result = [];
+                    _._entries.forEach(function (entry) {
+                        return result.push(entry.value);
+                    });
+                    return result;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Dictionary;
+        })(Collections.DictionaryAbstractBase);
+        Collections.Dictionary = Dictionary;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Collections) {
+        "use strict";
+
+        var Yielder = (function () {
+            function Yielder() {
+            }
+            Object.defineProperty(Yielder.prototype, "current", {
+                get: function () {
+                    return this._current;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Yielder.prototype.yieldReturn = function (value) {
+                this._current = value;
+                return true;
+            };
+
+            Yielder.prototype.yieldBreak = function () {
+                this._current = null;
+                return false;
+            };
+            return Yielder;
+        })();
+
+        var EnumeratorState;
+        (function (EnumeratorState) {
+            EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
+            EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
+            EnumeratorState[EnumeratorState["After"] = 2] = "After";
+        })(EnumeratorState || (EnumeratorState = {}));
+
+        (function (Enumerator) {
+            function from(source) {
+                if (source instanceof Array)
+                    return new ArrayEnumerator(source);
+                if ("getEnumerator" in source)
+                    return source.getEnumerator();
+
+                throw new Error("Unknown enumerable.");
+            }
+            Enumerator.from = from;
+        })(Collections.Enumerator || (Collections.Enumerator = {}));
+        var Enumerator = Collections.Enumerator;
+
+        var EnumeratorBase = (function (_super) {
+            __extends(EnumeratorBase, _super);
+            function EnumeratorBase(initializer, tryGetNext, disposer) {
+                _super.call(this);
+                this.initializer = initializer;
+                this.tryGetNext = tryGetNext;
+                this.disposer = disposer;
+                this.reset();
+            }
+            Object.defineProperty(EnumeratorBase.prototype, "current", {
+                get: function () {
+                    return this._yielder.current;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            EnumeratorBase.prototype.reset = function () {
+                var _ = this;
+                _._yielder = new Yielder();
+                _._state = 0 /* Before */;
+            };
+
+            EnumeratorBase.prototype.moveNext = function () {
+                var _ = this;
+                try  {
+                    switch (_._state) {
+                        case 0 /* Before */:
+                            _._state = 1 /* Running */;
+                            var initializer = _.initializer;
+                            if (initializer)
+                                initializer();
+
+                        case 1 /* Running */:
+                            if (_.tryGetNext(_._yielder)) {
+                                return true;
+                            } else {
+                                this.dispose();
+                                return false;
+                            }
+                        case 2 /* After */:
+                            return false;
+                    }
+                } catch (e) {
+                    this.dispose();
+                    throw e;
+                }
+            };
+
+            EnumeratorBase.prototype._onDispose = function () {
+                var _ = this, disposer = _.disposer;
+
+                _.initializer = null;
+                _.disposer = null;
+
+                var yielder = _._yielder;
+                _._yielder = null;
+                if (yielder)
+                    yielder.yieldBreak();
+
+                try  {
+                    if (disposer)
+                        disposer();
+                } finally {
+                    this._state = 2 /* After */;
+                }
+            };
+            return EnumeratorBase;
+        })(System.DisposableBase);
+        Collections.EnumeratorBase = EnumeratorBase;
+
+        var IndexEnumerator = (function (_super) {
+            __extends(IndexEnumerator, _super);
+            function IndexEnumerator(sourceFactory) {
+                var source;
+                _super.call(this, function () {
+                    source = sourceFactory();
+                    if (source && source.source) {
+                        if (source.length && source.step === 0)
+                            throw new Error("Invalid IndexEnumerator step value (0).");
+
+                        var pointer = source.pointer;
+                        if (!pointer)
+                            source.pointer = 0 | 0;
+                        else if (pointer != Math.floor(pointer))
+                            throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
+                        source.pointer = pointer | 0;
+
+                        var step = source.step;
+                        if (!step)
+                            source.step = 1;
+                        else if (step != Math.floor(step))
+                            throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
+                        source.step = step | 0;
+                    }
+                }, function (yielder) {
+                    var len = (source && source.source) ? source.length : 0;
+                    if (!len)
+                        return yielder.yieldBreak();
+                    var current = source.pointer | 0;
+                    source.pointer += source.step;
+                    return (current < len && current >= 0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
+                }, function () {
+                    if (source) {
+                        source.source = null;
+                    }
+                });
+            }
+            return IndexEnumerator;
+        })(EnumeratorBase);
+        Collections.IndexEnumerator = IndexEnumerator;
+
+        var ArrayEnumerator = (function (_super) {
+            __extends(ArrayEnumerator, _super);
+            function ArrayEnumerator(arrayOrFactory, start, step) {
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof step === "undefined") { step = 1; }
+                _super.call(this, function () {
+                    var array = System.Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+                    return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
+                });
+            }
+            return ArrayEnumerator;
+        })(IndexEnumerator);
+        Collections.ArrayEnumerator = ArrayEnumerator;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Text) {
+        function format(source) {
+            var args = [];
+            for (var _i = 0; _i < (arguments.length - 1); _i++) {
+                args[_i] = arguments[_i + 1];
+            }
+            for (var i = 0; i < args.length; i++)
+                source = source.replace("{" + i + "}", args[i]);
+            return source;
+        }
+        Text.format = format;
+    })(System.Text || (System.Text = {}));
+    var Text = System.Text;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Collections) {
+        var INT_0 = 0 | 0;
+        var INT_1 = 1 | 0;
+
+        var Node = (function () {
+            function Node(value, prev, next) {
+                this.value = value;
+                this.prev = prev;
+                this.next = next;
+            }
+            return Node;
+        })();
+
+        var LinkedList = (function () {
+            function LinkedList(source) {
+                this._count = INT_0;
+            }
+            LinkedList.prototype._addFirst = function (entry) {
+                var _ = this, first = _._first;
+                var next = new Node(entry, null, first);
+                if (first)
+                    first.prev = next;
+                else
+                    _._first = _._last = next;
+
+                _._count = _._count + INT_1;
+
+                return next;
+            };
+
+            LinkedList.prototype._addLast = function (entry) {
+                var _ = this, last = _._last;
+                var next = new Node(entry, last);
+                if (last)
+                    last.next = next;
+                else
+                    _._first = _._last = next;
+
+                _._count = _._count + INT_1;
+
+                return next;
+            };
+
+            LinkedList.prototype._findFirst = function (entry) {
+                var equals = System.areEqual, next = this._first;
+                while (next) {
+                    if (equals(entry, next.value))
+                        return next;
+                    next = next.next;
+                }
+                return null;
+            };
+
+            LinkedList.prototype._findLast = function (entry) {
+                var equals = System.areEqual, prev = this._last;
+                while (prev) {
+                    if (equals(entry, prev.value))
+                        return prev;
+                    prev = prev.prev;
+                }
+                return null;
+            };
+
+            LinkedList.prototype.forEach = function (action) {
+                var next = this._first, index = INT_0;
+                while (next && action(next.value, index++) !== false) {
+                    next = next.next;
+                }
+            };
+
+            LinkedList.prototype.getEnumerator = function () {
+                var _ = this, current;
+                return new Collections.EnumeratorBase(function () {
+                    current = new Node(null, null, _._first);
+                }, function (yielder) {
+                    return (current = current.next) ? yielder.yieldReturn(current.value) : yielder.yieldBreak();
+                });
+            };
+
+            Object.defineProperty(LinkedList.prototype, "count", {
+                get: function () {
+                    return this._count;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(LinkedList.prototype, "isReadOnly", {
+                get: function () {
+                    return false;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            LinkedList.prototype.add = function (entry) {
+                this._addLast(entry);
+            };
+
+            LinkedList.prototype.clear = function () {
+                var _ = this;
+                _._first = null;
+                _._last = null;
+                var count = _._count;
+                _._count = 0;
+                return count;
+            };
+
+            LinkedList.prototype.contains = function (entry) {
+                var found = false, equals = System.areEqual;
+                this.forEach(function (e) {
+                    return !(found = equals(entry, e));
+                });
+                return found;
+            };
+
+            LinkedList.prototype.copyTo = function (array, index) {
+                if (typeof index === "undefined") { index = 0; }
+                this.forEach(function (entry, i) {
+                    array[index + i] = entry;
+                });
+            };
+
+            LinkedList.prototype.removeOnce = function (entry) {
+                var _ = this;
+                var node = _._findFirst(entry);
+                if (node) {
+                    var prev = node.prev, next = node.next;
+                    if (prev)
+                        prev.next = next;
+                    else
+                        _._first = next;
+                    if (next)
+                        next.prev = prev;
+                    else
+                        _._last = prev;
+                }
+
+                return node != null;
+            };
+
+            LinkedList.prototype.remove = function (entry) {
+                var _ = this, count = INT_0;
+                while (_.removeOnce(entry)) {
+                    ++count;
+                }
+                return count;
+            };
+
+            LinkedList.prototype.find = function (entry) {
+                var result = this._findFirst(entry);
+
+                return result ? new PublicNode(this, result) : null;
+            };
+
+            LinkedList.prototype.findLast = function (entry) {
+                var result = this._findLast(entry);
+
+                return result ? new PublicNode(this, result) : null;
+            };
+
+            LinkedList.prototype.addLast = function (entry) {
+                return new PublicNode(this, this._addLast(entry));
+            };
+
+            LinkedList.prototype.addFirst = function (entry) {
+                return new PublicNode(this, this._addFirst(entry));
+            };
+
+            LinkedList.prototype.removeFirst = function () {
+                var _ = this, first = _._first;
+                if (first) {
+                    var next = first.next;
+                    _._first = next;
+                    if (next)
+                        next.prev = null;
+                }
+            };
+
+            LinkedList.prototype.removeLast = function () {
+                var _ = this, last = _._last;
+                if (last) {
+                    var prev = last.prev;
+                    _._last = prev;
+                    if (prev)
+                        prev.next = null;
+                }
+            };
+
+            LinkedList.prototype.removeNode = function (node) {
+                if (!node)
+                    throw new Error("ArgumentNullException: 'node' cannot be null.");
+
+                if (node.list != this)
+                    throw new Error("InvalidOperationException: provided node does not belong to this list.");
+
+                var n = node._node;
+                if (!n)
+                    throw new Error("InvalidOperationException: provided node is not valid.");
+
+                var prev = n.prev, next = n.next, a = false, b = false;
+
+                if (prev)
+                    prev.next = next;
+                else if (this._first == n)
+                    this._first = next;
+                else
+                    a = true;
+
+                if (next)
+                    next.prev = prev;
+                else if (this._last == n)
+                    this._last = prev;
+                else
+                    b = true;
+
+                if (a !== b) {
+                    throw new Error(System.Text.format("Exception: provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                }
+
+                return !a && !b;
+            };
+            return LinkedList;
+        })();
+        Collections.LinkedList = LinkedList;
+
+        var PublicNode = (function () {
+            function PublicNode(_list, _node) {
+                this._list = _list;
+                this._node = _node;
+            }
+            Object.defineProperty(PublicNode.prototype, "list", {
+                get: function () {
+                    return this._list;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(PublicNode.prototype, "previous", {
+                get: function () {
+                    var external = null;
+                    var prev = this._node.prev;
+                    if (prev && !(external = prev.external))
+                        prev.external = external = new PublicNode(this._list, prev);
+
+                    return external;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(PublicNode.prototype, "next", {
+                get: function () {
+                    var external = null;
+                    var next = this._node.next;
+                    if (next && !(external = next.external))
+                        next.external = external = new PublicNode(this._list, next);
+
+                    return external;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(PublicNode.prototype, "value", {
+                get: function () {
+                    return this._node.value;
+                },
+                set: function (v) {
+                    this._node.value = v;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return PublicNode;
+        })();
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Collections) {
+        var StringKeyDictionary = (function (_super) {
+            __extends(StringKeyDictionary, _super);
+            function StringKeyDictionary() {
+                _super.apply(this, arguments);
+                this._count = 0;
+                this._map = {};
+            }
+            StringKeyDictionary.prototype.containsKey = function (key) {
+                return key in this._map;
+            };
+
+            StringKeyDictionary.prototype.containsValue = function (value) {
+                var map = this._map, equal = System.areEqual;
+                for (var key in map)
+                    if (map.hasOwnProperty(key) && equal(map[key], value))
+                        return true;
+                return false;
+            };
+
+            StringKeyDictionary.prototype.get = function (key) {
+                return this._map[key];
+            };
+
+            StringKeyDictionary.prototype.set = function (key, value) {
+                var _ = this, map = _._map, old = map[key];
+                if (old !== value) {
+                    if (value === undefined) {
+                        if (key in map) {
+                            delete map[key];
+                            --_._count;
+                        }
+                    } else {
+                        if (!(key in map))
+                            ++_._count;
+                        map[key] = value;
+                    }
+
+                    _._onValueUpdate(key, value, old);
+                    return true;
+                }
+                return false;
+            };
+
+            StringKeyDictionary.prototype.importMap = function (values) {
+                var _ = this;
+                return _.handleUpdate(function () {
+                    var changed = false;
+                    for (var key in values) {
+                        if (values.hasOwnProperty(key) && _.set(key, values[key]))
+                            changed = true;
+                    }
+                    return changed;
+                });
+            };
+
+            StringKeyDictionary.prototype.toMap = function (selector) {
+                var _ = this, result = {};
+                for (var key in _._map) {
+                    if (_._map.hasOwnProperty(key)) {
+                        var value = _._map[key];
+                        if (selector)
+                            value = selector(key, value);
+                        if (value !== undefined)
+                            result[key] = value;
+                    }
+                }
+                return result;
+            };
+
+            Object.defineProperty(StringKeyDictionary.prototype, "keys", {
+                get: function () {
+                    var _ = this, result = [];
+                    for (var key in _._map)
+                        if (_._map.hasOwnProperty(key))
+                            result.push(key);
+
+                    return result;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(StringKeyDictionary.prototype, "values", {
+                get: function () {
+                    var _ = this, result = [];
+                    for (var key in _._map)
+                        if (_._map.hasOwnProperty(key))
+                            result.push(_._map[key]);
+
+                    return result;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Object.defineProperty(StringKeyDictionary.prototype, "count", {
+                get: function () {
+                    return this._count;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return StringKeyDictionary;
+        })(Collections.DictionaryAbstractBase);
+        Collections.StringKeyDictionary = StringKeyDictionary;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Collections) {
+        var OrderedStringKeyDictionary = (function (_super) {
+            __extends(OrderedStringKeyDictionary, _super);
+            function OrderedStringKeyDictionary() {
+                _super.call(this);
+                this._order = [];
+            }
+            OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
+                return this._order.indexOf(key, 0);
+            };
+
+            OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
+                return this.get(this._order[index]);
+            };
+
+            OrderedStringKeyDictionary.prototype.set = function (key, value, keepIndex) {
+                var _ = this, exists = _.indexOfKey(key) != -1;
+                if (!exists && (value !== undefined || keepIndex))
+                    _._order.push(key);
+                else if (exists && value === undefined && !keepIndex)
+                    Collections.ArrayUtility.remove(_._order, key);
+
+                return _super.prototype.set.call(this, key, value);
+            };
+
+            OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
+                var _ = this, order = _._order;
+                if (index < 0 || index >= order.length)
+                    throw new Error("IndexOutOfRange Exception.");
+
+                return _.set(order[index], value);
+            };
+
+            OrderedStringKeyDictionary.prototype.importValues = function (values) {
+                var _ = this;
+                return _.handleUpdate(function () {
+                    var changed = false;
+                    for (var i = 0; i < values.length; i++)
+                        if (_.setByIndex(i, values[i]))
+                            changed = true;
+                    return changed;
+                });
+            };
+
+            OrderedStringKeyDictionary.prototype.setValues = function () {
+                var values = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    values[_i] = arguments[_i + 0];
+                }
+                return this.importValues(values);
+            };
+
+            OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
+                return this.setByIndex(index, undefined);
+            };
+
+            Object.defineProperty(OrderedStringKeyDictionary.prototype, "keys", {
+                get: function () {
+                    var _ = this;
+                    return _._order.filter(function (key) {
+                        return _.containsKey(key);
+                    });
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return OrderedStringKeyDictionary;
+        })(Collections.StringKeyDictionary);
+        Collections.OrderedStringKeyDictionary = OrderedStringKeyDictionary;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
     "use strict";
 
     var ticksPerMillisecond = 10000, msPerSecond = 1000, secondsPerMinute = 60, minutesPerHour = 60, earthHoursPerDay = 24;
@@ -899,328 +2277,6 @@ var System;
     })();
     System.DisposableBase = DisposableBase;
 })(System || (System = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
-var System;
-(function (System) {
-    var Lazy = (function (_super) {
-        __extends(Lazy, _super);
-        function Lazy(_closure) {
-            _super.call(this);
-            this._closure = _closure;
-        }
-        Object.defineProperty(Lazy.prototype, "isValueCreated", {
-            get: function () {
-                return this._isValueCreated;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Lazy.prototype.reset = function () {
-            var _ = this;
-            if (!_._closure)
-                throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");
-
-            _._isValueCreated = false;
-            _._value = null;
-        };
-
-        Object.defineProperty(Lazy.prototype, "value", {
-            get: function () {
-                var _ = this;
-                if (!_._isValueCreated && _._closure) {
-                    var v = _._closure();
-                    _._value = v;
-                    _._isValueCreated = true;
-                    return v;
-                }
-
-                return _._value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Lazy.prototype.valueOnce = function () {
-            try  {
-                return this.value;
-            } finally {
-                this._closure = null;
-            }
-        };
-
-        Lazy.prototype._onDispose = function () {
-            this._closure = null;
-            this._value = null;
-        };
-        return Lazy;
-    })(System.DisposableBase);
-    System.Lazy = Lazy;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Collections) {
-        (function (ArrayUtility) {
-            function copy(array) {
-                return array ? array.slice() : array;
-            }
-            ArrayUtility.copy = copy;
-
-            function contains(array, item) {
-                return !array ? false : array.indexOf(item) != -1;
-            }
-            ArrayUtility.contains = contains;
-
-            function replace(array, old, newValue, max) {
-                var count = 0 | 0;
-                if (max !== 0) {
-                    if (!max)
-                        max = Infinity;
-
-                    for (var i = (array.length - 1) | 0; i >= 0; --i)
-                        if (array[i] === old) {
-                            array[i] = newValue;
-                            ++count;
-                            if (!--max)
-                                break;
-                        }
-                }
-
-                return count;
-            }
-            ArrayUtility.replace = replace;
-
-            function register(array, item) {
-                var ok = array && (!array.length || !contains(array, item));
-                if (ok)
-                    array.push(item);
-                return ok;
-            }
-            ArrayUtility.register = register;
-
-            function findIndex(array, predicate) {
-                var len = array.length | 0;
-                for (var i = 0 | 0; i < len; ++i)
-                    if (i in array && predicate(array[i]))
-                        return i;
-
-                return -1;
-            }
-            ArrayUtility.findIndex = findIndex;
-
-            function areAllEqual(arrays, strict) {
-                if (arrays.length < 2)
-                    throw new Error("Cannot compare a set of arrays less than 2.");
-                var first = arrays[0];
-                for (var i = 0 | 0, l = arrays.length | 0; i < l; ++i) {
-                    if (!areEqual(first, arrays[i], strict))
-                        return false;
-                }
-                return true;
-            }
-            ArrayUtility.areAllEqual = areAllEqual;
-
-            function areEqual(a, b, strict, equalityComparer) {
-                if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
-                if (a === b)
-                    return true;
-
-                var len = a.length | 0;
-                if (len != (b.length | 0))
-                    return false;
-
-                for (var i = 0 | 0; i < len; ++i)
-                    if (!equalityComparer(a[i], b[i], strict))
-                        return false;
-
-                return true;
-            }
-            ArrayUtility.areEqual = areEqual;
-
-            function applyTo(target, fn) {
-                for (var i = 0 | 0; i < target.length; ++i)
-                    target[i] = fn(target[i]);
-                return target;
-            }
-            ArrayUtility.applyTo = applyTo;
-
-            function removeIndex(array, index) {
-                var exists = index < array.length;
-                if (exists)
-                    array.splice(index, 1);
-                return exists;
-            }
-            ArrayUtility.removeIndex = removeIndex;
-
-            function remove(array, value, max) {
-                var count = 0;
-                if (array && array.length && max !== 0) {
-                    if (!max)
-                        max = Infinity;
-
-                    for (var i = (array.length - 1) | 0; i >= 0; --i)
-                        if (array[i] === value) {
-                            array.splice(i, 1);
-                            ++count;
-                            if (!--max)
-                                break;
-                        }
-                }
-
-                return count;
-            }
-            ArrayUtility.remove = remove;
-
-            function repeat(element, count) {
-                var result = [];
-                while (count--)
-                    result.push(element);
-
-                return result;
-            }
-            ArrayUtility.repeat = repeat;
-
-            function sum(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source.length)
-                    return 0;
-
-                var result = 0;
-                if (ignoreNaN)
-                    source.forEach(function (n) {
-                        if (!isNaN(n))
-                            result += n;
-                    });
-                else
-                    source.every(function (n) {
-                        result += n;
-                        return !isNaN(result);
-                    });
-
-                return result;
-            }
-            ArrayUtility.sum = sum;
-
-            function average(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source.length)
-                    return NaN;
-
-                var result = 0, count;
-                if (ignoreNaN) {
-                    count = 0;
-                    source.forEach(function (n) {
-                        if (!isNaN(n)) {
-                            result += n;
-                            count++;
-                        }
-                    });
-                } else {
-                    count = source.length;
-                    source.every(function (n) {
-                        result += n;
-                        return !isNaN(result);
-                    });
-                }
-
-                return (!count || isNaN(result)) ? NaN : (result / count);
-            }
-            ArrayUtility.average = average;
-
-            function product(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source.length)
-                    return NaN;
-
-                var result = 1;
-                if (ignoreNaN) {
-                    var found = false;
-                    source.forEach(function (n) {
-                        if (!isNaN(n)) {
-                            result *= n;
-                            if (!found)
-                                found = true;
-                        }
-                    });
-
-                    if (!found)
-                        result = NaN;
-                } else {
-                    source.every(function (n) {
-                        if (isNaN(n)) {
-                            result = NaN;
-                            return false;
-                        }
-
-                        result *= n;
-
-                        return true;
-                    });
-                }
-
-                return result;
-            }
-            ArrayUtility.product = product;
-
-            function ifSet(source, start, ignoreNaN, predicate) {
-                if (!source.length)
-                    return NaN;
-
-                var result = start;
-                if (ignoreNaN) {
-                    var found = false;
-                    source.forEach(function (n) {
-                        if (!isNaN(n)) {
-                            if (predicate(n, result))
-                                result = n;
-                            if (!found)
-                                found = true;
-                        }
-                    });
-
-                    if (!found)
-                        result = NaN;
-                } else {
-                    source.every(function (n) {
-                        if (isNaN(n)) {
-                            result = NaN;
-                            return false;
-                        }
-
-                        if (predicate(n, result))
-                            result = n;
-
-                        return true;
-                    });
-                }
-                return result;
-            }
-
-            function min(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                return ifSet(source, +Infinity, ignoreNaN, function (n, result) {
-                    return n < result;
-                });
-            }
-            ArrayUtility.min = min;
-
-            function max(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                return ifSet(source, -Infinity, ignoreNaN, function (n, result) {
-                    return n > result;
-                });
-            }
-            ArrayUtility.max = max;
-        })(Collections.ArrayUtility || (Collections.ArrayUtility = {}));
-        var ArrayUtility = Collections.ArrayUtility;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
 var System;
 (function (System) {
     var AU = System.Collections.ArrayUtility;
@@ -1399,818 +2455,149 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
-    (function (Collections) {
-        "use strict";
-
-        var Yielder = (function () {
-            function Yielder() {
-            }
-            Object.defineProperty(Yielder.prototype, "current", {
-                get: function () {
-                    return this._current;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Yielder.prototype.yieldReturn = function (value) {
-                this._current = value;
-                return true;
-            };
-
-            Yielder.prototype.yieldBreak = function () {
-                this._current = null;
-                return false;
-            };
-            return Yielder;
-        })();
-
-        var EnumeratorState;
-        (function (EnumeratorState) {
-            EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
-            EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
-            EnumeratorState[EnumeratorState["After"] = 2] = "After";
-        })(EnumeratorState || (EnumeratorState = {}));
-
-        (function (Enumerator) {
-            function from(source) {
-                if (source instanceof Array)
-                    return new ArrayEnumerator(source);
-                if (source["getEnumerator"])
-                    return source.getEnumerator();
-
-                throw new Error("Unknown enumerable.");
-            }
-            Enumerator.from = from;
-        })(Collections.Enumerator || (Collections.Enumerator = {}));
-        var Enumerator = Collections.Enumerator;
-
-        var EnumeratorBase = (function (_super) {
-            __extends(EnumeratorBase, _super);
-            function EnumeratorBase(initializer, tryGetNext, disposer) {
-                _super.call(this);
-                this.initializer = initializer;
-                this.tryGetNext = tryGetNext;
-                this.disposer = disposer;
-                this.reset();
-            }
-            Object.defineProperty(EnumeratorBase.prototype, "current", {
-                get: function () {
-                    return this._yielder.current;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            EnumeratorBase.prototype.reset = function () {
-                var _ = this;
-                _._yielder = new Yielder();
-                _._state = 0 /* Before */;
-            };
-
-            EnumeratorBase.prototype.moveNext = function () {
-                var _ = this;
-                try  {
-                    switch (_._state) {
-                        case 0 /* Before */:
-                            _._state = 1 /* Running */;
-                            var initializer = _.initializer;
-                            if (initializer)
-                                initializer();
-
-                        case 1 /* Running */:
-                            if (_.tryGetNext(_._yielder)) {
-                                return true;
-                            } else {
-                                this.dispose();
-                                return false;
-                            }
-                        case 2 /* After */:
-                            return false;
-                    }
-                } catch (e) {
-                    this.dispose();
-                    throw e;
-                }
-            };
-
-            EnumeratorBase.prototype._onDispose = function () {
-                var _ = this, disposer = _.disposer;
-
-                _.initializer = null;
-                _.disposer = null;
-
-                var yielder = _._yielder;
-                _._yielder = null;
-                if (yielder)
-                    yielder.yieldBreak();
-
-                try  {
-                    if (disposer)
-                        disposer();
-                } finally {
-                    this._state = 2 /* After */;
-                }
-            };
-            return EnumeratorBase;
-        })(System.DisposableBase);
-        Collections.EnumeratorBase = EnumeratorBase;
-
-        var IndexEnumerator = (function (_super) {
-            __extends(IndexEnumerator, _super);
-            function IndexEnumerator(sourceFactory) {
-                var source;
-                _super.call(this, function () {
-                    source = sourceFactory();
-                    if (source && source.source) {
-                        if (source.length && source.step === 0)
-                            throw new Error("Invalid IndexEnumerator step value (0).");
-
-                        var pointer = source.pointer;
-                        if (!pointer)
-                            source.pointer = 0 | 0;
-                        else if (pointer != Math.floor(pointer))
-                            throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
-                        source.pointer = pointer | 0;
-
-                        var step = source.step;
-                        if (!step)
-                            source.step = 1;
-                        else if (step != Math.floor(step))
-                            throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
-                        source.step = step | 0;
-                    }
-                }, function (yielder) {
-                    var len = (source && source.source) ? source.length : 0;
-                    if (!len)
-                        return yielder.yieldBreak();
-                    var current = source.pointer | 0;
-                    source.pointer += source.step;
-                    return (current < len && current >= 0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
-                }, function () {
-                    if (source) {
-                        source.source = null;
-                    }
-                });
-            }
-            return IndexEnumerator;
-        })(EnumeratorBase);
-        Collections.IndexEnumerator = IndexEnumerator;
-
-        var ArrayEnumerator = (function (_super) {
-            __extends(ArrayEnumerator, _super);
-            function ArrayEnumerator(arrayOrFactory, start, step) {
-                if (typeof start === "undefined") { start = 0; }
-                if (typeof step === "undefined") { step = 1; }
-                _super.call(this, function () {
-                    var array = System.Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-                    return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
-                });
-            }
-            return ArrayEnumerator;
-        })(IndexEnumerator);
-        Collections.ArrayEnumerator = ArrayEnumerator;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Collections) {
-        function notImplementedException(name, log) {
-            if (typeof log === "undefined") { log = ""; }
-            console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-            throw new Error("DictionaryAbstractBase." + name + ": Not implemented.");
+    var Lazy = (function (_super) {
+        __extends(Lazy, _super);
+        function Lazy(_closure) {
+            _super.call(this);
+            this._closure = _closure;
         }
+        Object.defineProperty(Lazy.prototype, "isValueCreated", {
+            get: function () {
+                return this._isValueCreated;
+            },
+            enumerable: true,
+            configurable: true
+        });
 
-        var DictionaryAbstractBase = (function () {
-            function DictionaryAbstractBase() {
-                this._updateRecursion = 0;
+        Lazy.prototype.reset = function () {
+            var _ = this;
+            if (!_._closure)
+                throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");
+
+            _._isValueCreated = false;
+            _._value = null;
+        };
+
+        Object.defineProperty(Lazy.prototype, "value", {
+            get: function () {
+                var _ = this;
+                if (!_._isValueCreated && _._closure) {
+                    var v = _._closure();
+                    _._value = v;
+                    _._isValueCreated = true;
+                    return v;
+                }
+
+                return _._value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Lazy.prototype.valueOnce = function () {
+            try  {
+                return this.value;
+            } finally {
+                this._closure = null;
             }
-            Object.defineProperty(DictionaryAbstractBase.prototype, "isUpdating", {
-                get: function () {
-                    return this._updateRecursion != 0;
-                },
-                enumerable: true,
-                configurable: true
-            });
+        };
 
-            DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
-                if (!System.areEqual(value, old, true)) {
-                    var _ = this;
-                    if (_.onValueChanged)
-                        _.onValueChanged(key, value, old);
-
-                    if (_._updateRecursion == 0)
-                        _._onUpdated();
-                }
-            };
-
-            DictionaryAbstractBase.prototype._onUpdated = function () {
-                var _ = this;
-                if (_.onUpdated)
-                    _.onUpdated();
-            };
-
-            DictionaryAbstractBase.prototype.handleUpdate = function (closure) {
-                var _ = this, result;
-                if (closure) {
-                    _._updateRecursion++;
-
-                    try  {
-                        result = closure();
-                    } finally {
-                        _._updateRecursion--;
-                    }
-                } else
-                    result = _._updateRecursion == 0;
-
-                if (result && _._updateRecursion == 0)
-                    _._onUpdated();
-
-                return result;
-            };
-
-            Object.defineProperty(DictionaryAbstractBase.prototype, "isReadOnly", {
-                get: function () {
-                    return false;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
-                get: function () {
-                    return notImplementedException("count");
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            DictionaryAbstractBase.prototype.add = function (item) {
-                this.addByKeyValue(item.key, item.value);
-            };
-
-            DictionaryAbstractBase.prototype.clear = function () {
-                var _ = this, keys = _.keys, count = keys.length;
-
-                if (count)
-                    _.handleUpdate(function () {
-                        keys.forEach(function (key) {
-                            return _.removeByKey(key);
-                        });
-                        return true;
-                    });
-
-                if (count != _.count)
-                    console.warn("Dictioary clear() results in mismatched count.");
-
-                return count;
-            };
-
-            DictionaryAbstractBase.prototype.contains = function (item) {
-                var value = this.get(item.key);
-                return System.areEqual(value, item.value);
-            };
-
-            DictionaryAbstractBase.prototype.copyTo = function (array, index) {
-                if (typeof index === "undefined") { index = 0; }
-                var e = this.getEnumerator();
-                while (e.moveNext())
-                    array[index++] = e.current;
-            };
-
-            DictionaryAbstractBase.prototype.remove = function (item) {
-                var key = item.key, value = this.get(key);
-                return (System.areEqual(value, item.value) && this.removeByKey(key)) ? 1 : 0;
-            };
-
-            Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
-                get: function () {
-                    return notImplementedException("keys");
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(DictionaryAbstractBase.prototype, "values", {
-                get: function () {
-                    return notImplementedException("values");
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            DictionaryAbstractBase.prototype.addByKeyValue = function (key, value) {
-                var _ = this;
-                if (_.containsKey(key))
-                    throw new Error("Adding key/value when one already exists.");
-
-                _.set(key, value);
-            };
-
-            DictionaryAbstractBase.prototype.get = function (key) {
-                return notImplementedException("get(key: TKey): TValue", "When calling for key: " + key);
-            };
-
-            DictionaryAbstractBase.prototype.set = function (key, value) {
-                return notImplementedException("set(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + ".");
-            };
-
-            DictionaryAbstractBase.prototype.containsKey = function (key) {
-                var value = this.get(key);
-                return value !== undefined;
-            };
-
-            DictionaryAbstractBase.prototype.containsValue = function (value) {
-                var e = this.getEnumerator(), equal = System.areEqual;
-
-                while (e.moveNext()) {
-                    if (equal(e.current, value, true)) {
-                        e.dispose();
-                        return true;
-                    }
-                }
-                return false;
-            };
-
-            DictionaryAbstractBase.prototype.removeByKey = function (key) {
-                return this.set(key, undefined);
-            };
-
-            DictionaryAbstractBase.prototype.removeByValue = function (value) {
-                var _ = this, count = 0, equal = System.areEqual;
-                _.keys.forEach(function (key) {
-                    if (equal(_.get(key), value, true)) {
-                        _.removeByKey(key);
-                        ++count;
-                    }
-                });
-                return count;
-            };
-
-            DictionaryAbstractBase.prototype.importPairs = function (pairs) {
-                var _ = this;
-                return _.handleUpdate(function () {
-                    var changed = false;
-                    pairs.forEach(function (pair) {
-                        _.set(pair.key, pair.value);
-                        changed = true;
-                    });
-                    return changed;
-                });
-            };
-
-            DictionaryAbstractBase.prototype.getEnumerator = function () {
-                var _ = this;
-                var keys, len, i = 0;
-                return new Collections.EnumeratorBase(function () {
-                    keys = _.keys;
-                    len = keys.length;
-                }, function (yielder) {
-                    while (i < len) {
-                        var key = keys[i++], value = _.get(key);
-                        if (value !== undefined)
-                            return yielder.yieldReturn({ key: key, value: value });
-                    }
-
-                    return yielder.yieldBreak();
-                });
-            };
-            return DictionaryAbstractBase;
-        })();
-        Collections.DictionaryAbstractBase = DictionaryAbstractBase;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
+        Lazy.prototype._onDispose = function () {
+            this._closure = null;
+            this._value = null;
+        };
+        return Lazy;
+    })(System.DisposableBase);
+    System.Lazy = Lazy;
 })(System || (System = {}));
 var System;
 (function (System) {
-    (function (Collections) {
-        var HashEntry = (function () {
-            function HashEntry(key, value, prev, next) {
-                this.key = key;
-                this.value = value;
-                this.prev = prev;
-                this.next = next;
-            }
-            return HashEntry;
-        })();
+    (function (Text) {
+        var Types = new System.Types();
 
-        var EntryList = (function () {
-            function EntryList(first, last) {
-                this.first = first;
-                this.last = last;
-            }
-            EntryList.prototype.addLast = function (entry) {
-                var _ = this;
-                if (_.last != null) {
-                    _.last.next = entry;
-                    entry.prev = _.last;
-                    _.last = entry;
-                } else
-                    _.first = _.last = entry;
-            };
-
-            EntryList.prototype.replace = function (entry, newEntry) {
-                var _ = this;
-                if (entry.prev != null) {
-                    entry.prev.next = newEntry;
-                    newEntry.prev = entry.prev;
-                } else
-                    _.first = newEntry;
-
-                if (entry.next != null) {
-                    entry.next.prev = newEntry;
-                    newEntry.next = entry.next;
-                } else
-                    _.last = newEntry;
-            };
-
-            EntryList.prototype.remove = function (entry) {
-                var _ = this;
-                if (entry.prev != null)
-                    entry.prev.next = entry.next;
-                else
-                    _.first = entry.next;
-
-                if (entry.next != null)
-                    entry.next.prev = entry.prev;
-                else
-                    _.last = entry.prev;
-            };
-
-            EntryList.prototype.clear = function () {
-                var _ = this;
-                while (_.last)
-                    _.remove(_.last);
-            };
-
-            EntryList.prototype.forEach = function (closure) {
-                var _ = this, currentEntry = _.first;
-                while (currentEntry) {
-                    closure(currentEntry);
-                    currentEntry = currentEntry.next;
-                }
-            };
-            return EntryList;
-        })();
-
-        function callHasOwnProperty(target, key) {
-            return Object.prototype.hasOwnProperty.call(target, key);
-        }
-
-        function computeHashCode(obj) {
-            if (obj === null)
-                return "null";
-            if (obj === undefined)
-                return "undefined";
-
-            return (typeof obj.toString === System.Types.Function) ? obj.toString() : Object.prototype.toString.call(obj);
-        }
-
-        var Dictionary = (function (_super) {
-            __extends(Dictionary, _super);
-            function Dictionary(compareSelector) {
-                if (typeof compareSelector === "undefined") { compareSelector = System.Functions.Identity; }
-                _super.call(this);
-                this.compareSelector = compareSelector;
-                this._count = 0;
-                this._entries = new EntryList();
-                this._buckets = {};
-            }
-            Dictionary.prototype.setKV = function (key, value, allowOverwrite) {
-                var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
-                var compareKey = comparer(key);
-                var hash = computeHashCode(compareKey), entry;
-
-                if (callHasOwnProperty(buckets, hash)) {
-                    var equal = System.areEqual;
-                    var array = buckets[hash];
-                    for (var i = 0; i < array.length; i++) {
-                        var old = array[i];
-                        if (comparer(old.key) === compareKey) {
-                            if (!allowOverwrite)
-                                throw new Error("Key already exists.");
-
-                            var changed = !equal(old.value, value);
-                            if (changed) {
-                                if (value === undefined) {
-                                    entries.remove(old);
-                                    array.splice(i, 1);
-                                    if (!array.length)
-                                        delete buckets[hash];
-                                    --_._count;
-                                } else {
-                                    entry = new HashEntry(key, value);
-                                    entries.replace(old, entry);
-                                    array[i] = entry;
-                                }
-
-                                _._onValueUpdate(key, value, old.value);
-                            }
-                            return changed;
-                        }
-                    }
-                    array.push(entry = entry || new HashEntry(key, value));
-                } else {
-                    if (value === undefined) {
-                        if (allowOverwrite)
-                            return false;
-                        else
-                            throw new Error("Cannot add 'undefined' value.");
-                    }
-                    buckets[hash] = [entry = new HashEntry(key, value)];
-                }
-                ++_._count;
-                entries.addLast(entry);
-                _._onValueUpdate(key, value, undefined);
-                return true;
-            };
-
-            Dictionary.prototype.addByKeyValue = function (key, value) {
-                this.setKV(key, value, false);
-            };
-
-            Dictionary.prototype.get = function (key) {
-                var buckets = this._buckets, comparer = this.compareSelector;
-                var compareKey = comparer(key);
-                var hash = computeHashCode(compareKey);
-                if (!callHasOwnProperty(buckets, hash))
-                    return undefined;
-
-                var array = buckets[hash];
-                for (var i = 0, len = array.length; i < len; i++) {
-                    var entry = array[i];
-                    if (comparer(entry.key) === compareKey)
-                        return entry.value;
-                }
-                return undefined;
-            };
-
-            Dictionary.prototype.set = function (key, value) {
-                return this.setKV(key, value, true);
-            };
-
-            Dictionary.prototype.containsKey = function (key) {
-                var _ = this, buckets = _._buckets, comparer = _.compareSelector;
-                var compareKey = comparer(key);
-                var hash = computeHashCode(compareKey);
-                if (!callHasOwnProperty(buckets, hash))
-                    return false;
-
-                var array = buckets[hash];
-                for (var i = 0, len = array.length; i < len; i++)
-                    if (comparer(array[i].key) === compareKey)
-                        return true;
-
-                return false;
-            };
-
-            Dictionary.prototype.clear = function () {
-                var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this);
-
-                _._count = 0;
-                for (var key in buckets)
-                    delete buckets[key];
-
-                _._entries.clear();
-
-                return count;
-            };
-
-            Object.defineProperty(Dictionary.prototype, "count", {
-                get: function () {
-                    return this._count;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Dictionary.prototype.getEnumerator = function () {
-                var _ = this, currentEntry;
-
-                return new Collections.EnumeratorBase(function () {
-                    currentEntry = _._entries.first;
-                }, function (yielder) {
-                    if (currentEntry != null) {
-                        var result = { key: currentEntry.key, value: currentEntry.value };
-                        currentEntry = currentEntry.next;
-                        return yielder.yieldReturn(result);
-                    }
-                    return yielder.yieldBreak();
-                });
-            };
-
-            Object.defineProperty(Dictionary.prototype, "keys", {
-                get: function () {
-                    var _ = this, result = [];
-                    _._entries.forEach(function (entry) {
-                        return result.push(entry.key);
-                    });
-                    return result;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(Dictionary.prototype, "values", {
-                get: function () {
-                    var _ = this, result = [];
-                    _._entries.forEach(function (entry) {
-                        return result.push(entry.value);
-                    });
-                    return result;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return Dictionary;
-        })(Collections.DictionaryAbstractBase);
-        Collections.Dictionary = Dictionary;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Collections) {
-        var StringKeyDictionary = (function (_super) {
-            __extends(StringKeyDictionary, _super);
-            function StringKeyDictionary() {
-                _super.apply(this, arguments);
-                this._count = 0;
-                this._map = {};
-            }
-            StringKeyDictionary.prototype.containsKey = function (key) {
-                return key in this._map;
-            };
-
-            StringKeyDictionary.prototype.containsValue = function (value) {
-                var map = this._map, equal = System.areEqual;
-                for (var key in map)
-                    if (map.hasOwnProperty(key) && equal(map[key], value))
-                        return true;
-                return false;
-            };
-
-            StringKeyDictionary.prototype.get = function (key) {
-                return this._map[key];
-            };
-
-            StringKeyDictionary.prototype.set = function (key, value) {
-                var _ = this, map = _._map, old = map[key];
-                if (old !== value) {
-                    if (value === undefined) {
-                        if (key in map) {
-                            delete map[key];
-                            --_._count;
-                        }
-                    } else {
-                        if (!(key in map))
-                            ++_._count;
-                        map[key] = value;
-                    }
-
-                    _._onValueUpdate(key, value, old);
-                    return true;
-                }
-                return false;
-            };
-
-            StringKeyDictionary.prototype.importMap = function (values) {
-                var _ = this;
-                return _.handleUpdate(function () {
-                    var changed = false;
-                    for (var key in values) {
-                        if (values.hasOwnProperty(key) && _.set(key, values[key]))
-                            changed = true;
-                    }
-                    return changed;
-                });
-            };
-
-            StringKeyDictionary.prototype.toMap = function (selector) {
-                var _ = this, result = {};
-                for (var key in _._map) {
-                    if (_._map.hasOwnProperty(key)) {
-                        var value = _._map[key];
-                        if (selector)
-                            value = selector(key, value);
-                        if (value !== undefined)
-                            result[key] = value;
-                    }
-                }
-                return result;
-            };
-
-            Object.defineProperty(StringKeyDictionary.prototype, "keys", {
-                get: function () {
-                    var _ = this, result = [];
-                    for (var key in _._map)
-                        if (_._map.hasOwnProperty(key))
-                            result.push(key);
-
-                    return result;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(StringKeyDictionary.prototype, "values", {
-                get: function () {
-                    var _ = this, result = [];
-                    for (var key in _._map)
-                        if (_._map.hasOwnProperty(key))
-                            result.push(_._map[key]);
-
-                    return result;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Object.defineProperty(StringKeyDictionary.prototype, "count", {
-                get: function () {
-                    return this._count;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return StringKeyDictionary;
-        })(Collections.DictionaryAbstractBase);
-        Collections.StringKeyDictionary = StringKeyDictionary;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
-var System;
-(function (System) {
-    (function (Collections) {
-        var OrderedStringKeyDictionary = (function (_super) {
-            __extends(OrderedStringKeyDictionary, _super);
-            function OrderedStringKeyDictionary() {
-                _super.call(this);
-                this._order = [];
-            }
-            OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
-                return this._order.indexOf(key, 0);
-            };
-
-            OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
-                return this.get(this._order[index]);
-            };
-
-            OrderedStringKeyDictionary.prototype.set = function (key, value, keepIndex) {
-                var _ = this, exists = _.indexOfKey(key) != -1;
-                if (!exists && (value !== undefined || keepIndex))
-                    _._order.push(key);
-                else if (exists && value === undefined && !keepIndex)
-                    Collections.ArrayUtility.remove(_._order, key);
-
-                return _super.prototype.set.call(this, key, value);
-            };
-
-            OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
-                var _ = this, order = _._order;
-                if (index < 0 || index >= order.length)
-                    throw new Error("IndexOutOfRange Exception.");
-
-                return _.set(order[index], value);
-            };
-
-            OrderedStringKeyDictionary.prototype.importValues = function (values) {
-                var _ = this;
-                return _.handleUpdate(function () {
-                    var changed = false;
-                    for (var i = 0; i < values.length; i++)
-                        if (_.setByIndex(i, values[i]))
-                            changed = true;
-                    return changed;
-                });
-            };
-
-            OrderedStringKeyDictionary.prototype.setValues = function () {
-                var values = [];
+        var StringBuilder = (function () {
+            function StringBuilder() {
+                var initial = [];
                 for (var _i = 0; _i < (arguments.length - 0); _i++) {
-                    values[_i] = arguments[_i + 0];
+                    initial[_i] = arguments[_i + 0];
                 }
-                return this.importValues(values);
+                var _ = this;
+                _._parts = [];
+                _.appendThese(initial);
+            }
+            StringBuilder.prototype.appendSingle = function (item) {
+                if (item !== null && item !== undefined) {
+                    switch (typeof item) {
+                        case Types.Object:
+                        case Types.Function:
+                            item = item.toString();
+                            break;
+                    }
+                    this._parts.push(item);
+                }
             };
 
-            OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
-                return this.setByIndex(index, undefined);
+            StringBuilder.prototype.appendThese = function (items) {
+                var _ = this;
+                items.forEach(function (s) {
+                    return _.appendSingle(s);
+                });
+                return _;
             };
 
-            Object.defineProperty(OrderedStringKeyDictionary.prototype, "keys", {
+            StringBuilder.prototype.append = function () {
+                var items = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    items[_i] = arguments[_i + 0];
+                }
+                this.appendThese(items);
+                return this;
+            };
+
+            StringBuilder.prototype.appendLine = function () {
+                var items = [];
+                for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                    items[_i] = arguments[_i + 0];
+                }
+                this.appendLines(items);
+                return this;
+            };
+
+            StringBuilder.prototype.appendLines = function (items) {
+                var _ = this;
+                items.forEach(function (i) {
+                    if (i !== null && i !== undefined) {
+                        _.appendSingle(i);
+                        _._parts.push("\r\n");
+                    }
+                });
+                return _;
+            };
+
+            Object.defineProperty(StringBuilder.prototype, "isEmpty", {
                 get: function () {
-                    var _ = this;
-                    return _._order.filter(function (key) {
-                        return _.containsKey(key);
-                    });
+                    return this._parts.length === 0;
                 },
                 enumerable: true,
                 configurable: true
             });
-            return OrderedStringKeyDictionary;
-        })(Collections.StringKeyDictionary);
-        Collections.OrderedStringKeyDictionary = OrderedStringKeyDictionary;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
+
+            StringBuilder.prototype.toString = function (delimiter) {
+                if (typeof delimiter === "undefined") { delimiter = ""; }
+                return this._parts.join(delimiter);
+            };
+
+            StringBuilder.prototype.clear = function () {
+                this._parts.length = 0;
+            };
+
+            StringBuilder.prototype.dispose = function () {
+                this.clear();
+            };
+            return StringBuilder;
+        })();
+        Text.StringBuilder = StringBuilder;
+    })(System.Text || (System.Text = {}));
+    var Text = System.Text;
 })(System || (System = {}));
 //# sourceMappingURL=System.js.map

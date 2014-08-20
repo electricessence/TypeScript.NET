@@ -17,8 +17,8 @@ module System {
 		dispatchEvent(event: Event): boolean;
 		hasEventListener(type: string): boolean;
 		removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
-		//willTrigger(type: string);
-		//toString(): string;
+		// willTrigger(type: string);
+		// toString(): string;
 
 	}
 
@@ -32,14 +32,14 @@ module System {
 			this.listener = listener;
 			this.useCapture = useCapture;
 			this.priority = priority;
-			//this.useWeakReference = useWeakReference;
+			// this.useWeakReference = useWeakReference;
 		}
 
 		type: string;
 		listener: EventListener;
 		useCapture: boolean;
 		priority: number;
-		//useWeakReference: boolean;
+		// useWeakReference: boolean;
 
 		dispose(): void {
 			this.listener = null;
@@ -62,7 +62,7 @@ module System {
 				&& _.listener == other.listener
 				&& _.useCapture == other.useCapture
 				&& _.priority == other.priority
-				//&& this.useWeakReference == other.useWeakReference
+				// && this.useWeakReference == other.useWeakReference
 			;
 		}
 	}

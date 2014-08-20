@@ -39,7 +39,7 @@ module System.Collections {
 		export function from<T>(source: any): IEnumerator<T> {
 			if (source instanceof Array)
 				return new ArrayEnumerator<T>(source);
-			if (source["getEnumerator"])
+			if ("getEnumerator" in source)
 				return source.getEnumerator();
 
 			throw new Error("Unknown enumerable.");

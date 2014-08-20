@@ -62,6 +62,52 @@ declare module System {
     function copyTo(source: any, target: any): void;
     function applyMixins(derivedCtor: any, baseCtors: any[]): void;
 }
+declare module System.Collections {
+    interface IEnumerateEach<T> {
+        forEach(action: Predicate<T>): void;
+        forEach(action: Action<T>): void;
+    }
+}
+declare module System.Text {
+    function format(source: string, ...args: any[]): string;
+}
+declare module System.Collections {
+    interface ILinkedListNode<T> {
+        list: LinkedList<T>;
+        previous: ILinkedListNode<T>;
+        next: ILinkedListNode<T>;
+        value: T;
+    }
+    class LinkedList<T> implements ICollection<T>, IEnumerateEach<T> {
+        constructor(source?: IEnumerable<T>);
+        constructor(source?: IArray<T>);
+        private _first;
+        private _last;
+        private _count;
+        private _addFirst(entry);
+        private _addLast(entry);
+        private _findFirst(entry);
+        private _findLast(entry);
+        public forEach(action: Predicate<T>): void;
+        public forEach(action: Action<T>): void;
+        public getEnumerator(): IEnumerator<T>;
+        public count : number;
+        public isReadOnly : boolean;
+        public add(entry: T): void;
+        public clear(): number;
+        public contains(entry: T): boolean;
+        public copyTo(array: T[], index?: number): void;
+        public removeOnce(entry: T): boolean;
+        public remove(entry: T): number;
+        public find(entry: T): ILinkedListNode<T>;
+        public findLast(entry: T): ILinkedListNode<T>;
+        public addLast(entry: T): ILinkedListNode<T>;
+        public addFirst(entry: T): ILinkedListNode<T>;
+        public removeFirst(): void;
+        public removeLast(): void;
+        public removeNode(node: ILinkedListNode<T>): boolean;
+    }
+}
 declare module System {
     enum TimeUnit {
         Ticks = 0,
@@ -461,5 +507,20 @@ declare module System.Collections {
         public setValues(...values: TValue[]): boolean;
         public removeByIndex(index: number): boolean;
         public keys : string[];
+    }
+}
+declare module System.Text {
+    class StringBuilder implements IDisposable {
+        private _parts;
+        constructor(...initial: any[]);
+        private appendSingle(item);
+        public appendThese(items: any[]): StringBuilder;
+        public append(...items: any[]): StringBuilder;
+        public appendLine(...items: any[]): StringBuilder;
+        public appendLines(items: any[]): StringBuilder;
+        public isEmpty : boolean;
+        public toString(delimiter?: string): string;
+        public clear(): void;
+        public dispose(): void;
     }
 }

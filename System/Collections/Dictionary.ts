@@ -195,7 +195,8 @@ module System.Collections {
 			// Ensure reset and clean...
 			_._count = 0;
 			for (var key in buckets)
-				delete buckets[key];
+				if(buckets.hasOwnProperty(key))
+					delete buckets[key];
 
 			_._entries.clear();
 

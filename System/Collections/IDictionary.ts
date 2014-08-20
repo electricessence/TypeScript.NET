@@ -5,6 +5,7 @@
 
 module System.Collections {
 
+
 	export interface IMap<TValue> {
 		[key: string]: TValue
 	}
