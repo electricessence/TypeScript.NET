@@ -9,6 +9,14 @@
 
 module System.Collections
 {
+	/*****************************
+	* IMPORTANT NOTES ABOUT PERFORMANCE:
+	* http://jsperf.com/simulating-a-queue
+	*
+	* Adding to an array is very fast, but modifying is slow.
+	* LinkedList wins when modifying contents.
+	*****************************/	
+	
 	export interface ILinkedListNode<T>
 	{
 		list: System.Collections.LinkedList<T>;
