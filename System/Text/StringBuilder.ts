@@ -10,6 +10,13 @@ import IDisposable = System.IDisposable;
 
 module System.Text
 {
+	/*****************************
+	 * IMPORTANT NOTES ABOUT PERFORMANCE:
+	 * http://jsperf.com/string-concatenation-looped
+	 * http://jsperf.com/adding-strings-to-an-array
+	 * 
+	 * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
+	 *****************************/
 
 	var Types = new System.Types();
 
