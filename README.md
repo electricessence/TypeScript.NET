@@ -43,6 +43,9 @@ For example, System has the following files in the build directory:
 /build/amd/System.js
 ```
 
+# Learn, Connect & Evolve
+https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
+
 # Future
 Planning to make this a bower (and possibly NPM) install.
 
