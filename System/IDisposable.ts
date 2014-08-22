@@ -40,7 +40,7 @@ module System {
 	{
 		var next: IDisposable;
 		// Get the next non-null entry.
-		while(disposables.length && !(next = disposables.shift())) { }
+		while(disposables.length && !(next = disposables.shift())) { } // TODO: avoid .shift()
 		if (next)
 		{
 			try

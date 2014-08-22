@@ -31,14 +31,18 @@ module System.Collections.ArrayUtility
 
 	export function register<T>(array: T[], item: T): boolean
 	{
-		var ok = array && (!array.length || !contains(array, item));
-		if (ok) array.push(item);
+		if(!array)
+			throw new Error("ArgumentNullException: 'array' cannot be null.");
+		var len = array.length; // avoid querying .length more than once. *
+		var ok = !len || !contains(array, item);
+		if (ok) array[len] = item; // * push would query length again.
 		return ok;
 	}
 
 	export function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number
 	{
-
+		if(!array)
+			throw new Error("ArgumentNullException: 'array' cannot be null.");
 		var len = array.length | 0;
 		for (var i = 0 | 0; i < len; ++i)
 			if (i in array && predicate(array[i]))
@@ -50,6 +54,8 @@ module System.Collections.ArrayUtility
 
 	export function areAllEqual(arrays: any[][], strict?: boolean): boolean
 	{
+		if(!arrays)
+			throw new Error("ArgumentNullException: 'arrays' cannot be null.");
 		if (arrays.length < 2)
 			throw new Error("Cannot compare a set of arrays less than 2.");
 		var first = arrays[0];
@@ -81,13 +87,22 @@ module System.Collections.ArrayUtility
 
 	export function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T
 	{
-		for (var i = 0 | 0; i < target.length; ++i)
-			target[i] = fn(target[i]);
+		if(!target)
+			throw new Error("ArgumentNullException: 'target' cannot be null.");
+
+		if(fn)
+		{
+			for(var i = 0 | 0; i<target.length; ++i)
+				target[i] = fn(target[i]);
+		}
 		return target;
 	}
 
 	export function removeIndex<T>(array: T[], index: number): boolean
 	{
+		if(!array)
+			throw new Error("ArgumentNullException: 'array' cannot be null.");
+
 		var exists = index < array.length;
 		if (exists)
 			array.splice(index, 1);
@@ -96,6 +111,9 @@ module System.Collections.ArrayUtility
 
 	export function remove<T>(array: T[], value: T, max?: number): number
 	{
+		if(!array)
+			throw new Error("ArgumentNullException: 'array' cannot be null.");
+
 		var count = 0;
 		if (array && array.length && max !== 0)
 		{
@@ -116,7 +134,6 @@ module System.Collections.ArrayUtility
 
 	export function repeat<T>(element: T, count: number): T[]
 	{
-
 		var result: T[] = [];
 		while (count--)
 			result.push(element);
@@ -127,7 +144,7 @@ module System.Collections.ArrayUtility
 
 	export function sum(source: number[], ignoreNaN:boolean = false): number
 	{
-		if (!source.length)
+		if (!source || !source.length)
 			return 0;
 
 		var result = 0;
@@ -148,7 +165,7 @@ module System.Collections.ArrayUtility
 
 	export function average(source: number[], ignoreNaN: boolean = false): number
 	{
-		if (!source.length)
+		if (!source || !source.length)
 			return NaN;
 
 		var result = 0, count:number;
@@ -181,7 +198,7 @@ module System.Collections.ArrayUtility
 
 	export function product(source: number[], ignoreNaN: boolean = false): number
 	{
-		if (!source.length)
+		if (!source || !source.length)
 			return NaN;
 
 		var result = 1;
@@ -221,7 +238,7 @@ module System.Collections.ArrayUtility
 
 	function ifSet(source: number[], start: number, ignoreNaN: boolean, predicate: (n: number, result:number) => boolean)
 	{
-		if (!source.length)
+		if (!source || !source.length)
 			return NaN;
 
 		var result = start;

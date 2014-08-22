@@ -753,7 +753,7 @@ module System.Linq
 					() =>
 					{
 						enumerator = _.getEnumerator();
-						q = [];
+						q = []; // TODO: Use an actual queue class that doesn't have the .shift() overhead.
 					},
 					yielder =>
 					{
@@ -848,7 +848,7 @@ module System.Linq
 
 			return new Enumerable<any>(() =>
 			{
-				var enumeratorStack: IEnumerator<any>[] = [];
+				var enumeratorStack: IEnumerator<any>[] = []; // TODO: Consider using an actual stack and not an array.
 				var enumerator: IEnumerator<any>;
 
 				return new EnumeratorBase<T>(
@@ -1353,7 +1353,7 @@ module System.Linq
 
 			return new Enumerable<T>(() =>
 			{
-				var buffer: T[];
+				var buffer: T[]; // TODO: Review this.  May be inefficient.
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1366,7 +1366,7 @@ module System.Linq
 						var len = buffer.length;
 						return len && yielder.yieldReturn(
 							buffer.splice(
-								(Math.random() * len) | 0, INT_POSITIVE_1).pop());
+								(Math.random() * len) | 0, INT_POSITIVE_1)[0]);
 					},
 					() => { buffer.length = 0; }
 					);
@@ -1470,7 +1470,7 @@ module System.Linq
 			var found: number = INT_NEGATTIVE_1;
 
 			if (compareSelector)
-				this.forEach((element: T, i: number) =>
+				this.forEach((element: T, i?: number) =>
 				{
 					if (System.areEqual(compareSelector(element), compareSelector(value), true))
 					{
@@ -1479,7 +1479,7 @@ module System.Linq
 					}
 				});
 			else
-				this.forEach((element: T, i: number) =>
+				this.forEach((element: T, i?: number) =>
 				{
 					// Why?  Because NaN doens't equal NaN. :P
 					if (System.areEqual(element, value, true))
@@ -1497,12 +1497,12 @@ module System.Linq
 			var result: number = INT_NEGATTIVE_1;
 
 			if (compareSelector)
-				this.forEach((element: T, i: number) =>
+				this.forEach((element: T, i?: number) =>
 				{
 					if (System.areEqual(compareSelector(element), compareSelector(value), true)) result = i;
 				});
 			else
-				this.forEach((element: T, i: number) =>
+				this.forEach((element: T, i?: number) =>
 				{
 					if (System.areEqual(element, value, true)) result = i;
 				});
@@ -1627,7 +1627,7 @@ module System.Linq
 							{
 								while (!secondEnumerator)
 								{
-									var next = secondTemp.shift();
+									var next = secondTemp.shift(); // Find a way to avoid using .shift().. SLOW!
 									if(next)
 										secondEnumerator = Enumerable.from<TSecond>(next).getEnumerator();
 									else if (!secondTemp.length)
@@ -1653,16 +1653,6 @@ module System.Linq
 		}
 			
 		// #region Join Methods
-
-		/*
-		public static IEnumerable<TResult> Join<TOuter, TInner, TKey, TResult>(
-		this IEnumerable<TOuter> outer,
-		IEnumerable<TInner> inner,
-		Func<TOuter, TKey> outerKeySelector,
-		Func<TInner, TKey> innerKeySelector,
-		Func<TOuter, TInner, TResult> resultSelector,
-		IEqualityComparer<TKey> comparer)
-		 */
 
 		join<TInner, TKey, TResult, TCompare>(
 			inner: Enumerable<TInner>,
@@ -1751,13 +1741,17 @@ module System.Linq
 				var secondEnumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
-					() => { firstEnumerator = _.getEnumerator(); },
+					() => {
+						firstEnumerator = _.getEnumerator()
+					},
 					yielder =>
 					{
-						if (secondEnumerator == null)
+						if (firstEnumerator!=null)
 						{
 							if (firstEnumerator.moveNext()) return yielder.yieldReturn(firstEnumerator.current);
 							secondEnumerator = Enumerable.from<T>(other).getEnumerator();
+							firstEnumerator.dispose();
+							firstEnumerator = null;
 						}
 						if (secondEnumerator.moveNext()) return yielder.yieldReturn(secondEnumerator.current);
 						return false;
@@ -1781,32 +1775,35 @@ module System.Linq
 			if (enumerables.length == 1)
 				return _.concatWith(enumerables[0]);
 
-			enumerables = enumerables.slice();
+			enumerables = enumerables.slice(); // TODO: Use a Queue or LinkedList class to avoid .shift();
 
 			return new Enumerable<T>(() =>
 			{
 				var enumerator: IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
-					null,
+					()=> { enumerator = _.getEnumerator(); }, // 1) First get our values...
 					yielder =>
 					{
+						while(true) {
 
-						while (!enumerator && enumerables.length)
-						{
-							enumerator = enumerables.shift();
+							while (!enumerator && enumerables.length)
+							{
+								enumerator = Enumerable.from<T>(enumerables.shift()).getEnumerator(); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
+							}
+
+							if (enumerator && enumerator.moveNext()) // 2) Keep returning until done.
+								return yielder.yieldReturn(enumerator.current);
+
+							if (enumerator) // 3) Dispose and reset for next.
+							{
+								enumerator.dispose();
+								enumerator = null;
+								continue;
+							}
+
+							return yielder.yieldBreak();
 						}
-
-						if (enumerator && enumerator.moveNext())
-							return yielder.yieldReturn(enumerator.current);
-
-						if (enumerator)
-						{
-							enumerator.dispose();
-							enumerator = null;
-						}
-
-						return yielder.yieldBreak();
 					});
 			});
 		}
