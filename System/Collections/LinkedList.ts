@@ -1,5 +1,6 @@
 ﻿///<reference path="../System.ts"/>
 ///<reference path="../Text/Text.ts"/>
+///<reference path="Enumerator.ts"/>
 
 /*
 * @author electricessence / https://github.com/electricessence/
@@ -17,6 +18,7 @@ module System.Collections
 	* LinkedList wins when modifying contents.
 	*****************************/
 
+	// Use an interface in order to prevent external construction of LinkedListNode
 	export interface ILinkedListNode<T>
 	{
 
@@ -40,7 +42,7 @@ module System.Collections
 	class Node<T>
 	{
 		constructor(
-			public value: T,
+			public value?: T,
 			public prev?: Node<T>,
 			public next?: Node<T>) { }
 
@@ -59,7 +61,7 @@ module System.Collections
 		if (!node)
 			return null;
 
-		var external: ILinkedListNode<T> = node.external;
+		var external: LinkedListNode<T> = node.external;
 		if(!external)
 			node.external = external = new LinkedListNode<T>(list, node);
 
@@ -87,26 +89,46 @@ module System.Collections
 		constructor(source?: IArray<T>);
 		constructor(source:any)
 		{
-			// TODO
+			var _ = this, c = INT_0, first: Node<T> = null, last: Node<T> = null;
+			var e = Enumerator.from<T>(source);
+
+			if (e.moveNext())
+			{
+				first = last = new Node<T>(e.current);
+				++c;
+			}
+
+			while(e.moveNext())
+			{
+				last = last.next = new Node<T>(e.current, last);
+				++c;
+			}
+
+			_._first = first;
+			_._last = last;
+			_._count = c;
 		}
 
 		// #region Internals.
 		private _first: Node<T>;
 		private _last: Node<T>;
-		private _count: number = INT_0;
+		private _count: number;
 
 		private _addFirst(entry: T): Node<T>
 		{
 			var _ = this, first = _._first;
-			var next = new Node(entry, null, first);
+			var prev = new Node(entry, null, first);
 			if (first)
-				first.prev = next;
+			{
+				first.prev = prev;
+				first = prev;
+			}
 			else
-				_._first = _._last = next;
+				_._first = _._last = prev;
 
 			_._count += INT_1;
 
-			return next;
+			return prev;
 		}
 
 		private _addLast(entry: T): Node<T>
@@ -114,7 +136,10 @@ module System.Collections
 			var _ = this, last = _._last;
 			var next = new Node(entry, last);
 			if (last)
+			{
 				last.next = next;
+				last = next;
+			}
 			else
 				_._first = _._last = next;
 
@@ -290,6 +315,36 @@ module System.Collections
 			return ensureExternal(this._last, this);
 		}
 
+		// get methods are available for convienence but is an n*index operation.
+
+		private _get(index: number): Node<T>
+		{
+			if (index < 0)
+				throw new Error("IndexOutOfBoundsException: index is less than zero.");
+
+			if (index >= this._count)
+				throw new Error("IndexOutOfBoundsException: index is greater than count.");
+
+			var next = this._first, i: number = INT_0;
+			while (next && index < i++)
+			{
+				next = next.next;
+			}
+
+			return next;
+			
+		}
+
+		get(index: number): T
+		{
+			return this._get(index).value;
+		}
+
+		getNode(index: number): ILinkedListNode<T>
+		{
+			return ensureExternal(this._get(index), this);
+		}
+
 		find(entry: T): ILinkedListNode<T>
 		{
 			return ensureExternal(this._findFirst(entry), this);
@@ -317,7 +372,7 @@ module System.Collections
 			{
 				var next = first.next;
 				_._first = next;
-				if (next)
+				if (next) // Might have been the last.
 					next.prev = null;
 
 				_._count -= INT_1;
@@ -331,7 +386,7 @@ module System.Collections
 			{
 				var prev = last.prev;
 				_._last = prev;
-				if(prev)
+				if(prev) // Might have been the first.
 					prev.next = null;
 
 				_._count -= INT_1;

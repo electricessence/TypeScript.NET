@@ -36,9 +36,22 @@ module System.Collections {
 	// Statics only...  No constructor...
 	export module Enumerator {
 		// Could be array, or IEnumerable...
-		export function from<T>(source: any): IEnumerator<T> {
+		export function from<T>(source: any): IEnumerator<T>
+		{
 			if (source instanceof Array)
 				return new ArrayEnumerator<T>(source);
+
+			if (typeof source === System.Types.Object && "length" in source)
+				return new IndexEnumerator<T>(() =>
+				{
+					return {
+						source: source,
+						length: source.length,
+						pointer: 0,
+						step: 1
+					}
+				});
+
 			if ("getEnumerator" in source)
 				return source.getEnumerator();
 
@@ -46,17 +59,18 @@ module System.Collections {
 		}
 
 		export function forEach<T>(
-			enumerator: IEnumerator<T>, 
+			e: IEnumerator<T>, 
 			action: (element: T, index?: number) => any): void
 		{
-			var e = enumerator;
-
-			var index = 0;
-			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			while (e.moveNext())
+			if (e)
 			{
-				if (action(e.current, index++) === false)
-					break;
+				var index = 0;
+				// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+				while (e.moveNext())
+				{
+					if (action(e.current, index++) === false)
+						break;
+				}
 			}
 		}
 	}

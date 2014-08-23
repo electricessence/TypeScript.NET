@@ -249,6 +249,211 @@ var System;
     })(System.Text || (System.Text = {}));
     var Text = System.Text;
 })(System || (System = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var System;
+(function (System) {
+    (function (Collections) {
+        "use strict";
+
+        var Yielder = (function () {
+            function Yielder() {
+            }
+            Object.defineProperty(Yielder.prototype, "current", {
+                get: function () {
+                    return this._current;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            Yielder.prototype.yieldReturn = function (value) {
+                this._current = value;
+                return true;
+            };
+
+            Yielder.prototype.yieldBreak = function () {
+                this._current = null;
+                return false;
+            };
+            return Yielder;
+        })();
+
+        var EnumeratorState;
+        (function (EnumeratorState) {
+            EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
+            EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
+            EnumeratorState[EnumeratorState["After"] = 2] = "After";
+        })(EnumeratorState || (EnumeratorState = {}));
+
+        (function (Enumerator) {
+            function from(source) {
+                if (source instanceof Array)
+                    return new ArrayEnumerator(source);
+
+                if (typeof source === System.Types.Object && "length" in source)
+                    return new IndexEnumerator(function () {
+                        return {
+                            source: source,
+                            length: source.length,
+                            pointer: 0,
+                            step: 1
+                        };
+                    });
+
+                if ("getEnumerator" in source)
+                    return source.getEnumerator();
+
+                throw new Error("Unknown enumerable.");
+            }
+            Enumerator.from = from;
+
+            function forEach(e, action) {
+                if (e) {
+                    var index = 0;
+
+                    while (e.moveNext()) {
+                        if (action(e.current, index++) === false)
+                            break;
+                    }
+                }
+            }
+            Enumerator.forEach = forEach;
+        })(Collections.Enumerator || (Collections.Enumerator = {}));
+        var Enumerator = Collections.Enumerator;
+
+        var EnumeratorBase = (function (_super) {
+            __extends(EnumeratorBase, _super);
+            function EnumeratorBase(initializer, tryGetNext, disposer) {
+                _super.call(this);
+                this.initializer = initializer;
+                this.tryGetNext = tryGetNext;
+                this.disposer = disposer;
+                this.reset();
+            }
+            Object.defineProperty(EnumeratorBase.prototype, "current", {
+                get: function () {
+                    return this._yielder.current;
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            EnumeratorBase.prototype.reset = function () {
+                var _ = this;
+                _._yielder = new Yielder();
+                _._state = 0 /* Before */;
+            };
+
+            EnumeratorBase.prototype.moveNext = function () {
+                var _ = this;
+                try  {
+                    switch (_._state) {
+                        case 0 /* Before */:
+                            _._state = 1 /* Running */;
+                            var initializer = _.initializer;
+                            if (initializer)
+                                initializer();
+
+                        case 1 /* Running */:
+                            if (_.tryGetNext(_._yielder)) {
+                                return true;
+                            } else {
+                                this.dispose();
+                                return false;
+                            }
+                        case 2 /* After */:
+                            return false;
+                    }
+                } catch (e) {
+                    this.dispose();
+                    throw e;
+                }
+            };
+
+            EnumeratorBase.prototype._onDispose = function () {
+                var _ = this, disposer = _.disposer;
+
+                _.initializer = null;
+                _.disposer = null;
+
+                var yielder = _._yielder;
+                _._yielder = null;
+                if (yielder)
+                    yielder.yieldBreak();
+
+                try  {
+                    if (disposer)
+                        disposer();
+                } finally {
+                    this._state = 2 /* After */;
+                }
+            };
+            return EnumeratorBase;
+        })(System.DisposableBase);
+        Collections.EnumeratorBase = EnumeratorBase;
+
+        var IndexEnumerator = (function (_super) {
+            __extends(IndexEnumerator, _super);
+            function IndexEnumerator(sourceFactory) {
+                var source;
+                _super.call(this, function () {
+                    source = sourceFactory();
+                    if (source && source.source) {
+                        if (source.length && source.step === 0)
+                            throw new Error("Invalid IndexEnumerator step value (0).");
+
+                        var pointer = source.pointer;
+                        if (!pointer)
+                            source.pointer = 0 | 0;
+                        else if (pointer != Math.floor(pointer))
+                            throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
+                        source.pointer = pointer | 0;
+
+                        var step = source.step;
+                        if (!step)
+                            source.step = 1;
+                        else if (step != Math.floor(step))
+                            throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
+                        source.step = step | 0;
+                    }
+                }, function (yielder) {
+                    var len = (source && source.source) ? source.length : 0;
+                    if (!len)
+                        return yielder.yieldBreak();
+                    var current = source.pointer | 0;
+                    source.pointer += source.step;
+                    return (current < len && current >= 0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
+                }, function () {
+                    if (source) {
+                        source.source = null;
+                    }
+                });
+            }
+            return IndexEnumerator;
+        })(EnumeratorBase);
+        Collections.IndexEnumerator = IndexEnumerator;
+
+        var ArrayEnumerator = (function (_super) {
+            __extends(ArrayEnumerator, _super);
+            function ArrayEnumerator(arrayOrFactory, start, step) {
+                if (typeof start === "undefined") { start = 0; }
+                if (typeof step === "undefined") { step = 1; }
+                _super.call(this, function () {
+                    var array = System.Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+                    return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
+                });
+            }
+            return ArrayEnumerator;
+        })(IndexEnumerator);
+        Collections.ArrayEnumerator = ArrayEnumerator;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
 var System;
 (function (System) {
     (function (Collections) {
@@ -297,27 +502,44 @@ var System;
 
         var LinkedList = (function () {
             function LinkedList(source) {
-                this._count = INT_0;
+                var _ = this, c = INT_0, first = null, last = null;
+                var e = Collections.Enumerator.from(source);
+
+                if (e.moveNext()) {
+                    first = last = new Node(e.current);
+                    ++c;
+                }
+
+                while (e.moveNext()) {
+                    last = last.next = new Node(e.current, last);
+                    ++c;
+                }
+
+                _._first = first;
+                _._last = last;
+                _._count = c;
             }
             LinkedList.prototype._addFirst = function (entry) {
                 var _ = this, first = _._first;
-                var next = new Node(entry, null, first);
-                if (first)
-                    first.prev = next;
-                else
-                    _._first = _._last = next;
+                var prev = new Node(entry, null, first);
+                if (first) {
+                    first.prev = prev;
+                    first = prev;
+                } else
+                    _._first = _._last = prev;
 
                 _._count += INT_1;
 
-                return next;
+                return prev;
             };
 
             LinkedList.prototype._addLast = function (entry) {
                 var _ = this, last = _._last;
                 var next = new Node(entry, last);
-                if (last)
+                if (last) {
                     last.next = next;
-                else
+                    last = next;
+                } else
                     _._first = _._last = next;
 
                 _._count += INT_1;
@@ -472,6 +694,29 @@ var System;
                 enumerable: true,
                 configurable: true
             });
+
+            LinkedList.prototype._get = function (index) {
+                if (index < 0)
+                    throw new Error("IndexOutOfBoundsException: index is less than zero.");
+
+                if (index >= this._count)
+                    throw new Error("IndexOutOfBoundsException: index is greater than count.");
+
+                var next = this._first, i = INT_0;
+                while (next && index < i++) {
+                    next = next.next;
+                }
+
+                return next;
+            };
+
+            LinkedList.prototype.get = function (index) {
+                return this._get(index).value;
+            };
+
+            LinkedList.prototype.getNode = function (index) {
+                return ensureExternal(this._get(index), this);
+            };
 
             LinkedList.prototype.find = function (entry) {
                 return ensureExternal(this._findFirst(entry), this);
@@ -1282,12 +1527,6 @@ var System;
     })();
     System.DisposableBase = DisposableBase;
 })(System || (System = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var System;
 (function (System) {
     var Lazy = (function (_super) {
@@ -1801,188 +2040,17 @@ var System;
 var System;
 (function (System) {
     (function (Collections) {
-        "use strict";
-
-        var Yielder = (function () {
-            function Yielder() {
-            }
-            Object.defineProperty(Yielder.prototype, "current", {
-                get: function () {
-                    return this._current;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            Yielder.prototype.yieldReturn = function (value) {
-                this._current = value;
-                return true;
-            };
-
-            Yielder.prototype.yieldBreak = function () {
-                this._current = null;
-                return false;
-            };
-            return Yielder;
-        })();
-
-        var EnumeratorState;
-        (function (EnumeratorState) {
-            EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
-            EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
-            EnumeratorState[EnumeratorState["After"] = 2] = "After";
-        })(EnumeratorState || (EnumeratorState = {}));
-
-        (function (Enumerator) {
-            function from(source) {
-                if (source instanceof Array)
-                    return new ArrayEnumerator(source);
-                if ("getEnumerator" in source)
-                    return source.getEnumerator();
-
-                throw new Error("Unknown enumerable.");
-            }
-            Enumerator.from = from;
-
-            function forEach(enumerator, action) {
-                var e = enumerator;
-
-                var index = 0;
-
-                while (e.moveNext()) {
-                    if (action(e.current, index++) === false)
-                        break;
+        (function (Enumerable) {
+            function forEach(enumerable, action) {
+                if (enumerable) {
+                    System.using(enumerable.getEnumerator(), function (e) {
+                        Collections.Enumerator.forEach(e, action);
+                    });
                 }
             }
-            Enumerator.forEach = forEach;
-        })(Collections.Enumerator || (Collections.Enumerator = {}));
-        var Enumerator = Collections.Enumerator;
-
-        var EnumeratorBase = (function (_super) {
-            __extends(EnumeratorBase, _super);
-            function EnumeratorBase(initializer, tryGetNext, disposer) {
-                _super.call(this);
-                this.initializer = initializer;
-                this.tryGetNext = tryGetNext;
-                this.disposer = disposer;
-                this.reset();
-            }
-            Object.defineProperty(EnumeratorBase.prototype, "current", {
-                get: function () {
-                    return this._yielder.current;
-                },
-                enumerable: true,
-                configurable: true
-            });
-
-            EnumeratorBase.prototype.reset = function () {
-                var _ = this;
-                _._yielder = new Yielder();
-                _._state = 0 /* Before */;
-            };
-
-            EnumeratorBase.prototype.moveNext = function () {
-                var _ = this;
-                try  {
-                    switch (_._state) {
-                        case 0 /* Before */:
-                            _._state = 1 /* Running */;
-                            var initializer = _.initializer;
-                            if (initializer)
-                                initializer();
-
-                        case 1 /* Running */:
-                            if (_.tryGetNext(_._yielder)) {
-                                return true;
-                            } else {
-                                this.dispose();
-                                return false;
-                            }
-                        case 2 /* After */:
-                            return false;
-                    }
-                } catch (e) {
-                    this.dispose();
-                    throw e;
-                }
-            };
-
-            EnumeratorBase.prototype._onDispose = function () {
-                var _ = this, disposer = _.disposer;
-
-                _.initializer = null;
-                _.disposer = null;
-
-                var yielder = _._yielder;
-                _._yielder = null;
-                if (yielder)
-                    yielder.yieldBreak();
-
-                try  {
-                    if (disposer)
-                        disposer();
-                } finally {
-                    this._state = 2 /* After */;
-                }
-            };
-            return EnumeratorBase;
-        })(System.DisposableBase);
-        Collections.EnumeratorBase = EnumeratorBase;
-
-        var IndexEnumerator = (function (_super) {
-            __extends(IndexEnumerator, _super);
-            function IndexEnumerator(sourceFactory) {
-                var source;
-                _super.call(this, function () {
-                    source = sourceFactory();
-                    if (source && source.source) {
-                        if (source.length && source.step === 0)
-                            throw new Error("Invalid IndexEnumerator step value (0).");
-
-                        var pointer = source.pointer;
-                        if (!pointer)
-                            source.pointer = 0 | 0;
-                        else if (pointer != Math.floor(pointer))
-                            throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
-                        source.pointer = pointer | 0;
-
-                        var step = source.step;
-                        if (!step)
-                            source.step = 1;
-                        else if (step != Math.floor(step))
-                            throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
-                        source.step = step | 0;
-                    }
-                }, function (yielder) {
-                    var len = (source && source.source) ? source.length : 0;
-                    if (!len)
-                        return yielder.yieldBreak();
-                    var current = source.pointer | 0;
-                    source.pointer += source.step;
-                    return (current < len && current >= 0) ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();
-                }, function () {
-                    if (source) {
-                        source.source = null;
-                    }
-                });
-            }
-            return IndexEnumerator;
-        })(EnumeratorBase);
-        Collections.IndexEnumerator = IndexEnumerator;
-
-        var ArrayEnumerator = (function (_super) {
-            __extends(ArrayEnumerator, _super);
-            function ArrayEnumerator(arrayOrFactory, start, step) {
-                if (typeof start === "undefined") { start = 0; }
-                if (typeof step === "undefined") { step = 1; }
-                _super.call(this, function () {
-                    var array = System.Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-                    return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
-                });
-            }
-            return ArrayEnumerator;
-        })(IndexEnumerator);
-        Collections.ArrayEnumerator = ArrayEnumerator;
+            Enumerable.forEach = forEach;
+        })(Collections.Enumerable || (Collections.Enumerable = {}));
+        var Enumerable = Collections.Enumerable;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));

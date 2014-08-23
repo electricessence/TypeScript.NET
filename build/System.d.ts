@@ -72,6 +72,43 @@ declare module System.Text {
     function format(source: string, ...args: any[]): string;
 }
 declare module System.Collections {
+    interface IYield<T> {
+        current: T;
+        yieldReturn(value: T): boolean;
+        yieldBreak(): boolean;
+    }
+    module Enumerator {
+        function from<T>(source: any): IEnumerator<T>;
+        function forEach<T>(e: IEnumerator<T>, action: (element: T, index?: number) => any): void;
+    }
+    class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T> {
+        private initializer;
+        private tryGetNext;
+        private disposer;
+        private _yielder;
+        private _state;
+        public current : T;
+        constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: () => void);
+        public reset(): void;
+        public moveNext(): boolean;
+        public _onDispose(): void;
+    }
+    class IndexEnumerator<T> extends EnumeratorBase<T> {
+        constructor(sourceFactory: () => {
+            source: {
+                [index: number]: T;
+            };
+            pointer: number;
+            length: number;
+            step: number;
+        });
+    }
+    class ArrayEnumerator<T> extends IndexEnumerator<T> {
+        constructor(arrayFactory: () => IArray<T>, start?: number, step?: number);
+        constructor(array: IArray<T>, start?: number, step?: number);
+    }
+}
+declare module System.Collections {
     interface ILinkedListNode<T> {
         list: LinkedList<T>;
         previous: ILinkedListNode<T>;
@@ -107,6 +144,9 @@ declare module System.Collections {
         public remove(entry: T): number;
         public first : ILinkedListNode<T>;
         public last : ILinkedListNode<T>;
+        private _get(index);
+        public get(index: number): T;
+        public getNode(index: number): ILinkedListNode<T>;
         public find(entry: T): ILinkedListNode<T>;
         public findLast(entry: T): ILinkedListNode<T>;
         public addFirst(entry: T): void;
@@ -357,6 +397,9 @@ declare module System.Collections {
     interface IEnumerable<T> {
         getEnumerator(): IEnumerator<T>;
     }
+    module Enumerable {
+        function forEach<T>(enumerable: IEnumerable<T>, action: (element: T, index?: number) => any): void;
+    }
 }
 declare module System.Collections {
     interface ICollection<T> extends IEnumerable<T> {
@@ -406,43 +449,6 @@ declare module System.Collections {
     interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue> {
         indexOfKey(key: TKey): number;
         getValueByIndex(index: number): TValue;
-    }
-}
-declare module System.Collections {
-    interface IYield<T> {
-        current: T;
-        yieldReturn(value: T): boolean;
-        yieldBreak(): boolean;
-    }
-    module Enumerator {
-        function from<T>(source: any): IEnumerator<T>;
-        function forEach<T>(enumerator: IEnumerator<T>, action: (element: T, index?: number) => any): void;
-    }
-    class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T> {
-        private initializer;
-        private tryGetNext;
-        private disposer;
-        private _yielder;
-        private _state;
-        public current : T;
-        constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: () => void);
-        public reset(): void;
-        public moveNext(): boolean;
-        public _onDispose(): void;
-    }
-    class IndexEnumerator<T> extends EnumeratorBase<T> {
-        constructor(sourceFactory: () => {
-            source: {
-                [index: number]: T;
-            };
-            pointer: number;
-            length: number;
-            step: number;
-        });
-    }
-    class ArrayEnumerator<T> extends IndexEnumerator<T> {
-        constructor(arrayFactory: () => IArray<T>, start?: number, step?: number);
-        constructor(array: IArray<T>, start?: number, step?: number);
     }
 }
 declare module System.Collections {

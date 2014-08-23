@@ -473,16 +473,11 @@ module System.Linq
 			});
 		}
 
-
-		// ES5: Array's have forEach and if an Enumerable version is necessary, then call Enumerable.fromArray([]) first.
 		static forEach<T>(
 			enumerable: IEnumerable<T>,
 			action: (element: T, index?: number) => any): void
 		{
-			using(enumerable.getEnumerator(), e=>
-			{
-				enumeratorForEach(e, action);
-			});
+			System.Collections.Enumerable.forEach(enumerable, action);
 		}
 
 		// Slightly optimized versions for numbers.

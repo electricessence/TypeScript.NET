@@ -371,9 +371,7 @@ var System;
             };
 
             Enumerable.forEach = function (enumerable, action) {
-                using(enumerable.getEnumerator(), function (e) {
-                    enumeratorForEach(e, action);
-                });
+                System.Collections.Enumerable.forEach(enumerable, action);
             };
 
             Enumerable.max = function (values) {
