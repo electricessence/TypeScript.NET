@@ -17,6 +17,7 @@ module System.Collections
 	*
 	* Adding to an array is very fast, but modifying is slow.
 	* LinkedList wins when modifying contents.
+	* http://stackoverflow.com/questions/166884/array-versus-linked-list
 	*****************************/
 
 	// Use an interface in order to prevent external construction of LinkedListNode
