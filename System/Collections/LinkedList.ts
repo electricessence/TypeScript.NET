@@ -1,6 +1,7 @@
 ﻿///<reference path="../System.ts"/>
 ///<reference path="../Text/Text.ts"/>
 ///<reference path="Enumerator.ts"/>
+///<reference path="ArrayUtility.ts"/>
 
 /*
 * @author electricessence / https://github.com/electricessence/
@@ -305,6 +306,13 @@ module System.Collections
 		}
 		// #endregion
 
+		toArray(): T[]
+		{
+			var array = ArrayUtility.initialize<T>(this._count);
+			this.copyTo(array);
+			return array;
+		}
+
 		get first(): ILinkedListNode<T>
 		{
 			return ensureExternal(this._first, this);
@@ -320,10 +328,10 @@ module System.Collections
 		private _get(index: number): Node<T>
 		{
 			if (index < 0)
-				throw new Error("IndexOutOfBoundsException: index is less than zero.");
+				throw new Error("ArgumentOutOfRangeException: index is less than zero.");
 
 			if (index >= this._count)
-				throw new Error("IndexOutOfBoundsException: index is greater than count.");
+				throw new Error("ArgumentOutOfRangeException: index is greater than count.");
 
 			var next = this._first, i: number = INT_0;
 			while (next && index < i++)

@@ -3,6 +3,19 @@
 module System.Collections.ArrayUtility
 {
 
+	export function initialize<T>(length: number): T[]
+	{
+		var array: T[];
+		if (length > 65536)
+			array = new Array(length);
+		else
+		{
+			array = new Array();
+			array.length = length;
+		}
+		return array;
+	}
+
 	export function copy<T>(array: T[]): T[] { return array ? array.slice() : array }
 
 	export function contains<T>(array: T[], item: T): boolean { return !array ? false : array.indexOf(item) != -1; }

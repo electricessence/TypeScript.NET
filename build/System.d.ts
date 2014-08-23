@@ -108,6 +108,25 @@ declare module System.Collections {
         constructor(array: IArray<T>, start?: number, step?: number);
     }
 }
+declare module System.Collections.ArrayUtility {
+    function initialize<T>(length: number): T[];
+    function copy<T>(array: T[]): T[];
+    function contains<T>(array: T[], item: T): boolean;
+    function replace<T>(array: T[], old: T, newValue: T, max?: number): number;
+    function register<T>(array: T[], item: T): boolean;
+    function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number;
+    function areAllEqual(arrays: any[][], strict?: boolean): boolean;
+    function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
+    function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T;
+    function removeIndex<T>(array: T[], index: number): boolean;
+    function remove<T>(array: T[], value: T, max?: number): number;
+    function repeat<T>(element: T, count: number): T[];
+    function sum(source: number[], ignoreNaN?: boolean): number;
+    function average(source: number[], ignoreNaN?: boolean): number;
+    function product(source: number[], ignoreNaN?: boolean): number;
+    function min(source: number[], ignoreNaN?: boolean): number;
+    function max(source: number[], ignoreNaN?: boolean): number;
+}
 declare module System.Collections {
     interface ILinkedListNode<T> {
         list: LinkedList<T>;
@@ -142,6 +161,7 @@ declare module System.Collections {
         public copyTo(array: T[], index?: number): void;
         public removeOnce(entry: T): boolean;
         public remove(entry: T): number;
+        public toArray(): T[];
         public first : ILinkedListNode<T>;
         public last : ILinkedListNode<T>;
         private _get(index);
@@ -345,24 +365,6 @@ declare module System {
         public _onDispose(): void;
     }
 }
-declare module System.Collections.ArrayUtility {
-    function copy<T>(array: T[]): T[];
-    function contains<T>(array: T[], item: T): boolean;
-    function replace<T>(array: T[], old: T, newValue: T, max?: number): number;
-    function register<T>(array: T[], item: T): boolean;
-    function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number;
-    function areAllEqual(arrays: any[][], strict?: boolean): boolean;
-    function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
-    function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T;
-    function removeIndex<T>(array: T[], index: number): boolean;
-    function remove<T>(array: T[], value: T, max?: number): number;
-    function repeat<T>(element: T, count: number): T[];
-    function sum(source: number[], ignoreNaN?: boolean): number;
-    function average(source: number[], ignoreNaN?: boolean): number;
-    function product(source: number[], ignoreNaN?: boolean): number;
-    function min(source: number[], ignoreNaN?: boolean): number;
-    function max(source: number[], ignoreNaN?: boolean): number;
-}
 declare module System {
     interface IEventDispatcher extends EventTarget, IDisposable {
         addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
@@ -531,6 +533,8 @@ declare module System.Collections {
 declare module System.Text {
     class StringBuilder implements IDisposable {
         private _parts;
+        private _partArray;
+        private _latest;
         constructor(...initial: any[]);
         private appendSingle(item);
         public appendThese(items: any[]): StringBuilder;
@@ -538,7 +542,9 @@ declare module System.Text {
         public appendLine(...items: any[]): StringBuilder;
         public appendLines(items: any[]): StringBuilder;
         public isEmpty : boolean;
-        public toString(delimiter?: string): string;
+        private _getCachedArray();
+        public toString(): string;
+        public join(delimiter: string): string;
         public clear(): void;
         public dispose(): void;
     }

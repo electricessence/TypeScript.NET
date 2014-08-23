@@ -457,6 +457,295 @@ var System;
 var System;
 (function (System) {
     (function (Collections) {
+        (function (ArrayUtility) {
+            function initialize(length) {
+                var array;
+                if (length > 65536)
+                    array = new Array(length);
+                else {
+                    array = new Array();
+                    array.length = length;
+                }
+                return array;
+            }
+            ArrayUtility.initialize = initialize;
+
+            function copy(array) {
+                return array ? array.slice() : array;
+            }
+            ArrayUtility.copy = copy;
+
+            function contains(array, item) {
+                return !array ? false : array.indexOf(item) != -1;
+            }
+            ArrayUtility.contains = contains;
+
+            function replace(array, old, newValue, max) {
+                var count = 0 | 0;
+                if (max !== 0) {
+                    if (!max)
+                        max = Infinity;
+
+                    for (var i = (array.length - 1) | 0; i >= 0; --i)
+                        if (array[i] === old) {
+                            array[i] = newValue;
+                            ++count;
+                            if (!--max)
+                                break;
+                        }
+                }
+
+                return count;
+            }
+            ArrayUtility.replace = replace;
+
+            function register(array, item) {
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
+                var len = array.length;
+                var ok = !len || !contains(array, item);
+                if (ok)
+                    array[len] = item;
+                return ok;
+            }
+            ArrayUtility.register = register;
+
+            function findIndex(array, predicate) {
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
+                var len = array.length | 0;
+                for (var i = 0 | 0; i < len; ++i)
+                    if (i in array && predicate(array[i]))
+                        return i;
+
+                return -1;
+            }
+            ArrayUtility.findIndex = findIndex;
+
+            function areAllEqual(arrays, strict) {
+                if (!arrays)
+                    throw new Error("ArgumentNullException: 'arrays' cannot be null.");
+                if (arrays.length < 2)
+                    throw new Error("Cannot compare a set of arrays less than 2.");
+                var first = arrays[0];
+                for (var i = 0 | 0, l = arrays.length | 0; i < l; ++i) {
+                    if (!areEqual(first, arrays[i], strict))
+                        return false;
+                }
+                return true;
+            }
+            ArrayUtility.areAllEqual = areAllEqual;
+
+            function areEqual(a, b, strict, equalityComparer) {
+                if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
+                if (a === b)
+                    return true;
+
+                var len = a.length | 0;
+                if (len != (b.length | 0))
+                    return false;
+
+                for (var i = 0 | 0; i < len; ++i)
+                    if (!equalityComparer(a[i], b[i], strict))
+                        return false;
+
+                return true;
+            }
+            ArrayUtility.areEqual = areEqual;
+
+            function applyTo(target, fn) {
+                if (!target)
+                    throw new Error("ArgumentNullException: 'target' cannot be null.");
+
+                if (fn) {
+                    for (var i = 0 | 0; i < target.length; ++i)
+                        target[i] = fn(target[i]);
+                }
+                return target;
+            }
+            ArrayUtility.applyTo = applyTo;
+
+            function removeIndex(array, index) {
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
+
+                var exists = index < array.length;
+                if (exists)
+                    array.splice(index, 1);
+                return exists;
+            }
+            ArrayUtility.removeIndex = removeIndex;
+
+            function remove(array, value, max) {
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
+
+                var count = 0;
+                if (array && array.length && max !== 0) {
+                    if (!max)
+                        max = Infinity;
+
+                    for (var i = (array.length - 1) | 0; i >= 0; --i)
+                        if (array[i] === value) {
+                            array.splice(i, 1);
+                            ++count;
+                            if (!--max)
+                                break;
+                        }
+                }
+
+                return count;
+            }
+            ArrayUtility.remove = remove;
+
+            function repeat(element, count) {
+                var result = [];
+                while (count--)
+                    result.push(element);
+
+                return result;
+            }
+            ArrayUtility.repeat = repeat;
+
+            function sum(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                if (!source || !source.length)
+                    return 0;
+
+                var result = 0;
+                if (ignoreNaN)
+                    source.forEach(function (n) {
+                        if (!isNaN(n))
+                            result += n;
+                    });
+                else
+                    source.every(function (n) {
+                        result += n;
+                        return !isNaN(result);
+                    });
+
+                return result;
+            }
+            ArrayUtility.sum = sum;
+
+            function average(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                if (!source || !source.length)
+                    return NaN;
+
+                var result = 0, count;
+                if (ignoreNaN) {
+                    count = 0;
+                    source.forEach(function (n) {
+                        if (!isNaN(n)) {
+                            result += n;
+                            count++;
+                        }
+                    });
+                } else {
+                    count = source.length;
+                    source.every(function (n) {
+                        result += n;
+                        return !isNaN(result);
+                    });
+                }
+
+                return (!count || isNaN(result)) ? NaN : (result / count);
+            }
+            ArrayUtility.average = average;
+
+            function product(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                if (!source || !source.length)
+                    return NaN;
+
+                var result = 1;
+                if (ignoreNaN) {
+                    var found = false;
+                    source.forEach(function (n) {
+                        if (!isNaN(n)) {
+                            result *= n;
+                            if (!found)
+                                found = true;
+                        }
+                    });
+
+                    if (!found)
+                        result = NaN;
+                } else {
+                    source.every(function (n) {
+                        if (isNaN(n)) {
+                            result = NaN;
+                            return false;
+                        }
+
+                        result *= n;
+
+                        return true;
+                    });
+                }
+
+                return result;
+            }
+            ArrayUtility.product = product;
+
+            function ifSet(source, start, ignoreNaN, predicate) {
+                if (!source || !source.length)
+                    return NaN;
+
+                var result = start;
+                if (ignoreNaN) {
+                    var found = false;
+                    source.forEach(function (n) {
+                        if (!isNaN(n)) {
+                            if (predicate(n, result))
+                                result = n;
+                            if (!found)
+                                found = true;
+                        }
+                    });
+
+                    if (!found)
+                        result = NaN;
+                } else {
+                    source.every(function (n) {
+                        if (isNaN(n)) {
+                            result = NaN;
+                            return false;
+                        }
+
+                        if (predicate(n, result))
+                            result = n;
+
+                        return true;
+                    });
+                }
+                return result;
+            }
+
+            function min(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                return ifSet(source, +Infinity, ignoreNaN, function (n, result) {
+                    return n < result;
+                });
+            }
+            ArrayUtility.min = min;
+
+            function max(source, ignoreNaN) {
+                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
+                return ifSet(source, -Infinity, ignoreNaN, function (n, result) {
+                    return n > result;
+                });
+            }
+            ArrayUtility.max = max;
+        })(Collections.ArrayUtility || (Collections.ArrayUtility = {}));
+        var ArrayUtility = Collections.ArrayUtility;
+    })(System.Collections || (System.Collections = {}));
+    var Collections = System.Collections;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Collections) {
         
 
         var INT_0 = 0 | 0;
@@ -679,6 +968,12 @@ var System;
                 return removedCount;
             };
 
+            LinkedList.prototype.toArray = function () {
+                var array = Collections.ArrayUtility.initialize(this._count);
+                this.copyTo(array);
+                return array;
+            };
+
             Object.defineProperty(LinkedList.prototype, "first", {
                 get: function () {
                     return ensureExternal(this._first, this);
@@ -697,10 +992,10 @@ var System;
 
             LinkedList.prototype._get = function (index) {
                 if (index < 0)
-                    throw new Error("IndexOutOfBoundsException: index is less than zero.");
+                    throw new Error("ArgumentOutOfRangeException: index is less than zero.");
 
                 if (index >= this._count)
-                    throw new Error("IndexOutOfBoundsException: index is greater than count.");
+                    throw new Error("ArgumentOutOfRangeException: index is greater than count.");
 
                 var next = this._first, i = INT_0;
                 while (next && index < i++) {
@@ -1586,283 +1881,6 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
-    (function (Collections) {
-        (function (ArrayUtility) {
-            function copy(array) {
-                return array ? array.slice() : array;
-            }
-            ArrayUtility.copy = copy;
-
-            function contains(array, item) {
-                return !array ? false : array.indexOf(item) != -1;
-            }
-            ArrayUtility.contains = contains;
-
-            function replace(array, old, newValue, max) {
-                var count = 0 | 0;
-                if (max !== 0) {
-                    if (!max)
-                        max = Infinity;
-
-                    for (var i = (array.length - 1) | 0; i >= 0; --i)
-                        if (array[i] === old) {
-                            array[i] = newValue;
-                            ++count;
-                            if (!--max)
-                                break;
-                        }
-                }
-
-                return count;
-            }
-            ArrayUtility.replace = replace;
-
-            function register(array, item) {
-                if (!array)
-                    throw new Error("ArgumentNullException: 'array' cannot be null.");
-                var len = array.length;
-                var ok = !len || !contains(array, item);
-                if (ok)
-                    array[len] = item;
-                return ok;
-            }
-            ArrayUtility.register = register;
-
-            function findIndex(array, predicate) {
-                if (!array)
-                    throw new Error("ArgumentNullException: 'array' cannot be null.");
-                var len = array.length | 0;
-                for (var i = 0 | 0; i < len; ++i)
-                    if (i in array && predicate(array[i]))
-                        return i;
-
-                return -1;
-            }
-            ArrayUtility.findIndex = findIndex;
-
-            function areAllEqual(arrays, strict) {
-                if (!arrays)
-                    throw new Error("ArgumentNullException: 'arrays' cannot be null.");
-                if (arrays.length < 2)
-                    throw new Error("Cannot compare a set of arrays less than 2.");
-                var first = arrays[0];
-                for (var i = 0 | 0, l = arrays.length | 0; i < l; ++i) {
-                    if (!areEqual(first, arrays[i], strict))
-                        return false;
-                }
-                return true;
-            }
-            ArrayUtility.areAllEqual = areAllEqual;
-
-            function areEqual(a, b, strict, equalityComparer) {
-                if (typeof equalityComparer === "undefined") { equalityComparer = System.areEqual; }
-                if (a === b)
-                    return true;
-
-                var len = a.length | 0;
-                if (len != (b.length | 0))
-                    return false;
-
-                for (var i = 0 | 0; i < len; ++i)
-                    if (!equalityComparer(a[i], b[i], strict))
-                        return false;
-
-                return true;
-            }
-            ArrayUtility.areEqual = areEqual;
-
-            function applyTo(target, fn) {
-                if (!target)
-                    throw new Error("ArgumentNullException: 'target' cannot be null.");
-
-                if (fn) {
-                    for (var i = 0 | 0; i < target.length; ++i)
-                        target[i] = fn(target[i]);
-                }
-                return target;
-            }
-            ArrayUtility.applyTo = applyTo;
-
-            function removeIndex(array, index) {
-                if (!array)
-                    throw new Error("ArgumentNullException: 'array' cannot be null.");
-
-                var exists = index < array.length;
-                if (exists)
-                    array.splice(index, 1);
-                return exists;
-            }
-            ArrayUtility.removeIndex = removeIndex;
-
-            function remove(array, value, max) {
-                if (!array)
-                    throw new Error("ArgumentNullException: 'array' cannot be null.");
-
-                var count = 0;
-                if (array && array.length && max !== 0) {
-                    if (!max)
-                        max = Infinity;
-
-                    for (var i = (array.length - 1) | 0; i >= 0; --i)
-                        if (array[i] === value) {
-                            array.splice(i, 1);
-                            ++count;
-                            if (!--max)
-                                break;
-                        }
-                }
-
-                return count;
-            }
-            ArrayUtility.remove = remove;
-
-            function repeat(element, count) {
-                var result = [];
-                while (count--)
-                    result.push(element);
-
-                return result;
-            }
-            ArrayUtility.repeat = repeat;
-
-            function sum(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source || !source.length)
-                    return 0;
-
-                var result = 0;
-                if (ignoreNaN)
-                    source.forEach(function (n) {
-                        if (!isNaN(n))
-                            result += n;
-                    });
-                else
-                    source.every(function (n) {
-                        result += n;
-                        return !isNaN(result);
-                    });
-
-                return result;
-            }
-            ArrayUtility.sum = sum;
-
-            function average(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source || !source.length)
-                    return NaN;
-
-                var result = 0, count;
-                if (ignoreNaN) {
-                    count = 0;
-                    source.forEach(function (n) {
-                        if (!isNaN(n)) {
-                            result += n;
-                            count++;
-                        }
-                    });
-                } else {
-                    count = source.length;
-                    source.every(function (n) {
-                        result += n;
-                        return !isNaN(result);
-                    });
-                }
-
-                return (!count || isNaN(result)) ? NaN : (result / count);
-            }
-            ArrayUtility.average = average;
-
-            function product(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source || !source.length)
-                    return NaN;
-
-                var result = 1;
-                if (ignoreNaN) {
-                    var found = false;
-                    source.forEach(function (n) {
-                        if (!isNaN(n)) {
-                            result *= n;
-                            if (!found)
-                                found = true;
-                        }
-                    });
-
-                    if (!found)
-                        result = NaN;
-                } else {
-                    source.every(function (n) {
-                        if (isNaN(n)) {
-                            result = NaN;
-                            return false;
-                        }
-
-                        result *= n;
-
-                        return true;
-                    });
-                }
-
-                return result;
-            }
-            ArrayUtility.product = product;
-
-            function ifSet(source, start, ignoreNaN, predicate) {
-                if (!source || !source.length)
-                    return NaN;
-
-                var result = start;
-                if (ignoreNaN) {
-                    var found = false;
-                    source.forEach(function (n) {
-                        if (!isNaN(n)) {
-                            if (predicate(n, result))
-                                result = n;
-                            if (!found)
-                                found = true;
-                        }
-                    });
-
-                    if (!found)
-                        result = NaN;
-                } else {
-                    source.every(function (n) {
-                        if (isNaN(n)) {
-                            result = NaN;
-                            return false;
-                        }
-
-                        if (predicate(n, result))
-                            result = n;
-
-                        return true;
-                    });
-                }
-                return result;
-            }
-
-            function min(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                return ifSet(source, +Infinity, ignoreNaN, function (n, result) {
-                    return n < result;
-                });
-            }
-            ArrayUtility.min = min;
-
-            function max(source, ignoreNaN) {
-                if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                return ifSet(source, -Infinity, ignoreNaN, function (n, result) {
-                    return n > result;
-                });
-            }
-            ArrayUtility.max = max;
-        })(Collections.ArrayUtility || (Collections.ArrayUtility = {}));
-        var ArrayUtility = Collections.ArrayUtility;
-    })(System.Collections || (System.Collections = {}));
-    var Collections = System.Collections;
-})(System || (System = {}));
-var System;
-(function (System) {
     var AU = System.Collections.ArrayUtility;
 
     var EventDispatcherEntry = (function (_super) {
@@ -2695,6 +2713,8 @@ var System;
     })(System.Collections || (System.Collections = {}));
     var Collections = System.Collections;
 })(System || (System = {}));
+var LinkedList = System.Collections.LinkedList;
+
 var System;
 (function (System) {
     (function (Text) {
@@ -2707,18 +2727,23 @@ var System;
                     initial[_i] = arguments[_i + 0];
                 }
                 var _ = this;
-                _._parts = [];
+                _._parts = new LinkedList();
+                _._latest = null;
+                _._partArray = null;
                 _.appendThese(initial);
             }
             StringBuilder.prototype.appendSingle = function (item) {
                 if (item !== null && item !== undefined) {
+                    var _ = this;
+                    _._latest = null;
+                    _._partArray = null;
                     switch (typeof item) {
                         case Types.Object:
                         case Types.Function:
                             item = item.toString();
                             break;
                     }
-                    this._parts.push(item);
+                    _._parts.add(item);
                 }
             };
 
@@ -2753,7 +2778,7 @@ var System;
                 items.forEach(function (i) {
                     if (i !== null && i !== undefined) {
                         _.appendSingle(i);
-                        _._parts.push("\r\n");
+                        _._parts.add("\r\n");
                     }
                 });
                 return _;
@@ -2761,19 +2786,34 @@ var System;
 
             Object.defineProperty(StringBuilder.prototype, "isEmpty", {
                 get: function () {
-                    return this._parts.length === 0;
+                    return this._parts.count === 0;
                 },
                 enumerable: true,
                 configurable: true
             });
 
-            StringBuilder.prototype.toString = function (delimiter) {
-                if (typeof delimiter === "undefined") { delimiter = ""; }
-                return this._parts.join(delimiter);
+            StringBuilder.prototype._getCachedArray = function () {
+                var a = this._partArray;
+                if (!a)
+                    this._partArray = a = this._parts.toArray();
+                return a;
+            };
+
+            StringBuilder.prototype.toString = function () {
+                var latest = this._latest;
+                if (!latest === null)
+                    this._latest = latest = this._getCachedArray().join();
+
+                return latest;
+            };
+
+            StringBuilder.prototype.join = function (delimiter) {
+                return this._getCachedArray().join(delimiter);
             };
 
             StringBuilder.prototype.clear = function () {
-                this._parts.length = 0;
+                this._parts.clear();
+                this._latest = null;
             };
 
             StringBuilder.prototype.dispose = function () {

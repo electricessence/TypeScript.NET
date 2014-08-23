@@ -1,4 +1,5 @@
 ///<reference path="../Types.ts"/>
+///<reference path="../Collections/LinkedList.ts"/>
 ///<reference path="../IDisposable.ts"/>
 
 /*
@@ -7,6 +8,7 @@
  */
 
 import IDisposable = System.IDisposable;
+import LinkedList = System.Collections.LinkedList;
 
 module System.Text
 {
@@ -14,8 +16,10 @@ module System.Text
 	 * IMPORTANT NOTES ABOUT PERFORMANCE:
 	 * http://jsperf.com/string-concatenation-looped
 	 * http://jsperf.com/adding-strings-to-an-array
+	 * http://jsperf.com/string-concatenation-versus-array-operations-with-join
 	 * 
 	 * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
+	 * StringBuilder will really show it's benefit likely somewhere above 1000 items.
 	 *****************************/
 
 	var Types = new System.Types();
@@ -24,13 +28,17 @@ module System.Text
 	// Adding IDisposable allows for use with System.using();
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
 	{
-		// Although we could simply have an array of any[] and store all values, that would potentially retain references to objects.
-		private _parts: string[];
+		// Since there are potential 'insert' operations occuring, we will use a LinkedList and then decide our concat scheme after.
+		private _parts: System.Collections.LinkedList<any>;
+		private _partArray: any[];
+		private _latest: string;
 
 		constructor(...initial: any[])
 		{
 			var _ = this;
-			_._parts = [];
+			_._parts = new LinkedList<any>();
+			_._latest = null;
+			_._partArray = null;
 			_.appendThese(initial);
 		}
 
@@ -38,6 +46,9 @@ module System.Text
 		{
 			if (item !== null && item !== undefined)
 			{
+				var _ = this;
+				_._latest = null;
+				_._partArray = null; // The array itself is just a lightweight container for existing values.
 				switch (typeof item)
 				{
 					case Types.Object:
@@ -45,7 +56,7 @@ module System.Text
 						item = item.toString();
 						break;
 				}
-				this._parts.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
+				_._parts.add(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
 			}
 
 		}
@@ -77,7 +88,7 @@ module System.Text
 				if (i !== null && i !== undefined)
 				{
 					_.appendSingle(i);
-					_._parts.push("\r\n");
+					_._parts.add("\r\n");
 				}
 			});
 			return _;
@@ -85,17 +96,35 @@ module System.Text
 
 		get isEmpty()
 		{
-			return this._parts.length === 0;
+			return this._parts.count === 0;
 		}
 
-		toString(delimiter: string = "")
+		private _getCachedArray(): any[]
 		{
-			return this._parts.join(delimiter);
+			var a = this._partArray;
+			if (!a)
+				this._partArray = a = this._parts.toArray();
+			return a;
+		}
+
+		toString()
+		{
+			var latest = this._latest;
+			if (!latest === null)
+				this._latest = latest = this._getCachedArray().join();
+
+			return latest;
+		}
+
+		join(delimiter: string): string
+		{
+			return this._getCachedArray().join(delimiter);
 		}
 
 		clear(): void
 		{
-			this._parts.length = 0;
+			this._parts.clear();
+			this._latest = null;
 		}
 
 		dispose(): void
