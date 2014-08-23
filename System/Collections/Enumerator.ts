@@ -44,6 +44,21 @@ module System.Collections {
 
 			throw new Error("Unknown enumerable.");
 		}
+
+		export function forEach<T>(
+			enumerator: IEnumerator<T>, 
+			action: (element: T, index?: number) => any): void
+		{
+			var e = enumerator;
+
+			var index = 0;
+			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+			while (e.moveNext())
+			{
+				if (action(e.current, index++) === false)
+					break;
+			}
+		}
 	}
 
 	// Naming this class EnumeratorBase to avoid collision with IE.

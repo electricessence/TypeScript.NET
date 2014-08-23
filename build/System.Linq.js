@@ -17,6 +17,9 @@ var System;
 
         var using = System.using;
 
+        var enumeratorFrom = System.Collections.Enumerator.from;
+        var enumeratorForEach = System.Collections.Enumerator.forEach;
+
         var LinqFunctions = (function (_super) {
             __extends(LinqFunctions, _super);
             function LinqFunctions() {
@@ -74,6 +77,27 @@ var System;
 
                 if (source instanceof Array || typeof source === System.Types.Object && "length" in source)
                     return Enumerable.fromArray(source);
+
+                throw new Error("Unsupported enumerable.");
+            };
+
+            Enumerable.toArray = function (source) {
+                if (source instanceof Array)
+                    return source.slice();
+
+                if (typeof source === System.Types.Object && "length" in source)
+                    source = Enumerable.fromArray(source);
+
+                if (source instanceof Enumerable)
+                    return source.toArray();
+
+                if ("getEnumerator" in source) {
+                    var result = [];
+                    enumeratorForEach(source.getEnumerator(), function (e, i) {
+                        result[i] = e;
+                    });
+                    return result;
+                }
 
                 throw new Error("Unsupported enumerable.");
             };
@@ -347,15 +371,8 @@ var System;
             };
 
             Enumerable.forEach = function (enumerable, action) {
-                var _ = enumerable;
-
-                var index = 0;
-
-                using(_.getEnumerator(), function (e) {
-                    while (e.moveNext()) {
-                        if (action(e.current, index++) === false)
-                            break;
-                    }
+                using(enumerable.getEnumerator(), function (e) {
+                    enumeratorForEach(e, action);
                 });
             };
 
@@ -396,8 +413,8 @@ var System;
                 if (predicate)
                     return this.where(predicate).toArray();
 
-                this.forEach(function (x) {
-                    return result.push(x);
+                this.forEach(function (x, i) {
+                    return result[i] = x;
                 });
 
                 return result;
@@ -1034,7 +1051,7 @@ var System;
                         buffer = _.toArray();
                     }, function (yielder) {
                         var len = buffer.length;
-                        return len && yielder.yieldReturn(buffer.splice((Math.random() * len) | 0, INT_POSITIVE_1).pop());
+                        return len && yielder.yieldReturn(buffer.splice((Math.random() * len) | 0, INT_POSITIVE_1)[0]);
                     }, function () {
                         buffer.length = 0;
                     });
@@ -1188,7 +1205,7 @@ var System;
                     return new EnumeratorBase(function () {
                         index = INT_0;
                         firstEnumerator = _.getEnumerator();
-                        secondEnumerator = Enumerable.from(second).getEnumerator();
+                        secondEnumerator = enumeratorFrom(second);
                     }, function (yielder) {
                         return firstEnumerator.moveNext() && secondEnumerator.moveNext() && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
                     }, function () {
@@ -1220,7 +1237,7 @@ var System;
                                 while (!secondEnumerator) {
                                     var next = secondTemp.shift();
                                     if (next)
-                                        secondEnumerator = Enumerable.from(next).getEnumerator();
+                                        secondEnumerator = enumeratorFrom(next);
                                     else if (!secondTemp.length)
                                         return yielder.yieldBreak();
                                 }
@@ -1305,10 +1322,12 @@ var System;
                     return new EnumeratorBase(function () {
                         firstEnumerator = _.getEnumerator();
                     }, function (yielder) {
-                        if (secondEnumerator == null) {
+                        if (firstEnumerator != null) {
                             if (firstEnumerator.moveNext())
                                 return yielder.yieldReturn(firstEnumerator.current);
-                            secondEnumerator = Enumerable.from(other).getEnumerator();
+                            secondEnumerator = enumeratorFrom(other);
+                            firstEnumerator.dispose();
+                            firstEnumerator = null;
                         }
                         if (secondEnumerator.moveNext())
                             return yielder.yieldReturn(secondEnumerator.current);
@@ -1333,20 +1352,25 @@ var System;
                 return new Enumerable(function () {
                     var enumerator;
 
-                    return new EnumeratorBase(null, function (yielder) {
-                        while (!enumerator && enumerables.length) {
-                            enumerator = enumerables.shift();
+                    return new EnumeratorBase(function () {
+                        enumerator = _.getEnumerator();
+                    }, function (yielder) {
+                        while (true) {
+                            while (!enumerator && enumerables.length) {
+                                enumerator = enumeratorFrom(enumerables.shift());
+                            }
+
+                            if (enumerator && enumerator.moveNext())
+                                return yielder.yieldReturn(enumerator.current);
+
+                            if (enumerator) {
+                                enumerator.dispose();
+                                enumerator = null;
+                                continue;
+                            }
+
+                            return yielder.yieldBreak();
                         }
-
-                        if (enumerator && enumerator.moveNext())
-                            return yielder.yieldReturn(enumerator.current);
-
-                        if (enumerator) {
-                            enumerator.dispose();
-                            enumerator = null;
-                        }
-
-                        return yielder.yieldBreak();
                     });
                 });
             };
@@ -1386,7 +1410,7 @@ var System;
                     return new EnumeratorBase(function () {
                         count = INT_0;
                         firstEnumerator = _.getEnumerator();
-                        secondEnumerator = Enumerable.from(other).getEnumerator();
+                        secondEnumerator = enumeratorFrom(other);
                         isEnumerated = false;
                     }, function (yielder) {
                         if (count == n) {
@@ -1414,7 +1438,7 @@ var System;
                     var buffer, mode, enumerator, alternateEnumerator;
 
                     return new EnumeratorBase(function () {
-                        alternateEnumerator = new System.Collections.ArrayEnumerator(Enumerable.from(sequence).toArray());
+                        alternateEnumerator = new System.Collections.ArrayEnumerator(Enumerable.toArray(sequence));
 
                         enumerator = _.getEnumerator();
 

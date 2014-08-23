@@ -15,15 +15,23 @@ module System.Collections
 	*
 	* Adding to an array is very fast, but modifying is slow.
 	* LinkedList wins when modifying contents.
-	*****************************/	
-	
+	*****************************/
+
 	export interface ILinkedListNode<T>
 	{
-		list: System.Collections.LinkedList<T>;
+
+		list: LinkedList<T>;
 
 		previous: ILinkedListNode<T>;
 		next: ILinkedListNode<T>;
 		value: T;
+
+		addBefore(entry: T): void;
+		addAfter(entry: T): void;
+
+		addNodeBefore(before: ILinkedListNode<T>): void;
+		addNodeAfter(after: ILinkedListNode<T>): void;
+
 	}
 
 	var INT_0: number = 0 | 0;
@@ -33,11 +41,44 @@ module System.Collections
 	{
 		constructor(
 			public value: T,
-			public prev: Node<T>,
+			public prev?: Node<T>,
 			public next?: Node<T>) { }
 
-		external: ILinkedListNode<T>;
+		external: LinkedListNode<T>;
 
+		assertDetached(): void
+		{
+			if (this.next || this.prev)
+				throw new Error("InvalidOperationException: adding a node that is already placed.");
+		}
+
+	}
+
+	function ensureExternal<T>(node: Node<T>, list: LinkedList<T>): ILinkedListNode<T>
+	{
+		if (!node)
+			return null;
+
+		var external: ILinkedListNode<T> = node.external;
+		if(!external)
+			node.external = external = new LinkedListNode<T>(list, node);
+
+		return external;
+	}
+
+	function getInternal<T>(node: ILinkedListNode<T>, list: LinkedList<T>): Node<T>
+	{
+		if (!node)
+			throw new Error("ArgumentNullException: 'node' cannot be null.");
+
+		if (node.list != list)
+			throw new Error("InvalidOperationException: provided node does not belong to this list.");
+
+		var n: Node<T> = (<any>node)._node;
+		if (!n)
+			throw new Error("InvalidOperationException: provided node is not valid.");
+
+		return n;
 	}
 
 	export class LinkedList<T> implements ICollection<T>, IEnumerateEach<T>
@@ -63,7 +104,7 @@ module System.Collections
 			else
 				_._first = _._last = next;
 
-			_._count = _._count + INT_1;
+			_._count += INT_1;
 
 			return next;
 		}
@@ -77,9 +118,36 @@ module System.Collections
 			else
 				_._first = _._last = next;
 
-			_._count = _._count + INT_1;
+			_._count += INT_1;
 
 			return next;
+		}
+
+		private _addNodeBefore(n: Node<T>, inserting: Node<T>): void
+		{
+			inserting.assertDetached();
+
+			inserting.next = n;
+			inserting.prev = n.prev;
+
+			n.prev.next = inserting;
+			n.prev = inserting;
+
+			this._count += INT_1;
+		}
+
+
+		private _addNodeAfter(n: Node<T>, inserting: Node<T>): void
+		{
+			inserting.assertDetached();
+
+			inserting.prev = n;
+			inserting.next = n.next;
+
+			n.next.prev = inserting;
+			n.next = inserting;
+
+			this._count += INT_1;
 		}
 
 		private _findFirst(entry: T): Node<T>
@@ -192,6 +260,8 @@ module System.Collections
 				else _._first = next;
 				if (next) next.prev = prev;
 				else _._last = prev;
+
+				_._count -= INT_1;
 			}
 
 			return node!=null;
@@ -200,42 +270,44 @@ module System.Collections
 
 		remove(entry: T): number
 		{
-			var _ = this, count:number = INT_0;
+			var _ = this, removedCount:number = INT_0;
 			while (_.removeOnce(entry))
 			{
-				++count;
+				++removedCount;
 			}
-			return count;
+			return removedCount;
 
 		}
 		// #endregion
 
+		get first(): ILinkedListNode<T>
+		{
+			return ensureExternal(this._first, this);
+		}
+
+		get last(): ILinkedListNode<T>
+		{
+			return ensureExternal(this._last, this);
+		}
+
 		find(entry: T): ILinkedListNode<T>
 		{
-			var result = this._findFirst(entry);
-
-			return result
-				? new LinkedListNode<T>(this, result)
-				: null;
+			return ensureExternal(this._findFirst(entry), this);
 		}
 
 		findLast(entry: T): ILinkedListNode<T>
 		{
-			var result = this._findLast(entry);
-
-			return result
-				? new LinkedListNode<T>(this, result)
-				: null;
+			return ensureExternal(this._findLast(entry), this);
 		}
 
-		addLast(entry: T): ILinkedListNode<T>
+		addFirst(entry: T): void
 		{
-			return new LinkedListNode<T>(this, this._addLast(entry));
+			this._addFirst(entry);
 		}
 
-		addFirst(entry: T): ILinkedListNode<T>
+		addLast(entry: T): void
 		{
-			return new LinkedListNode<T>(this, this._addFirst(entry));
+			this._addLast(entry);
 		}
 
 		removeFirst(): void
@@ -247,6 +319,8 @@ module System.Collections
 				_._first = next;
 				if (next)
 					next.prev = null;
+
+				_._count -= INT_1;
 			}
 		}
 
@@ -259,31 +333,25 @@ module System.Collections
 				_._last = prev;
 				if(prev)
 					prev.next = null;
+
+				_._count -= INT_1;
 			}
 		}
 
 		// Returns true if sucessful and false if not found (already removed).
 		removeNode(node: ILinkedListNode<T>): boolean
 		{
-			if (!node)
-				throw new Error("ArgumentNullException: 'node' cannot be null.");
-
-			if (node.list != this)
-				throw new Error("InvalidOperationException: provided node does not belong to this list.");
-
-			var n: Node<T> = (<any>node)._node;
-			if (!n)
-				throw new Error("InvalidOperationException: provided node is not valid.");
-			
+			var _ = this;
+			var n: Node<T> = getInternal(node, _);
 			var prev = n.prev, next = n.next, a:boolean = false, b:boolean = false;
 
 
 			if (prev) prev.next = next;
-			else if (this._first == n) this._first = next;
+			else if (_._first == n) _._first = next;
 			else a = true;
 
 			if (next) next.prev = prev;
-			else if (this._last == n) this._last = prev;
+			else if (_._last == n) _._last = prev;
 			else b = true;
 
 			if (a !== b)
@@ -296,12 +364,36 @@ module System.Collections
 
 		}
 
-		// TODO:
-		// addAfter(node, node)
-		// addAfter(node,T)
-		// addBefore(node,node)
-		// addBefore(node,T)
-		//
+		addBefore(node: ILinkedListNode<T>, entry: T): void
+		{
+			this._addNodeBefore(
+				getInternal(node, this),
+				new Node(entry));
+		}
+		
+
+		addAfter(node:ILinkedListNode<T>, entry:T):void
+		{
+			this._addNodeAfter(
+				getInternal(node, this),
+				new Node(entry));
+		}
+
+		addNodeBefore(node: ILinkedListNode<T>, before: ILinkedListNode<T>): void
+		{
+			this._addNodeBefore(
+				getInternal(node, this),
+				getInternal(before, this));
+		}
+
+		addNodeAfter(node: ILinkedListNode<T>, after: ILinkedListNode<T>): void
+		{
+			this._addNodeAfter(
+				getInternal(node, this),
+				getInternal(after, this));
+		}
+		
+
 
 	}
 
@@ -321,21 +413,11 @@ module System.Collections
 
 		get previous(): ILinkedListNode<T>
 		{
-			var external: ILinkedListNode<T> = null;
-			var prev: Node<T> = this._node.prev;
-			if (prev && !(external = prev.external))
-				prev.external = external = new LinkedListNode<T>(this._list, prev);
-
-			return external;
+			return ensureExternal(this._node.prev, this._list);
 		}
 		get next(): ILinkedListNode<T>
 		{
-			var external: ILinkedListNode<T> = null;
-			var next: Node<T> = this._node.next;
-			if (next && !(external = next.external))
-				next.external = external = new LinkedListNode<T>(this._list, next);
-
-			return external;
+			return ensureExternal(this._node.next, this._list);
 		}
 		get value(): T
 		{
@@ -344,6 +426,26 @@ module System.Collections
 		set value(v: T)
 		{
 			this._node.value = v;
+		}
+
+		addBefore(entry: T): void
+		{
+			this._list.addBefore(this, entry);
+		}
+
+		addAfter(entry: T): void
+		{
+			this._list.addAfter(this, entry);
+		}
+
+		addNodeBefore(before: ILinkedListNode<T>): void
+		{
+			this._list.addNodeBefore(this, before);
+		}
+
+		addNodeAfter(after: ILinkedListNode<T>): void
+		{
+			this._list.addNodeAfter(this, after);
 		}
 
 	}

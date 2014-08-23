@@ -252,6 +252,8 @@ var System;
 var System;
 (function (System) {
     (function (Collections) {
+        
+
         var INT_0 = 0 | 0;
         var INT_1 = 1 | 0;
 
@@ -261,8 +263,37 @@ var System;
                 this.prev = prev;
                 this.next = next;
             }
+            Node.prototype.assertDetached = function () {
+                if (this.next || this.prev)
+                    throw new Error("InvalidOperationException: adding a node that is already placed.");
+            };
             return Node;
         })();
+
+        function ensureExternal(node, list) {
+            if (!node)
+                return null;
+
+            var external = node.external;
+            if (!external)
+                node.external = external = new LinkedListNode(list, node);
+
+            return external;
+        }
+
+        function getInternal(node, list) {
+            if (!node)
+                throw new Error("ArgumentNullException: 'node' cannot be null.");
+
+            if (node.list != list)
+                throw new Error("InvalidOperationException: provided node does not belong to this list.");
+
+            var n = node._node;
+            if (!n)
+                throw new Error("InvalidOperationException: provided node is not valid.");
+
+            return n;
+        }
 
         var LinkedList = (function () {
             function LinkedList(source) {
@@ -276,7 +307,7 @@ var System;
                 else
                     _._first = _._last = next;
 
-                _._count = _._count + INT_1;
+                _._count += INT_1;
 
                 return next;
             };
@@ -289,9 +320,33 @@ var System;
                 else
                     _._first = _._last = next;
 
-                _._count = _._count + INT_1;
+                _._count += INT_1;
 
                 return next;
+            };
+
+            LinkedList.prototype._addNodeBefore = function (n, inserting) {
+                inserting.assertDetached();
+
+                inserting.next = n;
+                inserting.prev = n.prev;
+
+                n.prev.next = inserting;
+                n.prev = inserting;
+
+                this._count += INT_1;
+            };
+
+            LinkedList.prototype._addNodeAfter = function (n, inserting) {
+                inserting.assertDetached();
+
+                inserting.prev = n;
+                inserting.next = n.next;
+
+                n.next.prev = inserting;
+                n.next = inserting;
+
+                this._count += INT_1;
             };
 
             LinkedList.prototype._findFirst = function (entry) {
@@ -387,37 +442,51 @@ var System;
                         next.prev = prev;
                     else
                         _._last = prev;
+
+                    _._count -= INT_1;
                 }
 
                 return node != null;
             };
 
             LinkedList.prototype.remove = function (entry) {
-                var _ = this, count = INT_0;
+                var _ = this, removedCount = INT_0;
                 while (_.removeOnce(entry)) {
-                    ++count;
+                    ++removedCount;
                 }
-                return count;
+                return removedCount;
             };
 
-            LinkedList.prototype.find = function (entry) {
-                var result = this._findFirst(entry);
+            Object.defineProperty(LinkedList.prototype, "first", {
+                get: function () {
+                    return ensureExternal(this._first, this);
+                },
+                enumerable: true,
+                configurable: true
+            });
 
-                return result ? new LinkedListNode(this, result) : null;
+            Object.defineProperty(LinkedList.prototype, "last", {
+                get: function () {
+                    return ensureExternal(this._last, this);
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            LinkedList.prototype.find = function (entry) {
+                return ensureExternal(this._findFirst(entry), this);
             };
 
             LinkedList.prototype.findLast = function (entry) {
-                var result = this._findLast(entry);
-
-                return result ? new LinkedListNode(this, result) : null;
-            };
-
-            LinkedList.prototype.addLast = function (entry) {
-                return new LinkedListNode(this, this._addLast(entry));
+                return ensureExternal(this._findLast(entry), this);
             };
 
             LinkedList.prototype.addFirst = function (entry) {
-                return new LinkedListNode(this, this._addFirst(entry));
+                this._addFirst(entry);
+            };
+
+            LinkedList.prototype.addLast = function (entry) {
+                this._addLast(entry);
             };
 
             LinkedList.prototype.removeFirst = function () {
@@ -427,6 +496,8 @@ var System;
                     _._first = next;
                     if (next)
                         next.prev = null;
+
+                    _._count -= INT_1;
                 }
             };
 
@@ -437,33 +508,27 @@ var System;
                     _._last = prev;
                     if (prev)
                         prev.next = null;
+
+                    _._count -= INT_1;
                 }
             };
 
             LinkedList.prototype.removeNode = function (node) {
-                if (!node)
-                    throw new Error("ArgumentNullException: 'node' cannot be null.");
-
-                if (node.list != this)
-                    throw new Error("InvalidOperationException: provided node does not belong to this list.");
-
-                var n = node._node;
-                if (!n)
-                    throw new Error("InvalidOperationException: provided node is not valid.");
-
+                var _ = this;
+                var n = getInternal(node, _);
                 var prev = n.prev, next = n.next, a = false, b = false;
 
                 if (prev)
                     prev.next = next;
-                else if (this._first == n)
-                    this._first = next;
+                else if (_._first == n)
+                    _._first = next;
                 else
                     a = true;
 
                 if (next)
                     next.prev = prev;
-                else if (this._last == n)
-                    this._last = prev;
+                else if (_._last == n)
+                    _._last = prev;
                 else
                     b = true;
 
@@ -472,6 +537,22 @@ var System;
                 }
 
                 return !a && !b;
+            };
+
+            LinkedList.prototype.addBefore = function (node, entry) {
+                this._addNodeBefore(getInternal(node, this), new Node(entry));
+            };
+
+            LinkedList.prototype.addAfter = function (node, entry) {
+                this._addNodeAfter(getInternal(node, this), new Node(entry));
+            };
+
+            LinkedList.prototype.addNodeBefore = function (node, before) {
+                this._addNodeBefore(getInternal(node, this), getInternal(before, this));
+            };
+
+            LinkedList.prototype.addNodeAfter = function (node, after) {
+                this._addNodeAfter(getInternal(node, this), getInternal(after, this));
             };
             return LinkedList;
         })();
@@ -492,24 +573,14 @@ var System;
 
             Object.defineProperty(LinkedListNode.prototype, "previous", {
                 get: function () {
-                    var external = null;
-                    var prev = this._node.prev;
-                    if (prev && !(external = prev.external))
-                        prev.external = external = new LinkedListNode(this._list, prev);
-
-                    return external;
+                    return ensureExternal(this._node.prev, this._list);
                 },
                 enumerable: true,
                 configurable: true
             });
             Object.defineProperty(LinkedListNode.prototype, "next", {
                 get: function () {
-                    var external = null;
-                    var next = this._node.next;
-                    if (next && !(external = next.external))
-                        next.external = external = new LinkedListNode(this._list, next);
-
-                    return external;
+                    return ensureExternal(this._node.next, this._list);
                 },
                 enumerable: true,
                 configurable: true
@@ -524,6 +595,22 @@ var System;
                 enumerable: true,
                 configurable: true
             });
+
+            LinkedListNode.prototype.addBefore = function (entry) {
+                this._list.addBefore(this, entry);
+            };
+
+            LinkedListNode.prototype.addAfter = function (entry) {
+                this._list.addAfter(this, entry);
+            };
+
+            LinkedListNode.prototype.addNodeBefore = function (before) {
+                this._list.addNodeBefore(this, before);
+            };
+
+            LinkedListNode.prototype.addNodeAfter = function (after) {
+                this._list.addNodeAfter(this, after);
+            };
             return LinkedListNode;
         })();
     })(System.Collections || (System.Collections = {}));
@@ -1292,14 +1379,19 @@ var System;
             ArrayUtility.replace = replace;
 
             function register(array, item) {
-                var ok = array && (!array.length || !contains(array, item));
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
+                var len = array.length;
+                var ok = !len || !contains(array, item);
                 if (ok)
-                    array.push(item);
+                    array[len] = item;
                 return ok;
             }
             ArrayUtility.register = register;
 
             function findIndex(array, predicate) {
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
                 var len = array.length | 0;
                 for (var i = 0 | 0; i < len; ++i)
                     if (i in array && predicate(array[i]))
@@ -1310,6 +1402,8 @@ var System;
             ArrayUtility.findIndex = findIndex;
 
             function areAllEqual(arrays, strict) {
+                if (!arrays)
+                    throw new Error("ArgumentNullException: 'arrays' cannot be null.");
                 if (arrays.length < 2)
                     throw new Error("Cannot compare a set of arrays less than 2.");
                 var first = arrays[0];
@@ -1339,13 +1433,21 @@ var System;
             ArrayUtility.areEqual = areEqual;
 
             function applyTo(target, fn) {
-                for (var i = 0 | 0; i < target.length; ++i)
-                    target[i] = fn(target[i]);
+                if (!target)
+                    throw new Error("ArgumentNullException: 'target' cannot be null.");
+
+                if (fn) {
+                    for (var i = 0 | 0; i < target.length; ++i)
+                        target[i] = fn(target[i]);
+                }
                 return target;
             }
             ArrayUtility.applyTo = applyTo;
 
             function removeIndex(array, index) {
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
+
                 var exists = index < array.length;
                 if (exists)
                     array.splice(index, 1);
@@ -1354,6 +1456,9 @@ var System;
             ArrayUtility.removeIndex = removeIndex;
 
             function remove(array, value, max) {
+                if (!array)
+                    throw new Error("ArgumentNullException: 'array' cannot be null.");
+
                 var count = 0;
                 if (array && array.length && max !== 0) {
                     if (!max)
@@ -1383,7 +1488,7 @@ var System;
 
             function sum(source, ignoreNaN) {
                 if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source.length)
+                if (!source || !source.length)
                     return 0;
 
                 var result = 0;
@@ -1404,7 +1509,7 @@ var System;
 
             function average(source, ignoreNaN) {
                 if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source.length)
+                if (!source || !source.length)
                     return NaN;
 
                 var result = 0, count;
@@ -1430,7 +1535,7 @@ var System;
 
             function product(source, ignoreNaN) {
                 if (typeof ignoreNaN === "undefined") { ignoreNaN = false; }
-                if (!source.length)
+                if (!source || !source.length)
                     return NaN;
 
                 var result = 1;
@@ -1464,7 +1569,7 @@ var System;
             ArrayUtility.product = product;
 
             function ifSet(source, start, ignoreNaN, predicate) {
-                if (!source.length)
+                if (!source || !source.length)
                     return NaN;
 
                 var result = start;
@@ -1738,6 +1843,18 @@ var System;
                 throw new Error("Unknown enumerable.");
             }
             Enumerator.from = from;
+
+            function forEach(enumerator, action) {
+                var e = enumerator;
+
+                var index = 0;
+
+                while (e.moveNext()) {
+                    if (action(e.current, index++) === false)
+                        break;
+                }
+            }
+            Enumerator.forEach = forEach;
         })(Collections.Enumerator || (Collections.Enumerator = {}));
         var Enumerator = Collections.Enumerator;
 

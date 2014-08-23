@@ -10,6 +10,7 @@ declare module System.Linq {
         constructor(enumeratorFactory: () => Collections.IEnumerator<T>, finalizer?: () => void);
         static fromArray<T>(array: Collections.IArray<T>): ArrayEnumerable<T>;
         static from<T>(source: any): Enumerable<T>;
+        static toArray<T>(source: any): T[];
         public getEnumerator(): Collections.IEnumerator<T>;
         public _onDispose(): void;
         static choice<T>(values: Collections.IArray<T>): Enumerable<T>;

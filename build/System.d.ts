@@ -77,6 +77,10 @@ declare module System.Collections {
         previous: ILinkedListNode<T>;
         next: ILinkedListNode<T>;
         value: T;
+        addBefore(entry: T): void;
+        addAfter(entry: T): void;
+        addNodeBefore(before: ILinkedListNode<T>): void;
+        addNodeAfter(after: ILinkedListNode<T>): void;
     }
     class LinkedList<T> implements ICollection<T>, IEnumerateEach<T> {
         constructor(source?: IEnumerable<T>);
@@ -86,6 +90,8 @@ declare module System.Collections {
         private _count;
         private _addFirst(entry);
         private _addLast(entry);
+        private _addNodeBefore(n, inserting);
+        private _addNodeAfter(n, inserting);
         private _findFirst(entry);
         private _findLast(entry);
         public forEach(action: Predicate<T>): void;
@@ -99,13 +105,19 @@ declare module System.Collections {
         public copyTo(array: T[], index?: number): void;
         public removeOnce(entry: T): boolean;
         public remove(entry: T): number;
+        public first : ILinkedListNode<T>;
+        public last : ILinkedListNode<T>;
         public find(entry: T): ILinkedListNode<T>;
         public findLast(entry: T): ILinkedListNode<T>;
-        public addLast(entry: T): ILinkedListNode<T>;
-        public addFirst(entry: T): ILinkedListNode<T>;
+        public addFirst(entry: T): void;
+        public addLast(entry: T): void;
         public removeFirst(): void;
         public removeLast(): void;
         public removeNode(node: ILinkedListNode<T>): boolean;
+        public addBefore(node: ILinkedListNode<T>, entry: T): void;
+        public addAfter(node: ILinkedListNode<T>, entry: T): void;
+        public addNodeBefore(node: ILinkedListNode<T>, before: ILinkedListNode<T>): void;
+        public addNodeAfter(node: ILinkedListNode<T>, after: ILinkedListNode<T>): void;
     }
 }
 declare module System {
@@ -404,6 +416,7 @@ declare module System.Collections {
     }
     module Enumerator {
         function from<T>(source: any): IEnumerator<T>;
+        function forEach<T>(enumerator: IEnumerator<T>, action: (element: T, index?: number) => any): void;
     }
     class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T> {
         private initializer;

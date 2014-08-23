@@ -28,6 +28,10 @@ module System.Linq
 	import Dictionary = System.Collections.Dictionary;
 
 	import using = System.using;
+
+	import enumeratorFrom = System.Collections.Enumerator.from;
+	import enumeratorForEach = System.Collections.Enumerator.forEach;
+
 	// #endregion
 
 	// #region Local Constants.
@@ -105,6 +109,32 @@ module System.Linq
 
 			throw new Error("Unsupported enumerable.");
 		}
+
+		static toArray<T>(source: any): T[]
+		{
+			if (source instanceof Array)
+				return source.slice();
+
+			if (typeof source === System.Types.Object && "length" in source)
+				source = Enumerable.fromArray<T>(source);
+
+			if (source instanceof Enumerable)
+				return source.toArray();
+
+			if ("getEnumerator" in source)
+			{
+				var result: T[] = [];
+				enumeratorForEach<T>(source.getEnumerator(), (e, i) =>
+				{
+					result[i] = e;
+				});
+				return result;
+			}
+
+
+			throw new Error("Unsupported enumerable.");
+		}
+
 
 		// #region IEnumerable<T> Implementation...
 		getEnumerator(): IEnumerator<T>
@@ -449,17 +479,9 @@ module System.Linq
 			enumerable: IEnumerable<T>,
 			action: (element: T, index?: number) => any): void
 		{
-			var _ = enumerable;
-
-			var index = 0;
-			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			using(_.getEnumerator(), e=>
+			using(enumerable.getEnumerator(), e=>
 			{
-				while (e.moveNext())
-				{
-					if (action(e.current, index++) === false)
-						break;
-				}
+				enumeratorForEach(e, action);
 			});
 		}
 
@@ -516,7 +538,7 @@ module System.Linq
 
 			if (predicate) return this.where(predicate).toArray();
 
-			this.forEach(x=> result.push(x));
+			this.forEach((x,i)=> result[i] = x);
 
 			return result;
 		}
@@ -1573,7 +1595,7 @@ module System.Linq
 					{
 						index = INT_0;
 						firstEnumerator = _.getEnumerator();
-						secondEnumerator = Enumerable.from<TSecond>(second).getEnumerator();
+						secondEnumerator = enumeratorFrom<TSecond>(second);
 					},
 					yielder =>
 						firstEnumerator.moveNext() && secondEnumerator.moveNext()
@@ -1629,7 +1651,7 @@ module System.Linq
 								{
 									var next = secondTemp.shift(); // Find a way to avoid using .shift().. SLOW!
 									if(next)
-										secondEnumerator = Enumerable.from<TSecond>(next).getEnumerator();
+										secondEnumerator = enumeratorFrom<TSecond>(next);
 									else if (!secondTemp.length)
 										return yielder.yieldBreak();
 								}
@@ -1749,7 +1771,7 @@ module System.Linq
 						if (firstEnumerator!=null)
 						{
 							if (firstEnumerator.moveNext()) return yielder.yieldReturn(firstEnumerator.current);
-							secondEnumerator = Enumerable.from<T>(other).getEnumerator();
+							secondEnumerator = enumeratorFrom<T>(other);
 							firstEnumerator.dispose();
 							firstEnumerator = null;
 						}
@@ -1789,7 +1811,7 @@ module System.Linq
 
 							while (!enumerator && enumerables.length)
 							{
-								enumerator = Enumerable.from<T>(enumerables.shift()).getEnumerator(); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
+								enumerator = enumeratorFrom<T>(enumerables.shift()); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
 							}
 
 							if (enumerator && enumerator.moveNext()) // 2) Keep returning until done.
@@ -1849,7 +1871,7 @@ module System.Linq
 					{
 						count = INT_0;
 						firstEnumerator = _.getEnumerator();
-						secondEnumerator = Enumerable.from<T>(other).getEnumerator();
+						secondEnumerator = enumeratorFrom<T>(other);
 						isEnumerated = false;
 					},
 					yielder => {
@@ -1895,7 +1917,7 @@ module System.Linq
 					{
 						// Instead of recalling getEnumerator every time, just reset the existing one.
 						alternateEnumerator = new System.Collections.ArrayEnumerator(
-							Enumerable.from<T>(sequence).toArray()); // Freeze 
+							Enumerable.toArray<T>(sequence)); // Freeze 
 
 						enumerator = _.getEnumerator();
 
