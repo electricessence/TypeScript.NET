@@ -1,4 +1,10 @@
-﻿declare module System {
+﻿declare module System.Collections {
+    interface IArray<T> {
+        length: number;
+        [index: number]: T;
+    }
+}
+declare module System {
     class Functions {
         public Identity<T>(x: T): T;
         public True(): boolean;
@@ -56,75 +62,14 @@ declare module System {
     function copyTo(source: any, target: any): void;
     function applyMixins(derivedCtor: any, baseCtors: any[]): void;
 }
-declare module System.Collections.ArrayUtility {
-    function initialize<T>(length: number): T[];
-    function copy<T>(sourceArray: T[], sourceIndex?: number, length?: number): T[];
-    function copyTo<T>(sourceArray: T[], destinationArray: T[], sourceIndex?: number, destinationIndex?: number, length?: number): void;
-    function contains<T>(array: T[], item: T): boolean;
-    function replace<T>(array: T[], old: T, newValue: T, max?: number): number;
-    function updateRange<T>(array: T[], value: T, index: number, length: number): void;
-    function clear(array: any[], index: number, length: number): void;
-    function register<T>(array: T[], item: T): boolean;
-    function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number;
-    function areAllEqual(arrays: any[][], strict?: boolean): boolean;
-    function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
-    function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T;
-    function removeIndex<T>(array: T[], index: number): boolean;
-    function remove<T>(array: T[], value: T, max?: number): number;
-    function repeat<T>(element: T, count: number): T[];
-    function sum(source: number[], ignoreNaN?: boolean): number;
-    function average(source: number[], ignoreNaN?: boolean): number;
-    function product(source: number[], ignoreNaN?: boolean): number;
-    function min(source: number[], ignoreNaN?: boolean): number;
-    function max(source: number[], ignoreNaN?: boolean): number;
-}
 declare module System.Collections {
-    class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue> {
-        private _updateRecursion;
-        public isUpdating : boolean;
-        public onValueChanged: (key: TKey, value: TValue, old: TValue) => void;
-        public _onValueUpdate(key: TKey, value: TValue, old: TValue): void;
-        public onUpdated: () => void;
-        private _onUpdated();
-        public handleUpdate(closure?: () => boolean): boolean;
-        public isReadOnly : boolean;
-        public count : number;
-        public add(item: IKeyValuePair<TKey, TValue>): void;
-        public clear(): number;
-        public contains(item: IKeyValuePair<TKey, TValue>): boolean;
-        public copyTo(array: IKeyValuePair<TKey, TValue>[], index?: number): void;
-        public remove(item: IKeyValuePair<TKey, TValue>): number;
-        public keys : TKey[];
-        public values : TValue[];
-        public addByKeyValue(key: TKey, value: TValue): void;
-        public get(key: TKey): TValue;
-        public set(key: TKey, value: TValue): boolean;
-        public containsKey(key: TKey): boolean;
-        public containsValue(value: TValue): boolean;
-        public removeByKey(key: TKey): boolean;
-        public removeByValue(value: TValue): number;
-        public importPairs(pairs: IKeyValuePair<TKey, TValue>[]): boolean;
-        public getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
+    interface IEnumerateEach<T> {
+        forEach(action: Predicate<T>): void;
+        forEach(action: Action<T>): void;
     }
 }
-declare module System.Collections {
-    class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue> {
-        private compareSelector;
-        private _count;
-        private _entries;
-        private _buckets;
-        constructor(compareSelector?: Selector<TKey, any>);
-        private setKV(key, value, allowOverwrite);
-        public addByKeyValue(key: TKey, value: TValue): void;
-        public get(key: TKey): TValue;
-        public set(key: TKey, value: TValue): boolean;
-        public containsKey(key: TKey): boolean;
-        public clear(): number;
-        public count : number;
-        public getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
-        public keys : TKey[];
-        public values : TValue[];
-    }
+declare module System.Text {
+    function format(source: string, ...args: any[]): string;
 }
 declare module System.Collections {
     interface IYield<T> {
@@ -163,86 +108,27 @@ declare module System.Collections {
         constructor(array: IArray<T>, start?: number, step?: number);
     }
 }
-declare module System.Collections {
-    interface IArray<T> {
-        length: number;
-        [index: number]: T;
-    }
-}
-declare module System.Collections {
-    interface ICollection<T> extends IEnumerable<T> {
-        count: number;
-        isReadOnly: boolean;
-        add(item: T): void;
-        clear(): number;
-        contains(item: T): boolean;
-        copyTo(array: T[], index?: number): void;
-        remove(item: T): number;
-    }
-}
-declare module System.Collections {
-    interface IMap<TValue> {
-        [key: string]: TValue;
-    }
-    interface IKeyValuePair<TKey, TValue> {
-        key: TKey;
-        value: TValue;
-    }
-    interface IStringKeyValuePair<TValue> extends IKeyValuePair<string, TValue> {
-    }
-    interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TValue>> {
-        keys: TKey[];
-        values: TValue[];
-        addByKeyValue(key: TKey, value: TValue): void;
-        get(key: TKey): TValue;
-        set(key: TKey, value: TValue): boolean;
-        containsKey(key: TKey): boolean;
-        containsValue(value: TValue): boolean;
-        removeByKey(key: TKey): boolean;
-        removeByValue(value: TValue): number;
-        importPairs(pairs: IKeyValuePair<TKey, TValue>[]): boolean;
-    }
-    interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<IStringKeyValuePair<TValue>> {
-        importMap(map: IMap<TValue>): boolean;
-    }
-    interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue> {
-        indexOfKey(key: TKey): number;
-        getValueByIndex(index: number): TValue;
-    }
-}
-declare module System.Collections {
-    interface IEnumerable<T> {
-        getEnumerator(): IEnumerator<T>;
-    }
-    module Enumerable {
-        function forEach<T>(enumerable: IEnumerable<T>, action: (element: T, index?: number) => any): void;
-    }
-}
-declare module System.Collections {
-    interface IEnumerateEach<T> {
-        forEach(action: Predicate<T>): void;
-        forEach(action: Action<T>): void;
-    }
-}
-declare module System.Collections {
-    interface IEnumerator<T> {
-        current: T;
-        moveNext(): boolean;
-        reset(): void;
-        dispose(): void;
-    }
-}
-declare module System.Collections {
-    interface IList<T> extends ICollection<T> {
-        get(index: number): T;
-        set(index: number, value: T): boolean;
-        indexOf(item: T): number;
-        insert(index: number, value: T): void;
-        removeAt(index: number): void;
-    }
-}
-declare module System.Text {
-    function format(source: string, ...args: any[]): string;
+declare module System.Collections.ArrayUtility {
+    function initialize<T>(length: number): T[];
+    function copy<T>(sourceArray: T[], sourceIndex?: number, length?: number): T[];
+    function copyTo<T>(sourceArray: T[], destinationArray: T[], sourceIndex?: number, destinationIndex?: number, length?: number): void;
+    function contains<T>(array: T[], item: T): boolean;
+    function replace<T>(array: T[], old: T, newValue: T, max?: number): number;
+    function updateRange<T>(array: T[], value: T, index: number, length: number): void;
+    function clear(array: any[], index: number, length: number): void;
+    function register<T>(array: T[], item: T): boolean;
+    function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number;
+    function areAllEqual(arrays: any[][], strict?: boolean): boolean;
+    function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
+    function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T;
+    function removeIndex<T>(array: T[], index: number): boolean;
+    function remove<T>(array: T[], value: T, max?: number): number;
+    function repeat<T>(element: T, count: number): T[];
+    function sum(source: number[], ignoreNaN?: boolean): number;
+    function average(source: number[], ignoreNaN?: boolean): number;
+    function product(source: number[], ignoreNaN?: boolean): number;
+    function min(source: number[], ignoreNaN?: boolean): number;
+    function max(source: number[], ignoreNaN?: boolean): number;
 }
 declare module System.Collections {
     interface ILinkedListNode<T> {
@@ -295,35 +181,6 @@ declare module System.Collections {
         public addAfter(node: ILinkedListNode<T>, entry: T): void;
         public addNodeBefore(node: ILinkedListNode<T>, before: ILinkedListNode<T>): void;
         public addNodeAfter(node: ILinkedListNode<T>, after: ILinkedListNode<T>): void;
-    }
-}
-declare module System.Collections {
-    class StringKeyDictionary<TValue> extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<TValue> {
-        private _count;
-        private _map;
-        public containsKey(key: string): boolean;
-        public containsValue(value: TValue): boolean;
-        public get(key: string): TValue;
-        public set(key: string, value: TValue): boolean;
-        public importMap(values: IMap<TValue>): boolean;
-        public toMap(selector?: (key: string, value: TValue) => TValue): IMap<TValue>;
-        public keys : string[];
-        public values : TValue[];
-        public count : number;
-    }
-}
-declare module System.Collections {
-    class OrderedStringKeyDictionary<TValue> extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue> {
-        private _order;
-        constructor();
-        public indexOfKey(key: string): number;
-        public getValueByIndex(index: number): TValue;
-        public set(key: string, value: TValue, keepIndex?: boolean): boolean;
-        public setByIndex(index: number, value: TValue): boolean;
-        public importValues(values: TValue[]): boolean;
-        public setValues(...values: TValue[]): boolean;
-        public removeByIndex(index: number): boolean;
-        public keys : string[];
     }
 }
 declare module System.Collections {
@@ -465,6 +322,32 @@ declare module System.Diagnostics {
     }
 }
 declare module System {
+    interface IComparable<T> {
+        compareTo(other: T): number;
+    }
+}
+declare module System {
+    interface IConvertible {
+        toBoolean(provider: IFormatProvider): boolean;
+        toNumber(provider: IFormatProvider): number;
+        toString(provider: IFormatProvider): string;
+    }
+}
+declare module System {
+    interface IFormatProvider {
+        getFormat(formatType: Object): Object;
+    }
+}
+declare module System {
+    interface IFormattable {
+        toString(format?: string, formatProvider?: IFormatProvider): string;
+    }
+}
+declare module System.Runtime.Serialization {
+    interface ISerializable {
+    }
+}
+declare module System {
     function dispose(...disposables: IDisposable[]): void;
     function disposeWithoutException(...disposables: IDisposable[]): void;
     function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void;
@@ -483,6 +366,33 @@ declare module System {
         static assertIsNotDisposed(disposed: boolean, errorMessage?: string): boolean;
         public assertIsNotDisposed(errorMessage?: string): boolean;
         public dispose(): void;
+        public _onDispose(): void;
+    }
+}
+declare module System {
+    interface ICloneable<T> {
+        clone(): T;
+    }
+}
+declare module System {
+    interface IEquatable<T> {
+        equals(other: T): boolean;
+    }
+}
+declare module System {
+    interface ILazy<T> extends IDisposable {
+        value: T;
+        isValueCreated: boolean;
+    }
+    class Lazy<T> extends DisposableBase implements ILazy<T> {
+        private _closure;
+        private _isValueCreated;
+        private _value;
+        constructor(_closure: () => T);
+        public isValueCreated : boolean;
+        public reset(): void;
+        public value : T;
+        public valueOnce(): T;
         public _onDispose(): void;
     }
 }
@@ -508,57 +418,147 @@ declare module System {
         public dispose(): void;
     }
 }
-declare module System {
-    interface ICloneable<T> {
-        clone(): T;
+declare module System.Collections {
+    interface IEnumerator<T> {
+        current: T;
+        moveNext(): boolean;
+        reset(): void;
+        dispose(): void;
     }
 }
-declare module System {
-    interface IComparable<T> {
-        compareTo(other: T): number;
+declare module System.Collections {
+    interface IEnumerable<T> {
+        getEnumerator(): IEnumerator<T>;
+    }
+    module Enumerable {
+        function forEach<T>(enumerable: IEnumerable<T>, action: (element: T, index?: number) => any): void;
     }
 }
-declare module System {
-    interface IConvertible {
-        toBoolean(provider: IFormatProvider): boolean;
-        toNumber(provider: IFormatProvider): number;
-        toString(provider: IFormatProvider): string;
+declare module System.Collections {
+    interface ICollection<T> extends IEnumerable<T> {
+        count: number;
+        isReadOnly: boolean;
+        add(item: T): void;
+        clear(): number;
+        contains(item: T): boolean;
+        copyTo(array: T[], index?: number): void;
+        remove(item: T): number;
     }
 }
-declare module System {
-    interface IEquatable<T> {
-        equals(other: T): boolean;
+declare module System.Collections {
+    interface IList<T> extends ICollection<T> {
+        get(index: number): T;
+        set(index: number, value: T): boolean;
+        indexOf(item: T): number;
+        insert(index: number, value: T): void;
+        removeAt(index: number): void;
     }
 }
-declare module System {
-    interface IFormatProvider {
-        getFormat(formatType: Object): Object;
+declare module System.Collections {
+    interface IMap<TValue> {
+        [key: string]: TValue;
+    }
+    interface IKeyValuePair<TKey, TValue> {
+        key: TKey;
+        value: TValue;
+    }
+    interface IStringKeyValuePair<TValue> extends IKeyValuePair<string, TValue> {
+    }
+    interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TValue>> {
+        keys: TKey[];
+        values: TValue[];
+        addByKeyValue(key: TKey, value: TValue): void;
+        get(key: TKey): TValue;
+        set(key: TKey, value: TValue): boolean;
+        containsKey(key: TKey): boolean;
+        containsValue(value: TValue): boolean;
+        removeByKey(key: TKey): boolean;
+        removeByValue(value: TValue): number;
+        importPairs(pairs: IKeyValuePair<TKey, TValue>[]): boolean;
+    }
+    interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue>, ICollection<IStringKeyValuePair<TValue>> {
+        importMap(map: IMap<TValue>): boolean;
+    }
+    interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue> {
+        indexOfKey(key: TKey): number;
+        getValueByIndex(index: number): TValue;
     }
 }
-declare module System {
-    interface IFormattable {
-        toString(format?: string, formatProvider?: IFormatProvider): string;
+declare module System.Collections {
+    class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue> {
+        private _updateRecursion;
+        public isUpdating : boolean;
+        public onValueChanged: (key: TKey, value: TValue, old: TValue) => void;
+        public _onValueUpdate(key: TKey, value: TValue, old: TValue): void;
+        public onUpdated: () => void;
+        private _onUpdated();
+        public handleUpdate(closure?: () => boolean): boolean;
+        public isReadOnly : boolean;
+        public count : number;
+        public add(item: IKeyValuePair<TKey, TValue>): void;
+        public clear(): number;
+        public contains(item: IKeyValuePair<TKey, TValue>): boolean;
+        public copyTo(array: IKeyValuePair<TKey, TValue>[], index?: number): void;
+        public remove(item: IKeyValuePair<TKey, TValue>): number;
+        public keys : TKey[];
+        public values : TValue[];
+        public addByKeyValue(key: TKey, value: TValue): void;
+        public get(key: TKey): TValue;
+        public set(key: TKey, value: TValue): boolean;
+        public containsKey(key: TKey): boolean;
+        public containsValue(value: TValue): boolean;
+        public removeByKey(key: TKey): boolean;
+        public removeByValue(value: TValue): number;
+        public importPairs(pairs: IKeyValuePair<TKey, TValue>[]): boolean;
+        public getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
     }
 }
-declare module System {
-    interface ILazy<T> extends IDisposable {
-        value: T;
-        isValueCreated: boolean;
-    }
-    class Lazy<T> extends DisposableBase implements ILazy<T> {
-        private _closure;
-        private _isValueCreated;
-        private _value;
-        constructor(_closure: () => T);
-        public isValueCreated : boolean;
-        public reset(): void;
-        public value : T;
-        public valueOnce(): T;
-        public _onDispose(): void;
+declare module System.Collections {
+    class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue> {
+        private compareSelector;
+        private _count;
+        private _entries;
+        private _buckets;
+        constructor(compareSelector?: Selector<TKey, any>);
+        private setKV(key, value, allowOverwrite);
+        public addByKeyValue(key: TKey, value: TValue): void;
+        public get(key: TKey): TValue;
+        public set(key: TKey, value: TValue): boolean;
+        public containsKey(key: TKey): boolean;
+        public clear(): number;
+        public count : number;
+        public getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
+        public keys : TKey[];
+        public values : TValue[];
     }
 }
-declare module System.Runtime.Serialization {
-    interface ISerializable {
+declare module System.Collections {
+    class StringKeyDictionary<TValue> extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<TValue> {
+        private _count;
+        private _map;
+        public containsKey(key: string): boolean;
+        public containsValue(value: TValue): boolean;
+        public get(key: string): TValue;
+        public set(key: string, value: TValue): boolean;
+        public importMap(values: IMap<TValue>): boolean;
+        public toMap(selector?: (key: string, value: TValue) => TValue): IMap<TValue>;
+        public keys : string[];
+        public values : TValue[];
+        public count : number;
+    }
+}
+declare module System.Collections {
+    class OrderedStringKeyDictionary<TValue> extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue> {
+        private _order;
+        constructor();
+        public indexOfKey(key: string): number;
+        public getValueByIndex(index: number): TValue;
+        public set(key: string, value: TValue, keepIndex?: boolean): boolean;
+        public setByIndex(index: number, value: TValue): boolean;
+        public importValues(values: TValue[]): boolean;
+        public setValues(...values: TValue[]): boolean;
+        public removeByIndex(index: number): boolean;
+        public keys : string[];
     }
 }
 declare module System.Text {
