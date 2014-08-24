@@ -36,7 +36,7 @@ module System.Text
 		{
 			var _ = this;
 			_._latest = null;
-			_._partArray = null;
+			_._partArray = [];
 			_.appendThese(initial);
 		}
 
