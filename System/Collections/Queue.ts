@@ -35,7 +35,7 @@ module System.Collections
 		assertZeroOrGreater(value, property);
 	}
 
-	export class Queue<T> implements ICollection<T> {
+	export class Queue<T> implements ICollection<T>, IDisposable {
 		
 		private _array: T[];
 		private _head: number;       // First valid element in the queue
@@ -44,9 +44,9 @@ module System.Collections
         private _version: number;
 
 
-		constructor(source: IEnumerable<T>);
-		constructor(source: IArray<T>);
-		constructor(capacity: number);
+		constructor(source?: IEnumerable<T>);
+		constructor(source?: IArray<T>);
+		constructor(capacity?: number);
 		constructor(source?:any)
 		{
 			var _ = this;
@@ -166,6 +166,19 @@ module System.Collections
 
 
 		// #endregion
+
+		// Results in a complete reset.  Allows for easy cleanup elsewhere.
+		dispose(): void
+		{
+			var _ = this;
+			_.clear();
+			if (_._array != emptyArray)
+			{
+				_._array.length = 0;
+				_._array = emptyArray;
+			}
+			_._version = 0;
+		}
 
 		toArray(): T[]
 		{

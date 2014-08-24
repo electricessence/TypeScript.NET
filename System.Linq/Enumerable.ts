@@ -26,6 +26,7 @@ module System.Linq
 
 	import IMap = System.Collections.IMap;
 	import Dictionary = System.Collections.Dictionary;
+	import Queue = System.Collections.Queue;
 
 	import using = System.using;
 
@@ -764,29 +765,29 @@ module System.Linq
 			return new Enumerable<T>(() =>
 			{
 				var enumerator: IEnumerator<T>;
-				var q: T[];
+				var q: Queue<T>;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
 						enumerator = _.getEnumerator();
-						q = []; // TODO: Use an actual queue class that doesn't have the .shift() overhead.
+						q = new Queue<T>();
 					},
 					yielder =>
 					{
 						while (enumerator.moveNext())
 						{
 							// Add the next one to the queue.
-							q.push(enumerator.current);
+							q.enqueue(enumerator.current);
 
 							// Did we reach our quota?
-							if (q.length > c)
+							if (q.count > c)
 								// Okay then, start returning results.
-								return yielder.yieldReturn(q.shift());
+								return yielder.yieldReturn(q.dequeue());
 						}
 						return false;
 					},
-					() => { System.dispose(enumerator); });
+					() => { System.dispose(enumerator,q); });
 			});
 		}
 
@@ -818,13 +819,14 @@ module System.Linq
 			{
 				var enumerator: IEnumerator<any>;
 				var nestLevel: number = INT_0;
-				var buffer: any[];
+				var buffer: any[], len:number;
 
 				return new EnumeratorBase<any>(
 					() =>
 					{
 						nestLevel = INT_0;
 						buffer = [];
+						len = 0;
 						enumerator = _.getEnumerator();
 					},
 					yielder =>
@@ -833,26 +835,36 @@ module System.Linq
 						{
 							if (enumerator.moveNext())
 							{
-								buffer.push(enumerator.current);
+								buffer[len++] = enumerator.current;
 								return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
 							}
 
-							var next = Enumerable.fromArray<T>(buffer)
-								.selectMany((x: any) => func(x));
+							if (!len)
+								return yielder.yieldBreak();
+
+							var next = Enumerable
+								.fromArray<T>(buffer)
+								.selectMany(func);
+
 							if (!next.any())
 							{
-								return false;
+								return yielder.yieldBreak();
 							}
 							else
 							{
 								nestLevel++;
 								buffer = [];
+								len = 0;
 								enumerator.dispose();
 								enumerator = next.getEnumerator();
 							}
 						}
 					},
-					() => { System.dispose(enumerator); });
+					() =>
+					{
+						System.dispose(enumerator);
+						buffer.length = 0;
+					});
 			});
 		}
 
@@ -867,25 +879,31 @@ module System.Linq
 			{
 				var enumeratorStack: IEnumerator<any>[] = []; // TODO: Consider using an actual stack and not an array.
 				var enumerator: IEnumerator<any>;
+				var len: number;  // Avoid using push/pop since they query .length every time and can be slower.
 
 				return new EnumeratorBase<T>(
-					() => { enumerator = _.getEnumerator(); },
+					() =>
+					{
+						enumerator = _.getEnumerator();
+						len = 0;
+					},
 					yielder =>
 					{
 						while (true)
 						{
 							if (enumerator.moveNext())
 							{
-								var value = resultSelector(enumerator.current, enumeratorStack.length);
-								enumeratorStack.push(enumerator);
+								var value = resultSelector(enumerator.current, len);
+								enumeratorStack[len++] = enumerator;
 								enumerator = func(enumerator.current).getEnumerator();
 								return yielder.yieldReturn(value);
 							}
 
-							if (enumeratorStack.length == 0) return false;
+							if (len == 0) return false;
 
 							enumerator.dispose();
-							enumerator = enumeratorStack.pop();
+							enumerator = enumeratorStack[--len];
+							enumeratorStack.length = len;
 						}
 					},
 					() =>
@@ -1370,25 +1388,39 @@ module System.Linq
 
 			return new Enumerable<T>(() =>
 			{
-				var buffer: T[]; // TODO: Review this.  May be inefficient.
+				var buffer: T[]
+				var capacity: number;
+				var len: number;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
 						assertIsNotDisposed(disposed);
 						buffer = _.toArray();
+						capacity = len = buffer.length;
 					},
 					yielder =>
 					{
-						var len = buffer.length;
-						return len && yielder.yieldReturn(
-							buffer.splice(
-								(Math.random() * len) | 0, INT_POSITIVE_1)[0]);
+						// Avoid using major array operations like .slice();
+						if (!len)
+							return yielder.yieldBreak();
+
+						var selectedIndex = (Math.random() * len) | 0;
+						var selectedValue = buffer[selectedIndex];
+
+						var endValue = buffer[--len];
+						buffer[selectedIndex] = endValue; // Take the last one and put it here.
+						buffer[len] = null; // clear possible reference.
+
+						if (len % 32 == 0) // Shrink?
+							buffer.length = len;
+
+						return yielder.yieldReturn(selectedValue);
 					},
 					() => { buffer.length = 0; }
 					);
 			},
-				() => { disposed = true; });
+			() => { disposed = true; });
 		}
 
 		count(predicate?: Predicate<T>): number
@@ -1622,7 +1654,7 @@ module System.Linq
 
 			return new Enumerable<TResult>(() =>
 			{
-				var secondTemp: any[];
+				var secondTemp: Queue<any>;
 				var firstEnumerator: IEnumerator<T>;
 				var secondEnumerator: IEnumerator<TSecond>;
 				var index: number = INT_0;
@@ -1630,7 +1662,7 @@ module System.Linq
 				return new EnumeratorBase<TResult>(
 					() =>
 					{
-						secondTemp = second.slice();
+						secondTemp = new Queue<any>(second);
 						index = INT_0;
 						firstEnumerator = _.getEnumerator();
 						secondEnumerator = null;
@@ -1644,10 +1676,14 @@ module System.Linq
 							{
 								while (!secondEnumerator)
 								{
-									var next = secondTemp.shift(); // Find a way to avoid using .shift().. SLOW!
-									if(next)
-										secondEnumerator = enumeratorFrom<TSecond>(next);
-									else if (!secondTemp.length)
+									var next: any;
+									if (secondTemp.count)
+									{
+										var next = secondTemp.dequeue();
+										if(next) // Incase by chance next is null, then try again.
+											secondEnumerator = enumeratorFrom<TSecond>(next);
+									}
+									else
 										return yielder.yieldBreak();
 								}
 
@@ -1664,7 +1700,7 @@ module System.Linq
 					},
 					() =>
 					{
-						System.dispose(firstEnumerator);
+						System.dispose(firstEnumerator, secondTemp);
 					});
 			});
 		}
@@ -1792,21 +1828,26 @@ module System.Linq
 			if (enumerables.length == 1)
 				return _.concatWith(enumerables[0]);
 
-			enumerables = enumerables.slice(); // TODO: Use a Queue or LinkedList class to avoid .shift();
-
 			return new Enumerable<T>(() =>
 			{
 				var enumerator: IEnumerator<T>;
+				var queue: Queue<any[]>;
 
 				return new EnumeratorBase<T>(
-					()=> { enumerator = _.getEnumerator(); }, // 1) First get our values...
+					() =>
+					{
+						// 1) First get our values...
+						enumerator = _.getEnumerator();
+						queue = new Queue<any[]>(enumerables);
+					}, 
 					yielder =>
 					{
-						while(true) {
+						while (true)
+						{
 
-							while (!enumerator && enumerables.length)
+							while (!enumerator && queue.count)
 							{
-								enumerator = enumeratorFrom<T>(enumerables.shift()); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
+								enumerator = enumeratorFrom<T>(queue.dequeue()); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
 							}
 
 							if (enumerator && enumerator.moveNext()) // 2) Keep returning until done.
@@ -1821,7 +1862,12 @@ module System.Linq
 
 							return yielder.yieldBreak();
 						}
-					});
+					},
+					() =>
+					{
+						System.dispose(enumerator,queue); // Just in case this gets disposed early.
+					}
+					);
 			});
 		}
 
@@ -2179,7 +2225,8 @@ module System.Linq
 				var enumerator: IEnumerator<T>;
 				var key: TKey;
 				var compareKey: TCompare;
-				var group: TElement[] = [];
+				var group: TElement[];
+				var len: number;
 
 				return new EnumeratorBase<IGrouping<TKey, TElement>>(
 					() =>
@@ -2189,40 +2236,46 @@ module System.Linq
 						{
 							key = keySelector(enumerator.current);
 							compareKey = compareSelector(key);
-							group.push(elementSelector(enumerator.current));
+							group = [elementSelector(enumerator.current)];
+							len = 1;
 						}
+						else
+							group = null;
 					},
 					yielder =>
 					{
-						var hasNext: boolean;
+						if (!group)
+							return yielder.yieldBreak();
 
+						var hasNext: boolean, c:T;
 						while ((hasNext = enumerator.moveNext()))
 						{
-							if (compareKey === compareSelector(keySelector(enumerator.current)))
-								group.push(elementSelector(enumerator.current));
-							else break;
-						}
-
-						if (group.length)
-						{
-							var result: IGrouping<TKey, TElement>
-								= resultSelector(key, group);
-
-							if (hasNext)
-							{
-								key = keySelector(enumerator.current);
-								compareKey = compareSelector(key);
-								group = [elementSelector(enumerator.current)];
-							}
+							c = enumerator.current;
+							if (compareKey === compareSelector(keySelector(c)))
+								group[len++] = elementSelector(c);
 							else
-								group = [];
-
-							return yielder.yieldReturn(result);
+								break;
 						}
 
-						return false;
+						var result: IGrouping<TKey, TElement>
+							= resultSelector(key, group);
+
+						if (hasNext)
+						{
+							c = enumerator.current;
+							key = keySelector(c);
+							compareKey = compareSelector(key);
+							group = [elementSelector(c)];
+							len = 1;
+						}
+						else
+						{
+							group = null;
+						}
+
+						return yielder.yieldReturn(result);
 					},
-					() => { System.dispose(enumerator); });
+					() => { System.dispose(enumerator); group = null; });
 			});
 		}
 
@@ -2235,22 +2288,27 @@ module System.Linq
 
 			assertInteger(size, "size");
 
-			var _ = this;
+			var _ = this, len:number;
 
 			return new Enumerable<T[]>(() =>
 			{
 				var enumerator: IEnumerator<T>;
 				return new EnumeratorBase<T[]>(
-					() => { enumerator = _.getEnumerator(); },
+					() =>
+					{
+						enumerator = _.getEnumerator();
+					},
 					yielder =>
 					{
-						var array: T[] = [];
-						while (array.length < size && enumerator.moveNext)
+						var array: T[] = ArrayUtility.initialize<T>(size);
+						len = 0;
+						while (len < size && enumerator.moveNext)
 						{
-							array.push(enumerator.current);
+							array[len++] = enumerator.current;
 						}
 
-						return array.length && yielder.yieldReturn(array);
+						array.length = len;
+						return len && yielder.yieldReturn(array);
 					},
 					() => { System.dispose(enumerator); });
 			});
@@ -3091,10 +3149,10 @@ module System.Linq
 				{
 					buffer = [];
 					indexes = [];
-					Enumerable.forEach(_.source, (item, index) =>
+					Enumerable.forEach(_.source, (item, i) =>
 					{
-						buffer.push(item);
-						indexes.push(index);
+						buffer[index] = item;
+						indexes[i] = i;
 					});
 					var sortContext = SortContext.create(_);
 					sortContext.generateKeys(buffer);

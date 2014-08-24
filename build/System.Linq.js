@@ -14,6 +14,7 @@ var System;
         var EnumeratorBase = System.Collections.EnumeratorBase;
 
         var Dictionary = System.Collections.Dictionary;
+        var Queue = System.Collections.Queue;
 
         var using = System.using;
 
@@ -604,17 +605,17 @@ var System;
 
                     return new EnumeratorBase(function () {
                         enumerator = _.getEnumerator();
-                        q = [];
+                        q = new Queue();
                     }, function (yielder) {
                         while (enumerator.moveNext()) {
-                            q.push(enumerator.current);
+                            q.enqueue(enumerator.current);
 
-                            if (q.length > c)
-                                return yielder.yieldReturn(q.shift());
+                            if (q.count > c)
+                                return yielder.yieldReturn(q.dequeue());
                         }
                         return false;
                     }, function () {
-                        System.dispose(enumerator);
+                        System.dispose(enumerator, q);
                     });
                 });
             };
@@ -639,33 +640,38 @@ var System;
                 return new Enumerable(function () {
                     var enumerator;
                     var nestLevel = INT_0;
-                    var buffer;
+                    var buffer, len;
 
                     return new EnumeratorBase(function () {
                         nestLevel = INT_0;
                         buffer = [];
+                        len = 0;
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
                         while (true) {
                             if (enumerator.moveNext()) {
-                                buffer.push(enumerator.current);
+                                buffer[len++] = enumerator.current;
                                 return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
                             }
 
-                            var next = Enumerable.fromArray(buffer).selectMany(function (x) {
-                                return func(x);
-                            });
+                            if (!len)
+                                return yielder.yieldBreak();
+
+                            var next = Enumerable.fromArray(buffer).selectMany(func);
+
                             if (!next.any()) {
-                                return false;
+                                return yielder.yieldBreak();
                             } else {
                                 nestLevel++;
                                 buffer = [];
+                                len = 0;
                                 enumerator.dispose();
                                 enumerator = next.getEnumerator();
                             }
                         }
                     }, function () {
                         System.dispose(enumerator);
+                        buffer.length = 0;
                     });
                 });
             };
@@ -676,23 +682,26 @@ var System;
                 return new Enumerable(function () {
                     var enumeratorStack = [];
                     var enumerator;
+                    var len;
 
                     return new EnumeratorBase(function () {
                         enumerator = _.getEnumerator();
+                        len = 0;
                     }, function (yielder) {
                         while (true) {
                             if (enumerator.moveNext()) {
-                                var value = resultSelector(enumerator.current, enumeratorStack.length);
-                                enumeratorStack.push(enumerator);
+                                var value = resultSelector(enumerator.current, len);
+                                enumeratorStack[len++] = enumerator;
                                 enumerator = func(enumerator.current).getEnumerator();
                                 return yielder.yieldReturn(value);
                             }
 
-                            if (enumeratorStack.length == 0)
+                            if (len == 0)
                                 return false;
 
                             enumerator.dispose();
-                            enumerator = enumeratorStack.pop();
+                            enumerator = enumeratorStack[--len];
+                            enumeratorStack.length = len;
                         }
                     }, function () {
                         try  {
@@ -1043,13 +1052,28 @@ var System;
 
                 return new Enumerable(function () {
                     var buffer;
+                    var capacity;
+                    var len;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
                         buffer = _.toArray();
+                        capacity = len = buffer.length;
                     }, function (yielder) {
-                        var len = buffer.length;
-                        return len && yielder.yieldReturn(buffer.splice((Math.random() * len) | 0, INT_POSITIVE_1)[0]);
+                        if (!len)
+                            return yielder.yieldBreak();
+
+                        var selectedIndex = (Math.random() * len) | 0;
+                        var selectedValue = buffer[selectedIndex];
+
+                        var endValue = buffer[--len];
+                        buffer[selectedIndex] = endValue;
+                        buffer[len] = null;
+
+                        if (len % 32 == 0)
+                            buffer.length = len;
+
+                        return yielder.yieldReturn(selectedValue);
                     }, function () {
                         buffer.length = 0;
                     });
@@ -1225,7 +1249,7 @@ var System;
                     var index = INT_0;
 
                     return new EnumeratorBase(function () {
-                        secondTemp = second.slice();
+                        secondTemp = new Queue(second);
                         index = INT_0;
                         firstEnumerator = _.getEnumerator();
                         secondEnumerator = null;
@@ -1233,10 +1257,12 @@ var System;
                         if (firstEnumerator.moveNext()) {
                             while (true) {
                                 while (!secondEnumerator) {
-                                    var next = secondTemp.shift();
-                                    if (next)
-                                        secondEnumerator = enumeratorFrom(next);
-                                    else if (!secondTemp.length)
+                                    var next;
+                                    if (secondTemp.count) {
+                                        var next = secondTemp.dequeue();
+                                        if (next)
+                                            secondEnumerator = enumeratorFrom(next);
+                                    } else
                                         return yielder.yieldBreak();
                                 }
 
@@ -1250,7 +1276,7 @@ var System;
 
                         return yielder.yieldBreak();
                     }, function () {
-                        System.dispose(firstEnumerator);
+                        System.dispose(firstEnumerator, secondTemp);
                     });
                 });
             };
@@ -1345,17 +1371,17 @@ var System;
                 if (enumerables.length == 1)
                     return _.concatWith(enumerables[0]);
 
-                enumerables = enumerables.slice();
-
                 return new Enumerable(function () {
                     var enumerator;
+                    var queue;
 
                     return new EnumeratorBase(function () {
                         enumerator = _.getEnumerator();
+                        queue = new Queue(enumerables);
                     }, function (yielder) {
                         while (true) {
-                            while (!enumerator && enumerables.length) {
-                                enumerator = enumeratorFrom(enumerables.shift());
+                            while (!enumerator && queue.count) {
+                                enumerator = enumeratorFrom(queue.dequeue());
                             }
 
                             if (enumerator && enumerator.moveNext())
@@ -1369,6 +1395,8 @@ var System;
 
                             return yielder.yieldBreak();
                         }
+                    }, function () {
+                        System.dispose(enumerator, queue);
                     });
                 });
             };
@@ -1599,41 +1627,47 @@ var System;
                     var enumerator;
                     var key;
                     var compareKey;
-                    var group = [];
+                    var group;
+                    var len;
 
                     return new EnumeratorBase(function () {
                         enumerator = _.getEnumerator();
                         if (enumerator.moveNext()) {
                             key = keySelector(enumerator.current);
                             compareKey = compareSelector(key);
-                            group.push(elementSelector(enumerator.current));
-                        }
+                            group = [elementSelector(enumerator.current)];
+                            len = 1;
+                        } else
+                            group = null;
                     }, function (yielder) {
-                        var hasNext;
+                        if (!group)
+                            return yielder.yieldBreak();
 
+                        var hasNext, c;
                         while ((hasNext = enumerator.moveNext())) {
-                            if (compareKey === compareSelector(keySelector(enumerator.current)))
-                                group.push(elementSelector(enumerator.current));
+                            c = enumerator.current;
+                            if (compareKey === compareSelector(keySelector(c)))
+                                group[len++] = elementSelector(c);
                             else
                                 break;
                         }
 
-                        if (group.length) {
-                            var result = resultSelector(key, group);
+                        var result = resultSelector(key, group);
 
-                            if (hasNext) {
-                                key = keySelector(enumerator.current);
-                                compareKey = compareSelector(key);
-                                group = [elementSelector(enumerator.current)];
-                            } else
-                                group = [];
-
-                            return yielder.yieldReturn(result);
+                        if (hasNext) {
+                            c = enumerator.current;
+                            key = keySelector(c);
+                            compareKey = compareSelector(key);
+                            group = [elementSelector(c)];
+                            len = 1;
+                        } else {
+                            group = null;
                         }
 
-                        return false;
+                        return yielder.yieldReturn(result);
                     }, function () {
                         System.dispose(enumerator);
+                        group = null;
                     });
                 });
             };
@@ -1644,19 +1678,21 @@ var System;
 
                 assertInteger(size, "size");
 
-                var _ = this;
+                var _ = this, len;
 
                 return new Enumerable(function () {
                     var enumerator;
                     return new EnumeratorBase(function () {
                         enumerator = _.getEnumerator();
                     }, function (yielder) {
-                        var array = [];
-                        while (array.length < size && enumerator.moveNext) {
-                            array.push(enumerator.current);
+                        var array = ArrayUtility.initialize(size);
+                        len = 0;
+                        while (len < size && enumerator.moveNext) {
+                            array[len++] = enumerator.current;
                         }
 
-                        return array.length && yielder.yieldReturn(array);
+                        array.length = len;
+                        return len && yielder.yieldReturn(array);
                     }, function () {
                         System.dispose(enumerator);
                     });
@@ -2336,9 +2372,9 @@ var System;
                 return new System.Collections.EnumeratorBase(function () {
                     buffer = [];
                     indexes = [];
-                    Enumerable.forEach(_.source, function (item, index) {
-                        buffer.push(item);
-                        indexes.push(index);
+                    Enumerable.forEach(_.source, function (item, i) {
+                        buffer[index] = item;
+                        indexes[i] = i;
                     });
                     var sortContext = SortContext.create(_);
                     sortContext.generateKeys(buffer);
