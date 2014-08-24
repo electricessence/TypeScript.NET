@@ -60,6 +60,7 @@
     <TypeScriptCompile Include="Collections\IArray.ts" />
     <TypeScriptCompile Include="Collections\IEnumerateEach.ts" />
     <TypeScriptCompile Include="Collections\LinkedList.ts" />
+    <TypeScriptCompile Include="Collections\Queue.ts" />
     <TypeScriptCompile Include="Diagnostics\Stopwatch.ts" />
     <TypeScriptCompile Include="Functions.ts" />
     <TypeScriptCompile Include="IComparable.ts" />

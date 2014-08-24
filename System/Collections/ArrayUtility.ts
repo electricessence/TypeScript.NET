@@ -16,7 +16,51 @@ module System.Collections.ArrayUtility
 		return array;
 	}
 
-	export function copy<T>(array: T[]): T[] { return array ? array.slice() : array }
+	export function copy<T>(sourceArray: T[], sourceIndex: number = 0, length: number = Infinity): T[]
+	{
+		if (!sourceArray)
+			return sourceArray; // may have passed zero? undefined? or null?
+
+		var sourceLength = sourceArray.length;
+
+		return (sourceIndex || length < sourceLength)
+			? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength)
+			: sourceArray.slice();
+	}
+
+	export function copyTo<T>(
+		sourceArray: T[],
+		destinationArray: T[],
+		sourceIndex: number = 0,
+		destinationIndex: number = 0,
+		length: number = Infinity): void
+	{
+		if (!sourceArray)
+			throw new Error("ArgumentNullException: source array cannot be null.");
+
+		if (!destinationArray)
+			throw new Error("ArgumentNullException: destination array cannot be null.");
+
+		if (sourceIndex < 0)
+			throw new Error("ArgumentOutOfRangeException: source index cannot be less than zero.");
+
+		var sourceLength = sourceArray.length;
+		if (sourceIndex >= sourceLength)
+			throw new Error("ArgumentOutOfRangeException: the source index must be less than the length of the source array.");
+
+		if (destinationArray.length < 0)
+			throw new Error("ArgumentOutOfRangeException: destination index cannot be less than zero.");
+
+		var maxLength = sourceArray.length - sourceIndex;
+		if (isFinite(length) && length > maxLength)
+			throw new Error("ArgumentOutOfRangeException: source index + length cannot exceed the length of the source array.");
+
+		length = Math.min(length, maxLength);
+
+		for (var i = 0; i < length; ++i)
+			destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
+	}
+
 
 	export function contains<T>(array: T[], item: T): boolean { return !array ? false : array.indexOf(item) != -1; }
 
@@ -40,6 +84,26 @@ module System.Collections.ArrayUtility
 
 		return count;
 
+	}
+
+	export function updateRange<T>(
+		array: T[],
+		value: T,
+		index: number,
+		length: number): void
+	{
+		var end = index + length;
+		for(var i:number = index; i < end; ++i) {
+			array[i] = value;
+		}
+	}
+
+	export function clear(
+		array: any[],
+		index: number,
+		length: number): void
+	{
+		updateRange(array, null, index, length);
 	}
 
 	export function register<T>(array: T[], item: T): boolean
@@ -80,7 +144,11 @@ module System.Collections.ArrayUtility
 		return true;
 	}
 
-	export function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer: (a: T, b: T, strict?: boolean) => boolean = System.areEqual): boolean
+	export function areEqual<T>(
+		a: IArray<T>, b: IArray<T>,
+		strict?: boolean,
+		equalityComparer: (a: T, b: T, strict?: boolean) => boolean = System.areEqual)
+		: boolean
 	{
 		if (a === b)
 			return true;

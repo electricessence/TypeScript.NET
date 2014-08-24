@@ -20,6 +20,7 @@ module System.Collections
 	* http://stackoverflow.com/questions/166884/array-versus-linked-list
 	*****************************/
 
+
 	// Use an interface in order to prevent external construction of LinkedListNode
 	export interface ILinkedListNode<T>
 	{
@@ -48,7 +49,7 @@ module System.Collections
 			public prev?: Node<T>,
 			public next?: Node<T>) { }
 
-		external: LinkedListNode<T>;
+		external: ILinkedListNode<T>;
 
 		assertDetached(): void
 		{
@@ -63,7 +64,7 @@ module System.Collections
 		if (!node)
 			return null;
 
-		var external: LinkedListNode<T> = node.external;
+		var external: ILinkedListNode<T> = node.external;
 		if(!external)
 			node.external = external = new LinkedListNode<T>(list, node);
 
@@ -87,6 +88,10 @@ module System.Collections
 
 	export class LinkedList<T> implements ICollection<T>, IEnumerateEach<T>
 	{
+		private _first: Node<T>;
+		private _last: Node<T>;
+		private _count: number;
+
 		constructor(source?: IEnumerable<T>);
 		constructor(source?: IArray<T>);
 		constructor(source:any)
@@ -112,9 +117,6 @@ module System.Collections
 		}
 
 		// #region Internals.
-		private _first: Node<T>;
-		private _last: Node<T>;
-		private _count: number;
 
 		private _addFirst(entry: T): Node<T>
 		{
@@ -462,7 +464,7 @@ module System.Collections
 	}
 
 	// Use an internal node class to prevent mucking up the LinkedList.
-	class LinkedListNode<T> //implements ILinkedListNode<T>
+	class LinkedListNode<T> // implements ILinkedListNode<T>
 	{
 		constructor(
 			private _list: System.Collections.LinkedList<T>,
@@ -516,4 +518,4 @@ module System.Collections
 
 
 
-} 
+}

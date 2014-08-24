@@ -1759,7 +1759,7 @@ module System.Linq
 
 				return new EnumeratorBase<T>(
 					() => {
-						firstEnumerator = _.getEnumerator()
+						firstEnumerator = _.getEnumerator();
 					},
 					yielder =>
 					{
