@@ -2269,7 +2269,7 @@ module System.Linq
 		{
 			var sum = 0;
 			// This allows for infinity math that doesn't destroy the other values.
-			var sumInfinite = 0;
+			var sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
 
 			var count = 0; // No need to make integer if the result could be a float.
 
@@ -2323,7 +2323,7 @@ module System.Linq
 			var sum = 0;
 
 			// This allows for infinity math that doesn't destroy the other values.
-			var sumInfinite = 0;
+			var sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
 
 			this.forEach(x=>
 			{
@@ -2356,6 +2356,13 @@ module System.Linq
 					result = NaN;
 					return false;
 				}
+
+				if (value == 0)
+				{
+					result = 0; // Multiplying by zero will always end in zero.
+					return false;
+				}
+
 				// Multiplication can never recover from infinity and simply must retain signs.
 				// You could cancel out infinity with 1/infinity but no available representation exists.
 				result *= value;

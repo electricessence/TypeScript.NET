@@ -1749,6 +1749,11 @@ var System;
                         return false;
                     }
 
+                    if (value == 0) {
+                        result = 0;
+                        return false;
+                    }
+
                     result *= value;
                 });
 

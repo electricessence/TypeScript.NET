@@ -4,6 +4,7 @@
 
 /*
  * @author electricessence / https://github.com/electricessence/
+ * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/stringbuilder.cs
  * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
@@ -28,15 +29,12 @@ module System.Text
 	// Adding IDisposable allows for use with System.using();
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
 	{
-		// Since there are potential 'insert' operations occuring, we will use a LinkedList and then decide our concat scheme after.
-		private _parts: System.Collections.LinkedList<any>;
 		private _partArray: any[];
-		private _latest: string;
+		private _latest: string; // AKA persistentString
 
 		constructor(...initial: any[])
 		{
 			var _ = this;
-			_._parts = new LinkedList<any>();
 			_._latest = null;
 			_._partArray = null;
 			_.appendThese(initial);
@@ -48,7 +46,6 @@ module System.Text
 			{
 				var _ = this;
 				_._latest = null;
-				_._partArray = null; // The array itself is just a lightweight container for existing values.
 				switch (typeof item)
 				{
 					case Types.Object:
@@ -56,7 +53,7 @@ module System.Text
 						item = item.toString();
 						break;
 				}
-				_._parts.add(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
+				_._partArray.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
 			}
 
 		}
@@ -88,42 +85,46 @@ module System.Text
 				if (i !== null && i !== undefined)
 				{
 					_.appendSingle(i);
-					_._parts.add("\r\n");
+					_._partArray.push("\r\n");
 				}
 			});
 			return _;
 		}
 
-		get isEmpty()
+		/** /// These methods can only efficiently be added if not using a single array.
+		insert(index: number, value: string, count: number = 1): StringBuilder
 		{
-			return this._parts.count === 0;
+			
 		}
 
-		private _getCachedArray(): any[]
+		remove(startIndex:number, length:number): StringBuilder
 		{
-			var a = this._partArray;
-			if (!a)
-				this._partArray = a = this._parts.toArray();
-			return a;
+
+		}
+		/**/
+
+		get isEmpty()
+		{
+			return this._partArray.length === 0;
 		}
 
 		toString()
 		{
 			var latest = this._latest;
 			if (!latest === null)
-				this._latest = latest = this._getCachedArray().join();
+				this._latest = latest = this._partArray.join();
 
 			return latest;
 		}
 
 		join(delimiter: string): string
 		{
-			return this._getCachedArray().join(delimiter);
+			return this._partArray.join(delimiter);
 		}
 
 		clear(): void
 		{
-			this._parts.clear();
+			this._partArray.length = 0;
 			this._latest = null;
 		}
 
