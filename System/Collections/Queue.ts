@@ -41,6 +41,7 @@ module System.Collections
 		private _head: number;       // First valid element in the queue
 		private _tail: number;       // Last valid element in the queue
 		private _size: number;       // Number of elements.
+		private _capacity: number;   // Maps to _array.length;
         private _version: number;
 
 
@@ -79,7 +80,8 @@ module System.Collections
 					_._version = 0;
 				}
 			}
-				
+
+			_._capacity = _._array.length;
 		}
 
 		// #region ICollection<T> implementation
@@ -122,7 +124,7 @@ module System.Collections
 		contains(item: T): boolean
 		{
 			var _ = this;
-			var array = _._array, index = _._head, count = _._size, len = array.length;
+			var array = _._array, index = _._head, count = _._size, len = _._capacity;
 
 			while (count-- > 0)
 			{
@@ -148,14 +150,14 @@ module System.Collections
             var numToCopy = (arrayLen - arrayIndex < size) ? (arrayLen - arrayIndex) : size;
 			if (numToCopy == 0) return;
 
-			var source = _._array, len = source.length, head = _._head, lh = len - head;
+			var source = _._array, len = _._capacity, head = _._head, lh = len - head;
 			var firstPart = (lh < numToCopy) ? lh : numToCopy;
 
 			ArrayUtility.copyTo(source, target, head, arrayIndex, firstPart);
 			numToCopy -= firstPart;
 
 			if (numToCopy > 0)
-				ArrayUtility.copyTo(source, target, 0, arrayIndex + source.length - head, numToCopy);
+				ArrayUtility.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
 		}
 
 		remove(item: T): number
@@ -174,7 +176,7 @@ module System.Collections
 			_.clear();
 			if (_._array != emptyArray)
 			{
-				_._array.length = 0;
+				_._array.length = _._capacity = 0;
 				_._array = emptyArray;
 			}
 			_._version = 0;
@@ -196,7 +198,7 @@ module System.Collections
 
 			assertIntegerZeroOrGreater(capacity, "capacity");
 
-			var _ = this, array = _._array, len = array.length;
+			var _ = this, array = _._array, len = _._capacity;
 
 			if (capacity == len)
 				return;
@@ -206,7 +208,7 @@ module System.Collections
 			// Special case where we can simplly extend the length of the array. (JavaScript only)
 			if (array!=emptyArray && capacity > len && head < tail)
 			{
-				array.length = capacity;
+				array.length = _._capacity = capacity;
 				_._version++;
 				return;
 			}
@@ -226,6 +228,7 @@ module System.Collections
 			}
 
 			_._array = newarray;
+			_._capacity = capacity;
 			_._head = 0;
 			_._tail = (size == capacity) ? 0 : size;
 			_._version++;
@@ -233,7 +236,7 @@ module System.Collections
 
 		enqueue(item: T): void
 		{
-			var _ = this, array = _._array, size = _._size | 0, len = array.length | 0;
+			var _ = this, array = _._array, size = _._size | 0, len = _._capacity | 0;
 			if (size == len)
 			{
 				var newcapacity = len * GROWFACTOR_HALF;
@@ -242,7 +245,7 @@ module System.Collections
 
 				_.setCapacity(newcapacity);
 				array = _._array;
-				len = array.length;
+				len = _._capacity;
 			}
 
 			var tail = _._tail;
@@ -256,15 +259,22 @@ module System.Collections
 		{
 			var _ = this;
 			if (_._size == 0)
-				throw new Error("InvalidOperatioException: cannot call peek on an empty queue.");
+				throw new Error("InvalidOperatioException: cannot dequeue an empty queue.");
 
 			var array = _._array, head = _._head;
 
             var removed = _._array[head];
 			array[head] = null;
-			_._head = (head + 1) % array.length;
+			_._head = (head + 1) % _._capacity;
 
 			_._size--;
+
+
+			/* Need a scheme for shrinking 
+			if (_._size < _._capacity / 2)
+			{
+			}*/
+
 			_._version++;
 			return removed;
         }
@@ -274,7 +284,7 @@ module System.Collections
 			assertIntegerZeroOrGreater(index, "index");
 
 			var _ = this;
-			return _._array[(_._head + index) % _._array.length];
+			return _._array[(_._head + index) % _._capacity];
 		}
 
 		peek():T {
@@ -288,7 +298,7 @@ module System.Collections
 		{
 			var _ = this;
 			var size = _._size;
-			if (size < Math.floor(_._array.length * 0.9))
+			if (size < Math.floor(_._capacity * 0.9))
 				_.setCapacity(size);
 		}
 
