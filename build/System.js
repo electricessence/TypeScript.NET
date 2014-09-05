@@ -672,6 +672,8 @@ var System;
             function findIndex(array, predicate) {
                 if (!array)
                     throw new Error("ArgumentNullException: 'array' cannot be null.");
+                if (!System.Types.isFunction(predicate))
+                    throw new Error("InvalidArgumentException: 'predicate' must be a function.");
                 var len = array.length | 0;
                 for (var i = 0 | 0; i < len; ++i)
                     if (i in array && predicate(array[i]))
