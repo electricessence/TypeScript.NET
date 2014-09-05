@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Web
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System", "System\System.csproj", "{142E89F1-EE20-4A45-9D21-502DBA5D8CB6}"
 EndProject
@@ -21,6 +21,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "amd", "amd", "{6AEB8896-3A4
 		build\amd\loadtest.html = build\amd\loadtest.html
 		build\amd\System.js = build\amd\System.js
 		build\amd\System.Linq.js = build\amd\System.Linq.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C7850B66-3C59-4733-910A-293F69C88F3C}"
+	ProjectSection(SolutionItems) = preProject
+		build\tests\main.html = build\tests\main.html
+		build\tests\main.js = build\tests\main.js
 	EndProjectSection
 EndProject
 Global
@@ -43,5 +49,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6AEB8896-3A49-4136-8F1C-9067CD72EB69} = {846D4BC7-9E27-4653-A307-74FE6E3B99AD}
+		{C7850B66-3C59-4733-910A-293F69C88F3C} = {846D4BC7-9E27-4653-A307-74FE6E3B99AD}
 	EndGlobalSection
 EndGlobal

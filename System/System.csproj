@@ -92,16 +92,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\build\System.js">
-      <Link>build\System.js</Link>
+      <Link>- build\System.js</Link>
     </Content>
     <Content Include="..\build\System.min.js">
-      <Link>build\System.min.js</Link>
+      <Link>- build\System.min.js</Link>
       <DependentUpon>System.js</DependentUpon>
     </Content>
+    <Content Include="Collections\ArrayUtility.qunit.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\build\System.min.js.map">
-      <Link>build\System.min.js.map</Link>
+      <Link>- build\System.min.js.map</Link>
       <DependentUpon>System.min.js</DependentUpon>
     </Content>
   </ItemGroup>

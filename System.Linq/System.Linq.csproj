@@ -61,16 +61,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\build\System.Linq.js">
-      <Link>build\System.Linq.js</Link>
+      <Link>- build\System.Linq.js</Link>
     </Content>
     <Content Include="..\build\System.Linq.min.js">
-      <Link>build\System.Linq.min.js</Link>
+      <Link>- build\System.Linq.min.js</Link>
       <DependentUpon>System.Linq.js</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\build\System.Linq.min.js.map">
-      <Link>build\System.Linq.min.js.map</Link>
+      <Link>- build\System.Linq.min.js.map</Link>
       <DependentUpon>System.Linq.min.js</DependentUpon>
     </Content>
   </ItemGroup>
