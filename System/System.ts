@@ -8,7 +8,7 @@
 
 module System {
 
-	var Types = new System.Types();
+	import Types = System.Types;
 
 	// #region Function Signatures.
 	export interface Action<T>

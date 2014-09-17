@@ -55,104 +55,42 @@ var System;
 (function (System) {
     "use strict";
 
-    var Types = (function () {
-        function Types() {
-            this.Boolean = typeof true;
-            this.Number = typeof 0;
-            this.String = typeof "";
-            this.Object = typeof {};
-            this.Null = typeof null;
-            this.Undefined = typeof undefined;
-            this.Function = typeof System.Functions.Blank;
-        }
-        Object.defineProperty(Types, "Boolean", {
-            get: function () {
-                return typeof true;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Types, "Number", {
-            get: function () {
-                return typeof 0;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Types, "String", {
-            get: function () {
-                return typeof "";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Types, "Object", {
-            get: function () {
-                return typeof {};
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Types, "Null", {
-            get: function () {
-                return typeof null;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Types, "Undefined", {
-            get: function () {
-                return typeof undefined;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Types, "Function", {
-            get: function () {
-                return typeof System.Functions.Blank;
-            },
-            enumerable: true,
-            configurable: true
-        });
+    (function (Types) {
+        Types.Boolean = typeof true;
+        Types.Number = typeof 0;
+        Types.String = typeof "";
+        Types.Object = typeof {};
+        Types.Null = typeof null;
+        Types.Undefined = typeof undefined;
+        Types.Function = typeof System.Functions.Blank;
 
-        Types.prototype.isBoolean = function (type) {
-            return typeof type === this.Boolean;
-        };
-
-        Types.isBoolean = function (type) {
+        function isBoolean(type) {
             return typeof type === Types.Boolean;
-        };
+        }
+        Types.isBoolean = isBoolean;
 
-        Types.prototype.isNumber = function (type) {
-            return typeof type === this.Number;
-        };
-
-        Types.isNumber = function (type) {
+        function isNumber(type) {
             return typeof type === Types.Number;
-        };
+        }
+        Types.isNumber = isNumber;
 
-        Types.prototype.isString = function (type) {
-            return typeof type === this.String;
-        };
-
-        Types.isString = function (type) {
+        function isString(type) {
             return typeof type === Types.String;
-        };
+        }
+        Types.isString = isString;
 
-        Types.prototype.isFunction = function (type) {
-            return typeof type === this.Function;
-        };
-
-        Types.isFunction = function (type) {
+        function isFunction(type) {
             return typeof type === Types.Function;
-        };
-        return Types;
-    })();
-    System.Types = Types;
+        }
+        Types.isFunction = isFunction;
+    })(System.Types || (System.Types = {}));
+    var Types = System.Types;
+
+    Object.freeze(System.Types);
 })(System || (System = {}));
 var System;
 (function (System) {
-    var Types = new System.Types();
+    var Types = System.Types;
 
     
 
@@ -1604,6 +1542,8 @@ var System;
     })(System.TimeUnit || (System.TimeUnit = {}));
     var TimeUnit = System.TimeUnit;
 
+    Object.freeze(TimeUnit);
+
     function assertValidUnit(unit) {
         if (isNaN(unit) || unit > 5 /* Days */ || unit < 0 /* Ticks */ || Math.floor(unit) !== unit)
             throw new Error("Invalid TimeUnit.");
@@ -3035,7 +2975,7 @@ var LinkedList = System.Collections.LinkedList;
 var System;
 (function (System) {
     (function (Text) {
-        var Types = new System.Types();
+        var Types = System.Types;
 
         var StringBuilder = (function () {
             function StringBuilder() {

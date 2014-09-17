@@ -32,6 +32,7 @@ module System.Linq
 
 	import enumeratorFrom = System.Collections.Enumerator.from;
 	import enumeratorForEach = System.Collections.Enumerator.forEach;
+	import Types = System.Types;
 
 	// #endregion
 
@@ -44,8 +45,6 @@ module System.Linq
 	}
 
 	var Functions = new LinqFunctions();
-
-	var Types = new System.Types();
 
 	var INT_0: number = 0 | 0,
 		INT_NEGATTIVE_1 = -1 | 0,
@@ -83,6 +82,8 @@ module System.Linq
 		Return,
 		Skip
 	}
+
+	Object.freeze(EnumerableAction);
 
 
 	export class Enumerable<T> extends System.DisposableBase implements IEnumerable<T> {

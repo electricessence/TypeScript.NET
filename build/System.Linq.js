@@ -20,6 +20,7 @@ var System;
 
         var enumeratorFrom = System.Collections.Enumerator.from;
         var enumeratorForEach = System.Collections.Enumerator.forEach;
+        var Types = System.Types;
 
         var LinqFunctions = (function (_super) {
             __extends(LinqFunctions, _super);
@@ -36,8 +37,6 @@ var System;
         })(System.Functions);
 
         var Functions = new LinqFunctions();
-
-        var Types = new System.Types();
 
         var INT_0 = 0 | 0, INT_NEGATTIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
 
@@ -61,6 +60,8 @@ var System;
             EnumerableAction[EnumerableAction["Skip"] = 2] = "Skip";
         })(Linq.EnumerableAction || (Linq.EnumerableAction = {}));
         var EnumerableAction = Linq.EnumerableAction;
+
+        Object.freeze(EnumerableAction);
 
         var Enumerable = (function (_super) {
             __extends(Enumerable, _super);

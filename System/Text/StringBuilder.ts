@@ -23,7 +23,7 @@ module System.Text
 	 * StringBuilder will really show it's benefit likely somewhere above 1000 items.
 	 *****************************/
 
-	var Types = new System.Types();
+	import Types = System.Types;
 
 	export class StringBuilder implements IDisposable
 	// Adding IDisposable allows for use with System.using();

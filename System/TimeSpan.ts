@@ -36,6 +36,8 @@ module System
 		Days
 	} // Earth Days
 
+	Object.freeze(TimeUnit);
+
 	function assertValidUnit(unit: TimeUnit): boolean
 	{
 		if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit)

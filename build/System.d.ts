@@ -17,29 +17,18 @@ declare module System {
     }
 }
 declare module System {
-    class Types {
-        public Boolean: string;
-        public Number: string;
-        public String: string;
-        public Object: string;
-        public Null: string;
-        public Undefined: string;
-        public Function: string;
-        static Boolean : string;
-        static Number : string;
-        static String : string;
-        static Object : string;
-        static Null : string;
-        static Undefined : string;
-        static Function : string;
-        public isBoolean(type: any): boolean;
-        static isBoolean(type: any): boolean;
-        public isNumber(type: any): boolean;
-        static isNumber(type: any): boolean;
-        public isString(type: any): boolean;
-        static isString(type: any): boolean;
-        public isFunction(type: any): boolean;
-        static isFunction(type: any): boolean;
+    module Types {
+        var Boolean: string;
+        var Number: string;
+        var String: string;
+        var Object: string;
+        var Null: string;
+        var Undefined: string;
+        var Function: string;
+        function isBoolean(type: any): boolean;
+        function isNumber(type: any): boolean;
+        function isString(type: any): boolean;
+        function isFunction(type: any): boolean;
     }
 }
 declare module System {
