@@ -414,7 +414,7 @@ var System;
                     return this.where(predicate).toArray();
 
                 this.forEach(function (x, i) {
-                    return result[i] = x;
+                    result[i] = x;
                 });
 
                 return result;
