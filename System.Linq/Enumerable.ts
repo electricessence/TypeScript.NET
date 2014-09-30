@@ -535,7 +535,7 @@ module System.Linq
 
 			if (predicate) return this.where(predicate).toArray();
 
-			this.forEach((x,i)=> result[i] = x);
+			this.forEach((x,i)=> {result[i] = x});
 
 			return result;
 		}
