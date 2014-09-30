@@ -2202,10 +2202,10 @@ module System.Linq
 		groupBy<TKey, TElement, TCompare>(
 			keySelector: Selector<T, TKey>,
 			elementSelector: Selector<T, TElement> = Functions.Identity,
-			compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>
+			compareSelector?: Selector<TKey, TCompare>): Enumerable<Grouping<TKey, TElement>>
 		{
 			var _ = this;
-			return new Enumerable<IGrouping<TKey, TElement>>(
+			return new Enumerable<Grouping<TKey, TElement>>(
 				() => _.toLookup(keySelector, elementSelector, compareSelector)
 					.getEnumerator());
 		}
