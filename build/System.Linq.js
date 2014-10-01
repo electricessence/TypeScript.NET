@@ -1714,7 +1714,7 @@ var System;
 
                 this.forEach(function (x) {
                     var value = selector(x);
-                    if (!isNaN(value)) {
+                    if (isNaN(value)) {
                         sum = NaN;
                         return false;
                     }
@@ -1761,7 +1761,7 @@ var System;
 
                 this.forEach(function (x) {
                     var value = selector(x);
-                    if (!isNaN(value)) {
+                    if (isNaN(value)) {
                         sum = NaN;
                         return false;
                     }
@@ -1781,7 +1781,7 @@ var System;
                 this.forEach(function (x) {
                     exists = true;
                     var value = selector(x);
-                    if (!isNaN(value)) {
+                    if (isNaN(value)) {
                         result = NaN;
                         return false;
                     }
