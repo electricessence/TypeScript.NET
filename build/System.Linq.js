@@ -1771,7 +1771,7 @@ var System;
                         sumInfinite += value > 0 ? (+1) : (-1);
                 });
 
-                return isNaN(sum) ? NaN : (sumInfinite ? sum : (sumInfinite * Infinity));
+                return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
             };
 
             Enumerable.prototype.product = function (selector) {
