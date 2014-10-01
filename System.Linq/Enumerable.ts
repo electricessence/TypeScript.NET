@@ -2387,7 +2387,7 @@ module System.Linq
 			this.forEach(x=>
 			{
 				var value = selector(x);
-				if (!isNaN(value))
+				if (isNaN(value))
 				{
 					sum = NaN;
 					return false;
@@ -2410,7 +2410,7 @@ module System.Linq
 			{
 				exists = true;
 				var value = selector(x);
-				if (!isNaN(value))
+				if (isNaN(value))
 				{
 					result = NaN;
 					return false;
