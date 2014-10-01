@@ -1,5 +1,4 @@
-﻿/// <reference path="System.d.ts" />
-declare module System.Linq {
+﻿declare module System.Linq {
     enum EnumerableAction {
         Break = 0,
         Return = 1,

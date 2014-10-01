@@ -67,6 +67,7 @@
       <Link>- build\System.Linq.min.js</Link>
       <DependentUpon>System.Linq.js</DependentUpon>
     </Content>
+    <Content Include="Enumerable.qunit.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\build\System.Linq.min.js.map">

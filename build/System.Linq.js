@@ -1966,13 +1966,13 @@ var System;
                 var _ = this, disposed = !_.assertIsNotDisposed();
 
                 var cache;
+                var enumerator;
+
                 return new Enumerable(function () {
-                    var enumerator;
                     var index = INT_0;
 
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
-
                         if (!enumerator)
                             enumerator = _.getEnumerator();
                         if (!cache)
@@ -1994,6 +1994,9 @@ var System;
                     if (cache)
                         cache.length = 0;
                     cache = null;
+
+                    System.dispose(enumerator);
+                    enumerator = null;
                 });
             };
 

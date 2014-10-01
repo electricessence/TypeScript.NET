@@ -1206,33 +1206,33 @@ module System.Linq
 				return new WhereEnumerable(_, predicate);
 
 			return new Enumerable<T>(() =>
-			{
-				var enumerator: IEnumerator<T>;
-				var index: number = INT_0;
+				{
+					var enumerator: IEnumerator<T>;
+					var index: number = INT_0;
 
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						assertIsNotDisposed(disposed);
-
-						index = INT_0;
-						enumerator = _.getEnumerator();
-					},
-					yielder =>
-					{
-						assertIsNotDisposed(disposed);
-
-						while (enumerator.moveNext())
+					return new EnumeratorBase<T>(
+						() =>
 						{
-							if (predicate(enumerator.current, index++))
-								return yielder.yieldReturn(enumerator.current);
-						}
-						return false;
-					},
-					() => { System.dispose(enumerator); }
-					);
-			},
-				() => { disposed = true; });
+							assertIsNotDisposed(disposed);
+
+							index = INT_0;
+							enumerator = _.getEnumerator();
+						},
+						yielder =>
+						{
+							assertIsNotDisposed(disposed);
+
+							while (enumerator.moveNext())
+							{
+								if (predicate(enumerator.current, index++))
+									return yielder.yieldReturn(enumerator.current);
+							}
+							return false;
+						},
+						() => { System.dispose(enumerator); }
+						);
+				},
+					() => { disposed = true; });
 
 		}
 
@@ -2636,17 +2636,17 @@ module System.Linq
 			var _ = this, disposed: boolean = !_.assertIsNotDisposed();
 
 			var cache: T[];
+			var enumerator: IEnumerator<T>;
+
 			return new Enumerable<T>(() =>
 			{
 
-				var enumerator: IEnumerator<T>;
 				var index: number = INT_0;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
 						assertIsNotDisposed(disposed);
-
 						if (!enumerator)
 							enumerator = _.getEnumerator();
 						if (!cache)
@@ -2675,6 +2675,9 @@ module System.Linq
 					if (cache)
 						cache.length = 0;
 					cache = null;
+
+					System.dispose(enumerator);
+					enumerator = null;
 				});
 		}
 
