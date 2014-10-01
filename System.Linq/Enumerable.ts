@@ -2398,7 +2398,7 @@ module System.Linq
 					sumInfinite += value > 0 ? (+1) : (-1);
 			});
 
-			return isNaN(sum) ? NaN : (sumInfinite ? sum : (sumInfinite * Infinity));
+			return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
 		}
 
 		// Multiplication...
