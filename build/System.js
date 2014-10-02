@@ -2416,7 +2416,7 @@ var System;
                         return true;
                     });
 
-                if (count != _.count)
+                if (_.count != 0)
                     console.warn("Dictioary clear() results in mismatched count.");
 
                 return count;
