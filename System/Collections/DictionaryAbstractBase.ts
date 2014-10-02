@@ -83,9 +83,9 @@ module System.Collections {
 
 			if (count)
 				_.handleUpdate(
-					() => { keys.forEach(key=> _.removeByKey(key)); return true; });
+					() => { keys.forEach(key=> { _.removeByKey(key); }); return true; });
 
-			if (count != _.count)
+			if (_.count != 0) // After they've all been removed, then should be zero.
 				console.warn("Dictioary clear() results in mismatched count.");
 
 			return count;
