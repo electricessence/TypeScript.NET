@@ -171,3 +171,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+build/r.js
+build/build.bat
+build/build.json
