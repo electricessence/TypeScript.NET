@@ -4,6 +4,7 @@
 */
 
 module System.Collections {
+	"use strict";
 
 	function notImplementedException<T>(name:string, log:string = ""):any {
 		console.log("DictionaryAbstractBase sub-class has not overridden "+name+". " + log);
