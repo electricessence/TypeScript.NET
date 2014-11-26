@@ -1,6 +1,27 @@
 ﻿var System;
 (function (System) {
     (function (Threading) {
+        var noneToken = new CancellationToken();
+
+        var CancellationToken = (function () {
+            function CancellationToken() {
+            }
+            Object.defineProperty(CancellationToken, "none", {
+                get: function () {
+                    return noneToken;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return CancellationToken;
+        })();
+        Threading.CancellationToken = CancellationToken;
+    })(System.Threading || (System.Threading = {}));
+    var Threading = System.Threading;
+})(System || (System = {}));
+var System;
+(function (System) {
+    (function (Threading) {
         (function (Tasks) {
             (function (TaskStatus) {
                 TaskStatus[TaskStatus["Created"] = 0] = "Created";
@@ -91,3 +112,38 @@
     })(System.Threading || (System.Threading = {}));
     var Threading = System.Threading;
 })(System || (System = {}));
+var System;
+(function (System) {
+    (function (Threading) {
+        (function (Tasks) {
+            var TaskScheduler = (function () {
+                function TaskScheduler() {
+                }
+                Object.defineProperty(TaskScheduler, "current", {
+                    get: function () {
+                        return null;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(TaskScheduler, "default", {
+                    get: function () {
+                        return null;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                TaskScheduler.fromCurrentSynchronizationContext = function () {
+                    return null;
+                };
+                return TaskScheduler;
+            })();
+            Tasks.TaskScheduler = TaskScheduler;
+        })(Threading.Tasks || (Threading.Tasks = {}));
+        var Tasks = Threading.Tasks;
+    })(System.Threading || (System.Threading = {}));
+    var Threading = System.Threading;
+})(System || (System = {}));
+//# sourceMappingURL=System.Threading.js.map

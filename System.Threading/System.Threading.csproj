@@ -53,11 +53,18 @@
     <TypeScriptSourceRoot>..\System.Threading</TypeScriptSourceRoot>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
-    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+    <TypeScriptOutFile>..\build\System.Threading.js</TypeScriptOutFile>
+    <TypeScriptOutDir>..\build</TypeScriptOutDir>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+    <TypeScriptSourceRoot>..\System.Threading</TypeScriptSourceRoot>
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="CancellationToken.ts" />
     <TypeScriptCompile Include="Tasks\Task.ts" />
+    <TypeScriptCompile Include="Tasks\TaskScheduler.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="- build\" />

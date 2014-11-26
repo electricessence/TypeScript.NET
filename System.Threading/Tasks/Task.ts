@@ -1,17 +1,46 @@
 ﻿///<reference path="../../build/System.d.ts"/>
 
 /*
- * @author electricessence / https://github.com/electricessence/
- * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs
- * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * @author electricessence
+ *	https://github.com/electricessence/
+ * .NET Reference:
+ *	http://msdn.microsoft.com/en-us/library/dd321424%28v=vs.110%29.aspx
+ *	http://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs
+ * Liscensing: MIT
+ *	https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
 module System.Threading.Tasks
 {
 
-	export interface ITask<T>
+	export interface ITask<TResult> extends IDisposable, IEquatable<ITask<TResult>>
 	{
-		// TODO: Fill in the API
+		asyncState: Object;
+		creationOptions: TaskCreationOptions;
+		exception: Error;
+		//Factory: TaskFactory<TResult>;
+		id: number; // int
+		isCancelled: boolean;
+		isCompleted: boolean;
+		isFaulted: boolean;
+		result: TResult;
+		status: TaskStatus;
+
+		//configureAwait(continueOnCapturedContext: boolean): ConfiguredTaskAwaitable<TResult;
+		//continueWith >>> many overloads.
+
+		//getAwaiter(): TaskAwaiter<TResult>;
+
+		runSynchronously(scheduler?: TaskScheduler): void;
+
+		start(scheduler?: TaskScheduler): void;
+
+		wait():void;
+		wait(token: CancellationToken): void;
+		wait(milliseconds:number, token: CancellationToken): void;
+		wait(time: System.TimeSpan, token?: CancellationToken): void;
+		
+
 	}
 
 
