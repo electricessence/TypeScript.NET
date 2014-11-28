@@ -35,6 +35,9 @@ declare module System {
     interface Comparison<T> {
         (a: T, b: T): number;
     }
+    interface Func<TResult> {
+        (): TResult;
+    }
     interface Selector<TSource, TResult> {
         (source: TSource, index?: number): TResult;
     }

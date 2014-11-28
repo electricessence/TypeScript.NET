@@ -13,6 +13,7 @@ declare module System.Threading.Tasks {
         creationOptions: TaskCreationOptions;
         exception: Error;
         id: number;
+        isRunning: boolean;
         isCancelled: boolean;
         isCompleted: boolean;
         isFaulted: boolean;
@@ -22,8 +23,35 @@ declare module System.Threading.Tasks {
         start(scheduler?: TaskScheduler): void;
         wait(): void;
         wait(token: CancellationToken): void;
-        wait(milliseconds: number, token: CancellationToken): void;
-        wait(time: TimeSpan, token?: CancellationToken): void;
+        wait(milliseconds: number, token?: CancellationToken): void;
+    }
+    class Task<TResult> extends DisposableBase implements ITask<TResult> {
+        private _task;
+        private _asyncState;
+        private _cancellationToken;
+        private _creationOptions;
+        constructor(_task: (state?: Object) => TResult, _asyncState?: Object, _cancellationToken?: CancellationToken, _creationOptions?: TaskCreationOptions);
+        private _id;
+        public id : number;
+        private _result;
+        public result : TResult;
+        private _exception;
+        public exception : Error;
+        public asyncState : Object;
+        public creationOptions : TaskCreationOptions;
+        private _status;
+        public status : TaskStatus;
+        public isRunning : boolean;
+        public isCancelled : boolean;
+        public isCompleted : boolean;
+        public isFaulted : boolean;
+        public runSynchronously(scheduler?: TaskScheduler): void;
+        public start(scheduler?: TaskScheduler): void;
+        public wait(): void;
+        public wait(token: CancellationToken): void;
+        public wait(milliseconds: number, token?: CancellationToken): void;
+        public wait(time: TimeSpan, token?: CancellationToken): void;
+        public equals(other: any): boolean;
     }
     enum TaskStatus {
         Created = 0,

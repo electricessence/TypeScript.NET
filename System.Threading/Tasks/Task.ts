@@ -18,8 +18,9 @@ module System.Threading.Tasks
 		asyncState: Object;
 		creationOptions: TaskCreationOptions;
 		exception: Error;
-		//Factory: TaskFactory<TResult>;
+		//factory: TaskFactory<TResult>;
 		id: number; // int
+		isRunning: boolean;
 		isCancelled: boolean;
 		isCompleted: boolean;
 		isFaulted: boolean;
@@ -37,10 +38,118 @@ module System.Threading.Tasks
 
 		wait():void;
 		wait(token: CancellationToken): void;
-		wait(milliseconds:number, token: CancellationToken): void;
-		wait(time: System.TimeSpan, token?: CancellationToken): void;
-		
+		wait(milliseconds:number, token?: CancellationToken): void;
+		//wait(time: System.TimeSpan, token?: CancellationToken): void;
+	}
 
+	export class Task<TResult> extends DisposableBase implements ITask<TResult> {
+
+
+		constructor(
+			private _task: (state?: Object) => TResult,
+			private _asyncState?:Object,
+			private _cancellationToken?:CancellationToken,
+			private _creationOptions: TaskCreationOptions = TaskCreationOptions.None
+)
+		{
+			super();
+			this._result = undefined; // Assume 'void' in the beginning.
+			this._status = TaskStatus.Created;
+		}
+
+		private _id: number;
+		get id(): number
+		{
+			return this._id;
+		}
+
+
+		private _result: TResult;
+		get result(): TResult
+		{
+			return this._result;
+		}
+
+		private _exception: Error;
+		get exception(): Error
+		{
+			return this._exception;
+		}
+
+		get asyncState(): Object
+		{
+			return this._asyncState;
+		}
+
+		get creationOptions(): TaskCreationOptions
+		{
+			return this._creationOptions;
+		}
+
+
+		// #region State
+		private _status: TaskStatus;
+		get status(): TaskStatus
+		{
+			return this._status;
+		}
+
+		get isRunning(): boolean
+		{
+			return this._status == TaskStatus.Running;
+		}
+
+		get isCancelled(): boolean
+		{
+			return this._status == TaskStatus.Canceled;
+		}
+
+		get isCompleted(): boolean
+		{
+			return this._status == TaskStatus.RanToCompletion;
+		}
+
+		get isFaulted(): boolean
+		{
+			return this._status == TaskStatus.Faulted;
+		}
+		// #endregion
+
+
+		runSynchronously(scheduler?: TaskScheduler): void
+		{
+		}
+
+		start(scheduler?: TaskScheduler): void
+		{
+		}
+
+		wait(): void;
+		wait(token: CancellationToken): void;
+		wait(milliseconds: number, token?: CancellationToken): void;
+		wait(time: System.TimeSpan, token?: CancellationToken): void;
+		wait(time?: any, token?: CancellationToken): void
+		{
+			if (time instanceof CancellationToken)
+			{
+				token = time;
+			}
+
+			var milliseconds = Types.isNumber(time) ? time : 0;
+
+			if (time instanceof System.TimeSpan)
+			{
+				milliseconds = (<System.TimeSpan>time).milliseconds;
+			}
+
+			// TODO: Above is just the scaffold.  Next up, respond to parameters.
+
+		}
+
+		equals(other: any):boolean
+		{
+			return this==other || this.id == other.id;
+		}
 	}
 
 

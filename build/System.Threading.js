@@ -19,10 +19,133 @@
     })(System.Threading || (System.Threading = {}));
     var Threading = System.Threading;
 })(System || (System = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 var System;
 (function (System) {
     (function (Threading) {
         (function (Tasks) {
+            var Task = (function (_super) {
+                __extends(Task, _super);
+                function Task(_task, _asyncState, _cancellationToken, _creationOptions) {
+                    if (typeof _creationOptions === "undefined") { _creationOptions = 0 /* None */; }
+                    _super.call(this);
+                    this._task = _task;
+                    this._asyncState = _asyncState;
+                    this._cancellationToken = _cancellationToken;
+                    this._creationOptions = _creationOptions;
+                    this._result = undefined;
+                    this._status = 0 /* Created */;
+                }
+                Object.defineProperty(Task.prototype, "id", {
+                    get: function () {
+                        return this._id;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "result", {
+                    get: function () {
+                        return this._result;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "exception", {
+                    get: function () {
+                        return this._exception;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "asyncState", {
+                    get: function () {
+                        return this._asyncState;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "creationOptions", {
+                    get: function () {
+                        return this._creationOptions;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "status", {
+                    get: function () {
+                        return this._status;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "isRunning", {
+                    get: function () {
+                        return this._status == 3 /* Running */;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "isCancelled", {
+                    get: function () {
+                        return this._status == 7 /* Canceled */;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "isCompleted", {
+                    get: function () {
+                        return this._status == 6 /* RanToCompletion */;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(Task.prototype, "isFaulted", {
+                    get: function () {
+                        return this._status == 8 /* Faulted */;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Task.prototype.runSynchronously = function (scheduler) {
+                };
+
+                Task.prototype.start = function (scheduler) {
+                };
+
+                Task.prototype.wait = function (time, token) {
+                    if (time instanceof Threading.CancellationToken) {
+                        token = time;
+                    }
+
+                    var milliseconds = System.Types.isNumber(time) ? time : 0;
+
+                    if (time instanceof System.TimeSpan) {
+                        milliseconds = time.milliseconds;
+                    }
+                };
+
+                Task.prototype.equals = function (other) {
+                    return this == other || this.id == other.id;
+                };
+                return Task;
+            })(System.DisposableBase);
+            Tasks.Task = Task;
+
             (function (TaskStatus) {
                 TaskStatus[TaskStatus["Created"] = 0] = "Created";
 

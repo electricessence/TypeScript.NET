@@ -26,6 +26,11 @@ module System {
 		(a: T, b :T): number;
 	}
 
+	export interface Func<TResult>
+	{
+		(): TResult;
+	}
+
 	export interface Selector<TSource, TResult>
 	{
 		(source: TSource, index?:number): TResult;
