@@ -49,6 +49,7 @@ https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
 
 # In Progress
 Currently working on System.Threading.
+Why?  Because the Task<T> class is actually very useful in it's structure.  When wanting to create deferred or queued actions, it's useful to be able to dispose of ('cancel') an action before it executes, or even acquire status of a task.  This may also be useful if appropriately structured with WebWorkers or node.js.
 
 # Future
 Planning to make this a bower and other package systems (easy) install.
