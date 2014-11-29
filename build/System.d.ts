@@ -534,7 +534,7 @@ declare module System {
     }
 }
 declare module System {
-    interface ILazy<T> extends IDisposable {
+    interface ILazy<T> extends IDisposable, IEquatable<ILazy<T>> {
         value: T;
         isValueCreated: boolean;
     }
@@ -542,12 +542,15 @@ declare module System {
         private _closure;
         private _isValueCreated;
         private _value;
-        constructor(_closure: () => T);
+        constructor(_closure: Func<T>);
         public isValueCreated : boolean;
-        public reset(): void;
+        public canReset : boolean;
+        public reset(throwIfCannotReset?: boolean): boolean;
         public value : T;
-        public valueOnce(): T;
+        public getValue(clearClosureReference?: boolean): T;
         public _onDispose(): void;
+        public equals(other: Lazy<T>): boolean;
+        public valueEquals(other: Lazy<T>): boolean;
     }
 }
 declare module System.Runtime.Serialization {

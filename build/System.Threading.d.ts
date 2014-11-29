@@ -1,5 +1,4 @@
-﻿/// <reference path="System.d.ts" />
-declare module System.Threading {
+﻿declare module System.Threading {
     class CancellationToken {
         public canBeCancelled: boolean;
         public isCancellationRequested: boolean;
@@ -51,7 +50,7 @@ declare module System.Threading.Tasks {
         public wait(token: CancellationToken): void;
         public wait(milliseconds: number, token?: CancellationToken): void;
         public wait(time: TimeSpan, token?: CancellationToken): void;
-        public equals(other: any): boolean;
+        public equals(other: Task<TResult>): boolean;
     }
     enum TaskStatus {
         Created = 0,

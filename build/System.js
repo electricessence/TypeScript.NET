@@ -2915,6 +2915,8 @@ var System;
     })(System.DisposableBase);
     System.EventDispatcher = EventDispatcher;
 })(System || (System = {}));
+var DisposableBase = System.DisposableBase;
+
 var System;
 (function (System) {
     var Lazy = (function (_super) {
@@ -2931,42 +2933,70 @@ var System;
             configurable: true
         });
 
-        Lazy.prototype.reset = function () {
-            var _ = this;
-            if (!_._closure)
-                throw new Error("Cannot reset.  This Lazy has de-referenced its closure.");
+        Object.defineProperty(Lazy.prototype, "canReset", {
+            get: function () {
+                return !this.wasDisposed && !!(this._closure);
+            },
+            enumerable: true,
+            configurable: true
+        });
 
-            _._isValueCreated = false;
-            _._value = null;
+        Lazy.prototype.reset = function (throwIfCannotReset) {
+            var _ = this;
+
+            if (throwIfCannotReset)
+                _.assertIsNotDisposed();
+
+            if (!_._closure) {
+                if (throwIfCannotReset)
+                    throw new Error("Cannot reset.  This Lazy has already de-referenced its closure.");
+                return false;
+            } else {
+                _._isValueCreated = false;
+                _._value = null;
+                return true;
+            }
         };
 
         Object.defineProperty(Lazy.prototype, "value", {
             get: function () {
-                var _ = this;
+                return this.getValue();
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Lazy.prototype.getValue = function (clearClosureReference) {
+            var _ = this;
+
+            _.assertIsNotDisposed();
+
+            try  {
                 if (!_._isValueCreated && _._closure) {
                     var v = _._closure();
                     _._value = v;
                     _._isValueCreated = true;
                     return v;
                 }
-
-                return _._value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-
-        Lazy.prototype.valueOnce = function () {
-            try  {
-                return this.value;
             } finally {
-                this._closure = null;
+                if (clearClosureReference)
+                    _._closure = null;
             }
+
+            return _._value;
         };
 
         Lazy.prototype._onDispose = function () {
             this._closure = null;
             this._value = null;
+        };
+
+        Lazy.prototype.equals = function (other) {
+            return this == other;
+        };
+
+        Lazy.prototype.valueEquals = function (other) {
+            return this.equals(other) || this.value === other.value;
         };
         return Lazy;
     })(System.DisposableBase);

@@ -25,6 +25,10 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var DisposableBase = System.DisposableBase;
+var TimeSpan = System.TimeSpan;
+var TaskScheduler = System.Threading.Tasks.TaskScheduler;
+
 var System;
 (function (System) {
     (function (Threading) {

@@ -10,6 +10,11 @@
  *	https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
+// Ensure this is loaded before Task<T>.
+import DisposableBase = System.DisposableBase;
+import TimeSpan = System.TimeSpan;
+import TaskScheduler = System.Threading.Tasks.TaskScheduler;
+
 module System.Threading.Tasks
 {
 
@@ -127,7 +132,7 @@ module System.Threading.Tasks
 		wait(): void;
 		wait(token: CancellationToken): void;
 		wait(milliseconds: number, token?: CancellationToken): void;
-		wait(time: System.TimeSpan, token?: CancellationToken): void;
+		wait(time: TimeSpan, token?: CancellationToken): void;
 		wait(time?: any, token?: CancellationToken): void
 		{
 			if (time instanceof CancellationToken)
@@ -137,16 +142,16 @@ module System.Threading.Tasks
 
 			var milliseconds = Types.isNumber(time) ? time : 0;
 
-			if (time instanceof System.TimeSpan)
+			if (time instanceof TimeSpan)
 			{
-				milliseconds = (<System.TimeSpan>time).milliseconds;
+				milliseconds = (<TimeSpan>time).milliseconds;
 			}
 
 			// TODO: Above is just the scaffold.  Next up, respond to parameters.
 
 		}
 
-		equals(other: any):boolean
+		equals(other: Task<TResult>):boolean
 		{
 			return this==other || this.id == other.id;
 		}
