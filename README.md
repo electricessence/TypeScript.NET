@@ -48,8 +48,7 @@ NOTE: The amd versions aren't yet updated via a build step so it's more reliable
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
 
 # Ready for Beta Level Use
-**System.Linq**
-Nearly 100% of the original linq.js is present with some exceptions.  There's no string to lamda conversion because it's unnecessary when using TypeScript.  Unit test coverage is ongoing.  Please report any issues you might find and they will be fixed immediately.
+**System.Linq**: Nearly 100% of the original linq.js is present with some exceptions.  There's no string to lamda conversion because it's unnecessary when using TypeScript.  Unit test coverage is ongoing.  Please report any issues you might find and they will be fixed immediately.
 
 # In Progress
 Currently working on System.Threading.
