@@ -2374,10 +2374,11 @@ var System;
                 var index = INT_0;
 
                 return new System.Collections.EnumeratorBase(function () {
+                    index = INT_0;
                     buffer = [];
                     indexes = [];
                     Enumerable.forEach(_.source, function (item, i) {
-                        buffer[index] = item;
+                        buffer[i] = item;
                         indexes[i] = i;
                     });
                     var sortContext = SortContext.create(_);

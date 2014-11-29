@@ -1,4 +1,5 @@
-﻿declare module System.Threading {
+﻿/// <reference path="System.d.ts" />
+declare module System.Threading {
     class CancellationToken {
         public canBeCancelled: boolean;
         public isCancellationRequested: boolean;

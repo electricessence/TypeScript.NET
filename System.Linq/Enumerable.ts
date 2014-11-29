@@ -3146,16 +3146,17 @@ module System.Linq
 			var _ = this;
 			var buffer: T[];
 			var indexes: number[];
-			var index = INT_0;
+			var index: number = INT_0;
 
 			return new System.Collections.EnumeratorBase<T>(
 				() =>
 				{
+					index = INT_0;
 					buffer = [];
 					indexes = [];
 					Enumerable.forEach(_.source, (item, i) =>
 					{
-						buffer[index] = item;
+						buffer[i] = item;
 						indexes[i] = i;
 					});
 					var sortContext = SortContext.create(_);
