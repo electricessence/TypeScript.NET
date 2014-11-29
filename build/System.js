@@ -113,7 +113,7 @@ var System;
         if (a > b)
             return (+1) | 0;
 
-        if (b < a)
+        if (b > a)
             return (-1) | 0;
 
         return NaN;
