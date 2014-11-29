@@ -51,7 +51,7 @@ https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
 Currently working on System.Threading.
 
 # Future
-Planning to make this a bower (and possibly NPM) install.
+Planning to make this a bower and other package systems (easy) install.
 
 Full documentation and references (dreaming).
 
