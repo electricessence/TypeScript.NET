@@ -42,9 +42,13 @@ For example, System has the following files in the build directory:
 /build/System.min.js
 /build/amd/System.js
 ```
+NOTE: The amd versions aren't yet updated via a build step so it's more reliable to use the non amd versions and use a shim.
 
 # Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
+
+# In Progress
+Currently working on System.Threading.
 
 # Future
 Planning to make this a bower (and possibly NPM) install.
