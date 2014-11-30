@@ -5,27 +5,33 @@
 	var source = [
 		{
 			a: 1,
-			b: 2
+			b: 2,
+			c: "a"
 		},
 		{
 			a: 1,
-			b: 1
+			b: 1,
+			c: "b"
 		},
 		{
 			a: 1,
-			b: 3
+			b: 3,
+			c: "c"
 		},
 		{
 			a: 2,
-			b: 2
+			b: 2,
+			c: "d"
 		},
 		{
 			a: 2,
-			b: 1
+			b: 1,
+			c: "e"
 		},
 		{
 			a: 2,
-			b: 3
+			b: 3,
+			c: "f"
 		},
 	];
 
@@ -88,5 +94,54 @@
 			assert.equal(B[i].b, 3, "Last two 'b' values should be 3 when ordered by 'b'.");
 
 	});
+
+
+	QUnit.test("Enumerable.orderByDescending", function (assert) {
+
+		var source = sourceEnumerable.reverse();
+
+		var A = source.orderByDescending(function (o) { return o.a }).toArray();
+		for (var i = 0; i < 3; i++)
+			assert.equal(A[i].a, 2, "First three 'a' values should be 2 when ordered by 'a'.");
+		for (var i = 3; i < 6; i++)
+			assert.equal(A[i].a, 1, "Last three 'a' values should be 1 when ordered by 'a'.");
+
+		var B = source.orderByDescending(function (o) { return o.b }).toArray();
+		for (var i = 0; i < 2; i++)
+			assert.equal(B[i].b, 3, "First two 'b' values should be 3 when ordered by 'b'.");
+		for (var i = 2; i < 4; i++)
+			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
+		for (var i = 4; i < 6; i++)
+			assert.equal(B[i].b, 1, "Last two 'b' values should be 1 when ordered by 'b'.");
+
+	});
+
+	QUnit.test("Enumerable.orderBy.thenBy", function (assert) {
+
+		var B = sourceEnumerable
+			.orderBy(function (o) { return o.b })
+			.thenBy(function (o) { return o.c })
+			.toArray();
+
+		for (var i = 0; i < 2; i++)
+			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
+		for (var i = 2; i < 4; i++)
+			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
+		for (var i = 4; i < 6; i++)
+			assert.equal(B[i].b, 3, "Last two 'b' values should be 3 when ordered by 'b'.");
+
+		assert.equal(B[0].c, "b");
+		assert.equal(B[1].c, "e");
+
+		assert.equal(B[2].c, "a");
+		assert.equal(B[3].c, "d");
+
+		assert.equal(B[4].c, "c");
+		assert.equal(B[5].c, "f");
+
+
+	});
+
+
 
 })();
