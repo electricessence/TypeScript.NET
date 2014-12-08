@@ -52,6 +52,9 @@ declare module System.Threading.Tasks {
         public wait(milliseconds: number, token?: CancellationToken): void;
         public wait(time: TimeSpan, token?: CancellationToken): void;
         public equals(other: Task<TResult>): boolean;
+        private _scheduler;
+        public _executingTaskScheduler : ITaskScheduler;
+        public _executeEntry(bPreventDoubleExecution: boolean): boolean;
     }
     enum TaskStatus {
         Created = 0,
@@ -93,15 +96,24 @@ declare module System.Threading.Tasks {
     interface ITaskScheduler {
         id: number;
         maximumConcurrencyLevel: number;
-        getScheduledTasks(): Collections.IEnumerable<ITask<any>>;
-        queueTask(task: ITask<any>): void;
-        tryDequeue(task: ITask<any>): boolean;
-        tryExecuteTask(task: ITask<any>): boolean;
-        tryExecuteTaskInline(task: ITask<any>): boolean;
+        queueTask(task: Task<any>): void;
     }
-    class TaskScheduler {
+    class TaskScheduler implements ITaskScheduler {
+        private _maximumConcurrencyLevel;
+        constructor(_maximumConcurrencyLevel?: number);
         static current : ITaskScheduler;
         static default : ITaskScheduler;
         static fromCurrentSynchronizationContext(): ITaskScheduler;
+        private _id;
+        public id : number;
+        public maximumConcurrencyLevel : number;
+        private _queue;
+        public _getScheduledTasks(): Collections.IArray<ITask<any>>;
+        private _workerId;
+        private _ensureWorkerReady();
+        public queueTask(task: Task<any>): void;
+        public _tryDequeue(task: Task<any>): boolean;
+        public _tryExecuteTask(task: Task<any>): boolean;
+        public tryExecuteTaskInline(task: Task<any>, taskWasPreviouslyQueued: boolean): boolean;
     }
 }

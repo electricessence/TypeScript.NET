@@ -146,6 +146,18 @@ var System;
                 Task.prototype.equals = function (other) {
                     return this == other || this.id == other.id;
                 };
+
+                Object.defineProperty(Task.prototype, "_executingTaskScheduler", {
+                    get: function () {
+                        return this._scheduler;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Task.prototype._executeEntry = function (bPreventDoubleExecution) {
+                    return true;
+                };
                 return Task;
             })(System.DisposableBase);
             Tasks.Task = Task;
@@ -239,16 +251,28 @@ var System;
     })(System.Threading || (System.Threading = {}));
     var Threading = System.Threading;
 })(System || (System = {}));
+var Queue = System.Collections.Queue;
+
 var System;
 (function (System) {
     (function (Threading) {
         (function (Tasks) {
+            var _lastId = 0 | 0;
+            var _defaultScheduler;
+            var _currentScheduler;
+
+            var MAX_INT32_SIGNED = 2147483647 | 0;
+
             var TaskScheduler = (function () {
-                function TaskScheduler() {
+                function TaskScheduler(_maximumConcurrencyLevel) {
+                    if (typeof _maximumConcurrencyLevel === "undefined") { _maximumConcurrencyLevel = MAX_INT32_SIGNED; }
+                    this._maximumConcurrencyLevel = _maximumConcurrencyLevel;
+                    this._id = ++_lastId;
+                    this._queue = new Queue();
                 }
                 Object.defineProperty(TaskScheduler, "current", {
                     get: function () {
-                        return null;
+                        return _currentScheduler || TaskScheduler.default;
                     },
                     enumerable: true,
                     configurable: true
@@ -256,7 +280,9 @@ var System;
 
                 Object.defineProperty(TaskScheduler, "default", {
                     get: function () {
-                        return null;
+                        if (!_defaultScheduler)
+                            _defaultScheduler = new TaskScheduler();
+                        return _defaultScheduler;
                     },
                     enumerable: true,
                     configurable: true
@@ -264,6 +290,65 @@ var System;
 
                 TaskScheduler.fromCurrentSynchronizationContext = function () {
                     return null;
+                };
+
+                Object.defineProperty(TaskScheduler.prototype, "id", {
+                    get: function () {
+                        return this._id;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                Object.defineProperty(TaskScheduler.prototype, "maximumConcurrencyLevel", {
+                    get: function () {
+                        return this._maximumConcurrencyLevel;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+
+                TaskScheduler.prototype._getScheduledTasks = function () {
+                    return this._queue.toArray();
+                };
+
+                TaskScheduler.prototype._ensureWorkerReady = function () {
+                    var _this = this;
+                    var _ = this;
+                    if (!_._workerId) {
+                        _._workerId = setTimeout(function () {
+                            _._workerId = 0;
+                            _currentScheduler = _this;
+                            while (_._queue.count)
+                                _._tryExecuteTask(_._queue.dequeue());
+                            _currentScheduler = null;
+                        });
+                    }
+                };
+
+                TaskScheduler.prototype.queueTask = function (task) {
+                    if (!task)
+                        throw new Error("ArgumentNullException");
+                    this._queue.enqueue(task);
+                    this._ensureWorkerReady();
+                };
+
+                TaskScheduler.prototype._tryDequeue = function (task) {
+                    return this._queue.remove(task) !== 0;
+                };
+
+                TaskScheduler.prototype._tryExecuteTask = function (task) {
+                    if (task._executingTaskScheduler != this)
+                        throw new Error("Excecuted Task on wrong TaskScheduler.");
+
+                    return task._executeEntry(true);
+                };
+
+                TaskScheduler.prototype.tryExecuteTaskInline = function (task, taskWasPreviouslyQueued) {
+                    if (taskWasPreviouslyQueued && !this._tryDequeue(task))
+                        return false;
+
+                    return this._tryExecuteTask(task);
                 };
                 return TaskScheduler;
             })();
