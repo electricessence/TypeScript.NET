@@ -3,5 +3,10 @@
   "version": "1.0.0",
   "author": "Oren Ferrari",
   "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
-  "private": false
+  "private": false,
+  "devDependencies": {
+    "gulp": "~3.8.11",
+    "gulp-tsc": "~0.9.2",
+    "gulp-shell": "0.3.0"
+  }
 }
