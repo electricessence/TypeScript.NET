@@ -3,7 +3,7 @@
 /*
 * @author electricessence / https://github.com/electricessence/
 * Originally based upon .NET source but with many additions and improvements.
-* Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
 * Contains: ITimeMeasurement, ClockTime, TimeUnit, TimeUnitValue, and TimeSpan
 */
 

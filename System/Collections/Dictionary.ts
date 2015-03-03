@@ -4,7 +4,7 @@
 /*
 * @author electricessence / https://github.com/electricessence/
 * Original: http://linqjs.codeplex.com/
-* Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
 */
 
 module System.Collections {

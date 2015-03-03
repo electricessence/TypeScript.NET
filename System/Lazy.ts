@@ -2,7 +2,7 @@
 
 /*
  * @author electricessence / https://github.com/electricessence/
- * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
 // Ensure this is loaded before Lazy<T>.

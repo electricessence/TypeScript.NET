@@ -5,7 +5,7 @@
 /*
  * @author electricessence / https://github.com/electricessence/
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/stringbuilder.cs
- * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
 import IDisposable = System.IDisposable;

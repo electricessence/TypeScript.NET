@@ -3,7 +3,7 @@
 /*
  * @author electricessence / https://github.com/electricessence/
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/threading/Tasks/Task.cs
- * Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
 import IArray = System.Collections.IArray;

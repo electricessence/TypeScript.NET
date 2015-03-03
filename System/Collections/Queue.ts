@@ -3,7 +3,7 @@
 /*
 * @author electricessence / https://github.com/electricessence/
 * Based Upon: http://referencesource.microsoft.com/#System/compmod/system/collections/generic/queue.cs
-* Liscensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
 */
 
 module System.Collections
