@@ -13,11 +13,10 @@ var gulp = require('gulp');
 
 	var srcPaths = ['**/*'+TS];
 
-	['Globalization/TimeSpanFormat'+TS]
-		.forEach(function(f) {
-			srcPaths.push('!' + f);
-		});
-
+	//['Globalization/TimeSpanFormat'+TS]
+	//	.forEach(function(f) {
+	//		srcPaths.push('!' + f);
+	//	});
 
 	var typescript = require('gulp-tsc');
 	var uglify = require('gulp-uglify');
@@ -57,4 +56,4 @@ var gulp = require('gulp');
 		'default', [TASK_COMPILE, TASK_COMPRESS], function() {
 		});
 
-})('System');
+})('System.Linq');
