@@ -174,3 +174,15 @@ FakesAssemblies/
 build/r.js
 build/build.bat
 build/build.json
+
+# Mac
+.DS_Store
+
+# Nodejs
+node_modules
+bower_components
+
+# IntelliJ
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries

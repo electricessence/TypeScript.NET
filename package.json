@@ -1,0 +1,7 @@
+{
+  "name": "TypeScript.NET",
+  "version": "1.0.0",
+  "author": "Oren Ferrari",
+  "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
+  "private": false
+}

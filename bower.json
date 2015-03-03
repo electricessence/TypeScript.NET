@@ -1,0 +1,10 @@
+{
+  "name": "TypeScript.NET",
+  "version": "1.0.0",
+  "ignore": [
+    ".gitignore",
+    ".idea",
+    ".nuget",
+    "gulpfile.js"
+  ]
+}
