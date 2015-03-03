@@ -2795,7 +2795,7 @@ module System.Linq
 				return [];
 
 			if (s instanceof Array)
-				return (<Array<T>>s).slice();
+				return (<any>s).slice();
 
 			var len = s.length, result: T[] = new Array<T>(len);
 			for (var i = INT_0; i < len; ++i)
