@@ -20,8 +20,8 @@ var gulp = require('gulp');
 
 	var typescript = require('gulp-tsc');
 	var uglify = require('gulp-uglify');
-	var rename = require("gulp-rename");
-	var sourcemaps = require("gulp-sourcemaps");
+	var rename = require('gulp-rename');
+	var sourcemaps = require('gulp-sourcemaps');
 
 	gulp.task(
 		TASK_COMPILE, function() {
@@ -42,7 +42,7 @@ var gulp = require('gulp');
 
 
 	gulp.task(
-		TASK_COMPRESS, [TASK_COMPILE], function() { // Have 'compile' as a dependency to ensure constraints.
+		TASK_COMPRESS, [TASK_COMPILE], function() { // Have 'TASK_COMPILE' as a dependency to ensure constraints.
 			gulp.src(BUILD_FOLDER + JS_OUT)
 				.pipe(sourcemaps.init({loadMaps:true}))
 				.pipe(uglify())
