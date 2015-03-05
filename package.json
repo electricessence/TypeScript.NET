@@ -8,6 +8,7 @@
   "devDependencies": {
     "gulp": "~3.8.11",
     "gulp-minify": "0.0.5",
+    "gulp-r": "^1.1.2",
     "gulp-rename": "^1.2.0",
     "gulp-sourcemaps": "^1.5.0",
     "gulp-tsc": "~0.9.2",
