@@ -40,19 +40,25 @@ For example, System has the following files in the build directory:
 ```
 /build/System.js
 /build/System.min.js
-/build/amd/System.js
 ```
-NOTE: The amd versions aren't yet updated via a build step so it's more reliable to use the non amd versions and use a shim.
+
+Also if you would prefer to use AMD/Require.js you can use:
+```
+/amd/System.js
+/amd/System.Linq.js
+```
+
+You can also see an example of how to use a shim:
+```
+/build/test/amd-shimmed/
+```
+
 
 # Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
 
 # Ready for Beta Level Use
 **System.Linq**: Nearly 100% of the original linq.js is present with some exceptions.  There's no string to lamda conversion because it's unnecessary when using TypeScript.  Enumerable is currently a static class with utility for calling Enumerable(collection).  Instead it is more explicit by calling Enumerable.fromArray(array).  Unit test coverage is ongoing.  Please report any issues you might find and they will be fixed immediately.
-
-# In Progress
-Currently working on System.Threading.
-Why?  Because the Task<T> class is actually very useful in it's structure.  When wanting to create deferred or queued actions, it's useful to be able to dispose of ('cancel') an action before it executes, or even acquire status of a task.  This may also be useful if appropriately structured with WebWorkers or node.js.
 
 # Future
 Planning to make this a bower and other package systems (easy) install.
