@@ -1,8 +1,9 @@
 requirejs.config(
 	{
+		baseUrl : "../../",
 		paths: {
-			"TypeScript.NET/System": "../System.min",
-			"TypeScript.NET/System.Linq": "../System.Linq.min"
+			"TypeScript.NET/System": "System.min",
+			"TypeScript.NET/System.Linq": "System.Linq.min"
 		},
 		shim: {
 			"TypeScript.NET/System": {
