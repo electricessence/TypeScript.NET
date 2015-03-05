@@ -46,9 +46,9 @@ module.exports = function(gulp) {
 
 		var JS_OUT = namespace + JS;
 
-		var srcPaths = ['**/*' + TS];
+		var srcPaths = [SOURCE_ROOT + '/**/*' + TS];
 
-		['Globalization/TimeSpanFormat' + TS]
+		[SOURCE_ROOT + '/Globalization/TimeSpanFormat' + TS]
 			.forEach(
 			function(f) {
 				srcPaths.push('!' + f);
