@@ -8,9 +8,9 @@
 
 module System.Xml.Linq
 {
-	export class XAttribute {
-		constructor(name:string) {
-
+	export class XAttribute extends XObject {
+		constructor() {
+			super();
 		}
 	}
 }

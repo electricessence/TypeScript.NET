@@ -40,7 +40,7 @@ module System.Xml.Linq
 
 	// #endregion
 
-	function mayHaveAncestor(e:any):boolean {
+	function mayHaveAncestor(e: XObject):boolean {
 		switch(e.nodeType) {
 			case XmlNodeType.Element:
 			case XmlNodeType.Comment:
@@ -54,18 +54,36 @@ module System.Xml.Linq
 		}
 	}
 
+	function mayHaveDescendant(e: XObject): boolean
+	{
+		switch (e.nodeType)
+		{
+			case XmlNodeType.Element:
+			case XmlNodeType.Comment:
+			case XmlNodeType.ProcessingInstruction:
+			case XmlNodeType.Text:
+			case XmlNodeType.CDATA:
+			case XmlNodeType.Entity:
+				return true;
+			default:
+				return false;
+		}
+	}
 
-	export class XEnumerable<T> extends System.Linq.Enumerable<T> {
 
-		protected source:Enumerable<T>;
+	export class XEnumerable<T extends XObject> extends System.Linq.Enumerable<T>
+	{
+
+		private source:Enumerable<T>;
 
 		constructor(source:Enumerable<T>)
 		{
-			super(<any>source);
+			// TODO: Make sure this is correct.
+			super(source.getEnumerator);
 			this.source = source;
 		}
 
-		static asXEnumerable(source:Enumerable<T>):XEnumerable<T> {
+		static asXEnumerable<T extends XObject>(source:Enumerable<T>):XEnumerable<T> {
 			return new XEnumerable<T>(source);
 		}
 
@@ -117,61 +135,42 @@ module System.Xml.Linq
 
 
 
-	descendantNodes():Enumerable<XNode> {
+		descendantNodes(): Enumerable<XElement> {
 		var source:Enumerable<T> = this.source || this;
-	return XEnumerable.asXEnumerable(source
-		.selectMany(
-		function (e) {
-			if (e.nodeType &&
-				(e.nodeType === 'Element' ||
-				e.nodeType === 'Comment' ||
-				e.nodeType === 'ProcessingInstruction' ||
-				e.nodeType === 'Text' ||
-				e.nodeType === 'CDATA' ||
-				e.nodeType === 'Entity')) {
-				return e.descendantNodes();
-			}
-			return Enumerable.empty();
-		}));
+		return XEnumerable.asXEnumerable(
+			source.selectMany(
+				(e) => mayHaveDescendant(e)
+					? e.descendantNodes()
+					: Enumerable.empty<XElement>()
+				));			
 	}
 
-	descendantNodesAndSelf() {
+		descendantNodesAndSelf(): Enumerable<XElement> {
 
 		var source:Enumerable<T> = this.source || this;
-		return XEnumerable.asXEnumerable(source
-		.selectMany(
-		function (e) {
-			if (e.nodeType &&
-				(e.nodeType === 'Element' ||
-				e.nodeType === 'Comment' ||
-				e.nodeType === 'ProcessingInstruction' ||
-				e.nodeType === 'Text' ||
-				e.nodeType === 'CDATA' ||
-				e.nodeType === 'Entity')) {
-				return e.descendantNodesAndSelf();
-			}
-			return Enumerable.empty();
-		}));
+		return XEnumerable.asXEnumerable(
+			source.selectMany(
+				(e) => mayHaveDescendant(e)
+					? e.descendantNodes()
+					: Enumerable.empty<XElement>()
+				));		
 }
 
-	descendants(xname) {
-	var source, result;
+		descendants(xname: string): Enumerable<XElement>;
+		descendants(xname: XName): Enumerable<XElement>;
+		descendants(xname: any): Enumerable<XElement>
+		{
 
-	if (xname && typeof xname === 'string') {
-		xname = new Ltxml.XName(xname);
-	}
-	source = this.source ? this.source : this;  //ignore jslint
-	result = source
-		.selectMany(
-		function (e) {
-			if (e.nodeType && e.nodeType === 'Element') {
-				return e.descendants(xname);
-			}
-			return Enumerable.empty();
-		})
-		.asXEnumerable();
-	return result;
-}
+			var xn: XName = XName.from(xname);
+			var source: Enumerable<T> = this.source || this;
+			return XEnumerable.asXEnumerable(
+				source.selectMany(
+					(e) => e.nodeType === XmlNodeType.Element
+						? e.descendants(xn)
+						: Enumerable.empty<XElement>()
+					));
+		}
+
 
 	descendantsAndSelf(xname) {
 	var source, result;

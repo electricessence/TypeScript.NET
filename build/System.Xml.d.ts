@@ -1,3 +1,10 @@
+﻿declare module System.Xml {
+    interface IXmlLineInfo {
+        lineNumber: number;
+        linePosition: number;
+        hasLineInfo(): boolean;
+    }
+}
 declare module System.Xml {
     enum XmlNodeType {
         Attribute = 0,

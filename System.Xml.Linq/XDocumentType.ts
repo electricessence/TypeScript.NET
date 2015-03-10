@@ -1,4 +1,4 @@
-///<reference path="../build/System.d.ts"/>
+﻿///<reference path="../build/System.d.ts"/>
 ///<reference path="../build/System.Linq.d.ts"/>
 
 /*
@@ -8,9 +8,11 @@
 
 module System.Xml.Linq
 {
-	export class XElement extends XContainer {
-		constructor() {
+	export class XDocumentType extends XNode
+	{
+		constructor()
+		{
 			super();
 		}
 	}
-}
+} 

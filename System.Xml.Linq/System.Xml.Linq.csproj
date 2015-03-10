@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{2EC9A016-E425-42E8-8E7F-62CC4AF55415}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>System.Xml.Linq</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
+    <TypeScriptOutDir>..\build</TypeScriptOutDir>
+    <TypeScriptOutFile>..\build\System.Xml.Linq.js</TypeScriptOutFile>
+    <TypeScriptSourceRoot>..\System.Xml.Linq</TypeScriptSourceRoot>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>none</TypeScriptModuleKind>
+    <TypeScriptOutDir>..\build</TypeScriptOutDir>
+    <TypeScriptOutFile>..\build\System.Xml.Linq.js</TypeScriptOutFile>
+    <TypeScriptSourceRoot>..\System.Xml.Linq</TypeScriptSourceRoot>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\build\System.Xml.Linq.js">
+      <Link>- build\System.Xml.Linq.js</Link>
+    </Content>
+    <Content Include="..\build\System.Xml.Linq.min.js">
+      <Link>- build\System.Xml.Linq.min.js</Link>
+      <DependentUpon>System.Xml.Linq.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\build\System.Xml.Linq.min.js.map">
+      <Link>- build\System.Xml.Linq.min.js.map</Link>
+      <DependentUpon>System.Xml.Linq.min.js</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="IAnnotation.ts" />
+    <TypeScriptCompile Include="XAttribute.ts" />
+    <TypeScriptCompile Include="XCData.ts" />
+    <TypeScriptCompile Include="XComment.ts" />
+    <TypeScriptCompile Include="XContainer.ts" />
+    <TypeScriptCompile Include="XDeclaration.ts" />
+    <TypeScriptCompile Include="XDocument.ts" />
+    <TypeScriptCompile Include="XDocumentType.ts" />
+    <TypeScriptCompile Include="XElement.ts" />
+    <TypeScriptCompile Include="XEntity.ts" />
+    <TypeScriptCompile Include="XEnumerable.ts" />
+    <TypeScriptCompile Include="XName.ts" />
+    <TypeScriptCompile Include="XNamespace.ts" />
+    <TypeScriptCompile Include="XNode.ts" />
+    <TypeScriptCompile Include="XObject.ts" />
+    <TypeScriptCompile Include="XProcessingInstruction.ts" />
+    <TypeScriptCompile Include="XText.ts" />
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

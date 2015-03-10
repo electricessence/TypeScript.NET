@@ -8,9 +8,30 @@
 
 module System.Xml.Linq
 {
-	export class XName {
-		constructor(name:string) {
+	export class XName
+		implements System.IEquatable<XName>
+		//,ISerializable
+	{
+		constructor(
+			private _localName: string,
+			private _namespace: XNamespace = null)
+		{
 
+		}
+
+		get localName(): string
+		{
+			return this._localName;
+		}
+
+		get namespace(): XNamespace
+		{
+			return this._namespace || XNamespace.None;
+		}
+
+		get namespaceName(): string
+		{
+			return this.namespace.namespaceName;
 		}
 
 		static from(xname:any):XName {
@@ -23,6 +44,11 @@ module System.Xml.Linq
 			}
 
 			return xn;
+		}
+
+		equals(other: XName): boolean
+		{
+			return this._localName === other.localName;
 		}
 	}
 }

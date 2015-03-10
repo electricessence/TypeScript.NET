@@ -112,4 +112,6 @@ module System.Xml
 		 */
 		XmlDeclaration
 	}
+
+	Object.freeze(XmlNodeType);
 }
