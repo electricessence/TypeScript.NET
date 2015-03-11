@@ -15,21 +15,23 @@ module System.Linq
 	import Selector = System.Selector;
 	import Action = System.Action;
 
-	import ArrayUtility = System.Collections.ArrayUtility;
+	import Collections = System.Collections;
 
-	import IEnumerator = System.Collections.IEnumerator;
-	import EnumeratorBase = System.Collections.EnumeratorBase;
+	import ArrayUtility = Collections.ArrayUtility;
 
-	import IEnumerable = System.Collections.IEnumerable;
+	import IEnumerator = Collections.IEnumerator;
+	import EnumeratorBase = Collections.EnumeratorBase;
 
-	import IMap = System.Collections.IMap;
-	import Dictionary = System.Collections.Dictionary;
-	import Queue = System.Collections.Queue;
+	import IEnumerable = Collections.IEnumerable;
+
+	import IMap = Collections.IMap;
+	import Dictionary = Collections.Dictionary;
+	import Queue = Collections.Queue;
 
 	import using = System.using;
 
-	import enumeratorFrom = System.Collections.Enumerator.from;
-	import enumeratorForEach = System.Collections.Enumerator.forEach;
+	import enumeratorFrom = Collections.Enumerator.from;
+	import enumeratorForEach = Collections.Enumerator.forEach;
 	import Types = System.Types;
 
 	// #endregion

@@ -9,13 +9,14 @@ var System;
     var Linq;
     (function (Linq) {
         'use strict';
-        var ArrayUtility = System.Collections.ArrayUtility;
-        var EnumeratorBase = System.Collections.EnumeratorBase;
-        var Dictionary = System.Collections.Dictionary;
-        var Queue = System.Collections.Queue;
+        var Collections = System.Collections;
+        var ArrayUtility = Collections.ArrayUtility;
+        var EnumeratorBase = Collections.EnumeratorBase;
+        var Dictionary = Collections.Dictionary;
+        var Queue = Collections.Queue;
         var using = System.using;
-        var enumeratorFrom = System.Collections.Enumerator.from;
-        var enumeratorForEach = System.Collections.Enumerator.forEach;
+        var enumeratorFrom = Collections.Enumerator.from;
+        var enumeratorForEach = Collections.Enumerator.forEach;
         var Types = System.Types;
         var LinqFunctions = (function (_super) {
             __extends(LinqFunctions, _super);

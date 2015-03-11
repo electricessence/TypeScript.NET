@@ -3,9 +3,10 @@ declare module System.Linq {
     import Predicate = System.Predicate;
     import Selector = System.Selector;
     import Action = System.Action;
-    import IEnumerable = System.Collections.IEnumerable;
-    import IMap = System.Collections.IMap;
-    import Dictionary = System.Collections.Dictionary;
+    import Collections = System.Collections;
+    import IEnumerable = Collections.IEnumerable;
+    import IMap = Collections.IMap;
+    import Dictionary = Collections.Dictionary;
     enum EnumerableAction {
         Break = 0,
         Return = 1,

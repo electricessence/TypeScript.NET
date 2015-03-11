@@ -39,13 +39,15 @@ module.exports = function(gulp) {
 		var AMD_WRAPPING =
 			[
 				'(function(){',
+					'var this_module = function(' + dependencies.join(',') + '){',
 					'{%=body%}',
+					'return ' + namespace + ';}',
 					'',
 					'if (typeof define === typeof function () { } && define.amd) { // AMD',
-					'	define("' + namespace + '",' + depString + 'function(' + dependencies.join(',') + '){ return ' + namespace + '; });',
+					'	define("' + namespace + '",' + depString + "this_module);",
 					'}',
 					'else if(typeof module !== typeof undefined && module.exports) { // Node',
-				  '	module.exports = '+namespace+';',
+				  '	module.exports = this_module;',
 					'}',
 				'})(this);'
 			].join("\n");
