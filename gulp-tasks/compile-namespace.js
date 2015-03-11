@@ -35,14 +35,22 @@ module.exports = function(gulp) {
 		var TASK_COMPILE = namespace + '-compile';
 		var TASK_COMPRESS = TASK_COMPILE + MIN;
 		var TASK_AMD = TASK_COMPILE + AMD;
-		var AMD_WRAPPING = ''
-			+ 'define("'
-			+ namespace + '",'
-			+ depString
-			+ 'function('
-			+ dependencies.join(',')
-			+ '){{%=body%};return '
-			+ namespace + ';});';
+
+		var AMD_WRAPPING =
+			[
+				'(function(){',
+					'var this_module = function(' + dependencies.join(',') + '){',
+					'{%=body%}',
+					'return ' + namespace + ';}',
+					'',
+					'if (typeof define === typeof function () { } && define.amd) { // AMD',
+					'	define("' + namespace + '",' + depString + "this_module);",
+					'}',
+					'else if(typeof module !== typeof undefined && module.exports) { // Node',
+				  '	module.exports = this_module;',
+					'}',
+				'})(this);'
+			].join("\n");
 
 		var JS_OUT = namespace + JS;
 

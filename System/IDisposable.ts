@@ -57,7 +57,7 @@ module System {
 	export function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void
 	{
 		if(disposables && disposables.length)
-			disposeTheseInternal(disposables.slice(),ignoreExceptions);
+			disposeTheseInternal(disposables.slice(0),ignoreExceptions);
 	}
 
 	export function using<TDisposable extends IDisposable,TReturn>(
@@ -72,7 +72,7 @@ module System {
 		}
 	}
 
-	// Allows for simple type checking that includes types that don't delare themselves as IDisposable but do have a dispose() method.
+	// Allows for simple type checking that includes types that don't declare themselves as IDisposable but do have a dispose() method.
 	export interface IDisposable {
 		dispose(): void;
 	}
@@ -87,7 +87,7 @@ module System {
 		constructor(private _finalizer?: () => void) {
 		}
 
-		_wasDisposed: boolean = false;
+		private _wasDisposed: boolean = false;
 		get wasDisposed(): boolean {
 			return this._wasDisposed;
 		}
@@ -108,8 +108,8 @@ module System {
 		dispose(): void {
 			var _ = this;
 			if (!_._wasDisposed) {
-				// Premtively set wasDisposed in order to prevent repeated disposing.
-				// NOTE: in true multithreaded scenarios, this needs to be synchronized.
+				// Premptively set wasDisposed in order to prevent repeated disposing.
+				// NOTE: in true multi-threaded scenarios, this needs to be synchronized.
 				_._wasDisposed = true;
 				try {
 					_._onDispose(); // Protected override.
@@ -120,10 +120,10 @@ module System {
 			}
 		}
 
-		// Marked public so it can be overriden but is not intended for public use.
 		// Override this to handle destruction...
 		// Be sure to call super._onDestroy() in deeper sub classes...
-		_onDispose(): void {
+		protected _onDispose(): void {
+
 		}
 
 	}

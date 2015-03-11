@@ -29,6 +29,7 @@ module System.Text
 	// Adding IDisposable allows for use with System.using();
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
 	{
+		//noinspection JSMismatchedCollectionQueryUpdate
 		private _partArray: any[];
 		private _latest: string; // AKA persistentString
 
