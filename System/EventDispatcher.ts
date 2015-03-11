@@ -159,11 +159,10 @@ module System {
 		static get DISPOSED() { return "disposed"; }
 
 		// When dispatching events, we need a way to prevent recursion when disposing.
-		_isDisposing: boolean = false;
-		public get isDisposing(): boolean {
+		private _isDisposing: boolean = false;
+		get isDisposing(): boolean {
 			return this._isDisposing;
 		}
-
 
 		// Override the public method here since EventDispatcher will end up doing things a bit differently from here on.
 		public dispose() {

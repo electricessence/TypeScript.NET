@@ -8,11 +8,11 @@
 
 module System.Collections
 {
-	var MINIMUMGROW: number = 4 | 0;
-	// var SHRINKTHRESHOLD: number = 32 | 0; // Unused?
-	// var GROWFACTOR: number = 200 | 0;  // double each time
-	var GROWFACTOR_HALF: number = 100 | 0;
-	var DEFAULTCAPACITY: number = MINIMUMGROW;
+	var MINIMUM_GROW: number = 4 | 0;
+	// var SHRINK_THRESHOLD: number = 32 | 0; // Unused?
+	// var GROW_FACTOR: number = 200 | 0;  // double each time
+	var GROW_FACTOR_HALF: number = 100 | 0;
+	var DEFAULT_CAPACITY: number = MINIMUM_GROW;
 	var emptyArray: any[] = [];
 
 	function assertInteger(value: number, property: string): void
@@ -37,6 +37,7 @@ module System.Collections
 
 	export class Queue<T> implements ICollection<T>, IDisposable {
 		
+		//noinspection JSMismatchedCollectionQueryUpdate
 		private _array: T[];
 		private _head: number;       // First valid element in the queue
 		private _tail: number;       // Last valid element in the queue
@@ -73,7 +74,7 @@ module System.Collections
 					_._array = ArrayUtility.initialize<T>(
 						source instanceof Array || "length" in source
 						? source.length
-						: DEFAULTCAPACITY);
+						: DEFAULT_CAPACITY);
 
 					Enumerable.forEach<T>(source, e=> _.enqueue(e));
 
@@ -205,7 +206,7 @@ module System.Collections
 
 			var head = _._head, tail = _._tail, size = _._size;
 
-			// Special case where we can simplly extend the length of the array. (JavaScript only)
+			// Special case where we can simply extend the length of the array. (JavaScript only)
 			if (array!=emptyArray && capacity > len && head < tail)
 			{
 				array.length = _._capacity = capacity;
@@ -239,9 +240,9 @@ module System.Collections
 			var _ = this, array = _._array, size = _._size | 0, len = _._capacity | 0;
 			if (size == len)
 			{
-				var newcapacity = len * GROWFACTOR_HALF;
-				if (newcapacity < len + MINIMUMGROW)
-					newcapacity = len + MINIMUMGROW;
+				var newcapacity = len * GROW_FACTOR_HALF;
+				if (newcapacity < len + MINIMUM_GROW)
+					newcapacity = len + MINIMUM_GROW;
 
 				_.setCapacity(newcapacity);
 				array = _._array;
@@ -259,7 +260,7 @@ module System.Collections
 		{
 			var _ = this;
 			if (_._size == 0)
-				throw new Error("InvalidOperatioException: cannot dequeue an empty queue.");
+				throw new Error("InvalidOperationException: cannot dequeue an empty queue.");
 
 			var array = _._array, head = _._head;
 
@@ -313,15 +314,15 @@ module System.Collections
 					version = _._version;
 					index = 0;
 				},
-				yieler =>
+				yielder =>
 				{
 					if (version != _._version)
 						throw new Error("InvalidOperationException: collection was changed during enumeration.");
 
 					if (index == _._size)
-						return yieler.yieldBreak();
+						return yielder.yieldBreak();
 
-					return yieler.yieldReturn(_._getElement(index++));
+					return yielder.yieldReturn(_._getElement(index++));
 				});
 		}
 
