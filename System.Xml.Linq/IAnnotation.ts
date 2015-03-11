@@ -4,11 +4,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import IXmlLineInfo = System.Xml.IXmlLineInfo;
-import XmlNodeType = System.Xml.XmlNodeType;
-
 module System.Xml.Linq
 {
+	import IXmlLineInfo = System.Xml.IXmlLineInfo;
+	import XmlNodeType = System.Xml.XmlNodeType;
+
 	export interface IAnnotation
 	{
 		Type: any;

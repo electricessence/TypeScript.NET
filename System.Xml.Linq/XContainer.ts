@@ -6,17 +6,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import LinkedList = System.Collections.LinkedList;
 
 module System.Xml.Linq
 {
+	import LinkedList = System.Collections.LinkedList;
+
 	export class XContainer extends XNode
 	{
 		constructor()
 		{
 			super();
 
-			this._nodes = new LinkedList<XNode>;
+			this._nodes = new LinkedList<XNode>();
 		}
 
 		private _nodes:LinkedList<XNode>;

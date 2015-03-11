@@ -8,15 +8,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import IXmlLineInfo = System.Xml.IXmlLineInfo;
-import XmlNodeType = System.Xml.XmlNodeType;
-import EventDispatcher = System.EventDispatcher;
-
-import Enumerable = System.Linq.Enumerable;
-
 module System.Xml.Linq
 {
+	import IXmlLineInfo = System.Xml.IXmlLineInfo;
+	import XmlNodeType = System.Xml.XmlNodeType;
+	import EventDispatcher = System.EventDispatcher;
 
+	import Enumerable = System.Linq.Enumerable;
 
 	export class XObject
 		extends System.EventDispatcher
@@ -31,10 +29,8 @@ module System.Xml.Linq
 		constructor()
 		{
 			super();
-			var a = this._annotationsArray = [];
+			var a:IAnnotation[] = this._annotationsArray = [];
 			this._annotationsEnumerable = Enumerable.from<IAnnotation>(a);
-
-
 		}
 
 		private _lineNumber:number;
@@ -72,14 +68,13 @@ module System.Xml.Linq
 			return this._baseUri;
 		}
 
-		private _nodeType:XmlNodeType;
-		protected _setNodeType(nodeType:XmlNodeType):void{
-			this._nodeType = nodeType;
+		getNodeType():XmlNodeType {
+			return XmlNodeType.None;
 		}
 
 		get nodeType(): XmlNodeType
 		{
-			return this._nodeType;
+			return this.getNodeType();
 		}
 
 		get document(): XDocument

@@ -26,7 +26,7 @@ module System.Xml.Linq
 
 		get namespace(): XNamespace
 		{
-			return this._namespace || XNamespace.None;
+			return this._namespace || XNamespace.none;
 		}
 
 		get namespaceName(): string

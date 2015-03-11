@@ -6,11 +6,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import IEnumerable = System.Collections.IEnumerable;
-import Enumerable = System.Linq.Enumerable;
-
 module System.Xml.Linq
 {
+
+	import IEnumerable = System.Collections.IEnumerable;
+	import Enumerable = System.Linq.Enumerable;
+
 	var empty = Enumerable.empty<XElement>();
 
 	export class XElement extends XContainer {

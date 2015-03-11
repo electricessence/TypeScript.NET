@@ -7,12 +7,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import IComparer = System.Collections.IComparer;
-import IEqualityComparer = System.Collections.IEqualityComparer;
-import Enumerable = System.Linq.Enumerable;
 
 module System.Xml.Linq
 {
+	import IComparer = System.Collections.IComparer;
+	import IEqualityComparer = System.Collections.IEqualityComparer;
+	import Enumerable = System.Linq.Enumerable;
+
 	class XNodeDocumentOrderComparer implements IComparer<XNode>
 	{
 		constructor()
