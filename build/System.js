@@ -140,10 +140,10 @@ var System;
         }
     }
     System.copyTo = copyTo;
-    function applyMixins(derivedCtor, baseCtors) {
-        baseCtors.forEach(function (baseCtor) {
-            Object.getOwnPropertyNames(baseCtor.prototype).forEach(function (name) {
-                derivedCtor.prototype[name] = baseCtor.prototype[name];
+    function applyMixins(derivedConstructor, baseConstructors) {
+        baseConstructors.forEach(function (bc) {
+            Object.getOwnPropertyNames(bc.prototype).forEach(function (name) {
+                derivedConstructor.prototype[name] = bc.prototype[name];
             });
         });
     }
@@ -195,7 +195,7 @@ var System;
     }
     function disposeThese(disposables, ignoreExceptions) {
         if (disposables && disposables.length)
-            disposeTheseInternal(disposables.slice(), ignoreExceptions);
+            disposeTheseInternal(disposables.slice(0), ignoreExceptions);
     }
     System.disposeThese = disposeThese;
     function using(disposable, closure) {
@@ -259,7 +259,7 @@ var System;
                 if (length > 65536)
                     array = new Array(length);
                 else {
-                    array = new Array();
+                    array = [];
                     array.length = length;
                 }
                 return array;
@@ -271,7 +271,7 @@ var System;
                 if (!sourceArray)
                     return sourceArray;
                 var sourceLength = sourceArray.length;
-                return (sourceIndex || length < sourceLength) ? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength) : sourceArray.slice();
+                return (sourceIndex || length < sourceLength) ? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength) : sourceArray.slice(0);
             }
             ArrayUtility.copy = copy;
             function copyTo(sourceArray, destinationArray, sourceIndex, destinationIndex, length) {
@@ -1138,6 +1138,109 @@ var System;
         return TimeSpan;
     })();
     System.TimeSpan = TimeSpan;
+})(System || (System = {}));
+var System;
+(function (System) {
+    var Diagnostics;
+    (function (Diagnostics) {
+        var Stopwatch = (function () {
+            function Stopwatch() {
+                this.reset();
+            }
+            Stopwatch.getTimestampMilliseconds = function () {
+                return (new Date()).getTime();
+            };
+            Object.defineProperty(Stopwatch.prototype, "isRunning", {
+                get: function () {
+                    return this._isRunning;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Stopwatch.startNew = function () {
+                var s = new Stopwatch();
+                s.start();
+                return s;
+            };
+            Stopwatch.measure = function (closure) {
+                var start = Stopwatch.getTimestampMilliseconds();
+                closure();
+                return new System.TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
+            };
+            Stopwatch.prototype.record = function (closure) {
+                var e = Stopwatch.measure(closure);
+                this._elapsed += e.milliseconds;
+                return e;
+            };
+            Stopwatch.prototype.start = function () {
+                var _ = this;
+                if (!_._isRunning) {
+                    _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+                    _._isRunning = true;
+                }
+            };
+            Stopwatch.prototype.stop = function () {
+                var _ = this;
+                if (_._isRunning) {
+                    _._elapsed += _.currentLapMilliseconds;
+                    _._isRunning = false;
+                }
+            };
+            Stopwatch.prototype.reset = function () {
+                var _ = this;
+                _._elapsed = 0;
+                _._isRunning = false;
+                _._startTimeStamp = NaN;
+            };
+            Stopwatch.prototype.lap = function () {
+                var _ = this;
+                if (_._isRunning) {
+                    var t = Stopwatch.getTimestampMilliseconds();
+                    var s = _._startTimeStamp;
+                    var e = t - s;
+                    _._startTimeStamp = t;
+                    _._elapsed += e;
+                    return new System.TimeSpan(e);
+                }
+                else
+                    return System.TimeSpan.zero;
+            };
+            Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
+                get: function () {
+                    return this._isRunning ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp) : 0;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stopwatch.prototype, "currentLap", {
+                get: function () {
+                    return this._isRunning ? new System.TimeSpan(this.currentLapMilliseconds) : System.TimeSpan.zero;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stopwatch.prototype, "elapsedMilliseconds", {
+                get: function () {
+                    var _ = this;
+                    var timeElapsed = _._elapsed;
+                    if (_._isRunning)
+                        timeElapsed += _.currentLapMilliseconds;
+                    return timeElapsed;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stopwatch.prototype, "elapsed", {
+                get: function () {
+                    return new System.TimeSpan(this.elapsedMilliseconds);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Stopwatch;
+        })();
+        Diagnostics.Stopwatch = Stopwatch;
+    })(Diagnostics = System.Diagnostics || (System.Diagnostics = {}));
 })(System || (System = {}));
 var System;
 (function (System) {
@@ -2257,9 +2360,9 @@ var System;
 (function (System) {
     var Collections;
     (function (Collections) {
-        var MINIMUMGROW = 4 | 0;
-        var GROWFACTOR_HALF = 100 | 0;
-        var DEFAULTCAPACITY = MINIMUMGROW;
+        var MINIMUM_GROW = 4 | 0;
+        var GROW_FACTOR_HALF = 100 | 0;
+        var DEFAULT_CAPACITY = MINIMUM_GROW;
         var emptyArray = [];
         function assertInteger(value, property) {
             if (value != Math.floor(value))
@@ -2288,7 +2391,7 @@ var System;
                         _._array = source ? Collections.ArrayUtility.initialize(source) : emptyArray;
                     }
                     else {
-                        _._array = Collections.ArrayUtility.initialize(source instanceof Array || "length" in source ? source.length : DEFAULTCAPACITY);
+                        _._array = Collections.ArrayUtility.initialize(source instanceof Array || "length" in source ? source.length : DEFAULT_CAPACITY);
                         Collections.Enumerable.forEach(source, function (e) { return _.enqueue(e); });
                         _._version = 0;
                     }
@@ -2402,9 +2505,9 @@ var System;
             Queue.prototype.enqueue = function (item) {
                 var _ = this, array = _._array, size = _._size | 0, len = _._capacity | 0;
                 if (size == len) {
-                    var newcapacity = len * GROWFACTOR_HALF;
-                    if (newcapacity < len + MINIMUMGROW)
-                        newcapacity = len + MINIMUMGROW;
+                    var newcapacity = len * GROW_FACTOR_HALF;
+                    if (newcapacity < len + MINIMUM_GROW)
+                        newcapacity = len + MINIMUM_GROW;
                     _.setCapacity(newcapacity);
                     array = _._array;
                     len = _._capacity;
@@ -2418,7 +2521,7 @@ var System;
             Queue.prototype.dequeue = function () {
                 var _ = this;
                 if (_._size == 0)
-                    throw new Error("InvalidOperatioException: cannot dequeue an empty queue.");
+                    throw new Error("InvalidOperationException: cannot dequeue an empty queue.");
                 var array = _._array, head = _._head;
                 var removed = _._array[head];
                 array[head] = null;
@@ -2450,121 +2553,18 @@ var System;
                 return new Collections.EnumeratorBase(function () {
                     version = _._version;
                     index = 0;
-                }, function (yieler) {
+                }, function (yielder) {
                     if (version != _._version)
                         throw new Error("InvalidOperationException: collection was changed during enumeration.");
                     if (index == _._size)
-                        return yieler.yieldBreak();
-                    return yieler.yieldReturn(_._getElement(index++));
+                        return yielder.yieldBreak();
+                    return yielder.yieldReturn(_._getElement(index++));
                 });
             };
             return Queue;
         })();
         Collections.Queue = Queue;
     })(Collections = System.Collections || (System.Collections = {}));
-})(System || (System = {}));
-var System;
-(function (System) {
-    var Diagnostics;
-    (function (Diagnostics) {
-        var Stopwatch = (function () {
-            function Stopwatch() {
-                this.reset();
-            }
-            Stopwatch.getTimestampMilliseconds = function () {
-                return (new Date()).getTime();
-            };
-            Object.defineProperty(Stopwatch.prototype, "isRunning", {
-                get: function () {
-                    return this._isRunning;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Stopwatch.startNew = function () {
-                var s = new Stopwatch();
-                s.start();
-                return s;
-            };
-            Stopwatch.measure = function (closure) {
-                var start = Stopwatch.getTimestampMilliseconds();
-                closure();
-                return new System.TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
-            };
-            Stopwatch.prototype.record = function (closure) {
-                var e = Stopwatch.measure(closure);
-                this._elapsed += e.milliseconds;
-                return e;
-            };
-            Stopwatch.prototype.start = function () {
-                var _ = this;
-                if (!_._isRunning) {
-                    _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
-                    _._isRunning = true;
-                }
-            };
-            Stopwatch.prototype.stop = function () {
-                var _ = this;
-                if (_._isRunning) {
-                    _._elapsed += _.currentLapMilliseconds;
-                    _._isRunning = false;
-                }
-            };
-            Stopwatch.prototype.reset = function () {
-                var _ = this;
-                _._elapsed = 0;
-                _._isRunning = false;
-                _._startTimeStamp = NaN;
-            };
-            Stopwatch.prototype.lap = function () {
-                var _ = this;
-                if (_._isRunning) {
-                    var t = Stopwatch.getTimestampMilliseconds();
-                    var s = _._startTimeStamp;
-                    var e = t - s;
-                    _._startTimeStamp = t;
-                    _._elapsed += e;
-                    return new System.TimeSpan(e);
-                }
-                else
-                    return System.TimeSpan.zero;
-            };
-            Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
-                get: function () {
-                    return this._isRunning ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp) : 0;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stopwatch.prototype, "currentLap", {
-                get: function () {
-                    return this._isRunning ? new System.TimeSpan(this.currentLapMilliseconds) : System.TimeSpan.zero;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stopwatch.prototype, "elapsedMilliseconds", {
-                get: function () {
-                    var _ = this;
-                    var timeElapsed = _._elapsed;
-                    if (_._isRunning)
-                        timeElapsed += _.currentLapMilliseconds;
-                    return timeElapsed;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stopwatch.prototype, "elapsed", {
-                get: function () {
-                    return new System.TimeSpan(this.elapsedMilliseconds);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return Stopwatch;
-        })();
-        Diagnostics.Stopwatch = Stopwatch;
-    })(Diagnostics = System.Diagnostics || (System.Diagnostics = {}));
 })(System || (System = {}));
 var LinkedList = System.Collections.LinkedList;
 var System;

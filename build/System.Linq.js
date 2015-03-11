@@ -8,7 +8,7 @@ var System;
 (function (System) {
     var Linq;
     (function (Linq) {
-        "use strict";
+        'use strict';
         var ArrayUtility = System.Collections.ArrayUtility;
         var EnumeratorBase = System.Collections.EnumeratorBase;
         var Dictionary = System.Collections.Dictionary;
@@ -31,7 +31,7 @@ var System;
             return LinqFunctions;
         })(System.Functions);
         var Functions = new LinqFunctions();
-        var INT_0 = 0 | 0, INT_NEGATTIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
+        var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
         function assertIsNotDisposed(disposed) {
             return System.DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
         }
@@ -62,14 +62,14 @@ var System;
             Enumerable.from = function (source) {
                 if ("getEnumerator" in source)
                     return source;
-                if (source instanceof Array || typeof source === System.Types.Object && "length" in source)
+                if (source instanceof Array || typeof source === Types.Object && "length" in source)
                     return Enumerable.fromArray(source);
                 throw new Error("Unsupported enumerable.");
             };
             Enumerable.toArray = function (source) {
                 if (source instanceof Array)
                     return source.slice();
-                if (typeof source === System.Types.Object && "length" in source)
+                if (typeof source === Types.Object && "length" in source)
                     source = Enumerable.fromArray(source);
                 if (source instanceof Enumerable)
                     return source.toArray();
@@ -905,7 +905,7 @@ var System;
                 return compareSelector ? this.any(function (v) { return compareSelector(v) === compareSelector(value); }) : this.any(function (v) { return v === value; });
             };
             Enumerable.prototype.indexOf = function (value, compareSelector) {
-                var found = INT_NEGATTIVE_1;
+                var found = INT_NEGATIVE_1;
                 if (compareSelector)
                     this.forEach(function (element, i) {
                         if (System.areEqual(compareSelector(element), compareSelector(value), true)) {
@@ -923,7 +923,7 @@ var System;
                 return found;
             };
             Enumerable.prototype.lastIndexOf = function (value, compareSelector) {
-                var result = INT_NEGATTIVE_1;
+                var result = INT_NEGATIVE_1;
                 if (compareSelector)
                     this.forEach(function (element, i) {
                         if (System.areEqual(compareSelector(element), compareSelector(value), true))

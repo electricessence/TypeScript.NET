@@ -46,7 +46,7 @@ declare module System {
     function compare(a: any, b: any, strict?: boolean): number;
     function clone(source: any, depth?: number): any;
     function copyTo(source: any, target: any): void;
-    function applyMixins(derivedCtor: any, baseCtors: any[]): void;
+    function applyMixins(derivedConstructor: any, baseConstructors: any[]): void;
 }
 declare module System {
     function dispose(...disposables: IDisposable[]): void;
@@ -62,12 +62,12 @@ declare module System {
     class DisposableBase implements IDisposableAware {
         private _finalizer;
         constructor(_finalizer?: () => void);
-        _wasDisposed: boolean;
+        private _wasDisposed;
         wasDisposed: boolean;
         static assertIsNotDisposed(disposed: boolean, errorMessage?: string): boolean;
         assertIsNotDisposed(errorMessage?: string): boolean;
         dispose(): void;
-        _onDispose(): void;
+        protected _onDispose(): void;
     }
 }
 declare module System.Collections.ArrayUtility {
@@ -109,7 +109,7 @@ declare module System {
         dispatchEvent(event: Event): boolean;
         static DISPOSING: string;
         static DISPOSED: string;
-        _isDisposing: boolean;
+        private _isDisposing;
         isDisposing: boolean;
         dispose(): void;
     }
@@ -162,7 +162,7 @@ declare module System {
         reset(throwIfCannotReset?: boolean): boolean;
         value: T;
         getValue(clearClosureReference?: boolean): T;
-        _onDispose(): void;
+        protected _onDispose(): void;
         equals(other: Lazy<T>): boolean;
         valueEquals(other: Lazy<T>): boolean;
     }
@@ -256,6 +256,27 @@ declare module System {
         static zero: TimeSpan;
     }
 }
+declare module System.Diagnostics {
+    class Stopwatch {
+        static getTimestampMilliseconds(): number;
+        private _elapsed;
+        private _startTimeStamp;
+        private _isRunning;
+        isRunning: boolean;
+        constructor();
+        static startNew(): Stopwatch;
+        static measure(closure: () => void): TimeSpan;
+        record(closure: () => void): TimeSpan;
+        start(): void;
+        stop(): void;
+        reset(): void;
+        lap(): TimeSpan;
+        currentLapMilliseconds: number;
+        currentLap: TimeSpan;
+        elapsedMilliseconds: number;
+        elapsed: System.TimeSpan;
+    }
+}
 declare module System.Collections {
     class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue> {
         private _updateRecursion;
@@ -324,7 +345,7 @@ declare module System.Collections {
         constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: () => void);
         reset(): void;
         moveNext(): boolean;
-        _onDispose(): void;
+        protected _onDispose(): void;
     }
     class IndexEnumerator<T> extends EnumeratorBase<T> {
         constructor(sourceFactory: () => {
@@ -531,27 +552,6 @@ declare module System.Collections {
         peek(): T;
         trimExcess(): void;
         getEnumerator(): IEnumerator<T>;
-    }
-}
-declare module System.Diagnostics {
-    class Stopwatch {
-        static getTimestampMilliseconds(): number;
-        private _elapsed;
-        private _startTimeStamp;
-        private _isRunning;
-        isRunning: boolean;
-        constructor();
-        static startNew(): Stopwatch;
-        static measure(closure: () => void): TimeSpan;
-        record(closure: () => void): TimeSpan;
-        start(): void;
-        stop(): void;
-        reset(): void;
-        lap(): TimeSpan;
-        currentLapMilliseconds: number;
-        currentLap: TimeSpan;
-        elapsedMilliseconds: number;
-        elapsed: System.TimeSpan;
     }
 }
 import IDisposable = System.IDisposable;

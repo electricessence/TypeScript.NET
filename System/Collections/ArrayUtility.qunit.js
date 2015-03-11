@@ -21,8 +21,8 @@
 		assert.equal(a.length, len, ".length should be " + len);
 
 		len = 100000;
-		var a = ArrayUtility.initialize(len);
-		assert.equal(a.length, len, ".length should be " + len);
+		var b = ArrayUtility.initialize(len);
+		assert.equal(b.length, len, ".length should be " + len);
 
 	});
 

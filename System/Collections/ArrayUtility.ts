@@ -10,7 +10,7 @@ module System.Collections.ArrayUtility
 			array = new Array(length);
 		else
 		{
-			array = new Array();
+			array = [];
 			array.length = length;
 		}
 		return array;
@@ -25,7 +25,7 @@ module System.Collections.ArrayUtility
 
 		return (sourceIndex || length < sourceLength)
 			? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength)
-			: sourceArray.slice();
+			: sourceArray.slice(0);
 	}
 
 	export function copyTo<T>(

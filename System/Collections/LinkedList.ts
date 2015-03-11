@@ -404,7 +404,7 @@ module System.Collections
 			}
 		}
 
-		// Returns true if sucessful and false if not found (already removed).
+		// Returns true if successful and false if not found (already removed).
 		removeNode(node: ILinkedListNode<T>): boolean
 		{
 			var _ = this;

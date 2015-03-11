@@ -32,13 +32,13 @@ module System {
 			return this._isValueCreated;
 		}
 
-		// Adding a 'resetable' mechanism allows for simply resetting a lazy instead of reinstantiating a new one.
+		// Adding a 'resettable' mechanism allows for simply resetting a lazy instead of re-instantiating a new one.
 		get canReset(): boolean
 		{
 			return !this.wasDisposed && !!(this._closure);
 		}
 
-		// Returns true if succesfully reset.
+		// Returns true if successfully reset.
 		reset(throwIfCannotReset?:boolean):boolean {
 			var _ = this;
 
@@ -90,7 +90,7 @@ module System {
 		}
 
 
-		_onDispose():void {
+		protected _onDispose():void {
 			this._closure = null;
 			this._value = null;
 		}
