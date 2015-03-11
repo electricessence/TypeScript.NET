@@ -89,7 +89,7 @@ module System.Linq
 		// Enumerable<T> is an instance class that has useful statics.
 		// In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
 		// In this case, we use Enumerable<T> as the underlying class that is being chained.
-		constructor(private enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void)
+		constructor(private enumeratorFactory: () => System.Collections.IEnumerator<T>, finalizer?: () => void)
 		{
 			super(finalizer);
 		}
@@ -137,7 +137,7 @@ module System.Linq
 
 
 		// #region IEnumerable<T> Implementation...
-		getEnumerator(): IEnumerator<T>
+		getEnumerator(): System.Collections.IEnumerator<T>
 		{
 
 			this.assertIsNotDisposed();
@@ -876,8 +876,8 @@ module System.Linq
 
 			return new Enumerable<any>(() =>
 			{
-				var enumeratorStack: System.Collections.IEnumerator<any>[] = []; // TODO: Consider using an actual stack and not an array.
-				var enumerator: System.Collections.IEnumerator<any>;
+				// Dev Note: May want to consider using an actual stack and not an array.
+				var enumeratorStack: System.Collections.IEnumerator<any>[] = []; 				var enumerator: System.Collections.IEnumerator<any>;
 				var len: number;  // Avoid using push/pop since they query .length every time and can be slower.
 
 				return new EnumeratorBase<T>(
@@ -1277,7 +1277,7 @@ module System.Linq
 					{
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
-						keys = new System.Collections.Dictionary<T, boolean>(compareSelector);
+						keys = new Dictionary<T, boolean>(compareSelector);
 						if (second)
 							Enumerable.forEach(second, key => keys.addByKeyValue(key, true));
 					},

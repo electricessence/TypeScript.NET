@@ -3,7 +3,6 @@ declare module System.Linq {
     import Predicate = System.Predicate;
     import Selector = System.Selector;
     import Action = System.Action;
-    import IEnumerator = System.Collections.IEnumerator;
     import IEnumerable = System.Collections.IEnumerable;
     import IMap = System.Collections.IMap;
     import Dictionary = System.Collections.Dictionary;
@@ -14,11 +13,11 @@ declare module System.Linq {
     }
     class Enumerable<T> extends System.DisposableBase implements IEnumerable<T> {
         private enumeratorFactory;
-        constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void);
+        constructor(enumeratorFactory: () => System.Collections.IEnumerator<T>, finalizer?: () => void);
         static fromArray<T>(array: System.Collections.IArray<T>): ArrayEnumerable<T>;
         static from<T>(source: any): Enumerable<T>;
         static toArray<T>(source: any): T[];
-        getEnumerator(): IEnumerator<T>;
+        getEnumerator(): System.Collections.IEnumerator<T>;
         protected _onDispose(): void;
         static choice<T>(values: System.Collections.IArray<T>): Enumerable<T>;
         static cycle<T>(values: System.Collections.IArray<T>): Enumerable<T>;

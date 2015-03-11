@@ -256,27 +256,6 @@ declare module System {
         static zero: TimeSpan;
     }
 }
-declare module System.Diagnostics {
-    class Stopwatch {
-        static getTimestampMilliseconds(): number;
-        private _elapsed;
-        private _startTimeStamp;
-        private _isRunning;
-        isRunning: boolean;
-        constructor();
-        static startNew(): Stopwatch;
-        static measure(closure: () => void): TimeSpan;
-        record(closure: () => void): TimeSpan;
-        start(): void;
-        stop(): void;
-        reset(): void;
-        lap(): TimeSpan;
-        currentLapMilliseconds: number;
-        currentLap: TimeSpan;
-        elapsedMilliseconds: number;
-        elapsed: System.TimeSpan;
-    }
-}
 declare module System.Collections {
     class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue> {
         private _updateRecursion;
@@ -552,6 +531,27 @@ declare module System.Collections {
         peek(): T;
         trimExcess(): void;
         getEnumerator(): IEnumerator<T>;
+    }
+}
+declare module System.Diagnostics {
+    class Stopwatch {
+        static getTimestampMilliseconds(): number;
+        private _elapsed;
+        private _startTimeStamp;
+        private _isRunning;
+        isRunning: boolean;
+        constructor();
+        static startNew(): Stopwatch;
+        static measure(closure: () => void): TimeSpan;
+        record(closure: () => void): TimeSpan;
+        start(): void;
+        stop(): void;
+        reset(): void;
+        lap(): TimeSpan;
+        currentLapMilliseconds: number;
+        currentLap: TimeSpan;
+        elapsedMilliseconds: number;
+        elapsed: System.TimeSpan;
     }
 }
 import IDisposable = System.IDisposable;

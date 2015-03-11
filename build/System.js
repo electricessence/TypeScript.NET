@@ -1141,109 +1141,6 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
-    var Diagnostics;
-    (function (Diagnostics) {
-        var Stopwatch = (function () {
-            function Stopwatch() {
-                this.reset();
-            }
-            Stopwatch.getTimestampMilliseconds = function () {
-                return (new Date()).getTime();
-            };
-            Object.defineProperty(Stopwatch.prototype, "isRunning", {
-                get: function () {
-                    return this._isRunning;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Stopwatch.startNew = function () {
-                var s = new Stopwatch();
-                s.start();
-                return s;
-            };
-            Stopwatch.measure = function (closure) {
-                var start = Stopwatch.getTimestampMilliseconds();
-                closure();
-                return new System.TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
-            };
-            Stopwatch.prototype.record = function (closure) {
-                var e = Stopwatch.measure(closure);
-                this._elapsed += e.milliseconds;
-                return e;
-            };
-            Stopwatch.prototype.start = function () {
-                var _ = this;
-                if (!_._isRunning) {
-                    _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
-                    _._isRunning = true;
-                }
-            };
-            Stopwatch.prototype.stop = function () {
-                var _ = this;
-                if (_._isRunning) {
-                    _._elapsed += _.currentLapMilliseconds;
-                    _._isRunning = false;
-                }
-            };
-            Stopwatch.prototype.reset = function () {
-                var _ = this;
-                _._elapsed = 0;
-                _._isRunning = false;
-                _._startTimeStamp = NaN;
-            };
-            Stopwatch.prototype.lap = function () {
-                var _ = this;
-                if (_._isRunning) {
-                    var t = Stopwatch.getTimestampMilliseconds();
-                    var s = _._startTimeStamp;
-                    var e = t - s;
-                    _._startTimeStamp = t;
-                    _._elapsed += e;
-                    return new System.TimeSpan(e);
-                }
-                else
-                    return System.TimeSpan.zero;
-            };
-            Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
-                get: function () {
-                    return this._isRunning ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp) : 0;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stopwatch.prototype, "currentLap", {
-                get: function () {
-                    return this._isRunning ? new System.TimeSpan(this.currentLapMilliseconds) : System.TimeSpan.zero;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stopwatch.prototype, "elapsedMilliseconds", {
-                get: function () {
-                    var _ = this;
-                    var timeElapsed = _._elapsed;
-                    if (_._isRunning)
-                        timeElapsed += _.currentLapMilliseconds;
-                    return timeElapsed;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Object.defineProperty(Stopwatch.prototype, "elapsed", {
-                get: function () {
-                    return new System.TimeSpan(this.elapsedMilliseconds);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            return Stopwatch;
-        })();
-        Diagnostics.Stopwatch = Stopwatch;
-    })(Diagnostics = System.Diagnostics || (System.Diagnostics = {}));
-})(System || (System = {}));
-var System;
-(function (System) {
     var Collections;
     (function (Collections) {
         "use strict";
@@ -2565,6 +2462,109 @@ var System;
         })();
         Collections.Queue = Queue;
     })(Collections = System.Collections || (System.Collections = {}));
+})(System || (System = {}));
+var System;
+(function (System) {
+    var Diagnostics;
+    (function (Diagnostics) {
+        var Stopwatch = (function () {
+            function Stopwatch() {
+                this.reset();
+            }
+            Stopwatch.getTimestampMilliseconds = function () {
+                return (new Date()).getTime();
+            };
+            Object.defineProperty(Stopwatch.prototype, "isRunning", {
+                get: function () {
+                    return this._isRunning;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Stopwatch.startNew = function () {
+                var s = new Stopwatch();
+                s.start();
+                return s;
+            };
+            Stopwatch.measure = function (closure) {
+                var start = Stopwatch.getTimestampMilliseconds();
+                closure();
+                return new System.TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
+            };
+            Stopwatch.prototype.record = function (closure) {
+                var e = Stopwatch.measure(closure);
+                this._elapsed += e.milliseconds;
+                return e;
+            };
+            Stopwatch.prototype.start = function () {
+                var _ = this;
+                if (!_._isRunning) {
+                    _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+                    _._isRunning = true;
+                }
+            };
+            Stopwatch.prototype.stop = function () {
+                var _ = this;
+                if (_._isRunning) {
+                    _._elapsed += _.currentLapMilliseconds;
+                    _._isRunning = false;
+                }
+            };
+            Stopwatch.prototype.reset = function () {
+                var _ = this;
+                _._elapsed = 0;
+                _._isRunning = false;
+                _._startTimeStamp = NaN;
+            };
+            Stopwatch.prototype.lap = function () {
+                var _ = this;
+                if (_._isRunning) {
+                    var t = Stopwatch.getTimestampMilliseconds();
+                    var s = _._startTimeStamp;
+                    var e = t - s;
+                    _._startTimeStamp = t;
+                    _._elapsed += e;
+                    return new System.TimeSpan(e);
+                }
+                else
+                    return System.TimeSpan.zero;
+            };
+            Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
+                get: function () {
+                    return this._isRunning ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp) : 0;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stopwatch.prototype, "currentLap", {
+                get: function () {
+                    return this._isRunning ? new System.TimeSpan(this.currentLapMilliseconds) : System.TimeSpan.zero;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stopwatch.prototype, "elapsedMilliseconds", {
+                get: function () {
+                    var _ = this;
+                    var timeElapsed = _._elapsed;
+                    if (_._isRunning)
+                        timeElapsed += _.currentLapMilliseconds;
+                    return timeElapsed;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Stopwatch.prototype, "elapsed", {
+                get: function () {
+                    return new System.TimeSpan(this.elapsedMilliseconds);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            return Stopwatch;
+        })();
+        Diagnostics.Stopwatch = Stopwatch;
+    })(Diagnostics = System.Diagnostics || (System.Diagnostics = {}));
 })(System || (System = {}));
 var LinkedList = System.Collections.LinkedList;
 var System;

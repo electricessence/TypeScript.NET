@@ -751,7 +751,7 @@ var System;
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
                         enumerator = _.getEnumerator();
-                        keys = new System.Collections.Dictionary(compareSelector);
+                        keys = new Dictionary(compareSelector);
                         if (second)
                             Enumerable.forEach(second, function (key) { return keys.addByKeyValue(key, true); });
                     }, function (yielder) {
