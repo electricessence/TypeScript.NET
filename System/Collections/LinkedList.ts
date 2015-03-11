@@ -326,7 +326,19 @@ module System.Collections
 			return ensureExternal(this._last, this);
 		}
 
-		// get methods are available for convienence but is an n*index operation.
+		get firstValue(): T
+		{
+			var first = this._first;
+			return first ? first.value : null;
+		}
+
+		get lastValue(): T
+		{
+			var last = this._last;
+			return last ? last.value : null;
+		}
+
+		// get methods are available for convenience but is an n*index operation.
 
 		private _get(index: number): Node<T>
 		{

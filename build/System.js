@@ -1952,6 +1952,22 @@ var System;
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(LinkedList.prototype, "firstValue", {
+                get: function () {
+                    var first = this._first;
+                    return first ? first.value : null;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(LinkedList.prototype, "lastValue", {
+                get: function () {
+                    var last = this._last;
+                    return last ? last.value : null;
+                },
+                enumerable: true,
+                configurable: true
+            });
             LinkedList.prototype._get = function (index) {
                 if (index < 0)
                     throw new Error("ArgumentOutOfRangeException: index is less than zero.");

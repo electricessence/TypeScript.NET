@@ -211,16 +211,16 @@ module System.Xml.Linq
 	return result;
 }
 
-	InDocumentOrder() {
-	throw "Not implemented";
-}
+	inDocumentOrder() {
+		throw "Not implemented";
+	}
 
-	nodes() {
+	nodes<T>():XEnumerable<T> {
 	var source, result;
 
 	source = this.source ? this.source : this;  //ignore jslint
 	result = source
-		.selectMany(
+		.selectMany( e=>
 		function (e) {
 			if (e.nodeType &&
 				(e.nodeType === 'Element' ||

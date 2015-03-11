@@ -359,6 +359,11 @@ declare module System.Collections {
     }
 }
 declare module System.Collections {
+    interface IComparer<T> {
+        compare(x: T, y: T): number;
+    }
+}
+declare module System.Collections {
     interface IMap<TValue> {
         [key: string]: TValue;
     }
@@ -411,6 +416,11 @@ declare module System.Collections {
     }
 }
 declare module System.Collections {
+    interface IEqualityComparer<T> {
+        equals(x: T, y: T): boolean;
+    }
+}
+declare module System.Collections {
     interface IList<T> extends ICollection<T> {
         get(index: number): T;
         set(index: number, value: T): boolean;
@@ -459,6 +469,8 @@ declare module System.Collections {
         toArray(): T[];
         first: ILinkedListNode<T>;
         last: ILinkedListNode<T>;
+        firstValue: T;
+        lastValue: T;
         private _get(index);
         get(index: number): T;
         getNode(index: number): ILinkedListNode<T>;

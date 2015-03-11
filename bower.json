@@ -5,6 +5,7 @@
     ".gitignore",
     ".idea",
     ".nuget",
+    "gulp-tasks",
     "gulpfile.js"
   ]
 }

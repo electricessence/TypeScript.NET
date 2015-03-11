@@ -1,8 +1,11 @@
-﻿declare module System.Xml {
+declare module System.Xml {
     interface IXmlLineInfo {
         lineNumber: number;
         linePosition: number;
         hasLineInfo(): boolean;
+    }
+    class Test {
+        protected _blah: string;
     }
 }
 declare module System.Xml {

@@ -33,41 +33,68 @@ module System.Xml.Linq
 			super();
 			var a = this._annotationsArray = [];
 			this._annotationsEnumerable = Enumerable.from<IAnnotation>(a);
+
+
 		}
-	
+
+		private _lineNumber:number;
+		protected _setLineNumber(lineNumber:number):void{
+			this._lineNumber = lineNumber;
+		}
 
 		get lineNumber(): number  // int
 		{
+			return this._lineNumber;
+		}
 
+		private _linePosition:number;
+		protected _setLinePosition(linePosition:number):void{
+			this._linePosition = linePosition;
 		}
 
 		get linePosition(): number  // int
 		{
-
-		} // int
+			return this._linePosition;
+		}
 
 		hasLineInfo(): boolean
 		{
+			return !isNaN(this._lineNumber) && !isNaN(this._linePosition);
+		}
 
+		private _baseUri:string;
+		protected _setBaseUri(baseUri:string):void{
+			this._baseUri = baseUri;
 		}
 
 		get baseUri(): string
 		{
+			return this._baseUri;
+		}
+
+		private _nodeType:XmlNodeType;
+		protected _setNodeType(nodeType:XmlNodeType):void{
+			this._nodeType = nodeType;
 		}
 
 		get nodeType(): XmlNodeType
 		{
+			return this._nodeType;
 		}
 
 		get document(): XDocument
 		{
-			var current:XElement = this;
+			var current:XObject = this;
 
 			while (current)
 			{
 				if (current.nodeType === XmlNodeType.Document)
 				{
-					return current;
+					if( !(current instanceof XDocument) )
+					{
+						console.warn("Document node is not of type XDocument");
+					}
+					return <XDocument>current;
 				}
 
 				current = current.parent;
@@ -76,8 +103,15 @@ module System.Xml.Linq
 			return null;
 		}
 
+
+		private _parent:XElement;
+		protected _setParent(parent:XElement):void{
+			this._parent = parent;
+		}
+
 		get parent(): XElement
 		{
+			return this._parent;
 		}
 
 		removeAnnotations(type?:any):void

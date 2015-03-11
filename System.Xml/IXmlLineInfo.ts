@@ -12,4 +12,5 @@ module System.Xml
 		linePosition:number; // int
 		hasLineInfo():boolean
 	}
+
 } 
