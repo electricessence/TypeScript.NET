@@ -3,11 +3,10 @@ declare module System.Linq {
     import Predicate = System.Predicate;
     import Selector = System.Selector;
     import Action = System.Action;
-    import IEnumerator = System.Collections.IEnumerator;
-    import IEnumerable = System.Collections.IEnumerable;
-    import IArray = System.Collections.IArray;
-    import IMap = System.Collections.IMap;
-    import Dictionary = System.Collections.Dictionary;
+    import Collections = System.Collections;
+    import IEnumerable = Collections.IEnumerable;
+    import IMap = Collections.IMap;
+    import Dictionary = Collections.Dictionary;
     enum EnumerableAction {
         Break = 0,
         Return = 1,
@@ -15,14 +14,14 @@ declare module System.Linq {
     }
     class Enumerable<T> extends System.DisposableBase implements IEnumerable<T> {
         private enumeratorFactory;
-        constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void);
-        static fromArray<T>(array: IArray<T>): ArrayEnumerable<T>;
+        constructor(enumeratorFactory: () => System.Collections.IEnumerator<T>, finalizer?: () => void);
+        static fromArray<T>(array: System.Collections.IArray<T>): ArrayEnumerable<T>;
         static from<T>(source: any): Enumerable<T>;
         static toArray<T>(source: any): T[];
-        getEnumerator(): IEnumerator<T>;
-        _onDispose(): void;
-        static choice<T>(values: IArray<T>): Enumerable<T>;
-        static cycle<T>(values: IArray<T>): Enumerable<T>;
+        getEnumerator(): System.Collections.IEnumerator<T>;
+        protected _onDispose(): void;
+        static choice<T>(values: System.Collections.IArray<T>): Enumerable<T>;
+        static cycle<T>(values: System.Collections.IArray<T>): Enumerable<T>;
         static empty<T>(): Enumerable<T>;
         static repeat<T>(element: T, count?: number): Enumerable<T>;
         static repeatWithFinalize<T>(initializer: () => T, finalizer: (element: T) => void): Enumerable<T>;
@@ -35,7 +34,7 @@ declare module System.Linq {
         static matches(input: string, pattern: any, flags?: string): Enumerable<RegExpExecArray>;
         static generate<T>(factory: (index?: number) => T, count?: number): Enumerable<T>;
         static unfold<T>(seed: T, valueFactory: Selector<T, T>, skipSeed?: Boolean): Enumerable<T>;
-        static defer<T>(enumerableFactory: () => IEnumerable<T>): Enumerable<T>;
+        static defer<T>(enumerableFactory: () => System.Collections.IEnumerable<T>): Enumerable<T>;
         static forEach<T>(enumerable: IEnumerable<T>, action: (element: T, index?: number) => any): void;
         static max(values: Enumerable<number>): number;
         static min(values: Enumerable<number>): number;
@@ -61,7 +60,7 @@ declare module System.Linq {
         takeExceptLast(count?: number): Enumerable<T>;
         takeFromLast(count: number): Enumerable<T>;
         traverseBreadthFirst(func: (element: any) => IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any>;
-        traverseDepthFirst(func: (element: any) => IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any>;
+        traverseDepthFirst(func: (element: any) => System.Collections.IEnumerable<any>, resultSelector?: (element: any, nestLevel?: number) => any): Enumerable<any>;
         flatten(): Enumerable<any>;
         pairwise<TSelect>(selector: (prev: T, current: T) => TSelect): Enumerable<TSelect>;
         scan(func: (a: T, b: T) => T, seed?: T): Enumerable<T>;
@@ -91,34 +90,34 @@ declare module System.Linq {
         lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
         defaultIfEmpty(defaultValue?: T): Enumerable<T>;
         zip<TSecond, TResult>(second: Enumerable<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
-        zip<TSecond, TResult>(second: IArray<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        zip<TSecond, TResult>(second: System.Collections.IArray<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
         zipMultiple<TSecond, TResult>(second: Enumerable<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
-        zipMultiple<TSecond, TResult>(second: IArray<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
+        zipMultiple<TSecond, TResult>(second: System.Collections.IArray<TSecond>[], resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
         join<TInner, TKey, TResult, TCompare>(inner: Enumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner) => TResult, compareSelector?: Selector<TKey, TCompare>): Enumerable<TResult>;
         groupJoin<TInner, TKey, TResult, TCompare>(inner: Enumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner[]) => TResult, compareSelector?: Selector<TKey, TCompare>): Enumerable<TResult>;
-        concatWith(other: IEnumerable<T>): Enumerable<T>;
-        concatWith(other: IArray<T>): Enumerable<T>;
-        merge(enumerables: IEnumerable<T>[]): Enumerable<T>;
-        merge(enumerables: IArray<T>[]): Enumerable<T>;
-        concat(...enumerables: IEnumerable<T>[]): Enumerable<T>;
-        concat(...enumerables: IArray<T>[]): Enumerable<T>;
-        insertAt(index: number, other: IEnumerable<T>): Enumerable<T>;
-        insertAt(index: number, other: IArray<T>): Enumerable<T>;
-        alternateMultiple(sequence: IEnumerable<T>): Enumerable<T>;
-        alternateMultiple(sequence: IArray<T>): Enumerable<T>;
+        concatWith(other: System.Collections.IEnumerable<T>): Enumerable<T>;
+        concatWith(other: System.Collections.IArray<T>): Enumerable<T>;
+        merge(enumerables: System.Collections.IEnumerable<T>[]): Enumerable<T>;
+        merge(enumerables: System.Collections.IArray<T>[]): Enumerable<T>;
+        concat(...enumerables: System.Collections.IEnumerable<T>[]): Enumerable<T>;
+        concat(...enumerables: System.Collections.IArray<T>[]): Enumerable<T>;
+        insertAt(index: number, other: System.Collections.IEnumerable<T>): Enumerable<T>;
+        insertAt(index: number, other: System.Collections.IArray<T>): Enumerable<T>;
+        alternateMultiple(sequence: System.Collections.IEnumerable<T>): Enumerable<T>;
+        alternateMultiple(sequence: System.Collections.IArray<T>): Enumerable<T>;
         alternateSingle(value: T): Enumerable<T>;
         alternate(...sequence: T[]): Enumerable<T>;
-        intersect<TCompare>(second: IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
-        intersect<TCompare>(second: IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
-        sequenceEqual(second: IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
-        sequenceEqual(second: IArray<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
-        union<TCompare>(second: IEnumerable<T>, compareSelector: Selector<T, TCompare>): Enumerable<T>;
-        union<TCompare>(second: IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+        intersect<TCompare>(second: System.Collections.IEnumerable<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+        intersect<TCompare>(second: System.Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
+        sequenceEqual(second: System.Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+        sequenceEqual(second: System.Collections.IArray<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+        union<TCompare>(second: System.Collections.IEnumerable<T>, compareSelector: Selector<T, TCompare>): Enumerable<T>;
+        union<TCompare>(second: System.Collections.IArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
         orderBy<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         orderByDescending<TKey>(keySelector?: Selector<T, TKey>): OrderedEnumerable<T>;
         groupBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<Grouping<TKey, TElement>>;
         partitionBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, resultSelector?: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
-        buffer(size: number): IEnumerable<T[]>;
+        buffer(size: number): System.Collections.IEnumerable<T[]>;
         aggregate(func: (a: T, b: T) => T, seed?: T): T;
         average(selector?: Selector<T, number>): number;
         max(): T;
@@ -143,8 +142,8 @@ declare module System.Linq {
     class ArrayEnumerable<T> extends Enumerable<T> {
         private _source;
         constructor(source: System.Collections.IArray<T>);
-        _onDispose(): void;
-        source: IArray<T>;
+        protected _onDispose(): void;
+        source: System.Collections.IArray<T>;
         toArray(): T[];
         asEnumerable(): ArrayEnumerable<T>;
         forEach(action: (element: T, index?: number) => boolean): void;
@@ -162,40 +161,40 @@ declare module System.Linq {
         takeFromLast(count: number): Enumerable<T>;
         reverse(): Enumerable<T>;
         memoize(): ArrayEnumerable<T>;
-        sequenceEqual(second: IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
-        sequenceEqual(second: IArray<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+        sequenceEqual(second: System.Collections.IEnumerable<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
+        sequenceEqual(second: System.Collections.IArray<T>, equalityComparer?: (a: T, b: T) => boolean): boolean;
         toJoinedString(separator?: string, selector?: Selector<T, string>): string;
     }
     class WhereEnumerable<T> extends Enumerable<T> {
         private prevSource;
         private prevPredicate;
-        constructor(prevSource: IEnumerable<T>, prevPredicate: Predicate<T>);
+        constructor(prevSource: System.Collections.IEnumerable<T>, prevPredicate: Predicate<T>);
         where(predicate: Predicate<T>): Enumerable<T>;
         select<TSelect>(selector: Selector<T, TSelect>): Enumerable<TSelect>;
-        getEnumerator(): IEnumerator<T>;
-        _onDispose(): void;
+        getEnumerator(): System.Collections.IEnumerator<T>;
+        protected _onDispose(): void;
     }
     class WhereSelectEnumerable<TSource, T> extends Enumerable<T> {
         private prevSource;
         private prevPredicate;
         private prevSelector;
-        constructor(prevSource: IEnumerable<TSource>, prevPredicate: Predicate<TSource>, prevSelector: Selector<TSource, T>);
+        constructor(prevSource: System.Collections.IEnumerable<TSource>, prevPredicate: Predicate<TSource>, prevSelector: Selector<TSource, T>);
         where(predicate: (value: T, index?: number) => boolean): Enumerable<T>;
         select<TSelect>(selector: Selector<T, TSelect>): Enumerable<TSelect>;
-        getEnumerator(): IEnumerator<T>;
-        _onDispose(): void;
+        getEnumerator(): System.Collections.IEnumerator<T>;
+        protected _onDispose(): void;
     }
     class OrderedEnumerable<T> extends Enumerable<T> {
         private source;
         keySelector: (value: T) => any;
         descending: boolean;
         parent: OrderedEnumerable<T>;
-        constructor(source: IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent?: OrderedEnumerable<T>);
+        constructor(source: System.Collections.IEnumerable<T>, keySelector: (value: T) => any, descending: boolean, parent?: OrderedEnumerable<T>);
         createOrderedEnumerable(keySelector: (value: T) => any, descending: boolean): OrderedEnumerable<T>;
         thenBy(keySelector: (value: T) => any): OrderedEnumerable<T>;
         thenByDescending(keySelector: (value: T) => any): OrderedEnumerable<T>;
         getEnumerator(): System.Collections.EnumeratorBase<T>;
-        _onDispose(): void;
+        protected _onDispose(): void;
     }
     interface ILookup<TKey, TElement> extends IEnumerable<IGrouping<TKey, TElement>> {
         count: number;
@@ -208,7 +207,7 @@ declare module System.Linq {
         count: number;
         get(key: TKey): TElement[];
         contains(key: TKey): boolean;
-        getEnumerator(): IEnumerator<Grouping<TKey, TElement>>;
+        getEnumerator(): System.Collections.IEnumerator<Grouping<TKey, TElement>>;
     }
     interface IGrouping<TKey, TElement> extends IEnumerable<TElement> {
         key: TKey;

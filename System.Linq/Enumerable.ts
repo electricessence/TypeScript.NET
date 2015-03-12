@@ -50,12 +50,22 @@ module System.Linq
 		INT_NEGATIVE_1 = -1 | 0,
 		INT_POSITIVE_1 = +1 | 0;
 
+	var GET_ENUMERATOR = "getEnumerator", COUNT = "count";
+
+	function isIArray(o:any):boolean {
+		return typeof o === Types.Object && "length" in o;
+	}
 
 	// #endregion
 
 	// #region Helper Functions...
 	// This allows for the use of a boolean instead of calling this.assertIsNotDisposed()
 	// since there is a strong chance of introducing a circular reference.
+	var UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.",
+		INVALID_START_VALUE = "Must have a valid 'start' value.",
+		INVALID_STEP_VALUE = "Must have a valid 'step' value.",
+		INVALID_TO_VALUE = "Must have a valid 'to' value.";
+
 	function assertIsNotDisposed(disposed: boolean): boolean
 	{
 		return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
@@ -103,13 +113,13 @@ module System.Linq
 
 		static from<T>(source: any): Enumerable<T>
 		{
-			if ("getEnumerator" in source)
+			if (GET_ENUMERATOR in source)
 				return source;
 
-			if (source instanceof Array || typeof source === Types.Object && "length" in source)
+			if (source instanceof Array || isIArray(source))
 				return Enumerable.fromArray<T>(source);
 
-			throw new Error("Unsupported enumerable.");
+			throw new Error(UNSUPPORTED_ENUMERABLE);
 		}
 
 		static toArray<T>(source: any): T[]
@@ -117,13 +127,13 @@ module System.Linq
 			if (source instanceof Array)
 				return source.slice();
 
-			if (typeof source === Types.Object && "length" in source)
+			if (isIArray(source))
 				source = Enumerable.fromArray<T>(source);
 
 			if (source instanceof Enumerable)
 				return source.toArray();
 
-			if ("getEnumerator" in source)
+			if (GET_ENUMERATOR in source)
 			{
 				var result: T[] = [];
 				enumeratorForEach<T>(source.getEnumerator(), (e, i) =>
@@ -134,7 +144,7 @@ module System.Linq
 			}
 
 
-			throw new Error("Unsupported enumerable.");
+			throw new Error(UNSUPPORTED_ENUMERABLE);
 		}
 
 
@@ -197,7 +207,7 @@ module System.Linq
 			if (isNaN(count) || count <= 0)
 				return Enumerable.empty<T>();
 
-			return isFinite(count) && assertInteger(count, "count")
+			return isFinite(count) && assertInteger(count, COUNT)
 				? new Enumerable<T>(() =>
 				{
 					var c: number = count | 0; // Force integer evaluation.
@@ -243,15 +253,15 @@ module System.Linq
 		{
 
 			if (!isFinite(start))
-				throw new Error("Must have a valid 'start' value.");
+				throw new Error(INVALID_START_VALUE);
 
 			if (isNaN(count) || count <= 0)
 				return Enumerable.empty<number>();
 
 			if (!isFinite(step))
-				throw new Error("Must have a valid 'step' value.");
+				throw new Error(INVALID_STEP_VALUE);
 
-			return isFinite(count) && assertInteger(count, "count")
+			return isFinite(count) && assertInteger(count, COUNT)
 				? new Enumerable<number>(() =>
 				{
 					var value: number;
@@ -327,13 +337,13 @@ module System.Linq
 			step: number = 1): Enumerable<number>
 		{
 			if (!isFinite(start))
-				throw new Error("Must have a valid 'start' value.");
+				throw new Error(INVALID_START_VALUE);
 
 			if (isNaN(to))
-				throw new Error("Must have a valid 'to' value.");
+				throw new Error(INVALID_TO_VALUE);
 
 			if (!isFinite(step))
-				throw new Error("Must have a valid 'step' value.");
+				throw new Error(INVALID_STEP_VALUE);
 
 			// This way we adjust for the delta from start and to so the user can say +/- step and it will work as expected.
 			step = Math.abs(step);
@@ -410,7 +420,7 @@ module System.Linq
 			if (isNaN(count) || count <= 0)
 				return Enumerable.empty<T>();
 
-			return isFinite(count) && assertInteger(count, "count")
+			return isFinite(count) && assertInteger(count, COUNT)
 				? new Enumerable<T>(() =>
 				{
 					var c: number = count | 0; // Force integer evaluation.
@@ -668,7 +678,7 @@ module System.Linq
 			if (!isFinite(count)) // +Infinity equals skip all so return empty.
 				return Enumerable.empty<T>();
 
-			assertInteger(count, "count");
+			assertInteger(count, COUNT);
 
 			var c: number = count | 0;
 
@@ -708,7 +718,7 @@ module System.Linq
 			if (!isFinite(count)) // +Infinity equals no limit.
 				return _;
 
-			assertInteger(count, "count");
+			assertInteger(count, COUNT);
 			var c = count | 0;
 
 			// Once action returns false, the enumeration will stop.
@@ -760,7 +770,7 @@ module System.Linq
 			if (!isFinite(count)) // +Infinity equals skip all so return empty.
 				return Enumerable.empty<T>();
 
-			assertInteger(count, "count");
+			assertInteger(count, COUNT);
 			var c = count | 0;
 
 			return new Enumerable<T>(() =>
@@ -802,7 +812,7 @@ module System.Linq
 			if (!isFinite(count)) // Infinity means return all in reverse.
 				return _.reverse();
 
-			assertInteger(count, "count");
+			assertInteger(count, COUNT);
 
 			return _.reverse().take(count | 0);
 		}

@@ -4,9 +4,6 @@ declare module System.Xml {
         linePosition: number;
         hasLineInfo(): boolean;
     }
-    class Test {
-        protected _blah: string;
-    }
 }
 declare module System.Xml {
     enum XmlNodeType {

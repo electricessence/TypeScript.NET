@@ -5,7 +5,7 @@ module.exports = function(gulp) {
 	const PARENT = '../', TS = '.ts', JS = '.js', MIN = '.min', AMD = '.amd';
 
 	// TypeScript Compilation..
-	return function(namespace, dependencies) {
+	return function(namespace, dependencies, taskDeps) {
 
 		var depString = '';
 		if(dependencies && dependencies.length)
@@ -63,8 +63,9 @@ module.exports = function(gulp) {
 			});
 
 		var typescript = require('gulp-tsc');
+		taskDeps = taskDeps || [];
 		gulp.task(
-			TASK_COMPILE, function() {
+			TASK_COMPILE, taskDeps, function() {
 				return gulp.src(srcPaths) // Ignore
 					.pipe(
 					typescript(

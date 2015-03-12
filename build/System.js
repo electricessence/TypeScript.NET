@@ -140,10 +140,10 @@ var System;
         }
     }
     System.copyTo = copyTo;
-    function applyMixins(derivedCtor, baseCtors) {
-        baseCtors.forEach(function (baseCtor) {
-            Object.getOwnPropertyNames(baseCtor.prototype).forEach(function (name) {
-                derivedCtor.prototype[name] = baseCtor.prototype[name];
+    function applyMixins(derivedConstructor, baseConstructors) {
+        baseConstructors.forEach(function (bc) {
+            Object.getOwnPropertyNames(bc.prototype).forEach(function (name) {
+                derivedConstructor.prototype[name] = bc.prototype[name];
             });
         });
     }
@@ -181,21 +181,16 @@ var System;
         }
     }
     function disposeTheseInternal(disposables, ignoreExceptions) {
-        var next;
-        while (disposables.length && !(next = disposables.shift())) {
-        }
-        if (next) {
-            try {
-                disposeSingle(next, ignoreExceptions);
-            }
-            finally {
-                disposeTheseInternal(disposables, ignoreExceptions);
-            }
+        if (disposables) {
+            var len = disposables.length;
+            for (var i = 0; i < len; i++)
+                disposeSingle(disposables[i], ignoreExceptions);
+            disposables.length = 0;
         }
     }
     function disposeThese(disposables, ignoreExceptions) {
         if (disposables && disposables.length)
-            disposeTheseInternal(disposables.slice(), ignoreExceptions);
+            disposeTheseInternal(disposables.slice(0), ignoreExceptions);
     }
     System.disposeThese = disposeThese;
     function using(disposable, closure) {
@@ -259,7 +254,7 @@ var System;
                 if (length > 65536)
                     array = new Array(length);
                 else {
-                    array = new Array();
+                    array = [];
                     array.length = length;
                 }
                 return array;
@@ -271,7 +266,7 @@ var System;
                 if (!sourceArray)
                     return sourceArray;
                 var sourceLength = sourceArray.length;
-                return (sourceIndex || length < sourceLength) ? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength) : sourceArray.slice();
+                return (sourceIndex || length < sourceLength) ? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength) : sourceArray.slice(0);
             }
             ArrayUtility.copy = copy;
             function copyTo(sourceArray, destinationArray, sourceIndex, destinationIndex, length) {
@@ -2273,9 +2268,9 @@ var System;
 (function (System) {
     var Collections;
     (function (Collections) {
-        var MINIMUMGROW = 4 | 0;
-        var GROWFACTOR_HALF = 100 | 0;
-        var DEFAULTCAPACITY = MINIMUMGROW;
+        var MINIMUM_GROW = 4 | 0;
+        var GROW_FACTOR_HALF = 100 | 0;
+        var DEFAULT_CAPACITY = MINIMUM_GROW;
         var emptyArray = [];
         function assertInteger(value, property) {
             if (value != Math.floor(value))
@@ -2304,7 +2299,7 @@ var System;
                         _._array = source ? Collections.ArrayUtility.initialize(source) : emptyArray;
                     }
                     else {
-                        _._array = Collections.ArrayUtility.initialize(source instanceof Array || "length" in source ? source.length : DEFAULTCAPACITY);
+                        _._array = Collections.ArrayUtility.initialize(source instanceof Array || "length" in source ? source.length : DEFAULT_CAPACITY);
                         Collections.Enumerable.forEach(source, function (e) { return _.enqueue(e); });
                         _._version = 0;
                     }
@@ -2418,9 +2413,9 @@ var System;
             Queue.prototype.enqueue = function (item) {
                 var _ = this, array = _._array, size = _._size | 0, len = _._capacity | 0;
                 if (size == len) {
-                    var newcapacity = len * GROWFACTOR_HALF;
-                    if (newcapacity < len + MINIMUMGROW)
-                        newcapacity = len + MINIMUMGROW;
+                    var newcapacity = len * GROW_FACTOR_HALF;
+                    if (newcapacity < len + MINIMUM_GROW)
+                        newcapacity = len + MINIMUM_GROW;
                     _.setCapacity(newcapacity);
                     array = _._array;
                     len = _._capacity;
@@ -2434,7 +2429,7 @@ var System;
             Queue.prototype.dequeue = function () {
                 var _ = this;
                 if (_._size == 0)
-                    throw new Error("InvalidOperatioException: cannot dequeue an empty queue.");
+                    throw new Error("InvalidOperationException: cannot dequeue an empty queue.");
                 var array = _._array, head = _._head;
                 var removed = _._array[head];
                 array[head] = null;
@@ -2466,12 +2461,12 @@ var System;
                 return new Collections.EnumeratorBase(function () {
                     version = _._version;
                     index = 0;
-                }, function (yieler) {
+                }, function (yielder) {
                     if (version != _._version)
                         throw new Error("InvalidOperationException: collection was changed during enumeration.");
                     if (index == _._size)
-                        return yieler.yieldBreak();
-                    return yieler.yieldReturn(_._getElement(index++));
+                        return yielder.yieldBreak();
+                    return yielder.yieldReturn(_._getElement(index++));
                 });
             };
             return Queue;

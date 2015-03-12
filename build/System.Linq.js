@@ -8,14 +8,15 @@ var System;
 (function (System) {
     var Linq;
     (function (Linq) {
-        "use strict";
-        var ArrayUtility = System.Collections.ArrayUtility;
-        var EnumeratorBase = System.Collections.EnumeratorBase;
-        var Dictionary = System.Collections.Dictionary;
-        var Queue = System.Collections.Queue;
+        'use strict';
+        var Collections = System.Collections;
+        var ArrayUtility = Collections.ArrayUtility;
+        var EnumeratorBase = Collections.EnumeratorBase;
+        var Dictionary = Collections.Dictionary;
+        var Queue = Collections.Queue;
         var using = System.using;
-        var enumeratorFrom = System.Collections.Enumerator.from;
-        var enumeratorForEach = System.Collections.Enumerator.forEach;
+        var enumeratorFrom = Collections.Enumerator.from;
+        var enumeratorForEach = Collections.Enumerator.forEach;
         var Types = System.Types;
         var LinqFunctions = (function (_super) {
             __extends(LinqFunctions, _super);
@@ -31,7 +32,12 @@ var System;
             return LinqFunctions;
         })(System.Functions);
         var Functions = new LinqFunctions();
-        var INT_0 = 0 | 0, INT_NEGATTIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
+        var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
+        var GET_ENUMERATOR = "getEnumerator", COUNT = "count";
+        function isIArray(o) {
+            return typeof o === Types.Object && "length" in o;
+        }
+        var UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.", INVALID_START_VALUE = "Must have a valid 'start' value.", INVALID_STEP_VALUE = "Must have a valid 'step' value.", INVALID_TO_VALUE = "Must have a valid 'to' value.";
         function assertIsNotDisposed(disposed) {
             return System.DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
         }
@@ -60,27 +66,27 @@ var System;
                 return new ArrayEnumerable(array);
             };
             Enumerable.from = function (source) {
-                if ("getEnumerator" in source)
+                if (GET_ENUMERATOR in source)
                     return source;
-                if (source instanceof Array || typeof source === System.Types.Object && "length" in source)
+                if (source instanceof Array || isIArray(source))
                     return Enumerable.fromArray(source);
-                throw new Error("Unsupported enumerable.");
+                throw new Error(UNSUPPORTED_ENUMERABLE);
             };
             Enumerable.toArray = function (source) {
                 if (source instanceof Array)
                     return source.slice();
-                if (typeof source === System.Types.Object && "length" in source)
+                if (isIArray(source))
                     source = Enumerable.fromArray(source);
                 if (source instanceof Enumerable)
                     return source.toArray();
-                if ("getEnumerator" in source) {
+                if (GET_ENUMERATOR in source) {
                     var result = [];
                     enumeratorForEach(source.getEnumerator(), function (e, i) {
                         result[i] = e;
                     });
                     return result;
                 }
-                throw new Error("Unsupported enumerable.");
+                throw new Error(UNSUPPORTED_ENUMERABLE);
             };
             Enumerable.prototype.getEnumerator = function () {
                 this.assertIsNotDisposed();
@@ -112,7 +118,7 @@ var System;
                 if (count === void 0) { count = Infinity; }
                 if (isNaN(count) || count <= 0)
                     return Enumerable.empty();
-                return isFinite(count) && assertInteger(count, "count") ? new Enumerable(function () {
+                return isFinite(count) && assertInteger(count, COUNT) ? new Enumerable(function () {
                     var c = count | 0;
                     var index = INT_0;
                     return new EnumeratorBase(function () {
@@ -138,12 +144,12 @@ var System;
                 if (count === void 0) { count = Infinity; }
                 if (step === void 0) { step = 1; }
                 if (!isFinite(start))
-                    throw new Error("Must have a valid 'start' value.");
+                    throw new Error(INVALID_START_VALUE);
                 if (isNaN(count) || count <= 0)
                     return Enumerable.empty();
                 if (!isFinite(step))
-                    throw new Error("Must have a valid 'step' value.");
-                return isFinite(count) && assertInteger(count, "count") ? new Enumerable(function () {
+                    throw new Error(INVALID_STEP_VALUE);
+                return isFinite(count) && assertInteger(count, COUNT) ? new Enumerable(function () {
                     var value;
                     var c = count | 0;
                     var index = INT_0;
@@ -189,11 +195,11 @@ var System;
                 if (to === void 0) { to = Infinity; }
                 if (step === void 0) { step = 1; }
                 if (!isFinite(start))
-                    throw new Error("Must have a valid 'start' value.");
+                    throw new Error(INVALID_START_VALUE);
                 if (isNaN(to))
-                    throw new Error("Must have a valid 'to' value.");
+                    throw new Error(INVALID_TO_VALUE);
                 if (!isFinite(step))
-                    throw new Error("Must have a valid 'step' value.");
+                    throw new Error(INVALID_STEP_VALUE);
                 step = Math.abs(step);
                 if (!isFinite(to))
                     return Enumerable.range(start, Infinity, (start < to) ? (+step) : (-step));
@@ -242,7 +248,7 @@ var System;
                 if (count === void 0) { count = Infinity; }
                 if (isNaN(count) || count <= 0)
                     return Enumerable.empty();
-                return isFinite(count) && assertInteger(count, "count") ? new Enumerable(function () {
+                return isFinite(count) && assertInteger(count, COUNT) ? new Enumerable(function () {
                     var c = count | 0;
                     var index = INT_0;
                     return new EnumeratorBase(function () {
@@ -396,7 +402,7 @@ var System;
                     return _;
                 if (!isFinite(count))
                     return Enumerable.empty();
-                assertInteger(count, "count");
+                assertInteger(count, COUNT);
                 var c = count | 0;
                 return this.doAction(function (element, index) { return index < c ? 2 /* Skip */ : 1 /* Return */; });
             };
@@ -416,7 +422,7 @@ var System;
                 _.assertIsNotDisposed();
                 if (!isFinite(count))
                     return _;
-                assertInteger(count, "count");
+                assertInteger(count, COUNT);
                 var c = count | 0;
                 return _.doAction(function (element, index) { return index < c; });
             };
@@ -443,7 +449,7 @@ var System;
                     return _;
                 if (!isFinite(count))
                     return Enumerable.empty();
-                assertInteger(count, "count");
+                assertInteger(count, COUNT);
                 var c = count | 0;
                 return new Enumerable(function () {
                     var enumerator;
@@ -469,7 +475,7 @@ var System;
                 var _ = this;
                 if (!isFinite(count))
                     return _.reverse();
-                assertInteger(count, "count");
+                assertInteger(count, COUNT);
                 return _.reverse().take(count | 0);
             };
             Enumerable.prototype.traverseBreadthFirst = function (func, resultSelector) {
@@ -751,7 +757,7 @@ var System;
                     return new EnumeratorBase(function () {
                         assertIsNotDisposed(disposed);
                         enumerator = _.getEnumerator();
-                        keys = new System.Collections.Dictionary(compareSelector);
+                        keys = new Dictionary(compareSelector);
                         if (second)
                             Enumerable.forEach(second, function (key) { return keys.addByKeyValue(key, true); });
                     }, function (yielder) {
@@ -905,7 +911,7 @@ var System;
                 return compareSelector ? this.any(function (v) { return compareSelector(v) === compareSelector(value); }) : this.any(function (v) { return v === value; });
             };
             Enumerable.prototype.indexOf = function (value, compareSelector) {
-                var found = INT_NEGATTIVE_1;
+                var found = INT_NEGATIVE_1;
                 if (compareSelector)
                     this.forEach(function (element, i) {
                         if (System.areEqual(compareSelector(element), compareSelector(value), true)) {
@@ -923,7 +929,7 @@ var System;
                 return found;
             };
             Enumerable.prototype.lastIndexOf = function (value, compareSelector) {
-                var result = INT_NEGATTIVE_1;
+                var result = INT_NEGATIVE_1;
                 if (compareSelector)
                     this.forEach(function (element, i) {
                         if (System.areEqual(compareSelector(element), compareSelector(value), true))

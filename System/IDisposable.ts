@@ -38,26 +38,21 @@ module System {
 
 	function disposeTheseInternal(disposables: IDisposable[], ignoreExceptions:boolean): void
 	{
-		var next: IDisposable;
-		// Get the next non-null entry.
-		while(disposables.length && !(next = disposables.shift())) { } // TODO: avoid .shift()
-		if (next)
+		if(disposables)
 		{
-			try
-			{
-				disposeSingle(next, ignoreExceptions);
-			}
-			finally
-			{
-				disposeTheseInternal(disposables, ignoreExceptions);
-			}
+			var len = disposables.length;
+			for(var i = 0; i<len; i++)
+				disposeSingle(disposables[i], ignoreExceptions);
+			disposables.length = 0;
 		}
 	}
 
 	export function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void
 	{
 		if(disposables && disposables.length)
-			disposeTheseInternal(disposables.slice(0),ignoreExceptions);
+			disposeTheseInternal(
+				disposables.slice(0), // Creating a copy is important because the act of disposal can change the source collection.
+				ignoreExceptions);
 	}
 
 	export function using<TDisposable extends IDisposable,TReturn>(
@@ -108,7 +103,7 @@ module System {
 		dispose(): void {
 			var _ = this;
 			if (!_._wasDisposed) {
-				// Premptively set wasDisposed in order to prevent repeated disposing.
+				// Preemptively set wasDisposed in order to prevent repeated disposing.
 				// NOTE: in true multi-threaded scenarios, this needs to be synchronized.
 				_._wasDisposed = true;
 				try {
