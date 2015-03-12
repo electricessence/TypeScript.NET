@@ -30,14 +30,53 @@ module System.Xml.Linq
 		}
 	}
 
-	export class XObject
-		extends System.EventDispatcher
-		implements System.Xml.IXmlLineInfo
-	{
-		public static EVENT_CHANGED = "changed";
-		public static EVENT_CHANGING = "changing";
 
-		private _annotations: any;
+	/// <summary>
+	/// Instance of this class is used as an annotation on any node
+	/// for which we want to store its line information.
+	/// Note: on XElement nodes this annotation stores the line info
+	///   for the element start tag. The matching end tag line info
+	///   if present is stored using the LineInfoEndElementAnnotation
+	///   instance annotation.
+	/// </summary>
+	class LineInfoAnnotation
+	{
+		constructor(public lineNumber:number, public linePosition:number)
+		{
+
+		}
+	}
+
+	/// <summary>
+	/// Instance of this class is used as an annotation on XElement nodes
+	/// if that element is not empty element and we want to store the line info
+	/// for its end element tag.
+	/// </summary>
+	class LineInfoEndElementAnnotation extends LineInfoAnnotation
+	{
+		constructor(lineNumber:number, linePosition:number)
+		{
+			super(lineNumber, linePosition);
+		}
+	}
+
+	class XObjectChangeAnnotation
+	{
+		//EventHandler<XObjectChangeEventArgs> changing;
+		changing:()=>void;
+
+		//EventHandler<XObjectChangeEventArgs> changed;
+		changed:()=>void;
+
+		constructor()
+		{
+		}
+	}
+
+	export class XObject extends System.EventDispatcher implements System.Xml.IXmlLineInfo
+	{
+
+		private _annotations:any;
 
 		constructor()
 		{
@@ -47,155 +86,245 @@ module System.Xml.Linq
 		/// <summary>
 		/// Get the BaseUri for this <see cref="XObject"/>.
 		/// </summary>
-		get baseUri(): string
+		get baseUri():string
 		{
 			var o = this;
-			while (true)
+			while(true)
 			{
-				while (o != null && o.annotations == null)
+				while(o!=null && o.annotations==null)
 				{
 					o = o.parent;
 				}
-				if (o == null) break;
-				var a = o.annotation<BaseUriAnnotation>();
-				if (a != null) return a.baseUri;
+				if(o==null) break;
+				var a = o.annotation<BaseUriAnnotation>(BaseUriAnnotation);
+				if(a!=null) return a.baseUri;
 				o = o.parent;
 			}
 			return EMPTY;
 		}
 
 
-		get document(): XDocument
+		get document():XDocument
 		{
-			var n: XObject = this;
-			while (n.parent != null) n = n.parent;
+			var n:XObject = this;
+			while(n.parent!=null) n = n.parent;
 
-			return n && n.nodeType === XmlNodeType.Document ? <XDocument>n : null;
+			return n && n.nodeType===XmlNodeType.Document ? <XDocument>n : null;
 		}
 
-		getNodeType(): XmlNodeType
+		getNodeType():XmlNodeType
 		{
 			return XmlNodeType.None;
 		}
 
-		get nodeType(): XmlNodeType
+		get nodeType():XmlNodeType
 		{
 			return this.getNodeType();
 		}
 
 
-		private _parent: XElement;
-		// Internal
-		__setParent(parent: XElement): void
-		{
-			this._parent = parent;
-		}
 
 		// See line 1060 of System.Xml.Linq/XLinq.cs
 		/// <summary>
 		/// Adds an object to the annotation list of this <see cref="XObject"/>.
 		/// </summary>
 		/// <param name="annotation">The annotation to add.</param>
-		addAnnotation(annotation:any): void
+		addAnnotation(annotation:any):void
 		{
-			if (isNullOrUndefined(annotation))
+			if(isNullOrUndefined(annotation))
 				throw 'ArgumentNullException("annotation")';
 
 			// Herein lies a method of memory optimization.
 			// _annotations is not initialized unless used. 
 			// And arrays are not used unless needed.
 
-			var a: any = this._annotations;
-			if (isNullOrUndefined(a))
+			var a:any = this._annotations;
+			if(isNullOrUndefined(a))
 			{
-				// Not initialzied yet?
+				// Not initialized yet?
 				this._annotations =
 					annotation instanceof Array
-					? [annotation] // Create a wrapping array to ensure the outer collection isn't confused.
-					: annotation; // Not an array?  Ok go ahead with a single value.
+						? [annotation] // Create a wrapping array to ensure the outer collection isn't confused.
+						: annotation; // Not an array?  Ok go ahead with a single value.
 			}
 			else
 			{
-				if (a instanceof Array)
+				if(a instanceof Array)
 					a.push(annotation);
 				else
 					this._annotations = [a, annotation];
 			}
 		}
 
-
-		private _lineNumber:number;
-		protected _setLineNumber(lineNumber:number):void{
-			this._lineNumber = lineNumber;
-		}
-
-		get lineNumber(): number  // int
+		// See lines 1092 and 1142 of System.Xml.Linq/XLinq.cs
+		/// <summary>
+		/// Returns the first annotation object of the specified type from the list of annotations
+		/// of this <see cref="XObject"/>.
+		/// </summary>
+		/// <param name="type">The type of the annotation to retrieve.</param>
+		/// <returns>
+		/// The first matching annotation object, or null
+		/// if no annotation is the specified type.
+		/// </returns>
+		annotation<T>(type:any):T
 		{
-			return this._lineNumber;
-		}
-
-		private _linePosition:number;
-		protected _setLinePosition(linePosition:number):void{
-			this._linePosition = linePosition;
-		}
-
-		get linePosition(): number  // int
-		{
-			return this._linePosition;
-		}
-
-		hasLineInfo(): boolean
-		{
-			return !isNaN(this._lineNumber) && !isNaN(this._linePosition);
-		}
-
-
-
-
-
-
-
-
-		get parent(): XElement
-		{
-			return this._parent;
-		}
-
-		removeAnnotations(type?:any):void
-		{
-			var a = this._annotationsArray;
-			if (!type) a.length = 0;
-			else
+			if(!type) throw 'new ArgumentNullException("type")';
+			var a:any = this._annotations;
+			if(!isNullOrUndefined(a))
 			{
-				var i: number = 0 | 0;
-				for (var i = a.length - 1; i >= 0; i--)
+				if(a instanceof Array)
 				{
-					if (a[i].Type === type)
+					for(var i = 0; i<a.Length; i++)
 					{
-						a.splice(i, 1);
+						var obj = a[i];
+						if(obj==null) break;
+						if(obj instanceof type) return obj;
 					}
 				}
+				else
+				{
+					if(a instanceof type) return a;
+				}
+
 			}
+			return null;
 		}
 
-		annotation<T>(type?: any): T
+		/// <summary>
+		/// Returns an enumerable collection of annotations of the specified type
+		/// for this <see cref="XObject"/>.
+		/// </summary>
+		/// <param name="type">The type of the annotations to retrieve.</param>
+		/// <returns>An enumerable collection of annotations for this XObject.</returns>
+		annotations(type:any):Enumerable<any>
 		{
-			return this._annotationsEnumerable
-				.where(a=> a.Type === type)
-				.select(a=> a.Object)
-				.firstOrDefault();
+			if(!type) throw 'new ArgumentNullException("type")';
+			return this.annotationsIterator(type);
 		}
 
-		annotations<T>(type?: any):Enumerable<T>
+		private annotationsIterator(type:any):Enumerable<any>
 		{
-			var e = this._annotationsEnumerable;
-			if (type)
-				e = e.where(a=> a.Type === type);
-
-			return e.select(a=> a.Object);
+			var _ = this;
+			return Enumerable.from(
+				() =>
+				{
+					var a = _._annotations;
+					// A choice is made here to optimize for robustness versus memory.
+					return a instanceof Array ? a.slice(0) : [a];
+				})
+				.where(a=>a instanceof type);
 		}
 
-		
+
+
+		removeAnnotations(type:any):number
+		{
+			if(!type) throw 'new ArgumentNullException("type")';
+			var a = this._annotations;
+
+			if(a instanceof Array)
+			{
+				var count:number = 0 | 0;
+				var a2 = [];
+
+				// splicing can be slow, so better to iterate and regenerate a new array.
+				for(var i = 0; i<a.length; i++)
+				{
+					var r = a[i];
+					if(r instanceof type)
+						count++;
+					else
+						a2.push(r);
+				}
+
+				if(count) // Values changed?
+					this._annotations = a2;
+				else
+					a = a2; // No? Swap.
+
+				// Erase unused:
+				a.length = 0;
+
+				if(!this._annotations.length)
+					this._annotations = null;
+
+				return count;
+			}
+			else
+			{
+				if(a instanceof type)
+				{
+					this._annotations = null;
+					return 1;
+				}
+			}
+
+			return 0;
+		}
+
+		hasLineInfo():boolean
+		{
+			return this.annotation<LineInfoAnnotation>(LineInfoAnnotation)!=null;
+		}
+
+		get lineNumber():number  // int
+		{
+			var a = this.annotation<LineInfoAnnotation>(LineInfoAnnotation);
+			return a ? a.lineNumber : 0;
+		}
+
+		get linePosition():number  // int
+		{
+			var a = this.annotation<LineInfoAnnotation>(LineInfoAnnotation);
+			return a ? a.linePosition : 0;
+		}
+
+
+		get _hasBaseUri():boolean
+		{
+			return this.annotation<BaseUriAnnotation>(BaseUriAnnotation)!=null;
+		}
+
+		// Internal
+		_parent:XContainer;
+		get parent():XElement
+		{
+			return System.instanceAsType<XElement>(this._parent,XElement);
+		}
+
+
+		_setBaseUri(baseUri:string):void
+		{
+			this.addAnnotation(new BaseUriAnnotation(baseUri));
+		}
+
+		_setLineInfo(lineNumber:number, linePosition:number):void
+		{
+			this.addAnnotation(new LineInfoAnnotation(lineNumber, linePosition));
+		}
+
+		_skipNotify():boolean
+		{
+			return true; // For now
+			//var o = this;
+			//while (true)
+			//{
+			//	while (o != null && o.annotations == null)
+			//	{
+			//		o = o.parent;
+			//	}
+			//	if (o == null) return true;
+			//	if (o.annotations<XObjectChangeAnnotation>(XObjectChangeAnnotation) != null) return false;
+			//	o = o.parent;
+			//}
+		}
+
+		//
+		//static EVENT_CHANGED = "changed";
+		//static EVENT_CHANGING = "changing";
+		//
+		// TODO: Add change event handling.
+		//
 
 	}
 }

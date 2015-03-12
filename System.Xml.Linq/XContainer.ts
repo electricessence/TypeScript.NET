@@ -11,68 +11,112 @@ module System.Xml.Linq
 {
 	import LinkedList = System.Collections.LinkedList;
 
+	// Abstract class for maintaining child nodes and content.
 	export class XContainer extends XNode
 	{
-		constructor()
+		_content:any;
+
+		// Is supposed to be internal.
+		constructor(other?:XContainer)
 		{
 			super();
+			var _ = this;
+			if(other)
+			{
+				var content = other._content;
+				if(content!=null)
+				{
+					if(Types.isString(content))
+						_._content = content;
+					else
+					{
+						var n = content;
+						do
+						{
+							n = n.next;
+							_._appendNodeSkipNotify(n.CloneNode());
+						} while(n!=content);
+					}
+				}
+			}
 
-			this._nodes = new LinkedList<XNode>();
 		}
 
-		private _nodes:LinkedList<XNode>;
 
-		get firstNode():XNode {
-			return this._nodes.firstValue;
+		/// <summary>
+		/// Get the first child node of this node.
+		/// </summary>
+		get firstNode():XNode
+		{
+			var last = this.lastNode;
+			return last!=null ? last._next : null;
 		}
 
-		get lastNode():XNode {
-			return this._nodes.lastValue;
+
+		/// <summary>
+		/// Get the last child node of this node.
+		/// </summary>
+		get lastNode():XNode
+		{
+			var content = this._content;
+			if(!content) return null; // Includes "", 0, null, undefined.
+
+			if(Types.isString(content))
+			{
+				var t = new XText(content);
+				t._parent = this;
+				t._next = t; // Loop it.
+				content = t;
+			}
+
+			return content;
 		}
 
-		previousSiblingOf(node:XNode):XNode {
-			var prev:XNode = null;
-			var n = this._nodes.find(node);
-			if(n) {
-				var np = n.previous;
-				if(np) prev = np.value;
+		nodes():Enumerable<XNode>
+		{
+			var _ = this, n = _.lastNode;
+			if(!n) return Enumerable.empty<XNode>();
+
+			return new Enumerable<XNode>(
+				()=>
+				{
+					var started:boolean;
+					return new EnumeratorBase<XNode>(
+						()=> {
+							started = true;
+						},
+						yielder=>
+						{
+							n = n._next;
+
+							if(started) {
+								if(n._parent!=_ || n==_._content)
+									return yielder.yieldBreak();
+							} else {
+								started = true;
+							}
+
+							return yielder.yieldReturn(n);
+						}
+					)
+				});
+		}
+
+		_appendNodeSkipNotify(n:XNode)
+		{
+			var _ = this, content = _._content;
+			n._parent = _;
+			if(content==null || Types.isString(content))
+			{
+				n._next = n;
 			}
 			else
-				console.warn("Value not found in list.");
-			return prev;
-		}
-
-		nextSiblingOf(node:XNode):XNode {
-			var next:XNode = null;
-			var n = this._nodes.find(node);
-			if(n) {
-				var nn = n.next;
-				if(nn) next = nn.value;
+			{
+				var x:XNode = content;
+				n._next = x._next;
+				x._next = n;
 			}
-			else
-				console.warn("Value not found in list.");
-			return next;
+			_._content = n;
 		}
-
-		removeChild(node:XNode):void {
-			this._nodes.remove(node);
-		}
-
-		insertChildBefore(child:XNode, toInsert:XNode):void {
-			var n = this._nodes.find(child);
-			if(!n)
-				console.warn("Value not found in list.");
-
-			n.addBefore(toInsert);
-		}
-
-		insertChildAfter(child:XNode, toInsert:XNode):void {
-			var n = this._nodes.find(child);
-			if(!n)
-				console.warn("Value not found in list.");
-
-			n.addAfter(toInsert);
-		}
-
 	}
 }

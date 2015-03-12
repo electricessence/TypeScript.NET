@@ -37,6 +37,11 @@ module System {
 	}
 	// #endregion
 
+
+	export function instanceAsType<T>(instance:any, type:any):T {
+		return instance instanceof type ? instance : null;
+	}
+
 	export function isNullOrUndefined(n: any): boolean
 	{
 		return n === null || n === undefined;

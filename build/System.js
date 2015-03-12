@@ -82,6 +82,10 @@ var System;
 var System;
 (function (System) {
     var Types = System.Types;
+    function instanceAsType(instance, type) {
+        return instance instanceof type ? instance : null;
+    }
+    System.instanceAsType = instanceAsType;
     function isNullOrUndefined(n) {
         return n === null || n === undefined;
     }
@@ -152,6 +156,100 @@ var System;
         });
     }
     System.applyMixins = applyMixins;
+})(System || (System = {}));
+var System;
+(function (System) {
+    function dispose() {
+        var disposables = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            disposables[_i - 0] = arguments[_i];
+        }
+        disposeTheseInternal(disposables, false);
+    }
+    System.dispose = dispose;
+    function disposeWithoutException() {
+        var disposables = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            disposables[_i - 0] = arguments[_i];
+        }
+        disposeTheseInternal(disposables, true);
+    }
+    System.disposeWithoutException = disposeWithoutException;
+    function disposeSingle(disposable, ignoreExceptions) {
+        if (disposable && typeof disposable.dispose == System.Types.Function) {
+            if (ignoreExceptions) {
+                try {
+                    disposable.dispose();
+                }
+                catch (ex) {
+                }
+            }
+            else
+                disposable.dispose();
+        }
+    }
+    function disposeTheseInternal(disposables, ignoreExceptions) {
+        if (disposables) {
+            var len = disposables.length;
+            for (var i = 0; i < len; i++)
+                disposeSingle(disposables[i], ignoreExceptions);
+            disposables.length = 0;
+        }
+    }
+    function disposeThese(disposables, ignoreExceptions) {
+        if (disposables && disposables.length)
+            disposeTheseInternal(disposables.slice(0), ignoreExceptions);
+    }
+    System.disposeThese = disposeThese;
+    function using(disposable, closure) {
+        try {
+            return closure(disposable);
+        }
+        finally {
+            dispose(disposable);
+        }
+    }
+    System.using = using;
+    var DisposableBase = (function () {
+        function DisposableBase(_finalizer) {
+            this._finalizer = _finalizer;
+            this._wasDisposed = false;
+        }
+        Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
+            get: function () {
+                return this._wasDisposed;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
+            if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
+            if (disposed)
+                throw new Error(errorMessage);
+            return true;
+        };
+        DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
+            if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
+            return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
+        };
+        DisposableBase.prototype.dispose = function () {
+            var _ = this;
+            if (!_._wasDisposed) {
+                _._wasDisposed = true;
+                try {
+                    _._onDispose();
+                }
+                finally {
+                    if (_._finalizer)
+                        _._finalizer();
+                }
+            }
+        };
+        DisposableBase.prototype._onDispose = function () {
+        };
+        return DisposableBase;
+    })();
+    System.DisposableBase = DisposableBase;
 })(System || (System = {}));
 var System;
 (function (System) {
@@ -440,6 +538,610 @@ var System;
         })(ArrayUtility = Collections.ArrayUtility || (Collections.ArrayUtility = {}));
     })(Collections = System.Collections || (System.Collections = {}));
 })(System || (System = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+var System;
+(function (System) {
+    var AU = System.Collections.ArrayUtility;
+    var EventDispatcherEntry = (function (_super) {
+        __extends(EventDispatcherEntry, _super);
+        function EventDispatcherEntry(type, listener, useCapture, priority) {
+            if (useCapture === void 0) { useCapture = false; }
+            if (priority === void 0) { priority = 0; }
+            _super.call(this);
+            this.type = type;
+            this.listener = listener;
+            this.useCapture = useCapture;
+            this.priority = priority;
+        }
+        EventDispatcherEntry.prototype.dispose = function () {
+            this.listener = null;
+        };
+        Object.defineProperty(EventDispatcherEntry.prototype, "wasDisposed", {
+            get: function () {
+                return this.listener == null;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        EventDispatcherEntry.prototype.matches = function (type, listener, useCapture) {
+            if (useCapture === void 0) { useCapture = false; }
+            var _ = this;
+            return _.type == type && _.listener == listener && _.useCapture == useCapture;
+        };
+        EventDispatcherEntry.prototype.equals = function (other) {
+            var _ = this;
+            return _.type == other.type && _.listener == other.listener && _.useCapture == other.useCapture && _.priority == other.priority;
+        };
+        return EventDispatcherEntry;
+    })(System.DisposableBase);
+    var EventDispatcher = (function (_super) {
+        __extends(EventDispatcher, _super);
+        function EventDispatcher() {
+            _super.apply(this, arguments);
+            this._isDisposing = false;
+        }
+        EventDispatcher.prototype.addEventListener = function (type, listener, useCapture, priority) {
+            if (useCapture === void 0) { useCapture = false; }
+            if (priority === void 0) { priority = 0; }
+            var l = this._listeners;
+            if (!l)
+                this._listeners = l = [];
+            l.push(new EventDispatcherEntry(type, listener, useCapture, priority));
+        };
+        EventDispatcher.prototype.registerEventListener = function (type, listener, useCapture, priority) {
+            if (useCapture === void 0) { useCapture = false; }
+            if (priority === void 0) { priority = 0; }
+            if (!this.hasEventListener(type, listener, useCapture))
+                this.addEventListener(type, listener, useCapture, priority);
+        };
+        EventDispatcher.prototype.hasEventListener = function (type, listener, useCapture) {
+            if (useCapture === void 0) { useCapture = false; }
+            var l = this._listeners;
+            return l && l.some(function (value) { return type == value.type && (!listener || listener == value.listener && useCapture == value.useCapture); });
+        };
+        EventDispatcher.prototype.removeEventListener = function (type, listener, userCapture) {
+            if (userCapture === void 0) { userCapture = false; }
+            var l = this._listeners;
+            if (l) {
+                var i = AU.findIndex(l, function (entry) { return entry.matches(type, listener, userCapture); });
+                if (i != -1) {
+                    var e = l[i];
+                    l.splice(i, 1);
+                    e.dispose();
+                }
+            }
+        };
+        EventDispatcher.prototype.dispatchEvent = function (e, params) {
+            var _this = this;
+            var _ = this, l = _._listeners;
+            if (!l || !l.length)
+                return false;
+            var event;
+            if (typeof e == "string") {
+                event = new Event();
+                if (!params)
+                    params = {};
+                event.cancelable = !!params.cancelable;
+                event.target = _;
+                event.type = e;
+            }
+            else
+                event = e;
+            var type = event.type;
+            var entries = [];
+            l.forEach(function (e) {
+                if (e.type == type)
+                    entries.push(e);
+            });
+            if (!entries.length)
+                return false;
+            entries.sort(function (a, b) {
+                return b.priority - a.priority;
+            });
+            entries.forEach(function (entry) {
+                var newEvent = new Event();
+                System.copyTo(event, newEvent);
+                newEvent.target = _this;
+                entry.listener(newEvent);
+            });
+            return true;
+        };
+        Object.defineProperty(EventDispatcher, "DISPOSING", {
+            get: function () {
+                return "disposing";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventDispatcher, "DISPOSED", {
+            get: function () {
+                return "disposed";
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EventDispatcher.prototype, "isDisposing", {
+            get: function () {
+                return this._isDisposing;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        EventDispatcher.prototype.dispose = function () {
+            var _ = this;
+            if (!_.wasDisposed && !_._isDisposing) {
+                _._isDisposing = true;
+                _.dispatchEvent(EventDispatcher.DISPOSING);
+                _super.prototype.dispose.call(this);
+                _.dispatchEvent(EventDispatcher.DISPOSED);
+                var l = _._listeners;
+                if (l) {
+                    this._listeners = null;
+                    l.forEach(function (e) { return e.dispose(); });
+                }
+            }
+        };
+        return EventDispatcher;
+    })(System.DisposableBase);
+    System.EventDispatcher = EventDispatcher;
+})(System || (System = {}));
+var DisposableBase = System.DisposableBase;
+var System;
+(function (System) {
+    var Lazy = (function (_super) {
+        __extends(Lazy, _super);
+        function Lazy(_closure) {
+            _super.call(this);
+            this._closure = _closure;
+        }
+        Object.defineProperty(Lazy.prototype, "isValueCreated", {
+            get: function () {
+                return this._isValueCreated;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Lazy.prototype, "canReset", {
+            get: function () {
+                return !this.wasDisposed && !!(this._closure);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Lazy.prototype.reset = function (throwIfCannotReset) {
+            var _ = this;
+            if (throwIfCannotReset)
+                _.assertIsNotDisposed();
+            if (!_._closure) {
+                if (throwIfCannotReset)
+                    throw new Error("Cannot reset.  This Lazy has already de-referenced its closure.");
+                return false;
+            }
+            else {
+                _._isValueCreated = false;
+                _._value = null;
+                return true;
+            }
+        };
+        Object.defineProperty(Lazy.prototype, "value", {
+            get: function () {
+                return this.getValue();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Lazy.prototype.getValue = function (clearClosureReference) {
+            var _ = this;
+            _.assertIsNotDisposed();
+            try {
+                if (!_._isValueCreated && _._closure) {
+                    var v = _._closure();
+                    _._value = v;
+                    _._isValueCreated = true;
+                    return v;
+                }
+            }
+            finally {
+                if (clearClosureReference)
+                    _._closure = null;
+            }
+            return _._value;
+        };
+        Lazy.prototype._onDispose = function () {
+            this._closure = null;
+            this._value = null;
+        };
+        Lazy.prototype.equals = function (other) {
+            return this == other;
+        };
+        Lazy.prototype.valueEquals = function (other) {
+            return this.equals(other) || this.value === other.value;
+        };
+        return Lazy;
+    })(System.DisposableBase);
+    System.Lazy = Lazy;
+})(System || (System = {}));
+var System;
+(function (System) {
+    "use strict";
+    var ticksPerMillisecond = 10000, msPerSecond = 1000, secondsPerMinute = 60, minutesPerHour = 60, earthHoursPerDay = 24;
+    function pluralize(value, label) {
+        if (Math.abs(value) !== 1)
+            label += "s";
+        return label;
+    }
+    (function (TimeUnit) {
+        TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
+        TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
+        TimeUnit[TimeUnit["Seconds"] = 2] = "Seconds";
+        TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
+        TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
+        TimeUnit[TimeUnit["Days"] = 5] = "Days";
+    })(System.TimeUnit || (System.TimeUnit = {}));
+    var TimeUnit = System.TimeUnit;
+    Object.freeze(TimeUnit);
+    function assertValidUnit(unit) {
+        if (isNaN(unit) || unit > 5 /* Days */ || unit < 0 /* Ticks */ || Math.floor(unit) !== unit)
+            throw new Error("Invalid TimeUnit.");
+        return true;
+    }
+    var ClockTime = (function () {
+        function ClockTime() {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
+            }
+            this._totalMilliseconds = args.length > 1 ? TimeSpan.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0) : (args.length > 0 && args[0] || 0);
+        }
+        Object.defineProperty(ClockTime.prototype, "totalMilliseconds", {
+            get: function () {
+                return this._totalMilliseconds;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ClockTime.prototype, "direction", {
+            get: function () {
+                return System.compare(this._totalMilliseconds, 0);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ClockTime.prototype.equals = function (other) {
+            return System.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+        };
+        ClockTime.prototype.compareTo = function (other) {
+            if (other == null)
+                return 1 | 0;
+            return System.compare(this._totalMilliseconds, other.totalMilliseconds);
+        };
+        Object.defineProperty(ClockTime.prototype, "ticks", {
+            get: function () {
+                var _ = this, r = _._ticks;
+                if (r === undefined) {
+                    var ms = Math.abs(_._totalMilliseconds);
+                    _._ticks = r = (ms - Math.floor(ms)) * ticksPerMillisecond;
+                }
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ClockTime.prototype, "milliseconds", {
+            get: function () {
+                var _ = this, r = _._ms;
+                if (r === undefined)
+                    _._ms = r = (this._totalMilliseconds % msPerSecond) | 0;
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ClockTime.prototype, "seconds", {
+            get: function () {
+                var _ = this, r = _._seconds;
+                if (r === undefined)
+                    _._seconds = r = ((this._totalMilliseconds / msPerSecond) % secondsPerMinute) | 0;
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ClockTime.prototype, "minutes", {
+            get: function () {
+                var _ = this, r = _._minutes;
+                if (r === undefined)
+                    _._minutes = r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute) % minutesPerHour) | 0;
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ClockTime.prototype, "hours", {
+            get: function () {
+                var _ = this, r = _._hours;
+                if (r === undefined)
+                    _._hours = r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour) % earthHoursPerDay) | 0;
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ClockTime.prototype, "days", {
+            get: function () {
+                var _ = this, r = _._days;
+                if (r === undefined)
+                    _._days = r = (this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
+                return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        ClockTime.prototype.toTimeSpan = function () {
+            return new TimeSpan(this._totalMilliseconds);
+        };
+        ClockTime.from = function (hours, minutes, seconds, milliseconds) {
+            if (seconds === void 0) { seconds = 0; }
+            if (milliseconds === void 0) { milliseconds = 0; }
+            return new ClockTime(hours, minutes, seconds, milliseconds);
+        };
+        ClockTime.prototype.toString = function (format, formatProvider) {
+            var _ = this, a = [];
+            if (_.days)
+                a.push(pluralize(_.days, "day"));
+            if (_.hours)
+                a.push(pluralize(_.hours, "hour"));
+            if (_.minutes)
+                a.push(pluralize(_.minutes, "minute"));
+            if (_.seconds)
+                a.push(pluralize(_.seconds, "second"));
+            if (a.length > 1)
+                a.splice(a.length - 1, 0, "and");
+            return a.join(", ").replace(", and, ", " and ");
+        };
+        return ClockTime;
+    })();
+    System.ClockTime = ClockTime;
+    function assertComparisonType(other) {
+        if (!(other instanceof TimeUnitValue || other instanceof TimeSpan))
+            throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
+    }
+    function getMilliseconds(other) {
+        if (other instanceof TimeUnitValue) {
+            var o = other;
+            return o.type === 1 /* Milliseconds */ ? o.value : o.toTimeSpan().milliseconds;
+        }
+        else if (other instanceof TimeSpan) {
+            return other._milliseconds;
+        }
+        return undefined;
+    }
+    var TimeUnitValue = (function () {
+        function TimeUnitValue(value, _type) {
+            this.value = value;
+            this._type = _type;
+            assertValidUnit(_type);
+        }
+        TimeUnitValue.prototype.coerce = function (other) {
+            var type = this._type;
+            assertValidUnit(type);
+            if (other instanceof TimeSpan) {
+                other = other.toTimeUnitValue(type);
+            }
+            else if (other instanceof TimeUnitValue) {
+                if (type !== other.type)
+                    other = other.to(type);
+            }
+            else
+                return null;
+            return other;
+        };
+        TimeUnitValue.prototype.equals = function (other) {
+            var o = this.coerce(other);
+            if (o == null)
+                return false;
+            return System.areEqual(this.value, o.value);
+        };
+        TimeUnitValue.prototype.compareTo = function (other) {
+            if (other == null)
+                return 1 | 0;
+            assertComparisonType(other);
+            return System.compare(this.value, this.coerce(other).value);
+        };
+        Object.defineProperty(TimeUnitValue.prototype, "type", {
+            get: function () {
+                return this._type;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        TimeUnitValue.prototype.toTimeSpan = function () {
+            return new TimeSpan(this.value, this.type);
+        };
+        TimeUnitValue.prototype.to = function (units) {
+            if (units === void 0) { units = this.type; }
+            return this.toTimeSpan().toTimeUnitValue(units);
+        };
+        return TimeUnitValue;
+    })();
+    System.TimeUnitValue = TimeUnitValue;
+    var timeSpanZero;
+    var TimeSpan = (function () {
+        function TimeSpan(value, units) {
+            if (units === void 0) { units = 1 /* Milliseconds */; }
+            this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
+        }
+        TimeSpan.prototype.equals = function (other) {
+            var otherms = getMilliseconds(other);
+            if (other === undefined)
+                return false;
+            return System.areEqual(this._milliseconds, otherms);
+        };
+        TimeSpan.prototype.compareTo = function (other) {
+            if (other == null)
+                return 1 | 0;
+            assertComparisonType(other);
+            return System.compare(this._milliseconds, getMilliseconds(other));
+        };
+        TimeSpan.prototype.toTimeUnitValue = function (units) {
+            if (units === void 0) { units = 1 /* Milliseconds */; }
+            return new TimeUnitValue(this.total(units), units);
+        };
+        TimeSpan.convertToMilliseconds = function (value, units) {
+            if (units === void 0) { units = 1 /* Milliseconds */; }
+            switch (units) {
+                case 5 /* Days */:
+                    value *= earthHoursPerDay;
+                case 4 /* Hours */:
+                    value *= minutesPerHour;
+                case 3 /* Minutes */:
+                    value *= secondsPerMinute;
+                case 2 /* Seconds */:
+                    value *= msPerSecond;
+                case 1 /* Milliseconds */:
+                    return value;
+                case 0 /* Ticks */:
+                    return value / ticksPerMillisecond;
+                default:
+                    throw new Error("Invalid TimeUnit.");
+            }
+        };
+        TimeSpan.prototype.total = function (units) {
+            var _ = this;
+            switch (units) {
+                case 5 /* Days */:
+                    return _.days;
+                case 4 /* Hours */:
+                    return _.hours;
+                case 3 /* Minutes */:
+                    return _.minutes;
+                case 2 /* Seconds */:
+                    return _.seconds;
+                case 1 /* Milliseconds */:
+                    return _._milliseconds;
+                case 0 /* Ticks */:
+                    return _._milliseconds * ticksPerMillisecond;
+                default:
+                    throw new Error("Invalid TimeUnit.");
+            }
+        };
+        Object.defineProperty(TimeSpan.prototype, "ticks", {
+            get: function () {
+                return this._milliseconds * ticksPerMillisecond;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TimeSpan.prototype, "milliseconds", {
+            get: function () {
+                return this._milliseconds;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TimeSpan.prototype, "seconds", {
+            get: function () {
+                return this._milliseconds / msPerSecond;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TimeSpan.prototype, "minutes", {
+            get: function () {
+                return this.seconds / secondsPerMinute;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TimeSpan.prototype, "hours", {
+            get: function () {
+                return this.minutes / minutesPerHour;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TimeSpan.prototype, "days", {
+            get: function () {
+                return this.hours / earthHoursPerDay;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TimeSpan.prototype, "time", {
+            get: function () {
+                return new ClockTime(this._milliseconds);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        TimeSpan.prototype.add = function (other) {
+            if (System.Types.isNumber(other))
+                throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+            if (other instanceof TimeUnitValue || other instanceof ClockTime)
+                other = other.toTimeSpan();
+            return new TimeSpan(this._milliseconds + other.milliseconds);
+        };
+        TimeSpan.prototype.addUnit = function (value, units) {
+            if (units === void 0) { units = 1 /* Milliseconds */; }
+            return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+        };
+        TimeSpan.from = function (value, units) {
+            return new TimeSpan(value, units);
+        };
+        TimeSpan.fromDays = function (value) {
+            return new TimeSpan(value, 5 /* Days */);
+        };
+        TimeSpan.fromHours = function (value) {
+            return new TimeSpan(value, 4 /* Hours */);
+        };
+        TimeSpan.fromMinutes = function (value) {
+            return new TimeSpan(value, 3 /* Minutes */);
+        };
+        TimeSpan.fromSeconds = function (value) {
+            return new TimeSpan(value, 2 /* Seconds */);
+        };
+        TimeSpan.fromMilliseconds = function (value) {
+            return new TimeSpan(value, 1 /* Milliseconds */);
+        };
+        TimeSpan.fromTicks = function (value) {
+            return new TimeSpan(value, 0 /* Ticks */);
+        };
+        TimeSpan.fromTime = function (hours, minutes, seconds, milliseconds) {
+            if (seconds === void 0) { seconds = 0; }
+            if (milliseconds === void 0) { milliseconds = 0; }
+            return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+        };
+        TimeSpan.millisecondsFromTime = function (hours, minutes, seconds, milliseconds) {
+            if (seconds === void 0) { seconds = 0; }
+            if (milliseconds === void 0) { milliseconds = 0; }
+            var value = hours;
+            value *= minutesPerHour;
+            value += minutes;
+            value *= secondsPerMinute;
+            value += seconds;
+            value *= msPerSecond;
+            value += milliseconds;
+            return value;
+        };
+        TimeSpan.between = function (first, last) {
+            return new TimeSpan(last.getTime() - first.getTime());
+        };
+        Object.defineProperty(TimeSpan, "zero", {
+            get: function () {
+                return timeSpanZero || (timeSpanZero = new TimeSpan(0));
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return TimeSpan;
+    })();
+    System.TimeSpan = TimeSpan;
+})(System || (System = {}));
 var System;
 (function (System) {
     var Collections;
@@ -620,12 +1322,6 @@ var System;
         Collections.DictionaryAbstractBase = DictionaryAbstractBase;
     })(Collections = System.Collections || (System.Collections = {}));
 })(System || (System = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 var System;
 (function (System) {
     var Collections;
@@ -844,100 +1540,6 @@ var System;
         })(Collections.DictionaryAbstractBase);
         Collections.Dictionary = Dictionary;
     })(Collections = System.Collections || (System.Collections = {}));
-})(System || (System = {}));
-var System;
-(function (System) {
-    function dispose() {
-        var disposables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
-        }
-        disposeTheseInternal(disposables, false);
-    }
-    System.dispose = dispose;
-    function disposeWithoutException() {
-        var disposables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
-        }
-        disposeTheseInternal(disposables, true);
-    }
-    System.disposeWithoutException = disposeWithoutException;
-    function disposeSingle(disposable, ignoreExceptions) {
-        if (disposable && typeof disposable.dispose == System.Types.Function) {
-            if (ignoreExceptions) {
-                try {
-                    disposable.dispose();
-                }
-                catch (ex) {
-                }
-            }
-            else
-                disposable.dispose();
-        }
-    }
-    function disposeTheseInternal(disposables, ignoreExceptions) {
-        if (disposables) {
-            var len = disposables.length;
-            for (var i = 0; i < len; i++)
-                disposeSingle(disposables[i], ignoreExceptions);
-            disposables.length = 0;
-        }
-    }
-    function disposeThese(disposables, ignoreExceptions) {
-        if (disposables && disposables.length)
-            disposeTheseInternal(disposables.slice(0), ignoreExceptions);
-    }
-    System.disposeThese = disposeThese;
-    function using(disposable, closure) {
-        try {
-            return closure(disposable);
-        }
-        finally {
-            dispose(disposable);
-        }
-    }
-    System.using = using;
-    var DisposableBase = (function () {
-        function DisposableBase(_finalizer) {
-            this._finalizer = _finalizer;
-            this._wasDisposed = false;
-        }
-        Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
-            get: function () {
-                return this._wasDisposed;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
-            if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
-            if (disposed)
-                throw new Error(errorMessage);
-            return true;
-        };
-        DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
-            if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
-            return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
-        };
-        DisposableBase.prototype.dispose = function () {
-            var _ = this;
-            if (!_._wasDisposed) {
-                _._wasDisposed = true;
-                try {
-                    _._onDispose();
-                }
-                finally {
-                    if (_._finalizer)
-                        _._finalizer();
-                }
-            }
-        };
-        DisposableBase.prototype._onDispose = function () {
-        };
-        return DisposableBase;
-    })();
-    System.DisposableBase = DisposableBase;
 })(System || (System = {}));
 var System;
 (function (System) {
@@ -1882,382 +2484,6 @@ var System;
 })(System || (System = {}));
 var System;
 (function (System) {
-    "use strict";
-    var ticksPerMillisecond = 10000, msPerSecond = 1000, secondsPerMinute = 60, minutesPerHour = 60, earthHoursPerDay = 24;
-    function pluralize(value, label) {
-        if (Math.abs(value) !== 1)
-            label += "s";
-        return label;
-    }
-    (function (TimeUnit) {
-        TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
-        TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
-        TimeUnit[TimeUnit["Seconds"] = 2] = "Seconds";
-        TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
-        TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
-        TimeUnit[TimeUnit["Days"] = 5] = "Days";
-    })(System.TimeUnit || (System.TimeUnit = {}));
-    var TimeUnit = System.TimeUnit;
-    Object.freeze(TimeUnit);
-    function assertValidUnit(unit) {
-        if (isNaN(unit) || unit > 5 /* Days */ || unit < 0 /* Ticks */ || Math.floor(unit) !== unit)
-            throw new Error("Invalid TimeUnit.");
-        return true;
-    }
-    var ClockTime = (function () {
-        function ClockTime() {
-            var args = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
-            }
-            this._totalMilliseconds = args.length > 1 ? TimeSpan.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0) : (args.length > 0 && args[0] || 0);
-        }
-        Object.defineProperty(ClockTime.prototype, "totalMilliseconds", {
-            get: function () {
-                return this._totalMilliseconds;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "direction", {
-            get: function () {
-                return System.compare(this._totalMilliseconds, 0);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ClockTime.prototype.equals = function (other) {
-            return System.areEqual(this._totalMilliseconds, other.totalMilliseconds);
-        };
-        ClockTime.prototype.compareTo = function (other) {
-            if (other == null)
-                return 1 | 0;
-            return System.compare(this._totalMilliseconds, other.totalMilliseconds);
-        };
-        Object.defineProperty(ClockTime.prototype, "ticks", {
-            get: function () {
-                var _ = this, r = _._ticks;
-                if (r === undefined) {
-                    var ms = Math.abs(_._totalMilliseconds);
-                    _._ticks = r = (ms - Math.floor(ms)) * ticksPerMillisecond;
-                }
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "milliseconds", {
-            get: function () {
-                var _ = this, r = _._ms;
-                if (r === undefined)
-                    _._ms = r = (this._totalMilliseconds % msPerSecond) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "seconds", {
-            get: function () {
-                var _ = this, r = _._seconds;
-                if (r === undefined)
-                    _._seconds = r = ((this._totalMilliseconds / msPerSecond) % secondsPerMinute) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "minutes", {
-            get: function () {
-                var _ = this, r = _._minutes;
-                if (r === undefined)
-                    _._minutes = r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute) % minutesPerHour) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "hours", {
-            get: function () {
-                var _ = this, r = _._hours;
-                if (r === undefined)
-                    _._hours = r = ((this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour) % earthHoursPerDay) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "days", {
-            get: function () {
-                var _ = this, r = _._days;
-                if (r === undefined)
-                    _._days = r = (this._totalMilliseconds / msPerSecond / secondsPerMinute / minutesPerHour / earthHoursPerDay) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ClockTime.prototype.toTimeSpan = function () {
-            return new TimeSpan(this._totalMilliseconds);
-        };
-        ClockTime.from = function (hours, minutes, seconds, milliseconds) {
-            if (seconds === void 0) { seconds = 0; }
-            if (milliseconds === void 0) { milliseconds = 0; }
-            return new ClockTime(hours, minutes, seconds, milliseconds);
-        };
-        ClockTime.prototype.toString = function (format, formatProvider) {
-            var _ = this, a = [];
-            if (_.days)
-                a.push(pluralize(_.days, "day"));
-            if (_.hours)
-                a.push(pluralize(_.hours, "hour"));
-            if (_.minutes)
-                a.push(pluralize(_.minutes, "minute"));
-            if (_.seconds)
-                a.push(pluralize(_.seconds, "second"));
-            if (a.length > 1)
-                a.splice(a.length - 1, 0, "and");
-            return a.join(", ").replace(", and, ", " and ");
-        };
-        return ClockTime;
-    })();
-    System.ClockTime = ClockTime;
-    function assertComparisonType(other) {
-        if (!(other instanceof TimeUnitValue || other instanceof TimeSpan))
-            throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
-    }
-    function getMilliseconds(other) {
-        if (other instanceof TimeUnitValue) {
-            var o = other;
-            return o.type === 1 /* Milliseconds */ ? o.value : o.toTimeSpan().milliseconds;
-        }
-        else if (other instanceof TimeSpan) {
-            return other._milliseconds;
-        }
-        return undefined;
-    }
-    var TimeUnitValue = (function () {
-        function TimeUnitValue(value, _type) {
-            this.value = value;
-            this._type = _type;
-            assertValidUnit(_type);
-        }
-        TimeUnitValue.prototype.coerce = function (other) {
-            var type = this._type;
-            assertValidUnit(type);
-            if (other instanceof TimeSpan) {
-                other = other.toTimeUnitValue(type);
-            }
-            else if (other instanceof TimeUnitValue) {
-                if (type !== other.type)
-                    other = other.to(type);
-            }
-            else
-                return null;
-            return other;
-        };
-        TimeUnitValue.prototype.equals = function (other) {
-            var o = this.coerce(other);
-            if (o == null)
-                return false;
-            return System.areEqual(this.value, o.value);
-        };
-        TimeUnitValue.prototype.compareTo = function (other) {
-            if (other == null)
-                return 1 | 0;
-            assertComparisonType(other);
-            return System.compare(this.value, this.coerce(other).value);
-        };
-        Object.defineProperty(TimeUnitValue.prototype, "type", {
-            get: function () {
-                return this._type;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        TimeUnitValue.prototype.toTimeSpan = function () {
-            return new TimeSpan(this.value, this.type);
-        };
-        TimeUnitValue.prototype.to = function (units) {
-            if (units === void 0) { units = this.type; }
-            return this.toTimeSpan().toTimeUnitValue(units);
-        };
-        return TimeUnitValue;
-    })();
-    System.TimeUnitValue = TimeUnitValue;
-    var timeSpanZero;
-    var TimeSpan = (function () {
-        function TimeSpan(value, units) {
-            if (units === void 0) { units = 1 /* Milliseconds */; }
-            this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
-        }
-        TimeSpan.prototype.equals = function (other) {
-            var otherms = getMilliseconds(other);
-            if (other === undefined)
-                return false;
-            return System.areEqual(this._milliseconds, otherms);
-        };
-        TimeSpan.prototype.compareTo = function (other) {
-            if (other == null)
-                return 1 | 0;
-            assertComparisonType(other);
-            return System.compare(this._milliseconds, getMilliseconds(other));
-        };
-        TimeSpan.prototype.toTimeUnitValue = function (units) {
-            if (units === void 0) { units = 1 /* Milliseconds */; }
-            return new TimeUnitValue(this.total(units), units);
-        };
-        TimeSpan.convertToMilliseconds = function (value, units) {
-            if (units === void 0) { units = 1 /* Milliseconds */; }
-            switch (units) {
-                case 5 /* Days */:
-                    value *= earthHoursPerDay;
-                case 4 /* Hours */:
-                    value *= minutesPerHour;
-                case 3 /* Minutes */:
-                    value *= secondsPerMinute;
-                case 2 /* Seconds */:
-                    value *= msPerSecond;
-                case 1 /* Milliseconds */:
-                    return value;
-                case 0 /* Ticks */:
-                    return value / ticksPerMillisecond;
-                default:
-                    throw new Error("Invalid TimeUnit.");
-            }
-        };
-        TimeSpan.prototype.total = function (units) {
-            var _ = this;
-            switch (units) {
-                case 5 /* Days */:
-                    return _.days;
-                case 4 /* Hours */:
-                    return _.hours;
-                case 3 /* Minutes */:
-                    return _.minutes;
-                case 2 /* Seconds */:
-                    return _.seconds;
-                case 1 /* Milliseconds */:
-                    return _._milliseconds;
-                case 0 /* Ticks */:
-                    return _._milliseconds * ticksPerMillisecond;
-                default:
-                    throw new Error("Invalid TimeUnit.");
-            }
-        };
-        Object.defineProperty(TimeSpan.prototype, "ticks", {
-            get: function () {
-                return this._milliseconds * ticksPerMillisecond;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TimeSpan.prototype, "milliseconds", {
-            get: function () {
-                return this._milliseconds;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TimeSpan.prototype, "seconds", {
-            get: function () {
-                return this._milliseconds / msPerSecond;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TimeSpan.prototype, "minutes", {
-            get: function () {
-                return this.seconds / secondsPerMinute;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TimeSpan.prototype, "hours", {
-            get: function () {
-                return this.minutes / minutesPerHour;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TimeSpan.prototype, "days", {
-            get: function () {
-                return this.hours / earthHoursPerDay;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(TimeSpan.prototype, "time", {
-            get: function () {
-                return new ClockTime(this._milliseconds);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        TimeSpan.prototype.add = function (other) {
-            if (System.Types.isNumber(other))
-                throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
-            if (other instanceof TimeUnitValue || other instanceof ClockTime)
-                other = other.toTimeSpan();
-            return new TimeSpan(this._milliseconds + other.milliseconds);
-        };
-        TimeSpan.prototype.addUnit = function (value, units) {
-            if (units === void 0) { units = 1 /* Milliseconds */; }
-            return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
-        };
-        TimeSpan.from = function (value, units) {
-            return new TimeSpan(value, units);
-        };
-        TimeSpan.fromDays = function (value) {
-            return new TimeSpan(value, 5 /* Days */);
-        };
-        TimeSpan.fromHours = function (value) {
-            return new TimeSpan(value, 4 /* Hours */);
-        };
-        TimeSpan.fromMinutes = function (value) {
-            return new TimeSpan(value, 3 /* Minutes */);
-        };
-        TimeSpan.fromSeconds = function (value) {
-            return new TimeSpan(value, 2 /* Seconds */);
-        };
-        TimeSpan.fromMilliseconds = function (value) {
-            return new TimeSpan(value, 1 /* Milliseconds */);
-        };
-        TimeSpan.fromTicks = function (value) {
-            return new TimeSpan(value, 0 /* Ticks */);
-        };
-        TimeSpan.fromTime = function (hours, minutes, seconds, milliseconds) {
-            if (seconds === void 0) { seconds = 0; }
-            if (milliseconds === void 0) { milliseconds = 0; }
-            return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
-        };
-        TimeSpan.millisecondsFromTime = function (hours, minutes, seconds, milliseconds) {
-            if (seconds === void 0) { seconds = 0; }
-            if (milliseconds === void 0) { milliseconds = 0; }
-            var value = hours;
-            value *= minutesPerHour;
-            value += minutes;
-            value *= secondsPerMinute;
-            value += seconds;
-            value *= msPerSecond;
-            value += milliseconds;
-            return value;
-        };
-        TimeSpan.between = function (first, last) {
-            return new TimeSpan(last.getTime() - first.getTime());
-        };
-        Object.defineProperty(TimeSpan, "zero", {
-            get: function () {
-                return timeSpanZero || (timeSpanZero = new TimeSpan(0));
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return TimeSpan;
-    })();
-    System.TimeSpan = TimeSpan;
-})(System || (System = {}));
-var System;
-(function (System) {
     var Diagnostics;
     (function (Diagnostics) {
         var Stopwatch = (function () {
@@ -2358,228 +2584,6 @@ var System;
         })();
         Diagnostics.Stopwatch = Stopwatch;
     })(Diagnostics = System.Diagnostics || (System.Diagnostics = {}));
-})(System || (System = {}));
-var System;
-(function (System) {
-    var AU = System.Collections.ArrayUtility;
-    var EventDispatcherEntry = (function (_super) {
-        __extends(EventDispatcherEntry, _super);
-        function EventDispatcherEntry(type, listener, useCapture, priority) {
-            if (useCapture === void 0) { useCapture = false; }
-            if (priority === void 0) { priority = 0; }
-            _super.call(this);
-            this.type = type;
-            this.listener = listener;
-            this.useCapture = useCapture;
-            this.priority = priority;
-        }
-        EventDispatcherEntry.prototype.dispose = function () {
-            this.listener = null;
-        };
-        Object.defineProperty(EventDispatcherEntry.prototype, "wasDisposed", {
-            get: function () {
-                return this.listener == null;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        EventDispatcherEntry.prototype.matches = function (type, listener, useCapture) {
-            if (useCapture === void 0) { useCapture = false; }
-            var _ = this;
-            return _.type == type && _.listener == listener && _.useCapture == useCapture;
-        };
-        EventDispatcherEntry.prototype.equals = function (other) {
-            var _ = this;
-            return _.type == other.type && _.listener == other.listener && _.useCapture == other.useCapture && _.priority == other.priority;
-        };
-        return EventDispatcherEntry;
-    })(System.DisposableBase);
-    var EventDispatcher = (function (_super) {
-        __extends(EventDispatcher, _super);
-        function EventDispatcher() {
-            _super.apply(this, arguments);
-            this._isDisposing = false;
-        }
-        EventDispatcher.prototype.addEventListener = function (type, listener, useCapture, priority) {
-            if (useCapture === void 0) { useCapture = false; }
-            if (priority === void 0) { priority = 0; }
-            var l = this._listeners;
-            if (!l)
-                this._listeners = l = [];
-            l.push(new EventDispatcherEntry(type, listener, useCapture, priority));
-        };
-        EventDispatcher.prototype.registerEventListener = function (type, listener, useCapture, priority) {
-            if (useCapture === void 0) { useCapture = false; }
-            if (priority === void 0) { priority = 0; }
-            if (!this.hasEventListener(type, listener, useCapture))
-                this.addEventListener(type, listener, useCapture, priority);
-        };
-        EventDispatcher.prototype.hasEventListener = function (type, listener, useCapture) {
-            if (useCapture === void 0) { useCapture = false; }
-            var l = this._listeners;
-            return l && l.some(function (value) { return type == value.type && (!listener || listener == value.listener && useCapture == value.useCapture); });
-        };
-        EventDispatcher.prototype.removeEventListener = function (type, listener, userCapture) {
-            if (userCapture === void 0) { userCapture = false; }
-            var l = this._listeners;
-            if (l) {
-                var i = AU.findIndex(l, function (entry) { return entry.matches(type, listener, userCapture); });
-                if (i != -1) {
-                    var e = l[i];
-                    l.splice(i, 1);
-                    e.dispose();
-                }
-            }
-        };
-        EventDispatcher.prototype.dispatchEvent = function (e, params) {
-            var _this = this;
-            var _ = this, l = _._listeners;
-            if (!l || !l.length)
-                return false;
-            var event;
-            if (typeof e == "string") {
-                event = new Event();
-                if (!params)
-                    params = {};
-                event.cancelable = !!params.cancelable;
-                event.target = _;
-                event.type = e;
-            }
-            else
-                event = e;
-            var type = event.type;
-            var entries = [];
-            l.forEach(function (e) {
-                if (e.type == type)
-                    entries.push(e);
-            });
-            if (!entries.length)
-                return false;
-            entries.sort(function (a, b) {
-                return b.priority - a.priority;
-            });
-            entries.forEach(function (entry) {
-                var newEvent = new Event();
-                System.copyTo(event, newEvent);
-                newEvent.target = _this;
-                entry.listener(newEvent);
-            });
-            return true;
-        };
-        Object.defineProperty(EventDispatcher, "DISPOSING", {
-            get: function () {
-                return "disposing";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EventDispatcher, "DISPOSED", {
-            get: function () {
-                return "disposed";
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(EventDispatcher.prototype, "isDisposing", {
-            get: function () {
-                return this._isDisposing;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        EventDispatcher.prototype.dispose = function () {
-            var _ = this;
-            if (!_.wasDisposed && !_._isDisposing) {
-                _._isDisposing = true;
-                _.dispatchEvent(EventDispatcher.DISPOSING);
-                _super.prototype.dispose.call(this);
-                _.dispatchEvent(EventDispatcher.DISPOSED);
-                var l = _._listeners;
-                if (l) {
-                    this._listeners = null;
-                    l.forEach(function (e) { return e.dispose(); });
-                }
-            }
-        };
-        return EventDispatcher;
-    })(System.DisposableBase);
-    System.EventDispatcher = EventDispatcher;
-})(System || (System = {}));
-var DisposableBase = System.DisposableBase;
-var System;
-(function (System) {
-    var Lazy = (function (_super) {
-        __extends(Lazy, _super);
-        function Lazy(_closure) {
-            _super.call(this);
-            this._closure = _closure;
-        }
-        Object.defineProperty(Lazy.prototype, "isValueCreated", {
-            get: function () {
-                return this._isValueCreated;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Lazy.prototype, "canReset", {
-            get: function () {
-                return !this.wasDisposed && !!(this._closure);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Lazy.prototype.reset = function (throwIfCannotReset) {
-            var _ = this;
-            if (throwIfCannotReset)
-                _.assertIsNotDisposed();
-            if (!_._closure) {
-                if (throwIfCannotReset)
-                    throw new Error("Cannot reset.  This Lazy has already de-referenced its closure.");
-                return false;
-            }
-            else {
-                _._isValueCreated = false;
-                _._value = null;
-                return true;
-            }
-        };
-        Object.defineProperty(Lazy.prototype, "value", {
-            get: function () {
-                return this.getValue();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Lazy.prototype.getValue = function (clearClosureReference) {
-            var _ = this;
-            _.assertIsNotDisposed();
-            try {
-                if (!_._isValueCreated && _._closure) {
-                    var v = _._closure();
-                    _._value = v;
-                    _._isValueCreated = true;
-                    return v;
-                }
-            }
-            finally {
-                if (clearClosureReference)
-                    _._closure = null;
-            }
-            return _._value;
-        };
-        Lazy.prototype._onDispose = function () {
-            this._closure = null;
-            this._value = null;
-        };
-        Lazy.prototype.equals = function (other) {
-            return this == other;
-        };
-        Lazy.prototype.valueEquals = function (other) {
-            return this.equals(other) || this.value === other.value;
-        };
-        return Lazy;
-    })(System.DisposableBase);
-    System.Lazy = Lazy;
 })(System || (System = {}));
 var LinkedList = System.Collections.LinkedList;
 var System;

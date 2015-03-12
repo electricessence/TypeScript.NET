@@ -16,6 +16,7 @@ module System.Xml.Linq
 
 	class XNodeDocumentOrderComparer implements IComparer<XNode>
 	{
+
 		constructor()
 		{
 
@@ -57,8 +58,6 @@ module System.Xml.Linq
 			super();
 		}
 
-		protected var blah: string;
-
 		static get documentOrderComparer():IComparer<XNode>
 		{
 			return new XNodeDocumentOrderComparer();
@@ -69,17 +68,22 @@ module System.Xml.Linq
 			return new XNodeEqualityComparer();
 		}
 
+
+		_next:XNode;
+		get nextNode():XNode
+		{
+			var parent:XElement = this.parent;
+			return parent == null || this == parent.content ? null : this._next;
+		}
+
 		get previousNode():XNode
 		{
 			var parent = this.parent;
 			return parent ? parent.previousSiblingOf(this) : null;
 		}
 
-		get nextNode():XNode
-		{
-			var parent = this.parent;
-			return parent ? parent.nextSiblingOf(this) : null;
-		}
+
+
 
 		ancestors(xname?:string):Enumerable<XElement>;
 		ancestors(xname?:XName):Enumerable<XElement>;

@@ -110,7 +110,7 @@ module System.Xml
 		 The XML declaration (for example, <?xml version='1.0'?> ).
 		 The XmlDeclaration node must be the first node in the document. It cannot have children. It is a child of the Document node. It can have attributes that provide version and encoding information.
 		 */
-		XmlDeclaration
+		XmlDeclaration,
 	}
 
 	Object.freeze(XmlNodeType);
