@@ -33,7 +33,6 @@ module System.Linq
 	import enumeratorFrom = Collections.Enumerator.from;
 	import enumeratorForEach = Collections.Enumerator.forEach;
 	import Types = System.Types;
-
 	// #endregion
 
 	// #region Local Constants.
@@ -55,7 +54,6 @@ module System.Linq
 	function isIArray(o:any):boolean {
 		return typeof o === Types.Object && "length" in o;
 	}
-
 	// #endregion
 
 	// #region Helper Functions...

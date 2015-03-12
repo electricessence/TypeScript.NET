@@ -57,6 +57,8 @@ module System.Xml.Linq
 			super();
 		}
 
+		protected var blah: string;
+
 		static get documentOrderComparer():IComparer<XNode>
 		{
 			return new XNodeDocumentOrderComparer();

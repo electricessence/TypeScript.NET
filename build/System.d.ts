@@ -41,34 +41,13 @@ declare module System {
     interface Selector<TSource, TResult> {
         (source: TSource, index?: number): TResult;
     }
+    function isNullOrUndefined(n: any): boolean;
     function isEqualToNaN(n: any): boolean;
     function areEqual(a: any, b: any, strict?: boolean): boolean;
     function compare(a: any, b: any, strict?: boolean): number;
     function clone(source: any, depth?: number): any;
     function copyTo(source: any, target: any): void;
     function applyMixins(derivedConstructor: any, baseConstructors: any[]): void;
-}
-declare module System {
-    function dispose(...disposables: IDisposable[]): void;
-    function disposeWithoutException(...disposables: IDisposable[]): void;
-    function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void;
-    function using<TDisposable extends IDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
-    interface IDisposable {
-        dispose(): void;
-    }
-    interface IDisposableAware extends IDisposable {
-        wasDisposed: boolean;
-    }
-    class DisposableBase implements IDisposableAware {
-        private _finalizer;
-        constructor(_finalizer?: () => void);
-        private _wasDisposed;
-        wasDisposed: boolean;
-        static assertIsNotDisposed(disposed: boolean, errorMessage?: string): boolean;
-        assertIsNotDisposed(errorMessage?: string): boolean;
-        dispose(): void;
-        protected _onDispose(): void;
-    }
 }
 declare module System.Collections.ArrayUtility {
     function initialize<T>(length: number): T[];
@@ -91,170 +70,6 @@ declare module System.Collections.ArrayUtility {
     function product(source: number[], ignoreNaN?: boolean): number;
     function min(source: number[], ignoreNaN?: boolean): number;
     function max(source: number[], ignoreNaN?: boolean): number;
-}
-declare module System {
-    interface IEventDispatcher extends EventTarget, IDisposable {
-        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
-        dispatchEvent(event: Event): boolean;
-        hasEventListener(type: string): boolean;
-        removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
-    }
-    class EventDispatcher extends DisposableBase implements IEventDispatcher {
-        private _listeners;
-        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
-        registerEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
-        hasEventListener(type: string, listener?: EventListener, useCapture?: boolean): boolean;
-        removeEventListener(type: string, listener: EventListener, userCapture?: boolean): void;
-        dispatchEvent(type: string, params?: any): boolean;
-        dispatchEvent(event: Event): boolean;
-        static DISPOSING: string;
-        static DISPOSED: string;
-        private _isDisposing;
-        isDisposing: boolean;
-        dispose(): void;
-    }
-}
-declare module System {
-    interface ICloneable<T> {
-        clone(): T;
-    }
-}
-declare module System {
-    interface IComparable<T> {
-        compareTo(other: T): number;
-    }
-}
-declare module System {
-    interface IConvertible {
-        toBoolean(provider: IFormatProvider): boolean;
-        toNumber(provider: IFormatProvider): number;
-        toString(provider: IFormatProvider): string;
-    }
-}
-declare module System {
-    interface IEquatable<T> {
-        equals(other: T): boolean;
-    }
-}
-declare module System {
-    interface IFormatProvider {
-        getFormat(formatType: Object): Object;
-    }
-}
-declare module System {
-    interface IFormattable {
-        toString(format?: string, formatProvider?: IFormatProvider): string;
-    }
-}
-import DisposableBase = System.DisposableBase;
-declare module System {
-    interface ILazy<T> extends IDisposable, IEquatable<ILazy<T>> {
-        value: T;
-        isValueCreated: boolean;
-    }
-    class Lazy<T> extends DisposableBase implements ILazy<T> {
-        private _closure;
-        private _isValueCreated;
-        private _value;
-        constructor(_closure: Func<T>);
-        isValueCreated: boolean;
-        canReset: boolean;
-        reset(throwIfCannotReset?: boolean): boolean;
-        value: T;
-        getValue(clearClosureReference?: boolean): T;
-        protected _onDispose(): void;
-        equals(other: Lazy<T>): boolean;
-        valueEquals(other: Lazy<T>): boolean;
-    }
-}
-declare module System {
-    enum TimeUnit {
-        Ticks = 0,
-        Milliseconds = 1,
-        Seconds = 2,
-        Minutes = 3,
-        Hours = 4,
-        Days = 5,
-    }
-    interface ITimeMeasurement {
-        ticks: number;
-        milliseconds: number;
-        seconds: number;
-        minutes: number;
-        hours: number;
-        days: number;
-    }
-    class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable {
-        private _totalMilliseconds;
-        totalMilliseconds: number;
-        direction: number;
-        constructor(milliseconds: number);
-        constructor(hours: number, minutes: number, seconds?: number, milliseconds?: number);
-        equals(other: ClockTime): boolean;
-        compareTo(other: ClockTime): number;
-        private _ticks;
-        ticks: number;
-        private _ms;
-        milliseconds: number;
-        private _seconds;
-        seconds: number;
-        private _minutes;
-        minutes: number;
-        private _hours;
-        hours: number;
-        private _days;
-        days: number;
-        toTimeSpan(): TimeSpan;
-        static from(hours: number, minutes: number, seconds?: number, milliseconds?: number): ClockTime;
-        toString(format?: string, formatProvider?: System.IFormatProvider): string;
-    }
-    class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue> {
-        value: number;
-        private _type;
-        constructor(value: number, _type: TimeUnit);
-        coerce(other: TimeSpan): TimeUnitValue;
-        coerce(other: TimeUnitValue): TimeUnitValue;
-        equals(other: TimeSpan): boolean;
-        equals(other: TimeUnitValue): boolean;
-        compareTo(other: TimeSpan): number;
-        compareTo(other: TimeUnitValue): number;
-        type: TimeUnit;
-        toTimeSpan(): TimeSpan;
-        to(units?: TimeUnit): TimeUnitValue;
-    }
-    class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan> {
-        private _milliseconds;
-        constructor(value: number, units?: TimeUnit);
-        equals(other: TimeUnitValue): boolean;
-        equals(other: TimeSpan): boolean;
-        compareTo(other: TimeUnitValue): number;
-        compareTo(other: TimeSpan): number;
-        toTimeUnitValue(units?: TimeUnit): TimeUnitValue;
-        static convertToMilliseconds(value: number, units?: TimeUnit): number;
-        total(units: TimeUnit): number;
-        ticks: number;
-        milliseconds: number;
-        seconds: number;
-        minutes: number;
-        hours: number;
-        days: number;
-        time: ClockTime;
-        add(other: ClockTime): TimeSpan;
-        add(other: TimeUnitValue): TimeSpan;
-        add(other: TimeSpan): TimeSpan;
-        addUnit(value: number, units?: TimeUnit): TimeSpan;
-        static from(value: number, units: TimeUnit): TimeSpan;
-        static fromDays(value: number): TimeSpan;
-        static fromHours(value: number): TimeSpan;
-        static fromMinutes(value: number): TimeSpan;
-        static fromSeconds(value: number): TimeSpan;
-        static fromMilliseconds(value: number): TimeSpan;
-        static fromTicks(value: number): TimeSpan;
-        static fromTime(hours: number, minutes: number, seconds?: number, milliseconds?: number): TimeSpan;
-        static millisecondsFromTime(hours: number, minutes: number, seconds?: number, milliseconds?: number): number;
-        static between(first: Date, last: Date): TimeSpan;
-        static zero: TimeSpan;
-    }
 }
 declare module System.Collections {
     class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue> {
@@ -302,6 +117,28 @@ declare module System.Collections {
         getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
         keys: TKey[];
         values: TValue[];
+    }
+}
+declare module System {
+    function dispose(...disposables: IDisposable[]): void;
+    function disposeWithoutException(...disposables: IDisposable[]): void;
+    function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void;
+    function using<TDisposable extends IDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
+    interface IDisposable {
+        dispose(): void;
+    }
+    interface IDisposableAware extends IDisposable {
+        wasDisposed: boolean;
+    }
+    class DisposableBase implements IDisposableAware {
+        private _finalizer;
+        constructor(_finalizer?: () => void);
+        private _wasDisposed;
+        wasDisposed: boolean;
+        static assertIsNotDisposed(disposed: boolean, errorMessage?: string): boolean;
+        assertIsNotDisposed(errorMessage?: string): boolean;
+        dispose(): void;
+        protected _onDispose(): void;
     }
 }
 declare module System.Collections {
@@ -359,11 +196,6 @@ declare module System.Collections {
     }
 }
 declare module System.Collections {
-    interface IComparer<T> {
-        compare(x: T, y: T): number;
-    }
-}
-declare module System.Collections {
     interface IMap<TValue> {
         [key: string]: TValue;
     }
@@ -413,11 +245,6 @@ declare module System.Collections {
         moveNext(): boolean;
         reset(): void;
         dispose(): void;
-    }
-}
-declare module System.Collections {
-    interface IEqualityComparer<T> {
-        equals(x: T, y: T): boolean;
     }
 }
 declare module System.Collections {
@@ -545,6 +372,95 @@ declare module System.Collections {
         getEnumerator(): IEnumerator<T>;
     }
 }
+declare module System {
+    enum TimeUnit {
+        Ticks = 0,
+        Milliseconds = 1,
+        Seconds = 2,
+        Minutes = 3,
+        Hours = 4,
+        Days = 5,
+    }
+    interface ITimeMeasurement {
+        ticks: number;
+        milliseconds: number;
+        seconds: number;
+        minutes: number;
+        hours: number;
+        days: number;
+    }
+    class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable {
+        private _totalMilliseconds;
+        totalMilliseconds: number;
+        direction: number;
+        constructor(milliseconds: number);
+        constructor(hours: number, minutes: number, seconds?: number, milliseconds?: number);
+        equals(other: ClockTime): boolean;
+        compareTo(other: ClockTime): number;
+        private _ticks;
+        ticks: number;
+        private _ms;
+        milliseconds: number;
+        private _seconds;
+        seconds: number;
+        private _minutes;
+        minutes: number;
+        private _hours;
+        hours: number;
+        private _days;
+        days: number;
+        toTimeSpan(): TimeSpan;
+        static from(hours: number, minutes: number, seconds?: number, milliseconds?: number): ClockTime;
+        toString(format?: string, formatProvider?: System.IFormatProvider): string;
+    }
+    class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue> {
+        value: number;
+        private _type;
+        constructor(value: number, _type: TimeUnit);
+        coerce(other: TimeSpan): TimeUnitValue;
+        coerce(other: TimeUnitValue): TimeUnitValue;
+        equals(other: TimeSpan): boolean;
+        equals(other: TimeUnitValue): boolean;
+        compareTo(other: TimeSpan): number;
+        compareTo(other: TimeUnitValue): number;
+        type: TimeUnit;
+        toTimeSpan(): TimeSpan;
+        to(units?: TimeUnit): TimeUnitValue;
+    }
+    class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan> {
+        private _milliseconds;
+        constructor(value: number, units?: TimeUnit);
+        equals(other: TimeUnitValue): boolean;
+        equals(other: TimeSpan): boolean;
+        compareTo(other: TimeUnitValue): number;
+        compareTo(other: TimeSpan): number;
+        toTimeUnitValue(units?: TimeUnit): TimeUnitValue;
+        static convertToMilliseconds(value: number, units?: TimeUnit): number;
+        total(units: TimeUnit): number;
+        ticks: number;
+        milliseconds: number;
+        seconds: number;
+        minutes: number;
+        hours: number;
+        days: number;
+        time: ClockTime;
+        add(other: ClockTime): TimeSpan;
+        add(other: TimeUnitValue): TimeSpan;
+        add(other: TimeSpan): TimeSpan;
+        addUnit(value: number, units?: TimeUnit): TimeSpan;
+        static from(value: number, units: TimeUnit): TimeSpan;
+        static fromDays(value: number): TimeSpan;
+        static fromHours(value: number): TimeSpan;
+        static fromMinutes(value: number): TimeSpan;
+        static fromSeconds(value: number): TimeSpan;
+        static fromMilliseconds(value: number): TimeSpan;
+        static fromTicks(value: number): TimeSpan;
+        static fromTime(hours: number, minutes: number, seconds?: number, milliseconds?: number): TimeSpan;
+        static millisecondsFromTime(hours: number, minutes: number, seconds?: number, milliseconds?: number): number;
+        static between(first: Date, last: Date): TimeSpan;
+        static zero: TimeSpan;
+    }
+}
 declare module System.Diagnostics {
     class Stopwatch {
         static getTimestampMilliseconds(): number;
@@ -566,6 +482,85 @@ declare module System.Diagnostics {
         elapsed: System.TimeSpan;
     }
 }
+declare module System {
+    interface IEventDispatcher extends EventTarget, IDisposable {
+        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
+        dispatchEvent(event: Event): boolean;
+        hasEventListener(type: string): boolean;
+        removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
+    }
+    class EventDispatcher extends DisposableBase implements IEventDispatcher {
+        private _listeners;
+        addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
+        registerEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number): void;
+        hasEventListener(type: string, listener?: EventListener, useCapture?: boolean): boolean;
+        removeEventListener(type: string, listener: EventListener, userCapture?: boolean): void;
+        dispatchEvent(type: string, params?: any): boolean;
+        dispatchEvent(event: Event): boolean;
+        static DISPOSING: string;
+        static DISPOSED: string;
+        private _isDisposing;
+        isDisposing: boolean;
+        dispose(): void;
+    }
+}
+declare module System {
+    interface ICloneable<T> {
+        clone(): T;
+    }
+}
+declare module System {
+    interface IComparable<T> {
+        compareTo(other: T): number;
+    }
+}
+declare module System {
+    interface IConvertible {
+        toBoolean(provider: IFormatProvider): boolean;
+        toNumber(provider: IFormatProvider): number;
+        toString(provider: IFormatProvider): string;
+    }
+}
+declare module System {
+    interface IEquatable<T> {
+        equals(other: T): boolean;
+    }
+}
+declare module System {
+    interface IFormatProvider {
+        getFormat(formatType: Object): Object;
+    }
+}
+declare module System {
+    interface IFormattable {
+        toString(format?: string, formatProvider?: IFormatProvider): string;
+    }
+}
+import DisposableBase = System.DisposableBase;
+declare module System {
+    interface ILazy<T> extends IDisposable, IEquatable<ILazy<T>> {
+        value: T;
+        isValueCreated: boolean;
+    }
+    class Lazy<T> extends DisposableBase implements ILazy<T> {
+        private _closure;
+        private _isValueCreated;
+        private _value;
+        constructor(_closure: Func<T>);
+        isValueCreated: boolean;
+        canReset: boolean;
+        reset(throwIfCannotReset?: boolean): boolean;
+        value: T;
+        getValue(clearClosureReference?: boolean): T;
+        protected _onDispose(): void;
+        equals(other: Lazy<T>): boolean;
+        valueEquals(other: Lazy<T>): boolean;
+    }
+}
+declare module System.Runtime.Serialization {
+    interface ISerializable {
+    }
+}
 import IDisposable = System.IDisposable;
 import LinkedList = System.Collections.LinkedList;
 declare module System.Text {
@@ -583,9 +578,5 @@ declare module System.Text {
         join(delimiter: string): string;
         clear(): void;
         dispose(): void;
-    }
-}
-declare module System.Runtime.Serialization {
-    interface ISerializable {
     }
 }

@@ -37,6 +37,10 @@ module System {
 	}
 	// #endregion
 
+	export function isNullOrUndefined(n: any): boolean
+	{
+		return n === null || n === undefined;
+	}
 
 	export function isEqualToNaN(n: any): boolean {
 		return typeof n === Types.Number && isNaN(n);

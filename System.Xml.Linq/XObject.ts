@@ -4,7 +4,7 @@
 
 /*
  * @author electricessence / https://github.com/electricessence/
- * Documentation: https://msdn.microsoft.com/en-us/library/system.xml.xmlnodetype%28v=vs.110%29.aspx
+ * Documentation: https://msdn.microsoft.com/en-us/library/system.xml.linq.xobject(v=vs.110).aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
@@ -16,6 +16,20 @@ module System.Xml.Linq
 
 	import Enumerable = System.Linq.Enumerable;
 
+	import isNullOrUndefined = System.isNullOrUndefined;
+
+	var EMPTY:string = "";
+
+	class BaseUriAnnotation
+	{
+		baseUri:string;
+
+		constructor(baseUri:string)
+		{
+			this.baseUri = baseUri;
+		}
+	}
+
 	export class XObject
 		extends System.EventDispatcher
 		implements System.Xml.IXmlLineInfo
@@ -23,15 +37,92 @@ module System.Xml.Linq
 		public static EVENT_CHANGED = "changed";
 		public static EVENT_CHANGING = "changing";
 
-		private _annotationsArray: IAnnotation[];
-		private _annotationsEnumerable: Enumerable<IAnnotation>;
+		private _annotations: any;
 
 		constructor()
 		{
 			super();
-			var a:IAnnotation[] = this._annotationsArray = [];
-			this._annotationsEnumerable = Enumerable.from<IAnnotation>(a);
 		}
+
+		/// <summary>
+		/// Get the BaseUri for this <see cref="XObject"/>.
+		/// </summary>
+		get baseUri(): string
+		{
+			var o = this;
+			while (true)
+			{
+				while (o != null && o.annotations == null)
+				{
+					o = o.parent;
+				}
+				if (o == null) break;
+				var a = o.annotation<BaseUriAnnotation>();
+				if (a != null) return a.baseUri;
+				o = o.parent;
+			}
+			return EMPTY;
+		}
+
+
+		get document(): XDocument
+		{
+			var n: XObject = this;
+			while (n.parent != null) n = n.parent;
+
+			return n && n.nodeType === XmlNodeType.Document ? <XDocument>n : null;
+		}
+
+		getNodeType(): XmlNodeType
+		{
+			return XmlNodeType.None;
+		}
+
+		get nodeType(): XmlNodeType
+		{
+			return this.getNodeType();
+		}
+
+
+		private _parent: XElement;
+		// Internal
+		__setParent(parent: XElement): void
+		{
+			this._parent = parent;
+		}
+
+		// See line 1060 of System.Xml.Linq/XLinq.cs
+		/// <summary>
+		/// Adds an object to the annotation list of this <see cref="XObject"/>.
+		/// </summary>
+		/// <param name="annotation">The annotation to add.</param>
+		addAnnotation(annotation:any): void
+		{
+			if (isNullOrUndefined(annotation))
+				throw 'ArgumentNullException("annotation")';
+
+			// Herein lies a method of memory optimization.
+			// _annotations is not initialized unless used. 
+			// And arrays are not used unless needed.
+
+			var a: any = this._annotations;
+			if (isNullOrUndefined(a))
+			{
+				// Not initialzied yet?
+				this._annotations =
+					annotation instanceof Array
+					? [annotation] // Create a wrapping array to ensure the outer collection isn't confused.
+					: annotation; // Not an array?  Ok go ahead with a single value.
+			}
+			else
+			{
+				if (a instanceof Array)
+					a.push(annotation);
+				else
+					this._annotations = [a, annotation];
+			}
+		}
+
 
 		private _lineNumber:number;
 		protected _setLineNumber(lineNumber:number):void{
@@ -58,51 +149,12 @@ module System.Xml.Linq
 			return !isNaN(this._lineNumber) && !isNaN(this._linePosition);
 		}
 
-		private _baseUri:string;
-		protected _setBaseUri(baseUri:string):void{
-			this._baseUri = baseUri;
-		}
-
-		get baseUri(): string
-		{
-			return this._baseUri;
-		}
-
-		getNodeType():XmlNodeType {
-			return XmlNodeType.None;
-		}
-
-		get nodeType(): XmlNodeType
-		{
-			return this.getNodeType();
-		}
-
-		get document(): XDocument
-		{
-			var current:XObject = this;
-
-			while (current)
-			{
-				if (current.nodeType === XmlNodeType.Document)
-				{
-					if( !(current instanceof XDocument) )
-					{
-						console.warn("Document node is not of type XDocument");
-					}
-					return <XDocument>current;
-				}
-
-				current = current.parent;
-			}
-
-			return null;
-		}
 
 
-		private _parent:XElement;
-		protected _setParent(parent:XElement):void{
-			this._parent = parent;
-		}
+
+
+
+
 
 		get parent(): XElement
 		{
@@ -126,18 +178,7 @@ module System.Xml.Linq
 			}
 		}
 
-		addAnnotation(type: any, object?: any):void
-		{
-			if (!object)
-				object = {}
-
-			this._annotationsArray.push({
-				Type: type,
-				Object: object
-			});
-		}
-
-		annotation<T>(type: any): T
+		annotation<T>(type?: any): T
 		{
 			return this._annotationsEnumerable
 				.where(a=> a.Type === type)
@@ -158,3 +199,4 @@ module System.Xml.Linq
 
 	}
 }
+

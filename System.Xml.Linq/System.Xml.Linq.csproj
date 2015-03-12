@@ -90,5 +90,8 @@
     <TypeScriptCompile Include="XProcessingInstruction.ts" />
     <TypeScriptCompile Include="XText.ts" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="XLinq.cs" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(VSToolsPath)\TypeScript\Microsoft.TypeScript.targets')" />
 </Project>
