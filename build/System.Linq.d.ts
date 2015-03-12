@@ -1,4 +1,4 @@
-/// <reference path="System.d.ts" />
+/// <reference path="../../build/System.d.ts" />
 declare module System.Linq {
     import Predicate = System.Predicate;
     import Selector = System.Selector;
@@ -141,6 +141,7 @@ declare module System.Linq {
     }
     class ArrayEnumerable<T> extends Enumerable<T> {
         private _source;
+        constructor(sourceFactory: () => System.Collections.IArray<T>);
         constructor(source: System.Collections.IArray<T>);
         protected _onDispose(): void;
         source: System.Collections.IArray<T>;

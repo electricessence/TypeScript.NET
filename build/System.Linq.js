@@ -35,7 +35,7 @@ var System;
         var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
         var GET_ENUMERATOR = "getEnumerator", COUNT = "count";
         function isIArray(o) {
-            return typeof o === Types.Object && "length" in o;
+            return o instanceof Array || typeof o === Types.Object && "length" in o;
         }
         var UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.", INVALID_START_VALUE = "Must have a valid 'start' value.", INVALID_STEP_VALUE = "Must have a valid 'step' value.", INVALID_TO_VALUE = "Must have a valid 'to' value.";
         function assertIsNotDisposed(disposed) {
@@ -68,8 +68,10 @@ var System;
             Enumerable.from = function (source) {
                 if (GET_ENUMERATOR in source)
                     return source;
-                if (source instanceof Array || isIArray(source))
+                if (isIArray(source))
                     return Enumerable.fromArray(source);
+                if (Types.isFunction(source))
+                    return new Enumerable(function () { return Enumerable.from(source()).getEnumerator(); });
                 throw new Error(UNSUPPORTED_ENUMERABLE);
             };
             Enumerable.toArray = function (source) {
@@ -567,7 +569,7 @@ var System;
                             }
                             if (enumerator.moveNext()) {
                                 var c = enumerator.current;
-                                if (c instanceof Array) {
+                                if (isIArray(c)) {
                                     middleEnumerator.dispose();
                                     middleEnumerator = Enumerable.fromArray(c).selectMany(Functions.Identity).flatten().getEnumerator();
                                     continue;
@@ -1661,11 +1663,14 @@ var System;
             __extends(ArrayEnumerable, _super);
             function ArrayEnumerable(source) {
                 var _ = this;
-                _._source = source;
+                if (!Types.isFunction(source))
+                    _._source = source;
                 _super.call(this, function () {
                     _.assertIsNotDisposed();
                     return new System.Collections.ArrayEnumerator(function () {
                         _.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
+                        if (!_._source && source)
+                            _._source = source();
                         return _._source;
                     });
                 });
@@ -1784,7 +1789,7 @@ var System;
             };
             ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
                 if (equalityComparer === void 0) { equalityComparer = System.areEqual; }
-                if (second instanceof Array)
+                if (isIArray(second))
                     return ArrayUtility.areEqual(this.source, second, true, equalityComparer);
                 if (second instanceof ArrayEnumerable)
                     return second.sequenceEqual(this.source, equalityComparer);
