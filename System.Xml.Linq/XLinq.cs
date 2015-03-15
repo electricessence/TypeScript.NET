@@ -16,19 +16,13 @@ using System.Xml.Serialization;
 using CultureInfo = System.Globalization.CultureInfo;
 using System.Runtime.Versioning;
 
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "System.Xml.Linq.Res.#GetObject(System.String)", Justification = "Build generated code.")]
-[module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "System.Xml.Linq.Res.#get_Resources()", Justification = "Build generated code.")]
-
 namespace System.Xml.Linq
 {
 	/// <summary>
 	/// Represents a name of an XML element or attribute. This class cannot be inherited.
 	/// </summary>
 #if !SILVERLIGHT // Serialization
-	[Serializable()]
-	[KnownType(typeof(NameSerializer))]
 #endif // !SILVERLIGHT
-	[SuppressMessage("Microsoft.Usage", "CA2229:ImplementSerializationConstructors", Justification = "Deserialization handled by NameSerializer.")]
 	public sealed class XName : IEquatable<XName>
 #if !SILVERLIGHT // Serialization
 , ISerializable
@@ -122,8 +116,7 @@ namespace System.Xml.Linq
 		/// Converts a string formatted as an expanded XML name ({namespace}localname) to an XName object.
 		/// </summary>
 		/// <param name="expandedName">A string containing an expanded XML name in the format: {namespace}localname.</param>
-		/// <returns>An XName object constructed from the expanded name.</returns>        
-		[CLSCompliant(false)]
+		/// <returns>An XName object constructed from the expanded name.</returns>
 		public static implicit operator XName(string expandedName)
 		{
 			return expandedName != null ? Get(expandedName) : null;
@@ -224,7 +217,6 @@ namespace System.Xml.Linq
 	}
 
 #if !SILVERLIGHT // Serialization
-	[Serializable()]
 	internal sealed class NameSerializer : IObjectReference, ISerializable
 	{
 		string expandedName;
@@ -362,7 +354,6 @@ namespace System.Xml.Linq
 		/// </summary>
 		/// <param name="namespaceName">A string containing the namespace name.</param>
 		/// <returns>An XNamespace constructed from the namespace name string.</returns>
-		[CLSCompliant(false)]
 		public static implicit operator XNamespace(string namespaceName)
 		{
 			return namespaceName != null ? Get(namespaceName) : null;
@@ -373,8 +364,7 @@ namespace System.Xml.Linq
 		/// </summary>
 		/// <param name="ns">The namespace for the expanded name.</param>
 		/// <param name="localName">The local name for the expanded name.</param>
-		/// <returns>The new XName constructed from the namespace and local name.</returns>        
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Functionality available via XNamespace.Get().")]
+		/// <returns>The new XName constructed from the namespace and local name.</returns>
 		public static XName operator +(XNamespace ns, string localName)
 		{
 			if (ns == null) throw new ArgumentNullException("ns");
@@ -1007,7 +997,6 @@ namespace System.Xml.Linq
 		/// <summary>
 		/// Get the BaseUri for this <see cref="XObject"/>.
 		/// </summary>
-		[SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Back-compat with System.Xml.")]
 		public string BaseUri
 		{
 			get
@@ -1564,25 +1553,21 @@ namespace System.Xml.Linq
 		/// <summary>
 		/// Event argument for a <see cref="XObjectChange.Add"/> change event.
 		/// </summary>
-		[SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "XObjectChangeEventArgs is in fact immutable.")]
 		public static readonly XObjectChangeEventArgs Add = new XObjectChangeEventArgs(XObjectChange.Add);
 
 		/// <summary>
 		/// Event argument for a <see cref="XObjectChange.Remove"/> change event.
 		/// </summary>
-		[SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "XObjectChangeEventArgs is in fact immutable.")]
 		public static readonly XObjectChangeEventArgs Remove = new XObjectChangeEventArgs(XObjectChange.Remove);
 
 		/// <summary>
 		/// Event argument for a <see cref="XObjectChange.Name"/> change event.
 		/// </summary>
-		[SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "XObjectChangeEventArgs is in fact immutable.")]
 		public static readonly XObjectChangeEventArgs Name = new XObjectChangeEventArgs(XObjectChange.Name);
 
 		/// <summary>
 		/// Event argument for a <see cref="XObjectChange.Value"/> change event.
 		/// </summary>
-		[SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "XObjectChangeEventArgs is in fact immutable.")]
 		public static readonly XObjectChangeEventArgs Value = new XObjectChangeEventArgs(XObjectChange.Value);
 
 		/// <summary>
@@ -1824,7 +1809,6 @@ namespace System.Xml.Linq
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the two nodes do not share a common ancestor.
 		/// </exception>
-		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Reviewed.")]
 		public static int CompareDocumentOrder(XNode n1, XNode n2)
 		{
 			if (n1 == n2) return 0;
@@ -2136,7 +2120,6 @@ namespace System.Xml.Linq
 		/// Two <see cref="XProcessingInstruction"/> nodes are equal if they have the same
 		/// target and data. Two <see cref="XDocumentType"/> nodes are equal if the have the
 		/// same name, public id, system id, and internal subset.</remarks>
-		[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Justification = "Reviewed.")]
 		public static bool DeepEquals(XNode n1, XNode n2)
 		{
 			if (n1 == n2) return true;
@@ -2696,7 +2679,7 @@ namespace System.Xml.Linq
 			XAttribute a = content as XAttribute;
 			if (a != null)
 			{
-				AddAttribute(a);
+				_addAttribute(a);
 				return;
 			}
 			XStreamingElement x = content as XStreamingElement;
@@ -2997,11 +2980,11 @@ namespace System.Xml.Linq
 			ReplaceNodes((object)content);
 		}
 
-		internal virtual void AddAttribute(XAttribute a)
+		internal virtual void _addAttribute(XAttribute a)
 		{
 		}
 
-		internal virtual void AddAttributeSkipNotify(XAttribute a)
+		internal virtual void _addAttributeSkipNotify(XAttribute a)
 		{
 		}
 
@@ -3023,7 +3006,7 @@ namespace System.Xml.Linq
 			XAttribute a = content as XAttribute;
 			if (a != null)
 			{
-				AddAttributeSkipNotify(a);
+				_addAttributeSkipNotify(a);
 				return;
 			}
 			XStreamingElement x = content as XStreamingElement;
@@ -3049,7 +3032,7 @@ namespace System.Xml.Linq
 
 		internal void AddNode(XNode n)
 		{
-			ValidateNode(n, this);
+			_validateNode(n, this);
 			if (n.parent != null)
 			{
 				n = n.CloneNode();
@@ -3066,7 +3049,7 @@ namespace System.Xml.Linq
 
 		internal void AddNodeSkipNotify(XNode n)
 		{
-			ValidateNode(n, this);
+			_validateNode(n, this);
 			if (n.parent != null)
 			{
 				n = n.CloneNode();
@@ -3083,7 +3066,7 @@ namespace System.Xml.Linq
 
 		internal void AddString(string s)
 		{
-			ValidateString(s);
+			_validateString(s);
 			if (content == null)
 			{
 				if (s.Length > 0)
@@ -3124,7 +3107,7 @@ namespace System.Xml.Linq
 
 		internal void AddStringSkipNotify(string s)
 		{
-			ValidateString(s);
+			_validateString(s);
 			if (content == null)
 			{
 				content = s;
@@ -3631,11 +3614,11 @@ namespace System.Xml.Linq
 
 		// Validate insertion of the given node. previous is the node after which insertion
 		// will occur. previous == null means at beginning, previous == this means at end.
-		internal virtual void ValidateNode(XNode node, XNode previous)
+		internal virtual void _validateNode(XNode node, XNode previous)
 		{
 		}
 
-		internal virtual void ValidateString(string s)
+		internal virtual void _validateString(string s)
 		{
 		}
 
@@ -3793,7 +3776,7 @@ namespace System.Xml.Linq
 
 		void AddNode(XNode n)
 		{
-			parent.ValidateNode(n, previous);
+			parent._validateNode(n, previous);
 			if (n.parent != null)
 			{
 				n = n.CloneNode();
@@ -3825,7 +3808,7 @@ namespace System.Xml.Linq
 
 		void AddString(string s)
 		{
-			parent.ValidateString(s);
+			parent._validateString(s);
 			text += s;
 		}
 
@@ -3885,9 +3868,7 @@ namespace System.Xml.Linq
 	///     <item><see cref="XProcessingInstruction"/></item>
 	///   </list>
 	/// </remarks>
-	[XmlSchemaProvider(null, IsAny = true)]
 #if !SILVERLIGHT // Serialization
-	[System.ComponentModel.TypeDescriptionProvider(typeof(MS.Internal.Xml.Linq.ComponentModel.XTypeDescriptionProvider<XElement>))]
 #endif // !SILVERLIGHT
 	public class XElement : XContainer, IXmlSerializable
 	{
@@ -4367,10 +4348,7 @@ namespace System.Xml.Linq
 		/// in the passed in uri parameter.
 		/// </returns>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
-		[SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Back-compat with System.Xml.")]
 		public static XElement Load(string uri)
 		{
 			return Load(uri, LoadOptions.None);
@@ -4401,10 +4379,7 @@ namespace System.Xml.Linq
 		/// significant whitespace will be preserved.
 		/// </returns>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
-		[SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", Justification = "Back-compat with System.Xml.")]
 		public static XElement Load(string uri, LoadOptions options)
 		{
 			XmlReaderSettings rs = GetXmlReaderSettings(options);
@@ -4742,8 +4717,6 @@ namespace System.Xml.Linq
 		/// The name of the file to output the XML to.
 		/// </param>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
 		public void Save(string fileName)
 		{
@@ -4761,8 +4734,6 @@ namespace System.Xml.Linq
 		/// If SaveOptions.OmitDuplicateNamespaces is enabled duplicate namespace declarations will be removed.
 		/// </param>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
 		public void Save(string fileName, SaveOptions options)
 		{
@@ -4989,8 +4960,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XElement"/> as a <see cref="string"/>.
 		/// </returns>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator string(XElement element)
 		{
 			if (element == null) return null;
@@ -5012,8 +4981,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator bool(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5032,8 +4999,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the element does not contain a valid boolean value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator bool?(XElement element)
 		{
 			if (element == null) return null;
@@ -5055,8 +5020,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator int(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5075,8 +5038,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid integer value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator int?(XElement element)
 		{
 			if (element == null) return null;
@@ -5098,8 +5059,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator uint(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5118,8 +5077,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid unsigned integer value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator uint?(XElement element)
 		{
 			if (element == null) return null;
@@ -5141,8 +5098,6 @@ namespace System.Xml.Linq
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator long(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5161,8 +5116,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid long integer value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator long?(XElement element)
 		{
 			if (element == null) return null;
@@ -5184,8 +5137,6 @@ namespace System.Xml.Linq
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator ulong(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5204,8 +5155,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid unsigned long integer value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator ulong?(XElement element)
 		{
 			if (element == null) return null;
@@ -5227,8 +5176,6 @@ namespace System.Xml.Linq
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator float(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5247,8 +5194,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid float value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator float?(XElement element)
 		{
 			if (element == null) return null;
@@ -5270,8 +5215,6 @@ namespace System.Xml.Linq
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator double(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5290,8 +5233,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid double value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator double?(XElement element)
 		{
 			if (element == null) return null;
@@ -5312,9 +5253,7 @@ namespace System.Xml.Linq
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
-		/// </exception>        
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
+		/// </exception>
 		public static explicit operator decimal(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5333,8 +5272,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid decimal value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator decimal?(XElement element)
 		{
 			if (element == null) return null;
@@ -5355,9 +5292,7 @@ namespace System.Xml.Linq
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
-		/// </exception>        
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
+		/// </exception>
 		public static explicit operator DateTime(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5376,8 +5311,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid <see cref="DateTime"/> value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator DateTime?(XElement element)
 		{
 			if (element == null) return null;
@@ -5398,9 +5331,7 @@ namespace System.Xml.Linq
 		/// </exception>
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
-		/// </exception>        
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
+		/// </exception>
 		public static explicit operator DateTimeOffset(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5419,8 +5350,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid <see cref="DateTimeOffset"/> value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator DateTimeOffset?(XElement element)
 		{
 			if (element == null) return null;
@@ -5442,8 +5371,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator TimeSpan(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5462,8 +5389,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid <see cref="TimeSpan"/> value.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator TimeSpan?(XElement element)
 		{
 			if (element == null) return null;
@@ -5485,8 +5410,6 @@ namespace System.Xml.Linq
 		/// <exception cref="InvalidOperationException">
 		/// Thrown if the specified element is null.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator Guid(XElement element)
 		{
 			if (element == null) throw new ArgumentNullException("element");
@@ -5505,8 +5428,6 @@ namespace System.Xml.Linq
 		/// <exception cref="System.FormatException">
 		/// Thrown if the specified element does not contain a valid guid.
 		/// </exception>
-		[CLSCompliant(false)]
-		[SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Operator marked with CLSCompliant(false).")]
 		public static explicit operator Guid?(XElement element)
 		{
 			if (element == null) return null;
@@ -5548,14 +5469,14 @@ namespace System.Xml.Linq
 			WriteTo(writer);
 		}
 
-		internal override void AddAttribute(XAttribute a)
+		internal override void _addAttribute(XAttribute a)
 		{
 			if (Attribute(a.Name) != null) throw new InvalidOperationException(Res.GetString(Res.InvalidOperation_DuplicateAttribute));
 			if (a.parent != null) a = new XAttribute(a);
 			AppendAttribute(a);
 		}
 
-		internal override void AddAttributeSkipNotify(XAttribute a)
+		internal override void _addAttributeSkipNotify(XAttribute a)
 		{
 			if (Attribute(a.Name) != null) throw new InvalidOperationException(Res.GetString(Res.InvalidOperation_DuplicateAttribute));
 			if (a.parent != null) a = new XAttribute(a);
@@ -5745,7 +5666,7 @@ namespace System.Xml.Linq
 			AddAnnotation(new LineInfoEndElementAnnotation(lineNumber, linePosition));
 		}
 
-		internal override void ValidateNode(XNode node, XNode previous)
+		internal override void _validateNode(XNode node, XNode previous)
 		{
 			if (node is XDocument) throw new ArgumentException(Res.GetString(Res.Argument_AddNode, XmlNodeType.Document));
 			if (node is XDocumentType) throw new ArgumentException(Res.GetString(Res.Argument_AddNode, XmlNodeType.DocumentType));
@@ -6008,14 +5929,12 @@ namespace System.Xml.Linq
 	/// <summary>
 	/// Specifies a set of options for Load(). 
 	/// </summary>
-	[Flags()]
 	public enum LoadOptions
 	{
 		/// <summary>Default options.</summary>
 		None = 0x00000000,
 
 		/// <summary>Preserve whitespace.</summary>
-		[SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Justification = "Back-compat with System.Xml.")]
 		PreserveWhitespace = 0x00000001,
 
 		/// <summary>Set the BaseUri property.</summary>
@@ -6028,7 +5947,6 @@ namespace System.Xml.Linq
 	/// <summary>
 	/// Specifies a set of options for Save().
 	/// </summary>
-	[Flags()]
 	public enum SaveOptions
 	{
 		/// <summary>Default options.</summary>
@@ -6044,7 +5962,6 @@ namespace System.Xml.Linq
 	/// <summary>
 	/// Specifies a set of options for CreateReader().
 	/// </summary>
-	[Flags()]
 	public enum ReaderOptions
 	{
 		/// <summary>Default options.</summary>
@@ -6228,10 +6145,7 @@ namespace System.Xml.Linq
 		/// in the passed in uri parameter.
 		/// </returns>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
-		[SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#", Justification = "Back-compat with System.Xml.")]
 		public static XDocument Load(string uri)
 		{
 			return Load(uri, LoadOptions.None);
@@ -6261,10 +6175,7 @@ namespace System.Xml.Linq
 		/// all whitespace will be preserved.
 		/// </returns>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
-		[SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#", Justification = "Back-compat with System.Xml.")]
 		public static XDocument Load(string uri, LoadOptions options)
 		{
 			XmlReaderSettings rs = GetXmlReaderSettings(options);
@@ -6505,8 +6416,6 @@ namespace System.Xml.Linq
 		/// The name of the file to output the XML to.
 		/// </param>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
 		public void Save(string fileName)
 		{
@@ -6524,8 +6433,6 @@ namespace System.Xml.Linq
 		/// If SaveOptions.OmitDuplicateNamespaces is enabled duplicate namespace declarations will be removed.
 		/// </param>
 #if !SILVERLIGHT
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 #endif
 		public void Save(string fileName, SaveOptions options)
 		{
@@ -6673,12 +6580,12 @@ namespace System.Xml.Linq
 			writer.WriteEndDocument();
 		}
 
-		internal override void AddAttribute(XAttribute a)
+		internal override void _addAttribute(XAttribute a)
 		{
 			throw new ArgumentException(Res.GetString(Res.Argument_AddAttribute));
 		}
 
-		internal override void AddAttributeSkipNotify(XAttribute a)
+		internal override void _addAttributeSkipNotify(XAttribute a)
 		{
 			throw new ArgumentException(Res.GetString(Res.Argument_AddAttribute));
 		}
@@ -6723,12 +6630,12 @@ namespace System.Xml.Linq
 			return true;
 		}
 
-		internal override void ValidateNode(XNode node, XNode previous)
+		internal override void _validateNode(XNode node, XNode previous)
 		{
 			switch (node.NodeType)
 			{
 				case XmlNodeType.Text:
-					ValidateString(((XText)node).Value);
+					_validateString(((XText)node).Value);
 					break;
 				case XmlNodeType.Element:
 					ValidateDocument(previous, XmlNodeType.DocumentType, XmlNodeType.None);
@@ -6763,7 +6670,7 @@ namespace System.Xml.Linq
 			}
 		}
 
-		internal override void ValidateString(string s)
+		internal override void _validateString(string s)
 		{
 			if (!IsWhitespace(s)) throw new ArgumentException(Res.GetString(Res.Argument_AddNonWhitespace));
 		}
@@ -7330,9 +7237,7 @@ namespace System.Xml.Linq
 	/// An XML attribute is a name/value pair associated with an XML element.
 	/// </remarks>
 #if !SILVERLIGHT
-	[System.ComponentModel.TypeDescriptionProvider(typeof(MS.Internal.Xml.Linq.ComponentModel.XTypeDescriptionProvider<XAttribute>))]
 #endif
-	[SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix", Justification = "Reviewed.")]
 	public class XAttribute : XObject
 	{
 		static IEnumerable<XAttribute> emptySequence;
@@ -7545,7 +7450,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="string"/>.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator string(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7564,7 +7468,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator bool(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7580,7 +7483,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="bool"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator bool?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7599,7 +7501,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator int(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7615,7 +7516,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as an <see cref="int"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator int?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7634,7 +7534,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator uint(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7650,7 +7549,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as an <see cref="uint"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator uint?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7669,7 +7567,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator long(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7685,7 +7582,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="long"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator long?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7704,7 +7600,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator ulong(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7720,7 +7615,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as an <see cref="ulong"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator ulong?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7739,7 +7633,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator float(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7755,7 +7648,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="float"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator float?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7774,7 +7666,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator double(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7790,7 +7681,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="double"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator double?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7809,7 +7699,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator decimal(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7825,7 +7714,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="decimal"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator decimal?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7844,7 +7732,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator DateTime(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7860,7 +7747,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="DateTime"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator DateTime?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7879,7 +7765,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator DateTimeOffset(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7895,7 +7780,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="DateTimeOffset"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator DateTimeOffset?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7914,7 +7798,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator TimeSpan(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7930,7 +7813,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="TimeSpan"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator TimeSpan?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -7949,7 +7831,6 @@ namespace System.Xml.Linq
 		/// <exception cref="ArgumentNullException">
 		/// Thrown if the specified attribute is null.
 		/// </exception>
-		[CLSCompliant(false)]
 		public static explicit operator Guid(XAttribute attribute)
 		{
 			if (attribute == null) throw new ArgumentNullException("attribute");
@@ -7965,7 +7846,6 @@ namespace System.Xml.Linq
 		/// <returns>
 		/// The content of this <see cref="XAttribute"/> as a <see cref="Guid"/>?.
 		/// </returns>
-		[CLSCompliant(false)]
 		public static explicit operator Guid?(XAttribute attribute)
 		{
 			if (attribute == null) return null;
@@ -8136,8 +8016,6 @@ namespace System.Xml.Linq
 		/// Save an <see cref="XStreamingElement"/> to a file with formatting.
 		/// </summary>
 		/// <param name="fileName">Name of file to write content to</param>
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 		public void Save(string fileName)
 		{
 			Save(fileName, SaveOptions.None);
@@ -8151,8 +8029,6 @@ namespace System.Xml.Linq
 		/// If SaveOptions.DisableFormatting is enabled the output is not indented.
 		/// If SaveOptions.OmitDuplicateNamespaces is enabled duplicate namespace declarations will be removed.
 		/// </param>
-		[ResourceConsumption(ResourceScope.Machine)]
-		[ResourceExposure(ResourceScope.Machine)]
 		public void Save(string fileName, SaveOptions options)
 		{
 			XmlWriterSettings ws = XNode.GetXmlWriterSettings(options);

@@ -14,7 +14,7 @@ module System.Xml.Linq
 		implements System.IEquatable<XNamespace>
 	//,ISerializable
 	{
-		constructor(private _namespaceName: string)
+		constructor(private _namespaceName: string = "")
 		{
 
 		}
@@ -55,12 +55,20 @@ module System.Xml.Linq
 
 		equals(other: XNamespace): boolean
 		{
-			return this==other || this._namespaceName === other.namespaceName;
+			return this == other
+				|| this._namespaceName === other.namespaceName
+				|| !this._namespaceName && !other.namespaceName;
 		}
+
+		toString(): string
+		{
+			return this._namespaceName || "";
+		}
+
 	}
 
 	// Protect these instances.
-	var none = new XNamespace(null);
+	var none = new XNamespace();
 	var xml = new XNamespace('http://www.w3.org/XML/1998/namespace');
 	var xmlns = new XNamespace('http://www.w3.org/2000/xmlns/');
 

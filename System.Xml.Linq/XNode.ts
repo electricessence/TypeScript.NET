@@ -13,6 +13,7 @@ module System.Xml.Linq
 	import IComparer = System.Collections.IComparer;
 	import IEqualityComparer = System.Collections.IEqualityComparer;
 	import Enumerable = System.Linq.Enumerable;
+	import EnumeratorBase = System.Collections.EnumeratorBase;
 
 	class XNodeDocumentOrderComparer implements IComparer<XNode>
 	{
@@ -72,14 +73,22 @@ module System.Xml.Linq
 		_next:XNode;
 		get nextNode():XNode
 		{
-			var parent:XElement = this.parent;
-			return parent == null || this == parent.content ? null : this._next;
+			var p = this._parent;
+			return (p == null || this == p._content) ? null : this._next;
 		}
 
 		get previousNode():XNode
 		{
-			var parent = this.parent;
-			return parent ? parent.previousSiblingOf(this) : null;
+			var parent = this._parent;
+			if (!parent) return null;
+			var n: XNode = (<XNode>parent._content)._next;
+			var p: XNode = null;
+			while (n != this)
+			{
+				p = n;
+				n = n._next;
+			}
+			return p;
 		}
 
 
@@ -214,20 +223,12 @@ module System.Xml.Linq
 			{
 				atts1 = Enumerable
 					.from(this.attributesArray)
-					.where(
-					function (a)
-					{
-						return !a.isNamespaceDeclaration;
-					})
-					.orderBy("k=>k.name");
+					.where(a=> !a.isNamespaceDeclaration)
+					.orderBy(k=>k.name);
 				atts2 = Enumerable
 					.from(other.attributesArray)
-					.where(
-					function (a)
-					{
-						return !a.isNamespaceDeclaration;
-					})
-					.orderBy("k=>k.name");
+					.where(a=> !a.isNamespaceDeclaration)
+					.orderBy(k=> k.name);
 				// in following lambda, return true if any do NOT match
 				if(atts1.zip(
 						atts2, function (a, b)
@@ -299,11 +300,14 @@ module System.Xml.Linq
 		}
 
 		//replaceWith(node:XNode);
-		replaceWith(nodes:XNode[])
+		replaceWith(nodes:XNode[]):void
 		{
 			var _ = this, parent:any = _.parent;
 			if(!parent)
 				throw "InvalidOperationException: The parent is null.";
+
+			var node: XNode = this.previousNode;
+			var nextNode: XNode = this.nextNode;
 
 			//if(!nodes instanceof Array)
 			//{

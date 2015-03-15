@@ -12,12 +12,17 @@ module System.Xml.Linq
 		implements System.IEquatable<XName>
 		//,ISerializable
 	{
+		// C# Version uses a getHasCode method.  We will skip this implementation for simplicity.
+		// Comparisons will be done by string values.
+
+
 		constructor(
 			private _localName: string,
 			private _namespace: XNamespace = null)
 		{
 
 		}
+
 
 		get localName(): string
 		{
@@ -48,7 +53,21 @@ module System.Xml.Linq
 
 		equals(other: XName): boolean
 		{
-			return this._localName === other.localName;
+			return this == other
+				|| this.toString() == other.toString();
 		}
+
+
+		/// <summary>
+		/// Returns the expanded XML name in the format: {namespaceName}localName.
+		/// </summary>
+		toString(): string
+		{
+			var _ = this;
+			var ln = _._localName;
+			var ns = _._namespace && _.namespace.namespaceName;
+			return ns ? ("{" + ns + "}" + ln) : ln;			
+		}
+
 	}
 }

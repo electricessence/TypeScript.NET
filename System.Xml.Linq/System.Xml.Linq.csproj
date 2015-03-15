@@ -83,11 +83,15 @@
     <TypeScriptCompile Include="XElement.ts" />
     <TypeScriptCompile Include="XEntity.ts" />
     <TypeScriptCompile Include="XEnumerable.ts" />
+    <TypeScriptCompile Include="XLinq.cs.ts" />
     <TypeScriptCompile Include="XName.ts" />
     <TypeScriptCompile Include="XNamespace.ts" />
     <TypeScriptCompile Include="XNode.ts" />
     <TypeScriptCompile Include="XObject.ts" />
+    <TypeScriptCompile Include="XObjectChange.ts" />
+    <TypeScriptCompile Include="XObjectChangeEventArgs.ts" />
     <TypeScriptCompile Include="XProcessingInstruction.ts" />
+    <TypeScriptCompile Include="XStreamingElement.ts" />
     <TypeScriptCompile Include="XText.ts" />
   </ItemGroup>
   <ItemGroup>
