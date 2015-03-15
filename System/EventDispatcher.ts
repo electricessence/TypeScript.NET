@@ -10,6 +10,8 @@
 module System {
 
 	var AU = System.Collections.ArrayUtility;
+	var Types = System.Types;
+	var copyTo = System.copyTo;
 
 	export interface IEventDispatcher extends EventTarget, IDisposable {
 
@@ -111,10 +113,10 @@ module System {
 			}
 
 		}
-
+		
+		dispatchEvent(event: Event): boolean; // Event created outside or originated elsewhere.
 		dispatchEvent(type: string, params?:any): boolean;
-		dispatchEvent(event: Event): boolean;
-		dispatchEvent(e: any, params?:any): boolean {
+		dispatchEvent(e: any, params?: any): boolean {
 
 			var _ = this, l = _._listeners;
 			if (!l || !l.length)
@@ -122,16 +124,19 @@ module System {
 
 			var event: Event;
 
-			if (typeof e == "string") {
+			if (Types.isString(e))
+			{
+				// New event...
 				event = new Event();
-				if (!params)
-					params = {};
-				event.cancelable = !!params.cancelable;
-				event.target = _;
+				copyTo(params, event);
+				if(!event.target) event.target = _;
+				event.currentTarget = _;
 				event.type = e;
 			}
 			else
+			{
 				event = <Event>e;
+			}
 
 			var type = event.type;
 
@@ -143,11 +148,11 @@ module System {
 
 			entries.sort(function (a, b) { return b.priority - a.priority; });
 
-			// For now... Just use simple...
+			// For now... Just use simple bubbling...
 			entries.forEach(entry=> {
 				var newEvent = new Event();
-				System.copyTo(event, newEvent);
-				newEvent.target = this;
+				copyTo(event, newEvent);
+				newEvent.currentTarget = this
 				entry.listener(newEvent);
 			});
 

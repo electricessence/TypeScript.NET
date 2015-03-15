@@ -62,6 +62,8 @@
     <TypeScriptCompile Include="Collections\LinkedList.ts" />
     <TypeScriptCompile Include="Collections\Queue.ts" />
     <TypeScriptCompile Include="Diagnostics\Stopwatch.ts" />
+    <TypeScriptCompile Include="EventArgs.ts" />
+    <TypeScriptCompile Include="EventHandler.ts" />
     <TypeScriptCompile Include="Functions.ts" />
     <TypeScriptCompile Include="IComparable.ts" />
     <TypeScriptCompile Include="IConvertable.ts" />

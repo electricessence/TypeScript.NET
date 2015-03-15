@@ -105,9 +105,14 @@ module System {
 
 	}
 
-	export function copyTo(source: any, target: any): void {
-		for (var k in source) { // noinspection JSUnfilteredForInLoop
-			target[k] = source[k];
+	export function copyTo(source: any, target: any): void
+	{
+		if (source)
+		{
+			for (var k in source)
+			{ // noinspection JSUnfilteredForInLoop
+				target[k] = source[k];
+			}
 		}
 	}
 
