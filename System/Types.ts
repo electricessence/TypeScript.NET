@@ -42,6 +42,21 @@ module System
 			return typeof type === Types.Function;
 		}
 
+		export function isSimpleType(type: any): boolean
+		{
+			switch (typeof type)
+			{
+				case Boolean:
+				case Number:
+				case String:
+				case Null:
+				case Undefined:
+					return true;
+				default:
+					return false;
+			}
+		}
+
 	}
 
 	// Sealed class/module.

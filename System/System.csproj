@@ -64,6 +64,7 @@
     <TypeScriptCompile Include="Diagnostics\Stopwatch.ts" />
     <TypeScriptCompile Include="EventArgs.ts" />
     <TypeScriptCompile Include="EventHandler.ts" />
+    <TypeScriptCompile Include="EventHelper.ts" />
     <TypeScriptCompile Include="Functions.ts" />
     <TypeScriptCompile Include="IComparable.ts" />
     <TypeScriptCompile Include="IConvertable.ts" />

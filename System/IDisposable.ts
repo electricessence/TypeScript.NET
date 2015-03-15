@@ -3,20 +3,70 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-module System {
+module System
+{
 
-	export function dispose(...disposables: IDisposable[]): void
+	export function dispose(
+		...disposables: IDisposable[]): void
 	{
 		disposeTheseInternal(disposables, false);
 	}
 
-	export function disposeWithoutException(...disposables: IDisposable[]): void
+
+	export function flattenReferences(
+		o: any,
+		keepArrays: boolean = true,
+		registry?: any[]): any[] 
+	{
+		var r = registry || [];
+
+		var isArray = o instanceof Array;
+
+		if (isArray)
+			for (var i = 0; i < o.length; i++)
+				flattenReferences(o[i], keepArrays, r);
+
+		if (
+			(isArray
+				? keepArrays
+				: !System.Types.isSimpleType(o))
+			&& r.indexOf(o) == -1)
+			r.push(o);
+
+		return r;
+	}
+
+	export function disposeDeep(
+		disposable: any,
+		ignoreExceptions?: boolean): void
+	{
+		if (disposable instanceof Array)
+		{
+			var r = flattenReferences(disposable);
+			var len = r.length;
+			for (var i = 0; i < len; i++)
+			{
+				var d = r[i];
+				if (d instanceof Array)
+					d.length = 0;
+				else
+					disposeSingle(d, ignoreExceptions);
+			}
+		}
+		else
+			disposeSingle(disposable, ignoreExceptions);
+	}
+
+	export function disposeWithoutException(
+		...disposables: IDisposable[]): void
 	{
 		disposeTheseInternal(disposables, true);
 	}
 	
 	// Using this function will make it more robust when there's no type checking.
-	function disposeSingle(disposable: IDisposable, ignoreExceptions: boolean): void
+	function disposeSingle(
+		disposable: IDisposable,
+		ignoreExceptions: boolean): void
 	{
 		if (disposable && typeof disposable.dispose == Types.Function)
 		{
@@ -36,39 +86,45 @@ module System {
 		}
 	}
 
-	function disposeTheseInternal(disposables: IDisposable[], ignoreExceptions:boolean): void
+	function disposeTheseInternal(
+		disposables: IDisposable[],
+		ignoreExceptions: boolean): void
 	{
-		if(disposables)
+		if (disposables)
 		{
 			var len = disposables.length;
-			for(var i = 0; i<len; i++)
+			for (var i = 0; i < len; i++)
 				disposeSingle(disposables[i], ignoreExceptions);
 			disposables.length = 0;
 		}
 	}
 
-	export function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void
+	export function disposeThese(
+		disposables: IDisposable[],
+		ignoreExceptions?: boolean): void
 	{
-		if(disposables && disposables.length)
+		if (disposables && disposables.length)
 			disposeTheseInternal(
 				disposables.slice(0), // Creating a copy is important because the act of disposal can change the source collection.
 				ignoreExceptions);
 	}
 
-	export function using<TDisposable extends IDisposable,TReturn>(
+	export function using<TDisposable extends IDisposable, TReturn>(
 		disposable: TDisposable,
 		closure: (disposable: TDisposable) => TReturn): TReturn
 	{
 		try {
 			return closure(disposable);
 		}
-		finally {
+		finally
+		{
 			dispose(disposable);
 		}
 	}
 
 	// Allows for simple type checking that includes types that don't declare themselves as IDisposable but do have a dispose() method.
-	export interface IDisposable {
+	export interface IDisposable
+	{
 		dispose(): void;
 	}
 
@@ -77,38 +133,46 @@ module System {
 		wasDisposed: boolean;
 	}
 
-	export class DisposableBase implements IDisposableAware {
+	export class DisposableBase implements IDisposableAware
+	{
 
-		constructor(private _finalizer?: () => void) {
+		constructor(private _finalizer?: () => void)
+		{
 		}
 
 		private _wasDisposed: boolean = false;
-		get wasDisposed(): boolean {
+		get wasDisposed(): boolean
+		{
 			return this._wasDisposed;
 		}
 
-		 	// This allows for the use of a boolean instead of calling this.assertIsNotDisposed() since there is a strong chance of introducing a circular reference.
-		static assertIsNotDisposed(disposed:boolean, errorMessage: string = "ObjectDisposedException"): boolean {
+		// This allows for the use of a boolean instead of calling this.assertIsNotDisposed() since there is a strong chance of introducing a circular reference.
+		static assertIsNotDisposed(disposed: boolean, errorMessage: string = "ObjectDisposedException"): boolean
+		{
 			if (disposed)
 				throw new Error(errorMessage);
 
 			return true;
 		}
 
-		assertIsNotDisposed(errorMessage: string = "ObjectDisposedException"): boolean {
+		assertIsNotDisposed(errorMessage: string = "ObjectDisposedException"): boolean
+		{
 			return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
 		}
 
 
-		dispose(): void {
+		dispose(): void
+		{
 			var _ = this;
-			if (!_._wasDisposed) {
+			if (!_._wasDisposed)
+			{
 				// Preemptively set wasDisposed in order to prevent repeated disposing.
 				// NOTE: in true multi-threaded scenarios, this needs to be synchronized.
 				_._wasDisposed = true;
 				try {
 					_._onDispose(); // Protected override.
-				} finally {
+				} finally
+				{
 					if (_._finalizer) // Private finalizer...
 						_._finalizer();
 				}
@@ -117,7 +181,8 @@ module System {
 
 		// Override this to handle destruction...
 		// Be sure to call super._onDestroy() in deeper sub classes...
-		protected _onDispose(): void {
+		protected _onDispose(): void
+		{
 
 		}
 

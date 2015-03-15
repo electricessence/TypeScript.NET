@@ -160,6 +160,18 @@ module System {
 
 		}
 
+		protected _dispatchEventWithArgs(type: string, sender: any, e: EventArgs)
+		{
+			this.dispatchEvent(type, {
+				target: sender,
+
+				// These will append to the current event object for convienence.
+				sender: sender,
+				eventArgs: e
+			});
+		}
+
+
 		static get DISPOSING() { return "disposing"; }
 		static get DISPOSED() { return "disposed"; }
 

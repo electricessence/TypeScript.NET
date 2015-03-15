@@ -12,18 +12,12 @@ module System.Xml.Linq
 {
 	import IXmlLineInfo = System.Xml.IXmlLineInfo;
 	import XmlNodeType = System.Xml.XmlNodeType;
-	import EventDispatcher = System.EventDispatcher;
 
 	import Enumerable = System.Linq.Enumerable;
 
 	import isNullOrUndefined = System.isNullOrUndefined;
 
-	import EventHandler = System.EventHandler;
-
 	var EMPTY: string = "";
-
-	var EVENT_CHANGED = "changed";
-	var EVENT_CHANGING = "changing";
 
 	class BaseUriAnnotation
 	{
@@ -65,28 +59,41 @@ module System.Xml.Linq
 		}
 	}
 
-	class XObjectChangeAnnotation
+
+
+	var CHANGED = "changed";
+	var CHANGING = "changing";
+
+	class XObjectChangeAnnotation extends System.EventDispatcher
 	{
 		//EventHandler<XObjectChangeEventArgs>;
-		changing: (sender: any, e: XObjectChangeEventArgs)=>void;
-
+		changing(sender: any, e: XObjectChangeEventArgs): void
+		{
+			this._dispatchEventWithArgs(CHANGING, sender, e);
+		}
 		//EventHandler<XObjectChangeEventArgs>;
-		changed: (sender: any, e: XObjectChangeEventArgs) => void;
+		changed(sender: any, e: XObjectChangeEventArgs): void
+		{
+			this._dispatchEventWithArgs(CHANGED, sender, e);
+		}
 
 		constructor()
 		{
+			super();
+
 		}
 	}
 
 
 	export class XObject
-		// extends System.EventDispatcher
+		// extends System.EventDispatcher // Not necessary since events are piped through annotations.
+		extends System.DisposableBase // Is necessary to cleanup references..
 		implements System.Xml.IXmlLineInfo
 	{
 
 		constructor()
 		{
-			//super();
+			super();
 		}
 
 		private _annotations: any;
@@ -332,6 +339,7 @@ module System.Xml.Linq
 			this.addAnnotation(new LineInfoAnnotation(lineNumber, linePosition));
 		}
 
+		// If there are no change listeners in the ancestry tree, then skipping is allowed.
 		_skipNotify(): boolean
 		{
 			return this._firstAnnotationAncestry<XObjectChangeAnnotation>(XObjectChangeAnnotation)
@@ -339,158 +347,122 @@ module System.Xml.Linq
 				: true;
 		}
 
+
+		// Handles bubbling of events all the way up...
 		_notifyChanging(sender: any, e: XObjectChangeEventArgs): boolean
 		{
 			return this._annotationAncestryApply<XObjectChangeAnnotation>(
 				XObjectChangeAnnotation,
-				(a: XObjectChangeAnnotation) =>
-				{
-					if (a.changing)
-						a.changing(sender, e);
-				});
+				(a: XObjectChangeAnnotation)
+					=> a.changing(sender, e));
 		}
 
+		// Handles bubbling of events all the way up...
 		_notifyChanged(sender: any, e: XObjectChangeEventArgs): boolean
 		{
 			return this._annotationAncestryApply<XObjectChangeAnnotation>(
 				XObjectChangeAnnotation,
-				(a: XObjectChangeAnnotation) =>
-				{
-					if (a.changed)
-						a.changed(sender, e);
-				});
+				(a: XObjectChangeAnnotation)
+					=> a.changed(sender, e));
 		}
 
 
 
-		// THE FOLLOWING IS RETAINED FOR POTENTIAL EVENTDISPATCHER IMPLEMENTATION.
 
-		//static get EVENT_CHANGING(): string { return EVENT_CHANGING; }
-		//static get EVENT_CHANGED(): string { return EVENT_CHANGED; }
+		// Piping the events to the annotations is a means of bubbling.
+		private _changing: EventHelper;
+		get changing(): EventHelper
+		{
+			var _ = this, e = _._changing;
+			if (!e)
+			{
+				_._changing = e = new EventHelper(
+					CHANGING,
+					(listener: EventListener) =>
+					{
+						if (!listener) return;
+						var a: XObjectChangeAnnotation = _.annotation<XObjectChangeAnnotation>(XObjectChangeAnnotation);
+						if (!a) _.addAnnotation(a = new XObjectChangeAnnotation());
+						a.addEventListener(CHANGING, listener);
+					},
+					(listener: EventListener) =>
+					{
+						if (!listener) return;
+						var a: XObjectChangeAnnotation = _.annotation<XObjectChangeAnnotation>(XObjectChangeAnnotation);
+						if (a) a.removeEventListener(CHANGING, listener);
+					});
+			}
+			return e;
+		}
 
 
-		//protected _handleEvent(type: string, sender: any, e: XObjectChangeEventArgs)
+		// Piping the events to the annotations is a means of bubbling.
+		private _changed: EventHelper;
+		get changed(): EventHelper
+		{
+			var _ = this, e = _._changed;
+			if (!e)
+			{
+				_._changed = e = new EventHelper(
+					CHANGED,
+					(listener: EventListener) =>
+					{
+						if (!listener) return;
+						var a: XObjectChangeAnnotation = _.annotation<XObjectChangeAnnotation>(XObjectChangeAnnotation);
+						if (!a) _.addAnnotation(a = new XObjectChangeAnnotation());
+						a.addEventListener(CHANGED, listener);
+					},
+					(listener: EventListener) =>
+					{
+						if (!listener) return;
+						var a: XObjectChangeAnnotation = _.annotation<XObjectChangeAnnotation>(XObjectChangeAnnotation);
+						if (a) a.removeEventListener(CHANGED, listener);
+					});
+			}
+			return e;
+		}
+		
+
+		protected _onDispose(): void
+		{
+			var _ = this;
+
+			System.dispose(_._changing, _._changed);
+			_._changing = _._changed = null;
+			
+			System.disposeDeep(_._annotations);
+			_._annotations = null;
+
+			_._parent = null;
+
+		}
+
+		//  /// <summary>
+		//	/// Walks the tree starting with "this" node and returns first annotation of type <see cref="SaveOptions"/>
+		//	///   found in the ancestors.
+		//	/// </summary>
+		//	/// <returns>The effective <see cref="SaveOptions"/> for this <see cref="XObject"/></returns>
+		//	/*internal*/ SaveOptions GetSaveOptionsFromAnnotations()
 		//{
-		//	this.dispatchEvent(type, {
-		//		target: sender,
-
-		//		// These will append to the current event object for convienence.
-		//		sender: sender,
-		//		eventArgs: e
-		//	});
-		//}
-
-		//// DO NOT OVERRIDE
-		//protected _changing(sender: any, e: XObjectChangeEventArgs)
-		//{
-		//	this._onChanging(sender, e);
-		//	this._handleEvent(EVENT_CHANGING, sender, e);
-		//}
-
-		//// USE THIS TO HANDLE EVENTS. Override OK.
-		//protected _onChanging(sender: any, e: XObjectChangeEventArgs)
-		//{
-
-		//}
-
-		//// DO NOT OVERRIDE
-		//protected _changed(sender: any, e: XObjectChangeEventArgs)
-		//{
-		//	this._onChanged(sender, e);
-		//	this._handleEvent(EVENT_CHANGED, sender, e);
-		//}
-
-		//// USE THIS TO HANDLE EVENTS. Override OK.
-		//protected _onChanged(sender: any, e: XObjectChangeEventArgs)
-		//{
-
-		//}
-
-
-//		/// <summary>
-//		/// Occurs when this <see cref="XObject"/> or any of its descendants have changed.
-//		/// </summary>
-//		public event EventHandler< XObjectChangeEventArgs > Changed
-//{
-//		add
-//		{
-//			if (value == null) return;
-//			var a: XObjectChangeAnnotation = Annotation<XObjectChangeAnnotation>();
-//			if (a == null)
-//			{
-//				a = new XObjectChangeAnnotation();
-//				AddAnnotation(a);
-//			}
-//			a.changed += value;
-//		}
-//		remove
-//		{
-//			if (value == null) return;
-//			var a: XObjectChangeAnnotation = Annotation<XObjectChangeAnnotation>();
-//			if (a == null) return;
-//			a.changed -= value;
-//			if (a.changing == null && a.changed == null)
-//			{
-//				RemoveAnnotations<XObjectChangeAnnotation>();
-//			}
-//		}
-//	}
-
-//		/// <summary>
-//		/// Occurs when this <see cref="XObject"/> or any of its descendants are about to change.
-//		/// </summary>
-//		public event EventHandler< XObjectChangeEventArgs > Changing
-//	{
-//		add
-//		{
-//			if (value == null) return;
-//			var a: XObjectChangeAnnotation = Annotation<XObjectChangeAnnotation>();
-//			if (a == null)
-//			{
-//				a = new XObjectChangeAnnotation();
-//				AddAnnotation(a);
-//			}
-//			a.changing += value;
-//		}
-//		remove
-//		{
-//			if (value == null) return;
-//			var a: XObjectChangeAnnotation = Annotation<XObjectChangeAnnotation>();
-//			if (a == null) return;
-//			a.changing -= value;
-//			if (a.changing == null && a.changed == null)
-//			{
-//				RemoveAnnotations<XObjectChangeAnnotation>();
-//			}
-//		}
-//	}
-
-//			/// <summary>
-//	/// Walks the tree starting with "this" node and returns first annotation of type <see cref="SaveOptions"/>
-//	///   found in the ancestors.
-//	/// </summary>
-//	/// <returns>The effective <see cref="SaveOptions"/> for this <see cref="XObject"/></returns>
-//	/*internal*/ SaveOptions GetSaveOptionsFromAnnotations()
-//{
-//		var o: XObject = this;
-//		while (true)
-//		{
-//			while (o != null && o.annotations == null)
-//			{
-//				o = o.parent;
-//			}
-//			if (o == null)
-//			{
-//				return SaveOptions.None;
-//			}
-//			var saveOptions: object = o.Annotation(typeof (SaveOptions));
-//			if (saveOptions != null)
-//			{
-//				return <SaveOptions>saveOptions;
-//			}
-//			o = o.parent;
-//		}
-//	}
+		//		var o: XObject = this;
+		//		while (true)
+		//		{
+		//			while (o != null && o.annotations == null)
+		//			{
+		//				o = o.parent;
+		//			}
+		//			if (o == null)
+		//			{
+		//				return SaveOptions.None;
+		//			}
+		//			var saveOptions: object = o.Annotation(typeof (SaveOptions));
+		//			if (saveOptions != null)
+		//			{
+		//				return <SaveOptions>saveOptions;
+		//			}
+		//			o = o.parent;
+		//		}
+		//	}
 
 	}
 }

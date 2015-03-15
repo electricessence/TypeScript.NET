@@ -76,6 +76,19 @@ var System;
             return typeof type === Types.Function;
         }
         Types.isFunction = isFunction;
+        function isSimpleType(type) {
+            switch (typeof type) {
+                case Types.Boolean:
+                case Types.Number:
+                case Types.String:
+                case Types.Null:
+                case Types.Undefined:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        Types.isSimpleType = isSimpleType;
     })(Types = System.Types || (System.Types = {}));
     Object.freeze(System.Types);
 })(System || (System = {}));
@@ -861,6 +874,34 @@ var System;
         disposeTheseInternal(disposables, false);
     }
     System.dispose = dispose;
+    function flattenReferences(o, keepArrays, registry) {
+        if (keepArrays === void 0) { keepArrays = true; }
+        var r = registry || [];
+        var isArray = o instanceof Array;
+        if (isArray)
+            for (var i = 0; i < o.length; i++)
+                flattenReferences(o[i], keepArrays, r);
+        if ((isArray ? keepArrays : !System.Types.isSimpleType(o)) && r.indexOf(o) == -1)
+            r.push(o);
+        return r;
+    }
+    System.flattenReferences = flattenReferences;
+    function disposeDeep(disposable, ignoreExceptions) {
+        if (disposable instanceof Array) {
+            var r = flattenReferences(disposable);
+            var len = r.length;
+            for (var i = 0; i < len; i++) {
+                var d = r[i];
+                if (d instanceof Array)
+                    d.length = 0;
+                else
+                    disposeSingle(d, ignoreExceptions);
+            }
+        }
+        else
+            disposeSingle(disposable, ignoreExceptions);
+    }
+    System.disposeDeep = disposeDeep;
     function disposeWithoutException() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -2495,6 +2536,13 @@ var System;
             });
             return true;
         };
+        EventDispatcher.prototype._dispatchEventWithArgs = function (type, sender, e) {
+            this.dispatchEvent(type, {
+                target: sender,
+                sender: sender,
+                eventArgs: e
+            });
+        };
         Object.defineProperty(EventDispatcher, "DISPOSING", {
             get: function () {
                 return "disposing";
@@ -2533,6 +2581,85 @@ var System;
         return EventDispatcher;
     })(System.DisposableBase);
     System.EventDispatcher = EventDispatcher;
+})(System || (System = {}));
+var System;
+(function (System) {
+    var EventHelperBase = (function (_super) {
+        __extends(EventHelperBase, _super);
+        function EventHelperBase(_name) {
+            _super.call(this);
+            this._name = _name;
+            if (!_name)
+                throw 'ArgumentNullException("_name")';
+        }
+        Object.defineProperty(EventHelperBase.prototype, "name", {
+            get: function () {
+                return this._name;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        EventHelperBase.prototype.add = function (listener) {
+            throw "EventDispatcherBase.add Not Implemented.";
+        };
+        EventHelperBase.prototype.remove = function (listener) {
+            throw "EventDispatcherBase.remove Not Implemented.";
+        };
+        return EventHelperBase;
+    })(System.DisposableBase);
+    System.EventHelperBase = EventHelperBase;
+    var EventHelper = (function (_super) {
+        __extends(EventHelper, _super);
+        function EventHelper(name, _onAdd, _onRemove) {
+            _super.call(this, name);
+            this._onAdd = _onAdd;
+            this._onRemove = _onRemove;
+            if (!_onAdd)
+                throw 'ArgumentNullException("_onAdd")';
+            if (!_onRemove)
+                throw 'ArgumentNullException("_onRemove")';
+        }
+        EventHelper.prototype.add = function (listener) {
+            this.assertIsNotDisposed();
+            this._onAdd(listener);
+        };
+        EventHelper.prototype.remove = function (listener) {
+            this.assertIsNotDisposed();
+            this._onRemove(listener);
+        };
+        EventHelper.prototype._onDisposed = function () {
+            this._onAdd = null;
+            this._onRemove = null;
+        };
+        return EventHelper;
+    })(EventHelperBase);
+    System.EventHelper = EventHelper;
+    Object.freeze(EventHelper);
+    var EventDispatcherHelper = (function (_super) {
+        __extends(EventDispatcherHelper, _super);
+        function EventDispatcherHelper(name, _dispatcher) {
+            _super.call(this, name);
+            this._dispatcher = _dispatcher;
+            if (!_dispatcher)
+                throw 'ArgumentNullException("_dispatcher")';
+        }
+        EventDispatcherHelper.prototype.add = function (listener) {
+            var _ = this;
+            _.assertIsNotDisposed();
+            _._dispatcher.addEventListener(_._name, listener);
+        };
+        EventDispatcherHelper.prototype.remove = function (listener) {
+            var _ = this;
+            _.assertIsNotDisposed();
+            _._dispatcher.removeEventListener(_._name, listener);
+        };
+        EventDispatcherHelper.prototype._onDisposed = function () {
+            this._dispatcher = null;
+        };
+        return EventDispatcherHelper;
+    })(EventHelperBase);
+    System.EventDispatcherHelper = EventDispatcherHelper;
+    Object.freeze(EventHelper);
 })(System || (System = {}));
 var DisposableBase = System.DisposableBase;
 var System;

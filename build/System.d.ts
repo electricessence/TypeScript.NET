@@ -23,6 +23,7 @@ declare module System {
         function isNumber(type: any): boolean;
         function isString(type: any): boolean;
         function isFunction(type: any): boolean;
+        function isSimpleType(type: any): boolean;
     }
 }
 declare module System {
@@ -122,6 +123,8 @@ declare module System.Collections {
 }
 declare module System {
     function dispose(...disposables: IDisposable[]): void;
+    function flattenReferences(o: any, keepArrays?: boolean, registry?: any[]): any[];
+    function disposeDeep(disposable: any, ignoreExceptions?: boolean): void;
     function disposeWithoutException(...disposables: IDisposable[]): void;
     function disposeThese(disposables: IDisposable[], ignoreExceptions?: boolean): void;
     function using<TDisposable extends IDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;
@@ -505,6 +508,7 @@ declare module System {
         removeEventListener(type: string, listener: EventListener, userCapture?: boolean): void;
         dispatchEvent(event: Event): boolean;
         dispatchEvent(type: string, params?: any): boolean;
+        protected _dispatchEventWithArgs(type: string, sender: any, e: EventArgs): void;
         static DISPOSING: string;
         static DISPOSED: string;
         private _isDisposing;
@@ -515,6 +519,30 @@ declare module System {
 declare module System {
     interface EventHandler {
         (sender: Object, e: EventArgs): void;
+    }
+}
+declare module System {
+    class EventHelperBase extends DisposableBase {
+        protected _name: string;
+        constructor(_name: string);
+        name: string;
+        add(listener: EventListener): void;
+        remove(listener: EventListener): void;
+    }
+    class EventHelper extends EventHelperBase {
+        private _onAdd;
+        private _onRemove;
+        constructor(name: string, _onAdd: (listener: EventListener) => void, _onRemove: (listener: EventListener) => void);
+        add(listener: EventListener): void;
+        remove(listener: EventListener): void;
+        protected _onDisposed(): void;
+    }
+    class EventDispatcherHelper extends EventHelperBase {
+        private _dispatcher;
+        constructor(name: string, _dispatcher: EventDispatcher);
+        add(listener: EventListener): void;
+        remove(listener: EventListener): void;
+        protected _onDisposed(): void;
     }
 }
 declare module System {
