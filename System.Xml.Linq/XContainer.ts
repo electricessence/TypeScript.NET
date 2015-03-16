@@ -18,7 +18,9 @@ module System.Xml.Linq
 	{
 
 		constructor(
-			public parent: XContainer, public previous: XNode, public text: string = null)
+			public parent: XContainer,
+			public previous: XNode,
+			public text: string = null)
 		{
 		}
 

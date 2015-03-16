@@ -366,7 +366,14 @@ module System.Xml.Linq
 					=> a.changed(sender, e));
 		}
 
-
+		// Handles bubbling of events all the way up...
+		_notifyChange(sender: any, e: XObjectChangeEventArgs, closure:()=>void): void
+		{
+			var _ = this;
+			var notify: boolean = _._notifyChanging(sender, e);
+			closure();
+			if (notify) _._notifyChanged(sender, e);
+		}
 
 
 		// Piping the events to the annotations is a means of bubbling.

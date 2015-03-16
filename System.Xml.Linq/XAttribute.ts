@@ -13,4 +13,7 @@ module System.Xml.Linq
 			super();
 		}
 	}
+
+	/*internal*/
+	_next: XAttribute;
 }

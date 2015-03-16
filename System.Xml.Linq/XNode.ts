@@ -48,7 +48,7 @@ module System.Xml.Linq
 
 		var xn:XName = XName.from(xname);
 		// XName provided? filter results...
-		return xn ? a.where(x=>x.name.equals(xn)) : a
+		return xn ? a.where(x=> x.name.equals(xn)) : a;
 	}
 
 
@@ -74,7 +74,9 @@ module System.Xml.Linq
 		get nextNode():XNode
 		{
 			var p = this._parent;
-			return (p == null || this == p._content) ? null : this._next;
+			return (p == null || this == p._content)
+				? null
+				: this._next;
 		}
 
 		get previousNode():XNode
@@ -106,12 +108,16 @@ module System.Xml.Linq
 					var current:XNode;
 					return new EnumeratorBase<XElement>(
 						() => { current = _; },
-						yielder => (current = current.parent) && yielder.yieldReturn(<XElement>current)
+						yielder =>
+							(current = current._parent)
+							&& yielder.yieldReturn(<XElement>current)
 					);
 				});
 
 			// XName provided? filter results...
-			return xn ? a.where(x=>x.name.equals(xname)) : a;
+			return xn
+				? a.where(x=> x.name.equals(xname))
+				: a;
 		}
 
 		addAfterSelf()

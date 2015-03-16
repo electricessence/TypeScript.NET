@@ -18,7 +18,9 @@ module System.Xml.Linq
 		/// </summary>
 		/// <param name="name">The name to assign to the new <see cref="XStreamingElement"/> node</param>
 		/// <param name="content">The content to assign to the new <see cref="XStreamingElement"/> node</param>
-		constructor(public _name: XName, public _content: any)
+		constructor(
+			private _name: XName,
+			public _content: any)
 		{
 			if (_name == null) throw 'ArgumentNullException("name")';
 			if (_content instanceof Array)
