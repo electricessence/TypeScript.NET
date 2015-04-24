@@ -67,6 +67,8 @@
     <TypeScriptCompile Include="IConvertable.ts" />
     <TypeScriptCompile Include="IFormatProvider.ts" />
     <TypeScriptCompile Include="IFormattable.ts" />
+    <TypeScriptCompile Include="IObservable.ts" />
+    <TypeScriptCompile Include="IObserver.ts" />
     <TypeScriptCompile Include="Runtime\Serialization\ISerializable.ts" />
     <TypeScriptCompile Include="System.ts" />
     <TypeScriptCompile Include="IDisposable.ts" />
