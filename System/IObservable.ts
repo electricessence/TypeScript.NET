@@ -19,7 +19,7 @@ module System
 	class Subscription<T> implements IDisposableAware
 	{
 		constructor(
-			private _observable: ObservableBase<T>,
+			private _observable: ObservableNode<T>,
 			public observer: IObserver<T>)
 		{
 			if (!_observable || !observer)
@@ -64,7 +64,7 @@ module System
 
 
 	// Can be used as a base class, mixin, or simply reference on how to implement the pattern.
-	export class ObservableBase<T> implements IObservable<T>, IObserver<T>
+	export class ObservableNode<T> implements IObservable<T>, IObserver<T>
 	{
 
 		private _subcribers: LinkedList<Subscription<T>> = new LinkedList<Subscription<T>>();
@@ -113,31 +113,30 @@ module System
 
 		onNext(value: T): void
 		{
-			this._subcribers.forEach(s=> s.observer.onNext(value));
+			// Use a clone in case calling "onNext" will cause a change in the collection contents.
+			this._subcribers
+				.forEachFromClone(s=> s.observer.onNext(value));
 		}
+
         onError(error: Error): void
 		{
-			this._subcribers.forEach(s=> s.observer.onError(error));
+			// Use a clone in case calling "onError" will cause a change in the collection contents.
+			this._subcribers
+				.forEachFromClone(s=> s.observer.onError(error));
 		}
 
-		// TODO: Probably better to scrap the list...
         onCompleted(): void
 		{
-			var node: System.Collections.ILinkedListNode<Subscription<T>>,
-				prevNode: System.Collections.ILinkedListNode<Subscription<T>>;
-
-			while (node = this._subcribers.first)
+			var array = this._subcribers.toArray();
+			this._subcribers.clear();
+			array.forEach(entry=>
 			{
-				if (node == prevNode)
-					throw 'Entry disposal not removing node from list.';
-				var entry = node.value;
 				var observer = entry.observer;
-				entry.dispose(); // Should remove the node.
-
-				prevNode = node;
-
+				entry.dispose();
 				observer.onCompleted();
-			}
+			});
+
+			array.length = 0;
 		}
 	}
 

@@ -60,6 +60,7 @@ declare module System.Collections.ArrayUtility {
     function findIndex<T>(array: IArray<T>, predicate: (item: T) => boolean): number;
     function areAllEqual(arrays: any[][], strict?: boolean): boolean;
     function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer?: (a: T, b: T, strict?: boolean) => boolean): boolean;
+    function forEach<T>(sourceArray: T[], fn: (value: T, index?: number) => any): void;
     function applyTo<T extends IArray<number>>(target: T, fn: (a: number) => number): T;
     function removeIndex<T>(array: T[], index: number): boolean;
     function remove<T>(array: T[], value: T, max?: number): number;
@@ -284,6 +285,8 @@ declare module System.Collections {
         private _findLast(entry);
         forEach(action: System.Predicate<T>): void;
         forEach(action: System.Action<T>): void;
+        forEachFromClone(action: System.Predicate<T>): void;
+        forEachFromClone(action: System.Action<T>): void;
         getEnumerator(): IEnumerator<T>;
         count: number;
         isReadOnly: boolean;
@@ -538,7 +541,7 @@ declare module System {
     interface IObservable<T> {
         subscribe(observer: IObserver<T>): IDisposable;
     }
-    class ObservableBase<T> implements IObservable<T>, IObserver<T> {
+    class ObservableNode<T> implements IObservable<T>, IObserver<T> {
         private _subcribers;
         private _findEntryNode(observer);
         subscribe(observer: IObserver<T>): IDisposable;

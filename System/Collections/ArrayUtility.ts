@@ -16,6 +16,9 @@ module System.Collections.ArrayUtility
 		return array;
 	}
 
+	// Special forEach usage that will exit if the callback value === false.
+
+
 	export function copy<T>(sourceArray: T[], sourceIndex: number = 0, length: number = Infinity): T[]
 	{
 		if (!sourceArray)
@@ -165,6 +168,12 @@ module System.Collections.ArrayUtility
 
 		return true;
 
+	}
+	
+	// Allows for using "false" to cause forEach to break.
+	export function forEach<T>(sourceArray: T[], fn: (value: T, index?: number) => any): void
+	{
+		sourceArray.every((value: T, index: number) => fn(value, index) !== false);
 	}
 
 

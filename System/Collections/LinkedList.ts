@@ -223,6 +223,16 @@ module System.Collections
 		}
 		// #endregion
 
+		// Clone's the collection before exectuing the for each.
+		forEachFromClone(action: System.Predicate<T>): void;
+		forEachFromClone(action: System.Action<T>): void;
+		forEachFromClone(action: (element: T, index?: number) => any): void
+		{
+			var array = this.toArray();
+			ArrayUtility.forEach(array, action);
+			array.length = 0;
+		}
+
 		// #region IEnumerable<T>
 		getEnumerator(): IEnumerator<T>
 		{

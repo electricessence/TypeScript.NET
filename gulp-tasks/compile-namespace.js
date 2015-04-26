@@ -29,7 +29,7 @@ module.exports = function(gulp) {
 
 
 		var BUILD_FOLDER = PARENT + 'build/';
-		var AMD_BUILD_FOLDER = PARENT + "amd/";
+		var AMD_BUILD_FOLDER = PARENT + 'amd/';
 		var SOURCE_ROOT = PARENT + namespace;
 
 		var TASK_COMPILE = namespace + '-compile';
@@ -44,13 +44,13 @@ module.exports = function(gulp) {
 					'return ' + namespace + ';}',
 					'',
 					'if (typeof define === typeof function () { } && define.amd) { // AMD',
-					'	define("' + namespace + '",' + depString + "this_module);",
+					'	define("' + namespace + '",' + depString + 'this_module);',
 					'}',
 					'else if(typeof module !== typeof undefined && module.exports) { // Node',
 				  '	module.exports = this_module;',
 					'}',
 				'})(this);'
-			].join("\n");
+			].join('\n');
 
 		var JS_OUT = namespace + JS;
 
@@ -94,7 +94,7 @@ module.exports = function(gulp) {
 					.pipe(gulp.dest(BUILD_FOLDER));
 			});
 
-		var wrap = require("gulp-wrap-js");
+		var wrap = require('gulp-wrap-js');
 		gulp.task(
 			TASK_AMD, [TASK_COMPILE], function() {
 				return gulp.src(BUILD_FOLDER + JS_OUT)

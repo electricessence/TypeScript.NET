@@ -277,6 +277,10 @@ var System;
                 return true;
             }
             ArrayUtility.areEqual = areEqual;
+            function forEach(sourceArray, fn) {
+                sourceArray.every(function (value, index) { return fn(value, index) !== false; });
+            }
+            ArrayUtility.forEach = forEach;
             function applyTo(target, fn) {
                 if (!target)
                     throw new Error("ArgumentNullException: 'target' cannot be null.");
@@ -1268,6 +1272,11 @@ var System;
                 while (next && action(next.value, index++) !== false) {
                     next = next.next;
                 }
+            };
+            LinkedList.prototype.forEachFromClone = function (action) {
+                var array = this.toArray();
+                Collections.ArrayUtility.forEach(array, action);
+                array.length = 0;
             };
             LinkedList.prototype.getEnumerator = function () {
                 var _ = this, current;
@@ -2521,11 +2530,11 @@ var System;
         };
         return Subscription;
     })();
-    var ObservableBase = (function () {
-        function ObservableBase() {
+    var ObservableNode = (function () {
+        function ObservableNode() {
             this._subcribers = new LinkedList();
         }
-        ObservableBase.prototype._findEntryNode = function (observer) {
+        ObservableNode.prototype._findEntryNode = function (observer) {
             var node = this._subcribers.first;
             while (node) {
                 if (node.value.observer == observer) {
@@ -2537,7 +2546,7 @@ var System;
             }
             return node;
         };
-        ObservableBase.prototype.subscribe = function (observer) {
+        ObservableNode.prototype.subscribe = function (observer) {
             var n = this._findEntryNode(observer);
             if (n)
                 return n.value;
@@ -2545,7 +2554,7 @@ var System;
             this._subcribers.add(s);
             return s;
         };
-        ObservableBase.prototype.unsubscribe = function (observer) {
+        ObservableNode.prototype.unsubscribe = function (observer) {
             var n = this._findEntryNode(observer);
             if (n) {
                 var s = n.value;
@@ -2553,27 +2562,25 @@ var System;
                 s.dispose();
             }
         };
-        ObservableBase.prototype.onNext = function (value) {
-            this._subcribers.forEach(function (s) { return s.observer.onNext(value); });
+        ObservableNode.prototype.onNext = function (value) {
+            this._subcribers.forEachFromClone(function (s) { return s.observer.onNext(value); });
         };
-        ObservableBase.prototype.onError = function (error) {
-            this._subcribers.forEach(function (s) { return s.observer.onError(error); });
+        ObservableNode.prototype.onError = function (error) {
+            this._subcribers.forEachFromClone(function (s) { return s.observer.onError(error); });
         };
-        ObservableBase.prototype.onCompleted = function () {
-            var node, prevNode;
-            while (node = this._subcribers.first) {
-                if (node == prevNode)
-                    throw 'Entry disposal not removing node from list.';
-                var entry = node.value;
+        ObservableNode.prototype.onCompleted = function () {
+            var array = this._subcribers.toArray();
+            this._subcribers.clear();
+            array.forEach(function (entry) {
                 var observer = entry.observer;
                 entry.dispose();
-                prevNode = node;
                 observer.onCompleted();
-            }
+            });
+            array.length = 0;
         };
-        return ObservableBase;
+        return ObservableNode;
     })();
-    System.ObservableBase = ObservableBase;
+    System.ObservableNode = ObservableNode;
 })(System || (System = {}));
 var DisposableBase = System.DisposableBase;
 var System;
