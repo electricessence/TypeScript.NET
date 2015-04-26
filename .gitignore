@@ -175,6 +175,10 @@ build/r.js
 build/build.bat
 build/build.json
 
+# Windows
+Thumbs.db
+Desktop.ini
+
 # Mac
 .DS_Store
 
