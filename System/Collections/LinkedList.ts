@@ -34,6 +34,8 @@ module System.Collections
 		addBefore(entry: T): void;
 		addAfter(entry: T): void;
 
+		remove(): void;
+
 		addNodeBefore(before: ILinkedListNode<T>): void;
 		addNodeAfter(after: ILinkedListNode<T>): void;
 
@@ -464,7 +466,7 @@ module System.Collections
 	}
 
 	// Use an internal node class to prevent mucking up the LinkedList.
-	class LinkedListNode<T> // implements ILinkedListNode<T>
+	class LinkedListNode<T> implements ILinkedListNode<T>
 	{
 		constructor(
 			private _list: System.Collections.LinkedList<T>,
@@ -512,6 +514,11 @@ module System.Collections
 		addNodeAfter(after: ILinkedListNode<T>): void
 		{
 			this._list.addNodeAfter(this, after);
+		}
+
+		remove(): void
+		{
+			this._list.removeNode(this);
 		}
 
 	}
