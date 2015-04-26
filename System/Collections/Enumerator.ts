@@ -132,7 +132,7 @@ module System.Collections {
 			}
 		}
 
-		_onDispose(): void {
+		protected _onDispose(): void {
 			var _ = this, disposer = _.disposer;
 
 			_.initializer = null;

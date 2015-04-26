@@ -12,7 +12,7 @@ module System
 
 	export module Types
 	{
-		// Calling an instance of this class allows for a local/private non-interferable copy.
+		// Calling an instance of this class allows for a local/private 'sealed' copy.
 
 		export var Boolean: string = typeof true;
 		export var Number: string = typeof 0;
@@ -44,6 +44,7 @@ module System
 
 	}
 
+	// Sealed class/module.
 	Object.freeze(System.Types);
 
 }

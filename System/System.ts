@@ -102,12 +102,12 @@ module System {
 		}
 	}
 
-	export function applyMixins(derivedCtor: any, baseCtors: any[]):void {
-		baseCtors.forEach(
-			baseCtor => {
-				Object.getOwnPropertyNames(baseCtor.prototype).forEach(
+	export function applyMixins(derivedConstructor: any, baseConstructors: any[]):void {
+		baseConstructors.forEach(
+			bc => {
+				Object.getOwnPropertyNames(bc.prototype).forEach(
 					name => {
-						derivedCtor.prototype[name] = baseCtor.prototype[name]; } );
+						derivedConstructor.prototype[name] = bc.prototype[name]; } );
 			}
 		);
 	}

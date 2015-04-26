@@ -53,6 +53,28 @@ You can also see an example of how to use a shim:
 /build/test/amd-shimmed/
 ```
 
+# Build
+This project uses 'Gulp' to build the resultant JavaScript files.
+
+#### Setup:
+Simply install node.js.  This should include npm (Node Package Manager).
+Then at any command prompt, type:
+```
+npm install gulp -g
+```
+This will ensure you can type 'gulp' in any location.
+
+#### Building
+Then if you need to build an individual namespace/package, simply type ```gulp``` within that project folder (where there is a ```gulpfile.js```).
+
+If you want to make sure the entire solution is updated, typing ```gulp``` inside the ```gulp-tasks``` folder will build all registerd project folders.
+
+#### IDE Support
+WebStorm has a terminal and it's simply easy enough to type gulp when you need to build.
+
+Visual Studio has an incredible set of tools for node and task runners.  Here's one of them:
+https://visualstudiogallery.msdn.microsoft.com/8e1b4368-4afb-467a-bc13-9650572db708
+
 
 # Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ

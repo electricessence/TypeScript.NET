@@ -11,6 +11,6 @@ module System.Runtime.Serialization
 	{
 		// Placeholder for now...
 		//getObjectData(info:SerializationInfo, context:StreamingContext): void;
-    }
+	}
 }
  
