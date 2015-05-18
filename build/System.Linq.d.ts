@@ -1,4 +1,4 @@
-/// <reference path="../../build/System.d.ts" />
+/// <reference path="../build/System.d.ts" />
 declare module System.Linq {
     import Predicate = System.Predicate;
     import Selector = System.Selector;
