@@ -3,12 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-module System.Text {
+module Text
+{
 
-  export function format(source:string, ...args:any[]) {
-    for (var i = 0; i < args.length; i++)
-		source = source.replace("{" + i + "}", args[i]);
-	  return source;
-  }
+	export function format(source:string, ...args:any[]) {
+		for(var i = 0; i<args.length; i++) {
+			source = source.replace("{" + i + "}", args[i]);
+		}
+		return source;
+	}
 
 }
+
+export = Text;

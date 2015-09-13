@@ -1,11 +1,11 @@
-﻿///<reference path="IFormatProvider.ts"/>
-
-/*
+﻿/*
  * @author electricessence / https://github.com/electricessence/
  * Based upon .NET source.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IConvertible.cs
  */
+
+///<reference path="IFormatProvider.ts"/>
 
 interface IConvertible
 {

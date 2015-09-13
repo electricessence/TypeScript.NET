@@ -3,41 +3,41 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-module System {
+'use strict';
 
-	"use strict";
+// This is exposed as a class to allow for extending.
+class Functions
+{
 
-	export class Functions {
+	Identity<T>(x:T) { return x; }
 
-		Identity<T>(x:T) { return x; }
+	True() { return true; }
 
-		True() { return true; }
+	False() { return false; }
 
-		False() { return false; }
+	Blank() { }
 
-		Blank() { }
-
-		static get Identity():<T>(x:T) => T
-		{
-			return rootFunctions.Identity;
-		}
-
-		static get True():() => boolean
-		{
-			return rootFunctions.True;
-		}
-
-		static get False():() => boolean
-		{
-			return rootFunctions.False;
-		}
-
-		static get Blank():() => void
-		{
-			return rootFunctions.Blank;
-		}
+	static get Identity():<T>(x:T) => T
+	{
+		return rootFunctions.Identity;
 	}
 
-	var rootFunctions:Functions = new Functions();
+	static get True():() => boolean
+	{
+		return rootFunctions.True;
+	}
+
+	static get False():() => boolean
+	{
+		return rootFunctions.False;
+	}
+
+	static get Blank():() => void
+	{
+		return rootFunctions.Blank;
+	}
 }
-export = System.Functions;
+
+var rootFunctions:Functions = new Functions();
+
+export = Functions;

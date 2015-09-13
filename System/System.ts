@@ -7,34 +7,6 @@ import Types = require('Types');
 
 module System {
 
-	// #region Function Signatures.
-	export interface Action<T>
-	{
-		(object: T, index?: number): void;
-	}
-
-	export interface Predicate<T>
-	{
-		(object: T, index?:number): boolean;
-	}
-
-	export interface Comparison<T>
-	{
-		(a: T, b :T): number;
-	}
-
-	export interface Func<TResult>
-	{
-		(): TResult;
-	}
-
-	export interface Selector<TSource, TResult>
-	{
-		(source: TSource, index?:number): TResult;
-	}
-	// #endregion
-
-
 	export function isEqualToNaN(n: any): boolean {
 		return typeof n === Types.Number && isNaN(n);
 	}

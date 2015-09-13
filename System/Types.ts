@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-"use strict";
+'use strict';
 
 import Functions = require('Functions');
 

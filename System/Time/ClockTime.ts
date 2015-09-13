@@ -8,12 +8,11 @@
 ///<reference path="../IEquatable.ts"/>
 ///<reference path="../IComparable.ts"/>
 ///<reference path="../IFormattable.ts"/>
+///<reference path="../IFormatProvider.ts"/>
 import System = require('../System');
+import HowMany = require('HowMany');
 import TimeSpan = require('TimeSpan');
 
-const
-	ticksPerMillisecond = 10000,
-	msPerSecond = 1000;
 
 class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable
 {
@@ -64,7 +63,7 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._ticks;
 		if(r===undefined) {
 			var ms = Math.abs(_._totalMilliseconds);
-			_._ticks = r = (ms - Math.floor(ms))*ticksPerMillisecond;
+			_._ticks = r = (ms - Math.floor(ms))*HowMany.Ticks.Per.Millisecond;
 		}
 		return r;
 	}
@@ -76,7 +75,7 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._ms;
 		if(r===undefined)
 			_._ms = r =
-				(this._totalMilliseconds%msPerSecond) | 0;
+				(this._totalMilliseconds%HowMany.Milliseconds.Per.Hour) | 0;
 		return r;
 	}
 
@@ -87,7 +86,7 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._seconds;
 		if(r===undefined)
 			_._seconds = r =
-				((this._totalMilliseconds/msPerSecond)%secondsPerMinute) | 0;
+				((this._totalMilliseconds/HowMany.Milliseconds.Per.Hour)%HowMany.Seconds.Per.Minute) | 0;
 		return r;
 	}
 
@@ -98,8 +97,8 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		if(r===undefined)
 			_._minutes = r =
 				((this._totalMilliseconds
-				/msPerSecond
-				/secondsPerMinute)%minutesPerHour) | 0;
+				/HowMany.Milliseconds.Per.Hour
+				/HowMany.Seconds.Per.Minute)%HowMany.Minutes.Per.Hour) | 0;
 
 		return r;
 	}
@@ -111,9 +110,9 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		if(r===undefined)
 			_._hours = r =
 				((this._totalMilliseconds
-				/msPerSecond
-				/secondsPerMinute
-				/minutesPerHour)%earthHoursPerDay) | 0;
+				/HowMany.Milliseconds.Per.Hour
+				/HowMany.Seconds.Per.Minute
+				/HowMany.Minutes.Per.Hour)%HowMany.Hours.Per.Day) | 0;
 		return r;
 
 	}
@@ -125,10 +124,10 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		if(r===undefined)
 			_._days = r =
 				(this._totalMilliseconds
-				/msPerSecond
-				/secondsPerMinute
-				/minutesPerHour
-				/earthHoursPerDay) | 0;
+				/HowMany.Milliseconds.Per.Hour
+				/HowMany.Seconds.Per.Minute
+				/HowMany.Minutes.Per.Hour
+				/HowMany.Hours.Per.Day) | 0;
 		return r;
 	}
 
@@ -143,7 +142,7 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		return new ClockTime(hours, minutes, seconds, milliseconds);
 	}
 
-	toString(format?:string, formatProvider?:System.IFormatProvider):string
+	toString(/*format?:string, formatProvider?:IFormatProvider*/):string
 	{
 		/* INSERT CUSTOM FORMATTING CODE HERE */
 
@@ -168,6 +167,16 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		return a.join(", ").replace(", and, ", " and ");
 	}
 
+}
+
+
+// Temporary until the full TimeSpanFormat is available.
+function pluralize(value:number, label:string):string
+{
+	if(Math.abs(value)!==1)
+		label += "s";
+
+	return label;
 }
 
 export = ClockTime;

@@ -3,30 +3,30 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-module System.Collections {
 
-	export interface IList<T> extends ICollection<T> 
-	{
+///<reference path="ICollection.ts"/>
 
-		/* From ICollection<T>: 
-		count: number;
-		isReadOnly: boolean;
 
-		add(item: T): void;
-		clear(): number;
-		contains(item: T): boolean;
-		copyTo(array: T[], index?: number): void;
-		remove(item: T): number;
-		*/
+interface IList<T> extends ICollection<T>
+{
 
-		get(index: number): T;
-		set(index: number, value: T):boolean;
+	/* From ICollection<T>:
+	 count: number;
+	 isReadOnly: boolean;
 
-		indexOf(item: T): number;
-		insert(index: number, value: T):void;
+	 add(item: T): void;
+	 clear(): number;
+	 contains(item: T): boolean;
+	 copyTo(array: T[], index?: number): void;
+	 remove(item: T): number;
+	 */
 
-		removeAt(index: number): void;
+	get(index:number): T;
+	set(index:number, value:T):boolean;
 
-	}
+	indexOf(item:T): number;
+	insert(index:number, value:T):void;
 
-} 
+	removeAt(index:number): void;
+
+}

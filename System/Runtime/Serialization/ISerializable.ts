@@ -1,16 +1,12 @@
 ﻿/*
-* @author electricessence / https://github.com/electricessence/
-* Based upon .NET source.
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
-*/
+ * @author electricessence / https://github.com/electricessence/
+ * Based upon .NET source.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * Source: http://referencesource.microsoft.com/#mscorlib/system/runtime/serialization/ISerializable.cs
+ */
 
-module System.Runtime.Serialization
+interface ISerializable
 {
-	// http://referencesource.microsoft.com/#mscorlib/system/runtime/serialization/iserializable.cs
-	export interface ISerializable
-	{
-		// Placeholder for now...
-		//getObjectData(info:SerializationInfo, context:StreamingContext): void;
-	}
+	// Placeholder for now...
+	//getObjectData(info:SerializationInfo, context:StreamingContext): void;
 }
- 

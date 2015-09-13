@@ -8,7 +8,8 @@
 
 import Types = require('Types');
 
-module DisposableUtil {
+/// Disposable Utility
+module Utility {
 
 	export function dispose(...disposables:IDisposable[]):void
 	{
@@ -72,4 +73,4 @@ module DisposableUtil {
 
 }
 
-export = DisposableUtil;
+export = Utility;

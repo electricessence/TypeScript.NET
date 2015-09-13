@@ -82,7 +82,7 @@
 		assert.equal(s.length, len, ".length should be the same");
 	});
 
-	/*	ArrayUtility.applyTo skipped.
+	/*	Utility.applyTo skipped.
 		It has too many permutations while being a straight forward function. */
 
 	QUnit.test("ArrayUtility.remove", function (assert) {

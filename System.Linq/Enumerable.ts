@@ -397,7 +397,7 @@ module System.Linq
 					() => { regex = new RegExp(pattern, flags); },
 					yielder =>
 					{
-						// Calling regex.exec concecutively on the same input uses the lastIndex to start the next match.
+						// Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
 						var match = regex.exec(input);
 						return (match !== null) ? yielder.yieldReturn(match) : false;
 					});
@@ -594,7 +594,7 @@ module System.Linq
 		// #endregion
 
 
-		// Similar to forEach, but execute's an action for each time a value is enumerated.
+		// Similar to forEach, but executes an action for each time a value is enumerated.
 		// If the action explicitly returns false or 0 (EnumerationAction.Break), the enumeration will complete.
 		// If it returns a 2 (EnumerationAction.Skip) it will move on to the next item.
 		// This also automatically handles disposing the enumerator.
@@ -634,7 +634,7 @@ module System.Linq
 							if (actionResult !== 2)
 								return yielder.yieldReturn(enumerator.current);
 
-							// If actionResult===2, then a signal for skip is recieved.
+							// If actionResult===2, then a signal for skip is received.
 						}
 						return false;
 					},
@@ -643,7 +643,7 @@ module System.Linq
 
 			},
 			// Using a finalizer value reduces the chance of a circular reference
-			// since we could simply reference the enueration and check e.wasDisposed.
+			// since we could simply reference the enumeration and check e.wasDisposed.
 				() => { disposed = true; });
 		}
 
@@ -1389,7 +1389,7 @@ module System.Linq
 
 			return new Enumerable<T>(() =>
 			{
-				var buffer: T[]
+				var buffer: T[];
 				var capacity: number;
 				var len: number;
 
@@ -1531,7 +1531,7 @@ module System.Linq
 			else
 				this.forEach((element: T, i?: number) =>
 				{
-					// Why?  Because NaN doens't equal NaN. :P
+					// Why?  Because NaN doesn't equal NaN. :P
 					if (System.areEqual(element, value, true))
 					{
 						found = i;
@@ -1681,7 +1681,7 @@ module System.Linq
 									if (secondTemp.count)
 									{
 										var next = secondTemp.dequeue();
-										if(next) // Incase by chance next is null, then try again.
+										if(next) // In case by chance next is null, then try again.
 											secondEnumerator = enumeratorFrom<TSecond>(next);
 									}
 									else
@@ -2758,7 +2758,7 @@ module System.Linq
 	}
 
 	// #region Supporting Classes
-	// The following classes have to be inside the same module definition since they reference eachother.
+	// The following classes have to be inside the same module definition since they reference each other.
 
 	export class ArrayEnumerable<T> extends Enumerable<T> {
 
@@ -2827,7 +2827,7 @@ module System.Linq
 				// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
 				for (var i = INT_0; i < source.length; ++i)
 				{
-					// _.assertIsNotDisposed(); // Assertion here is unncessary since we already have a reference to the source array.
+					// _.assertIsNotDisposed(); // Assertion here is unnecessary since we already have a reference to the source array.
 					if (action(source[i], i) === false)
 						break;
 				}
@@ -3084,7 +3084,7 @@ module System.Linq
 			var _ = this,
 				predicate = _.prevPredicate,
 				source = _.prevSource,
-				selector: Selector<TSource, T> = _.prevSelector, // Type definition needed for correct inferrence.
+				selector: Selector<TSource, T> = _.prevSelector, // Type definition needed for correct inference.
 				enumerator: System.Collections.IEnumerator<TSource>;
 
 			return new EnumeratorBase<T>(

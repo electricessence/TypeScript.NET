@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="TypeScript" pattern="file:*.ts&amp;&amp;!file:*.d.ts" />
+</component>

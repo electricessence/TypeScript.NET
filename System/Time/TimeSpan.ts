@@ -4,23 +4,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-"use strict";
+'use strict';
 
 ///<reference path="ITimeMeasurement.ts"/>
 ///<reference path="../IEquatable.ts"/>
 ///<reference path="../IComparable.ts"/>
 import System = require('../System');
 import Types = require('../Types');
+import HowMany = require('HowMany');
 import TimeUnit = require('TimeUnit');
 import TimeUnitValue = require('TimeUnitValue');
 import ClockTime = require('ClockTime');
 
-const
-	ticksPerMillisecond = 10000,
-	msPerSecond = 1000,
-	secondsPerMinute = 60,
-	minutesPerHour = 60,
-	earthHoursPerDay = 24;
 
 class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>
 {
@@ -37,12 +32,12 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	equals(other:TimeSpan):boolean;
 	equals(other:any):boolean
 	{
-		var otherms:number = getMilliseconds(other);
+		var otherMS:number = getMilliseconds(other);
 
 		if(other===undefined) // undefined is used instead of NaN since NaN could be a valid value.
 			return false;
 
-		return System.areEqual(this._milliseconds, otherms);
+		return System.areEqual(this._milliseconds, otherMS);
 	}
 
 
@@ -68,17 +63,17 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 		// noinspection FallThroughInSwitchStatementJS
 		switch(units) {
 			case TimeUnit.Days:
-				value *= earthHoursPerDay;
+				value *= HowMany.Hours.Per.Day;
 			case TimeUnit.Hours:
-				value *= minutesPerHour;
+				value *= HowMany.Minutes.Per.Hour;
 			case TimeUnit.Minutes:
-				value *= secondsPerMinute;
+				value *= HowMany.Seconds.Per.Minute;
 			case TimeUnit.Seconds:
-				value *= msPerSecond;
+				value *= HowMany.Milliseconds.Per.Second;
 			case TimeUnit.Milliseconds:
 				return value;
 			case TimeUnit.Ticks:
-				return value/ticksPerMillisecond;
+				return value/HowMany.Ticks.Per.Millisecond;
 			default:
 				throw new Error("Invalid TimeUnit.");
 		}
@@ -99,7 +94,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 			case TimeUnit.Milliseconds:
 				return _._milliseconds;
 			case TimeUnit.Ticks:
-				return _._milliseconds*ticksPerMillisecond;
+				return _._milliseconds*HowMany.Ticks.Per.Millisecond;
 			default:
 				throw new Error("Invalid TimeUnit.");
 		}
@@ -107,7 +102,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 	get ticks():number
 	{
-		return this._milliseconds*ticksPerMillisecond;
+		return this._milliseconds*HowMany.Ticks.Per.Millisecond;
 	}
 
 	get milliseconds():number
@@ -117,22 +112,22 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 	get seconds():number
 	{
-		return this._milliseconds/msPerSecond;
+		return this._milliseconds/HowMany.Milliseconds.Per.Second;
 	}
 
 	get minutes():number
 	{
-		return this.seconds/secondsPerMinute;
+		return this.seconds/HowMany.Seconds.Per.Minute;
 	}
 
 	get hours():number
 	{
-		return this.minutes/minutesPerHour;
+		return this.minutes/HowMany.Minutes.Per.Hour;
 	}
 
 	get days():number
 	{
-		return this.hours/earthHoursPerDay;
+		return this.hours/HowMany.Hours.Per.Day;
 	}
 
 	// Instead of the confusing total versus unit name, expose a 'ClockTime' value which reports the individual components.
@@ -202,11 +197,11 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	static millisecondsFromTime(hours:number, minutes:number, seconds:number = 0, milliseconds:number = 0):number
 	{
 		var value = hours;
-		value *= minutesPerHour;
+		value *= HowMany.Minutes.Per.Hour;
 		value += minutes;
-		value *= secondsPerMinute;
+		value *= HowMany.Seconds.Per.Minute;
 		value += seconds;
-		value *= msPerSecond;
+		value *= HowMany.Milliseconds.Per.Second;
 		value += milliseconds;
 		return value;
 	}
@@ -224,30 +219,12 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 }
 
 
-// Temporary until the full TimeSpanFormat is available.
-function pluralize(value:number, label:string):string
-{
-	if(Math.abs(value)!==1)
-		label += "s";
-
-	return label;
-}
-
-
-function assertValidUnit(unit:TimeUnit):boolean
-{
-	if(isNaN(unit) || unit>TimeUnit.Days || unit<TimeUnit.Ticks || Math.floor(unit)!==unit)
-		throw new Error("Invalid TimeUnit.");
-
-	return true;
-}
-
-
 function assertComparisonType(other:any):void
 {
 	if(!(other instanceof TimeUnitValue || other instanceof TimeSpan))
 		throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
 }
+
 
 function getMilliseconds(other:any):number
 {
