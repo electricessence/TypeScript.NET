@@ -32,7 +32,7 @@
 			a: 2,
 			b: 3,
 			c: "f"
-		},
+		}
 	];
 
 	var sourceEnumerable = Enumerable.fromArray(source);
@@ -54,9 +54,9 @@
 	QUnit.test("Enumerable.where.memoize", function (assert) {
 		var source = sourceEnumerable.where(function(i){return i.a==1});
 
-		var A = source;
+		var sum, A = source;
 
-		var sum = A.sum(selector);
+		sum = A.sum(selector);
 
 		assert.equal(sum, source.sum(selector), "Values must be equal after where pass 1.");
 
@@ -66,7 +66,7 @@
 
 		A = source.memoize();
 
-		var sum = A.sum(selector);
+		sum = A.sum(selector);
 
 		assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 1.");
 
