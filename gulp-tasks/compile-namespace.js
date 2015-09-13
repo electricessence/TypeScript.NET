@@ -8,17 +8,16 @@ module.exports = function(gulp) {
 	return function(namespace, dependencies) {
 
 		var depString = '';
-		if(dependencies && dependencies.length)
-		{
+		if(dependencies && dependencies.length) {
 			var d = [], o = [];
 			dependencies.forEach(
 				function(e) {
-					if(e)
-					{
+					if(e) {
 						o.push(e);
 						d.push('\'' + e + '\'');
 					}
-				});
+				}
+			);
 
 			if(d.length)
 				depString = '[' + d.join(',') + '],';
@@ -37,20 +36,20 @@ module.exports = function(gulp) {
 		var TASK_AMD = TASK_COMPILE + AMD;
 
 		var AMD_WRAPPING =
-			[
-				'(function(){',
-					'var this_module = function(' + dependencies.join(',') + '){',
-					'{%=body%}',
-					'return ' + namespace + ';}',
-					'',
-					'if (typeof define === typeof function () { } && define.amd) { // AMD',
-					'	define("' + namespace + '",' + depString + 'this_module);',
-					'}',
-					'else if(typeof module !== typeof undefined && module.exports) { // Node',
-				  '	module.exports = this_module;',
-					'}',
-				'})(this);'
-			].join('\n');
+			    [
+				    '(function(){',
+				    '	var this_module = function(' + dependencies.join(',') + '){',
+				    '		{%=body%}',
+				    '		return ' + namespace + ';}',
+				    '',
+				    '	if (typeof define === typeof function() {} && define.amd) { // AMD',
+				    '		define("' + namespace + '",' + depString + 'this_module);',
+				    '	}',
+				    '	else if(typeof module !== typeof undefined && module.exports) { // Node',
+				    '		module.exports = this_module;',
+				    '	}',
+				    '})(this);'
+			    ].join('\n');
 
 		var JS_OUT = namespace + JS;
 
@@ -60,7 +59,8 @@ module.exports = function(gulp) {
 			.forEach(
 			function(f) {
 				srcPaths.push('!' + f);
-			});
+			}
+		);
 
 		var typescript = require('gulp-tsc');
 		gulp.task(
@@ -76,9 +76,12 @@ module.exports = function(gulp) {
 							removeComments: true,
 							noImplicitAny: true,
 							declaration: true
-						}))
+						}
+					)
+				)
 					.pipe(gulp.dest(BUILD_FOLDER));
-			});
+			}
+		);
 
 		var sourcemaps = require('gulp-sourcemaps');
 
@@ -92,7 +95,8 @@ module.exports = function(gulp) {
 					.pipe(rename(namespace + MIN + JS))
 					.pipe(sourcemaps.write(BUILD_FOLDER, {includeContent: false}))
 					.pipe(gulp.dest(BUILD_FOLDER));
-			});
+			}
+		);
 
 		var wrap = require('gulp-wrap-js');
 		gulp.task(
@@ -103,7 +107,8 @@ module.exports = function(gulp) {
 					.pipe(uglify())
 					.pipe(sourcemaps.write(AMD_BUILD_FOLDER, {includeContent: false}))
 					.pipe(gulp.dest(AMD_BUILD_FOLDER));
-			});
+			}
+		);
 
 		// Return the unique task names to be triggered upstream.
 		return [TASK_COMPILE, TASK_COMPRESS, TASK_AMD];

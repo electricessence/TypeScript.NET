@@ -1,15 +1,10 @@
 ﻿/*
-* @author electricessence / https://github.com/electricessence/
-* Based upon .NET source.
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
-*/
+ * @author electricessence / https://github.com/electricessence/
+ * Based upon .NET source.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ */
 
-module System
+interface IComparable<T>
 {
-
-	export interface IComparable<T>
-	{
-		compareTo(other: T): number;
-	}
-
-} 
+	compareTo(other:T): number;
+}

@@ -1,7 +1,10 @@
 ﻿///<reference path="../System.ts"/>
+///<reference path="IArray.ts"/>
 
 module System.Collections.ArrayUtility
 {
+
+	import IArray = System.Collections.IArray;
 
 	export function initialize<T>(length: number): T[]
 	{
@@ -381,3 +384,5 @@ module System.Collections.ArrayUtility
 	}
 
 }
+
+export = System.Collections.ArrayUtility;

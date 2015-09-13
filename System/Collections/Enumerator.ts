@@ -1,19 +1,18 @@
 ﻿///<reference path="../IDisposable.ts"/>
+///<reference path="IEnumerator.ts"/>
+///<reference path="IYield.ts"/>
 
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
+import Types = require('../Types');
+import DisposableBase = require('../DisposableBase')
+
 module System.Collections {
 
 	"use strict";
-
-	export interface IYield<T> {
-		current: T;
-		yieldReturn(value: T): boolean;
-		yieldBreak(): boolean;
-	}
 
 	class Yielder<T> implements IYield<T>
 	{
@@ -42,7 +41,7 @@ module System.Collections {
 			if (source instanceof Array)
 				return new ArrayEnumerator<T>(source);
 
-			if (typeof source === System.Types.Object && "length" in source)
+			if (typeof source === Types.Object && "length" in source)
 				return new IndexEnumerator<T>(() =>
 				{
 					return {

@@ -1,14 +1,11 @@
-﻿///<reference path="Functions.ts"/>
-///<reference path="Types.ts"/>
-
-/*
+﻿/*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-module System {
+import Types = require('Types');
 
-	import Types = System.Types;
+module System {
 
 	// #region Function Signatures.
 	export interface Action<T>
@@ -113,3 +110,4 @@ module System {
 	}
 }
 
+export = System;

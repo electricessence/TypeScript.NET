@@ -1,4 +1,4 @@
-///<reference path="../TimeSpan.ts"/>
+///<reference path="../Time/TimeSpan.ts"/>
 
 /*
  * @author electricessence / https://github.com/electricessence/

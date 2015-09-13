@@ -3,9 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-interface IEnumerator<T> {
-	current: T;
-	moveNext(): boolean;
-	reset(): void;
+// Allows for simple type checking that includes types that don't declare themselves as IDisposable but do have a dispose() method.
+interface IDisposable {
 	dispose(): void;
 }

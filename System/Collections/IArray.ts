@@ -5,7 +5,7 @@
 
 module System.Collections
 {
-	// Is interchangable with Array, but also allows for other similar constructs.
+	// Is interchangeable with Array, but also allows for other similar constructs.
 	export interface IArray<T>
 	{
 		length: number;

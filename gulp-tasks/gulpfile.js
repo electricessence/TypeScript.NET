@@ -4,10 +4,16 @@ var gulp = require('gulp');
 var tasks = [];
 
 // Setup the function to append the task names to the array.
-function addTask(task,namespace,dependencies) { tasks = tasks.concat(require('../gulp-tasks/' + task)(gulp)(namespace,dependencies)); }
+function addTask(task, namespace, dependencies) {
+	tasks = tasks.concat(
+		require('../gulp-tasks/' + task)(gulp)(
+			namespace, dependencies
+		)
+	);
+}
 
 // Add the task to gulp.
-addTask('compile-namespace','System');
-addTask('compile-namespace','System.Linq',['System']);
+addTask('compile-namespace', 'System');
+addTask('compile-namespace', 'System.Linq', ['System']);
 
-gulp.task( 'default', tasks );
+gulp.task('default', tasks);

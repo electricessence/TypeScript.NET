@@ -1,4 +1,5 @@
-﻿///<reference path="System.ts"/>
+﻿
+///<reference path="System.ts"/>
 ///<reference path="IDisposable.ts"/>
 ///<reference path="Collections/ArrayUtility.ts"/>
 

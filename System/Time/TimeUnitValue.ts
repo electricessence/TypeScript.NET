@@ -1,0 +1,89 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ */
+
+///<reference path="ITimeMeasurement.ts"/>
+///<reference path="../IEquatable.ts"/>
+///<reference path="../IComparable.ts"/>
+///<reference path="../IFormattable.ts"/>
+import TimeUnit = require('TimeUnit');
+import TimeSpan = require('TimeSpan');
+
+// This class allows for passing around a specific measure of time coerced by its unit type.
+class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue>
+{
+
+	constructor(public value: number, private _type: TimeUnit)
+	{
+		assertValidUnit(_type);
+	}
+
+
+	// Attempts to convert value to current unit type.
+	// If not coercible, it returns null.
+	coerce(other: TimeSpan): TimeUnitValue;
+	coerce(other: TimeUnitValue): TimeUnitValue;
+	coerce(other: any): TimeUnitValue
+	{
+		var type = this._type;
+		assertValidUnit(type);
+
+		if (other instanceof TimeSpan)
+		{
+			other = other.toTimeUnitValue(type);
+		}
+		else if (other instanceof TimeUnitValue)
+		{
+			if (type !== other.type)
+				other = other.to(type);
+		}
+		else
+			return null;
+
+		return other;
+	}
+
+	equals(other: TimeSpan): boolean;
+	equals(other: TimeUnitValue): boolean;
+	equals(other: any): boolean
+	{
+		var o:TimeUnitValue = this.coerce(other);
+		if (o == null)
+			return false;
+
+		return System.areEqual(this.value, o.value);
+	}
+
+
+	compareTo(other: TimeSpan): number;
+	compareTo(other: TimeUnitValue): number;
+	compareTo(other:any):number
+	{
+		if (other == null) return 1 | 0;
+
+		assertComparisonType(other);
+
+		return System.compare(this.value, this.coerce(other).value);
+
+	}
+
+	// To avoid confusion, the unit type can only be set once at construction.
+	get type(): TimeUnit
+	{
+		return this._type;
+	}
+
+	toTimeSpan(): TimeSpan
+	{
+		return new TimeSpan(this.value, this.type);
+	}
+
+	to(units: TimeUnit = this.type): TimeUnitValue
+	{
+		return this.toTimeSpan().toTimeUnitValue(units);
+	}
+
+}
+
+export = TimeUnitValue;
