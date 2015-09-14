@@ -8,8 +8,8 @@
 ///<reference path="IYield.ts"/>
 import Types = require('../../Types');
 import DisposableBase = require('../../Disposable/DisposableBase');
-import ArrayEnumerator = require('ArrayEnumerator');
-import IndexEnumerator = require('IndexEnumerator');
+import ArrayEnumerator= require('./ArrayEnumerator');
+import IndexEnumerator= require('./IndexEnumerator');
 
 'use strict';
 

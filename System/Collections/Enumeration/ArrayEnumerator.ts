@@ -4,7 +4,7 @@
  */
 
 ///<reference path="../Arrays/IArray.ts"/>
-import IndexEnumerator = require('IndexEnumerator');
+import IndexEnumerator= require('./IndexEnumerator');
 import Types = require('../../Types');
 
 class ArrayEnumerator<T> extends IndexEnumerator<T>

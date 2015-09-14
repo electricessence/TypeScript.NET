@@ -10,7 +10,7 @@ import System = require('../System/System');
 import Functions = require('../System/Functions');
 import ArrayUtility = require('../System/Collections/Arrays/Utility');
 import ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
-import Enumerable = require('Enumerable');
+import Enumerable= require('./Enumerable');
 'use strict';
 
 const

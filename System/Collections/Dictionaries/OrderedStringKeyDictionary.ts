@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import StringKeyDictionary = require('StringKeyDictionary');
+import StringKeyDictionary= require('./StringKeyDictionary');
 import ArrayUtility = require('../Arrays/Utility');
 
 class OrderedStringKeyDictionary<TValue>

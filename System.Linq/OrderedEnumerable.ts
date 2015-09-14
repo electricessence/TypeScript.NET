@@ -9,8 +9,8 @@
 import System = require('../System/System');
 import DisposeUtility = require('../System/Disposable/Utility');
 import EnumeratorBase = require('../System/Collections/Enumeration/EnumeratorBase');
-import Enumerable = require('Enumerable');
-import WhereSelectEnumerable = require('WhereSelectEnumerable');
+import Enumerable= require('./Enumerable');
+import WhereSelectEnumerable= require('./WhereSelectEnumerable');
 'use strict';
 
 const

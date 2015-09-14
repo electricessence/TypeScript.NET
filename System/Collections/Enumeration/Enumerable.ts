@@ -4,8 +4,8 @@
  */
 
 ///<reference path="IEnumerable.ts"/>
-import DU = require('Disposable/Utility');
-import Enumerator = require('Enumerator');
+import DU= require('./Disposable/Utility');
+import Enumerator= require('./Enumerator');
 
 
 module Enumerable {

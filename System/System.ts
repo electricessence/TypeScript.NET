@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import Types = require('Types');
+import Types = require('./Types');
 
 module System {
 

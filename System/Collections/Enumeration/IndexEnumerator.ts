@@ -1,4 +1,4 @@
-import EnumeratorBase = require('EnumeratorBase');
+import EnumeratorBase= require('./EnumeratorBase');
 
 class IndexEnumerator<T> extends EnumeratorBase<T>
 {

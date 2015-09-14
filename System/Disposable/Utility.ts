@@ -6,7 +6,7 @@
  */
 
 
-import Types = require('Types');
+import Types= require('./Types');
 
 /// Disposable Utility
 module Utility {

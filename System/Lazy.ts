@@ -4,8 +4,9 @@
  */
 
 ///<reference path="ILazy.ts"/>
-import DisposableBase = require('Disposable/DisposableBase');
-import System = require('System');
+///<reference path="FunctionTypes.ts"/>
+import DisposableBase= require('./Disposable/DisposableBase');
+import System = require('./System');
 
 class Lazy<T> extends DisposableBase implements ILazy<T>
 {
@@ -13,7 +14,7 @@ class Lazy<T> extends DisposableBase implements ILazy<T>
 	private _isValueCreated:boolean;
 	private _value:T;
 
-	constructor(private _closure:System.Func<T>)
+	constructor(private _closure:Func<T>)
 	{
 		super();
 	}

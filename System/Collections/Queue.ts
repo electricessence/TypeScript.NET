@@ -9,9 +9,9 @@
 ///<reference path="IList.ts"/>
 import System = require('../System');
 import Types = require('../Types');
-import ArrayUtility = require('Arrays/Utility');
-import EnumeratorBase = require('Enumeration/EnumeratorBase');
-import Enumerable = require('Enumeration/Enumerable');
+import ArrayUtility= require('./Arrays/Utility');
+import EnumeratorBase= require('./Enumeration/EnumeratorBase');
+import Enumerable= require('./Enumeration/Enumerable');
 
 const MINIMUM_GROW:number = 4 | 0;
 // var SHRINK_THRESHOLD: number = 32 | 0; // Unused?

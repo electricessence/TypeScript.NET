@@ -10,8 +10,8 @@
 ///<reference path="../IFormattable.ts"/>
 ///<reference path="../IFormatProvider.ts"/>
 import System = require('../System');
-import HowMany = require('HowMany');
-import TimeSpan = require('TimeSpan');
+import HowMany= require('./HowMany');
+import TimeSpan= require('./TimeSpan');
 
 
 class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable

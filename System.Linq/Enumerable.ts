@@ -22,12 +22,12 @@ import Queue = require('../System/Collections/Queue');
 import DisposeUtility = require('../System/Disposable/Utility');
 import DisposableBase = require('../System/Disposable/DisposableBase');
 
-import Grouping = require('Grouping');
-import Lookup = require('Lookup');
-import ArrayEnumerable = require('ArrayEnumerable');
-import WhereEnumerable = require('WhereEnumerable');
-import WhereSelectEnumerable = require('WhereSelectEnumerable');
-import OrderedEnumerable = require('OrderedEnumerable');
+import Grouping= require('./Grouping');
+import Lookup= require('./Lookup');
+import ArrayEnumerable= require('./ArrayEnumerable');
+import WhereEnumerable= require('./WhereEnumerable');
+import WhereSelectEnumerable= require('./WhereSelectEnumerable');
+import OrderedEnumerable= require('./OrderedEnumerable');
 
 
 import using = DisposeUtility.using;

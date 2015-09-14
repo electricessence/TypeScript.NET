@@ -5,7 +5,7 @@
 
 'use strict';
 
-import Functions = require('Functions');
+import Functions = require('./Functions');
 
 module Types
 {

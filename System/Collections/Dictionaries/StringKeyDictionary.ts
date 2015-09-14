@@ -4,7 +4,7 @@
  */
 
 import System = require('../../System');
-import DictionaryAbstractBase = require('DictionaryAbstractBase');
+import DictionaryAbstractBase= require('./DictionaryAbstractBase');
 
 class StringKeyDictionary<TValue>
 extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<TValue>

@@ -7,7 +7,7 @@
 
 ///<reference path="../System/Collections/Enumeration/IEnumerable"/>
 ///<reference path="IGrouping"/>
-import ArrayEnumerable = require('ArrayEnumerable');
+import ArrayEnumerable= require('./ArrayEnumerable');
 'use strict';
 
 

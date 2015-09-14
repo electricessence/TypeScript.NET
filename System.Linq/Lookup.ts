@@ -9,7 +9,7 @@
 import DisposeUtility = require('../System/Disposable/Utility');
 import Dictionary = require('../System/Collections/Dictionaries/Dictionary');
 import EnumeratorBase = require('../System/Collections/Enumeration/EnumeratorBase');
-import Grouping = require('Grouping');
+import Grouping= require('./Grouping');
 
 
 class Lookup<TKey, TElement> implements ILookup<TKey, TElement>

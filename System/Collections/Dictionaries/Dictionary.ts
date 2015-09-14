@@ -8,7 +8,7 @@
 import System = require('../../System');
 import Types = require('../../Types');
 import Functions = require('../../Functions');
-import DictionaryAbstractBase = require('DictionaryAbstractBase');
+import DictionaryAbstractBase= require('./DictionaryAbstractBase');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
 
 

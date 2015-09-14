@@ -11,10 +11,10 @@
 ///<reference path="../IComparable.ts"/>
 import System = require('../System');
 import Types = require('../Types');
-import HowMany = require('HowMany');
-import TimeUnit = require('TimeUnit');
-import TimeUnitValue = require('TimeUnitValue');
-import ClockTime = require('ClockTime');
+import HowMany= require('./HowMany');
+import TimeUnit= require('./TimeUnit');
+import TimeUnitValue= require('./TimeUnitValue');
+import ClockTime= require('./ClockTime');
 
 
 class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>

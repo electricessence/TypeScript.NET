@@ -1,1 +1,0 @@
-alert(('Collections' in System && 'Enumerable' in System.Linq) ? 'Success.' : 'Fail.');

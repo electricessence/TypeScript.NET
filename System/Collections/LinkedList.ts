@@ -11,9 +11,9 @@
 ///<reference path="ICollection.ts"/>
 import System = require('../System');
 import Text = require('../Text/Text');
-import ArrayUtility = require('Arrays/Utility');
-import Enumerator = require('Enumeration/Enumerator');
-import EnumeratorBase = require('Enumeration/EnumeratorBase');
+import ArrayUtility= require('./Arrays/Utility');
+import Enumerator= require('./Enumeration/Enumerator');
+import EnumeratorBase= require('./Enumeration/EnumeratorBase');
 'use strict';
 
 /*****************************

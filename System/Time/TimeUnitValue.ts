@@ -7,8 +7,8 @@
 ///<reference path="../IEquatable.ts"/>
 ///<reference path="../IComparable.ts"/>
 ///<reference path="../IFormattable.ts"/>
-import TimeUnit = require('TimeUnit');
-import TimeSpan = require('TimeSpan');
+import TimeUnit= require('./TimeUnit');
+import TimeSpan= require('./TimeSpan');
 import System = require('../System');
 
 // This class allows for passing around a specific measure of time coerced by its unit type.
