@@ -1,0 +1,86 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+define(["require", "exports", './Disposable/DisposableBase'], function (require, exports, DisposableBase) {
+    var Lazy = (function (_super) {
+        __extends(Lazy, _super);
+        function Lazy(_closure) {
+            _super.call(this);
+            this._closure = _closure;
+        }
+        Object.defineProperty(Lazy.prototype, "isValueCreated", {
+            get: function () {
+                return this._isValueCreated;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Lazy.prototype, "canReset", {
+            // Adding a 'resettable' mechanism allows for simply resetting a lazy instead of re-instantiating a new one.
+            get: function () {
+                return !this.wasDisposed && !!(this._closure);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // Returns true if successfully reset.
+        Lazy.prototype.reset = function (throwIfCannotReset) {
+            var _ = this;
+            if (throwIfCannotReset)
+                _.assertIsNotDisposed();
+            if (!_._closure) {
+                if (throwIfCannotReset)
+                    throw new Error("Cannot reset.  This Lazy has already de-referenced its closure.");
+                return false;
+            }
+            else {
+                _._isValueCreated = false;
+                _._value = null;
+                return true;
+            }
+        };
+        Object.defineProperty(Lazy.prototype, "value", {
+            get: function () {
+                return this.getValue();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Lazy.prototype.getValue = function (clearClosureReference) {
+            var _ = this;
+            _.assertIsNotDisposed();
+            try {
+                if (!_._isValueCreated && _._closure) {
+                    var v = _._closure();
+                    _._value = v;
+                    _._isValueCreated = true;
+                    return v;
+                }
+            }
+            finally {
+                if (clearClosureReference)
+                    _._closure = null;
+            }
+            return _._value;
+        };
+        Lazy.prototype._onDispose = function () {
+            this._closure = null;
+            this._value = null;
+        };
+        Lazy.prototype.equals = function (other) {
+            return this == other;
+        };
+        Lazy.prototype.valueEquals = function (other) {
+            return this.equals(other) || this.value === other.value;
+        };
+        return Lazy;
+    })(DisposableBase);
+});
+//# sourceMappingURL=Lazy.js.map
