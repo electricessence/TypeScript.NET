@@ -1,0 +1,390 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>TypeScript.NET</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script src="assets/js/modernizr.js"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">TypeScript.NET</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> TypeScript.NET</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="typescript-net">TypeScript.NET</h1>
+				<p>###A JavaScript Friendly .NET Library Ported to TypeScript</p>
+				<p>The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
+				Contributions are welcomed as the .NET Library (meaning it&#39;s class structure and classes, not necessarily its content) has a substantial amount of usefulness.  With the open sourcing of .NET, TypeScript seems the most logical means to take advantage of it.  Typing, generics, classes, modules, inheritance, all are required to make a resultant JavaScript library that takes advantage of this elegance.</p>
+				<p>Much inspiration comes from TypeScript itself and from libraries like linq.js.
+				There is of course some variance away from .NET&#39;s convention (camelCase methods in favor of TitleCase) and some things simply have to be done different.  &quot;Extensions&quot; as a feature might be one of the greatest additions to .NET that JavaScript doesn&#39;t have a plan for, but it does have some tricky equivalents.</p>
+				<p>If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contriubte it yourself! :)</p>
+				<h2 id="why-should-i-use-this-let-alone-typescript-">Why should I use this, let alone TypeScript?</h2>
+				<p>1) <strong>It&#39;s 100% compatible with JavaScript.</strong>  Currently TypeScript.NET&#39;s target is ES5, so legacy JavaScript won&#39;t work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don&#39;t have to change your source code to target newer versions. :) </p>
+				<p>2) TypeScript is lead by Anders Hejlsberg, the founder of C#.  You will feel quite at home in TypeScript if you are a fan of typed languages (like C#), but at the same time you&#39;ll get all the flexibility and compatibility of JavaScript.</p>
+				<p>See <a href="http://www.typescriptlang.org/">http://www.typescriptlang.org/</a> for more information about the TypeScript language.</p>
+				<p>Also some more good info on WikiPedia: <a href="http://en.wikipedia.org/wiki/TypeScript">http://en.wikipedia.org/wiki/TypeScript</a>.</p>
+				<p>2) The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It&#39;s still JavaScript, but with many bonuses including a growing community. :)</p>
+				<p>3) Most major IDE&#39;s and text editors now support TypeScript either built in, or via a plug-in:</p>
+				<ul>
+					<li>Visual Studio 2013 (or greater)</li>
+					<li>WebStorm (recommended!)</li>
+					<li>Sublime Text</li>
+				</ul>
+				<p>To name a few.</p>
+				<p>In my case, I use both Visual Studio and Web Storm to ensure quality.  </p>
+				<p>4) There&#39;s some really good and useful code here already, including a fully typed (with generics) Linq implementation.  Take a look!</p>
+				<h1 id="usage">Usage</h1>
+				<p>This library is meant to be flexible. So for a single project/package there are multiple versions of the result.</p>
+				<p>For example, System has the following files in the build directory:</p>
+				<pre><code>/build/System<span class="hljs-class">.js</span>
+/build/System<span class="hljs-class">.min</span><span class="hljs-class">.js</span>
+</code></pre><p>Also if you would prefer to use AMD/Require.js you can use:</p>
+				<pre><code>/amd/System<span class="hljs-class">.js</span>
+/amd/System<span class="hljs-class">.Linq</span><span class="hljs-class">.js</span>
+</code></pre><p>You can also see an example of how to use a shim:</p>
+				<pre><code><span class="hljs-regexp">/build/</span>test<span class="hljs-regexp">/amd-shimmed/</span>
+</code></pre><h1 id="build">Build</h1>
+				<p>This project uses &#39;Gulp&#39; to build the resultant JavaScript files.</p>
+				<h4 id="setup-">Setup:</h4>
+				<p>Simply install node.js.  This should include npm (Node Package Manager).
+				Then at any command prompt, type:</p>
+				<pre><code>npm <span class="hljs-operator"><span class="hljs-keyword">install</span> gulp -<span class="hljs-keyword">g</span></span>
+</code></pre><p>This will ensure you can type &#39;gulp&#39; in any location.</p>
+				<h4 id="building">Building</h4>
+				<p>Then if you need to build an individual namespace/package, simply type <code>gulp</code> within that project folder (where there is a <code>gulpfile.js</code>).</p>
+				<p>If you want to make sure the entire solution is updated, typing <code>gulp</code> inside the <code>gulp-tasks</code> folder will build all registerd project folders.</p>
+				<h4 id="ide-support">IDE Support</h4>
+				<p>WebStorm has a terminal and it&#39;s simply easy enough to type gulp when you need to build.</p>
+				<p>Visual Studio has an incredible set of tools for node and task runners.  Here&#39;s one of them:
+				<a href="https://visualstudiogallery.msdn.microsoft.com/8e1b4368-4afb-467a-bc13-9650572db708">https://visualstudiogallery.msdn.microsoft.com/8e1b4368-4afb-467a-bc13-9650572db708</a></p>
+				<h1 id="learn-connect-evolve">Learn, Connect &amp; Evolve</h1>
+				<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
+				<h1 id="ready-for-beta-level-use">Ready for Beta Level Use</h1>
+				<p><strong>System.Linq</strong>: Nearly 100% of the original linq.js is present with some exceptions.  There&#39;s no string to lamda conversion because it&#39;s unnecessary when using TypeScript.  Enumerable is currently a static class with utility for calling Enumerable(collection).  Instead it is more explicit by calling Enumerable.fromArray(array).  Unit test coverage is ongoing.  Please report any issues you might find and they will be fixed immediately.</p>
+				<h1 id="future">Future</h1>
+				<p>Planning to make this a bower and other package systems (easy) install.</p>
+				<p>Full documentation and references (dreaming).</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_arrayenumerable_.html">"<wbr>System.<wbr>Linq/<wbr>Array<wbr>Enumerable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_enumerable_.html">"<wbr>System.<wbr>Linq/<wbr>Enumerable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_grouping_.html">"<wbr>System.<wbr>Linq/<wbr>Grouping"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_igrouping_.html">"<wbr>System.<wbr>Linq/IGrouping"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_ilookup_.html">"<wbr>System.<wbr>Linq/ILookup"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_lookup_.html">"<wbr>System.<wbr>Linq/<wbr>Lookup"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_orderedenumerable_.html">"<wbr>System.<wbr>Linq/<wbr>Ordered<wbr>Enumerable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_whereenumerable_.html">"<wbr>System.<wbr>Linq/<wbr>Where<wbr>Enumerable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_linq_whereselectenumerable_.html">"<wbr>System.<wbr>Linq/<wbr>Where<wbr>Select<wbr>Enumerable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_arrays_iarray_.html">"<wbr>System/<wbr>Collections/<wbr>Arrays/IArray"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_arrays_utility_.html">"<wbr>System/<wbr>Collections/<wbr>Arrays/<wbr>Utility"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_dictionaries_dictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_dictionaries_dictionaryabstractbase_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary<wbr>Abstract<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_dictionaries_idictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/IDictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_dictionaries_orderedstringkeydictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Ordered<wbr>String<wbr>Key<wbr>Dictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_dictionaries_stringkeydictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>String<wbr>Key<wbr>Dictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_arrayenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Array<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_enumerable_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_enumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_enumeratorbase_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_ienumerable_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_ienumerateeach_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerate<wbr>Each"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_ienumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_iyield_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IYield"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_indexenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Index<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_icollection_.html">"<wbr>System/<wbr>Collections/ICollection"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_ilinkedlist_.html">"<wbr>System/<wbr>Collections/ILinked<wbr>List"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_ilinkedlistnode_.html">"<wbr>System/<wbr>Collections/ILinked<wbr>List<wbr>Node"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_ilist_.html">"<wbr>System/<wbr>Collections/IList"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_linkedlist_.html">"<wbr>System/<wbr>Collections/<wbr>Linked<wbr>List"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_queue_.html">"<wbr>System/<wbr>Collections/<wbr>Queue"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_diagnostics_stopwatch_.html">"<wbr>System/<wbr>Diagnostics/<wbr>Stopwatch"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_disposable_disposablebase_.html">"<wbr>System/<wbr>Disposable/<wbr>Disposable<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_disposable_idisposable_.html">"<wbr>System/<wbr>Disposable/IDisposable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_disposable_idisposableaware_.html">"<wbr>System/<wbr>Disposable/IDisposable<wbr>Aware"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_disposable_utility_.html">"<wbr>System/<wbr>Disposable/<wbr>Utility"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_events_eventdispatcher_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_events_ieventdispatcher_.html">"<wbr>System/<wbr>Events/IEvent<wbr>Dispatcher"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_functiontypes_.html">"<wbr>System/<wbr>Function<wbr>Types"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_functions_.html">"<wbr>System/<wbr>Functions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_icloneable_.html">"<wbr>System/ICloneable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_icomparable_.html">"<wbr>System/IComparable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_iconvertable_.html">"<wbr>System/IConvertable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_iequatable_.html">"<wbr>System/IEquatable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_iformatprovider_.html">"<wbr>System/IFormat<wbr>Provider"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_iformattable_.html">"<wbr>System/IFormattable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_ilazy_.html">"<wbr>System/ILazy"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_lazy_.html">"<wbr>System/<wbr>Lazy"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_observable_iobservable_.html">"<wbr>System/<wbr>Observable/IObservable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_observable_iobserver_.html">"<wbr>System/<wbr>Observable/IObserver"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_observable_observableaware_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Aware"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_runtime_serialization_iserializable_.html">"<wbr>System/<wbr>Runtime/<wbr>Serialization/ISerializable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_system_.html">"<wbr>System/<wbr>System"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_text_stringbuilder_.html">"<wbr>System/<wbr>Text/<wbr>String<wbr>Builder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_text_text_.html">"<wbr>System/<wbr>Text/<wbr>Text"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_time_clocktime_.html">"<wbr>System/<wbr>Time/<wbr>Clock<wbr>Time"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_time_howmany_.html">"<wbr>System/<wbr>Time/<wbr>How<wbr>Many"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_time_itimemeasurement_.html">"<wbr>System/<wbr>Time/ITime<wbr>Measurement"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_time_timespan_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Span"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_time_timeunit_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Unit"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_time_timeunitvalue_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Unit<wbr>Value"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_types_.html">"<wbr>System/<wbr>Types"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.io" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

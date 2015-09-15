@@ -17,6 +17,7 @@
     "typescript": "^1.5.3"
   },
   "devDependencies": {
-    "bower": "^1.5.2"
+    "bower": "^1.5.2",
+    "typedoc": "^0.3.10"
   }
 }
