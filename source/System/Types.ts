@@ -7,37 +7,94 @@
 
 import Functions = require('./Functions');
 
+/**
+ * Sealed/Frozen module for simple type comparison.
+ */
 module Types
 {
 
 	// Calling an instance of this class allows for a local/private 'sealed' copy.
 
+	/**
+	 * typeof true
+	 * @type {string}
+	 */
 	export var Boolean:string = typeof true;
+
+	/**
+	 * typeof 0
+	 * @type {string}
+	 */
 	export var Number:string = typeof 0;
+
+	/**
+	 * typeof ""
+	 * @type {string}
+	 */
 	export var String:string = typeof "";
+
+	/**
+	 * typeof {}
+	 * @type {string}
+	 */
 	export var Object:string = typeof {};
+
+	/**
+	 * typeof null
+	 * @type {string}
+	 */
 	export var Null:string = typeof null;
+
+	/**
+	 * typeof undefined
+	 * @type {string}
+	 */
 	export var Undefined:string = typeof undefined;
+
+	/**
+	 * typeof function
+	 * @type {string}
+	 */
 	export var Function:string = typeof Functions.Blank;
 
-	export function isBoolean(type:any):boolean
+	/**
+	 * Returns true if the value parameter is a boolean.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isBoolean(value:any):boolean
 	{
-		return typeof type===Types.Boolean;
+		return typeof value===Types.Boolean;
 	}
 
-	export function isNumber(type:any):boolean
+	/**
+	 * Returns true if the value parameter is a number.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isNumber(value:any):boolean
 	{
-		return typeof type===Types.Number;
+		return typeof value===Types.Number;
 	}
 
-	export function isString(type:any):boolean
+	/**
+	 * Returns true if the value parameter is a string.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isString(value:any):boolean
 	{
-		return typeof type===Types.String;
+		return typeof value===Types.String;
 	}
 
-	export function isFunction(type:any):boolean
+	/**
+	 * Returns true if the value parameter is a function.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isFunction(value:any):boolean
 	{
-		return typeof type===Types.Function;
+		return typeof value===Types.Function;
 	}
 
 }

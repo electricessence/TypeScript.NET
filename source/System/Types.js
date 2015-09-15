@@ -13,20 +13,20 @@ define(["require", "exports", './Functions'], function (require, exports, Functi
         Types.Null = typeof null;
         Types.Undefined = typeof undefined;
         Types.Function = typeof Functions.Blank;
-        function isBoolean(type) {
-            return typeof type === Types.Boolean;
+        function isBoolean(value) {
+            return typeof value === Types.Boolean;
         }
         Types.isBoolean = isBoolean;
-        function isNumber(type) {
-            return typeof type === Types.Number;
+        function isNumber(value) {
+            return typeof value === Types.Number;
         }
         Types.isNumber = isNumber;
-        function isString(type) {
-            return typeof type === Types.String;
+        function isString(value) {
+            return typeof value === Types.String;
         }
         Types.isString = isString;
-        function isFunction(type) {
-            return typeof type === Types.Function;
+        function isFunction(value) {
+            return typeof value === Types.Function;
         }
         Types.isFunction = isFunction;
     })(Types || (Types = {}));

@@ -1,0 +1,1 @@
+typedoc --out documentation source --module amd --target es5
