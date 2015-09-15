@@ -1,16 +1,15 @@
 ///<reference path="../typings/requirejs/require.d.ts"/>
-
 requirejs.config(
 	{
-		baseUrl: '../',
+		baseUrl: '../'
 	}
 );
-
 require(
 	[
 		'System/Collections/Arrays/Utility'
-	], (ArrayUtil)=> {
+	], function(ArrayUtil) {
 		var a = ArrayUtil.initialize(50);
 		alert(a.length);
 	}
 );
+//# sourceMappingURL=main.js.map
