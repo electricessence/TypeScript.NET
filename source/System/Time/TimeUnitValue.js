@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 define(["require", "exports", './TimeUnit', './TimeSpan', '../System'], function (require, exports, TimeUnit, TimeSpan, System) {
-    // This class allows for passing around a specific measure of time coerced by its unit type.
     var TimeUnitValue = (function () {
         function TimeUnitValue(value, _type) {
             this.value = value;
@@ -37,7 +36,6 @@ define(["require", "exports", './TimeUnit', './TimeSpan', '../System'], function
             return System.compare(this.value, this.coerce(other).value);
         };
         Object.defineProperty(TimeUnitValue.prototype, "type", {
-            // To avoid confusion, the unit type can only be set once at construction.
             get: function () {
                 return this._type;
             },

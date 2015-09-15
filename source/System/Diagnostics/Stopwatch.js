@@ -28,7 +28,6 @@ define(["require", "exports", '../Time/TimeSpan'], function (require, exports, T
             return new TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
         };
         Stopwatch.prototype.record = function (closure) {
-            // Although a reasonably thread safe way to record, it may not correctly represent time in an async scenario.
             var e = Stopwatch.measure(closure);
             this._elapsed += e.milliseconds;
             return e;
@@ -53,8 +52,6 @@ define(["require", "exports", '../Time/TimeSpan'], function (require, exports, T
             _._isRunning = false;
             _._startTimeStamp = NaN;
         };
-        // Effectively calls a stop start and continues timing...
-        // Can also be called to effectively start a lap before calling it again to get the elapsed lap time.
         Stopwatch.prototype.lap = function () {
             var _ = this;
             if (_._isRunning) {

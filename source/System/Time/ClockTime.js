@@ -23,7 +23,6 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
             configurable: true
         });
         Object.defineProperty(ClockTime.prototype, "direction", {
-            // Could be in reverse or negative...
             get: function () {
                 return System.compare(this._totalMilliseconds, 0);
             },
@@ -117,7 +116,6 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
         ClockTime.prototype.toTimeSpan = function () {
             return new TimeSpan(this._totalMilliseconds);
         };
-        // Static version for relative consistency.  Constructor does allow this format.
         ClockTime.from = function (hours, minutes, seconds, milliseconds) {
             if (seconds === void 0) { seconds = 0; }
             if (milliseconds === void 0) { milliseconds = 0; }
@@ -140,7 +138,6 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
         };
         return ClockTime;
     })();
-    // Temporary until the full TimeSpanFormat is available.
     function pluralize(value, label) {
         if (Math.abs(value) !== 1)
             label += "s";

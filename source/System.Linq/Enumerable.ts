@@ -33,6 +33,7 @@ import OrderedEnumerable= require('./OrderedEnumerable');
 import using = DisposeUtility.using;
 import enumeratorFrom = Enumerator.from;
 import enumeratorForEach = Enumerator.forEach;
+import EnumerableAction = Enumerable.EnumerableAction;
 'use strict';
 
 
@@ -55,16 +56,6 @@ const
 
 
 // #endregion
-
-
-enum EnumerableAction
-{
-	Break,
-	Return,
-	Skip
-}
-
-Object.freeze(EnumerableAction);
 
 
 class Enumerable<T> extends DisposableBase implements IEnumerable<T>
@@ -2851,16 +2842,18 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	// #endregion
-
-	// #endregion
 }
 
-// #region Supporting Classes
-// The following classes have to be inside the same module definition since they reference each other.
+module Enumerable {
+	export enum EnumerableAction
+	{
+		Break,
+		Return,
+		Skip
+	}
 
-// #endregion
-
+	Object.freeze(EnumerableAction);
+}
 
 // #region Helper Functions...
 // This allows for the use of a boolean instead of calling this.assertIsNotDisposed()

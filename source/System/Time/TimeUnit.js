@@ -7,7 +7,7 @@ define(["require", "exports"], function (require, exports) {
         TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
         TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
         TimeUnit[TimeUnit["Days"] = 5] = "Days";
-    })(TimeUnit || (TimeUnit = {})); // Earth Days
+    })(TimeUnit || (TimeUnit = {}));
     Object.freeze(TimeUnit);
     return TimeUnit;
 });

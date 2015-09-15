@@ -23,14 +23,12 @@ define(["require", "exports", './Disposable/DisposableBase'], function (require,
             configurable: true
         });
         Object.defineProperty(Lazy.prototype, "canReset", {
-            // Adding a 'resettable' mechanism allows for simply resetting a lazy instead of re-instantiating a new one.
             get: function () {
                 return !this.wasDisposed && !!(this._closure);
             },
             enumerable: true,
             configurable: true
         });
-        // Returns true if successfully reset.
         Lazy.prototype.reset = function (throwIfCannotReset) {
             var _ = this;
             if (throwIfCannotReset)

@@ -13,6 +13,7 @@ define(["require", "exports", '../System/System', '../System/Types', '../System/
     var using = DisposeUtility.using;
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;
+    var EnumerableAction = Enumerable.EnumerableAction;
     'use strict';
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
@@ -26,13 +27,6 @@ define(["require", "exports", '../System/System', '../System/Types', '../System/
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
     var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
-    var EnumerableAction;
-    (function (EnumerableAction) {
-        EnumerableAction[EnumerableAction["Break"] = 0] = "Break";
-        EnumerableAction[EnumerableAction["Return"] = 1] = "Return";
-        EnumerableAction[EnumerableAction["Skip"] = 2] = "Skip";
-    })(EnumerableAction || (EnumerableAction = {}));
-    Object.freeze(EnumerableAction);
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(enumeratorFactory, finalizer) {
@@ -1627,6 +1621,16 @@ define(["require", "exports", '../System/System', '../System/Types', '../System/
         };
         return Enumerable;
     })(DisposableBase);
+    var Enumerable;
+    (function (Enumerable) {
+        (function (EnumerableAction) {
+            EnumerableAction[EnumerableAction["Break"] = 0] = "Break";
+            EnumerableAction[EnumerableAction["Return"] = 1] = "Return";
+            EnumerableAction[EnumerableAction["Skip"] = 2] = "Skip";
+        })(Enumerable.EnumerableAction || (Enumerable.EnumerableAction = {}));
+        var EnumerableAction = Enumerable.EnumerableAction;
+        Object.freeze(EnumerableAction);
+    })(Enumerable || (Enumerable = {}));
     function assertIsNotDisposed(disposed) {
         return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
     }

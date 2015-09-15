@@ -6,7 +6,6 @@
 'use strict';
 define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports, System, Types, HowMany, TimeUnit, TimeUnitValue, ClockTime) {
     var TimeSpan = (function () {
-        // In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
         function TimeSpan(value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
             this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
@@ -29,7 +28,6 @@ define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit'
         };
         TimeSpan.convertToMilliseconds = function (value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
-            // noinspection FallThroughInSwitchStatementJS
             switch (units) {
                 case TimeUnit.Days:
                     value *= HowMany.Hours.Per.Day;
@@ -109,7 +107,6 @@ define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit'
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "time", {
-            // Instead of the confusing total versus unit name, expose a 'ClockTime' value which reports the individual components.
             get: function () {
                 return new ClockTime(this._milliseconds);
             },

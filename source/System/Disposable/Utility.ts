@@ -6,10 +6,11 @@
  */
 
 
-import Types= require('./Types');
+import Types = require('../Types');
 
 /// Disposable Utility
-module Utility {
+module Utility
+{
 
 	export function dispose(...disposables:IDisposable[]):void
 	{

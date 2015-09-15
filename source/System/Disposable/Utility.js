@@ -1,5 +1,5 @@
 ///<reference path="IDisposable.ts"/>
-define(["require", "exports", './Types'], function (require, exports, Types) {
+define(["require", "exports", '../Types'], function (require, exports, Types) {
     var Utility;
     (function (Utility) {
         function dispose() {
