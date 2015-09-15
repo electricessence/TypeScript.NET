@@ -6,10 +6,9 @@ requirejs.config(
 );
 require(
 	[
-		'System/Collections/Arrays/Utility'
+		'min/System/Collections/Arrays/Utility'
 	], function(ArrayUtil) {
 		var a = ArrayUtil.initialize(50);
 		alert(a.length);
 	}
 );
-//# sourceMappingURL=main.js.map

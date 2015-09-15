@@ -9,7 +9,7 @@ import System = require('../../System');
 
 
 /// Array Utility
-module Utility
+module ArrayUtility
 {
 
 	export function initialize<T>(length:number):T[]
@@ -397,4 +397,4 @@ module Utility
 
 }
 
-export = Utility;
+export = ArrayUtility;

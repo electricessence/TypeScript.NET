@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 define(["require", "exports", '../../Types', '../../System'], function (require, exports, Types, System) {
-    var Utility;
-    (function (Utility) {
+    var ArrayUtility;
+    (function (ArrayUtility) {
         function initialize(length) {
             var array;
             if (length > 65536)
@@ -15,7 +15,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return array;
         }
-        Utility.initialize = initialize;
+        ArrayUtility.initialize = initialize;
         function copy(sourceArray, sourceIndex, length) {
             if (sourceIndex === void 0) { sourceIndex = 0; }
             if (length === void 0) { length = Infinity; }
@@ -26,7 +26,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
                 ? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength)
                 : sourceArray.slice(0);
         }
-        Utility.copy = copy;
+        ArrayUtility.copy = copy;
         function copyTo(sourceArray, destinationArray, sourceIndex, destinationIndex, length) {
             if (sourceIndex === void 0) { sourceIndex = 0; }
             if (destinationIndex === void 0) { destinationIndex = 0; }
@@ -50,9 +50,9 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
                 destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
             }
         }
-        Utility.copyTo = copyTo;
+        ArrayUtility.copyTo = copyTo;
         function contains(array, item) { return !array ? false : array.indexOf(item) != -1; }
-        Utility.contains = contains;
+        ArrayUtility.contains = contains;
         function replace(array, old, newValue, max) {
             var count = 0 | 0;
             if (max !== 0) {
@@ -69,18 +69,18 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return count;
         }
-        Utility.replace = replace;
+        ArrayUtility.replace = replace;
         function updateRange(array, value, index, length) {
             var end = index + length;
             for (var i = index; i < end; ++i) {
                 array[i] = value;
             }
         }
-        Utility.updateRange = updateRange;
+        ArrayUtility.updateRange = updateRange;
         function clear(array, index, length) {
             updateRange(array, null, index, length);
         }
-        Utility.clear = clear;
+        ArrayUtility.clear = clear;
         function register(array, item) {
             if (!array)
                 throw new Error("ArgumentNullException: 'array' cannot be null.");
@@ -90,7 +90,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
                 array[len] = item;
             return ok;
         }
-        Utility.register = register;
+        ArrayUtility.register = register;
         function findIndex(array, predicate) {
             if (!array)
                 throw new Error("ArgumentNullException: 'array' cannot be null.");
@@ -103,7 +103,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return -1;
         }
-        Utility.findIndex = findIndex;
+        ArrayUtility.findIndex = findIndex;
         function areAllEqual(arrays, strict) {
             if (!arrays)
                 throw new Error("ArgumentNullException: 'arrays' cannot be null.");
@@ -116,7 +116,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return true;
         }
-        Utility.areAllEqual = areAllEqual;
+        ArrayUtility.areAllEqual = areAllEqual;
         function areEqual(a, b, strict, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = System.areEqual; }
             if (a === b)
@@ -130,11 +130,11 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return true;
         }
-        Utility.areEqual = areEqual;
+        ArrayUtility.areEqual = areEqual;
         function forEach(sourceArray, fn) {
             sourceArray.every(function (value, index) { return fn(value, index) !== false; });
         }
-        Utility.forEach = forEach;
+        ArrayUtility.forEach = forEach;
         function applyTo(target, fn) {
             if (!target)
                 throw new Error("ArgumentNullException: 'target' cannot be null.");
@@ -145,7 +145,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return target;
         }
-        Utility.applyTo = applyTo;
+        ArrayUtility.applyTo = applyTo;
         function removeIndex(array, index) {
             if (!array)
                 throw new Error("ArgumentNullException: 'array' cannot be null.");
@@ -154,7 +154,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
                 array.splice(index, 1);
             return exists;
         }
-        Utility.removeIndex = removeIndex;
+        ArrayUtility.removeIndex = removeIndex;
         function remove(array, value, max) {
             if (!array)
                 throw new Error("ArgumentNullException: 'array' cannot be null.");
@@ -173,7 +173,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return count;
         }
-        Utility.remove = remove;
+        ArrayUtility.remove = remove;
         function repeat(element, count) {
             var result = [];
             while (count--) {
@@ -181,7 +181,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return result;
         }
-        Utility.repeat = repeat;
+        ArrayUtility.repeat = repeat;
         function sum(source, ignoreNaN) {
             if (ignoreNaN === void 0) { ignoreNaN = false; }
             if (!source || !source.length)
@@ -199,7 +199,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
                 });
             return result;
         }
-        Utility.sum = sum;
+        ArrayUtility.sum = sum;
         function average(source, ignoreNaN) {
             if (ignoreNaN === void 0) { ignoreNaN = false; }
             if (!source || !source.length)
@@ -223,7 +223,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return (!count || isNaN(result)) ? NaN : (result / count);
         }
-        Utility.average = average;
+        ArrayUtility.average = average;
         function product(source, ignoreNaN) {
             if (ignoreNaN === void 0) { ignoreNaN = false; }
             if (!source || !source.length)
@@ -253,7 +253,7 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             }
             return result;
         }
-        Utility.product = product;
+        ArrayUtility.product = product;
         function ifSet(source, start, ignoreNaN, predicate) {
             if (!source || !source.length)
                 return NaN;
@@ -288,13 +288,13 @@ define(["require", "exports", '../../Types', '../../System'], function (require,
             if (ignoreNaN === void 0) { ignoreNaN = false; }
             return ifSet(source, +Infinity, ignoreNaN, function (n, result) { return n < result; });
         }
-        Utility.min = min;
+        ArrayUtility.min = min;
         function max(source, ignoreNaN) {
             if (ignoreNaN === void 0) { ignoreNaN = false; }
             return ifSet(source, -Infinity, ignoreNaN, function (n, result) { return n > result; });
         }
-        Utility.max = max;
-    })(Utility || (Utility = {}));
-    return Utility;
+        ArrayUtility.max = max;
+    })(ArrayUtility || (ArrayUtility = {}));
+    return ArrayUtility;
 });
 //# sourceMappingURL=Utility.js.map

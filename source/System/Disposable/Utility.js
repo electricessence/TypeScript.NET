@@ -1,7 +1,7 @@
 ///<reference path="IDisposable.ts"/>
 define(["require", "exports", '../Types'], function (require, exports, Types) {
-    var Utility;
-    (function (Utility) {
+    var DisposableUtility;
+    (function (DisposableUtility) {
         function dispose() {
             var disposables = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -9,7 +9,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
             }
             disposeTheseInternal(disposables, false);
         }
-        Utility.dispose = dispose;
+        DisposableUtility.dispose = dispose;
         function disposeWithoutException() {
             var disposables = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -17,7 +17,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
             }
             disposeTheseInternal(disposables, true);
         }
-        Utility.disposeWithoutException = disposeWithoutException;
+        DisposableUtility.disposeWithoutException = disposeWithoutException;
         function disposeSingle(disposable, ignoreExceptions) {
             if (disposable && typeof disposable.dispose == Types.Function) {
                 if (ignoreExceptions) {
@@ -47,7 +47,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
             if (disposables && disposables.length)
                 disposeTheseInternal(disposables.slice(0), ignoreExceptions);
         }
-        Utility.disposeThese = disposeThese;
+        DisposableUtility.disposeThese = disposeThese;
         function using(disposable, closure) {
             try {
                 return closure(disposable);
@@ -56,8 +56,8 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
                 dispose(disposable);
             }
         }
-        Utility.using = using;
-    })(Utility || (Utility = {}));
-    return Utility;
+        DisposableUtility.using = using;
+    })(DisposableUtility || (DisposableUtility = {}));
+    return DisposableUtility;
 });
 //# sourceMappingURL=Utility.js.map
