@@ -1,10 +1,16 @@
 var gulp = require('gulp');
+var del = require('del');
+var sourcemaps = require('gulp-sourcemaps');
+var uglify = require('gulp-uglify');
 
-// This renders the same output as WebStorm's configuration.
+function clearGulpTscTemp() {
+	del([ './gulp-tsc-tmp-*' ]);
+	del([ './source/.gulp-tsc-tmp-*' ]);
+}
+
 gulp.task(
+	// This renders the same output as WebStorm's configuration.
 	'typescript', function() {
-
-		var typescript = require('gulp-tsc');
 
 		var options = {
 			outDir: './source',
@@ -15,12 +21,18 @@ gulp.task(
 			sourceMap: true
 		};
 
+		del([ './min/**/*' ]);
 
-		return gulp
+		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
+		var stream = gulp
 			.src(['./source/**/*.ts'])
-			.pipe(typescript(options))
-			.pipe(gulp.dest('./source'));
+			.pipe(require('gulp-tsc')(options))
+			.pipe(gulp.dest('./source'))
+			;
 
+		clearGulpTscTemp();
+
+		return stream;
 	}
 );
 
@@ -28,29 +40,35 @@ gulp.task(
 gulp.task(
 	'typescript.min', function() {
 
-
-		var sourcemaps = require('gulp-sourcemaps');
-		var uglify = require('gulp-uglify');
-
 		var
-
-
 			sourceMapOptions = {
+				//sourceRoot: '../../source/',
+				sourceRoot: function(file) {
+					return '../../source/';
+				}
+				,
 				includeContent: false
-			},
+			};
 
-			minOptions       = {
-				preserveComments:'license'
-			}
-			;
+		del([ './min/**/*' ]);
 
-
-		return gulp
-			.src(['source/**/*.js'], { base: 'source' })
-			//.pipe(sourcemaps.init({loadMaps: true}))
-			.pipe(uglify(minOptions))
-			//.pipe(sourcemaps.write('../maps', sourceMapOptions))
+		var stream = gulp
+			.src(['./source/**/*.ts'], { base: './source' })
+			.pipe(sourcemaps.init())
+			.pipe(require('gulp-typescript')({
+				outDir:'./min',
+				noImplicitAny: true,
+				module: 'amd',
+				target: 'es5',
+				removeComments: true
+			}))
+			.pipe(uglify({preserveComments:'license'}))
+			.pipe(sourcemaps.write('.', sourceMapOptions))
 			.pipe(gulp.dest('./min'));
+
+		clearGulpTscTemp();
+
+		return stream;
 
 	}
 );
