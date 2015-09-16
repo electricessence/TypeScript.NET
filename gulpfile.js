@@ -40,21 +40,21 @@ gulp.task(
 gulp.task(
 	'typescript.min', function() {
 
-		var
-			sourceMapOptions = {
-				//sourceRoot: '../../source/',
-				sourceRoot: function(file) {
-					return '../../source/';
-				}
-				,
-				includeContent: false
-			};
+		//var
+		//	sourceMapOptions = {
+		//		//sourceRoot: '../../source/',
+		//		sourceRoot: function(file) {
+		//			return '../../source/';
+		//		}
+		//		,
+		//		includeContent: false
+		//	};
 
 		del([ './min/**/*' ]);
 
 		var stream = gulp
 			.src(['./source/**/*.ts'], { base: './source' })
-			.pipe(sourcemaps.init())
+			//.pipe(sourcemaps.init())
 			.pipe(require('gulp-typescript')({
 				outDir:'./min',
 				noImplicitAny: true,
@@ -63,7 +63,7 @@ gulp.task(
 				removeComments: true
 			}))
 			.pipe(uglify({preserveComments:'license'}))
-			.pipe(sourcemaps.write('.', sourceMapOptions))
+			//.pipe(sourcemaps.write('.', sourceMapOptions))
 			.pipe(gulp.dest('./min'));
 
 		clearGulpTscTemp();
