@@ -5,7 +5,7 @@ requirejs.config(
 );
 require(
 	[
-		'min/System/Collections/Arrays/Utility'
+		'source/System/Collections/Arrays/Utility'
 	],
 
 	function(ArrayUtil) {
