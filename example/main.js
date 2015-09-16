@@ -1,4 +1,3 @@
-///<reference path="../typings/requirejs/require.d.ts"/>
 requirejs.config(
 	{
 		baseUrl: '../'
@@ -7,7 +6,9 @@ requirejs.config(
 require(
 	[
 		'min/System/Collections/Arrays/Utility'
-	], function(ArrayUtil) {
+	],
+
+	function(ArrayUtil) {
 		var a = ArrayUtil.initialize(50);
 		alert(a.length);
 	}
