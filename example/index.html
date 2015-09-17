@@ -8,6 +8,9 @@
 <body>
 My Page.
 
-<script src="main.js"></script>
+<script>
+    requirejs.config({baseUrl: '../'});
+    require(['example/main']);
+</script>
 </body>
 </html>
