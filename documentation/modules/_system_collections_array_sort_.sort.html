@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Per | TypeScript.NET</title>
+	<title>Sort | TypeScript.NET</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,19 +57,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_system_time_howmany_.html">&quot;System/Time/HowMany&quot;</a>
+					<a href="_system_collections_array_sort_.html">&quot;System/Collections/Array/Sort&quot;</a>
 				</li>
 				<li>
-					<a href="_system_time_howmany_.howmany.html">HowMany</a>
-				</li>
-				<li>
-					<a href="_system_time_howmany_.howmany.hours.html">Hours</a>
-				</li>
-				<li>
-					<a href="_system_time_howmany_.howmany.hours.per.html">Per</a>
+					<a href="_system_collections_array_sort_.sort.html">Sort</a>
 				</li>
 			</ul>
-			<h1>Module Per</h1>
+			<h1>Module Sort</h1>
 		</div>
 	</div>
 </header>
@@ -81,25 +75,89 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Variables</h3>
+							<h3>Enumerations</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-module"><a href="_system_time_howmany_.howmany.hours.per.html#day" class="tsd-kind-icon">Day</a></li>
+								<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/_system_collections_array_sort_.sort.order.html" class="tsd-kind-icon">Order</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="_system_collections_array_sort_.sort.html#createcomparer" class="tsd-kind-icon">create<wbr>Comparer</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="_system_collections_array_sort_.sort.html#ensurearray" class="tsd-kind-icon">ensure<wbr>Array</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-module">
-					<a name="day" class="tsd-anchor"></a>
-					<h3>Day</h3>
-					<div class="tsd-signature tsd-kind-icon">Day<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in System/Time/HowMany.ts:13</li>
-						</ul>
-					</aside>
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="createcomparer" class="tsd-anchor"></a>
+					<h3>create<wbr>Comparer</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Comparer&lt;TSource, T&gt;<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_functiontypes_.selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, order<span class="tsd-signature-symbol">?: </span><a href="../enums/_system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol"> | </span><a href="../enums/_system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol">[]</span>, equivalentToNaN<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_functiontypes_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Array/Sort.ts:26</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TSource</h4>
+								</li>
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>selector: <a href="../interfaces/_system_functiontypes_.selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> order: <a href="../enums/_system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol"> | </span><a href="../enums/_system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;Order.Ascending</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> equivalentToNaN: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;NaN</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_functiontypes_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="ensurearray" class="tsd-anchor"></a>
+					<h3>ensure<wbr>Array</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">ensure<wbr>Array&lt;T&gt;<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Array/Sort.ts:20</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -110,32 +168,10 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_system_time_howmany_.html">"<wbr>System/<wbr>Time/<wbr>How<wbr>Many"</a>
+						<a href="_system_collections_array_sort_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Sort"</a>
 						<ul>
 							<li class="current tsd-kind-module tsd-parent-kind-external-module">
-								<a href="_system_time_howmany_.howmany.html">How<wbr>Many</a>
-								<ul>
-									<li class="current tsd-kind-module tsd-parent-kind-module">
-										<a href="_system_time_howmany_.howmany.hours.html">Hours</a>
-										<ul>
-											<li class="current tsd-kind-module tsd-parent-kind-module">
-												<a href="_system_time_howmany_.howmany.hours.per.html">Per</a>
-											</li>
-										</ul>
-									</li>
-									<li class=" tsd-kind-module tsd-parent-kind-module">
-										<a href="_system_time_howmany_.howmany.milliseconds.html">Milliseconds</a>
-									</li>
-									<li class=" tsd-kind-module tsd-parent-kind-module">
-										<a href="_system_time_howmany_.howmany.minutes.html">Minutes</a>
-									</li>
-									<li class=" tsd-kind-module tsd-parent-kind-module">
-										<a href="_system_time_howmany_.howmany.seconds.html">Seconds</a>
-									</li>
-									<li class=" tsd-kind-module tsd-parent-kind-module">
-										<a href="_system_time_howmany_.howmany.ticks.html">Ticks</a>
-									</li>
-								</ul>
+								<a href="_system_collections_array_sort_.sort.html">Sort</a>
 							</li>
 						</ul>
 					</li>
@@ -143,8 +179,14 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-module">
-						<a href="_system_time_howmany_.howmany.hours.per.html#day" class="tsd-kind-icon">Day</a>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/_system_collections_array_sort_.sort.order.html" class="tsd-kind-icon">Order</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="_system_collections_array_sort_.sort.html#createcomparer" class="tsd-kind-icon">create<wbr>Comparer</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="_system_collections_array_sort_.sort.html#ensurearray" class="tsd-kind-icon">ensure<wbr>Array</a>
 					</li>
 				</ul>
 			</nav>
