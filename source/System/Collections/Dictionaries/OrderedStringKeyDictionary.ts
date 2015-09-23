@@ -4,7 +4,7 @@
  */
 
 import StringKeyDictionary= require('./StringKeyDictionary');
-import ArrayUtility = require('../Arrays/Utility');
+import ArrayUtility = require('../Array/Utility');
 
 class OrderedStringKeyDictionary<TValue>
 extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue>

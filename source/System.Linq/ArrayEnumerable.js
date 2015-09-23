@@ -6,12 +6,11 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/System', '../System/Functions', '../System/Collections/Arrays/Utility', '../System/Collections/Enumeration/ArrayEnumerator', './Enumerable'], function (require, exports, System, Functions, ArrayUtility, ArrayEnumerator, Enumerable) {
+define(["require", "exports", '../System/System', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Enumeration/ArrayEnumerator', './Enumerable'], function (require, exports, System, Functions, ArrayCompare, ArrayEnumerator, Enumerable) {
     'use strict';
-    var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
+    var INT_ZERO = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
     var ArrayEnumerable = (function (_super) {
         __extends(ArrayEnumerable, _super);
         function ArrayEnumerable(source) {
@@ -41,7 +40,7 @@ define(["require", "exports", '../System/System', '../System/Functions', '../Sys
             if (s instanceof Array)
                 return s.slice();
             var len = s.length, result = new Array(len);
-            for (var i = INT_0; i < len; ++i) {
+            for (var i = INT_ZERO; i < len; ++i) {
                 result[i] = s[i];
             }
             return result;
@@ -54,7 +53,7 @@ define(["require", "exports", '../System/System', '../System/Functions', '../Sys
             _.assertIsNotDisposed();
             var source = _._source;
             if (source) {
-                for (var i = INT_0; i < source.length; ++i) {
+                for (var i = INT_ZERO; i < source.length; ++i) {
                     if (action(source[i], i) === false)
                         break;
                 }
@@ -150,7 +149,7 @@ define(["require", "exports", '../System/System', '../System/Functions', '../Sys
         ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = System.areEqual; }
             if (second instanceof Array)
-                return ArrayUtility.areEqual(this.source, second, true, equalityComparer);
+                return ArrayCompare.areEqual(this.source, second, true, equalityComparer);
             if (second instanceof ArrayEnumerable)
                 return second.sequenceEqual(this.source, equalityComparer);
             return _super.prototype.sequenceEqual.call(this, second, equalityComparer);

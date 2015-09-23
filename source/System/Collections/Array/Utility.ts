@@ -9,7 +9,7 @@ import System = require('../../System');
 
 
 /// Array Utility
-module ArrayUtility
+module Utility
 {
 
 	export function initialize<T>(length:number):T[]
@@ -144,40 +144,6 @@ module ArrayUtility
 
 	}
 
-	export function areAllEqual(arrays:any[][], strict?:boolean):boolean
-	{
-		if(!arrays)
-			throw new Error("ArgumentNullException: 'arrays' cannot be null.");
-		if(arrays.length<2)
-			throw new Error("Cannot compare a set of arrays less than 2.");
-		var first = arrays[0];
-		for(var i = 0 | 0, l = arrays.length | 0; i<l; ++i) {
-			if(!areEqual(first, arrays[i], strict))
-				return false;
-		}
-		return true;
-	}
-
-	export function areEqual<T>(
-		a:IArray<T>, b:IArray<T>,
-		strict?:boolean,
-		equalityComparer:(a:T, b:T, strict?:boolean) => boolean = System.areEqual):boolean
-	{
-		if(a===b)
-			return true;
-
-		var len = a.length | 0;
-		if(len!=(b.length | 0))
-			return false;
-
-		for(var i = 0 | 0; i<len; ++i) {
-			if(!equalityComparer(a[i], b[i], strict))
-				return false;
-		}
-
-		return true;
-
-	}
 
 	// Allows for using "false" to cause forEach to break.
 	export function forEach<T>(sourceArray:T[], fn:(value:T, index?:number) => any):void
@@ -244,157 +210,6 @@ module ArrayUtility
 	}
 
 
-	export function sum(source:number[], ignoreNaN:boolean = false):number
-	{
-		if(!source || !source.length)
-			return 0;
-
-		var result = 0;
-		if(ignoreNaN)
-			source.forEach(
-					n =>
-				{
-					if(!isNaN(n)) result += n;
-				}
-			);
-		else
-			source.every(
-					n =>
-				{
-					result += n;
-					return !isNaN(result);
-				}
-			);
-
-		return result;
-	}
-
-	export function average(source:number[], ignoreNaN:boolean = false):number
-	{
-		if(!source || !source.length)
-			return NaN;
-
-		var result = 0, count:number;
-		if(ignoreNaN) {
-			count = 0;
-			source.forEach(
-					n =>
-				{
-					if(!isNaN(n)) {
-						result += n;
-						count++;
-					}
-				}
-			);
-
-		}
-		else {
-			count = source.length;
-			source.every(
-					n =>
-				{
-					result += n;
-					return !isNaN(result);
-				}
-			);
-
-		}
-
-		return (!count || isNaN(result)) ? NaN : (result/count);
-	}
-
-	export function product(source:number[], ignoreNaN:boolean = false):number
-	{
-		if(!source || !source.length)
-			return NaN;
-
-		var result = 1;
-		if(ignoreNaN) {
-			var found = false;
-			source.forEach(
-					n =>
-				{
-					if(!isNaN(n)) {
-						result *= n;
-						if(!found) found = true;
-					}
-				}
-			);
-
-			if(!found)
-				result = NaN;
-		}
-		else {
-			source.every(
-					n =>
-				{
-					if(isNaN(n)) {
-						result = NaN;
-						return false;
-					}
-
-					result *= n;
-
-					return true;
-				}
-			);
-		}
-
-		return result;
-	}
-
-	function ifSet(source:number[], start:number, ignoreNaN:boolean, predicate:(n:number, result:number) => boolean)
-	{
-		if(!source || !source.length)
-			return NaN;
-
-		var result = start;
-		if(ignoreNaN) {
-			var found = false;
-			source.forEach(
-					n =>
-				{
-					if(!isNaN(n)) {
-						if(predicate(n, result))
-							result = n;
-						if(!found) found = true;
-					}
-				}
-			);
-
-			if(!found)
-				result = NaN;
-		}
-		else {
-			source.every(
-					n =>
-				{
-					if(isNaN(n)) {
-						result = NaN;
-						return false;
-					}
-
-					if(predicate(n, result))
-						result = n;
-
-					return true;
-				}
-			);
-		}
-		return result;
-
-	}
-
-	export function min(source:number[], ignoreNaN:boolean = false):number
-	{
-		return ifSet(source, +Infinity, ignoreNaN, (n, result) => n<result);
-	}
-
-	export function max(source:number[], ignoreNaN:boolean = false):number
-	{
-		return ifSet(source, -Infinity, ignoreNaN, (n, result) => n>result);
-	}
-
 }
 
-export = ArrayUtility;
+export = Utility;

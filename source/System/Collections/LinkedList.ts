@@ -8,8 +8,8 @@
 ///<reference path="ILinkedListNode.ts"/>
 ///<reference path="ILinkedList.ts"/>
 import System = require('../System');
-import Text = require('../Text/Text');
-import ArrayUtility= require('./Arrays/Utility');
+import TextUtility = require('../Text/Utility');
+import ArrayUtility= require('./Array/Utility');
 import Enumerator= require('./Enumeration/Enumerator');
 import EnumeratorBase= require('./Enumeration/EnumeratorBase');
 'use strict';
@@ -411,7 +411,7 @@ class LinkedList<T> implements ILinkedList<T>
 
 		if(a!==b) {
 			throw new Error(
-				Text.format(
+				TextUtility.format(
 					"Exception: provided node is has no {0} reference but is not the {1} node!",
 					a ? "previous" : "next", a ? "first" : "last"
 				)

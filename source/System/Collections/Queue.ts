@@ -9,7 +9,7 @@
 ///<reference path="IList.ts"/>
 import System = require('../System');
 import Types = require('../Types');
-import ArrayUtility= require('./Arrays/Utility');
+import ArrayUtility= require('./Array/Utility');
 import EnumeratorBase= require('./Enumeration/EnumeratorBase');
 import Enumerable= require('./Enumeration/Enumerable');
 

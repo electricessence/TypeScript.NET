@@ -3,7 +3,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../System', '../Text/Text', './Arrays/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase'], function (require, exports, System, Text, ArrayUtility, Enumerator, EnumeratorBase) {
+define(["require", "exports", '../System', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase'], function (require, exports, System, TextUtility, ArrayUtility, Enumerator, EnumeratorBase) {
     'use strict';
     var INT_0 = 0 | 0;
     var INT_1 = 1 | 0;
@@ -273,7 +273,7 @@ define(["require", "exports", '../System', '../Text/Text', './Arrays/Utility', '
             else
                 b = true;
             if (a !== b) {
-                throw new Error(Text.format("Exception: provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                throw new Error(TextUtility.format("Exception: provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
             }
             return !a && !b;
         };

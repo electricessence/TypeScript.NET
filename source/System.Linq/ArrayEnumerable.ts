@@ -5,18 +5,18 @@
  */
 
 
-///<reference path="../System/Collections/Arrays/IArray"/>
+///<reference path="../System/Collections/Array/IArray"/>
 import System = require('../System/System');
 import Functions = require('../System/Functions');
-import ArrayUtility = require('../System/Collections/Arrays/Utility');
+import ArrayCompare = require('../System/Collections/Array/Compare');
 import ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
 import Enumerable= require('./Enumerable');
 'use strict';
 
 const
-	INT_0:number = 0 | 0,
-	INT_NEGATIVE_1 = -1 | 0,
-	INT_POSITIVE_1 = +1 | 0;
+INT_ZERO:number = 0 | 0,
+INT_NEG1        = -1 | 0,
+INT_POS1        = +1 | 0;
 
 class ArrayEnumerable<T> extends Enumerable<T>
 {
@@ -61,7 +61,7 @@ class ArrayEnumerable<T> extends Enumerable<T>
 			return (<any>s).slice();
 
 		var len = s.length, result:T[] = new Array<T>(len);
-		for(var i = INT_0; i<len; ++i) {
+		for(var i = INT_ZERO; i<len; ++i) {
 			result[i] = s[i];
 		}
 
@@ -86,7 +86,7 @@ class ArrayEnumerable<T> extends Enumerable<T>
 		if(source) {
 
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			for(var i = INT_0; i<source.length; ++i) {
+			for(var i = INT_ZERO; i<source.length; ++i) {
 				// _.assertIsNotDisposed(); // Assertion here is unnecessary since we already have a reference to the source array.
 				if(action(source[i], i)===false)
 					break;
@@ -229,7 +229,7 @@ class ArrayEnumerable<T> extends Enumerable<T>
 	sequenceEqual(second:any, equalityComparer:(a:T, b:T) => boolean = System.areEqual):boolean
 	{
 		if(second instanceof Array)
-			return ArrayUtility.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
+			return ArrayCompare.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
 
 		if(second instanceof ArrayEnumerable)
 			return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);

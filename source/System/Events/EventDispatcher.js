@@ -5,10 +5,9 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System', '../Disposable/DisposableBase', '../Collections/Arrays/Utility'], function (require, exports, System, DisposableBase, AU) {
+define(["require", "exports", '../System', '../Disposable/DisposableBase', '../Collections/Array/Utility'], function (require, exports, System, DisposableBase, AU) {
     var EventDispatcherEntry = (function (_super) {
         __extends(EventDispatcherEntry, _super);
         function EventDispatcherEntry(type, listener, useCapture, priority) {
@@ -19,6 +18,11 @@ define(["require", "exports", '../System', '../Disposable/DisposableBase', '../C
             this.listener = listener;
             this.useCapture = useCapture;
             this.priority = priority;
+            var _ = this;
+            _.type = type;
+            _.listener = listener;
+            _.useCapture = useCapture;
+            _.priority = priority;
         }
         EventDispatcherEntry.prototype.dispose = function () {
             this.listener = null;

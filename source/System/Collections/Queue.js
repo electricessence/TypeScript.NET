@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../System', '../Types', './Arrays/Utility', './Enumeration/EnumeratorBase', './Enumeration/Enumerable'], function (require, exports, System, Types, ArrayUtility, EnumeratorBase, Enumerable) {
+define(["require", "exports", '../System', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/Enumerable'], function (require, exports, System, Types, ArrayUtility, EnumeratorBase, Enumerable) {
     var MINIMUM_GROW = 4 | 0;
     var GROW_FACTOR_HALF = 100 | 0;
     var DEFAULT_CAPACITY = MINIMUM_GROW;

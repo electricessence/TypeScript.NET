@@ -6,10 +6,9 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/System', '../System/Types', '../System/Functions', '../System/Collections/Arrays/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', './Grouping', './Lookup', './ArrayEnumerable', './WhereEnumerable', './WhereSelectEnumerable', './OrderedEnumerable'], function (require, exports, System, Types, BaseFunctions, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase, Grouping, Lookup, ArrayEnumerable, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable) {
+define(["require", "exports", '../System/System', '../System/Types', '../System/Functions', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', './Grouping', './Lookup', './ArrayEnumerable', './WhereEnumerable', './WhereSelectEnumerable', './OrderedEnumerable'], function (require, exports, System, Types, BaseFunctions, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase, Grouping, Lookup, ArrayEnumerable, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable) {
     var using = DisposeUtility.using;
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;

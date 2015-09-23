@@ -5,7 +5,7 @@
  */
 
 ///<reference path="../System/FunctionTypes"/>
-///<reference path="../System/Collections/Arrays/IArray"/>
+///<reference path="../System/Collections/Array/IArray"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerator"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerable"/>
 ///<reference path="../System/Collections/Dictionaries/IDictionary"/>
@@ -13,7 +13,7 @@
 import System = require('../System/System');
 import Types = require('../System/Types');
 import BaseFunctions = require('../System/Functions');
-import ArrayUtility = require('../System/Collections/Arrays/Utility');
+import ArrayUtility = require('../System/Collections/Array/Utility');
 import ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
 import Enumerator = require('../System/Collections/Enumeration/Enumerator');
 import EnumeratorBase = require('../System/Collections/Enumeration/EnumeratorBase');

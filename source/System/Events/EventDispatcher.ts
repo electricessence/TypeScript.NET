@@ -8,27 +8,27 @@
 
 import System = require('../System');
 import DisposableBase = require('../Disposable/DisposableBase');
-import AU = require('../Collections/Arrays/Utility');
+import AU = require('../Collections/Array/Utility');
 
 
 class EventDispatcherEntry extends DisposableBase
 {
 
-	constructor(type:string, listener:EventListener, useCapture:boolean = false, priority:number = 0)//, useWeakReference: boolean = false)
+	constructor(
+		public type:string,
+		public listener:EventListener,
+		public useCapture:boolean = false,
+		public priority:number = 0)//, useWeakReference: boolean = false)
 	{
 		super();
-
-		this.type = type;
-		this.listener = listener;
-		this.useCapture = useCapture;
-		this.priority = priority;
-		// this.useWeakReference = useWeakReference;
+		var _ = this;
+		_.type = type;
+		_.listener = listener;
+		_.useCapture = useCapture;
+		_.priority = priority;
+		// _.useWeakReference = useWeakReference;
 	}
 
-	type:string;
-	listener:EventListener;
-	useCapture:boolean;
-	priority:number;
 	// useWeakReference: boolean;
 
 	dispose():void {
@@ -42,16 +42,16 @@ class EventDispatcherEntry extends DisposableBase
 	matches(type:string, listener:EventListener, useCapture:boolean = false):boolean {
 		var _ = this;
 		return _.type==type
-			&& _.listener==listener
-			&& _.useCapture==useCapture;
+		       && _.listener==listener
+		       && _.useCapture==useCapture;
 	}
 
 	equals(other:EventDispatcherEntry):boolean {
 		var _ = this;
 		return _.type==other.type
-			&& _.listener==other.listener
-			&& _.useCapture==other.useCapture
-			&& _.priority==other.priority
+		       && _.listener==other.listener
+		       && _.useCapture==other.useCapture
+		       && _.priority==other.priority
 			// && this.useWeakReference == other.useWeakReference
 			;
 	}
@@ -62,7 +62,11 @@ class EventDispatcher extends DisposableBase implements IEventDispatcher
 
 	private _listeners:EventDispatcherEntry[];
 
-	addEventListener(type:string, listener:EventListener, useCapture:boolean = false, priority:number = 0):void//, useWeakReference: boolean= false)
+	addEventListener(
+		type:string,
+		listener:EventListener,
+		useCapture:boolean = false,
+		priority:number = 0):void//, useWeakReference: boolean= false)
 	{
 		var l:EventDispatcherEntry[] = this._listeners;
 		if(!l)
@@ -74,7 +78,11 @@ class EventDispatcher extends DisposableBase implements IEventDispatcher
 	}
 
 	// Allow for simple add once mechanism.
-	registerEventListener(type:string, listener:EventListener, useCapture:boolean = false, priority:number = 0):void//, useWeakReference: boolean= false)
+	registerEventListener(
+		type:string,
+		listener:EventListener,
+		useCapture:boolean = false,
+		priority:number = 0):void//, useWeakReference: boolean= false)
 	{
 		if(!this.hasEventListener(type, listener, useCapture))
 			this.addEventListener(type, listener, useCapture, priority);
@@ -84,7 +92,7 @@ class EventDispatcher extends DisposableBase implements IEventDispatcher
 		var l = this._listeners;
 		return l && l.some(
 				(value:EventDispatcherEntry):boolean =>
-				type==value.type && (!listener || listener==value.listener && useCapture==value.useCapture)
+               type==value.type && (!listener || listener==value.listener && useCapture==value.useCapture)
 			);
 
 	}

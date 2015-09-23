@@ -2,6 +2,6 @@
 
 require.config({
 
-	baseUri : "."
+	baseUrl : "."
 
 });

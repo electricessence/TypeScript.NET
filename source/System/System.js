@@ -5,6 +5,7 @@
 define(["require", "exports", './Types'], function (require, exports, Types) {
     var System;
     (function (System) {
+        var INT_ZERO = 0 | 0, INT_POS1 = (+1) | 0, INT_NEG1 = (-1) | 0;
         function isEqualToNaN(n) {
             return typeof n === Types.Number && isNaN(n);
         }
@@ -17,11 +18,11 @@ define(["require", "exports", './Types'], function (require, exports, Types) {
         function compare(a, b, strict) {
             if (strict === void 0) { strict = true; }
             if (areEqual(a, b, strict))
-                return 0 | 0;
-            if (a > b)
-                return (+1) | 0;
-            if (b > a)
-                return (-1) | 0;
+                return INT_ZERO;
+            if (a > b || strict && (a === 0 && b == 0 || a === null && b === undefined))
+                return INT_POS1;
+            if (b > a || strict && (b === 0 && a == 0 || b === null && a === undefined))
+                return INT_NEG1;
             return NaN;
         }
         System.compare = compare;
@@ -42,9 +43,10 @@ define(["require", "exports", './Types'], function (require, exports, Types) {
             if (source instanceof Array) {
                 result = source.slice();
                 if (depth > 0) {
-                    for (var i = 0; i < result.length; i++)
+                    for (var i = 0; i < result.length; i++) {
                         if (i in result)
                             result[i] = clone(result[i], depth - 1);
+                    }
                 }
             }
             else {

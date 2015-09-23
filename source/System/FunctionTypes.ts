@@ -6,18 +6,24 @@
 
 interface Action<T>
 {
-	(object: T, index?: number): void;
+	(object:T, index?:number): void;
 }
 
 interface Predicate<T>
 {
-	(object: T, index?:number): boolean;
+	(object:T, index?:number): boolean;
 }
 
 interface Comparison<T>
 {
-	(a: T, b :T): number;
+	(a:T, b:T, strict?:boolean): number;
 }
+
+interface EqualityComparison<T>
+{
+	(a:T, b:T, strict?:boolean): boolean;
+}
+
 
 interface Func<TResult>
 {
@@ -26,5 +32,5 @@ interface Func<TResult>
 
 interface Selector<TSource, TResult>
 {
-	(source: TSource, index?:number): TResult;
+	(source:TSource, index?:number): TResult;
 }
