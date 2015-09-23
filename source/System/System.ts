@@ -37,7 +37,8 @@ module System
 				}
 			}
 		}
-		else {
+		else
+		{
 			result = {};
 			if(depth>0) for(var k in source)
 			{

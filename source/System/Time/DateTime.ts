@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-import HowMany = require('HowMany');
+import HowMany = require('./HowMany');
 
 class DateTime
 {

@@ -66,7 +66,8 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         };
         Object.defineProperty(TimeSpan.prototype, "ticks", {
             get: function () {
-                return this._milliseconds * 10000;
+                return this._milliseconds
+                    * 10000;
             },
             enumerable: true,
             configurable: true
@@ -80,28 +81,32 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         });
         Object.defineProperty(TimeSpan.prototype, "seconds", {
             get: function () {
-                return this._milliseconds / 1000;
+                return this._milliseconds
+                    / 1000;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "minutes", {
             get: function () {
-                return this.seconds / 60;
+                return this.seconds
+                    / 60;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "hours", {
             get: function () {
-                return this.minutes / 60;
+                return this.minutes
+                    / 60;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "days", {
             get: function () {
-                return this.hours / 24;
+                return this.hours
+                    / 24;
             },
             enumerable: true,
             configurable: true
@@ -115,7 +120,8 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         });
         TimeSpan.prototype.add = function (other) {
             if (Types.isNumber(other))
-                throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+                throw new Error("Use .addUnit to add a numerical value amount.  " +
+                    ".add only supports ClockTime, TimeSpan, and TimeUnitValue.");
             if (other instanceof TimeUnitValue || other instanceof ClockTime)
                 other = other.toTimeSpan();
             return new TimeSpan(this._milliseconds + other.milliseconds);

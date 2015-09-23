@@ -20,7 +20,6 @@ module HowMany
 		{
 			Hour = 60,
 			Day = Hour*Hours.Per.Day
-
 		}
 
 	}
@@ -32,7 +31,6 @@ module HowMany
 			Minute = 60,
 			Hour = Minute*Minutes.Per.Hour,
 			Day = Hour*Hours.Per.Day
-
 		}
 
 	}

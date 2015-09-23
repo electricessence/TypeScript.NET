@@ -11,10 +11,10 @@
 ///<reference path="../IComparable.ts"/>
 import Values = require('../Compare');
 import Types = require('../Types');
-import TimeUnit= require('./TimeUnit');
-import HowMany= require('HowMany');
-import TimeUnitValue= require('./TimeUnitValue');
-import ClockTime= require('./ClockTime');
+import TimeUnit = require('./TimeUnit');
+import HowMany = require('./HowMany');
+import TimeUnitValue = require('./TimeUnitValue');
+import ClockTime = require('./ClockTime');
 
 
 class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>
@@ -61,7 +61,8 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	static convertToMilliseconds(value:number, units:TimeUnit = TimeUnit.Milliseconds):number
 	{
 		// noinspection FallThroughInSwitchStatementJS
-		switch(units) {
+		switch(units)
+		{
 			case TimeUnit.Days:
 				value *= HowMany.Hours.Per.Day;
 			case TimeUnit.Hours:
@@ -82,7 +83,8 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	total(units:TimeUnit):number
 	{
 		var _ = this;
-		switch(units) {
+		switch(units)
+		{
 			case TimeUnit.Days:
 				return _.days;
 			case TimeUnit.Hours:
@@ -102,7 +104,8 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 	get ticks():number
 	{
-		return this._milliseconds*HowMany.Ticks.Per.Millisecond;
+		return this._milliseconds
+			*HowMany.Ticks.Per.Millisecond;
 	}
 
 	get milliseconds():number
@@ -112,22 +115,26 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 	get seconds():number
 	{
-		return this._milliseconds/HowMany.Milliseconds.Per.Second;
+		return this._milliseconds
+			/HowMany.Milliseconds.Per.Second;
 	}
 
 	get minutes():number
 	{
-		return this.seconds/HowMany.Seconds.Per.Minute;
+		return this.seconds
+			/HowMany.Seconds.Per.Minute;
 	}
 
 	get hours():number
 	{
-		return this.minutes/HowMany.Minutes.Per.Hour;
+		return this.minutes
+			/HowMany.Minutes.Per.Hour;
 	}
 
 	get days():number
 	{
-		return this.hours/HowMany.Hours.Per.Day;
+		return this.hours
+			/HowMany.Hours.Per.Day;
 	}
 
 	// Instead of the confusing total versus unit name, expose a 'ClockTime' value which reports the individual components.
@@ -142,9 +149,14 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	add(other:any):TimeSpan
 	{
 		if(Types.isNumber(other))
-			throw new Error("Use .addUnit to add a numerical value amount.  .add only supports ClockTime, TimeSpan, and TimeUnitValue.");
+			throw new Error(
+				"Use .addUnit to add a numerical value amount.  " +
+				".add only supports ClockTime, TimeSpan, and TimeUnitValue."
+			);
+
 		if(other instanceof TimeUnitValue || other instanceof ClockTime)
 			other = other.toTimeSpan();
+
 		return new TimeSpan(this._milliseconds + other.milliseconds);
 	}
 
@@ -189,12 +201,24 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 		return new TimeSpan(value, TimeUnit.Ticks);
 	}
 
-	static fromTime(hours:number, minutes:number, seconds:number = 0, milliseconds:number = 0):TimeSpan
+	static fromTime(
+		hours:number,
+		minutes:number,
+		seconds:number = 0,
+		milliseconds:number = 0):TimeSpan
 	{
-		return new TimeSpan(TimeSpan.millisecondsFromTime(hours, minutes, seconds, milliseconds));
+		return new TimeSpan(
+			TimeSpan.millisecondsFromTime(
+				hours, minutes, seconds, milliseconds
+			)
+		);
 	}
 
-	static millisecondsFromTime(hours:number, minutes:number, seconds:number = 0, milliseconds:number = 0):number
+	static millisecondsFromTime(
+		hours:number,
+		minutes:number,
+		seconds:number = 0,
+		milliseconds:number = 0):number
 	{
 		var value = hours;
 		value *= HowMany.Minutes.Per.Hour;
@@ -228,13 +252,15 @@ function assertComparisonType(other:any):void
 
 function getMilliseconds(other:any):number
 {
-	if(other instanceof TimeUnitValue) {
+	if(other instanceof TimeUnitValue)
+	{
 		var o:TimeUnitValue = other;
 		return o.type===TimeUnit.Milliseconds
 			? o.value
 			: o.toTimeSpan().milliseconds;
 	}
-	else if(other instanceof TimeSpan) {
+	else if(other instanceof TimeSpan)
+	{
 		return other._milliseconds;
 	}
 
