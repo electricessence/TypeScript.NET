@@ -8,6 +8,7 @@
 ///<reference path="ICollection.ts"/>
 ///<reference path="IList.ts"/>
 import System = require('../System');
+import Values = require('../Compare');
 import Types = require('../Types');
 import ArrayUtility= require('./Array/Utility');
 import EnumeratorBase= require('./Enumeration/EnumeratorBase');
@@ -110,7 +111,7 @@ class Queue<T> implements ICollection<T>, IDisposable
 		var array = _._array, index = _._head, count = _._size, len = _._capacity;
 
 		while(count-->0) {
-			if(System.areEqual(array[index], item)) // May need a equality compare here.
+			if(Values.areEqual(array[index], item)) // May need a equality compare here.
 				return true;
 
 			index = (index + 1)%len;

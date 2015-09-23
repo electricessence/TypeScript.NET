@@ -4,6 +4,7 @@
  */
 
 import System = require('../../System');
+import Values = require('../../Compare');
 import DictionaryAbstractBase= require('./DictionaryAbstractBase');
 
 class StringKeyDictionary<TValue>
@@ -18,7 +19,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 	}
 
 	containsValue(value:TValue):boolean {
-		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = System.areEqual;
+		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
 		for(var key in map) {
 			if(map.hasOwnProperty(key) && equal(map[key], value))
 				return true;

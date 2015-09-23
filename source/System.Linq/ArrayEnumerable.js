@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/System', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Enumeration/ArrayEnumerator', './Enumerable'], function (require, exports, System, Functions, ArrayCompare, ArrayEnumerator, Enumerable) {
+define(["require", "exports", '../System/Compare', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Enumeration/ArrayEnumerator', './Enumerable'], function (require, exports, Values, Functions, ArrayCompare, ArrayEnumerator, Enumerable) {
     'use strict';
     var INT_ZERO = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
     var ArrayEnumerable = (function (_super) {
@@ -147,7 +147,7 @@ define(["require", "exports", '../System/System', '../System/Functions', '../Sys
             return new ArrayEnumerable(this._source);
         };
         ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-            if (equalityComparer === void 0) { equalityComparer = System.areEqual; }
+            if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
             if (second instanceof Array)
                 return ArrayCompare.areEqual(this.source, second, true, equalityComparer);
             if (second instanceof ArrayEnumerable)

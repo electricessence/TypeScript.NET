@@ -3,7 +3,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../System', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase'], function (require, exports, System, TextUtility, ArrayUtility, Enumerator, EnumeratorBase) {
+define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase) {
     'use strict';
     var INT_0 = 0 | 0;
     var INT_1 = 1 | 0;
@@ -92,7 +92,7 @@ define(["require", "exports", '../System', '../Text/Utility', './Array/Utility',
             this._count += INT_1;
         };
         LinkedList.prototype._findFirst = function (entry) {
-            var equals = System.areEqual, next = this._first;
+            var equals = Values.areEqual, next = this._first;
             while (next) {
                 if (equals(entry, next.value))
                     return next;
@@ -101,7 +101,7 @@ define(["require", "exports", '../System', '../Text/Utility', './Array/Utility',
             return null;
         };
         LinkedList.prototype._findLast = function (entry) {
-            var equals = System.areEqual, prev = this._last;
+            var equals = Values.areEqual, prev = this._last;
             while (prev) {
                 if (equals(entry, prev.value))
                     return prev;
@@ -154,7 +154,7 @@ define(["require", "exports", '../System', '../Text/Utility', './Array/Utility',
             return count;
         };
         LinkedList.prototype.contains = function (entry) {
-            var found = false, equals = System.areEqual;
+            var found = false, equals = Values.areEqual;
             this.forEach(function (e) { return !(found = equals(entry, e)); });
             return found;
         };

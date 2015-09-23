@@ -5,27 +5,6 @@
 define(["require", "exports", './Types'], function (require, exports, Types) {
     var System;
     (function (System) {
-        var INT_ZERO = 0 | 0, INT_POS1 = (+1) | 0, INT_NEG1 = (-1) | 0;
-        function isEqualToNaN(n) {
-            return typeof n === Types.Number && isNaN(n);
-        }
-        System.isEqualToNaN = isEqualToNaN;
-        function areEqual(a, b, strict) {
-            if (strict === void 0) { strict = true; }
-            return a === b || !strict && a == b || isEqualToNaN(a) && isEqualToNaN(b);
-        }
-        System.areEqual = areEqual;
-        function compare(a, b, strict) {
-            if (strict === void 0) { strict = true; }
-            if (areEqual(a, b, strict))
-                return INT_ZERO;
-            if (a > b || strict && (a === 0 && b == 0 || a === null && b === undefined))
-                return INT_POS1;
-            if (b > a || strict && (b === 0 && a == 0 || b === null && a === undefined))
-                return INT_NEG1;
-            return NaN;
-        }
-        System.compare = compare;
         function clone(source, depth) {
             if (depth === void 0) { depth = 0; }
             if (depth < 0)

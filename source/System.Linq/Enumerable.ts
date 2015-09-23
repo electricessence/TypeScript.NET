@@ -11,6 +11,7 @@
 ///<reference path="../System/Collections/Dictionaries/IDictionary"/>
 ///<reference path="IGrouping"/>
 import System = require('../System/System');
+import Values = require('../System/Compare');
 import Types = require('../System/Types');
 import BaseFunctions = require('../System/Functions');
 import ArrayUtility = require('../System/Collections/Array/Utility');
@@ -50,9 +51,9 @@ var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 const
-	INT_0:number = 0 | 0,
-	INT_NEGATIVE_1 = -1 | 0,
-	INT_POSITIVE_1 = +1 | 0;
+INT_0:number = 0 | 0,
+INT_NEGATIVE_1 = -1 | 0,
+INT_POSITIVE_1 = +1 | 0;
 
 
 // #endregion
@@ -259,8 +260,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						yielder =>
 					{
 						var result:boolean =
-							index++<c
-							&& yielder.yieldReturn(value);
+							    index++<c
+							    && yielder.yieldReturn(value);
 
 						if(result && index<count)
 							value += step;
@@ -1015,7 +1016,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 					{
 						var prev = enumerator.current;
 						return enumerator.moveNext()
-							&& yielder.yieldReturn(selector(prev, enumerator.current));
+						       && yielder.yieldReturn(selector(prev, enumerator.current));
 					},
 					() => { DisposeUtility.dispose(enumerator); }
 				);
@@ -1049,7 +1050,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							//noinspection JSUnusedAssignment
 							return isUseSeed
 								? yielder.yieldReturn(value = seed)
-								: enumerator.moveNext() && yielder.yieldReturn(value = enumerator.current);
+								: enumerator.moveNext() && yielder.yieldReturn(value
+								= enumerator.current);
 						}
 
 						return (enumerator.moveNext())
@@ -1564,7 +1566,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 			this.forEach(
 				(element:T, i?:number) =>
 				{
-					if(System.areEqual(compareSelector(element), compareSelector(value), true)) {
+					if(Values.areEqual(compareSelector(element), compareSelector(value), true)) {
 						found = i;
 						return false;
 					}
@@ -1575,7 +1577,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				(element:T, i?:number) =>
 				{
 					// Why?  Because NaN doesn't equal NaN. :P
-					if(System.areEqual(element, value, true)) {
+					if(Values.areEqual(element, value, true)) {
 						found = i;
 						return false;
 					}
@@ -1593,14 +1595,15 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 			this.forEach(
 				(element:T, i?:number) =>
 				{
-					if(System.areEqual(compareSelector(element), compareSelector(value), true)) result = i;
+					if(Values.areEqual(compareSelector(element), compareSelector(value), true)) result
+						= i;
 				}
 			);
 		else
 			this.forEach(
 				(element:T, i?:number) =>
 				{
-					if(System.areEqual(element, value, true)) result = i;
+					if(Values.areEqual(element, value, true)) result = i;
 				}
 			);
 
@@ -1982,8 +1985,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						}
 
 						return !isEnumerated
-							&& secondEnumerator.moveNext()
-							&& yielder.yieldReturn(secondEnumerator.current);
+						       && secondEnumerator.moveNext()
+						       && yielder.yieldReturn(secondEnumerator.current);
 					},
 					() =>
 					{
@@ -2004,9 +2007,9 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		return new Enumerable<T>(
 			() => {
 				var buffer:T,
-					mode:EnumerableAction,
-					enumerator:IEnumerator<T>,
-					alternateEnumerator:IEnumerator<T>;
+				    mode:EnumerableAction,
+				    enumerator:IEnumerator<T>,
+				    alternateEnumerator:IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2076,7 +2079,9 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	}
 
 
-	intersect<TCompare>(second:IEnumerable<T>, compareSelector?:Selector<T, TCompare>):Enumerable<T>;
+	intersect<TCompare>(
+		second:IEnumerable<T>,
+		compareSelector?:Selector<T, TCompare>):Enumerable<T>;
 	intersect<TCompare>(second:IArray<T>, compareSelector?:Selector<T, TCompare>):Enumerable<T>;
 	intersect<TCompare>(second:any, compareSelector?:Selector<T, TCompare>):Enumerable<T>
 	{
@@ -2114,9 +2119,9 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	sequenceEqual(second:IEnumerable<T>, equalityComparer?:(a:T, b:T) => boolean):boolean;
-	sequenceEqual(second:IArray<T>, equalityComparer?:(a:T, b:T) => boolean):boolean;
-	sequenceEqual(second:any, equalityComparer:(a:T, b:T) => boolean = System.areEqual):boolean
+	sequenceEqual(second:IEnumerable<T>, equalityComparer?:EqualityComparison<T>):boolean;
+	sequenceEqual(second:IArray<T>, equalityComparer?:EqualityComparison<T>):boolean;
+	sequenceEqual(second:any, equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	{
 		return using(
 			this.getEnumerator(),
@@ -2319,7 +2324,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						}
 
 						var result:IGrouping<TKey, TElement>
-							= resultSelector(key, group);
+							    = resultSelector(key, group);
 
 						if(hasNext) {
 							c = enumerator.current;
@@ -2844,7 +2849,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 }
 
-module Enumerable {
+module Enumerable
+{
 	export enum EnumerableAction
 	{
 		Break,

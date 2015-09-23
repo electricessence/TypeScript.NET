@@ -10,6 +10,7 @@
 import TimeUnit= require('./TimeUnit');
 import TimeSpan= require('./TimeSpan');
 import System = require('../System');
+import Values = require('../Compare');
 
 // This class allows for passing around a specific measure of time coerced by its unit type.
 class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue>
@@ -51,7 +52,7 @@ class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitVa
 		if(o==null)
 			return false;
 
-		return System.areEqual(this.value, o.value);
+		return Values.areEqual(this.value, o.value);
 	}
 
 
@@ -63,7 +64,7 @@ class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitVa
 
 		assertComparisonType(other);
 
-		return System.compare(this.value, this.coerce(other).value);
+		return Values.compare(this.value, this.coerce(other).value);
 
 	}
 

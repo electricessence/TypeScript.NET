@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../../System', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports, System, Types, Functions, DictionaryAbstractBase, EnumeratorBase) {
+define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports, Values, Types, Functions, DictionaryAbstractBase, EnumeratorBase) {
     var HashEntry = (function () {
         function HashEntry(key, value, prev, next) {
             this.key = key;
@@ -101,7 +101,7 @@ define(["require", "exports", '../../System', '../../Types', '../../Functions', 
             var compareKey = comparer(key);
             var hash = computeHashCode(compareKey), entry;
             if (callHasOwnProperty(buckets, hash)) {
-                var equal = System.areEqual;
+                var equal = Values.areEqual;
                 var array = buckets[hash];
                 for (var i = 0; i < array.length; i++) {
                     var old = array[i];

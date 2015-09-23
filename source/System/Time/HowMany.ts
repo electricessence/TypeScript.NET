@@ -8,70 +8,59 @@ module HowMany
 {
 	export module Hours
 	{
-		export module Per
+		export const enum Per
 		{
-			export const Day:number = 24;
+			Day = 24
 		}
-		Object.freeze(Per);
 	}
-	Object.freeze(Hours);
 
 	export module Minutes
 	{
-		export module Per
+		export const enum Per
 		{
-			export const Hour:number = 60;
-			export const Day:number = Hour*Hours.Per.Day;
+			Hour = 60,
+			Day = Hour*Hours.Per.Day
 
 		}
-		Object.freeze(Per);
 
 	}
-	Object.freeze(Minutes);
 
 	export module Seconds
 	{
-		export module Per
+		export const enum Per
 		{
-			export const Minute:number = 60;
-			export const Hour:number = Minute*Minutes.Per.Hour;
-			export const Day:number = Hour*Hours.Per.Day;
+			Minute = 60,
+			Hour = Minute*Minutes.Per.Hour,
+			Day = Hour*Hours.Per.Day
 
 		}
-		Object.freeze(Per);
 
 	}
-	Object.freeze(Seconds);
 
 	export module Milliseconds
 	{
-		export module Per
+		export const enum Per
 		{
-			export const Second:number = 1000;
-			export const Minute:number = Second*Seconds.Per.Minute;
-			export const Hour:number = Minute*Minutes.Per.Hour;
-			export const Day:number = Hour*Hours.Per.Day;
-
+			Second = 1000,
+			Minute = Second*Seconds.Per.Minute,
+			Hour = Minute*Minutes.Per.Hour,
+			Day = Hour*Hours.Per.Day
 		}
-		Object.freeze(Per);
 
 	}
-	Object.freeze(Milliseconds);
 
 	export module Ticks
 	{
-		export module Per
+		export const enum Per
 		{
-			export const Millisecond:number = 10000;
-			export const Second:number = Millisecond*Milliseconds.Per.Second;
-			export const Minute:number = Second*Seconds.Per.Minute;
-			export const Hour:number = Minute*Minutes.Per.Hour;
-			export const Day:number = Hour*Hours.Per.Day;
+			Millisecond = 10000,
+			Second = Millisecond*Milliseconds.Per.Second,
+			Minute = Second*Seconds.Per.Minute,
+			Hour = Minute*Minutes.Per.Hour,
+			Day = Hour*Hours.Per.Day
 		}
-		Object.freeze(Per);
 
 	}
-	Object.freeze(Ticks);
 
 }
 

@@ -4,9 +4,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-
+///<reference path="../System/FunctionTypes.ts"/>
 ///<reference path="../System/Collections/Array/IArray"/>
 import System = require('../System/System');
+import Values = require('../System/Compare');
 import Functions = require('../System/Functions');
 import ArrayCompare = require('../System/Collections/Array/Compare');
 import ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
@@ -224,9 +225,9 @@ class ArrayEnumerable<T> extends Enumerable<T>
 		return new ArrayEnumerable<T>(this._source);
 	}
 
-	sequenceEqual(second:IEnumerable<T>, equalityComparer?:(a:T, b:T) => boolean):boolean;
-	sequenceEqual(second:IArray<T>, equalityComparer?:(a:T, b:T) => boolean):boolean;
-	sequenceEqual(second:any, equalityComparer:(a:T, b:T) => boolean = System.areEqual):boolean
+	sequenceEqual(second:IEnumerable<T>, equalityComparer?:EqualityComparison<T>):boolean;
+	sequenceEqual(second:IArray<T>, equalityComparer?:EqualityComparison<T>):boolean;
+	sequenceEqual(second:any, equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	{
 		if(second instanceof Array)
 			return ArrayCompare.areEqual(this.source, <IArray<T>>second, true, equalityComparer);

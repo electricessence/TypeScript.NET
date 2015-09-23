@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 'use strict';
-define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports, System, Types, HowMany, TimeUnit, TimeUnitValue, ClockTime) {
+define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports, Values, Types, TimeUnit, TimeUnitValue, ClockTime) {
     var TimeSpan = (function () {
         function TimeSpan(value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
@@ -14,13 +14,13 @@ define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit'
             var otherMS = getMilliseconds(other);
             if (other === undefined)
                 return false;
-            return System.areEqual(this._milliseconds, otherMS);
+            return Values.areEqual(this._milliseconds, otherMS);
         };
         TimeSpan.prototype.compareTo = function (other) {
             if (other == null)
                 return 1 | 0;
             assertComparisonType(other);
-            return System.compare(this._milliseconds, getMilliseconds(other));
+            return Values.compare(this._milliseconds, getMilliseconds(other));
         };
         TimeSpan.prototype.toTimeUnitValue = function (units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
@@ -30,17 +30,17 @@ define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit'
             if (units === void 0) { units = TimeUnit.Milliseconds; }
             switch (units) {
                 case TimeUnit.Days:
-                    value *= HowMany.Hours.Per.Day;
+                    value *= 24;
                 case TimeUnit.Hours:
-                    value *= HowMany.Minutes.Per.Hour;
+                    value *= 60;
                 case TimeUnit.Minutes:
-                    value *= HowMany.Seconds.Per.Minute;
+                    value *= 60;
                 case TimeUnit.Seconds:
-                    value *= HowMany.Milliseconds.Per.Second;
+                    value *= 1000;
                 case TimeUnit.Milliseconds:
                     return value;
                 case TimeUnit.Ticks:
-                    return value / HowMany.Ticks.Per.Millisecond;
+                    return value / 10000;
                 default:
                     throw new Error("Invalid TimeUnit.");
             }
@@ -59,14 +59,14 @@ define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit'
                 case TimeUnit.Milliseconds:
                     return _._milliseconds;
                 case TimeUnit.Ticks:
-                    return _._milliseconds * HowMany.Ticks.Per.Millisecond;
+                    return _._milliseconds * 10000;
                 default:
                     throw new Error("Invalid TimeUnit.");
             }
         };
         Object.defineProperty(TimeSpan.prototype, "ticks", {
             get: function () {
-                return this._milliseconds * HowMany.Ticks.Per.Millisecond;
+                return this._milliseconds * 10000;
             },
             enumerable: true,
             configurable: true
@@ -80,28 +80,28 @@ define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit'
         });
         Object.defineProperty(TimeSpan.prototype, "seconds", {
             get: function () {
-                return this._milliseconds / HowMany.Milliseconds.Per.Second;
+                return this._milliseconds / 1000;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "minutes", {
             get: function () {
-                return this.seconds / HowMany.Seconds.Per.Minute;
+                return this.seconds / 60;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "hours", {
             get: function () {
-                return this.minutes / HowMany.Minutes.Per.Hour;
+                return this.minutes / 60;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "days", {
             get: function () {
-                return this.hours / HowMany.Hours.Per.Day;
+                return this.hours / 24;
             },
             enumerable: true,
             configurable: true
@@ -154,11 +154,11 @@ define(["require", "exports", '../System', '../Types', './HowMany', './TimeUnit'
             if (seconds === void 0) { seconds = 0; }
             if (milliseconds === void 0) { milliseconds = 0; }
             var value = hours;
-            value *= HowMany.Minutes.Per.Hour;
+            value *= 60;
             value += minutes;
-            value *= HowMany.Seconds.Per.Minute;
+            value *= 60;
             value += seconds;
-            value *= HowMany.Milliseconds.Per.Second;
+            value *= 1000;
             value += milliseconds;
             return value;
         };

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../../System', '../Enumeration/EnumeratorBase'], function (require, exports, System, EnumeratorBase) {
+define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase'], function (require, exports, Values, EnumeratorBase) {
     'use strict';
     var DictionaryAbstractBase = (function () {
         function DictionaryAbstractBase() {
@@ -14,7 +14,7 @@ define(["require", "exports", '../../System', '../Enumeration/EnumeratorBase'], 
             configurable: true
         });
         DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
-            if (!System.areEqual(value, old, true)) {
+            if (!Values.areEqual(value, old, true)) {
                 var _ = this;
                 if (_.onValueChanged)
                     _.onValueChanged(key, value, old);
@@ -70,7 +70,7 @@ define(["require", "exports", '../../System', '../Enumeration/EnumeratorBase'], 
         };
         DictionaryAbstractBase.prototype.contains = function (item) {
             var value = this.getValue(item.key);
-            return System.areEqual(value, item.value);
+            return Values.areEqual(value, item.value);
         };
         DictionaryAbstractBase.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }
@@ -81,7 +81,7 @@ define(["require", "exports", '../../System', '../Enumeration/EnumeratorBase'], 
         };
         DictionaryAbstractBase.prototype.remove = function (item) {
             var key = item.key, value = this.getValue(key);
-            return (System.areEqual(value, item.value) && this.removeByKey(key))
+            return (Values.areEqual(value, item.value) && this.removeByKey(key))
                 ? 1 : 0;
         };
         Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
@@ -111,7 +111,7 @@ define(["require", "exports", '../../System', '../Enumeration/EnumeratorBase'], 
             return value !== undefined;
         };
         DictionaryAbstractBase.prototype.containsValue = function (value) {
-            var e = this.getEnumerator(), equal = System.areEqual;
+            var e = this.getEnumerator(), equal = Values.areEqual;
             while (e.moveNext()) {
                 if (equal(e.current, value, true)) {
                     e.dispose();
@@ -124,7 +124,7 @@ define(["require", "exports", '../../System', '../Enumeration/EnumeratorBase'], 
             return this.setValue(key, undefined);
         };
         DictionaryAbstractBase.prototype.removeByValue = function (value) {
-            var _ = this, count = 0, equal = System.areEqual;
+            var _ = this, count = 0, equal = Values.areEqual;
             _.keys.forEach(function (key) {
                 if (equal(_.getValue(key), value, true)) {
                     _.removeByKey(key);

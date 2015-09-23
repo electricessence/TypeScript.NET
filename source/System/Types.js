@@ -21,6 +21,10 @@ define(["require", "exports", './Functions'], function (require, exports, Functi
             return typeof value === Types.Number;
         }
         Types.isNumber = isNumber;
+        function isTrueNaN(value) {
+            return typeof value === Types.Number && isNaN(value);
+        }
+        Types.isTrueNaN = isTrueNaN;
         function isString(value) {
             return typeof value === Types.String;
         }

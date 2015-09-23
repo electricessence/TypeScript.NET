@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/System', '../System/Types', '../System/Functions', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', './Grouping', './Lookup', './ArrayEnumerable', './WhereEnumerable', './WhereSelectEnumerable', './OrderedEnumerable'], function (require, exports, System, Types, BaseFunctions, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase, Grouping, Lookup, ArrayEnumerable, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable) {
+define(["require", "exports", '../System/Compare', '../System/Types', '../System/Functions', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', './Grouping', './Lookup', './ArrayEnumerable', './WhereEnumerable', './WhereSelectEnumerable', './OrderedEnumerable'], function (require, exports, Values, Types, BaseFunctions, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase, Grouping, Lookup, ArrayEnumerable, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable) {
     var using = DisposeUtility.using;
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;
@@ -586,7 +586,8 @@ define(["require", "exports", '../System/System', '../System/Types', '../System/
                         isFirst = false;
                         return isUseSeed
                             ? yielder.yieldReturn(value = seed)
-                            : enumerator.moveNext() && yielder.yieldReturn(value = enumerator.current);
+                            : enumerator.moveNext() && yielder.yieldReturn(value
+                                = enumerator.current);
                     }
                     return (enumerator.moveNext())
                         ? yielder.yieldReturn(value = func(value, enumerator.current))
@@ -867,14 +868,14 @@ define(["require", "exports", '../System/System', '../System/Types', '../System/
             var found = INT_NEGATIVE_1;
             if (compareSelector)
                 this.forEach(function (element, i) {
-                    if (System.areEqual(compareSelector(element), compareSelector(value), true)) {
+                    if (Values.areEqual(compareSelector(element), compareSelector(value), true)) {
                         found = i;
                         return false;
                     }
                 });
             else
                 this.forEach(function (element, i) {
-                    if (System.areEqual(element, value, true)) {
+                    if (Values.areEqual(element, value, true)) {
                         found = i;
                         return false;
                     }
@@ -885,12 +886,13 @@ define(["require", "exports", '../System/System', '../System/Types', '../System/
             var result = INT_NEGATIVE_1;
             if (compareSelector)
                 this.forEach(function (element, i) {
-                    if (System.areEqual(compareSelector(element), compareSelector(value), true))
-                        result = i;
+                    if (Values.areEqual(compareSelector(element), compareSelector(value), true))
+                        result
+                            = i;
                 });
             else
                 this.forEach(function (element, i) {
-                    if (System.areEqual(element, value, true))
+                    if (Values.areEqual(element, value, true))
                         result = i;
                 });
             return result;
@@ -1196,7 +1198,7 @@ define(["require", "exports", '../System/System', '../System/Types', '../System/
             });
         };
         Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-            if (equalityComparer === void 0) { equalityComparer = System.areEqual; }
+            if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
             return using(this.getEnumerator(), function (e1) { return using(Enumerable.from(second).getEnumerator(), function (e2) {
                 while (e1.moveNext()) {
                     if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))

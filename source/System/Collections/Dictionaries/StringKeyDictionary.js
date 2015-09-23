@@ -7,7 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../../System', './DictionaryAbstractBase'], function (require, exports, System, DictionaryAbstractBase) {
+define(["require", "exports", '../../Compare', './DictionaryAbstractBase'], function (require, exports, Values, DictionaryAbstractBase) {
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {
@@ -19,7 +19,7 @@ define(["require", "exports", '../../System', './DictionaryAbstractBase'], funct
             return key in this._map;
         };
         StringKeyDictionary.prototype.containsValue = function (value) {
-            var map = this._map, equal = System.areEqual;
+            var map = this._map, equal = Values.areEqual;
             for (var key in map) {
                 if (map.hasOwnProperty(key) && equal(map[key], value))
                     return true;

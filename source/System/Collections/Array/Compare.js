@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../../System', '../../Types'], function (require, exports, System, Types) {
+define(["require", "exports", '../../Compare', '../../Types'], function (require, exports, Values, Types) {
     'use strict';
     var Compare;
     (function (Compare) {
@@ -19,7 +19,7 @@ define(["require", "exports", '../../System', '../../Types'], function (require,
             return len;
         }
         function areAllEqual(arrays, strict, equalityComparer) {
-            if (equalityComparer === void 0) { equalityComparer = System.areEqual; }
+            if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
             if (!arrays)
                 throw new Error("ArgumentNullException: 'arrays' cannot be null.");
             if (arrays.length < 2)
@@ -33,7 +33,7 @@ define(["require", "exports", '../../System', '../../Types'], function (require,
         }
         Compare.areAllEqual = areAllEqual;
         function areEqual(a, b, strict, equalityComparer) {
-            if (equalityComparer === void 0) { equalityComparer = System.areEqual; }
+            if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
             var len = validateSize(a, b);
             if (Types.isBoolean(len))
                 return len;
@@ -62,7 +62,7 @@ define(["require", "exports", '../../System', '../../Types'], function (require,
             return b;
         }
         function areEquivalent(a, b, comparer) {
-            if (comparer === void 0) { comparer = System.compare; }
+            if (comparer === void 0) { comparer = Values.compare; }
             var len = validateSize(a, b);
             if (Types.isBoolean(len))
                 return len;

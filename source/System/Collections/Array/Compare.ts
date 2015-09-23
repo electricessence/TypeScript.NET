@@ -5,7 +5,7 @@
 
 ///<reference path="IArray.ts"/>
 ///<reference path="../../FunctionTypes.ts"/>
-import System = require('../../System');
+import Values = require('../../Compare');
 import Types = require('../../Types');
 
 'use strict';
@@ -41,7 +41,7 @@ module Compare
 	export function areAllEqual(
 		arrays:any[][],
 		strict?:boolean,
-		equalityComparer:EqualityComparison<any> = System.areEqual):boolean
+		equalityComparer:EqualityComparison<any> = Values.areEqual):boolean
 	{
 		if(!arrays)
 			throw new Error("ArgumentNullException: 'arrays' cannot be null.");
@@ -59,7 +59,7 @@ module Compare
 	export function areEqual<T>(
 		a:IArray<T>, b:IArray<T>,
 		strict?:boolean,
-		equalityComparer:EqualityComparison<T> = System.areEqual):boolean
+		equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	{
 		var len = validateSize(a, b);
 		if(Types.isBoolean(len)) return <boolean>len;
@@ -90,7 +90,7 @@ module Compare
 
 	export function areEquivalent<T>(
 		a:IArray<T>, b:IArray<T>,
-		comparer:Comparison<T> = System.compare):boolean
+		comparer:Comparison<T> = Values.compare):boolean
 	{
 		var len = validateSize(a, b);
 		if(Types.isBoolean(len)) return <boolean>len;

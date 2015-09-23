@@ -6,6 +6,7 @@
 
 ///<reference path="../../FunctionTypes.ts"/>
 import System = require('../../System');
+import Values = require('../../Compare');
 import Types = require('../../Types');
 import Functions = require('../../Functions');
 import DictionaryAbstractBase= require('./DictionaryAbstractBase');
@@ -114,7 +115,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		var hash = computeHashCode(compareKey), entry:HashEntry<TKey, TValue>;
 
 		if(callHasOwnProperty(buckets, hash)) {
-			var equal:(a:any, b:any, strict?:boolean) => boolean = System.areEqual;
+			var equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
 			var array = buckets[hash];
 			for(var i = 0; i<array.length; i++) {
 				var old = array[i];

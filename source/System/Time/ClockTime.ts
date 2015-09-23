@@ -10,6 +10,7 @@
 ///<reference path="../IFormattable.ts"/>
 ///<reference path="../IFormatProvider.ts"/>
 import System = require('../System');
+import Values = require('../Compare');
 import HowMany= require('./HowMany');
 import TimeSpan= require('./TimeSpan');
 
@@ -25,7 +26,7 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 	// Could be in reverse or negative...
 	get direction():number
 	{
-		return System.compare(this._totalMilliseconds, 0);
+		return Values.compare(this._totalMilliseconds, 0);
 	}
 
 	constructor(milliseconds:number);
@@ -46,14 +47,14 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 
 	equals(other:ClockTime):boolean
 	{
-		return System.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+		return Values.areEqual(this._totalMilliseconds, other.totalMilliseconds);
 	}
 
 	compareTo(other:ClockTime):number
 	{
 		if(other==null) return 1 | 0;
 
-		return System.compare(this._totalMilliseconds, other.totalMilliseconds);
+		return Values.compare(this._totalMilliseconds, other.totalMilliseconds);
 	}
 
 

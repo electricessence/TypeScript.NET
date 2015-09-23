@@ -8,6 +8,7 @@
 ///<reference path="ILinkedListNode.ts"/>
 ///<reference path="ILinkedList.ts"/>
 import System = require('../System');
+import Values = require('../Compare');
 import TextUtility = require('../Text/Utility');
 import ArrayUtility= require('./Array/Utility');
 import Enumerator= require('./Enumeration/Enumerator');
@@ -163,7 +164,7 @@ class LinkedList<T> implements ILinkedList<T>
 
 	private _findFirst(entry:T):Node<T>
 	{
-		var equals = System.areEqual,
+		var equals = Values.areEqual,
 			next = this._first;
 		while(next) {
 			if(equals(entry, next.value))
@@ -175,7 +176,7 @@ class LinkedList<T> implements ILinkedList<T>
 
 	private _findLast(entry:T):Node<T>
 	{
-		var equals = System.areEqual,
+		var equals = Values.areEqual,
 			prev = this._last;
 		while(prev) {
 			if(equals(entry, prev.value))
@@ -256,7 +257,7 @@ class LinkedList<T> implements ILinkedList<T>
 
 	contains(entry:T):boolean
 	{
-		var found:boolean = false, equals = System.areEqual;
+		var found:boolean = false, equals = Values.areEqual;
 		this.forEach(e => !(found = equals(entry, e)));
 		return found;
 	}

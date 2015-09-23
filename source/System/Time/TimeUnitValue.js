@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", './TimeUnit', './TimeSpan', '../System'], function (require, exports, TimeUnit, TimeSpan, System) {
+define(["require", "exports", './TimeUnit', './TimeSpan', '../Compare'], function (require, exports, TimeUnit, TimeSpan, Values) {
     var TimeUnitValue = (function () {
         function TimeUnitValue(value, _type) {
             this.value = value;
@@ -27,13 +27,13 @@ define(["require", "exports", './TimeUnit', './TimeSpan', '../System'], function
             var o = this.coerce(other);
             if (o == null)
                 return false;
-            return System.areEqual(this.value, o.value);
+            return Values.areEqual(this.value, o.value);
         };
         TimeUnitValue.prototype.compareTo = function (other) {
             if (other == null)
                 return 1 | 0;
             assertComparisonType(other);
-            return System.compare(this.value, this.coerce(other).value);
+            return Values.compare(this.value, this.coerce(other).value);
         };
         Object.defineProperty(TimeUnitValue.prototype, "type", {
             get: function () {

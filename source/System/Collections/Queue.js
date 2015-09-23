@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../System', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/Enumerable'], function (require, exports, System, Types, ArrayUtility, EnumeratorBase, Enumerable) {
+define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/Enumerable'], function (require, exports, Values, Types, ArrayUtility, EnumeratorBase, Enumerable) {
     var MINIMUM_GROW = 4 | 0;
     var GROW_FACTOR_HALF = 100 | 0;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
@@ -69,7 +69,7 @@ define(["require", "exports", '../System', '../Types', './Array/Utility', './Enu
             var _ = this;
             var array = _._array, index = _._head, count = _._size, len = _._capacity;
             while (count-- > 0) {
-                if (System.areEqual(array[index], item))
+                if (Values.areEqual(array[index], item))
                     return true;
                 index = (index + 1) % len;
             }

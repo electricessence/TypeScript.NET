@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/System', '../System/Collections/Enumeration/EnumeratorBase', './Enumerable'], function (require, exports, System, EnumeratorBase, Enumerable) {
+define(["require", "exports", '../System/Compare', '../System/Collections/Enumeration/EnumeratorBase', './Enumerable'], function (require, exports, Values, EnumeratorBase, Enumerable) {
     'use strict';
     var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
     var OrderedEnumerable = (function (_super) {
@@ -95,12 +95,12 @@ define(["require", "exports", '../System/System', '../System/Collections/Enumera
         };
         SortContext.prototype.compare = function (index1, index2) {
             var _ = this, keys = _.keys;
-            var comparison = System.compare(keys[index1], keys[index2]);
+            var comparison = Values.compare(keys[index1], keys[index2]);
             if (comparison == 0) {
                 var child = _.child;
                 return child
                     ? child.compare(index1, index2)
-                    : System.compare(index1, index2);
+                    : Values.compare(index1, index2);
             }
             return _.descending ? -comparison : comparison;
         };

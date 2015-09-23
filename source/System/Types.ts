@@ -78,6 +78,16 @@ module Types
 	}
 
 	/**
+	 * Returns true if is a number and is NaN.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isTrueNaN(value:any):boolean
+	{
+		return typeof value===Types.Number && isNaN(value);
+	}
+
+	/**
 	 * Returns true if the value parameter is a string.
 	 * @param value
 	 * @returns {boolean}

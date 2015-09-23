@@ -5,6 +5,7 @@
 
 ///<reference path="IDictionary"/>
 import System = require('../../System');
+import Values = require('../../Compare');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
 
 'use strict';
@@ -23,7 +24,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	// Pseudo-protected.
 	public _onValueUpdate(key:TKey, value:TValue, old:TValue):void {
-		if(!System.areEqual(value, old, true)) {
+		if(!Values.areEqual(value, old, true)) {
 
 			var _ = this;
 			if(_.onValueChanged)
@@ -98,7 +99,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	contains(item:IKeyValuePair<TKey, TValue>):boolean {
 		var value = this.getValue(item.key);
-		return System.areEqual(value, item.value);
+		return Values.areEqual(value, item.value);
 	}
 
 	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):void {
@@ -111,7 +112,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	remove(item:IKeyValuePair<TKey, TValue>):number {
 		var key = item.key, value = this.getValue(key);
-		return (System.areEqual(value, item.value) && this.removeByKey(key))
+		return (Values.areEqual(value, item.value) && this.removeByKey(key))
 			? 1 : 0;
 	}
 
@@ -149,7 +150,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	}
 
 	containsValue(value:TValue):boolean {
-		var e = this.getEnumerator(), equal:(a:any, b:any, strict?:boolean) => boolean = System.areEqual;
+		var e = this.getEnumerator(), equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
 
 		while(e.moveNext()) {
 			if(equal(e.current, value, true)) {
@@ -165,7 +166,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	}
 
 	removeByValue(value:TValue):number {
-		var _ = this, count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = System.areEqual;
+		var _ = this, count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
 		_.keys.forEach(
 				key=> {
 				if(equal(_.getValue(key), value, true)) {

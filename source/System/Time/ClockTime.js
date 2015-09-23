@@ -3,7 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../System', './HowMany', './TimeSpan'], function (require, exports, System, HowMany, TimeSpan) {
+define(["require", "exports", '../Compare', './TimeSpan'], function (require, exports, Values, TimeSpan) {
     var ClockTime = (function () {
         function ClockTime() {
             var args = [];
@@ -24,25 +24,25 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
         });
         Object.defineProperty(ClockTime.prototype, "direction", {
             get: function () {
-                return System.compare(this._totalMilliseconds, 0);
+                return Values.compare(this._totalMilliseconds, 0);
             },
             enumerable: true,
             configurable: true
         });
         ClockTime.prototype.equals = function (other) {
-            return System.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+            return Values.areEqual(this._totalMilliseconds, other.totalMilliseconds);
         };
         ClockTime.prototype.compareTo = function (other) {
             if (other == null)
                 return 1 | 0;
-            return System.compare(this._totalMilliseconds, other.totalMilliseconds);
+            return Values.compare(this._totalMilliseconds, other.totalMilliseconds);
         };
         Object.defineProperty(ClockTime.prototype, "ticks", {
             get: function () {
                 var _ = this, r = _._ticks;
                 if (r === undefined) {
                     var ms = Math.abs(_._totalMilliseconds);
-                    _._ticks = r = (ms - Math.floor(ms)) * HowMany.Ticks.Per.Millisecond;
+                    _._ticks = r = (ms - Math.floor(ms)) * 10000;
                 }
                 return r;
             },
@@ -54,7 +54,7 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
                 var _ = this, r = _._ms;
                 if (r === undefined)
                     _._ms = r =
-                        (this._totalMilliseconds % HowMany.Milliseconds.Per.Hour) | 0;
+                        (this._totalMilliseconds % 3600000) | 0;
                 return r;
             },
             enumerable: true,
@@ -65,7 +65,7 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
                 var _ = this, r = _._seconds;
                 if (r === undefined)
                     _._seconds = r =
-                        ((this._totalMilliseconds / HowMany.Milliseconds.Per.Hour) % HowMany.Seconds.Per.Minute) | 0;
+                        ((this._totalMilliseconds / 3600000) % 60) | 0;
                 return r;
             },
             enumerable: true,
@@ -77,8 +77,8 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
                 if (r === undefined)
                     _._minutes = r =
                         ((this._totalMilliseconds
-                            / HowMany.Milliseconds.Per.Hour
-                            / HowMany.Seconds.Per.Minute) % HowMany.Minutes.Per.Hour) | 0;
+                            / 3600000
+                            / 60) % 60) | 0;
                 return r;
             },
             enumerable: true,
@@ -90,9 +90,9 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
                 if (r === undefined)
                     _._hours = r =
                         ((this._totalMilliseconds
-                            / HowMany.Milliseconds.Per.Hour
-                            / HowMany.Seconds.Per.Minute
-                            / HowMany.Minutes.Per.Hour) % HowMany.Hours.Per.Day) | 0;
+                            / 3600000
+                            / 60
+                            / 60) % 24) | 0;
                 return r;
             },
             enumerable: true,
@@ -104,10 +104,10 @@ define(["require", "exports", '../System', './HowMany', './TimeSpan'], function 
                 if (r === undefined)
                     _._days = r =
                         (this._totalMilliseconds
-                            / HowMany.Milliseconds.Per.Hour
-                            / HowMany.Seconds.Per.Minute
-                            / HowMany.Minutes.Per.Hour
-                            / HowMany.Hours.Per.Day) | 0;
+                            / 3600000
+                            / 60
+                            / 60
+                            / 24) | 0;
                 return r;
             },
             enumerable: true,

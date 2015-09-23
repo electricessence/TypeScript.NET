@@ -9,10 +9,10 @@
 ///<reference path="ITimeMeasurement.ts"/>
 ///<reference path="../IEquatable.ts"/>
 ///<reference path="../IComparable.ts"/>
-import System = require('../System');
+import Values = require('../Compare');
 import Types = require('../Types');
-import HowMany= require('./HowMany');
 import TimeUnit= require('./TimeUnit');
+import HowMany= require('HowMany');
 import TimeUnitValue= require('./TimeUnitValue');
 import ClockTime= require('./ClockTime');
 
@@ -37,7 +37,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 		if(other===undefined) // undefined is used instead of NaN since NaN could be a valid value.
 			return false;
 
-		return System.areEqual(this._milliseconds, otherMS);
+		return Values.areEqual(this._milliseconds, otherMS);
 	}
 
 
@@ -49,7 +49,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 		assertComparisonType(other);
 
-		return System.compare(this._milliseconds, getMilliseconds(other));
+		return Values.compare(this._milliseconds, getMilliseconds(other));
 
 	}
 
