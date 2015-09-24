@@ -84,6 +84,7 @@
 					<li><a href="../interfaces/_system_time_itimemeasurement_.itimemeasurement.html" class="tsd-signature-type">ITimeMeasurement</a></li>
 					<li><a href="../interfaces/_system_iequatable_.iequatable.html" class="tsd-signature-type">IEquatable</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_time_timespan_.timespan.html" class="tsd-signature-type">TimeSpan</a><span class="tsd-signature-symbol">&gt;</span></li>
 					<li><a href="../interfaces/_system_icomparable_.icomparable.html" class="tsd-signature-type">IComparable</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_time_timespan_.timespan.html" class="tsd-signature-type">TimeSpan</a><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/_system_time_itimetotal_.itimetotal.html" class="tsd-signature-type">ITimeTotal</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -112,6 +113,7 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#seconds" class="tsd-kind-icon">seconds</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#ticks" class="tsd-kind-icon">ticks</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#time" class="tsd-kind-icon">time</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#total" class="tsd-kind-icon">total</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-static"><a href="_system_time_timespan_.timespan.html#zero" class="tsd-kind-icon">zero</a></li>
 							</ul>
 						</section>
@@ -122,8 +124,8 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#addunit" class="tsd-kind-icon">add<wbr>Unit</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#compareto" class="tsd-kind-icon">compare<wbr>To</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#equals" class="tsd-kind-icon">equals</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#gettotal" class="tsd-kind-icon">get<wbr>Total</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#totimeunitvalue" class="tsd-kind-icon">to<wbr>Time<wbr>Unit<wbr>Value</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_time_timespan_.timespan.html#total" class="tsd-kind-icon">total</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_system_time_timespan_.timespan.html#between" class="tsd-kind-icon">between</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_system_time_timespan_.timespan.html#converttomilliseconds" class="tsd-kind-icon">convert<wbr>ToMilliseconds</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_system_time_timespan_.timespan.html#from" class="tsd-kind-icon">from</a></li>
@@ -194,7 +196,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:128</li>
+									<li>Defined in System/Time/TimeSpan.ts:134</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -211,7 +213,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:123</li>
+									<li>Defined in System/Time/TimeSpan.ts:128</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -228,7 +230,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:108</li>
+									<li>Defined in System/Time/TimeSpan.ts:111</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -245,7 +247,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:118</li>
+									<li>Defined in System/Time/TimeSpan.ts:122</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -262,7 +264,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:113</li>
+									<li>Defined in System/Time/TimeSpan.ts:116</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -279,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:103</li>
+									<li>Defined in System/Time/TimeSpan.ts:105</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -296,10 +298,27 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:134</li>
+									<li>Defined in System/Time/TimeSpan.ts:146</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_time_clocktime_.clocktime.html" class="tsd-signature-type">ClockTime</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="total" class="tsd-anchor"></a>
+					<h3>total</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> total<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_time_itimemeasurement_.itimemeasurement.html" class="tsd-signature-type">ITimeMeasurement</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Time/TimeSpan.ts:141</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_time_itimemeasurement_.itimemeasurement.html" class="tsd-signature-type">ITimeMeasurement</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -313,7 +332,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:215</li>
+									<li>Defined in System/Time/TimeSpan.ts:244</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_time_timespan_.timespan.html" class="tsd-signature-type">TimeSpan</a></h4>
@@ -335,7 +354,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:139</li>
+									<li>Defined in System/Time/TimeSpan.ts:151</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -349,7 +368,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:140</li>
+									<li>Defined in System/Time/TimeSpan.ts:152</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -363,7 +382,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:141</li>
+									<li>Defined in System/Time/TimeSpan.ts:153</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -386,7 +405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:151</li>
+									<li>Defined in System/Time/TimeSpan.ts:168</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -479,6 +498,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="gettotal" class="tsd-anchor"></a>
+					<h3>get<wbr>Total</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Total<span class="tsd-signature-symbol">(</span>units<span class="tsd-signature-symbol">: </span><a href="../enums/_system_time_timeunit_.timeunit.html" class="tsd-signature-type">TimeUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Time/TimeSpan.ts:83</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>units: <a href="../enums/_system_time_timeunit_.timeunit.html" class="tsd-signature-type">TimeUnit</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="totimeunitvalue" class="tsd-anchor"></a>
 					<h3>to<wbr>Time<wbr>Unit<wbr>Value</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -501,29 +543,6 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="total" class="tsd-anchor"></a>
-					<h3>total</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">total<span class="tsd-signature-symbol">(</span>units<span class="tsd-signature-symbol">: </span><a href="../enums/_system_time_timeunit_.timeunit.html" class="tsd-signature-type">TimeUnit</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:82</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>units: <a href="../enums/_system_time_timeunit_.timeunit.html" class="tsd-signature-type">TimeUnit</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a name="between" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> between</h3>
@@ -534,7 +553,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:209</li>
+									<li>Defined in System/Time/TimeSpan.ts:238</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -586,7 +605,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:157</li>
+									<li>Defined in System/Time/TimeSpan.ts:174</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -612,7 +631,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:162</li>
+									<li>Defined in System/Time/TimeSpan.ts:179</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -635,7 +654,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:167</li>
+									<li>Defined in System/Time/TimeSpan.ts:184</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -658,7 +677,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:182</li>
+									<li>Defined in System/Time/TimeSpan.ts:199</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -681,7 +700,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:172</li>
+									<li>Defined in System/Time/TimeSpan.ts:189</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -704,7 +723,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:177</li>
+									<li>Defined in System/Time/TimeSpan.ts:194</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -727,7 +746,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:187</li>
+									<li>Defined in System/Time/TimeSpan.ts:204</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -750,7 +769,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:192</li>
+									<li>Defined in System/Time/TimeSpan.ts:209</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -782,7 +801,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Time/TimeSpan.ts:197</li>
+									<li>Defined in System/Time/TimeSpan.ts:222</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -851,6 +870,9 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="_system_time_timespan_.timespan.html#time" class="tsd-kind-icon">time</a>
 							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="_system_time_timespan_.timespan.html#total" class="tsd-kind-icon">total</a>
+							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
 								<a href="_system_time_timespan_.timespan.html#zero" class="tsd-kind-icon">zero</a>
 							</li>
@@ -867,10 +889,10 @@
 								<a href="_system_time_timespan_.timespan.html#equals" class="tsd-kind-icon">equals</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_system_time_timespan_.timespan.html#totimeunitvalue" class="tsd-kind-icon">to<wbr>Time<wbr>Unit<wbr>Value</a>
+								<a href="_system_time_timespan_.timespan.html#gettotal" class="tsd-kind-icon">get<wbr>Total</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_system_time_timespan_.timespan.html#total" class="tsd-kind-icon">total</a>
+								<a href="_system_time_timespan_.timespan.html#totimeunitvalue" class="tsd-kind-icon">to<wbr>Time<wbr>Unit<wbr>Value</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_system_time_timespan_.timespan.html#between" class="tsd-kind-icon">between</a>
