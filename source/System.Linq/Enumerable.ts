@@ -22,20 +22,25 @@ import Queue = require('../System/Collections/Queue');
 import DisposeUtility = require('../System/Disposable/Utility');
 import DisposableBase = require('../System/Disposable/DisposableBase');
 
-import Grouping= require('./Grouping');
-import Lookup= require('./Lookup');
-import ArrayEnumerable= require('./ArrayEnumerable');
-import WhereEnumerable= require('./WhereEnumerable');
-import WhereSelectEnumerable= require('./WhereSelectEnumerable');
-import OrderedEnumerable= require('./OrderedEnumerable');
+import Grouping = require('./Grouping');
+import Lookup = require('./Lookup');
+import ArrayEnumerable = require('./ArrayEnumerable');
+import WhereEnumerable = require('./WhereEnumerable');
+import WhereSelectEnumerable = require('./WhereSelectEnumerable');
+import OrderedEnumerable = require('./OrderedEnumerable');
 
 
 import using = DisposeUtility.using;
 import enumeratorFrom = Enumerator.from;
 import enumeratorForEach = Enumerator.forEach;
-import EnumerableAction = Enumerable.EnumerableAction;
 'use strict';
 
+enum EnumerableAction
+{
+	Break,
+	Return,
+	Skip
+}
 
 // #region Local Constants.
 // Leave internal to avoid accidental overwriting.
@@ -53,8 +58,6 @@ const
 	INT_0:number = 0 | 0,
 	INT_NEG1:number = -1 | 0,
 	INT_POS1:number = +1 | 0;
-
-
 // #endregion
 
 
@@ -64,7 +67,9 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	// Enumerable<T> is an instance class that has useful statics.
 	// In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
 	// In this case, we use Enumerable<T> as the underlying class that is being chained.
-	constructor(private enumeratorFactory:() => IEnumerator<T>, finalizer?:() => void)
+	constructor(
+		protected _enumeratorFactory:() => IEnumerator<T>,
+		finalizer?:() => void)
 	{
 		super(finalizer);
 	}
@@ -119,7 +124,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 		this.assertIsNotDisposed();
 
-		return this.enumeratorFactory();
+		return this._enumeratorFactory();
 	}
 
 	// #endregion
@@ -128,7 +133,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	protected _onDispose():void
 	{
 		super._onDispose();
-		this.enumeratorFactory = null;
+		this._enumeratorFactory = null;
 	}
 
 	// #endregion
@@ -138,12 +143,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	static choice<T>(values:IArray<T>):Enumerable<T>
 	{
 		return new Enumerable<T>(
-			() =>
-				new EnumeratorBase<T>(
-					null,
-					(yielder)=>
-						yielder.yieldReturn(values[(Math.random()*values.length) | 0])
-				)
+			() => new EnumeratorBase<T>(
+				null,
+				(yielder)=>
+					yielder.yieldReturn(values[(Math.random()*values.length) | 0])
+			)
 		);
 	}
 
@@ -168,11 +172,10 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	static empty<T>():Enumerable<T>
 	{
 		return new Enumerable<T>(
-			() =>
-				new EnumeratorBase<T>(
-					null,
-					Functions.False
-				)
+			() => new EnumeratorBase<T>(
+				null,
+				Functions.False
+			)
 		);
 	}
 
@@ -3002,17 +3005,6 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 }
 
-module Enumerable
-{
-	export enum EnumerableAction
-	{
-		Break,
-		Return,
-		Skip
-	}
-
-	Object.freeze(EnumerableAction);
-}
 
 // #region Helper Functions...
 // This allows for the use of a boolean instead of calling this.assertIsNotDisposed()

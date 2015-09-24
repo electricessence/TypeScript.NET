@@ -1,8 +1,17 @@
-﻿(function () {
+﻿///<reference path="../../../typings/qunit/qunit.d.ts"/>
+///<amd-dependency path="QUnit"/>
 
-	var Enumerable = System.Linq.Enumerable;
+import Enumerable = require('System.Linq/Enumerable');
 
-	var source = [
+interface TestItem {
+	a:number;
+	b:number;
+	c:string;
+}
+
+function run() {
+
+	var source:{a:number,b:number,c:string}[] = [
 		{
 			a: 1,
 			b: 2,
@@ -36,7 +45,7 @@
 	];
 
 	var sourceEnumerable = Enumerable.fromArray(source);
-	var selector = function (i) { return i.b };
+	var selector = function (i:TestItem):number { return i.b };
 
 	QUnit.test("Enumerable.memoize", function (assert) {
 
@@ -54,7 +63,7 @@
 	QUnit.test("Enumerable.where.memoize", function (assert) {
 		var source = sourceEnumerable.where(function(i){return i.a==1});
 
-		var sum, A = source;
+		var sum:number, A = source;
 
 		sum = A.sum(selector);
 
@@ -144,4 +153,6 @@
 
 
 
-})();
+}
+
+export = run;

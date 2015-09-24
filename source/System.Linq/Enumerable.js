@@ -13,8 +13,13 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
     var using = DisposeUtility.using;
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;
-    var EnumerableAction = Enumerable.EnumerableAction;
     'use strict';
+    var EnumerableAction;
+    (function (EnumerableAction) {
+        EnumerableAction[EnumerableAction["Break"] = 0] = "Break";
+        EnumerableAction[EnumerableAction["Return"] = 1] = "Return";
+        EnumerableAction[EnumerableAction["Skip"] = 2] = "Skip";
+    })(EnumerableAction || (EnumerableAction = {}));
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
         function LinqFunctions() {
@@ -29,9 +34,9 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
     var INT_0 = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
-        function Enumerable(enumeratorFactory, finalizer) {
+        function Enumerable(_enumeratorFactory, finalizer) {
             _super.call(this, finalizer);
-            this.enumeratorFactory = enumeratorFactory;
+            this._enumeratorFactory = _enumeratorFactory;
         }
         Enumerable.fromArray = function (array) {
             return new ArrayEnumerable(array);
@@ -61,18 +66,16 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         };
         Enumerable.prototype.getEnumerator = function () {
             this.assertIsNotDisposed();
-            return this.enumeratorFactory();
+            return this._enumeratorFactory();
         };
         Enumerable.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
-            this.enumeratorFactory = null;
+            this._enumeratorFactory = null;
         };
         Enumerable.choice = function (values) {
-            return new Enumerable(function () {
-                return new EnumeratorBase(null, function (yielder) {
-                    return yielder.yieldReturn(values[(Math.random() * values.length) | 0]);
-                });
-            });
+            return new Enumerable(function () { return new EnumeratorBase(null, function (yielder) {
+                return yielder.yieldReturn(values[(Math.random() * values.length) | 0]);
+            }); });
         };
         Enumerable.cycle = function (values) {
             return new Enumerable(function () {
@@ -85,9 +88,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             });
         };
         Enumerable.empty = function () {
-            return new Enumerable(function () {
-                return new EnumeratorBase(null, Functions.False);
-            });
+            return new Enumerable(function () { return new EnumeratorBase(null, Functions.False); });
         };
         Enumerable.repeat = function (element, count) {
             if (count === void 0) { count = Infinity; }
@@ -1623,16 +1624,6 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         };
         return Enumerable;
     })(DisposableBase);
-    var Enumerable;
-    (function (Enumerable) {
-        (function (EnumerableAction) {
-            EnumerableAction[EnumerableAction["Break"] = 0] = "Break";
-            EnumerableAction[EnumerableAction["Return"] = 1] = "Return";
-            EnumerableAction[EnumerableAction["Skip"] = 2] = "Skip";
-        })(Enumerable.EnumerableAction || (Enumerable.EnumerableAction = {}));
-        var EnumerableAction = Enumerable.EnumerableAction;
-        Object.freeze(EnumerableAction);
-    })(Enumerable || (Enumerable = {}));
     function assertIsNotDisposed(disposed) {
         return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
     }

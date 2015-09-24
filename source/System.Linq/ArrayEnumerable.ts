@@ -10,18 +10,17 @@ import Values = require('../System/Compare');
 import Functions = require('../System/Functions');
 import ArrayCompare = require('../System/Collections/Array/Compare');
 import ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
-import Enumerable= require('./Enumerable');
+import EnumerableLocal = require('./Enumerable');
 'use strict';
 
 const
 	INT_ZERO:number = 0 | 0,
-	INT_NEG1 = -1 | 0,
-	INT_POS1 = +1 | 0;
+	INT_NEG1:number = -1 | 0,
+	INT_POS1:number = +1 | 0;
 
-class ArrayEnumerable<T> extends Enumerable<T>
+class ArrayEnumerable<T> extends EnumerableLocal<T>
 {
-
-	private _source:{ length: number;[x: number]: T; };
+	private _source:IArray<T>;
 
 	constructor(source:IArray<T>)
 	{
@@ -30,14 +29,12 @@ class ArrayEnumerable<T> extends Enumerable<T>
 		super(() =>
 		{
 			_.assertIsNotDisposed();
-			return new ArrayEnumerator<T>(
-				() =>
-				{
-					_.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
+			return new ArrayEnumerator<T>(() =>
+			{
+				_.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
 
-					return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
-				}
-			);
+				return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
+			});
 		});
 	}
 
@@ -181,7 +178,7 @@ class ArrayEnumerable<T> extends Enumerable<T>
 			: defaultValue;
 	}
 
-	skip(count:number):Enumerable<T>
+	skip(count:number):EnumerableLocal<T>
 	{
 
 		var _ = this;
@@ -189,20 +186,20 @@ class ArrayEnumerable<T> extends Enumerable<T>
 		if(!count || count<0) // Out of bounds? Simply return a unfiltered enumerable.
 			return _.asEnumerable();
 
-		return new Enumerable<T>(
+		return new EnumerableLocal<T>(
 			() => new ArrayEnumerator<T>(() => _._source, count)
 		);
 	}
 
-	takeExceptLast(count:number = 1):Enumerable<T>
+	takeExceptLast(count:number = 1):EnumerableLocal<T>
 	{
 		var _ = this, len = _._source ? _._source.length : 0;
 		return _.take(len - count);
 	}
 
-	takeFromLast(count:number):Enumerable<T>
+	takeFromLast(count:number):EnumerableLocal<T>
 	{
-		if(!count || count<0) return Enumerable.empty<T>();
+		if(!count || count<0) return EnumerableLocal.empty<T>();
 
 		var _ = this,
 			len = _._source
@@ -212,11 +209,11 @@ class ArrayEnumerable<T> extends Enumerable<T>
 		return _.skip(len - count);
 	}
 
-	reverse():Enumerable<T>
+	reverse():EnumerableLocal<T>
 	{
 		var _ = this;
 
-		return new Enumerable<T>(
+		return new EnumerableLocal<T>(
 			() => new ArrayEnumerator<T>(
 				() => _._source, _._source
 					? (_._source.length - 1)

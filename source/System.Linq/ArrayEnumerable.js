@@ -9,7 +9,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-define(["require", "exports", '../System/Compare', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Enumeration/ArrayEnumerator', './Enumerable'], function (require, exports, Values, Functions, ArrayCompare, ArrayEnumerator, Enumerable) {
+define(["require", "exports", '../System/Compare', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Enumeration/ArrayEnumerator', './Enumerable'], function (require, exports, Values, Functions, ArrayCompare, ArrayEnumerator, EnumerableLocal) {
     'use strict';
     var INT_ZERO = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
     var ArrayEnumerable = (function (_super) {
@@ -127,7 +127,7 @@ define(["require", "exports", '../System/Compare', '../System/Functions', '../Sy
             var _ = this;
             if (!count || count < 0)
                 return _.asEnumerable();
-            return new Enumerable(function () { return new ArrayEnumerator(function () { return _._source; }, count); });
+            return new EnumerableLocal(function () { return new ArrayEnumerator(function () { return _._source; }, count); });
         };
         ArrayEnumerable.prototype.takeExceptLast = function (count) {
             if (count === void 0) { count = 1; }
@@ -136,7 +136,7 @@ define(["require", "exports", '../System/Compare', '../System/Functions', '../Sy
         };
         ArrayEnumerable.prototype.takeFromLast = function (count) {
             if (!count || count < 0)
-                return Enumerable.empty();
+                return EnumerableLocal.empty();
             var _ = this, len = _._source
                 ? _._source.length
                 : 0;
@@ -144,7 +144,7 @@ define(["require", "exports", '../System/Compare', '../System/Functions', '../Sy
         };
         ArrayEnumerable.prototype.reverse = function () {
             var _ = this;
-            return new Enumerable(function () { return new ArrayEnumerator(function () { return _._source; }, _._source
+            return new EnumerableLocal(function () { return new ArrayEnumerator(function () { return _._source; }, _._source
                 ? (_._source.length - 1)
                 : 0, -1); });
         };
@@ -168,7 +168,7 @@ define(["require", "exports", '../System/Compare', '../System/Functions', '../Sy
                 : _super.prototype.toJoinedString.call(this, separator, selector);
         };
         return ArrayEnumerable;
-    })(Enumerable);
+    })(EnumerableLocal);
     return ArrayEnumerable;
 });
 //# sourceMappingURL=ArrayEnumerable.js.map
