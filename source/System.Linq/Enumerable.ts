@@ -13,6 +13,7 @@
 import Values = require('../System/Compare');
 import Types = require('../System/Types');
 import BaseFunctions = require('../System/Functions');
+import ArrayCompare = require('../System/Collections/Array/Compare');
 import ArrayUtility = require('../System/Collections/Array/Utility');
 import ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
 import Enumerator = require('../System/Collections/Enumeration/Enumerator');
@@ -21,14 +22,6 @@ import Dictionary = require('../System/Collections/Dictionaries/Dictionary');
 import Queue = require('../System/Collections/Queue');
 import DisposeUtility = require('../System/Disposable/Utility');
 import DisposableBase = require('../System/Disposable/DisposableBase');
-
-import Grouping = require('./Grouping');
-import Lookup = require('./Lookup');
-import ArrayEnumerable = require('./ArrayEnumerable');
-import WhereEnumerable = require('./WhereEnumerable');
-import WhereSelectEnumerable = require('./WhereSelectEnumerable');
-import OrderedEnumerable = require('./OrderedEnumerable');
-
 
 import using = DisposeUtility.using;
 import enumeratorFrom = Enumerator.from;
@@ -3004,6 +2997,585 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	}
 
 }
+
+
+class ArrayEnumerable<T> extends Enumerable<T>
+{
+	private _source:IArray<T>;
+
+	constructor(source:IArray<T>)
+	{
+		var _ = this;
+		_._source = source;
+		super(() =>
+		{
+			_.assertIsNotDisposed();
+			return new ArrayEnumerator<T>(() =>
+			{
+				_.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
+
+				return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
+			});
+		});
+	}
+
+	protected _onDispose():void
+	{
+		super._onDispose();
+		this._source = <any>null;
+	}
+
+	get source():IArray<T> { return this._source; }
+
+	toArray():T[]
+	{
+		var s = this.source;
+		if(!s)
+			return [];
+
+		if(s instanceof Array)
+			return (<any>s).slice();
+
+		var len = s.length, result:T[] = new Array<T>(len);
+		for(var i = INT_0; i<len; ++i)
+		{
+			result[i] = s[i];
+		}
+
+		return result;
+	}
+
+	asEnumerable():ArrayEnumerable<T>
+	{
+		return new ArrayEnumerable<T>(this._source);
+	}
+
+	// Optimize forEach so that subsequent usage is optimized.
+	forEach(action:(element:T, index?:number) => boolean):void;
+	forEach(action:(element:T, index?:number) => void):void;
+	forEach(action:(element:T, index?:number) => any):void
+	{
+
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source;
+		if(source)
+		{
+
+			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+			for(var i = INT_0; i<source.length; ++i)
+			{
+				// _.assertIsNotDisposed(); // Assertion here is unnecessary since we already have a reference to the source array.
+				if(action(source[i], i)===false)
+					break;
+			}
+		}
+	}
+
+	// These methods should ALWAYS check for array length before attempting anything.
+
+	any(predicate?:Predicate<T>):boolean
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source, len = source ? source.length : 0;
+		return len && (!predicate || super.any(predicate));
+	}
+
+	count(predicate?:Predicate<T>):number
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source, len = source ? source.length : 0;
+		return len && (predicate ? super.count(predicate) : len);
+	}
+
+	elementAt(index:number):T
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source;
+		return (index<source.length && index>=0)
+			? source[index]
+			: super.elementAt(index);
+	}
+
+	elementAtOrDefault(index:number, defaultValue:T = null):T
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source;
+		return (index<source.length && index>=0)
+			? source[index]
+			: defaultValue;
+	}
+
+	first():T
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source;
+		return (source && source.length)
+			? source[0]
+			: super.first();
+	}
+
+	firstOrDefault(defaultValue:T = null):T
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source;
+		return (source && source.length)
+			? source[0]
+			: defaultValue;
+	}
+
+	last():T
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source, len = source.length;
+		return (len)
+			? source[len - 1]
+			: super.last();
+	}
+
+	lastOrDefault(defaultValue:T = null):T
+	{
+		var _ = this;
+		_.assertIsNotDisposed();
+
+		var source = _._source, len = source.length;
+		return len
+			? source[len - 1]
+			: defaultValue;
+	}
+
+	skip(count:number):Enumerable<T>
+	{
+
+		var _ = this;
+
+		if(!count || count<0) // Out of bounds? Simply return a unfiltered enumerable.
+			return _.asEnumerable();
+
+		return new Enumerable<T>(
+			() => new ArrayEnumerator<T>(() => _._source, count)
+		);
+	}
+
+	takeExceptLast(count:number = 1):Enumerable<T>
+	{
+		var _ = this, len = _._source ? _._source.length : 0;
+		return _.take(len - count);
+	}
+
+	takeFromLast(count:number):Enumerable<T>
+	{
+		if(!count || count<0) return Enumerable.empty<T>();
+
+		var _ = this,
+			len = _._source
+				? _._source.length
+				: 0;
+
+		return _.skip(len - count);
+	}
+
+	reverse():Enumerable<T>
+	{
+		var _ = this;
+
+		return new Enumerable<T>(
+			() => new ArrayEnumerator<T>(
+				() => _._source, _._source
+					? (_._source.length - 1)
+					: 0, -1
+			)
+		);
+	}
+
+	memoize():ArrayEnumerable<T>
+	{
+		return new ArrayEnumerable<T>(this._source);
+	}
+
+	sequenceEqual(second:IEnumerable<T>, equalityComparer?:EqualityComparison<T>):boolean;
+	sequenceEqual(second:IArray<T>, equalityComparer?:EqualityComparison<T>):boolean;
+	sequenceEqual(second:any, equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
+	{
+		if(second instanceof Array)
+			return ArrayCompare.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
+
+		if(second instanceof ArrayEnumerable)
+			return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
+
+		return super.sequenceEqual(second, equalityComparer);
+	}
+
+
+	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
+	{
+		var s = this._source;
+		return !selector && s instanceof Array
+			? (<Array<T>>s).join(separator)
+			: super.toJoinedString(separator, selector);
+	}
+
+}
+
+class Grouping<TKey, TElement> extends ArrayEnumerable<TElement> implements IGrouping<TKey, TElement>
+{
+
+	constructor(private _groupKey:TKey, elements:TElement[])
+	{
+		super(elements);
+	}
+
+	get key():TKey
+	{
+		return this._groupKey;
+	}
+}
+
+
+class Lookup<TKey, TElement>
+{
+
+	constructor(private _dictionary:Dictionary<TKey, TElement[]>) { }
+
+	get count():number
+	{
+		return this._dictionary.count;
+	}
+
+	get(key:TKey):TElement[]
+	{
+		return this._dictionary.getValue(key);
+	}
+
+	contains(key:TKey):boolean
+	{
+		return this._dictionary.containsKey(key);
+	}
+
+	getEnumerator():IEnumerator<Grouping<TKey, TElement>>
+	{
+
+		var _ = this;
+		var enumerator:IEnumerator<IKeyValuePair<TKey, TElement[]>>;
+
+		return new EnumeratorBase<Grouping<TKey, TElement>>(
+			() => { enumerator = _._dictionary.getEnumerator(); },
+			(yielder)=>
+			{
+
+				if(!enumerator.moveNext())
+					return false;
+
+				var current = enumerator.current;
+
+				return yielder.yieldReturn(new Grouping<TKey, TElement>(current.key, current.value));
+			},
+			() => { DisposeUtility.dispose(enumerator); }
+		);
+	}
+
+}
+
+
+
+class WhereEnumerable<T> extends Enumerable<T>
+{
+	constructor(
+		private prevSource:IEnumerable<T>,
+		private prevPredicate:Predicate<T>  // predicate.length always <= 1
+	)
+	{
+		super(null);
+	}
+
+	where(predicate:Predicate<T>):Enumerable<T>
+	{
+
+		if(predicate.length>1)
+			return super.where(predicate);
+
+		var prevPredicate = this.prevPredicate;
+		var composedPredicate = (x:T) => prevPredicate(x) && predicate(x);
+		return new WhereEnumerable<T>(this.prevSource, composedPredicate);
+	}
+
+	select<TSelect>(selector:Selector<T, TSelect>):Enumerable<TSelect>
+	{
+
+		if(selector.length>1)
+			return super.select(selector);
+
+		return new WhereSelectEnumerable<T, TSelect>(
+			this.prevSource,
+			this.prevPredicate,
+			selector
+		);
+	}
+
+	getEnumerator():IEnumerator<T>
+	{
+		var predicate = this.prevPredicate;
+		var source = this.prevSource;
+		var enumerator:IEnumerator<T>;
+
+		return new EnumeratorBase<T>(
+			() => { enumerator = source.getEnumerator(); },
+
+			(yielder)=>
+			{
+				while(enumerator.moveNext()) {
+					if(predicate(enumerator.current))
+						return yielder.yieldReturn(enumerator.current);
+				}
+
+				return false;
+			},
+
+			() => { DisposeUtility.dispose(enumerator); }
+		);
+	}
+
+	protected _onDispose():void
+	{
+		super._onDispose();
+		this.prevPredicate = null;
+		this.prevSource = null;
+	}
+}
+
+
+
+class WhereSelectEnumerable<TSource, T> extends Enumerable<T>
+{
+	constructor(
+		private prevSource:IEnumerable<TSource>,
+		private prevPredicate:Predicate<TSource>,  // predicate.length always <= 1
+		private prevSelector:Selector<TSource, T> // selector.length always <= 1
+	)
+	{
+		super(null);
+	}
+
+	where(predicate:(value:T, index?:number) => boolean):Enumerable<T>
+	{
+		if(predicate.length>1)
+			return super.where(predicate);
+
+		return new WhereEnumerable<T>(this, predicate);
+	}
+
+	select<TSelect>(selector:Selector<T, TSelect>):Enumerable<TSelect>
+	{
+
+		if(selector.length>1)
+		// if selector use index, can't compose
+			return super.select(selector);
+
+		var _ = this;
+		var prevSelector = _.prevSelector;
+		var composedSelector = (x:TSource) => selector(prevSelector(x));
+		return new WhereSelectEnumerable(_.prevSource, _.prevPredicate, composedSelector);
+	}
+
+	getEnumerator():IEnumerator<T>
+	{
+		var _ = this,
+			predicate = _.prevPredicate,
+			source = _.prevSource,
+			selector:Selector<TSource, T> = _.prevSelector, // Type definition needed for correct inference.
+			enumerator:IEnumerator<TSource>;
+
+		return new EnumeratorBase<T>(
+			() => { enumerator = source.getEnumerator(); },
+
+			(yielder)=>
+			{
+				while(enumerator.moveNext())
+				{
+					var c = enumerator.current;
+					if(predicate==null || predicate(c))
+					{
+						return yielder.yieldReturn(selector(c));
+					}
+				}
+				return false;
+			},
+
+			() => { DisposeUtility.dispose(enumerator); }
+		);
+	}
+
+	protected _onDispose():void
+	{
+		var _ = this;
+		super._onDispose();
+		_.prevPredicate = null;
+		_.prevSource = null;
+		_.prevSelector = null;
+	}
+}
+
+
+class OrderedEnumerable<T> extends Enumerable<T>
+{
+
+	constructor(
+		private source:IEnumerable<T>,
+		public keySelector:(value:T) => any,
+		public descending:boolean,
+		public parent?:OrderedEnumerable<T>)
+	{
+		super(null);
+	}
+
+	createOrderedEnumerable(keySelector:(value:T) => any, descending:boolean):OrderedEnumerable<T>
+	{
+		return new OrderedEnumerable<T>(this.source, keySelector, descending, this);
+	}
+
+	thenBy(keySelector:(value:T) => any):OrderedEnumerable<T>
+	{
+		return this.createOrderedEnumerable(keySelector, false);
+	}
+
+	thenByDescending(keySelector:(value:T) => any):OrderedEnumerable<T>
+	{
+		return this.createOrderedEnumerable(keySelector, true);
+	}
+
+	getEnumerator():EnumeratorBase<T>
+	{
+		var _ = this;
+		var buffer:T[];
+		var indexes:number[];
+		var index:number = INT_0;
+
+		return new EnumeratorBase<T>(
+			() =>
+			{
+				index = INT_0;
+				buffer = [];
+				indexes = [];
+				Enumerable.forEach(
+					_.source, (item, i) =>
+					{
+						buffer[i] = item;
+						indexes[i] = i;
+					}
+				);
+				var sortContext = SortContext.create(_);
+				sortContext.generateKeys(buffer);
+
+				indexes.sort((a, b) => sortContext.compare(a, b));
+			},
+
+			(yielder)=>
+			{
+				return (index<indexes.length)
+					? yielder.yieldReturn(buffer[indexes[index++]])
+					: false;
+			},
+
+			() =>
+			{
+				if(buffer)
+					buffer.length = 0;
+				buffer = null;
+				if(indexes)
+					indexes.length = 0;
+				indexes = null;
+			}
+		);
+	}
+
+	protected _onDispose():void
+	{
+		super._onDispose();
+		this.source = null;
+		this.keySelector = null;
+		this.descending = null;
+		this.parent = null;
+	}
+}
+
+class SortContext<T, TOrderBy>
+{
+
+	keys:TOrderBy[];
+
+	constructor(
+		public keySelector:(value:T) => TOrderBy,
+		public descending:boolean,
+		public child:SortContext<T, TOrderBy>)
+	{
+		this.keys = null;
+	}
+
+	static create<T, TOrderBy>(
+		orderedEnumerable:OrderedEnumerable<T>,
+		currentContext:SortContext<T, TOrderBy> = null):SortContext<T, TOrderBy>
+	{
+		var context:SortContext<T, TOrderBy>
+			= new SortContext<T, TOrderBy>(
+			orderedEnumerable.keySelector,
+			orderedEnumerable.descending,
+			currentContext
+		);
+
+		if(orderedEnumerable.parent)
+			return SortContext.create(orderedEnumerable.parent, context);
+
+		return context;
+	}
+
+	generateKeys(source:IArray<T>):void
+	{
+		var _ = this;
+		var len = source.length | 0;
+		var keySelector:(value:T) => TOrderBy = _.keySelector;
+		var keys = new Array<TOrderBy>(len);
+		for(var i = INT_0; i<len; ++i)
+		{
+			keys[i] = keySelector(source[i]);
+		}
+		_.keys = keys;
+
+		if(_.child)
+			_.child.generateKeys(source);
+	}
+
+	compare(index1:number, index2:number):number
+	{
+		var _ = this, keys = _.keys;
+		var comparison = Values.compare(keys[index1], keys[index2]);
+
+		if(comparison==0)
+		{
+			var child = _.child;
+			return child
+				? child.compare(index1, index2)
+				: Values.compare(index1, index2);
+		}
+
+		return _.descending ? -comparison : comparison;
+	}
+}
+
 
 
 // #region Helper Functions...
