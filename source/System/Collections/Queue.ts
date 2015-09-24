@@ -31,10 +31,7 @@ class Queue<T> implements ICollection<T>, IDisposable
 	private _version:number;
 
 
-	constructor(source?:IEnumerable<T>);
-	constructor(source?:IArray<T>);
-	constructor(capacity?:number);
-	constructor(source?:any)
+	constructor(source?:IEnumerable<T> | IArray<T> | number)
 	{
 		var _ = this;
 		_._head = 0;
@@ -48,21 +45,23 @@ class Queue<T> implements ICollection<T>, IDisposable
 		{
 			if(Types.isNumber(source))
 			{
-				assertIntegerZeroOrGreater(source, "source");
+				var capacity = <number>source;
+				assertIntegerZeroOrGreater(capacity, "capacity");
 
-				_._array = source
-					? ArrayUtility.initialize<T>(source)
+				_._array = capacity
+					? ArrayUtility.initialize<T>(capacity)
 					: emptyArray;
 			}
 			else
 			{
+				var se = <IEnumerable<T> | IArray<T>> source;
 				_._array = ArrayUtility.initialize<T>(
-					source instanceof Array || "length" in source
-						? source.length
+					(se instanceof Array || "length" in <any>se)
+						? (<IArray<T>>se).length
 						: DEFAULT_CAPACITY
 				);
 
-				Enumerable.forEach<T>(source, e=> _.enqueue(e));
+				Enumerable.forEach<T>(se, (e:T)=> _.enqueue(e));
 
 				_._version = 0;
 			}

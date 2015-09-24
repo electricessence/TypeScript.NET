@@ -19,16 +19,18 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
                 _._array = emptyArray;
             else {
                 if (Types.isNumber(source)) {
-                    assertIntegerZeroOrGreater(source, "source");
-                    _._array = source
-                        ? ArrayUtility.initialize(source)
+                    var capacity = source;
+                    assertIntegerZeroOrGreater(capacity, "capacity");
+                    _._array = capacity
+                        ? ArrayUtility.initialize(capacity)
                         : emptyArray;
                 }
                 else {
-                    _._array = ArrayUtility.initialize(source instanceof Array || "length" in source
-                        ? source.length
+                    var se = source;
+                    _._array = ArrayUtility.initialize((se instanceof Array || "length" in se)
+                        ? se.length
                         : DEFAULT_CAPACITY);
-                    Enumerable.forEach(source, function (e) { return _.enqueue(e); });
+                    Enumerable.forEach(se, function (e) { return _.enqueue(e); });
                     _._version = 0;
                 }
             }

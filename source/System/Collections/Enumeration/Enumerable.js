@@ -7,7 +7,7 @@ define(["require", "exports", '../../Disposable/Utility', './Enumerator'], funct
     (function (Enumerable) {
         function forEach(enumerable, action) {
             if (enumerable) {
-                DU.using(enumerable.getEnumerator(), function (e) {
+                DU.using(Enumerator.from(enumerable), function (e) {
                     Enumerator.forEach(e, action);
                 });
             }
