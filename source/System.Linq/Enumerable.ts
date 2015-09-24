@@ -10,7 +10,6 @@
 ///<reference path="../System/Collections/Enumeration/IEnumerable"/>
 ///<reference path="../System/Collections/Dictionaries/IDictionary"/>
 ///<reference path="IGrouping"/>
-import System = require('../System/System');
 import Values = require('../System/Compare');
 import Types = require('../System/Types');
 import BaseFunctions = require('../System/Functions');
@@ -51,9 +50,9 @@ var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 const
-INT_0:number = 0 | 0,
-INT_NEGATIVE_1 = -1 | 0,
-INT_POSITIVE_1 = +1 | 0;
+	INT_0:number = 0 | 0,
+	INT_NEG1:number = -1 | 0,
+	INT_POS1:number = +1 | 0;
 
 
 // #endregion
@@ -97,7 +96,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		if(source instanceof Enumerable)
 			return source.toArray();
 
-		if("getEnumerator" in source) {
+		if("getEnumerator" in source)
+		{
 			var result:T[] = [];
 			enumeratorForEach<T>(
 				source.getEnumerator(), (e, i) =>
@@ -141,7 +141,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 			() =>
 				new EnumeratorBase<T>(
 					null,
-						yielder =>
+					(yielder)=>
 						yielder.yieldReturn(values[(Math.random()*values.length) | 0])
 				)
 		);
@@ -155,7 +155,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				var index:number = INT_0; // Let the compiler know this is an int.
 				return new EnumeratorBase<T>(
 					() => { index = INT_0; }, // Reinitialize the value just in case the enumerator is restarted.
-						yielder =>
+					(yielder)=>
 					{
 						if(index>=values.length) index = INT_0;
 						return yielder.yieldReturn(values[index++]);
@@ -190,7 +190,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 				return new EnumeratorBase<T>(
 					() => { index = INT_0; },
-						yielder => (index++<c) && yielder.yieldReturn(element)
+
+					(yielder)=> (index++<c) && yielder.yieldReturn(element)
 				);
 			}
 		)
@@ -198,7 +199,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 			() =>
 				new EnumeratorBase<T>(
 					null,
-						yielder => yielder.yieldReturn(element)
+					(yielder)=> yielder.yieldReturn(element)
 				)
 		);
 	}
@@ -215,7 +216,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				var element:T;
 				return new EnumeratorBase<T>(
 					() => { element = initializer(); },
-						yielder => yielder.yieldReturn(element),
+
+					(yielder)=> yielder.yieldReturn(element),
 					() => { finalizer(element); }
 				);
 			}
@@ -224,7 +226,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 	static make<T>(element:T):Enumerable<T>
 	{
-		return Enumerable.repeat<T>(element, INT_POSITIVE_1);
+		return Enumerable.repeat<T>(element, INT_POS1);
 	}
 
 	// start and step can be other than integer.
@@ -257,11 +259,12 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						index = INT_0;
 						value = start;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						var result:boolean =
-							    index++<c
-							    && yielder.yieldReturn(value);
+							index++<c
+							&& yielder.yieldReturn(value);
 
 						if(result && index<count)
 							value += step;
@@ -281,7 +284,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 					{
 						value = start;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						var current:number = value;
 						value += step;
@@ -346,7 +350,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				return start<to
 					? new EnumeratorBase<number>(
 					() => { value = start; },
-						yielder =>
+
+					(yielder)=>
 					{
 						var result:boolean = value<=to && yielder.yieldReturn(value);
 
@@ -358,7 +363,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				)
 					: new EnumeratorBase<number>(
 					() => { value = start; },
-						yielder =>
+
+					(yielder)=>
 					{
 						var result:boolean = value>=to && yielder.yieldReturn(value);
 
@@ -379,7 +385,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		if(type!=Types.String)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
-		if(pattern instanceof RegExp) {
+		if(pattern instanceof RegExp)
+		{
 			flags += (pattern.ignoreCase) ? "i" : "";
 			flags += (pattern.multiline) ? "m" : "";
 			pattern = pattern.source;
@@ -393,7 +400,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				var regex:RegExp;
 				return new EnumeratorBase<RegExpExecArray>(
 					() => { regex = new RegExp(pattern, flags); },
-						yielder =>
+
+					(yielder)=>
 					{
 						// Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
 						var match = regex.exec(input);
@@ -419,7 +427,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 				return new EnumeratorBase<T>(
 					() => { index = INT_0; },
-						yielder =>
+
+					(yielder)=>
 					{
 						var current:number = index++;
 						return current<c && yielder.yieldReturn(factory(current));
@@ -433,7 +442,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				var index:number = INT_0;
 				return new EnumeratorBase<T>(
 					() => { index = INT_0; },
-						yielder => yielder.yieldReturn(factory(index++))
+
+					(yielder)=> yielder.yieldReturn(factory(index++))
 				);
 			}
 		);
@@ -454,7 +464,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						value = seed;
 						isFirst = !skipSeed;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						var i = index++;
 						if(isFirst)
@@ -478,7 +489,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 				return new EnumeratorBase<T>(
 					() => { enumerator = enumerableFactory().getEnumerator(); },
-						yielder => enumerator.moveNext() && yielder.yieldReturn(enumerator.current),
+
+					(yielder)=> enumerator.moveNext() && yielder.yieldReturn(enumerator.current),
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			}
@@ -531,7 +543,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 			_.getEnumerator(), e=>
 			{
 				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
-				while(_.assertIsNotDisposed() && e.moveNext()) {
+				while(_.assertIsNotDisposed() && e.moveNext())
+				{
 					if(action(e.current, index++)===false)
 						break;
 				}
@@ -634,11 +647,13 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						index = INT_0;
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
 
-						while(enumerator.moveNext()) {
+						while(enumerator.moveNext())
+						{
 							var actionResult = action(enumerator.current, index++);
 
 							if(actionResult===false || actionResult===EnumerableAction)
@@ -651,6 +666,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						}
 						return false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 
@@ -796,9 +812,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						enumerator = _.getEnumerator();
 						q = new Queue<T>();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
-						while(enumerator.moveNext()) {
+						while(enumerator.moveNext())
+						{
 							// Add the next one to the queue.
 							q.enqueue(enumerator.current);
 
@@ -809,6 +827,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						}
 						return false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator, q); }
 				);
 			}
@@ -855,10 +874,13 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						len = 0;
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
-						while(true) {
-							if(enumerator.moveNext()) {
+						while(true)
+						{
+							if(enumerator.moveNext())
+							{
 								buffer[len++] = enumerator.current;
 								return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
 							}
@@ -870,10 +892,12 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 								.fromArray<T>(buffer)
 								.selectMany(func);
 
-							if(!next.any()) {
+							if(!next.any())
+							{
 								return yielder.yieldBreak();
 							}
-							else {
+							else
+							{
 								nestLevel++;
 								buffer = [];
 								len = 0;
@@ -882,6 +906,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							}
 						}
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(enumerator);
@@ -913,10 +938,13 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						enumerator = _.getEnumerator();
 						len = 0;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
-						while(true) {
-							if(enumerator.moveNext()) {
+						while(true)
+						{
+							if(enumerator.moveNext())
+							{
 								var value = resultSelector(enumerator.current, len);
 								enumeratorStack[len++] = enumerator;
 								enumerator = func(enumerator.current).getEnumerator();
@@ -930,12 +958,15 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							enumeratorStack.length = len;
 						}
 					},
+
 					() =>
 					{
-						try {
+						try
+						{
 							DisposeUtility.dispose(enumerator);
 						}
-						finally {
+						finally
+						{
 							DisposeUtility.disposeThese(enumeratorStack);
 						}
 					}
@@ -957,21 +988,28 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 				return new EnumeratorBase<T>(
 					() => { enumerator = _.getEnumerator(); },
-						yielder =>
+
+					(yielder)=>
 					{
-						while(true) {
-							if(middleEnumerator!=null) {
-								if(middleEnumerator.moveNext()) {
+						while(true)
+						{
+							if(middleEnumerator!=null)
+							{
+								if(middleEnumerator.moveNext())
+								{
 									return yielder.yieldReturn(middleEnumerator.current);
 								}
-								else {
+								else
+								{
 									middleEnumerator = null;
 								}
 							}
 
-							if(enumerator.moveNext()) {
+							if(enumerator.moveNext())
+							{
 								var c = enumerator.current;
-								if(c instanceof Array) {
+								if(c instanceof Array)
+								{
 									middleEnumerator.dispose();
 									middleEnumerator = Enumerable.fromArray<any>(c)
 										.selectMany(Functions.Identity)
@@ -979,7 +1017,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 										.getEnumerator();
 									continue;
 								}
-								else {
+								else
+								{
 									return yielder.yieldReturn(enumerator.current);
 								}
 							}
@@ -987,6 +1026,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							return false;
 						}
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(enumerator, middleEnumerator);
@@ -1012,12 +1052,14 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						enumerator = _.getEnumerator();
 						enumerator.moveNext();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						var prev = enumerator.current;
 						return enumerator.moveNext()
-						       && yielder.yieldReturn(selector(prev, enumerator.current));
+							&& yielder.yieldReturn(selector(prev, enumerator.current));
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			}
@@ -1043,9 +1085,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						enumerator = _.getEnumerator();
 						isFirst = true;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
-						if(isFirst) {
+						if(isFirst)
+						{
 							isFirst = false;
 							//noinspection JSUnusedAssignment
 							return isUseSeed
@@ -1058,6 +1102,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							? yielder.yieldReturn(value = func(value, enumerator.current))
 							: false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			}
@@ -1089,7 +1134,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						index = INT_0;
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
 
@@ -1097,9 +1143,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							? yielder.yieldReturn(selector(enumerator.current, index++))
 							: false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			},
+
 			() => { disposed = true; }
 		);
 	}
@@ -1141,7 +1189,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						middleEnumerator = undefined;
 						index = INT_0;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 
 						// Just started, and nothing to enumerate? End.
@@ -1153,7 +1202,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						{
 
 							// Initialize middle if there isn't one.
-							if(!middleEnumerator) {
+							if(!middleEnumerator)
+							{
 								var middleSeq = collectionSelector(enumerator.current, index++);
 
 								// Collection is null?  Skip it...
@@ -1180,6 +1230,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 						return false;
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(enumerator, middleEnumerator);
@@ -1210,11 +1261,13 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						index = INT_0;
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
 
-						while(enumerator.moveNext()) {
+						while(enumerator.moveNext())
+						{
 							var result = selector(enumerator.current, index++);
 							if(result!==null && result!==undefined)
 								return yielder.yieldReturn(result);
@@ -1222,9 +1275,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 						return false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			},
+
 			() => { disposed = true; }
 		);
 	}
@@ -1251,19 +1306,23 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						index = INT_0;
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
 
-						while(enumerator.moveNext()) {
+						while(enumerator.moveNext())
+						{
 							if(predicate(enumerator.current, index++))
 								return yielder.yieldReturn(enumerator.current);
 						}
 						return false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			},
+
 			() => { disposed = true; }
 		);
 
@@ -1273,7 +1332,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	ofType<TType>(type:any):Enumerable<TType>
 	{
 		var typeName:string;
-		switch(<any>type) {
+		switch(<any>type)
+		{
 			case Number:
 				typeName = Types.Number;
 				break;
@@ -1316,18 +1376,22 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						if(second)
 							Enumerable.forEach(second, key => keys.addByKeyValue(key, true));
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
-						while(enumerator.moveNext()) {
+						while(enumerator.moveNext())
+						{
 							var current = enumerator.current;
-							if(!keys.containsKey(current)) {
+							if(!keys.containsKey(current))
+							{
 								keys.addByKeyValue(current, true);
 								return yielder.yieldReturn(current);
 							}
 						}
 						return false;
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(enumerator);
@@ -1335,6 +1399,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 					}
 				);
 			},
+
 			() => { disposed = true; }
 		);
 	}
@@ -1363,16 +1428,20 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
-						while(enumerator.moveNext()) {
+						while(enumerator.moveNext())
+						{
 							var key = compareSelector(enumerator.current);
 
-							if(initial) {
+							if(initial)
+							{
 								initial = false;
 							}
-							else if(compareKey===key) {
+							else if(compareKey===key)
+							{
 								continue;
 							}
 
@@ -1381,9 +1450,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						}
 						return false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			},
+
 			() => { disposed = true; }
 		);
 	}
@@ -1406,13 +1477,14 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						index = buffer.length | 0;
 					},
 
-						yielder =>
+					(yielder)=>
 					index>INT_0
 					&& yielder.yieldReturn(buffer[--index]),
 
 					() => { buffer.length = 0; }
 				);
 			},
+
 			() => { disposed = true; }
 		);
 	}
@@ -1435,7 +1507,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						buffer = _.toArray();
 						capacity = len = buffer.length;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						// Avoid using major array operations like .slice();
 						if(!len)
@@ -1452,9 +1525,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 						return yielder.yieldReturn(selectedValue);
 					},
+
 					() => { buffer.length = 0; }
 				);
 			},
+
 			() => { disposed = true; }
 		);
 	}
@@ -1466,21 +1541,19 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		_.assertIsNotDisposed();
 
 		var count:number = INT_0;
-		if(predicate) {
-			_.forEach(
-				(x, i) =>
-				{
-					if(predicate(x, i))++count;
-				}
-			);
+		if(predicate)
+		{
+			_.forEach((x, i) =>
+			{
+				if(predicate(x, i))++count;
+			});
 		}
-		else {
-			_.forEach(
-				() =>
-				{
-					++count;
-				}
-			);
+		else
+		{
+			_.forEach(() =>
+			{
+				++count;
+			});
 		}
 
 		return count;
@@ -1490,15 +1563,14 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	all(predicate:Predicate<T>):boolean
 	{
 		var result = true;
-		this.forEach(
-				x =>
+		this.forEach(x =>
+		{
+			if(!predicate(x))
 			{
-				if(!predicate(x)) {
-					result = false;
-					return false; // break
-				}
+				result = false;
+				return false; // break
 			}
-		);
+		});
 		return result;
 	}
 
@@ -1515,23 +1587,21 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 		// Splitting the forEach up this way reduces iterative processing.
 		// forEach handles the generation and disposal of the enumerator.
-		if(predicate) {
-			this.forEach(
-					x =>
-				{
-					result = predicate(x); // false = not found and therefore it should continue.  true = found and break;
-					return !result;
-				}
-			);
+		if(predicate)
+		{
+			this.forEach(x =>
+			{
+				result = predicate(x); // false = not found and therefore it should continue.  true = found and break;
+				return !result;
+			});
 		}
-		else {
-			this.forEach(
-				() =>
-				{
-					result = true;
-					return false;
-				}
-			);
+		else
+		{
+			this.forEach(() =>
+			{
+				result = true;
+				return false;
+			});
 		}
 		return result;
 
@@ -1560,52 +1630,46 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 	// Better to chain a where statement first to be more explicit.
 	indexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
 	{
-		var found:number = INT_NEGATIVE_1;
+		var found:number = INT_NEG1;
 
 		if(compareSelector)
-			this.forEach(
-				(element:T, i?:number) =>
+			this.forEach((element:T, i?:number) =>
+			{
+				if(Values.areEqual(compareSelector(element), compareSelector(value), true))
 				{
-					if(Values.areEqual(compareSelector(element), compareSelector(value), true)) {
-						found = i;
-						return false;
-					}
+					found = i;
+					return false;
 				}
-			);
+			});
 		else
-			this.forEach(
-				(element:T, i?:number) =>
+			this.forEach((element:T, i?:number) =>
+			{
+				// Why?  Because NaN doesn't equal NaN. :P
+				if(Values.areEqual(element, value, true))
 				{
-					// Why?  Because NaN doesn't equal NaN. :P
-					if(Values.areEqual(element, value, true)) {
-						found = i;
-						return false;
-					}
+					found = i;
+					return false;
 				}
-			);
+			});
 
 		return found;
 	}
 
 	lastIndexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
 	{
-		var result:number = INT_NEGATIVE_1;
+		var result:number = INT_NEG1;
 
 		if(compareSelector)
-			this.forEach(
-				(element:T, i?:number) =>
-				{
-					if(Values.areEqual(compareSelector(element), compareSelector(value), true)) result
-						= i;
-				}
-			);
+			this.forEach((element:T, i?:number) =>
+			{
+				if(Values.areEqual(compareSelector(element), compareSelector(value), true)) result
+					= i;
+			});
 		else
-			this.forEach(
-				(element:T, i?:number) =>
-				{
-					if(Values.areEqual(element, value, true)) result = i;
-				}
-			);
+			this.forEach((element:T, i?:number) =>
+			{
+				if(Values.areEqual(element, value, true)) result = i;
+			});
 
 		return result;
 	}
@@ -1627,20 +1691,24 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
 
-						if(enumerator.moveNext()) {
+						if(enumerator.moveNext())
+						{
 							isFirst = false;
 							return yielder.yieldReturn(enumerator.current);
 						}
-						else if(isFirst) {
+						else if(isFirst)
+						{
 							isFirst = false;
 							return yielder.yieldReturn(defaultValue);
 						}
 						return false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			}
@@ -1673,7 +1741,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						firstEnumerator = _.getEnumerator();
 						secondEnumerator = enumeratorFrom<TSecond>(second);
 					},
-						yielder =>
+
+					(yielder)=>
 					firstEnumerator.moveNext() && secondEnumerator.moveNext()
 					&& yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++)),
 					() =>
@@ -1717,12 +1786,16 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						secondEnumerator = null;
 					},
 
-						yielder =>
+					(yielder)=>
 					{
-						if(firstEnumerator.moveNext()) {
-							while(true) {
-								while(!secondEnumerator) {
-									if(secondTemp.count) {
+						if(firstEnumerator.moveNext())
+						{
+							while(true)
+							{
+								while(!secondEnumerator)
+								{
+									if(secondTemp.count)
+									{
 										var next = secondTemp.dequeue();
 										if(next) // In case by chance next is null, then try again.
 											secondEnumerator = enumeratorFrom<TSecond>(next);
@@ -1743,6 +1816,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 						return yielder.yieldBreak();
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(firstEnumerator, secondTemp);
@@ -1764,21 +1838,27 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
 		var _ = this;
 		return new Enumerable<TResult>(
-			() => {
+			() =>
+			{
 				var outerEnumerator:IEnumerator<T>;
 				var lookup:Lookup<TKey,TInner>;
 				var innerElements:TInner[] = null;
 				var innerCount:number = INT_0;
 
 				return new EnumeratorBase<TResult>(
-					() => {
+					() =>
+					{
 						outerEnumerator = _.getEnumerator();
 						lookup = Enumerable.from<TInner>(inner)
 							.toLookup(innerKeySelector, Functions.Identity, compareSelector);
 					},
-						yielder => {
-						while(true) {
-							if(innerElements!=null) {
+
+					(yielder)=>
+					{
+						while(true)
+						{
+							if(innerElements!=null)
+							{
 								var innerElement = innerElements[innerCount++];
 								if(innerElement!==undefined)
 									return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
@@ -1787,15 +1867,18 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 								innerCount = INT_0;
 							}
 
-							if(outerEnumerator.moveNext()) {
+							if(outerEnumerator.moveNext())
+							{
 								var key = outerKeySelector(outerEnumerator.current);
 								innerElements = lookup.get(key);
 							}
-							else {
+							else
+							{
 								return yielder.yieldBreak();
 							}
 						}
 					},
+
 					() => { DisposeUtility.dispose(outerEnumerator); }
 				);
 			}
@@ -1812,17 +1895,20 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		var _ = this;
 
 		return new Enumerable<TResult>(
-			() => {
+			() =>
+			{
 				var enumerator:IEnumerator<T>;
 				var lookup:Lookup<TKey, TInner> = null;
 
 				return new EnumeratorBase<TResult>(
-					() => {
+					() =>
+					{
 						enumerator = _.getEnumerator();
 						lookup = Enumerable.from<TInner>(inner)
 							.toLookup(innerKeySelector, Functions.Identity, compareSelector);
 					},
-						yielder =>
+
+					(yielder)=>
 					enumerator.moveNext()
 					&& yielder.yieldReturn(
 						resultSelector(
@@ -1830,6 +1916,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							lookup.get(outerKeySelector(enumerator.current))
 						)
 					),
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			}
@@ -1849,12 +1936,15 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				var secondEnumerator:IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						firstEnumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder) =>
 					{
-						if(firstEnumerator!=null) {
+						if(firstEnumerator!=null)
+						{
 							if(firstEnumerator.moveNext()) return yielder.yieldReturn(firstEnumerator.current);
 							secondEnumerator = enumeratorFrom<T>(other);
 							firstEnumerator.dispose();
@@ -1863,6 +1953,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						if(secondEnumerator.moveNext()) return yielder.yieldReturn(secondEnumerator.current);
 						return false;
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(firstEnumerator, secondEnumerator);
@@ -1897,11 +1988,14 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						enumerator = _.getEnumerator();
 						queue = new Queue<any[]>(enumerables);
 					},
-						yielder =>
-					{
-						while(true) {
 
-							while(!enumerator && queue.count) {
+					(yielder) =>
+					{
+						while(true)
+						{
+
+							while(!enumerator && queue.count)
+							{
 								enumerator = enumeratorFrom<T>(queue.dequeue()); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
 							}
 
@@ -1918,6 +2012,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							return yielder.yieldBreak();
 						}
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(enumerator, queue); // Just in case this gets disposed early.
@@ -1956,7 +2051,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		_.assertIsNotDisposed();
 
 		return new Enumerable<T>(
-			() => {
+			() =>
+			{
 
 				var firstEnumerator:IEnumerator<T>;
 				var secondEnumerator:IEnumerator<T>;
@@ -1972,22 +2068,27 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						secondEnumerator = enumeratorFrom<T>(other);
 						isEnumerated = false;
 					},
-						yielder => {
-						if(count==n) { // Inserting?
+
+					(yielder) =>
+					{
+						if(count==n)
+						{ // Inserting?
 							isEnumerated = true;
 							if(secondEnumerator.moveNext())
 								return yielder.yieldReturn(secondEnumerator.current);
 						}
 
-						if(firstEnumerator.moveNext()) {
+						if(firstEnumerator.moveNext())
+						{
 							count++;
 							return yielder.yieldReturn(firstEnumerator.current);
 						}
 
 						return !isEnumerated
-						       && secondEnumerator.moveNext()
-						       && yielder.yieldReturn(secondEnumerator.current);
+							&& secondEnumerator.moveNext()
+							&& yielder.yieldReturn(secondEnumerator.current);
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(firstEnumerator, secondEnumerator);
@@ -2005,11 +2106,12 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		var _ = this;
 
 		return new Enumerable<T>(
-			() => {
+			() =>
+			{
 				var buffer:T,
-				    mode:EnumerableAction,
-				    enumerator:IEnumerator<T>,
-				    alternateEnumerator:IEnumerator<T>;
+					mode:EnumerableAction,
+					enumerator:IEnumerator<T>,
+					alternateEnumerator:IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2029,9 +2131,11 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						if(hasAtLeastOne)
 							buffer = enumerator.current;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
-						switch(mode) {
+						switch(mode)
+						{
 							case EnumerableAction.Break: // We're done?
 								return yielder.yieldBreak();
 
@@ -2059,6 +2163,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						return yielder.yieldReturn(latest);
 
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(enumerator, alternateEnumerator);
@@ -2088,13 +2193,15 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		var _ = this;
 
 		return new Enumerable<T>(
-			() => {
+			() =>
+			{
 				var enumerator:IEnumerator<T>;
 				var keys:Dictionary<T,boolean>;
 				var outs:Dictionary<T,boolean>;
 
 				return new EnumeratorBase<T>(
-					() => {
+					() =>
+					{
 						enumerator = _.getEnumerator();
 
 						keys = new Dictionary<T, boolean>(compareSelector);
@@ -2103,16 +2210,21 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						Enumerable.from<T>(second)
 							.forEach(key=> { keys.addByKeyValue(key, true); });
 					},
-						yielder => {
-						while(enumerator.moveNext()) {
+
+					(yielder)=>
+					{
+						while(enumerator.moveNext())
+						{
 							var current = enumerator.current;
-							if(!outs.containsKey(current) && keys.containsKey(current)) {
+							if(!outs.containsKey(current) && keys.containsKey(current))
+							{
 								outs.addByKeyValue(current, true);
 								return yielder.yieldReturn(current);
 							}
 						}
 						return yielder.yieldBreak();
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);  // Should Dictionary be IDisposable?
 			}
@@ -2129,7 +2241,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				Enumerable.from<T>(second).getEnumerator(),
 					e2=>
 				{
-					while(e1.moveNext()) {
+					while(e1.moveNext())
+					{
 						if(!e2.moveNext() || !equalityComparer(e1.current, e2.current))
 							return false;
 					}
@@ -2167,28 +2280,35 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						firstEnumerator = source.getEnumerator();
 						keys = new Dictionary<T, any>(compareSelector);
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						var current:T;
-						if(secondEnumerator===undefined) {
-							while(firstEnumerator.moveNext()) {
+						if(secondEnumerator===undefined)
+						{
+							while(firstEnumerator.moveNext())
+							{
 								current = firstEnumerator.current;
-								if(!keys.containsKey(current)) {
+								if(!keys.containsKey(current))
+								{
 									keys.addByKeyValue(current, null);
 									return yielder.yieldReturn(current);
 								}
 							}
 							secondEnumerator = Enumerable.from<T>(second).getEnumerator();
 						}
-						while(secondEnumerator.moveNext()) {
+						while(secondEnumerator.moveNext())
+						{
 							current = secondEnumerator.current;
-							if(!keys.containsKey(current)) {
+							if(!keys.containsKey(current))
+							{
 								keys.addByKeyValue(current, null);
 								return yielder.yieldReturn(current);
 							}
 						}
 						return false;
 					},
+
 					() =>
 					{
 						DisposeUtility.dispose(firstEnumerator, secondEnumerator);
@@ -2300,7 +2420,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						enumerator = _.getEnumerator();
-						if(enumerator.moveNext()) {
+						if(enumerator.moveNext())
+						{
 							key = keySelector(enumerator.current);
 							compareKey = compareSelector(key);
 							group = [elementSelector(enumerator.current)];
@@ -2309,13 +2430,15 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						else
 							group = null;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						if(!group)
 							return yielder.yieldBreak();
 
 						var hasNext:boolean, c:T;
-						while((hasNext = enumerator.moveNext())) {
+						while((hasNext = enumerator.moveNext()))
+						{
 							c = enumerator.current;
 							if(compareKey===compareSelector(keySelector(c)))
 								group[len++] = elementSelector(c);
@@ -2324,22 +2447,26 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						}
 
 						var result:IGrouping<TKey, TElement>
-							    = resultSelector(key, group);
+							= resultSelector(key, group);
 
-						if(hasNext) {
+						if(hasNext)
+						{
 							c = enumerator.current;
 							key = keySelector(c);
 							compareKey = compareSelector(key);
 							group = [elementSelector(c)];
 							len = 1;
 						}
-						else {
+						else
+						{
 							group = null;
 						}
 
 						return yielder.yieldReturn(result);
 					},
-					() => {
+
+					() =>
+					{
 						DisposeUtility.dispose(enumerator);
 						group = null;
 					}
@@ -2368,17 +2495,20 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 					{
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						var array:T[] = ArrayUtility.initialize<T>(size);
 						len = 0;
-						while(len<size && enumerator.moveNext) {
+						while(len<size && enumerator.moveNext)
+						{
 							array[len++] = enumerator.current;
 						}
 
 						array.length = len;
 						return len && yielder.yieldReturn(array);
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			}
@@ -2406,7 +2536,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 			function (x)
 			{
 				var value = selector(x);
-				if(isNaN(value)) {
+				if(isNaN(value))
+				{
 					sum = NaN;
 					return false;
 				}
@@ -2459,7 +2590,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				x=>
 			{
 				var value = selector(x);
-				if(isNaN(value)) {
+				if(isNaN(value))
+				{
 					sum = NaN;
 					return false;
 				}
@@ -2483,12 +2615,14 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 			{
 				exists = true;
 				var value = selector(x);
-				if(isNaN(value)) {
+				if(isNaN(value))
+				{
 					result = NaN;
 					return false;
 				}
 
-				if(value==0) {
+				if(value==0)
+				{
 					result = 0; // Multiplying by zero will always end in zero.
 					return false;
 				}
@@ -2522,7 +2656,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		_.forEach(
 			(x:T, i:number) =>
 			{
-				if(i==n) {
+				if(i==n)
+				{
 					value = x;
 					found = true;
 					return false;
@@ -2551,7 +2686,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		_.forEach(
 			(x:T, i:number) =>
 			{
-				if(i==n) {
+				if(i==n)
+				{
 					value = x;
 					found = true;
 					return false;
@@ -2655,7 +2791,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		_.forEach(
 				x=>
 			{
-				if(!found) {
+				if(!found)
+				{
 					found = true;
 					value = x;
 				}
@@ -2678,7 +2815,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 		_.forEach(
 				x=>
 			{
-				if(!found) {
+				if(!found)
+				{
 					found = true;
 					value = x;
 				}
@@ -2708,11 +2846,13 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						if(!sharedEnumerator)
 							sharedEnumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					sharedEnumerator.moveNext()
 					&& yielder.yieldReturn(sharedEnumerator.current)
 				);
 			},
+
 			() =>
 			{
 				DisposeUtility.dispose(sharedEnumerator);
@@ -2744,13 +2884,15 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 							cache = [];
 						index = INT_0;
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
 
 						var i = index++;
 
-						if(i>=cache.length) {
+						if(i>=cache.length)
+						{
 							return (enumerator.moveNext())
 								? yielder.yieldReturn(cache[i] = enumerator.current)
 								: false;
@@ -2760,6 +2902,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 					}
 				);
 			},
+
 			() =>
 			{
 				disposed = true;
@@ -2785,26 +2928,32 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						try {
+						try
+						{
 							assertIsNotDisposed(disposed);
 							enumerator = _.getEnumerator();
 						}
-						catch(e) {
+						catch(e)
+						{
 							// Don't init...
 						}
 					},
-						yielder =>
+
+					(yielder)=>
 					{
-						try {
+						try
+						{
 							assertIsNotDisposed(disposed);
 							if(enumerator.moveNext())
 								return yielder.yieldReturn(enumerator.current);
 						}
-						catch(e) {
+						catch(e)
+						{
 							handler(e);
 						}
 						return false;
 					},
+
 					() => { DisposeUtility.dispose(enumerator); }
 				);
 			}
@@ -2826,19 +2975,23 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 						assertIsNotDisposed(disposed);
 						enumerator = _.getEnumerator();
 					},
-						yielder =>
+
+					(yielder)=>
 					{
 						assertIsNotDisposed(disposed);
 						return (enumerator.moveNext())
 							? yielder.yieldReturn(enumerator.current)
 							: false;
 					},
+
 					() =>
 					{
-						try {
+						try
+						{
 							DisposeUtility.dispose(enumerator);
 						}
-						finally {
+						finally
+						{
 							action();
 						}
 					}

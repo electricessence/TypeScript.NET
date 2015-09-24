@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 define(["require", "exports", '../Compare', './TimeSpan'], function (require, exports, Values, TimeSpan) {
+    'use strict';
     var ClockTime = (function () {
         function ClockTime() {
             var args = [];
@@ -109,6 +110,13 @@ define(["require", "exports", '../Compare', './TimeSpan'], function (require, ex
                             / 60
                             / 24) | 0;
                 return r;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(ClockTime.prototype, "total", {
+            get: function () {
+                return this.toTimeSpan();
             },
             enumerable: true,
             configurable: true

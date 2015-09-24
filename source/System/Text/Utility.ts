@@ -15,7 +15,7 @@ module Utility
 		return source;
 	}
 
-	// Based upon Crockford's supplant funciton.
+	// Based upon Crockford's supplant function.
 	export function supplant(source:string, o:{[key:string]:any}):string {
 		return source.replace(/\{([^{}]*)\}/g,
 			(a:string, b:string):any=> {

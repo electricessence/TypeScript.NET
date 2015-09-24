@@ -16,9 +16,13 @@ define(["require", "exports"], function (require, exports) {
                     ? new Date()
                     : new Date(value);
         }
-        DateTime.prototype.getJsDate = function () {
-            return new Date(this._value.getTime());
-        };
+        Object.defineProperty(DateTime.prototype, "jsDate", {
+            get: function () {
+                return new Date(this._value.getTime());
+            },
+            enumerable: true,
+            configurable: true
+        });
         DateTime.prototype.setJsDate = function (value) {
             this._value = new Date(value.getTime());
         };
@@ -29,6 +33,9 @@ define(["require", "exports"], function (require, exports) {
         DateTime.prototype.addDays = function (days) {
             days = days || 0;
             return this.addMilliseconds(days * 86400000);
+        };
+        DateTime.prototype.add = function (time) {
+            return this.addMilliseconds(time.total.milliseconds);
         };
         DateTime.now = function () {
             return new DateTime();

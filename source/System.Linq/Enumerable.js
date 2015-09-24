@@ -6,8 +6,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", '../System/Compare', '../System/Types', '../System/Functions', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', './Grouping', './Lookup', './ArrayEnumerable', './WhereEnumerable', './WhereSelectEnumerable', './OrderedEnumerable'], function (require, exports, Values, Types, BaseFunctions, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase, Grouping, Lookup, ArrayEnumerable, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable) {
     var using = DisposeUtility.using;
@@ -26,7 +25,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
     })(BaseFunctions);
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
-    var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
+    var INT_0 = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(enumeratorFactory, finalizer) {
@@ -110,7 +109,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             });
         };
         Enumerable.make = function (element) {
-            return Enumerable.repeat(element, INT_POSITIVE_1);
+            return Enumerable.repeat(element, INT_POS1);
         };
         Enumerable.range = function (start, count, step) {
             if (start === void 0) { start = 0; }
@@ -866,7 +865,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 : this.any(function (v) { return v === value; });
         };
         Enumerable.prototype.indexOf = function (value, compareSelector) {
-            var found = INT_NEGATIVE_1;
+            var found = INT_NEG1;
             if (compareSelector)
                 this.forEach(function (element, i) {
                     if (Values.areEqual(compareSelector(element), compareSelector(value), true)) {
@@ -884,7 +883,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return found;
         };
         Enumerable.prototype.lastIndexOf = function (value, compareSelector) {
-            var result = INT_NEGATIVE_1;
+            var result = INT_NEG1;
             if (compareSelector)
                 this.forEach(function (element, i) {
                     if (Values.areEqual(compareSelector(element), compareSelector(value), true))

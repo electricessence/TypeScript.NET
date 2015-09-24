@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 define(["require", "exports", '../System/Disposable/Utility', '../System/Collections/Enumeration/EnumeratorBase', './Grouping'], function (require, exports, DisposeUtility, EnumeratorBase, Grouping) {
+    'use strict';
     var Lookup = (function () {
         function Lookup(_dictionary) {
             this._dictionary = _dictionary;

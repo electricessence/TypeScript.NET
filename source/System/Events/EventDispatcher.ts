@@ -6,7 +6,7 @@
 ///<reference path="../Disposable/IDisposable.ts"/>
 ///<reference path="IEventDispatcher.ts"/>
 
-import System = require('../System');
+import shallowCopy = require('../Utility/shallowCopy');
 import DisposableBase = require('../Disposable/DisposableBase');
 import AU = require('../Collections/Array/Utility');
 
@@ -147,7 +147,7 @@ class EventDispatcher extends DisposableBase implements IEventDispatcher
 		entries.forEach(
 				entry=> {
 				var newEvent = Object.create(Event);
-				System.copyTo(event, newEvent);
+				shallowCopy(event, newEvent);
 				newEvent.target = this;
 				entry.listener(newEvent);
 			}

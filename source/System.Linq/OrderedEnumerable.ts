@@ -6,18 +6,14 @@
 
 
 ///<reference path="../System/Collections/Enumeration/IEnumerable"/>
-import System = require('../System/System');
-import Values = require('../System/Compare')
+import Values = require('../System/Compare');
 import DisposeUtility = require('../System/Disposable/Utility');
 import EnumeratorBase = require('../System/Collections/Enumeration/EnumeratorBase');
 import Enumerable= require('./Enumerable');
 import WhereSelectEnumerable= require('./WhereSelectEnumerable');
 'use strict';
 
-const
-	INT_0:number = 0 | 0,
-	INT_NEGATIVE_1 = -1 | 0,
-	INT_POSITIVE_1 = +1 | 0;
+const INT_0:number = 0 | 0;
 
 
 class OrderedEnumerable<T> extends Enumerable<T>
@@ -72,12 +68,14 @@ class OrderedEnumerable<T> extends Enumerable<T>
 
 				indexes.sort((a, b) => sortContext.compare(a, b));
 			},
-				yielder =>
+
+			(yielder)=>
 			{
 				return (index<indexes.length)
 					? yielder.yieldReturn(buffer[indexes[index++]])
 					: false;
 			},
+
 			() =>
 			{
 				if(buffer)
@@ -136,7 +134,8 @@ class SortContext<T, TOrderBy>
 		var len = source.length | 0;
 		var keySelector:(value:T) => TOrderBy = _.keySelector;
 		var keys = new Array<TOrderBy>(len);
-		for(var i = INT_0; i<len; ++i) {
+		for(var i = INT_0; i<len; ++i)
+		{
 			keys[i] = keySelector(source[i]);
 		}
 		_.keys = keys;
@@ -150,7 +149,8 @@ class SortContext<T, TOrderBy>
 		var _ = this, keys = _.keys;
 		var comparison = Values.compare(keys[index1], keys[index2]);
 
-		if(comparison==0) {
+		if(comparison==0)
+		{
 			var child = _.child;
 			return child
 				? child.compare(index1, index2)

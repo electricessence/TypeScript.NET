@@ -7,7 +7,6 @@
 
 ///<reference path="ICollection.ts"/>
 ///<reference path="IList.ts"/>
-import System = require('../System');
 import Values = require('../Compare');
 import Types = require('../Types');
 import ArrayUtility= require('./Array/Utility');
@@ -45,15 +44,18 @@ class Queue<T> implements ICollection<T>, IDisposable
 
 		if(!source)
 			_._array = emptyArray;
-		else {
-			if(Types.isNumber(source)) {
+		else
+		{
+			if(Types.isNumber(source))
+			{
 				assertIntegerZeroOrGreater(source, "source");
 
 				_._array = source
 					? ArrayUtility.initialize<T>(source)
 					: emptyArray;
 			}
-			else {
+			else
+			{
 				_._array = ArrayUtility.initialize<T>(
 					source instanceof Array || "length" in source
 						? source.length
@@ -92,7 +94,8 @@ class Queue<T> implements ICollection<T>, IDisposable
 		var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
 		if(head<tail)
 			ArrayUtility.clear(array, head, size);
-		else {
+		else
+		{
 			ArrayUtility.clear(array, head, array.length - head);
 			ArrayUtility.clear(array, 0, tail);
 		}
@@ -110,7 +113,8 @@ class Queue<T> implements ICollection<T>, IDisposable
 		var _ = this;
 		var array = _._array, index = _._head, count = _._size, len = _._capacity;
 
-		while(count-->0) {
+		while(count-->0)
+		{
 			if(Values.areEqual(array[index], item)) // May need a equality compare here.
 				return true;
 
@@ -159,7 +163,8 @@ class Queue<T> implements ICollection<T>, IDisposable
 	{
 		var _ = this;
 		_.clear();
-		if(_._array!=emptyArray) {
+		if(_._array!=emptyArray)
+		{
 			_._array.length = _._capacity = 0;
 			_._array = emptyArray;
 		}
@@ -178,7 +183,8 @@ class Queue<T> implements ICollection<T>, IDisposable
 		return arr;
 	}
 
-	setCapacity(capacity:number):void {
+	setCapacity(capacity:number):void
+	{
 
 		assertIntegerZeroOrGreater(capacity, "capacity");
 
@@ -190,7 +196,8 @@ class Queue<T> implements ICollection<T>, IDisposable
 		var head = _._head, tail = _._tail, size = _._size;
 
 		// Special case where we can simply extend the length of the array. (JavaScript only)
-		if(array!=emptyArray && capacity>len && head<tail) {
+		if(array!=emptyArray && capacity>len && head<tail)
+		{
 			array.length = _._capacity = capacity;
 			_._version++;
 			return;
@@ -198,11 +205,14 @@ class Queue<T> implements ICollection<T>, IDisposable
 
 		// We create a new array because modifying an existing one could be slow.
 		var newArray:T[] = ArrayUtility.initialize<T>(capacity);
-		if(size>0) {
-			if(head<tail) {
+		if(size>0)
+		{
+			if(head<tail)
+			{
 				ArrayUtility.copyTo(array, newArray, head, 0, size);
 			}
-			else {
+			else
+			{
 				ArrayUtility.copyTo(array, newArray, head, 0, len - head);
 				ArrayUtility.copyTo(array, newArray, 0, len - head, tail);
 			}
@@ -218,7 +228,8 @@ class Queue<T> implements ICollection<T>, IDisposable
 	enqueue(item:T):void
 	{
 		var _ = this, array = _._array, size = _._size | 0, len = _._capacity | 0;
-		if(size==len) {
+		if(size==len)
+		{
 			var newCapacity = len*GROW_FACTOR_HALF;
 			if(newCapacity<len + MINIMUM_GROW)
 				newCapacity = len + MINIMUM_GROW;
@@ -267,7 +278,8 @@ class Queue<T> implements ICollection<T>, IDisposable
 		return _._array[(_._head + index)%_._capacity];
 	}
 
-	peek():T {
+	peek():T
+	{
 		if(this._size==0)
 			throw new Error("InvalidOperationException: cannot call peek on an empty queue.");
 
@@ -293,7 +305,7 @@ class Queue<T> implements ICollection<T>, IDisposable
 				version = _._version;
 				index = 0;
 			},
-				yielder =>
+			(yielder)=>
 			{
 				if(version!=_._version)
 					throw new Error("InvalidOperationException: collection was changed during enumeration.");

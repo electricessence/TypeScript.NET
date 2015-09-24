@@ -9,7 +9,6 @@
 ///<reference path="IObservable.ts"/>
 ///<reference path="../Disposable/IDisposableAware.ts"/>
 
-import System = require('../System');
 import LinkedList = require('../Collections/LinkedList');
 
 class Subscription<T> implements IDisposableAware

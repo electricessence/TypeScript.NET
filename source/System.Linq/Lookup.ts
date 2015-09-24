@@ -10,6 +10,7 @@ import DisposeUtility = require('../System/Disposable/Utility');
 import Dictionary = require('../System/Collections/Dictionaries/Dictionary');
 import EnumeratorBase = require('../System/Collections/Enumeration/EnumeratorBase');
 import Grouping = require('./Grouping');
+'use strict';
 
 
 class Lookup<TKey, TElement> implements ILookup<TKey, TElement>
@@ -40,7 +41,7 @@ class Lookup<TKey, TElement> implements ILookup<TKey, TElement>
 
 		return new EnumeratorBase<Grouping<TKey, TElement>>(
 			() => { enumerator = _._dictionary.getEnumerator(); },
-				yielder =>
+			(yielder)=>
 			{
 
 				if(!enumerator.moveNext())

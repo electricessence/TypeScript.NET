@@ -6,12 +6,11 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", '../System/Compare', '../System/Collections/Enumeration/EnumeratorBase', './Enumerable'], function (require, exports, Values, EnumeratorBase, Enumerable) {
     'use strict';
-    var INT_0 = 0 | 0, INT_NEGATIVE_1 = -1 | 0, INT_POSITIVE_1 = +1 | 0;
+    var INT_0 = 0 | 0;
     var OrderedEnumerable = (function (_super) {
         __extends(OrderedEnumerable, _super);
         function OrderedEnumerable(source, keySelector, descending, parent) {

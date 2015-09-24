@@ -7,7 +7,6 @@
 
 ///<reference path="ILinkedListNode.ts"/>
 ///<reference path="ILinkedList.ts"/>
-import System = require('../System');
 import Values = require('../Compare');
 import TextUtility = require('../Text/Utility');
 import ArrayUtility= require('./Array/Utility');
@@ -87,12 +86,14 @@ class LinkedList<T> implements ILinkedList<T>
 		var _ = this, c = INT_0, first:Node<T> = null, last:Node<T> = null;
 		var e = Enumerator.from<T>(source);
 
-		if(e.moveNext()) {
+		if(e.moveNext())
+		{
 			first = last = new Node<T>(e.current);
 			++c;
 		}
 
-		while(e.moveNext()) {
+		while(e.moveNext())
+		{
 			last = last.next = new Node<T>(e.current, last);
 			++c;
 		}
@@ -166,7 +167,8 @@ class LinkedList<T> implements ILinkedList<T>
 	{
 		var equals = Values.areEqual,
 			next = this._first;
-		while(next) {
+		while(next)
+		{
 			if(equals(entry, next.value))
 				return next;
 			next = next.next;
@@ -178,7 +180,8 @@ class LinkedList<T> implements ILinkedList<T>
 	{
 		var equals = Values.areEqual,
 			prev = this._last;
-		while(prev) {
+		while(prev)
+		{
 			if(equals(entry, prev.value))
 				return prev;
 			prev = prev.prev;
@@ -195,7 +198,8 @@ class LinkedList<T> implements ILinkedList<T>
 	forEach(action:(element:T, index?:number) => any):void
 	{
 		var next = this._first, index:number = INT_0;
-		while(next && action(next.value, index++)!==false) {
+		while(next && action(next.value, index++)!==false)
+		{
 			next = next.next;
 		}
 	}
@@ -218,7 +222,7 @@ class LinkedList<T> implements ILinkedList<T>
 		var _ = this, current:Node<T>;
 		return new EnumeratorBase<T>(
 			() => { current = new Node(null, null, _._first); }, // Initialize anchor...
-				yielder =>
+			(yielder)=>
 				(current = current.next)
 					? yielder.yieldReturn(current.value)
 					: yielder.yieldBreak()
@@ -276,7 +280,8 @@ class LinkedList<T> implements ILinkedList<T>
 	{
 		var _ = this;
 		var node:Node<T> = _._findFirst(entry);
-		if(node) {
+		if(node)
+		{
 			var prev = node.prev, next = node.next;
 			if(prev) prev.next = next;
 			else _._first = next;
@@ -293,7 +298,8 @@ class LinkedList<T> implements ILinkedList<T>
 	remove(entry:T):number
 	{
 		var _ = this, removedCount:number = INT_0;
-		while(_.removeOnce(entry)) {
+		while(_.removeOnce(entry))
+		{
 			++removedCount;
 		}
 		return removedCount;
@@ -330,7 +336,8 @@ class LinkedList<T> implements ILinkedList<T>
 			throw new Error("ArgumentOutOfRangeException: index is greater than count.");
 
 		var next = this._first, i:number = INT_0;
-		while(next && index<i++) {
+		while(next && index<i++)
+		{
 			next = next.next;
 		}
 
@@ -371,7 +378,8 @@ class LinkedList<T> implements ILinkedList<T>
 	removeFirst():void
 	{
 		var _ = this, first = _._first;
-		if(first) {
+		if(first)
+		{
 			var next = first.next;
 			_._first = next;
 			if(next) // Might have been the last.
@@ -384,7 +392,8 @@ class LinkedList<T> implements ILinkedList<T>
 	removeLast():void
 	{
 		var _ = this, last = _._last;
-		if(last) {
+		if(last)
+		{
 			var prev = last.prev;
 			_._last = prev;
 			if(prev) // Might have been the first.
@@ -410,7 +419,8 @@ class LinkedList<T> implements ILinkedList<T>
 		else if(_._last==n) _._last = prev;
 		else b = true;
 
-		if(a!==b) {
+		if(a!==b)
+		{
 			throw new Error(
 				TextUtility.format(
 					"Exception: provided node is has no {0} reference but is not the {1} node!",

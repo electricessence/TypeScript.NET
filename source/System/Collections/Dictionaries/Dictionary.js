@@ -6,8 +6,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports, Values, Types, Functions, DictionaryAbstractBase, EnumeratorBase) {
     var HashEntry = (function () {
@@ -154,8 +153,8 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
             if (!callHasOwnProperty(buckets, hash))
                 return undefined;
             var array = buckets[hash];
-            for (var i = 0, len = array.length; i < len; i++) {
-                var entry = array[i];
+            for (var _i = 0; _i < array.length; _i++) {
+                var entry = array[_i];
                 if (comparer(entry.key) === compareKey)
                     return entry.value;
             }

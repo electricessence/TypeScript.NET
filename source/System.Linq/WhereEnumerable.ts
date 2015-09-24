@@ -55,7 +55,8 @@ class WhereEnumerable<T> extends Enumerable<T>
 
 		return new EnumeratorBase<T>(
 			() => { enumerator = source.getEnumerator(); },
-				yielder =>
+
+			(yielder)=>
 			{
 				while(enumerator.moveNext()) {
 					if(predicate(enumerator.current))
@@ -64,6 +65,7 @@ class WhereEnumerable<T> extends Enumerable<T>
 
 				return false;
 			},
+
 			() => { DisposeUtility.dispose(enumerator); }
 		);
 	}

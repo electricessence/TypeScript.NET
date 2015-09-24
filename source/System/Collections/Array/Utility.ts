@@ -5,8 +5,7 @@
 
 ///<reference path="IArray.ts"/>
 import Types = require('../../Types');
-import System = require('../../System');
-
+'use strict';
 
 /// Array Utility
 module Utility
@@ -17,7 +16,8 @@ module Utility
 		var array:T[];
 		if(length>65536)
 			array = new Array(length);
-		else {
+		else
+		{
 			array = [];
 			array.length = length;
 		}
@@ -27,7 +27,10 @@ module Utility
 	// Special forEach usage that will exit if the callback value === false.
 
 
-	export function copy<T>(sourceArray:T[], sourceIndex:number = 0, length:number = Infinity):T[]
+	export function copy<T>(
+		sourceArray:T[],
+		sourceIndex:number = 0,
+		length:number = Infinity):T[]
 	{
 		if(!sourceArray)
 			return sourceArray; // may have passed zero? undefined? or null?
@@ -68,24 +71,33 @@ module Utility
 
 		length = Math.min(length, maxLength);
 
-		for(var i = 0; i<length; ++i) {
+		for(var i = 0; i<length; ++i)
+		{
 			destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
 		}
 	}
 
 
-	export function contains<T>(array:T[], item:T):boolean { return !array ? false : array.indexOf(item)!= -1; }
+	export function contains<T>(array:T[], item:T):boolean
+	{ return !array ? false : array.indexOf(item)!= -1; }
 
-	export function replace<T>(array:T[], old:T, newValue:T, max?:number):number
+	export function replace<T>(
+		array:T[],
+		old:T,
+		newValue:T,
+		max?:number):number
 	{
 
 		var count = 0 | 0;
-		if(max!==0) {
+		if(max!==0)
+		{
 			if(!max)
 				max = Infinity;
 
-			for(var i = (array.length - 1) | 0; i>=0; --i) {
-				if(array[i]===old) {
+			for(var i = (array.length - 1) | 0; i>=0; --i)
+			{
+				if(array[i]===old)
+				{
 					array[i] = newValue;
 					++count;
 					if(!--max)
@@ -105,7 +117,8 @@ module Utility
 		length:number):void
 	{
 		var end = index + length;
-		for(var i:number = index; i<end; ++i) {
+		for(var i:number = index; i<end; ++i)
+		{
 			array[i] = value;
 		}
 	}
@@ -135,7 +148,8 @@ module Utility
 		if(!Types.isFunction(predicate))
 			throw new Error("InvalidArgumentException: 'predicate' must be a function.");
 		var len = array.length | 0;
-		for(var i = 0 | 0; i<len; ++i) {
+		for(var i = 0 | 0; i<len; ++i)
+		{
 			if(i in array && predicate(array[i]))
 				return i;
 		}
@@ -157,8 +171,10 @@ module Utility
 		if(!target)
 			throw new Error("ArgumentNullException: 'target' cannot be null.");
 
-		if(fn) {
-			for(var i = 0 | 0; i<target.length; ++i) {
+		if(fn)
+		{
+			for(var i = 0 | 0; i<target.length; ++i)
+			{
 				target[i] = fn(target[i]);
 			}
 		}
@@ -182,12 +198,15 @@ module Utility
 			throw new Error("ArgumentNullException: 'array' cannot be null.");
 
 		var count = 0;
-		if(array && array.length && max!==0) {
+		if(array && array.length && max!==0)
+		{
 			if(!max)
 				max = Infinity;
 
-			for(var i = (array.length - 1) | 0; i>=0; --i) {
-				if(array[i]===value) {
+			for(var i = (array.length - 1) | 0; i>=0; --i)
+			{
+				if(array[i]===value)
+				{
 					array.splice(i, 1);
 					++count;
 					if(!--max)
@@ -202,7 +221,8 @@ module Utility
 	export function repeat<T>(element:T, count:number):T[]
 	{
 		var result:T[] = [];
-		while(count--) {
+		while(count--)
+		{
 			result.push(element);
 		}
 

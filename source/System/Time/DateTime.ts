@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
+///<reference path='ITimeTotal.ts'/>
 import HowMany = require('./HowMany');
 
 class DateTime
@@ -10,7 +11,7 @@ class DateTime
 
 	private _value:Date;
 
-	getJsDate():Date
+	get jsDate():Date
 	{
 		return new Date(this._value.getTime()); // return a clone.
 	}
@@ -38,6 +39,7 @@ class DateTime
 				: new Date(value);
 	}
 
+
 	addMilliseconds(ms:number):DateTime
 	{
 		ms = ms || 0;
@@ -48,6 +50,10 @@ class DateTime
 	{
 		days = days || 0;
 		return this.addMilliseconds(days*HowMany.Milliseconds.Per.Day);
+	}
+
+	add(time:ITimeTotal):DateTime {
+		return this.addMilliseconds(time.total.milliseconds);
 	}
 
 	static now():DateTime

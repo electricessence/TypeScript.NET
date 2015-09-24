@@ -13,7 +13,7 @@ import Functions = require('./Functions');
 module Types
 {
 
-	// Calling an instance of this class allows for a local/private 'sealed' copy.
+	// Calling an instance of this class allows for a local/private 'sealed' shallowCopy.
 
 	/**
 	 * typeof true

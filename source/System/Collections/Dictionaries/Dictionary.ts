@@ -5,7 +5,6 @@
  */
 
 ///<reference path="../../FunctionTypes.ts"/>
-import System = require('../../System');
 import Values = require('../../Compare');
 import Types = require('../../Types');
 import Functions = require('../../Functions');
@@ -171,10 +170,9 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		if(!callHasOwnProperty(buckets, hash)) return undefined;
 
 		var array = buckets[hash];
-		for(var i = 0, len = array.length; i<len; i++) {
-			var entry = array[i];
+		for(var entry of array)
 			if(comparer(entry.key)===compareKey) return entry.value;
-		}
+
 		return undefined;
 	}
 

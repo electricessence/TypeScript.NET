@@ -5,17 +5,17 @@
  */
 
 ///<reference path="ITimeMeasurement.ts"/>
+///<reference path="ITimeTotal.ts"/>
 ///<reference path="../IEquatable.ts"/>
 ///<reference path="../IComparable.ts"/>
 ///<reference path="../IFormattable.ts"/>
 ///<reference path="../IFormatProvider.ts"/>
-import System = require('../System');
 import Values = require('../Compare');
 import HowMany= require('./HowMany');
 import TimeSpan= require('./TimeSpan');
+'use strict';
 
-
-class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable
+class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable, ITimeTotal
 {
 	private _totalMilliseconds:number;
 	get totalMilliseconds():number
@@ -130,6 +130,10 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 				/HowMany.Minutes.Per.Hour
 				/HowMany.Hours.Per.Day) | 0;
 		return r;
+	}
+
+	get total():ITimeMeasurement {
+		return this.toTimeSpan();
 	}
 
 	toTimeSpan():TimeSpan

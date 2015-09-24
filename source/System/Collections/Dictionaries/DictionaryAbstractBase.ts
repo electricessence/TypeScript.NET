@@ -4,7 +4,6 @@
  */
 
 ///<reference path="IDictionary"/>
-import System = require('../../System');
 import Values = require('../../Compare');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
 
@@ -23,8 +22,10 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	public onValueChanged:(key:TKey, value:TValue, old:TValue) => void;
 
 	// Pseudo-protected.
-	public _onValueUpdate(key:TKey, value:TValue, old:TValue):void {
-		if(!Values.areEqual(value, old, true)) {
+	public _onValueUpdate(key:TKey, value:TValue, old:TValue):void
+	{
+		if(!Values.areEqual(value, old, true))
+		{
 
 			var _ = this;
 			if(_.onValueChanged)
@@ -41,22 +42,27 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	// The consumer of this class can also wire up their own event system.
 	public onUpdated:() => void;
 
-	private _onUpdated():void {
+	private _onUpdated():void
+	{
 		var _ = this;
 		if(_.onUpdated)
 			_.onUpdated();
 	}
 
 	// Takes a closure that if returning true will propagate an update signal.
-	public handleUpdate(closure?:() => boolean):boolean {
+	public handleUpdate(closure?:() => boolean):boolean
+	{
 		var _ = this, result:boolean;
-		if(closure) {
+		if(closure)
+		{
 			_._updateRecursion++;
 
-			try {
+			try
+			{
 				result = closure();
 			}
-			finally {
+			finally
+			{
 				_._updateRecursion--;
 			}
 		}
@@ -76,16 +82,19 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	get count():number { return notImplementedException("count"); }
 
-	add(item:IKeyValuePair<TKey, TValue>):void {
+	add(item:IKeyValuePair<TKey, TValue>):void
+	{
 		this.addByKeyValue(item.key, item.value);
 	}
 
-	clear():number {
+	clear():number
+	{
 		var _ = this, keys = _.keys, count = keys.length;
 
 		if(count)
 			_.handleUpdate(
-				() => {
+				() =>
+				{
 					keys.forEach(key=> { _.removeByKey(key); });
 					return true;
 				}
@@ -97,12 +106,14 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 		return count;
 	}
 
-	contains(item:IKeyValuePair<TKey, TValue>):boolean {
+	contains(item:IKeyValuePair<TKey, TValue>):boolean
+	{
 		var value = this.getValue(item.key);
 		return Values.areEqual(value, item.value);
 	}
 
-	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):void {
+	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):void
+	{
 		var e = this.getEnumerator();
 		while(e.moveNext()) // Disposes when finished.
 		{
@@ -110,7 +121,8 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 		}
 	}
 
-	remove(item:IKeyValuePair<TKey, TValue>):number {
+	remove(item:IKeyValuePair<TKey, TValue>):number
+	{
 		var key = item.key, value = this.getValue(key);
 		return (Values.areEqual(value, item.value) && this.removeByKey(key))
 			? 1 : 0;
@@ -124,7 +136,8 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	get values():TValue[] { return notImplementedException("values"); }
 
 
-	addByKeyValue(key:TKey, value:TValue):void {
+	addByKeyValue(key:TKey, value:TValue):void
+	{
 		var _ = this;
 		if(_.containsKey(key))
 			throw new Error("Adding key/value when one already exists.");
@@ -132,28 +145,34 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 		_.setValue(key, value);
 	}
 
-	getValue(key:TKey):TValue {
+	getValue(key:TKey):TValue
+	{
 		return notImplementedException(
 			"getValue(key: TKey): TValue", "When calling for key: " + key
 		);
 	}
 
-	setValue(key:TKey, value:TValue):boolean {
+	setValue(key:TKey, value:TValue):boolean
+	{
 		return notImplementedException(
 			"setValue(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + "."
 		);
 	}
 
-	containsKey(key:TKey):boolean {
+	containsKey(key:TKey):boolean
+	{
 		var value = this.getValue(key);
 		return value!==undefined;
 	}
 
-	containsValue(value:TValue):boolean {
+	containsValue(value:TValue):boolean
+	{
 		var e = this.getEnumerator(), equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
 
-		while(e.moveNext()) {
-			if(equal(e.current, value, true)) {
+		while(e.moveNext())
+		{
+			if(equal(e.current, value, true))
+			{
 				e.dispose();
 				return true;
 			}
@@ -161,30 +180,35 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 		return false;
 	}
 
-	removeByKey(key:TKey):boolean {
+	removeByKey(key:TKey):boolean
+	{
 		return this.setValue(key, undefined);
 	}
 
-	removeByValue(value:TValue):number {
+	removeByValue(value:TValue):number
+	{
 		var _ = this, count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
-		_.keys.forEach(
-				key=> {
-				if(equal(_.getValue(key), value, true)) {
-					_.removeByKey(key);
-					++count;
-				}
+		_.keys.forEach(key=>
+		{
+			if(equal(_.getValue(key), value, true))
+			{
+				_.removeByKey(key);
+				++count;
 			}
-		);
+		});
 		return count;
 	}
 
-	importPairs(pairs:IKeyValuePair<TKey, TValue>[]):boolean {
+	importPairs(pairs:IKeyValuePair<TKey, TValue>[]):boolean
+	{
 		var _ = this;
 		return _.handleUpdate(
-			() => {
+			() =>
+			{
 				var changed:boolean = false;
 				pairs.forEach(
-						pair=> {
+						pair=>
+					{
 						_.setValue(pair.key, pair.value);
 						changed = true;
 					}
@@ -194,16 +218,21 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 		);
 	}
 
-	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>> {
+	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
+	{
 		var _ = this;
 		var keys:TKey[], len:number, i = 0;
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
-			() => {
+			() =>
+			{
 				keys = _.keys;
 				len = keys.length
 			},
-				yielder => {
-				while(i<len) {
+
+			(yielder)=>
+			{
+				while(i<len)
+				{
 					var key = keys[i++], value = _.getValue(key);
 					if(value!==undefined) // Still valid?
 						return yielder.yieldReturn({key: key, value: value});
@@ -217,7 +246,8 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 }
 
-function notImplementedException<T>(name:string, log:string = ""):any {
+function notImplementedException<T>(name:string, log:string = ""):any
+{
 	console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
 	throw new Error("DictionaryAbstractBase." + name + ": Not implemented.");
 }

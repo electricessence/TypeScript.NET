@@ -9,11 +9,10 @@
 ///<reference path="../IFormattable.ts"/>
 import TimeUnit= require('./TimeUnit');
 import TimeSpan= require('./TimeSpan');
-import System = require('../System');
 import Values = require('../Compare');
 
 // This class allows for passing around a specific measure of time coerced by its unit type.
-class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue>
+class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue>, ITimeTotal
 {
 
 	constructor(public value:number, private _type:TimeUnit)
@@ -77,6 +76,10 @@ class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitVa
 	toTimeSpan():TimeSpan
 	{
 		return new TimeSpan(this.value, this.type);
+	}
+
+	get total():ITimeMeasurement {
+		return this.toTimeSpan();
 	}
 
 	to(units:TimeUnit = this.type):TimeUnitValue

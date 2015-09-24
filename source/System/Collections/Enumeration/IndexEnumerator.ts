@@ -9,9 +9,11 @@ class IndexEnumerator<T> extends EnumeratorBase<T>
 
 		var source:{ source: { [index: number]: T }; pointer: number; length: number; step: number };
 		super(
-			() => {
+			() =>
+			{
 				source = sourceFactory();
-				if(source && source.source) {
+				if(source && source.source)
+				{
 					if(source.length && source.step===0)
 						throw new Error("Invalid IndexEnumerator step value (0).");
 
@@ -30,7 +32,9 @@ class IndexEnumerator<T> extends EnumeratorBase<T>
 					source.step = step | 0;
 				}
 			},
-				yielder => {
+
+			(yielder)=>
+			{
 				var len = (source && source.source) ? source.length : 0;
 				if(!len)
 					return yielder.yieldBreak();
@@ -40,8 +44,11 @@ class IndexEnumerator<T> extends EnumeratorBase<T>
 					? yielder.yieldReturn(source.source[current])
 					: yielder.yieldBreak();
 			},
-			() => {
-				if(source) {
+
+			() =>
+			{
+				if(source)
+				{
 					source.source = null;
 				}
 			}

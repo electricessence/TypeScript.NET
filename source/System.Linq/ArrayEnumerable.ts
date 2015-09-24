@@ -6,7 +6,6 @@
 
 ///<reference path="../System/FunctionTypes.ts"/>
 ///<reference path="../System/Collections/Array/IArray"/>
-import System = require('../System/System');
 import Values = require('../System/Compare');
 import Functions = require('../System/Functions');
 import ArrayCompare = require('../System/Collections/Array/Compare');
@@ -15,9 +14,9 @@ import Enumerable= require('./Enumerable');
 'use strict';
 
 const
-INT_ZERO:number = 0 | 0,
-INT_NEG1        = -1 | 0,
-INT_POS1        = +1 | 0;
+	INT_ZERO:number = 0 | 0,
+	INT_NEG1 = -1 | 0,
+	INT_POS1 = +1 | 0;
 
 class ArrayEnumerable<T> extends Enumerable<T>
 {
@@ -28,20 +27,18 @@ class ArrayEnumerable<T> extends Enumerable<T>
 	{
 		var _ = this;
 		_._source = source;
-		super(
-			() =>
-			{
-				_.assertIsNotDisposed();
-				return new ArrayEnumerator<T>(
-					() =>
-					{
-						_.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
+		super(() =>
+		{
+			_.assertIsNotDisposed();
+			return new ArrayEnumerator<T>(
+				() =>
+				{
+					_.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
 
-						return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
-					}
-				);
-			}
-		);
+					return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
+				}
+			);
+		});
 	}
 
 	protected _onDispose():void
@@ -62,7 +59,8 @@ class ArrayEnumerable<T> extends Enumerable<T>
 			return (<any>s).slice();
 
 		var len = s.length, result:T[] = new Array<T>(len);
-		for(var i = INT_ZERO; i<len; ++i) {
+		for(var i = INT_ZERO; i<len; ++i)
+		{
 			result[i] = s[i];
 		}
 
@@ -84,10 +82,12 @@ class ArrayEnumerable<T> extends Enumerable<T>
 		_.assertIsNotDisposed();
 
 		var source = _._source;
-		if(source) {
+		if(source)
+		{
 
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			for(var i = INT_ZERO; i<source.length; ++i) {
+			for(var i = INT_ZERO; i<source.length; ++i)
+			{
 				// _.assertIsNotDisposed(); // Assertion here is unnecessary since we already have a reference to the source array.
 				if(action(source[i], i)===false)
 					break;
@@ -190,9 +190,7 @@ class ArrayEnumerable<T> extends Enumerable<T>
 			return _.asEnumerable();
 
 		return new Enumerable<T>(
-			() => new ArrayEnumerator<T>(
-				() => _._source, count
-			)
+			() => new ArrayEnumerator<T>(() => _._source, count)
 		);
 	}
 
@@ -205,7 +203,12 @@ class ArrayEnumerable<T> extends Enumerable<T>
 	takeFromLast(count:number):Enumerable<T>
 	{
 		if(!count || count<0) return Enumerable.empty<T>();
-		var _ = this, len = _._source ? _._source.length : 0;
+
+		var _ = this,
+			len = _._source
+				? _._source.length
+				: 0;
+
 		return _.skip(len - count);
 	}
 
@@ -215,7 +218,9 @@ class ArrayEnumerable<T> extends Enumerable<T>
 
 		return new Enumerable<T>(
 			() => new ArrayEnumerator<T>(
-				() => _._source, _._source ? (_._source.length - 1) : 0, -1
+				() => _._source, _._source
+					? (_._source.length - 1)
+					: 0, -1
 			)
 		);
 	}

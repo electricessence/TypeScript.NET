@@ -45,6 +45,13 @@ define(["require", "exports", './TimeUnit', './TimeSpan', '../Compare'], functio
         TimeUnitValue.prototype.toTimeSpan = function () {
             return new TimeSpan(this.value, this.type);
         };
+        Object.defineProperty(TimeUnitValue.prototype, "total", {
+            get: function () {
+                return this.toTimeSpan();
+            },
+            enumerable: true,
+            configurable: true
+        });
         TimeUnitValue.prototype.to = function (units) {
             if (units === void 0) { units = this.type; }
             return this.toTimeSpan().toTimeUnitValue(units);

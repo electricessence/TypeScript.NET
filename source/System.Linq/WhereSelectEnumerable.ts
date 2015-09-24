@@ -55,16 +55,20 @@ class WhereSelectEnumerable<TSource, T> extends Enumerable<T>
 
 		return new EnumeratorBase<T>(
 			() => { enumerator = source.getEnumerator(); },
-				yielder =>
+
+			(yielder)=>
 			{
-				while(enumerator.moveNext()) {
+				while(enumerator.moveNext())
+				{
 					var c = enumerator.current;
-					if(predicate==null || predicate(c)) {
+					if(predicate==null || predicate(c))
+					{
 						return yielder.yieldReturn(selector(c));
 					}
 				}
 				return false;
 			},
+
 			() => { DisposeUtility.dispose(enumerator); }
 		);
 	}

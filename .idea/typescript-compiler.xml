@@ -2,7 +2,7 @@
 <project version="4">
   <component name="TypeScriptCompiler">
     <option name="isCompilerEnabled" value="true" />
-    <option name="typeScriptServiceDirectory" value="C:\Users\essence\AppData\Roaming\npm\node_modules\typescript\lib" />
+    <option name="typeScriptServiceDirectory" value="C:\Users\ojferrar\AppData\Roaming\npm\node_modules\typescript\lib" />
     <option name="typeScriptCompilerParams" value="--target ES5 --module AMD  --noImplicitAny --removeComments" />
     <option name="versionType" value="SERVICE_DIRECTORY" />
   </component>

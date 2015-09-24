@@ -17,7 +17,7 @@ import TimeUnitValue = require('./TimeUnitValue');
 import ClockTime = require('./ClockTime');
 
 
-class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>
+class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>, ITimeTotal
 {
 
 	private _milliseconds:number;
@@ -55,7 +55,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 	toTimeUnitValue(units:TimeUnit = TimeUnit.Milliseconds):TimeUnitValue
 	{
-		return new TimeUnitValue(this.total(units), units);
+		return new TimeUnitValue(this.getTotal(units), units);
 	}
 
 	static convertToMilliseconds(value:number, units:TimeUnit = TimeUnit.Milliseconds):number
@@ -80,7 +80,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 		}
 	}
 
-	total(units:TimeUnit):number
+	getTotal(units:TimeUnit):number
 	{
 		var _ = this;
 		switch(units)
@@ -137,7 +137,12 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 			/HowMany.Hours.Per.Day;
 	}
 
-	// Instead of the confusing total versus unit name, expose a 'ClockTime' value which reports the individual components.
+	// Provides an interface only way of acquiring the getTotal time.
+	get total():ITimeMeasurement {
+		return this;
+	}
+
+	// Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
 	get time():ClockTime
 	{
 		return new ClockTime(this._milliseconds);

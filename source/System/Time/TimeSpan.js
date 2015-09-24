@@ -24,7 +24,7 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         };
         TimeSpan.prototype.toTimeUnitValue = function (units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
-            return new TimeUnitValue(this.total(units), units);
+            return new TimeUnitValue(this.getTotal(units), units);
         };
         TimeSpan.convertToMilliseconds = function (value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
@@ -45,7 +45,7 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
                     throw new Error("Invalid TimeUnit.");
             }
         };
-        TimeSpan.prototype.total = function (units) {
+        TimeSpan.prototype.getTotal = function (units) {
             var _ = this;
             switch (units) {
                 case TimeUnit.Days:
@@ -107,6 +107,13 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
             get: function () {
                 return this.hours
                     / 24;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(TimeSpan.prototype, "total", {
+            get: function () {
+                return this;
             },
             enumerable: true,
             configurable: true

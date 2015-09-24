@@ -6,8 +6,7 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", '../System/Compare', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Enumeration/ArrayEnumerator', './Enumerable'], function (require, exports, Values, Functions, ArrayCompare, ArrayEnumerator, Enumerable) {
     'use strict';
@@ -137,12 +136,16 @@ define(["require", "exports", '../System/Compare', '../System/Functions', '../Sy
         ArrayEnumerable.prototype.takeFromLast = function (count) {
             if (!count || count < 0)
                 return Enumerable.empty();
-            var _ = this, len = _._source ? _._source.length : 0;
+            var _ = this, len = _._source
+                ? _._source.length
+                : 0;
             return _.skip(len - count);
         };
         ArrayEnumerable.prototype.reverse = function () {
             var _ = this;
-            return new Enumerable(function () { return new ArrayEnumerator(function () { return _._source; }, _._source ? (_._source.length - 1) : 0, -1); });
+            return new Enumerable(function () { return new ArrayEnumerator(function () { return _._source; }, _._source
+                ? (_._source.length - 1)
+                : 0, -1); });
         };
         ArrayEnumerable.prototype.memoize = function () {
             return new ArrayEnumerable(this._source);
