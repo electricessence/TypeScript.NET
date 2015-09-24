@@ -23,67 +23,27 @@ Also some more good info on WikiPedia: http://en.wikipedia.org/wiki/TypeScript.
 2) The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It's still JavaScript, but with many bonuses including a growing community. :)
 
 3) Most major IDE's and text editors now support TypeScript either built in, or via a plug-in:
-* Visual Studio 2013 (or greater)
+* Visual Studio
+* VS Code
 * WebStorm (recommended!)
 * Sublime Text
+* Atom
 
 To name a few.
-
-In my case, I use both Visual Studio and Web Storm to ensure quality.  
 
 4) There's some really good and useful code here already, including a fully typed (with generics) Linq implementation.  Take a look!
 
 # Usage
-This library is meant to be flexible. So for a single project/package there are multiple versions of the result.
-
-For example, System has the following files in the build directory:
-```
-/build/System.js
-/build/System.min.js
-```
-
-Also if you would prefer to use AMD/Require.js you can use:
-```
-/amd/System.js
-/amd/System.Linq.js
-```
-
-You can also see an example of how to use a shim:
-```
-/build/test/amd-shimmed/
-```
-
-# Build
-This project uses 'Gulp' to build the resultant JavaScript files.
-
-#### Setup:
-Simply install node.js.  This should include npm (Node Package Manager).
-Then at any command prompt, type:
-```
-npm install gulp -g
-```
-This will ensure you can type 'gulp' in any location.
-
-#### Building
-Then if you need to build an individual namespace/package, simply type ```gulp``` within that project folder (where there is a ```gulpfile.js```).
-
-If you want to make sure the entire solution is updated, typing ```gulp``` inside the ```gulp-tasks``` folder will build all registerd project folders.
-
-#### IDE Support
-WebStorm has a terminal and it's simply easy enough to type gulp when you need to build.
-
-Visual Studio has an incredible set of tools for node and task runners.  Here's one of them:
-https://visualstudiogallery.msdn.microsoft.com/8e1b4368-4afb-467a-bc13-9650572db708
+After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
+* Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don't want.
+* If you care about bundling and minification r.js is probably the right way to go.
+* The modular structure is not limited to requirejs since it should work perfeclty well with JSPM/SystemJS.
+* It is easy to change the module types. :)
 
 
 # Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
 
-# Ready for Beta Level Use
-**System.Linq**: Nearly 100% of the original linq.js is present with some exceptions.  There's no string to lamda conversion because it's unnecessary when using TypeScript.  Enumerable is currently a static class with utility for calling Enumerable(collection).  Instead it is more explicit by calling Enumerable.fromArray(array).  Unit test coverage is ongoing.  Please report any issues you might find and they will be fixed immediately.
 
-# Future
-Planning to make this a bower and other package systems (easy) install.
-
-Full documentation and references (dreaming).
-
+# Documentation
+Currently improving over time using JSDoc style comments and TypeDoc. http://http://typedoc.io/
