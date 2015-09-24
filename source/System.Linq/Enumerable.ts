@@ -443,6 +443,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
             return Enumerable.empty<T>();
 
         return isFinite(count) && assertInteger(count, "count")
+
             ? new Enumerable<T>(
             () =>
             {
@@ -461,8 +462,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
                         return current<c && yielder.yieldReturn(factory(current));
                     }
                 );
-            }
-        )
+            })
+
             : new Enumerable<T>(
             () =>
             {
@@ -475,8 +476,7 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
 
                     (yielder)=> yielder.yieldReturn(factory(index++))
                 );
-            }
-        );
+            });
     }
 
     static unfold<T>(seed:T, valueFactory:Selector<T, T>, skipSeed:Boolean = false):Enumerable<T>

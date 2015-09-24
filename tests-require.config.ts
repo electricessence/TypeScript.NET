@@ -4,8 +4,8 @@
 require.config({
 	paths: {
 		"QUnit": "bower_components/qunit/qunit/qunit",
-		"System": "source/System/",
-		"System.Linq": "source/System.Linq/"
+		"System": "source/"+"System",
+		"System.Linq": "source/"+"System.Linq"
 	},
 
 	shim: {
