@@ -1,4 +1,4 @@
-﻿﻿///<reference path="../../../typings/qunit/qunit.d.ts"/>
+///<reference path="../../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
 
 import ArrayCompare = require('System/Collections/Array/Compare');
@@ -8,12 +8,12 @@ import ArrayUtility = require('System/Collections/Array/Utility');
 function run() {
 	// Min/Max tests...
 	var minA = -10, maxA = 2000,
-	    minB = -Infinity, maxB = Infinity;
+		minB = -Infinity, maxB = Infinity;
 
 	var a       = [5, minA, -1, maxA, -2, NaN, 20],
-	    sum     = 5 + minA + -1 + maxA + -2 + 20,
-	    average = sum/6, // Not including NaN
-	    product = 5*minA* -1*maxA* -2*20;
+		sum     = 5 + minA + -1 + maxA + -2 + 20,
+		average = sum/6, // Not including NaN
+		product = 5*minA* -1*maxA* -2*20;
 
 	var b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20];
 
@@ -87,7 +87,7 @@ function run() {
 	});
 
 	/*	Utility.applyTo skipped.
-		It has too many permutations while being a straight forward function. */
+	 It has too many permutations while being a straight forward function. */
 
 	QUnit.test("Array/Utility.remove", function (assert) {
 		var s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
