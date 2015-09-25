@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Example Usage</title>
     <script src="../bower_components/requirejs/require.js"></script>
-    <script src="require.config.js"></script>
 </head>
 <body>
 My Page.
 
 <script>
+    require.config({ baseUrl: "../" });
     require(['example/main']);
 </script>
 </body>
