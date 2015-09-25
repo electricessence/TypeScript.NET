@@ -64,11 +64,11 @@ define(["require", "exports", '../Collections/LinkedList'], function (require, e
         };
         ObservableNode.prototype.onNext = function (value) {
             this._subscribers
-                .forEachFromClone(function (s) { return s.observer.onNext(value); });
+                .forEach(function (s) { return s.observer.onNext(value); }, true);
         };
         ObservableNode.prototype.onError = function (error) {
             this._subscribers
-                .forEachFromClone(function (s) { return s.observer.onError(error); });
+                .forEach(function (s) { return s.observer.onError(error); }, true);
         };
         ObservableNode.prototype.onCompleted = function () {
             var array = this._subscribers.toArray();

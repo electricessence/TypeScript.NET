@@ -154,3 +154,5 @@ module Procedure
 	}
 
 }
+
+export = Procedure;

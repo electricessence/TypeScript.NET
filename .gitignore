@@ -190,6 +190,7 @@ bower_components
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
+.idea/typescript-compiler.xml
 
 # TypeScript
-typings
+typings.idea/dictionaries

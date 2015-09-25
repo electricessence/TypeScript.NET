@@ -1,6 +1,7 @@
 {
   "name": "TypeScript.NET",
   "version": "2.0.0",
+  "license": "MIT",
   "author": "Oren Ferrari",
   "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
   "private": false,

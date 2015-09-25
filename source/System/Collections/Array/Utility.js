@@ -52,7 +52,9 @@ define(["require", "exports", '../../Types'], function (require, exports, Types)
             }
         }
         Utility.copyTo = copyTo;
-        function contains(array, item) { return !array ? false : array.indexOf(item) != -1; }
+        function contains(array, item) {
+            return !array ? false : array.indexOf(item) != -1;
+        }
         Utility.contains = contains;
         function replace(array, old, newValue, max) {
             var count = 0 | 0;

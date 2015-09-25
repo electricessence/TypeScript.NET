@@ -9,15 +9,17 @@ define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumer
         function from(source) {
             if (source instanceof Array)
                 return new ArrayEnumerator(source);
-            if (typeof source === Types.Object && "length" in source)
+            if (typeof source === Types.Object && "length" in source) {
+                var a = source;
                 return new IndexEnumerator(function () {
                     return {
-                        source: source,
-                        length: source.length,
+                        source: a,
+                        length: a.length,
                         pointer: 0,
                         step: 1
                     };
                 });
+            }
             if ("getEnumerator" in source)
                 return source.getEnumerator();
             throw new Error("Unknown enumerable.");
