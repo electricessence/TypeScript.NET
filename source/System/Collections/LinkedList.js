@@ -5,8 +5,7 @@
  */
 define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase) {
     'use strict';
-    var INT_0 = 0 | 0;
-    var INT_1 = 1 | 0;
+    var INT_0 = 0 | 0, INT_1 = 1 | 0;
     var Node = (function () {
         function Node(value, prev, next) {
             this.value = value;
@@ -109,20 +108,25 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             }
             return null;
         };
-        LinkedList.prototype.forEach = function (action) {
-            var next = this._first, index = INT_0;
-            while (next && action(next.value, index++) !== false) {
-                next = next.next;
+        LinkedList.prototype.forEach = function (action, useCopy) {
+            if (useCopy === void 0) { useCopy = false; }
+            if (useCopy) {
+                var array = this.toArray();
+                ArrayUtility.forEach(array, action);
+                array.length = 0;
             }
-        };
-        LinkedList.prototype.forEachFromClone = function (action) {
-            var array = this.toArray();
-            ArrayUtility.forEach(array, action);
-            array.length = 0;
+            else {
+                var next = this._first, index = INT_0;
+                while (next && action(next.value, index++) !== false) {
+                    next = next.next;
+                }
+            }
         };
         LinkedList.prototype.getEnumerator = function () {
             var _ = this, current;
-            return new EnumeratorBase(function () { current = new Node(null, null, _._first); }, function (yielder) {
+            return new EnumeratorBase(function () {
+                current = new Node(null, null, _._first);
+            }, function (yielder) {
                 return (current = current.next)
                     ? yielder.yieldReturn(current.value)
                     : yielder.yieldBreak();

@@ -8,9 +8,7 @@
 
 interface IEnumerateEach<T>
 {
-	// Should allow for if the return value is explicitly 'false' should treat as 'break' signal.
-	// Inversely, 'true' means keep going.
-	forEach(action:Predicate<T>): void;
-	forEach(action:Action<T>): void;
+    // Enforcing an interface that allows operating on a copy can prevent changing underlying data while enumerating.
+    forEach(action:Predicate<T> | Action<T>, useCopy?:boolean): void;
 }
 

@@ -59,6 +59,7 @@ define(["require", "exports", 'System.Linq/Enumerable', "QUnit"], function (requ
         });
         QUnit.test("Enumerable.orderBy", function (assert) {
             var source = sourceEnumerable.reverse();
+            debugger;
             var A = source.orderBy(function (o) { return o.a; }).toArray();
             for (var i = 0; i < 3; i++)
                 assert.equal(A[i].a, 1, "First three 'a' values should be 1 when ordered by 'a'.");

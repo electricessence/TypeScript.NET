@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/Enumerable'], function (require, exports, Values, Types, ArrayUtility, EnumeratorBase, Enumerable) {
+define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/forEach'], function (require, exports, Values, Types, AU, EnumeratorBase, forEach) {
     var MINIMUM_GROW = 4 | 0;
     var GROW_FACTOR_HALF = 100 | 0;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
@@ -22,15 +22,15 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
                     var capacity = source;
                     assertIntegerZeroOrGreater(capacity, "capacity");
                     _._array = capacity
-                        ? ArrayUtility.initialize(capacity)
+                        ? AU.initialize(capacity)
                         : emptyArray;
                 }
                 else {
                     var se = source;
-                    _._array = ArrayUtility.initialize((se instanceof Array || "length" in se)
+                    _._array = AU.initialize((se instanceof Array || "length" in se)
                         ? se.length
                         : DEFAULT_CAPACITY);
-                    Enumerable.forEach(se, function (e) { return _.enqueue(e); });
+                    forEach(se, function (e) { return _.enqueue(e); });
                     _._version = 0;
                 }
             }
@@ -56,10 +56,10 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         Queue.prototype.clear = function () {
             var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
             if (head < tail)
-                ArrayUtility.clear(array, head, size);
+                AU.clear(array, head, size);
             else {
-                ArrayUtility.clear(array, head, array.length - head);
-                ArrayUtility.clear(array, 0, tail);
+                AU.clear(array, head, array.length - head);
+                AU.clear(array, 0, tail);
             }
             _._head = 0;
             _._tail = 0;
@@ -82,16 +82,18 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
             if (target == null)
                 throw new Error("ArgumentNullException: array cannot be null.");
             assertIntegerZeroOrGreater(arrayIndex, "arrayIndex");
-            var arrayLen = target.length, _ = this, size = _._size;
-            var numToCopy = (arrayLen - arrayIndex < size) ? (arrayLen - arrayIndex) : size;
+            var _ = this, arrayLen = target.length, size = _._size, numToCopy = (arrayLen - arrayIndex < size)
+                ? (arrayLen - arrayIndex)
+                : size;
             if (numToCopy == 0)
                 return;
-            var source = _._array, len = _._capacity, head = _._head, lh = len - head;
-            var firstPart = (lh < numToCopy) ? lh : numToCopy;
-            ArrayUtility.copyTo(source, target, head, arrayIndex, firstPart);
+            var source = _._array, len = _._capacity, head = _._head, lh = len - head, firstPart = (lh < numToCopy)
+                ? lh
+                : numToCopy;
+            AU.copyTo(source, target, head, arrayIndex, firstPart);
             numToCopy -= firstPart;
             if (numToCopy > 0)
-                ArrayUtility.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
+                AU.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
         };
         Queue.prototype.remove = function (item) {
             throw new Error("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
@@ -108,11 +110,18 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         };
         Queue.prototype.toArray = function () {
             var _ = this, size = _._size;
-            var arr = ArrayUtility.initialize(size);
+            var arr = AU.initialize(size);
             if (size == 0)
                 return arr;
             _.copyTo(arr);
             return arr;
+        };
+        Queue.prototype.forEach = function (action) {
+            var _ = this, copy = _.toArray(), len = _._size;
+            for (var i = 0; i < len; i++) {
+                if (action(copy[i], i) === false)
+                    break;
+            }
         };
         Queue.prototype.setCapacity = function (capacity) {
             assertIntegerZeroOrGreater(capacity, "capacity");
@@ -125,14 +134,14 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
                 _._version++;
                 return;
             }
-            var newArray = ArrayUtility.initialize(capacity);
+            var newArray = AU.initialize(capacity);
             if (size > 0) {
                 if (head < tail) {
-                    ArrayUtility.copyTo(array, newArray, head, 0, size);
+                    AU.copyTo(array, newArray, head, 0, size);
                 }
                 else {
-                    ArrayUtility.copyTo(array, newArray, head, 0, len - head);
-                    ArrayUtility.copyTo(array, newArray, 0, len - head, tail);
+                    AU.copyTo(array, newArray, head, 0, len - head);
+                    AU.copyTo(array, newArray, 0, len - head, tail);
                 }
             }
             _._array = newArray;

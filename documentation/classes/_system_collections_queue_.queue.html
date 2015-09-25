@@ -90,6 +90,7 @@
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
 					<li><a href="../interfaces/_system_collections_icollection_.icollection.html" class="tsd-signature-type">ICollection</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/_system_collections_enumeration_ienumerateeach_.ienumerateeach.html" class="tsd-signature-type">IEnumerateEach</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					<li><a href="../interfaces/_system_disposable_idisposable_.idisposable.html" class="tsd-signature-type">IDisposable</a></li>
 				</ul>
 			</section>
@@ -132,6 +133,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_collections_queue_.queue.html#dequeue" class="tsd-kind-icon">dequeue</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_collections_queue_.queue.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_collections_queue_.queue.html#enqueue" class="tsd-kind-icon">enqueue</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_collections_queue_.queue.html#foreach" class="tsd-kind-icon">for<wbr>Each</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_collections_queue_.queue.html#getenumerator" class="tsd-kind-icon">get<wbr>Enumerator</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_collections_queue_.queue.html#peek" class="tsd-kind-icon">peek</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_collections_queue_.queue.html#remove" class="tsd-kind-icon">remove</a></li>
@@ -155,7 +157,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:31</li>
+									<li>Defined in System/Collections/Queue.ts:33</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -177,7 +179,7 @@
 					<div class="tsd-signature tsd-kind-icon">_array<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Collections/Queue.ts:26</li>
+							<li>Defined in System/Collections/Queue.ts:28</li>
 						</ul>
 					</aside>
 				</section>
@@ -187,7 +189,7 @@
 					<div class="tsd-signature tsd-kind-icon">_capacity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Collections/Queue.ts:30</li>
+							<li>Defined in System/Collections/Queue.ts:32</li>
 						</ul>
 					</aside>
 				</section>
@@ -197,7 +199,7 @@
 					<div class="tsd-signature tsd-kind-icon">_head<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Collections/Queue.ts:27</li>
+							<li>Defined in System/Collections/Queue.ts:29</li>
 						</ul>
 					</aside>
 				</section>
@@ -207,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">_size<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Collections/Queue.ts:29</li>
+							<li>Defined in System/Collections/Queue.ts:31</li>
 						</ul>
 					</aside>
 				</section>
@@ -217,7 +219,7 @@
 					<div class="tsd-signature tsd-kind-icon">_tail<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Collections/Queue.ts:28</li>
+							<li>Defined in System/Collections/Queue.ts:30</li>
 						</ul>
 					</aside>
 				</section>
@@ -227,7 +229,7 @@
 					<div class="tsd-signature tsd-kind-icon">_version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Collections/Queue.ts:31</li>
+							<li>Defined in System/Collections/Queue.ts:33</li>
 						</ul>
 					</aside>
 				</section>
@@ -281,7 +283,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:272</li>
+									<li>Defined in System/Collections/Queue.ts:291</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -347,7 +349,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_system_collections_icollection_.icollection.html">ICollection</a>.<a href="../interfaces/_system_collections_icollection_.icollection.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:110</li>
+									<li>Defined in System/Collections/Queue.ts:109</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -371,7 +373,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_system_collections_icollection_.icollection.html">ICollection</a>.<a href="../interfaces/_system_collections_icollection_.icollection.html#copyto">copyTo</a></p>
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:127</li>
+									<li>Defined in System/Collections/Queue.ts:126</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -397,7 +399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:248</li>
+									<li>Defined in System/Collections/Queue.ts:267</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -415,7 +417,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_system_disposable_idisposable_.idisposable.html">IDisposable</a>.<a href="../interfaces/_system_disposable_idisposable_.idisposable.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:161</li>
+									<li>Defined in System/Collections/Queue.ts:171</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -432,13 +434,36 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:227</li>
+									<li>Defined in System/Collections/Queue.ts:246</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>item: <span class="tsd-signature-type">T</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="foreach" class="tsd-anchor"></a>
+					<h3>for<wbr>Each</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">for<wbr>Each<span class="tsd-signature-symbol">(</span>action<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_functiontypes_.predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_functiontypes_.action.html" class="tsd-signature-type">Action</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Queue.ts:195</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>action: <a href="../interfaces/_system_functiontypes_.predicate.html" class="tsd-signature-type">Predicate</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_functiontypes_.action.html" class="tsd-signature-type">Action</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -456,7 +481,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_system_collections_icollection_.icollection.html">ICollection</a>.<a href="../interfaces/_system_collections_icollection_.icollection.html#getenumerator">getEnumerator</a></p>
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:296</li>
+									<li>Defined in System/Collections/Queue.ts:315</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_collections_enumeration_ienumerator_.ienumerator.html" class="tsd-signature-type">IEnumerator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -473,7 +498,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:280</li>
+									<li>Defined in System/Collections/Queue.ts:299</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -491,7 +516,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_system_collections_icollection_.icollection.html">ICollection</a>.<a href="../interfaces/_system_collections_icollection_.icollection.html#remove">remove</a></p>
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:149</li>
+									<li>Defined in System/Collections/Queue.ts:159</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -514,7 +539,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:185</li>
+									<li>Defined in System/Collections/Queue.ts:205</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -537,7 +562,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:173</li>
+									<li>Defined in System/Collections/Queue.ts:183</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -554,7 +579,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Collections/Queue.ts:288</li>
+									<li>Defined in System/Collections/Queue.ts:307</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -631,6 +656,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_system_collections_queue_.queue.html#enqueue" class="tsd-kind-icon">enqueue</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_system_collections_queue_.queue.html#foreach" class="tsd-kind-icon">for<wbr>Each</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_system_collections_queue_.queue.html#getenumerator" class="tsd-kind-icon">get<wbr>Enumerator</a>

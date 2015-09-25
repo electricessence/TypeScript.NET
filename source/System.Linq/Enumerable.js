@@ -6,7 +6,8 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    __.prototype = b.prototype;
+    d.prototype = new __();
 };
 define(["require", "exports", '../System/Compare', '../System/Types', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase'], function (require, exports, Values, Types, BaseFunctions, ArrayCompare, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase) {
     var dispose = DisposeUtility.dispose;
@@ -282,7 +283,11 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             });
         };
         Enumerable.forEach = function (enumerable, action) {
-            Enumerable.forEach(enumerable, action);
+            if (enumerable) {
+                using(Enumerator.from(enumerable), function (e) {
+                    Enumerator.forEach(e, action);
+                });
+            }
         };
         Enumerable.max = function (values) {
             return values

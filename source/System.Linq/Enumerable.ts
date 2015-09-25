@@ -287,8 +287,8 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
                         return result;
                     }
                 );
-            }
-        )
+            })
+
             : new Enumerable<number>(
             () =>
             {
@@ -537,7 +537,12 @@ class Enumerable<T> extends DisposableBase implements IEnumerable<T>
         enumerable:IEnumerable<T>,
         action:(element:T, index?:number) => any):void
     {
-        Enumerable.forEach(enumerable, action);
+        if (enumerable) {
+            using(Enumerator.from(enumerable), e=>
+            {
+                Enumerator.forEach(e, action);
+            });
+        }
     }
 
     // Slightly optimized versions for numbers.

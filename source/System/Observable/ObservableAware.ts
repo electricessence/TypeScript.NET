@@ -110,14 +110,14 @@ class ObservableNode<T> implements IObservable<T>, IObserver<T>
 	{
 		// Use a clone in case calling "onNext" will cause a change in the collection contents.
 		this._subscribers
-			.forEachFromClone(s=> s.observer.onNext(value));
+			.forEach(s=> s.observer.onNext(value), true);
 	}
 
 	onError(error: Error): void
 	{
 		// Use a clone in case calling "onError" will cause a change in the collection contents.
 		this._subscribers
-			.forEachFromClone(s=> s.observer.onError(error));
+			.forEach(s=> s.observer.onError(error), true);
 	}
 
 	onCompleted(): void
