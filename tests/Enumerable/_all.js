@@ -1,6 +1,6 @@
-///<reference path="../../../typings/qunit/qunit.d.ts"/>
+///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", 'System.Linq/Enumerable', "QUnit"], function (require, exports, Enumerable) {
+define(["require", "exports", '../../source/System.Linq/Enumerable', "QUnit"], function (require, exports, Enumerable) {
     function run() {
         var source = [
             {
@@ -59,7 +59,6 @@ define(["require", "exports", 'System.Linq/Enumerable', "QUnit"], function (requ
         });
         QUnit.test("Enumerable.orderBy", function (assert) {
             var source = sourceEnumerable.reverse();
-            debugger;
             var A = source.orderBy(function (o) { return o.a; }).toArray();
             for (var i = 0; i < 3; i++)
                 assert.equal(A[i].a, 1, "First three 'a' values should be 1 when ordered by 'a'.");
@@ -109,4 +108,4 @@ define(["require", "exports", 'System.Linq/Enumerable', "QUnit"], function (requ
     }
     return run;
 });
-//# sourceMappingURL=tests.js.map
+//# sourceMappingURL=_all.js.map

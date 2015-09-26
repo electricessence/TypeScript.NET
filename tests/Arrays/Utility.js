@@ -1,10 +1,9 @@
-///<reference path="../../../typings/qunit/qunit.d.ts"/>
+///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", 'System/Collections/Array/Compare', 'System/Collections/Array/Procedure', 'System/Collections/Array/Utility', "QUnit"], function (require, exports, ArrayCompare, ArrayProcedure, ArrayUtility) {
+define(["require", "exports", '../../source/System/Collections/Array/Compare', '../../source/System/Collections/Array/Utility', "QUnit"], function (require, exports, ArrayCompare, ArrayUtility) {
     function run() {
-        var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity;
-        var a = [5, minA, -1, maxA, -2, NaN, 20], sum = 5 + minA + -1 + maxA + -2 + 20, average = sum / 6, product = 5 * minA * -1 * maxA * -2 * 20;
-        var b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20];
+        var minA = -10, maxA = 2000;
+        var a = [5, minA, -1, maxA, -2, NaN, 20];
         QUnit.test("Array/Utility.initialize", function (assert) {
             var len;
             len = 100;
@@ -24,8 +23,12 @@ define(["require", "exports", 'System/Collections/Array/Compare', 'System/Collec
             assert.ok(!ArrayUtility.contains(a, -9876));
         });
         QUnit.test("Array/Utility.findIndex", function (assert) {
-            assert.equal(ArrayUtility.findIndex(a, function (v) { return v == -1; }), 2);
-            assert.equal(ArrayUtility.findIndex(a, function (v) { return v == -9876; }), -1);
+            assert.equal(ArrayUtility.findIndex(a, function (v) {
+                return v == -1;
+            }), 2);
+            assert.equal(ArrayUtility.findIndex(a, function (v) {
+                return v == -9876;
+            }), -1);
         });
         QUnit.test("Array/Utility.register", function (assert) {
             var s = ArrayUtility.copy(a), len = s.length;
@@ -84,29 +87,7 @@ define(["require", "exports", 'System/Collections/Array/Compare', 'System/Collec
             for (var i = 0; i < count; i++)
                 assert.equal(r[i], value);
         });
-        QUnit.test("Array/Procedure.sum", function (assert) {
-            assert.ok(isNaN(ArrayProcedure.sum(a, false)), "Sum should be NaN");
-            assert.equal(ArrayProcedure.sum(a, true), sum, "Sum should be " + sum);
-        });
-        QUnit.test("Array/Procedure.average", function (assert) {
-            assert.ok(isNaN(ArrayProcedure.average(a, false)), "Average should be NaN");
-            assert.equal(ArrayProcedure.average(a, true), average, "Average should be " + average);
-        });
-        QUnit.test("Array/Procedure.product", function (assert) {
-            assert.ok(isNaN(ArrayProcedure.product(a, false)), "Product should be NaN");
-            assert.equal(ArrayProcedure.product(a, true), product, "Product should be " + product);
-        });
-        QUnit.test("Array/Procedure.min", function (assert) {
-            assert.ok(isNaN(ArrayProcedure.min(a, false)), "Min value should be NaN");
-            assert.equal(ArrayProcedure.min(a, true), minA, "Min value should be " + minA);
-            assert.equal(ArrayProcedure.min(b, true), minB, "Min value should be " + minB);
-        });
-        QUnit.test("Array/Procedure.max", function (assert) {
-            assert.ok(isNaN(ArrayProcedure.max(a, false)), "Min value should be NaN");
-            assert.equal(ArrayProcedure.max(a, true), maxA, "Min value should be " + maxA);
-            assert.equal(ArrayProcedure.max(b, true), maxB, "Min value should be " + maxB);
-        });
     }
     return run;
 });
-//# sourceMappingURL=tests.js.map
+//# sourceMappingURL=Utility.js.map
