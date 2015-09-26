@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "license": "MIT",
   "author": "Oren Ferrari",
-  "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
+  "description": "A JavaScript Friendly .NET Based Library Ported to TypeScript.",
   "private": false,
   "repository": "https://github.com/electricessence/TypeScript.NET.git",
   "dependencies": {

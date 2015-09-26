@@ -10,7 +10,7 @@ function run() {
 
     var a = [5, minA, -1, maxA, -2, NaN, 20];
 
-    QUnit.test("Array/Utility.initialize", function (assert) {
+    QUnit.test("Array/Utility.initialize", function (assert:QUnitAssert) {
         var len:number;
 
         len = 100;
@@ -24,19 +24,19 @@ function run() {
     });
 
 
-    QUnit.test("Array/Utility.copy/equals", function (assert) {
+    QUnit.test("Array/Utility.copy/equals", function (assert:QUnitAssert) {
         var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
         var s2 = ArrayUtility.copy(s1);
 
         assert.ok(ArrayCompare.areEqual(s1, s2));
     });
 
-    QUnit.test("Array/Utility.contains", function (assert) {
+    QUnit.test("Array/Utility.contains", function (assert:QUnitAssert) {
         assert.ok(ArrayUtility.contains(a, -1));
         assert.ok(!ArrayUtility.contains(a, -9876));
     });
 
-    QUnit.test("Array/Utility.findIndex", function (assert) {
+    QUnit.test("Array/Utility.findIndex", function (assert:QUnitAssert) {
         assert.equal(ArrayUtility.findIndex(a, function (v:number) {
             return v == -1;
         }), 2);
@@ -45,7 +45,7 @@ function run() {
         }), -1);
     });
 
-    QUnit.test("Array/Utility.register", function (assert) {
+    QUnit.test("Array/Utility.register", function (assert:QUnitAssert) {
         var s = ArrayUtility.copy(a), len = s.length;
         assert.ok(ArrayUtility.register(s, -9876));
         assert.equal(s.length, len + 1);
@@ -56,7 +56,7 @@ function run() {
     });
 
 
-    QUnit.test("Array/Utility.remove", function (assert) {
+    QUnit.test("Array/Utility.remove", function (assert:QUnitAssert) {
         var s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
         var len = s.length;
 
@@ -86,7 +86,7 @@ function run() {
     /*	Utility.applyTo skipped.
      It has too many permutations while being a straight forward function. */
 
-    QUnit.test("Array/Utility.remove", function (assert) {
+    QUnit.test("Array/Utility.remove", function (assert:QUnitAssert) {
         var s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
         var len = s.length;
 
@@ -114,7 +114,7 @@ function run() {
     });
 
 
-    QUnit.test("Array/Utility.repeat", function (assert) {
+    QUnit.test("Array/Utility.repeat", function (assert:QUnitAssert) {
         var value = 10, count = 3;
         var r = ArrayUtility.repeat(value, count);
         assert.ok(r.length == count, ".length should be 3");

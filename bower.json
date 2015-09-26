@@ -27,7 +27,8 @@
 		"TypeScript",
 		"tsc",
 		".net",
-		"TypeScript.NET"
+		"TypeScript.NET",
+		"LINQ"
 	],
 	"license": "MIT",
 	"dependencies": {

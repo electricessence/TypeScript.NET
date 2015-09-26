@@ -82,21 +82,20 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
             if (target == null)
                 throw new Error("ArgumentNullException: array cannot be null.");
             assertIntegerZeroOrGreater(arrayIndex, "arrayIndex");
-            var _ = this, arrayLen = target.length, size = _._size, numToCopy = (arrayLen - arrayIndex < size)
-                ? (arrayLen - arrayIndex)
-                : size;
-            if (numToCopy == 0)
+            var _ = this, size = _._size;
+            if (!size)
                 return;
-            var source = _._array, len = _._capacity, head = _._head, lh = len - head, firstPart = (lh < numToCopy)
+            var numToCopy = size, source = _._array, len = _._capacity, head = _._head, lh = len - head, firstPart = (lh < size)
                 ? lh
-                : numToCopy;
+                : size;
             AU.copyTo(source, target, head, arrayIndex, firstPart);
             numToCopy -= firstPart;
             if (numToCopy > 0)
                 AU.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
         };
         Queue.prototype.remove = function (item) {
-            throw new Error("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
+            throw new Error("NotImplementedException: " +
+                "ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                 " since it would require destroying the underlying array to remove the item.");
         };
         Queue.prototype.dispose = function () {

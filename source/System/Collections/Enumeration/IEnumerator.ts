@@ -3,9 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
 
-interface IEnumerator<T> {
+///<reference path='../../Disposable/IDisposable'/>
+
+interface IEnumerator<T> extends IDisposable {
 	current: T;
 	moveNext(): boolean;
 	reset(): void;
-	dispose(): void;
 }

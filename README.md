@@ -1,7 +1,7 @@
 TypeScript.NET
 ==============
 
-###A JavaScript Friendly .NET Library Ported to TypeScript
+###A JavaScript Friendly .NET Based Library Ported to TypeScript
 
 The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
 Contributions are welcomed as the .NET Library (meaning it's class structure and classes, not necessarily its content) has a substantial amount of usefulness.  With the open sourcing of .NET, TypeScript seems the most logical means to take advantage of it.  Typing, generics, classes, modules, inheritance, all are required to make a resultant JavaScript library that takes advantage of this elegance.
@@ -18,11 +18,11 @@ If you have a .NET Library class that you want to see represented in TypeScript,
 
 See http://www.typescriptlang.org/ for more information about the TypeScript language.
 
-Also some more good info on WikiPedia: http://en.wikipedia.org/wiki/TypeScript.
+Also some more good info on Wikipedia: http://en.wikipedia.org/wiki/TypeScript.
 
 2) The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It's still JavaScript, but with many bonuses including a growing community. :)
 
-3) Most major IDE's and text editors now support TypeScript either built in, or via a plug-in:
+3) Most major IDEs and text editors now support TypeScript either built in, or via a plug-in:
 * Visual Studio
 * VS Code
 * WebStorm (recommended!)
@@ -37,13 +37,15 @@ To name a few.
 After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
 * Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don't want.
 * If you care about bundling and minification r.js is probably the right way to go.
-* The modular structure is not limited to requirejs since it should work perfeclty well with JSPM/SystemJS.
+* The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.
 * It is easy to change the module types. :)
 
 
 # Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
 
+# Unit Tests
+Simply launch /tests/index.html to see existing unit tests and their status.
 
 # Documentation
 Currently improving over time using JSDoc style comments and TypeDoc. http://http://typedoc.io/

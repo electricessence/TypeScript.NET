@@ -17,47 +17,76 @@ import IndexEnumerator= require('./IndexEnumerator');
 // Statics only...  No constructor...
 module Enumerator
 {
-    // Could be array, or IEnumerable...
-    export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>
-    {
-        if (source instanceof Array)
-            return new ArrayEnumerator<T>(<T[]>source);
 
-        if (typeof source===Types.Object && "length" in source)
-        {
-            var a = <IArray<T>>source;
-            return new IndexEnumerator<T>(
-                () =>
-                {
-                    return {
-                        source: <{[index: number]: T}>a,
-                        length: a.length,
-                        pointer: 0,
-                        step: 1
-                    }
-                }
-            );
-        }
+	class EmptyEnumerator implements IEnumerator<any>
+	{
+		get current():any
+		{
+			return undefined;
+		}
 
-        if ("getEnumerator" in source)
-            return (<any>source).getEnumerator();
+		moveNext():boolean
+		{
+			return false;
+		}
 
-        throw new Error("Unknown enumerable.");
-    }
+		reset():void { }
 
-    export function forEach<T>(
-        e:IEnumerator<T>,
-        action:(element:T, index?:number) => any):void
-    {
-        if (e) {
-            var index = 0;
-            // Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-            while (e.moveNext()) {
-                if (action(e.current, index++)===false)
-                    break;
-            }
-        }
-    }
+		dispose():void { }
+	}
+
+	const Empty = new EmptyEnumerator();
+
+	// Could be array, or IEnumerable...
+	export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>
+	{
+		// To simplify and prevent null reference exceptions:
+		if(!source)
+			return Empty;
+
+		if(source instanceof Array)
+			return new ArrayEnumerator<T>(<T[]>source);
+
+		if(typeof source===Types.Object)
+		{
+			if("length" in source)
+			{
+				var a = <IArray<T>>source;
+				return new IndexEnumerator<T>(
+					() =>
+					{
+						return {
+							source: <{[index: number]: T}>a,
+							length: a.length,
+							pointer: 0,
+							step: 1
+						}
+					}
+				);
+			}
+			if("getEnumerator" in source)
+				return (<any>source).getEnumerator();
+
+		}
+
+		throw new Error("Unknown enumerable.");
+	}
+
+	export function forEach<T>(
+		e:IEnumerator<T>,
+		action:(element:T, index?:number) => any):void
+	{
+		if(e)
+		{
+			var index = 0;
+			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+			while(e.moveNext())
+			{
+				if(action(e.current, index++)===false)
+					break;
+			}
+		}
+	}
 }
 
 

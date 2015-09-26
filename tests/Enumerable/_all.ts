@@ -1,15 +1,17 @@
-﻿///<reference path="../../typings/qunit/qunit.d.ts"/>
+﻿///<reference path="../../typings/qunit/qunit"/>
 ///<amd-dependency path="QUnit"/>
 
-import Enumerable = require('../../source/System.Linq/Enumerable');
+import Linq = require('../../source/System.Linq/Enumerable');
 
-interface TestItem {
+interface TestItem
+{
 	a:number;
 	b:number;
 	c:string;
 }
 
-function run() {
+function run()
+{
 
 	var source:{a:number,b:number,c:string}[] = [
 		{
@@ -44,10 +46,11 @@ function run() {
 		}
 	];
 
-	var sourceEnumerable = Enumerable.fromArray(source);
+	var sourceEnumerable = Linq.fromArray(source);
 	var selector = function (i:TestItem):number { return i.b };
 
-	QUnit.test("Enumerable.memoize", function (assert) {
+	QUnit.test("Linq.memoize", function (assert:QUnitAssert)
+	{
 
 		var source = sourceEnumerable;
 		var A = source.memoize();
@@ -60,8 +63,9 @@ function run() {
 		assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 2.");
 	});
 
-	QUnit.test("Enumerable.where.memoize", function (assert) {
-		var source = sourceEnumerable.where(function(i:TestItem){return i.a==1});
+	QUnit.test("Linq.where.memoize", function (assert:QUnitAssert)
+	{
+		var source = sourceEnumerable.where(function (i:TestItem) {return i.a==1});
 
 		var sum:number, A = source;
 
@@ -84,60 +88,89 @@ function run() {
 
 	});
 
-	QUnit.test("Enumerable.orderBy", function (assert) {
+	QUnit.test("Linq.orderBy", function (assert:QUnitAssert)
+	{
 
 		var source = sourceEnumerable.reverse();
 
 		var A = source.orderBy(function (o:TestItem) { return o.a }).toArray();
-		for (var i = 0; i < 3;i++)
+		for(var i = 0; i<3; i++)
+		{
 			assert.equal(A[i].a, 1, "First three 'a' values should be 1 when ordered by 'a'.");
-		for (var i = 3; i < 6; i++)
+		}
+		for(var i = 3; i<6; i++)
+		{
 			assert.equal(A[i].a, 2, "Last three 'a' values should be 2 when ordered by 'a'.");
+		}
 
 		var B = source.orderBy(function (o:TestItem) { return o.b }).toArray();
-		for (var i = 0; i < 2; i++)
+		for(var i = 0; i<2; i++)
+		{
 			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
-		for (var i = 2; i < 4; i++)
+		}
+		for(var i = 2; i<4; i++)
+		{
 			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
-		for (var i = 4; i < 6; i++)
+		}
+		for(var i = 4; i<6; i++)
+		{
 			assert.equal(B[i].b, 3, "Last two 'b' values should be 3 when ordered by 'b'.");
+		}
 
 	});
 
 
-	QUnit.test("Enumerable.orderByDescending", function (assert) {
+	QUnit.test("Linq.orderByDescending", function (assert:QUnitAssert)
+	{
 
 		var source = sourceEnumerable.reverse();
 
 		var A = source.orderByDescending(function (o:TestItem) { return o.a }).toArray();
-		for (var i = 0; i < 3; i++)
+		for(var i = 0; i<3; i++)
+		{
 			assert.equal(A[i].a, 2, "First three 'a' values should be 2 when ordered by 'a'.");
-		for (var i = 3; i < 6; i++)
+		}
+		for(var i = 3; i<6; i++)
+		{
 			assert.equal(A[i].a, 1, "Last three 'a' values should be 1 when ordered by 'a'.");
+		}
 
 		var B = source.orderByDescending(function (o:TestItem) { return o.b }).toArray();
-		for (var i = 0; i < 2; i++)
+		for(var i = 0; i<2; i++)
+		{
 			assert.equal(B[i].b, 3, "First two 'b' values should be 3 when ordered by 'b'.");
-		for (var i = 2; i < 4; i++)
+		}
+		for(var i = 2; i<4; i++)
+		{
 			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
-		for (var i = 4; i < 6; i++)
+		}
+		for(var i = 4; i<6; i++)
+		{
 			assert.equal(B[i].b, 1, "Last two 'b' values should be 1 when ordered by 'b'.");
+		}
 
 	});
 
-	QUnit.test("Enumerable.orderBy.thenBy", function (assert) {
+	QUnit.test("Linq.orderBy.thenBy", function (assert:QUnitAssert)
+	{
 
 		var B = sourceEnumerable
 			.orderBy(function (o:TestItem) { return o.b })
 			.thenBy(function (o:TestItem) { return o.c })
 			.toArray();
 
-		for (var i = 0; i < 2; i++)
+		for(var i = 0; i<2; i++)
+		{
 			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
-		for (var i = 2; i < 4; i++)
+		}
+		for(var i = 2; i<4; i++)
+		{
 			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
-		for (var i = 4; i < 6; i++)
+		}
+		for(var i = 4; i<6; i++)
+		{
 			assert.equal(B[i].b, 3, "Last two 'b' values should be 3 when ordered by 'b'.");
+		}
 
 		assert.equal(B[0].c, "b");
 		assert.equal(B[1].c, "e");
@@ -150,7 +183,6 @@ function run() {
 
 
 	});
-
 
 
 }
