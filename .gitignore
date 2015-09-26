@@ -186,6 +186,7 @@ Desktop.ini
 node_modules
 bower_components
 
+
 # IntelliJ
 .idea/workspace.xml
 .idea/tasks.xml
@@ -193,4 +194,4 @@ bower_components
 .idea/typescript-compiler.xml
 
 # TypeScript
-typings.idea/dictionaries
+typings
