@@ -104,7 +104,10 @@ module ICollectionTests
 		collection:ICollection<T>,
 		sourceValues:T[]):void
 	{
-		/* The following tests inherently tests:
+		if(sourceValues.indexOf(null)!=-1)
+			throw "Source values should not contain null as checking against null is one of the tests.";
+
+		/* The following tests inherently test:
 		 - count
 		 - contains
 		 */
@@ -113,6 +116,7 @@ module ICollectionTests
 			assertAdding(assert, collection, sourceValues);
 			assertCopyToClear(assert, collection);
 			assertRemoving(assert, collection);
+			assert.ok(!collection.contains(null),'Equality comparison is not strict.');
 		});
 
 	}
@@ -124,11 +128,14 @@ module ICollectionTests
 
 		//noinspection SpellCheckingInspection
 		Collection(name + '<' + 'string>', collection, [
+			"",
 			"lorem",
 			"ipsum",
 			"dolem",
 			"ipsum" // Have a repeated entry to test removing multiple.
 		])
+
+
 	}
 
 	export function NumberCollection(
@@ -143,8 +150,11 @@ module ICollectionTests
 			2,
 			3,
 			5,
-			8
-		])
+			8,
+			NaN // Must be able to reconginze NaN
+		]);
+
+
 	}
 
 	export function InstanceCollection(
@@ -154,6 +164,7 @@ module ICollectionTests
 		var repeat = {};
 		//noinspection SpellCheckingInspection
 		Collection(name + '<' + 'Object>', collection, [
+			undefined,
 			{},
 			repeat,
 			{},

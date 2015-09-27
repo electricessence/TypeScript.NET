@@ -77,15 +77,19 @@ define(["require", "exports", '../../source/System/Text/Utility', '../../source/
             }
         }
         function Collection(name, collection, sourceValues) {
+            if (sourceValues.indexOf(null) != -1)
+                throw "Source values should not contain null as checking against null is one of the tests.";
             QUnit.test(name, function (assert) {
                 assertAdding(assert, collection, sourceValues);
                 assertCopyToClear(assert, collection);
                 assertRemoving(assert, collection);
+                assert.ok(!collection.contains(null), 'Equality comparison is not strict.');
             });
         }
         ICollectionTests.Collection = Collection;
         function StringCollection(name, collection) {
             Collection(name + '<' + 'string>', collection, [
+                "",
                 "lorem",
                 "ipsum",
                 "dolem",
@@ -101,13 +105,15 @@ define(["require", "exports", '../../source/System/Text/Utility', '../../source/
                 2,
                 3,
                 5,
-                8
+                8,
+                NaN
             ]);
         }
         ICollectionTests.NumberCollection = NumberCollection;
         function InstanceCollection(name, collection) {
             var repeat = {};
             Collection(name + '<' + 'Object>', collection, [
+                undefined,
                 {},
                 repeat,
                 {},

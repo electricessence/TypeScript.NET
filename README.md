@@ -9,7 +9,7 @@ Contributions are welcomed as the .NET Library (meaning it's class structure and
 Much inspiration comes from TypeScript itself and from libraries like linq.js.
 There is of course some variance away from .NET's convention (camelCase methods in favor of TitleCase) and some things simply have to be done different.  "Extensions" as a feature might be one of the greatest additions to .NET that JavaScript doesn't have a plan for, but it does have some tricky equivalents.
 
-If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contriubte it yourself! :)
+If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contribute it yourself! :)
 
 ## Why should I use this, let alone TypeScript?
 1) **It's 100% compatible with JavaScript.**  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :) 
@@ -46,6 +46,9 @@ https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
 
 # Unit Tests
 Simply launch /tests/index.html to see existing unit tests and their status.
+
+# Examples
+Currently the unit test cover many example usages.
 
 # Documentation
 Currently improving over time using JSDoc style comments and TypeDoc. http://http://typedoc.io/
