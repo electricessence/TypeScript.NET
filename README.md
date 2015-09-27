@@ -57,4 +57,4 @@ Simply launch /tests/index.html to see existing unit tests and their status.
 Currently the unit test cover many example usages.
 
 # Documentation
-Currently improving over time using JSDoc style comments and TypeDoc. http://http://typedoc.io/
+Currently improving over time using JSDoc style comments and TypeDoc. http://typedoc.io/
