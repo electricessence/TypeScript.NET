@@ -4,6 +4,7 @@
 
 import Text = require('../../source/System/Text/Utility');
 import AU = require('../../source/System/Collections/Array/Utility');
+import NotImplementedException = require('../../source/System/Exceptions/NotImplementedException');
 
 /**
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
@@ -93,8 +94,14 @@ module ICollectionTests
 			}
 		}
 		catch (ex) {
-			if(ex.message.indexOf('NotImplementedException')==-1)
+			if(ex instanceof NotImplementedException)
+			{
+				console.log(ex);
+			}
+			else
+			{
 				throw ex;
+			}
 		}
 
 	}

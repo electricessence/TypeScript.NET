@@ -7,7 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './StringKeyDictionary', '../Array/Utility'], function (require, exports, StringKeyDictionary, ArrayUtility) {
+define(["require", "exports", './StringKeyDictionary', '../Array/Utility', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, StringKeyDictionary, ArrayUtility, ArgumentOutOfRangeException) {
     var OrderedStringKeyDictionary = (function (_super) {
         __extends(OrderedStringKeyDictionary, _super);
         function OrderedStringKeyDictionary() {
@@ -31,7 +31,7 @@ define(["require", "exports", './StringKeyDictionary', '../Array/Utility'], func
         OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
             var _ = this, order = _._order;
             if (index < 0 || index >= order.length)
-                throw new Error("IndexOutOfRange Exception.");
+                throw new ArgumentOutOfRangeException('index');
             return _.set(order[index], value);
         };
         OrderedStringKeyDictionary.prototype.importValues = function (values) {

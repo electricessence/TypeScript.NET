@@ -9,9 +9,17 @@
 ///<reference path="ILinkedList.ts"/>
 import Values = require('../Compare');
 import TextUtility = require('../Text/Utility');
-import ArrayUtility= require('./Array/Utility');
-import Enumerator= require('./Enumeration/Enumerator');
-import EnumeratorBase= require('./Enumeration/EnumeratorBase');
+import ArrayUtility = require('./Array/Utility');
+import Enumerator = require('./Enumeration/Enumerator');
+import EnumeratorBase = require('./Enumeration/EnumeratorBase');
+
+import InvalidOperationException = require('../Exceptions/InvalidOperationException');
+
+import ArgumentException = require('../Exceptions/ArgumentException');
+import ArgumentNullException = require('../Exceptions/ArgumentNullException');
+import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
+
+
 'use strict';
 
 /*****************************
@@ -43,7 +51,8 @@ class Node<T>
 	assertDetached():void
 	{
 		if(this.next || this.prev)
-			throw new Error("InvalidOperationException: adding a node that is already placed.");
+			throw new InvalidOperationException(
+				"Adding a node that is already placed.");
 	}
 
 }
@@ -63,14 +72,17 @@ function ensureExternal<T>(node:Node<T>, list:LinkedList<T>):ILinkedListNode<T>
 function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):Node<T>
 {
 	if(!node)
-		throw new Error("ArgumentNullException: 'node' cannot be null.");
+		throw new ArgumentNullException(
+			"Cannot be null.");
 
 	if(node.list!=list)
-		throw new Error("InvalidOperationException: provided node does not belong to this list.");
+		throw new InvalidOperationException(
+			"Provided node does not belong to this list.");
 
 	var n:Node<T> = (<any>node)._node;
 	if(!n)
-		throw new Error("InvalidOperationException: provided node is not valid.");
+		throw new InvalidOperationException(
+			"Provided node is not valid.");
 
 	return n;
 }
@@ -334,10 +346,12 @@ class LinkedList<T> implements ILinkedList<T>
 	private _getNodeAt(index:number):Node<T>
 	{
 		if(index<0)
-			throw new Error("ArgumentOutOfRangeException: index is less than zero.");
+			throw new ArgumentOutOfRangeException(
+				'index', index, 'Is less than zero.');
 
 		if(index>=this._count)
-			throw new Error("ArgumentOutOfRangeException: index is greater than count.");
+			throw new ArgumentOutOfRangeException(
+				'index', index, 'Is greater than count.');
 
 		var next = this._first, i:number = INT_0;
 		while(next && index<i++)
@@ -425,9 +439,9 @@ class LinkedList<T> implements ILinkedList<T>
 
 		if(a!==b)
 		{
-			throw new Error(
-				TextUtility.format(
-					"Exception: provided node is has no {0} reference but is not the {1} node!",
+			throw new ArgumentException(
+				'node', TextUtility.format(
+					"Provided node is has no {0} reference but is not the {1} node!",
 					a ? "previous" : "next", a ? "first" : "last"
 				)
 			);

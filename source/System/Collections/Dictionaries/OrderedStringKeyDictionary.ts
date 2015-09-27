@@ -5,6 +5,7 @@
 
 import StringKeyDictionary= require('./StringKeyDictionary');
 import ArrayUtility = require('../Array/Utility');
+import ArgumentOutOfRangeException = require('../../Exceptions/ArgumentOutOfRangeException')
 
 class OrderedStringKeyDictionary<TValue>
 extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue>
@@ -39,7 +40,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	setByIndex(index:number, value:TValue):boolean {
 		var _ = this, order = _._order;
 		if(index<0 || index>=order.length)
-			throw new Error("IndexOutOfRange Exception.");
+			throw new ArgumentOutOfRangeException('index');
 
 		return _.set(order[index], value);
 	}

@@ -14,6 +14,7 @@ import Types = require('../Types');
 import AU = require('./Array/Utility');
 import EnumeratorBase = require('./Enumeration/EnumeratorBase');
 import forEach = require('./Enumeration/forEach');
+import NotImplementedException = require('../Exceptions/NotImplementedException');
 
 const MINIMUM_GROW:number = 4 | 0;
 // var SHRINK_THRESHOLD: number = 32 | 0; // Unused?
@@ -156,8 +157,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 
 	remove(item:T):number
 	{
-		throw new Error(
-			"NotImplementedException: "+
+		throw new NotImplementedException(
 			"ICollection\<T\>.remove is not implemented in Queue\<T\>" +
 			" since it would require destroying the underlying array to remove the item."
 		);

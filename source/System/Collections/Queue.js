@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/forEach'], function (require, exports, Values, Types, AU, EnumeratorBase, forEach) {
+define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException'], function (require, exports, Values, Types, AU, EnumeratorBase, forEach, NotImplementedException) {
     var MINIMUM_GROW = 4 | 0;
     var GROW_FACTOR_HALF = 100 | 0;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
@@ -94,8 +94,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
                 AU.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
         };
         Queue.prototype.remove = function (item) {
-            throw new Error("NotImplementedException: " +
-                "ICollection\<T\>.remove is not implemented in Queue\<T\>" +
+            throw new NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                 " since it would require destroying the underlying array to remove the item.");
         };
         Queue.prototype.dispose = function () {

@@ -1,7 +1,7 @@
 ///<reference path="../../source/System/Collections/ICollection.ts"/>
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", '../../source/System/Text/Utility', '../../source/System/Collections/Array/Utility', "QUnit"], function (require, exports, Text, AU) {
+define(["require", "exports", '../../source/System/Text/Utility', '../../source/System/Collections/Array/Utility', '../../source/System/Exceptions/NotImplementedException', "QUnit"], function (require, exports, Text, AU, NotImplementedException) {
     var ICollectionTests;
     (function (ICollectionTests) {
         function General(name, collection) {
@@ -72,8 +72,12 @@ define(["require", "exports", '../../source/System/Text/Utility', '../../source/
                 }
             }
             catch (ex) {
-                if (ex.message.indexOf('NotImplementedException') == -1)
+                if (ex instanceof NotImplementedException) {
+                    console.log(ex);
+                }
+                else {
                     throw ex;
+                }
             }
         }
         function Collection(name, collection, sourceValues) {
