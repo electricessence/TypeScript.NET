@@ -31,7 +31,12 @@ Also some more good info on Wikipedia: http://en.wikipedia.org/wiki/TypeScript.
 
 To name a few.
 
-4) There's some really good and useful code here already, including a fully typed (with generics) Linq implementation.  Take a look!
+# Highlights
+* **Linq**: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable<T> with passing unit tests.  All the things you love about Linq, but fully typed and JS compatilble.
+* **Exceptions**: There is a growing set of Exceptions like ArugmentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using *instanceof* as if you used multiple *catch* statements in C#.
+* **Collections**: Mutliple collections types with standard ICollection<T> and IEnumerable<T> interfaces.  LinkedList<T>, Queue<T>, Dictionary<T>, and more, all unit tested using a common interface test of ICollection<T>.
+* **IDisposable**: Additional interfaces, utilities, and classes like **DisposableBase** that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator<T>, use IDisposable to ensure releasing of references.
+* **DateTime & TimeSpan**: The *System/Time* namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
 
 # Usage
 After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
@@ -39,6 +44,7 @@ After some time and effort, I've decided that this library should be module base
 * If you care about bundling and minification r.js is probably the right way to go.
 * The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.
 * It is easy to change the module types. :)
+* You can easily recompile the entire library into annother *dist* folder fully minified using gulp.
 
 
 # Learn, Connect & Evolve
