@@ -163,7 +163,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		this.setKV(key, value, false);
 	}
 
-	get(key:TKey):TValue {
+	getValue(key:TKey):TValue {
 		var buckets = this._buckets, comparer = this.compareSelector;
 		var compareKey = comparer(key);
 		var hash = computeHashCode(compareKey);
@@ -176,7 +176,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		return undefined;
 	}
 
-	set(key:TKey, value:TValue):boolean {
+	setValue(key:TKey, value:TValue):boolean {
 		return this.setKV(key, value, true);
 	}
 

@@ -27,10 +27,10 @@ define(["require", "exports", '../../Compare', './DictionaryAbstractBase'], func
             }
             return false;
         };
-        StringKeyDictionary.prototype.get = function (key) {
+        StringKeyDictionary.prototype.getValue = function (key) {
             return this._map[key];
         };
-        StringKeyDictionary.prototype.set = function (key, value) {
+        StringKeyDictionary.prototype.setValue = function (key, value) {
             var _ = this, map = _._map, old = map[key];
             if (old !== value) {
                 if (value === undefined) {

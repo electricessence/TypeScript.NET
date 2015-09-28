@@ -27,7 +27,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	}
 
 	// adding keepIndex allows for clearing a value while still retaining it's index.
-	set(key:string, value:TValue, keepIndex?:boolean):boolean {
+	setValue(key:string, value:TValue, keepIndex?:boolean):boolean {
 		var _ = this, exists = _.indexOfKey(key)!= -1;
 		if(!exists && (value!==undefined || keepIndex))
 			_._order.push(key);
@@ -40,9 +40,9 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	setByIndex(index:number, value:TValue):boolean {
 		var _ = this, order = _._order;
 		if(index<0 || index>=order.length)
-			throw new ArgumentOutOfRangeException('index');
+			throw new ArgumentOutOfRangeException('index',index);
 
-		return _.set(order[index], value);
+		return _.setValue(order[index], value);
 	}
 
 	// importValues([x,y,z]);

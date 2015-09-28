@@ -35,27 +35,26 @@ define(["require", "exports", '../../source/System.Linq/Enumerable', "QUnit"], f
             }
         ];
         var sourceEnumerable = Linq.fromArray(source);
-        var selector = function (i) { return i.b; };
         QUnit.test("Linq.memoize", function (assert) {
             var source = sourceEnumerable;
             var A = source.memoize();
-            var sum = A.sum(selector);
-            assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 1.");
-            sum = A.sum(selector);
-            assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 2.");
+            var sum = A.sum(function (o) { return o.a; });
+            assert.equal(sum, source.sum(function (o) { return o.a; }), "Values must be equal after memoize pass 1.");
+            sum = A.sum(function (o) { return o.b; });
+            assert.equal(sum, source.sum(function (o) { return o.b; }), "Values must be equal after memoize pass 2.");
         });
         QUnit.test("Linq.where.memoize", function (assert) {
             var source = sourceEnumerable.where(function (i) { return i.a == 1; });
             var sum, A = source;
-            sum = A.sum(selector);
-            assert.equal(sum, source.sum(selector), "Values must be equal after where pass 1.");
-            sum = A.sum(selector);
-            assert.equal(sum, source.sum(selector), "Values must be equal after where pass 2.");
+            sum = A.sum(function (o) { return o.a; });
+            assert.equal(sum, source.sum(function (o) { return o.a; }), "Values must be equal after where pass 1.");
+            sum = A.sum(function (o) { return o.b; });
+            assert.equal(sum, source.sum(function (o) { return o.b; }), "Values must be equal after where pass 2.");
             A = source.memoize();
-            sum = A.sum(selector);
-            assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 1.");
-            sum = A.sum(selector);
-            assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 2.");
+            sum = A.sum(function (o) { return o.a; });
+            assert.equal(sum, source.sum(function (o) { return o.a; }), "Values must be equal after memoize pass 1.");
+            sum = A.sum(function (o) { return o.b; });
+            assert.equal(sum, source.sum(function (o) { return o.b; }), "Values must be equal after memoize pass 2.");
         });
         QUnit.test("Linq.orderBy", function (assert) {
             var source = sourceEnumerable.reverse();
@@ -117,6 +116,18 @@ define(["require", "exports", '../../source/System.Linq/Enumerable', "QUnit"], f
             assert.equal(B[3].c, "d");
             assert.equal(B[4].c, "c");
             assert.equal(B[5].c, "f");
+        });
+        QUnit.test("Linq.groupBy", function (assert) {
+            var A_distinct = sourceEnumerable
+                .select(function (o) { return o.a; }).distinct();
+            var A = sourceEnumerable
+                .groupBy(function (o) { return o.a; });
+            assert.equal(A_distinct.count(), A.count(), "Number of groups should match distinct values.");
+            var B = sourceEnumerable
+                .groupBy(function (o) { return o.b; });
+            var B_distinct = sourceEnumerable
+                .select(function (o) { return o.b; }).distinct();
+            assert.equal(B_distinct.count(), B.count(), "Number of groups should match distinct values.");
         });
     }
     return run;

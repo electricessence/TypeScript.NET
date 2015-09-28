@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException'], function (require, exports, Values, Types, AU, EnumeratorBase, forEach, NotImplementedException) {
+define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, Types, AU, EnumeratorBase, forEach, NotImplementedException, InvalidOperationException, ArgumentException, ArgumentOutOfRangeException) {
     var MINIMUM_GROW = 4 | 0;
     var GROW_FACTOR_HALF = 100 | 0;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
@@ -167,7 +167,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         Queue.prototype.dequeue = function () {
             var _ = this;
             if (_._size == 0)
-                throw new Error("InvalidOperationException: cannot dequeue an empty queue.");
+                throw new InvalidOperationException("Cannot dequeue an empty queue.");
             var array = _._array, head = _._head;
             var removed = _._array[head];
             array[head] = null;
@@ -183,7 +183,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         };
         Queue.prototype.peek = function () {
             if (this._size == 0)
-                throw new Error("InvalidOperationException: cannot call peek on an empty queue.");
+                throw new InvalidOperationException("Cannot call peek on an empty queue.");
             return this._array[this._head];
         };
         Queue.prototype.trimExcess = function () {
@@ -201,7 +201,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
                 index = 0;
             }, function (yielder) {
                 if (version != _._version)
-                    throw new Error("InvalidOperationException: collection was changed during enumeration.");
+                    throw new InvalidOperationException("Collection was changed during enumeration.");
                 if (index == _._size)
                     return yielder.yieldBreak();
                 return yielder.yieldReturn(_._getElement(index++));
@@ -211,11 +211,11 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
     })();
     function assertInteger(value, property) {
         if (value != Math.floor(value))
-            throw new Error("InvalidOperationException: " + property + " must be an integer.");
+            throw new ArgumentException(property, "Must be an integer.");
     }
     function assertZeroOrGreater(value, property) {
         if (value < 0)
-            throw new Error("ArgumentOutOfRangeException: " + property + " must be greater than zero");
+            throw new ArgumentOutOfRangeException(property, value, "Must be greater than zero");
     }
     function assertIntegerZeroOrGreater(value, property) {
         assertInteger(value, property);

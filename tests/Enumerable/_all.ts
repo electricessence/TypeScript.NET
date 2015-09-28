@@ -47,7 +47,6 @@ function run()
 	];
 
 	var sourceEnumerable = Linq.fromArray(source);
-	var selector = function (i:TestItem):number { return i.b };
 
 	QUnit.test("Linq.memoize", function (assert:QUnitAssert)
 	{
@@ -55,36 +54,36 @@ function run()
 		var source = sourceEnumerable;
 		var A = source.memoize();
 
-		var sum = A.sum(selector);
+		var sum = A.sum(o=>o.a);
 
-		assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 1.");
+		assert.equal(sum, source.sum(o=>o.a), "Values must be equal after memoize pass 1.");
 
-		sum = A.sum(selector);
-		assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 2.");
+		sum = A.sum(o=>o.b);
+		assert.equal(sum, source.sum(o=>o.b), "Values must be equal after memoize pass 2.");
 	});
 
 	QUnit.test("Linq.where.memoize", function (assert:QUnitAssert)
 	{
-		var source = sourceEnumerable.where(function (i:TestItem) {return i.a==1});
+		var source = sourceEnumerable.where(i => i.a==1);
 
 		var sum:number, A = source;
 
-		sum = A.sum(selector);
+		sum = A.sum(o=>o.a);
 
-		assert.equal(sum, source.sum(selector), "Values must be equal after where pass 1.");
+		assert.equal(sum, source.sum(o=>o.a), "Values must be equal after where pass 1.");
 
-		sum = A.sum(selector);
-		assert.equal(sum, source.sum(selector), "Values must be equal after where pass 2.");
+		sum = A.sum(o=>o.b);
+		assert.equal(sum, source.sum(o=>o.b), "Values must be equal after where pass 2.");
 
 
 		A = source.memoize();
 
-		sum = A.sum(selector);
+		sum = A.sum(o=>o.a);
 
-		assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 1.");
+		assert.equal(sum, source.sum(o=>o.a), "Values must be equal after memoize pass 1.");
 
-		sum = A.sum(selector);
-		assert.equal(sum, source.sum(selector), "Values must be equal after memoize pass 2.");
+		sum = A.sum(o=>o.b);
+		assert.equal(sum, source.sum(o=>o.b), "Values must be equal after memoize pass 2.");
 
 	});
 
@@ -93,7 +92,7 @@ function run()
 
 		var source = sourceEnumerable.reverse();
 
-		var A = source.orderBy(function (o:TestItem) { return o.a }).toArray();
+		var A = source.orderBy(o=>o.a).toArray();
 		for(var i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 1, "First three 'a' values should be 1 when ordered by 'a'.");
@@ -103,7 +102,7 @@ function run()
 			assert.equal(A[i].a, 2, "Last three 'a' values should be 2 when ordered by 'a'.");
 		}
 
-		var B = source.orderBy(function (o:TestItem) { return o.b }).toArray();
+		var B = source.orderBy(o=> o.b).toArray();
 		for(var i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
@@ -125,7 +124,7 @@ function run()
 
 		var source = sourceEnumerable.reverse();
 
-		var A = source.orderByDescending(function (o:TestItem) { return o.a }).toArray();
+		var A = source.orderByDescending((o:TestItem)=> o.a).toArray();
 		for(var i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 2, "First three 'a' values should be 2 when ordered by 'a'.");
@@ -135,7 +134,7 @@ function run()
 			assert.equal(A[i].a, 1, "Last three 'a' values should be 1 when ordered by 'a'.");
 		}
 
-		var B = source.orderByDescending(function (o:TestItem) { return o.b }).toArray();
+		var B = source.orderByDescending((o:TestItem)=> o.b).toArray();
 		for(var i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 3, "First two 'b' values should be 3 when ordered by 'b'.");
@@ -155,8 +154,8 @@ function run()
 	{
 
 		var B = sourceEnumerable
-			.orderBy(function (o:TestItem) { return o.b })
-			.thenBy(function (o:TestItem) { return o.c })
+			.orderBy(o => o.b)
+			.thenBy(o => o.c)
 			.toArray();
 
 		for(var i = 0; i<2; i++)
@@ -180,6 +179,26 @@ function run()
 
 		assert.equal(B[4].c, "c");
 		assert.equal(B[5].c, "f");
+
+
+	});
+
+
+	QUnit.test("Linq.groupBy", function (assert:QUnitAssert)
+	{
+		var A_distinct = sourceEnumerable
+			.select(o=>o.a).distinct();
+		var A = sourceEnumerable
+			.groupBy(o=>o.a);
+
+		assert.equal(A_distinct.count(), A.count(), "Number of groups should match distinct values.");
+
+		var B = sourceEnumerable
+			.groupBy(o=>o.b);
+		var B_distinct = sourceEnumerable
+			.select(o=>o.b).distinct();
+
+		assert.equal(B_distinct.count(), B.count(), "Number of groups should match distinct values.");
 
 
 	});

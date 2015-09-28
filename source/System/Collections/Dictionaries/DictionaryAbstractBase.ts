@@ -6,6 +6,7 @@
 ///<reference path="IDictionary"/>
 import Values = require('../../Compare');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
+import NotImplementedException = require('../../Exceptions/NotImplementedException');
 
 'use strict';
 
@@ -80,7 +81,9 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	/////////////////////////////////////////
 	get isReadOnly():boolean { return false; }
 
-	get count():number { return notImplementedException("count"); }
+	get count():number {
+		return notImplementedException("count");
+	}
 
 	add(item:IKeyValuePair<TKey, TValue>):void
 	{
@@ -249,7 +252,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 function notImplementedException<T>(name:string, log:string = ""):any
 {
 	console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-	throw new Error("DictionaryAbstractBase." + name + ": Not implemented.");
+	throw new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
 }
 
 export = DictionaryAbstractBase;

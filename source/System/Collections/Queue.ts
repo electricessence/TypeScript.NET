@@ -15,6 +15,9 @@ import AU = require('./Array/Utility');
 import EnumeratorBase = require('./Enumeration/EnumeratorBase');
 import forEach = require('./Enumeration/forEach');
 import NotImplementedException = require('../Exceptions/NotImplementedException');
+import InvalidOperationException = require('../Exceptions/InvalidOperationException');
+import ArgumentException = require('../Exceptions/ArgumentException');
+import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
 
 const MINIMUM_GROW:number = 4 | 0;
 // var SHRINK_THRESHOLD: number = 32 | 0; // Unused?
@@ -269,7 +272,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	{
 		var _ = this;
 		if(_._size==0)
-			throw new Error("InvalidOperationException: cannot dequeue an empty queue.");
+			throw new InvalidOperationException("Cannot dequeue an empty queue.");
 
 		var array = _._array, head = _._head;
 
@@ -300,7 +303,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	peek():T
 	{
 		if(this._size==0)
-			throw new Error("InvalidOperationException: cannot call peek on an empty queue.");
+			throw new InvalidOperationException("Cannot call peek on an empty queue.");
 
 		return this._array[this._head];
 	}
@@ -327,7 +330,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 			(yielder)=>
 			{
 				if(version!=_._version)
-					throw new Error("InvalidOperationException: collection was changed during enumeration.");
+					throw new InvalidOperationException("Collection was changed during enumeration.");
 
 				if(index==_._size)
 					return yielder.yieldBreak();
@@ -342,14 +345,14 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 function assertInteger(value:number, property:string):void
 {
 	if(value!=Math.floor(value))
-		throw new Error("InvalidOperationException: " + property + " must be an integer.");
+		throw new ArgumentException(property, "Must be an integer.");
 
 }
 
 function assertZeroOrGreater(value:number, property:string):void
 {
 	if(value<0)
-		throw new Error("ArgumentOutOfRangeException: " + property + " must be greater than zero");
+		throw new ArgumentOutOfRangeException(property, value, "Must be greater than zero");
 
 }
 

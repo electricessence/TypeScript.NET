@@ -28,11 +28,11 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 	}
 
 
-	get(key:string):TValue {
+	getValue(key:string):TValue {
 		return this._map[key];
 	}
 
-	set(key:string, value:TValue):boolean {
+	setValue(key:string, value:TValue):boolean {
 		var _ = this, map = _._map, old = map[key];
 		if(old!==value) {
 

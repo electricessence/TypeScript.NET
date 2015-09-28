@@ -20,7 +20,7 @@ define(["require", "exports", './StringKeyDictionary', '../Array/Utility', '../.
         OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
             return this.getValue(this._order[index]);
         };
-        OrderedStringKeyDictionary.prototype.set = function (key, value, keepIndex) {
+        OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {
             var _ = this, exists = _.indexOfKey(key) != -1;
             if (!exists && (value !== undefined || keepIndex))
                 _._order.push(key);
@@ -31,8 +31,8 @@ define(["require", "exports", './StringKeyDictionary', '../Array/Utility', '../.
         OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
             var _ = this, order = _._order;
             if (index < 0 || index >= order.length)
-                throw new ArgumentOutOfRangeException('index');
-            return _.set(order[index], value);
+                throw new ArgumentOutOfRangeException('index', index);
+            return _.setValue(order[index], value);
         };
         OrderedStringKeyDictionary.prototype.importValues = function (values) {
             var _ = this;

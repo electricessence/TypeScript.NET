@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
  */
-define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase'], function (require, exports, Values, EnumeratorBase) {
+define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException'], function (require, exports, Values, EnumeratorBase, NotImplementedException) {
     'use strict';
     var DictionaryAbstractBase = (function () {
         function DictionaryAbstractBase() {
@@ -50,7 +50,9 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase'],
             configurable: true
         });
         Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
-            get: function () { return notImplementedException("count"); },
+            get: function () {
+                return notImplementedException("count");
+            },
             enumerable: true,
             configurable: true
         });
@@ -164,7 +166,7 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase'],
     function notImplementedException(name, log) {
         if (log === void 0) { log = ""; }
         console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-        throw new Error("DictionaryAbstractBase." + name + ": Not implemented.");
+        throw new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
     }
     return DictionaryAbstractBase;
 });

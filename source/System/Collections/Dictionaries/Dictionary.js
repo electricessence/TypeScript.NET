@@ -146,7 +146,7 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
         Dictionary.prototype.addByKeyValue = function (key, value) {
             this.setKV(key, value, false);
         };
-        Dictionary.prototype.get = function (key) {
+        Dictionary.prototype.getValue = function (key) {
             var buckets = this._buckets, comparer = this.compareSelector;
             var compareKey = comparer(key);
             var hash = computeHashCode(compareKey);
@@ -160,7 +160,7 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
             }
             return undefined;
         };
-        Dictionary.prototype.set = function (key, value) {
+        Dictionary.prototype.setValue = function (key, value) {
             return this.setKV(key, value, true);
         };
         Dictionary.prototype.containsKey = function (key) {
