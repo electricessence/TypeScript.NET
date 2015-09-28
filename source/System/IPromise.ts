@@ -5,7 +5,7 @@
  */
 
 /**
- * Basic promise interface defined by kriskowal.
+ * Basic promise interface defined by https://github.com/kriskowal/q.
  * Included for ease of use with other classes.
  */
 interface IPromise<T> {
