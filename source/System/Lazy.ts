@@ -1,6 +1,6 @@
 /*
  * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
 ///<reference path="ILazy.ts"/>
@@ -92,4 +92,4 @@ class Lazy<T> extends DisposableBase implements ILazy<T>
 		return this.equals(other) || this.value===other.value;
 	}
 }
-	
+
