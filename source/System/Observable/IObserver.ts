@@ -5,9 +5,10 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-interface IObserver<T> // <in T>
+interface IObserver<T>
 {
-	onNext(value:T): void;
-	onError(error:Error): void;
-	onCompleted():void;
+	// onNext is optional because an observer may only care about onCompleted.
+	onNext?:(value:T)=>void;
+	onError?:(error:Error)=>void;
+	onCompleted?:()=>void;
 }

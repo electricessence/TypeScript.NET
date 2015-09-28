@@ -7,10 +7,9 @@
 *   https://msdn.microsoft.com/en-us/library/dd990377.aspx
 */
 
-///<reference path="IObserver.ts"/>
-///<reference path="../Disposable/IDisposable.ts"/>
+///<reference path="IObserver"/>
+///<reference path="ISubscribable"/>
 
-interface IObservable<T> // <out T>
+interface IObservable<T> extends ISubscribable<IObserver<T>>
 {
-	subscribe(observer: IObserver<T>): IDisposable;
 }
