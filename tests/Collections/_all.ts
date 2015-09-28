@@ -4,8 +4,10 @@
 import LinkedList = require('./LinkedList');
 import Queue = require('./Queue');
 
-function run() {
-    Queue();
+function run()
+{
+	LinkedList();
+	Queue();
 }
 
 export = run;
