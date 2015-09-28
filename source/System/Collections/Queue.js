@@ -1,7 +1,7 @@
 /*
  * @author electricessence / https://github.com/electricessence/
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, Types, AU, EnumeratorBase, forEach, NotImplementedException, InvalidOperationException, ArgumentException, ArgumentOutOfRangeException) {
     var MINIMUM_GROW = 4 | 0;

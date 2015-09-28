@@ -1,7 +1,7 @@
 /*
  * @author electricessence / https://github.com/electricessence/
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase, InvalidOperationException, ArgumentException, ArgumentNullException, ArgumentOutOfRangeException) {
     'use strict';
