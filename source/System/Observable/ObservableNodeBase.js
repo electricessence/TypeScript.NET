@@ -10,21 +10,21 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", './SubscribableBase'], function (require, exports, SubscribableBase) {
-    var ObservableNode = (function (_super) {
-        __extends(ObservableNode, _super);
-        function ObservableNode() {
+    var ObservableNodeBase = (function (_super) {
+        __extends(ObservableNodeBase, _super);
+        function ObservableNodeBase() {
             _super.apply(this, arguments);
         }
-        ObservableNode.prototype.onNext = function (value) {
+        ObservableNodeBase.prototype.onNext = function (value) {
             processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });
         };
-        ObservableNode.prototype.onError = function (error) {
+        ObservableNodeBase.prototype.onError = function (error) {
             processAction(this._getSubscribers(), function (s) { s.onError && s.onError(error); });
         };
-        ObservableNode.prototype.onCompleted = function () {
+        ObservableNodeBase.prototype.onCompleted = function () {
             processAction(this._unsubscribeAll(true), function (s) { s.onCompleted && s.onCompleted(); });
         };
-        return ObservableNode;
+        return ObservableNodeBase;
     })(SubscribableBase);
     var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
     function processAction(observers, handler, dispose) {
@@ -52,6 +52,6 @@ define(["require", "exports", './SubscribableBase'], function (require, exports,
                 };
         }
     }
-    return ObservableNode;
+    return ObservableNodeBase;
 });
-//# sourceMappingURL=ObservableNode.js.map
+//# sourceMappingURL=ObservableNodeBase.js.map
