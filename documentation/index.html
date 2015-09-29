@@ -87,7 +87,14 @@
 					<li>Atom</li>
 				</ul>
 				<p>To name a few.</p>
-				<p>4) There&#39;s some really good and useful code here already, including a fully typed (with generics) Linq implementation.  Take a look!</p>
+				<h1 id="highlights">Highlights</h1>
+				<ul>
+					<li><strong>Linq</strong>: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable<T> with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.</li>
+					<li><strong>Exceptions</strong>: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using <em>instanceof</em> as if you used multiple <em>catch</em> statements in C#.</li>
+					<li><strong>Collections</strong>: Multiple collections types with standard ICollection<T> and IEnumerable<T> interfaces.  LinkedList<T>, Queue<T>, Dictionary<T>, and more, all unit tested using a common interface test of ICollection<T>.</li>
+					<li><strong>IDisposable</strong>: Additional interfaces, utilities, and classes like <strong>DisposableBase</strong> that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator<T>, use IDisposable to ensure releasing of references.</li>
+					<li><strong>DateTime &amp; TimeSpan</strong>: The <em>System/Time</em> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
+				</ul>
 				<h1 id="usage">Usage</h1>
 				<p>After some time and effort, I&#39;ve decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:</p>
 				<ul>
@@ -95,6 +102,7 @@
 					<li>If you care about bundling and minification r.js is probably the right way to go.</li>
 					<li>The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.</li>
 					<li>It is easy to change the module types. :)</li>
+					<li>You can easily recompile the entire library into another <em>dist</em> folder fully minified using gulp.</li>
 				</ul>
 				<h1 id="learn-connect-evolve">Learn, Connect &amp; Evolve</h1>
 				<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
@@ -103,7 +111,7 @@
 				<h1 id="examples">Examples</h1>
 				<p>Currently the unit test cover many example usages.</p>
 				<h1 id="documentation">Documentation</h1>
-				<p>Currently improving over time using JSDoc style comments and TypeDoc. <a href="http://http://typedoc.io/">http://http://typedoc.io/</a></p>
+				<p>Currently improving over time using JSDoc style comments and TypeDoc. <a href="http://typedoc.io/">http://typedoc.io/</a></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -221,7 +229,28 @@
 						<a href="modules/_system_exception_.html">"<wbr>System/<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_exceptiontype_.html">"<wbr>System/<wbr>Exceptions/<wbr>Exception<wbr>Type"</a>
+						<a href="modules/_system_exceptiontype_.html">"<wbr>System/<wbr>Exception<wbr>Type"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_exceptions_argumentexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_exceptions_argumentnullexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Null<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_exceptions_argumentoutofrangeexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Out<wbr>OfRange<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_exceptions_invalidoperationexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Invalid<wbr>Operation<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_exceptions_notimplementedexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Not<wbr>Implemented<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_exceptions_nullreferenceexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Null<wbr>Reference<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_exceptions_systemexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>System<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_functiontypes_.html">"<wbr>System/<wbr>Function<wbr>Types"</a>
@@ -260,7 +289,19 @@
 						<a href="modules/_system_observable_iobserver_.html">"<wbr>System/<wbr>Observable/IObserver"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_observableaware_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Aware"</a>
+						<a href="modules/_system_observable_isubscribable_.html">"<wbr>System/<wbr>Observable/ISubscribable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_observable_observablenodebase_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Node<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_observable_subscribablebase_.html">"<wbr>System/<wbr>Observable/<wbr>Subscribable<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_observable_subscription_.html">"<wbr>System/<wbr>Observable/<wbr>Subscription"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_promises_ipromise_.html">"<wbr>System/<wbr>Promises/IPromise"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_runtime_serialization_iserializable_.html">"<wbr>System/<wbr>Runtime/<wbr>Serialization/ISerializable"</a>

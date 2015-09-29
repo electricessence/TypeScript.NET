@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ObservableNode | TypeScript.NET</title>
+	<title>SubscribableBase | TypeScript.NET</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,13 +57,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="../modules/_system_observable_observableaware_.html">&quot;System/Observable/ObservableAware&quot;</a>
+					<a href="../modules/_system_observable_subscribablebase_.html">&quot;System/Observable/SubscribableBase&quot;</a>
 				</li>
 				<li>
-					<a href="_system_observable_observableaware_.observablenode.html">ObservableNode</a>
+					<a href="_system_observable_subscribablebase_.subscribablebase.html">SubscribableBase</a>
 				</li>
 			</ul>
-			<h1>Class ObservableNode&lt;T&gt;</h1>
+			<h1>Class SubscribableBase&lt;TSubscriber&gt;</h1>
 		</div>
 	</div>
 </header>
@@ -74,7 +74,7 @@
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
 					<li>
-						<h4>T</h4>
+						<h4>TSubscriber</h4>
 					</li>
 				</ul>
 			</section>
@@ -82,50 +82,81 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ObservableNode</span>
+						<span class="target">SubscribableBase</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<a href="_system_observable_observablenodebase_.observablenodebase.html" class="tsd-signature-type">ObservableNodeBase</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/_system_observable_iobservable_.iobservable.html" class="tsd-signature-type">IObservable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
-					<li><a href="../interfaces/_system_observable_iobserver_.iobserver.html" class="tsd-signature-type">IObserver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li><a href="../interfaces/_system_disposable_idisposable_.idisposable.html" class="tsd-signature-type">IDisposable</a></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_system_observable_subscribablebase_.subscribablebase.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
 						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_system_observable_observableaware_.observablenode.html#_subscribers" class="tsd-kind-icon">_subscribers</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="_system_observable_subscribablebase_.subscribablebase.html#___subscriptions" class="tsd-kind-icon">___subscriptions</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_system_observable_observableaware_.observablenode.html#_findentrynode" class="tsd-kind-icon">_find<wbr>Entry<wbr>Node</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_observableaware_.observablenode.html#oncompleted" class="tsd-kind-icon">on<wbr>Completed</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_observableaware_.observablenode.html#onerror" class="tsd-kind-icon">on<wbr>Error</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_observableaware_.observablenode.html#onnext" class="tsd-kind-icon">on<wbr>Next</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_observableaware_.observablenode.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_observableaware_.observablenode.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="_system_observable_subscribablebase_.subscribablebase.html#_findentrynode" class="tsd-kind-icon">_find<wbr>Entry<wbr>Node</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_system_observable_subscribablebase_.subscribablebase.html#_getsubscribers" class="tsd-kind-icon">_get<wbr>Subscribers</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="_system_observable_subscribablebase_.subscribablebase.html#_unsubscribeall" class="tsd-kind-icon">_unsubscribe<wbr>All</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_subscribablebase_.subscribablebase.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_subscribablebase_.subscribablebase.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_subscribablebase_.subscribablebase.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_observable_subscribablebase_.subscribablebase.html#unsubscribeall" class="tsd-kind-icon">unsubscribe<wbr>All</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Subscribable<wbr>Base<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_system_observable_subscribablebase_.subscribablebase.html" class="tsd-signature-type">SubscribableBase</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Observable/SubscribableBase.ts:28</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="_system_observable_subscribablebase_.subscribablebase.html" class="tsd-signature-type">SubscribableBase</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_subscribers" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _subscribers</h3>
-					<div class="tsd-signature tsd-kind-icon">_subscribers<span class="tsd-signature-symbol">:</span> <a href="_system_collections_linkedlist_.linkedlist.html" class="tsd-signature-type">LinkedList</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_observable_observableaware_.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<a name="___subscriptions" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> ___subscriptions</h3>
+					<div class="tsd-signature tsd-kind-icon">___subscriptions<span class="tsd-signature-symbol">:</span> <a href="_system_collections_linkedlist_.linkedlist.html" class="tsd-signature-type">LinkedList</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_observable_subscription_.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Observable/ObservableAware.ts:65</li>
+							<li>Defined in System/Observable/SubscribableBase.ts:22</li>
 						</ul>
 					</aside>
 				</section>
@@ -136,87 +167,79 @@
 					<a name="_findentrynode" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _find<wbr>Entry<wbr>Node</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
-						<li class="tsd-signature tsd-kind-icon">_find<wbr>Entry<wbr>Node<span class="tsd-signature-symbol">(</span>observer<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_observable_iobserver_.iobserver.html" class="tsd-signature-type">IObserver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_collections_ilinkedlistnode_.ilinkedlistnode.html" class="tsd-signature-type">ILinkedListNode</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_observable_observableaware_.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">_find<wbr>Entry<wbr>Node<span class="tsd-signature-symbol">(</span>subscriber<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_collections_ilinkedlistnode_.ilinkedlistnode.html" class="tsd-signature-type">ILinkedListNode</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_observable_subscription_.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Observable/ObservableAware.ts:67</li>
+									<li>Defined in System/Observable/SubscribableBase.ts:35</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>observer: <a href="../interfaces/_system_observable_iobserver_.iobserver.html" class="tsd-signature-type">IObserver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>subscriber: <span class="tsd-signature-type">TSubscriber</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_collections_ilinkedlistnode_.ilinkedlistnode.html" class="tsd-signature-type">ILinkedListNode</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_observable_observableaware_.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_collections_ilinkedlistnode_.ilinkedlistnode.html" class="tsd-signature-type">ILinkedListNode</a><span class="tsd-signature-symbol">&lt;</span><a href="_system_observable_subscription_.subscription.html" class="tsd-signature-type">Subscription</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="oncompleted" class="tsd-anchor"></a>
-					<h3>on<wbr>Completed</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Completed<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="_getsubscribers" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _get<wbr>Subscribers</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">_get<wbr>Subscribers<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_system_observable_iobserver_.iobserver.html">IObserver</a>.<a href="../interfaces/_system_observable_iobserver_.iobserver.html#oncompleted">onCompleted</a></p>
 								<ul>
-									<li>Defined in System/Observable/ObservableAware.ts:123</li>
+									<li>Defined in System/Observable/SubscribableBase.ts:24</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onerror" class="tsd-anchor"></a>
-					<h3>on<wbr>Error</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Error<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Error</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+					<a name="_unsubscribeall" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _unsubscribe<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">_unsubscribe<wbr>All<span class="tsd-signature-symbol">(</span>returnSubscribers<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_system_observable_iobserver_.iobserver.html">IObserver</a>.<a href="../interfaces/_system_observable_iobserver_.iobserver.html#onerror">onError</a></p>
 								<ul>
-									<li>Defined in System/Observable/ObservableAware.ts:116</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>error: <span class="tsd-signature-type">Error</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="onnext" class="tsd-anchor"></a>
-					<h3>on<wbr>Next</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">on<wbr>Next<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_system_observable_iobserver_.iobserver.html">IObserver</a>.<a href="../interfaces/_system_observable_iobserver_.iobserver.html#onnext">onNext</a></p>
-								<ul>
-									<li>Defined in System/Observable/ObservableAware.ts:109</li>
+									<li>Defined in System/Observable/SubscribableBase.ts:79</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>value: <span class="tsd-signature-type">T</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> returnSubscribers: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></h5>
 								</li>
 							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="dispose" class="tsd-anchor"></a>
+					<h3>dispose</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_system_disposable_idisposable_.idisposable.html">IDisposable</a>.<a href="../interfaces/_system_disposable_idisposable_.idisposable.html#dispose">dispose</a></p>
+								<ul>
+									<li>Defined in System/Observable/SubscribableBase.ts:94</li>
+								</ul>
+							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -225,20 +248,19 @@
 					<a name="subscribe" class="tsd-anchor"></a>
 					<h3>subscribe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">(</span>observer<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_observable_iobserver_.iobserver.html" class="tsd-signature-type">IObserver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_disposable_idisposable_.idisposable.html" class="tsd-signature-type">IDisposable</a></li>
+						<li class="tsd-signature tsd-kind-icon">subscribe<span class="tsd-signature-symbol">(</span>subscriber<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_disposable_idisposable_.idisposable.html" class="tsd-signature-type">IDisposable</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_system_observable_iobservable_.iobservable.html">IObservable</a>.<a href="../interfaces/_system_observable_iobservable_.iobservable.html#subscribe">subscribe</a></p>
 								<ul>
-									<li>Defined in System/Observable/ObservableAware.ts:86</li>
+									<li>Defined in System/Observable/SubscribableBase.ts:55</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>observer: <a href="../interfaces/_system_observable_iobserver_.iobserver.html" class="tsd-signature-type">IObserver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>subscriber: <span class="tsd-signature-type">TSubscriber</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_disposable_idisposable_.idisposable.html" class="tsd-signature-type">IDisposable</a></h4>
@@ -249,21 +271,38 @@
 					<a name="unsubscribe" class="tsd-anchor"></a>
 					<h3>unsubscribe</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>observer<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_observable_iobserver_.iobserver.html" class="tsd-signature-type">IObserver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>subscriber<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TSubscriber</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Observable/ObservableAware.ts:98</li>
+									<li>Defined in System/Observable/SubscribableBase.ts:68</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>observer: <a href="../interfaces/_system_observable_iobserver_.iobserver.html" class="tsd-signature-type">IObserver</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>subscriber: <span class="tsd-signature-type">TSubscriber</span></h5>
 								</li>
 							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="unsubscribeall" class="tsd-anchor"></a>
+					<h3>unsubscribe<wbr>All</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">unsubscribe<wbr>All<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Observable/SubscribableBase.ts:90</li>
+								</ul>
+							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -277,7 +316,7 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="../modules/_system_observable_observableaware_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Aware"</a>
+						<a href="../modules/_system_observable_subscribablebase_.html">"<wbr>System/<wbr>Observable/<wbr>Subscribable<wbr>Base"</a>
 					</li>
 				</ul>
 			</nav>
@@ -286,36 +325,39 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter">
-						<a href="_system_observable_observableaware_.observablenode.html" class="tsd-kind-icon">Observable<wbr>Node</a>
+						<a href="_system_observable_subscribablebase_.subscribablebase.html" class="tsd-kind-icon">Subscribable<wbr>Base</a>
 						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class">
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="_system_observable_observableaware_.observablenode.html#_subscribers" class="tsd-kind-icon">_subscribers</a>
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#___subscriptions" class="tsd-kind-icon">___subscriptions</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
-								<a href="_system_observable_observableaware_.observablenode.html#_findentrynode" class="tsd-kind-icon">_find<wbr>Entry<wbr>Node</a>
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#_findentrynode" class="tsd-kind-icon">_find<wbr>Entry<wbr>Node</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#_getsubscribers" class="tsd-kind-icon">_get<wbr>Subscribers</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#_unsubscribeall" class="tsd-kind-icon">_unsubscribe<wbr>All</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_system_observable_observableaware_.observablenode.html#oncompleted" class="tsd-kind-icon">on<wbr>Completed</a>
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_system_observable_observableaware_.observablenode.html#onerror" class="tsd-kind-icon">on<wbr>Error</a>
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#subscribe" class="tsd-kind-icon">subscribe</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_system_observable_observableaware_.observablenode.html#onnext" class="tsd-kind-icon">on<wbr>Next</a>
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_system_observable_observableaware_.observablenode.html#subscribe" class="tsd-kind-icon">subscribe</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_system_observable_observableaware_.observablenode.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
+								<a href="_system_observable_subscribablebase_.subscribablebase.html#unsubscribeall" class="tsd-kind-icon">unsubscribe<wbr>All</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
-						<a href="_system_observable_observableaware_.subscription.html" class="tsd-kind-icon">Subscription</a>
-					</li>
 				</ul>
 			</nav>
 		</div>

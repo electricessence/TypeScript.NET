@@ -6,6 +6,6 @@
 *   http://referencesource.microsoft.com/#mscorlib/system/IObservable.cs
 *   https://msdn.microsoft.com/en-us/library/dd990377.aspx
 */
-///<reference path="IObserver.ts"/>
-///<reference path="../Disposable/IDisposable.ts"/>
+///<reference path="IObserver"/>
+///<reference path="ISubscribable"/>
 //# sourceMappingURL=IObservable.js.map
