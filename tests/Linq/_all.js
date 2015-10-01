@@ -1,6 +1,7 @@
 ///<reference path="../../typings/qunit/qunit"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", '../../source/System.Linq/Enumerable', "QUnit"], function (require, exports, Linq) {
+define(["require", "exports", '../../source/System.Linq/Linq', "QUnit"], function (require, exports, Linq) {
+    var Enumerable = Linq.Enumerable;
     function run() {
         var source = [
             {
@@ -34,7 +35,7 @@ define(["require", "exports", '../../source/System.Linq/Enumerable', "QUnit"], f
                 c: "f"
             }
         ];
-        var sourceEnumerable = Linq.fromArray(source);
+        var sourceEnumerable = Enumerable.fromArray(source);
         QUnit.test("Linq.memoize", function (assert) {
             var source = sourceEnumerable;
             var A = source.memoize();

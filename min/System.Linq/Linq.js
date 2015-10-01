@@ -8,28 +8,46 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/Compare', '../System/Types', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase'], function (require, exports, Values, Types, BaseFunctions, ArrayCompare, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase) {
-    var dispose = DisposeUtility.dispose;
-    var using = DisposeUtility.using;
-    var enumeratorFrom = Enumerator.from;
-    var enumeratorForEach = Enumerator.forEach;
-    'use strict';
-    var LinqFunctions = (function (_super) {
-        __extends(LinqFunctions, _super);
-        function LinqFunctions() {
-            _super.apply(this, arguments);
-        }
-        LinqFunctions.prototype.Greater = function (a, b) {
-            return a > b ? a : b;
-        };
-        LinqFunctions.prototype.Lesser = function (a, b) {
-            return a < b ? a : b;
-        };
-        return LinqFunctions;
-    })(BaseFunctions);
-    var Functions = new LinqFunctions();
-    Object.freeze(Functions);
-    var INT_0 = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
+///<reference path="../System/FunctionTypes.d.ts"/>
+///<reference path="../System/Collections/Array/IArray.d.ts"/>
+///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
+///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
+///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+var Values = require('../System/Compare');
+var Types = require('../System/Types');
+var BaseFunctions = require('../System/Functions');
+var ArrayCompare = require('../System/Collections/Array/Compare');
+var ArrayUtility = require('../System/Collections/Array/Utility');
+var ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
+var Enumerator = require('../System/Collections/Enumeration/Enumerator');
+var EnumeratorBase = require('../System/Collections/Enumeration/EnumeratorBase');
+var Dictionary = require('../System/Collections/Dictionaries/Dictionary');
+var Queue = require('../System/Collections/Queue');
+var DisposeUtility = require('../System/Disposable/Utility');
+var DisposableBase = require('../System/Disposable/DisposableBase');
+var dispose = DisposeUtility.dispose;
+var using = DisposeUtility.using;
+var enumeratorFrom = Enumerator.from;
+var enumeratorForEach = Enumerator.forEach;
+'use strict';
+var LinqFunctions = (function (_super) {
+    __extends(LinqFunctions, _super);
+    function LinqFunctions() {
+        _super.apply(this, arguments);
+    }
+    LinqFunctions.prototype.Greater = function (a, b) {
+        return a > b ? a : b;
+    };
+    LinqFunctions.prototype.Lesser = function (a, b) {
+        return a < b ? a : b;
+    };
+    return LinqFunctions;
+})(BaseFunctions);
+var Functions = new LinqFunctions();
+Object.freeze(Functions);
+var INT_0 = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
+var Linq;
+(function (Linq) {
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(_enumeratorFactory, finalizer) {
@@ -43,14 +61,14 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             if ("getEnumerator" in source)
                 return source;
             if (source instanceof Array || typeof source === Types.Object && "length" in source)
-                return Enumerable.fromArray(source);
+                return new ArrayEnumerable(source);
             throw new Error("Unsupported enumerable.");
         };
         Enumerable.toArray = function (source) {
             if (source instanceof Array)
                 return source.slice();
             if (typeof source === Types.Object && "length" in source)
-                source = Enumerable.fromArray(source);
+                source = new ArrayEnumerable(source);
             if (source instanceof Enumerable)
                 return source.toArray();
             if ("getEnumerator" in source) {
@@ -1708,6 +1726,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         };
         return Enumerable;
     })(DisposableBase);
+    Linq.Enumerable = Enumerable;
     var ArrayEnumerable = (function (_super) {
         __extends(ArrayEnumerable, _super);
         function ArrayEnumerable(source) {
@@ -2098,17 +2117,16 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         };
         return SortContext;
     })();
-    function assertIsNotDisposed(disposed) {
-        return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
-    }
-    function numberOrNaN(value) {
-        return isNaN(value) ? NaN : value;
-    }
-    function assertInteger(value, variable) {
-        if (typeof value === Types.Number && !isNaN(value) && value != (value | 0))
-            throw new Error("'" + variable + "'" + " must be an integer.");
-        return true;
-    }
-    return Enumerable;
-});
-//# sourceMappingURL=Enumerable.js.map
+})(Linq || (Linq = {}));
+function assertIsNotDisposed(disposed) {
+    return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
+}
+function numberOrNaN(value) {
+    return isNaN(value) ? NaN : value;
+}
+function assertInteger(value, variable) {
+    if (typeof value === Types.Number && !isNaN(value) && value != (value | 0))
+        throw new Error("'" + variable + "'" + " must be an integer.");
+    return true;
+}
+module.exports = Linq;

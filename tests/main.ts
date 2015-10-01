@@ -3,7 +3,7 @@
 
 import ArrayTests = require('./Arrays/_all');
 import CollectionTests = require('./Collections/_all');
-import EnumerableTests = require('./Enumerable/_all');
+import EnumerableTests = require('./Linq/_all');
 
 ArrayTests();
 CollectionTests();
