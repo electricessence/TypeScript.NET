@@ -6,9 +6,9 @@
 
 'use strict';
 
-///<reference path="ITimeMeasurement.ts"/>
-///<reference path="../IEquatable.ts"/>
-///<reference path="../IComparable.ts"/>
+///<reference path="ITimeMeasurement.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../IComparable.d.ts"/>
 import Values = require('../Compare');
 import Types = require('../Types');
 import TimeUnit = require('./TimeUnit');

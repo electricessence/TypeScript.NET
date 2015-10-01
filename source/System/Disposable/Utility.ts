@@ -1,4 +1,4 @@
-///<reference path="IDisposable.ts"/>
+///<reference path="IDisposable.d.ts"/>
 
 /*
  * @author electricessence / https://github.com/electricessence/

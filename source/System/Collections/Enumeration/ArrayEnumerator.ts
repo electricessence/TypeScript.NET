@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Array/IArray.ts"/>
+///<reference path="../Array/IArray.d.ts"/>
 import IndexEnumerator= require('./IndexEnumerator');
 import Types = require('../../Types');
 

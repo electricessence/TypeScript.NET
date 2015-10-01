@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="IDisposableAware.ts"/>
+///<reference path="IDisposableAware.d.ts"/>
 'use strict';
 define(["require", "exports"], function (require, exports) {
     var DisposableBase = (function () {

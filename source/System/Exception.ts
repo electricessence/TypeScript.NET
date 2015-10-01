@@ -4,8 +4,8 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-///<reference path="Collections/Dictionaries/IDictionary"/>
-///<reference path="Disposable/IDisposable"/>
+///<reference path="Collections/Dictionaries/IDictionary.d.ts"/>
+///<reference path="Disposable/IDisposable.d.ts"/>
 
 const NAME:string = 'Exception';
 

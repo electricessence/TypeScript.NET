@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IEnumerable.ts"/>
-///<reference path="../Array/IArray.ts"/>
+///<reference path="IEnumerable.d.ts"/>
+///<reference path="../Array/IArray.d.ts"/>
 import DU = require('../../Disposable/Utility');
 import Enumerator = require('./Enumerator');
 import using = DU.using;

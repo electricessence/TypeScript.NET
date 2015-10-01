@@ -1,4 +1,4 @@
-///<reference path="../../source/System/Collections/ICollection.ts"/>
+///<reference path="../../source/System/Collections/ICollection.d.ts"/>
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
 

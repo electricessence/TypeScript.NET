@@ -5,8 +5,8 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-///<reference path="IObserver.ts"/>
-///<reference path="IObservable.ts"/>
+///<reference path="IObserver.d.ts"/>
+///<reference path="IObservable.d.ts"/>
 import SubscribableBase = require('./SubscribableBase');
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.

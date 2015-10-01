@@ -4,12 +4,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../System/FunctionTypes"/>
-///<reference path="../System/Collections/Array/IArray"/>
-///<reference path="../System/Collections/Enumeration/IEnumerator"/>
-///<reference path="../System/Collections/Enumeration/IEnumerable"/>
-///<reference path="../System/Collections/Dictionaries/IDictionary"/>
-///<reference path="IGrouping"/>
+///<reference path="../System/FunctionTypes.d.ts"/>
+///<reference path="../System/Collections/Array/IArray.d.ts"/>
+///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
+///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
+///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+///<reference path="IGrouping.d.ts"/>
 import Values = require('../System/Compare');
 import Types = require('../System/Types');
 import BaseFunctions = require('../System/Functions');

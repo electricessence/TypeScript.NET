@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Disposable/IDisposable.ts"/>
-///<reference path="IEventDispatcher.ts"/>
+///<reference path="../Disposable/IDisposable.d.ts"/>
+///<reference path="IEventDispatcher.d.ts"/>
 
 import shallowCopy = require('../Utility/shallowCopy');
 import DisposableBase = require('../Disposable/DisposableBase');

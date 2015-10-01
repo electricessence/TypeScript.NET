@@ -4,7 +4,7 @@
  */
 
 
-///<reference path="IDisposableAware.ts"/>
+///<reference path="IDisposableAware.d.ts"/>
 
 'use strict';
 

@@ -1,4 +1,4 @@
-///<reference path="IDisposable.ts"/>
+///<reference path="IDisposable.d.ts"/>
 define(["require", "exports", '../Types'], function (require, exports, Types) {
     var DisposableUtility;
     (function (DisposableUtility) {

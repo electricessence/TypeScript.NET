@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IArray.ts"/>
-///<reference path="../../FunctionTypes.ts"/>
+///<reference path="IArray.d.ts"/>
+///<reference path="../../FunctionTypes.d.ts"/>
 import Values = require('../../Compare');
 import Types = require('../../Types');
 

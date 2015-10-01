@@ -5,8 +5,8 @@
  */
 
 
-///<reference path="ILinkedListNode.ts"/>
-///<reference path="ILinkedList.ts"/>
+///<reference path="ILinkedListNode.d.ts"/>
+///<reference path="ILinkedList.d.ts"/>
 import Values = require('../Compare');
 import TextUtility = require('../Text/Utility');
 import ArrayUtility = require('./Array/Utility');

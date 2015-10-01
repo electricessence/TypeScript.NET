@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IDictionary"/>
+///<reference path="IDictionary.d.ts"/>
 import Values = require('../../Compare');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
 import NotImplementedException = require('../../Exceptions/NotImplementedException');

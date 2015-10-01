@@ -4,12 +4,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeMeasurement.ts"/>
-///<reference path="ITimeTotal.ts"/>
-///<reference path="../IEquatable.ts"/>
-///<reference path="../IComparable.ts"/>
-///<reference path="../IFormattable.ts"/>
-///<reference path="../IFormatProvider.ts"/>
+///<reference path="ITimeMeasurement.d.ts"/>
+///<reference path="ITimeTotal.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../IComparable.d.ts"/>
+///<reference path="../IFormattable.d.ts"/>
+///<reference path="../IFormatProvider.d.ts"/>
 import Values = require('../Compare');
 import HowMany= require('./HowMany');
 import TimeSpan= require('./TimeSpan');

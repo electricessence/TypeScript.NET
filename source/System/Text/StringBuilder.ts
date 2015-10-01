@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Disposable/IDisposable.ts"/>
+///<reference path="../Disposable/IDisposable.d.ts"/>
 import Types = require('../Types');
 import LinkedList = require('../Collections/LinkedList');
 

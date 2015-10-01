@@ -5,9 +5,9 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 define(["require", "exports"], function (require, exports) {
-    ///<reference path="ISubscribable"/>
-    ///<reference path="IObservable.ts"/>
-    ///<reference path="../Disposable/IDisposableAware.ts"/>
+    ///<reference path="ISubscribable.d.ts"/>
+    ///<reference path="IObservable.d.ts"/>
+    ///<reference path="../Disposable/IDisposableAware.d.ts"/>
     var Subscription = (function () {
         function Subscription(_subscribable, _subscriber) {
             this._subscribable = _subscribable;

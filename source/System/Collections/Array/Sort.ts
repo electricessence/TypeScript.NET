@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../FunctionTypes.ts"/>
+///<reference path="../../FunctionTypes.d.ts"/>
 
 import Types = require('../../Types');
 import ValueCompare = require('../../Compare');

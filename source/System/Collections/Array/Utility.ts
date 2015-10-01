@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IArray.ts"/>
+///<reference path="IArray.d.ts"/>
 import Types = require('../../Types');
 'use strict';
 

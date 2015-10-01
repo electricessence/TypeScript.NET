@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeMeasurement.ts"/>
-///<reference path="../IEquatable.ts"/>
-///<reference path="../IComparable.ts"/>
-///<reference path="../IFormattable.ts"/>
+///<reference path="ITimeMeasurement.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../IComparable.d.ts"/>
+///<reference path="../IFormattable.d.ts"/>
 import TimeUnit= require('./TimeUnit');
 import TimeSpan= require('./TimeSpan');
 import Values = require('../Compare');

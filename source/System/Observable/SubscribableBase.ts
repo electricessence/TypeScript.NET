@@ -5,8 +5,8 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-///<reference path="../Disposable/IDisposable"/>
-///<reference path="../FunctionTypes"/>
+///<reference path="../Disposable/IDisposable.d.ts"/>
+///<reference path="../FunctionTypes.d.ts"/>
 
 import LinkedList = require('../Collections/LinkedList');
 import DisposeUtility = require('../Disposable/Utility')

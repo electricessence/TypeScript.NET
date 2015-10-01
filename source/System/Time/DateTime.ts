@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path='ITimeTotal.ts'/>
+///<reference path='ITimeTotal.d.ts'/>
 import HowMany = require('./HowMany');
 
 class DateTime

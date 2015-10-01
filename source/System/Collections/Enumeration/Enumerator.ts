@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../Disposable/IDisposable.ts"/>
-///<reference path="IEnumerable.ts"/>
-///<reference path="IEnumerator.ts"/>
-///<reference path="IYield.ts"/>
+///<reference path="../../Disposable/IDisposable.d.ts"/>
+///<reference path="IEnumerable.d.ts"/>
+///<reference path="IEnumerator.d.ts"/>
+///<reference path="IYield.d.ts"/>
 import Types = require('../../Types');
 import DisposableBase = require('../../Disposable/DisposableBase');
 import ArrayEnumerator= require('./ArrayEnumerator');

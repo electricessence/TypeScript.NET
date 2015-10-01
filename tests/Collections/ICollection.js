@@ -1,4 +1,4 @@
-///<reference path="../../source/System/Collections/ICollection.ts"/>
+///<reference path="../../source/System/Collections/ICollection.d.ts"/>
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
 define(["require", "exports", '../../source/System/Text/Utility', '../../source/System/Collections/Array/Utility', '../../source/System/Exceptions/NotImplementedException', "QUnit"], function (require, exports, Text, AU, NotImplementedException) {

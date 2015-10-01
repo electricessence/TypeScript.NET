@@ -5,10 +5,10 @@
  */
 
 
-///<reference path="ICollection.ts"/>
-///<reference path="IList.ts"/>
-///<reference path="Enumeration/IEnumerateEach.ts"/>
-///<reference path="../FunctionTypes.ts"/>
+///<reference path="ICollection.d.ts"/>
+///<reference path="IList.d.ts"/>
+///<reference path="Enumeration/IEnumerateEach.d.ts"/>
+///<reference path="../FunctionTypes.d.ts"/>
 import Values = require('../Compare');
 import Types = require('../Types');
 import AU = require('./Array/Utility');

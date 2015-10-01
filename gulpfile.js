@@ -4,8 +4,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
 
 function clearGulpTscTemp() {
-	del([ './gulp-tsc-tmp-*' ]);
-	del([ './source/.gulp-tsc-tmp-*' ]);
+	del(['./gulp-tsc-tmp-*']);
+	del(['./source/.gulp-tsc-tmp-*']);
 }
 
 gulp.task(
@@ -13,6 +13,7 @@ gulp.task(
 	'typescript', function() {
 
 		var options = {
+			tscPath:'./node_modules/typescript/bin/tsc',
 			outDir: './source',
 			noImplicitAny: true,
 			module: 'amd',
@@ -21,13 +22,13 @@ gulp.task(
 			sourceMap: true
 		};
 
-		del([ './min/**/*' ]);
+		del(['./min/**/*']);
 
 		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
 		var stream = gulp
-			.src(['./source/**/*.ts'])
-			.pipe(require('gulp-tsc')(options))
-			.pipe(gulp.dest('./source'))
+			    .src(['./source/**/*.ts'])
+			    .pipe(require('gulp-tsc')(options))
+			    .pipe(gulp.dest('./source'))
 			;
 
 		clearGulpTscTemp();
@@ -50,19 +51,19 @@ gulp.task(
 		//		includeContent: false
 		//	};
 
-		del([ './min/**/*' ]);
+		del(['./min/**/*']);
 
 		var stream = gulp
 			.src(['./source/**/*.ts'], { base: './source' })
 			//.pipe(sourcemaps.init())
 			.pipe(require('gulp-typescript')({
-				outDir:'./min',
+				outDir: './min',
 				noImplicitAny: true,
 				module: 'amd',
 				target: 'es5',
 				removeComments: true
 			}))
-			.pipe(uglify({preserveComments:'license'}))
+			.pipe(uglify({ preserveComments: 'license' }))
 			//.pipe(sourcemaps.write('.', sourceMapOptions))
 			.pipe(gulp.dest('./min'));
 
@@ -90,6 +91,7 @@ gulp.task(
 					module: 'amd',
 					target: 'es5',
 
+					includeDeclarations: true,
 					ignoreCompilerErrors: false,
 					version: true
 				}

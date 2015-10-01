@@ -6,9 +6,9 @@
  */
 
 
-///<reference path="ISubscribable"/>
-///<reference path="IObservable.ts"/>
-///<reference path="../Disposable/IDisposableAware.ts"/>
+///<reference path="ISubscribable.d.ts"/>
+///<reference path="IObservable.d.ts"/>
+///<reference path="../Disposable/IDisposableAware.d.ts"/>
 
 /**
  * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.

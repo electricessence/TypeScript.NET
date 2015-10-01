@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ILazy.ts"/>
-///<reference path="FunctionTypes.ts"/>
+///<reference path="ILazy.d.ts"/>
+///<reference path="FunctionTypes.d.ts"/>
 import DisposableBase= require('./Disposable/DisposableBase');
 
 class Lazy<T> extends DisposableBase implements ILazy<T>

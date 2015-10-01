@@ -4,8 +4,8 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 define(["require", "exports"], function (require, exports) {
-    ///<reference path="Collections/Dictionaries/IDictionary"/>
-    ///<reference path="Disposable/IDisposable"/>
+    ///<reference path="Collections/Dictionaries/IDictionary.d.ts"/>
+    ///<reference path="Disposable/IDisposable.d.ts"/>
     var NAME = 'Exception';
     var Exception = (function () {
         function Exception(message, innerException) {
