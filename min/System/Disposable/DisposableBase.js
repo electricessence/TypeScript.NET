@@ -2,45 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="IDisposableAware.d.ts"/>
-'use strict';
-var DisposableBase = (function () {
-    function DisposableBase(_finalizer) {
-        this._finalizer = _finalizer;
-        this._wasDisposed = false;
-    }
-    Object.defineProperty(DisposableBase.prototype, "wasDisposed", {
-        get: function () {
-            return this._wasDisposed;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
-        if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
-        if (disposed)
-            throw new Error(errorMessage);
-        return true;
-    };
-    DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
-        if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
-        return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
-    };
-    DisposableBase.prototype.dispose = function () {
-        var _ = this;
-        if (!_._wasDisposed) {
-            _._wasDisposed = true;
-            try {
-                _._onDispose();
-            }
-            finally {
-                if (_._finalizer)
-                    _._finalizer();
-            }
-        }
-    };
-    DisposableBase.prototype._onDispose = function () {
-    };
-    return DisposableBase;
-})();
-module.exports = DisposableBase;
+"use strict";define(["require","exports"],function(s,e){var i=function(){function s(s){this._finalizer=s,this._wasDisposed=!1}return Object.defineProperty(s.prototype,"wasDisposed",{get:function(){return this._wasDisposed},enumerable:!0,configurable:!0}),s.assertIsNotDisposed=function(s,e){if(void 0===e&&(e="ObjectDisposedException"),s)throw new Error(e);return!0},s.prototype.assertIsNotDisposed=function(e){return void 0===e&&(e="ObjectDisposedException"),s.assertIsNotDisposed(this._wasDisposed,e)},s.prototype.dispose=function(){var s=this;if(!s._wasDisposed){s._wasDisposed=!0;try{s._onDispose()}finally{s._finalizer&&s._finalizer()}}},s.prototype._onDispose=function(){},s}();return i});
+//# sourceMappingURL=DisposableBase.js.map

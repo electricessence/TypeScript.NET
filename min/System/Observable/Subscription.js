@@ -4,39 +4,5 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-///<reference path="ISubscribable.d.ts"/>
-///<reference path="IObservable.d.ts"/>
-///<reference path="../Disposable/IDisposableAware.d.ts"/>
-var Subscription = (function () {
-    function Subscription(_subscribable, _subscriber) {
-        this._subscribable = _subscribable;
-        this._subscriber = _subscriber;
-        if (!_subscribable || !_subscriber)
-            throw 'Subscribable and subscriber cannot be null.';
-    }
-    Object.defineProperty(Subscription.prototype, "subscriber", {
-        get: function () {
-            return this._subscriber;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Subscription.prototype, "wasDisposed", {
-        get: function () {
-            return !this._subscribable || !this._subscriber;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Subscription.prototype.dispose = function () {
-        var subscriber = this.subscriber;
-        var subscribable = this._subscribable;
-        this._subscriber = null;
-        this._subscribable = null;
-        if (subscriber && subscribable) {
-            subscribable.unsubscribe(subscriber);
-        }
-    };
-    return Subscription;
-})();
-module.exports = Subscription;
+define(["require","exports"],function(e,r){var s=function(){function e(e,r){if(this._subscribable=e,this._subscriber=r,!e||!r)throw"Subscribable and subscriber cannot be null."}return Object.defineProperty(e.prototype,"subscriber",{get:function(){return this._subscriber},enumerable:!0,configurable:!0}),Object.defineProperty(e.prototype,"wasDisposed",{get:function(){return!this._subscribable||!this._subscriber},enumerable:!0,configurable:!0}),e.prototype.dispose=function(){var e=this.subscriber,r=this._subscribable;this._subscriber=null,this._subscribable=null,e&&r&&r.unsubscribe(e)},e}();return s});
+//# sourceMappingURL=Subscription.js.map

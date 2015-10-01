@@ -3,29 +3,5 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var SystemException = require('./SystemException');
-var NAME = 'ArgumentException';
-var ArgumentException = (function (_super) {
-    __extends(ArgumentException, _super);
-    function ArgumentException(paramName, message, innerException) {
-        if (message === void 0) { message = null; }
-        if (innerException === void 0) { innerException = null; }
-        this.paramName = paramName;
-        _super.call(this, message, innerException);
-    }
-    ArgumentException.prototype.getName = function () {
-        return NAME;
-    };
-    ArgumentException.prototype.toString = function () {
-        var _ = this, pn = _.paramName;
-        pn = pn ? ('{' + pn + '} ') : '';
-        return '[' + _.name + ': ' + pn + _.message + ']';
-    };
-    return ArgumentException;
-})(SystemException);
-module.exports = ArgumentException;
+var __extends=this&&this.__extends||function(t,e){function n(){this.constructor=t}for(var r in e)e.hasOwnProperty(r)&&(t[r]=e[r]);t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)};define(["require","exports","./SystemException"],function(t,e,n){var r="ArgumentException",o=function(t){function e(e,n,r){void 0===n&&(n=null),void 0===r&&(r=null),this.paramName=e,t.call(this,n,r)}return __extends(e,t),e.prototype.getName=function(){return r},e.prototype.toString=function(){var t=this,e=t.paramName;return e=e?"{"+e+"} ":"","["+t.name+": "+e+t.message+"]"},e}(n);return o});
+//# sourceMappingURL=ArgumentException.js.map

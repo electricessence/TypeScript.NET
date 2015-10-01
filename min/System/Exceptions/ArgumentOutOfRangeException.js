@@ -3,23 +3,5 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var ArgumentException = require('./ArgumentException');
-var NAME = 'ArgumentNullException';
-var ArgumentOutOfRangeException = (function (_super) {
-    __extends(ArgumentOutOfRangeException, _super);
-    function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
-        if (innerException === void 0) { innerException = null; }
-        this.actualValue = actualValue;
-        _super.call(this, paramName, message, innerException);
-    }
-    ArgumentOutOfRangeException.prototype.getName = function () {
-        return NAME;
-    };
-    return ArgumentOutOfRangeException;
-})(ArgumentException);
-module.exports = ArgumentOutOfRangeException;
+var __extends=this&&this.__extends||function(t,e){function n(){this.constructor=t}for(var r in e)e.hasOwnProperty(r)&&(t[r]=e[r]);t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)};define(["require","exports","./ArgumentException"],function(t,e,n){var r="ArgumentNullException",o=function(t){function e(e,n,r,o){void 0===o&&(o=null),this.actualValue=n,t.call(this,e,r,o)}return __extends(e,t),e.prototype.getName=function(){return r},e}(n);return o});
+//# sourceMappingURL=ArgumentOutOfRangeException.js.map

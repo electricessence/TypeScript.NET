@@ -3,32 +3,5 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-///<reference path="Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="Disposable/IDisposable.d.ts"/>
-var NAME = 'Exception';
-var Exception = (function () {
-    function Exception(message, innerException) {
-        if (message === void 0) { message = null; }
-        if (innerException === void 0) { innerException = null; }
-        this.message = message;
-        var _ = this;
-        _.name = _.getName();
-        _.data = {};
-        if (innerException)
-            _.data['innerException'] = innerException;
-        Object.freeze(_);
-    }
-    Exception.prototype.getName = function () { return NAME; };
-    Exception.prototype.toString = function () {
-        var _ = this, m = _.message;
-        m = m ? (': ' + m) : '';
-        return '[' + _.name + m + ']';
-    };
-    Exception.prototype.dispose = function () {
-        var data = this.data;
-        for (var k in data)
-            delete data[k];
-    };
-    return Exception;
-})();
-module.exports = Exception;
+define(["require","exports"],function(e,t){var n="Exception",r=function(){function e(e,t){void 0===e&&(e=null),void 0===t&&(t=null),this.message=e;var n=this;n.name=n.getName(),n.data={},t&&(n.data.innerException=t),Object.freeze(n)}return e.prototype.getName=function(){return n},e.prototype.toString=function(){var e=this,t=e.message;return t=t?": "+t:"","["+e.name+t+"]"},e.prototype.dispose=function(){var e=this.data;for(var t in e)delete e[t]},e}();return r});
+//# sourceMappingURL=Exception.js.map

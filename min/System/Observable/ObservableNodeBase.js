@@ -4,54 +4,5 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-///<reference path="IObserver.d.ts"/>
-///<reference path="IObservable.d.ts"/>
-var SubscribableBase = require('./SubscribableBase');
-var ObservableNodeBase = (function (_super) {
-    __extends(ObservableNodeBase, _super);
-    function ObservableNodeBase() {
-        _super.apply(this, arguments);
-    }
-    ObservableNodeBase.prototype.onNext = function (value) {
-        processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });
-    };
-    ObservableNodeBase.prototype.onError = function (error) {
-        processAction(this._getSubscribers(), function (s) { s.onError && s.onError(error); });
-    };
-    ObservableNodeBase.prototype.onCompleted = function () {
-        processAction(this._unsubscribeAll(true), function (s) { s.onCompleted && s.onCompleted(); });
-    };
-    return ObservableNodeBase;
-})(SubscribableBase);
-var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
-function processAction(observers, handler, dispose) {
-    if (dispose === void 0) { dispose = true; }
-    var observersErrors = null;
-    for (var _i = 0; _i < observers.length; _i++) {
-        var s = observers[_i];
-        try {
-            handler(s);
-        }
-        catch (ex) {
-            observersErrors = observersErrors || [];
-            observersErrors.push({ observer: s, ex: ex });
-        }
-    }
-    if (dispose)
-        observers.length = 0;
-    if (observersErrors && observersErrors.length) {
-        if (console && console.error)
-            console.error(OBSERVER_ERROR_MESSAGE, observersErrors);
-        else
-            throw {
-                message: OBSERVER_ERROR_MESSAGE,
-                errors: observersErrors
-            };
-    }
-}
-module.exports = ObservableNodeBase;
+var __extends=this&&this.__extends||function(o,e){function r(){this.constructor=o}for(var t in e)e.hasOwnProperty(t)&&(o[t]=e[t]);o.prototype=null===e?Object.create(e):(r.prototype=e.prototype,new r)};define(["require","exports","./SubscribableBase"],function(o,e,r){function t(o,e,r){void 0===r&&(r=!0);for(var t=null,n=0;n<o.length;n++){var i=o[n];try{e(i)}catch(c){t=t||[],t.push({observer:i,ex:c})}}if(r&&(o.length=0),t&&t.length){if(!console||!console.error)throw{message:s,errors:t};console.error(s,t)}}var n=function(o){function e(){o.apply(this,arguments)}return __extends(e,o),e.prototype.onNext=function(o){t(this._getSubscribers(),function(e){e.onNext&&e.onNext(o)})},e.prototype.onError=function(o){t(this._getSubscribers(),function(e){e.onError&&e.onError(o)})},e.prototype.onCompleted=function(){t(this._unsubscribeAll(!0),function(o){o.onCompleted&&o.onCompleted()})},e}(r),s="One or more observers had errors when attempting to pass information.";return n});
+//# sourceMappingURL=ObservableNodeBase.js.map

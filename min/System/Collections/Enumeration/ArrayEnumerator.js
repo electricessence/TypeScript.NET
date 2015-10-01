@@ -2,24 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-///<reference path="../Array/IArray.d.ts"/>
-var IndexEnumerator = require('./IndexEnumerator');
-var Types = require('../../Types');
-var ArrayEnumerator = (function (_super) {
-    __extends(ArrayEnumerator, _super);
-    function ArrayEnumerator(arrayOrFactory, start, step) {
-        if (start === void 0) { start = 0; }
-        if (step === void 0) { step = 1; }
-        _super.call(this, function () {
-            var array = Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-            return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
-        });
-    }
-    return ArrayEnumerator;
-})(IndexEnumerator);
-module.exports = ArrayEnumerator;
+var __extends=this&&this.__extends||function(t,n){function e(){this.constructor=t}for(var r in n)n.hasOwnProperty(r)&&(t[r]=n[r]);t.prototype=null===n?Object.create(n):(e.prototype=n.prototype,new e)};define(["require","exports","./IndexEnumerator","../../Types"],function(t,n,e,r){var o=function(t){function n(n,e,o){void 0===e&&(e=0),void 0===o&&(o=1),t.call(this,function(){var t=r.isFunction(n)?n():n;return{source:t,pointer:e,length:t?t.length:0,step:o}})}return __extends(n,t),n}(e);return o});
+//# sourceMappingURL=ArrayEnumerator.js.map

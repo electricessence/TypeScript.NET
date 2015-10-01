@@ -2,56 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var DateTime = (function () {
-    function DateTime(value) {
-        if (value === void 0) { value = new Date(); }
-        var _ = this;
-        if (value instanceof DateTime)
-            _._value = value.jsDate;
-        else if (value instanceof Date)
-            _.setJsDate(value);
-        else
-            _._value = value == undefined
-                ? new Date()
-                : new Date(value);
-    }
-    Object.defineProperty(DateTime.prototype, "jsDate", {
-        get: function () {
-            return new Date(this._value.getTime());
-        },
-        enumerable: true,
-        configurable: true
-    });
-    DateTime.prototype.setJsDate = function (value) {
-        this._value = new Date(value.getTime());
-    };
-    DateTime.prototype.addMilliseconds = function (ms) {
-        ms = ms || 0;
-        return new DateTime(this._value.getTime() + ms);
-    };
-    DateTime.prototype.addDays = function (days) {
-        days = days || 0;
-        return this.addMilliseconds(days * 86400000);
-    };
-    DateTime.prototype.add = function (time) {
-        return this.addMilliseconds(time.total.milliseconds);
-    };
-    DateTime.now = function () {
-        return new DateTime();
-    };
-    DateTime.today = function () {
-        var now = new Date();
-        return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-    };
-    DateTime.tomorrow = function () {
-        var today = DateTime.today();
-        return today.addDays(1);
-    };
-    DateTime.daysAgo = function (days) {
-        var today = DateTime.today();
-        return today.addDays(-days);
-    };
-    return DateTime;
-})();
-Object.freeze(DateTime);
-module.exports = DateTime;
+define(["require","exports"],function(e,t){var n=function(){function e(t){void 0===t&&(t=new Date);var n=this;t instanceof e?n._value=t.jsDate:t instanceof Date?n.setJsDate(t):n._value=void 0==t?new Date:new Date(t)}return Object.defineProperty(e.prototype,"jsDate",{get:function(){return new Date(this._value.getTime())},enumerable:!0,configurable:!0}),e.prototype.setJsDate=function(e){this._value=new Date(e.getTime())},e.prototype.addMilliseconds=function(t){return t=t||0,new e(this._value.getTime()+t)},e.prototype.addDays=function(e){return e=e||0,this.addMilliseconds(864e5*e)},e.prototype.add=function(e){return this.addMilliseconds(e.total.milliseconds)},e.now=function(){return new e},e.today=function(){var t=new Date;return new e(new Date(t.getFullYear(),t.getMonth(),t.getDate()))},e.tomorrow=function(){var t=e.today();return t.addDays(1)},e.daysAgo=function(t){var n=e.today();return n.addDays(-t)},e}();return Object.freeze(n),n});
+//# sourceMappingURL=DateTime.js.map

@@ -2,43 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-var Functions = (function () {
-    function Functions() {
-    }
-    Functions.prototype.Identity = function (x) { return x; };
-    Functions.prototype.True = function () { return true; };
-    Functions.prototype.False = function () { return false; };
-    Functions.prototype.Blank = function () { };
-    Object.defineProperty(Functions, "Identity", {
-        get: function () {
-            return rootFunctions.Identity;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Functions, "True", {
-        get: function () {
-            return rootFunctions.True;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Functions, "False", {
-        get: function () {
-            return rootFunctions.False;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Functions, "Blank", {
-        get: function () {
-            return rootFunctions.Blank;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Functions;
-})();
-var rootFunctions = new Functions();
-module.exports = Functions;
+"use strict";define(["require","exports"],function(e,n){var t=function(){function e(){}return e.prototype.Identity=function(e){return e},e.prototype.True=function(){return!0},e.prototype.False=function(){return!1},e.prototype.Blank=function(){},Object.defineProperty(e,"Identity",{get:function(){return r.Identity},enumerable:!0,configurable:!0}),Object.defineProperty(e,"True",{get:function(){return r.True},enumerable:!0,configurable:!0}),Object.defineProperty(e,"False",{get:function(){return r.False},enumerable:!0,configurable:!0}),Object.defineProperty(e,"Blank",{get:function(){return r.Blank},enumerable:!0,configurable:!0}),e}(),r=new t;return t});
+//# sourceMappingURL=Functions.js.map

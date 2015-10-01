@@ -1,11 +1,11 @@
+"use strict";
+
 var gulp = require('gulp');
 var del = require('del');
-var sourcemaps = require('gulp-sourcemaps');
-var uglify = require('gulp-uglify');
 
 function clearGulpTscTemp() {
-	del(['./gulp-tsc-tmp-*']);
-	del(['./source/.gulp-tsc-tmp-*']);
+	//del(['./gulp-tsc-tmp-*']);
+	//del(['./source/.gulp-tsc-tmp-*']);
 }
 
 gulp.task(
@@ -13,7 +13,7 @@ gulp.task(
 	'typescript', function() {
 
 		var options = {
-			tscPath:'./node_modules/typescript/bin/tsc',
+			tscPath: './node_modules/typescript/bin/tsc',
 			outDir: './source',
 			noImplicitAny: true,
 			module: 'amd',
@@ -21,8 +21,6 @@ gulp.task(
 			removeComments: true,
 			sourceMap: true
 		};
-
-		del(['./min/**/*']);
 
 		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
 		var stream = gulp
@@ -37,34 +35,40 @@ gulp.task(
 	}
 );
 
-
 gulp.task(
-	'typescript.min', function() {
-
-		//var
-		//	sourceMapOptions = {
-		//		//sourceRoot: '../../source/',
-		//		sourceRoot: function(file) {
-		//			return '../../source/';
-		//		}
-		//		,
-		//		includeContent: false
-		//	};
+	'typescript.min', ['typescript'], function() {
 
 		del(['./min/**/*']);
 
+		var sourcemaps = require('gulp-sourcemaps');
+		var uglify = require('gulp-uglify');
+
+		// This isn't ideal, but it works and points the maps to the original source.
+		var sourceMapOptions = {
+			sourceRoot: function(file) {
+				var count = (file.relative + '').split("\\").length;
+				var result = '';
+				for(var i = 1; i<count; i++)
+				{
+					result += '../';
+				}
+				return result + '../source/';
+			},
+			includeContent: false
+		};
+
+
 		var stream = gulp
-			.src(['./source/**/*.ts'], { base: './source' })
-			//.pipe(sourcemaps.init())
+			.src(['./source/**/*.ts'])
+			.pipe(sourcemaps.init())
 			.pipe(require('gulp-typescript')({
-				outDir: './min',
 				noImplicitAny: true,
 				module: 'amd',
 				target: 'es5',
 				removeComments: true
 			}))
 			.pipe(uglify({ preserveComments: 'license' }))
-			//.pipe(sourcemaps.write('.', sourceMapOptions))
+			.pipe(sourcemaps.write('.', sourceMapOptions))
 			.pipe(gulp.dest('./min'));
 
 		clearGulpTscTemp();
@@ -76,7 +80,7 @@ gulp.task(
 
 
 gulp.task(
-	'typedoc', ['typescript'], function() {
+	'typedoc', ['typescript', 'typescript.min'], function() {
 
 		var typedoc = require('gulp-typedoc');
 
@@ -100,3 +104,9 @@ gulp.task(
 
 	}
 );
+
+gulp.task('default', [
+	'typescript',
+	'typescript.min',
+	'typedoc'
+]);

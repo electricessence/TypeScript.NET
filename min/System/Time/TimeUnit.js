@@ -3,14 +3,5 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var TimeUnit;
-(function (TimeUnit) {
-    TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
-    TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
-    TimeUnit[TimeUnit["Seconds"] = 2] = "Seconds";
-    TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
-    TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
-    TimeUnit[TimeUnit["Days"] = 5] = "Days";
-})(TimeUnit || (TimeUnit = {}));
-Object.freeze(TimeUnit);
-module.exports = TimeUnit;
+define(["require","exports"],function(e,s){var i;return function(e){e[e.Ticks=0]="Ticks",e[e.Milliseconds=1]="Milliseconds",e[e.Seconds=2]="Seconds",e[e.Minutes=3]="Minutes",e[e.Hours=4]="Hours",e[e.Days=5]="Days"}(i||(i={})),Object.freeze(i),i});
+//# sourceMappingURL=TimeUnit.js.map

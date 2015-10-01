@@ -2,12 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-function applyMixins(derivedConstructor, baseConstructors) {
-    baseConstructors
-        .forEach(function (bc) {
-        Object.getOwnPropertyNames(bc.prototype).forEach(function (name) {
-            derivedConstructor.prototype[name] = bc.prototype[name];
-        });
-    });
-}
-module.exports = applyMixins;
+define(["require","exports"],function(t,o){function e(t,o){o.forEach(function(o){Object.getOwnPropertyNames(o.prototype).forEach(function(e){t.prototype[e]=o.prototype[e]})})}return e});
+//# sourceMappingURL=applyMixins.js.map
