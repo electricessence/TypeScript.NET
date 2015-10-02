@@ -13,7 +13,6 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
     var using = DisposeUtility.using;
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;
-    'use strict';
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
         function LinqFunctions() {
@@ -32,6 +31,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
     var INT_0 = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0;
     var Linq;
     (function (Linq) {
+        'use strict';
         var Enumerable = (function (_super) {
             __extends(Enumerable, _super);
             function Enumerable(_enumeratorFactory, finalizer) {

@@ -8,7 +8,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", '../../Disposable/DisposableBase'], function (require, exports, DisposableBase) {
-    'use strict';
     var Yielder = (function () {
         function Yielder() {
         }

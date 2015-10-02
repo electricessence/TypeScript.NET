@@ -26,7 +26,7 @@ import dispose = DisposeUtility.dispose;
 import using = DisposeUtility.using;
 import enumeratorFrom = Enumerator.from;
 import enumeratorForEach = Enumerator.forEach;
-'use strict';
+
 
 // #region Local Constants.
 // Leave internal to avoid accidental overwriting.
@@ -55,6 +55,8 @@ const
 
 module Linq
 {
+	'use strict';
+
 	export const enum EnumerableAction
 	{
 		Break = 0,
@@ -3566,7 +3568,8 @@ module Linq
 		}
 	}
 
-	export interface IOrderedEnumerable<T> extends Enumerable<T> {
+	export interface IOrderedEnumerable<T> extends Enumerable<T>
+	{
 		thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 		thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 	}

@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 define(["require", "exports", './Functions'], function (require, exports, Functions) {
     var Types;
     (function (Types) {

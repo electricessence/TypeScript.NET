@@ -5,7 +5,7 @@
 
 ///<reference path="IArray.d.ts"/>
 import Types = require('../../Types');
-'use strict';
+
 
 /// Array Utility
 module Utility

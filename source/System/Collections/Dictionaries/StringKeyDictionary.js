@@ -8,7 +8,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", '../../Compare', './DictionaryAbstractBase'], function (require, exports, Values, DictionaryAbstractBase) {
-    'use strict';
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {

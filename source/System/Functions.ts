@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-'use strict';
 
 /**
  * Can be used statically or extended for varying different reusable function signatures.
@@ -15,24 +14,28 @@ class Functions
 	 * A typed method for use with simple selection of the parameter.
 	 * @returns {boolean}
 	 */
-	Identity<T>(x:T) { return x; }
+	Identity<T>(x:T)
+	{ return x; }
 
 	/**
 	 * Returns true.
 	 * @returns {boolean}
 	 */
-	True() { return true; }
+	True()
+	{ return true; }
 
 	/**
 	 * Returns false.
 	 * @returns {boolean}
 	 */
-	False() { return false; }
+	False()
+	{ return false; }
 
 	/**
 	 * Does nothing.
 	 */
-	Blank() { }
+	Blank()
+	{ }
 
 	/**
 	 * A typed method for use with simple selection of the parameter.

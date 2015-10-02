@@ -8,7 +8,7 @@
 import Values = require('../../Compare');
 import Types = require('../../Types');
 
-'use strict';
+
 
 module Compare
 {

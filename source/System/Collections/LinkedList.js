@@ -4,7 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase, InvalidOperationException, ArgumentException, ArgumentNullException, ArgumentOutOfRangeException) {
-    'use strict';
     var INT_0 = 0 | 0, INT_1 = 1 | 0;
     var Node = (function () {
         function Node(value, prev, next) {

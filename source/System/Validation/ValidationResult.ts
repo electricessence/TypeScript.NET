@@ -4,11 +4,19 @@
  */
 
 /// <reference path="IValidationResult.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
 
 const valid = new ValidationResult(true);
 
-class ValidationResult implements IValidationResult
+/**
+ * A class for generating responses to validation.
+ */
+class ValidationResult
+implements IValidationResult, IEquatable<IValidationResult>
 {
+	/**
+	 * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
+	 */
 	constructor(
 		public isValid:boolean = false,
 		public message:string = null,
@@ -19,10 +27,26 @@ class ValidationResult implements IValidationResult
 		Object.freeze(this);
 	}
 
+	equals(other:IValidationResult):boolean
+	{
+		var _ = this;
+		return _.isValid===other.isValid
+			&& _.message==_.message
+			&& _.data==_.data;
+	}
+
+
+	/**
+	 * Represents a single/shared instance of a valid result.
+	 * Allows for returning this instance like you would return 'true'.
+	 */
 	static get valid():IValidationResult {
 		return valid;
 	}
 
+	/**
+	 * Factory method for easily creating an invalid result.
+	 */
 	static invalid(
 		message:string,
 		data:any = null):IValidationResult

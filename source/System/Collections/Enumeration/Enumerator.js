@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumerator'], function (require, exports, Types, ArrayEnumerator, IndexEnumerator) {
-    'use strict';
     var Enumerator;
     (function (Enumerator) {
         var EmptyEnumerator = (function () {

@@ -20,7 +20,7 @@ import ArgumentNullException = require('../Exceptions/ArgumentNullException');
 import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
 
 
-'use strict';
+
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

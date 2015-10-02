@@ -5,7 +5,7 @@
 
 import Values = require('../../Compare');
 import DictionaryAbstractBase= require('./DictionaryAbstractBase');
-'use strict';
+
 
 class StringKeyDictionary<TValue>
 extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<TValue>

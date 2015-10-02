@@ -4,6 +4,7 @@
  */
 define(["require", "exports"], function (require, exports) {
     /// <reference path="IValidationResult.d.ts"/>
+    ///<reference path="../IEquatable.d.ts"/>
     var valid = new ValidationResult(true);
     var ValidationResult = (function () {
         function ValidationResult(isValid, message, data) {
@@ -15,6 +16,12 @@ define(["require", "exports"], function (require, exports) {
             this.data = data;
             Object.freeze(this);
         }
+        ValidationResult.prototype.equals = function (other) {
+            var _ = this;
+            return _.isValid === other.isValid
+                && _.message == _.message
+                && _.data == _.data;
+        };
         Object.defineProperty(ValidationResult, "valid", {
             get: function () {
                 return valid;

@@ -7,6 +7,7 @@
 ///<reference path="Collections/Dictionaries/IDictionary.d.ts"/>
 ///<reference path="Disposable/IDisposable.d.ts"/>
 
+
 const NAME:string = 'Exception';
 
 /**

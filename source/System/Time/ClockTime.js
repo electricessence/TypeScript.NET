@@ -4,7 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../Compare', './TimeSpan'], function (require, exports, Values, TimeSpan) {
-    'use strict';
     var ClockTime = (function () {
         function ClockTime() {
             var args = [];

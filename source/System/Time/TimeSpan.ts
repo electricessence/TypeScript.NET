@@ -4,8 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-'use strict';
-
 ///<reference path="ITimeMeasurement.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
@@ -138,7 +136,8 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	}
 
 	// Provides an interface only way of acquiring the getTotal time.
-	get total():ITimeMeasurement {
+	get total():ITimeMeasurement
+	{
 		return this;
 	}
 

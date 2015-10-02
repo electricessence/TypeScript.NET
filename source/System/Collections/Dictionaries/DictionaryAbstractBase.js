@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException'], function (require, exports, Values, EnumeratorBase, NotImplementedException) {
-    'use strict';
     var DictionaryAbstractBase = (function () {
         function DictionaryAbstractBase() {
             this._updateRecursion = 0;

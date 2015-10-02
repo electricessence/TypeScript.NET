@@ -6,11 +6,6 @@
 
 ///<reference path="IDisposableAware.d.ts"/>
 
-'use strict';
-
-//class ObjectDisposedException extends Exception {
-//
-//}
 
 class DisposableBase implements IDisposableAware
 {

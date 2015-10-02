@@ -13,7 +13,7 @@
 import Values = require('../Compare');
 import HowMany= require('./HowMany');
 import TimeSpan= require('./TimeSpan');
-'use strict';
+
 
 class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable, ITimeTotal
 {

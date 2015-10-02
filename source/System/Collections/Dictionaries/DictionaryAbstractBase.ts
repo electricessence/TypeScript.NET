@@ -8,7 +8,7 @@ import Values = require('../../Compare');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
 import NotImplementedException = require('../../Exceptions/NotImplementedException');
 
-'use strict';
+
 
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?

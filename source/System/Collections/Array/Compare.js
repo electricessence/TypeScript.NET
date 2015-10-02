@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../../Compare', '../../Types'], function (require, exports, Values, Types) {
-    'use strict';
     var Compare;
     (function (Compare) {
         function validateSize(a, b) {

@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../../Types'], function (require, exports, Types) {
-    'use strict';
     var Utility;
     (function (Utility) {
         function initialize(length) {

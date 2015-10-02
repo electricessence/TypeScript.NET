@@ -2,9 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="IDisposableAware.d.ts"/>
-'use strict';
 define(["require", "exports"], function (require, exports) {
+    ///<reference path="IDisposableAware.d.ts"/>
     var DisposableBase = (function () {
         function DisposableBase(_finalizer) {
             this._finalizer = _finalizer;

@@ -9,7 +9,7 @@
 import Types = require('../../Types');
 import DisposableBase = require('../../Disposable/DisposableBase')
 
-'use strict';
+
 
 class Yielder<T> implements IYield<T>
 {
