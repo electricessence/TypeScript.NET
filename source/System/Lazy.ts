@@ -16,6 +16,7 @@ class Lazy<T> extends DisposableBase implements ILazy<T>
 	constructor(private _closure:Func<T>)
 	{
 		super();
+		this._disposableObjectName = 'Lazy';
 	}
 
 	get isValueCreated():boolean
@@ -34,7 +35,7 @@ class Lazy<T> extends DisposableBase implements ILazy<T>
 		var _ = this;
 
 		if(throwIfCannotReset)
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 		if(!_._closure) {
 			if(throwIfCannotReset)
@@ -57,7 +58,7 @@ class Lazy<T> extends DisposableBase implements ILazy<T>
 
 		var _ = this;
 
-		_.assertIsNotDisposed();
+		_.throwIfDisposed();
 
 		try {
 			if(!_._isValueCreated && _._closure) {

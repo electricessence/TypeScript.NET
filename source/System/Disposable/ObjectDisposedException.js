@@ -26,6 +26,10 @@ define(["require", "exports", '../Exceptions/InvalidOperationException'], functi
             oName = oName ? ('{' + oName + '} ') : '';
             return '[' + _.name + ': ' + oName + _.message + ']';
         };
+        ObjectDisposedException.throwIfDisposed = function (disposable, objectName, message) {
+            if (disposable.wasDisposed)
+                throw new ObjectDisposedException(objectName, message);
+        };
         return ObjectDisposedException;
     })(InvalidOperationException);
     return ObjectDisposedException;

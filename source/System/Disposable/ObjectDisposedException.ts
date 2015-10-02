@@ -4,6 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
+///<reference path="IDisposableAware.d.ts"/>
 import Exception = require('../Exception');
 import InvalidOperationException = require('../Exceptions/InvalidOperationException');
 
@@ -38,6 +39,15 @@ extends InvalidOperationException
 		oName = oName ? ('{' + oName + '} ') : '';
 
 		return '[' + _.name + ': ' + oName + _.message + ']';
+	}
+
+	static throwIfDisposed(
+		disposable:IDisposableAware,
+		objectName?:string,
+		message?:string):void
+	{
+		if(disposable.wasDisposed)
+			throw new ObjectDisposedException(objectName, message);
 	}
 
 }

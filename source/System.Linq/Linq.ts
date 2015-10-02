@@ -21,6 +21,7 @@ import Dictionary = require('../System/Collections/Dictionaries/Dictionary');
 import Queue = require('../System/Collections/Queue');
 import DisposeUtility = require('../System/Disposable/Utility');
 import DisposableBase = require('../System/Disposable/DisposableBase');
+import ObjectDisposedException = require('../System/Disposable/ObjectDisposedException');
 
 import dispose = DisposeUtility.dispose;
 import using = DisposeUtility.using;
@@ -49,7 +50,10 @@ Object.freeze(Functions);
 const
 	INT_0:number = 0 | 0,
 	INT_NEG1:number = -1 | 0,
-	INT_POS1:number = +1 | 0;
+	INT_POS1:number = +1 | 0,
+	LENGTH = 'length',
+	GET_ENUMERATOR = 'getEnumerator',
+	UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
 // #endregion
 
 
@@ -57,6 +61,11 @@ module Linq
 {
 	'use strict';
 
+	// TODO: Create UnsupportedEnumerableException.
+
+	/**
+	 * Defined values for doAction.
+	 */
 	export const enum EnumerableAction
 	{
 		Break = 0,
@@ -64,13 +73,16 @@ module Linq
 		Skip = 2
 	}
 
+	/**
+	 * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
+	 *
+	 * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
+	 * In this case, we use Enumerable<T> as the underlying class that is being chained.
+	 */
 	export class Enumerable<T>
 	extends DisposableBase implements IEnumerable<T>
 	{
 
-		// Enumerable<T> is an instance class that has useful statics.
-		// In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
-		// In this case, we use Enumerable<T> as the underlying class that is being chained.
 		constructor(
 			protected _enumeratorFactory:() => IEnumerator<T>,
 			finalizer?:() => void)
@@ -78,47 +90,66 @@ module Linq
 			super(finalizer);
 		}
 
+		/**
+		 * Static shortcut for creating an ArrayEnumerable.
+		 */
 		static fromArray<T>(array:IArray<T>):Enumerable<T>
 		{
 			return new ArrayEnumerable<T>(array);
 		}
 
-		static from<T>(source:any):Enumerable<T>
+		/**
+		 * Universal method for converting a primitive enumerables into a LINQ enabled ones.
+		 *
+		 * Is not limited to TypeScript usages.
+		 */
+		static from<T>(source:IEnumerable<T> | IArray<T>):Enumerable<T>
 		{
-			if("getEnumerator" in source)
-				return source;
-
-			if(source instanceof Array || typeof source===Types.Object && "length" in source)
-				return new ArrayEnumerable<T>(source);
-
-			throw new Error("Unsupported enumerable.");
-		}
-
-		static toArray<T>(source:any):T[]
-		{
-			if(source instanceof Array)
-				return source.slice();
-
-			if(typeof source===Types.Object && "length" in source)
-				source = new ArrayEnumerable<T>(source);
-
-			if(source instanceof Enumerable)
-				return source.toArray();
-
-			if("getEnumerator" in source)
+			if(typeof source===Types.Object)
 			{
-				var result:T[] = [];
-				enumeratorForEach<T>(
-					source.getEnumerator(), (e, i) =>
-					{
-						result[i] = e;
-					}
-				);
-				return result;
+				if(source instanceof Enumerable)
+					return source;
+
+				if(source instanceof Array)
+					return new ArrayEnumerable<T>(source);
+
+				if(GET_ENUMERATOR in source)
+					return new Enumerable(()=>(<IEnumerable<T>>source).getEnumerator());
+
+				if(LENGTH in source)
+					return new ArrayEnumerable<T>(<IArray<T>>source);
 			}
 
+			throw new Error(UNSUPPORTED_ENUMERABLE);
+		}
 
-			throw new Error("Unsupported enumerable.");
+		static toArray<T>(source:IEnumerable<T> | IArray<T>):T[]
+		{
+			if(typeof source===Types.Object)
+			{
+				if(source instanceof Array)
+					return source.slice();
+
+				if(LENGTH in source)
+					source = new ArrayEnumerable<T>(<IArray<T>>source);
+
+				if(source instanceof Enumerable)
+					return source.toArray();
+
+				if(GET_ENUMERATOR in source)
+				{
+					var result:T[] = [];
+					enumeratorForEach<T>(
+						(<IEnumerable<T>>source).getEnumerator(), (e, i) =>
+						{
+							result[i] = e;
+						}
+					);
+					return result;
+				}
+			}
+
+			throw new Error(UNSUPPORTED_ENUMERABLE);
 		}
 
 
@@ -126,7 +157,7 @@ module Linq
 		getEnumerator():IEnumerator<T>
 		{
 
-			this.assertIsNotDisposed();
+			this.throwIfDisposed();
 
 			return this._enumeratorFactory();
 		}
@@ -572,16 +603,11 @@ module Linq
 		//////////////////////////////////////////
 		// #region Instance methods...
 
-		assertIsNotDisposed(errorMessage:string = "Enumerable was disposed."):boolean
-		{
-			return super.assertIsNotDisposed(errorMessage);
-		}
-
 		forEach(action:Predicate<T> | Action<T>):void
 		{
 
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var index:number = INT_0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
@@ -589,7 +615,7 @@ module Linq
 				_.getEnumerator(), e=>
 				{
 					// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
-					while(_.assertIsNotDisposed() && e.moveNext())
+					while(_.throwIfDisposed() && e.moveNext())
 					{
 						if(<any>action(e.current, index++)===false)
 							break;
@@ -682,7 +708,7 @@ module Linq
 			action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>):Enumerable<T>
 		{
 
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -693,7 +719,7 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							index = INT_0;
 							enumerator = _.getEnumerator();
@@ -701,7 +727,7 @@ module Linq
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							while(enumerator.moveNext())
 							{
@@ -737,7 +763,7 @@ module Linq
 		force(defaultAction:EnumerableAction = EnumerableAction.Break):void
 		{
 
-			this.assertIsNotDisposed();
+			this.throwIfDisposed();
 
 			this.doAction(element => defaultAction);
 		}
@@ -747,7 +773,7 @@ module Linq
 		{
 			var _ = this;
 
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			if(!count || isNaN(count) || count<0) // Out of bounds? Simply return this.
 				return _;
@@ -770,7 +796,7 @@ module Linq
 		skipWhile(predicate:Predicate<T>):Enumerable<T>
 		{
 
-			this.assertIsNotDisposed();
+			this.throwIfDisposed();
 
 			var skipping:boolean = true;
 
@@ -780,7 +806,9 @@ module Linq
 					if(skipping)
 						skipping = predicate(element, index);
 
-					return skipping ? EnumerableAction.Skip : EnumerableAction.Return;
+					return skipping
+						? EnumerableAction.Skip
+						: EnumerableAction.Return;
 				}
 			);
 		}
@@ -791,7 +819,7 @@ module Linq
 				return Enumerable.empty<T>();
 
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			if(!isFinite(count)) // +Infinity equals no limit.
 				return _;
@@ -806,7 +834,7 @@ module Linq
 		takeWhile(predicate:Predicate<T>):Enumerable<T>
 		{
 
-			this.assertIsNotDisposed();
+			this.throwIfDisposed();
 
 			return this.doAction(
 				(element:T, index?:number) =>
@@ -820,7 +848,7 @@ module Linq
 		takeUntil(predicate:Predicate<T>, includeUntilValue?:boolean):Enumerable<T>
 		{
 
-			this.assertIsNotDisposed();
+			this.throwIfDisposed();
 
 			if(!includeUntilValue)
 				return this.doAction(
@@ -1184,7 +1212,7 @@ module Linq
 		select<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
 		{
 
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			if(selector.length<2)
 				return new WhereSelectEnumerable(_, null, selector);
@@ -1198,7 +1226,7 @@ module Linq
 					return new EnumeratorBase<TResult>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							index = INT_0;
 							enumerator = _.getEnumerator();
@@ -1206,7 +1234,7 @@ module Linq
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							return enumerator.moveNext()
 								? yielder.yieldReturn(selector(enumerator.current, index++))
@@ -1312,7 +1340,7 @@ module Linq
 		choose<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
 		{
 
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			return new Enumerable<TResult>(
 				() =>
@@ -1323,7 +1351,7 @@ module Linq
 					return new EnumeratorBase<TResult>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							index = INT_0;
 							enumerator = _.getEnumerator();
@@ -1331,7 +1359,7 @@ module Linq
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							while(enumerator.moveNext())
 							{
@@ -1360,7 +1388,7 @@ module Linq
 		where(predicate:Predicate<T>):Enumerable<T>
 		{
 
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			if(predicate.length<2)
 				return new WhereEnumerable(_, predicate);
@@ -1374,7 +1402,7 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							index = INT_0;
 							enumerator = _.getEnumerator();
@@ -1382,7 +1410,7 @@ module Linq
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							while(enumerator.moveNext())
 							{
@@ -1444,7 +1472,7 @@ module Linq
 			second:IEnumerable<T>,
 			compareSelector?:Selector<T, TCompare>):Enumerable<T>
 		{
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -1455,7 +1483,7 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							enumerator = _.getEnumerator();
 							keys = new Dictionary<T, boolean>(compareSelector);
 							if(second)
@@ -1464,7 +1492,7 @@ module Linq
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							while(enumerator.moveNext())
 							{
 								var current = enumerator.current;
@@ -1501,7 +1529,7 @@ module Linq
 		distinctUntilChanged<TCompare>(compareSelector?:Selector<T, TCompare>):Enumerable<T>
 		{
 
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -1513,13 +1541,13 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							enumerator = _.getEnumerator();
 						},
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							while(enumerator.moveNext())
 							{
 								var key = compareSelector(enumerator.current);
@@ -1555,7 +1583,7 @@ module Linq
 
 		reverse():Enumerable<T>
 		{
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -1566,7 +1594,7 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							buffer = _.toArray();
 							index = buffer.length | 0;
 						},
@@ -1591,7 +1619,7 @@ module Linq
 
 		shuffle():Enumerable<T>
 		{
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -1603,7 +1631,7 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							buffer = _.toArray();
 							capacity = len = buffer.length;
 						},
@@ -1644,7 +1672,7 @@ module Linq
 		{
 
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var count:number = INT_0;
 			if(predicate)
@@ -1782,7 +1810,7 @@ module Linq
 
 		defaultIfEmpty(defaultValue:T = null):Enumerable<T>
 		{
-			var _ = this, disposed:boolean = !_.assertIsNotDisposed();
+			var _ = this, disposed:boolean = !_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -1794,13 +1822,13 @@ module Linq
 						() =>
 						{
 							isFirst = true;
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							enumerator = _.getEnumerator();
 						},
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							if(enumerator.moveNext())
 							{
@@ -2143,7 +2171,7 @@ module Linq
 			var n:number = index | 0;
 
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -2744,7 +2772,7 @@ module Linq
 			var n:number = index | 0;
 
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found = false;
@@ -2774,7 +2802,7 @@ module Linq
 			var n:number = index | 0;
 
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found = false;
@@ -2805,7 +2833,7 @@ module Linq
 		first():T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found:boolean = false;
@@ -2825,7 +2853,7 @@ module Linq
 		firstOrDefault(defaultValue:T = null):T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found = false;
@@ -2843,7 +2871,7 @@ module Linq
 		last():T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found:boolean = false;
@@ -2862,7 +2890,7 @@ module Linq
 		lastOrDefault(defaultValue:T = null):T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found:boolean = false;
@@ -2879,7 +2907,7 @@ module Linq
 		single():T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found:boolean = false;
@@ -2903,7 +2931,7 @@ module Linq
 		{
 
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var value:T = undefined;
 			var found:boolean = false;
@@ -2927,7 +2955,7 @@ module Linq
 		share():Enumerable<T>
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var sharedEnumerator:IEnumerator<T>;
 			return new Enumerable<T>(
@@ -2958,7 +2986,7 @@ module Linq
 
 		memoize():Enumerable<T>
 		{
-			var _ = this, disposed:boolean = !_.assertIsNotDisposed();
+			var _ = this, disposed:boolean = !_.throwIfDisposed();
 
 			var cache:T[];
 			var enumerator:IEnumerator<T>;
@@ -2972,7 +3000,7 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							if(!enumerator)
 								enumerator = _.getEnumerator();
 							if(!cache)
@@ -2982,7 +3010,7 @@ module Linq
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 
 							var i = index++;
 
@@ -3014,7 +3042,7 @@ module Linq
 		// #region Error Handling
 		catchError(handler:(e:Error) => void):Enumerable<T>
 		{
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 			return new Enumerable<T>(
 				() =>
 				{
@@ -3025,7 +3053,7 @@ module Linq
 						{
 							try
 							{
-								assertIsNotDisposed(disposed);
+								throwIfDisposed(disposed);
 								enumerator = _.getEnumerator();
 							}
 							catch(e)
@@ -3038,7 +3066,7 @@ module Linq
 						{
 							try
 							{
-								assertIsNotDisposed(disposed);
+								throwIfDisposed(disposed);
 								if(enumerator.moveNext())
 									return yielder.yieldReturn(enumerator.current);
 							}
@@ -3060,7 +3088,7 @@ module Linq
 
 		finallyAction(action:() => void):Enumerable<T>
 		{
-			var _ = this, disposed = !_.assertIsNotDisposed();
+			var _ = this, disposed = !_.throwIfDisposed();
 
 			return new Enumerable<T>(
 				() =>
@@ -3070,13 +3098,13 @@ module Linq
 					return new EnumeratorBase<T>(
 						() =>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							enumerator = _.getEnumerator();
 						},
 
 						(yielder)=>
 						{
-							assertIsNotDisposed(disposed);
+							throwIfDisposed(disposed);
 							return (enumerator.moveNext())
 								? yielder.yieldReturn(enumerator.current)
 								: false;
@@ -3108,13 +3136,14 @@ module Linq
 		constructor(source:IArray<T>)
 		{
 			var _ = this;
+			_._disposableObjectName = "ArrayEnumerable";
 			_._source = source;
 			super(() =>
 			{
-				_.assertIsNotDisposed();
+				_.throwIfDisposed();
 				return new ArrayEnumerator<T>(() =>
 				{
-					_.assertIsNotDisposed("The underlying ArrayEnumerable was disposed.");
+					_.throwIfDisposed("The underlying ArrayEnumerable was disposed.", "ArrayEnumerator");
 
 					return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
 				});
@@ -3159,7 +3188,7 @@ module Linq
 		forEach(action:Predicate<T> | Action<T>):void
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source;
 			if(source)
@@ -3180,7 +3209,7 @@ module Linq
 		any(predicate?:Predicate<T>):boolean
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source, len = source ? source.length : 0;
 			return len && (!predicate || super.any(predicate));
@@ -3189,7 +3218,7 @@ module Linq
 		count(predicate?:Predicate<T>):number
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source, len = source ? source.length : 0;
 			return len && (predicate ? super.count(predicate) : len);
@@ -3198,7 +3227,7 @@ module Linq
 		elementAt(index:number):T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source;
 			return (index<source.length && index>=0)
@@ -3209,7 +3238,7 @@ module Linq
 		elementAtOrDefault(index:number, defaultValue:T = null):T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source;
 			return (index<source.length && index>=0)
@@ -3220,7 +3249,7 @@ module Linq
 		first():T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source;
 			return (source && source.length)
@@ -3231,7 +3260,7 @@ module Linq
 		firstOrDefault(defaultValue:T = null):T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source;
 			return (source && source.length)
@@ -3242,7 +3271,7 @@ module Linq
 		last():T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source, len = source.length;
 			return (len)
@@ -3253,7 +3282,7 @@ module Linq
 		lastOrDefault(defaultValue:T = null):T
 		{
 			var _ = this;
-			_.assertIsNotDisposed();
+			_.throwIfDisposed();
 
 			var source = _._source, len = source.length;
 			return len
@@ -3724,11 +3753,12 @@ module Linq
 
 
 // #region Helper Functions...
-// This allows for the use of a boolean instead of calling this.assertIsNotDisposed()
+// This allows for the use of a boolean instead of calling this.throwIfDisposed()
 // since there is a strong chance of introducing a circular reference.
-function assertIsNotDisposed(disposed:boolean):boolean
+function throwIfDisposed(disposed:boolean):void
 {
-	return DisposableBase.assertIsNotDisposed(disposed, "Enumerable was disposed.");
+	if(disposed)
+		throw new ObjectDisposedException("Enumerable");
 }
 
 function numberOrNaN(value:any):number
@@ -3736,7 +3766,7 @@ function numberOrNaN(value:any):number
 	return isNaN(value) ? NaN : value;
 }
 
-
+// TODO: Convert to ArgumentException.
 function assertInteger(value:number, variable:string):boolean
 {
 	if(typeof value===Types.Number && !isNaN(value) && value!=(value | 0))
