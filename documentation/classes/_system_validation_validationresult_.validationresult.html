@@ -70,6 +70,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A class for generating responses to validation.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -82,6 +89,7 @@
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
 					<li><a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html" class="tsd-signature-type">IValidationResult</a></li>
+					<li><a href="../interfaces/_system_iequatable_d_.iequatable.html" class="tsd-signature-type">IEquatable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html" class="tsd-signature-type">IValidationResult</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -111,6 +119,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_validation_validationresult_.validationresult.html#equals" class="tsd-kind-icon">equals</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="_system_validation_validationresult_.validationresult.html#invalid" class="tsd-kind-icon">invalid</a></li>
 							</ul>
 						</section>
@@ -129,9 +138,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Validation/ValidationResult.ts:14</li>
+									<li>Defined in System/Validation/ValidationResult.ts:16</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don&#39;t cover.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -158,7 +172,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html">IValidationResult</a>.<a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html#data">data</a></p>
 						<ul>
-							<li>Defined in System/Validation/ValidationResult.ts:14</li>
+							<li>Defined in System/Validation/ValidationResult.ts:23</li>
 						</ul>
 					</aside>
 				</section>
@@ -169,7 +183,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html">IValidationResult</a>.<a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html#isvalid">isValid</a></p>
 						<ul>
-							<li>Defined in System/Validation/ValidationResult.ts:12</li>
+							<li>Defined in System/Validation/ValidationResult.ts:21</li>
 						</ul>
 					</aside>
 				</section>
@@ -180,7 +194,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html">IValidationResult</a>.<a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html#message">message</a></p>
 						<ul>
-							<li>Defined in System/Validation/ValidationResult.ts:13</li>
+							<li>Defined in System/Validation/ValidationResult.ts:22</li>
 						</ul>
 					</aside>
 				</section>
@@ -197,9 +211,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Validation/ValidationResult.ts:29</li>
+									<li>Defined in System/Validation/ValidationResult.ts:43</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Represents a single/shared instance of a valid result.
+									Allows for returning this instance like you would return &#39;true&#39;.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html" class="tsd-signature-type">IValidationResult</a></h4>
 						</li>
 					</ul>
@@ -207,6 +227,29 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="equals" class="tsd-anchor"></a>
+					<h3>equals</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">equals<span class="tsd-signature-symbol">(</span>other<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html" class="tsd-signature-type">IValidationResult</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Validation/ValidationResult.ts:30</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>other: <a href="../interfaces/_system_validation_ivalidationresult_d_.ivalidationresult.html" class="tsd-signature-type">IValidationResult</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a name="invalid" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> invalid</h3>
@@ -217,9 +260,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Validation/ValidationResult.ts:33</li>
+									<li>Defined in System/Validation/ValidationResult.ts:50</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Factory method for easily creating an invalid result.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -267,6 +315,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-static">
 								<a href="_system_validation_validationresult_.validationresult.html#valid" class="tsd-kind-icon">valid</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_system_validation_validationresult_.validationresult.html#equals" class="tsd-kind-icon">equals</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="_system_validation_validationresult_.validationresult.html#invalid" class="tsd-kind-icon">invalid</a>
