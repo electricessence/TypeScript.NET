@@ -9,18 +9,11 @@ const valid = new ValidationResult(true);
 
 class ValidationResult implements IValidationResult
 {
-	isValid:boolean;
-	message:string;
-	data:any;
-
 	constructor(
-		isValid:boolean = false,
-		message:string = null,
-		data:any = null)
+		public isValid:boolean = false,
+		public message:string = null,
+		public data:any = null)
 	{
-		this.isValid = isValid;
-		this.message = message;
-		this.data = data;
 
 		// Readonly...
 		Object.freeze(this);
