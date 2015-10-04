@@ -2,6 +2,10 @@
 
 var gulp = require('gulp');
 var del = require('del');
+var replace = require('gulp-replace');
+
+
+const DOCS = './documentation';
 
 function clearGulpTscTemp() {
 	//del(['./gulp-tsc-tmp-*']);
@@ -102,11 +106,13 @@ gulp.task(
 			)
 		);
 
-		const SEARCH_FOLDER = 'documentation/assets/js';
 
+		// Fix for issue with search that places a [BACK-SLASH] instead of a [SLASH].
+		const SEARCH_FOLDER = DOCS+'/assets/js';
 		gulp
 			.src([SEARCH_FOLDER + '/search.js'])
-			.pipe(require('gulp-replace')("\\\\","/"))
+			.pipe(replace('\\\\','/'))
+			.pipe(replace('/_','/'))
 			.pipe(gulp.dest(SEARCH_FOLDER));
 
 		return stream;
@@ -114,6 +120,24 @@ gulp.task(
 	}
 );
 
+gulp.task('typedoc-fix',[],function(){
+
+	var rename = require('gulp-rename');
+
+	// Fix for issue where type-docs insert an [UNDERSCORE] in front of all .html files.
+	return gulp
+		.src([DOCS+'/**/*.html'])
+		.pipe(replace('/_','/'))
+		.pipe(replace(' href="_',' href="'))
+		.pipe(rename(function (path) {
+			path.basename = path.basename.replace(/^_/,'');
+		}))
+		.pipe(gulp.dest(DOCS));
+});
+
+gulp.task('typedoc-fix-cleanup',[],function(){
+	del([DOCS+'/**/_*.html']);
+});
 
 gulp.task('default', [
 	'typescript',
