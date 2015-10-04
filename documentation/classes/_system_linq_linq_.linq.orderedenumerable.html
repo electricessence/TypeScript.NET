@@ -115,6 +115,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_system_linq_linq_.linq.orderedenumerable.html#_disposableobjectname" class="tsd-kind-icon">_disposable<wbr>Object<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_system_linq_linq_.linq.orderedenumerable.html#_enumeratorfactory" class="tsd-kind-icon">_enumerator<wbr>Factory</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_system_linq_linq_.linq.orderedenumerable.html#descending" class="tsd-kind-icon">descending</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_system_linq_linq_.linq.orderedenumerable.html#keyselector" class="tsd-kind-icon">key<wbr>Selector</a></li>
@@ -139,7 +140,6 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#alternatesingle" class="tsd-kind-icon">alternate<wbr>Single</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#any" class="tsd-kind-icon">any</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#asenumerable" class="tsd-kind-icon">as<wbr>Enumerable</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#assertisnotdisposed" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#average" class="tsd-kind-icon">average</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#buffer" class="tsd-kind-icon">buffer</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#catcherror" class="tsd-kind-icon">catch<wbr>Error</a></li>
@@ -207,6 +207,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#takewhile" class="tsd-kind-icon">take<wbr>While</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.orderedenumerable.html#thenby" class="tsd-kind-icon">then<wbr>By</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.orderedenumerable.html#thenbydescending" class="tsd-kind-icon">then<wbr>ByDescending</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_system_linq_linq_.linq.orderedenumerable.html#throwifdisposed" class="tsd-kind-icon">throw<wbr>IfDisposed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#todictionary" class="tsd-kind-icon">to<wbr>Dictionary</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#tojoinedstring" class="tsd-kind-icon">to<wbr>Joined<wbr>String</a></li>
@@ -218,7 +219,6 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#where" class="tsd-kind-icon">where</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#zip" class="tsd-kind-icon">zip</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited"><a href="_system_linq_linq_.linq.orderedenumerable.html#zipmultiple" class="tsd-kind-icon">zip<wbr>Multiple</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_system_linq_linq_.linq.orderedenumerable.html#assertisnotdisposed-1" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static"><a href="_system_linq_linq_.linq.orderedenumerable.html#choice" class="tsd-kind-icon">choice</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static"><a href="_system_linq_linq_.linq.orderedenumerable.html#cycle" class="tsd-kind-icon">cycle</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static"><a href="_system_linq_linq_.linq.orderedenumerable.html#defer" class="tsd-kind-icon">defer</a></li>
@@ -258,7 +258,7 @@
 							<aside class="tsd-sources">
 								<p>Overwrites <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3579</li>
+									<li>Defined in System.Linq/Linq.ts:3608</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -302,6 +302,18 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="_disposableobjectname" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _disposable<wbr>Object<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">_disposable<wbr>Object<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#_disposableobjectname">_disposableObjectName</a></p>
+						<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#_disposableobjectname">_disposableObjectName</a></p>
+						<ul>
+							<li>Defined in System/Disposable/DisposableBase.ts:25</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 					<a name="_enumeratorfactory" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _enumerator<wbr>Factory</h3>
 					<div class="tsd-signature tsd-kind-icon">_enumerator<wbr>Factory<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
@@ -309,7 +321,7 @@
 						<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#_enumeratorfactory">_enumeratorFactory</a></p>
 						<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#_enumeratorfactory">_enumeratorFactory</a></p>
 						<ul>
-							<li>Defined in System.Linq/Linq.ts:75</li>
+							<li>Defined in System.Linq/Linq.ts:87</li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -334,7 +346,7 @@
 					<div class="tsd-signature tsd-kind-icon">descending<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System.Linq/Linq.ts:3584</li>
+							<li>Defined in System.Linq/Linq.ts:3613</li>
 						</ul>
 					</aside>
 				</section>
@@ -344,7 +356,7 @@
 					<div class="tsd-signature tsd-kind-icon">key<wbr>Selector<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System.Linq/Linq.ts:3583</li>
+							<li>Defined in System.Linq/Linq.ts:3612</li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -375,7 +387,7 @@
 					<div class="tsd-signature tsd-kind-icon">parent<span class="tsd-signature-symbol">:</span> <a href="_system_linq_linq_.linq.orderedenumerable.html" class="tsd-signature-type">OrderedEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System.Linq/Linq.ts:3585</li>
+							<li>Defined in System.Linq/Linq.ts:3614</li>
 						</ul>
 					</aside>
 				</section>
@@ -385,7 +397,7 @@
 					<div class="tsd-signature tsd-kind-icon">source<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System.Linq/Linq.ts:3582</li>
+							<li>Defined in System.Linq/Linq.ts:3611</li>
 						</ul>
 					</aside>
 				</section>
@@ -403,7 +415,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#wasdisposed">wasDisposed</a></p>
 								<ul>
-									<li>Defined in System/Disposable/DisposableBase.ts:18</li>
+									<li>Defined in System/Disposable/DisposableBase.ts:19</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -425,7 +437,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#_ondispose">_onDispose</a></p>
 								<p>Overwrites <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#_ondispose">_onDispose</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3650</li>
+									<li>Defined in System.Linq/Linq.ts:3679</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -443,7 +455,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#aggregate">aggregate</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2615</li>
+									<li>Defined in System.Linq/Linq.ts:2643</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -492,7 +504,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#all">all</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#all">all</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1669</li>
+									<li>Defined in System.Linq/Linq.ts:1697</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -517,7 +529,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#alternate">alternate</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#alternate">alternate</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2274</li>
+									<li>Defined in System.Linq/Linq.ts:2302</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -542,7 +554,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#alternatemultiple">alternateMultiple</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#alternatemultiple">alternateMultiple</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2197</li>
+									<li>Defined in System.Linq/Linq.ts:2225</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -567,7 +579,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#alternatesingle">alternateSingle</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#alternatesingle">alternateSingle</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2269</li>
+									<li>Defined in System.Linq/Linq.ts:2297</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -592,7 +604,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#any">any</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#any">any</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1690</li>
+									<li>Defined in System.Linq/Linq.ts:1718</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -617,36 +629,10 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#asenumerable">asEnumerable</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#asenumerable">asEnumerable</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:617</li>
+									<li>Defined in System.Linq/Linq.ts:643</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-					<a name="assertisnotdisposed" class="tsd-anchor"></a>
-					<h3>assert<wbr>IsNot<wbr>Disposed</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed<span class="tsd-signature-symbol">(</span>errorMessage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#assertisnotdisposed">assertIsNotDisposed</a></p>
-								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#assertisnotdisposed">assertIsNotDisposed</a></p>
-								<p>Overwrites <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#assertisnotdisposed">assertIsNotDisposed</a></p>
-								<ul>
-									<li>Defined in System.Linq/Linq.ts:575</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> errorMessage: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Enumerable was disposed.&quot;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -662,7 +648,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#average">average</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#average">average</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2622</li>
+									<li>Defined in System.Linq/Linq.ts:2650</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -687,7 +673,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#buffer">buffer</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#buffer">buffer</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2572</li>
+									<li>Defined in System.Linq/Linq.ts:2600</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -711,7 +697,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#catcherror">catchError</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3015</li>
+									<li>Defined in System.Linq/Linq.ts:3043</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -754,7 +740,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#choose">choose</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#choose">choose</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1312</li>
+									<li>Defined in System.Linq/Linq.ts:1340</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -785,7 +771,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#concat">concat</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#concat">concat</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2124</li>
+									<li>Defined in System.Linq/Linq.ts:2152</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -810,7 +796,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#concatwith">concatWith</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#concatwith">concatWith</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2029</li>
+									<li>Defined in System.Linq/Linq.ts:2057</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -835,7 +821,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#contains">contains</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#contains">contains</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1727</li>
+									<li>Defined in System.Linq/Linq.ts:1755</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -869,7 +855,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#count">count</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#count">count</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1643</li>
+									<li>Defined in System.Linq/Linq.ts:1671</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -892,7 +878,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3590</li>
+									<li>Defined in System.Linq/Linq.ts:3619</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -938,7 +924,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#defaultifempty">defaultIfEmpty</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#defaultifempty">defaultIfEmpty</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1783</li>
+									<li>Defined in System.Linq/Linq.ts:1811</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -963,7 +949,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#dispose">dispose</a></p>
 								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in System/Disposable/DisposableBase.ts:38</li>
+									<li>Defined in System/Disposable/DisposableBase.ts:37</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -981,7 +967,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#distinct">distinct</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1495</li>
+									<li>Defined in System.Linq/Linq.ts:1523</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1024,7 +1010,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#distinctuntilchanged">distinctUntilChanged</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#distinctuntilchanged">distinctUntilChanged</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1501</li>
+									<li>Defined in System.Linq/Linq.ts:1529</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1055,7 +1041,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#doaction">doAction</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#doaction">doAction</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:681</li>
+									<li>Defined in System.Linq/Linq.ts:707</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1088,7 +1074,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#elementat">elementAt</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#elementat">elementAt</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2738</li>
+									<li>Defined in System.Linq/Linq.ts:2766</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1113,7 +1099,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#elementatordefault">elementAtOrDefault</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#elementatordefault">elementAtOrDefault</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2767</li>
+									<li>Defined in System.Linq/Linq.ts:2795</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1141,7 +1127,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#every">every</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#every">every</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1684</li>
+									<li>Defined in System.Linq/Linq.ts:1712</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1166,7 +1152,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#except">except</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#except">except</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1443</li>
+									<li>Defined in System.Linq/Linq.ts:1471</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1199,7 +1185,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#finallyaction">finallyAction</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3061</li>
+									<li>Defined in System.Linq/Linq.ts:3089</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1236,7 +1222,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#first">first</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#first">first</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2805</li>
+									<li>Defined in System.Linq/Linq.ts:2833</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1255,7 +1241,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#firstordefault">firstOrDefault</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#firstordefault">firstOrDefault</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2825</li>
+									<li>Defined in System.Linq/Linq.ts:2853</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1280,7 +1266,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#flatten">flatten</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#flatten">flatten</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1039</li>
+									<li>Defined in System.Linq/Linq.ts:1067</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1299,7 +1285,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#foreach">forEach</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#foreach">forEach</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:580</li>
+									<li>Defined in System.Linq/Linq.ts:606</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1324,7 +1310,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#force">force</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#force">force</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:737</li>
+									<li>Defined in System.Linq/Linq.ts:763</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1349,7 +1335,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#getenumerator">getEnumerator</a></p>
 								<p>Overwrites <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#getenumerator">getEnumerator</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3605</li>
+									<li>Defined in System.Linq/Linq.ts:3634</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_collections_enumeration_enumeratorbase_.enumeratorbase.html" class="tsd-signature-type">EnumeratorBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1368,7 +1354,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#groupby">groupBy</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#groupby">groupBy</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2477</li>
+									<li>Defined in System.Linq/Linq.ts:2505</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1410,7 +1396,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#groupjoin">groupJoin</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1988</li>
+									<li>Defined in System.Linq/Linq.ts:2016</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1483,7 +1469,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#indexof">indexOf</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#indexof">indexOf</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1737</li>
+									<li>Defined in System.Linq/Linq.ts:1765</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1517,7 +1503,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#insertat">insertAt</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#insertat">insertAt</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2137</li>
+									<li>Defined in System.Linq/Linq.ts:2165</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1545,7 +1531,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#intersect">intersect</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#intersect">intersect</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2280</li>
+									<li>Defined in System.Linq/Linq.ts:2308</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1579,7 +1565,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#isempty">isEmpty</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#isempty">isEmpty</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1722</li>
+									<li>Defined in System.Linq/Linq.ts:1750</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1597,7 +1583,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#join">join</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1928</li>
+									<li>Defined in System.Linq/Linq.ts:1956</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1670,7 +1656,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#last">last</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#last">last</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2843</li>
+									<li>Defined in System.Linq/Linq.ts:2871</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1689,7 +1675,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#lastindexof">lastIndexOf</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#lastindexof">lastIndexOf</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1764</li>
+									<li>Defined in System.Linq/Linq.ts:1792</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1723,7 +1709,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#lastordefault">lastOrDefault</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#lastordefault">lastOrDefault</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2862</li>
+									<li>Defined in System.Linq/Linq.ts:2890</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1748,7 +1734,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#max">max</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#max">max</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2656</li>
+									<li>Defined in System.Linq/Linq.ts:2684</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1767,7 +1753,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#maxby">maxBy</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#maxby">maxBy</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2666</li>
+									<li>Defined in System.Linq/Linq.ts:2694</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1798,7 +1784,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#memoize">memoize</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#memoize">memoize</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2959</li>
+									<li>Defined in System.Linq/Linq.ts:2987</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1817,7 +1803,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#merge">merge</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#merge">merge</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2067</li>
+									<li>Defined in System.Linq/Linq.ts:2095</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1842,7 +1828,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#min">min</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#min">min</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2661</li>
+									<li>Defined in System.Linq/Linq.ts:2689</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1861,7 +1847,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#minby">minBy</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#minby">minBy</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2671</li>
+									<li>Defined in System.Linq/Linq.ts:2699</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1891,7 +1877,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#oftype">ofType</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1410</li>
+									<li>Defined in System.Linq/Linq.ts:1438</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1914,7 +1900,7 @@
 												<li class="tsd-description">
 													<aside class="tsd-sources">
 														<ul>
-															<li>Defined in System.Linq/Linq.ts:1410</li>
+															<li>Defined in System.Linq/Linq.ts:1438</li>
 														</ul>
 													</aside>
 													<h4 class="tsd-returns-title">Returns <a href="../undefined" class="tsd-signature-type">__type</a></h4>
@@ -1939,7 +1925,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#orderby">orderBy</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#orderby">orderBy</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2415</li>
+									<li>Defined in System.Linq/Linq.ts:2443</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1970,7 +1956,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#orderbydescending">orderByDescending</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#orderbydescending">orderByDescending</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2420</li>
+									<li>Defined in System.Linq/Linq.ts:2448</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2000,7 +1986,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#pairwise">pairwise</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1103</li>
+									<li>Defined in System.Linq/Linq.ts:1131</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2051,7 +2037,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#partitionby">partitionBy</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2490</li>
+									<li>Defined in System.Linq/Linq.ts:2518</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2118,7 +2104,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#product">product</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#product">product</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2704</li>
+									<li>Defined in System.Linq/Linq.ts:2732</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2143,7 +2129,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#reverse">reverse</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#reverse">reverse</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1556</li>
+									<li>Defined in System.Linq/Linq.ts:1584</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2161,7 +2147,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#scan">scan</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1135</li>
+									<li>Defined in System.Linq/Linq.ts:1163</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2210,7 +2196,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#select">select</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#select">select</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1184</li>
+									<li>Defined in System.Linq/Linq.ts:1212</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2242,7 +2228,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#selectmany">selectMany</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#selectmany">selectMany</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1231</li>
+									<li>Defined in System.Linq/Linq.ts:1259</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2263,7 +2249,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#selectmany">selectMany</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1233</li>
+									<li>Defined in System.Linq/Linq.ts:1261</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2321,7 +2307,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#sequenceequal">sequenceEqual</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#sequenceequal">sequenceEqual</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2331</li>
+									<li>Defined in System.Linq/Linq.ts:2359</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2349,7 +2335,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#share">share</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#share">share</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2927</li>
+									<li>Defined in System.Linq/Linq.ts:2955</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2368,7 +2354,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#shuffle">shuffle</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#shuffle">shuffle</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1592</li>
+									<li>Defined in System.Linq/Linq.ts:1620</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2387,7 +2373,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#single">single</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#single">single</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2879</li>
+									<li>Defined in System.Linq/Linq.ts:2907</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -2406,7 +2392,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#singleordefault">singleOrDefault</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#singleordefault">singleOrDefault</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2902</li>
+									<li>Defined in System.Linq/Linq.ts:2930</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2431,7 +2417,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#skip">skip</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#skip">skip</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:746</li>
+									<li>Defined in System.Linq/Linq.ts:772</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2456,7 +2442,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#skipwhile">skipWhile</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#skipwhile">skipWhile</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:770</li>
+									<li>Defined in System.Linq/Linq.ts:796</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2481,7 +2467,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#some">some</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#some">some</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1717</li>
+									<li>Defined in System.Linq/Linq.ts:1745</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2506,7 +2492,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#sum">sum</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#sum">sum</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2677</li>
+									<li>Defined in System.Linq/Linq.ts:2705</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2531,7 +2517,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#take">take</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#take">take</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:788</li>
+									<li>Defined in System.Linq/Linq.ts:816</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2556,7 +2542,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#takeexceptlast">takeExceptLast</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#takeexceptlast">takeExceptLast</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:847</li>
+									<li>Defined in System.Linq/Linq.ts:875</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2581,7 +2567,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#takefromlast">takeFromLast</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#takefromlast">takeFromLast</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:897</li>
+									<li>Defined in System.Linq/Linq.ts:925</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2606,7 +2592,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#takeuntil">takeUntil</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#takeuntil">takeUntil</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:820</li>
+									<li>Defined in System.Linq/Linq.ts:848</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2634,7 +2620,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#takewhile">takeWhile</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#takewhile">takeWhile</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:806</li>
+									<li>Defined in System.Linq/Linq.ts:834</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2657,7 +2643,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3595</li>
+									<li>Defined in System.Linq/Linq.ts:3624</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2698,7 +2684,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3600</li>
+									<li>Defined in System.Linq/Linq.ts:3629</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2729,6 +2715,34 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="throwifdisposed" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> throw<wbr>IfDisposed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">throw<wbr>IfDisposed<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, objectName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#throwifdisposed">throwIfDisposed</a></p>
+								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#throwifdisposed">throwIfDisposed</a></p>
+								<ul>
+									<li>Defined in System/Disposable/DisposableBase.ts:27</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> message: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> objectName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;this._disposableObjectName</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="toarray" class="tsd-anchor"></a>
 					<h3>to<wbr>Array</h3>
@@ -2741,7 +2755,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#toarray">toArray</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#toarray">toArray</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:602</li>
+									<li>Defined in System.Linq/Linq.ts:628</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2766,7 +2780,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#todictionary">toDictionary</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#todictionary">toDictionary</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:657</li>
+									<li>Defined in System.Linq/Linq.ts:683</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2809,7 +2823,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#tojoinedstring">toJoinedString</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#tojoinedstring">toJoinedString</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:667</li>
+									<li>Defined in System.Linq/Linq.ts:693</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2837,7 +2851,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#tolookup">toLookup</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#tolookup">toLookup</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:624</li>
+									<li>Defined in System.Linq/Linq.ts:650</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2880,7 +2894,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#tomap">toMap</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#tomap">toMap</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:645</li>
+									<li>Defined in System.Linq/Linq.ts:671</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2913,7 +2927,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#traversebreadthfirst">traverseBreadthFirst</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:916</li>
+									<li>Defined in System.Linq/Linq.ts:944</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2979,7 +2993,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#traversedepthfirst">traverseDepthFirst</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:981</li>
+									<li>Defined in System.Linq/Linq.ts:1009</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3046,7 +3060,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#union">union</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#union">union</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2353</li>
+									<li>Defined in System.Linq/Linq.ts:2381</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3080,7 +3094,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#where">where</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#where">where</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1360</li>
+									<li>Defined in System.Linq/Linq.ts:1388</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3104,7 +3118,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#zip">zip</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1827</li>
+									<li>Defined in System.Linq/Linq.ts:1855</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3164,7 +3178,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#zipmultiple">zipMultiple</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1860</li>
+									<li>Defined in System.Linq/Linq.ts:1888</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3213,34 +3227,6 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="assertisnotdisposed-1" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> assert<wbr>IsNot<wbr>Disposed</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed<span class="tsd-signature-symbol">(</span>disposed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, errorMessage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#assertisnotdisposed-1">assertIsNotDisposed</a></p>
-								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#assertisnotdisposed-1">assertIsNotDisposed</a></p>
-								<ul>
-									<li>Defined in System/Disposable/DisposableBase.ts:24</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>disposed: <span class="tsd-signature-type">boolean</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> errorMessage: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;ObjectDisposedException&quot;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static">
 					<a name="choice" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> choice</h3>
@@ -3253,7 +3239,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#choice">choice</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#choice">choice</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:147</li>
+									<li>Defined in System.Linq/Linq.ts:178</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3284,7 +3270,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#cycle">cycle</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#cycle">cycle</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:158</li>
+									<li>Defined in System.Linq/Linq.ts:189</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3314,7 +3300,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#defer">defer</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:518</li>
+									<li>Defined in System.Linq/Linq.ts:549</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3357,7 +3343,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#empty">empty</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#empty">empty</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:179</li>
+									<li>Defined in System.Linq/Linq.ts:210</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3381,7 +3367,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#foreach-1">forEach</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:542</li>
+									<li>Defined in System.Linq/Linq.ts:573</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3428,7 +3414,7 @@
 					<a name="from" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> from</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">from&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">from&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -3436,9 +3422,15 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#from">from</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#from">from</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:86</li>
+									<li>Defined in System.Linq/Linq.ts:106</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Universal method for converting a primitive enumerables into a LINQ enabled ones.</p>
+								</div>
+								<p>Is not limited to TypeScript usages.</p>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -3448,7 +3440,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>source: <span class="tsd-signature-type">any</span></h5>
+									<h5>source: <a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -3467,9 +3459,14 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#fromarray">fromArray</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#fromarray">fromArray</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:81</li>
+									<li>Defined in System.Linq/Linq.ts:96</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Static shortcut for creating an ArrayEnumerable.</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -3497,7 +3494,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#generate">generate</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:445</li>
+									<li>Defined in System.Linq/Linq.ts:476</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3549,7 +3546,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#make">make</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#make">make</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:247</li>
+									<li>Defined in System.Linq/Linq.ts:278</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3580,7 +3577,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#matches">matches</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#matches">matches</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:408</li>
+									<li>Defined in System.Linq/Linq.ts:439</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3611,7 +3608,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#max-1">max</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#max-1">max</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:556</li>
+									<li>Defined in System.Linq/Linq.ts:587</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3636,7 +3633,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#min-1">min</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#min-1">min</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:563</li>
+									<li>Defined in System.Linq/Linq.ts:594</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3661,7 +3658,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#range">range</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#range">range</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:253</li>
+									<li>Defined in System.Linq/Linq.ts:284</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3692,7 +3689,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#rangedown">rangeDown</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#rangedown">rangeDown</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:319</li>
+									<li>Defined in System.Linq/Linq.ts:350</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3723,7 +3720,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#rangeto">rangeTo</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#rangeto">rangeTo</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:344</li>
+									<li>Defined in System.Linq/Linq.ts:375</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3754,7 +3751,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#repeat">repeat</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#repeat">repeat</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:189</li>
+									<li>Defined in System.Linq/Linq.ts:220</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3787,7 +3784,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#repeatwithfinalize">repeatWithFinalize</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:221</li>
+									<li>Defined in System.Linq/Linq.ts:252</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3843,7 +3840,7 @@
 					<a name="toarray-1" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> to<wbr>Array</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">to<wbr>Array&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Array&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -3851,7 +3848,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#toarray-1">toArray</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#toarray-1">toArray</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:97</li>
+									<li>Defined in System.Linq/Linq.ts:126</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3863,7 +3860,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>source: <span class="tsd-signature-type">any</span></h5>
+									<h5>source: <a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -3882,7 +3879,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#toinfinity">toInfinity</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#toinfinity">toInfinity</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:330</li>
+									<li>Defined in System.Linq/Linq.ts:361</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3910,7 +3907,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#tonegativeinfinity">toNegativeInfinity</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#tonegativeinfinity">toNegativeInfinity</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:337</li>
+									<li>Defined in System.Linq/Linq.ts:368</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3938,7 +3935,7 @@
 								<p>Implementation of <a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html">IOrderedEnumerable</a>.<a href="../interfaces/_system_linq_linq_.linq.iorderedenumerable.html#unfold">unfold</a></p>
 								<p>Inherited from <a href="_system_linq_linq_.linq.enumerable.html">Enumerable</a>.<a href="_system_linq_linq_.linq.enumerable.html#unfold">unfold</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:488</li>
+									<li>Defined in System.Linq/Linq.ts:519</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -4007,6 +4004,9 @@
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="_system_linq_linq_.linq.orderedenumerable.html#_disposableobjectname" class="tsd-kind-icon">_disposable<wbr>Object<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#_enumeratorfactory" class="tsd-kind-icon">_enumerator<wbr>Factory</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
@@ -4047,9 +4047,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#asenumerable" class="tsd-kind-icon">as<wbr>Enumerable</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_system_linq_linq_.linq.orderedenumerable.html#assertisnotdisposed" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#average" class="tsd-kind-icon">average</a>
@@ -4252,6 +4249,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#thenbydescending" class="tsd-kind-icon">then<wbr>ByDescending</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="_system_linq_linq_.linq.orderedenumerable.html#throwifdisposed" class="tsd-kind-icon">throw<wbr>IfDisposed</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
 							</li>
@@ -4284,9 +4284,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited">
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#zipmultiple" class="tsd-kind-icon">zip<wbr>Multiple</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_system_linq_linq_.linq.orderedenumerable.html#assertisnotdisposed-1" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-static">
 								<a href="_system_linq_linq_.linq.orderedenumerable.html#choice" class="tsd-kind-icon">choice</a>

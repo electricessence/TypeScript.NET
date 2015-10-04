@@ -28,6 +28,7 @@ import using = DisposeUtility.using;
 import enumeratorFrom = Enumerator.from;
 import enumeratorForEach = Enumerator.forEach;
 
+'use strict';
 
 // #region Local Constants.
 // Leave internal to avoid accidental overwriting.
@@ -59,7 +60,6 @@ const
 
 module Linq
 {
-	'use strict';
 
 	// TODO: Create UnsupportedEnumerableException.
 

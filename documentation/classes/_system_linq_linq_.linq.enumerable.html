@@ -73,6 +73,15 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.</p>
+					</div>
+					<p>In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
+					In this case, we use Enumerable<T> as the underlying class that is being chained.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
@@ -131,6 +140,7 @@
 						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_system_linq_linq_.linq.enumerable.html#_disposableobjectname" class="tsd-kind-icon">_disposable<wbr>Object<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="_system_linq_linq_.linq.enumerable.html#_enumeratorfactory" class="tsd-kind-icon">_enumerator<wbr>Factory</a></li>
 							</ul>
 						</section>
@@ -151,7 +161,6 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#alternatesingle" class="tsd-kind-icon">alternate<wbr>Single</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#any" class="tsd-kind-icon">any</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#asenumerable" class="tsd-kind-icon">as<wbr>Enumerable</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="_system_linq_linq_.linq.enumerable.html#assertisnotdisposed" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#average" class="tsd-kind-icon">average</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#buffer" class="tsd-kind-icon">buffer</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#catcherror" class="tsd-kind-icon">catch<wbr>Error</a></li>
@@ -216,6 +225,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#takefromlast" class="tsd-kind-icon">take<wbr>From<wbr>Last</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#takeuntil" class="tsd-kind-icon">take<wbr>Until</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#takewhile" class="tsd-kind-icon">take<wbr>While</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="_system_linq_linq_.linq.enumerable.html#throwifdisposed" class="tsd-kind-icon">throw<wbr>IfDisposed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#toarray" class="tsd-kind-icon">to<wbr>Array</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_system_linq_linq_.linq.enumerable.html#todictionary" class="tsd-kind-icon">to<wbr>Dictionary</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#tojoinedstring" class="tsd-kind-icon">to<wbr>Joined<wbr>String</a></li>
@@ -227,7 +237,6 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_system_linq_linq_.linq.enumerable.html#where" class="tsd-kind-icon">where</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_system_linq_linq_.linq.enumerable.html#zip" class="tsd-kind-icon">zip</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="_system_linq_linq_.linq.enumerable.html#zipmultiple" class="tsd-kind-icon">zip<wbr>Multiple</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_system_linq_linq_.linq.enumerable.html#assertisnotdisposed-1" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="_system_linq_linq_.linq.enumerable.html#choice" class="tsd-kind-icon">choice</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="_system_linq_linq_.linq.enumerable.html#cycle" class="tsd-kind-icon">cycle</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static"><a href="_system_linq_linq_.linq.enumerable.html#defer" class="tsd-kind-icon">defer</a></li>
@@ -267,7 +276,7 @@
 							<aside class="tsd-sources">
 								<p>Overwrites <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:69</li>
+									<li>Defined in System.Linq/Linq.ts:84</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -310,13 +319,24 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="_disposableobjectname" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _disposable<wbr>Object<wbr>Name</h3>
+					<div class="tsd-signature tsd-kind-icon">_disposable<wbr>Object<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#_disposableobjectname">_disposableObjectName</a></p>
+						<ul>
+							<li>Defined in System/Disposable/DisposableBase.ts:25</li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 					<a name="_enumeratorfactory" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> _enumerator<wbr>Factory</h3>
 					<div class="tsd-signature tsd-kind-icon">_enumerator<wbr>Factory<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System.Linq/Linq.ts:75</li>
+							<li>Defined in System.Linq/Linq.ts:87</li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -349,7 +369,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#wasdisposed">wasDisposed</a></p>
 								<ul>
-									<li>Defined in System/Disposable/DisposableBase.ts:18</li>
+									<li>Defined in System/Disposable/DisposableBase.ts:19</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -370,7 +390,7 @@
 							<aside class="tsd-sources">
 								<p>Overwrites <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#_ondispose">_onDispose</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:137</li>
+									<li>Defined in System.Linq/Linq.ts:168</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -387,7 +407,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2615</li>
+									<li>Defined in System.Linq/Linq.ts:2643</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -434,7 +454,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1669</li>
+									<li>Defined in System.Linq/Linq.ts:1697</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -457,7 +477,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2274</li>
+									<li>Defined in System.Linq/Linq.ts:2302</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -480,7 +500,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2197</li>
+									<li>Defined in System.Linq/Linq.ts:2225</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -503,7 +523,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2269</li>
+									<li>Defined in System.Linq/Linq.ts:2297</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -526,7 +546,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1690</li>
+									<li>Defined in System.Linq/Linq.ts:1718</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -549,34 +569,10 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:617</li>
+									<li>Defined in System.Linq/Linq.ts:643</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-					<a name="assertisnotdisposed" class="tsd-anchor"></a>
-					<h3>assert<wbr>IsNot<wbr>Disposed</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed<span class="tsd-signature-symbol">(</span>errorMessage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Overwrites <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#assertisnotdisposed">assertIsNotDisposed</a></p>
-								<ul>
-									<li>Defined in System.Linq/Linq.ts:575</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> errorMessage: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Enumerable was disposed.&quot;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -590,7 +586,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2622</li>
+									<li>Defined in System.Linq/Linq.ts:2650</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -613,7 +609,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2572</li>
+									<li>Defined in System.Linq/Linq.ts:2600</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -636,7 +632,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3015</li>
+									<li>Defined in System.Linq/Linq.ts:3043</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -677,7 +673,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1312</li>
+									<li>Defined in System.Linq/Linq.ts:1340</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -706,7 +702,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2124</li>
+									<li>Defined in System.Linq/Linq.ts:2152</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -729,7 +725,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2029</li>
+									<li>Defined in System.Linq/Linq.ts:2057</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -752,7 +748,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1727</li>
+									<li>Defined in System.Linq/Linq.ts:1755</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -784,7 +780,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1643</li>
+									<li>Defined in System.Linq/Linq.ts:1671</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -807,7 +803,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1783</li>
+									<li>Defined in System.Linq/Linq.ts:1811</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -832,7 +828,7 @@
 								<p>Implementation of <a href="../interfaces/_system_disposable_idisposableaware_d_.idisposableaware.html">IDisposableAware</a>.<a href="../interfaces/_system_disposable_idisposableaware_d_.idisposableaware.html#dispose">dispose</a></p>
 								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#dispose">dispose</a></p>
 								<ul>
-									<li>Defined in System/Disposable/DisposableBase.ts:38</li>
+									<li>Defined in System/Disposable/DisposableBase.ts:37</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -849,7 +845,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1495</li>
+									<li>Defined in System.Linq/Linq.ts:1523</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -890,7 +886,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1501</li>
+									<li>Defined in System.Linq/Linq.ts:1529</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -919,7 +915,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:681</li>
+									<li>Defined in System.Linq/Linq.ts:707</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -950,7 +946,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2738</li>
+									<li>Defined in System.Linq/Linq.ts:2766</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -973,7 +969,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2767</li>
+									<li>Defined in System.Linq/Linq.ts:2795</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -999,7 +995,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1684</li>
+									<li>Defined in System.Linq/Linq.ts:1712</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1022,7 +1018,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1443</li>
+									<li>Defined in System.Linq/Linq.ts:1471</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1054,7 +1050,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:3061</li>
+									<li>Defined in System.Linq/Linq.ts:3089</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1089,7 +1085,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2805</li>
+									<li>Defined in System.Linq/Linq.ts:2833</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1106,7 +1102,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2825</li>
+									<li>Defined in System.Linq/Linq.ts:2853</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1129,7 +1125,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1039</li>
+									<li>Defined in System.Linq/Linq.ts:1067</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1146,7 +1142,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:580</li>
+									<li>Defined in System.Linq/Linq.ts:606</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1169,7 +1165,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:737</li>
+									<li>Defined in System.Linq/Linq.ts:763</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1193,7 +1189,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html">IEnumerable</a>.<a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html#getenumerator">getEnumerator</a></p>
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:126</li>
+									<li>Defined in System.Linq/Linq.ts:157</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_system_collections_enumeration_ienumerator_d_.ienumerator.html" class="tsd-signature-type">IEnumerator</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1210,7 +1206,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2477</li>
+									<li>Defined in System.Linq/Linq.ts:2505</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1251,7 +1247,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1988</li>
+									<li>Defined in System.Linq/Linq.ts:2016</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1322,7 +1318,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1737</li>
+									<li>Defined in System.Linq/Linq.ts:1765</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1354,7 +1350,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2137</li>
+									<li>Defined in System.Linq/Linq.ts:2165</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1380,7 +1376,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2280</li>
+									<li>Defined in System.Linq/Linq.ts:2308</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1412,7 +1408,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1722</li>
+									<li>Defined in System.Linq/Linq.ts:1750</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1429,7 +1425,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1928</li>
+									<li>Defined in System.Linq/Linq.ts:1956</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1500,7 +1496,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2843</li>
+									<li>Defined in System.Linq/Linq.ts:2871</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1517,7 +1513,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1764</li>
+									<li>Defined in System.Linq/Linq.ts:1792</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1549,7 +1545,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2862</li>
+									<li>Defined in System.Linq/Linq.ts:2890</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1572,7 +1568,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2656</li>
+									<li>Defined in System.Linq/Linq.ts:2684</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1589,7 +1585,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2666</li>
+									<li>Defined in System.Linq/Linq.ts:2694</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1618,7 +1614,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2959</li>
+									<li>Defined in System.Linq/Linq.ts:2987</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1635,7 +1631,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2067</li>
+									<li>Defined in System.Linq/Linq.ts:2095</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1658,7 +1654,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2661</li>
+									<li>Defined in System.Linq/Linq.ts:2689</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -1675,7 +1671,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2671</li>
+									<li>Defined in System.Linq/Linq.ts:2699</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1704,7 +1700,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1410</li>
+									<li>Defined in System.Linq/Linq.ts:1438</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1727,7 +1723,7 @@
 												<li class="tsd-description">
 													<aside class="tsd-sources">
 														<ul>
-															<li>Defined in System.Linq/Linq.ts:1410</li>
+															<li>Defined in System.Linq/Linq.ts:1438</li>
 														</ul>
 													</aside>
 													<h4 class="tsd-returns-title">Returns <a href="../undefined" class="tsd-signature-type">__type</a></h4>
@@ -1750,7 +1746,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2415</li>
+									<li>Defined in System.Linq/Linq.ts:2443</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1779,7 +1775,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2420</li>
+									<li>Defined in System.Linq/Linq.ts:2448</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1808,7 +1804,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1103</li>
+									<li>Defined in System.Linq/Linq.ts:1131</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1858,7 +1854,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2490</li>
+									<li>Defined in System.Linq/Linq.ts:2518</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -1923,7 +1919,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2704</li>
+									<li>Defined in System.Linq/Linq.ts:2732</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1946,7 +1942,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1556</li>
+									<li>Defined in System.Linq/Linq.ts:1584</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -1963,7 +1959,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1135</li>
+									<li>Defined in System.Linq/Linq.ts:1163</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2010,7 +2006,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1184</li>
+									<li>Defined in System.Linq/Linq.ts:1212</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2040,7 +2036,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1231</li>
+									<li>Defined in System.Linq/Linq.ts:1259</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2060,7 +2056,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1233</li>
+									<li>Defined in System.Linq/Linq.ts:1261</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2116,7 +2112,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2331</li>
+									<li>Defined in System.Linq/Linq.ts:2359</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2142,7 +2138,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2927</li>
+									<li>Defined in System.Linq/Linq.ts:2955</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2159,7 +2155,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1592</li>
+									<li>Defined in System.Linq/Linq.ts:1620</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -2176,7 +2172,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2879</li>
+									<li>Defined in System.Linq/Linq.ts:2907</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -2193,7 +2189,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2902</li>
+									<li>Defined in System.Linq/Linq.ts:2930</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2216,7 +2212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:746</li>
+									<li>Defined in System.Linq/Linq.ts:772</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2239,7 +2235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:770</li>
+									<li>Defined in System.Linq/Linq.ts:796</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2262,7 +2258,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1717</li>
+									<li>Defined in System.Linq/Linq.ts:1745</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2285,7 +2281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2677</li>
+									<li>Defined in System.Linq/Linq.ts:2705</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2308,7 +2304,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:788</li>
+									<li>Defined in System.Linq/Linq.ts:816</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2331,7 +2327,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:847</li>
+									<li>Defined in System.Linq/Linq.ts:875</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2354,7 +2350,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:897</li>
+									<li>Defined in System.Linq/Linq.ts:925</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2377,7 +2373,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:820</li>
+									<li>Defined in System.Linq/Linq.ts:848</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2403,7 +2399,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:806</li>
+									<li>Defined in System.Linq/Linq.ts:834</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2413,6 +2409,33 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="throwifdisposed" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> throw<wbr>IfDisposed</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">throw<wbr>IfDisposed<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, objectName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#throwifdisposed">throwIfDisposed</a></p>
+								<ul>
+									<li>Defined in System/Disposable/DisposableBase.ts:27</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> message: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> objectName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;this._disposableObjectName</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -2426,7 +2449,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:602</li>
+									<li>Defined in System.Linq/Linq.ts:628</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2449,7 +2472,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:657</li>
+									<li>Defined in System.Linq/Linq.ts:683</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2490,7 +2513,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:667</li>
+									<li>Defined in System.Linq/Linq.ts:693</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2516,7 +2539,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:624</li>
+									<li>Defined in System.Linq/Linq.ts:650</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2557,7 +2580,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:645</li>
+									<li>Defined in System.Linq/Linq.ts:671</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2589,7 +2612,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:916</li>
+									<li>Defined in System.Linq/Linq.ts:944</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2654,7 +2677,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:981</li>
+									<li>Defined in System.Linq/Linq.ts:1009</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2719,7 +2742,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:2353</li>
+									<li>Defined in System.Linq/Linq.ts:2381</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2751,7 +2774,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1360</li>
+									<li>Defined in System.Linq/Linq.ts:1388</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -2774,7 +2797,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1827</li>
+									<li>Defined in System.Linq/Linq.ts:1855</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2833,7 +2856,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:1860</li>
+									<li>Defined in System.Linq/Linq.ts:1888</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2882,33 +2905,6 @@
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="assertisnotdisposed-1" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> assert<wbr>IsNot<wbr>Disposed</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed<span class="tsd-signature-symbol">(</span>disposed<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, errorMessage<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_system_disposable_disposablebase_.disposablebase.html">DisposableBase</a>.<a href="_system_disposable_disposablebase_.disposablebase.html#assertisnotdisposed-1">assertIsNotDisposed</a></p>
-								<ul>
-									<li>Defined in System/Disposable/DisposableBase.ts:24</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>disposed: <span class="tsd-signature-type">boolean</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> errorMessage: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;ObjectDisposedException&quot;</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-						</li>
-					</ul>
-				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
 					<a name="choice" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> choice</h3>
@@ -2919,7 +2915,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:147</li>
+									<li>Defined in System.Linq/Linq.ts:178</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2948,7 +2944,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:158</li>
+									<li>Defined in System.Linq/Linq.ts:189</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -2977,7 +2973,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:518</li>
+									<li>Defined in System.Linq/Linq.ts:549</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3018,7 +3014,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:179</li>
+									<li>Defined in System.Linq/Linq.ts:210</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3041,7 +3037,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:542</li>
+									<li>Defined in System.Linq/Linq.ts:573</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3088,15 +3084,21 @@
 					<a name="from" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> from</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">from&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">from&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:86</li>
+									<li>Defined in System.Linq/Linq.ts:106</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Universal method for converting a primitive enumerables into a LINQ enabled ones.</p>
+								</div>
+								<p>Is not limited to TypeScript usages.</p>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -3106,7 +3108,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>source: <span class="tsd-signature-type">any</span></h5>
+									<h5>source: <a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_system_linq_linq_.linq.enumerable.html" class="tsd-signature-type">Enumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
@@ -3123,9 +3125,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:81</li>
+									<li>Defined in System.Linq/Linq.ts:96</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Static shortcut for creating an ArrayEnumerable.</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -3152,7 +3159,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:445</li>
+									<li>Defined in System.Linq/Linq.ts:476</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3202,7 +3209,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:247</li>
+									<li>Defined in System.Linq/Linq.ts:278</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3231,7 +3238,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:408</li>
+									<li>Defined in System.Linq/Linq.ts:439</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3260,7 +3267,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:556</li>
+									<li>Defined in System.Linq/Linq.ts:587</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3283,7 +3290,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:563</li>
+									<li>Defined in System.Linq/Linq.ts:594</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3306,7 +3313,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:253</li>
+									<li>Defined in System.Linq/Linq.ts:284</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3335,7 +3342,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:319</li>
+									<li>Defined in System.Linq/Linq.ts:350</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3364,7 +3371,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:344</li>
+									<li>Defined in System.Linq/Linq.ts:375</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3393,7 +3400,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:189</li>
+									<li>Defined in System.Linq/Linq.ts:220</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3425,7 +3432,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:221</li>
+									<li>Defined in System.Linq/Linq.ts:252</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3481,13 +3488,13 @@
 					<a name="toarray-1" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> to<wbr>Array</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">to<wbr>Array&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">to<wbr>Array&lt;T&gt;<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:97</li>
+									<li>Defined in System.Linq/Linq.ts:126</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3499,7 +3506,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>source: <span class="tsd-signature-type">any</span></h5>
+									<h5>source: <a href="../interfaces/_system_collections_enumeration_ienumerable_d_.ienumerable.html" class="tsd-signature-type">IEnumerable</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -3516,7 +3523,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:330</li>
+									<li>Defined in System.Linq/Linq.ts:361</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3542,7 +3549,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:337</li>
+									<li>Defined in System.Linq/Linq.ts:368</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3568,7 +3575,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System.Linq/Linq.ts:488</li>
+									<li>Defined in System.Linq/Linq.ts:519</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -3627,6 +3634,9 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 								<a href="_system_linq_linq_.linq.enumerable.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="_system_linq_linq_.linq.enumerable.html#_disposableobjectname" class="tsd-kind-icon">_disposable<wbr>Object<wbr>Name</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 								<a href="_system_linq_linq_.linq.enumerable.html#_enumeratorfactory" class="tsd-kind-icon">_enumerator<wbr>Factory</a>
 							</li>
@@ -3656,9 +3666,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_system_linq_linq_.linq.enumerable.html#asenumerable" class="tsd-kind-icon">as<wbr>Enumerable</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite">
-								<a href="_system_linq_linq_.linq.enumerable.html#assertisnotdisposed" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_system_linq_linq_.linq.enumerable.html#average" class="tsd-kind-icon">average</a>
@@ -3852,6 +3859,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_system_linq_linq_.linq.enumerable.html#takewhile" class="tsd-kind-icon">take<wbr>While</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="_system_linq_linq_.linq.enumerable.html#throwifdisposed" class="tsd-kind-icon">throw<wbr>IfDisposed</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_system_linq_linq_.linq.enumerable.html#toarray" class="tsd-kind-icon">to<wbr>Array</a>
 							</li>
@@ -3884,9 +3894,6 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
 								<a href="_system_linq_linq_.linq.enumerable.html#zipmultiple" class="tsd-kind-icon">zip<wbr>Multiple</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_system_linq_linq_.linq.enumerable.html#assertisnotdisposed-1" class="tsd-kind-icon">assert<wbr>IsNot<wbr>Disposed</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-static">
 								<a href="_system_linq_linq_.linq.enumerable.html#choice" class="tsd-kind-icon">choice</a>
