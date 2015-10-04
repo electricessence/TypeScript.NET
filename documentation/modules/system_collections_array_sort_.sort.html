@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;System/Compare&quot; | TypeScript.NET</title>
+	<title>Sort | TypeScript.NET</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,10 +57,13 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="system_compare_.html">&quot;System/Compare&quot;</a>
+					<a href="system_collections_array_sort_.html">&quot;System/Collections/Array/Sort&quot;</a>
+				</li>
+				<li>
+					<a href="system_collections_array_sort_.sort.html">Sort</a>
 				</li>
 			</ul>
-			<h1>External module &quot;System/Compare&quot;</h1>
+			<h1>Module Sort</h1>
 		</div>
 	</div>
 </header>
@@ -72,12 +75,89 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Modules</h3>
+							<h3>Enumerations</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-module tsd-parent-kind-external-module"><a href="system_compare_.compare.html" class="tsd-kind-icon">Compare</a></li>
+								<li class="tsd-kind-enum tsd-parent-kind-module"><a href="../enums/system_collections_array_sort_.sort.order.html" class="tsd-kind-icon">Order</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="system_collections_array_sort_.sort.html#createcomparer" class="tsd-kind-icon">create<wbr>Comparer</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter"><a href="system_collections_array_sort_.sort.html#ensurearray" class="tsd-kind-icon">ensure<wbr>Array</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="createcomparer" class="tsd-anchor"></a>
+					<h3>create<wbr>Comparer</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Comparer&lt;TSource, T&gt;<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_functiontypes_d_.selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, order<span class="tsd-signature-symbol">?: </span><a href="../enums/system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol"> | </span><a href="../enums/system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol">[]</span>, equivalentToNaN<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Array/Sort.ts:26</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TSource</h4>
+								</li>
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>selector: <a href="../interfaces/system_functiontypes_d_.selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> order: <a href="../enums/system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol"> | </span><a href="../enums/system_collections_array_sort_.sort.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;Order.Ascending</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> equivalentToNaN: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;NaN</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+					<a name="ensurearray" class="tsd-anchor"></a>
+					<h3>ensure<wbr>Array</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">ensure<wbr>Array&lt;T&gt;<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Array/Sort.ts:20</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -88,10 +168,10 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="system_compare_.html">"<wbr>System/<wbr>Compare"</a>
+						<a href="system_collections_array_sort_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Sort"</a>
 						<ul>
-							<li class=" tsd-kind-module tsd-parent-kind-external-module">
-								<a href="system_compare_.compare.html">Compare</a>
+							<li class="current tsd-kind-module tsd-parent-kind-external-module">
+								<a href="system_collections_array_sort_.sort.html">Sort</a>
 							</li>
 						</ul>
 					</li>
@@ -99,6 +179,15 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/system_collections_array_sort_.sort.order.html" class="tsd-kind-icon">Order</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="system_collections_array_sort_.sort.html#createcomparer" class="tsd-kind-icon">create<wbr>Comparer</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module tsd-has-type-parameter">
+						<a href="system_collections_array_sort_.sort.html#ensurearray" class="tsd-kind-icon">ensure<wbr>Array</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
