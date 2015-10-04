@@ -82,7 +82,7 @@
 				<ul>
 					<li>Visual Studio</li>
 					<li>VS Code</li>
-					<li>WebStorm (recommended!)</li>
+					<li>WebStorm (strongly recommended!)</li>
 					<li>Sublime Text</li>
 					<li>Atom</li>
 				</ul>
@@ -93,25 +93,26 @@
 					<li><strong>Exceptions</strong>: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using <em>instanceof</em> as if you used multiple <em>catch</em> statements in C#.</li>
 					<li><strong>Collections</strong>: Multiple collections types with standard ICollection<T> and IEnumerable<T> interfaces.  LinkedList<T>, Queue<T>, Dictionary<T>, and more, all unit tested using a common interface test of ICollection<T>.</li>
 					<li><strong>IDisposable</strong>: Additional interfaces, utilities, and classes like <strong>DisposableBase</strong> that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator<T>, use IDisposable to ensure releasing of references.</li>
-					<li><strong>DateTime &amp; TimeSpan</strong>: The <em>System/Time</em> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
+					<li><strong>DateTime &amp; TimeSpan</strong>: The <strong>System/Time</strong> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
 				</ul>
 				<h1 id="usage">Usage</h1>
 				<p>After some time and effort, I&#39;ve decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:</p>
 				<ul>
 					<li>Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don&#39;t want.</li>
-					<li>If you care about bundling and minification r.js is probably the right way to go.</li>
+					<li>If you care about bundling and minification, <strong>&#39;r.js optimizer&#39;</strong> is probably the right way to go.</li>
 					<li>The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.</li>
 					<li>It is easy to change the module types. :)</li>
-					<li>You can easily recompile the entire library into another <em>dist</em> folder fully minified using gulp.</li>
+					<li>You can easily recompile the entire library into another <strong>dist</strong> folder fully minified using gulp.</li>
+					<li>An already minified with source-map version is provided in the <strong>min</strong> folder</li>
 				</ul>
-				<h1 id="learn-connect-evolve">Learn, Connect &amp; Evolve</h1>
-				<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
 				<h1 id="unit-tests">Unit Tests</h1>
 				<p>Simply launch /tests/index.html to see existing unit tests and their status.</p>
 				<h1 id="examples">Examples</h1>
 				<p>Currently the unit test cover many example usages.</p>
 				<h1 id="documentation">Documentation</h1>
-				<p>Currently improving over time using JSDoc style comments and TypeDoc. <a href="http://typedoc.io/">http://typedoc.io/</a></p>
+				<p>Currently improving over time using JSDoc style comments and TypeDoc. (<a href="http://typedoc.io/">http://typedoc.io/</a>)<br>View Documentation: <a href="http://electricessence.github.io/TypeScript.NET/documentation/">http://electricessence.github.io/TypeScript.NET/documentation/</a></p>
+				<h1 id="learn-connect-evolve">Learn, Connect &amp; Evolve</h1>
+				<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

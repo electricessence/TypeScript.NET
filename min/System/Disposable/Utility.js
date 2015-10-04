@@ -1,4 +1,6 @@
-///<reference path="IDisposable.d.ts"/>
-///<reference path="../Collections/Array/IArray.d.ts"/>
-define(["require","exports","../Types"],function(n,e,r){function t(){for(var n=[],e=0;e<arguments.length;e++)n[e-0]=arguments[e];f(n,!1)}function i(){for(var n=[],e=0;e<arguments.length;e++)n[e-0]=arguments[e];return f(n,!0)}function s(n,e){return n&&n.length?f(n.slice(),e):null}function u(n,e){try{return e(n)}finally{o(n,!1)}}function o(n,e){if(n&&"dispose"in n&&typeof n.dispose==r.Function)if(e)try{n.dispose()}catch(t){return t}else n.dispose();return null}function f(n,e,r){void 0===r&&(r=0);for(var t,i=n.length;i>r;r++){var s=n[r];if(s)if(e){var u=o(s,!0);u&&(t||(t=[]),t.push(u))}else{var l=!1;try{o(s,!1),l=!0}finally{!l&&i>r+1&&f(n,!1,r+1)}if(!l)break}}return t}e.dispose=t,e.disposeWithoutException=i,e.disposeThese=s,e.using=u});
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+define(["require","exports","../Types"],function(e,n,r){"use strict";function t(){for(var e=[],n=0;n<arguments.length;n++)e[n-0]=arguments[n];f(e,!1)}function i(){for(var e=[],n=0;n<arguments.length;n++)e[n-0]=arguments[n];return f(e,!0)}function s(e,n){return e&&e.length?f(e.slice(),n):null}function u(e,n){try{return n(e)}finally{o(e,!1)}}function o(e,n){if(e&&"dispose"in e&&typeof e.dispose==r.Function)if(n)try{e.dispose()}catch(t){return t}else e.dispose();return null}function f(e,n,r){void 0===r&&(r=0);for(var t,i=e.length;i>r;r++){var s=e[r];if(s)if(n){var u=o(s,!0);u&&(t||(t=[]),t.push(u))}else{var l=!1;try{o(s,!1),l=!0}finally{!l&&i>r+1&&f(e,!1,r+1)}if(!l)break}}return t}n.dispose=t,n.disposeWithoutException=i,n.disposeThese=s,n.using=u});
 //# sourceMappingURL=Utility.js.map
