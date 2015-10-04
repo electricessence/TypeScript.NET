@@ -25,7 +25,7 @@ Also some more good info on Wikipedia: http://en.wikipedia.org/wiki/TypeScript.
 3) Most major IDEs and text editors now support TypeScript either built in, or via a plug-in:
 * Visual Studio
 * VS Code
-* WebStorm (recommended!)
+* WebStorm (strongly recommended!)
 * Sublime Text
 * Atom
 
@@ -36,19 +36,16 @@ To name a few.
 * **Exceptions**: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using *instanceof* as if you used multiple *catch* statements in C#.
 * **Collections**: Multiple collections types with standard ICollection<T> and IEnumerable<T> interfaces.  LinkedList<T>, Queue<T>, Dictionary<T>, and more, all unit tested using a common interface test of ICollection<T>.
 * **IDisposable**: Additional interfaces, utilities, and classes like **DisposableBase** that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator<T>, use IDisposable to ensure releasing of references.
-* **DateTime & TimeSpan**: The *System/Time* namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
+* **DateTime & TimeSpan**: The **System/Time** namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
 
 # Usage
 After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
 * Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don't want.
-* If you care about bundling and minification r.js is probably the right way to go.
+* If you care about bundling and minification, **'r.js optimizer'** is probably the right way to go.
 * The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.
 * It is easy to change the module types. :)
-* You can easily recompile the entire library into another *dist* folder fully minified using gulp.
-
-
-# Learn, Connect & Evolve
-https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
+* You can easily recompile the entire library into another **dist** folder fully minified using gulp.
+* An already minified with source-map version is provided in the **min** folder
 
 # Unit Tests
 Simply launch /tests/index.html to see existing unit tests and their status.
@@ -57,4 +54,8 @@ Simply launch /tests/index.html to see existing unit tests and their status.
 Currently the unit test cover many example usages.
 
 # Documentation
-Currently improving over time using JSDoc style comments and TypeDoc. http://typedoc.io/
+Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)  
+View Documentation: http://electricessence.github.io/TypeScript.NET/documentation/
+
+# Learn, Connect & Evolve
+https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
