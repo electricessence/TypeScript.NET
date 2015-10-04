@@ -1,6 +1,0 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-define(["require","exports","../../Compare","../../Types"],function(r,n,e,t){var a;return function(r){function n(r,n){if(r&&n&&r===n||!r&&!n)return!0;if(!r||!n)return!1;var e=0|r.length;return e!==(0|n.length)?!1:0===e?!0:e}function a(r,n,t){if(void 0===t&&(t=e.areEqual),!r)throw new Error("ArgumentNullException: 'arrays' cannot be null.");if(r.length<2)throw new Error("Cannot compare a set of arrays less than 2.");for(var a=r[0],u=0,i=0|r.length;i>u;++u)if(!o(a,r[u],n,t))return!1;return!0}function o(r,a,o,u){void 0===u&&(u=e.areEqual);var i=n(r,a);if(t.isBoolean(i))return i;for(var f=0;i>f;++f)if(!u(r[f],a[f],o))return!1;return!0}function u(r,n){if(!r)return null;if(r instanceof Array)return r.slice();var e,t=r.length;t>65536?e=new Array(t):(e=[],e.length=t);for(var a=0;t>a;a++)e[a]=r[a];return e.sort(n),e}function i(r,a,o){void 0===o&&(o=e.compare);var i=n(r,a);if(t.isBoolean(i))return i;r=u(r,o),a=u(a,o);for(var f=0;i>f;++f)if(0!==o(r[f],a[f]))return!1;return!0}r.areAllEqual=a,r.areEqual=o,r.areEquivalent=i}(a||(a={})),a});
-//# sourceMappingURL=Compare.js.map
