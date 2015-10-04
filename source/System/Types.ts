@@ -111,5 +111,4 @@ module Types
 // Sealed class/module.
 Object.freeze(Types);
 
-
 export = Types;
