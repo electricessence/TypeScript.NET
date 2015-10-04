@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>TypeScript.NET by electricessence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">TypeScript.NET</h1>
+      <h2 class="project-tagline">A JavaScript Friendly .NET Based Library Ported to TypeScript</h2>
+      <a href="https://github.com/electricessence/TypeScript.NET" class="btn">View on GitHub</a>
+      <a href="https://github.com/electricessence/TypeScript.NET/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/electricessence/TypeScript.NET/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="typescriptnet" class="anchor" href="#typescriptnet" aria-hidden="true"><span class="octicon octicon-link"></span></a>TypeScript.NET</h1>
+
+<h2>
+<a id="a-javascript-friendly-net-based-library-ported-to-typescript" class="anchor" href="#a-javascript-friendly-net-based-library-ported-to-typescript" aria-hidden="true"><span class="octicon octicon-link"></span></a>A JavaScript Friendly .NET Based Library Ported to TypeScript</h2>
+
+<p>The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
+Contributions are welcomed as the .NET Library (meaning it's class structure and classes, not necessarily its content) has a substantial amount of usefulness.  With the open sourcing of .NET, TypeScript seems the most logical means to take advantage of it.  Typing, generics, classes, modules, inheritance, all are required to make a resultant JavaScript library that takes advantage of this elegance.</p>
+
+<p>Much inspiration comes from TypeScript itself and from libraries like linq.js.
+There is of course some variance away from .NET's convention (camelCase methods in favor of TitleCase) and some things simply have to be done different.  "Extensions" as a feature might be one of the greatest additions to .NET that JavaScript doesn't have a plan for, but it does have some tricky equivalents.</p>
+
+<p>If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contribute it yourself! :)</p>
+
+<h2>
+<a id="why-should-i-use-this-let-alone-typescript" class="anchor" href="#why-should-i-use-this-let-alone-typescript" aria-hidden="true"><span class="octicon octicon-link"></span></a>Why should I use this, let alone TypeScript?</h2>
+
+<p>1) <strong>It's 100% compatible with JavaScript.</strong>  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :) </p>
+
+<p>2) TypeScript is lead by Anders Hejlsberg, the founder of C#.  You will feel quite at home in TypeScript if you are a fan of typed languages (like C#), but at the same time you'll get all the flexibility and compatibility of JavaScript.</p>
+
+<p>See <a href="http://www.typescriptlang.org/">http://www.typescriptlang.org/</a> for more information about the TypeScript language.</p>
+
+<p>Also some more good info on Wikipedia: <a href="http://en.wikipedia.org/wiki/TypeScript">http://en.wikipedia.org/wiki/TypeScript</a>.</p>
+
+<p>2) The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It's still JavaScript, but with many bonuses including a growing community. :)</p>
+
+<p>3) Most major IDEs and text editors now support TypeScript either built in, or via a plug-in:</p>
+
+<ul>
+<li>Visual Studio</li>
+<li>VS Code</li>
+<li>WebStorm (recommended!)</li>
+<li>Sublime Text</li>
+<li>Atom</li>
+</ul>
+
+<p>To name a few.</p>
+
+<h1>
+<a id="highlights" class="anchor" href="#highlights" aria-hidden="true"><span class="octicon octicon-link"></span></a>Highlights</h1>
+
+<ul>
+<li>
+<strong>Linq</strong>: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.</li>
+<li>
+<strong>Exceptions</strong>: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using <em>instanceof</em> as if you used multiple <em>catch</em> statements in C#.</li>
+<li>
+<strong>Collections</strong>: Multiple collections types with standard ICollection and IEnumerable interfaces.  LinkedList, Queue, Dictionary, and more, all unit tested using a common interface test of ICollection.</li>
+<li>
+<strong>IDisposable</strong>: Additional interfaces, utilities, and classes like <strong>DisposableBase</strong> that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator, use IDisposable to ensure releasing of references.</li>
+<li>
+<strong>DateTime &amp; TimeSpan</strong>: The <em>System/Time</em> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
+</ul>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:</p>
+
+<ul>
+<li>Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don't want.</li>
+<li>If you care about bundling and minification r.js is probably the right way to go.</li>
+<li>The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.</li>
+<li>It is easy to change the module types. :)</li>
+<li>You can easily recompile the entire library into another <em>dist</em> folder fully minified using gulp.</li>
+</ul>
+
+<h1>
+<a id="learn-connect--evolve" class="anchor" href="#learn-connect--evolve" aria-hidden="true"><span class="octicon octicon-link"></span></a>Learn, Connect &amp; Evolve</h1>
+
+<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
+
+<h1>
+<a id="unit-tests" class="anchor" href="#unit-tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Unit Tests</h1>
+
+<p>Simply launch /tests/index.html to see existing unit tests and their status.</p>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h1>
+
+<p>Currently the unit test cover many example usages.</p>
+
+<h1>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h1>
+
+<p>Currently improving over time using JSDoc style comments and TypeDoc. <a href="http://typedoc.io/">http://typedoc.io/</a></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/electricessence/TypeScript.NET">TypeScript.NET</a> is maintained by <a href="https://github.com/electricessence">electricessence</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
