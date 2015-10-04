@@ -84,7 +84,7 @@ gulp.task(
 
 		var typedoc = require('gulp-typedoc');
 
-		return gulp
+		var stream = gulp
 			.src(['source'])
 			.pipe(
 			typedoc(
@@ -102,8 +102,18 @@ gulp.task(
 			)
 		);
 
+		const SEARCH_FOLDER = 'documentation/assets/js';
+
+		gulp
+			.src([SEARCH_FOLDER + '/search.js'])
+			.pipe(require('gulp-replace')("\\\\","/"))
+			.pipe(gulp.dest(SEARCH_FOLDER));
+
+		return stream;
+
 	}
 );
+
 
 gulp.task('default', [
 	'typescript',
