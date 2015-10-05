@@ -73,7 +73,7 @@ class EntryList<TKey, TValue>
 		}
 	}
 
-	forEach(closure:(entry:HashEntry<TKey, TValue>) => void) {
+	forEach(closure:(entry:HashEntry<TKey, TValue>) => void):void {
 		var _ = this, currentEntry:HashEntry<TKey, TValue> = _.first;
 		while(currentEntry) {
 			closure(currentEntry);

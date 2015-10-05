@@ -7,7 +7,8 @@
 import Values = require('../../Compare');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
 import NotImplementedException = require('../../Exceptions/NotImplementedException');
-
+import ArgumentException = require('../../Exceptions/ArgumentException');
+import InvalidOperationException = require('../../Exceptions/InvalidOperationException');
 
 
 
@@ -82,11 +83,17 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	get isReadOnly():boolean { return false; }
 
 	get count():number {
-		return notImplementedException("count");
+		throw notImplementedException("count");
 	}
 
 	add(item:IKeyValuePair<TKey, TValue>):void
 	{
+		if(!item)
+			throw new ArgumentException(
+				'item',
+				'Dictionaries must use a valid key/value pair. \''+item+'\' is not allowed.'
+			);
+
 		this.addByKeyValue(item.key, item.value);
 	}
 
@@ -111,6 +118,9 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	contains(item:IKeyValuePair<TKey, TValue>):boolean
 	{
+		// Should never have a null object in the collection.
+		if(!item) return false;
+
 		var value = this.getValue(item.key);
 		return Values.areEqual(value, item.value);
 	}
@@ -134,30 +144,34 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	/////////////////////////////////////////
 	// IDictionary<TKey,TValue>
 	/////////////////////////////////////////
-	get keys():TKey[] { return notImplementedException("keys"); }
+	get keys():TKey[] { throw notImplementedException("keys"); }
 
-	get values():TValue[] { return notImplementedException("values"); }
+	get values():TValue[] { throw notImplementedException("values"); }
 
 
 	addByKeyValue(key:TKey, value:TValue):void
 	{
 		var _ = this;
-		if(_.containsKey(key))
-			throw new Error("Adding key/value when one already exists.");
+		if(_.containsKey(key)) {
+			var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
+			ex.data['key'] = key;
+			ex.data['value'] = value;
+			throw ex;
+		}
 
 		_.setValue(key, value);
 	}
 
 	getValue(key:TKey):TValue
 	{
-		return notImplementedException(
+		throw notImplementedException(
 			"getValue(key: TKey): TValue", "When calling for key: " + key
 		);
 	}
 
 	setValue(key:TKey, value:TValue):boolean
 	{
-		return notImplementedException(
+		throw notImplementedException(
 			"setValue(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + "."
 		);
 	}
@@ -252,7 +266,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 function notImplementedException<T>(name:string, log:string = ""):any
 {
 	console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-	throw new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
+	return new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
 }
 
 export = DictionaryAbstractBase;
