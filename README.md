@@ -32,10 +32,10 @@ Also some more good info on Wikipedia: http://en.wikipedia.org/wiki/TypeScript.
 To name a few.
 
 # Highlights
-* **Linq**: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable<T> with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.
+* **Linq**: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable&lt;T&gt; with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.
 * **Exceptions**: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using *instanceof* as if you used multiple *catch* statements in C#.
-* **Collections**: Multiple collections types with standard ICollection<T> and IEnumerable<T> interfaces.  LinkedList<T>, Queue<T>, Dictionary<T>, and more, all unit tested using a common interface test of ICollection<T>.
-* **IDisposable**: Additional interfaces, utilities, and classes like **DisposableBase** that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator<T>, use IDisposable to ensure releasing of references.
+* **Collections**: Multiple collections types with standard ICollection&lt;T&gt; and IEnumerable&lt;T&gt; interfaces.  LinkedList&lt;T&gt;, Queue&lt;T&gt;, Dictionary&lt;T&gt;, and more, all unit tested using a common interface test of ICollection&lt;T&gt;.
+* **IDisposable**: Additional interfaces, utilities, and classes like **DisposableBase** that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator&lt;T&gt;, use IDisposable to ensure releasing of references.
 * **DateTime & TimeSpan**: The **System/Time** namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
 
 # Usage

@@ -76,8 +76,9 @@ gulp.task(
 gulp.task(
 	'typedoc', function(done) {
 
-		var typedoc = require('gulp-typedoc'),
-		    rename  = require('gulp-rename');
+		var typedoc    = require('gulp-typedoc'),
+		    rename     = require('gulp-rename'),
+		    htmlMinify = require('gulp-html-minify');
 
 		var typedocOptions = {
 			name: 'TypeScript.NET',
@@ -107,9 +108,11 @@ gulp.task(
 					.pipe(replace('/_', '/'))
 					.pipe(gulp.dest(SEARCH_FOLDER));
 
-				// Step 2-B: Rename (rewrite) html files.
-				const PREFIXED_DOCS = DOCS + '/**/_*.html';
-				gulp.src(PREFIXED_DOCS)
+				// Step 2-B: Refactor (rewrite) html files.
+				gulp.src(DOCS + '/**/*.html')
+					.pipe(replace('/_', '/'))
+					.pipe(replace(' href="_', ' href="'))
+					.pipe(htmlMinify())
 					.pipe(rename(
 						function(path) {
 							path.basename = path.basename.replace(/^_/, '');
@@ -117,24 +120,13 @@ gulp.task(
 					.pipe(gulp.dest(DOCS))
 					.on(EVENT_END, function() {
 						// Step 3: Delete all old underscored html files.
-						del.sync([PREFIXED_DOCS], function() {
-
-							// Step 4: Fix for issue where type-docs insert an [UNDERSCORE] in front of all .html files.
-							gulp
-								.src(DOCS + '/**/*.html')
-								.pipe(replace('/_', '/'))
-								.pipe(replace(' href="_', ' href="'))
-								.pipe(gulp.dest(DOCS))
-								.on(EVENT_END, function(){
-									console.log("TypeDocs: fixes complete");
-									done();
-								});
-
+						del.sync(DOCS + '/**/_*.html', function() {
+							console.log("TypeDocs: fixes complete");
+							done();
 						});
 					});
 
 			});
-
 
 
 	}

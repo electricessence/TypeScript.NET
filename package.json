@@ -6,14 +6,14 @@
   "description": "A JavaScript Friendly .NET Based Library Ported to TypeScript.",
   "private": false,
   "repository": "https://github.com/electricessence/TypeScript.NET.git",
-  "scripts":{
+  "scripts": {
     "postinstall": "node node_modules/bower/bin/bower install && node node_modules/tsd/build/cli reinstall"
   },
   "devDependencies": {
-    "typescript": "^1.6.2",
     "bower": "^1.5.2",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
+    "gulp-html-minify": "0.0.12",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.6.0",
@@ -22,6 +22,7 @@
     "gulp-typescript": "^2.8.3",
     "gulp-uglify": "^1.4.1",
     "tsd": "^0.6.4",
-    "typedoc": "^0.3.10"
+    "typedoc": "^0.3.10",
+    "typescript": "^1.6.2"
   }
 }
