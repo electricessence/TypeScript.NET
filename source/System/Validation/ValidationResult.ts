@@ -27,6 +27,9 @@ implements IValidationResult, IEquatable<IValidationResult>
 		Object.freeze(this);
 	}
 
+	/**
+	 * Allows for comparing another IValidationResult to see if they are equal.
+	 */
 	equals(other:IValidationResult):boolean
 	{
 		var _ = this;

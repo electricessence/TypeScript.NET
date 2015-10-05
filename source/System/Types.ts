@@ -3,112 +3,104 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+const
+_BOOLEAN:string   = typeof true,
+_NUMBER:string    = typeof 0,
+_STRING:string    = typeof "",
+_OBJECT:string    = typeof {},
+_NULL:string      = typeof null,
+_UNDEFINED:string = typeof undefined,
+_FUNCTION:string  = typeof isFunction;
 
-import Functions = require('./Functions');
 
 /**
- * Sealed/Frozen module for simple type comparison.
+ * typeof true
+ * @type {string}
  */
-module Types
+export const BOOLEAN:string = _BOOLEAN;
+
+/**
+ * typeof 0
+ * @type {string}
+ */
+export const NUMBER:string = _NUMBER;
+
+/**
+ * typeof ""
+ * @type {string}
+ */
+export const STRING:string = _STRING;
+
+/**
+ * typeof {}
+ * @type {string}
+ */
+export const OBJECT:string = _OBJECT;
+
+/**
+ * typeof null
+ * @type {string}
+ */
+export const NULL:string = _NULL;
+
+/**
+ * typeof undefined
+ * @type {string}
+ */
+export const UNDEFINED:string = _UNDEFINED;
+
+/**
+ * typeof function
+ * @type {string}
+ */
+export const FUNCTION:string = _FUNCTION;
+
+/**
+ * Returns true if the value parameter is a boolean.
+ * @param value
+ * @returns {boolean}
+ */
+export function isBoolean(value:any):boolean
 {
-
-	// Calling an instance of this class allows for a local/private 'sealed' shallowCopy.
-
-	/**
-	 * typeof true
-	 * @type {string}
-	 */
-	export var Boolean:string = typeof true;
-
-	/**
-	 * typeof 0
-	 * @type {string}
-	 */
-	export var Number:string = typeof 0;
-
-	/**
-	 * typeof ""
-	 * @type {string}
-	 */
-	export var String:string = typeof "";
-
-	/**
-	 * typeof {}
-	 * @type {string}
-	 */
-	export var Object:string = typeof {};
-
-	/**
-	 * typeof null
-	 * @type {string}
-	 */
-	export var Null:string = typeof null;
-
-	/**
-	 * typeof undefined
-	 * @type {string}
-	 */
-	export var Undefined:string = typeof undefined;
-
-	/**
-	 * typeof function
-	 * @type {string}
-	 */
-	export var Function:string = typeof Functions.Blank;
-
-	/**
-	 * Returns true if the value parameter is a boolean.
-	 * @param value
-	 * @returns {boolean}
-	 */
-	export function isBoolean(value:any):boolean
-	{
-		return typeof value===Types.Boolean;
-	}
-
-	/**
-	 * Returns true if the value parameter is a number.
-	 * @param value
-	 * @returns {boolean}
-	 */
-	export function isNumber(value:any):boolean
-	{
-		return typeof value===Types.Number;
-	}
-
-	/**
-	 * Returns true if is a number and is NaN.
-	 * @param value
-	 * @returns {boolean}
-	 */
-	export function isTrueNaN(value:any):boolean
-	{
-		return typeof value===Types.Number && isNaN(value);
-	}
-
-	/**
-	 * Returns true if the value parameter is a string.
-	 * @param value
-	 * @returns {boolean}
-	 */
-	export function isString(value:any):boolean
-	{
-		return typeof value===Types.String;
-	}
-
-	/**
-	 * Returns true if the value parameter is a function.
-	 * @param value
-	 * @returns {boolean}
-	 */
-	export function isFunction(value:any):boolean
-	{
-		return typeof value===Types.Function;
-	}
-
+	return typeof value===_BOOLEAN;
 }
 
-// Sealed class/module.
-Object.freeze(Types);
+/**
+ * Returns true if the value parameter is a number.
+ * @param value
+ * @returns {boolean}
+ */
+export function isNumber(value:any):boolean
+{
+	return typeof value===_NUMBER;
+}
 
-export = Types;
+/**
+ * Returns true if is a number and is NaN.
+ * @param value
+ * @returns {boolean}
+ */
+export function isTrueNaN(value:any):boolean
+{
+	return typeof value===_NUMBER && isNaN(value);
+}
+
+/**
+ * Returns true if the value parameter is a string.
+ * @param value
+ * @returns {boolean}
+ */
+export function isString(value:any):boolean
+{
+	return typeof value===_STRING;
+}
+
+/**
+ * Returns true if the value parameter is a function.
+ * @param value
+ * @returns {boolean}
+ */
+export function isFunction(value:any):boolean
+{
+	return typeof value===_FUNCTION;
+}

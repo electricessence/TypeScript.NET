@@ -87,7 +87,7 @@ function disposeSingle(
 {
 	if(disposable
 		&& 'dispose' in disposable
-		&& typeof disposable.dispose==Types.Function)
+		&& typeof disposable.dispose==Types.FUNCTION)
 	{
 		if(trapExceptions)
 		{

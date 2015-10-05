@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require","exports","./Functions"],function(n,e,t){var o;return function(n){function e(e){return typeof e===n.Boolean}function o(e){return typeof e===n.Number}function r(e){return typeof e===n.Number&&isNaN(e)}function u(e){return typeof e===n.String}function i(e){return typeof e===n.Function}n.Boolean=typeof!0,n.Number="number",n.String="string",n.Object=typeof{},n.Null="object",n.Undefined="undefined",n.Function=typeof t.Blank,n.isBoolean=e,n.isNumber=o,n.isTrueNaN=r,n.isString=u,n.isFunction=i}(o||(o={})),Object.freeze(o),o});
+define(["require","exports"],function(n,e){function t(n){return typeof n===f}function o(n){return typeof n===N}function r(n){return typeof n===N&&isNaN(n)}function i(n){return typeof n===p}function u(n){return typeof n===E}var f=typeof!0,N="number",p="string",c=typeof{},s="object",y="undefined",E=typeof u;e.BOOLEAN=f,e.NUMBER=N,e.STRING=p,e.OBJECT=c,e.NULL=s,e.UNDEFINED=y,e.FUNCTION=E,e.isBoolean=t,e.isNumber=o,e.isTrueNaN=r,e.isString=i,e.isFunction=u});
 //# sourceMappingURL=Types.js.map

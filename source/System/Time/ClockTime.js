@@ -3,7 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', './TimeSpan'], function (require, exports, Values, TimeSpan) {
+define(["require", "exports", '../Compare', './HowMany', './TimeSpan'], function (require, exports, Values, HowMany, TimeSpan) {
     var ClockTime = (function () {
         function ClockTime() {
             var args = [];

@@ -5,33 +5,31 @@
 
 import Types = require('../Types');
 
-module Utility
+export function format(source:string, ...args:any[])
 {
-
-	export function format(source:string, ...args:any[]) {
-		for(var i = 0; i<args.length; i++) {
-			source = source.replace("{" + i + "}", args[i]);
-		}
-		return source;
+	for(var i = 0; i<args.length; i++)
+	{
+		source = source.replace("{" + i + "}", args[i]);
 	}
-
-	// Based upon Crockford's supplant function.
-	export function supplant(source:string, o:{[key:string]:any}):string {
-		return source.replace(/\{([^{}]*)\}/g,
-			(a:string, b:string):any=> {
-				var r = o[b];
-				switch (typeof r) {
-					case Types.String:
-						return true;
-					case Types.Number:
-						return r;
-					default:
-						return a;
-				}
-			}
-		);
-	}
-
+	return source;
 }
 
-export = Utility;
+// Based upon Crockford's supplant function.
+export function supplant(source:string, o:{[key:string]:any}):string
+{
+	return source.replace(/\{([^{}]*)\}/g,
+		(a:string, b:string):any=>
+		{
+			var r = o[b];
+			switch(typeof r)
+			{
+				case Types.STRING:
+					return true;
+				case Types.NUMBER:
+					return r;
+				default:
+					return a;
+			}
+		}
+	);
+}

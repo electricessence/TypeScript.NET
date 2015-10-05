@@ -42,8 +42,8 @@ class StringBuilder implements IDisposable
 			var _ = this;
 			_._latest = null;
 			switch(typeof item) {
-				case Types.Object:
-				case Types.Function:
+				case Types.OBJECT:
+				case Types.FUNCTION:
 					item = item.toString();
 					break;
 			}

@@ -12,12 +12,12 @@ function clone(source:any, depth:number = 0):any
 
 	switch(typeof source)
 	{
-		case Types.Undefined:
-		case Types.Null:
-		case Types.String:
-		case Types.Boolean:
-		case Types.Number:
-		case Types.Function:
+		case Types.UNDEFINED:
+		case Types.NULL:
+		case Types.STRING:
+		case Types.BOOLEAN:
+		case Types.NUMBER:
+		case Types.FUNCTION:
 			return source; // return primitives as is.
 	}
 

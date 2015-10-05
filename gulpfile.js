@@ -1,6 +1,7 @@
 'use strict';
 
-var gulp = require('gulp');
+var gulp = require('gulp'),
+    del  = require('del');
 
 const EVENT_END = 'end';
 const DOCS = './documentation';
@@ -17,7 +18,8 @@ gulp.task(
 			module: 'amd',
 			target: 'es5',
 			removeComments: true,
-			sourceMap: true
+			sourceMap: true,
+			excludeNotExported:true
 		};
 
 		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
@@ -76,8 +78,7 @@ gulp.task(
 		var typedoc    = require('gulp-typedoc'),
 		    rename     = require('gulp-rename'),
 		    replace    = require('gulp-replace'),
-		    htmlMinify = require('gulp-html-minify'),
-		    del        = require('del');
+		    htmlMinify = require('gulp-html-minify');
 
 		var typedocOptions = {
 			name: 'TypeScript.NET',

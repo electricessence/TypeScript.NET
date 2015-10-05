@@ -8,12 +8,12 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
         if (depth < 0)
             return source;
         switch (typeof source) {
-            case Types.Undefined:
-            case Types.Null:
-            case Types.String:
-            case Types.Boolean:
-            case Types.Number:
-            case Types.Function:
+            case Types.UNDEFINED:
+            case Types.NULL:
+            case Types.STRING:
+            case Types.BOOLEAN:
+            case Types.NUMBER:
+            case Types.FUNCTION:
                 return source;
         }
         var result;

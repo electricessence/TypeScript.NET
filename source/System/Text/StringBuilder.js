@@ -20,8 +20,8 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
                 var _ = this;
                 _._latest = null;
                 switch (typeof item) {
-                    case Types.Object:
-                    case Types.Function:
+                    case Types.OBJECT:
+                    case Types.FUNCTION:
                         item = item.toString();
                         break;
                 }

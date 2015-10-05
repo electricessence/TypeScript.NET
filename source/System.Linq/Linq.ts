@@ -101,7 +101,7 @@ extends DisposableBase implements IEnumerable<T>
 	 */
 	static from<T>(source:IEnumerable<T> | IArray<T>):Enumerable<T>
 	{
-		if(typeof source===Types.Object)
+		if(typeof source===Types.OBJECT)
 		{
 			if(source instanceof Enumerable)
 				return source;
@@ -121,7 +121,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	static toArray<T>(source:IEnumerable<T> | IArray<T>):T[]
 	{
-		if(typeof source===Types.Object)
+		if(typeof source===Types.OBJECT)
 		{
 			if(source instanceof Array)
 				return source.slice();
@@ -436,7 +436,7 @@ extends DisposableBase implements IEnumerable<T>
 	{
 
 		var type = typeof input;
-		if(type!=Types.String)
+		if(type!=Types.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
 		if(pattern instanceof RegExp)
@@ -1438,16 +1438,16 @@ extends DisposableBase implements IEnumerable<T>
 		switch(<any>type)
 		{
 			case Number:
-				typeName = Types.Number;
+				typeName = Types.NUMBER;
 				break;
 			case String:
-				typeName = Types.String;
+				typeName = Types.STRING;
 				break;
 			case Boolean:
-				typeName = Types.Boolean;
+				typeName = Types.BOOLEAN;
 				break;
 			case Function:
-				typeName = Types.Function;
+				typeName = Types.FUNCTION;
 				break;
 			default:
 				typeName = null;
@@ -3767,10 +3767,21 @@ function numberOrNaN(value:any):number
 // TODO: Convert to ArgumentException.
 function assertInteger(value:number, variable:string):boolean
 {
-	if(typeof value===Types.Number && !isNaN(value) && value!=(value | 0))
+	if(typeof value===Types.NUMBER && !isNaN(value) && value!=(value | 0))
 		throw new Error("'" + variable + "'" + " must be an integer.");
 	return true;
 }
 
 // #endregion
 
+/**
+ * Universal method for converting a primitive enumerables into a LINQ enabled ones.
+ *
+ * Simply a shortcut to Enumerable.from().
+ *
+ * Is not limited to TypeScript usages.
+ */
+export function from<T>(source:IEnumerable<T> | IArray<T>):Enumerable<T>
+{
+	return Enumerable.from(source);
+}

@@ -82,7 +82,7 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
             return "null";
         if (obj === undefined)
             return "undefined";
-        return (typeof obj.toString === Types.Function)
+        return (typeof obj.toString === Types.FUNCTION)
             ? obj.toString()
             : Object.prototype.toString.call(obj);
     }

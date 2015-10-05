@@ -40,7 +40,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new ArrayEnumerable(array);
         };
         Enumerable.from = function (source) {
-            if (typeof source === Types.Object) {
+            if (typeof source === Types.OBJECT) {
                 if (source instanceof Enumerable)
                     return source;
                 if (source instanceof Array)
@@ -53,7 +53,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             throw new Error(UNSUPPORTED_ENUMERABLE);
         };
         Enumerable.toArray = function (source) {
-            if (typeof source === Types.Object) {
+            if (typeof source === Types.OBJECT) {
                 if (source instanceof Array)
                     return source.slice();
                 if (LENGTH in source)
@@ -218,7 +218,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         Enumerable.matches = function (input, pattern, flags) {
             if (flags === void 0) { flags = ""; }
             var type = typeof input;
-            if (type != Types.String)
+            if (type != Types.STRING)
                 throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
             if (pattern instanceof RegExp) {
                 flags += (pattern.ignoreCase) ? "i" : "";
@@ -754,16 +754,16 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var typeName;
             switch (type) {
                 case Number:
-                    typeName = Types.Number;
+                    typeName = Types.NUMBER;
                     break;
                 case String:
-                    typeName = Types.String;
+                    typeName = Types.STRING;
                     break;
                 case Boolean:
-                    typeName = Types.Boolean;
+                    typeName = Types.BOOLEAN;
                     break;
                 case Function:
-                    typeName = Types.Function;
+                    typeName = Types.FUNCTION;
                     break;
                 default:
                     typeName = null;
@@ -2114,9 +2114,13 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         return isNaN(value) ? NaN : value;
     }
     function assertInteger(value, variable) {
-        if (typeof value === Types.Number && !isNaN(value) && value != (value | 0))
+        if (typeof value === Types.NUMBER && !isNaN(value) && value != (value | 0))
             throw new Error("'" + variable + "'" + " must be an integer.");
         return true;
     }
+    function from(source) {
+        return Enumerable.from(source);
+    }
+    exports.from = from;
 });
 //# sourceMappingURL=Linq.js.map

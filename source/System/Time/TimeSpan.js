@@ -3,7 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports, Values, Types, TimeUnit, TimeUnitValue, ClockTime) {
+define(["require", "exports", '../Compare', '../Types', './TimeUnit', './HowMany', './TimeUnitValue', './ClockTime'], function (require, exports, Values, Types, TimeUnit, HowMany, TimeUnitValue, ClockTime) {
     var TimeSpan = (function () {
         function TimeSpan(value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
