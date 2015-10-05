@@ -1,11 +1,8 @@
-"use strict";
+'use strict';
 
 var gulp = require('gulp');
-var del = require('del');
-var replace = require('gulp-replace');
-var EVENT_END = 'end';
 
-
+const EVENT_END = 'end';
 const DOCS = './documentation';
 
 gulp.task(
@@ -78,7 +75,9 @@ gulp.task(
 
 		var typedoc    = require('gulp-typedoc'),
 		    rename     = require('gulp-rename'),
-		    htmlMinify = require('gulp-html-minify');
+		    replace    = require('gulp-replace'),
+		    htmlMinify = require('gulp-html-minify'),
+		    del        = require('del');
 
 		var typedocOptions = {
 			name: 'TypeScript.NET',
@@ -93,14 +92,14 @@ gulp.task(
 		};
 
 		// Step 1: Render type-docs..
-		console.log("TypeDocs: rendering");
+		console.log('TypeDocs: rendering');
 		gulp
 			.src('source')
 			.pipe(typedoc(typedocOptions))
 			.on(EVENT_END, function() {
 
 				// Step 2-A: Fix for issue with search that places a [BACK-SLASH] instead of a [SLASH].
-				console.log("TypeDocs: applying fixes");
+				console.log('TypeDocs: applying fixes');
 				const SEARCH_FOLDER = DOCS + '/assets/js';
 				gulp
 					.src(SEARCH_FOLDER + '/search.js')
@@ -121,7 +120,7 @@ gulp.task(
 					.on(EVENT_END, function() {
 						// Step 3: Delete all old underscored html files.
 						del.sync(DOCS + '/**/_*.html', function() {
-							console.log("TypeDocs: fixes complete");
+							console.log('TypeDocs: fixes complete');
 							done();
 						});
 					});
@@ -131,6 +130,29 @@ gulp.task(
 
 	}
 );
+
+function bumpVersion(type) {
+	var fs     = require('fs'),
+	    semver = require('semver'),
+	    bump   = require('gulp-bump');
+
+	var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+	// increment version
+	var newVer = semver.inc(pkg.version, type);
+
+	return gulp.src(['./bower.json', './package.json'])
+		.pipe(bump({ version: newVer }))
+		.pipe(gulp.dest('./'));
+
+}
+
+gulp.task('version-bump-patch', function() {
+	bumpVersion('patch');
+});
+
+gulp.task('version-bump-minor', function() {
+	bumpVersion('minor');
+});
 
 gulp.task('default', [
 	'typescript',
