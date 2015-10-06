@@ -18,8 +18,7 @@ gulp.task(
 			module: 'amd',
 			target: 'es5',
 			removeComments: true,
-			sourceMap: true,
-			excludeNotExported:true
+			sourceMap: true
 		};
 
 		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
@@ -89,7 +88,8 @@ gulp.task(
 
 			includeDeclarations: true,
 			ignoreCompilerErrors: false,
-			version: true
+			version: true,
+			excludeNotExported:true
 		};
 
 		// Step 1: Render type-docs..
