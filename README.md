@@ -47,6 +47,12 @@ After some time and effort, I've decided that this library should be module base
 * You can easily recompile the entire library into another **dist** folder fully minified using gulp.
 * An already minified with source-map version is provided in the **min** folder
 
+```
+bower install TypeScript.NET
+```  
+This should also include require.js in your bower components directory.  
+If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
+
 # Unit Tests
 Simply launch /tests/index.html to see existing unit tests and their status.
 
