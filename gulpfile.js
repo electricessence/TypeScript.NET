@@ -146,8 +146,7 @@ gulp.task(
 			{
 				console.log('TypeDocs: fixes complete');
 				done();
-			})
-			;
+			});
 		}
 
 	});
