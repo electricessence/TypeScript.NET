@@ -55,7 +55,7 @@ This should also include require.js in your bower components directory.
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
 
 #### Nuget:
-https://www.nuget.org/packages/TypeScript.NET.AMD/
+https://www.nuget.org/packages/TypeScript.NET.AMD/  
 ```
 PM> Install-Package TypeScript.NET.AMD 
 ```  
