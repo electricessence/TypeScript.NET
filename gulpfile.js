@@ -1,12 +1,14 @@
 'use strict';
 
+// List of all tasks by name and for reuse as dependencies.
 const
-	TASK_TYPESCRIPT = 'typescript',
-	TASK_TYPESCRIPT_MIN = 'typescript.min',
-	TASK_TYPEDOC = 'typedoc',
+	TASK_TYPESCRIPT         = 'typescript',
+	TASK_TYPESCRIPT_MIN     = 'typescript.min',
+	TASK_TYPEDOC            = 'typedoc',
 	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
 	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
-	TASK_DEFAULT = 'default';
+	TASK_NUGET_PACK         = 'nuget-pack',
+	TASK_DEFAULT            = 'default';
 
 var gulp       = require('gulp'),
     del        = require('del'),
@@ -16,11 +18,11 @@ var gulp       = require('gulp'),
     typescript = require('gulp-typescript'),
     typedoc    = require('gulp-typedoc'),
     replace    = require('gulp-replace'),
-    semver     = require('semver');
+    semver     = require('semver'),
+    nugetpack  = require('gulp-nuget-pack');
 
 const EVENT_END = 'end';
 const DOCS = './documentation';
-
 
 
 gulp.task(
@@ -174,6 +176,46 @@ function bumpVersion(type)
 gulp.task(TASK_VERSION_BUMP_PATCH, function() { bumpVersion('patch'); });
 
 gulp.task(TASK_VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
+
+
+gulp.task(TASK_NUGET_PACK,
+	[
+		TASK_TYPESCRIPT,
+		TASK_TYPESCRIPT_MIN
+	],
+	function(callback) {
+
+		const CONTENT = '/content';
+
+		var fs = require('fs');
+
+		var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+		nugetpack({
+				id: "TypeScript.NET.AMD",
+				title: pkg.name,
+				version: pkg.version,
+				authors: "https://github.com/electricessence/",
+				description: pkg.description,
+				summary: "See http://electricessence.github.io/TypeScript.NET/ for details.",
+				language: "en-us",
+				projectUrl: "https://github.com/electricessence/TypeScript.NET",
+				licenseUrl: "https://raw.githubusercontent.com/electricessence/TypeScript.NET/master/LICENSE.md",
+				tags: "typescript tsc .NET TypeScript.NET LINQ",
+				excludes: ["js/**/*.dev.js"],
+				outputDir: ".nuget"
+			},
+
+			[
+				'source',
+				'min',
+				'*.json',
+				'*.md'
+			],
+
+			callback
+		);
+	});
+
 
 gulp.task(TASK_DEFAULT, [
 	TASK_TYPESCRIPT,

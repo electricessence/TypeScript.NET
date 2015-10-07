@@ -16,6 +16,7 @@
     "gulp": "^3.9.0",
     "gulp-bump": "^1.0.0",
     "gulp-html-minify": "0.0.12",
+    "gulp-nuget-pack": "0.0.6",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.6.0",
