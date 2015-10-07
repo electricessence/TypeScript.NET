@@ -1,7 +1,7 @@
 TypeScript.NET
 ==============
 
-##A JavaScript Friendly .NET Based Library Ported to TypeScript
+###A JavaScript Friendly .NET Based Library Ported to TypeScript
 
 The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
 Contributions are welcomed as the .NET Library (meaning it's class structure and classes, not necessarily its content) has a substantial amount of usefulness.  With the open sourcing of .NET, TypeScript seems the most logical means to take advantage of it.  Typing, generics, classes, modules, inheritance, all are required to make a resultant JavaScript library that takes advantage of this elegance.
@@ -31,14 +31,14 @@ Also some more good info on Wikipedia: http://en.wikipedia.org/wiki/TypeScript.
 
 To name a few.
 
-# Highlights
+## Highlights
 * **Linq**: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable&lt;T&gt; with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.
 * **Exceptions**: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using *instanceof* as if you used multiple *catch* statements in C#.
 * **Collections**: Multiple collections types with standard ICollection&lt;T&gt; and IEnumerable&lt;T&gt; interfaces.  LinkedList&lt;T&gt;, Queue&lt;T&gt;, Dictionary&lt;T&gt;, and more, all unit tested using a common interface test of ICollection&lt;T&gt;.
 * **IDisposable**: Additional interfaces, utilities, and classes like **DisposableBase** that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator&lt;T&gt;, use IDisposable to ensure releasing of references.
 * **DateTime & TimeSpan**: The **System/Time** namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
 
-# Usage
+## Usage
 After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
 * Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don't want.
 * If you care about bundling and minification, **'r.js optimizer'** is probably the right way to go.
@@ -47,21 +47,28 @@ After some time and effort, I've decided that this library should be module base
 * You can easily recompile the entire library into another **dist** folder fully minified using gulp.
 * An already minified with source-map version is provided in the **min** folder
 
+#### Bower Install:
 ```
 bower install TypeScript.NET
 ```  
 This should also include require.js in your bower components directory.  
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
 
-# Unit Tests
+#### Nuget:
+https://www.nuget.org/packages/TypeScript.NET.AMD/
+```
+PM> Install-Package TypeScript.NET.AMD 
+```  
+
+## Unit Tests
 Simply launch /tests/index.html to see existing unit tests and their status.
 
-# Examples
+## Examples
 Currently the unit test cover many example usages.
 
-# Documentation
+## Documentation
 Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)  
 View Documentation: http://electricessence.github.io/TypeScript.NET/documentation/
 
-# Learn, Connect & Evolve
+## Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
