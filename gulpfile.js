@@ -1,14 +1,31 @@
 'use strict';
 
-var gulp = require('gulp'),
-    del  = require('del');
+const
+	TASK_TYPESCRIPT = 'typescript',
+	TASK_TYPESCRIPT_MIN = 'typescript.min',
+	TASK_TYPEDOC = 'typedoc',
+	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
+	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
+	TASK_DEFAULT = 'default';
+
+var gulp       = require('gulp'),
+    del        = require('del'),
+    rename     = require('gulp-rename'),
+    sourcemaps = require('gulp-sourcemaps'),
+    uglify     = require('gulp-uglify'),
+    typescript = require('gulp-typescript'),
+    typedoc    = require('gulp-typedoc'),
+    replace    = require('gulp-replace'),
+    semver     = require('semver');
 
 const EVENT_END = 'end';
 const DOCS = './documentation';
 
+
+
 gulp.task(
 	// This renders the same output as WebStorm's configuration.
-	'typescript', function()
+	TASK_TYPESCRIPT, function()
 	{
 
 		var options = {
@@ -28,20 +45,25 @@ gulp.task(
 			.pipe(gulp.dest('./source'))
 			;
 	}
-);
+)
+;
 
 gulp.task(
-	'typescript.min', function()
+	TASK_TYPESCRIPT_MIN, function()
 	{
-
 		del(['./min/**/*']);
 
-		var sourcemaps = require('gulp-sourcemaps');
-		var uglify = require('gulp-uglify');
+		var typescriptOptions/*:typescript.Params*/ = {
+			noImplicitAny: true,
+			module: 'amd',
+			target: 'es5',
+			removeComments: true
+		};
 
 		// This isn't ideal, but it works and points the maps to the original source.
-		var sourceMapOptions = {
-			sourceRoot: function(file) {
+		var sourceMapOptions/*:sourcemaps.WriteOptions*/ = {
+			sourceRoot: function(file/*:VinylFile*/)/*:string*/
+			{
 				var count = (file.relative + '').split("\\").length;
 				var result = '';
 				for(var i = 1; i<count; i++)
@@ -53,32 +75,24 @@ gulp.task(
 			includeContent: false
 		};
 
+		var uglifyOptions = {
+			preserveComments: 'license'
+		};
 
 		return gulp
 			.src(['./source/**/*.ts'])
 			.pipe(sourcemaps.init())
-			.pipe(require('gulp-typescript')({
-				noImplicitAny: true,
-				module: 'amd',
-				target: 'es5',
-				removeComments: true
-			}))
-			.pipe(uglify({ preserveComments: 'license' }))
+			.pipe(typescript(typescriptOptions))
+			.pipe(uglify(uglifyOptions))
 			.pipe(sourcemaps.write('.', sourceMapOptions))
 			.pipe(gulp.dest('./min'));
 
-	}
-);
+	});
 
 
 gulp.task(
-	'typedoc', function(done) {
-
-		var typedoc    = require('gulp-typedoc'),
-		    rename     = require('gulp-rename'),
-		    replace    = require('gulp-replace'),
-		    htmlMinify = require('gulp-html-minify');
-
+	TASK_TYPEDOC, function(done)
+	{
 		var typedocOptions = {
 			name: 'TypeScript.NET',
 			out: './documentation',
@@ -89,53 +103,64 @@ gulp.task(
 			includeDeclarations: true,
 			ignoreCompilerErrors: false,
 			version: true,
-			excludeNotExported:true
+			excludeNotExported: true
 		};
 
 		// Step 1: Render type-docs..
 		console.log('TypeDocs: rendering');
-		gulp
+		return gulp
 			.src('source')
 			.pipe(typedoc(typedocOptions))
-			.on(EVENT_END, function() {
-
-				// Step 2-A: Fix for issue with search that places a [BACK-SLASH] instead of a [SLASH].
-				console.log('TypeDocs: applying fixes');
-				const SEARCH_FOLDER = DOCS + '/assets/js';
-				gulp
-					.src(SEARCH_FOLDER + '/search.js')
-					.pipe(replace('\\\\', '/'))
-					.pipe(replace('/_', '/'))
-					.pipe(gulp.dest(SEARCH_FOLDER));
-
-				// Step 2-B: Refactor (rewrite) html files.
-				gulp.src(DOCS + '/**/*.html')
-					.pipe(replace('/_', '/'))
-					.pipe(replace(' href="_', ' href="'))
-					.pipe(htmlMinify())
-					.pipe(rename(
-						function(path) {
-							path.basename = path.basename.replace(/^_/, '');
-						}))
-					.pipe(gulp.dest(DOCS))
-					.on(EVENT_END, function() {
-						// Step 3: Delete all old underscored html files.
-						del.sync(DOCS + '/**/_*.html', function() {
-							console.log('TypeDocs: fixes complete');
-							done();
-						});
-					});
-
-			});
+			.on(EVENT_END, typedocFixes);
 
 
-	}
-);
+		function typedocFixes()
+		{
 
-function bumpVersion(type) {
-	var fs     = require('fs'),
-	    semver = require('semver'),
-	    bump   = require('gulp-bump');
+			// Step 2-A: Fix for issue with search that places a [BACK-SLASH] instead of a [SLASH].
+			console.log('TypeDocs: applying fixes');
+			const SEARCH_FOLDER = DOCS + '/assets/js';
+			gulp
+				.src(SEARCH_FOLDER + '/search.js')
+				.pipe(replace('\\\\', '/'))
+				.pipe(replace('/_', '/'))
+				.pipe(gulp.dest(SEARCH_FOLDER));
+
+			// Step 2-B: Refactor (rewrite) html files.
+			gulp.src(DOCS + '/**/*.html')
+				.pipe(replace('/_', '/'))
+				.pipe(replace(' href="_', ' href="'))
+				.pipe(rename(function(path)
+				{
+					path.basename = path.basename.replace(/^_/, '');
+				}))
+				.pipe(gulp.dest(DOCS))
+				.on(EVENT_END, cleanup);
+
+		}
+
+		function cleanup()
+		{
+			// Step 3: Delete all old underscored html files.
+			del.sync(DOCS + '/**/_*.html', function()
+			{
+				console.log('TypeDocs: fixes complete');
+				done();
+			})
+			;
+		}
+
+	});
+
+/**
+ * @param {string} type
+ * @returns {NodeJS.ReadableStream}
+ */
+function bumpVersion(type)
+{
+	// No tsd yet.
+	var fs   = require('fs'),
+	    bump = require('gulp-bump');
 
 	var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 	// increment version
@@ -147,16 +172,12 @@ function bumpVersion(type) {
 
 }
 
-gulp.task('version-bump-patch', function() {
-	bumpVersion('patch');
-});
+gulp.task(TASK_VERSION_BUMP_PATCH, function() { bumpVersion('patch'); });
 
-gulp.task('version-bump-minor', function() {
-	bumpVersion('minor');
-});
+gulp.task(TASK_VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 
-gulp.task('default', [
-	'typescript',
-	'typescript.min',
-	'typedoc'
+gulp.task(TASK_DEFAULT, [
+	TASK_TYPESCRIPT,
+	TASK_TYPESCRIPT_MIN,
+	TASK_TYPEDOC
 ]);

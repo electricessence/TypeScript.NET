@@ -7,7 +7,7 @@
   "private": false,
   "repository": "https://github.com/electricessence/TypeScript.NET.git",
   "scripts": {
-    "postinstall": "node node_modules/bower/bin/bower install && node node_modules/tsd/build/cli reinstall"
+    "postinstall": "node node_modules/bower/bin/bower install && node node_modules/tsd/build/cli reinstall --resolve"
   },
   "devDependencies": {
     "bower": "^1.5.2",
