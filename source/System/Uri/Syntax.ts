@@ -44,7 +44,7 @@ export const enum UriSyntaxFlags {
 	UnEscapeDotsAndSlashes = 0x2000000, // additionally unescape dots and slashes before doing path compression
 	AllowIdn               = 0x4000000, // IDN host conversion allowed
 	KeepTailLWS            = 0x8000000,
-	AllowIriParsing        = 0x10000000,; // Iri parsing. String is normalized, bidi control characters are removed, unicode char limits are checked etc.
+	AllowIriParsing        = 0x10000000; // Iri parsing. String is normalized, bidi control characters are removed, unicode char limits are checked etc.
 }
 
 const enum UriQuirksVersion
