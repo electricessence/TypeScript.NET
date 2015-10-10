@@ -7,6 +7,7 @@ const
 	TASK_TYPEDOC            = 'typedoc',
 	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
 	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
+	TASK_CSHARP_TO_TS       = 'c-sharp-to-typescript',
 	TASK_NUGET_PACK         = 'nuget-pack',
 	TASK_DEFAULT            = 'default';
 
@@ -24,6 +25,81 @@ var gulp       = require('gulp'),
 const EVENT_END = 'end';
 const DOCS = './documentation';
 
+// Note: This is NOT a parser, just a step by step find replace.
+gulp.task(
+	TASK_CSHARP_TO_TS,
+	function() {
+		return gulp.src('./source/**/*.cs')
+
+			// https://gist.github.com/electricessence/b575f18dc184beb5cc69
+			.pipe(replace(/(\n\s*)namespace\s/g, '$1module '))
+
+			.pipe(replace(/(\n\s*)using\s/g, '$1import '))
+
+			.pipe(replace(/(\n\s*)#(region|endregion)\s/g, '$1// #$2 '))
+
+			.pipe(replace(/\bpublic\s+(partial\s+)?class\b/g,'export $1class'))
+
+			.pipe(replace(/class\s+(\w+)\s*\:\s*I(\w+)/g,'class $1 implements I$2'))
+
+			.pipe(replace( // Convert member vars
+				/((\b(public|internal|protected|private|static|unsafe|readonly|volatile|const)\b)+)\s+(\w+)\s+(\w\S*)(\s*([=][^=]|;))/g,
+				'$1 $5:$4$6'
+			))
+
+			.pipe(replace(/(\n\s+)static\b/g, '$1private static'))
+
+			.pipe(replace(/\b(out|ref)\b/g, '/*$1*/'))
+
+
+			.pipe(replace( // Convert C# params to ECMA
+				/([(,/]\s*)([^(), /*]+)\s+(\w+)\s*([,)])/g,
+				'$1$3:$2$4'))
+			.pipe(replace( // Convert methods
+				/\b(?!else|if)(\w\S*)(\t| )+(\w\S*)\s*\(([^()]*)\)(\s*\n\s*\{)/g,
+				'$2($3):$1 $4'
+			))
+			.pipe(replace( // Convert simple get
+				/(\w+\s+)?(\w+\s+)(\w+)(\s|\n)*\{(\s|\n)*get(\s|\n)*(\{[^{}]*\})(\s|\n)*}/g,
+				'$1 get $3():$2\n$7'
+			))
+			.pipe(replace( // Convert vars
+				/(\n\s+|for\()(?!return|public|goto|import|throw|var)(\w+)(\[\])?\s+(\w\S*)(\s*([=][^=]|;))/g,
+				'$1var $4:$2$3$5'
+			))
+			.pipe(replace( // Specify compiler integer
+				/(\s*:\s*int\s*=\s*\d+)\s*([,;])/g,
+				'$1 | 0$2'
+			))
+			.pipe(replace( // Convert bool to boolean
+				/\b(bool|Boolean)\b/g,
+				'boolean'
+			))
+			.pipe(replace( // Convert number casting
+				/\((int|uint|short|ushort|long|ulong|float|double|decimal)\)/g,
+				'<$1>'
+			))
+			.pipe(replace( // Convert number types.
+				/( [^*<])(int|uint|short|ushort|long|ulong|float|double|decimal)\b/g,
+				'$1number/*$2*/'
+			))
+			.pipe(replace( // Remove unnecessary public
+				'public static',
+				'static'
+			))
+			.pipe(replace( // Comment unsupported words
+				/\b(internal|unsafe|readonly|volatile|partial)(\s+)/g,
+				'/*$1*/$2'
+			))
+			.pipe(replace( //Passify throw new
+				/\bthrow new ([^;]+);/g,
+				"throw '$1';"))
+
+
+			.pipe(rename({ extname: '.ts' }))
+			.pipe(gulp.dest('./source'));
+	}
+);
 
 gulp.task(
 	// This renders the same output as WebStorm's configuration.

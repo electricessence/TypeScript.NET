@@ -78,7 +78,7 @@ protected virtual; string; Resolve(Uri; baseUri, Uri; relativeUri, out; UriForma
 	result = Uri.ResolveHelper(baseUri, relativeUri, ref;
 	newUriString, ref;
 	userEscaped, out;
-	parsingError
+	parsingError;
 )
 	if (parsingError != null)
 		return null;
@@ -87,8 +87,7 @@ protected virtual; string; Resolve(Uri; baseUri, Uri; relativeUri, out; UriForma
 		return result.OriginalString;
 
 	return newUriString;
-};
-
+}
 //
 //
 //
