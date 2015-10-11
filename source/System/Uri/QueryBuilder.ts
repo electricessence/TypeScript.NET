@@ -79,6 +79,11 @@ class QueryBuilder extends OrderedStringKeyDictionary<Primitive|ISerializable|IU
 		return (entries.length && prefixIfNotEmpty ? '?' : '')
 			+ entries.join(ENTRY_SEPARATOR);
 	}
+
+	toString():string
+	{
+		return this.encode();
+	}
 }
 
 

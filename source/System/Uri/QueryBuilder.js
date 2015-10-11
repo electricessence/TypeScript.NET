@@ -44,6 +44,9 @@ define(["require", "exports", '../Types', '../Collections/Dictionaries/OrderedSt
             return (entries.length && prefixIfNotEmpty ? '?' : '')
                 + entries.join(ENTRY_SEPARATOR);
         };
+        QueryBuilder.prototype.toString = function () {
+            return this.encode();
+        };
         return QueryBuilder;
     })(OrderedStringKeyDictionary);
     return QueryBuilder;
