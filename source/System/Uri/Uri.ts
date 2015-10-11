@@ -1,105 +1,16 @@
-///<reference path="IUri.d.ts"/>
-///<reference path="../ICloneable.d.ts"/>
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+ */
 
+///<reference path="IUri.d.ts"/>
 import copy = require('../Utility/shallowCopy');
 import Types = require('../Types');
 import UriScheme = require('./Scheme');
 import ArgumentException = require('../Exceptions/ArgumentException');
 import ArgumentNullException = require('../Exceptions/ArgumentNullException');
 import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
-
-const SLASH = '/', QM = '?', HASH = '#';
-
-function getScheme(scheme:UriScheme|string):string
-{
-	var s:any = scheme;
-	if(Types.isString(s))
-	{
-		if(!s) return undefined;
-
-		s = UriScheme[s.toLowerCase().replace(/^\s+|[^a-z.]+$/g, '')];
-
-		if(isNaN(s))
-			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
-	}
-
-	if(Types.isNumber(s, false))
-	{
-		s = UriScheme[<number>s];
-		if(!s)
-			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
-
-		return s;
-	}
-
-	return undefined;
-}
-
-function getAuthority(uri:IUri):string
-{
-
-	if(!uri.host)
-	{
-		if(uri.userInfo)
-			throw new ArgumentException('host', 'Cannot include user info when there is no host.');
-
-		if(!isNaN(uri.port))
-			throw new ArgumentException('host', 'Cannot include a port when there is no host.');
-	}
-
-	/*
-	 * [//[user:password@]host[:port]]
-	 */
-
-	var result = uri.host || '';
-
-	if(result)
-	{
-		if(uri.userInfo) result = uri.userInfo + "@" + result;
-		if(!isNaN(uri.port)) result += ':' + uri.port;
-		result = '//' + result;
-	}
-
-	return result;
-}
-
-function formatQuery(query:string):string {
-	return query && ((query.indexOf(QM)== -1 ? QM : '') + query);
-}
-
-function formatFragment(fragment:string):string {
-	return fragment && ((fragment.indexOf(HASH)== -1 ? HASH : '') + fragment);
-}
-
-function getPathAndQuery(uri:IUri):string
-{
-
-	var path  = uri.path,
-	    query = uri.query;
-
-	return ''
-		+ (path && ((path.indexOf(SLASH)== -1 ? SLASH : '') + path) || '')
-		+ (formatQuery(query) || '');
-
-}
-
-function uriToString(uri:IUri):string
-{
-	// scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
-	// {scheme}{authority}{path}{query}{fragment}
-
-	var scheme       = getScheme(uri.scheme),
-	    authority    = getAuthority(uri),
-	    pathAndQuery = getPathAndQuery(uri),
-	    fragment     = formatFragment(uri.fragment);
-
-	return ''
-		+ ((scheme && (scheme + ':')) || '')
-		+ (authority || '')
-		+ (pathAndQuery || '')
-		+ (fragment || '')
-
-}
 
 
 /**
@@ -109,10 +20,12 @@ class Uri implements IUri
 {
 
 	public scheme:string;
+	public userInfo:string;
+	public host:string;
+	public port:number;
+	public path:string;
 	public query:string;
 	public fragment:string;
-
-	// constructor(url:string);
 
 	/**
 	 * @param scheme The user name, password, or other user-specific information associated with the specified URI.
@@ -125,14 +38,18 @@ class Uri implements IUri
 	 */
 	constructor(
 		scheme:UriScheme|string,
-		public userInfo:string,
-		public host:string,
-		public port:number,
-		public path:string,
+		userInfo:string,
+		host:string,
+		port:number,
+		path:string,
 		query:string,
 		fragment:string)
 	{
 		this.scheme = getScheme(scheme);
+		this.userInfo = userInfo;
+		this.host = host;
+		this.port = port;
+		this.path = path;
 		this.query = formatQuery(query);
 		this.fragment = formatFragment(fragment);
 
@@ -264,5 +181,99 @@ class Uri implements IUri
 
 
 }
+
+const SLASH = '/', QM = '?', HASH = '#';
+
+function getScheme(scheme:UriScheme|string):string
+{
+	var s:any = scheme;
+	if(Types.isString(s))
+	{
+		if(!s) return undefined;
+
+		s = UriScheme[s.toLowerCase().replace(/^\s+|[^a-z.]+$/g, '')];
+
+		if(isNaN(s))
+			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
+	}
+
+	if(Types.isNumber(s, false))
+	{
+		s = UriScheme[<number>s];
+		if(!s)
+			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
+
+		return s;
+	}
+
+	return undefined;
+}
+
+function getAuthority(uri:IUri):string
+{
+
+	if(!uri.host)
+	{
+		if(uri.userInfo)
+			throw new ArgumentException('host', 'Cannot include user info when there is no host.');
+
+		if(!isNaN(uri.port))
+			throw new ArgumentException('host', 'Cannot include a port when there is no host.');
+	}
+
+	/*
+	 * [//[user:password@]host[:port]]
+	 */
+
+	var result = uri.host || '';
+
+	if(result)
+	{
+		if(uri.userInfo) result = uri.userInfo + "@" + result;
+		if(!isNaN(uri.port)) result += ':' + uri.port;
+		result = '//' + result;
+	}
+
+	return result;
+}
+
+function formatQuery(query:string):string {
+	return query && ((query.indexOf(QM)== -1 ? QM : '') + query);
+}
+
+function formatFragment(fragment:string):string {
+	return fragment && ((fragment.indexOf(HASH)== -1 ? HASH : '') + fragment);
+}
+
+function getPathAndQuery(uri:IUri):string
+{
+
+	var path  = uri.path,
+	    query = uri.query;
+
+	return ''
+		+ (path && ((path.indexOf(SLASH)== -1 ? SLASH : '') + path) || '')
+		+ (formatQuery(query) || '');
+
+}
+
+function uriToString(uri:IUri):string
+{
+	// scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
+	// {scheme}{authority}{path}{query}{fragment}
+
+	var scheme       = getScheme(uri.scheme),
+	    authority    = getAuthority(uri),
+	    pathAndQuery = getPathAndQuery(uri),
+	    fragment     = formatFragment(uri.fragment);
+
+	return ''
+		+ ((scheme && (scheme + ':')) || '')
+		+ (authority || '')
+		+ (pathAndQuery || '')
+		+ (fragment || '')
+
+}
+
 
 export = Uri;
