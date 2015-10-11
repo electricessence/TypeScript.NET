@@ -68,11 +68,12 @@ export function isBoolean(value:any):boolean
 /**
  * Returns true if the value parameter is a number.
  * @param value
+ * @param allowNaN
  * @returns {boolean}
  */
-export function isNumber(value:any):boolean
+export function isNumber(value:any, allowNaN:boolean = true):boolean
 {
-	return typeof value===_NUMBER;
+	return typeof value===_NUMBER && (allowNaN || !isNaN(value));
 }
 
 /**

@@ -1,0 +1,1 @@
+{"version":3,"file":"HostNameType.js","sourceRoot":"","sources":["HostNameType.ts"],"names":["UriHostNameType"],"mappings":"AAAA;;;;GAIG;;IAGH,IAAK,eAyBJ;IAzBD,WAAK,eAAe;QAInBA,uDAAKA,CAAAA;QAKLA,mDAAGA,CAAAA;QAKHA,qDAAIA,CAAAA;QAKJA,qDAAIA,CAAAA;QAKJA,2DAAOA,CAAAA;IACRA,CAACA,EAzBI,eAAe,KAAf,eAAe,QAyBnB;IAED,MAAM,CAAC,MAAM,CAAC,eAAe,CAAC,CAAC;IAE/B,OAAS,eAAe,CAAC"}

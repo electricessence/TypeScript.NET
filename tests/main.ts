@@ -4,7 +4,9 @@
 import ArrayTests = require('./Arrays/_all');
 import CollectionTests = require('./Collections/_all');
 import EnumerableTests = require('./Linq/_all');
+import UriTests = require('./Uri/_all');
 
+UriTests();
 ArrayTests();
 CollectionTests();
 EnumerableTests();

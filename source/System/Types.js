@@ -15,8 +15,9 @@ define(["require", "exports"], function (require, exports) {
         return typeof value === _BOOLEAN;
     }
     exports.isBoolean = isBoolean;
-    function isNumber(value) {
-        return typeof value === _NUMBER;
+    function isNumber(value, allowNaN) {
+        if (allowNaN === void 0) { allowNaN = true; }
+        return typeof value === _NUMBER && (allowNaN || !isNaN(value));
     }
     exports.isNumber = isNumber;
     function isTrueNaN(value) {
