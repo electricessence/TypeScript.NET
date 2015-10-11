@@ -77,6 +77,8 @@
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="system_collections_array_compare_.html#areallequal" class="tsd-kind-icon">are<wbr>All<wbr>Equal</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="system_collections_array_compare_.html#areequal" class="tsd-kind-icon">are<wbr>Equal</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="system_collections_array_compare_.html#areequivalent" class="tsd-kind-icon">are<wbr>Equivalent</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported"><a href="system_collections_array_compare_.html#copyandsort" class="tsd-kind-icon">copy<wbr>And<wbr>Sort</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="system_collections_array_compare_.html#validatesize" class="tsd-kind-icon">validate<wbr>Size</a></li>
 							</ul>
 						</section>
 					</div>
@@ -88,7 +90,7 @@
 					<a name="areallequal" class="tsd-anchor"></a>
 					<h3>are<wbr>All<wbr>Equal</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">are<wbr>All<wbr>Equal<span class="tsd-signature-symbol">(</span>arrays<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span>, strict<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, equalityComparer<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">EqualityComparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">are<wbr>All<wbr>Equal<span class="tsd-signature-symbol">(</span>arrays<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span>, strict<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, equalityComparer<span class="tsd-signature-symbol">?: </span><a href="../interfaces/system_functiontypes_d_.equalitycomparison.html" class="tsd-signature-type">EqualityComparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -106,7 +108,7 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> strict: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> equalityComparer: <span class="tsd-signature-type">EqualityComparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;Values.areEqual</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> equalityComparer: <a href="../interfaces/system_functiontypes_d_.equalitycomparison.html" class="tsd-signature-type">EqualityComparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;Values.areEqual</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -117,7 +119,7 @@
 					<a name="areequal" class="tsd-anchor"></a>
 					<h3>are<wbr>Equal</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">are<wbr>Equal&lt;T&gt;<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, strict<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, equalityComparer<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">EqualityComparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">are<wbr>Equal&lt;T&gt;<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, strict<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span>, equalityComparer<span class="tsd-signature-symbol">?: </span><a href="../interfaces/system_functiontypes_d_.equalitycomparison.html" class="tsd-signature-type">EqualityComparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -135,16 +137,16 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>a: <span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>a: <a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
-									<h5>b: <span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>b: <a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> strict: <span class="tsd-signature-type">boolean</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> equalityComparer: <span class="tsd-signature-type">EqualityComparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;Values.areEqual</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> equalityComparer: <a href="../interfaces/system_functiontypes_d_.equalitycomparison.html" class="tsd-signature-type">EqualityComparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;Values.areEqual</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -155,7 +157,7 @@
 					<a name="areequivalent" class="tsd-anchor"></a>
 					<h3>are<wbr>Equivalent</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">are<wbr>Equivalent&lt;T&gt;<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, comparer<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Comparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+						<li class="tsd-signature tsd-kind-icon">are<wbr>Equivalent&lt;T&gt;<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, comparer<span class="tsd-signature-symbol">?: </span><a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -173,16 +175,74 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>a: <span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>a: <a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
-									<h5>b: <span class="tsd-signature-type">IArray</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>b: <a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> comparer: <span class="tsd-signature-type">Comparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;Values.compare</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> comparer: <a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;Values.compare</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+					<a name="copyandsort" class="tsd-anchor"></a>
+					<h3>copy<wbr>And<wbr>Sort</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">copy<wbr>And<wbr>Sort&lt;T&gt;<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, comparer<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Array/Compare.ts:72</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>comparer: <a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="validatesize" class="tsd-anchor"></a>
+					<h3>validate<wbr>Size</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">validate<wbr>Size<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span>, b<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Array/Compare.ts:14</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5>b: <a href="../interfaces/system_collections_array_iarray_d_.iarray.html" class="tsd-signature-type">IArray</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -209,6 +269,12 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="system_collections_array_compare_.html#areequivalent" class="tsd-kind-icon">are<wbr>Equivalent</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="system_collections_array_compare_.html#copyandsort" class="tsd-kind-icon">copy<wbr>And<wbr>Sort</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="system_collections_array_compare_.html#validatesize" class="tsd-kind-icon">validate<wbr>Size</a>
 					</li>
 				</ul>
 			</nav>

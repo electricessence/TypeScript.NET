@@ -75,7 +75,9 @@
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="system_disposable_utility_.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="system_disposable_utility_.html#disposesingle" class="tsd-kind-icon">dispose<wbr>Single</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="system_disposable_utility_.html#disposethese" class="tsd-kind-icon">dispose<wbr>These</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported"><a href="system_disposable_utility_.html#disposetheseinternal" class="tsd-kind-icon">dispose<wbr>These<wbr>Internal</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="system_disposable_utility_.html#disposewithoutexception" class="tsd-kind-icon">dispose<wbr>Without<wbr>Exception</a></li>
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="system_disposable_utility_.html#using" class="tsd-kind-icon">using</a></li>
 							</ul>
@@ -89,7 +91,7 @@
 					<a name="dispose" class="tsd-anchor"></a>
 					<h3>dispose</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>disposables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IDisposable</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">dispose<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>disposables<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -108,7 +110,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>disposables: <span class="tsd-signature-type">IDisposable</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>disposables: <a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
@@ -117,11 +119,43 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="disposesingle" class="tsd-anchor"></a>
+					<h3>dispose<wbr>Single</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">dispose<wbr>Single<span class="tsd-signature-symbol">(</span>disposable<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a>, trapExceptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Disposable/Utility.ts:84</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This private function makes disposing more robust for when there&#39;s no type checking.
+									If trapExceptions is &#39;true&#39; it catches and returns any exception instead of throwing.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>disposable: <a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a></h5>
+								</li>
+								<li>
+									<h5>trapExceptions: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="disposethese" class="tsd-anchor"></a>
 					<h3>dispose<wbr>These</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">dispose<wbr>These<span class="tsd-signature-symbol">(</span>disposables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IDisposable</span><span class="tsd-signature-symbol">[]</span>, trapExceptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">dispose<wbr>These<span class="tsd-signature-symbol">(</span>disposables<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span>, trapExceptions<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -138,7 +172,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>disposables: <span class="tsd-signature-type">IDisposable</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>disposables: <a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> trapExceptions: <span class="tsd-signature-type">boolean</span></h5>
@@ -152,11 +186,45 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+					<a name="disposetheseinternal" class="tsd-anchor"></a>
+					<h3>dispose<wbr>These<wbr>Internal</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">dispose<wbr>These<wbr>Internal<span class="tsd-signature-symbol">(</span>disposables<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span>, trapExceptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, index<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Disposable/Utility.ts:113</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This dispose method assumes it&#39;s working on a local copy and is unsafe for external use.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>disposables: <a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>trapExceptions: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> index: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
 					<a name="disposewithoutexception" class="tsd-anchor"></a>
 					<h3>dispose<wbr>Without<wbr>Exception</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
-						<li class="tsd-signature tsd-kind-icon">dispose<wbr>Without<wbr>Exception<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>disposables<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IDisposable</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
+						<li class="tsd-signature tsd-kind-icon">dispose<wbr>Without<wbr>Exception<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>disposables<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -174,7 +242,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>disposables: <span class="tsd-signature-type">IDisposable</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>disposables: <a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
@@ -209,7 +277,7 @@
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
-									<h4>TDisposable<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IDisposable</span></h4>
+									<h4>TDisposable<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_disposable_idisposable_d_.idisposable.html" class="tsd-signature-type">IDisposable</a></h4>
 								</li>
 								<li>
 									<h4>TReturn</h4>
@@ -271,8 +339,14 @@
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="system_disposable_utility_.html#dispose" class="tsd-kind-icon">dispose</a>
 					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="system_disposable_utility_.html#disposesingle" class="tsd-kind-icon">dispose<wbr>Single</a>
+					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="system_disposable_utility_.html#disposethese" class="tsd-kind-icon">dispose<wbr>These</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="system_disposable_utility_.html#disposetheseinternal" class="tsd-kind-icon">dispose<wbr>These<wbr>Internal</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module">
 						<a href="system_disposable_utility_.html#disposewithoutexception" class="tsd-kind-icon">dispose<wbr>Without<wbr>Exception</a>

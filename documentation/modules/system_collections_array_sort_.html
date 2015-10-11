@@ -81,6 +81,7 @@
 							<h3>Functions</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="system_collections_array_sort_.html#createcomparer" class="tsd-kind-icon">create<wbr>Comparer</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported"><a href="system_collections_array_sort_.html#ensurearray" class="tsd-kind-icon">ensure<wbr>Array</a></li>
 							</ul>
 						</section>
 					</div>
@@ -92,7 +93,7 @@
 					<a name="createcomparer" class="tsd-anchor"></a>
 					<h3>create<wbr>Comparer</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Comparer&lt;TSource, T&gt;<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Selector</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, order<span class="tsd-signature-symbol">?: </span><a href="../enums/system_collections_array_sort_.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol"> | </span><a href="../enums/system_collections_array_sort_.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol">[]</span>, equivalentToNaN<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Comparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Comparer&lt;TSource, T&gt;<span class="tsd-signature-symbol">(</span>selector<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_functiontypes_d_.selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, order<span class="tsd-signature-symbol">?: </span><a href="../enums/system_collections_array_sort_.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol"> | </span><a href="../enums/system_collections_array_sort_.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol">[]</span>, equivalentToNaN<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
@@ -113,7 +114,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>selector: <span class="tsd-signature-type">Selector</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>selector: <a href="../interfaces/system_functiontypes_d_.selector.html" class="tsd-signature-type">Selector</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> order: <a href="../enums/system_collections_array_sort_.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol"> | </span><a href="../enums/system_collections_array_sort_.order.html" class="tsd-signature-type">Order</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;Order.Ascending</span></h5>
@@ -122,7 +123,36 @@
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> equivalentToNaN: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;NaN</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Comparison</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/system_functiontypes_d_.comparison.html" class="tsd-signature-type">Comparison</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TSource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+					<a name="ensurearray" class="tsd-anchor"></a>
+					<h3>ensure<wbr>Array</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">ensure<wbr>Array&lt;T&gt;<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Collections/Array/Sort.ts:18</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T</h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -146,6 +176,9 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
 						<a href="system_collections_array_sort_.html#createcomparer" class="tsd-kind-icon">create<wbr>Comparer</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter tsd-is-not-exported">
+						<a href="system_collections_array_sort_.html#ensurearray" class="tsd-kind-icon">ensure<wbr>Array</a>
 					</li>
 				</ul>
 			</nav>
