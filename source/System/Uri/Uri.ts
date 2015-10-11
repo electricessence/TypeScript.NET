@@ -131,11 +131,12 @@ class Uri implements IUri
 	pathAndQuery:string;
 
 	/**
-	 * The segments that represent a path. https://msdn.microsoft.com/en-us/library/system.uri.segments%28v=vs.110%29.aspx
+	 * The segments that represent a path.<br/>
+	 * https://msdn.microsoft.com/en-us/library/system.uri.segments%28v=vs.110%29.aspx
 	 *
-	 * Example:
-	 * If the path value equals: ```/tree/node/index.html```
-	 * The result will be: ```javascript ['/','tree/','node/','index.html'] ```
+	 * <h5><b>Example:</b></h5>
+	 * If the path value equals: ```/tree/node/index.html```<br/>
+	 * The result will be: ```['/','tree/','node/','index.html']```
 	 * @returns {string[]}
 	 */
 	get pathSegments():string[]

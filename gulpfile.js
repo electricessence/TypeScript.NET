@@ -102,10 +102,10 @@ gulp.task(
 			module: 'amd',
 			target: 'es5',
 
+//			excludeNotExported: true // Disable till fixed.
 			includeDeclarations: true,
 			ignoreCompilerErrors: false,
 			version: true,
-			excludeNotExported: true
 		};
 
 		// Step 1: Render type-docs..
