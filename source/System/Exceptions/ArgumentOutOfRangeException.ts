@@ -9,7 +9,7 @@ import Exception = require('../Exception');
 import ArgumentException = require('./ArgumentException');
 
 
-const NAME:string = 'ArgumentNullException';
+const NAME:string = 'ArgumentOutOfRangeException';
 
 class ArgumentOutOfRangeException extends ArgumentException
 {

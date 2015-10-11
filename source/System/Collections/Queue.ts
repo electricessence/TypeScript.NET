@@ -130,7 +130,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	}
 
 
-	copyTo(target:T[], arrayIndex:number = 0):void
+	copyTo(target:T[], arrayIndex:number = 0):T[]
 	{
 		if(target==null)
 			throw new Error("ArgumentNullException: array cannot be null.");
@@ -156,6 +156,16 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 
 		if(numToCopy>0)
 			AU.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
+
+		return target;
+	}
+
+
+	toArray():T[]
+	{
+		var _ = this, size = _._size;
+		var arr:T[] = AU.initialize<T>(size);
+		return size ? _.copyTo(arr) : arr;
 	}
 
 	remove(item:T):number
@@ -182,17 +192,6 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		_._version = 0;
 	}
 
-	toArray():T[]
-	{
-		var _ = this, size = _._size;
-		var arr:T[] = AU.initialize<T>(size);
-		if(size==0)
-			return arr;
-
-		_.copyTo(arr);
-
-		return arr;
-	}
 
 	forEach(action:Predicate<T> | Action<T>):void
 	{

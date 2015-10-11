@@ -5,7 +5,7 @@
  */
 
 
-///<reference path="../Runtime/Serialization/ISerializable.d.ts"/>
+///<reference path="../Serialization/ISerializable.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="IUri.d.ts"/>
 

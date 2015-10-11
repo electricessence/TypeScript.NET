@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException', '../../Exceptions/ArgumentException', '../../Exceptions/InvalidOperationException'], function (require, exports, Values, EnumeratorBase, NotImplementedException, ArgumentException, InvalidOperationException) {
+define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports, Values, EnumeratorBase, NotImplementedException, ArgumentException, ArgumentNullException, InvalidOperationException) {
     var DictionaryAbstractBase = (function () {
         function DictionaryAbstractBase() {
             this._updateRecursion = 0;
@@ -79,12 +79,20 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
         };
         DictionaryAbstractBase.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }
+            if (!array)
+                throw new ArgumentNullException('array');
             var e = this.getEnumerator();
             while (e.moveNext()) {
                 array[index++] = e.current;
             }
+            return array;
+        };
+        DictionaryAbstractBase.prototype.toArray = function () {
+            return this.copyTo([], 0);
         };
         DictionaryAbstractBase.prototype.remove = function (item) {
+            if (!item)
+                return 0;
             var key = item.key, value = this.getValue(key);
             return (Values.areEqual(value, item.value) && this.removeByKey(key))
                 ? 1 : 0;

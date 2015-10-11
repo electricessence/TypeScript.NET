@@ -8,6 +8,7 @@ import Values = require('../../Compare');
 import EnumeratorBase = require('../Enumeration/EnumeratorBase');
 import NotImplementedException = require('../../Exceptions/NotImplementedException');
 import ArgumentException = require('../../Exceptions/ArgumentException');
+import ArgumentNullException = require('../../Exceptions/ArgumentNullException');
 import InvalidOperationException = require('../../Exceptions/InvalidOperationException');
 
 
@@ -125,17 +126,29 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 		return Values.areEqual(value, item.value);
 	}
 
-	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):void
+	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):IKeyValuePair<TKey, TValue>[]
 	{
+		if(!array) throw new ArgumentNullException('array');
+
+		// This is a generic implementation that will work for all derived classes.
+		// It can be overridden and optimized.
 		var e = this.getEnumerator();
 		while(e.moveNext()) // Disposes when finished.
 		{
 			array[index++] = e.current;
 		}
+		return array;
+	}
+
+
+	toArray():IKeyValuePair<TKey,TValue>[] {
+		return this.copyTo([],0);
 	}
 
 	remove(item:IKeyValuePair<TKey, TValue>):number
 	{
+		if(!item) return 0;
+
 		var key = item.key, value = this.getValue(key);
 		return (Values.areEqual(value, item.value) && this.removeByKey(key))
 			? 1 : 0;

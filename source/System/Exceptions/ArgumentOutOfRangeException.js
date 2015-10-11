@@ -9,7 +9,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 define(["require", "exports", './ArgumentException'], function (require, exports, ArgumentException) {
-    var NAME = 'ArgumentNullException';
+    var NAME = 'ArgumentOutOfRangeException';
     var ArgumentOutOfRangeException = (function (_super) {
         __extends(ArgumentOutOfRangeException, _super);
         function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {

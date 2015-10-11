@@ -20,8 +20,6 @@ import ArgumentNullException = require('../Exceptions/ArgumentNullException');
 import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
 
 
-
-
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
  * http://jsperf.com/simulating-a-queue
@@ -33,8 +31,8 @@ import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeEx
 
 
 const
-	INT_0:number = 0 | 0,
-	INT_1:number = 1 | 0;
+INT_0:number = 0 | 0,
+INT_1:number = 1 | 0;
 
 
 class Node<T>
@@ -180,7 +178,7 @@ class LinkedList<T> implements ILinkedList<T>
 	private _findFirst(entry:T):Node<T>
 	{
 		var equals = Values.areEqual,
-			next = this._first;
+		    next   = this._first;
 		while(next)
 		{
 			if(equals(entry, next.value))
@@ -193,7 +191,7 @@ class LinkedList<T> implements ILinkedList<T>
 	private _findLast(entry:T):Node<T>
 	{
 		var equals = Values.areEqual,
-			prev = this._last;
+		    prev   = this._last;
 		while(prev)
 		{
 			if(equals(entry, prev.value))
@@ -282,7 +280,7 @@ class LinkedList<T> implements ILinkedList<T>
 		return found;
 	}
 
-	copyTo(array:T[], index:number = 0):void
+	copyTo(array:T[], index:number = 0):T[]
 	{
 		this.forEach(
 			(entry, i) =>
@@ -290,6 +288,14 @@ class LinkedList<T> implements ILinkedList<T>
 				array[index + i] = entry;
 			}
 		);
+
+		return array;
+	}
+
+	toArray():T[]
+	{
+		var array = ArrayUtility.initialize<T>(this._count);
+		return this.copyTo(array);
 	}
 
 	removeOnce(entry:T):boolean
@@ -324,12 +330,6 @@ class LinkedList<T> implements ILinkedList<T>
 
 	// #endregion
 
-	toArray():T[]
-	{
-		var array = ArrayUtility.initialize<T>(this._count);
-		this.copyTo(array);
-		return array;
-	}
 
 	get first():ILinkedListNode<T>
 	{

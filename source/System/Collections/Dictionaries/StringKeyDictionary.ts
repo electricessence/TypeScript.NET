@@ -1,10 +1,12 @@
-﻿/*
+﻿///<reference path="IDictionary.d.ts"/>
+/*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
 import Values = require('../../Compare');
 import DictionaryAbstractBase= require('./DictionaryAbstractBase');
+import ArgumentNullException = require('../../Exceptions/ArgumentNullException');
 
 
 class StringKeyDictionary<TValue>
@@ -110,6 +112,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 	get count():number {
 		return this._count;
 	}
+
 
 }
 

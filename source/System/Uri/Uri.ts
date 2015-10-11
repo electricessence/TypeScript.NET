@@ -11,21 +11,26 @@ import UriScheme = require('./Scheme');
 import ArgumentException = require('../Exceptions/ArgumentException');
 import ArgumentNullException = require('../Exceptions/ArgumentNullException');
 import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
+import QueryParams = require('./QueryParams');
 
 
 /**
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
+ *
+ * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  */
 class Uri implements IUri
 {
 
-	public scheme:string;
-	public userInfo:string;
-	public host:string;
-	public port:number;
-	public path:string;
-	public query:string;
-	public fragment:string;
+	scheme:string;
+	userInfo:string;
+	host:string;
+	port:number;
+	path:string;
+	query:string;
+	fragment:string;
+
+	queryParams:IMap<string|boolean|number>;
 
 	/**
 	 * @param scheme The user name, password, or other user-specific information associated with the specified URI.
@@ -45,21 +50,27 @@ class Uri implements IUri
 		query:string,
 		fragment:string)
 	{
-		this.scheme = getScheme(scheme);
-		this.userInfo = userInfo;
-		this.host = host;
-		this.port = port;
-		this.path = path;
-		this.query = formatQuery(query);
-		this.fragment = formatFragment(fragment);
+		var _ = this;
+		_.scheme = getScheme(scheme);
+		_.userInfo = userInfo;
+		_.host = host;
+		_.port = port;
+		_.path = path;
+		_.query = formatQuery(query);
+		_.fragment = formatFragment(fragment);
 
 		// This should validate the uri...
-		this.absoluteUri = this.getAbsoluteUri();
-		this.authority = this.getAuthority();
-		this.pathAndQuery = this.getPathAndQuery();
+		_.absoluteUri = _.getAbsoluteUri();
+		_.authority = _.getAuthority();
+		_.pathAndQuery = _.getPathAndQuery();
+
+		Object.freeze(_.queryParams
+			= query
+			? QueryParams.parseToMap(query)
+			: {});
 
 		// Intended to be read-only.  Call .toMap() to get a writable copy.
-		Object.freeze(this);
+		Object.freeze(_);
 	}
 
 	static from(uri:IUri):Uri
@@ -75,6 +86,7 @@ class Uri implements IUri
 		);
 	}
 
+	// TODO: Include a parse method.
 	//static parse(url:string):Uri {
 	//
 	//}

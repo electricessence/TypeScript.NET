@@ -3,20 +3,25 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types, UriScheme, ArgumentException, ArgumentOutOfRangeException) {
+define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException', './QueryParams'], function (require, exports, Types, UriScheme, ArgumentException, ArgumentOutOfRangeException, QueryParams) {
     var Uri = (function () {
         function Uri(scheme, userInfo, host, port, path, query, fragment) {
-            this.scheme = getScheme(scheme);
-            this.userInfo = userInfo;
-            this.host = host;
-            this.port = port;
-            this.path = path;
-            this.query = formatQuery(query);
-            this.fragment = formatFragment(fragment);
-            this.absoluteUri = this.getAbsoluteUri();
-            this.authority = this.getAuthority();
-            this.pathAndQuery = this.getPathAndQuery();
-            Object.freeze(this);
+            var _ = this;
+            _.scheme = getScheme(scheme);
+            _.userInfo = userInfo;
+            _.host = host;
+            _.port = port;
+            _.path = path;
+            _.query = formatQuery(query);
+            _.fragment = formatFragment(fragment);
+            _.absoluteUri = _.getAbsoluteUri();
+            _.authority = _.getAuthority();
+            _.pathAndQuery = _.getPathAndQuery();
+            Object.freeze(_.queryParams
+                = query
+                    ? QueryParams.parseToMap(query)
+                    : {});
+            Object.freeze(_);
         }
         Uri.from = function (uri) {
             return new Uri(uri.scheme, uri.userInfo, uri.host, uri.port, uri.path, uri.query, uri.fragment);

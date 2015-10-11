@@ -13,6 +13,7 @@ interface ICollection<T> extends IEnumerable<T>
 	add(item:T): void;
 	clear(): number;
 	contains(item:T): boolean;
-	copyTo(array:T[], index?:number): void;
+	copyTo(array:T[], index?:number): T[];
+	toArray():T[];
 	remove(item:T): number;  // Number of times removed.
 }

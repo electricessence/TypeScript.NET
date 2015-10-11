@@ -166,6 +166,11 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             this.forEach(function (entry, i) {
                 array[index + i] = entry;
             });
+            return array;
+        };
+        LinkedList.prototype.toArray = function () {
+            var array = ArrayUtility.initialize(this._count);
+            return this.copyTo(array);
         };
         LinkedList.prototype.removeOnce = function (entry) {
             var _ = this;
@@ -190,11 +195,6 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
                 ++removedCount;
             }
             return removedCount;
-        };
-        LinkedList.prototype.toArray = function () {
-            var array = ArrayUtility.initialize(this._count);
-            this.copyTo(array);
-            return array;
         };
         Object.defineProperty(LinkedList.prototype, "first", {
             get: function () {

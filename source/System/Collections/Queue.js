@@ -92,6 +92,12 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
             numToCopy -= firstPart;
             if (numToCopy > 0)
                 AU.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
+            return target;
+        };
+        Queue.prototype.toArray = function () {
+            var _ = this, size = _._size;
+            var arr = AU.initialize(size);
+            return size ? _.copyTo(arr) : arr;
         };
         Queue.prototype.remove = function (item) {
             throw new NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
@@ -105,14 +111,6 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
                 _._array = emptyArray;
             }
             _._version = 0;
-        };
-        Queue.prototype.toArray = function () {
-            var _ = this, size = _._size;
-            var arr = AU.initialize(size);
-            if (size == 0)
-                return arr;
-            _.copyTo(arr);
-            return arr;
         };
         Queue.prototype.forEach = function (action) {
             var _ = this, copy = _.toArray(), len = _._size;
