@@ -69,7 +69,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<Primitive|ISerializable|IU
 	{
 		var entries:string[] = [];
 		var keys = this.keys;
-		for(var k of keys)
+		for(let k of keys)
 		{
 			entries.push(
 				k + KEY_VALUE_SEPARATOR

@@ -114,7 +114,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         };
         Queue.prototype.forEach = function (action) {
             var _ = this, copy = _.toArray(), len = _._size;
-            for (var i = 0; i < len; i++) {
+            for (var i = 0 | 0; i < len; i++) {
                 if (action(copy[i], i) === false)
                     break;
             }

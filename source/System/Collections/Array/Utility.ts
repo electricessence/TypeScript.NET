@@ -67,7 +67,7 @@ export function copyTo<T>(
 
 	length = Math.min(length, maxLength);
 
-	for(var i = 0; i<length; ++i)
+	for(let i = 0; i<length; ++i)
 	{
 		destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
 	}
@@ -92,7 +92,7 @@ export function replace<T>(
 		if(!max)
 			max = Infinity;
 
-		for(var i = (array.length - 1) | 0; i>=0; --i)
+		for(let i = (array.length - 1) | 0; i>=0; --i)
 		{
 			if(array[i]===old)
 			{
@@ -115,7 +115,7 @@ export function updateRange<T>(
 	length:number):void
 {
 	var end = index + length;
-	for(var i:number = index; i<end; ++i)
+	for(let i:number = index; i<end; ++i)
 	{
 		array[i] = value;
 	}
@@ -146,7 +146,7 @@ export function findIndex<T>(array:IArray<T>, predicate:(item:T) => boolean):num
 	if(!Types.isFunction(predicate))
 		throw new Error("InvalidArgumentException: 'predicate' must be a function.");
 	var len = array.length | 0;
-	for(var i = 0 | 0; i<len; ++i)
+	for(let i = 0 | 0; i<len; ++i)
 	{
 		if(i in array && predicate(array[i]))
 			return i;
@@ -174,7 +174,7 @@ export function applyTo<T extends IArray<number>>(target:T, fn:(a:number) => num
 
 	if(fn)
 	{
-		for(var i = 0 | 0; i<target.length; ++i)
+		for(let i = 0 | 0; i<target.length; ++i)
 		{
 			target[i] = fn(target[i]);
 		}
@@ -204,7 +204,7 @@ export function remove<T>(array:T[], value:T, max?:number):number
 		if(!max)
 			max = Infinity;
 
-		for(var i = (array.length - 1) | 0; i>=0; --i)
+		for(let i = (array.length - 1) | 0; i>=0; --i)
 		{
 			if(array[i]===value)
 			{

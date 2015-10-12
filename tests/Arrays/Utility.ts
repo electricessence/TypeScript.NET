@@ -118,7 +118,7 @@ function run() {
         var value = 10, count = 3;
         var r = ArrayUtility.repeat(value, count);
         assert.ok(r.length == count, ".length should be 3");
-        for (var i = 0; i < count; i++)
+        for(let i = 0; i < count; i++)
             assert.equal(r[i], value);
     });
 

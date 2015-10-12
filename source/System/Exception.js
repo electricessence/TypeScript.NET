@@ -28,7 +28,8 @@ define(["require", "exports"], function (require, exports) {
         Exception.prototype.dispose = function () {
             var data = this.data;
             for (var k in data)
-                delete data[k];
+                if (data.hasOwnProperty(k))
+                    delete data[k];
         };
         return Exception;
     })();

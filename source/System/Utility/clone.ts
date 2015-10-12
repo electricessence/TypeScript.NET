@@ -27,7 +27,7 @@ function clone(source:any, depth:number = 0):any
 		result = (<any>source).slice();
 		if(depth>0)
 		{
-			for(var i = 0; i<result.length; i++)
+			for(let i = 0; i<result.length; i++)
 			{
 				result[i] = clone(result[i], depth - 1);
 			}
@@ -36,7 +36,7 @@ function clone(source:any, depth:number = 0):any
 	else
 	{
 		result = {};
-		if(depth>0) for(var k in source)
+		if(depth>0) for(let k in source)
 		{
 			//noinspection JSUnfilteredForInLoop
 			result[k] = clone(source[k], depth - 1);

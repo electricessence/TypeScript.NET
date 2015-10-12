@@ -22,7 +22,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 
 	containsValue(value:TValue):boolean {
 		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
-		for(var key in map) {
+		for(let key in map) {
 			if(map.hasOwnProperty(key) && equal(map[key], value))
 				return true;
 		}
@@ -62,7 +62,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 		return _.handleUpdate(
 			() => {
 				var changed:boolean = false;
-				for(var key in values) {
+				for(let key in values) {
 					if(values.hasOwnProperty(key) && _.setValue(key, values[key]))
 						changed = true;
 				}
@@ -73,7 +73,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 
 	toMap(selector?:(key:string, value:TValue) => TValue):IMap<TValue> {
 		var _ = this, result:IMap<TValue> = {};
-		for(var key in _._map) {
+		for(let key in _._map) {
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 			{
 				var value = _._map[key];
@@ -89,7 +89,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 	get keys():string[] {
 
 		var _ = this, result:string[] = [];
-		for(var key in _._map) {
+		for(let key in _._map) {
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 				result.push(key);
 		}
@@ -101,7 +101,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 	get values():TValue[] {
 
 		var _ = this, result:TValue[] = [];
-		for(var key in _._map) {
+		for(let key in _._map) {
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 				result.push(_._map[key]);
 		}

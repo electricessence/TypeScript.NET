@@ -43,7 +43,7 @@ export function areAllEqual(
 	if(arrays.length<2)
 		throw new Error("Cannot compare a set of arrays less than 2.");
 	var first = arrays[0];
-	for(var i = 0 | 0, l = arrays.length | 0; i<l; ++i)
+	for(let i = 0 | 0, l = arrays.length | 0; i<l; ++i)
 	{
 		if(!areEqual(first, arrays[i], strict, equalityComparer))
 			return false;
@@ -59,7 +59,7 @@ export function areEqual<T>(
 	var len = validateSize(a, b);
 	if(Types.isBoolean(len)) return <boolean>len;
 
-	for(var i = 0 | 0; i<len; ++i)
+	for(let i = 0 | 0; i<len; ++i)
 	{
 		if(!equalityComparer(a[i], b[i], strict))
 			return false;
@@ -80,7 +80,7 @@ function copyAndSort<T>(a:IArray<T>, comparer:Comparison<T>):T[]
 		b = [];
 		b.length = len;
 	}
-	for(var i = 0; i<len; i++) b[i] = a[i];
+	for(let i = 0; i<len; i++) b[i] = a[i];
 	b.sort(comparer);
 	return b;
 }
@@ -97,7 +97,7 @@ export function areEquivalent<T>(
 	a = copyAndSort(a, comparer);
 	b = copyAndSort(b, comparer);
 
-	for(var i = 0 | 0; i<len; ++i)
+	for(let i = 0 | 0; i<len; ++i)
 	{
 		if(comparer(a[i], b[i])!==0)
 			return false;

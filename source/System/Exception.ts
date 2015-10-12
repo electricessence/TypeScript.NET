@@ -70,8 +70,9 @@ class Exception implements Error, IDisposable
 	dispose():void
 	{
 		var data = this.data;
-		for(var k in data)
-			delete data[k];
+		for(let k in data)
+			if(data.hasOwnProperty(k))
+				delete data[k];
 	}
 }
 

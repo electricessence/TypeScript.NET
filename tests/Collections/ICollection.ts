@@ -32,7 +32,7 @@ module ICollectionTests
 	function assertAdding<T>(assert:QUnitAssert, c:ICollection<T>, a:T[])
 	{
 		var count:number;
-		for(var v of a)
+		for(let v of a)
 		{
 			assertIsNumber(assert, count = c.count, 'count');
 			c.add(v);
@@ -57,7 +57,7 @@ module ICollectionTests
 		assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
 
 		// Restore contents.
-		for(var v of a) c.add(v);
+		for(let v of a) c.add(v);
 
 		var extraSize = 10;
 		var b = AU.initialize<T>(count + extraSize);
@@ -70,7 +70,7 @@ module ICollectionTests
 		assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
 
 		// Restore contents.
-		for(var v of a) c.add(v);
+		for(let v of a) c.add(v);
 		assert.equal(c.count, a.length, "A collection's count should be equal to the number of items added.");
 	}
 
@@ -85,7 +85,7 @@ module ICollectionTests
 		assertIsNumber(assert, c.count, 'count');
 
 		try {
-			for(var v of a)
+			for(let v of a)
 			{
 				count -= c.remove(v); // More than one instance can exist and it should remove both.
 				assertIsNumber(assert, c.count, 'count');

@@ -94,25 +94,25 @@ function run()
 		var source = sourceEnumerable.reverse();
 
 		var A = source.orderBy(o=>o.a).toArray();
-		for(var i = 0; i<3; i++)
+		for(let i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 1, "First three 'a' values should be 1 when ordered by 'a'.");
 		}
-		for(var i = 3; i<6; i++)
+		for(let i = 3; i<6; i++)
 		{
 			assert.equal(A[i].a, 2, "Last three 'a' values should be 2 when ordered by 'a'.");
 		}
 
 		var B = source.orderBy(o=> o.b).toArray();
-		for(var i = 0; i<2; i++)
+		for(let i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
 		}
-		for(var i = 2; i<4; i++)
+		for(let i = 2; i<4; i++)
 		{
 			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
 		}
-		for(var i = 4; i<6; i++)
+		for(let i = 4; i<6; i++)
 		{
 			assert.equal(B[i].b, 3, "Last two 'b' values should be 3 when ordered by 'b'.");
 		}
@@ -126,25 +126,25 @@ function run()
 		var source = sourceEnumerable.reverse();
 
 		var A = source.orderByDescending((o:TestItem)=> o.a).toArray();
-		for(var i = 0; i<3; i++)
+		for(let i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 2, "First three 'a' values should be 2 when ordered by 'a'.");
 		}
-		for(var i = 3; i<6; i++)
+		for(let i = 3; i<6; i++)
 		{
 			assert.equal(A[i].a, 1, "Last three 'a' values should be 1 when ordered by 'a'.");
 		}
 
 		var B = source.orderByDescending((o:TestItem)=> o.b).toArray();
-		for(var i = 0; i<2; i++)
+		for(let i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 3, "First two 'b' values should be 3 when ordered by 'b'.");
 		}
-		for(var i = 2; i<4; i++)
+		for(let i = 2; i<4; i++)
 		{
 			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
 		}
-		for(var i = 4; i<6; i++)
+		for(let i = 4; i<6; i++)
 		{
 			assert.equal(B[i].b, 1, "Last two 'b' values should be 1 when ordered by 'b'.");
 		}
@@ -159,15 +159,15 @@ function run()
 			.thenBy(o => o.c)
 			.toArray();
 
-		for(var i = 0; i<2; i++)
+		for(let i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
 		}
-		for(var i = 2; i<4; i++)
+		for(let i = 2; i<4; i++)
 		{
 			assert.equal(B[i].b, 2, "Second two 'b' values should be 2 when ordered by 'b'.");
 		}
-		for(var i = 4; i<6; i++)
+		for(let i = 4; i<6; i++)
 		{
 			assert.equal(B[i].b, 3, "Last two 'b' values should be 3 when ordered by 'b'.");
 		}

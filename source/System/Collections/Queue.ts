@@ -197,7 +197,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	{
 		// Until implementing a changed enumeration mechanism, a copy needs to be used.
 		var _ = this, copy = _.toArray(), len = _._size;
-		for(var i = 0; i<len; i++)
+		for(let i = 0|0; i<len; i++)
 		{
 			if(<any>action(copy[i], i)===false)
 				break;

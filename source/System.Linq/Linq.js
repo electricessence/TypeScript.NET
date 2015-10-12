@@ -1746,7 +1746,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 return [];
             if (s instanceof Array)
                 return s.slice();
-            var len = s.length, result = new Array(len);
+            var len = s.length, result = ArrayUtility.initialize(len);
             for (var i = INT_0; i < len; ++i) {
                 result[i] = s[i];
             }

@@ -48,7 +48,7 @@ function processAction<T>(
 {
 	var observersErrors:{observer:IObserver<T>,ex:any}[] = null;
 
-	for(var s of observers)
+	for(let s of observers)
 	{
 		try
 		{

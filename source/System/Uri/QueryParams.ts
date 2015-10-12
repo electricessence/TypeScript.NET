@@ -31,7 +31,7 @@ export function encode(
 
 	if(values instanceof Array)
 	{
-		for(var kvp of values)
+		for(let kvp of values)
 		{
 			if(kvp) entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
 		}
@@ -39,7 +39,7 @@ export function encode(
 	else
 	{
 		var keys = Object.keys(values);
-		for(var k of keys)
+		for(let k of keys)
 		{
 			entries.push(k + KEY_VALUE_SEPARATOR + encodeValue((<any>values)[k]));
 		}
@@ -86,7 +86,7 @@ export function parse(
 	if(query && (query = query.replace(/^\s*\?+/, '')))
 	{
 		var entries = query.split(ENTRY_SEPARATOR);
-		for(var entry of entries)
+		for(let entry of entries)
 		{
 			/*
 			 * Since it is technically possible to have multiple '=' we need to identify the first one.

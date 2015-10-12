@@ -59,7 +59,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 			() =>
 			{
 				var changed:boolean = false;
-				for(var i = 0; i<values.length; i++)
+				for(let i = 0; i<values.length; i++)
 				{
 					if(_.setByIndex(i, values[i]))
 						changed = true;

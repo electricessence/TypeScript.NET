@@ -37,7 +37,7 @@ export function createComparer<TSource,T>(
 		var len = Math.min(aValue.length, bValue.length);
 
 		var oArray:Order[] = order instanceof Array ? <Order[]>order : null;
-		for(var i = 0; i<len; i++)
+		for(let i = 0; i<len; i++)
 		{
 			var vA = aValue[i], vB = bValue[i],
 			    o  = oArray

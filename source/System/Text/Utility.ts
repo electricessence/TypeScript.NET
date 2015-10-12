@@ -7,7 +7,7 @@ import Types = require('../Types');
 
 export function format(source:string, ...args:any[])
 {
-	for(var i = 0; i<args.length; i++)
+	for(let i = 0; i<args.length; i++)
 	{
 		source = source.replace("{" + i + "}", args[i]);
 	}

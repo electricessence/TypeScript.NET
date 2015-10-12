@@ -116,7 +116,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		if(callHasOwnProperty(buckets, hash)) {
 			var equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
 			var array = buckets[hash];
-			for(var i = 0; i<array.length; i++) {
+			for(let i = 0; i<array.length; i++) {
 				var old = array[i];
 				if(comparer(old.key)===compareKey) {
 					if(!allowOverwrite)
@@ -170,7 +170,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		if(!callHasOwnProperty(buckets, hash)) return undefined;
 
 		var array = buckets[hash];
-		for(var entry of array)
+		for(let entry of array)
 			if(comparer(entry.key)===compareKey) return entry.value;
 
 		return undefined;
@@ -187,7 +187,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		if(!callHasOwnProperty(buckets, hash)) return false;
 
 		var array = buckets[hash];
-		for(var i = 0, len = array.length; i<len; i++) {
+		for(let i = 0, len = array.length; i<len; i++) {
 			if(comparer(array[i].key)===compareKey) return true;
 		}
 
@@ -200,7 +200,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 
 		// Ensure reset and clean...
 		_._count = 0;
-		for(var key in buckets) {
+		for(let key in buckets) {
 			if(buckets.hasOwnProperty(key))
 				delete buckets[key];
 		}
