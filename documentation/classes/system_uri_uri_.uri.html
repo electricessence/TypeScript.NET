@@ -90,6 +90,7 @@
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
 					<li><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></li>
+					<li><a href="../interfaces/system_iequatable_d_.iequatable.html" class="tsd-signature-type">IEquatable</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -127,6 +128,8 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="system_uri_uri_.uri.html#copyto" class="tsd-kind-icon">copy<wbr>To</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="system_uri_uri_.uri.html#equals" class="tsd-kind-icon">equals</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="system_uri_uri_.uri.html#getabsoluteuri" class="tsd-kind-icon">get<wbr>Absolute<wbr>Uri</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="system_uri_uri_.uri.html#getauthority" class="tsd-kind-icon">get<wbr>Authority</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="system_uri_uri_.uri.html#getpathandquery" class="tsd-kind-icon">get<wbr>Path<wbr>And<wbr>Query</a></li>
@@ -134,6 +137,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="system_uri_uri_.uri.html#tostring" class="tsd-kind-icon">to<wbr>String</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="system_uri_uri_.uri.html#from" class="tsd-kind-icon">from</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="system_uri_uri_.uri.html#getauthority-1" class="tsd-kind-icon">get<wbr>Authority</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="system_uri_uri_.uri.html#parse" class="tsd-kind-icon">parse</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><a href="system_uri_uri_.uri.html#tostring-1" class="tsd-kind-icon">to<wbr>String</a></li>
 							</ul>
 						</section>
@@ -146,13 +150,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Uri<span class="tsd-signature-symbol">(</span>scheme<span class="tsd-signature-symbol">: </span><a href="../enums/system_uri_scheme_.urischeme.html" class="tsd-signature-type">UriScheme</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, userInfo<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, port<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, query<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fragment<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="system_uri_uri_.uri.html" class="tsd-signature-type">Uri</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Uri<span class="tsd-signature-symbol">(</span>scheme<span class="tsd-signature-symbol">: </span><a href="../enums/system_uri_scheme_.urischeme.html" class="tsd-signature-type">UriScheme</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, userInfo<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, host<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, port<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, path<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, query<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/system_uri_iuricomponentformattable_d_.iuricomponentmap.html" class="tsd-signature-type">IUriComponentMap</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/system_collections_dictionaries_idictionary_d_.ikeyvaluepair.html" class="tsd-signature-type">IKeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../modules/system_uri_uri_.html#primitive" class="tsd-signature-type">Primitive</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span>, fragment<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="system_uri_uri_.uri.html" class="tsd-signature-type">Uri</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:33</li>
+									<li>Defined in System/Uri/Uri.ts:36</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -200,7 +204,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>query: <span class="tsd-signature-type">string</span></h5>
+									<h5>query: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/system_uri_iuricomponentformattable_d_.iuricomponentmap.html" class="tsd-signature-type">IUriComponentMap</a><span class="tsd-signature-symbol"> | </span><a href="../interfaces/system_collections_dictionaries_idictionary_d_.ikeyvaluepair.html" class="tsd-signature-type">IKeyValuePair</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="../modules/system_uri_uri_.html#primitive" class="tsd-signature-type">Primitive</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
 											<p>Any query information included in the specified URI.</p>
@@ -229,7 +233,7 @@
 					<div class="tsd-signature tsd-kind-icon">absolute<wbr>Uri<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:121</li>
+							<li>Defined in System/Uri/Uri.ts:168</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -244,7 +248,7 @@
 					<div class="tsd-signature tsd-kind-icon">authority<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:126</li>
+							<li>Defined in System/Uri/Uri.ts:173</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -260,7 +264,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/system_uri_iuri_d_.iuri.html">IUri</a>.<a href="../interfaces/system_uri_iuri_d_.iuri.html#fragment">fragment</a></p>
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:31</li>
+							<li>Defined in System/Uri/Uri.ts:34</li>
 						</ul>
 					</aside>
 				</section>
@@ -271,7 +275,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/system_uri_iuri_d_.iuri.html">IUri</a>.<a href="../interfaces/system_uri_iuri_d_.iuri.html#host">host</a></p>
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:27</li>
+							<li>Defined in System/Uri/Uri.ts:30</li>
 						</ul>
 					</aside>
 				</section>
@@ -282,7 +286,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/system_uri_iuri_d_.iuri.html">IUri</a>.<a href="../interfaces/system_uri_iuri_d_.iuri.html#path">path</a></p>
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:29</li>
+							<li>Defined in System/Uri/Uri.ts:32</li>
 						</ul>
 					</aside>
 				</section>
@@ -292,7 +296,7 @@
 					<div class="tsd-signature tsd-kind-icon">path<wbr>And<wbr>Query<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:131</li>
+							<li>Defined in System/Uri/Uri.ts:178</li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -308,7 +312,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/system_uri_iuri_d_.iuri.html">IUri</a>.<a href="../interfaces/system_uri_iuri_d_.iuri.html#port">port</a></p>
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:28</li>
+							<li>Defined in System/Uri/Uri.ts:31</li>
 						</ul>
 					</aside>
 				</section>
@@ -319,17 +323,17 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/system_uri_iuri_d_.iuri.html">IUri</a>.<a href="../interfaces/system_uri_iuri_d_.iuri.html#query">query</a></p>
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:30</li>
+							<li>Defined in System/Uri/Uri.ts:33</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="queryparams" class="tsd-anchor"></a>
 					<h3>query<wbr>Params</h3>
-					<div class="tsd-signature tsd-kind-icon">query<wbr>Params<span class="tsd-signature-symbol">:</span> <a href="../interfaces/system_collections_dictionaries_idictionary_d_.imap.html" class="tsd-signature-type">IMap</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<div class="tsd-signature tsd-kind-icon">query<wbr>Params<span class="tsd-signature-symbol">:</span> <a href="../interfaces/system_collections_dictionaries_idictionary_d_.imap.html" class="tsd-signature-type">IMap</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules/system_uri_uri_.html#primitive" class="tsd-signature-type">Primitive</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:33</li>
+							<li>Defined in System/Uri/Uri.ts:36</li>
 						</ul>
 					</aside>
 				</section>
@@ -340,7 +344,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/system_uri_iuri_d_.iuri.html">IUri</a>.<a href="../interfaces/system_uri_iuri_d_.iuri.html#scheme">scheme</a></p>
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:25</li>
+							<li>Defined in System/Uri/Uri.ts:28</li>
 						</ul>
 					</aside>
 				</section>
@@ -351,7 +355,7 @@
 					<aside class="tsd-sources">
 						<p>Implementation of <a href="../interfaces/system_uri_iuri_d_.iuri.html">IUri</a>.<a href="../interfaces/system_uri_iuri_d_.iuri.html#userinfo">userInfo</a></p>
 						<ul>
-							<li>Defined in System/Uri/Uri.ts:26</li>
+							<li>Defined in System/Uri/Uri.ts:29</li>
 						</ul>
 					</aside>
 				</section>
@@ -368,7 +372,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:142</li>
+									<li>Defined in System/Uri/Uri.ts:189</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -387,6 +391,57 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="copyto" class="tsd-anchor"></a>
+					<h3>copy<wbr>To</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">copy<wbr>To<span class="tsd-signature-symbol">(</span>map<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Uri/Uri.ts:126</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>map: <a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="equals" class="tsd-anchor"></a>
+					<h3>equals</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">equals<span class="tsd-signature-symbol">(</span>other<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Uri/Uri.ts:89</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p> Compares the values of another IUri via toString comparison.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>other: <a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 					<a name="getabsoluteuri" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Absolute<wbr>Uri</h3>
@@ -397,7 +452,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:97</li>
+									<li>Defined in System/Uri/Uri.ts:144</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -419,7 +474,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:105</li>
+									<li>Defined in System/Uri/Uri.ts:152</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -441,7 +496,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:113</li>
+									<li>Defined in System/Uri/Uri.ts:160</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -463,7 +518,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:151</li>
+									<li>Defined in System/Uri/Uri.ts:198</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -485,7 +540,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:170</li>
+									<li>Defined in System/Uri/Uri.ts:206</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -499,22 +554,28 @@
 					<a name="from" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> from</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">from<span class="tsd-signature-symbol">(</span>uri<span class="tsd-signature-symbol">: </span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="system_uri_uri_.uri.html" class="tsd-signature-type">Uri</a></li>
+						<li class="tsd-signature tsd-kind-icon">from<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="system_uri_uri_.uri.html" class="tsd-signature-type">Uri</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:76</li>
+									<li>Defined in System/Uri/Uri.ts:100</li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Parses or clones values from existing Uri values.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>uri: <a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></h5>
+									<h5>url: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="system_uri_uri_.uri.html" class="tsd-signature-type">Uri</a></h4>
+							<p>An validated Uri object with the values.</p>
 						</li>
 					</ul>
 				</section>
@@ -528,7 +589,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:190</li>
+									<li>Defined in System/Uri/Uri.ts:228</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -547,6 +608,35 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
+					<a name="parse" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> parse</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
+						<li class="tsd-signature tsd-kind-icon">parse<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in System/Uri/Uri.ts:121</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Parse a URL into it&#39;s components.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>url: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/system_uri_iuri_d_.iuri.html" class="tsd-signature-type">IUri</a></h4>
+							<p>Returns a map of the values.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-static">
 					<a name="tostring-1" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagStatic">Static</span> to<wbr>String</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-static">
@@ -556,7 +646,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in System/Uri/Uri.ts:180</li>
+									<li>Defined in System/Uri/Uri.ts:216</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -633,6 +723,12 @@
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="system_uri_uri_.uri.html#pathsegments" class="tsd-kind-icon">path<wbr>Segments</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="system_uri_uri_.uri.html#copyto" class="tsd-kind-icon">copy<wbr>To</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="system_uri_uri_.uri.html#equals" class="tsd-kind-icon">equals</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
 								<a href="system_uri_uri_.uri.html#getabsoluteuri" class="tsd-kind-icon">get<wbr>Absolute<wbr>Uri</a>
 							</li>
@@ -655,12 +751,24 @@
 								<a href="system_uri_uri_.uri.html#getauthority-1" class="tsd-kind-icon">get<wbr>Authority</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
+								<a href="system_uri_uri_.uri.html#parse" class="tsd-kind-icon">parse</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-static">
 								<a href="system_uri_uri_.uri.html#tostring-1" class="tsd-kind-icon">to<wbr>String</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/system_uri_uri_.html#primitive" class="tsd-kind-icon">Primitive</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/system_uri_uri_.html#at" class="tsd-kind-icon">AT</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/system_uri_uri_.html#empty" class="tsd-kind-icon">EMPTY</a>
+					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/system_uri_uri_.html#hash" class="tsd-kind-icon">HASH</a>
 					</li>
@@ -669,6 +777,9 @@
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/system_uri_uri_.html#slash" class="tsd-kind-icon">SLASH</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/system_uri_uri_.html#slash2" class="tsd-kind-icon">SLASH2</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/system_uri_uri_.html#formatfragment" class="tsd-kind-icon">format<wbr>Fragment</a>
@@ -684,6 +795,12 @@
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/system_uri_uri_.html#getscheme" class="tsd-kind-icon">get<wbr>Scheme</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/system_uri_uri_.html#parse" class="tsd-kind-icon">parse</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
+						<a href="../modules/system_uri_uri_.html#trim" class="tsd-kind-icon">trim</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="../modules/system_uri_uri_.html#uritostring" class="tsd-kind-icon">uri<wbr>ToString</a>
