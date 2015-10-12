@@ -36,7 +36,8 @@ To name a few.
 * **Exceptions**: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using *instanceof* as if you used multiple *catch* statements in C#.
 * **Collections**: Multiple collections types with standard ICollection&lt;T&gt; and IEnumerable&lt;T&gt; interfaces.  LinkedList&lt;T&gt;, Queue&lt;T&gt;, Dictionary&lt;T&gt;, and more, all unit tested using a common interface test of ICollection&lt;T&gt;.
 * **IDisposable**: Additional interfaces, utilities, and classes like **DisposableBase** that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator&lt;T&gt;, use IDisposable to ensure releasing of references.
-* **DateTime & TimeSpan**: The **System/Time** namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
+* **DateTime** & **TimeSpan**: The **System/Time** namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
+* **Uri**, **QueryParams**, & **QueryBuilder**:  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.
 
 ## Usage
 After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
