@@ -32,5 +32,9 @@ define(["require", "exports"], function (require, exports) {
         return typeof value === _FUNCTION;
     }
     exports.isFunction = isFunction;
+    function isObject(value) {
+        return typeof value === _OBJECT;
+    }
+    exports.isObject = isObject;
 });
 //# sourceMappingURL=Types.js.map

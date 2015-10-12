@@ -5,6 +5,7 @@
  */
 
 ///<reference path="IUri.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
 import copy = require('../Utility/shallowCopy');
 import Types = require('../Types');
 import UriScheme = require('./Scheme');
@@ -19,7 +20,7 @@ import QueryParams = require('./QueryParams');
  *
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  */
-class Uri implements IUri
+class Uri implements IUri, IEquatable<IUri>
 {
 
 	scheme:string;
@@ -73,8 +74,27 @@ class Uri implements IUri
 		Object.freeze(_);
 	}
 
-	static from(uri:IUri):Uri
+	/**
+	 *  Compares the values of another IUri via toString comparison.
+ 	 * @param other
+	 * @returns {boolean}
+	 */
+	equals(other:IUri):boolean
 	{
+		return this.absoluteUri==Uri.toString(other);
+	}
+
+
+	/**
+	 * Parses or clones values from existing Uri values.
+	 * @param url
+	 * @returns {Uri} An validated Uri object with the values.
+	 */
+	static from(url:string|IUri):Uri
+	{
+		var uri = (!url || Types.isString(url))
+			? parse(<string>url) : <IUri>url;
+
 		return new Uri(
 			uri.scheme,
 			uri.userInfo,
@@ -86,10 +106,30 @@ class Uri implements IUri
 		);
 	}
 
-	// TODO: Include a parse method.
-	//static parse(url:string):Uri {
-	//
-	//}
+	/**
+	 * Parse a URL into it's components.
+	 * @param url
+	 * @returns {IUri} Returns a map of the values.
+	 */
+	static parse(url:string):IUri
+	{
+		return parse(url);
+	}
+
+	copyTo(map:IUri):IUri
+	{
+		var _ = this;
+
+		if(_.scheme) map.scheme = _.scheme;
+		if(_.userInfo) map.userInfo = _.userInfo;
+		if(_.host) map.host = _.host;
+		if(_.port) map.port = _.port;
+		if(_.path) map.path = _.path;
+		if(_.query) map.query = _.query;
+		if(_.fragment) map.fragment = _.fragment;
+
+		return map;
+	}
 
 	/**
 	 * Is provided for sub classes to override this value.
@@ -150,18 +190,7 @@ class Uri implements IUri
 	 */
 	toMap():IUri
 	{
-		var _ = this;
-		var map:IUri = {};
-
-		if(_.scheme) map.scheme = _.scheme;
-		if(_.userInfo) map.userInfo = _.userInfo;
-		if(_.host) map.host = _.host;
-		if(_.port) map.port = _.port;
-		if(_.path) map.path = _.path;
-		if(_.query) map.query = _.query;
-		if(_.fragment) map.fragment = _.fragment;
-
-		return map;
+		return this.copyTo({});
 	}
 
 	/**
@@ -179,7 +208,9 @@ class Uri implements IUri
 	 */
 	static toString(uri:IUri):string
 	{
-		return uriToString(uri);
+		return uri instanceof Uri
+			? (<Uri>uri).absoluteUri
+			: uriToString(uri);
 	}
 
 	/**
@@ -195,7 +226,12 @@ class Uri implements IUri
 
 }
 
-const SLASH = '/', QM = '?', HASH = '#';
+const SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
+
+function trim(source:string):string
+{
+	return source.replace(/^\s+|\s+$/g, EMPTY);
+}
 
 function getScheme(scheme:UriScheme|string):string
 {
@@ -204,7 +240,7 @@ function getScheme(scheme:UriScheme|string):string
 	{
 		if(!s) return undefined;
 
-		s = UriScheme[s.toLowerCase().replace(/^\s+|[^a-z.]+$/g, '')];
+		s = UriScheme[<any>trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
 
 		if(isNaN(s))
 			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
@@ -238,24 +274,26 @@ function getAuthority(uri:IUri):string
 	 * [//[user:password@]host[:port]]
 	 */
 
-	var result = uri.host || '';
+	var result = uri.host || EMPTY;
 
 	if(result)
 	{
-		if(uri.userInfo) result = uri.userInfo + "@" + result;
+		if(uri.userInfo) result = uri.userInfo + AT + result;
 		if(!isNaN(uri.port)) result += ':' + uri.port;
-		result = '//' + result;
+		result = SLASH2 + result;
 	}
 
 	return result;
 }
 
-function formatQuery(query:string):string {
-	return query && ((query.indexOf(QM)== -1 ? QM : '') + query);
+function formatQuery(query:string):string
+{
+	return query && ((query.indexOf(QM)== -1 ? QM : EMPTY) + query);
 }
 
-function formatFragment(fragment:string):string {
-	return fragment && ((fragment.indexOf(HASH)== -1 ? HASH : '') + fragment);
+function formatFragment(fragment:string):string
+{
+	return fragment && ((fragment.indexOf(HASH)== -1 ? HASH : EMPTY) + fragment);
 }
 
 function getPathAndQuery(uri:IUri):string
@@ -264,9 +302,9 @@ function getPathAndQuery(uri:IUri):string
 	var path  = uri.path,
 	    query = uri.query;
 
-	return ''
-		+ (path && ((path.indexOf(SLASH)== -1 ? SLASH : '') + path) || '')
-		+ (formatQuery(query) || '');
+	return EMPTY
+		+ (path && ((path.indexOf(SLASH)== -1 ? SLASH : EMPTY) + path) || EMPTY)
+		+ (formatQuery(query) || EMPTY);
 
 }
 
@@ -280,11 +318,89 @@ function uriToString(uri:IUri):string
 	    pathAndQuery = getPathAndQuery(uri),
 	    fragment     = formatFragment(uri.fragment);
 
-	return ''
-		+ ((scheme && (scheme + ':')) || '')
-		+ (authority || '')
-		+ (pathAndQuery || '')
-		+ (fragment || '')
+	return EMPTY
+		+ ((scheme && (scheme + ':')) || EMPTY)
+		+ (authority || EMPTY)
+		+ (pathAndQuery || EMPTY)
+		+ (fragment || EMPTY)
+
+}
+
+
+function parse(
+	url:string):IUri
+{
+	if(!url)
+		throw new ArgumentException('url', 'Nothing to parse.');
+
+
+	// Could use a regex here, but well follow some rules instead.
+	// The intention is to 'gather' the pieces.  This isn't validation (yet).
+
+	// scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
+	var i:number, result:IUri = {};
+
+	// Anything after the first # is the fragment.
+	i = url.indexOf(HASH);
+	if(i!= -1)
+	{
+		result.fragment = url.substring(i);
+		url = url.substring(0, i);
+	}
+
+	// Anything after the first ? is the query.
+	i = url.indexOf(QM);
+	if(i!= -1)
+	{
+		result.query = url.substring(i);
+		url = url.substring(0, i);
+	}
+
+	// Guarantees a separation.
+	i = url.indexOf(SLASH2);
+	if(i!= -1)
+	{
+		var scheme = trim(url.substring(0, i)), c = /:$/;
+		if(!c.test(scheme))
+			throw new ArgumentException('url','Scheme was improperly formatted');
+
+		scheme = trim(scheme.replace(c,EMPTY));
+		result.scheme = scheme || undefined;
+
+		url = url.substring(i + 2);
+	}
+
+	// Find any path information.
+	i = url.indexOf(SLASH);
+	if(i!= -1)
+	{
+		result.path = url.substring(i) || undefined;
+		url = url.substring(0, i);
+	}
+
+	// Separate user info.
+	i = url.indexOf(AT);
+	if(i!= -1)
+	{
+		result.userInfo = url.substring(0, i) || undefined;
+		url = url.substring(i + 1);
+	}
+
+	// Remaining is host and port.
+	i = url.indexOf(':');
+	if(i!= -1)
+	{
+		var port = parseInt(trim(url.substring(i + 1)));
+		if(isNaN(port))
+			throw new ArgumentException('url','Port was invalid.');
+
+		result.port = port;
+		url = url.substring(0, i);
+	}
+
+	result.host = trim(url) || undefined;
+
+	return result;
 
 }
 

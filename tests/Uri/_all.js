@@ -1,5 +1,5 @@
-///<reference path="../../typings/qunit/qunit"/>
-///<amd-dependency path="QUnit"/>
+///<reference path='../../typings/qunit/qunit'/>
+///<amd-dependency path='QUnit'/>
 define(["require", "exports", '../../source/System/Uri/Uri', "QUnit"], function (require, exports, Uri) {
     function run() {
         var validUri = {
@@ -19,21 +19,30 @@ define(["require", "exports", '../../source/System/Uri/Uri', "QUnit"], function 
             + validUri.path
             + validUri.query
             + validUri.fragment;
-        QUnit.test("Valid Uri", function (assert) {
-            assert.equal(Uri.toString(validUri), validUrl, "Uri.toString(uri) must match source values.");
-            var uri = Uri.from(validUri);
-            assert.equal(uri.toString(), validUrl, "Uri.toString() must match source values.");
-            assert.equal(uri.absoluteUri, validUrl, "Uri.absoluteUri must match source values.");
-            assert.equal(uri.pathAndQuery, uri.path + uri.query, "Uri path and query must equal expected.");
-            assert.equal(uri.queryParams['param'], "hello there", "Uri must decode the query params correctly.");
-            assert.equal(uri.queryParams['flag'], false, "Uri must parse and deserialize the query params correctly.");
-            assert.equal(uri.queryParams['blah'], undefined, "Uri must ignore invalid query params.");
+        QUnit.test('Uri: parse valid', function (assert) {
+            assert.equal(Uri.from(validUrl).absoluteUri, validUrl, 'Uri.from(string) should parse correctly.');
         });
-        QUnit.test("Invalid scheme", function (assert) {
+        QUnit.test('Uri: parse equality', function (assert) {
+            assert.equal(Uri.from(validUrl).equals(validUri), true, 'Uri.from(string) should equal derived values.');
+        });
+        QUnit.test('Uri: valid', function (assert) {
+            assert.equal(Uri.toString(validUri), validUrl, 'Uri.toString(uri) must match source values.');
+            var uri = Uri.from(validUri);
+            assert.equal(uri.toString(), validUrl, 'Uri.toString() must match source values.');
+            assert.equal(uri.absoluteUri, validUrl, 'Uri.absoluteUri must match source values.');
+            assert.equal(uri.pathAndQuery, uri.path + uri.query, 'Uri path and query must equal expected.');
+            assert.equal(uri.queryParams['param'], 'hello there', 'Uri must decode the query params correctly.');
+            assert.equal(uri.queryParams['flag'], false, 'Uri must parse and deserialize the query params correctly.');
+            assert.equal(uri.queryParams['blah'], undefined, 'Uri must ignore invalid query params.');
+        });
+        QUnit.test('Uri: invalid scheme', function (assert) {
             assert.throws(function () {
                 Uri.from({
                     scheme: 'x y z'
                 });
+            });
+            assert.throws(function () {
+                Uri.from('http//');
             });
             assert.throws(function () {
                 Uri.from({
@@ -41,7 +50,7 @@ define(["require", "exports", '../../source/System/Uri/Uri', "QUnit"], function 
                 });
             });
         });
-        QUnit.test("Invalid authority", function (assert) {
+        QUnit.test('Uri: invalid authority', function (assert) {
             assert.throws(function () {
                 Uri.from({
                     userInfo: validUri.userInfo

@@ -105,3 +105,13 @@ export function isFunction(value:any):boolean
 {
 	return typeof value===_FUNCTION;
 }
+
+/**
+ * Returns true if the value parameter is an object.
+ * @param value
+ * @returns {boolean}
+ */
+export function isObject(value:any):boolean
+{
+	return typeof value===_OBJECT;
+}
