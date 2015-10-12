@@ -7,11 +7,22 @@
 define(["require", "exports", '../Types', '../Serialization/Utility'], function (require, exports, Types, Serialization) {
     var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     function encode(values, prefixIfNotEmpty) {
+        if (!values)
+            return '';
         var entries = [];
-        var keys = Object.keys(values);
-        for (var _i = 0; _i < keys.length; _i++) {
-            var k = keys[_i];
-            entries.push(k + KEY_VALUE_SEPARATOR + encodeValue(values[k]));
+        if (values instanceof Array) {
+            for (var _i = 0; _i < values.length; _i++) {
+                var kvp = values[_i];
+                if (kvp)
+                    entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
+            }
+        }
+        else {
+            var keys = Object.keys(values);
+            for (var _a = 0; _a < keys.length; _a++) {
+                var k = keys[_a];
+                entries.push(k + KEY_VALUE_SEPARATOR + encodeValue(values[k]));
+            }
         }
         return (entries.length && prefixIfNotEmpty ? '?' : '')
             + entries.join(ENTRY_SEPARATOR);

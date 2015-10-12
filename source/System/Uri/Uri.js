@@ -7,19 +7,21 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
     var Uri = (function () {
         function Uri(scheme, userInfo, host, port, path, query, fragment) {
             var _ = this;
-            _.scheme = getScheme(scheme);
-            _.userInfo = userInfo;
-            _.host = host;
+            _.scheme = getScheme(scheme) || null;
+            _.userInfo = userInfo || null;
+            _.host = host || null;
             _.port = port;
-            _.path = path;
-            _.query = formatQuery(query);
-            _.fragment = formatFragment(fragment);
+            _.path = path || null;
+            if (!Types.isString(query))
+                query = QueryParams.encode(query);
+            _.query = formatQuery(query) || null;
+            _.fragment = formatFragment(fragment) || null;
             _.absoluteUri = _.getAbsoluteUri();
-            _.authority = _.getAuthority();
-            _.pathAndQuery = _.getPathAndQuery();
+            _.authority = _.getAuthority() || null;
+            _.pathAndQuery = _.getPathAndQuery() || null;
             Object.freeze(_.queryParams
-                = query
-                    ? QueryParams.parseToMap(query)
+                = _.query
+                    ? QueryParams.parseToMap(_.query)
                     : {});
             Object.freeze(_);
         }

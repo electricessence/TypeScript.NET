@@ -15,6 +15,8 @@ import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeEx
 import QueryParams = require('./QueryParams');
 
 
+type Primitive = string|boolean|number;
+
 /**
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
  *
@@ -31,7 +33,7 @@ class Uri implements IUri, IEquatable<IUri>
 	query:string;
 	fragment:string;
 
-	queryParams:IMap<string|boolean|number>;
+	queryParams:IMap<Primitive>;
 
 	/**
 	 * @param scheme The user name, password, or other user-specific information associated with the specified URI.
@@ -48,26 +50,31 @@ class Uri implements IUri, IEquatable<IUri>
 		host:string,
 		port:number,
 		path:string,
-		query:string,
+		query:string|IUriComponentMap|IKeyValuePair<string,Primitive>[],
 		fragment:string)
 	{
 		var _ = this;
-		_.scheme = getScheme(scheme);
-		_.userInfo = userInfo;
-		_.host = host;
+		_.scheme = getScheme(scheme) || null;
+		_.userInfo = userInfo || null;
+		_.host = host || null;
 		_.port = port;
-		_.path = path;
-		_.query = formatQuery(query);
-		_.fragment = formatFragment(fragment);
+		_.path = path || null;
+
+
+		if(!Types.isString(query))
+			query = QueryParams.encode(<IUriComponentMap|IKeyValuePair<string,Primitive>[]>query);
+
+		_.query = formatQuery(<string>query) || null;
+		_.fragment = formatFragment(fragment) || null;
 
 		// This should validate the uri...
 		_.absoluteUri = _.getAbsoluteUri();
-		_.authority = _.getAuthority();
-		_.pathAndQuery = _.getPathAndQuery();
+		_.authority = _.getAuthority() || null;
+		_.pathAndQuery = _.getPathAndQuery() || null;
 
 		Object.freeze(_.queryParams
-			= query
-			? QueryParams.parseToMap(query)
+			= _.query
+			? QueryParams.parseToMap(_.query)
 			: {});
 
 		// Intended to be read-only.  Call .toMap() to get a writable copy.

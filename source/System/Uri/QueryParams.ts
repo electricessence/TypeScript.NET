@@ -23,14 +23,26 @@ type Primitive = string|boolean|number;
  * Returns the encoded URI string
  */
 export function encode(
-	values:IUriComponentMap,
+	values:IUriComponentMap|IKeyValuePair<string,Primitive>[],
 	prefixIfNotEmpty?:boolean):string
 {
+	if(!values) return '';
 	var entries:string[] = [];
-	var keys = Object.keys(values);
-	for(var k of keys)
+
+	if(values instanceof Array)
 	{
-		entries.push(k + KEY_VALUE_SEPARATOR + encodeValue(<any>values[k]));
+		for(var kvp of values)
+		{
+			if(kvp) entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
+		}
+	}
+	else
+	{
+		var keys = Object.keys(values);
+		for(var k of keys)
+		{
+			entries.push(k + KEY_VALUE_SEPARATOR + encodeValue((<any>values)[k]));
+		}
 	}
 
 	return (entries.length && prefixIfNotEmpty ? '?' : '')
@@ -71,7 +83,7 @@ export function parse(
 	deserialize:boolean = true,
 	decodeValues:boolean = true):void
 {
-	if(query && (query = query.replace(/^\s*\?+/,'')))
+	if(query && (query = query.replace(/^\s*\?+/, '')))
 	{
 		var entries = query.split(ENTRY_SEPARATOR);
 		for(var entry of entries)
