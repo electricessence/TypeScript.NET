@@ -93,7 +93,8 @@
 					<li><strong>Exceptions</strong>: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using <em>instanceof</em> as if you used multiple <em>catch</em> statements in C#.</li>
 					<li><strong>Collections</strong>: Multiple collections types with standard ICollection&lt;T&gt; and IEnumerable&lt;T&gt; interfaces.  LinkedList&lt;T&gt;, Queue&lt;T&gt;, Dictionary&lt;T&gt;, and more, all unit tested using a common interface test of ICollection&lt;T&gt;.</li>
 					<li><strong>IDisposable</strong>: Additional interfaces, utilities, and classes like <strong>DisposableBase</strong> that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator&lt;T&gt;, use IDisposable to ensure releasing of references.</li>
-					<li><strong>DateTime &amp; TimeSpan</strong>: The <strong>System/Time</strong> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
+					<li><strong>DateTime</strong> &amp; <strong>TimeSpan</strong>: The <strong>System/Time</strong> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
+					<li><strong>Uri</strong>, <strong>QueryParams</strong>, &amp; <strong>QueryBuilder</strong>:  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.</li>
 				</ul>
 				<h2 id="usage">Usage</h2>
 				<p>After some time and effort, I&#39;ve decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:</p>
@@ -117,6 +118,9 @@
 				<p>Currently the unit test cover many example usages.</p>
 				<h2 id="documentation">Documentation</h2>
 				<p>Currently improving over time using JSDoc style comments and TypeDoc. (<a href="http://typedoc.io/">http://typedoc.io/</a>)<br>View Documentation: <a href="http://electricessence.github.io/TypeScript.NET/documentation/">http://electricessence.github.io/TypeScript.NET/documentation/</a></p>
+				<h2 id="discussion">Discussion</h2>
+				<p><a href="https://redd.it/3ok0bm">https://redd.it/3ok0bm</a> TypeScript
+				<a href="https://redd.it/3ojzbt">https://redd.it/3ojzbt</a> .NET</p>
 				<h2 id="learn-connect-evolve">Learn, Connect &amp; Evolve</h2>
 				<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
 			</div>
