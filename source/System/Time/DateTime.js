@@ -54,7 +54,8 @@ define(["require", "exports", './HowMany'], function (require, exports, HowMany)
         };
         return DateTime;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = DateTime;
     Object.freeze(DateTime);
-    return DateTime;
 });
 //# sourceMappingURL=DateTime.js.map

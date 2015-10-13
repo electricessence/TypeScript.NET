@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types'], function (require, exports, Types) {
+define(["require", "exports", '../Types'], function (require, exports, Types_1) {
     'use strict';
     function dispose() {
         var disposables = [];
@@ -38,7 +38,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
     function disposeSingle(disposable, trapExceptions) {
         if (disposable
             && 'dispose' in disposable
-            && typeof disposable.dispose == Types.FUNCTION) {
+            && typeof disposable.dispose == Types_1.default.FUNCTION) {
             if (trapExceptions) {
                 try {
                     disposable.dispose();

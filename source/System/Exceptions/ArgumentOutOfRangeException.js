@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './ArgumentException'], function (require, exports, ArgumentException) {
+define(["require", "exports", './ArgumentException'], function (require, exports, ArgumentException_1) {
     var NAME = 'ArgumentOutOfRangeException';
     var ArgumentOutOfRangeException = (function (_super) {
         __extends(ArgumentOutOfRangeException, _super);
@@ -21,7 +21,8 @@ define(["require", "exports", './ArgumentException'], function (require, exports
             return NAME;
         };
         return ArgumentOutOfRangeException;
-    })(ArgumentException);
-    return ArgumentOutOfRangeException;
+    })(ArgumentException_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ArgumentOutOfRangeException;
 });
 //# sourceMappingURL=ArgumentOutOfRangeException.js.map

@@ -8,12 +8,13 @@
 ///<reference path="../Disposable/IDisposable.d.ts"/>
 ///<reference path="../FunctionTypes.d.ts"/>
 
-import LinkedList = require('../Collections/LinkedList');
-import DisposeUtility = require('../Disposable/Utility')
-import Subscription = require('./Subscription');
+import LinkedList from '../Collections/LinkedList';
+import * as DisposeUtility from '../Disposable/Utility'
+import Subscription from './Subscription';
 
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
 
+export default
 class SubscribableBase<TSubscriber>
 implements IDisposable
 {
@@ -96,5 +97,3 @@ implements IDisposable
 	}
 
 }
-
-export = SubscribableBase;

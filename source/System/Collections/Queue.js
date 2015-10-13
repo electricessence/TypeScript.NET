@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', '../Types', './Array/Utility', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, Types, AU, EnumeratorBase, forEach, NotImplementedException, InvalidOperationException, ArgumentException, ArgumentOutOfRangeException) {
+define(["require", "exports", '../Compare', './Array/Utility', '../Types', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, AU, Types_1, EnumeratorBase_1, forEach_1, NotImplementedException_1, InvalidOperationException_1, ArgumentException_1, ArgumentOutOfRangeException_1) {
     var MINIMUM_GROW = 4 | 0;
     var GROW_FACTOR_HALF = 100 | 0;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
@@ -18,7 +18,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
             if (!source)
                 _._array = emptyArray;
             else {
-                if (Types.isNumber(source)) {
+                if (Types_1.default.isNumber(source)) {
                     var capacity = source;
                     assertIntegerZeroOrGreater(capacity, "capacity");
                     _._array = capacity
@@ -30,7 +30,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
                     _._array = AU.initialize((se instanceof Array || "length" in se)
                         ? se.length
                         : DEFAULT_CAPACITY);
-                    forEach(se, function (e) { return _.enqueue(e); });
+                    forEach_1.default(se, function (e) { return _.enqueue(e); });
                     _._version = 0;
                 }
             }
@@ -100,7 +100,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
             return size ? _.copyTo(arr) : arr;
         };
         Queue.prototype.remove = function (item) {
-            throw new NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
+            throw new NotImplementedException_1.default("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                 " since it would require destroying the underlying array to remove the item.");
         };
         Queue.prototype.dispose = function () {
@@ -165,7 +165,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         Queue.prototype.dequeue = function () {
             var _ = this;
             if (_._size == 0)
-                throw new InvalidOperationException("Cannot dequeue an empty queue.");
+                throw new InvalidOperationException_1.default("Cannot dequeue an empty queue.");
             var array = _._array, head = _._head;
             var removed = _._array[head];
             array[head] = null;
@@ -181,7 +181,7 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         };
         Queue.prototype.peek = function () {
             if (this._size == 0)
-                throw new InvalidOperationException("Cannot call peek on an empty queue.");
+                throw new InvalidOperationException_1.default("Cannot call peek on an empty queue.");
             return this._array[this._head];
         };
         Queue.prototype.trimExcess = function () {
@@ -194,12 +194,12 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
             var _ = this;
             var index;
             var version;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 version = _._version;
                 index = 0;
             }, function (yielder) {
                 if (version != _._version)
-                    throw new InvalidOperationException("Collection was changed during enumeration.");
+                    throw new InvalidOperationException_1.default("Collection was changed during enumeration.");
                 if (index == _._size)
                     return yielder.yieldBreak();
                 return yielder.yieldReturn(_._getElement(index++));
@@ -207,18 +207,19 @@ define(["require", "exports", '../Compare', '../Types', './Array/Utility', './En
         };
         return Queue;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Queue;
     function assertInteger(value, property) {
         if (value != Math.floor(value))
-            throw new ArgumentException(property, "Must be an integer.");
+            throw new ArgumentException_1.default(property, "Must be an integer.");
     }
     function assertZeroOrGreater(value, property) {
         if (value < 0)
-            throw new ArgumentOutOfRangeException(property, value, "Must be greater than zero");
+            throw new ArgumentOutOfRangeException_1.default(property, value, "Must be greater than zero");
     }
     function assertIntegerZeroOrGreater(value, property) {
         assertInteger(value, property);
         assertZeroOrGreater(value, property);
     }
-    return Queue;
 });
 //# sourceMappingURL=Queue.js.map

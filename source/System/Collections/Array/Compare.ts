@@ -5,8 +5,8 @@
 
 ///<reference path="IArray.d.ts"/>
 ///<reference path="../../FunctionTypes.d.ts"/>
-import Values = require('../../Compare');
-import Types = require('../../Types');
+import * as Values from '../../Compare';
+import Types from '../../Types';
 
 /*  validateSize: Utility for quick validation/invalidation of array equality.
 	Why this way?  Why not pass a closure for the last return?

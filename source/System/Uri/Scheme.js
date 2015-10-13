@@ -27,6 +27,7 @@ define(["require", "exports"], function (require, exports) {
     UriScheme[PIPE] = UriScheme.pipe;
     UriScheme[TCP] = UriScheme.tcp;
     Object.freeze(UriScheme);
-    return UriScheme;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = UriScheme;
 });
 //# sourceMappingURL=Scheme.js.map

@@ -4,13 +4,14 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import Types = require('../Types');
-import Exception = require('../Exception');
-import SystemException = require('./SystemException');
+import Types from '../Types';
+import Exception from '../Exception';
+import SystemException from './SystemException';
 
 
 const NAME:string = 'ArgumentException';
 
+export default
 class ArgumentException extends SystemException
 {
 
@@ -41,5 +42,3 @@ class ArgumentException extends SystemException
 	}
 
 }
-
-export = ArgumentException;

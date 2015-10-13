@@ -13,6 +13,7 @@ const NAME:string = 'Exception';
 /**
  * Represents errors that occur during application execution.
  */
+export default
 class Exception implements Error, IDisposable
 {
 	/**
@@ -75,5 +76,3 @@ class Exception implements Error, IDisposable
 				delete data[k];
 	}
 }
-
-export = Exception;

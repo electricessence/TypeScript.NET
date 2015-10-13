@@ -7,9 +7,10 @@
 
 ///<reference path="IObserver.d.ts"/>
 ///<reference path="IObservable.d.ts"/>
-import SubscribableBase = require('./SubscribableBase');
+import SubscribableBase from './SubscribableBase';
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
+export default
 class ObservableNodeBase<T>
 extends SubscribableBase<IObserver<T>> implements IObservable<T>, IObserver<T>
 {
@@ -76,5 +77,3 @@ function processAction<T>(
 	}
 
 }
-
-export = ObservableNodeBase;

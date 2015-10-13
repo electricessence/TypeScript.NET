@@ -3,27 +3,27 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types', '../Exceptions/InvalidOperationException'], function (require, exports, Types, InvalidOperationException) {
+define(["require", "exports", '../Types', '../Exceptions/InvalidOperationException'], function (require, exports, Types_1, InvalidOperationException_1) {
     var EMPTY = '', TRUE = 'true', FALSE = 'false';
     function toString(value, defaultForUnknown) {
         var v = value;
         switch (typeof v) {
-            case Types.NULL:
-                return Types.NULL;
-            case Types.UNDEFINED:
-                return Types.UNDEFINED;
-            case Types.STRING:
+            case Types_1.default.NULL:
+                return Types_1.default.NULL;
+            case Types_1.default.UNDEFINED:
+                return Types_1.default.UNDEFINED;
+            case Types_1.default.STRING:
                 return v;
-            case Types.BOOLEAN:
+            case Types_1.default.BOOLEAN:
                 return v ? TRUE : FALSE;
-            case Types.NUMBER:
+            case Types_1.default.NUMBER:
                 return EMPTY + v;
             default:
-                if ('serialize' in v && typeof v.serialze == Types.FUNCTION)
+                if ('serialize' in v && typeof v.serialze == Types_1.default.FUNCTION)
                     return v.serialize();
                 else if (arguments.length > 1)
                     return defaultForUnknown;
-                var ex = new InvalidOperationException('Attempting to serialize unidentifiable type.');
+                var ex = new InvalidOperationException_1.default('Attempting to serialize unidentifiable type.');
                 ex.data['value'] = v;
                 throw ex;
         }
@@ -34,9 +34,9 @@ define(["require", "exports", '../Types', '../Exceptions/InvalidOperationExcepti
             if (caseInsensitive)
                 value = value.toLowerCase();
             switch (value) {
-                case Types.NULL:
+                case Types_1.default.NULL:
                     return null;
-                case Types.UNDEFINED:
+                case Types_1.default.UNDEFINED:
                     return undefined;
                 case TRUE:
                     return true;

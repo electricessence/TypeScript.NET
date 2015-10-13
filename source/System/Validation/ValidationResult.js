@@ -35,6 +35,7 @@ define(["require", "exports"], function (require, exports) {
         };
         return ValidationResult;
     })();
-    return ValidationResult;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ValidationResult;
 });
 //# sourceMappingURL=ValidationResult.js.map

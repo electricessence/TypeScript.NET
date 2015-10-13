@@ -5,8 +5,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types = require('../Types');
-import Serialization = require('../Serialization/Utility');
+import Types from '../Types';
+import * as Serialization from '../Serialization/Utility';
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.

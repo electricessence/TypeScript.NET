@@ -34,4 +34,4 @@ enum UriHostNameType {
 
 Object.freeze(UriHostNameType);
 
-export = UriHostNameType;
+export default UriHostNameType;

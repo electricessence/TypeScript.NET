@@ -4,10 +4,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-define(["require", "exports", '../Collections/LinkedList', '../Disposable/Utility', './Subscription'], function (require, exports, LinkedList, DisposeUtility, Subscription) {
+define(["require", "exports", '../Collections/LinkedList', '../Disposable/Utility', './Subscription'], function (require, exports, LinkedList_1, DisposeUtility, Subscription_1) {
     var SubscribableBase = (function () {
         function SubscribableBase() {
-            this.__subscriptions = new LinkedList();
+            this.__subscriptions = new LinkedList_1.default();
         }
         SubscribableBase.prototype._getSubscribers = function () {
             return this.__subscriptions
@@ -31,7 +31,7 @@ define(["require", "exports", '../Collections/LinkedList', '../Disposable/Utilit
             var n = _._findEntryNode(subscriber);
             if (n)
                 return n.value;
-            var s = new Subscription(_, subscriber);
+            var s = new Subscription_1.default(_, subscriber);
             _.__subscriptions.add(s);
             return s;
         };
@@ -60,6 +60,7 @@ define(["require", "exports", '../Collections/LinkedList', '../Disposable/Utilit
         };
         return SubscribableBase;
     })();
-    return SubscribableBase;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = SubscribableBase;
 });
 //# sourceMappingURL=SubscribableBase.js.map

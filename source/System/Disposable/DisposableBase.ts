@@ -6,8 +6,9 @@
 
 ///<reference path="IDisposableAware.d.ts"/>
 
-import ObjectDisposedException = require('./ObjectDisposedException');
+import ObjectDisposedException from './ObjectDisposedException';
 
+export default
 class DisposableBase implements IDisposableAware
 {
 
@@ -62,5 +63,3 @@ class DisposableBase implements IDisposableAware
 	}
 
 }
-
-export = DisposableBase;

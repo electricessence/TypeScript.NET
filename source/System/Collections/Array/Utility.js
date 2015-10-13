@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Types'], function (require, exports, Types) {
+define(["require", "exports", '../../Types'], function (require, exports, Types_1) {
     function initialize(length) {
         var array;
         if (length > 65536)
@@ -94,7 +94,7 @@ define(["require", "exports", '../../Types'], function (require, exports, Types)
     function findIndex(array, predicate) {
         if (!array)
             throw new Error("ArgumentNullException: 'array' cannot be null.");
-        if (!Types.isFunction(predicate))
+        if (!Types_1.default.isFunction(predicate))
             throw new Error("InvalidArgumentException: 'predicate' must be a function.");
         var len = array.length | 0;
         for (var i = 0 | 0; i < len; ++i) {

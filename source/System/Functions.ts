@@ -7,6 +7,7 @@
 /**
  * Can be used statically or extended for varying different reusable function signatures.
  */
+export default
 class Functions
 {
 
@@ -74,5 +75,3 @@ class Functions
 }
 
 var rootFunctions:Functions = new Functions();
-
-export = Functions;

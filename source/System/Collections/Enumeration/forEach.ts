@@ -5,11 +5,10 @@
 
 ///<reference path="IEnumerable.d.ts"/>
 ///<reference path="../Array/IArray.d.ts"/>
-import DU = require('../../Disposable/Utility');
-import Enumerator = require('./Enumerator');
-import using = DU.using;
+import {using} from '../../Disposable/Utility';
+import * as Enumerator from '../../Collections/Enumeration/Enumerator';
 
-function forEach<T>(
+export default function forEach<T>(
     enumerable:IEnumerable<T> | IArray<T>,
     action:(element:T, index?:number) => any):void
 {
@@ -21,4 +20,3 @@ function forEach<T>(
     }
 }
 
-export = forEach;

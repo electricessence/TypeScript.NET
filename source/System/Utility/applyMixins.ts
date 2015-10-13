@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-function applyMixins(derivedConstructor:any, baseConstructors:any[]):void
+export default function applyMixins(derivedConstructor:any, baseConstructors:any[]):void
 {
 	baseConstructors
 		.forEach(bc =>
@@ -17,5 +17,3 @@ function applyMixins(derivedConstructor:any, baseConstructors:any[]):void
 		}
 	);
 }
-
-export = applyMixins;

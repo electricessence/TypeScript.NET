@@ -6,13 +6,13 @@
 
 ///<reference path="IUri.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
-import copy = require('../Utility/shallowCopy');
-import Types = require('../Types');
-import UriScheme = require('./Scheme');
-import ArgumentException = require('../Exceptions/ArgumentException');
-import ArgumentNullException = require('../Exceptions/ArgumentNullException');
-import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
-import QueryParams = require('./QueryParams');
+import Types from '../Types';
+import * as QueryParams from '../Uri/QueryParams';
+import copy from '../Utility/shallowCopy';
+import UriScheme from '../Uri/Scheme';
+import ArgumentException from '../Exceptions/ArgumentException';
+import ArgumentNullException from '../Exceptions/ArgumentNullException';
+import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
 
 
 type Primitive = string|boolean|number;
@@ -22,6 +22,7 @@ type Primitive = string|boolean|number;
  *
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  */
+export default
 class Uri implements IUri, IEquatable<IUri>
 {
 
@@ -410,6 +411,3 @@ function parse(
 	return result;
 
 }
-
-
-export = Uri;

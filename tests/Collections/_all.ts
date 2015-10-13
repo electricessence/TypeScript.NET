@@ -1,15 +1,13 @@
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 /// <amd-dependency path="QUnit"/>
 
-import LinkedList = require('./LinkedList');
-import Queue = require('./Queue');
-import OrderedStringKeyDictionary = require('./OrderedStringKeyDictionary');
+import LinkedList from './LinkedList';
+import Queue from './Queue';
+import OrderedStringKeyDictionary from './OrderedStringKeyDictionary';
 
-function run()
+export default function run()
 {
 	LinkedList();
 	Queue();
 	OrderedStringKeyDictionary();
 }
-
-export = run;

@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './SystemException'], function (require, exports, SystemException) {
+define(["require", "exports", './SystemException'], function (require, exports, SystemException_1) {
     var NAME = 'NullReferenceException';
     var NullReferenceException = (function (_super) {
         __extends(NullReferenceException, _super);
@@ -19,7 +19,8 @@ define(["require", "exports", './SystemException'], function (require, exports, 
             return NAME;
         };
         return NullReferenceException;
-    })(SystemException);
-    return NullReferenceException;
+    })(SystemException_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = NullReferenceException;
 });
 //# sourceMappingURL=NullReferenceException.js.map

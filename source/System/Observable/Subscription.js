@@ -40,6 +40,7 @@ define(["require", "exports"], function (require, exports) {
         };
         return Subscription;
     })();
-    return Subscription;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Subscription;
 });
 //# sourceMappingURL=Subscription.js.map

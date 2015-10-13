@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types = require('../Types');
+import Types from '../Types';
 
 export function format(source:string, ...args:any[])
 {

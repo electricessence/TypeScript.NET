@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types'], function (require, exports, Types) {
+define(["require", "exports", '../Types'], function (require, exports, Types_1) {
     function format(source) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -18,9 +18,9 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
         return source.replace(/\{([^{}]*)\}/g, function (a, b) {
             var r = o[b];
             switch (typeof r) {
-                case Types.STRING:
+                case Types_1.default.STRING:
                     return true;
-                case Types.NUMBER:
+                case Types_1.default.NUMBER:
                     return r;
                 default:
                     return a;

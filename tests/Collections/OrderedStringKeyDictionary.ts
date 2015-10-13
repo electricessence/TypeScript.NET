@@ -1,8 +1,8 @@
 ///<reference path="..\..\source\System\Collections\Dictionaries\IDictionary.d.ts"/>
-import ICollectionTests = require('./ICollection');
-import OrderedStringKeyDictionary = require('../../source/System/Collections/Dictionaries/OrderedStringKeyDictionary');
+import * as ICollectionTests from './ICollection';
+import OrderedStringKeyDictionary from '../../source/System/Collections/Dictionaries/OrderedStringKeyDictionary';
 
-function run()
+export default function run()
 {
 
 	ICollectionTests.Collection<IKeyValuePair<string,number>>(
@@ -17,5 +17,3 @@ function run()
 			{key:'F',value:6}
 		]);
 }
-
-export = run;

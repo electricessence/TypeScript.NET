@@ -1,6 +1,6 @@
 ///<reference path='../../typings/qunit/qunit'/>
 ///<amd-dependency path='QUnit'/>
-define(["require", "exports", '../../source/System/Uri/Uri', "QUnit"], function (require, exports, Uri) {
+define(["require", "exports", '../../source/System/Uri/Uri', "QUnit"], function (require, exports, Uri_1) {
     function run() {
         var validUri = {
             scheme: 'http',
@@ -20,14 +20,14 @@ define(["require", "exports", '../../source/System/Uri/Uri', "QUnit"], function 
             + validUri.query
             + validUri.fragment;
         QUnit.test('Uri: parse valid', function (assert) {
-            assert.equal(Uri.from(validUrl).absoluteUri, validUrl, 'Uri.from(string) should parse correctly.');
+            assert.equal(Uri_1.default.from(validUrl).absoluteUri, validUrl, 'Uri.from(string) should parse correctly.');
         });
         QUnit.test('Uri: parse equality', function (assert) {
-            assert.equal(Uri.from(validUrl).equals(validUri), true, 'Uri.from(string) should equal derived values.');
+            assert.equal(Uri_1.default.from(validUrl).equals(validUri), true, 'Uri.from(string) should equal derived values.');
         });
         QUnit.test('Uri: valid', function (assert) {
-            assert.equal(Uri.toString(validUri), validUrl, 'Uri.toString(uri) must match source values.');
-            var uri = Uri.from(validUri);
+            assert.equal(Uri_1.default.toString(validUri), validUrl, 'Uri.toString(uri) must match source values.');
+            var uri = Uri_1.default.from(validUri);
             assert.equal(uri.toString(), validUrl, 'Uri.toString() must match source values.');
             assert.equal(uri.absoluteUri, validUrl, 'Uri.absoluteUri must match source values.');
             assert.equal(uri.pathAndQuery, uri.path + uri.query, 'Uri path and query must equal expected.');
@@ -37,32 +37,33 @@ define(["require", "exports", '../../source/System/Uri/Uri', "QUnit"], function 
         });
         QUnit.test('Uri: invalid scheme', function (assert) {
             assert.throws(function () {
-                Uri.from({
+                Uri_1.default.from({
                     scheme: 'x y z'
                 });
             });
             assert.throws(function () {
-                Uri.from('http//');
+                Uri_1.default.from('http//');
             });
             assert.throws(function () {
-                Uri.from({
+                Uri_1.default.from({
                     scheme: 'https:s'
                 });
             });
         });
         QUnit.test('Uri: invalid authority', function (assert) {
             assert.throws(function () {
-                Uri.from({
+                Uri_1.default.from({
                     userInfo: validUri.userInfo
                 });
             });
             assert.throws(function () {
-                Uri.from({
+                Uri_1.default.from({
                     port: validUri.port
                 });
             });
         });
     }
-    return run;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = run;
 });
 //# sourceMappingURL=_all.js.map

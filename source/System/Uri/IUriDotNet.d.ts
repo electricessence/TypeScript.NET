@@ -10,7 +10,7 @@
 ///<reference path="IUri.d.ts"/>
 
 
-import UriHostNameType = require('./HostNameType');
+import UriHostNameType from './HostNameType';
 
 
 /**

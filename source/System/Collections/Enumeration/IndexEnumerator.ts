@@ -1,5 +1,6 @@
-import EnumeratorBase= require('./EnumeratorBase');
+import EnumeratorBase from './EnumeratorBase';
 
+export default
 class IndexEnumerator<T> extends EnumeratorBase<T>
 {
 
@@ -55,5 +56,3 @@ class IndexEnumerator<T> extends EnumeratorBase<T>
 		);
 	}
 }
-
-export = IndexEnumerator;

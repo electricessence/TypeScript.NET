@@ -9,7 +9,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './SubscribableBase'], function (require, exports, SubscribableBase) {
+define(["require", "exports", './SubscribableBase'], function (require, exports, SubscribableBase_1) {
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {
@@ -25,7 +25,9 @@ define(["require", "exports", './SubscribableBase'], function (require, exports,
             processAction(this._unsubscribeAll(true), function (s) { s.onCompleted && s.onCompleted(); });
         };
         return ObservableNodeBase;
-    })(SubscribableBase);
+    })(SubscribableBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ObservableNodeBase;
     var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
     function processAction(observers, handler, dispose) {
         if (dispose === void 0) { dispose = true; }
@@ -52,6 +54,5 @@ define(["require", "exports", './SubscribableBase'], function (require, exports,
                 };
         }
     }
-    return ObservableNodeBase;
 });
 //# sourceMappingURL=ObservableNodeBase.js.map

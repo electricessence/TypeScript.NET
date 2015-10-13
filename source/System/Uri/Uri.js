@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException', './QueryParams'], function (require, exports, Types, UriScheme, ArgumentException, ArgumentOutOfRangeException, QueryParams) {
+define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, QueryParams, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1) {
     var Uri = (function () {
         function Uri(scheme, userInfo, host, port, path, query, fragment) {
             var _ = this;
@@ -12,7 +12,7 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
             _.host = host || null;
             _.port = port;
             _.path = path || null;
-            if (!Types.isString(query))
+            if (!Types_1.default.isString(query))
                 query = QueryParams.encode(query);
             _.query = formatQuery(query) || null;
             _.fragment = formatFragment(fragment) || null;
@@ -29,7 +29,7 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
             return this.absoluteUri == Uri.toString(other);
         };
         Uri.from = function (url) {
-            var uri = (!url || Types.isString(url))
+            var uri = (!url || Types_1.default.isString(url))
                 ? parse(url) : url;
             return new Uri(uri.scheme, uri.userInfo, uri.host, uri.port, uri.path, uri.query, uri.fragment);
         };
@@ -86,23 +86,25 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
         };
         return Uri;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Uri;
     var SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
     function trim(source) {
         return source.replace(/^\s+|\s+$/g, EMPTY);
     }
     function getScheme(scheme) {
         var s = scheme;
-        if (Types.isString(s)) {
+        if (Types_1.default.isString(s)) {
             if (!s)
                 return undefined;
-            s = UriScheme[trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
+            s = Scheme_1.default[trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
             if (isNaN(s))
-                throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
+                throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
         }
-        if (Types.isNumber(s, false)) {
-            s = UriScheme[s];
+        if (Types_1.default.isNumber(s, false)) {
+            s = Scheme_1.default[s];
             if (!s)
-                throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
+                throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
             return s;
         }
         return undefined;
@@ -110,9 +112,9 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
     function getAuthority(uri) {
         if (!uri.host) {
             if (uri.userInfo)
-                throw new ArgumentException('host', 'Cannot include user info when there is no host.');
+                throw new ArgumentException_1.default('host', 'Cannot include user info when there is no host.');
             if (!isNaN(uri.port))
-                throw new ArgumentException('host', 'Cannot include a port when there is no host.');
+                throw new ArgumentException_1.default('host', 'Cannot include a port when there is no host.');
         }
         var result = uri.host || EMPTY;
         if (result) {
@@ -148,7 +150,7 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
     }
     function parse(url) {
         if (!url)
-            throw new ArgumentException('url', 'Nothing to parse.');
+            throw new ArgumentException_1.default('url', 'Nothing to parse.');
         var i, result = {};
         i = url.indexOf(HASH);
         if (i != -1) {
@@ -164,7 +166,7 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
         if (i != -1) {
             var scheme = trim(url.substring(0, i)), c = /:$/;
             if (!c.test(scheme))
-                throw new ArgumentException('url', 'Scheme was improperly formatted');
+                throw new ArgumentException_1.default('url', 'Scheme was improperly formatted');
             scheme = trim(scheme.replace(c, EMPTY));
             result.scheme = scheme || undefined;
             url = url.substring(i + 2);
@@ -183,13 +185,12 @@ define(["require", "exports", '../Types', './Scheme', '../Exceptions/ArgumentExc
         if (i != -1) {
             var port = parseInt(trim(url.substring(i + 1)));
             if (isNaN(port))
-                throw new ArgumentException('url', 'Port was invalid.');
+                throw new ArgumentException_1.default('url', 'Port was invalid.');
             result.port = port;
             url = url.substring(0, i);
         }
         result.host = trim(url) || undefined;
         return result;
     }
-    return Uri;
 });
 //# sourceMappingURL=Uri.js.map

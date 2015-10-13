@@ -1,9 +1,9 @@
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
 
-import ArrayProcedure = require('../../source/System/Collections/Array/Procedure');
+import * as ArrayProcedure from '../../source/System/Collections/Array/Procedure';
 
-function run() {
+export default function run() {
     // Min/Max tests...
     var minA = -10, maxA = 2000,
         minB = -Infinity, maxB = Infinity;
@@ -46,5 +46,3 @@ function run() {
     });
 
 }
-
-export = run;

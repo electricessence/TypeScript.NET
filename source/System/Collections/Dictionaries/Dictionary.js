@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports, Values, Types, Functions, DictionaryAbstractBase, EnumeratorBase) {
+define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports, Compare_1, Types_1, Functions_1, DictionaryAbstractBase_1, EnumeratorBase_1) {
     var HashEntry = (function () {
         function HashEntry(key, value, prev, next) {
             this.key = key;
@@ -82,14 +82,14 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
             return "null";
         if (obj === undefined)
             return "undefined";
-        return (typeof obj.toString === Types.FUNCTION)
+        return (typeof obj.toString === Types_1.default.FUNCTION)
             ? obj.toString()
             : Object.prototype.toString.call(obj);
     }
     var Dictionary = (function (_super) {
         __extends(Dictionary, _super);
         function Dictionary(compareSelector) {
-            if (compareSelector === void 0) { compareSelector = Functions.Identity; }
+            if (compareSelector === void 0) { compareSelector = Functions_1.default.Identity; }
             _super.call(this);
             this.compareSelector = compareSelector;
             this._count = 0;
@@ -101,7 +101,7 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
             var compareKey = comparer(key);
             var hash = computeHashCode(compareKey), entry;
             if (callHasOwnProperty(buckets, hash)) {
-                var equal = Values.areEqual;
+                var equal = Compare_1.areEqual;
                 var array = buckets[hash];
                 for (var i = 0; i < array.length; i++) {
                     var old = array[i];
@@ -195,7 +195,7 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
         });
         Dictionary.prototype.getEnumerator = function () {
             var _ = this, currentEntry;
-            return new EnumeratorBase(function () { currentEntry = _._entries.first; }, function (yielder) {
+            return new EnumeratorBase_1.default(function () { currentEntry = _._entries.first; }, function (yielder) {
                 if (currentEntry != null) {
                     var result = { key: currentEntry.key, value: currentEntry.value };
                     currentEntry = currentEntry.next;
@@ -223,7 +223,8 @@ define(["require", "exports", '../../Compare', '../../Types', '../../Functions',
             configurable: true
         });
         return Dictionary;
-    })(DictionaryAbstractBase);
-    return Dictionary;
+    })(DictionaryAbstractBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Dictionary;
 });
 //# sourceMappingURL=Dictionary.js.map

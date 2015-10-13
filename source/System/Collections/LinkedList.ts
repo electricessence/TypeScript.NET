@@ -7,17 +7,17 @@
 
 ///<reference path="ILinkedListNode.d.ts"/>
 ///<reference path="ILinkedList.d.ts"/>
-import Values = require('../Compare');
-import TextUtility = require('../Text/Utility');
-import ArrayUtility = require('./Array/Utility');
-import Enumerator = require('./Enumeration/Enumerator');
-import EnumeratorBase = require('./Enumeration/EnumeratorBase');
+import * as Values from '../Compare';
+import * as TextUtility from '../Text/Utility';
+import * as ArrayUtility from '../Collections/Array/Utility';
+import * as Enumerator from './Enumeration/Enumerator';
+import EnumeratorBase from './Enumeration/EnumeratorBase';
 
-import InvalidOperationException = require('../Exceptions/InvalidOperationException');
+import InvalidOperationException from '../Exceptions/InvalidOperationException';
 
-import ArgumentException = require('../Exceptions/ArgumentException');
-import ArgumentNullException = require('../Exceptions/ArgumentNullException');
-import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
+import ArgumentException from '../Exceptions/ArgumentException';
+import ArgumentNullException from '../Exceptions/ArgumentNullException';
+import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
 
 
 /*****************************
@@ -85,7 +85,9 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):Node<T>
 	return n;
 }
 
-class LinkedList<T> implements ILinkedList<T>
+export default
+class LinkedList<T>
+implements ILinkedList<T>
 {
 	private _first:Node<T>;
 	private _last:Node<T>;
@@ -548,5 +550,3 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 
 }
 
-
-export = LinkedList;

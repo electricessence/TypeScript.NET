@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Types', '../../Compare'], function (require, exports, Types, ValueCompare) {
+define(["require", "exports", '../../Types', '../../Compare'], function (require, exports, Types_1, ValueCompare) {
     function ensureArray(value) {
         return value instanceof Array
             ? value
@@ -11,7 +11,7 @@ define(["require", "exports", '../../Types', '../../Compare'], function (require
     function createComparer(selector, order, equivalentToNaN) {
         if (order === void 0) { order = 1; }
         if (equivalentToNaN === void 0) { equivalentToNaN = NaN; }
-        var nanHasEquivalent = !Types.isTrueNaN(equivalentToNaN);
+        var nanHasEquivalent = !Types_1.default.isTrueNaN(equivalentToNaN);
         return function (a, b) {
             var aValue = ensureArray(selector(a));
             var bValue = ensureArray(selector(b));
@@ -22,9 +22,9 @@ define(["require", "exports", '../../Types', '../../Compare'], function (require
                     ? (i < oArray.length ? oArray[i] : 1)
                     : order;
                 if (nanHasEquivalent) {
-                    if (Types.isTrueNaN(vA))
+                    if (Types_1.default.isTrueNaN(vA))
                         vA = equivalentToNaN;
-                    if (Types.isTrueNaN(vA))
+                    if (Types_1.default.isTrueNaN(vA))
                         vB = equivalentToNaN;
                 }
                 var r = ValueCompare.compare(vA, vB);

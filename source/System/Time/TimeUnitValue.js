@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", './TimeUnit', './TimeSpan', '../Compare'], function (require, exports, TimeUnit, TimeSpan, Values) {
+define(["require", "exports", '../Compare', './TimeUnit', './TimeSpan'], function (require, exports, Compare_1, TimeUnit_1, TimeSpan_1) {
     var TimeUnitValue = (function () {
         function TimeUnitValue(value, _type) {
             this.value = value;
@@ -12,7 +12,7 @@ define(["require", "exports", './TimeUnit', './TimeSpan', '../Compare'], functio
         TimeUnitValue.prototype.coerce = function (other) {
             var type = this._type;
             assertValidUnit(type);
-            if (other instanceof TimeSpan) {
+            if (other instanceof TimeSpan_1.default) {
                 other = other.toTimeUnitValue(type);
             }
             else if (other instanceof TimeUnitValue) {
@@ -27,13 +27,13 @@ define(["require", "exports", './TimeUnit', './TimeSpan', '../Compare'], functio
             var o = this.coerce(other);
             if (o == null)
                 return false;
-            return Values.areEqual(this.value, o.value);
+            return Compare_1.areEqual(this.value, o.value);
         };
         TimeUnitValue.prototype.compareTo = function (other) {
             if (other == null)
                 return 1 | 0;
             assertComparisonType(other);
-            return Values.compare(this.value, this.coerce(other).value);
+            return Compare_1.compare(this.value, this.coerce(other).value);
         };
         Object.defineProperty(TimeUnitValue.prototype, "type", {
             get: function () {
@@ -43,7 +43,7 @@ define(["require", "exports", './TimeUnit', './TimeSpan', '../Compare'], functio
             configurable: true
         });
         TimeUnitValue.prototype.toTimeSpan = function () {
-            return new TimeSpan(this.value, this.type);
+            return new TimeSpan_1.default(this.value, this.type);
         };
         Object.defineProperty(TimeUnitValue.prototype, "total", {
             get: function () {
@@ -58,15 +58,16 @@ define(["require", "exports", './TimeUnit', './TimeSpan', '../Compare'], functio
         };
         return TimeUnitValue;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = TimeUnitValue;
     function assertComparisonType(other) {
-        if (!(other instanceof TimeUnitValue || other instanceof TimeSpan))
+        if (!(other instanceof TimeUnitValue || other instanceof TimeSpan_1.default))
             throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
     }
     function assertValidUnit(unit) {
-        if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit)
+        if (isNaN(unit) || unit > TimeUnit_1.default.Days || unit < TimeUnit_1.default.Ticks || Math.floor(unit) !== unit)
             throw new Error("Invalid TimeUnit.");
         return true;
     }
-    return TimeUnitValue;
 });
 //# sourceMappingURL=TimeUnitValue.js.map

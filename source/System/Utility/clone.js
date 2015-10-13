@@ -2,18 +2,18 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types'], function (require, exports, Types) {
+define(["require", "exports", '../Types'], function (require, exports, Types_1) {
     function clone(source, depth) {
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
             return source;
         switch (typeof source) {
-            case Types.UNDEFINED:
-            case Types.NULL:
-            case Types.STRING:
-            case Types.BOOLEAN:
-            case Types.NUMBER:
-            case Types.FUNCTION:
+            case Types_1.default.UNDEFINED:
+            case Types_1.default.NULL:
+            case Types_1.default.STRING:
+            case Types_1.default.BOOLEAN:
+            case Types_1.default.NUMBER:
+            case Types_1.default.FUNCTION:
                 return source;
         }
         var result;
@@ -34,6 +34,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
         }
         return result;
     }
-    return clone;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = clone;
 });
 //# sourceMappingURL=clone.js.map

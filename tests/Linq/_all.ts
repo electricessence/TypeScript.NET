@@ -1,8 +1,7 @@
 ﻿///<reference path="../../typings/qunit/qunit"/>
 ///<amd-dependency path="QUnit"/>
 
-import Linq = require('../../source/System.Linq/Linq');
-import Enumerable = Linq.Enumerable;
+import Enumerable from '../../source/System.Linq/Linq';
 
 interface TestItem
 {
@@ -11,7 +10,7 @@ interface TestItem
 	c:string;
 }
 
-function run()
+export default function run()
 {
 
 	var source:{a:number,b:number,c:string}[] = [
@@ -206,5 +205,3 @@ function run()
 
 
 }
-
-export = run;

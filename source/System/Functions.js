@@ -40,7 +40,8 @@ define(["require", "exports"], function (require, exports) {
         });
         return Functions;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Functions;
     var rootFunctions = new Functions();
-    return Functions;
 });
 //# sourceMappingURL=Functions.js.map

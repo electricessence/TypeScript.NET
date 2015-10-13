@@ -5,11 +5,11 @@
  */
 
 ///<reference path="../../FunctionTypes.d.ts"/>
-import Values = require('../../Compare');
-import Types = require('../../Types');
-import Functions = require('../../Functions');
-import DictionaryAbstractBase= require('./DictionaryAbstractBase');
-import EnumeratorBase = require('../Enumeration/EnumeratorBase');
+import {areEqual} from '../../Compare';
+import Types from '../../Types';
+import Functions from '../../Functions';
+import DictionaryAbstractBase from './DictionaryAbstractBase';
+import EnumeratorBase from '../Enumeration/EnumeratorBase';
 
 
 // LinkedList for Dictionary
@@ -97,6 +97,7 @@ function computeHashCode(obj:any):string {
 }
 
 
+export default
 class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 {
 	private _count:number = 0;
@@ -114,7 +115,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		var hash = computeHashCode(compareKey), entry:HashEntry<TKey, TValue>;
 
 		if(callHasOwnProperty(buckets, hash)) {
-			var equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
+			var equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
 			var array = buckets[hash];
 			for(let i = 0; i<array.length; i++) {
 				var old = array[i];
@@ -244,6 +245,3 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 	}
 
 }
-
-
-export  = Dictionary;

@@ -4,7 +4,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types', '../Serialization/Utility'], function (require, exports, Types, Serialization) {
+define(["require", "exports", '../Types', '../Serialization/Utility'], function (require, exports, Types_1, Serialization) {
     var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     function encode(values, prefixIfNotEmpty) {
         if (!values)
@@ -30,7 +30,7 @@ define(["require", "exports", '../Types', '../Serialization/Utility'], function 
     exports.encode = encode;
     function encodeValue(value) {
         var v = value;
-        if (typeof v == Types.OBJECT && "toUriComponent" in v) {
+        if (typeof v == Types_1.default.OBJECT && "toUriComponent" in v) {
             v = v.toUriComponent();
             if (v && v.indexOf('&') != 1)
                 throw '.toUriComponent() did not encode the value.';

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumerator'], function (require, exports, Types, ArrayEnumerator, IndexEnumerator) {
+define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumerator'], function (require, exports, Types_1, ArrayEnumerator_1, IndexEnumerator_1) {
     var EmptyEnumerator = (function () {
         function EmptyEnumerator() {
         }
@@ -25,11 +25,11 @@ define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumer
         if (!source)
             return Empty;
         if (source instanceof Array)
-            return new ArrayEnumerator(source);
-        if (typeof source === Types.OBJECT) {
+            return new ArrayEnumerator_1.default(source);
+        if (typeof source === Types_1.default.OBJECT) {
             if ("length" in source) {
                 var a = source;
-                return new IndexEnumerator(function () {
+                return new IndexEnumerator_1.default(function () {
                     return {
                         source: a,
                         length: a.length,

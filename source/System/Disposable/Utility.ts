@@ -5,7 +5,7 @@
 
 ///<reference path="IDisposable.d.ts"/>
 ///<reference path="../Collections/Array/IArray.d.ts"/>
-import Types = require('../Types');
+import Types from '../Types';
 
 'use strict';
 

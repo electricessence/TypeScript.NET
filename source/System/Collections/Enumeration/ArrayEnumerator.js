@@ -7,19 +7,20 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './IndexEnumerator', '../../Types'], function (require, exports, IndexEnumerator, Types) {
+define(["require", "exports", './IndexEnumerator', '../../Types'], function (require, exports, IndexEnumerator_1, Types_1) {
     var ArrayEnumerator = (function (_super) {
         __extends(ArrayEnumerator, _super);
         function ArrayEnumerator(arrayOrFactory, start, step) {
             if (start === void 0) { start = 0; }
             if (step === void 0) { step = 1; }
             _super.call(this, function () {
-                var array = Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+                var array = Types_1.default.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
                 return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
             });
         }
         return ArrayEnumerator;
-    })(IndexEnumerator);
-    return ArrayEnumerator;
+    })(IndexEnumerator_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ArrayEnumerator;
 });
 //# sourceMappingURL=ArrayEnumerator.js.map

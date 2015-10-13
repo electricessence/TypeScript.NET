@@ -10,11 +10,12 @@
 ///<reference path="../IComparable.d.ts"/>
 ///<reference path="../IFormattable.d.ts"/>
 ///<reference path="../IFormatProvider.d.ts"/>
-import Values = require('../Compare');
-import HowMany= require('./HowMany');
-import TimeSpan= require('./TimeSpan');
+import {areEqual,compare} from '../Compare';
+import * as HowMany from './HowMany';
+import TimeSpan from './TimeSpan';
 
 
+export default
 class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable, ITimeTotal
 {
 	private _totalMilliseconds:number;
@@ -26,7 +27,7 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 	// Could be in reverse or negative...
 	get direction():number
 	{
-		return Values.compare(this._totalMilliseconds, 0);
+		return compare(this._totalMilliseconds, 0);
 	}
 
 	constructor(milliseconds:number);
@@ -47,14 +48,14 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 
 	equals(other:ClockTime):boolean
 	{
-		return Values.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+		return areEqual(this._totalMilliseconds, other.totalMilliseconds);
 	}
 
 	compareTo(other:ClockTime):number
 	{
 		if(other==null) return 1 | 0;
 
-		return Values.compare(this._totalMilliseconds, other.totalMilliseconds);
+		return compare(this._totalMilliseconds, other.totalMilliseconds);
 	}
 
 
@@ -183,5 +184,3 @@ function pluralize(value:number, label:string):string
 
 	return label;
 }
-
-export = ClockTime;

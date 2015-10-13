@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../Exceptions/InvalidOperationException'], function (require, exports, InvalidOperationException) {
+define(["require", "exports", '../Exceptions/InvalidOperationException'], function (require, exports, InvalidOperationException_1) {
     var NAME = 'ObjectDisposedException';
     var ObjectDisposedException = (function (_super) {
         __extends(ObjectDisposedException, _super);
@@ -31,7 +31,8 @@ define(["require", "exports", '../Exceptions/InvalidOperationException'], functi
                 throw new ObjectDisposedException(objectName, message);
         };
         return ObjectDisposedException;
-    })(InvalidOperationException);
-    return ObjectDisposedException;
+    })(InvalidOperationException_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ObjectDisposedException;
 });
 //# sourceMappingURL=ObjectDisposedException.js.map

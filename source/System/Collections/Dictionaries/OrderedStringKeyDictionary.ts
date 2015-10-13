@@ -3,10 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import StringKeyDictionary= require('./StringKeyDictionary');
-import ArrayUtility = require('../Array/Utility');
-import ArgumentOutOfRangeException = require('../../Exceptions/ArgumentOutOfRangeException')
+import * as ArrayUtility from '../Array/Utility';
+import StringKeyDictionary from './StringKeyDictionary';
+import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeException'
 
+export default
 class OrderedStringKeyDictionary<TValue>
 extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue>
 {
@@ -88,5 +89,3 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	}
 
 }
-
-export = OrderedStringKeyDictionary;

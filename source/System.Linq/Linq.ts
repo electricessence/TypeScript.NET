@@ -9,22 +9,20 @@
 ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
 ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
-import Values = require('../System/Compare');
-import Types = require('../System/Types');
-import BaseFunctions = require('../System/Functions');
-import ArrayCompare = require('../System/Collections/Array/Compare');
-import ArrayUtility = require('../System/Collections/Array/Utility');
-import ArrayEnumerator = require('../System/Collections/Enumeration/ArrayEnumerator');
-import Enumerator = require('../System/Collections/Enumeration/Enumerator');
-import EnumeratorBase = require('../System/Collections/Enumeration/EnumeratorBase');
-import Dictionary = require('../System/Collections/Dictionaries/Dictionary');
-import Queue = require('../System/Collections/Queue');
-import DisposeUtility = require('../System/Disposable/Utility');
-import DisposableBase = require('../System/Disposable/DisposableBase');
-import ObjectDisposedException = require('../System/Disposable/ObjectDisposedException');
+import * as Values from '../System/Compare';
+import * as Arrays from '../System/Collections/Array/Compare';
+import * as ArrayUtility from '../System/Collections/Array/Utility';
+import * as Enumerator from '../System/Collections/Enumeration/Enumerator';
+import Types from '../System/Types';
+import BaseFunctions from '../System/Functions';
+import ArrayEnumerator from '../System/Collections/Enumeration/ArrayEnumerator';
+import EnumeratorBase from '../System/Collections/Enumeration/EnumeratorBase';
+import Dictionary from '../System/Collections/Dictionaries/Dictionary';
+import Queue from '../System/Collections/Queue';
+import {dispose, disposeThese, using} from '../System/Disposable/Utility';
+import DisposableBase from '../System/Disposable/DisposableBase';
+import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
 
-import dispose = DisposeUtility.dispose;
-import using = DisposeUtility.using;
 import enumeratorFrom = Enumerator.from;
 import enumeratorForEach = Enumerator.forEach;
 
@@ -1051,7 +1049,7 @@ extends DisposableBase implements IEnumerable<T>
 						}
 						finally
 						{
-							DisposeUtility.disposeThese(enumeratorStack);
+							disposeThese(enumeratorStack);
 						}
 					}
 				);
@@ -3341,7 +3339,7 @@ extends Enumerable<T>
 		equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	{
 		if(second instanceof Array)
-			return ArrayCompare.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
+			return Arrays.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
 
 		if(second instanceof ArrayEnumerable)
 			return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
@@ -3774,14 +3772,4 @@ function assertInteger(value:number, variable:string):boolean
 
 // #endregion
 
-/**
- * Universal method for converting a primitive enumerables into a LINQ enabled ones.
- *
- * Simply a shortcut to Enumerable.from().
- *
- * Is not limited to TypeScript usages.
- */
-export function from<T>(source:IEnumerable<T> | IArray<T>):Enumerable<T>
-{
-	return Enumerable.from(source);
-}
+export default Enumerable;

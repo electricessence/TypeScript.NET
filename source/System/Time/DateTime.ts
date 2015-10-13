@@ -4,8 +4,9 @@
  */
 
 ///<reference path='ITimeTotal.d.ts'/>
-import HowMany = require('./HowMany');
+import * as HowMany from './HowMany';
 
+export default
 class DateTime
 {
 
@@ -88,5 +89,3 @@ class DateTime
 }
 
 Object.freeze(DateTime);
-
-export = DateTime;

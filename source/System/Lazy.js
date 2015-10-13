@@ -7,7 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './Disposable/DisposableBase'], function (require, exports, DisposableBase) {
+define(["require", "exports", './Disposable/DisposableBase'], function (require, exports, DisposableBase_1) {
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
         function Lazy(_closure) {
@@ -79,6 +79,8 @@ define(["require", "exports", './Disposable/DisposableBase'], function (require,
             return this.equals(other) || this.value === other.value;
         };
         return Lazy;
-    })(DisposableBase);
+    })(DisposableBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Lazy;
 });
 //# sourceMappingURL=Lazy.js.map

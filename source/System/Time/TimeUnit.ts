@@ -16,4 +16,4 @@ enum TimeUnit
 
 Object.freeze(TimeUnit);
 
-export = TimeUnit;
+export default TimeUnit;

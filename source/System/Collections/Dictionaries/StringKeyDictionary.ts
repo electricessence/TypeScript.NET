@@ -4,11 +4,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Values = require('../../Compare');
-import DictionaryAbstractBase= require('./DictionaryAbstractBase');
-import ArgumentNullException = require('../../Exceptions/ArgumentNullException');
+import {areEqual} from '../../Compare';
+import DictionaryAbstractBase from './DictionaryAbstractBase';
+import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 
 
+export default
 class StringKeyDictionary<TValue>
 extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<TValue>
 {
@@ -21,7 +22,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 	}
 
 	containsValue(value:TValue):boolean {
-		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
+		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
 		for(let key in map) {
 			if(map.hasOwnProperty(key) && equal(map[key], value))
 				return true;
@@ -115,5 +116,3 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 
 
 }
-
-export = StringKeyDictionary;

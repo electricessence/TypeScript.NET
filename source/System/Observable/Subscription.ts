@@ -13,6 +13,7 @@
 /**
  * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
  */
+export default
 class Subscription<T> implements IDisposableAware
 {
 	constructor(
@@ -63,5 +64,3 @@ class Subscription<T> implements IDisposableAware
 		}
 	}
 }
-
-export = Subscription;

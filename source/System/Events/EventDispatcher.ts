@@ -6,11 +6,12 @@
 ///<reference path="../Disposable/IDisposable.d.ts"/>
 ///<reference path="IEventDispatcher.d.ts"/>
 
-import shallowCopy = require('../Utility/shallowCopy');
-import DisposableBase = require('../Disposable/DisposableBase');
-import AU = require('../Collections/Array/Utility');
+import shallowCopy from '../Utility/shallowCopy';
+import DisposableBase from '../Disposable/DisposableBase';
+import * as AU from '../Collections/Array/Utility';
 
 
+export default
 class EventDispatcherEntry extends DisposableBase
 {
 
@@ -191,4 +192,3 @@ class EventDispatcher extends DisposableBase implements IEventDispatcher
 
 }
 
-export = EventDispatcher;

@@ -3,7 +3,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './EnumeratorBase'], function (require, exports, EnumeratorBase) {
+define(["require", "exports", './EnumeratorBase'], function (require, exports, EnumeratorBase_1) {
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
         function IndexEnumerator(sourceFactory) {
@@ -42,7 +42,8 @@ define(["require", "exports", './EnumeratorBase'], function (require, exports, E
             });
         }
         return IndexEnumerator;
-    })(EnumeratorBase);
-    return IndexEnumerator;
+    })(EnumeratorBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = IndexEnumerator;
 });
 //# sourceMappingURL=IndexEnumerator.js.map

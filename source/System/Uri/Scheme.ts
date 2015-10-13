@@ -95,4 +95,4 @@ UriScheme[UriScheme.tcp] = TCP;
 
 Object.freeze(UriScheme);
 
-export = UriScheme;
+export default UriScheme;

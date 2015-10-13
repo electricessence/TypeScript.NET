@@ -5,8 +5,8 @@
 
 ///<reference path="../../FunctionTypes.d.ts"/>
 
-import Types = require('../../Types');
-import ValueCompare = require('../../Compare');
+import Types from '../../Types';
+import * as ValueCompare from '../../Compare';
 import CompareResult = ValueCompare.CompareResult;
 
 export const enum Order

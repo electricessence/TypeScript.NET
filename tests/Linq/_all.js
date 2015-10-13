@@ -1,7 +1,6 @@
 ///<reference path="../../typings/qunit/qunit"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", '../../source/System.Linq/Linq', "QUnit"], function (require, exports, Linq) {
-    var Enumerable = Linq.Enumerable;
+define(["require", "exports", '../../source/System.Linq/Linq', "QUnit"], function (require, exports, Linq_1) {
     function run() {
         var source = [
             {
@@ -35,7 +34,7 @@ define(["require", "exports", '../../source/System.Linq/Linq', "QUnit"], functio
                 c: "f"
             }
         ];
-        var sourceEnumerable = Enumerable.fromArray(source);
+        var sourceEnumerable = Linq_1.default.fromArray(source);
         QUnit.test("Linq.memoize", function (assert) {
             var source = sourceEnumerable;
             var A = source.memoize();
@@ -131,6 +130,7 @@ define(["require", "exports", '../../source/System.Linq/Linq', "QUnit"], functio
             assert.equal(B_distinct.count(), B.count(), "Number of groups should match distinct values.");
         });
     }
-    return run;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = run;
 });
 //# sourceMappingURL=_all.js.map

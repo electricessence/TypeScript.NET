@@ -11,6 +11,7 @@ define(["require", "exports"], function (require, exports) {
             });
         });
     }
-    return applyMixins;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = applyMixins;
 });
 //# sourceMappingURL=applyMixins.js.map

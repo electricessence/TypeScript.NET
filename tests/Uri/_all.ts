@@ -1,10 +1,10 @@
 ﻿///<reference path='../../typings/qunit/qunit'/>
 ///<amd-dependency path='QUnit'/>
 
-import Uri = require('../../source/System/Uri/Uri');
+import Uri from '../../source/System/Uri/Uri';
 
 
-function run()
+export default function run()
 {
 
 	var validUri:IUri = {
@@ -126,5 +126,3 @@ function run()
 
 	});
 }
-
-export = run;

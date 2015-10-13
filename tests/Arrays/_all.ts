@@ -1,14 +1,12 @@
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 /// <amd-dependency path="QUnit"/>
 
-import Utility = require('./Utility');
-import Procedure = require('./Procedure');
-import Compare = require('./Compare');
+import Utility from './Utility';
+import Procedure from './Procedure';
+import Compare from './Compare';
 
-function run() {
+export default function run() {
     Utility();
     Procedure();
     Compare();
 }
-
-export = run;

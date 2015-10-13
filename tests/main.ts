@@ -1,10 +1,10 @@
 ///<reference path="../typings/qunit/qunit.d.ts"/>
 /// <amd-dependency path="QUnit"/>
 
-import ArrayTests = require('./Arrays/_all');
-import CollectionTests = require('./Collections/_all');
-import EnumerableTests = require('./Linq/_all');
-import UriTests = require('./Uri/_all');
+import ArrayTests from './Arrays/_all';
+import CollectionTests from './Collections/_all';
+import EnumerableTests from './Linq/_all';
+import UriTests from './Uri/_all';
 
 UriTests();
 ArrayTests();

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Compare', '../../Types'], function (require, exports, Values, Types) {
+define(["require", "exports", '../../Compare', '../../Types'], function (require, exports, Values, Types_1) {
     function validateSize(a, b) {
         if (a && b && a === b || !a && !b)
             return true;
@@ -32,7 +32,7 @@ define(["require", "exports", '../../Compare', '../../Types'], function (require
     function areEqual(a, b, strict, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
         var len = validateSize(a, b);
-        if (Types.isBoolean(len))
+        if (Types_1.default.isBoolean(len))
             return len;
         for (var i = 0 | 0; i < len; ++i) {
             if (!equalityComparer(a[i], b[i], strict))
@@ -61,7 +61,7 @@ define(["require", "exports", '../../Compare', '../../Types'], function (require
     function areEquivalent(a, b, comparer) {
         if (comparer === void 0) { comparer = Values.compare; }
         var len = validateSize(a, b);
-        if (Types.isBoolean(len))
+        if (Types_1.default.isBoolean(len))
             return len;
         a = copyAndSort(a, comparer);
         b = copyAndSort(b, comparer);

@@ -7,7 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './StringKeyDictionary', '../Array/Utility', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, StringKeyDictionary, ArrayUtility, ArgumentOutOfRangeException) {
+define(["require", "exports", '../Array/Utility', './StringKeyDictionary', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1) {
     var OrderedStringKeyDictionary = (function (_super) {
         __extends(OrderedStringKeyDictionary, _super);
         function OrderedStringKeyDictionary() {
@@ -31,9 +31,9 @@ define(["require", "exports", './StringKeyDictionary', '../Array/Utility', '../.
         OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
             var _ = this, order = _._order;
             if (index < 0)
-                throw new ArgumentOutOfRangeException('index', index, 'Is less than zero.');
+                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
             if (index >= order.length)
-                throw new ArgumentOutOfRangeException('index', index, 'Is greater than the count.');
+                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than the count.');
             return _.setValue(order[index], value);
         };
         OrderedStringKeyDictionary.prototype.importValues = function (values) {
@@ -66,7 +66,8 @@ define(["require", "exports", './StringKeyDictionary', '../Array/Utility', '../.
             configurable: true
         });
         return OrderedStringKeyDictionary;
-    })(StringKeyDictionary);
-    return OrderedStringKeyDictionary;
+    })(StringKeyDictionary_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = OrderedStringKeyDictionary;
 });
 //# sourceMappingURL=OrderedStringKeyDictionary.js.map

@@ -3,7 +3,7 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types'], function (require, exports, Types) {
+define(["require", "exports", '../Types'], function (require, exports, Types_1) {
     var StringBuilder = (function () {
         function StringBuilder() {
             var initial = [];
@@ -20,8 +20,8 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
                 var _ = this;
                 _._latest = null;
                 switch (typeof item) {
-                    case Types.OBJECT:
-                    case Types.FUNCTION:
+                    case Types_1.default.OBJECT:
+                    case Types_1.default.FUNCTION:
                         item = item.toString();
                         break;
                 }
@@ -84,6 +84,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
         };
         return StringBuilder;
     })();
-    return StringBuilder;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = StringBuilder;
 });
 //# sourceMappingURL=StringBuilder.js.map

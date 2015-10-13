@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Time/TimeSpan'], function (require, exports, TimeSpan) {
+define(["require", "exports", '../Time/TimeSpan'], function (require, exports, TimeSpan_1) {
     var Stopwatch = (function () {
         function Stopwatch() {
             this.reset();
@@ -25,7 +25,7 @@ define(["require", "exports", '../Time/TimeSpan'], function (require, exports, T
         Stopwatch.measure = function (closure) {
             var start = Stopwatch.getTimestampMilliseconds();
             closure();
-            return new TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
+            return new TimeSpan_1.default(Stopwatch.getTimestampMilliseconds() - start);
         };
         Stopwatch.prototype.record = function (closure) {
             var e = Stopwatch.measure(closure);
@@ -60,10 +60,10 @@ define(["require", "exports", '../Time/TimeSpan'], function (require, exports, T
                 var e = t - s;
                 _._startTimeStamp = t;
                 _._elapsed += e;
-                return new TimeSpan(e);
+                return new TimeSpan_1.default(e);
             }
             else
-                return TimeSpan.zero;
+                return TimeSpan_1.default.zero;
         };
         Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
             get: function () {
@@ -77,8 +77,8 @@ define(["require", "exports", '../Time/TimeSpan'], function (require, exports, T
         Object.defineProperty(Stopwatch.prototype, "currentLap", {
             get: function () {
                 return this._isRunning
-                    ? new TimeSpan(this.currentLapMilliseconds)
-                    : TimeSpan.zero;
+                    ? new TimeSpan_1.default(this.currentLapMilliseconds)
+                    : TimeSpan_1.default.zero;
             },
             enumerable: true,
             configurable: true
@@ -96,13 +96,14 @@ define(["require", "exports", '../Time/TimeSpan'], function (require, exports, T
         });
         Object.defineProperty(Stopwatch.prototype, "elapsed", {
             get: function () {
-                return new TimeSpan(this.elapsedMilliseconds);
+                return new TimeSpan_1.default(this.elapsedMilliseconds);
             },
             enumerable: true,
             configurable: true
         });
         return Stopwatch;
     })();
-    return Stopwatch;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Stopwatch;
 });
 //# sourceMappingURL=Stopwatch.js.map

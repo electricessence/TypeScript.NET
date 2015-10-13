@@ -7,14 +7,15 @@
 ///<reference path="ITimeMeasurement.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
-import Values = require('../Compare');
-import Types = require('../Types');
-import TimeUnit = require('./TimeUnit');
-import HowMany = require('./HowMany');
-import TimeUnitValue = require('./TimeUnitValue');
-import ClockTime = require('./ClockTime');
+import {areEqual,compare} from '../Compare';
+import Types from '../Types';
+import * as HowMany from './HowMany';
+import TimeUnit from './TimeUnit';
+import TimeUnitValue from './TimeUnitValue';
+import ClockTime from './ClockTime';
 
 
+export default
 class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>, ITimeTotal
 {
 
@@ -35,7 +36,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 		if(other===undefined) // undefined is used instead of NaN since NaN could be a valid value.
 			return false;
 
-		return Values.areEqual(this._milliseconds, otherMS);
+		return areEqual(this._milliseconds, otherMS);
 	}
 
 
@@ -47,7 +48,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 		assertComparisonType(other);
 
-		return Values.compare(this._milliseconds, getMilliseconds(other));
+		return compare(this._milliseconds, getMilliseconds(other));
 
 	}
 
@@ -272,5 +273,3 @@ function getMilliseconds(other:any):number
 }
 
 var timeSpanZero:TimeSpan;
-
-export = TimeSpan;

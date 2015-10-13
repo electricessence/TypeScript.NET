@@ -8,9 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/Compare', '../System/Types', '../System/Functions', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/Enumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function (require, exports, Values, Types, BaseFunctions, ArrayCompare, ArrayUtility, ArrayEnumerator, Enumerator, EnumeratorBase, Dictionary, Queue, DisposeUtility, DisposableBase, ObjectDisposedException) {
-    var dispose = DisposeUtility.dispose;
-    var using = DisposeUtility.using;
+define(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function (require, exports, Values, Arrays, ArrayUtility, Enumerator, Types_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, Utility_1, DisposableBase_1, ObjectDisposedException_1) {
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;
     'use strict';
@@ -26,7 +24,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return a < b ? a : b;
         };
         return LinqFunctions;
-    })(BaseFunctions);
+    })(Functions_1.default);
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
     var INT_0 = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0, LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator', UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
@@ -40,7 +38,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new ArrayEnumerable(array);
         };
         Enumerable.from = function (source) {
-            if (typeof source === Types.OBJECT) {
+            if (typeof source === Types_1.default.OBJECT) {
                 if (source instanceof Enumerable)
                     return source;
                 if (source instanceof Array)
@@ -53,7 +51,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             throw new Error(UNSUPPORTED_ENUMERABLE);
         };
         Enumerable.toArray = function (source) {
-            if (typeof source === Types.OBJECT) {
+            if (typeof source === Types_1.default.OBJECT) {
                 if (source instanceof Array)
                     return source.slice();
                 if (LENGTH in source)
@@ -79,14 +77,14 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             this._enumeratorFactory = null;
         };
         Enumerable.choice = function (values) {
-            return new Enumerable(function () { return new EnumeratorBase(null, function (yielder) {
+            return new Enumerable(function () { return new EnumeratorBase_1.default(null, function (yielder) {
                 return yielder.yieldReturn(values[(Math.random() * values.length) | 0]);
             }); });
         };
         Enumerable.cycle = function (values) {
             return new Enumerable(function () {
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     index = INT_0;
                 }, function (yielder) {
                     if (index >= values.length)
@@ -96,7 +94,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             });
         };
         Enumerable.empty = function () {
-            return new Enumerable(function () { return new EnumeratorBase(null, Functions.False); });
+            return new Enumerable(function () { return new EnumeratorBase_1.default(null, Functions.False); });
         };
         Enumerable.repeat = function (element, count) {
             if (count === void 0) { count = Infinity; }
@@ -106,18 +104,18 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 ? new Enumerable(function () {
                     var c = count | 0;
                     var index = INT_0;
-                    return new EnumeratorBase(function () {
+                    return new EnumeratorBase_1.default(function () {
                         index = INT_0;
                     }, function (yielder) { return (index++ < c) && yielder.yieldReturn(element); });
                 })
                 : new Enumerable(function () {
-                    return new EnumeratorBase(null, function (yielder) { return yielder.yieldReturn(element); });
+                    return new EnumeratorBase_1.default(null, function (yielder) { return yielder.yieldReturn(element); });
                 });
         };
         Enumerable.repeatWithFinalize = function (initializer, finalizer) {
             return new Enumerable(function () {
                 var element;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     element = initializer();
                 }, function (yielder) { return yielder.yieldReturn(element); }, function () {
                     finalizer(element);
@@ -142,7 +140,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     var value;
                     var c = count | 0;
                     var index = INT_0;
-                    return new EnumeratorBase(function () {
+                    return new EnumeratorBase_1.default(function () {
                         index = INT_0;
                         value = start;
                     }, function (yielder) {
@@ -155,7 +153,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 })
                 : new Enumerable(function () {
                     var value;
-                    return new EnumeratorBase(function () {
+                    return new EnumeratorBase_1.default(function () {
                         value = start;
                     }, function (yielder) {
                         var current = value;
@@ -197,7 +195,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var value;
                 return start < to
-                    ? new EnumeratorBase(function () {
+                    ? new EnumeratorBase_1.default(function () {
                         value = start;
                     }, function (yielder) {
                         var result = value <= to && yielder.yieldReturn(value);
@@ -205,7 +203,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                             value += step;
                         return result;
                     })
-                    : new EnumeratorBase(function () {
+                    : new EnumeratorBase_1.default(function () {
                         value = start;
                     }, function (yielder) {
                         var result = value >= to && yielder.yieldReturn(value);
@@ -218,7 +216,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         Enumerable.matches = function (input, pattern, flags) {
             if (flags === void 0) { flags = ""; }
             var type = typeof input;
-            if (type != Types.STRING)
+            if (type != Types_1.default.STRING)
                 throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
             if (pattern instanceof RegExp) {
                 flags += (pattern.ignoreCase) ? "i" : "";
@@ -229,7 +227,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 flags += "g";
             return new Enumerable(function () {
                 var regex;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     regex = new RegExp(pattern, flags);
                 }, function (yielder) {
                     var match = regex.exec(input);
@@ -245,7 +243,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 ? new Enumerable(function () {
                     var c = count | 0;
                     var index = INT_0;
-                    return new EnumeratorBase(function () {
+                    return new EnumeratorBase_1.default(function () {
                         index = INT_0;
                     }, function (yielder) {
                         var current = index++;
@@ -254,7 +252,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 })
                 : new Enumerable(function () {
                     var index = INT_0;
-                    return new EnumeratorBase(function () {
+                    return new EnumeratorBase_1.default(function () {
                         index = INT_0;
                     }, function (yielder) { return yielder.yieldReturn(factory(index++)); });
                 });
@@ -265,7 +263,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var index = INT_0;
                 var value;
                 var isFirst;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     index = INT_0;
                     value = seed;
                     isFirst = !skipSeed;
@@ -282,16 +280,16 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         Enumerable.defer = function (enumerableFactory) {
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = enumerableFactory().getEnumerator();
                 }, function (yielder) { return enumerator.moveNext() && yielder.yieldReturn(enumerator.current); }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
         Enumerable.forEach = function (enumerable, action) {
             if (enumerable) {
-                using(Enumerator.from(enumerable), function (e) {
+                Utility_1.using(Enumerator.from(enumerable), function (e) {
                     Enumerator.forEach(e, action);
                 });
             }
@@ -310,7 +308,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var _ = this;
             _.throwIfDisposed();
             var index = INT_0;
-            using(_.getEnumerator(), function (e) {
+            Utility_1.using(_.getEnumerator(), function (e) {
                 while (_.throwIfDisposed() && e.moveNext()) {
                     if (action(e.current, index++) === false)
                         break;
@@ -333,7 +331,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
             if (elementSelector === void 0) { elementSelector = Functions.Identity; }
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-            var dict = new Dictionary(compareSelector);
+            var dict = new Dictionary_1.default(compareSelector);
             this.forEach(function (x) {
                 var key = keySelector(x);
                 var element = elementSelector(x);
@@ -354,7 +352,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         };
         Enumerable.prototype.toDictionary = function (keySelector, elementSelector, compareSelector) {
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-            var dict = new Dictionary(compareSelector);
+            var dict = new Dictionary_1.default(compareSelector);
             this.forEach(function (x) { return dict.addByKeyValue(keySelector(x), elementSelector(x)); });
             return dict;
         };
@@ -368,7 +366,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     index = INT_0;
                     enumerator = _.getEnumerator();
@@ -383,7 +381,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -467,9 +465,9 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var q;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
-                    q = new Queue();
+                    q = new Queue_1.default();
                 }, function (yielder) {
                     while (enumerator.moveNext()) {
                         q.enqueue(enumerator.current);
@@ -478,7 +476,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator, q);
+                    Utility_1.dispose(enumerator, q);
                 });
             });
         };
@@ -497,7 +495,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var enumerator;
                 var nestLevel = INT_0;
                 var buffer, len;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     nestLevel = INT_0;
                     buffer = [];
                     len = 0;
@@ -525,7 +523,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         }
                     }
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                     buffer.length = 0;
                 });
             });
@@ -536,7 +534,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var enumeratorStack = [];
                 var enumerator;
                 var len;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                     len = 0;
                 }, function (yielder) {
@@ -555,10 +553,10 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                 }, function () {
                     try {
-                        dispose(enumerator);
+                        Utility_1.dispose(enumerator);
                     }
                     finally {
-                        DisposeUtility.disposeThese(enumeratorStack);
+                        Utility_1.disposeThese(enumeratorStack);
                     }
                 });
             });
@@ -568,7 +566,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var middleEnumerator = null;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     while (true) {
@@ -597,7 +595,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         return false;
                     }
                 }, function () {
-                    dispose(enumerator, middleEnumerator);
+                    Utility_1.dispose(enumerator, middleEnumerator);
                 });
             });
         };
@@ -605,7 +603,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var _ = this;
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                     enumerator.moveNext();
                 }, function (yielder) {
@@ -613,7 +611,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     return enumerator.moveNext()
                         && yielder.yieldReturn(selector(prev, enumerator.current));
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
@@ -624,7 +622,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var enumerator;
                 var value;
                 var isFirst;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                     isFirst = true;
                 }, function (yielder) {
@@ -639,7 +637,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         ? yielder.yieldReturn(value = func(value, enumerator.current))
                         : false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
@@ -650,7 +648,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     index = INT_0;
                     enumerator = _.getEnumerator();
@@ -660,7 +658,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         ? yielder.yieldReturn(selector(enumerator.current, index++))
                         : false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -674,7 +672,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var enumerator;
                 var middleEnumerator;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                     middleEnumerator = undefined;
                     index = INT_0;
@@ -695,7 +693,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     } while (enumerator.moveNext());
                     return false;
                 }, function () {
-                    dispose(enumerator, middleEnumerator);
+                    Utility_1.dispose(enumerator, middleEnumerator);
                     enumerator = null;
                     middleEnumerator = null;
                 });
@@ -706,7 +704,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     index = INT_0;
                     enumerator = _.getEnumerator();
@@ -719,7 +717,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -732,7 +730,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     index = INT_0;
                     enumerator = _.getEnumerator();
@@ -744,7 +742,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -754,16 +752,16 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var typeName;
             switch (type) {
                 case Number:
-                    typeName = Types.NUMBER;
+                    typeName = Types_1.default.NUMBER;
                     break;
                 case String:
-                    typeName = Types.STRING;
+                    typeName = Types_1.default.STRING;
                     break;
                 case Boolean:
-                    typeName = Types.BOOLEAN;
+                    typeName = Types_1.default.BOOLEAN;
                     break;
                 case Function:
-                    typeName = Types.FUNCTION;
+                    typeName = Types_1.default.FUNCTION;
                     break;
                 default:
                     typeName = null;
@@ -782,10 +780,10 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var keys;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
-                    keys = new Dictionary(compareSelector);
+                    keys = new Dictionary_1.default(compareSelector);
                     if (second)
                         Enumerable.forEach(second, function (key) { return keys.addByKeyValue(key, true); });
                 }, function (yielder) {
@@ -799,7 +797,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                     keys.clear();
                 });
             }, function () {
@@ -815,7 +813,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var enumerator;
                 var compareKey;
                 var initial = true;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
@@ -833,7 +831,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -844,7 +842,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var buffer;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     buffer = _.toArray();
                     index = buffer.length | 0;
@@ -864,7 +862,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var buffer;
                 var capacity;
                 var len;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     buffer = _.toArray();
                     capacity = len = buffer.length;
@@ -981,7 +979,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var isFirst;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     isFirst = true;
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
@@ -997,7 +995,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
@@ -1007,7 +1005,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var firstEnumerator;
                 var secondEnumerator;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     index = INT_0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = enumeratorFrom(second);
@@ -1015,7 +1013,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     return firstEnumerator.moveNext() && secondEnumerator.moveNext()
                         && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
                 }, function () {
-                    dispose(firstEnumerator, secondEnumerator);
+                    Utility_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1028,8 +1026,8 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var firstEnumerator;
                 var secondEnumerator;
                 var index = INT_0;
-                return new EnumeratorBase(function () {
-                    secondTemp = new Queue(second);
+                return new EnumeratorBase_1.default(function () {
+                    secondTemp = new Queue_1.default(second);
                     index = INT_0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = null;
@@ -1053,7 +1051,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return yielder.yieldBreak();
                 }, function () {
-                    dispose(firstEnumerator, secondTemp);
+                    Utility_1.dispose(firstEnumerator, secondTemp);
                 });
             });
         };
@@ -1065,7 +1063,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var lookup;
                 var innerElements = null;
                 var innerCount = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     outerEnumerator = _.getEnumerator();
                     lookup = Enumerable.from(inner)
                         .toLookup(innerKeySelector, Functions.Identity, compareSelector);
@@ -1087,7 +1085,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         }
                     }
                 }, function () {
-                    dispose(outerEnumerator);
+                    Utility_1.dispose(outerEnumerator);
                 });
             });
         };
@@ -1097,7 +1095,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var lookup = null;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                     lookup = Enumerable.from(inner)
                         .toLookup(innerKeySelector, Functions.Identity, compareSelector);
@@ -1105,7 +1103,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     return enumerator.moveNext()
                         && yielder.yieldReturn(resultSelector(enumerator.current, lookup.get(outerKeySelector(enumerator.current))));
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
@@ -1114,7 +1112,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     firstEnumerator = _.getEnumerator();
                 }, function (yielder) {
                     if (firstEnumerator != null) {
@@ -1128,7 +1126,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         return yielder.yieldReturn(secondEnumerator.current);
                     return false;
                 }, function () {
-                    dispose(firstEnumerator, secondEnumerator);
+                    Utility_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1141,9 +1139,9 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             return new Enumerable(function () {
                 var enumerator;
                 var queue;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
-                    queue = new Queue(enumerables);
+                    queue = new Queue_1.default(enumerables);
                 }, function (yielder) {
                     while (true) {
                         while (!enumerator && queue.count) {
@@ -1159,7 +1157,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         return yielder.yieldBreak();
                     }
                 }, function () {
-                    dispose(enumerator, queue);
+                    Utility_1.dispose(enumerator, queue);
                 });
             });
         };
@@ -1187,7 +1185,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var secondEnumerator;
                 var count = INT_0;
                 var isEnumerated = false;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     count = INT_0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = enumeratorFrom(other);
@@ -1206,7 +1204,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         && secondEnumerator.moveNext()
                         && yielder.yieldReturn(secondEnumerator.current);
                 }, function () {
-                    dispose(firstEnumerator, secondEnumerator);
+                    Utility_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1214,8 +1212,8 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var _ = this;
             return new Enumerable(function () {
                 var buffer, mode, enumerator, alternateEnumerator;
-                return new EnumeratorBase(function () {
-                    alternateEnumerator = new ArrayEnumerator(Enumerable.toArray(sequence));
+                return new EnumeratorBase_1.default(function () {
+                    alternateEnumerator = new ArrayEnumerator_1.default(Enumerable.toArray(sequence));
                     enumerator = _.getEnumerator();
                     var hasAtLeastOne = enumerator.moveNext();
                     mode = hasAtLeastOne
@@ -1243,7 +1241,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         buffer = enumerator.current;
                     return yielder.yieldReturn(latest);
                 }, function () {
-                    dispose(enumerator, alternateEnumerator);
+                    Utility_1.dispose(enumerator, alternateEnumerator);
                 });
             });
         };
@@ -1263,10 +1261,10 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var enumerator;
                 var keys;
                 var outs;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
-                    keys = new Dictionary(compareSelector);
-                    outs = new Dictionary(compareSelector);
+                    keys = new Dictionary_1.default(compareSelector);
+                    outs = new Dictionary_1.default(compareSelector);
                     Enumerable.from(second)
                         .forEach(function (key) {
                         keys.addByKeyValue(key, true);
@@ -1281,13 +1279,13 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return yielder.yieldBreak();
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
         Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-            return using(this.getEnumerator(), function (e1) { return using(Enumerable.from(second).getEnumerator(), function (e2) {
+            return Utility_1.using(this.getEnumerator(), function (e1) { return Utility_1.using(Enumerable.from(second).getEnumerator(), function (e2) {
                 while (e1.moveNext()) {
                     if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
                         return false;
@@ -1302,9 +1300,9 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var firstEnumerator;
                 var secondEnumerator;
                 var keys;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     firstEnumerator = source.getEnumerator();
-                    keys = new Dictionary(compareSelector);
+                    keys = new Dictionary_1.default(compareSelector);
                 }, function (yielder) {
                     var current;
                     if (secondEnumerator === undefined) {
@@ -1326,7 +1324,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(firstEnumerator, secondEnumerator);
+                    Utility_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1355,7 +1353,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var compareKey;
                 var group;
                 var len;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                     if (enumerator.moveNext()) {
                         key = keySelector(enumerator.current);
@@ -1389,7 +1387,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return yielder.yieldReturn(result);
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                     group = null;
                 });
             });
@@ -1401,7 +1399,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var _ = this, len;
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     var array = ArrayUtility.initialize(size);
@@ -1412,7 +1410,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     array.length = len;
                     return len && yielder.yieldReturn(array);
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
@@ -1620,7 +1618,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             _.throwIfDisposed();
             var sharedEnumerator;
             return new Enumerable(function () {
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     // assertIsNotDisposed(disposed);  This doesn't need an assertion since disposing the underlying enumerable disposes the enumerator.
                     if (!sharedEnumerator)
                         sharedEnumerator = _.getEnumerator();
@@ -1629,7 +1627,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         && yielder.yieldReturn(sharedEnumerator.current);
                 });
             }, function () {
-                dispose(sharedEnumerator);
+                Utility_1.dispose(sharedEnumerator);
             });
         };
         Enumerable.prototype.memoize = function () {
@@ -1638,7 +1636,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var enumerator;
             return new Enumerable(function () {
                 var index = INT_0;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     if (!enumerator)
                         enumerator = _.getEnumerator();
@@ -1660,7 +1658,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 if (cache)
                     cache.length = 0;
                 cache = null;
-                dispose(enumerator);
+                Utility_1.dispose(enumerator);
                 enumerator = null;
             });
         };
@@ -1668,7 +1666,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var _ = this, disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     try {
                         throwIfDisposed(disposed);
                         enumerator = _.getEnumerator();
@@ -1686,7 +1684,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                     }
                     return false;
                 }, function () {
-                    dispose(enumerator);
+                    Utility_1.dispose(enumerator);
                 });
             });
         };
@@ -1694,7 +1692,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var _ = this, disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase(function () {
+                return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
@@ -1704,7 +1702,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                         : false;
                 }, function () {
                     try {
-                        dispose(enumerator);
+                        Utility_1.dispose(enumerator);
                     }
                     finally {
                         action();
@@ -1713,7 +1711,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             });
         };
         return Enumerable;
-    })(DisposableBase);
+    })(DisposableBase_1.default);
     exports.Enumerable = Enumerable;
     var ArrayEnumerable = (function (_super) {
         __extends(ArrayEnumerable, _super);
@@ -1723,7 +1721,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             _._source = source;
             _super.call(this, function () {
                 _.throwIfDisposed();
-                return new ArrayEnumerator(function () {
+                return new ArrayEnumerator_1.default(function () {
                     _.throwIfDisposed("The underlying ArrayEnumerable was disposed.", "ArrayEnumerator");
                     return _._source;
                 });
@@ -1833,7 +1831,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var _ = this;
             if (!count || count < 0)
                 return _.asEnumerable();
-            return new Enumerable(function () { return new ArrayEnumerator(function () { return _._source; }, count); });
+            return new Enumerable(function () { return new ArrayEnumerator_1.default(function () { return _._source; }, count); });
         };
         ArrayEnumerable.prototype.takeExceptLast = function (count) {
             if (count === void 0) { count = 1; }
@@ -1850,7 +1848,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         };
         ArrayEnumerable.prototype.reverse = function () {
             var _ = this;
-            return new Enumerable(function () { return new ArrayEnumerator(function () { return _._source; }, _._source
+            return new Enumerable(function () { return new ArrayEnumerator_1.default(function () { return _._source; }, _._source
                 ? (_._source.length - 1)
                 : 0, -1); });
         };
@@ -1860,7 +1858,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
             if (second instanceof Array)
-                return ArrayCompare.areEqual(this.source, second, true, equalityComparer);
+                return Arrays.areEqual(this.source, second, true, equalityComparer);
             if (second instanceof ArrayEnumerable)
                 return second.sequenceEqual(this.source, equalityComparer);
             return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
@@ -1910,7 +1908,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         Lookup.prototype.getEnumerator = function () {
             var _ = this;
             var enumerator;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 enumerator = _._dictionary.getEnumerator();
             }, function (yielder) {
                 if (!enumerator.moveNext())
@@ -1918,7 +1916,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 var current = enumerator.current;
                 return yielder.yieldReturn(new Grouping(current.key, current.value));
             }, function () {
-                dispose(enumerator);
+                Utility_1.dispose(enumerator);
             });
         };
         return Lookup;
@@ -1946,7 +1944,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var predicate = this.prevPredicate;
             var source = this.prevSource;
             var enumerator;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 enumerator = source.getEnumerator();
             }, function (yielder) {
                 while (enumerator.moveNext()) {
@@ -1955,7 +1953,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 }
                 return false;
             }, function () {
-                dispose(enumerator);
+                Utility_1.dispose(enumerator);
             });
         };
         WhereEnumerable.prototype._onDispose = function () {
@@ -1988,7 +1986,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
         };
         WhereSelectEnumerable.prototype.getEnumerator = function () {
             var _ = this, predicate = _.prevPredicate, source = _.prevSource, selector = _.prevSelector, enumerator;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 enumerator = source.getEnumerator();
             }, function (yielder) {
                 while (enumerator.moveNext()) {
@@ -1999,7 +1997,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
                 }
                 return false;
             }, function () {
-                dispose(enumerator);
+                Utility_1.dispose(enumerator);
             });
         };
         WhereSelectEnumerable.prototype._onDispose = function () {
@@ -2034,7 +2032,7 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
             var buffer;
             var indexes;
             var index = INT_0;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 index = INT_0;
                 buffer = [];
                 indexes = [];
@@ -2108,19 +2106,17 @@ define(["require", "exports", '../System/Compare', '../System/Types', '../System
     })();
     function throwIfDisposed(disposed) {
         if (disposed)
-            throw new ObjectDisposedException("Enumerable");
+            throw new ObjectDisposedException_1.default("Enumerable");
     }
     function numberOrNaN(value) {
         return isNaN(value) ? NaN : value;
     }
     function assertInteger(value, variable) {
-        if (typeof value === Types.NUMBER && !isNaN(value) && value != (value | 0))
+        if (typeof value === Types_1.default.NUMBER && !isNaN(value) && value != (value | 0))
             throw new Error("'" + variable + "'" + " must be an integer.");
         return true;
     }
-    function from(source) {
-        return Enumerable.from(source);
-    }
-    exports.from = from;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Enumerable;
 });
 //# sourceMappingURL=Linq.js.map

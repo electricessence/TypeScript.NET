@@ -5,8 +5,9 @@
 
 ///<reference path="ILazy.d.ts"/>
 ///<reference path="FunctionTypes.d.ts"/>
-import DisposableBase= require('./Disposable/DisposableBase');
+import DisposableBase from './Disposable/DisposableBase';
 
+export default
 class Lazy<T> extends DisposableBase implements ILazy<T>
 {
 

@@ -33,6 +33,7 @@ define(["require", "exports"], function (require, exports) {
         };
         return Exception;
     })();
-    return Exception;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Exception;
 });
 //# sourceMappingURL=Exception.js.map

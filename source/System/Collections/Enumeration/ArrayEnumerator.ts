@@ -4,9 +4,10 @@
  */
 
 ///<reference path="../Array/IArray.d.ts"/>
-import IndexEnumerator= require('./IndexEnumerator');
-import Types = require('../../Types');
+import IndexEnumerator from './IndexEnumerator';
+import Types from '../../Types';
 
+export default
 class ArrayEnumerator<T> extends IndexEnumerator<T>
 {
 	constructor(arrayFactory:() => IArray<T>, start?:number, step?:number);
@@ -23,4 +24,3 @@ class ArrayEnumerator<T> extends IndexEnumerator<T>
 	}
 }
 
-export = ArrayEnumerator;

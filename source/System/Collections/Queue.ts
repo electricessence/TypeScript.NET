@@ -9,15 +9,15 @@
 ///<reference path="IList.d.ts"/>
 ///<reference path="Enumeration/IEnumerateEach.d.ts"/>
 ///<reference path="../FunctionTypes.d.ts"/>
-import Values = require('../Compare');
-import Types = require('../Types');
-import AU = require('./Array/Utility');
-import EnumeratorBase = require('./Enumeration/EnumeratorBase');
-import forEach = require('./Enumeration/forEach');
-import NotImplementedException = require('../Exceptions/NotImplementedException');
-import InvalidOperationException = require('../Exceptions/InvalidOperationException');
-import ArgumentException = require('../Exceptions/ArgumentException');
-import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
+import * as Values from '../Compare';
+import * as AU from './Array/Utility';
+import Types from '../Types';
+import EnumeratorBase from './Enumeration/EnumeratorBase';
+import forEach from './Enumeration/forEach';
+import NotImplementedException from '../Exceptions/NotImplementedException';
+import InvalidOperationException from '../Exceptions/InvalidOperationException';
+import ArgumentException from '../Exceptions/ArgumentException';
+import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
 
 const MINIMUM_GROW:number = 4 | 0;
 // var SHRINK_THRESHOLD: number = 32 | 0; // Unused?
@@ -26,6 +26,7 @@ const GROW_FACTOR_HALF:number = 100 | 0;
 const DEFAULT_CAPACITY:number = MINIMUM_GROW;
 var emptyArray:any[] = [];
 
+export default
 class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 {
 
@@ -360,5 +361,3 @@ function assertIntegerZeroOrGreater(value:number, property:string):void
 	assertInteger(value, property);
 	assertZeroOrGreater(value, property);
 }
-
-export = Queue;

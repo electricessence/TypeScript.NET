@@ -4,7 +4,7 @@
  */
 
 ///<reference path="IArray.d.ts"/>
-import Types = require('../../Types');
+import Types from '../../Types';
 
 
 export function initialize<T>(length:number):T[]

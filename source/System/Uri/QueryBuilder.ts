@@ -4,12 +4,12 @@
  */
 
 ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="..\Serialization\ISerializable.d.ts"/>
+///<reference path="../Serialization/ISerializable.d.ts"/>
 ///<reference path="IUriComponentFormattable.d.ts"/>
-import Types = require('../Types');
-import Serialization = require('../Serialization/Utility');
-import OrderedStringKeyDictionary = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
-import QueryParams = require('./QueryParams');
+import Types from '../Types';
+import * as Serialization from '../Serialization/Utility';
+import * as QueryParams from './QueryParams';
+import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
 
 const
 ENTRY_SEPARATOR     = "&",
@@ -22,6 +22,7 @@ type Primitive = string|boolean|number;
  *
  * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
  */
+export default
 class QueryBuilder extends OrderedStringKeyDictionary<Primitive|ISerializable|IUriComponentFormattable>
 {
 
@@ -85,6 +86,3 @@ class QueryBuilder extends OrderedStringKeyDictionary<Primitive|ISerializable|IU
 		return this.encode();
 	}
 }
-
-
-export = QueryBuilder;

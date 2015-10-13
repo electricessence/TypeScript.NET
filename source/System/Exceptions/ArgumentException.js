@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './SystemException'], function (require, exports, SystemException) {
+define(["require", "exports", './SystemException'], function (require, exports, SystemException_1) {
     var NAME = 'ArgumentException';
     var ArgumentException = (function (_super) {
         __extends(ArgumentException, _super);
@@ -27,7 +27,8 @@ define(["require", "exports", './SystemException'], function (require, exports, 
             return '[' + _.name + ': ' + pn + _.message + ']';
         };
         return ArgumentException;
-    })(SystemException);
-    return ArgumentException;
+    })(SystemException_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ArgumentException;
 });
 //# sourceMappingURL=ArgumentException.js.map

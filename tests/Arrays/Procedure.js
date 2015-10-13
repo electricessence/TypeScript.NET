@@ -28,6 +28,7 @@ define(["require", "exports", '../../source/System/Collections/Array/Procedure',
             assert.equal(ArrayProcedure.max(b, true), maxB, "Min value should be " + maxB);
         });
     }
-    return run;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = run;
 });
 //# sourceMappingURL=Procedure.js.map

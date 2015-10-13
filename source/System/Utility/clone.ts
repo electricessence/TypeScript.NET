@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types = require('../Types');
+import Types from '../Types';
 
-function clone(source:any, depth:number = 0):any
+export default function clone(source:any, depth:number = 0):any
 {
 	if(depth<0)
 		return source;
@@ -46,5 +46,3 @@ function clone(source:any, depth:number = 0):any
 	return result;
 
 }
-
-export = clone;

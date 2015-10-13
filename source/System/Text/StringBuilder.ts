@@ -5,8 +5,8 @@
  */
 
 ///<reference path="../Disposable/IDisposable.d.ts"/>
-import Types = require('../Types');
-import LinkedList = require('../Collections/LinkedList');
+import Types from '../Types';
+import LinkedList from '../Collections/LinkedList';
 
 
 /*****************************
@@ -20,6 +20,7 @@ import LinkedList = require('../Collections/LinkedList');
  *****************************/
 
 
+export default
 class StringBuilder implements IDisposable
 	// Adding IDisposable allows for use with System.using();
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
@@ -129,5 +130,3 @@ class StringBuilder implements IDisposable
 	}
 
 }
-
-export = StringBuilder;

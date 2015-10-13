@@ -6,8 +6,8 @@
 ///<reference path="../../Disposable/IDisposable.d.ts"/>
 ///<reference path="IEnumerator.d.ts"/>
 ///<reference path="IYield.d.ts"/>
-import Types = require('../../Types');
-import DisposableBase = require('../../Disposable/DisposableBase')
+import Types from '../../Types';
+import DisposableBase from '../../Disposable/DisposableBase'
 
 
 
@@ -31,6 +31,7 @@ class Yielder<T> implements IYield<T>
 enum EnumeratorState { Before, Running, After }
 
 // Naming this class EnumeratorBase to avoid collision with IE.
+export default
 class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 {
 
@@ -110,5 +111,3 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	}
 
 }
-
-export = EnumeratorBase;

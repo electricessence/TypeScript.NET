@@ -7,7 +7,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../../Disposable/DisposableBase'], function (require, exports, DisposableBase) {
+define(["require", "exports", '../../Disposable/DisposableBase'], function (require, exports, DisposableBase_1) {
     var Yielder = (function () {
         function Yielder() {
         }
@@ -96,7 +96,8 @@ define(["require", "exports", '../../Disposable/DisposableBase'], function (requ
             }
         };
         return EnumeratorBase;
-    })(DisposableBase);
-    return EnumeratorBase;
+    })(DisposableBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = EnumeratorBase;
 });
 //# sourceMappingURL=EnumeratorBase.js.map

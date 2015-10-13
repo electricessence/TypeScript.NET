@@ -5,12 +5,13 @@
  */
 
 ///<reference path="IDisposableAware.d.ts"/>
-import Exception = require('../Exception');
-import InvalidOperationException = require('../Exceptions/InvalidOperationException');
+import Exception from '../Exception';
+import InvalidOperationException from '../Exceptions/InvalidOperationException';
 
 
 const NAME:string = 'ObjectDisposedException';
 
+export default
 class ObjectDisposedException
 extends InvalidOperationException
 {
@@ -51,5 +52,3 @@ extends InvalidOperationException
 	}
 
 }
-
-export = ObjectDisposedException;

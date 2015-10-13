@@ -1,6 +1,6 @@
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", '../../source/System/Collections/Array/Compare', '../../source/System/Collections/Array/Utility', "QUnit"], function (require, exports, ArrayCompare, ArrayUtility) {
+define(["require", "exports", '../../source/System/Collections/Array/Compare', '../../source/System/Collections/Array/Utility', "QUnit"], function (require, exports, Arrays, ArrayUtility) {
     function run() {
         var minA = -10, maxA = 2000;
         var a = [5, minA, -1, maxA, -2, NaN, 20];
@@ -16,7 +16,7 @@ define(["require", "exports", '../../source/System/Collections/Array/Compare', '
         QUnit.test("Array/Utility.copy/equals", function (assert) {
             var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
             var s2 = ArrayUtility.copy(s1);
-            assert.ok(ArrayCompare.areEqual(s1, s2));
+            assert.ok(Arrays.areEqual(s1, s2));
         });
         QUnit.test("Array/Utility.contains", function (assert) {
             assert.ok(ArrayUtility.contains(a, -1));
@@ -88,6 +88,7 @@ define(["require", "exports", '../../source/System/Collections/Array/Compare', '
                 assert.equal(r[i], value);
         });
     }
-    return run;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = run;
 });
 //# sourceMappingURL=Utility.js.map

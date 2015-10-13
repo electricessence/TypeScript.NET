@@ -3,7 +3,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase, InvalidOperationException, ArgumentException, ArgumentNullException, ArgumentOutOfRangeException) {
+define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
     var INT_0 = 0 | 0, INT_1 = 1 | 0;
     var Node = (function () {
         function Node(value, prev, next) {
@@ -13,7 +13,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         }
         Node.prototype.assertDetached = function () {
             if (this.next || this.prev)
-                throw new InvalidOperationException("Adding a node that is already placed.");
+                throw new InvalidOperationException_1.default("Adding a node that is already placed.");
         };
         return Node;
     })();
@@ -27,12 +27,12 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
     }
     function getInternal(node, list) {
         if (!node)
-            throw new ArgumentNullException("Cannot be null.");
+            throw new ArgumentNullException_1.default("Cannot be null.");
         if (node.list != list)
-            throw new InvalidOperationException("Provided node does not belong to this list.");
+            throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
         var n = node._node;
         if (!n)
-            throw new InvalidOperationException("Provided node is not valid.");
+            throw new InvalidOperationException_1.default("Provided node is not valid.");
         return n;
     }
     var LinkedList = (function () {
@@ -123,7 +123,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         };
         LinkedList.prototype.getEnumerator = function () {
             var _ = this, current;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 current = new Node(null, null, _._first);
             }, function (yielder) {
                 return (current = current.next)
@@ -212,9 +212,9 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         });
         LinkedList.prototype._getNodeAt = function (index) {
             if (index < 0)
-                throw new ArgumentOutOfRangeException('index', index, 'Is less than zero.');
+                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
             if (index >= this._count)
-                throw new ArgumentOutOfRangeException('index', index, 'Is greater than count.');
+                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than count.');
             var next = this._first, i = INT_0;
             while (next && index < i++) {
                 next = next.next;
@@ -276,7 +276,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             else
                 b = true;
             if (a !== b) {
-                throw new ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
             }
             return !a && !b;
         };
@@ -294,6 +294,8 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         };
         return LinkedList;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = LinkedList;
     var LinkedListNode = (function () {
         function LinkedListNode(_list, _node) {
             this._list = _list;
@@ -347,6 +349,5 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         };
         return LinkedListNode;
     })();
-    return LinkedList;
 });
 //# sourceMappingURL=LinkedList.js.map

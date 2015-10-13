@@ -11,6 +11,7 @@ const valid = new ValidationResult(true);
 /**
  * A class for generating responses to validation.
  */
+export default
 class ValidationResult
 implements IValidationResult, IEquatable<IValidationResult>
 {
@@ -57,6 +58,3 @@ implements IValidationResult, IEquatable<IValidationResult>
 		return new ValidationResult(false, message, data);
 	}
 }
-
-
-export = ValidationResult

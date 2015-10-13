@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports, Values, EnumeratorBase, NotImplementedException, ArgumentException, ArgumentNullException, InvalidOperationException) {
+define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports, Compare_1, EnumeratorBase_1, NotImplementedException_1, ArgumentException_1, ArgumentNullException_1, InvalidOperationException_1) {
     var DictionaryAbstractBase = (function () {
         function DictionaryAbstractBase() {
             this._updateRecursion = 0;
@@ -13,7 +13,7 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
             configurable: true
         });
         DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
-            if (!Values.areEqual(value, old, true)) {
+            if (!Compare_1.areEqual(value, old, true)) {
                 var _ = this;
                 if (_.onValueChanged)
                     _.onValueChanged(key, value, old);
@@ -50,14 +50,14 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
         });
         Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
             get: function () {
-                throw notImplementedException("count");
+                throw notImplemented("count");
             },
             enumerable: true,
             configurable: true
         });
         DictionaryAbstractBase.prototype.add = function (item) {
             if (!item)
-                throw new ArgumentException('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+                throw new ArgumentException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
             this.addByKeyValue(item.key, item.value);
         };
         DictionaryAbstractBase.prototype.clear = function () {
@@ -75,12 +75,12 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
             if (!item)
                 return false;
             var value = this.getValue(item.key);
-            return Values.areEqual(value, item.value);
+            return Compare_1.areEqual(value, item.value);
         };
         DictionaryAbstractBase.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }
             if (!array)
-                throw new ArgumentNullException('array');
+                throw new ArgumentNullException_1.default('array');
             var e = this.getEnumerator();
             while (e.moveNext()) {
                 array[index++] = e.current;
@@ -94,23 +94,23 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
             if (!item)
                 return 0;
             var key = item.key, value = this.getValue(key);
-            return (Values.areEqual(value, item.value) && this.removeByKey(key))
+            return (Compare_1.areEqual(value, item.value) && this.removeByKey(key))
                 ? 1 : 0;
         };
         Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
-            get: function () { throw notImplementedException("keys"); },
+            get: function () { throw notImplemented("keys"); },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(DictionaryAbstractBase.prototype, "values", {
-            get: function () { throw notImplementedException("values"); },
+            get: function () { throw notImplemented("values"); },
             enumerable: true,
             configurable: true
         });
         DictionaryAbstractBase.prototype.addByKeyValue = function (key, value) {
             var _ = this;
             if (_.containsKey(key)) {
-                var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
+                var ex = new InvalidOperationException_1.default("Adding a key/value when the key already exists.");
                 ex.data['key'] = key;
                 ex.data['value'] = value;
                 throw ex;
@@ -118,17 +118,17 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
             _.setValue(key, value);
         };
         DictionaryAbstractBase.prototype.getValue = function (key) {
-            throw notImplementedException("getValue(key: TKey): TValue", "When calling for key: " + key);
+            throw notImplemented("getValue(key: TKey): TValue", "When calling for key: " + key);
         };
         DictionaryAbstractBase.prototype.setValue = function (key, value) {
-            throw notImplementedException("setValue(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + ".");
+            throw notImplemented("setValue(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + ".");
         };
         DictionaryAbstractBase.prototype.containsKey = function (key) {
             var value = this.getValue(key);
             return value !== undefined;
         };
         DictionaryAbstractBase.prototype.containsValue = function (value) {
-            var e = this.getEnumerator(), equal = Values.areEqual;
+            var e = this.getEnumerator(), equal = Compare_1.areEqual;
             while (e.moveNext()) {
                 if (equal(e.current, value, true)) {
                     e.dispose();
@@ -141,7 +141,7 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
             return this.setValue(key, undefined);
         };
         DictionaryAbstractBase.prototype.removeByValue = function (value) {
-            var _ = this, count = 0, equal = Values.areEqual;
+            var _ = this, count = 0, equal = Compare_1.areEqual;
             _.keys.forEach(function (key) {
                 if (equal(_.getValue(key), value, true)) {
                     _.removeByKey(key);
@@ -164,7 +164,7 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
         DictionaryAbstractBase.prototype.getEnumerator = function () {
             var _ = this;
             var keys, len, i = 0;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 keys = _.keys;
                 len = keys.length;
             }, function (yielder) {
@@ -178,11 +178,12 @@ define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', 
         };
         return DictionaryAbstractBase;
     })();
-    function notImplementedException(name, log) {
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = DictionaryAbstractBase;
+    function notImplemented(name, log) {
         if (log === void 0) { log = ""; }
         console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-        return new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
+        return new NotImplementedException_1.default("DictionaryAbstractBase." + name + ": Not implemented.");
     }
-    return DictionaryAbstractBase;
 });
 //# sourceMappingURL=DictionaryAbstractBase.js.map

@@ -1,10 +1,10 @@
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
 
-import ArrayCompare = require('../../source/System/Collections/Array/Compare');
-import ArrayUtility = require('../../source/System/Collections/Array/Utility');
+import * as Arrays from '../../source/System/Collections/Array/Compare';
+import * as ArrayUtility from '../../source/System/Collections/Array/Utility';
 
-function run() {
+export default function run() {
     // Min/Max tests...
     var minA = -10, maxA = 2000;
 
@@ -28,7 +28,7 @@ function run() {
         var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
         var s2 = ArrayUtility.copy(s1);
 
-        assert.ok(ArrayCompare.areEqual(s1, s2));
+        assert.ok(Arrays.areEqual(s1, s2));
     });
 
     QUnit.test("Array/Utility.contains", function (assert:QUnitAssert) {
@@ -124,5 +124,3 @@ function run() {
 
 
 }
-
-export = run;

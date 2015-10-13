@@ -4,8 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types = require('../Types');
-import InvalidOperationException = require('../Exceptions/InvalidOperationException');
+import Types from '../Types';
+import InvalidOperationException from '../Exceptions/InvalidOperationException';
 
 
 const EMPTY = '', TRUE = 'true', FALSE = 'false';

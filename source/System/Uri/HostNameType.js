@@ -13,6 +13,7 @@ define(["require", "exports"], function (require, exports) {
         UriHostNameType[UriHostNameType["Unknown"] = 4] = "Unknown";
     })(UriHostNameType || (UriHostNameType = {}));
     Object.freeze(UriHostNameType);
-    return UriHostNameType;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = UriHostNameType;
 });
 //# sourceMappingURL=HostNameType.js.map
