@@ -87,3 +87,8 @@ export function createComparer<TSource,T>(
 		return 0;
 	};
 }
+
+export {
+	createComparer as default, // Allow for default import.
+	createComparer as by // Alias for Sort.by(...) instead of Sort.createComparer
+}

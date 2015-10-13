@@ -35,5 +35,7 @@ define(["require", "exports", '../../Types', '../../Compare'], function (require
         };
     }
     exports.createComparer = createComparer;
+    exports.default = createComparer;
+    exports.by = createComparer;
 });
 //# sourceMappingURL=Sort.js.map
