@@ -6,9 +6,11 @@
 ///<reference path="../../FunctionTypes.d.ts"/>
 
 import Types from '../../Types';
-import * as ValueCompare from '../../Compare';
-import CompareResult = ValueCompare.CompareResult;
+import {compare,CompareResult} from '../../Compare';
 
+/**
+ * Enum representation of sorting order.
+ */
 export const enum Order
 {
 	Ascending  = (+1) | 0,
@@ -22,6 +24,29 @@ function ensureArray<T>(value:T|T[]):T[]
 		: [<T>value];
 }
 
+/**
+ * A factory function that creates a comparer to be used in multi-dimensional sorting.
+ *
+ * <h4>Example</h4>
+ * ```typescript
+ * var myArray = [{a:1:b:2},{a:3,b:4},{a:1,b:3}];
+ *
+ * // First sort by a, then by b.
+ * myArray.sort(
+ *   createComparer(
+ *     (e)=> [e.a, e.b],
+ *     [Order.Ascending, Order.Descending]
+ *   )
+ * );
+ *
+ * // result: [{a:1,b:3},{a:1:b:2},{a:3,b:4}]
+ * ```
+ *
+ * @param selector
+ * @param order
+ * @param equivalentToNaN
+ * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
+ */
 export function createComparer<TSource,T>(
 	selector:Selector<TSource|TSource[],T>,
 	order:Order | Order[] = Order.Ascending,
@@ -53,7 +78,7 @@ export function createComparer<TSource,T>(
 
 			}
 
-			var r = ValueCompare.compare(vA, vB);
+			var r = compare(vA, vB);
 			if(r!==CompareResult.Equal)
 				return o*r;
 

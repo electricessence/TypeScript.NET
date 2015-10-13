@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Types', '../../Compare'], function (require, exports, Types_1, ValueCompare) {
+define(["require", "exports", '../../Types', '../../Compare'], function (require, exports, Types_1, Compare_1) {
     function ensureArray(value) {
         return value instanceof Array
             ? value
@@ -27,7 +27,7 @@ define(["require", "exports", '../../Types', '../../Compare'], function (require
                     if (Types_1.default.isTrueNaN(vA))
                         vB = equivalentToNaN;
                 }
-                var r = ValueCompare.compare(vA, vB);
+                var r = Compare_1.compare(vA, vB);
                 if (r !== 0)
                     return o * r;
             }
