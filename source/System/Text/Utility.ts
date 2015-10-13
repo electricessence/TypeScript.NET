@@ -5,27 +5,47 @@
 
 import Types from '../Types';
 
+/**
+ * Takes any arg
+ * @param source
+ * @param args
+ * @returns {string}
+ */
 export function format(source:string, ...args:any[])
 {
-	for(let i = 0; i<args.length; i++)
-	{
-		source = source.replace("{" + i + "}", args[i]);
-	}
-	return source;
+	return supplant(source, args);
 }
 
-// Based upon Crockford's supplant function.
-export function supplant(source:string, o:{[key:string]:any}):string
+//
+
+/**
+ * This takes a string and replaces '{string}' with the respected parameter.
+ * Also allows for passing an array in order to use '{n}' notation.
+ * Not limited to an array's indexes.  For example, {length} is allowed.
+ * Based upon Crockford's supplant function.
+ * @param source
+ * @param params
+ * @returns {string}
+ */
+export function supplant(source:string, params:{[key:string]:any}|any[]):string
 {
+	var oIsArray = params instanceof Array;
 	return source.replace(/\{([^{}]*)\}/g,
 		(a:string, b:string):any=>
 		{
-			var r = o[b];
+			var n:any = b;
+			if(oIsArray)
+			{
+				let i = parseInt(b);
+				if(!isNaN(i)) n = i;
+			}
+
+			var r = (<any>params)[n];
 			switch(typeof r)
 			{
 				case Types.STRING:
-					return true;
 				case Types.NUMBER:
+				case Types.BOOLEAN:
 					return r;
 				default:
 					return a;
