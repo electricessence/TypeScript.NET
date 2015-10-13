@@ -17,7 +17,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
             var n = b;
             if (oIsArray) {
                 var i = parseInt(b);
-                if (!isNaN(n))
+                if (!isNaN(i))
                     n = i;
             }
             var r = params[n];
@@ -25,6 +25,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
                 case Types.STRING:
                     return true;
                 case Types.NUMBER:
+                case Types.BOOLEAN:
                     return r;
                 default:
                     return a;

@@ -13,7 +13,7 @@ import Types = require('../Types');
  */
 export function format(source:string, ...args:any[])
 {
-	return supplant(source,args);
+	return supplant(source, args);
 }
 
 //
@@ -34,9 +34,10 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 		(a:string, b:string):any=>
 		{
 			var n:any = b;
-			if(oIsArray) {
+			if(oIsArray)
+			{
 				let i = parseInt(b);
-				if(!isNaN(n)) n = i;
+				if(!isNaN(i)) n = i;
 			}
 
 			var r = (<any>params)[n];
@@ -45,6 +46,7 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 				case Types.STRING:
 					return true;
 				case Types.NUMBER:
+				case Types.BOOLEAN:
 					return r;
 				default:
 					return a;
