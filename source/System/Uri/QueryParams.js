@@ -66,7 +66,16 @@ define(["require", "exports", '../Types', '../Serialization/Utility'], function 
         if (deserialize === void 0) { deserialize = true; }
         if (decodeValues === void 0) { decodeValues = true; }
         var result = {};
-        parse(query, function (key, value) { result[key] = value; }, deserialize, decodeValues);
+        parse(query, function (key, value) {
+            if (key in result) {
+                var prev = result[key];
+                if (!(prev instanceof Array))
+                    result[key] = prev = [prev];
+                prev.push(value);
+            }
+            else
+                result[key] = value;
+        }, deserialize, decodeValues);
         return result;
     }
     exports.parseToMap = parseToMap;

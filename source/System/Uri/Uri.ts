@@ -35,7 +35,7 @@ class Uri implements IUri, IEquatable<IUri>
 	query:string;
 	fragment:string;
 
-	queryParams:IMap<Primitive>;
+	queryParams:IMap<Primitive|Primitive[]>;
 
 	/**
 	 * @param scheme The user name, password, or other user-specific information associated with the specified URI.

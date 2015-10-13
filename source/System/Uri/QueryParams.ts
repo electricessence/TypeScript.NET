@@ -115,11 +115,20 @@ export function parse(
 export function parseToMap(
 	query:string,
 	deserialize:boolean = true,
-	decodeValues:boolean = true):IMap<Primitive>
+	decodeValues:boolean = true):IMap<Primitive|Primitive[]>
 {
-	var result:IMap<Primitive> = {};
+	var result:IMap<Primitive|Primitive[]> = {};
 	parse(query,
-		(key, value)=> {result[key] = value;},
+		(key, value)=> {
+			if(key in result) {
+				var prev:any = result[key];
+				if(!(prev instanceof Array))
+					result[key] = prev = [prev];
+				prev.push(value);
+			}
+			else
+				result[key] = value;
+		},
 		deserialize,
 		decodeValues);
 	return result;
