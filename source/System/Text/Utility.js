@@ -8,19 +8,23 @@ define(["require", "exports", '../Types'], function (require, exports, Types_1) 
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
-        for (var i = 0; i < args.length; i++) {
-            source = source.replace("{" + i + "}", args[i]);
-        }
-        return source;
+        return supplant(source, args);
     }
     exports.format = format;
-    function supplant(source, o) {
+    function supplant(source, params) {
+        var oIsArray = params instanceof Array;
         return source.replace(/\{([^{}]*)\}/g, function (a, b) {
-            var r = o[b];
+            var n = b;
+            if (oIsArray) {
+                var i = parseInt(b);
+                if (!isNaN(i))
+                    n = i;
+            }
+            var r = params[n];
             switch (typeof r) {
                 case Types_1.default.STRING:
-                    return true;
                 case Types_1.default.NUMBER:
+                case Types_1.default.BOOLEAN:
                     return r;
                 default:
                     return a;

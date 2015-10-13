@@ -71,5 +71,8 @@ Currently the unit test cover many example usages.
 Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)  
 View Documentation: http://electricessence.github.io/TypeScript.NET/documentation/
 
+## Discussion
+https://redd.it/3ojya5
+
 ## Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
