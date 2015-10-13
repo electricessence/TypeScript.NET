@@ -72,7 +72,8 @@ Currently improving over time using JSDoc style comments and TypeDoc. (http://ty
 View Documentation: http://electricessence.github.io/TypeScript.NET/documentation/
 
 ## Discussion
-https://redd.it/3ojzbt
+https://redd.it/3ok0bm TypeScript
+https://redd.it/3ojzbt .NET
 
 ## Learn, Connect & Evolve
 https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
