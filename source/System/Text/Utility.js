@@ -23,7 +23,6 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
             var r = params[n];
             switch (typeof r) {
                 case Types.STRING:
-                    return true;
                 case Types.NUMBER:
                 case Types.BOOLEAN:
                     return r;

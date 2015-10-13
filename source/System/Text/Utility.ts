@@ -44,7 +44,6 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 			switch(typeof r)
 			{
 				case Types.STRING:
-					return true;
 				case Types.NUMBER:
 				case Types.BOOLEAN:
 					return r;
