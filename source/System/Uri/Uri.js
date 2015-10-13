@@ -30,7 +30,7 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         };
         Uri.from = function (url) {
             var uri = (!url || Types_1.default.isString(url))
-                ? tryParse(url) : url;
+                ? Uri.parse(url) : url;
             return new Uri(uri.scheme, uri.userInfo, uri.host, uri.port, uri.path, uri.query, uri.fragment);
         };
         Uri.parse = function (url, throwIfInvalid) {

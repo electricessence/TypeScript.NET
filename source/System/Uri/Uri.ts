@@ -102,7 +102,7 @@ class Uri implements IUri, IEquatable<IUri>
 	static from(url:string|IUri):Uri
 	{
 		var uri = (!url || Types.isString(url))
-			? tryParse(<string>url) : <IUri>url;
+			? Uri.parse(<string>url) : <IUri>url;
 
 		return new Uri(
 			uri.scheme,

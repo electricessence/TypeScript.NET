@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require","exports"],function(t,o){function e(t,o){o.forEach(function(o){Object.getOwnPropertyNames(o.prototype).forEach(function(e){t.prototype[e]=o.prototype[e]})})}return e});
+define(["require","exports"],function(e,t){function o(e,t){t.forEach(function(t){Object.getOwnPropertyNames(t.prototype).forEach(function(o){e.prototype[o]=t.prototype[o]})})}Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=o});
 //# sourceMappingURL=applyMixins.js.map

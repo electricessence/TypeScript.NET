@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require","exports"],function(r,n){function e(r,n){if(void 0===n&&(n={}),n)for(var e in r)n[e]=r[e];return n}return e});
+define(["require","exports"],function(e,r){function i(e,r){if(void 0===r&&(r={}),r)for(var i in e)r[i]=e[i];return r}Object.defineProperty(r,"__esModule",{value:!0}),r["default"]=i});
 //# sourceMappingURL=shallowCopy.js.map
