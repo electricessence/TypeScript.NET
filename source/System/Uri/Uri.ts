@@ -10,6 +10,7 @@ import Types from '../Types';
 import * as QueryParams from '../Uri/QueryParams';
 import copy from '../Utility/shallowCopy';
 import UriScheme from '../Uri/Scheme';
+import Exception from '../Exception';
 import ArgumentException from '../Exceptions/ArgumentException';
 import ArgumentNullException from '../Exceptions/ArgumentNullException';
 import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
@@ -101,7 +102,7 @@ class Uri implements IUri, IEquatable<IUri>
 	static from(url:string|IUri):Uri
 	{
 		var uri = (!url || Types.isString(url))
-			? parse(<string>url) : <IUri>url;
+			? tryParse(<string>url) : <IUri>url;
 
 		return new Uri(
 			uri.scheme,
@@ -115,13 +116,27 @@ class Uri implements IUri, IEquatable<IUri>
 	}
 
 	/**
-	 * Parse a URL into it's components.
-	 * @param url
-	 * @returns {IUri} Returns a map of the values.
+	 * Parses a URL into it's components.
+	 * @param url The url to parse.
+	 * @param throwIfInvalid
+	 * @returns {IUri} Returns a map of the values or *null* if invalid and *throwIfInvalid* is <b>false</b>.
 	 */
-	static parse(url:string):IUri
+	static parse(url:string, throwIfInvalid:boolean = true):IUri
 	{
-		return parse(url);
+		var result:IUri = null;
+		var ex = tryParse(url,(out)=>{result = out;});
+		if(throwIfInvalid && ex) throw ex;
+		return result;
+	}
+
+	/**
+	 * Parses a URL into it's components.
+	 * @param url The url to parse.
+	 * @param out A delegate to capture the value.
+	 * @returns {boolean} True if valid.  False if invalid.
+	 */
+	static tryParse(url:string,out:(result:IUri)=>void):boolean {
+		return !tryParse(url,out); // return type is Exception.
 	}
 
 	copyTo(map:IUri):IUri
@@ -335,11 +350,10 @@ function uriToString(uri:IUri):string
 }
 
 
-function parse(
-	url:string):IUri
+function tryParse(url:string, out:(result:IUri)=>void):Exception
 {
 	if(!url)
-		throw new ArgumentException('url', 'Nothing to parse.');
+		return new ArgumentException('url', 'Nothing to parse.');
 
 
 	// Could use a regex here, but well follow some rules instead.
@@ -370,7 +384,7 @@ function parse(
 	{
 		var scheme = trim(url.substring(0, i)), c = /:$/;
 		if(!c.test(scheme))
-			throw new ArgumentException('url','Scheme was improperly formatted');
+			return new ArgumentException('url','Scheme was improperly formatted');
 
 		scheme = trim(scheme.replace(c,EMPTY));
 		result.scheme = scheme || undefined;
@@ -400,7 +414,7 @@ function parse(
 	{
 		var port = parseInt(trim(url.substring(i + 1)));
 		if(isNaN(port))
-			throw new ArgumentException('url','Port was invalid.');
+			return new ArgumentException('url','Port was invalid.');
 
 		result.port = port;
 		url = url.substring(0, i);
@@ -408,6 +422,9 @@ function parse(
 
 	result.host = trim(url) || undefined;
 
-	return result;
+	out(result);
+
+	// null is good! (here)
+	return null;
 
 }

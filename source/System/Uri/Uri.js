@@ -30,11 +30,19 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         };
         Uri.from = function (url) {
             var uri = (!url || Types_1.default.isString(url))
-                ? parse(url) : url;
+                ? tryParse(url) : url;
             return new Uri(uri.scheme, uri.userInfo, uri.host, uri.port, uri.path, uri.query, uri.fragment);
         };
-        Uri.parse = function (url) {
-            return parse(url);
+        Uri.parse = function (url, throwIfInvalid) {
+            if (throwIfInvalid === void 0) { throwIfInvalid = true; }
+            var result = null;
+            var ex = tryParse(url, function (out) { result = out; });
+            if (throwIfInvalid && ex)
+                throw ex;
+            return result;
+        };
+        Uri.tryParse = function (url, out) {
+            return !tryParse(url, out);
         };
         Uri.prototype.copyTo = function (map) {
             var _ = this;
@@ -148,9 +156,9 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
             + (pathAndQuery || EMPTY)
             + (fragment || EMPTY);
     }
-    function parse(url) {
+    function tryParse(url, out) {
         if (!url)
-            throw new ArgumentException_1.default('url', 'Nothing to parse.');
+            return new ArgumentException_1.default('url', 'Nothing to parse.');
         var i, result = {};
         i = url.indexOf(HASH);
         if (i != -1) {
@@ -166,7 +174,7 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         if (i != -1) {
             var scheme = trim(url.substring(0, i)), c = /:$/;
             if (!c.test(scheme))
-                throw new ArgumentException_1.default('url', 'Scheme was improperly formatted');
+                return new ArgumentException_1.default('url', 'Scheme was improperly formatted');
             scheme = trim(scheme.replace(c, EMPTY));
             result.scheme = scheme || undefined;
             url = url.substring(i + 2);
@@ -185,12 +193,13 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         if (i != -1) {
             var port = parseInt(trim(url.substring(i + 1)));
             if (isNaN(port))
-                throw new ArgumentException_1.default('url', 'Port was invalid.');
+                return new ArgumentException_1.default('url', 'Port was invalid.');
             result.port = port;
             url = url.substring(0, i);
         }
         result.host = trim(url) || undefined;
-        return result;
+        out(result);
+        return null;
     }
 });
 //# sourceMappingURL=Uri.js.map
