@@ -7,9 +7,9 @@ import Types from './Types';
 import isTrueNaN = Types.isTrueNaN;
 
 export const enum CompareResult {
-	Equal   = 0 | 0,
-	Greater = (+1) | 0,
-	Less    = (-1) | 0
+	Equal   = 0,
+	Greater = 1,
+	Less    = -1
 }
 
 

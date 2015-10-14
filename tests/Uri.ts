@@ -1,7 +1,7 @@
-﻿///<reference path='../../typings/qunit/qunit'/>
+﻿///<reference path="../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path='QUnit'/>
 
-import Uri from '../../source/System/Uri/Uri';
+import Uri from '../source/System/Uri/Uri';
 
 
 export default function run()

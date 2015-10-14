@@ -3,9 +3,9 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', './Array/Utility', '../Types', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, AU, Types_1, EnumeratorBase_1, forEach_1, NotImplementedException_1, InvalidOperationException_1, ArgumentException_1, ArgumentOutOfRangeException_1) {
-    var MINIMUM_GROW = 4 | 0;
-    var GROW_FACTOR_HALF = 100 | 0;
+define(["require", "exports", '../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, AU, Types_1, Integer_1, EnumeratorBase_1, forEach_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1) {
+    var MINIMUM_GROW = 4;
+    var GROW_FACTOR_HALF = 100;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
     var emptyArray = [];
     var Queue = (function () {
@@ -114,7 +114,7 @@ define(["require", "exports", '../Compare', './Array/Utility', '../Types', './En
         };
         Queue.prototype.forEach = function (action) {
             var _ = this, copy = _.toArray(), len = _._size;
-            for (var i = 0 | 0; i < len; i++) {
+            for (var i = 0; i < len; i++) {
                 if (action(copy[i], i) === false)
                     break;
             }
@@ -147,7 +147,7 @@ define(["require", "exports", '../Compare', './Array/Utility', '../Types', './En
             _._version++;
         };
         Queue.prototype.enqueue = function (item) {
-            var _ = this, array = _._array, size = _._size | 0, len = _._capacity | 0;
+            var _ = this, array = _._array, size = _._size, len = _._capacity;
             if (size == len) {
                 var newCapacity = len * GROW_FACTOR_HALF;
                 if (newCapacity < len + MINIMUM_GROW)
@@ -209,16 +209,12 @@ define(["require", "exports", '../Compare', './Array/Utility', '../Types', './En
     })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Queue;
-    function assertInteger(value, property) {
-        if (value != Math.floor(value))
-            throw new ArgumentException_1.default(property, "Must be an integer.");
-    }
     function assertZeroOrGreater(value, property) {
         if (value < 0)
             throw new ArgumentOutOfRangeException_1.default(property, value, "Must be greater than zero");
     }
     function assertIntegerZeroOrGreater(value, property) {
-        assertInteger(value, property);
+        Integer_1.default.assert(value, property);
         assertZeroOrGreater(value, property);
     }
 });

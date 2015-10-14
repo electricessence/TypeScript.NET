@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Types'], function (require, exports, Types_1) {
+define(["require", "exports", '../../Types', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
     function initialize(length) {
         var array;
         if (length > 65536)
@@ -14,39 +14,37 @@ define(["require", "exports", '../../Types'], function (require, exports, Types_
         return array;
     }
     exports.initialize = initialize;
-    function copy(sourceArray, sourceIndex, length) {
+    function copy(source, sourceIndex, length) {
         if (sourceIndex === void 0) { sourceIndex = 0; }
         if (length === void 0) { length = Infinity; }
-        if (!sourceArray)
-            return sourceArray;
-        var sourceLength = sourceArray.length;
-        return (sourceIndex || length < sourceLength)
-            ? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength)
-            : sourceArray.slice(0);
+        return source
+            && copyTo(source, [], sourceIndex, 0, length);
     }
     exports.copy = copy;
-    function copyTo(sourceArray, destinationArray, sourceIndex, destinationIndex, length) {
+    var CBN = 'Cannot be null.', CBL0 = 'Cannot be less than zero.';
+    function copyTo(source, destination, sourceIndex, destinationIndex, length) {
         if (sourceIndex === void 0) { sourceIndex = 0; }
         if (destinationIndex === void 0) { destinationIndex = 0; }
         if (length === void 0) { length = Infinity; }
-        if (!sourceArray)
-            throw new Error("ArgumentNullException: source array cannot be null.");
-        if (!destinationArray)
-            throw new Error("ArgumentNullException: destination array cannot be null.");
+        if (!source)
+            throw new ArgumentNullException_1.default('source', CBN);
+        if (!destination)
+            throw new ArgumentNullException_1.default('destination', CBN);
         if (sourceIndex < 0)
-            throw new Error("ArgumentOutOfRangeException: source index cannot be less than zero.");
-        var sourceLength = sourceArray.length;
+            throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, CBL0);
+        var sourceLength = source.length;
         if (sourceIndex >= sourceLength)
-            throw new Error("ArgumentOutOfRangeException: the source index must be less than the length of the source array.");
-        if (destinationArray.length < 0)
-            throw new Error("ArgumentOutOfRangeException: destination index cannot be less than zero.");
-        var maxLength = sourceArray.length - sourceIndex;
+            throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
+        if (destination.length < 0)
+            throw new ArgumentOutOfRangeException_1.default('destinationIndex', destinationIndex, CBL0);
+        var maxLength = source.length - sourceIndex;
         if (isFinite(length) && length > maxLength)
-            throw new Error("ArgumentOutOfRangeException: source index + length cannot exceed the length of the source array.");
+            throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
         length = Math.min(length, maxLength);
         for (var i = 0; i < length; ++i) {
-            destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
+            destination[destinationIndex + i] = source[sourceIndex + i];
         }
+        return destination;
     }
     exports.copyTo = copyTo;
     function contains(array, item) {
@@ -54,11 +52,11 @@ define(["require", "exports", '../../Types'], function (require, exports, Types_
     }
     exports.contains = contains;
     function replace(array, old, newValue, max) {
-        var count = 0 | 0;
+        var count = 0;
         if (max !== 0) {
             if (!max)
                 max = Infinity;
-            for (var i = (array.length - 1) | 0; i >= 0; --i) {
+            for (var i = (array.length - 1); i >= 0; --i) {
                 if (array[i] === old) {
                     array[i] = newValue;
                     ++count;
@@ -96,23 +94,31 @@ define(["require", "exports", '../../Types'], function (require, exports, Types_
             throw new Error("ArgumentNullException: 'array' cannot be null.");
         if (!Types_1.default.isFunction(predicate))
             throw new Error("InvalidArgumentException: 'predicate' must be a function.");
-        var len = array.length | 0;
-        for (var i = 0 | 0; i < len; ++i) {
+        var len = array.length;
+        for (var i = 0; i < len; ++i) {
             if (i in array && predicate(array[i]))
                 return i;
         }
         return -1;
     }
     exports.findIndex = findIndex;
-    function forEach(sourceArray, fn) {
-        sourceArray.every(function (value, index) { return fn(value, index) !== false; });
+    function forEach(source, fn) {
+        if (!source)
+            throw new Error("ArgumentNullException: 'source' cannot be null.");
+        if (fn) {
+            for (var i = 0; i < source.length; ++i) {
+                if (fn(source[i]) === false)
+                    break;
+            }
+        }
+        return source;
     }
     exports.forEach = forEach;
     function applyTo(target, fn) {
         if (!target)
             throw new Error("ArgumentNullException: 'target' cannot be null.");
         if (fn) {
-            for (var i = 0 | 0; i < target.length; ++i) {
+            for (var i = 0; i < target.length; ++i) {
                 target[i] = fn(target[i]);
             }
         }
@@ -135,7 +141,7 @@ define(["require", "exports", '../../Types'], function (require, exports, Types_
         if (array && array.length && max !== 0) {
             if (!max)
                 max = Infinity;
-            for (var i = (array.length - 1) | 0; i >= 0; --i) {
+            for (var i = (array.length - 1); i >= 0; --i) {
                 if (array[i] === value) {
                     array.splice(i, 1);
                     ++count;
@@ -155,5 +161,22 @@ define(["require", "exports", '../../Types'], function (require, exports, Types_
         return result;
     }
     exports.repeat = repeat;
+    function flatten(a, recurseDepth) {
+        if (recurseDepth === void 0) { recurseDepth = 0; }
+        var result = [];
+        for (var i = 0; i < a.length; i++) {
+            var x = a[i];
+            if (x instanceof Array) {
+                if (recurseDepth)
+                    x = flatten(x);
+                for (var n = 0; n < x.length; n++)
+                    result.push(x[n]);
+            }
+            else
+                result.push(x);
+        }
+        return result;
+    }
+    exports.flatten = flatten;
 });
 //# sourceMappingURL=Utility.js.map

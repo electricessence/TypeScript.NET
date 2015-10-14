@@ -14,6 +14,7 @@ import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
 import * as Enumerator from '../System/Collections/Enumeration/Enumerator';
 import Types from '../System/Types';
+import Integer from '../System/Integer';
 import BaseFunctions from '../System/Functions';
 import ArrayEnumerator from '../System/Collections/Enumeration/ArrayEnumerator';
 import EnumeratorBase from '../System/Collections/Enumeration/EnumeratorBase';
@@ -21,6 +22,7 @@ import Dictionary from '../System/Collections/Dictionaries/Dictionary';
 import Queue from '../System/Collections/Queue';
 import {dispose, disposeThese, using} from '../System/Disposable/Utility';
 import DisposableBase from '../System/Disposable/DisposableBase';
+import ArgumentException from '../System/Exceptions/ArgumentException';
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
 
 import enumeratorFrom = Enumerator.from;
@@ -47,9 +49,6 @@ var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 const
-INT_0:number           = 0 | 0,
-INT_NEG1:number        = -1 | 0,
-INT_POS1:number        = +1 | 0,
 LENGTH                 = 'length',
 GET_ENUMERATOR         = 'getEnumerator',
 UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
@@ -175,7 +174,7 @@ extends DisposableBase implements IEnumerable<T>
 			() => new EnumeratorBase<T>(
 				null,
 				(yielder)=>
-					yielder.yieldReturn(values[(Math.random()*values.length) | 0])
+					yielder.yieldReturn(values[Integer.random(values.length)])
 			)
 		);
 	}
@@ -185,15 +184,15 @@ extends DisposableBase implements IEnumerable<T>
 		return new Enumerable<T>(
 			() =>
 			{
-				var index:number = INT_0; // Let the compiler know this is an int.
+				var index:number = 0; // Let the compiler know this is an int.
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						index = INT_0;
+						index = 0;
 					}, // Reinitialize the value just in case the enumerator is restarted.
 					(yielder)=>
 					{
-						if(index>=values.length) index = INT_0;
+						if(index>=values.length) index = 0;
 						return yielder.yieldReturn(values[index++]);
 					}
 				);
@@ -216,17 +215,17 @@ extends DisposableBase implements IEnumerable<T>
 		if(isNaN(count) || count<=0)
 			return Enumerable.empty<T>();
 
-		return isFinite(count) && assertInteger(count, "count")
+		return isFinite(count) && Integer.assert(count, "count")
 			? new Enumerable<T>(
 			() =>
 			{
-				var c:number = count | 0; // Force integer evaluation.
-				var index:number = INT_0;
+				var c:number = count;
+				var index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						index = INT_0;
+						index = 0;
 					},
 
 					(yielder)=> (index++<c) && yielder.yieldReturn(element)
@@ -271,7 +270,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	static make<T>(element:T):Enumerable<T>
 	{
-		return Enumerable.repeat<T>(element, INT_POS1);
+		return Enumerable.repeat<T>(element, 1);
 	}
 
 	// start and step can be other than integer.
@@ -290,18 +289,18 @@ extends DisposableBase implements IEnumerable<T>
 		if(!isFinite(step))
 			throw new Error("Must have a valid 'step' value.");
 
-		return isFinite(count) && assertInteger(count, "count")
+		return isFinite(count) && Integer.assert(count, "count")
 			? new Enumerable<number>(
 			() =>
 			{
 				var value:number;
-				var c:number = count | 0; // Force integer evaluation.
-				var index:number = INT_0;
+				var c:number = count; // Force integer evaluation.
+				var index:number = 0;
 
 				return new EnumeratorBase<number>(
 					() =>
 					{
-						index = INT_0;
+						index = 0;
 						value = start;
 					},
 
@@ -473,18 +472,18 @@ extends DisposableBase implements IEnumerable<T>
 		if(isNaN(count) || count<=0)
 			return Enumerable.empty<T>();
 
-		return isFinite(count) && assertInteger(count, "count")
+		return isFinite(count) && Integer.assert(count, "count")
 
 			? new Enumerable<T>(
 			() =>
 			{
-				var c:number = count | 0; // Force integer evaluation.
-				var index:number = INT_0;
+				var c:number = count;
+				var index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						index = INT_0;
+						index = 0;
 					},
 
 					(yielder)=>
@@ -498,11 +497,11 @@ extends DisposableBase implements IEnumerable<T>
 			: new Enumerable<T>(
 			() =>
 			{
-				var index:number = INT_0;
+				var index:number = 0;
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						index = INT_0;
+						index = 0;
 					},
 
 					(yielder)=> yielder.yieldReturn(factory(index++))
@@ -515,13 +514,13 @@ extends DisposableBase implements IEnumerable<T>
 		return new Enumerable<T>(
 			() =>
 			{
-				var index:number = INT_0;
+				var index:number = 0;
 				var value:T;
 				var isFirst:boolean;
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						index = INT_0;
+						index = 0;
 						value = seed;
 						isFirst = !skipSeed;
 					},
@@ -603,7 +602,7 @@ extends DisposableBase implements IEnumerable<T>
 		var _ = this;
 		_.throwIfDisposed();
 
-		var index:number = INT_0;
+		var index:number = 0;
 		// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
 		using(
 			_.getEnumerator(), e=>
@@ -708,14 +707,14 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				var enumerator:IEnumerator<T>;
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
 						throwIfDisposed(disposed);
 
-						index = INT_0;
+						index = 0;
 						enumerator = _.getEnumerator();
 					},
 
@@ -775,9 +774,9 @@ extends DisposableBase implements IEnumerable<T>
 		if(!isFinite(count)) // +Infinity equals skip all so return empty.
 			return Enumerable.empty<T>();
 
-		assertInteger(count, "count");
+		Integer.assert(count, "count");
 
-		var c:number = count | 0;
+		var c:number = count;
 
 		return this.doAction(
 			(element:T, index?:number) =>
@@ -818,8 +817,8 @@ extends DisposableBase implements IEnumerable<T>
 		if(!isFinite(count)) // +Infinity equals no limit.
 			return _;
 
-		assertInteger(count, "count");
-		var c = count | 0;
+		Integer.assert(count, "count");
+		var c = count;
 
 		// Once action returns false, the enumeration will stop.
 		return _.doAction((element:T, index?:number) => index<c);
@@ -876,8 +875,8 @@ extends DisposableBase implements IEnumerable<T>
 		if(!isFinite(count)) // +Infinity equals skip all so return empty.
 			return Enumerable.empty<T>();
 
-		assertInteger(count, "count");
-		var c = count | 0;
+		Integer.assert(count, "count");
+		var c = count;
 
 		return new Enumerable<T>(
 			() =>
@@ -926,9 +925,9 @@ extends DisposableBase implements IEnumerable<T>
 		if(!isFinite(count)) // Infinity means return all in reverse.
 			return _.reverse();
 
-		assertInteger(count, "count");
+		Integer.assert(count, "count");
 
-		return _.reverse().take(count | 0);
+		return _.reverse().take(count);
 	}
 
 	// #endregion
@@ -945,13 +944,13 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				var enumerator:IEnumerator<any>;
-				var nestLevel:number = INT_0;
+				var nestLevel:number = 0;
 				var buffer:any[], len:number;
 
 				return new EnumeratorBase<any>(
 					() =>
 					{
-						nestLevel = INT_0;
+						nestLevel = 0;
 						buffer = [];
 						len = 0;
 						enumerator = _.getEnumerator();
@@ -1215,14 +1214,14 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				var enumerator:IEnumerator<T>;
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
 					{
 						throwIfDisposed(disposed);
 
-						index = INT_0;
+						index = 0;
 						enumerator = _.getEnumerator();
 					},
 
@@ -1269,14 +1268,14 @@ extends DisposableBase implements IEnumerable<T>
 			{
 				var enumerator:IEnumerator<T>;
 				var middleEnumerator:IEnumerator<any>;
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
 					{
 						enumerator = _.getEnumerator();
 						middleEnumerator = undefined;
-						index = INT_0;
+						index = 0;
 					},
 
 					(yielder)=>
@@ -1340,14 +1339,14 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				var enumerator:IEnumerator<T>;
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
 					{
 						throwIfDisposed(disposed);
 
-						index = INT_0;
+						index = 0;
 						enumerator = _.getEnumerator();
 					},
 
@@ -1391,14 +1390,14 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				var enumerator:IEnumerator<T>;
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
 						throwIfDisposed(disposed);
 
-						index = INT_0;
+						index = 0;
 						enumerator = _.getEnumerator();
 					},
 
@@ -1583,18 +1582,18 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				var buffer:T[];
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
 						throwIfDisposed(disposed);
 						buffer = _.toArray();
-						index = buffer.length | 0;
+						index = buffer.length;
 					},
 
 					(yielder)=>
-					index>INT_0
+					index>0
 					&& yielder.yieldReturn(buffer[--index]),
 
 					() =>
@@ -1636,7 +1635,7 @@ extends DisposableBase implements IEnumerable<T>
 						if(!len)
 							return yielder.yieldBreak();
 
-						var selectedIndex = (Math.random()*len) | 0;
+						var selectedIndex = Integer.random(len);
 						var selectedValue = buffer[selectedIndex];
 
 						buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
@@ -1668,7 +1667,7 @@ extends DisposableBase implements IEnumerable<T>
 		var _ = this;
 		_.throwIfDisposed();
 
-		var count:number = INT_0;
+		var count:number = 0;
 		if(predicate)
 		{
 			_.forEach((x, i) =>
@@ -1758,7 +1757,7 @@ extends DisposableBase implements IEnumerable<T>
 	// Better to chain a where statement first to be more explicit.
 	indexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
 	{
-		var found:number = INT_NEG1;
+		var found:number = -1;
 
 		if(compareSelector)
 			this.forEach((element:T, i?:number) =>
@@ -1785,7 +1784,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	lastIndexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
 	{
-		var result:number = INT_NEG1;
+		var result:number = -1;
 
 		if(compareSelector)
 			this.forEach((element:T, i?:number) =>
@@ -1857,12 +1856,12 @@ extends DisposableBase implements IEnumerable<T>
 			{
 				var firstEnumerator:IEnumerator<T>;
 				var secondEnumerator:IEnumerator<TSecond>;
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
 					{
-						index = INT_0;
+						index = 0;
 						firstEnumerator = _.getEnumerator();
 						secondEnumerator = enumeratorFrom<TSecond>(second);
 					},
@@ -1894,13 +1893,13 @@ extends DisposableBase implements IEnumerable<T>
 				var secondTemp:Queue<any>;
 				var firstEnumerator:IEnumerator<T>;
 				var secondEnumerator:IEnumerator<TSecond>;
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
 					{
 						secondTemp = new Queue<any>(second);
-						index = INT_0;
+						index = 0;
 						firstEnumerator = _.getEnumerator();
 						secondEnumerator = null;
 					},
@@ -1962,7 +1961,7 @@ extends DisposableBase implements IEnumerable<T>
 				var outerEnumerator:IEnumerator<T>;
 				var lookup:ILookup<TKey,TInner>;
 				var innerElements:TInner[] = null;
-				var innerCount:number = INT_0;
+				var innerCount:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -1983,7 +1982,7 @@ extends DisposableBase implements IEnumerable<T>
 									return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
 
 								innerElement = null;
-								innerCount = INT_0;
+								innerCount = 0;
 							}
 
 							if(outerEnumerator.moveNext())
@@ -2161,8 +2160,8 @@ extends DisposableBase implements IEnumerable<T>
 		if(isNaN(index) || index<0 || !isFinite(index))
 			throw new Error("'index' is invalid or out of bounds.");
 
-		assertInteger(index, "index");
-		var n:number = index | 0;
+		Integer.assert(index, "index");
+		var n:number = index;
 
 		var _ = this;
 		_.throwIfDisposed();
@@ -2174,13 +2173,13 @@ extends DisposableBase implements IEnumerable<T>
 				var firstEnumerator:IEnumerator<T>;
 				var secondEnumerator:IEnumerator<T>;
 
-				var count:number = INT_0;
+				var count:number = 0;
 				var isEnumerated:boolean = false;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						count = INT_0;
+						count = 0;
 						firstEnumerator = _.getEnumerator();
 						secondEnumerator = enumeratorFrom<T>(other);
 						isEnumerated = false;
@@ -2467,12 +2466,12 @@ extends DisposableBase implements IEnumerable<T>
 		 },
 		 () => {
 		 if (sortedByBound.length > 0) {
-		 var draw = (Math.random() * totalWeight)|0 + 1;
+		 var draw = (Math.random() * totalWeight) + 1;
 
-		 var lower = -1 | 0;
+		 var lower = -1;
 		 var upper = sortedByBound.length;
 		 while (upper - lower > 1) {
-		 var index = ((lower + upper) / 2) | 0;
+		 var index = ((lower + upper) / 2);
 		 if (sortedByBound[index].bound >= draw) {
 		 upper = index;
 		 }
@@ -2596,7 +2595,7 @@ extends DisposableBase implements IEnumerable<T>
 		if(size<1 || !isFinite(size))
 			throw new Error("Invalid buffer size.");
 
-		assertInteger(size, "size");
+		Integer.assert(size, "size");
 
 		var _ = this, len:number;
 
@@ -2641,7 +2640,7 @@ extends DisposableBase implements IEnumerable<T>
 		return this.scan(func, seed).lastOrDefault();
 	}
 
-	average(selector:Selector<T, number> = numberOrNaN):number
+	average(selector:Selector<T, number> = Types.numberOrNaN):number
 	{
 		var sum = 0;
 		// This allows for infinity math that doesn't destroy the other values.
@@ -2696,7 +2695,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	// Addition...  Only works with numerical enumerations.
-	sum(selector:Selector<T, number> = numberOrNaN):number
+	sum(selector:Selector<T, number> = Types.numberOrNaN):number
 	{
 		var sum = 0;
 
@@ -2723,7 +2722,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	// Multiplication...
-	product(selector:Selector<T, number> = numberOrNaN):number
+	product(selector:Selector<T, number> = Types.numberOrNaN):number
 	{
 		var result = 1, exists:boolean = false;
 
@@ -2762,8 +2761,8 @@ extends DisposableBase implements IEnumerable<T>
 		if(isNaN(index) || index<0 || !isFinite(index))
 			throw new Error("'index' is invalid or out of bounds.");
 
-		assertInteger(index, "index");
-		var n:number = index | 0;
+		Integer.assert(index, "index");
+		var n:number = index;
 
 		var _ = this;
 		_.throwIfDisposed();
@@ -2792,8 +2791,8 @@ extends DisposableBase implements IEnumerable<T>
 		if(isNaN(index) || index<0 || !isFinite(index))
 			throw new Error("'index' is invalid or out of bounds.");
 
-		assertInteger(index, "index");
-		var n:number = index | 0;
+		Integer.assert(index, "index");
+		var n:number = index;
 
 		var _ = this;
 		_.throwIfDisposed();
@@ -2989,7 +2988,7 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 
-				var index:number = INT_0;
+				var index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2999,7 +2998,7 @@ extends DisposableBase implements IEnumerable<T>
 							enumerator = _.getEnumerator();
 						if(!cache)
 							cache = [];
-						index = INT_0;
+						index = 0;
 					},
 
 					(yielder)=>
@@ -3166,7 +3165,7 @@ extends Enumerable<T>
 			return (<any>s).slice();
 
 		var len = s.length, result:T[] = ArrayUtility.initialize<T>(len);
-		for(let i = INT_0; i<len; ++i)
+		for(let i = 0; i<len; ++i)
 		{
 			result[i] = s[i];
 		}
@@ -3190,7 +3189,7 @@ extends Enumerable<T>
 		{
 
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			for(let i = INT_0; i<source.length; ++i)
+			for(let i = 0; i<source.length; ++i)
 			{
 				// _.assertIsNotDisposed(); // Assertion here is unnecessary since we already have a reference to the source array.
 				if(<any>action(source[i], i)===false)
@@ -3634,12 +3633,12 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 		var _ = this;
 		var buffer:T[];
 		var indexes:number[];
-		var index:number = INT_0;
+		var index:number = 0;
 
 		return new EnumeratorBase<T>(
 			() =>
 			{
-				index = INT_0;
+				index = 0;
 				buffer = [];
 				indexes = [];
 				Enumerable.forEach(
@@ -3717,10 +3716,10 @@ class SortContext<T, TOrderBy>
 	generateKeys(source:IArray<T>):void
 	{
 		var _ = this;
-		var len = source.length | 0;
+		var len = source.length;
 		var keySelector:(value:T) => TOrderBy = _.keySelector;
 		var keys = new Array<TOrderBy>(len);
-		for(let i = INT_0; i<len; ++i)
+		for(let i = 0; i<len; ++i)
 		{
 			keys[i] = keySelector(source[i]);
 		}
@@ -3751,25 +3750,10 @@ class SortContext<T, TOrderBy>
 // #region Helper Functions...
 // This allows for the use of a boolean instead of calling this.throwIfDisposed()
 // since there is a strong chance of introducing a circular reference.
-function throwIfDisposed(disposed:boolean):void
+function throwIfDisposed(disposed:boolean, className:string = "Enumerable"):void
 {
-	if(disposed)
-		throw new ObjectDisposedException("Enumerable");
+	if(disposed) throw new ObjectDisposedException(className);
 }
-
-function numberOrNaN(value:any):number
-{
-	return isNaN(value) ? NaN : value;
-}
-
-// TODO: Convert to ArgumentException.
-function assertInteger(value:number, variable:string):boolean
-{
-	if(typeof value===Types.NUMBER && !isNaN(value) && value!=(value | 0))
-		throw new Error("'" + variable + "'" + " must be an integer.");
-	return true;
-}
-
 // #endregion
 
 export default Enumerable;

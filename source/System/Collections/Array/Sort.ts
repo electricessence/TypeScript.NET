@@ -13,8 +13,8 @@ import {compare,CompareResult} from '../../Compare';
  */
 export const enum Order
 {
-	Ascending  = (+1) | 0,
-	Descending = (-1) | 0
+	Ascending  = +1,
+	Descending = -1
 }
 
 function ensureArray<T>(value:T|T[]):T[]

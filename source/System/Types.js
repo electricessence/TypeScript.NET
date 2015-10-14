@@ -38,6 +38,10 @@ define(["require", "exports"], function (require, exports) {
             return typeof value === _OBJECT;
         }
         Types.isObject = isObject;
+        function numberOrNaN(value) {
+            return isNaN(value) ? NaN : value;
+        }
+        Types.numberOrNaN = numberOrNaN;
     })(Types = exports.Types || (exports.Types = {}));
     Object.freeze(Types);
     Object.defineProperty(exports, "__esModule", { value: true });

@@ -30,11 +30,6 @@ import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeExcepti
  *****************************/
 
 
-const
-INT_0:number = 0 | 0,
-INT_1:number = 1 | 0;
-
-
 class Node<T>
 {
 	constructor(
@@ -97,7 +92,7 @@ implements ILinkedList<T>
 	constructor(source?:IArray<T>);
 	constructor(source:any)
 	{
-		var _ = this, c = INT_0, first:Node<T> = null, last:Node<T> = null;
+		var _ = this, c = 0, first:Node<T> = null, last:Node<T> = null;
 		var e = Enumerator.from<T>(source);
 
 		if(e.moveNext())
@@ -130,7 +125,7 @@ implements ILinkedList<T>
 
 		_._first = prev;
 
-		_._count += INT_1;
+		_._count += 1;
 
 		return prev;
 	}
@@ -145,7 +140,7 @@ implements ILinkedList<T>
 			_._first = next;
 
 		_._last = next;
-		_._count += INT_1;
+		_._count += 1;
 
 		return next;
 	}
@@ -160,7 +155,7 @@ implements ILinkedList<T>
 		n.prev.next = inserting;
 		n.prev = inserting;
 
-		this._count += INT_1;
+		this._count += 1;
 	}
 
 
@@ -174,7 +169,7 @@ implements ILinkedList<T>
 		n.next.prev = inserting;
 		n.next = inserting;
 
-		this._count += INT_1;
+		this._count += 1;
 	}
 
 	private _findFirst(entry:T):Node<T>
@@ -219,7 +214,7 @@ implements ILinkedList<T>
 		}
 		else
 		{
-			var next = this._first, index:number = INT_0;
+			var next = this._first, index:number = 0;
 			while(next && <any>action(next.value, index++)!==false)
 			{
 				next = next.next;
@@ -312,7 +307,7 @@ implements ILinkedList<T>
 			if(next) next.prev = prev;
 			else _._last = prev;
 
-			_._count -= INT_1;
+			_._count -= 1;
 		}
 
 		return node!=null;
@@ -321,7 +316,7 @@ implements ILinkedList<T>
 
 	remove(entry:T):number
 	{
-		var _ = this, removedCount:number = INT_0;
+		var _ = this, removedCount:number = 0;
 		while(_.removeOnce(entry))
 		{
 			++removedCount;
@@ -355,7 +350,7 @@ implements ILinkedList<T>
 			throw new ArgumentOutOfRangeException(
 				'index', index, 'Is greater than count.');
 
-		var next = this._first, i:number = INT_0;
+		var next = this._first, i:number = 0;
 		while(next && index<i++)
 		{
 			next = next.next;
@@ -405,7 +400,7 @@ implements ILinkedList<T>
 			if(next) // Might have been the last.
 				next.prev = null;
 
-			_._count -= INT_1;
+			_._count -= 1;
 		}
 	}
 
@@ -419,7 +414,7 @@ implements ILinkedList<T>
 			if(prev) // Might have been the first.
 				prev.next = null;
 
-			_._count -= INT_1;
+			_._count -= 1;
 		}
 	}
 

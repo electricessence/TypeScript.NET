@@ -117,6 +117,17 @@ export module Types
 	{
 		return typeof value===_OBJECT;
 	}
+
+	/**
+	 * Guarantees a number value or NaN instead.
+	 * @param value
+	 * @returns {number}
+	 */
+	export function numberOrNaN(value:any):number
+	{
+		return isNaN(value) ? NaN : value;
+	}
+
 }
 
 Object.freeze(Types);

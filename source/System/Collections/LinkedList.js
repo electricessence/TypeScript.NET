@@ -4,7 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
-    var INT_0 = 0 | 0, INT_1 = 1 | 0;
     var Node = (function () {
         function Node(value, prev, next) {
             this.value = value;
@@ -37,7 +36,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
     }
     var LinkedList = (function () {
         function LinkedList(source) {
-            var _ = this, c = INT_0, first = null, last = null;
+            var _ = this, c = 0, first = null, last = null;
             var e = Enumerator.from(source);
             if (e.moveNext()) {
                 first = last = new Node(e.current);
@@ -59,7 +58,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
             else
                 _._last = prev;
             _._first = prev;
-            _._count += INT_1;
+            _._count += 1;
             return prev;
         };
         LinkedList.prototype._addLast = function (entry) {
@@ -70,7 +69,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
             else
                 _._first = next;
             _._last = next;
-            _._count += INT_1;
+            _._count += 1;
             return next;
         };
         LinkedList.prototype._addNodeBefore = function (n, inserting) {
@@ -79,7 +78,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
             inserting.prev = n.prev;
             n.prev.next = inserting;
             n.prev = inserting;
-            this._count += INT_1;
+            this._count += 1;
         };
         LinkedList.prototype._addNodeAfter = function (n, inserting) {
             inserting.assertDetached();
@@ -87,7 +86,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
             inserting.next = n.next;
             n.next.prev = inserting;
             n.next = inserting;
-            this._count += INT_1;
+            this._count += 1;
         };
         LinkedList.prototype._findFirst = function (entry) {
             var equals = Values.areEqual, next = this._first;
@@ -115,7 +114,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
                 array.length = 0;
             }
             else {
-                var next = this._first, index = INT_0;
+                var next = this._first, index = 0;
                 while (next && action(next.value, index++) !== false) {
                     next = next.next;
                 }
@@ -185,12 +184,12 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
                     next.prev = prev;
                 else
                     _._last = prev;
-                _._count -= INT_1;
+                _._count -= 1;
             }
             return node != null;
         };
         LinkedList.prototype.remove = function (entry) {
-            var _ = this, removedCount = INT_0;
+            var _ = this, removedCount = 0;
             while (_.removeOnce(entry)) {
                 ++removedCount;
             }
@@ -215,7 +214,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
                 throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
             if (index >= this._count)
                 throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than count.');
-            var next = this._first, i = INT_0;
+            var next = this._first, i = 0;
             while (next && index < i++) {
                 next = next.next;
             }
@@ -246,7 +245,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
                 _._first = next;
                 if (next)
                     next.prev = null;
-                _._count -= INT_1;
+                _._count -= 1;
             }
         };
         LinkedList.prototype.removeLast = function () {
@@ -256,7 +255,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/A
                 _._last = prev;
                 if (prev)
                     prev.next = null;
-                _._count -= INT_1;
+                _._count -= 1;
             }
         };
         LinkedList.prototype.removeNode = function (node) {

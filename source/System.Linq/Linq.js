@@ -8,7 +8,41 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function (require, exports, Values, Arrays, ArrayUtility, Enumerator, Types_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, Utility_1, DisposableBase_1, ObjectDisposedException_1) {
+define([
+    "require",
+    "exports",
+    '../System/Compare',
+    '../System/Collections/Array/Compare',
+    '../System/Collections/Array/Utility',
+    '../System/Collections/Enumeration/Enumerator',
+    '../System/Types',
+    '../System/Integer',
+    '../System/Functions',
+    '../System/Collections/Enumeration/ArrayEnumerator',
+    '../System/Collections/Enumeration/EnumeratorBase',
+    '../System/Collections/Dictionaries/Dictionary',
+    '../System/Collections/Queue',
+    '../System/Disposable/Utility',
+    '../System/Disposable/DisposableBase',
+    '../System/Disposable/ObjectDisposedException'
+], function(
+    require,
+    exports,
+    Values,
+    Arrays,
+    ArrayUtility,
+    Enumerator,
+    Types_1,
+    Integer_1,
+    Functions_1,
+    ArrayEnumerator_1,
+    EnumeratorBase_1,
+    Dictionary_1,
+    Queue_1,
+    Utility_1,
+    DisposableBase_1,
+    ObjectDisposedException_1)
+{
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;
     'use strict';
@@ -27,7 +61,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
     })(Functions_1.default);
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
-    var INT_0 = 0 | 0, INT_NEG1 = -1 | 0, INT_POS1 = +1 | 0, LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator', UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
+    var LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator', UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(_enumeratorFactory, finalizer) {
@@ -78,17 +112,17 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         };
         Enumerable.choice = function (values) {
             return new Enumerable(function () { return new EnumeratorBase_1.default(null, function (yielder) {
-                return yielder.yieldReturn(values[(Math.random() * values.length) | 0]);
+                return yielder.yieldReturn(values[Integer_1.default.random(values.length)]);
             }); });
         };
         Enumerable.cycle = function (values) {
             return new Enumerable(function () {
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
-                    index = INT_0;
+                    index = 0;
                 }, function (yielder) {
                     if (index >= values.length)
-                        index = INT_0;
+                        index = 0;
                     return yielder.yieldReturn(values[index++]);
                 });
             });
@@ -100,12 +134,12 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             if (count === void 0) { count = Infinity; }
             if (isNaN(count) || count <= 0)
                 return Enumerable.empty();
-            return isFinite(count) && assertInteger(count, "count")
+            return isFinite(count) && Integer_1.default.assert(count, "count")
                 ? new Enumerable(function () {
-                    var c = count | 0;
-                    var index = INT_0;
+                var c = count;
+                var index = 0;
                     return new EnumeratorBase_1.default(function () {
-                        index = INT_0;
+                        index = 0;
                     }, function (yielder) { return (index++ < c) && yielder.yieldReturn(element); });
                 })
                 : new Enumerable(function () {
@@ -123,7 +157,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             });
         };
         Enumerable.make = function (element) {
-            return Enumerable.repeat(element, INT_POS1);
+            return Enumerable.repeat(element, 1);
         };
         Enumerable.range = function (start, count, step) {
             if (start === void 0) { start = 0; }
@@ -135,13 +169,13 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 return Enumerable.empty();
             if (!isFinite(step))
                 throw new Error("Must have a valid 'step' value.");
-            return isFinite(count) && assertInteger(count, "count")
+            return isFinite(count) && Integer_1.default.assert(count, "count")
                 ? new Enumerable(function () {
                     var value;
-                    var c = count | 0;
-                    var index = INT_0;
+                var c = count;
+                var index = 0;
                     return new EnumeratorBase_1.default(function () {
-                        index = INT_0;
+                        index = 0;
                         value = start;
                     }, function (yielder) {
                         var result = index++ < c
@@ -239,32 +273,32 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             if (count === void 0) { count = Infinity; }
             if (isNaN(count) || count <= 0)
                 return Enumerable.empty();
-            return isFinite(count) && assertInteger(count, "count")
+            return isFinite(count) && Integer_1.default.assert(count, "count")
                 ? new Enumerable(function () {
-                    var c = count | 0;
-                    var index = INT_0;
+                var c = count;
+                var index = 0;
                     return new EnumeratorBase_1.default(function () {
-                        index = INT_0;
+                        index = 0;
                     }, function (yielder) {
                         var current = index++;
                         return current < c && yielder.yieldReturn(factory(current));
                     });
                 })
                 : new Enumerable(function () {
-                    var index = INT_0;
+                var index = 0;
                     return new EnumeratorBase_1.default(function () {
-                        index = INT_0;
+                        index = 0;
                     }, function (yielder) { return yielder.yieldReturn(factory(index++)); });
                 });
         };
         Enumerable.unfold = function (seed, valueFactory, skipSeed) {
             if (skipSeed === void 0) { skipSeed = false; }
             return new Enumerable(function () {
-                var index = INT_0;
+                var index = 0;
                 var value;
                 var isFirst;
                 return new EnumeratorBase_1.default(function () {
-                    index = INT_0;
+                    index = 0;
                     value = seed;
                     isFirst = !skipSeed;
                 }, function (yielder) {
@@ -307,7 +341,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         Enumerable.prototype.forEach = function (action) {
             var _ = this;
             _.throwIfDisposed();
-            var index = INT_0;
+            var index = 0;
             Utility_1.using(_.getEnumerator(), function (e) {
                 while (_.throwIfDisposed() && e.moveNext()) {
                     if (action(e.current, index++) === false)
@@ -365,10 +399,10 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             var _ = this, disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
-                    index = INT_0;
+                    index = 0;
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     throwIfDisposed(disposed);
@@ -399,8 +433,8 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 return _;
             if (!isFinite(count))
                 return Enumerable.empty();
-            assertInteger(count, "count");
-            var c = count | 0;
+            Integer_1.default.assert(count, "count");
+            var c = count;
             return this.doAction(function (element, index) {
                 return index < c
                     ? 2
@@ -425,8 +459,8 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             _.throwIfDisposed();
             if (!isFinite(count))
                 return _;
-            assertInteger(count, "count");
-            var c = count | 0;
+            Integer_1.default.assert(count, "count");
+            var c = count;
             return _.doAction(function (element, index) { return index < c; });
         };
         Enumerable.prototype.takeWhile = function (predicate) {
@@ -460,8 +494,8 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 return _;
             if (!isFinite(count))
                 return Enumerable.empty();
-            assertInteger(count, "count");
-            var c = count | 0;
+            Integer_1.default.assert(count, "count");
+            var c = count;
             return new Enumerable(function () {
                 var enumerator;
                 var q;
@@ -486,17 +520,17 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             var _ = this;
             if (!isFinite(count))
                 return _.reverse();
-            assertInteger(count, "count");
-            return _.reverse().take(count | 0);
+            Integer_1.default.assert(count, "count");
+            return _.reverse().take(count);
         };
         Enumerable.prototype.traverseBreadthFirst = function (func, resultSelector) {
             var _ = this;
             return new Enumerable(function () {
                 var enumerator;
-                var nestLevel = INT_0;
+                var nestLevel = 0;
                 var buffer, len;
                 return new EnumeratorBase_1.default(function () {
-                    nestLevel = INT_0;
+                    nestLevel = 0;
                     buffer = [];
                     len = 0;
                     enumerator = _.getEnumerator();
@@ -647,10 +681,10 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 return new WhereSelectEnumerable(_, null, selector);
             return new Enumerable(function () {
                 var enumerator;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
-                    index = INT_0;
+                    index = 0;
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     throwIfDisposed(disposed);
@@ -671,11 +705,11 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             return new Enumerable(function () {
                 var enumerator;
                 var middleEnumerator;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     enumerator = _.getEnumerator();
                     middleEnumerator = undefined;
-                    index = INT_0;
+                    index = 0;
                 }, function (yielder) {
                     if (middleEnumerator === undefined && !enumerator.moveNext())
                         return false;
@@ -703,10 +737,10 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             var _ = this, disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
-                    index = INT_0;
+                    index = 0;
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     throwIfDisposed(disposed);
@@ -729,10 +763,10 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 return new WhereEnumerable(_, predicate);
             return new Enumerable(function () {
                 var enumerator;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
-                    index = INT_0;
+                    index = 0;
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     throwIfDisposed(disposed);
@@ -841,13 +875,13 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             var _ = this, disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var buffer;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     buffer = _.toArray();
-                    index = buffer.length | 0;
+                    index = buffer.length;
                 }, function (yielder) {
-                    return index > INT_0
+                    return index>0
                         && yielder.yieldReturn(buffer[--index]);
                 }, function () {
                     buffer.length = 0;
@@ -869,7 +903,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 }, function (yielder) {
                     if (!len)
                         return yielder.yieldBreak();
-                    var selectedIndex = (Math.random() * len) | 0;
+                    var selectedIndex = Integer_1.default.random(len);
                     var selectedValue = buffer[selectedIndex];
                     buffer[selectedIndex] = buffer[--len];
                     buffer[len] = null;
@@ -886,7 +920,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         Enumerable.prototype.count = function (predicate) {
             var _ = this;
             _.throwIfDisposed();
-            var count = INT_0;
+            var count = 0;
             if (predicate) {
                 _.forEach(function (x, i) {
                     if (predicate(x, i))
@@ -941,7 +975,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 : this.any(function (v) { return v === value; });
         };
         Enumerable.prototype.indexOf = function (value, compareSelector) {
-            var found = INT_NEG1;
+            var found = -1;
             if (compareSelector)
                 this.forEach(function (element, i) {
                     if (Values.areEqual(compareSelector(element), compareSelector(value), true)) {
@@ -959,7 +993,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             return found;
         };
         Enumerable.prototype.lastIndexOf = function (value, compareSelector) {
-            var result = INT_NEG1;
+            var result = -1;
             if (compareSelector)
                 this.forEach(function (element, i) {
                     if (Values.areEqual(compareSelector(element), compareSelector(value), true))
@@ -1004,9 +1038,9 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
-                    index = INT_0;
+                    index = 0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = enumeratorFrom(second);
                 }, function (yielder) {
@@ -1025,10 +1059,10 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 var secondTemp;
                 var firstEnumerator;
                 var secondEnumerator;
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     secondTemp = new Queue_1.default(second);
-                    index = INT_0;
+                    index = 0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = null;
                 }, function (yielder) {
@@ -1062,7 +1096,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                 var outerEnumerator;
                 var lookup;
                 var innerElements = null;
-                var innerCount = INT_0;
+                var innerCount = 0;
                 return new EnumeratorBase_1.default(function () {
                     outerEnumerator = _.getEnumerator();
                     lookup = Enumerable.from(inner)
@@ -1074,7 +1108,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                             if (innerElement !== undefined)
                                 return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
                             innerElement = null;
-                            innerCount = INT_0;
+                            innerCount = 0;
                         }
                         if (outerEnumerator.moveNext()) {
                             var key = outerKeySelector(outerEnumerator.current);
@@ -1176,17 +1210,17 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         Enumerable.prototype.insertAt = function (index, other) {
             if (isNaN(index) || index < 0 || !isFinite(index))
                 throw new Error("'index' is invalid or out of bounds.");
-            assertInteger(index, "index");
-            var n = index | 0;
+            Integer_1.default.assert(index, "index");
+            var n = index;
             var _ = this;
             _.throwIfDisposed();
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
-                var count = INT_0;
+                var count = 0;
                 var isEnumerated = false;
                 return new EnumeratorBase_1.default(function () {
-                    count = INT_0;
+                    count = 0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = enumeratorFrom(other);
                     isEnumerated = false;
@@ -1395,7 +1429,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         Enumerable.prototype.buffer = function (size) {
             if (size < 1 || !isFinite(size))
                 throw new Error("Invalid buffer size.");
-            assertInteger(size, "size");
+            Integer_1.default.assert(size, "size");
             var _ = this, len;
             return new Enumerable(function () {
                 var enumerator;
@@ -1418,7 +1452,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             return this.scan(func, seed).lastOrDefault();
         };
         Enumerable.prototype.average = function (selector) {
-            if (selector === void 0) { selector = numberOrNaN; }
+            if(selector=== void 0) { selector = Types_1.default.numberOrNaN; }
             var sum = 0;
             var sumInfinite = 0;
             var count = 0;
@@ -1455,7 +1489,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             return this.aggregate(function (a, b) { return (keySelector(a) < keySelector(b)) ? a : b; });
         };
         Enumerable.prototype.sum = function (selector) {
-            if (selector === void 0) { selector = numberOrNaN; }
+            if(selector=== void 0) { selector = Types_1.default.numberOrNaN; }
             var sum = 0;
             var sumInfinite = 0;
             this.forEach(function (x) {
@@ -1472,7 +1506,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
         };
         Enumerable.prototype.product = function (selector) {
-            if (selector === void 0) { selector = numberOrNaN; }
+            if(selector=== void 0) { selector = Types_1.default.numberOrNaN; }
             var result = 1, exists = false;
             this.forEach(function (x) {
                 exists = true;
@@ -1492,8 +1526,8 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         Enumerable.prototype.elementAt = function (index) {
             if (isNaN(index) || index < 0 || !isFinite(index))
                 throw new Error("'index' is invalid or out of bounds.");
-            assertInteger(index, "index");
-            var n = index | 0;
+            Integer_1.default.assert(index, "index");
+            var n = index;
             var _ = this;
             _.throwIfDisposed();
             var value = undefined;
@@ -1513,8 +1547,8 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             if (defaultValue === void 0) { defaultValue = null; }
             if (isNaN(index) || index < 0 || !isFinite(index))
                 throw new Error("'index' is invalid or out of bounds.");
-            assertInteger(index, "index");
-            var n = index | 0;
+            Integer_1.default.assert(index, "index");
+            var n = index;
             var _ = this;
             _.throwIfDisposed();
             var value = undefined;
@@ -1635,14 +1669,14 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             var cache;
             var enumerator;
             return new Enumerable(function () {
-                var index = INT_0;
+                var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
                     if (!enumerator)
                         enumerator = _.getEnumerator();
                     if (!cache)
                         cache = [];
-                    index = INT_0;
+                    index = 0;
                 }, function (yielder) {
                     throwIfDisposed(disposed);
                     var i = index++;
@@ -1745,7 +1779,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             if (s instanceof Array)
                 return s.slice();
             var len = s.length, result = ArrayUtility.initialize(len);
-            for (var i = INT_0; i < len; ++i) {
+            for(var i = 0; i<len; ++i) {
                 result[i] = s[i];
             }
             return result;
@@ -1758,7 +1792,7 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             _.throwIfDisposed();
             var source = _._source;
             if (source) {
-                for (var i = INT_0; i < source.length; ++i) {
+                for(var i = 0; i<source.length; ++i) {
                     if (action(source[i], i) === false)
                         break;
                 }
@@ -2031,9 +2065,9 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             var _ = this;
             var buffer;
             var indexes;
-            var index = INT_0;
+            var index = 0;
             return new EnumeratorBase_1.default(function () {
-                index = INT_0;
+                index = 0;
                 buffer = [];
                 indexes = [];
                 Enumerable.forEach(_.source, function (item, i) {
@@ -2081,10 +2115,10 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         };
         SortContext.prototype.generateKeys = function (source) {
             var _ = this;
-            var len = source.length | 0;
+            var len = source.length;
             var keySelector = _.keySelector;
             var keys = new Array(len);
-            for (var i = INT_0; i < len; ++i) {
+            for(var i = 0; i<len; ++i) {
                 keys[i] = keySelector(source[i]);
             }
             _.keys = keys;
@@ -2104,17 +2138,11 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
         };
         return SortContext;
     })();
-    function throwIfDisposed(disposed) {
+
+    function throwIfDisposed(disposed, className) {
+        if(className=== void 0) { className = "Enumerable"; }
         if (disposed)
-            throw new ObjectDisposedException_1.default("Enumerable");
-    }
-    function numberOrNaN(value) {
-        return isNaN(value) ? NaN : value;
-    }
-    function assertInteger(value, variable) {
-        if (typeof value === Types_1.default.NUMBER && !isNaN(value) && value != (value | 0))
-            throw new Error("'" + variable + "'" + " must be an integer.");
-        return true;
+            throw new ObjectDisposedException_1.default(className);
     }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Enumerable;

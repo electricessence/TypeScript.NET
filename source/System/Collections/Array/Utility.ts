@@ -4,11 +4,20 @@
  */
 
 ///<reference path="IArray.d.ts"/>
+///<reference path="../../FunctionTypes.d.ts"/>
 import Types from '../../Types';
+import ArgumentNullException from '../../Exceptions/ArgumentNullException';
+import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeException';
 
-
+/**
+ * Initializes an array depending on the requested capacity.
+ * The returned array will have a .length equal to the value provided.
+ * @param length
+ * @returns {T[]}
+ */
 export function initialize<T>(length:number):T[]
 {
+	// This logic is based upon JS performance tests that show a significant difference at the level of 65536.
 	var array:T[];
 	if(length>65536)
 		array = new Array(length);
@@ -20,79 +29,106 @@ export function initialize<T>(length:number):T[]
 	return array;
 }
 
-// Special forEach usage that will exit if the callback value === false.
-
-
+/**
+ *
+ * @param source
+ * @param sourceIndex
+ * @param length
+ * @returns {any}
+ */
 export function copy<T>(
-	sourceArray:T[],
+	source:IArray<T>,
 	sourceIndex:number = 0,
-	length:number = Infinity):T[]
+	length:number = Infinity):IArray<T>
 {
-	if(!sourceArray)
-		return sourceArray; // may have passed zero? undefined? or null?
-
-	var sourceLength = sourceArray.length;
-
-	return (sourceIndex || length<sourceLength)
-		? sourceArray.slice(sourceIndex, Math.min(length, sourceLength) - sourceLength)
-		: sourceArray.slice(0);
+	return source // may have passed zero? undefined? or null?
+		&& copyTo<T>(source, [], sourceIndex, 0, length);
 }
 
+const
+CBN  = 'Cannot be null.',
+CBL0 = 'Cannot be less than zero.';
+
+/**
+ * Copies one array to another.
+ * @param source
+ * @param destination
+ * @param sourceIndex
+ * @param destinationIndex
+ * @param length An optional limit to stop copying.
+ * @returns The destination array.
+ */
 export function copyTo<T>(
-	sourceArray:T[],
-	destinationArray:T[],
+	source:IArray<T>,
+	destination:IArray<T>,
 	sourceIndex:number = 0,
 	destinationIndex:number = 0,
-	length:number = Infinity):void
+	length:number = Infinity):IArray<T>
 {
-	if(!sourceArray)
-		throw new Error("ArgumentNullException: source array cannot be null.");
+	if(!source)
+		throw new ArgumentNullException('source', CBN);
 
-	if(!destinationArray)
-		throw new Error("ArgumentNullException: destination array cannot be null.");
+	if(!destination)
+		throw new ArgumentNullException('destination', CBN);
 
 	if(sourceIndex<0)
-		throw new Error("ArgumentOutOfRangeException: source index cannot be less than zero.");
+		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
 
-	var sourceLength = sourceArray.length;
+	var sourceLength = source.length;
 	if(sourceIndex>=sourceLength)
-		throw new Error("ArgumentOutOfRangeException: the source index must be less than the length of the source array.");
+		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
 
-	if(destinationArray.length<0)
-		throw new Error("ArgumentOutOfRangeException: destination index cannot be less than zero.");
+	if(destination.length<0)
+		throw new ArgumentOutOfRangeException('destinationIndex', destinationIndex, CBL0);
 
-	var maxLength = sourceArray.length - sourceIndex;
+	var maxLength = source.length - sourceIndex;
 	if(isFinite(length) && length>maxLength)
-		throw new Error("ArgumentOutOfRangeException: source index + length cannot exceed the length of the source array.");
+		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
 
 	length = Math.min(length, maxLength);
 
 	for(let i = 0; i<length; ++i)
 	{
-		destinationArray[destinationIndex + i] = sourceArray[sourceIndex + i];
+		destination[destinationIndex + i] = source[sourceIndex + i];
 	}
+
+	return destination;
 }
 
-
+/**
+ * Checks to see if the provided array contains an item.
+ * If the array value is null, then false is returned.
+ * @param array
+ * @param item
+ * @returns {boolean}
+ */
 export function contains<T>(array:T[], item:T):boolean
 {
 	return !array ? false : array.indexOf(item)!= -1;
 }
 
+/**
+ * Finds and replaces a value from an array.  Will replaces all instances unless a maximum is specified.
+ * @param array
+ * @param old
+ * @param newValue
+ * @param max
+ * @returns {number}
+ */
 export function replace<T>(
-	array:T[],
+	array:IArray<T>,
 	old:T,
 	newValue:T,
 	max?:number):number
 {
 
-	var count = 0 | 0;
+	var count = 0;
 	if(max!==0)
 	{
 		if(!max)
 			max = Infinity;
 
-		for(let i = (array.length - 1) | 0; i>=0; --i)
+		for(let i = (array.length - 1); i>=0; --i)
 		{
 			if(array[i]===old)
 			{
@@ -139,14 +175,14 @@ export function register<T>(array:T[], item:T):boolean
 	return ok;
 }
 
-export function findIndex<T>(array:IArray<T>, predicate:(item:T) => boolean):number
+export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 {
 	if(!array)
 		throw new Error("ArgumentNullException: 'array' cannot be null.");
 	if(!Types.isFunction(predicate))
 		throw new Error("InvalidArgumentException: 'predicate' must be a function.");
-	var len = array.length | 0;
-	for(let i = 0 | 0; i<len; ++i)
+	var len = array.length;
+	for(let i = 0; i<len; ++i)
 	{
 		if(i in array && predicate(array[i]))
 			return i;
@@ -157,24 +193,47 @@ export function findIndex<T>(array:IArray<T>, predicate:(item:T) => boolean):num
 }
 
 
-// Allows for using "false" to cause forEach to break.
-// TODO: Improve this to use IArray<T>
+/**
+ * Allows for using "false" to cause forEach to break.
+ * Can also be applied to a structure that indexes like an array, but may not be.
+ * @param source
+ * @param fn
+ * @returns {IArray<T>}
+ */
 export function forEach<T>(
-	sourceArray:T[],
-	fn:(value:T, index?:number) => any):void
+	source:IArray<T>,
+	fn:(value:T, index?:number) => (void|boolean)):IArray<T>
 {
-	sourceArray.every((value:T, index:number) => fn(value, index)!==false);
+	if(!source)
+		throw new Error("ArgumentNullException: 'source' cannot be null.");
+
+	if(fn)
+	{
+		for(let i = 0; i<source.length; ++i)
+		{
+			if(fn(source[i])===false)
+				break;
+		}
+	}
+	return source;
 }
 
 
-export function applyTo<T extends IArray<number>>(target:T, fn:(a:number) => number):T
+/**
+ * Is similar to Array.map() but instead of returning a new array, it updates the existing indexes.
+ * Can also be applied to a structure that indexes like an array, but may not be.
+ * @param target
+ * @param fn
+ * @returns {IArray<T>}
+ */
+export function applyTo<T>(target:IArray<T>, fn:(a:T) => T):IArray<T>
 {
 	if(!target)
 		throw new Error("ArgumentNullException: 'target' cannot be null.");
 
 	if(fn)
 	{
-		for(let i = 0 | 0; i<target.length; ++i)
+		for(let i = 0; i<target.length; ++i)
 		{
 			target[i] = fn(target[i]);
 		}
@@ -182,6 +241,12 @@ export function applyTo<T extends IArray<number>>(target:T, fn:(a:number) => num
 	return target;
 }
 
+/**
+ * Removes an entry at a specified index.
+ * @param array
+ * @param index
+ * @returns {boolean} True if the value was able to be removed.
+ */
 export function removeIndex<T>(array:T[], index:number):boolean
 {
 	if(!array)
@@ -193,6 +258,13 @@ export function removeIndex<T>(array:T[], index:number):boolean
 	return exists;
 }
 
+/**
+ * Finds and removes a value from an array.  Will remove all instances unless a maximum is specified.
+ * @param array
+ * @param value
+ * @param max
+ * @returns {number} The number of times the value was found and removed.
+ */
 export function remove<T>(array:T[], value:T, max?:number):number
 {
 	if(!array)
@@ -204,7 +276,7 @@ export function remove<T>(array:T[], value:T, max?:number):number
 		if(!max)
 			max = Infinity;
 
-		for(let i = (array.length - 1) | 0; i>=0; --i)
+		for(let i = (array.length - 1); i>=0; --i)
 		{
 			if(array[i]===value)
 			{
@@ -219,6 +291,12 @@ export function remove<T>(array:T[], value:T, max?:number):number
 	return count;
 }
 
+/**
+ * Simply repeats a value the number of times specified.
+ * @param element
+ * @param count
+ * @returns {T[]}
+ */
 export function repeat<T>(element:T, count:number):T[]
 {
 	var result:T[] = [];
@@ -227,5 +305,28 @@ export function repeat<T>(element:T, count:number):T[]
 		result.push(element);
 	}
 
+	return result;
+}
+
+/**
+ * Takes any arrays within an array and inserts the values contained within in place of that array.
+ * For every count higher than 0 in recurseDepth it will attempt an additional pass.  Passing Infinity will flatten all arrays contained.
+ * @param a
+ * @param recurseDepth
+ * @returns {any[]}
+ */
+export function flatten(a:any[], recurseDepth:number = 0):any[]
+{
+	var result:any[] = [];
+	for(var i = 0; i<a.length; i++)
+	{
+		var x = a[i];
+		if(x instanceof Array)
+		{
+			if(recurseDepth) x = flatten(x);
+			for(var n = 0; n<x.length; n++) result.push(x[n]);
+		}
+		else result.push(x);
+	}
 	return result;
 }
