@@ -7,71 +7,73 @@
 /**
  * Can be used statically or extended for varying different reusable function signatures.
  */
-export default
 class Functions
 {
 
 	/**
 	 * A typed method for use with simple selection of the parameter.
-	 * @returns {boolean}
+	 * @returns {T}
 	 */
-	Identity<T>(x:T)
+	Identity<T>(x:T):T
 	{ return x; }
 
 	/**
 	 * Returns true.
 	 * @returns {boolean}
 	 */
-	True()
+	True():boolean
 	{ return true; }
 
 	/**
 	 * Returns false.
 	 * @returns {boolean}
 	 */
-	False()
+	False():boolean
 	{ return false; }
 
 	/**
 	 * Does nothing.
 	 */
-	Blank()
+	Blank():void
 	{ }
+}
 
+const rootFunctions:Functions = new Functions();
+
+// Expose static versions.
+
+module Functions
+{
 	/**
 	 * A typed method for use with simple selection of the parameter.
 	 * @returns {boolean}
 	 */
-	static get Identity():<T>(x:T) => T
-	{
-		return rootFunctions.Identity;
-	}
+	export var Identity:<T>(x:T) => T
+		= rootFunctions.Identity;
 
 	/**
 	 * Returns false.
 	 * @returns {boolean}
 	 */
-	static get True():() => boolean
-	{
-		return rootFunctions.True;
-	}
+	export var True:() => boolean
+		= rootFunctions.True;
 
 	/**
 	 * Returns false.
 	 * @returns {boolean}
 	 */
-	static get False():() => boolean
-	{
-		return rootFunctions.False;
-	}
+	export var False:() => boolean
+		= rootFunctions.False;
 
 	/**
 	 * Does nothing.
 	 */
-	static get Blank():() => void
-	{
-		return rootFunctions.Blank;
-	}
+	export var Blank:() => void
+		= rootFunctions.Blank;
 }
 
-var rootFunctions:Functions = new Functions();
+// Make this read only.  Should still allow for sub-classing since extra methods are added to prototype.
+Object.freeze(Functions);
+
+export default Functions;
+

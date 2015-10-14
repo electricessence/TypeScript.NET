@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types from './Types';
+import Type from './Types';
 import ArgumentException from './Exceptions/ArgumentException';
 
 function Integer(n:number):number
@@ -22,7 +22,7 @@ module Integer
 
 	export function is(n:number):boolean
 	{
-		return Types.isNumber(n, false) && n==(n | 0);
+		return Type.isNumber(n, false) && n==(n | 0);
 	}
 
 	export function assert(n:number, argumentName?:string):boolean

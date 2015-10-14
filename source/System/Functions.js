@@ -10,38 +10,18 @@ define(["require", "exports"], function (require, exports) {
         Functions.prototype.True = function () { return true; };
         Functions.prototype.False = function () { return false; };
         Functions.prototype.Blank = function () { };
-        Object.defineProperty(Functions, "Identity", {
-            get: function () {
-                return rootFunctions.Identity;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Functions, "True", {
-            get: function () {
-                return rootFunctions.True;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Functions, "False", {
-            get: function () {
-                return rootFunctions.False;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Functions, "Blank", {
-            get: function () {
-                return rootFunctions.Blank;
-            },
-            enumerable: true,
-            configurable: true
-        });
         return Functions;
     })();
+    var rootFunctions = new Functions();
+    var Functions;
+    (function (Functions) {
+        Functions.Identity = rootFunctions.Identity;
+        Functions.True = rootFunctions.True;
+        Functions.False = rootFunctions.False;
+        Functions.Blank = rootFunctions.Blank;
+    })(Functions || (Functions = {}));
+    Object.freeze(Functions);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Functions;
-    var rootFunctions = new Functions();
 });
 //# sourceMappingURL=Functions.js.map
