@@ -15,6 +15,9 @@ _FUNCTION:string  = typeof function() {};
 // Only used for primitives.
 var typeInfoRegistry:{[key:string]:TypeInfo} = {};
 
+/**
+ * Exposes easy access to type information including inquiring about members.
+ */
 export class TypeInfo
 {
 	// Not retained for primitives. Since they have no members.
@@ -97,6 +100,12 @@ export class TypeInfo
 				: undefined);
 	}
 
+	/**
+	 * Returns a TypeInfo for any target object.
+	 * If the target object is of a primitive type, it returns the TypeInfo instance assigned to that type.
+	 * @param target
+	 * @returns {TypeInfo}
+	 */
 	static getFor(target:any):TypeInfo
 	{
 		var type:string = typeof target;
