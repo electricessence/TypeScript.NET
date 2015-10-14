@@ -24,7 +24,7 @@ define(["require", "exports", '../../Types', '../../Compare'], function (require
                 if (nanHasEquivalent) {
                     if (Types_1.default.isTrueNaN(vA))
                         vA = equivalentToNaN;
-                    if (Types_1.default.isTrueNaN(vA))
+                    if (Types_1.default.isTrueNaN(vB))
                         vB = equivalentToNaN;
                 }
                 var r = Compare_1.compare(vA, vB);

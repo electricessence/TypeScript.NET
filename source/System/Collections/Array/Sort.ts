@@ -5,7 +5,7 @@
 
 ///<reference path="../../FunctionTypes.d.ts"/>
 
-import Types from '../../Types';
+import Type from '../../Types';
 import {compare,CompareResult} from '../../Compare';
 
 /**
@@ -52,7 +52,7 @@ export function createComparer<TSource,T>(
 	order:Order | Order[] = Order.Ascending,
 	equivalentToNaN:any = NaN):Comparison<TSource|TSource[]>
 {
-	var nanHasEquivalent = !Types.isTrueNaN(equivalentToNaN);
+	var nanHasEquivalent = !Type.isTrueNaN(equivalentToNaN);
 
 	return (a:TSource|TSource[], b:TSource|TSource[]):CompareResult=>
 	{
@@ -71,9 +71,9 @@ export function createComparer<TSource,T>(
 
 			if(nanHasEquivalent)
 			{
-				if(Types.isTrueNaN(vA))
+				if(Type.isTrueNaN(vA))
 					vA = equivalentToNaN;
-				if(Types.isTrueNaN(vA))
+				if(Type.isTrueNaN(vB))
 					vB = equivalentToNaN;
 
 			}
