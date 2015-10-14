@@ -6,6 +6,8 @@
 ///<reference path="IArray.d.ts"/>
 ///<reference path="../../FunctionTypes.d.ts"/>
 import Types from '../../Types';
+import {areEqual} from '../../Compare';
+import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeException';
 
@@ -41,8 +43,11 @@ export function copy<T>(
 	sourceIndex:number = 0,
 	length:number = Infinity):IArray<T>
 {
-	return source // may have passed zero? undefined? or null?
-		&& copyTo<T>(source, [], sourceIndex, 0, length);
+	if(!source) return source; // may have passed zero? undefined? or null?
+	return copyTo<T>(
+		source,
+		initialize<T>(Math.min(length, Math.max(source.length - sourceIndex, 0))),
+		sourceIndex, 0, length);
 }
 
 const
@@ -102,9 +107,22 @@ export function copyTo<T>(
  * @param item
  * @returns {boolean}
  */
-export function contains<T>(array:T[], item:T):boolean
+export function contains<T>(array:IArray<T>, item:T):boolean
 {
-	return !array ? false : array.indexOf(item)!= -1;
+	if(array && array.length)
+	{
+
+		if(array instanceof Array) return array.indexOf(item)!= -1;
+
+		for(let i = 0; i<array.length; ++i)
+		{
+			// 'areEqual' includes NaN==NaN evaluation.
+			if(areEqual(array[i], item))
+				return true;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -144,6 +162,13 @@ export function replace<T>(
 
 }
 
+/**
+ * Replaces values of an array across a range of indexes.
+ * @param array
+ * @param value
+ * @param index
+ * @param length
+ */
 export function updateRange<T>(
 	array:T[],
 	value:T,
@@ -157,6 +182,12 @@ export function updateRange<T>(
 	}
 }
 
+/**
+ * Clears (sets to null) values of an array across a range of indexes.
+ * @param array
+ * @param index
+ * @param length
+ */
 export function clear(
 	array:any[],
 	index:number,
@@ -165,22 +196,35 @@ export function clear(
 	updateRange(array, null, index, length);
 }
 
-export function register<T>(array:T[], item:T):boolean
+/**
+ * Ensures a value exists within an array.  If not found, adds to the end.
+ * @param array
+ * @param item
+ * @returns {boolean}
+ */
+export function register<T>(array:IArray<T>, item:T):boolean
 {
 	if(!array)
-		throw new Error("ArgumentNullException: 'array' cannot be null.");
+		throw new ArgumentNullException('array', CBN);
 	var len = array.length; // avoid querying .length more than once. *
 	var ok = !len || !contains(array, item);
 	if(ok) array[len] = item; // * push would query length again.
 	return ok;
 }
 
+/**
+ * Returns the first index of which the provided predicate returns true.
+ * Returns -1 if always false.
+ * @param array
+ * @param predicate
+ * @returns {number}
+ */
 export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 {
 	if(!array)
-		throw new Error("ArgumentNullException: 'array' cannot be null.");
+		throw new ArgumentNullException('array', CBN);
 	if(!Types.isFunction(predicate))
-		throw new Error("InvalidArgumentException: 'predicate' must be a function.");
+		throw new ArgumentException('predicate', 'Must be a function.');
 	var len = array.length;
 	for(let i = 0; i<len; ++i)
 	{
@@ -189,7 +233,6 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 	}
 
 	return -1;
-
 }
 
 

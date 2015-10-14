@@ -1,6 +1,6 @@
 ///<reference path="../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path='QUnit'/>
-define(["require", "exports", '../source/System/Uri/Uri', "QUnit"], function(require, exports, Uri_1) {
+define(["require", "exports", '../source/System/Uri/Uri', "QUnit"], function (require, exports, Uri_1) {
     function run() {
         var validUri = {
             scheme: 'http',

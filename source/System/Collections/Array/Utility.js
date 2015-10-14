@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Types', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
+define(["require", "exports", '../../Types', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
     function initialize(length) {
         var array;
         if (length > 65536)
@@ -17,8 +17,9 @@ define(["require", "exports", '../../Types', '../../Exceptions/ArgumentNullExcep
     function copy(source, sourceIndex, length) {
         if (sourceIndex === void 0) { sourceIndex = 0; }
         if (length === void 0) { length = Infinity; }
-        return source
-            && copyTo(source, [], sourceIndex, 0, length);
+        if (!source)
+            return source;
+        return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
     }
     exports.copy = copy;
     var CBN = 'Cannot be null.', CBL0 = 'Cannot be less than zero.';
@@ -48,7 +49,15 @@ define(["require", "exports", '../../Types', '../../Exceptions/ArgumentNullExcep
     }
     exports.copyTo = copyTo;
     function contains(array, item) {
-        return !array ? false : array.indexOf(item) != -1;
+        if (array && array.length) {
+            if (array instanceof Array)
+                return array.indexOf(item) != -1;
+            for (var i = 0; i < array.length; ++i) {
+                if (Compare_1.areEqual(array[i], item))
+                    return true;
+            }
+        }
+        return false;
     }
     exports.contains = contains;
     function replace(array, old, newValue, max) {
@@ -81,7 +90,7 @@ define(["require", "exports", '../../Types', '../../Exceptions/ArgumentNullExcep
     exports.clear = clear;
     function register(array, item) {
         if (!array)
-            throw new Error("ArgumentNullException: 'array' cannot be null.");
+            throw new ArgumentNullException_1.default('array', CBN);
         var len = array.length;
         var ok = !len || !contains(array, item);
         if (ok)
@@ -91,9 +100,9 @@ define(["require", "exports", '../../Types', '../../Exceptions/ArgumentNullExcep
     exports.register = register;
     function findIndex(array, predicate) {
         if (!array)
-            throw new Error("ArgumentNullException: 'array' cannot be null.");
+            throw new ArgumentNullException_1.default('array', CBN);
         if (!Types_1.default.isFunction(predicate))
-            throw new Error("InvalidArgumentException: 'predicate' must be a function.");
+            throw new ArgumentException_1.default('predicate', 'Must be a function.');
         var len = array.length;
         for (var i = 0; i < len; ++i) {
             if (i in array && predicate(array[i]))
