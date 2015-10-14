@@ -105,7 +105,7 @@ gulp.task(
 //			excludeNotExported: true // Disable till fixed.
 			includeDeclarations: true,
 			ignoreCompilerErrors: false,
-			version: true,
+			version: true
 		};
 
 		// Step 1: Render type-docs..
@@ -184,8 +184,6 @@ gulp.task(TASK_NUGET_PACK,
 		TASK_TYPESCRIPT_MIN
 	],
 	function(callback) {
-
-		const CONTENT = '/content';
 
 		var fs = require('fs');
 
