@@ -5,7 +5,7 @@
 
 ///<reference path="../Array/IArray.d.ts"/>
 import IndexEnumerator from './IndexEnumerator';
-import Types from '../../Types';
+import Type from '../../Types';
 
 export default
 class ArrayEnumerator<T> extends IndexEnumerator<T>
@@ -17,7 +17,7 @@ class ArrayEnumerator<T> extends IndexEnumerator<T>
 		super(
 			() =>
 			{
-				var array = Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+				var array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
 				return {source: array, pointer: start, length: (array ? array.length : 0), step: step};
 			}
 		);

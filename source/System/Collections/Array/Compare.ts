@@ -6,7 +6,7 @@
 ///<reference path="IArray.d.ts"/>
 ///<reference path="../../FunctionTypes.d.ts"/>
 import * as Values from '../../Compare';
-import Types from '../../Types';
+import Type from '../../Types';
 
 /*  validateSize: Utility for quick validation/invalidation of array equality.
 	Why this way?  Why not pass a closure for the last return?
@@ -57,7 +57,7 @@ export function areEqual<T>(
 	equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 {
 	var len = validateSize(a, b);
-	if(Types.isBoolean(len)) return <boolean>len;
+	if(Type.isBoolean(len)) return <boolean>len;
 
 	for(let i = 0; i<len; ++i)
 	{
@@ -90,7 +90,7 @@ export function areEquivalent<T>(
 	comparer:Comparison<T> = Values.compare):boolean
 {
 	var len = validateSize(a, b);
-	if(Types.isBoolean(len)) return <boolean>len;
+	if(Type.isBoolean(len)) return <boolean>len;
 
 	// There might be a better more performant way to do this, but for the moment, this
 	// works quite well.

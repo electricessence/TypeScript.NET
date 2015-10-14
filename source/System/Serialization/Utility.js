@@ -1,4 +1,3 @@
-///<reference path="ISerializable.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -9,9 +8,7 @@ define(["require", "exports", '../Types', '../Exceptions/InvalidOperationExcepti
         var v = value;
         switch (typeof v) {
             case Types_1.default.NULL:
-                return Types_1.default.NULL;
             case Types_1.default.UNDEFINED:
-                return Types_1.default.UNDEFINED;
             case Types_1.default.STRING:
                 return v;
             case Types_1.default.BOOLEAN:
@@ -19,7 +16,7 @@ define(["require", "exports", '../Types', '../Exceptions/InvalidOperationExcepti
             case Types_1.default.NUMBER:
                 return EMPTY + v;
             default:
-                if ('serialize' in v && typeof v.serialze == Types_1.default.FUNCTION)
+                if (Types_1.default.of(v).member('serialize').isFunction)
                     return v.serialize();
                 else if (arguments.length > 1)
                     return defaultForUnknown;

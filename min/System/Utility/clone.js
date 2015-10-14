@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require","exports","../Types"],function(e,a,f){function t(e,a){if(void 0===a&&(a=0),0>a)return e;switch(typeof e){case f["default"].UNDEFINED:case f["default"].NULL:case f["default"].STRING:case f["default"].BOOLEAN:case f["default"].NUMBER:case f["default"].FUNCTION:return e}var r;if(e instanceof Array){if(r=e.slice(),a>0)for(var u=0;u<r.length;u++)r[u]=t(r[u],a-1)}else if(r={},a>0)for(var i in e)r[i]=t(e[i],a-1);return r}Object.defineProperty(a,"__esModule",{value:!0}),a["default"]=t});
+define(["require","exports","../Types"],function(e,r,i){function f(e,r){if(void 0===r&&(r=0),0>r)return e;if(!i["default"].isObject(e))return e;var n;if(e instanceof Array){if(n=e.slice(),r>0)for(var t=0;t<n.length;t++)n[t]=f(n[t],r-1)}else if(n={},r>0)for(var u in e)n[u]=f(e[u],r-1);return n}Object.defineProperty(r,"__esModule",{value:!0}),r["default"]=f});
 //# sourceMappingURL=clone.js.map

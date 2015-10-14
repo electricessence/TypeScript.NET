@@ -6,7 +6,8 @@
 
 ///<reference path="IUri.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
-import Types from '../Types';
+///<reference path="../Primitive.d.ts"/>
+import Type from '../Types';
 import * as QueryParams from '../Uri/QueryParams';
 import copy from '../Utility/shallowCopy';
 import UriScheme from '../Uri/Scheme';
@@ -14,9 +15,6 @@ import Exception from '../Exception';
 import ArgumentException from '../Exceptions/ArgumentException';
 import ArgumentNullException from '../Exceptions/ArgumentNullException';
 import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
-
-
-type Primitive = string|boolean|number;
 
 /**
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
@@ -63,7 +61,7 @@ class Uri implements IUri, IEquatable<IUri>
 		_.path = path || null;
 
 
-		if(!Types.isString(query))
+		if(!Type.isString(query))
 			query = QueryParams.encode(<IUriComponentMap|IKeyValuePair<string,Primitive>[]>query);
 
 		_.query = formatQuery(<string>query) || null;
@@ -101,7 +99,7 @@ class Uri implements IUri, IEquatable<IUri>
 	 */
 	static from(url:string|IUri):Uri
 	{
-		var uri = (!url || Types.isString(url))
+		var uri = (!url || Type.isString(url))
 			? Uri.parse(<string>url) : <IUri>url;
 
 		return new Uri(
@@ -259,7 +257,7 @@ function trim(source:string):string
 function getScheme(scheme:UriScheme|string):string
 {
 	var s:any = scheme;
-	if(Types.isString(s))
+	if(Type.isString(s))
 	{
 		if(!s) return undefined;
 
@@ -269,7 +267,7 @@ function getScheme(scheme:UriScheme|string):string
 			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
 	}
 
-	if(Types.isNumber(s, false))
+	if(Type.isNumber(s, false))
 	{
 		s = UriScheme[<number>s];
 		if(!s)

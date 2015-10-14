@@ -4,7 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import Types from '../Types';
+import Type from '../Types';
 import Exception from '../Exception';
 import SystemException from './SystemException';
 

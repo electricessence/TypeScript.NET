@@ -1,16 +1,16 @@
-///<reference path="ISerializable.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types from '../Types';
+///<reference path="ISerializable.d.ts"/>
+///<reference path="../Primitive.d.ts"/>
+
+import Type from '../Types';
 import InvalidOperationException from '../Exceptions/InvalidOperationException';
 
 
 const EMPTY = '', TRUE = 'true', FALSE = 'false';
-
-type Primitive = string|boolean|number;
 
 export function toString(
 	value:Primitive|ISerializable,
@@ -20,19 +20,17 @@ export function toString(
 	var v = <any>value;
 	switch(typeof v)
 	{
-		case Types.NULL:
-			return Types.NULL;
-		case Types.UNDEFINED:
-			return Types.UNDEFINED;
-		case Types.STRING:
+		case Type.NULL:
+		case Type.UNDEFINED:
+		case Type.STRING:
 			return v;
-		case Types.BOOLEAN:
+		case Type.BOOLEAN:
 			return v ? TRUE : FALSE;
-		case Types.NUMBER:
+		case Type.NUMBER:
 			return EMPTY + v;
 		default:
 
-			if('serialize' in v && typeof v.serialze==Types.FUNCTION)
+			if(Type.of(v).member('serialize').isFunction)
 				return v.serialize();
 			else if(arguments.length>1)
 				return defaultForUnknown;
@@ -58,9 +56,9 @@ export function toPrimitive(
 
 		switch(value)
 		{
-			case Types.NULL:
+			case Type.NULL:
 				return null;
-			case Types.UNDEFINED:
+			case Type.UNDEFINED:
 				return undefined;
 			case TRUE:
 				return true;

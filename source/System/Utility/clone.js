@@ -7,15 +7,8 @@ define(["require", "exports", '../Types'], function (require, exports, Types_1) 
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
             return source;
-        switch (typeof source) {
-            case Types_1.default.UNDEFINED:
-            case Types_1.default.NULL:
-            case Types_1.default.STRING:
-            case Types_1.default.BOOLEAN:
-            case Types_1.default.NUMBER:
-            case Types_1.default.FUNCTION:
-                return source;
-        }
+        if (!Types_1.default.isObject(source))
+            return source;
         var result;
         if (source instanceof Array) {
             result = source.slice();

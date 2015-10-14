@@ -6,7 +6,7 @@
 
 ///<reference path="../../FunctionTypes.d.ts"/>
 import {areEqual} from '../../Compare';
-import Types from '../../Types';
+import Type from '../../Types';
 import Functions from '../../Functions';
 import DictionaryAbstractBase from './DictionaryAbstractBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
@@ -91,7 +91,7 @@ function computeHashCode(obj:any):string {
 	if(obj===null) return "null";
 	if(obj===undefined) return "undefined";
 
-	return (typeof obj.toString===Types.FUNCTION)
+	return (typeof obj.toString===Type.FUNCTION)
 		? obj.toString()
 		: Object.prototype.toString.call(obj);
 }

@@ -7,7 +7,7 @@
 ///<reference path="IEnumerable.d.ts"/>
 ///<reference path="IEnumerator.d.ts"/>
 ///<reference path="IYield.d.ts"/>
-import Types from '../../Types';
+import Type from '../../Types';
 import DisposableBase from '../../Disposable/DisposableBase';
 import ArrayEnumerator from './ArrayEnumerator';
 import IndexEnumerator from './IndexEnumerator';
@@ -42,7 +42,7 @@ export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>
 	if(source instanceof Array)
 		return new ArrayEnumerator<T>(<T[]>source);
 
-	if(typeof source===Types.OBJECT)
+	if(typeof source===Type.OBJECT)
 	{
 		if("length" in source)
 		{

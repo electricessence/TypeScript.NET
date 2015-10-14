@@ -6,7 +6,7 @@
 ///<reference path="../../Disposable/IDisposable.d.ts"/>
 ///<reference path="IEnumerator.d.ts"/>
 ///<reference path="IYield.d.ts"/>
-import Types from '../../Types';
+import Type from '../../Types';
 import DisposableBase from '../../Disposable/DisposableBase'
 
 

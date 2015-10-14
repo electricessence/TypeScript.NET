@@ -11,7 +11,7 @@
 ///<reference path="../FunctionTypes.d.ts"/>
 import * as Values from '../Compare';
 import * as AU from './Array/Utility';
-import Types from '../Types';
+import Type from '../Types';
 import Integer from '../Integer';
 import EnumeratorBase from './Enumeration/EnumeratorBase';
 import forEach from './Enumeration/forEach';
@@ -50,7 +50,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 			_._array = emptyArray;
 		else
 		{
-			if(Types.isNumber(source))
+			if(Type.isNumber(source))
 			{
 				var capacity = <number>source;
 				assertIntegerZeroOrGreater(capacity, "capacity");

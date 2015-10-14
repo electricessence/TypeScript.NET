@@ -36,9 +36,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types_1) 
     }
     exports.using = using;
     function disposeSingle(disposable, trapExceptions) {
-        if (disposable
-            && 'dispose' in disposable
-            && typeof disposable.dispose == Types_1.default.FUNCTION) {
+        if (Types_1.default.of(disposable).member('dispose').isFunction) {
             if (trapExceptions) {
                 try {
                     disposable.dispose();

@@ -5,7 +5,7 @@
  */
 
 ///<reference path="../Disposable/IDisposable.d.ts"/>
-import Types from '../Types';
+import Type from '../Types';
 import LinkedList from '../Collections/LinkedList';
 
 
@@ -43,8 +43,8 @@ class StringBuilder implements IDisposable
 			var _ = this;
 			_._latest = null;
 			switch(typeof item) {
-				case Types.OBJECT:
-				case Types.FUNCTION:
+				case Type.OBJECT:
+				case Type.FUNCTION:
 					item = item.toString();
 					break;
 			}

@@ -5,7 +5,7 @@
 
 ///<reference path="IArray.d.ts"/>
 ///<reference path="../../FunctionTypes.d.ts"/>
-import Types from '../../Types';
+import Type from '../../Types';
 import {areEqual} from '../../Compare';
 import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
@@ -223,7 +223,7 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 {
 	if(!array)
 		throw new ArgumentNullException('array', CBN);
-	if(!Types.isFunction(predicate))
+	if(!Type.isFunction(predicate))
 		throw new ArgumentException('predicate', 'Must be a function.');
 	var len = array.length;
 	for(let i = 0; i<len; ++i)

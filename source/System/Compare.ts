@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types from './Types';
-import isTrueNaN = Types.isTrueNaN;
+import Type from './Types';
+import isTrueNaN = Type.isTrueNaN;
 
 export const enum CompareResult {
 	Equal   = 0,

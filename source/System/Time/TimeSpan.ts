@@ -8,7 +8,7 @@
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
 import {areEqual,compare} from '../Compare';
-import Types from '../Types';
+import Type from '../Types';
 import * as HowMany from './HowMany';
 import TimeUnit from './TimeUnit';
 import TimeUnitValue from './TimeUnitValue';
@@ -153,7 +153,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	add(other:TimeSpan):TimeSpan;
 	add(other:any):TimeSpan
 	{
-		if(Types.isNumber(other))
+		if(Type.isNumber(other))
 			throw new Error(
 				"Use .addUnit to add a numerical value amount.  " +
 				".add only supports ClockTime, TimeSpan, and TimeUnitValue."

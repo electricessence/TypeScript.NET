@@ -13,7 +13,7 @@ import * as Values from '../System/Compare';
 import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
 import * as Enumerator from '../System/Collections/Enumeration/Enumerator';
-import Types from '../System/Types';
+import Type from '../System/Types';
 import Integer from '../System/Integer';
 import BaseFunctions from '../System/Functions';
 import ArrayEnumerator from '../System/Collections/Enumeration/ArrayEnumerator';
@@ -98,7 +98,8 @@ extends DisposableBase implements IEnumerable<T>
 	 */
 	static from<T>(source:IEnumerable<T> | IArray<T>):Enumerable<T>
 	{
-		if(typeof source===Types.OBJECT)
+		var type = Type.of(source);
+		if(type.isObject)
 		{
 			if(source instanceof Enumerable)
 				return source;
@@ -106,10 +107,10 @@ extends DisposableBase implements IEnumerable<T>
 			if(source instanceof Array)
 				return new ArrayEnumerable<T>(source);
 
-			if(GET_ENUMERATOR in source)
+			if(type.member(GET_ENUMERATOR).isFunction)
 				return new Enumerable(()=>(<IEnumerable<T>>source).getEnumerator());
 
-			if(LENGTH in source)
+			if(type.member(LENGTH).isValidNumber)
 				return new ArrayEnumerable<T>(<IArray<T>>source);
 		}
 
@@ -118,18 +119,19 @@ extends DisposableBase implements IEnumerable<T>
 
 	static toArray<T>(source:IEnumerable<T> | IArray<T>):T[]
 	{
-		if(typeof source===Types.OBJECT)
+		var type = Type.of(source);
+		if(type.isObject)
 		{
 			if(source instanceof Array)
 				return source.slice();
 
-			if(LENGTH in source)
+			if(type.member(LENGTH).isValidNumber)
 				source = new ArrayEnumerable<T>(<IArray<T>>source);
 
 			if(source instanceof Enumerable)
 				return source.toArray();
 
-			if(GET_ENUMERATOR in source)
+			if(type.member(GET_ENUMERATOR).isFunction)
 			{
 				var result:T[] = [];
 				enumeratorForEach<T>(
@@ -433,7 +435,7 @@ extends DisposableBase implements IEnumerable<T>
 	{
 
 		var type = typeof input;
-		if(type!=Types.STRING)
+		if(type!=Type.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
 		if(pattern instanceof RegExp)
@@ -1435,16 +1437,16 @@ extends DisposableBase implements IEnumerable<T>
 		switch(<any>type)
 		{
 			case Number:
-				typeName = Types.NUMBER;
+				typeName = Type.NUMBER;
 				break;
 			case String:
-				typeName = Types.STRING;
+				typeName = Type.STRING;
 				break;
 			case Boolean:
-				typeName = Types.BOOLEAN;
+				typeName = Type.BOOLEAN;
 				break;
 			case Function:
-				typeName = Types.FUNCTION;
+				typeName = Type.FUNCTION;
 				break;
 			default:
 				typeName = null;
@@ -2640,7 +2642,7 @@ extends DisposableBase implements IEnumerable<T>
 		return this.scan(func, seed).lastOrDefault();
 	}
 
-	average(selector:Selector<T, number> = Types.numberOrNaN):number
+	average(selector:Selector<T, number> = Type.numberOrNaN):number
 	{
 		var sum = 0;
 		// This allows for infinity math that doesn't destroy the other values.
@@ -2695,7 +2697,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	// Addition...  Only works with numerical enumerations.
-	sum(selector:Selector<T, number> = Types.numberOrNaN):number
+	sum(selector:Selector<T, number> = Type.numberOrNaN):number
 	{
 		var sum = 0;
 
@@ -2722,7 +2724,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	// Multiplication...
-	product(selector:Selector<T, number> = Types.numberOrNaN):number
+	product(selector:Selector<T, number> = Type.numberOrNaN):number
 	{
 		var result = 1, exists:boolean = false;
 

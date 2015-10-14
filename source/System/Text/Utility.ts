@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types from '../Types';
+import Type from '../Types';
 
 /**
  * Takes any arg
@@ -43,9 +43,9 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 			var r = (<any>params)[n];
 			switch(typeof r)
 			{
-				case Types.STRING:
-				case Types.NUMBER:
-				case Types.BOOLEAN:
+				case Type.STRING:
+				case Type.NUMBER:
+				case Type.BOOLEAN:
 					return r;
 				default:
 					return a;

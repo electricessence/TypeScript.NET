@@ -38,27 +38,29 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
             return new ArrayEnumerable(array);
         };
         Enumerable.from = function (source) {
-            if (typeof source === Types_1.default.OBJECT) {
+            var type = Types_1.default.of(source);
+            if (type.isObject) {
                 if (source instanceof Enumerable)
                     return source;
                 if (source instanceof Array)
                     return new ArrayEnumerable(source);
-                if (GET_ENUMERATOR in source)
+                if (type.member(GET_ENUMERATOR).isFunction)
                     return new Enumerable(function () { return source.getEnumerator(); });
-                if (LENGTH in source)
+                if (type.member(LENGTH).isValidNumber)
                     return new ArrayEnumerable(source);
             }
             throw new Error(UNSUPPORTED_ENUMERABLE);
         };
         Enumerable.toArray = function (source) {
-            if (typeof source === Types_1.default.OBJECT) {
+            var type = Types_1.default.of(source);
+            if (type.isObject) {
                 if (source instanceof Array)
                     return source.slice();
-                if (LENGTH in source)
+                if (type.member(LENGTH).isValidNumber)
                     source = new ArrayEnumerable(source);
                 if (source instanceof Enumerable)
                     return source.toArray();
-                if (GET_ENUMERATOR in source) {
+                if (type.member(GET_ENUMERATOR).isFunction) {
                     var result = [];
                     enumeratorForEach(source.getEnumerator(), function (e, i) {
                         result[i] = e;

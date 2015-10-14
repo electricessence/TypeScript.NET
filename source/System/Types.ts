@@ -10,10 +10,109 @@ _STRING:string    = typeof "",
 _OBJECT:string    = typeof {},
 _NULL:string      = typeof null,
 _UNDEFINED:string = typeof undefined,
-_FUNCTION:string  = typeof function(){};
+_FUNCTION:string  = typeof function() {};
 
+// Only used for primitives.
+var typeInfoRegistry:{[key:string]:TypeInfo} = {};
 
-export module Types
+export class TypeInfo
+{
+	// Not retained for primitives. Since they have no members.
+	private target:any;
+
+	type:string;
+
+	isBoolean:boolean;
+	isNumber:boolean;
+	isFinite:boolean;
+	isValidNumber:boolean;
+	isString:boolean;
+	isTrueNaN:boolean;
+	isObject:boolean;
+	isFunction:boolean;
+	isUndefined:boolean;
+	isNull:boolean;
+	isNullOrUndefined:boolean;
+
+	constructor(target:any)
+	{
+		var _ = this;
+		_.isBoolean = false;
+		_.isNumber = false;
+		_.isString = false;
+		_.isTrueNaN = false;
+		_.isObject = false;
+		_.isFunction = false;
+		_.isUndefined = false;
+		_.isNull = false;
+
+		switch(_.type = typeof target)
+		{
+			case _BOOLEAN:
+				_.isBoolean = true;
+				break;
+			case _NUMBER:
+				_.isNumber = true;
+				_.isTrueNaN = isNaN(target);
+				_.isFinite = isFinite(target);
+				_.isValidNumber = !_.isTrueNaN;
+				break;
+			case _STRING:
+				_.isString = true;
+				break;
+			case _OBJECT:
+				_.target = target;
+				_.isObject = true;
+				break;
+			case _FUNCTION:
+				_.target = target;
+				_.isString = true;
+				break;
+			case _UNDEFINED:
+				_.isUndefined = true;
+				_.isNullOrUndefined = true;
+				break;
+			case _NULL:
+				_.isNull = true;
+				_.isNullOrUndefined = true;
+				break;
+		}
+
+		Object.freeze(_);
+
+	}
+
+	/**
+	 * Returns a TypeInfo for any member or non-member,
+	 * where non-members are of type undefined.
+	 * @param name
+	 * @returns {TypeInfo}
+	 */
+	member(name:string):TypeInfo
+	{
+		var t = this.target;
+		return TypeInfo.getFor(
+			t && name in t
+				? t[name]
+				: undefined);
+	}
+
+	static getFor(target:any):TypeInfo
+	{
+		var type:string = typeof target;
+		switch(type)
+		{
+			case _OBJECT:
+			case _FUNCTION:
+				return new TypeInfo(target);
+		}
+		var info = typeInfoRegistry[type];
+		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
+		return info;
+	}
+}
+
+module Type
 {
 	/**
 	 * typeof true
@@ -128,8 +227,13 @@ export module Types
 		return isNaN(value) ? NaN : value;
 	}
 
+	export function of(target:any):TypeInfo
+	{
+		return TypeInfo.getFor(target);
+	}
+
 }
 
-Object.freeze(Types);
+Object.freeze(Type);
 
-export default Types;
+export default Type;

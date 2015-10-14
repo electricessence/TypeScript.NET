@@ -21,12 +21,21 @@ define(["require", "exports", '../Types', './QueryParams', '../Collections/Dicti
                 this.importMap(query);
             }
         }
-        QueryBuilder.prototype.importFromString = function (values, deserialize, decodeValues, preserveOrder) {
-            var _this = this;
+        QueryBuilder.prototype.importFromString = function (values, deserialize, decodeValues) {
             if (deserialize === void 0) { deserialize = true; }
             if (decodeValues === void 0) { decodeValues = true; }
-            if (preserveOrder === void 0) { preserveOrder = true; }
-            QueryParams.parse(values, function (key, value) { _this.setValue(key, value, preserveOrder); }, deserialize, decodeValues);
+            var _ = this;
+            QueryParams.parse(values, function (key, value) {
+                if (_.containsKey(key)) {
+                    var prev = _.getValue(key);
+                    if (prev instanceof Array)
+                        prev.push(value);
+                    else
+                        _.setValue(key, [prev, value]);
+                }
+                else
+                    _.setValue(key, value);
+            }, deserialize, decodeValues);
             return this;
         };
         QueryBuilder.init = function (query, decodeValues) {
@@ -38,8 +47,12 @@ define(["require", "exports", '../Types', './QueryParams', '../Collections/Dicti
             var keys = this.keys;
             for (var _i = 0; _i < keys.length; _i++) {
                 var k = keys[_i];
-                entries.push(k + KEY_VALUE_SEPARATOR
-                    + QueryParams.encodeValue(this.getValue(k)));
+                var value = this.getValue(k);
+                for (var _a = 0, _b = value instanceof Array ? value : [value]; _a < _b.length; _a++) {
+                    var v = _b[_a];
+                    entries.push(k + KEY_VALUE_SEPARATOR
+                        + QueryParams.encodeValue(v));
+                }
             }
             return (entries.length && prefixIfNotEmpty ? '?' : '')
                 + entries.join(ENTRY_SEPARATOR);

@@ -1,11 +1,12 @@
-///<reference path="IUriComponentFormattable.d.ts"/>
-///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types from '../Types';
+///<reference path="IUriComponentFormattable.d.ts"/>
+///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
+///<reference path="../Primitive.d.ts"/>
+import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
 
 /*
@@ -16,8 +17,6 @@ import * as Serialization from '../Serialization/Utility';
 const
 ENTRY_SEPARATOR     = "&",
 KEY_VALUE_SEPARATOR = "=";
-
-type Primitive = string|boolean|number;
 
 /**
  * Returns the encoded URI string
@@ -57,7 +56,7 @@ export function encode(
 export function encodeValue(value:Primitive|ISerializable|IUriComponentFormattable):string
 {
 	var v = <any>value;
-	if(typeof v==Types.OBJECT && "toUriComponent" in v)
+	if(typeof v==Type.OBJECT && "toUriComponent" in v)
 	{
 		v = v.toUriComponent();
 		if(v && v.indexOf('&')!=1)

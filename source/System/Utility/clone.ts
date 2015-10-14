@@ -3,23 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types from '../Types';
+import Type from '../Types';
 
 export default function clone(source:any, depth:number = 0):any
 {
 	if(depth<0)
 		return source;
 
-	switch(typeof source)
-	{
-		case Types.UNDEFINED:
-		case Types.NULL:
-		case Types.STRING:
-		case Types.BOOLEAN:
-		case Types.NUMBER:
-		case Types.FUNCTION:
-			return source; // return primitives as is.
-	}
+	// return primitives as is.
+	if(!Type.isObject(source)) return source;
 
 	var result:any;
 	if(source instanceof Array)

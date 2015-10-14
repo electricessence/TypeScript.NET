@@ -5,7 +5,7 @@
 
 ///<reference path="IDisposable.d.ts"/>
 ///<reference path="../Collections/Array/IArray.d.ts"/>
-import Types from '../Types';
+import Type from '../Types';
 
 'use strict';
 
@@ -85,9 +85,7 @@ function disposeSingle(
 	disposable:IDisposable,
 	trapExceptions:boolean):any
 {
-	if(disposable
-		&& 'dispose' in disposable
-		&& typeof disposable.dispose==Types.FUNCTION)
+	if(Type.of(disposable).member('dispose').isFunction)
 	{
 		if(trapExceptions)
 		{

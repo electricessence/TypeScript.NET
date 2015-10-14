@@ -6,7 +6,8 @@
 ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
 ///<reference path="../Serialization/ISerializable.d.ts"/>
 ///<reference path="IUriComponentFormattable.d.ts"/>
-import Types from '../Types';
+///<reference path="../Primitive.d.ts"/>
+import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
 import * as QueryParams from './QueryParams';
 import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
@@ -15,15 +16,13 @@ const
 ENTRY_SEPARATOR     = "&",
 KEY_VALUE_SEPARATOR = "=";
 
-type Primitive = string|boolean|number;
-
 /**
  * Provides a means for parsing and building a set of parameters.
  *
  * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
  */
 export default
-class QueryBuilder extends OrderedStringKeyDictionary<Primitive|ISerializable|IUriComponentFormattable>
+class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriComponentValue[]>
 {
 
 	constructor(
@@ -32,24 +31,43 @@ class QueryBuilder extends OrderedStringKeyDictionary<Primitive|ISerializable|IU
 	{
 		super();
 
-		if(Types.isString(query))
+		if(Type.isString(query))
 		{
 			this.importFromString(<string>query, decodeValues);
 		}
 		else
 		{
-			this.importMap(<IUriComponentMap>query)
+			this.importMap(<IUriComponentMap>query);
 		}
 	}
 
+	/**
+	 * Property parses the components of an URI into their values or array of values.
+	 * @param values
+	 * @param deserialize
+	 * @param decodeValues
+	 * @returns {QueryBuilder}
+	 */
 	importFromString(
 		values:string,
 		deserialize:boolean = true,
-		decodeValues:boolean = true,
-		preserveOrder:boolean = true):QueryBuilder
+		decodeValues:boolean = true):QueryBuilder
 	{
+		var _ = this;
 		QueryParams.parse(values,
-			(key, value)=> {this.setValue(key, value, preserveOrder);},
+			(key, value)=>
+			{
+				if(_.containsKey(key))
+				{
+					var prev = _.getValue(key);
+					if(prev instanceof Array)
+						prev.push(value);
+					else
+						_.setValue(key, [<UriComponentValue>prev, value]);
+				}
+				else
+					_.setValue(key, value);
+			},
 			deserialize,
 			decodeValues);
 
@@ -72,9 +90,15 @@ class QueryBuilder extends OrderedStringKeyDictionary<Primitive|ISerializable|IU
 		var keys = this.keys;
 		for(let k of keys)
 		{
-			entries.push(
-				k + KEY_VALUE_SEPARATOR
-				+ QueryParams.encodeValue(<any>this.getValue(k)));
+			var value = this.getValue(k);
+			// Since the values can either be UriComponentValues or an array of UriComponentValues..
+			// This creates a single code path for both options.
+			for(let v of value instanceof Array ? value : [value])
+			{
+				entries.push(
+					k + KEY_VALUE_SEPARATOR
+					+ QueryParams.encodeValue(<UriComponentValue>v));
+			}
 		}
 
 		return (entries.length && prefixIfNotEmpty ? '?' : '')
