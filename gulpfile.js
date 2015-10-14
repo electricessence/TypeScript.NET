@@ -1,9 +1,8 @@
-'use strict';
-
 // List of all tasks by name and for reuse as dependencies.
 const
 	TASK_TYPESCRIPT         = 'typescript',
 	TASK_TYPESCRIPT_MIN     = 'typescript.min',
+	TASK_TYPESCRIPT_ES6     = 'typescript.es6',
 	TASK_TYPEDOC            = 'typedoc',
 	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
 	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
@@ -88,6 +87,26 @@ gulp.task(
 			.pipe(uglify(uglifyOptions))
 			.pipe(sourcemaps.write('.', sourceMapOptions))
 			.pipe(gulp.dest('./min'));
+
+	});
+
+gulp.task(
+	TASK_TYPESCRIPT_ES6, function()
+	{
+		del(['./es6/**/*']);
+
+		var typescriptOptions/*:typescript.Params*/ = {
+			noImplicitAny: true,
+			target: 'es6',
+			removeComments: true
+		};
+
+		return gulp
+			.src(['./source/**/*.ts'])
+			.pipe(sourcemaps.init())
+			.pipe(typescript(typescriptOptions))
+			.pipe(sourcemaps.write('.'))
+			.pipe(gulp.dest('./es6'));
 
 	});
 
