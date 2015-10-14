@@ -176,8 +176,8 @@ define(["require", "exports", '../../Types', '../../Compare', '../../Exceptions/
         for (var i = 0; i < a.length; i++) {
             var x = a[i];
             if (x instanceof Array) {
-                if (recurseDepth)
-                    x = flatten(x);
+                if (recurseDepth > 0)
+                    x = flatten(x, recurseDepth - 1);
                 for (var n = 0; n < x.length; n++)
                     result.push(x[n]);
             }

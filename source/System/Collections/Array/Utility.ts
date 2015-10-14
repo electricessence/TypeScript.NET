@@ -366,7 +366,7 @@ export function flatten(a:any[], recurseDepth:number = 0):any[]
 		var x = a[i];
 		if(x instanceof Array)
 		{
-			if(recurseDepth) x = flatten(x);
+			if(recurseDepth>0) x = flatten(x, recurseDepth-1);
 			for(var n = 0; n<x.length; n++) result.push(x[n]);
 		}
 		else result.push(x);
