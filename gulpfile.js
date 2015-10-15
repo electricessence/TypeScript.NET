@@ -50,7 +50,7 @@ gulp.task(
 ;
 
 gulp.task(
-	TASK_TYPESCRIPT_MIN, function()
+	TASK_TYPESCRIPT_AMD, function()
 	{
 		del(['./amd/**/*']);
 
@@ -170,7 +170,7 @@ gulp.task(TASK_VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 gulp.task(TASK_NUGET_PACK,
 	[
 		TASK_TYPESCRIPT,
-		TASK_TYPESCRIPT_MIN
+		TASK_TYPESCRIPT_AMD
 	],
 	function(callback) {
 
@@ -206,6 +206,6 @@ gulp.task(TASK_NUGET_PACK,
 
 gulp.task(TASK_DEFAULT, [
 	TASK_TYPESCRIPT,
-	TASK_TYPESCRIPT_MIN,
+	TASK_TYPESCRIPT_AMD,
 	TASK_TYPEDOC
 ]);
