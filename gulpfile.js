@@ -1,5 +1,3 @@
-'use strict';
-
 // List of all tasks by name and for reuse as dependencies.
 const
 	TASK_TYPESCRIPT         = 'typescript',
@@ -64,17 +62,7 @@ gulp.task(
 
 		// This isn't ideal, but it works and points the maps to the original source.
 		var sourceMapOptions/*:sourcemaps.WriteOptions*/ = {
-			sourceRoot: function(file/*:VinylFile*/)/*:string*/
-			{
-				var count = (file.relative + '').split("\\").length;
-				var result = '';
-				for(var i = 1; i<count; i++)
-				{
-					result += '../';
-				}
-				return result + '../source/';
-			},
-			includeContent: false
+			sourceRoot: null
 		};
 
 		var uglifyOptions = {
