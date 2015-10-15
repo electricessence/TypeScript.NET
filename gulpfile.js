@@ -8,16 +8,17 @@ const
 	TASK_NUGET_PACK         = 'nuget-pack',
 	TASK_DEFAULT            = 'default';
 
-var gulp       = require('gulp'),
-    del        = require('del'),
-    rename     = require('gulp-rename'),
-    sourcemaps = require('gulp-sourcemaps'),
-    uglify     = require('gulp-uglify'),
-    typescript = require('gulp-typescript'),
-    typedoc    = require('gulp-typedoc'),
-    replace    = require('gulp-replace'),
-    semver     = require('semver'),
-    nugetpack  = require('gulp-nuget-pack');
+const
+	gulp       = require('gulp'),
+	del        = require('del'),
+	rename     = require('gulp-rename'),
+	sourcemaps = require('gulp-sourcemaps'),
+	uglify     = require('gulp-uglify'),
+	typescript = require('gulp-typescript'),
+	typedoc    = require('gulp-typedoc'),
+	replace    = require('gulp-replace'),
+	semver     = require('semver'),
+	nugetpack  = require('gulp-nuget-pack');
 
 const EVENT_END = 'end';
 const DOCS = './documentation';
@@ -51,7 +52,7 @@ gulp.task(
 gulp.task(
 	TASK_TYPESCRIPT_MIN, function()
 	{
-		del(['./min/**/*']);
+		del(['./amd/**/*']);
 
 		var typescriptOptions/*:typescript.Params*/ = {
 			noImplicitAny: true,
@@ -75,7 +76,7 @@ gulp.task(
 			.pipe(typescript(typescriptOptions))
 			.pipe(uglify(uglifyOptions))
 			.pipe(sourcemaps.write('.', sourceMapOptions))
-			.pipe(gulp.dest('./min'));
+			.pipe(gulp.dest('./amd'));
 
 	});
 
