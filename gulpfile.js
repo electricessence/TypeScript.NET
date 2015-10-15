@@ -1,12 +1,15 @@
 // List of all tasks by name and for reuse as dependencies.
 const
-	TASK_TYPESCRIPT         = 'typescript',
-	TASK_TYPESCRIPT_AMD     = 'typescript.amd',
-	TASK_TYPEDOC            = 'typedoc',
-	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
-	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
-	TASK_NUGET_PACK         = 'nuget-pack',
-	TASK_DEFAULT            = 'default';
+	TASK_TYPESCRIPT          = 'typescript',
+	TASK_TYPESCRIPT_ES6      = 'typescript.es6',
+	TASK_TYPESCRIPT_AMD      = 'typescript.amd',
+	TASK_TYPESCRIPT_COMMONJS = 'typescript.commonjs',
+	TASK_TYPEDOC             = 'typedoc',
+	TASK_VERSION_BUMP_MINOR  = 'version-bump-minor',
+	TASK_VERSION_BUMP_PATCH  = 'version-bump-patch',
+	TASK_NUGET_PACK          = 'nuget-pack',
+	TASK_DIST                = 'default';
+	TASK_DEFAULT             = 'default';
 
 const
 	gulp       = require('gulp'),
@@ -22,42 +25,65 @@ const
 
 const EVENT_END = 'end';
 const DOCS = './documentation';
+const TSC_PATH = './node_modules/typescript/bin/tsc';
 
+const
+	COMMONJS = 'commonjs',
+	AMD      = 'amd',
+	ES5      = 'es5',
+	ES6      = 'es6';
+
+function getTscOptions(destination, target, module) {
+	return {
+		tscPath: TSC_PATH,
+		outDir: destination,
+		noImplicitAny: true,
+		module: module,
+		target: target,
+		removeComments: true,
+		sourceMap: true
+	}
+}
+
+function tsc(destination, target, module) {
+
+	// In order to mirror WebStorm's compiler option, gulp-tsc is used.
+	return gulp
+		.src(['./source/**/*.ts'])
+		.pipe(require('gulp-tsc')(getTscOptions(destination, target, module)))
+		.pipe(gulp.dest(destination))
+		;
+
+}
 
 gulp.task(
 	// This renders the same output as WebStorm's configuration.
 	TASK_TYPESCRIPT, function()
 	{
-
-		var options = {
-			tscPath: './node_modules/typescript/bin/tsc',
-			outDir: './source',
-			noImplicitAny: true,
-			module: 'amd',
-			target: 'es5',
-			removeComments: true,
-			sourceMap: true
-		};
-
-		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
-		return gulp
-			.src(['./source/**/*.ts'])
-			.pipe(require('gulp-tsc')(options))
-			.pipe(gulp.dest('./source'))
-			;
+		return tsc('./source', ES5, AMD);
 	}
-)
-;
+);
+
+gulp.task(
+	TASK_TYPESCRIPT_ES6, function()
+	{
+		const d = './dist/es6';
+		del([d + '/**/*']);
+		return tsc(d, ES6, null);
+	}
+);
+
 
 gulp.task(
 	TASK_TYPESCRIPT_AMD, function()
 	{
-		del(['./amd/**/*']);
+		const DESTINATION = './dist/amd';
+		del([DESTINATION + '/**/*']);
 
 		var typescriptOptions/*:typescript.Params*/ = {
 			noImplicitAny: true,
-			module: 'amd',
-			target: 'es5',
+			module: AMD,
+			target: ES5,
 			removeComments: true
 		};
 
@@ -76,10 +102,19 @@ gulp.task(
 			.pipe(typescript(typescriptOptions))
 			.pipe(uglify(uglifyOptions))
 			.pipe(sourcemaps.write('.', sourceMapOptions))
-			.pipe(gulp.dest('./amd'));
+			.pipe(gulp.dest(DESTINATION));
 
 	});
 
+
+gulp.task(
+	TASK_TYPESCRIPT_COMMONJS, function()
+	{
+		const d = './dist/commonjs';
+		del([d + '/**/*']);
+		return tsc(d, ES5, COMMONJS);
+	}
+);
 
 gulp.task(
 	TASK_TYPEDOC, function(done)
@@ -166,6 +201,7 @@ gulp.task(TASK_VERSION_BUMP_PATCH, function() { bumpVersion('patch'); });
 
 gulp.task(TASK_VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 
+gulp.task(TASK_DIST,[TASK_TYPESCRIPT_AMD,TASK_TYPESCRIPT_COMMONJS,TASK_TYPESCRIPT_ES6]);
 
 gulp.task(TASK_NUGET_PACK,
 	[
