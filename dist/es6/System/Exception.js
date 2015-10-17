@@ -7,13 +7,15 @@
 ///<reference path="Disposable/IDisposable.d.ts"/>
 const NAME = 'Exception';
 export default class Exception {
-    constructor(message = null, innerException = null) {
+    constructor(message = null, innerException = null, beforeSealing) {
         this.message = message;
         var _ = this;
         _.name = _.getName();
         _.data = {};
         if (innerException)
             _.data['innerException'] = innerException;
+        if (beforeSealing)
+            beforeSealing(_);
         Object.freeze(_);
     }
     getName() { return NAME; }

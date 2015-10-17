@@ -4,19 +4,23 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 import SystemException from './SystemException';
+import { trim } from '../Text/Utility';
 const NAME = 'ArgumentException';
 export default class ArgumentException extends SystemException {
-    constructor(paramName, message = null, innerException = null) {
-        this.paramName = paramName;
-        super(message, innerException);
+    constructor(paramName, message = null, innerException = null, beforeSealing) {
+        var pn = paramName ? ('{' + paramName + '} ') : '';
+        super(trim(pn + message), innerException, (_) => {
+            _.paramName = paramName;
+            if (beforeSealing)
+                beforeSealing(_);
+        });
     }
     getName() {
         return NAME;
     }
     toString() {
-        var _ = this, pn = _.paramName;
-        pn = pn ? ('{' + pn + '} ') : '';
-        return '[' + _.name + ': ' + pn + _.message + ']';
+        var _ = this;
+        return '[' + _.name + ': ' + _.message + ']';
     }
 }
 //# sourceMappingURL=ArgumentException.js.map

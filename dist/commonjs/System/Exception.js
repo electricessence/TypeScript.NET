@@ -29,7 +29,7 @@ var Exception = (function () {
         _.name = _.getName();
         _.data = {};
         if (innerException) _.data['innerException'] = innerException;
-        beforeSealing(_);
+        if (beforeSealing) beforeSealing(_);
         Object.freeze(_);
     }
 

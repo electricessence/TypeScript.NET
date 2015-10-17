@@ -3,6 +3,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import Type from '../Types';
+export const EMPTY = '';
+export function escapeRegExp(source) {
+    return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+export function trim(source, chars, ignoreCase) {
+    if (chars) {
+        if (chars === EMPTY)
+            return source;
+        var escaped = escapeRegExp(chars instanceof Array ? chars.join() : chars);
+        return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), EMPTY);
+    }
+    return source.replace(/^\s+|\s+$/g, EMPTY);
+}
 export function format(source, ...args) {
     return supplant(source, args);
 }

@@ -1,15 +1,16 @@
 // List of all tasks by name and for reuse as dependencies.
 const
-	TASK_TYPESCRIPT          = 'typescript',
-	TASK_TYPESCRIPT_ES6      = 'dist.es6',
-	TASK_TYPESCRIPT_AMD      = 'dist.amd',
-	TASK_TYPESCRIPT_COMMONJS = 'dist.commonjs',
-	TASK_TYPEDOC             = 'typedoc',
-	TASK_VERSION_BUMP_MINOR  = 'version-bump-minor',
-	TASK_VERSION_BUMP_PATCH  = 'version-bump-patch',
-	TASK_NUGET_PACK          = 'nuget-pack',
-	TASK_DIST                = 'default';
-	TASK_DEFAULT             = 'default';
+	TASK_TYPESCRIPT         = 'typescript',
+	TASK_DIST               = 'dist',
+	TASK_DIST_ES6           = TASK_DIST + '.es6',
+	TASK_DIST_AMD           = TASK_DIST + '.amd',
+	TASK_DIST_COMMONJS      = TASK_DIST + '.commonjs',
+	TASK_DIST_SYSTEMJS      = TASK_DIST + '.systemjs',
+	TASK_TYPEDOC            = 'typedoc',
+	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
+	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
+	TASK_NUGET_PACK         = 'nuget-pack',
+	TASK_DEFAULT            = 'default';
 
 const
 	gulp       = require('gulp'),
@@ -30,6 +31,7 @@ const TSC_PATH = './node_modules/typescript/bin/tsc';
 
 const
 	COMMONJS = 'commonjs',
+	SYSTEMJS = 'system',
 	AMD      = 'amd',
 	ES5      = 'es5',
 	ES6      = 'es6';
@@ -66,9 +68,9 @@ gulp.task(
 );
 
 gulp.task(
-	TASK_TYPESCRIPT_ES6, function()
+	TASK_DIST_ES6, function()
 	{
-		const d = './dist/es6';
+		const d = './dist/' + ES6;
 		del([d + '/**/*']);
 		return tsc(d, ES6, null);
 	}
@@ -76,9 +78,9 @@ gulp.task(
 
 
 gulp.task(
-	TASK_TYPESCRIPT_AMD, function()
+	TASK_DIST_AMD, function()
 	{
-		const DESTINATION = './dist/amd';
+		const DESTINATION = './dist/' + AMD;
 		del([DESTINATION + '/**/*']);
 
 		var typescriptOptions/*:typescript.Params*/ = {
@@ -109,9 +111,9 @@ gulp.task(
 
 
 gulp.task(
-	TASK_TYPESCRIPT_COMMONJS, function()
+	TASK_DIST_COMMONJS, function()
 	{
-		const DESTINATION = './dist/'+COMMONJS;
+		const DESTINATION = './dist/' + COMMONJS;
 		del([DESTINATION + '/**/*']);
 
 		var typescriptOptions/*:typescript.Params*/ = {
@@ -136,6 +138,24 @@ gulp.task(
 
 	}
 );
+
+gulp.task(
+	TASK_DIST_SYSTEMJS, function()
+	{
+		const d = './dist/' + SYSTEMJS;
+		del([d + '/**/*']);
+		return tsc(d, ES5, SYSTEMJS);
+	}
+);
+
+
+gulp.task(TASK_DIST, [
+	TASK_DIST_ES6,
+	TASK_DIST_AMD,
+	TASK_DIST_COMMONJS,
+	TASK_DIST_SYSTEMJS
+]);
+
 
 gulp.task(
 	TASK_TYPEDOC, function(done)
@@ -222,12 +242,10 @@ gulp.task(TASK_VERSION_BUMP_PATCH, function() { bumpVersion('patch'); });
 
 gulp.task(TASK_VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 
-gulp.task(TASK_DIST,[TASK_TYPESCRIPT_AMD,TASK_TYPESCRIPT_COMMONJS,TASK_TYPESCRIPT_ES6]);
-
 gulp.task(TASK_NUGET_PACK,
 	[
 		TASK_TYPESCRIPT,
-		TASK_TYPESCRIPT_AMD
+		TASK_DIST_AMD
 	],
 	function(callback) {
 
@@ -263,6 +281,6 @@ gulp.task(TASK_NUGET_PACK,
 
 gulp.task(TASK_DEFAULT, [
 	TASK_TYPESCRIPT,
-	TASK_TYPESCRIPT_AMD,
+	TASK_DIST,
 	TASK_TYPEDOC
 ]);

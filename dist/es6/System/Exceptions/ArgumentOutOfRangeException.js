@@ -6,9 +6,10 @@
 import ArgumentException from './ArgumentException';
 const NAME = 'ArgumentOutOfRangeException';
 export default class ArgumentOutOfRangeException extends ArgumentException {
-    constructor(paramName, actualValue, message, innerException = null) {
-        this.actualValue = actualValue;
-        super(paramName, message, innerException);
+    constructor(paramName, actualValue, message = ' ', innerException = null) {
+        super(paramName, message, innerException, (_) => {
+            _.actualValue = actualValue;
+        });
     }
     getName() {
         return NAME;

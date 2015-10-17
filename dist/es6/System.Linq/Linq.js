@@ -1647,9 +1647,6 @@ export class Enumerable extends DisposableBase {
 }
 class ArrayEnumerable extends Enumerable {
     constructor(source) {
-        var _ = this;
-        _._disposableObjectName = "ArrayEnumerable";
-        _._source = source;
         super(() => {
             _.throwIfDisposed();
             return new ArrayEnumerator(() => {
@@ -1657,6 +1654,9 @@ class ArrayEnumerable extends Enumerable {
                 return _._source;
             });
         });
+        var _ = this;
+        _._disposableObjectName = "ArrayEnumerable";
+        _._source = source;
     }
     _onDispose() {
         super._onDispose();

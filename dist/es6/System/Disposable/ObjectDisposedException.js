@@ -7,8 +7,9 @@ import InvalidOperationException from '../Exceptions/InvalidOperationException';
 const NAME = 'ObjectDisposedException';
 export default class ObjectDisposedException extends InvalidOperationException {
     constructor(objectName, message = null, innerException = null) {
-        this.objectName = objectName;
-        super(message, innerException);
+        super(message, innerException, (_) => {
+            _.objectName = objectName;
+        });
     }
     getName() {
         return NAME;
