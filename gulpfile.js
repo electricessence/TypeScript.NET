@@ -1,9 +1,9 @@
 // List of all tasks by name and for reuse as dependencies.
 const
 	TASK_TYPESCRIPT          = 'typescript',
-	TASK_TYPESCRIPT_ES6      = 'typescript.es6',
-	TASK_TYPESCRIPT_AMD      = 'typescript.amd',
-	TASK_TYPESCRIPT_COMMONJS = 'typescript.commonjs',
+	TASK_TYPESCRIPT_ES6      = 'dist.es6',
+	TASK_TYPESCRIPT_AMD      = 'dist.amd',
+	TASK_TYPESCRIPT_COMMONJS = 'dist.commonjs',
 	TASK_TYPEDOC             = 'typedoc',
 	TASK_VERSION_BUMP_MINOR  = 'version-bump-minor',
 	TASK_VERSION_BUMP_PATCH  = 'version-bump-patch',
