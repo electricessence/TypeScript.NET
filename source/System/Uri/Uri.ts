@@ -9,7 +9,7 @@
 ///<reference path="../Primitive.d.ts"/>
 import Type from '../Types';
 import * as QueryParams from '../Uri/QueryParams';
-import copy from '../Utility/shallowCopy';
+import {trim} from '../Text/Utility';
 import UriScheme from '../Uri/Scheme';
 import Exception from '../Exception';
 import ArgumentException from '../Exceptions/ArgumentException';
@@ -21,7 +21,6 @@ import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeExcepti
  *
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  */
-export default
 class Uri implements IUri, IEquatable<IUri>
 {
 
@@ -57,7 +56,10 @@ class Uri implements IUri, IEquatable<IUri>
 		_.scheme = getScheme(scheme) || null;
 		_.userInfo = userInfo || null;
 		_.host = host || null;
-		_.port = port;
+		_.port = port || null;
+
+		_.authority = _.getAuthority() || null;
+
 		_.path = path || null;
 
 
@@ -65,17 +67,17 @@ class Uri implements IUri, IEquatable<IUri>
 			query = QueryParams.encode(<IUriComponentMap|IKeyValuePair<string,Primitive>[]>query);
 
 		_.query = formatQuery(<string>query) || null;
-		_.fragment = formatFragment(fragment) || null;
-
-		// This should validate the uri...
-		_.absoluteUri = _.getAbsoluteUri();
-		_.authority = _.getAuthority() || null;
-		_.pathAndQuery = _.getPathAndQuery() || null;
-
 		Object.freeze(_.queryParams
 			= _.query
 			? QueryParams.parseToMap(_.query)
 			: {});
+
+		_.pathAndQuery = _.getPathAndQuery() || null;
+
+		_.fragment = formatFragment(fragment) || null;
+
+		// This should validate the uri...
+		_.absoluteUri = _.getAbsoluteUri();
 
 		// Intended to be read-only.  Call .toMap() to get a writable copy.
 		Object.freeze(_);
@@ -137,19 +139,13 @@ class Uri implements IUri, IEquatable<IUri>
 		return !tryParse(url,out); // return type is Exception.
 	}
 
+	static copyOf(map:IUri):IUri {
+		return copyUri(map);
+	}
+
 	copyTo(map:IUri):IUri
 	{
-		var _ = this;
-
-		if(_.scheme) map.scheme = _.scheme;
-		if(_.userInfo) map.userInfo = _.userInfo;
-		if(_.host) map.host = _.host;
-		if(_.port) map.port = _.port;
-		if(_.path) map.path = _.path;
-		if(_.query) map.query = _.query;
-		if(_.fragment) map.fragment = _.fragment;
-
-		return map;
+		return copyUri(this,map);
 	}
 
 	/**
@@ -247,12 +243,29 @@ class Uri implements IUri, IEquatable<IUri>
 
 }
 
-const SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
-
-function trim(source:string):string
-{
-	return source.replace(/^\s+|\s+$/g, EMPTY);
+module Uri {
+	export enum Fields {
+		scheme,
+		userInfo,
+		host,
+		port,
+		path,
+		query,
+		fragment
+	}
+	Object.freeze(Fields);
 }
+
+function copyUri(from:IUri, to:IUri = {}) {
+	var i = 0, field:string;
+	while(field = Uri.Fields[i++]) {
+		var value = (<any>from)[field];
+		if(value) (<any>to)[field] = value;
+	}
+	return to;
+}
+
+const SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
 
 function getScheme(scheme:UriScheme|string):string
 {
@@ -287,7 +300,7 @@ function getAuthority(uri:IUri):string
 		if(uri.userInfo)
 			throw new ArgumentException('host', 'Cannot include user info when there is no host.');
 
-		if(!isNaN(uri.port))
+		if(Type.isNumber(uri.port,false))
 			throw new ArgumentException('host', 'Cannot include a port when there is no host.');
 	}
 
@@ -346,6 +359,7 @@ function uriToString(uri:IUri):string
 		+ (fragment || EMPTY)
 
 }
+
 
 
 function tryParse(url:string, out:(result:IUri)=>void):Exception
@@ -418,11 +432,15 @@ function tryParse(url:string, out:(result:IUri)=>void):Exception
 		url = url.substring(0, i);
 	}
 
-	result.host = trim(url) || undefined;
+	url = trim(url);
+	if(url)
+		result.host = url;
 
-	out(result);
+	out(copyUri(result));
 
 	// null is good! (here)
 	return null;
 
 }
+
+export default Uri;

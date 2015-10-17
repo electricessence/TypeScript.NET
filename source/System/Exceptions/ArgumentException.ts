@@ -7,6 +7,7 @@
 import Type from '../Types';
 import Exception from '../Exception';
 import SystemException from './SystemException';
+import {trim} from '../Text/Utility';
 
 
 const NAME:string = 'ArgumentException';
@@ -21,10 +22,13 @@ class ArgumentException extends SystemException
 	constructor(
 		paramName:string,
 		message:string = null,
-		innerException:Exception = null)
+		innerException:Error = null)
 	{
-		this.paramName = paramName;
-		super(message, innerException);
+		var _ = this, pn = _.paramName;
+		pn = pn ? ('{' + pn + '} ') : '';
+
+		_.paramName = paramName;
+		super(trim(pn + message), innerException);
 	}
 
 
@@ -35,10 +39,8 @@ class ArgumentException extends SystemException
 
 	toString():string
 	{
-		var _ = this, pn = _.paramName;
-		pn = pn ? ('{' + pn + '} ') : '';
-
-		return '[' + _.name + ': ' + pn + _.message + ']';
+		var _ = this;
+		return '[' + _.name + ': ' + _.message + ']';
 	}
 
 }

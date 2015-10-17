@@ -12,6 +12,14 @@ const NAME:string = 'ArgumentNullException';
 export default
 class ArgumentNullException extends ArgumentException
 {
+	constructor(
+		paramName:string,
+		message:string = '',
+		innerException:Error = null)
+	{
+		super(paramName, message, innerException);
+	}
+
 	protected getName():string
 	{
 		return NAME;

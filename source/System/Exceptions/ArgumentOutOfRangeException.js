@@ -13,6 +13,7 @@ define(["require", "exports", './ArgumentException'], function (require, exports
     var ArgumentOutOfRangeException = (function (_super) {
         __extends(ArgumentOutOfRangeException, _super);
         function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
+            if (message === void 0) { message = ''; }
             if (innerException === void 0) { innerException = null; }
             this.actualValue = actualValue;
             _super.call(this, paramName, message, innerException);

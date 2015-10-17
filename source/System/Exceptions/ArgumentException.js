@@ -8,23 +8,24 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './SystemException'], function (require, exports, SystemException_1) {
+define(["require", "exports", './SystemException', '../Text/Utility'], function (require, exports, SystemException_1, Utility_1) {
     var NAME = 'ArgumentException';
     var ArgumentException = (function (_super) {
         __extends(ArgumentException, _super);
         function ArgumentException(paramName, message, innerException) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }
-            this.paramName = paramName;
-            _super.call(this, message, innerException);
+            var _ = this, pn = _.paramName;
+            pn = pn ? ('{' + pn + '} ') : '';
+            _.paramName = paramName;
+            _super.call(this, Utility_1.trim(pn + message), innerException);
         }
         ArgumentException.prototype.getName = function () {
             return NAME;
         };
         ArgumentException.prototype.toString = function () {
-            var _ = this, pn = _.paramName;
-            pn = pn ? ('{' + pn + '} ') : '';
-            return '[' + _.name + ': ' + pn + _.message + ']';
+            var _ = this;
+            return '[' + _.name + ': ' + _.message + ']';
         };
         return ArgumentException;
     })(SystemException_1.default);

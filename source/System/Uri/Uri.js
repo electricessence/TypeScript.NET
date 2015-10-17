@@ -3,26 +3,26 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, QueryParams, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1) {
+define(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, QueryParams, Utility_1, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1) {
     var Uri = (function () {
         function Uri(scheme, userInfo, host, port, path, query, fragment) {
             var _ = this;
             _.scheme = getScheme(scheme) || null;
             _.userInfo = userInfo || null;
             _.host = host || null;
-            _.port = port;
+            _.port = port || null;
+            _.authority = _.getAuthority() || null;
             _.path = path || null;
             if (!Types_1.default.isString(query))
                 query = QueryParams.encode(query);
             _.query = formatQuery(query) || null;
-            _.fragment = formatFragment(fragment) || null;
-            _.absoluteUri = _.getAbsoluteUri();
-            _.authority = _.getAuthority() || null;
-            _.pathAndQuery = _.getPathAndQuery() || null;
             Object.freeze(_.queryParams
                 = _.query
                     ? QueryParams.parseToMap(_.query)
                     : {});
+            _.pathAndQuery = _.getPathAndQuery() || null;
+            _.fragment = formatFragment(fragment) || null;
+            _.absoluteUri = _.getAbsoluteUri();
             Object.freeze(_);
         }
         Uri.prototype.equals = function (other) {
@@ -44,23 +44,11 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         Uri.tryParse = function (url, out) {
             return !tryParse(url, out);
         };
+        Uri.copyOf = function (map) {
+            return copyUri(map);
+        };
         Uri.prototype.copyTo = function (map) {
-            var _ = this;
-            if (_.scheme)
-                map.scheme = _.scheme;
-            if (_.userInfo)
-                map.userInfo = _.userInfo;
-            if (_.host)
-                map.host = _.host;
-            if (_.port)
-                map.port = _.port;
-            if (_.path)
-                map.path = _.path;
-            if (_.query)
-                map.query = _.query;
-            if (_.fragment)
-                map.fragment = _.fragment;
-            return map;
+            return copyUri(this, map);
         };
         Uri.prototype.getAbsoluteUri = function () {
             return uriToString(this);
@@ -94,18 +82,37 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         };
         return Uri;
     })();
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Uri;
-    var SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
-    function trim(source) {
-        return source.replace(/^\s+|\s+$/g, EMPTY);
+    var Uri;
+    (function (Uri) {
+        (function (Fields) {
+            Fields[Fields["scheme"] = 0] = "scheme";
+            Fields[Fields["userInfo"] = 1] = "userInfo";
+            Fields[Fields["host"] = 2] = "host";
+            Fields[Fields["port"] = 3] = "port";
+            Fields[Fields["path"] = 4] = "path";
+            Fields[Fields["query"] = 5] = "query";
+            Fields[Fields["fragment"] = 6] = "fragment";
+        })(Uri.Fields || (Uri.Fields = {}));
+        var Fields = Uri.Fields;
+        Object.freeze(Fields);
+    })(Uri || (Uri = {}));
+    function copyUri(from, to) {
+        if (to === void 0) { to = {}; }
+        var i = 0, field;
+        while (field = Uri.Fields[i++]) {
+            var value = from[field];
+            if (value)
+                to[field] = value;
+        }
+        return to;
     }
+    var SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
     function getScheme(scheme) {
         var s = scheme;
         if (Types_1.default.isString(s)) {
             if (!s)
                 return undefined;
-            s = Scheme_1.default[trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
+            s = Scheme_1.default[Utility_1.trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
             if (isNaN(s))
                 throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
         }
@@ -121,7 +128,7 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         if (!uri.host) {
             if (uri.userInfo)
                 throw new ArgumentException_1.default('host', 'Cannot include user info when there is no host.');
-            if (!isNaN(uri.port))
+            if (Types_1.default.isNumber(uri.port, false))
                 throw new ArgumentException_1.default('host', 'Cannot include a port when there is no host.');
         }
         var result = uri.host || EMPTY;
@@ -172,10 +179,10 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         }
         i = url.indexOf(SLASH2);
         if (i != -1) {
-            var scheme = trim(url.substring(0, i)), c = /:$/;
+            var scheme = Utility_1.trim(url.substring(0, i)), c = /:$/;
             if (!c.test(scheme))
                 return new ArgumentException_1.default('url', 'Scheme was improperly formatted');
-            scheme = trim(scheme.replace(c, EMPTY));
+            scheme = Utility_1.trim(scheme.replace(c, EMPTY));
             result.scheme = scheme || undefined;
             url = url.substring(i + 2);
         }
@@ -191,15 +198,19 @@ define(["require", "exports", '../Types', '../Uri/QueryParams', '../Uri/Scheme',
         }
         i = url.indexOf(':');
         if (i != -1) {
-            var port = parseInt(trim(url.substring(i + 1)));
+            var port = parseInt(Utility_1.trim(url.substring(i + 1)));
             if (isNaN(port))
                 return new ArgumentException_1.default('url', 'Port was invalid.');
             result.port = port;
             url = url.substring(0, i);
         }
-        result.host = trim(url) || undefined;
-        out(result);
+        url = Utility_1.trim(url);
+        if (url)
+            result.host = url;
+        out(copyUri(result));
         return null;
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Uri;
 });
 //# sourceMappingURL=Uri.js.map

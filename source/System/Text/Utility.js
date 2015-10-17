@@ -3,6 +3,21 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports", '../Types'], function (require, exports, Types_1) {
+    exports.EMPTY = '';
+    function escapeRegExp(source) {
+        return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    }
+    exports.escapeRegExp = escapeRegExp;
+    function trim(source, chars, ignoreCase) {
+        if (chars) {
+            if (chars === exports.EMPTY)
+                return source;
+            var escaped = escapeRegExp(chars instanceof Array ? chars.join() : chars);
+            return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), exports.EMPTY);
+        }
+        return source.replace(/^\s+|\s+$/g, exports.EMPTY);
+    }
+    exports.trim = trim;
     function format(source) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {

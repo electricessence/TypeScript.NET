@@ -29,7 +29,7 @@ class Exception implements Error, IDisposable
 	 */
 	constructor(
 		public message:string = null,
-		innerException:Exception = null)
+		innerException:Error = null)
 	{
 		var _ = this;
 		_.name = _.getName();
