@@ -15,8 +15,9 @@ define(["require", "exports", '../Exceptions/InvalidOperationException'], functi
         function ObjectDisposedException(objectName, message, innerException) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }
-            this.objectName = objectName;
-            _super.call(this, message, innerException);
+            _super.call(this, message, innerException, function (_) {
+                _.objectName = objectName;
+            });
         }
         ObjectDisposedException.prototype.getName = function () {
             return NAME;

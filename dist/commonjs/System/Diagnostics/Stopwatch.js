@@ -2,107 +2,127 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var TimeSpan_1 = require('../Time/TimeSpan');
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _TimeTimeSpan = require('../Time/TimeSpan');
+
+var _TimeTimeSpan2 = _interopRequireDefault(_TimeTimeSpan);
+
 var Stopwatch = (function () {
     function Stopwatch() {
+        _classCallCheck(this, Stopwatch);
+
         this.reset();
     }
-    Stopwatch.getTimestampMilliseconds = function () {
-        return (new Date()).getTime();
-    };
-    Object.defineProperty(Stopwatch.prototype, "isRunning", {
-        get: function () {
-            return this._isRunning;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Stopwatch.startNew = function () {
-        var s = new Stopwatch();
-        s.start();
-        return s;
-    };
-    Stopwatch.measure = function (closure) {
-        var start = Stopwatch.getTimestampMilliseconds();
-        closure();
-        return new TimeSpan_1.default(Stopwatch.getTimestampMilliseconds() - start);
-    };
-    Stopwatch.prototype.record = function (closure) {
-        var e = Stopwatch.measure(closure);
-        this._elapsed += e.milliseconds;
-        return e;
-    };
-    Stopwatch.prototype.start = function () {
-        var _ = this;
-        if (!_._isRunning) {
-            _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
-            _._isRunning = true;
+
+    _createClass(Stopwatch, [{
+        key: 'record',
+        value: function record(closure) {
+            var e = Stopwatch.measure(closure);
+            this._elapsed += e.milliseconds;
+            return e;
         }
-    };
-    Stopwatch.prototype.stop = function () {
-        var _ = this;
-        if (_._isRunning) {
-            _._elapsed += _.currentLapMilliseconds;
+    }, {
+        key: 'start',
+        value: function start() {
+            var _ = this;
+            if (!_._isRunning) {
+                _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+                _._isRunning = true;
+            }
+        }
+    }, {
+        key: 'stop',
+        value: function stop() {
+            var _ = this;
+            if (_._isRunning) {
+                _._elapsed += _.currentLapMilliseconds;
+                _._isRunning = false;
+            }
+        }
+    }, {
+        key: 'reset',
+        value: function reset() {
+            var _ = this;
+            _._elapsed = 0;
             _._isRunning = false;
+            _._startTimeStamp = NaN;
         }
-    };
-    Stopwatch.prototype.reset = function () {
-        var _ = this;
-        _._elapsed = 0;
-        _._isRunning = false;
-        _._startTimeStamp = NaN;
-    };
-    Stopwatch.prototype.lap = function () {
-        var _ = this;
-        if (_._isRunning) {
-            var t = Stopwatch.getTimestampMilliseconds();
-            var s = _._startTimeStamp;
-            var e = t - s;
-            _._startTimeStamp = t;
-            _._elapsed += e;
-            return new TimeSpan_1.default(e);
+    }, {
+        key: 'lap',
+        value: function lap() {
+            var _ = this;
+            if (_._isRunning) {
+                var t = Stopwatch.getTimestampMilliseconds();
+                var s = _._startTimeStamp;
+                var e = t - s;
+                _._startTimeStamp = t;
+                _._elapsed += e;
+                return new _TimeTimeSpan2['default'](e);
+            } else return _TimeTimeSpan2['default'].zero;
         }
-        else
-            return TimeSpan_1.default.zero;
-    };
-    Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
-        get: function () {
-            return this._isRunning
-                ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp)
-                : 0;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Stopwatch.prototype, "currentLap", {
-        get: function () {
-            return this._isRunning
-                ? new TimeSpan_1.default(this.currentLapMilliseconds)
-                : TimeSpan_1.default.zero;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Stopwatch.prototype, "elapsedMilliseconds", {
-        get: function () {
+    }, {
+        key: 'isRunning',
+        get: function get() {
+            return this._isRunning;
+        }
+    }, {
+        key: 'currentLapMilliseconds',
+        get: function get() {
+            return this._isRunning ? Stopwatch.getTimestampMilliseconds() - this._startTimeStamp : 0;
+        }
+    }, {
+        key: 'currentLap',
+        get: function get() {
+            return this._isRunning ? new _TimeTimeSpan2['default'](this.currentLapMilliseconds) : _TimeTimeSpan2['default'].zero;
+        }
+    }, {
+        key: 'elapsedMilliseconds',
+        get: function get() {
             var _ = this;
             var timeElapsed = _._elapsed;
-            if (_._isRunning)
-                timeElapsed += _.currentLapMilliseconds;
+            if (_._isRunning) timeElapsed += _.currentLapMilliseconds;
             return timeElapsed;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Stopwatch.prototype, "elapsed", {
-        get: function () {
-            return new TimeSpan_1.default(this.elapsedMilliseconds);
-        },
-        enumerable: true,
-        configurable: true
-    });
+        }
+    }, {
+        key: 'elapsed',
+        get: function get() {
+            return new _TimeTimeSpan2['default'](this.elapsedMilliseconds);
+        }
+    }], [{
+        key: 'getTimestampMilliseconds',
+        value: function getTimestampMilliseconds() {
+            return new Date().getTime();
+        }
+    }, {
+        key: 'startNew',
+        value: function startNew() {
+            var s = new Stopwatch();
+            s.start();
+            return s;
+        }
+    }, {
+        key: 'measure',
+        value: function measure(closure) {
+            var start = Stopwatch.getTimestampMilliseconds();
+            closure();
+            return new _TimeTimeSpan2['default'](Stopwatch.getTimestampMilliseconds() - start);
+        }
+    }]);
+
     return Stopwatch;
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Stopwatch;
+
+exports['default'] = Stopwatch;
+module.exports = exports['default'];
 //# sourceMappingURL=Stopwatch.js.map

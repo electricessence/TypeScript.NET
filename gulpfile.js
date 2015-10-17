@@ -17,6 +17,7 @@ const
 	rename     = require('gulp-rename'),
 	sourcemaps = require('gulp-sourcemaps'),
 	uglify     = require('gulp-uglify'),
+	babel      = require('gulp-babel'),
 	typescript = require('gulp-typescript'),
 	typedoc    = require('gulp-typedoc'),
 	replace    = require('gulp-replace'),
@@ -110,9 +111,29 @@ gulp.task(
 gulp.task(
 	TASK_TYPESCRIPT_COMMONJS, function()
 	{
-		const d = './dist/commonjs';
-		del([d + '/**/*']);
-		return tsc(d, ES5, COMMONJS);
+		const DESTINATION = './dist/'+COMMONJS;
+		del([DESTINATION + '/**/*']);
+
+		var typescriptOptions/*:typescript.Params*/ = {
+			noImplicitAny: true,
+			module: null,
+			target: ES6,
+			removeComments: true
+		};
+
+		// This isn't ideal, but it works and points the maps to the original source.
+		var sourceMapOptions/*:sourcemaps.WriteOptions*/ = {
+			sourceRoot: null
+		};
+
+		return gulp
+			.src(['./source/**/*.ts'])
+			.pipe(sourcemaps.init())
+			.pipe(typescript(typescriptOptions))
+			.pipe(babel())
+			.pipe(sourcemaps.write('.', sourceMapOptions))
+			.pipe(gulp.dest(DESTINATION));
+
 	}
 );
 

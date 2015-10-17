@@ -19,11 +19,12 @@ class ArgumentOutOfRangeException extends ArgumentException
 	constructor(
 		paramName:string,
 		actualValue:string|number|boolean,
-		message:string = '',
+		message:string = ' ',
 		innerException:Exception = null)
 	{
-		this.actualValue = actualValue;
-		super(paramName, message, innerException);
+		super(paramName, message, innerException, (_)=>{
+			_.actualValue = actualValue;
+		});
 	}
 
 

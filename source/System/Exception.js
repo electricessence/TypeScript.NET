@@ -8,7 +8,7 @@ define(["require", "exports"], function (require, exports) {
     ///<reference path="Disposable/IDisposable.d.ts"/>
     var NAME = 'Exception';
     var Exception = (function () {
-        function Exception(message, innerException) {
+        function Exception(message, innerException, beforeSealing) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }
             this.message = message;
@@ -17,6 +17,8 @@ define(["require", "exports"], function (require, exports) {
             _.data = {};
             if (innerException)
                 _.data['innerException'] = innerException;
+            if (beforeSealing)
+                beforeSealing(_);
             Object.freeze(_);
         }
         Exception.prototype.getName = function () { return NAME; };

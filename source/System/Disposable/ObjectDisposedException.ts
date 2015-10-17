@@ -24,8 +24,9 @@ extends InvalidOperationException
 		message:string = null,
 		innerException:Exception = null)
 	{
-		this.objectName = objectName;
-		super(message, innerException);
+		super(message, innerException, (_)=>{
+			_.objectName = objectName;
+		});
 	}
 
 

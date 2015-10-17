@@ -3,50 +3,97 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="ILinkedListNode.d.ts"/>
-///<reference path="ILinkedList.d.ts"/>
-var Values = require('../Compare');
-var TextUtility = require('../Text/Utility');
-var ArrayUtility = require('../Collections/Array/Utility');
-var Enumerator = require('./Enumeration/Enumerator');
-var EnumeratorBase_1 = require('./Enumeration/EnumeratorBase');
-var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
-var ArgumentException_1 = require('../Exceptions/ArgumentException');
-var ArgumentNullException_1 = require('../Exceptions/ArgumentNullException');
-var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _Compare = require('../Compare');
+
+var Values = _interopRequireWildcard(_Compare);
+
+var _TextUtility = require('../Text/Utility');
+
+var TextUtility = _interopRequireWildcard(_TextUtility);
+
+var _CollectionsArrayUtility = require('../Collections/Array/Utility');
+
+var ArrayUtility = _interopRequireWildcard(_CollectionsArrayUtility);
+
+var _EnumerationEnumerator = require('./Enumeration/Enumerator');
+
+var Enumerator = _interopRequireWildcard(_EnumerationEnumerator);
+
+var _EnumerationEnumeratorBase = require('./Enumeration/EnumeratorBase');
+
+var _EnumerationEnumeratorBase2 = _interopRequireDefault(_EnumerationEnumeratorBase);
+
+var _ExceptionsInvalidOperationException = require('../Exceptions/InvalidOperationException');
+
+var _ExceptionsInvalidOperationException2 = _interopRequireDefault(_ExceptionsInvalidOperationException);
+
+var _ExceptionsArgumentException = require('../Exceptions/ArgumentException');
+
+var _ExceptionsArgumentException2 = _interopRequireDefault(_ExceptionsArgumentException);
+
+var _ExceptionsArgumentNullException = require('../Exceptions/ArgumentNullException');
+
+var _ExceptionsArgumentNullException2 = _interopRequireDefault(_ExceptionsArgumentNullException);
+
+var _ExceptionsArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
+
+var _ExceptionsArgumentOutOfRangeException2 = _interopRequireDefault(_ExceptionsArgumentOutOfRangeException);
+
 var Node = (function () {
     function Node(value, prev, next) {
+        _classCallCheck(this, Node);
+
         this.value = value;
         this.prev = prev;
         this.next = next;
     }
-    Node.prototype.assertDetached = function () {
-        if (this.next || this.prev)
-            throw new InvalidOperationException_1.default("Adding a node that is already placed.");
-    };
+
+    _createClass(Node, [{
+        key: 'assertDetached',
+        value: function assertDetached() {
+            if (this.next || this.prev) throw new _ExceptionsInvalidOperationException2['default']("Adding a node that is already placed.");
+        }
+    }]);
+
     return Node;
 })();
+
 function ensureExternal(node, list) {
-    if (!node)
-        return null;
+    if (!node) return null;
     var external = node.external;
-    if (!external)
-        node.external = external = new LinkedListNode(list, node);
+    if (!external) node.external = external = new LinkedListNode(list, node);
     return external;
 }
 function getInternal(node, list) {
-    if (!node)
-        throw new ArgumentNullException_1.default("Cannot be null.");
-    if (node.list != list)
-        throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
+    if (!node) throw new _ExceptionsArgumentNullException2['default']("Cannot be null.");
+    if (node.list != list) throw new _ExceptionsInvalidOperationException2['default']("Provided node does not belong to this list.");
     var n = node._node;
-    if (!n)
-        throw new InvalidOperationException_1.default("Provided node is not valid.");
+    if (!n) throw new _ExceptionsInvalidOperationException2['default']("Provided node is not valid.");
     return n;
 }
+
 var LinkedList = (function () {
     function LinkedList(source) {
-        var _ = this, c = 0, first = null, last = null;
+        _classCallCheck(this, LinkedList);
+
+        var _ = this,
+            c = 0,
+            first = null,
+            last = null;
         var e = Enumerator.from(source);
         if (e.moveNext()) {
             first = last = new Node(e.current);
@@ -60,302 +107,353 @@ var LinkedList = (function () {
         _._last = last;
         _._count = c;
     }
-    LinkedList.prototype._addFirst = function (entry) {
-        var _ = this, first = _._first;
-        var prev = new Node(entry, null, first);
-        if (first)
-            first.prev = prev;
-        else
-            _._last = prev;
-        _._first = prev;
-        _._count += 1;
-        return prev;
-    };
-    LinkedList.prototype._addLast = function (entry) {
-        var _ = this, last = _._last;
-        var next = new Node(entry, last);
-        if (last)
-            last.next = next;
-        else
-            _._first = next;
-        _._last = next;
-        _._count += 1;
-        return next;
-    };
-    LinkedList.prototype._addNodeBefore = function (n, inserting) {
-        inserting.assertDetached();
-        inserting.next = n;
-        inserting.prev = n.prev;
-        n.prev.next = inserting;
-        n.prev = inserting;
-        this._count += 1;
-    };
-    LinkedList.prototype._addNodeAfter = function (n, inserting) {
-        inserting.assertDetached();
-        inserting.prev = n;
-        inserting.next = n.next;
-        n.next.prev = inserting;
-        n.next = inserting;
-        this._count += 1;
-    };
-    LinkedList.prototype._findFirst = function (entry) {
-        var equals = Values.areEqual, next = this._first;
-        while (next) {
-            if (equals(entry, next.value))
-                return next;
-            next = next.next;
+
+    _createClass(LinkedList, [{
+        key: '_addFirst',
+        value: function _addFirst(entry) {
+            var _ = this,
+                first = _._first;
+            var prev = new Node(entry, null, first);
+            if (first) first.prev = prev;else _._last = prev;
+            _._first = prev;
+            _._count += 1;
+            return prev;
         }
-        return null;
-    };
-    LinkedList.prototype._findLast = function (entry) {
-        var equals = Values.areEqual, prev = this._last;
-        while (prev) {
-            if (equals(entry, prev.value))
-                return prev;
-            prev = prev.prev;
+    }, {
+        key: '_addLast',
+        value: function _addLast(entry) {
+            var _ = this,
+                last = _._last;
+            var next = new Node(entry, last);
+            if (last) last.next = next;else _._first = next;
+            _._last = next;
+            _._count += 1;
+            return next;
         }
-        return null;
-    };
-    LinkedList.prototype.forEach = function (action, useCopy) {
-        if (useCopy === void 0) { useCopy = false; }
-        if (useCopy) {
-            var array = this.toArray();
-            ArrayUtility.forEach(array, action);
-            array.length = 0;
+    }, {
+        key: '_addNodeBefore',
+        value: function _addNodeBefore(n, inserting) {
+            inserting.assertDetached();
+            inserting.next = n;
+            inserting.prev = n.prev;
+            n.prev.next = inserting;
+            n.prev = inserting;
+            this._count += 1;
         }
-        else {
-            var next = this._first, index = 0;
-            while (next && action(next.value, index++) !== false) {
+    }, {
+        key: '_addNodeAfter',
+        value: function _addNodeAfter(n, inserting) {
+            inserting.assertDetached();
+            inserting.prev = n;
+            inserting.next = n.next;
+            n.next.prev = inserting;
+            n.next = inserting;
+            this._count += 1;
+        }
+    }, {
+        key: '_findFirst',
+        value: function _findFirst(entry) {
+            var equals = Values.areEqual,
+                next = this._first;
+            while (next) {
+                if (equals(entry, next.value)) return next;
                 next = next.next;
             }
+            return null;
         }
-    };
-    LinkedList.prototype.getEnumerator = function () {
-        var _ = this, current;
-        return new EnumeratorBase_1.default(function () {
-            current = new Node(null, null, _._first);
-        }, function (yielder) {
-            return (current = current.next)
-                ? yielder.yieldReturn(current.value)
-                : yielder.yieldBreak();
-        });
-    };
-    Object.defineProperty(LinkedList.prototype, "count", {
-        get: function () {
-            return this._count;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LinkedList.prototype, "isReadOnly", {
-        get: function () {
-            return false;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    LinkedList.prototype.add = function (entry) {
-        this._addLast(entry);
-    };
-    LinkedList.prototype.clear = function () {
-        var _ = this;
-        _._first = null;
-        _._last = null;
-        var count = _._count;
-        _._count = 0;
-        return count;
-    };
-    LinkedList.prototype.contains = function (entry) {
-        var found = false, equals = Values.areEqual;
-        this.forEach(function (e) { return !(found = equals(entry, e)); });
-        return found;
-    };
-    LinkedList.prototype.copyTo = function (array, index) {
-        if (index === void 0) { index = 0; }
-        this.forEach(function (entry, i) {
-            array[index + i] = entry;
-        });
-        return array;
-    };
-    LinkedList.prototype.toArray = function () {
-        var array = ArrayUtility.initialize(this._count);
-        return this.copyTo(array);
-    };
-    LinkedList.prototype.removeOnce = function (entry) {
-        var _ = this;
-        var node = _._findFirst(entry);
-        if (node) {
-            var prev = node.prev, next = node.next;
-            if (prev)
-                prev.next = next;
-            else
+    }, {
+        key: '_findLast',
+        value: function _findLast(entry) {
+            var equals = Values.areEqual,
+                prev = this._last;
+            while (prev) {
+                if (equals(entry, prev.value)) return prev;
+                prev = prev.prev;
+            }
+            return null;
+        }
+    }, {
+        key: 'forEach',
+        value: function forEach(action) {
+            var useCopy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+            if (useCopy) {
+                var array = this.toArray();
+                ArrayUtility.forEach(array, action);
+                array.length = 0;
+            } else {
+                var next = this._first,
+                    index = 0;
+                while (next && action(next.value, index++) !== false) {
+                    next = next.next;
+                }
+            }
+        }
+    }, {
+        key: 'getEnumerator',
+        value: function getEnumerator() {
+            var _ = this,
+                current;
+            return new _EnumerationEnumeratorBase2['default'](function () {
+                current = new Node(null, null, _._first);
+            }, function (yielder) {
+                return (current = current.next) ? yielder.yieldReturn(current.value) : yielder.yieldBreak();
+            });
+        }
+    }, {
+        key: 'add',
+        value: function add(entry) {
+            this._addLast(entry);
+        }
+    }, {
+        key: 'clear',
+        value: function clear() {
+            var _ = this;
+            _._first = null;
+            _._last = null;
+            var count = _._count;
+            _._count = 0;
+            return count;
+        }
+    }, {
+        key: 'contains',
+        value: function contains(entry) {
+            var found = false,
+                equals = Values.areEqual;
+            this.forEach(function (e) {
+                return !(found = equals(entry, e));
+            });
+            return found;
+        }
+    }, {
+        key: 'copyTo',
+        value: function copyTo(array) {
+            var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
+            this.forEach(function (entry, i) {
+                array[index + i] = entry;
+            });
+            return array;
+        }
+    }, {
+        key: 'toArray',
+        value: function toArray() {
+            var array = ArrayUtility.initialize(this._count);
+            return this.copyTo(array);
+        }
+    }, {
+        key: 'removeOnce',
+        value: function removeOnce(entry) {
+            var _ = this;
+            var node = _._findFirst(entry);
+            if (node) {
+                var prev = node.prev,
+                    next = node.next;
+                if (prev) prev.next = next;else _._first = next;
+                if (next) next.prev = prev;else _._last = prev;
+                _._count -= 1;
+            }
+            return node != null;
+        }
+    }, {
+        key: 'remove',
+        value: function remove(entry) {
+            var _ = this,
+                removedCount = 0;
+            while (_.removeOnce(entry)) {
+                ++removedCount;
+            }
+            return removedCount;
+        }
+    }, {
+        key: '_getNodeAt',
+        value: function _getNodeAt(index) {
+            if (index < 0) throw new _ExceptionsArgumentOutOfRangeException2['default']('index', index, 'Is less than zero.');
+            if (index >= this._count) throw new _ExceptionsArgumentOutOfRangeException2['default']('index', index, 'Is greater than count.');
+            var next = this._first,
+                i = 0;
+            while (next && index < i++) {
+                next = next.next;
+            }
+            return next;
+        }
+    }, {
+        key: 'getValueAt',
+        value: function getValueAt(index) {
+            return this._getNodeAt(index).value;
+        }
+    }, {
+        key: 'getNodeAt',
+        value: function getNodeAt(index) {
+            return ensureExternal(this._getNodeAt(index), this);
+        }
+    }, {
+        key: 'find',
+        value: function find(entry) {
+            return ensureExternal(this._findFirst(entry), this);
+        }
+    }, {
+        key: 'findLast',
+        value: function findLast(entry) {
+            return ensureExternal(this._findLast(entry), this);
+        }
+    }, {
+        key: 'addFirst',
+        value: function addFirst(entry) {
+            this._addFirst(entry);
+        }
+    }, {
+        key: 'addLast',
+        value: function addLast(entry) {
+            this._addLast(entry);
+        }
+    }, {
+        key: 'removeFirst',
+        value: function removeFirst() {
+            var _ = this,
+                first = _._first;
+            if (first) {
+                var next = first.next;
                 _._first = next;
-            if (next)
-                next.prev = prev;
-            else
+                if (next) next.prev = null;
+                _._count -= 1;
+            }
+        }
+    }, {
+        key: 'removeLast',
+        value: function removeLast() {
+            var _ = this,
+                last = _._last;
+            if (last) {
+                var prev = last.prev;
                 _._last = prev;
-            _._count -= 1;
+                if (prev) prev.next = null;
+                _._count -= 1;
+            }
         }
-        return node != null;
-    };
-    LinkedList.prototype.remove = function (entry) {
-        var _ = this, removedCount = 0;
-        while (_.removeOnce(entry)) {
-            ++removedCount;
+    }, {
+        key: 'removeNode',
+        value: function removeNode(node) {
+            var _ = this;
+            var n = getInternal(node, _);
+            var prev = n.prev,
+                next = n.next,
+                a = false,
+                b = false;
+            if (prev) prev.next = next;else if (_._first == n) _._first = next;else a = true;
+            if (next) next.prev = prev;else if (_._last == n) _._last = prev;else b = true;
+            if (a !== b) {
+                throw new _ExceptionsArgumentException2['default']('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+            }
+            return !a && !b;
         }
-        return removedCount;
-    };
-    Object.defineProperty(LinkedList.prototype, "first", {
-        get: function () {
+    }, {
+        key: 'addBefore',
+        value: function addBefore(node, entry) {
+            this._addNodeBefore(getInternal(node, this), new Node(entry));
+        }
+    }, {
+        key: 'addAfter',
+        value: function addAfter(node, entry) {
+            this._addNodeAfter(getInternal(node, this), new Node(entry));
+        }
+    }, {
+        key: 'addNodeBefore',
+        value: function addNodeBefore(node, before) {
+            this._addNodeBefore(getInternal(node, this), getInternal(before, this));
+        }
+    }, {
+        key: 'addNodeAfter',
+        value: function addNodeAfter(node, after) {
+            this._addNodeAfter(getInternal(node, this), getInternal(after, this));
+        }
+    }, {
+        key: 'count',
+        get: function get() {
+            return this._count;
+        }
+    }, {
+        key: 'isReadOnly',
+        get: function get() {
+            return false;
+        }
+    }, {
+        key: 'first',
+        get: function get() {
             return ensureExternal(this._first, this);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LinkedList.prototype, "last", {
-        get: function () {
+        }
+    }, {
+        key: 'last',
+        get: function get() {
             return ensureExternal(this._last, this);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    LinkedList.prototype._getNodeAt = function (index) {
-        if (index < 0)
-            throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
-        if (index >= this._count)
-            throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than count.');
-        var next = this._first, i = 0;
-        while (next && index < i++) {
-            next = next.next;
         }
-        return next;
-    };
-    LinkedList.prototype.getValueAt = function (index) {
-        return this._getNodeAt(index).value;
-    };
-    LinkedList.prototype.getNodeAt = function (index) {
-        return ensureExternal(this._getNodeAt(index), this);
-    };
-    LinkedList.prototype.find = function (entry) {
-        return ensureExternal(this._findFirst(entry), this);
-    };
-    LinkedList.prototype.findLast = function (entry) {
-        return ensureExternal(this._findLast(entry), this);
-    };
-    LinkedList.prototype.addFirst = function (entry) {
-        this._addFirst(entry);
-    };
-    LinkedList.prototype.addLast = function (entry) {
-        this._addLast(entry);
-    };
-    LinkedList.prototype.removeFirst = function () {
-        var _ = this, first = _._first;
-        if (first) {
-            var next = first.next;
-            _._first = next;
-            if (next)
-                next.prev = null;
-            _._count -= 1;
-        }
-    };
-    LinkedList.prototype.removeLast = function () {
-        var _ = this, last = _._last;
-        if (last) {
-            var prev = last.prev;
-            _._last = prev;
-            if (prev)
-                prev.next = null;
-            _._count -= 1;
-        }
-    };
-    LinkedList.prototype.removeNode = function (node) {
-        var _ = this;
-        var n = getInternal(node, _);
-        var prev = n.prev, next = n.next, a = false, b = false;
-        if (prev)
-            prev.next = next;
-        else if (_._first == n)
-            _._first = next;
-        else
-            a = true;
-        if (next)
-            next.prev = prev;
-        else if (_._last == n)
-            _._last = prev;
-        else
-            b = true;
-        if (a !== b) {
-            throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
-        }
-        return !a && !b;
-    };
-    LinkedList.prototype.addBefore = function (node, entry) {
-        this._addNodeBefore(getInternal(node, this), new Node(entry));
-    };
-    LinkedList.prototype.addAfter = function (node, entry) {
-        this._addNodeAfter(getInternal(node, this), new Node(entry));
-    };
-    LinkedList.prototype.addNodeBefore = function (node, before) {
-        this._addNodeBefore(getInternal(node, this), getInternal(before, this));
-    };
-    LinkedList.prototype.addNodeAfter = function (node, after) {
-        this._addNodeAfter(getInternal(node, this), getInternal(after, this));
-    };
+    }]);
+
     return LinkedList;
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = LinkedList;
+
+exports['default'] = LinkedList;
+
 var LinkedListNode = (function () {
     function LinkedListNode(_list, _node) {
+        _classCallCheck(this, LinkedListNode);
+
         this._list = _list;
         this._node = _node;
     }
-    Object.defineProperty(LinkedListNode.prototype, "list", {
-        get: function () {
+
+    _createClass(LinkedListNode, [{
+        key: 'addBefore',
+        value: function addBefore(entry) {
+            this._list.addBefore(this, entry);
+        }
+    }, {
+        key: 'addAfter',
+        value: function addAfter(entry) {
+            this._list.addAfter(this, entry);
+        }
+    }, {
+        key: 'addNodeBefore',
+        value: function addNodeBefore(before) {
+            this._list.addNodeBefore(this, before);
+        }
+    }, {
+        key: 'addNodeAfter',
+        value: function addNodeAfter(after) {
+            this._list.addNodeAfter(this, after);
+        }
+    }, {
+        key: 'remove',
+        value: function remove() {
+            this._list.removeNode(this);
+        }
+    }, {
+        key: 'list',
+        get: function get() {
             return this._list;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LinkedListNode.prototype, "previous", {
-        get: function () {
+        }
+    }, {
+        key: 'previous',
+        get: function get() {
             return ensureExternal(this._node.prev, this._list);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LinkedListNode.prototype, "next", {
-        get: function () {
+        }
+    }, {
+        key: 'next',
+        get: function get() {
             return ensureExternal(this._node.next, this._list);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(LinkedListNode.prototype, "value", {
-        get: function () {
+        }
+    }, {
+        key: 'value',
+        get: function get() {
             return this._node.value;
         },
-        set: function (v) {
+        set: function set(v) {
             this._node.value = v;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    LinkedListNode.prototype.addBefore = function (entry) {
-        this._list.addBefore(this, entry);
-    };
-    LinkedListNode.prototype.addAfter = function (entry) {
-        this._list.addAfter(this, entry);
-    };
-    LinkedListNode.prototype.addNodeBefore = function (before) {
-        this._list.addNodeBefore(this, before);
-    };
-    LinkedListNode.prototype.addNodeAfter = function (after) {
-        this._list.addNodeAfter(this, after);
-    };
-    LinkedListNode.prototype.remove = function () {
-        this._list.removeNode(this);
-    };
+        }
+    }]);
+
     return LinkedListNode;
 })();
+
+module.exports = exports['default'];
 //# sourceMappingURL=LinkedList.js.map

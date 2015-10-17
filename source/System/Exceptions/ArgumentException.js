@@ -12,13 +12,15 @@ define(["require", "exports", './SystemException', '../Text/Utility'], function 
     var NAME = 'ArgumentException';
     var ArgumentException = (function (_super) {
         __extends(ArgumentException, _super);
-        function ArgumentException(paramName, message, innerException) {
+        function ArgumentException(paramName, message, innerException, beforeSealing) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }
-            var _ = this, pn = _.paramName;
-            pn = pn ? ('{' + pn + '} ') : '';
-            _.paramName = paramName;
-            _super.call(this, Utility_1.trim(pn + message), innerException);
+            var pn = paramName ? ('{' + paramName + '} ') : '';
+            _super.call(this, Utility_1.trim(pn + message), innerException, function (_) {
+                _.paramName = paramName;
+                if (beforeSealing)
+                    beforeSealing(_);
+            });
         }
         ArgumentException.prototype.getName = function () {
             return NAME;

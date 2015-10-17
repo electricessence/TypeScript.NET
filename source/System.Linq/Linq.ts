@@ -3131,9 +3131,6 @@ extends Enumerable<T>
 
 	constructor(source:IArray<T>)
 	{
-		var _ = this;
-		_._disposableObjectName = "ArrayEnumerable";
-		_._source = source;
 		super(() =>
 		{
 			_.throwIfDisposed();
@@ -3144,6 +3141,11 @@ extends Enumerable<T>
 				return _._source; // Could possibly be null, but ArrayEnumerable if not disposed simply treats null as empty array.
 			});
 		});
+
+		var _ = this;
+		_._disposableObjectName = "ArrayEnumerable";
+		_._source = source;
+
 	}
 
 	protected _onDispose():void

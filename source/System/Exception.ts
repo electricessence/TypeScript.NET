@@ -26,10 +26,12 @@ class Exception implements Error, IDisposable
 	 * Initializes a new instance of the Exception class with a specified error message and optionally a reference to the inner exception that is the cause of this exception.
 	 * @param message
 	 * @param innerException
+	 * @param beforeSealing This delegate is used to allow actions to occur just before this constructor finishes.  Since some compilers do not allow the use of 'this' before super.
 	 */
 	constructor(
 		public message:string = null,
-		innerException:Error = null)
+		innerException:Error = null,
+		beforeSealing?:(ex:any)=>void)
 	{
 		var _ = this;
 		_.name = _.getName();
@@ -42,8 +44,11 @@ class Exception implements Error, IDisposable
 		 * Object.freeze has to be used carefully, but will prevent overriding values.
 		 */
 
+		if(beforeSealing) beforeSealing(_);
 		Object.freeze(_);
 	}
+
+
 
 	data:IMap<any>;
 

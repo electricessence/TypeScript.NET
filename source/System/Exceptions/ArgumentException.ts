@@ -22,13 +22,15 @@ class ArgumentException extends SystemException
 	constructor(
 		paramName:string,
 		message:string = null,
-		innerException:Error = null)
+		innerException:Error = null,
+		beforeSealing?:(ex:any)=>void)
 	{
-		var _ = this, pn = _.paramName;
-		pn = pn ? ('{' + pn + '} ') : '';
+		var pn = paramName ? ('{' + paramName + '} ') : '';
 
-		_.paramName = paramName;
-		super(trim(pn + message), innerException);
+		super(trim(pn + message), innerException, (_)=>{
+			_.paramName = paramName;
+			if(beforeSealing) beforeSealing(_);
+		});
 	}
 
 

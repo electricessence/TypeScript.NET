@@ -2,8 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-function shallowCopy(source, target) {
-    if (target === void 0) { target = {}; }
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports["default"] = shallowCopy;
+
+function shallowCopy(source) {
+    var target = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
     if (target) {
         for (var k in source) {
             target[k] = source[k];
@@ -11,6 +19,6 @@ function shallowCopy(source, target) {
     }
     return target;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = shallowCopy;
+
+module.exports = exports["default"];
 //# sourceMappingURL=shallowCopy.js.map

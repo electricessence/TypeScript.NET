@@ -3,6 +3,11 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 var TimeUnit;
 (function (TimeUnit) {
     TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
@@ -13,6 +18,6 @@ var TimeUnit;
     TimeUnit[TimeUnit["Days"] = 5] = "Days";
 })(TimeUnit || (TimeUnit = {}));
 Object.freeze(TimeUnit);
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TimeUnit;
+exports["default"] = TimeUnit;
+module.exports = exports["default"];
 //# sourceMappingURL=TimeUnit.js.map

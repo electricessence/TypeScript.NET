@@ -1718,9 +1718,6 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
     var ArrayEnumerable = (function (_super) {
         __extends(ArrayEnumerable, _super);
         function ArrayEnumerable(source) {
-            var _ = this;
-            _._disposableObjectName = "ArrayEnumerable";
-            _._source = source;
             _super.call(this, function () {
                 _.throwIfDisposed();
                 return new ArrayEnumerator_1.default(function () {
@@ -1728,6 +1725,9 @@ define(["require", "exports", '../System/Compare', '../System/Collections/Array/
                     return _._source;
                 });
             });
+            var _ = this;
+            _._disposableObjectName = "ArrayEnumerable";
+            _._source = source;
         }
         ArrayEnumerable.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
