@@ -26,6 +26,7 @@
     "gulp-typedoc": "^1.2.1",
     "gulp-typescript": "^2.8.3",
     "gulp-uglify": "^1.4.1",
+    "mocha": "^2.3.3",
     "semver": "^5.0.3",
     "tsd": "^0.6.4",
     "typedoc": "^0.3.10",
