@@ -3,15 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeMeasurement.ts"/>
-///<reference path="../IEquatable.ts"/>
-///<reference path="../IComparable.ts"/>
-///<reference path="../IFormattable.ts"/>
-import TimeUnit= require('./TimeUnit');
-import TimeSpan= require('./TimeSpan');
-import Values = require('../Compare');
+///<reference path="ITimeMeasurement.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../IComparable.d.ts"/>
+///<reference path="../IFormattable.d.ts"/>
+import {areEqual, compare} from '../Compare';
+import TimeUnit from './TimeUnit';
+import TimeSpan from './TimeSpan';
 
 // This class allows for passing around a specific measure of time coerced by its unit type.
+export default
 class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue>, ITimeTotal
 {
 
@@ -51,7 +52,7 @@ class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitVa
 		if(o==null)
 			return false;
 
-		return Values.areEqual(this.value, o.value);
+		return areEqual(this.value, o.value);
 	}
 
 
@@ -63,7 +64,7 @@ class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitVa
 
 		assertComparisonType(other);
 
-		return Values.compare(this.value, this.coerce(other).value);
+		return compare(this.value, this.coerce(other).value);
 
 	}
 
@@ -103,5 +104,3 @@ function assertValidUnit(unit:TimeUnit):boolean
 
 	return true;
 }
-
-export = TimeUnitValue;

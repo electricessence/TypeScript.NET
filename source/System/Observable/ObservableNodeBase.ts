@@ -5,11 +5,12 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-///<reference path="IObserver.ts"/>
-///<reference path="IObservable.ts"/>
-import SubscribableBase = require('./SubscribableBase');
+///<reference path="IObserver.d.ts"/>
+///<reference path="IObservable.d.ts"/>
+import SubscribableBase from './SubscribableBase';
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
+export default
 class ObservableNodeBase<T>
 extends SubscribableBase<IObserver<T>> implements IObservable<T>, IObserver<T>
 {
@@ -48,7 +49,7 @@ function processAction<T>(
 {
 	var observersErrors:{observer:IObserver<T>,ex:any}[] = null;
 
-	for(var s of observers)
+	for(let s of observers)
 	{
 		try
 		{
@@ -76,5 +77,3 @@ function processAction<T>(
 	}
 
 }
-
-export = ObservableNodeBase;

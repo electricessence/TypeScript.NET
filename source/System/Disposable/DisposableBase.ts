@@ -4,14 +4,11 @@
  */
 
 
-///<reference path="IDisposableAware.ts"/>
+///<reference path="IDisposableAware.d.ts"/>
 
-'use strict';
+import ObjectDisposedException from './ObjectDisposedException';
 
-//class ObjectDisposedException extends Exception {
-//
-//}
-
+export default
 class DisposableBase implements IDisposableAware
 {
 
@@ -25,18 +22,16 @@ class DisposableBase implements IDisposableAware
 		return this._wasDisposed;
 	}
 
-	// This allows for the use of a boolean instead of calling this.assertIsNotDisposed() since there is a strong chance of introducing a circular reference.
-	static assertIsNotDisposed(disposed:boolean, errorMessage:string = "ObjectDisposedException"):boolean
-	{
-		if(disposed)
-			throw new Error(errorMessage);
+	// Allow for simple override of name.
+	protected _disposableObjectName:string;
 
+	protected throwIfDisposed(
+		message?:string,
+		objectName:string = this._disposableObjectName):boolean
+	{
+		if(this._wasDisposed)
+			throw new ObjectDisposedException(objectName, message);
 		return true;
-	}
-
-	assertIsNotDisposed(errorMessage:string = "ObjectDisposedException"):boolean
-	{
-		return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
 	}
 
 
@@ -68,5 +63,3 @@ class DisposableBase implements IDisposableAware
 	}
 
 }
-
-export = DisposableBase;

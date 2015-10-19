@@ -4,11 +4,12 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import SystemException = require('./SystemException');
+import SystemException from './SystemException';
 
 
 const NAME:string = 'NotImplementedException';
 
+export default
 class NotImplementedException extends SystemException {
 
 	protected getName():string
@@ -17,5 +18,3 @@ class NotImplementedException extends SystemException {
 	}
 
 }
-
-export = NotImplementedException

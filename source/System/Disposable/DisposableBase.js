@@ -2,9 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="IDisposableAware.ts"/>
-'use strict';
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", './ObjectDisposedException'], function (require, exports, ObjectDisposedException_1) {
     var DisposableBase = (function () {
         function DisposableBase(_finalizer) {
             this._finalizer = _finalizer;
@@ -17,15 +15,11 @@ define(["require", "exports"], function (require, exports) {
             enumerable: true,
             configurable: true
         });
-        DisposableBase.assertIsNotDisposed = function (disposed, errorMessage) {
-            if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
-            if (disposed)
-                throw new Error(errorMessage);
+        DisposableBase.prototype.throwIfDisposed = function (message, objectName) {
+            if (objectName === void 0) { objectName = this._disposableObjectName; }
+            if (this._wasDisposed)
+                throw new ObjectDisposedException_1.default(objectName, message);
             return true;
-        };
-        DisposableBase.prototype.assertIsNotDisposed = function (errorMessage) {
-            if (errorMessage === void 0) { errorMessage = "ObjectDisposedException"; }
-            return DisposableBase.assertIsNotDisposed(this._wasDisposed, errorMessage);
         };
         DisposableBase.prototype.dispose = function () {
             var _ = this;
@@ -44,6 +38,7 @@ define(["require", "exports"], function (require, exports) {
         };
         return DisposableBase;
     })();
-    return DisposableBase;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = DisposableBase;
 });
 //# sourceMappingURL=DisposableBase.js.map

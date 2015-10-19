@@ -4,19 +4,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-'use strict';
-
-///<reference path="ITimeMeasurement.ts"/>
-///<reference path="../IEquatable.ts"/>
-///<reference path="../IComparable.ts"/>
-import Values = require('../Compare');
-import Types = require('../Types');
-import TimeUnit = require('./TimeUnit');
-import HowMany = require('./HowMany');
-import TimeUnitValue = require('./TimeUnitValue');
-import ClockTime = require('./ClockTime');
+///<reference path="ITimeMeasurement.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../IComparable.d.ts"/>
+import {areEqual,compare} from '../Compare';
+import Type from '../Types';
+import * as HowMany from './HowMany';
+import TimeUnit from './TimeUnit';
+import TimeUnitValue from './TimeUnitValue';
+import ClockTime from './ClockTime';
 
 
+export default
 class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>, ITimeTotal
 {
 
@@ -37,7 +36,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 		if(other===undefined) // undefined is used instead of NaN since NaN could be a valid value.
 			return false;
 
-		return Values.areEqual(this._milliseconds, otherMS);
+		return areEqual(this._milliseconds, otherMS);
 	}
 
 
@@ -49,7 +48,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 
 		assertComparisonType(other);
 
-		return Values.compare(this._milliseconds, getMilliseconds(other));
+		return compare(this._milliseconds, getMilliseconds(other));
 
 	}
 
@@ -138,7 +137,8 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	}
 
 	// Provides an interface only way of acquiring the getTotal time.
-	get total():ITimeMeasurement {
+	get total():ITimeMeasurement
+	{
 		return this;
 	}
 
@@ -153,7 +153,7 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	add(other:TimeSpan):TimeSpan;
 	add(other:any):TimeSpan
 	{
-		if(Types.isNumber(other))
+		if(Type.isNumber(other))
 			throw new Error(
 				"Use .addUnit to add a numerical value amount.  " +
 				".add only supports ClockTime, TimeSpan, and TimeUnitValue."
@@ -273,5 +273,3 @@ function getMilliseconds(other:any):number
 }
 
 var timeSpanZero:TimeSpan;
-
-export = TimeSpan;

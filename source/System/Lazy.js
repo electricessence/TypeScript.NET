@@ -5,15 +5,15 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './Disposable/DisposableBase'], function (require, exports, DisposableBase) {
+define(["require", "exports", './Disposable/DisposableBase'], function (require, exports, DisposableBase_1) {
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
         function Lazy(_closure) {
             _super.call(this);
             this._closure = _closure;
+            this._disposableObjectName = 'Lazy';
         }
         Object.defineProperty(Lazy.prototype, "isValueCreated", {
             get: function () {
@@ -32,7 +32,7 @@ define(["require", "exports", './Disposable/DisposableBase'], function (require,
         Lazy.prototype.reset = function (throwIfCannotReset) {
             var _ = this;
             if (throwIfCannotReset)
-                _.assertIsNotDisposed();
+                _.throwIfDisposed();
             if (!_._closure) {
                 if (throwIfCannotReset)
                     throw new Error("Cannot reset.  This Lazy has already de-referenced its closure.");
@@ -53,7 +53,7 @@ define(["require", "exports", './Disposable/DisposableBase'], function (require,
         });
         Lazy.prototype.getValue = function (clearClosureReference) {
             var _ = this;
-            _.assertIsNotDisposed();
+            _.throwIfDisposed();
             try {
                 if (!_._isValueCreated && _._closure) {
                     var v = _._closure();
@@ -79,6 +79,8 @@ define(["require", "exports", './Disposable/DisposableBase'], function (require,
             return this.equals(other) || this.value === other.value;
         };
         return Lazy;
-    })(DisposableBase);
+    })(DisposableBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Lazy;
 });
 //# sourceMappingURL=Lazy.js.map

@@ -3,59 +3,167 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-'use strict';
+const
+_BOOLEAN:string   = typeof true,
+_NUMBER:string    = typeof 0,
+_STRING:string    = typeof "",
+_OBJECT:string    = typeof {},
+_NULL:string      = typeof null,
+_UNDEFINED:string = typeof undefined,
+_FUNCTION:string  = typeof function() {};
 
-import Functions = require('./Functions');
+// Only used for primitives.
+var typeInfoRegistry:{[key:string]:TypeInfo} = {};
 
 /**
- * Sealed/Frozen module for simple type comparison.
+ * Exposes easy access to type information including inquiring about members.
  */
-module Types
+export class TypeInfo
 {
+	// Not retained for primitives. Since they have no members.
+	private target:any;
 
-	// Calling an instance of this class allows for a local/private 'sealed' shallowCopy.
+	type:string;
 
+	isBoolean:boolean;
+	isNumber:boolean;
+	isFinite:boolean;
+	isValidNumber:boolean;
+	isString:boolean;
+	isTrueNaN:boolean;
+	isObject:boolean;
+	isFunction:boolean;
+	isUndefined:boolean;
+	isNull:boolean;
+	isNullOrUndefined:boolean;
+
+	constructor(target:any)
+	{
+		var _ = this;
+		_.isBoolean = false;
+		_.isNumber = false;
+		_.isString = false;
+		_.isTrueNaN = false;
+		_.isObject = false;
+		_.isFunction = false;
+		_.isUndefined = false;
+		_.isNull = false;
+
+		switch(_.type = typeof target)
+		{
+			case _BOOLEAN:
+				_.isBoolean = true;
+				break;
+			case _NUMBER:
+				_.isNumber = true;
+				_.isTrueNaN = isNaN(target);
+				_.isFinite = isFinite(target);
+				_.isValidNumber = !_.isTrueNaN;
+				break;
+			case _STRING:
+				_.isString = true;
+				break;
+			case _OBJECT:
+				_.target = target;
+				_.isObject = true;
+				break;
+			case _FUNCTION:
+				_.target = target;
+				_.isString = true;
+				break;
+			case _UNDEFINED:
+				_.isUndefined = true;
+				_.isNullOrUndefined = true;
+				break;
+			case _NULL:
+				_.isNull = true;
+				_.isNullOrUndefined = true;
+				break;
+		}
+
+		Object.freeze(_);
+
+	}
+
+	/**
+	 * Returns a TypeInfo for any member or non-member,
+	 * where non-members are of type undefined.
+	 * @param name
+	 * @returns {TypeInfo}
+	 */
+	member(name:string):TypeInfo
+	{
+		var t = this.target;
+		return TypeInfo.getFor(
+			t && name in t
+				? t[name]
+				: undefined);
+	}
+
+	/**
+	 * Returns a TypeInfo for any target object.
+	 * If the target object is of a primitive type, it returns the TypeInfo instance assigned to that type.
+	 * @param target
+	 * @returns {TypeInfo}
+	 */
+	static getFor(target:any):TypeInfo
+	{
+		var type:string = typeof target;
+		switch(type)
+		{
+			case _OBJECT:
+			case _FUNCTION:
+				return new TypeInfo(target);
+		}
+		var info = typeInfoRegistry[type];
+		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
+		return info;
+	}
+}
+
+module Type
+{
 	/**
 	 * typeof true
 	 * @type {string}
 	 */
-	export var Boolean:string = typeof true;
+	export const BOOLEAN:string = _BOOLEAN;
 
 	/**
 	 * typeof 0
 	 * @type {string}
 	 */
-	export var Number:string = typeof 0;
+	export const NUMBER:string = _NUMBER;
 
 	/**
 	 * typeof ""
 	 * @type {string}
 	 */
-	export var String:string = typeof "";
+	export const STRING:string = _STRING;
 
 	/**
 	 * typeof {}
 	 * @type {string}
 	 */
-	export var Object:string = typeof {};
+	export const OBJECT:string = _OBJECT;
 
 	/**
 	 * typeof null
 	 * @type {string}
 	 */
-	export var Null:string = typeof null;
+	export const NULL:string = _NULL;
 
 	/**
 	 * typeof undefined
 	 * @type {string}
 	 */
-	export var Undefined:string = typeof undefined;
+	export const UNDEFINED:string = _UNDEFINED;
 
 	/**
 	 * typeof function
 	 * @type {string}
 	 */
-	export var Function:string = typeof Functions.Blank;
+	export const FUNCTION:string = _FUNCTION;
 
 	/**
 	 * Returns true if the value parameter is a boolean.
@@ -64,17 +172,18 @@ module Types
 	 */
 	export function isBoolean(value:any):boolean
 	{
-		return typeof value===Types.Boolean;
+		return typeof value===_BOOLEAN;
 	}
 
 	/**
 	 * Returns true if the value parameter is a number.
 	 * @param value
+	 * @param allowNaN
 	 * @returns {boolean}
 	 */
-	export function isNumber(value:any):boolean
+	export function isNumber(value:any, allowNaN:boolean = true):boolean
 	{
-		return typeof value===Types.Number;
+		return typeof value===_NUMBER && (allowNaN || !isNaN(value));
 	}
 
 	/**
@@ -84,7 +193,7 @@ module Types
 	 */
 	export function isTrueNaN(value:any):boolean
 	{
-		return typeof value===Types.Number && isNaN(value);
+		return typeof value===_NUMBER && isNaN(value);
 	}
 
 	/**
@@ -94,7 +203,7 @@ module Types
 	 */
 	export function isString(value:any):boolean
 	{
-		return typeof value===Types.String;
+		return typeof value===_STRING;
 	}
 
 	/**
@@ -104,13 +213,36 @@ module Types
 	 */
 	export function isFunction(value:any):boolean
 	{
-		return typeof value===Types.Function;
+		return typeof value===_FUNCTION;
+	}
+
+	/**
+	 * Returns true if the value parameter is an object.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isObject(value:any):boolean
+	{
+		return typeof value===_OBJECT;
+	}
+
+	/**
+	 * Guarantees a number value or NaN instead.
+	 * @param value
+	 * @returns {number}
+	 */
+	export function numberOrNaN(value:any):number
+	{
+		return isNaN(value) ? NaN : value;
+	}
+
+	export function of(target:any):TypeInfo
+	{
+		return TypeInfo.getFor(target);
 	}
 
 }
 
-// Sealed class/module.
-Object.freeze(Types);
+Object.freeze(Type);
 
-
-export = Types;
+export default Type;

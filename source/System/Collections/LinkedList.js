@@ -3,9 +3,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase, InvalidOperationException, ArgumentException, ArgumentNullException, ArgumentOutOfRangeException) {
-    'use strict';
-    var INT_0 = 0 | 0, INT_1 = 1 | 0;
+define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
     var Node = (function () {
         function Node(value, prev, next) {
             this.value = value;
@@ -14,7 +12,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         }
         Node.prototype.assertDetached = function () {
             if (this.next || this.prev)
-                throw new InvalidOperationException("Adding a node that is already placed.");
+                throw new InvalidOperationException_1.default("Adding a node that is already placed.");
         };
         return Node;
     })();
@@ -28,17 +26,17 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
     }
     function getInternal(node, list) {
         if (!node)
-            throw new ArgumentNullException("Cannot be null.");
+            throw new ArgumentNullException_1.default("Cannot be null.");
         if (node.list != list)
-            throw new InvalidOperationException("Provided node does not belong to this list.");
+            throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
         var n = node._node;
         if (!n)
-            throw new InvalidOperationException("Provided node is not valid.");
+            throw new InvalidOperationException_1.default("Provided node is not valid.");
         return n;
     }
     var LinkedList = (function () {
         function LinkedList(source) {
-            var _ = this, c = INT_0, first = null, last = null;
+            var _ = this, c = 0, first = null, last = null;
             var e = Enumerator.from(source);
             if (e.moveNext()) {
                 first = last = new Node(e.current);
@@ -60,7 +58,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             else
                 _._last = prev;
             _._first = prev;
-            _._count += INT_1;
+            _._count += 1;
             return prev;
         };
         LinkedList.prototype._addLast = function (entry) {
@@ -71,7 +69,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             else
                 _._first = next;
             _._last = next;
-            _._count += INT_1;
+            _._count += 1;
             return next;
         };
         LinkedList.prototype._addNodeBefore = function (n, inserting) {
@@ -80,7 +78,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             inserting.prev = n.prev;
             n.prev.next = inserting;
             n.prev = inserting;
-            this._count += INT_1;
+            this._count += 1;
         };
         LinkedList.prototype._addNodeAfter = function (n, inserting) {
             inserting.assertDetached();
@@ -88,7 +86,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             inserting.next = n.next;
             n.next.prev = inserting;
             n.next = inserting;
-            this._count += INT_1;
+            this._count += 1;
         };
         LinkedList.prototype._findFirst = function (entry) {
             var equals = Values.areEqual, next = this._first;
@@ -116,7 +114,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
                 array.length = 0;
             }
             else {
-                var next = this._first, index = INT_0;
+                var next = this._first, index = 0;
                 while (next && action(next.value, index++) !== false) {
                     next = next.next;
                 }
@@ -124,7 +122,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         };
         LinkedList.prototype.getEnumerator = function () {
             var _ = this, current;
-            return new EnumeratorBase(function () {
+            return new EnumeratorBase_1.default(function () {
                 current = new Node(null, null, _._first);
             }, function (yielder) {
                 return (current = current.next)
@@ -167,6 +165,11 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             this.forEach(function (entry, i) {
                 array[index + i] = entry;
             });
+            return array;
+        };
+        LinkedList.prototype.toArray = function () {
+            var array = ArrayUtility.initialize(this._count);
+            return this.copyTo(array);
         };
         LinkedList.prototype.removeOnce = function (entry) {
             var _ = this;
@@ -181,21 +184,16 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
                     next.prev = prev;
                 else
                     _._last = prev;
-                _._count -= INT_1;
+                _._count -= 1;
             }
             return node != null;
         };
         LinkedList.prototype.remove = function (entry) {
-            var _ = this, removedCount = INT_0;
+            var _ = this, removedCount = 0;
             while (_.removeOnce(entry)) {
                 ++removedCount;
             }
             return removedCount;
-        };
-        LinkedList.prototype.toArray = function () {
-            var array = ArrayUtility.initialize(this._count);
-            this.copyTo(array);
-            return array;
         };
         Object.defineProperty(LinkedList.prototype, "first", {
             get: function () {
@@ -213,10 +211,10 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         });
         LinkedList.prototype._getNodeAt = function (index) {
             if (index < 0)
-                throw new ArgumentOutOfRangeException('index', index, 'Is less than zero.');
+                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
             if (index >= this._count)
-                throw new ArgumentOutOfRangeException('index', index, 'Is greater than count.');
-            var next = this._first, i = INT_0;
+                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than count.');
+            var next = this._first, i = 0;
             while (next && index < i++) {
                 next = next.next;
             }
@@ -247,7 +245,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
                 _._first = next;
                 if (next)
                     next.prev = null;
-                _._count -= INT_1;
+                _._count -= 1;
             }
         };
         LinkedList.prototype.removeLast = function () {
@@ -257,7 +255,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
                 _._last = prev;
                 if (prev)
                     prev.next = null;
-                _._count -= INT_1;
+                _._count -= 1;
             }
         };
         LinkedList.prototype.removeNode = function (node) {
@@ -277,7 +275,7 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
             else
                 b = true;
             if (a !== b) {
-                throw new ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
             }
             return !a && !b;
         };
@@ -295,6 +293,8 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         };
         return LinkedList;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = LinkedList;
     var LinkedListNode = (function () {
         function LinkedListNode(_list, _node) {
             this._list = _list;
@@ -348,6 +348,5 @@ define(["require", "exports", '../Compare', '../Text/Utility', './Array/Utility'
         };
         return LinkedListNode;
     })();
-    return LinkedList;
 });
 //# sourceMappingURL=LinkedList.js.map

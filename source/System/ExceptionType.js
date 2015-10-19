@@ -3,17 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 define(["require", "exports"], function (require, exports) {
-    var ExceptionType;
-    (function (ExceptionType) {
-        ExceptionType.Error = 'Error';
-        ExceptionType.EvalError = 'EvalError';
-        ExceptionType.RangeError = 'RangeError';
-        ExceptionType.ReferenceError = 'ReferenceError';
-        ExceptionType.SyntaxError = 'SyntaxError';
-        ExceptionType.TypeError = 'TypeError';
-        ExceptionType.URIError = 'URIError';
-    })(ExceptionType || (ExceptionType = {}));
-    Object.freeze(ExceptionType);
-    return ExceptionType;
+    exports.Error = 'Error';
+    exports.EvalError = 'EvalError';
+    exports.RangeError = 'RangeError';
+    exports.ReferenceError = 'ReferenceError';
+    exports.SyntaxError = 'SyntaxError';
+    exports.TypeError = 'TypeError';
+    exports.URIError = 'URIError';
 });
 //# sourceMappingURL=ExceptionType.js.map

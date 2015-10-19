@@ -4,12 +4,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../FunctionTypes.ts"/>
-import Values = require('../../Compare');
-import Types = require('../../Types');
-import Functions = require('../../Functions');
-import DictionaryAbstractBase= require('./DictionaryAbstractBase');
-import EnumeratorBase = require('../Enumeration/EnumeratorBase');
+///<reference path="../../FunctionTypes.d.ts"/>
+import {areEqual} from '../../Compare';
+import Type from '../../Types';
+import Functions from '../../Functions';
+import DictionaryAbstractBase from './DictionaryAbstractBase';
+import EnumeratorBase from '../Enumeration/EnumeratorBase';
 
 
 // LinkedList for Dictionary
@@ -73,7 +73,7 @@ class EntryList<TKey, TValue>
 		}
 	}
 
-	forEach(closure:(entry:HashEntry<TKey, TValue>) => void) {
+	forEach(closure:(entry:HashEntry<TKey, TValue>) => void):void {
 		var _ = this, currentEntry:HashEntry<TKey, TValue> = _.first;
 		while(currentEntry) {
 			closure(currentEntry);
@@ -91,12 +91,13 @@ function computeHashCode(obj:any):string {
 	if(obj===null) return "null";
 	if(obj===undefined) return "undefined";
 
-	return (typeof obj.toString===Types.Function)
+	return (typeof obj.toString===Type.FUNCTION)
 		? obj.toString()
 		: Object.prototype.toString.call(obj);
 }
 
 
+export default
 class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 {
 	private _count:number = 0;
@@ -114,9 +115,9 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		var hash = computeHashCode(compareKey), entry:HashEntry<TKey, TValue>;
 
 		if(callHasOwnProperty(buckets, hash)) {
-			var equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
+			var equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
 			var array = buckets[hash];
-			for(var i = 0; i<array.length; i++) {
+			for(let i = 0; i<array.length; i++) {
 				var old = array[i];
 				if(comparer(old.key)===compareKey) {
 					if(!allowOverwrite)
@@ -170,7 +171,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		if(!callHasOwnProperty(buckets, hash)) return undefined;
 
 		var array = buckets[hash];
-		for(var entry of array)
+		for(let entry of array)
 			if(comparer(entry.key)===compareKey) return entry.value;
 
 		return undefined;
@@ -187,7 +188,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		if(!callHasOwnProperty(buckets, hash)) return false;
 
 		var array = buckets[hash];
-		for(var i = 0, len = array.length; i<len; i++) {
+		for(let i = 0, len = array.length; i<len; i++) {
 			if(comparer(array[i].key)===compareKey) return true;
 		}
 
@@ -200,7 +201,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 
 		// Ensure reset and clean...
 		_._count = 0;
-		for(var key in buckets) {
+		for(let key in buckets) {
 			if(buckets.hasOwnProperty(key))
 				delete buckets[key];
 		}
@@ -244,6 +245,3 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 	}
 
 }
-
-
-export  = Dictionary;

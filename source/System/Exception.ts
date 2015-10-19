@@ -4,14 +4,16 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-///<reference path="Collections/Dictionaries/IDictionary"/>
-///<reference path="Disposable/IDisposable"/>
+///<reference path="Collections/Dictionaries/IDictionary.d.ts"/>
+///<reference path="Disposable/IDisposable.d.ts"/>
+
 
 const NAME:string = 'Exception';
 
 /**
  * Represents errors that occur during application execution.
  */
+export default
 class Exception implements Error, IDisposable
 {
 	/**
@@ -24,10 +26,12 @@ class Exception implements Error, IDisposable
 	 * Initializes a new instance of the Exception class with a specified error message and optionally a reference to the inner exception that is the cause of this exception.
 	 * @param message
 	 * @param innerException
+	 * @param beforeSealing This delegate is used to allow actions to occur just before this constructor finishes.  Since some compilers do not allow the use of 'this' before super.
 	 */
 	constructor(
 		public message:string = null,
-		innerException:Exception = null)
+		innerException:Error = null,
+		beforeSealing?:(ex:any)=>void)
 	{
 		var _ = this;
 		_.name = _.getName();
@@ -40,8 +44,11 @@ class Exception implements Error, IDisposable
 		 * Object.freeze has to be used carefully, but will prevent overriding values.
 		 */
 
+		if(beforeSealing) beforeSealing(_);
 		Object.freeze(_);
 	}
+
+
 
 	data:IMap<any>;
 
@@ -69,9 +76,8 @@ class Exception implements Error, IDisposable
 	dispose():void
 	{
 		var data = this.data;
-		for(var k in data)
-			delete data[k];
+		for(let k in data)
+			if(data.hasOwnProperty(k))
+				delete data[k];
 	}
 }
-
-export = Exception;

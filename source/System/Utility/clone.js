@@ -2,20 +2,13 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types'], function (require, exports, Types) {
+define(["require", "exports", '../Types'], function (require, exports, Types_1) {
     function clone(source, depth) {
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
             return source;
-        switch (typeof source) {
-            case Types.Undefined:
-            case Types.Null:
-            case Types.String:
-            case Types.Boolean:
-            case Types.Number:
-            case Types.Function:
-                return source;
-        }
+        if (!Types_1.default.isObject(source))
+            return source;
         var result;
         if (source instanceof Array) {
             result = source.slice();
@@ -34,6 +27,7 @@ define(["require", "exports", '../Types'], function (require, exports, Types) {
         }
         return result;
     }
-    return clone;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = clone;
 });
 //# sourceMappingURL=clone.js.map

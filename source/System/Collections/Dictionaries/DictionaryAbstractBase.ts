@@ -3,15 +3,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IDictionary"/>
-import Values = require('../../Compare');
-import EnumeratorBase = require('../Enumeration/EnumeratorBase');
-import NotImplementedException = require('../../Exceptions/NotImplementedException');
+///<reference path="IDictionary.d.ts"/>
+import {areEqual} from '../../Compare';
+import EnumeratorBase from '../Enumeration/EnumeratorBase';
+import NotImplementedException from '../../Exceptions/NotImplementedException';
+import ArgumentException from '../../Exceptions/ArgumentException';
+import ArgumentNullException from '../../Exceptions/ArgumentNullException';
+import InvalidOperationException from '../../Exceptions/InvalidOperationException';
 
-'use strict';
 
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?
+export default
 class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 {
 	// This allows for batch updates in order to improve the efficiency of responsive systems.
@@ -25,7 +28,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	// Pseudo-protected.
 	public _onValueUpdate(key:TKey, value:TValue, old:TValue):void
 	{
-		if(!Values.areEqual(value, old, true))
+		if(!areEqual(value, old, true))
 		{
 
 			var _ = this;
@@ -82,11 +85,17 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	get isReadOnly():boolean { return false; }
 
 	get count():number {
-		return notImplementedException("count");
+		throw notImplemented("count");
 	}
 
 	add(item:IKeyValuePair<TKey, TValue>):void
 	{
+		if(!item)
+			throw new ArgumentException(
+				'item',
+				'Dictionaries must use a valid key/value pair. \''+item+'\' is not allowed.'
+			);
+
 		this.addByKeyValue(item.key, item.value);
 	}
 
@@ -111,53 +120,72 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	contains(item:IKeyValuePair<TKey, TValue>):boolean
 	{
+		// Should never have a null object in the collection.
+		if(!item) return false;
+
 		var value = this.getValue(item.key);
-		return Values.areEqual(value, item.value);
+		return areEqual(value, item.value);
 	}
 
-	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):void
+	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):IKeyValuePair<TKey, TValue>[]
 	{
+		if(!array) throw new ArgumentNullException('array');
+
+		// This is a generic implementation that will work for all derived classes.
+		// It can be overridden and optimized.
 		var e = this.getEnumerator();
 		while(e.moveNext()) // Disposes when finished.
 		{
 			array[index++] = e.current;
 		}
+		return array;
+	}
+
+
+	toArray():IKeyValuePair<TKey,TValue>[] {
+		return this.copyTo([],0);
 	}
 
 	remove(item:IKeyValuePair<TKey, TValue>):number
 	{
+		if(!item) return 0;
+
 		var key = item.key, value = this.getValue(key);
-		return (Values.areEqual(value, item.value) && this.removeByKey(key))
+		return (areEqual(value, item.value) && this.removeByKey(key))
 			? 1 : 0;
 	}
 
 	/////////////////////////////////////////
 	// IDictionary<TKey,TValue>
 	/////////////////////////////////////////
-	get keys():TKey[] { return notImplementedException("keys"); }
+	get keys():TKey[] { throw notImplemented("keys"); }
 
-	get values():TValue[] { return notImplementedException("values"); }
+	get values():TValue[] { throw notImplemented("values"); }
 
 
 	addByKeyValue(key:TKey, value:TValue):void
 	{
 		var _ = this;
-		if(_.containsKey(key))
-			throw new Error("Adding key/value when one already exists.");
+		if(_.containsKey(key)) {
+			var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
+			ex.data['key'] = key;
+			ex.data['value'] = value;
+			throw ex;
+		}
 
 		_.setValue(key, value);
 	}
 
 	getValue(key:TKey):TValue
 	{
-		return notImplementedException(
+		throw notImplemented(
 			"getValue(key: TKey): TValue", "When calling for key: " + key
 		);
 	}
 
 	setValue(key:TKey, value:TValue):boolean
 	{
-		return notImplementedException(
+		throw notImplemented(
 			"setValue(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + "."
 		);
 	}
@@ -170,7 +198,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	containsValue(value:TValue):boolean
 	{
-		var e = this.getEnumerator(), equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
+		var e = this.getEnumerator(), equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
 
 		while(e.moveNext())
 		{
@@ -190,7 +218,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	removeByValue(value:TValue):number
 	{
-		var _ = this, count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = Values.areEqual;
+		var _ = this, count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
 		_.keys.forEach(key=>
 		{
 			if(equal(_.getValue(key), value, true))
@@ -249,10 +277,8 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 }
 
-function notImplementedException<T>(name:string, log:string = ""):any
+function notImplemented<T>(name:string, log:string = ""):any
 {
 	console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-	throw new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
+	return new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
 }
-
-export = DictionaryAbstractBase;

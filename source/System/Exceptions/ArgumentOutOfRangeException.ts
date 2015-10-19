@@ -4,13 +4,14 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import Types = require('../Types');
-import Exception = require('../Exception');
-import ArgumentException = require('./ArgumentException');
+import Type from '../Types';
+import Exception from '../Exception';
+import ArgumentException from './ArgumentException';
 
 
-const NAME:string = 'ArgumentNullException';
+const NAME:string = 'ArgumentOutOfRangeException';
 
+export default
 class ArgumentOutOfRangeException extends ArgumentException
 {
 	actualValue:string|number|boolean;
@@ -18,11 +19,12 @@ class ArgumentOutOfRangeException extends ArgumentException
 	constructor(
 		paramName:string,
 		actualValue:string|number|boolean,
-		message:string,
+		message:string = ' ',
 		innerException:Exception = null)
 	{
-		this.actualValue = actualValue;
-		super(paramName, message, innerException);
+		super(paramName, message, innerException, (_)=>{
+			_.actualValue = actualValue;
+		});
 	}
 
 
@@ -32,5 +34,3 @@ class ArgumentOutOfRangeException extends ArgumentException
 	}
 
 }
-
-export = ArgumentOutOfRangeException;

@@ -8,18 +8,21 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './ArgumentException'], function (require, exports, ArgumentException) {
+define(["require", "exports", './ArgumentException'], function (require, exports, ArgumentException_1) {
     var NAME = 'ArgumentNullException';
     var ArgumentNullException = (function (_super) {
         __extends(ArgumentNullException, _super);
-        function ArgumentNullException() {
-            _super.apply(this, arguments);
+        function ArgumentNullException(paramName, message, innerException) {
+            if (message === void 0) { message = ''; }
+            if (innerException === void 0) { innerException = null; }
+            _super.call(this, paramName, message, innerException);
         }
         ArgumentNullException.prototype.getName = function () {
             return NAME;
         };
         return ArgumentNullException;
-    })(ArgumentException);
-    return ArgumentNullException;
+    })(ArgumentException_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ArgumentNullException;
 });
 //# sourceMappingURL=ArgumentNullException.js.map

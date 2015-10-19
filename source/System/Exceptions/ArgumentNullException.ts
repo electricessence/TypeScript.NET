@@ -4,18 +4,25 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import ArgumentException = require('./ArgumentException');
+import ArgumentException from './ArgumentException';
 
 
 const NAME:string = 'ArgumentNullException';
 
+export default
 class ArgumentNullException extends ArgumentException
 {
+	constructor(
+		paramName:string,
+		message:string = '',
+		innerException:Error = null)
+	{
+		super(paramName, message, innerException);
+	}
+
 	protected getName():string
 	{
 		return NAME;
 	}
 
 }
-
-export = ArgumentNullException;

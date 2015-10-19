@@ -3,23 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types = require('../Types');
+import Type from '../Types';
 
-function clone(source:any, depth:number = 0):any
+export default function clone(source:any, depth:number = 0):any
 {
 	if(depth<0)
 		return source;
 
-	switch(typeof source)
-	{
-		case Types.Undefined:
-		case Types.Null:
-		case Types.String:
-		case Types.Boolean:
-		case Types.Number:
-		case Types.Function:
-			return source; // return primitives as is.
-	}
+	// return primitives as is.
+	if(!Type.isObject(source)) return source;
 
 	var result:any;
 	if(source instanceof Array)
@@ -27,7 +19,7 @@ function clone(source:any, depth:number = 0):any
 		result = (<any>source).slice();
 		if(depth>0)
 		{
-			for(var i = 0; i<result.length; i++)
+			for(let i = 0; i<result.length; i++)
 			{
 				result[i] = clone(result[i], depth - 1);
 			}
@@ -36,7 +28,7 @@ function clone(source:any, depth:number = 0):any
 	else
 	{
 		result = {};
-		if(depth>0) for(var k in source)
+		if(depth>0) for(let k in source)
 		{
 			//noinspection JSUnfilteredForInLoop
 			result[k] = clone(source[k], depth - 1);
@@ -46,5 +38,3 @@ function clone(source:any, depth:number = 0):any
 	return result;
 
 }
-
-export = clone;

@@ -3,10 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Array/IArray.ts"/>
-import IndexEnumerator= require('./IndexEnumerator');
-import Types = require('../../Types');
+///<reference path="../Array/IArray.d.ts"/>
+import IndexEnumerator from './IndexEnumerator';
+import Type from '../../Types';
 
+export default
 class ArrayEnumerator<T> extends IndexEnumerator<T>
 {
 	constructor(arrayFactory:() => IArray<T>, start?:number, step?:number);
@@ -16,11 +17,10 @@ class ArrayEnumerator<T> extends IndexEnumerator<T>
 		super(
 			() =>
 			{
-				var array = Types.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+				var array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
 				return {source: array, pointer: start, length: (array ? array.length : 0), step: step};
 			}
 		);
 	}
 }
 
-export = ArrayEnumerator;

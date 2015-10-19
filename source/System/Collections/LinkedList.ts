@@ -5,22 +5,20 @@
  */
 
 
-///<reference path="ILinkedListNode.ts"/>
-///<reference path="ILinkedList.ts"/>
-import Values = require('../Compare');
-import TextUtility = require('../Text/Utility');
-import ArrayUtility = require('./Array/Utility');
-import Enumerator = require('./Enumeration/Enumerator');
-import EnumeratorBase = require('./Enumeration/EnumeratorBase');
+///<reference path="ILinkedListNode.d.ts"/>
+///<reference path="ILinkedList.d.ts"/>
+import * as Values from '../Compare';
+import * as TextUtility from '../Text/Utility';
+import * as ArrayUtility from '../Collections/Array/Utility';
+import * as Enumerator from './Enumeration/Enumerator';
+import EnumeratorBase from './Enumeration/EnumeratorBase';
 
-import InvalidOperationException = require('../Exceptions/InvalidOperationException');
+import InvalidOperationException from '../Exceptions/InvalidOperationException';
 
-import ArgumentException = require('../Exceptions/ArgumentException');
-import ArgumentNullException = require('../Exceptions/ArgumentNullException');
-import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
+import ArgumentException from '../Exceptions/ArgumentException';
+import ArgumentNullException from '../Exceptions/ArgumentNullException';
+import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
 
-
-'use strict';
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -30,11 +28,6 @@ import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeEx
  * LinkedList wins when modifying contents.
  * http://stackoverflow.com/questions/166884/array-versus-linked-list
  *****************************/
-
-
-const
-	INT_0:number = 0 | 0,
-	INT_1:number = 1 | 0;
 
 
 class Node<T>
@@ -87,7 +80,9 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):Node<T>
 	return n;
 }
 
-class LinkedList<T> implements ILinkedList<T>
+export default
+class LinkedList<T>
+implements ILinkedList<T>
 {
 	private _first:Node<T>;
 	private _last:Node<T>;
@@ -97,7 +92,7 @@ class LinkedList<T> implements ILinkedList<T>
 	constructor(source?:IArray<T>);
 	constructor(source:any)
 	{
-		var _ = this, c = INT_0, first:Node<T> = null, last:Node<T> = null;
+		var _ = this, c = 0, first:Node<T> = null, last:Node<T> = null;
 		var e = Enumerator.from<T>(source);
 
 		if(e.moveNext())
@@ -130,7 +125,7 @@ class LinkedList<T> implements ILinkedList<T>
 
 		_._first = prev;
 
-		_._count += INT_1;
+		_._count += 1;
 
 		return prev;
 	}
@@ -145,7 +140,7 @@ class LinkedList<T> implements ILinkedList<T>
 			_._first = next;
 
 		_._last = next;
-		_._count += INT_1;
+		_._count += 1;
 
 		return next;
 	}
@@ -160,7 +155,7 @@ class LinkedList<T> implements ILinkedList<T>
 		n.prev.next = inserting;
 		n.prev = inserting;
 
-		this._count += INT_1;
+		this._count += 1;
 	}
 
 
@@ -174,13 +169,13 @@ class LinkedList<T> implements ILinkedList<T>
 		n.next.prev = inserting;
 		n.next = inserting;
 
-		this._count += INT_1;
+		this._count += 1;
 	}
 
 	private _findFirst(entry:T):Node<T>
 	{
 		var equals = Values.areEqual,
-			next = this._first;
+		    next   = this._first;
 		while(next)
 		{
 			if(equals(entry, next.value))
@@ -193,7 +188,7 @@ class LinkedList<T> implements ILinkedList<T>
 	private _findLast(entry:T):Node<T>
 	{
 		var equals = Values.areEqual,
-			prev = this._last;
+		    prev   = this._last;
 		while(prev)
 		{
 			if(equals(entry, prev.value))
@@ -219,7 +214,7 @@ class LinkedList<T> implements ILinkedList<T>
 		}
 		else
 		{
-			var next = this._first, index:number = INT_0;
+			var next = this._first, index:number = 0;
 			while(next && <any>action(next.value, index++)!==false)
 			{
 				next = next.next;
@@ -282,7 +277,7 @@ class LinkedList<T> implements ILinkedList<T>
 		return found;
 	}
 
-	copyTo(array:T[], index:number = 0):void
+	copyTo(array:T[], index:number = 0):T[]
 	{
 		this.forEach(
 			(entry, i) =>
@@ -290,6 +285,14 @@ class LinkedList<T> implements ILinkedList<T>
 				array[index + i] = entry;
 			}
 		);
+
+		return array;
+	}
+
+	toArray():T[]
+	{
+		var array = ArrayUtility.initialize<T>(this._count);
+		return this.copyTo(array);
 	}
 
 	removeOnce(entry:T):boolean
@@ -304,7 +307,7 @@ class LinkedList<T> implements ILinkedList<T>
 			if(next) next.prev = prev;
 			else _._last = prev;
 
-			_._count -= INT_1;
+			_._count -= 1;
 		}
 
 		return node!=null;
@@ -313,7 +316,7 @@ class LinkedList<T> implements ILinkedList<T>
 
 	remove(entry:T):number
 	{
-		var _ = this, removedCount:number = INT_0;
+		var _ = this, removedCount:number = 0;
 		while(_.removeOnce(entry))
 		{
 			++removedCount;
@@ -324,12 +327,6 @@ class LinkedList<T> implements ILinkedList<T>
 
 	// #endregion
 
-	toArray():T[]
-	{
-		var array = ArrayUtility.initialize<T>(this._count);
-		this.copyTo(array);
-		return array;
-	}
 
 	get first():ILinkedListNode<T>
 	{
@@ -353,7 +350,7 @@ class LinkedList<T> implements ILinkedList<T>
 			throw new ArgumentOutOfRangeException(
 				'index', index, 'Is greater than count.');
 
-		var next = this._first, i:number = INT_0;
+		var next = this._first, i:number = 0;
 		while(next && index<i++)
 		{
 			next = next.next;
@@ -403,7 +400,7 @@ class LinkedList<T> implements ILinkedList<T>
 			if(next) // Might have been the last.
 				next.prev = null;
 
-			_._count -= INT_1;
+			_._count -= 1;
 		}
 	}
 
@@ -417,7 +414,7 @@ class LinkedList<T> implements ILinkedList<T>
 			if(prev) // Might have been the first.
 				prev.next = null;
 
-			_._count -= INT_1;
+			_._count -= 1;
 		}
 	}
 
@@ -548,5 +545,3 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 
 }
 
-
-export = LinkedList;

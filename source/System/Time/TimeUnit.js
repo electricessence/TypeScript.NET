@@ -14,6 +14,7 @@ define(["require", "exports"], function (require, exports) {
         TimeUnit[TimeUnit["Days"] = 5] = "Days";
     })(TimeUnit || (TimeUnit = {}));
     Object.freeze(TimeUnit);
-    return TimeUnit;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = TimeUnit;
 });
 //# sourceMappingURL=TimeUnit.js.map

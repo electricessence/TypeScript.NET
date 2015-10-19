@@ -3,9 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path='ITimeTotal.ts'/>
-import HowMany = require('./HowMany');
+///<reference path='ITimeTotal.d.ts'/>
+import * as HowMany from './HowMany';
 
+export default
 class DateTime
 {
 
@@ -88,5 +89,3 @@ class DateTime
 }
 
 Object.freeze(DateTime);
-
-export = DateTime;

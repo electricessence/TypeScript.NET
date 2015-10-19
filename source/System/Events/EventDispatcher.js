@@ -5,10 +5,9 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], function (require, exports, shallowCopy, DisposableBase, AU) {
+define(["require", "exports", '../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], function (require, exports, shallowCopy_1, DisposableBase_1, AU) {
     var EventDispatcherEntry = (function (_super) {
         __extends(EventDispatcherEntry, _super);
         function EventDispatcherEntry(type, listener, useCapture, priority) {
@@ -50,7 +49,9 @@ define(["require", "exports", '../Utility/shallowCopy', '../Disposable/Disposabl
                 && _.priority == other.priority;
         };
         return EventDispatcherEntry;
-    })(DisposableBase);
+    })(DisposableBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = EventDispatcherEntry;
     var EventDispatcher = (function (_super) {
         __extends(EventDispatcher, _super);
         function EventDispatcher() {
@@ -115,7 +116,7 @@ define(["require", "exports", '../Utility/shallowCopy', '../Disposable/Disposabl
             entries.sort(function (a, b) { return b.priority - a.priority; });
             entries.forEach(function (entry) {
                 var newEvent = Object.create(Event);
-                shallowCopy(event, newEvent);
+                shallowCopy_1.default(event, newEvent);
                 newEvent.target = _this;
                 entry.listener(newEvent);
             });
@@ -153,7 +154,6 @@ define(["require", "exports", '../Utility/shallowCopy', '../Disposable/Disposabl
             }
         };
         return EventDispatcher;
-    })(DisposableBase);
-    return EventDispatcher;
+    })(DisposableBase_1.default);
 });
 //# sourceMappingURL=EventDispatcher.js.map

@@ -2,35 +2,50 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types'], function (require, exports, Types) {
-    var Utility;
-    (function (Utility) {
-        function format(source) {
-            var args = [];
-            for (var _i = 1; _i < arguments.length; _i++) {
-                args[_i - 1] = arguments[_i];
-            }
-            for (var i = 0; i < args.length; i++) {
-                source = source.replace("{" + i + "}", args[i]);
-            }
-            return source;
+define(["require", "exports", '../Types'], function (require, exports, Types_1) {
+    exports.EMPTY = '';
+    function escapeRegExp(source) {
+        return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    }
+    exports.escapeRegExp = escapeRegExp;
+    function trim(source, chars, ignoreCase) {
+        if (chars) {
+            if (chars === exports.EMPTY)
+                return source;
+            var escaped = escapeRegExp(chars instanceof Array ? chars.join() : chars);
+            return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), exports.EMPTY);
         }
-        Utility.format = format;
-        function supplant(source, o) {
-            return source.replace(/\{([^{}]*)\}/g, function (a, b) {
-                var r = o[b];
-                switch (typeof r) {
-                    case Types.String:
-                        return true;
-                    case Types.Number:
-                        return r;
-                    default:
-                        return a;
-                }
-            });
+        return source.replace(/^\s+|\s+$/g, exports.EMPTY);
+    }
+    exports.trim = trim;
+    function format(source) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
         }
-        Utility.supplant = supplant;
-    })(Utility || (Utility = {}));
-    return Utility;
+        return supplant(source, args);
+    }
+    exports.format = format;
+    function supplant(source, params) {
+        var oIsArray = params instanceof Array;
+        return source.replace(/\{([^{}]*)\}/g, function (a, b) {
+            var n = b;
+            if (oIsArray) {
+                var i = parseInt(b);
+                if (!isNaN(i))
+                    n = i;
+            }
+            var r = params[n];
+            switch (typeof r) {
+                case Types_1.default.STRING:
+                case Types_1.default.NUMBER:
+                case Types_1.default.BOOLEAN:
+                    return r;
+                default:
+                    return a;
+            }
+        });
+    }
+    exports.supplant = supplant;
 });
 //# sourceMappingURL=Utility.js.map

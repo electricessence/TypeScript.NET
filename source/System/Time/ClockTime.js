@@ -3,8 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', './TimeSpan'], function (require, exports, Values, TimeSpan) {
-    'use strict';
+define(["require", "exports", '../Compare', './HowMany', './TimeSpan'], function (require, exports, Compare_1, HowMany, TimeSpan_1) {
     var ClockTime = (function () {
         function ClockTime() {
             var args = [];
@@ -13,7 +12,7 @@ define(["require", "exports", '../Compare', './TimeSpan'], function (require, ex
             }
             this._totalMilliseconds =
                 args.length > 1
-                    ? TimeSpan.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
+                    ? TimeSpan_1.default.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
                     : (args.length > 0 && args[0] || 0);
         }
         Object.defineProperty(ClockTime.prototype, "totalMilliseconds", {
@@ -25,18 +24,18 @@ define(["require", "exports", '../Compare', './TimeSpan'], function (require, ex
         });
         Object.defineProperty(ClockTime.prototype, "direction", {
             get: function () {
-                return Values.compare(this._totalMilliseconds, 0);
+                return Compare_1.compare(this._totalMilliseconds, 0);
             },
             enumerable: true,
             configurable: true
         });
         ClockTime.prototype.equals = function (other) {
-            return Values.areEqual(this._totalMilliseconds, other.totalMilliseconds);
+            return Compare_1.areEqual(this._totalMilliseconds, other.totalMilliseconds);
         };
         ClockTime.prototype.compareTo = function (other) {
             if (other == null)
                 return 1 | 0;
-            return Values.compare(this._totalMilliseconds, other.totalMilliseconds);
+            return Compare_1.compare(this._totalMilliseconds, other.totalMilliseconds);
         };
         Object.defineProperty(ClockTime.prototype, "ticks", {
             get: function () {
@@ -122,7 +121,7 @@ define(["require", "exports", '../Compare', './TimeSpan'], function (require, ex
             configurable: true
         });
         ClockTime.prototype.toTimeSpan = function () {
-            return new TimeSpan(this._totalMilliseconds);
+            return new TimeSpan_1.default(this._totalMilliseconds);
         };
         ClockTime.from = function (hours, minutes, seconds, milliseconds) {
             if (seconds === void 0) { seconds = 0; }
@@ -146,11 +145,12 @@ define(["require", "exports", '../Compare', './TimeSpan'], function (require, ex
         };
         return ClockTime;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ClockTime;
     function pluralize(value, label) {
         if (Math.abs(value) !== 1)
             label += "s";
         return label;
     }
-    return ClockTime;
 });
 //# sourceMappingURL=ClockTime.js.map

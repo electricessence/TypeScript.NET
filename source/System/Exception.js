@@ -4,11 +4,11 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 define(["require", "exports"], function (require, exports) {
-    ///<reference path="Collections/Dictionaries/IDictionary"/>
-    ///<reference path="Disposable/IDisposable"/>
+    ///<reference path="Collections/Dictionaries/IDictionary.d.ts"/>
+    ///<reference path="Disposable/IDisposable.d.ts"/>
     var NAME = 'Exception';
     var Exception = (function () {
-        function Exception(message, innerException) {
+        function Exception(message, innerException, beforeSealing) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }
             this.message = message;
@@ -17,6 +17,8 @@ define(["require", "exports"], function (require, exports) {
             _.data = {};
             if (innerException)
                 _.data['innerException'] = innerException;
+            if (beforeSealing)
+                beforeSealing(_);
             Object.freeze(_);
         }
         Exception.prototype.getName = function () { return NAME; };
@@ -28,10 +30,12 @@ define(["require", "exports"], function (require, exports) {
         Exception.prototype.dispose = function () {
             var data = this.data;
             for (var k in data)
-                delete data[k];
+                if (data.hasOwnProperty(k))
+                    delete data[k];
         };
         return Exception;
     })();
-    return Exception;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Exception;
 });
 //# sourceMappingURL=Exception.js.map

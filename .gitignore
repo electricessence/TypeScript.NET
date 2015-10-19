@@ -188,6 +188,8 @@ bower_components
 
 
 # IntelliJ
+.idea/vcs.xml
+.idea/misc.xml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/dictionaries
@@ -195,3 +197,6 @@ bower_components
 
 # TypeScript
 typings
+
+# TypeDoc
+documentation

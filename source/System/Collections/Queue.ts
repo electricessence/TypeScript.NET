@@ -5,27 +5,28 @@
  */
 
 
-///<reference path="ICollection.ts"/>
-///<reference path="IList.ts"/>
-///<reference path="Enumeration/IEnumerateEach.ts"/>
-///<reference path="../FunctionTypes.ts"/>
-import Values = require('../Compare');
-import Types = require('../Types');
-import AU = require('./Array/Utility');
-import EnumeratorBase = require('./Enumeration/EnumeratorBase');
-import forEach = require('./Enumeration/forEach');
-import NotImplementedException = require('../Exceptions/NotImplementedException');
-import InvalidOperationException = require('../Exceptions/InvalidOperationException');
-import ArgumentException = require('../Exceptions/ArgumentException');
-import ArgumentOutOfRangeException = require('../Exceptions/ArgumentOutOfRangeException');
+///<reference path="ICollection.d.ts"/>
+///<reference path="IList.d.ts"/>
+///<reference path="Enumeration/IEnumerateEach.d.ts"/>
+///<reference path="../FunctionTypes.d.ts"/>
+import * as Values from '../Compare';
+import * as AU from './Array/Utility';
+import Type from '../Types';
+import Integer from '../Integer';
+import EnumeratorBase from './Enumeration/EnumeratorBase';
+import forEach from './Enumeration/forEach';
+import NotImplementedException from '../Exceptions/NotImplementedException';
+import InvalidOperationException from '../Exceptions/InvalidOperationException';
+import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
 
-const MINIMUM_GROW:number = 4 | 0;
-// var SHRINK_THRESHOLD: number = 32 | 0; // Unused?
-// var GROW_FACTOR: number = 200 | 0;  // double each time
-const GROW_FACTOR_HALF:number = 100 | 0;
+const MINIMUM_GROW:number = 4;
+// var SHRINK_THRESHOLD: number = 32; // Unused?
+// var GROW_FACTOR: number = 200;  // double each time
+const GROW_FACTOR_HALF:number = 100;
 const DEFAULT_CAPACITY:number = MINIMUM_GROW;
 var emptyArray:any[] = [];
 
+export default
 class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 {
 
@@ -49,7 +50,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 			_._array = emptyArray;
 		else
 		{
-			if(Types.isNumber(source))
+			if(Type.isNumber(source))
 			{
 				var capacity = <number>source;
 				assertIntegerZeroOrGreater(capacity, "capacity");
@@ -130,7 +131,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	}
 
 
-	copyTo(target:T[], arrayIndex:number = 0):void
+	copyTo(target:T[], arrayIndex:number = 0):T[]
 	{
 		if(target==null)
 			throw new Error("ArgumentNullException: array cannot be null.");
@@ -142,20 +143,30 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		if(!size) return;
 
 		var numToCopy = size,
-			source = _._array,
-			len = _._capacity,
-			head = _._head,
-			lh = len - head,
-			firstPart
-				= (lh<size)
-				? lh
-				: size;
+		    source    = _._array,
+		    len       = _._capacity,
+		    head      = _._head,
+		    lh        = len - head,
+		    firstPart
+		              = (lh<size)
+			    ? lh
+			    : size;
 
 		AU.copyTo(source, target, head, arrayIndex, firstPart);
 		numToCopy -= firstPart;
 
 		if(numToCopy>0)
 			AU.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
+
+		return target;
+	}
+
+
+	toArray():T[]
+	{
+		var _ = this, size = _._size;
+		var arr:T[] = AU.initialize<T>(size);
+		return size ? _.copyTo(arr) : arr;
 	}
 
 	remove(item:T):number
@@ -182,23 +193,12 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		_._version = 0;
 	}
 
-	toArray():T[]
-	{
-		var _ = this, size = _._size;
-		var arr:T[] = AU.initialize<T>(size);
-		if(size==0)
-			return arr;
-
-		_.copyTo(arr);
-
-		return arr;
-	}
 
 	forEach(action:Predicate<T> | Action<T>):void
 	{
 		// Until implementing a changed enumeration mechanism, a copy needs to be used.
 		var _ = this, copy = _.toArray(), len = _._size;
-		for(var i = 0; i<len; i++)
+		for(let i = 0; i<len; i++)
 		{
 			if(<any>action(copy[i], i)===false)
 				break;
@@ -249,7 +249,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 
 	enqueue(item:T):void
 	{
-		var _ = this, array = _._array, size = _._size | 0, len = _._capacity | 0;
+		var _ = this, array = _._array, size = _._size, len = _._capacity;
 		if(size==len)
 		{
 			var newCapacity = len*GROW_FACTOR_HALF;
@@ -341,14 +341,6 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	}
 }
 
-
-function assertInteger(value:number, property:string):void
-{
-	if(value!=Math.floor(value))
-		throw new ArgumentException(property, "Must be an integer.");
-
-}
-
 function assertZeroOrGreater(value:number, property:string):void
 {
 	if(value<0)
@@ -358,8 +350,6 @@ function assertZeroOrGreater(value:number, property:string):void
 
 function assertIntegerZeroOrGreater(value:number, property:string):void
 {
-	assertInteger(value, property);
+	Integer.assert(value, property);
 	assertZeroOrGreater(value, property);
 }
-
-export = Queue;

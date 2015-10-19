@@ -4,13 +4,15 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import Types = require('../Types');
-import Exception = require('../Exception');
-import SystemException = require('./SystemException');
+import Type from '../Types';
+import Exception from '../Exception';
+import SystemException from './SystemException';
+import {trim} from '../Text/Utility';
 
 
 const NAME:string = 'ArgumentException';
 
+export default
 class ArgumentException extends SystemException
 {
 
@@ -20,10 +22,15 @@ class ArgumentException extends SystemException
 	constructor(
 		paramName:string,
 		message:string = null,
-		innerException:Exception = null)
+		innerException:Error = null,
+		beforeSealing?:(ex:any)=>void)
 	{
-		this.paramName = paramName;
-		super(message, innerException);
+		var pn = paramName ? ('{' + paramName + '} ') : '';
+
+		super(trim(pn + message), innerException, (_)=>{
+			_.paramName = paramName;
+			if(beforeSealing) beforeSealing(_);
+		});
 	}
 
 
@@ -34,12 +41,8 @@ class ArgumentException extends SystemException
 
 	toString():string
 	{
-		var _ = this, pn = _.paramName;
-		pn = pn ? ('{' + pn + '} ') : '';
-
-		return '[' + _.name + ': ' + pn + _.message + ']';
+		var _ = this;
+		return '[' + _.name + ': ' + _.message + ']';
 	}
 
 }
-
-export = ArgumentException;

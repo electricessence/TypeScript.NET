@@ -3,43 +3,42 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports, Values, Types, TimeUnit, TimeUnitValue, ClockTime) {
+define(["require", "exports", '../Compare', '../Types', './HowMany', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports, Compare_1, Types_1, HowMany, TimeUnit_1, TimeUnitValue_1, ClockTime_1) {
     var TimeSpan = (function () {
         function TimeSpan(value, units) {
-            if (units === void 0) { units = TimeUnit.Milliseconds; }
+            if (units === void 0) { units = TimeUnit_1.default.Milliseconds; }
             this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
         }
         TimeSpan.prototype.equals = function (other) {
             var otherMS = getMilliseconds(other);
             if (other === undefined)
                 return false;
-            return Values.areEqual(this._milliseconds, otherMS);
+            return Compare_1.areEqual(this._milliseconds, otherMS);
         };
         TimeSpan.prototype.compareTo = function (other) {
             if (other == null)
                 return 1 | 0;
             assertComparisonType(other);
-            return Values.compare(this._milliseconds, getMilliseconds(other));
+            return Compare_1.compare(this._milliseconds, getMilliseconds(other));
         };
         TimeSpan.prototype.toTimeUnitValue = function (units) {
-            if (units === void 0) { units = TimeUnit.Milliseconds; }
-            return new TimeUnitValue(this.getTotal(units), units);
+            if (units === void 0) { units = TimeUnit_1.default.Milliseconds; }
+            return new TimeUnitValue_1.default(this.getTotal(units), units);
         };
         TimeSpan.convertToMilliseconds = function (value, units) {
-            if (units === void 0) { units = TimeUnit.Milliseconds; }
+            if (units === void 0) { units = TimeUnit_1.default.Milliseconds; }
             switch (units) {
-                case TimeUnit.Days:
+                case TimeUnit_1.default.Days:
                     value *= 24;
-                case TimeUnit.Hours:
+                case TimeUnit_1.default.Hours:
                     value *= 60;
-                case TimeUnit.Minutes:
+                case TimeUnit_1.default.Minutes:
                     value *= 60;
-                case TimeUnit.Seconds:
+                case TimeUnit_1.default.Seconds:
                     value *= 1000;
-                case TimeUnit.Milliseconds:
+                case TimeUnit_1.default.Milliseconds:
                     return value;
-                case TimeUnit.Ticks:
+                case TimeUnit_1.default.Ticks:
                     return value / 10000;
                 default:
                     throw new Error("Invalid TimeUnit.");
@@ -48,17 +47,17 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         TimeSpan.prototype.getTotal = function (units) {
             var _ = this;
             switch (units) {
-                case TimeUnit.Days:
+                case TimeUnit_1.default.Days:
                     return _.days;
-                case TimeUnit.Hours:
+                case TimeUnit_1.default.Hours:
                     return _.hours;
-                case TimeUnit.Minutes:
+                case TimeUnit_1.default.Minutes:
                     return _.minutes;
-                case TimeUnit.Seconds:
+                case TimeUnit_1.default.Seconds:
                     return _.seconds;
-                case TimeUnit.Milliseconds:
+                case TimeUnit_1.default.Milliseconds:
                     return _._milliseconds;
-                case TimeUnit.Ticks:
+                case TimeUnit_1.default.Ticks:
                     return _._milliseconds * 10000;
                 default:
                     throw new Error("Invalid TimeUnit.");
@@ -120,43 +119,43 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         });
         Object.defineProperty(TimeSpan.prototype, "time", {
             get: function () {
-                return new ClockTime(this._milliseconds);
+                return new ClockTime_1.default(this._milliseconds);
             },
             enumerable: true,
             configurable: true
         });
         TimeSpan.prototype.add = function (other) {
-            if (Types.isNumber(other))
+            if (Types_1.default.isNumber(other))
                 throw new Error("Use .addUnit to add a numerical value amount.  " +
                     ".add only supports ClockTime, TimeSpan, and TimeUnitValue.");
-            if (other instanceof TimeUnitValue || other instanceof ClockTime)
+            if (other instanceof TimeUnitValue_1.default || other instanceof ClockTime_1.default)
                 other = other.toTimeSpan();
             return new TimeSpan(this._milliseconds + other.milliseconds);
         };
         TimeSpan.prototype.addUnit = function (value, units) {
-            if (units === void 0) { units = TimeUnit.Milliseconds; }
+            if (units === void 0) { units = TimeUnit_1.default.Milliseconds; }
             return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
         };
         TimeSpan.from = function (value, units) {
             return new TimeSpan(value, units);
         };
         TimeSpan.fromDays = function (value) {
-            return new TimeSpan(value, TimeUnit.Days);
+            return new TimeSpan(value, TimeUnit_1.default.Days);
         };
         TimeSpan.fromHours = function (value) {
-            return new TimeSpan(value, TimeUnit.Hours);
+            return new TimeSpan(value, TimeUnit_1.default.Hours);
         };
         TimeSpan.fromMinutes = function (value) {
-            return new TimeSpan(value, TimeUnit.Minutes);
+            return new TimeSpan(value, TimeUnit_1.default.Minutes);
         };
         TimeSpan.fromSeconds = function (value) {
-            return new TimeSpan(value, TimeUnit.Seconds);
+            return new TimeSpan(value, TimeUnit_1.default.Seconds);
         };
         TimeSpan.fromMilliseconds = function (value) {
-            return new TimeSpan(value, TimeUnit.Milliseconds);
+            return new TimeSpan(value, TimeUnit_1.default.Milliseconds);
         };
         TimeSpan.fromTicks = function (value) {
-            return new TimeSpan(value, TimeUnit.Ticks);
+            return new TimeSpan(value, TimeUnit_1.default.Ticks);
         };
         TimeSpan.fromTime = function (hours, minutes, seconds, milliseconds) {
             if (seconds === void 0) { seconds = 0; }
@@ -187,14 +186,16 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         });
         return TimeSpan;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = TimeSpan;
     function assertComparisonType(other) {
-        if (!(other instanceof TimeUnitValue || other instanceof TimeSpan))
+        if (!(other instanceof TimeUnitValue_1.default || other instanceof TimeSpan))
             throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
     }
     function getMilliseconds(other) {
-        if (other instanceof TimeUnitValue) {
+        if (other instanceof TimeUnitValue_1.default) {
             var o = other;
-            return o.type === TimeUnit.Milliseconds
+            return o.type === TimeUnit_1.default.Milliseconds
                 ? o.value
                 : o.toTimeSpan().milliseconds;
         }
@@ -204,6 +205,5 @@ define(["require", "exports", '../Compare', '../Types', './TimeUnit', './TimeUni
         return undefined;
     }
     var timeSpanZero;
-    return TimeSpan;
 });
 //# sourceMappingURL=TimeSpan.js.map

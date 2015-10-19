@@ -3,13 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../Disposable/IDisposable.ts"/>
-///<reference path="IEnumerator.ts"/>
-///<reference path="IYield.ts"/>
-import Types = require('../../Types');
-import DisposableBase = require('../../Disposable/DisposableBase')
+///<reference path="../../Disposable/IDisposable.d.ts"/>
+///<reference path="IEnumerator.d.ts"/>
+///<reference path="IYield.d.ts"/>
+import Type from '../../Types';
+import DisposableBase from '../../Disposable/DisposableBase'
 
-'use strict';
+
 
 class Yielder<T> implements IYield<T>
 {
@@ -31,6 +31,7 @@ class Yielder<T> implements IYield<T>
 enum EnumeratorState { Before, Running, After }
 
 // Naming this class EnumeratorBase to avoid collision with IE.
+export default
 class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 {
 
@@ -110,5 +111,3 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	}
 
 }
-
-export = EnumeratorBase;

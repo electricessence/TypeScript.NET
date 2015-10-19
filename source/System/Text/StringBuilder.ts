@@ -4,9 +4,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Disposable/IDisposable.ts"/>
-import Types = require('../Types');
-import LinkedList = require('../Collections/LinkedList');
+///<reference path="../Disposable/IDisposable.d.ts"/>
+import Type from '../Types';
+import LinkedList from '../Collections/LinkedList';
 
 
 /*****************************
@@ -20,6 +20,7 @@ import LinkedList = require('../Collections/LinkedList');
  *****************************/
 
 
+export default
 class StringBuilder implements IDisposable
 	// Adding IDisposable allows for use with System.using();
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
@@ -42,8 +43,8 @@ class StringBuilder implements IDisposable
 			var _ = this;
 			_._latest = null;
 			switch(typeof item) {
-				case Types.Object:
-				case Types.Function:
+				case Type.OBJECT:
+				case Type.FUNCTION:
 					item = item.toString();
 					break;
 			}
@@ -129,5 +130,3 @@ class StringBuilder implements IDisposable
 	}
 
 }
-
-export = StringBuilder;

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", './HowMany'], function (require, exports, HowMany) {
     var DateTime = (function () {
         function DateTime(value) {
             if (value === void 0) { value = new Date(); }
@@ -54,7 +54,8 @@ define(["require", "exports"], function (require, exports) {
         };
         return DateTime;
     })();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = DateTime;
     Object.freeze(DateTime);
-    return DateTime;
 });
 //# sourceMappingURL=DateTime.js.map

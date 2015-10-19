@@ -1,40 +1,41 @@
 {
-	"name": "TypeScript.NET",
-	"version": "2.0.0",
-	"ignore": [
-		".gitignore",
-		".idea",
-		".nuget",
-		"gulpfile.js",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests",
-		"example",
-		"documentation",
-		"source/_tests",
-		"tests-*"
-	],
-	"homepage": "https://github.com/electricessence/TypeScript.NET",
-	"authors": [
-		"electricessence <oren@electrified.net>"
-	],
-	"description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
-	"moduleType": [
-		"amd"
-	],
-	"keywords": [
-		"TypeScript",
-		"tsc",
-		".net",
-		"TypeScript.NET",
-		"LINQ"
-	],
-	"license": "MIT",
-	"dependencies": {
-		"requirejs": "~2.1.20"
-	},
-	"devDependencies": {
-		"qunit": "~1.19.0"
-	}
+  "name": "TypeScript.NET",
+  "version": "2.2.1",
+  "ignore": [
+    ".gitignore",
+    ".idea",
+    ".nuget",
+    "gulpfile.js",
+    "node_modules",
+    "bower_components",
+    "tests",
+    "example",
+    "documentation",
+    "dist/commonjs",
+    "dist/es6",
+    "dist/system"
+  ],
+  "homepage": "https://github.com/electricessence/TypeScript.NET",
+  "authors": [
+    "electricessence <oren@electrified.net>"
+  ],
+  "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "JavaScript",
+    "TypeScript",
+    "tsc",
+    ".net",
+    "TypeScript.NET",
+    "LINQ"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "requirejs": "~2.1.20"
+  },
+  "devDependencies": {
+    "qunit": "~1.19.0"
+  }
 }

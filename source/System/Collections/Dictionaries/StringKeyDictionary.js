@@ -1,3 +1,4 @@
+///<reference path="IDictionary.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -5,11 +6,9 @@
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../../Compare', './DictionaryAbstractBase'], function (require, exports, Values, DictionaryAbstractBase) {
-    'use strict';
+define(["require", "exports", '../../Compare', './DictionaryAbstractBase'], function (require, exports, Compare_1, DictionaryAbstractBase_1) {
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {
@@ -21,7 +20,7 @@ define(["require", "exports", '../../Compare', './DictionaryAbstractBase'], func
             return key in this._map;
         };
         StringKeyDictionary.prototype.containsValue = function (value) {
-            var map = this._map, equal = Values.areEqual;
+            var map = this._map, equal = Compare_1.areEqual;
             for (var key in map) {
                 if (map.hasOwnProperty(key) && equal(map[key], value))
                     return true;
@@ -106,7 +105,8 @@ define(["require", "exports", '../../Compare', './DictionaryAbstractBase'], func
             configurable: true
         });
         return StringKeyDictionary;
-    })(DictionaryAbstractBase);
-    return StringKeyDictionary;
+    })(DictionaryAbstractBase_1.default);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = StringKeyDictionary;
 });
 //# sourceMappingURL=StringKeyDictionary.js.map

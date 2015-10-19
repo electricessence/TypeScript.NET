@@ -3,35 +3,70 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Types = require('../Types');
+import Type from '../Types';
 
-module Utility
-{
+export const EMPTY:string = '';
 
-	export function format(source:string, ...args:any[]) {
-		for(var i = 0; i<args.length; i++) {
-			source = source.replace("{" + i + "}", args[i]);
-		}
-		return source;
-	}
-
-	// Based upon Crockford's supplant function.
-	export function supplant(source:string, o:{[key:string]:any}):string {
-		return source.replace(/\{([^{}]*)\}/g,
-			(a:string, b:string):any=> {
-				var r = o[b];
-				switch (typeof r) {
-					case Types.String:
-						return true;
-					case Types.Number:
-						return r;
-					default:
-						return a;
-				}
-			}
-		);
-	}
-
+export function escapeRegExp(source:string):string {
+	return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
-export = Utility;
+export function trim(source:string, chars?:string|string[],ignoreCase?:boolean):string
+{
+	if(chars) {
+		if(chars===EMPTY) return source;
+		var escaped = escapeRegExp(chars instanceof Array ? chars.join() : <string>chars);
+		return source.replace(new RegExp('^['+escaped+']+|['+escaped+']+$','g'+(ignoreCase?'i':'')),EMPTY);
+	}
+
+	return source.replace(/^\s+|\s+$/g, EMPTY);
+}
+
+/**
+ * Takes any arg
+ * @param source
+ * @param args
+ * @returns {string}
+ */
+export function format(source:string, ...args:any[])
+{
+	return supplant(source, args);
+}
+
+//
+
+/**
+ * This takes a string and replaces '{string}' with the respected parameter.
+ * Also allows for passing an array in order to use '{n}' notation.
+ * Not limited to an array's indexes.  For example, {length} is allowed.
+ * Based upon Crockford's supplant function.
+ * @param source
+ * @param params
+ * @returns {string}
+ */
+export function supplant(source:string, params:{[key:string]:any}|any[]):string
+{
+	var oIsArray = params instanceof Array;
+	return source.replace(/\{([^{}]*)\}/g,
+		(a:string, b:string):any=>
+		{
+			var n:any = b;
+			if(oIsArray)
+			{
+				let i = parseInt(b);
+				if(!isNaN(i)) n = i;
+			}
+
+			var r = (<any>params)[n];
+			switch(typeof r)
+			{
+				case Type.STRING:
+				case Type.NUMBER:
+				case Type.BOOLEAN:
+					return r;
+				default:
+					return a;
+			}
+		}
+	);
+}

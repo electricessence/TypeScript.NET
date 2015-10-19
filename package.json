@@ -1,28 +1,35 @@
 {
   "name": "TypeScript.NET",
-  "version": "2.0.0",
+  "version": "2.2.1",
   "license": "MIT",
-  "author": "Oren Ferrari",
+  "author": "electricessence <oren@electrified.net>",
   "description": "A JavaScript Friendly .NET Based Library Ported to TypeScript.",
   "private": false,
   "repository": "https://github.com/electricessence/TypeScript.NET.git",
-  "dependencies": {
-    "typescript": "^1.6.2"
+  "scripts": {
+    "postinstall": "node node_modules/bower/bin/bower install && node node_modules/tsd/build/cli reinstall --resolve"
   },
   "devDependencies": {
+    "babel": "^5.8.23",
     "bower": "^1.5.2",
     "del": "^2.0.2",
+    "fs": "0.0.2",
     "gulp": "^3.9.0",
-    "gulp-clean": "^0.3.1",
+    "gulp-babel": "^5.3.0",
+    "gulp-bump": "^1.0.0",
+    "gulp-html-minify": "0.0.12",
+    "gulp-nuget-pack": "0.0.6",
     "gulp-rename": "^1.2.2",
-    "gulp-rimraf": "^0.1.1",
-    "gulp-sourcemaps": "^1.5.2",
+    "gulp-replace": "^0.5.4",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-tsc": "^1.1.1",
     "gulp-typedoc": "^1.2.1",
     "gulp-typescript": "^2.8.3",
     "gulp-uglify": "^1.4.1",
-    "gulp-wrap-js": "^0.4.1",
+    "mocha": "^2.3.3",
+    "semver": "^5.0.3",
     "tsd": "^0.6.4",
-    "typedoc": "^0.3.10"
+    "typedoc": "^0.3.10",
+    "typescript": "^1.6.2"
   }
 }

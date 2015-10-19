@@ -3,13 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IEnumerable.ts"/>
-///<reference path="../Array/IArray.ts"/>
-import DU = require('../../Disposable/Utility');
-import Enumerator = require('./Enumerator');
-import using = DU.using;
+///<reference path="IEnumerable.d.ts"/>
+///<reference path="../Array/IArray.d.ts"/>
+import {using} from '../../Disposable/Utility';
+import * as Enumerator from '../../Collections/Enumeration/Enumerator';
 
-function forEach<T>(
+export default function forEach<T>(
     enumerable:IEnumerable<T> | IArray<T>,
     action:(element:T, index?:number) => any):void
 {
@@ -21,4 +20,3 @@ function forEach<T>(
     }
 }
 
-export = forEach;

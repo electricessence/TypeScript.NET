@@ -3,9 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import TimeSpan = require('../Time/TimeSpan');
+import TimeSpan from '../Time/TimeSpan';
 
 
+export default
 class Stopwatch
 {
 
@@ -124,5 +125,3 @@ class Stopwatch
 	}
 
 }
-
-export = Stopwatch;
