@@ -8,4 +8,5 @@ define(["require", "exports", './Arrays/_all', './Collections/_all', './Linq/_al
     _all_3.default();
     QUnit.start();
 });
+
 //# sourceMappingURL=main.js.map

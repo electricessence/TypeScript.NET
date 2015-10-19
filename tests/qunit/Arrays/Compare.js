@@ -6,4 +6,5 @@ define(["require", "exports", "QUnit"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
+
 //# sourceMappingURL=Compare.js.map

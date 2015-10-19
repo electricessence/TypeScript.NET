@@ -66,4 +66,5 @@ define(["require", "exports", 'source/System/Uri/Uri', "QUnit"], function (requi
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
+
 //# sourceMappingURL=Uri.js.map

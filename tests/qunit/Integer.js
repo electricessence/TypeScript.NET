@@ -20,4 +20,5 @@ define(["require", "exports", 'source/System/Integer', "QUnit"], function (requi
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
+
 //# sourceMappingURL=Integer.js.map

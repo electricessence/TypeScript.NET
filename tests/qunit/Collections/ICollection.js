@@ -124,4 +124,5 @@ define(["require", "exports", 'source/System/Text/Utility', 'source/System/Colle
     }
     exports.InstanceCollection = InstanceCollection;
 });
+
 //# sourceMappingURL=ICollection.js.map

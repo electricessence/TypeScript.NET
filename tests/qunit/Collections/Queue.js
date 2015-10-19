@@ -7,4 +7,5 @@ define(["require", "exports", './ICollection', 'source/System/Collections/Queue'
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
+
 //# sourceMappingURL=Queue.js.map
