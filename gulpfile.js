@@ -6,6 +6,9 @@ const
 	TASK_DIST_AMD           = TASK_DIST + '.amd',
 	TASK_DIST_COMMONJS      = TASK_DIST + '.commonjs',
 	TASK_DIST_SYSTEMJS      = TASK_DIST + '.systemjs',
+	TASK_TYPESCRIPT_QUNIT   = TASK_TYPESCRIPT + '.qunit (AMD)',
+	TASK_TYPESCRIPT_MOCHA   = TASK_TYPESCRIPT + '.mocha',
+	TASK_BUILD              = 'build',
 	TASK_TYPEDOC            = 'typedoc',
 	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
 	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
@@ -19,6 +22,7 @@ const
 	sourcemaps = require('gulp-sourcemaps'),
 	uglify     = require('gulp-uglify'),
 	babel      = require('gulp-babel'),
+	gulpTsc    = require('gulp-tsc'),
 	typescript = require('gulp-typescript'),
 	typedoc    = require('gulp-typedoc'),
 	replace    = require('gulp-replace'),
@@ -48,40 +52,49 @@ function getTscOptions(destination, target, module) {
 	}
 }
 
-function tsc(destination, target, module) {
+function tscFromTo(from, to, target, module) {
 
+	console.log('TypeScript Render:', target, module, from==to ? from : (from + ' >> ' + to));
 	// In order to mirror WebStorm's compiler option, gulp-tsc is used.
 	return gulp
-		.src(['./source/**/*.ts'])
-		.pipe(require('gulp-tsc')(getTscOptions(destination, target, module)))
-		.pipe(gulp.dest(destination))
-		;
+		.src([from + '/**/*.ts'])
+		.pipe(gulpTsc(getTscOptions(to, target, module)))
+		.pipe(gulp.dest(to));
+}
 
+function tsc(folder, target, module) {
+	return tscFromTo(folder, folder, target, module);
+}
+
+function tscSource(destination, target, module) {
+	return tscFromTo('./source', destination, target, module);
 }
 
 gulp.task(
 	// This renders the same output as WebStorm's configuration.
 	TASK_TYPESCRIPT, function()
 	{
-		return tsc('./source', ES5, AMD);
+		return tsc('./source', ES5, COMMONJS);
 	}
 );
 
 gulp.task(
-	TASK_DIST_ES6, function()
+	TASK_DIST_ES6, function(done)
 	{
 		const d = './dist/' + ES6;
-		del([d + '/**/*']);
-		return tsc(d, ES6, null);
+		del(d + '/**/*')
+			.then(function() {
+				tscSource(d, ES6, null)
+					.on(EVENT_END, done);
+			});
 	}
 );
 
 
 gulp.task(
-	TASK_DIST_AMD, function()
+	TASK_DIST_AMD, function(done)
 	{
 		const DESTINATION = './dist/' + AMD;
-		del([DESTINATION + '/**/*']);
 
 		var typescriptOptions/*:typescript.Params*/ = {
 			noImplicitAny: true,
@@ -99,22 +112,28 @@ gulp.task(
 			preserveComments: 'license'
 		};
 
-		return gulp
-			.src(['./source/**/*.ts'])
-			.pipe(sourcemaps.init())
-			.pipe(typescript(typescriptOptions))
-			.pipe(uglify(uglifyOptions))
-			.pipe(sourcemaps.write('.', sourceMapOptions))
-			.pipe(gulp.dest(DESTINATION));
+		del(DESTINATION + '/**/*')
+			.then(function() {
+
+				console.log('TypeScript Render:', ES5, AMD, './source >> ' + DESTINATION);
+
+				gulp
+					.src(['./source/**/*.ts'])
+					.pipe(sourcemaps.init())
+					.pipe(typescript(typescriptOptions))
+					.pipe(uglify(uglifyOptions))
+					.pipe(sourcemaps.write('.', sourceMapOptions))
+					.pipe(gulp.dest(DESTINATION))
+					.on(EVENT_END, done);
+			});
 
 	});
 
 
 gulp.task(
-	TASK_DIST_COMMONJS, function()
+	TASK_DIST_COMMONJS, function(done)
 	{
 		const DESTINATION = './dist/' + COMMONJS;
-		del([DESTINATION + '/**/*']);
 
 		var typescriptOptions/*:typescript.Params*/ = {
 			noImplicitAny: true,
@@ -128,26 +147,33 @@ gulp.task(
 			sourceRoot: null
 		};
 
-		return gulp
-			.src(['./source/**/*.ts'])
-			.pipe(sourcemaps.init())
-			.pipe(typescript(typescriptOptions))
-			.pipe(babel())
-			.pipe(sourcemaps.write('.', sourceMapOptions))
-			.pipe(gulp.dest(DESTINATION));
+		del(DESTINATION + '/**/*').then(function() {
+
+			console.log('TypeScript Render:', ES6, './source >> ' + DESTINATION);
+
+			gulp
+				.src(['./source/**/*.ts'])
+				.pipe(sourcemaps.init())
+				.pipe(typescript(typescriptOptions))
+				.pipe(babel())
+				.pipe(sourcemaps.write('.', sourceMapOptions))
+				.pipe(gulp.dest(DESTINATION))
+				.on(EVENT_END, done);
+		});
 
 	}
 );
 
 gulp.task(
-	TASK_DIST_SYSTEMJS, function()
+	TASK_DIST_SYSTEMJS, function(done)
 	{
 		const d = './dist/' + SYSTEMJS;
-		del([d + '/**/*']);
-		return tsc(d, ES5, SYSTEMJS);
+		del(d + '/**/*').then(function() {
+			return tscSource(d, ES5, SYSTEMJS)
+				.on(EVENT_END, done);
+		});
 	}
 );
-
 
 gulp.task(TASK_DIST, [
 	TASK_DIST_ES6,
@@ -156,6 +182,29 @@ gulp.task(TASK_DIST, [
 	TASK_DIST_SYSTEMJS
 ]);
 
+gulp.task(
+	TASK_TYPESCRIPT_QUNIT, function()
+	{
+		return gulp
+			.src(['./tests/qunit/**/*.ts'],{base:'./'})
+			.pipe(gulpTsc(getTscOptions('./tests/qunit', ES5, AMD)))
+			.pipe(gulp.dest('./tests/qunit'));	}
+);
+
+gulp.task(
+	TASK_TYPESCRIPT_MOCHA, function()
+	{
+		return tsc('./tests/mocha', ES5, COMMONJS);
+	}
+);
+
+gulp.task(
+	TASK_BUILD, [
+		TASK_TYPESCRIPT,
+		TASK_DIST,
+		TASK_TYPESCRIPT_QUNIT
+	]
+);
 
 gulp.task(
 	TASK_TYPEDOC, function(done)

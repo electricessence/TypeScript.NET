@@ -8,19 +8,18 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './SystemException'], function (require, exports, SystemException_1) {
-    var NAME = 'NotImplementedException';
-    var NotImplementedException = (function (_super) {
-        __extends(NotImplementedException, _super);
-        function NotImplementedException() {
-            _super.apply(this, arguments);
-        }
-        NotImplementedException.prototype.getName = function () {
-            return NAME;
-        };
-        return NotImplementedException;
-    })(SystemException_1.default);
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = NotImplementedException;
-});
+var SystemException_1 = require('./SystemException');
+var NAME = 'NotImplementedException';
+var NotImplementedException = (function (_super) {
+    __extends(NotImplementedException, _super);
+    function NotImplementedException() {
+        _super.apply(this, arguments);
+    }
+    NotImplementedException.prototype.getName = function () {
+        return NAME;
+    };
+    return NotImplementedException;
+})(SystemException_1.default);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = NotImplementedException;
 //# sourceMappingURL=NotImplementedException.js.map
