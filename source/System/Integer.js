@@ -2,7 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", './Types', './Exceptions/ArgumentException'], function (require, exports, Types_1, ArgumentException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", './Types', './Exceptions/ArgumentException'], function (require, exports) {
+    var Types_1 = require('./Types');
+    var ArgumentException_1 = require('./Exceptions/ArgumentException');
     function Integer(n) {
         return n | 0;
     }

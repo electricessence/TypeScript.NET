@@ -1,6 +1,14 @@
 ///<reference path="../../../typings/qunit/qunit"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", 'source/System.Linq/Linq', "QUnit"], function (require, exports, Linq_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", "QUnit", 'source/System.Linq/Linq'], function (require, exports) {
+    var Linq_1 = require('source/System.Linq/Linq');
     function run() {
         var source = [
             {

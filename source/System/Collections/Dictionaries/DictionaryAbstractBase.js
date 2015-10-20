@@ -2,7 +2,21 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports, Compare_1, EnumeratorBase_1, NotImplementedException_1, ArgumentException_1, ArgumentNullException_1, InvalidOperationException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports) {
+    ///<reference path="IDictionary.d.ts"/>
+    var Compare_1 = require('../../Compare');
+    var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
+    var NotImplementedException_1 = require('../../Exceptions/NotImplementedException');
+    var ArgumentException_1 = require('../../Exceptions/ArgumentException');
+    var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
+    var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
     var DictionaryAbstractBase = (function () {
         function DictionaryAbstractBase() {
             this._updateRecursion = 0;

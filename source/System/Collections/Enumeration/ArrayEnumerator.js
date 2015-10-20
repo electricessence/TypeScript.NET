@@ -7,7 +7,17 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './IndexEnumerator', '../../Types'], function (require, exports, IndexEnumerator_1, Types_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", './IndexEnumerator', '../../Types'], function (require, exports) {
+    ///<reference path="../Array/IArray.d.ts"/>
+    var IndexEnumerator_1 = require('./IndexEnumerator');
+    var Types_1 = require('../../Types');
     var ArrayEnumerator = (function (_super) {
         __extends(ArrayEnumerator, _super);
         function ArrayEnumerator(arrayOrFactory, start, step) {

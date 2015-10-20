@@ -7,7 +7,17 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './Disposable/DisposableBase'], function (require, exports, DisposableBase_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", './Disposable/DisposableBase'], function (require, exports) {
+    ///<reference path="ILazy.d.ts"/>
+    ///<reference path="FunctionTypes.d.ts"/>
+    var DisposableBase_1 = require('./Disposable/DisposableBase');
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
         function Lazy(_closure) {

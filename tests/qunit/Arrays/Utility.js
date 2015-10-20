@@ -1,6 +1,15 @@
 ///<reference path="../../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", 'source/System/Collections/Array/Compare', 'source/System/Collections/Array/Utility', "QUnit"], function (require, exports, Arrays, ArrayUtility) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", "QUnit", 'source/System/Collections/Array/Compare', 'source/System/Collections/Array/Utility'], function (require, exports) {
+    var Arrays = require('source/System/Collections/Array/Compare');
+    var ArrayUtility = require('source/System/Collections/Array/Utility');
     function run() {
         var minA = -10, maxA = 2000;
         var a = [5, minA, -1, maxA, -2, NaN, 20];

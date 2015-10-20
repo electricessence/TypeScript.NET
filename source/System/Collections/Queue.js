@@ -3,7 +3,27 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, AU, Types_1, Integer_1, EnumeratorBase_1, forEach_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+    ///<reference path="ICollection.d.ts"/>
+    ///<reference path="IList.d.ts"/>
+    ///<reference path="Enumeration/IEnumerateEach.d.ts"/>
+    ///<reference path="../FunctionTypes.d.ts"/>
+    var Values = require('../Compare');
+    var AU = require('./Array/Utility');
+    var Types_1 = require('../Types');
+    var Integer_1 = require('../Integer');
+    var EnumeratorBase_1 = require('./Enumeration/EnumeratorBase');
+    var forEach_1 = require('./Enumeration/forEach');
+    var NotImplementedException_1 = require('../Exceptions/NotImplementedException');
+    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
+    var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
     var MINIMUM_GROW = 4;
     var GROW_FACTOR_HALF = 100;
     var DEFAULT_CAPACITY = MINIMUM_GROW;

@@ -8,7 +8,20 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports, Compare_1, Types_1, Functions_1, DictionaryAbstractBase_1, EnumeratorBase_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports) {
+    ///<reference path="../../FunctionTypes.d.ts"/>
+    var Compare_1 = require('../../Compare');
+    var Types_1 = require('../../Types');
+    var Functions_1 = require('../../Functions');
+    var DictionaryAbstractBase_1 = require('./DictionaryAbstractBase');
+    var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
     var HashEntry = (function () {
         function HashEntry(key, value, prev, next) {
             this.key = key;

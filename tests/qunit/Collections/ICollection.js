@@ -1,7 +1,17 @@
 ///<reference path="../../../source/System/Collections/ICollection.d.ts"/>
 ///<reference path="../../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", 'source/System/Text/Utility', 'source/System/Collections/Array/Utility', 'source/System/Exceptions/NotImplementedException', "QUnit"], function (require, exports, Text, AU, NotImplementedException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", "QUnit", 'source/System/Text/Utility', 'source/System/Collections/Array/Utility', 'source/System/Exceptions/NotImplementedException'], function (require, exports) {
+    var Text = require('source/System/Text/Utility');
+    var AU = require('source/System/Collections/Array/Utility');
+    var NotImplementedException_1 = require('source/System/Exceptions/NotImplementedException');
     function General(name, collection) {
         var count = collection.count;
         QUnit.test(name + ".count", function (assert) {

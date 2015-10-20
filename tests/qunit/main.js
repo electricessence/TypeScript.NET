@@ -1,6 +1,18 @@
 ///<reference path="../../typings/qunit/qunit.d.ts"/>
 /// <amd-dependency path="QUnit"/>
-define(["require", "exports", './Arrays/_all', './Collections/_all', './Linq/_all', './Uri', './Integer', "QUnit"], function (require, exports, _all_1, _all_2, _all_3, Uri_1, Integer_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", "QUnit", './Arrays/_all', './Collections/_all', './Linq/_all', './Uri', './Integer'], function (require, exports) {
+    var _all_1 = require('./Arrays/_all');
+    var _all_2 = require('./Collections/_all');
+    var _all_3 = require('./Linq/_all');
+    var Uri_1 = require('./Uri');
+    var Integer_1 = require('./Integer');
     Integer_1.default();
     _all_1.default();
     Uri_1.default();

@@ -4,7 +4,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-define(["require", "exports", '../Collections/LinkedList', '../Disposable/Utility', './Subscription'], function (require, exports, LinkedList_1, DisposeUtility, Subscription_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Collections/LinkedList', '../Disposable/Utility', './Subscription'], function (require, exports) {
+    ///<reference path="../Disposable/IDisposable.d.ts"/>
+    ///<reference path="../FunctionTypes.d.ts"/>
+    var LinkedList_1 = require('../Collections/LinkedList');
+    var DisposeUtility = require('../Disposable/Utility');
+    var Subscription_1 = require('./Subscription');
     var SubscribableBase = (function () {
         function SubscribableBase() {
             this.__subscriptions = new LinkedList_1.default();

@@ -7,7 +7,17 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../Array/Utility', './StringKeyDictionary', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Array/Utility', './StringKeyDictionary', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+    var ArrayUtility = require('../Array/Utility');
+    var StringKeyDictionary_1 = require('./StringKeyDictionary');
+    var ArgumentOutOfRangeException_1 = require('../../Exceptions/ArgumentOutOfRangeException');
     var OrderedStringKeyDictionary = (function (_super) {
         __extends(OrderedStringKeyDictionary, _super);
         function OrderedStringKeyDictionary() {

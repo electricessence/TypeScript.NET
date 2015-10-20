@@ -1,6 +1,14 @@
 ///<reference path="../../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
-define(["require", "exports", 'source/System/Collections/Array/Procedure', "QUnit"], function (require, exports, ArrayProcedure) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", "QUnit", 'source/System/Collections/Array/Procedure'], function (require, exports) {
+    var ArrayProcedure = require('source/System/Collections/Array/Procedure');
     function run() {
         var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity;
         var a = [5, minA, -1, maxA, -2, NaN, 20], sum = 5 + minA + -1 + maxA + -2 + 20, average = sum / 6, product = 5 * minA * -1 * maxA * -2 * 20;

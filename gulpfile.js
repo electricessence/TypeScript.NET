@@ -1,19 +1,36 @@
+const TYPESCRIPT = 'typescript';
+
+
+const MODULE = Object.freeze({
+	COMMONJS: 'commonjs',
+	SYSTEMJS: 'system',
+	UMD: 'umd',
+	AMD: 'amd'
+});
+
+const TARGET = Object.freeze({
+	ES5: 'es5',
+	ES6: 'es6'
+});
+
 // List of all tasks by name and for reuse as dependencies.
-const
-	TASK_TYPESCRIPT         = 'typescript',
-	TASK_DIST               = 'dist',
-	TASK_DIST_ES6           = TASK_DIST + '.es6',
-	TASK_DIST_AMD           = TASK_DIST + '.amd',
-	TASK_DIST_COMMONJS      = TASK_DIST + '.commonjs',
-	TASK_DIST_SYSTEMJS      = TASK_DIST + '.systemjs',
-	TASK_TYPESCRIPT_QUNIT   = TASK_TYPESCRIPT + '.qunit (AMD)',
-	TASK_TYPESCRIPT_MOCHA   = TASK_TYPESCRIPT + '.mocha',
-	TASK_BUILD              = 'build',
-	TASK_TYPEDOC            = 'typedoc',
-	TASK_VERSION_BUMP_MINOR = 'version-bump-minor',
-	TASK_VERSION_BUMP_PATCH = 'version-bump-patch',
-	TASK_NUGET_PACK         = 'nuget-pack',
-	TASK_DEFAULT            = 'default';
+const TASK = Object.freeze({
+	SOURCE: 'source (umd)',
+	DIST: 'dist',
+	DIST_ES6: 'dist.' + TARGET.ES6,
+	DIST_AMD: 'dist.' + MODULE.AMD,
+	DIST_UMD: 'dist.' + MODULE.UMD+'.min',
+	DIST_COMMONJS: 'dist.' + MODULE.COMMONJS,
+	DIST_SYSTEMJS: 'dist.' + MODULE.SYSTEMJS,
+	TYPESCRIPT_QUNIT: TYPESCRIPT + '.qunit (amd)',
+	TYPESCRIPT_MOCHA: TYPESCRIPT + '.mocha',
+	BUILD: 'build',
+	TYPEDOC: 'typedoc',
+	VERSION_BUMP_MINOR: 'version-bump-minor',
+	VERSION_BUMP_PATCH: 'version-bump-patch',
+	NUGET_PACK: 'nuget-pack',
+	DEFAULT: 'default'
+});
 
 const
 	gulp       = require('gulp'),
@@ -22,222 +39,239 @@ const
 	sourcemaps = require('gulp-sourcemaps'),
 	uglify     = require('gulp-uglify'),
 	babel      = require('gulp-babel'),
-	gulpTsc    = require('gulp-tsc'),
 	typescript = require('gulp-typescript'),
 	typedoc    = require('gulp-typedoc'),
 	replace    = require('gulp-replace'),
 	semver     = require('semver'),
-	nugetpack  = require('gulp-nuget-pack');
-
-const EVENT_END = 'end';
-const DOCS = './documentation';
-const TSC_PATH = './node_modules/typescript/bin/tsc';
-
-const
-	COMMONJS = 'commonjs',
-	SYSTEMJS = 'system',
-	AMD      = 'amd',
-	ES5      = 'es5',
-	ES6      = 'es6';
-
-function getTscOptions(destination, target, module) {
-	return {
-		tscPath: TSC_PATH,
-		outDir: destination,
-		noImplicitAny: true,
-		module: module,
-		target: target,
-		removeComments: true,
-		sourceMap: true
-	}
-}
-
-function tscFromTo(from, to, target, module) {
-
-	console.log('TypeScript Render:', target, module, from==to ? from : (from + ' >> ' + to));
-	// In order to mirror WebStorm's compiler option, gulp-tsc is used.
-	return gulp
-		.src([from + '/**/*.ts'])
-		.pipe(gulpTsc(getTscOptions(to, target, module)))
-		.pipe(gulp.dest(to));
-}
-
-function tsc(folder, target, module) {
-	return tscFromTo(folder, folder, target, module);
-}
-
-function tscSource(destination, target, module) {
-	return tscFromTo('./source', destination, target, module);
-}
-
-gulp.task(
-	// This renders the same output as WebStorm's configuration.
-	TASK_TYPESCRIPT, function()
-	{
-		return tsc('./source', ES5, COMMONJS);
-	}
-);
-
-gulp.task(
-	TASK_DIST_ES6, function(done)
-	{
-		const d = './dist/' + ES6;
-		del(d + '/**/*')
-			.then(function() {
-				tscSource(d, ES6, null)
-					.on(EVENT_END, done);
-			});
-	}
-);
+	nugetpack  = require('gulp-nuget-pack'),
+	Q          = require('q');
 
 
-gulp.task(
-	TASK_DIST_AMD, function(done)
-	{
-		const DESTINATION = './dist/' + AMD;
+const EVENT = Object.freeze({
+	END: 'end'
+});
 
-		var typescriptOptions/*:typescript.Params*/ = {
+const PATH = Object.freeze({
+	SOURCE: './source',
+	TSC: './node_modules/typescript/bin/tsc',
+	DOCS: './documentation'
+});
+
+
+const tsc = (function() {
+	"use strict";
+
+	var c = require('gulp-tsc');
+	c.getOptions = getOptions;
+	c.fromTo = fromTo;
+	c.at = at;
+	c.atV2 = atV2;
+	c.sourceTo = sourceTo;
+	c.dist = dist;
+	c.distPostProcess = distPostProcess;
+	c.distMini = distMini;
+
+	function getOptions(destination, target, module) {
+		return {
+			tscPath: PATH.TSC,
+			outDir: destination,
 			noImplicitAny: true,
-			module: AMD,
-			target: ES5,
+			module: module,
+			target: target,
+			removeComments: true,
+			sourceMap: true
+		}
+	}
+
+	function fromTo(from, to, target, module) {
+
+		console.log('TypeScript Render:', target, module, from==to ? from : (from + ' >> ' + to));
+		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
+		return gulp
+			.src([from + '/**/*.ts'])
+			.pipe(c(getOptions(to, target, module)))
+			.pipe(gulp.dest(to));
+	}
+
+	function at(folder, target, module) {
+		return tsc.fromTo(folder, folder, target, module);
+	}
+
+	function atV2(folder, target, module) {
+
+		var typescriptOptions = {
+			noImplicitAny: true,
+			module: module,
+			target: target,
 			removeComments: true
 		};
 
-		// This isn't ideal, but it works and points the maps to the original source.
-		var sourceMapOptions/*:sourcemaps.WriteOptions*/ = {
+		var sourceMapOptions = {
 			sourceRoot: null
 		};
 
-		var uglifyOptions = {
-			preserveComments: 'license'
-		};
 
-		del(DESTINATION + '/**/*')
-			.then(function() {
+		console.log('TypeScript Render:', target, module, folder);
 
-				console.log('TypeScript Render:', ES5, AMD, './source >> ' + DESTINATION);
+		return gulp
+			.src([folder + '/**/*.ts'])
+			.pipe(sourcemaps.init())
+			.pipe(typescript(typescriptOptions))
+			.pipe(sourcemaps.write('.', sourceMapOptions))
+			.pipe(gulp.dest(folder));
+	}
 
-				gulp
-					.src(['./source/**/*.ts'])
-					.pipe(sourcemaps.init())
-					.pipe(typescript(typescriptOptions))
-					.pipe(uglify(uglifyOptions))
-					.pipe(sourcemaps.write('.', sourceMapOptions))
-					.pipe(gulp.dest(DESTINATION))
-					.on(EVENT_END, done);
-			});
+	function sourceTo(folder, target, module) {
+		return tsc.fromTo(PATH.SOURCE, folder, target, module);
+	}
 
-	});
+	function dist(folder, target, module) {
+		//noinspection JSUnresolvedFunction
+		var deferred = Q.defer();
+		var d = './dist/' + folder;
+		del(d + '/**/*')['then'](function() {
+			sourceTo(d, target, module)
+				.on(EVENT.END, deferred.resolve);
+		});
+		return deferred.promise;
+	}
 
+	function distPostProcess(folder, target, module, postProcess) {
+		//noinspection JSUnresolvedFunction
+		var deferred = Q.defer();
+		var d = './dist/' + folder;
+		//noinspection JSUnresolvedFunction
+		del(d + '/**/*').then(function() {
 
-gulp.task(
-	TASK_DIST_COMMONJS, function(done)
-	{
-		const DESTINATION = './dist/' + COMMONJS;
+			console.log('TypeScript Render:', target, module, './source >> ' + d);
 
-		var typescriptOptions/*:typescript.Params*/ = {
-			noImplicitAny: true,
-			module: null,
-			target: ES6,
-			removeComments: true
-		};
+			var typescriptOptions = {
+				noImplicitAny: true,
+				module: module,
+				target: target,
+				removeComments: true
+			};
 
-		// This isn't ideal, but it works and points the maps to the original source.
-		var sourceMapOptions/*:sourcemaps.WriteOptions*/ = {
-			sourceRoot: null
-		};
+			var sourceMapOptions = {
+				sourceRoot: null
+			};
 
-		del(DESTINATION + '/**/*').then(function() {
-
-			console.log('TypeScript Render:', ES6, './source >> ' + DESTINATION);
 
 			gulp
 				.src(['./source/**/*.ts'])
 				.pipe(sourcemaps.init())
 				.pipe(typescript(typescriptOptions))
-				.pipe(babel())
+				.pipe(postProcess())
 				.pipe(sourcemaps.write('.', sourceMapOptions))
-				.pipe(gulp.dest(DESTINATION))
-				.on(EVENT_END, done);
-		});
+				.pipe(gulp.dest(d))
+				.on(EVENT.END, deferred.resolve);
 
+		});
+		return deferred.promise;
+
+	}
+
+	function distMini(folder, target, module) {
+
+		return distPostProcess(folder, target, module, function() {
+			return uglify({
+				preserveComments: 'license'
+			});
+		});
+	}
+
+	return c;
+})();
+
+gulp.task(
+	// This renders the same output as WebStorm's configuration.
+	TASK.SOURCE, function()
+	{
+		return tsc.at('./source', ES5, UMD);
 	}
 );
 
 gulp.task(
-	TASK_DIST_SYSTEMJS, function(done)
+	TASK.DIST_ES6, function()
 	{
-		const d = './dist/' + SYSTEMJS;
-		del(d + '/**/*').then(function() {
-			return tscSource(d, ES5, SYSTEMJS)
-				.on(EVENT_END, done);
-		});
+		const ES6 = TARGET.ES6;
+		return tsc.dist(ES6, ES6, null);
 	}
 );
 
-gulp.task(TASK_DIST, [
-	TASK_DIST_ES6,
-	TASK_DIST_AMD,
-	TASK_DIST_COMMONJS,
-	TASK_DIST_SYSTEMJS
+
+gulp.task(
+	TASK.DIST_AMD, function()
+	{
+		return tsc.distMini(
+			MODULE.AMD, TARGET.ES5, MODULE.AMD);
+	});
+
+
+gulp.task(
+	TASK.DIST_UMD, function()
+	{
+		return tsc.distMini(
+			MODULE.UMD+'.min', TARGET.ES5, MODULE.UMD);
+	});
+
+gulp.task(
+	TASK.DIST_COMMONJS, function()
+	{
+
+		return tsc.distPostProcess(
+			MODULE.COMMONJS, TARGET.ES6, MODULE.COMMONJS, babel);
+	}
+);
+
+gulp.task(
+	TASK.DIST_SYSTEMJS, function()
+	{
+		return tsc.dist(
+			MODULE.SYSTEMJS, TARGET.ES5, MODULE.SYSTEMJS);
+	}
+);
+
+gulp.task(TASK.DIST, [
+	TASK.DIST_ES6,
+	TASK.DIST_AMD,
+	TASK.DIST_UMD,
+	TASK.DIST_COMMONJS,
+	TASK.DIST_SYSTEMJS
 ]);
 
 gulp.task(
-	TASK_TYPESCRIPT_QUNIT, function()
+	TASK.TYPESCRIPT_QUNIT, function()
 	{
-
-		const DESTINATION = './tests/qunit';
-
-		var typescriptOptions = {
-			noImplicitAny: true,
-			module: AMD,
-			target: ES5,
-			removeComments: true
-		};
-
-		// This isn't ideal, but it works and points the maps to the original source.
-		var sourceMapOptions/*:sourcemaps.WriteOptions*/ = {
-			sourceRoot: null
-		};
-
-
-		console.log('TypeScript Render:', ES5, AMD, DESTINATION);
-
-		return gulp
-			.src([DESTINATION+'/**/*.ts'])
-			.pipe(sourcemaps.init())
-			.pipe(typescript(typescriptOptions))
-			.pipe(sourcemaps.write('.', sourceMapOptions))
-			.pipe(gulp.dest(DESTINATION));
-
-
+		// Can't figure out why the TSC doesn't work the same for this folder as it does for the source folder. :(
+		return tsc.atV2('./tests/qunit',TARGET.ES5,MODULE.UMD);
 	}
 );
 
 gulp.task(
-	TASK_TYPESCRIPT_MOCHA, function()
+	TASK.TYPESCRIPT_MOCHA, function()
 	{
-		return tsc('./tests/mocha', ES5, COMMONJS);
+		return tsc.at('./tests/mocha', TARGET.ES5, MODULE.UMD);
 	}
 );
 
 gulp.task(
-	TASK_BUILD, [
-		TASK_TYPESCRIPT,
-		TASK_DIST,
-		TASK_TYPESCRIPT_QUNIT
+	TASK.BUILD, [
+		TASK.SOURCE,
+		TASK.DIST,
+		TASK.TYPESCRIPT_QUNIT
 	]
 );
 
 gulp.task(
-	TASK_TYPEDOC, function(done)
+	TASK.TYPEDOC, function(done)
 	{
 		var typedocOptions = {
 			name: 'TypeScript.NET',
-			out: './documentation',
+			out: PATH.DOCS,
 
-			module: 'amd',
-			target: 'es5',
+			module: MODULE.AMD,
+			target: TARGET.ES5,
 
 //			excludeNotExported: true // Disable till fixed.
 			includeDeclarations: true,
@@ -248,9 +282,9 @@ gulp.task(
 		// Step 1: Render type-docs..
 		console.log('TypeDocs: rendering');
 		return gulp
-			.src('source')
+			.src(PATH.SOURCE)
 			.pipe(typedoc(typedocOptions))
-			.on(EVENT_END, typedocFixes);
+			.on(EVENT.END, typedocFixes);
 
 
 		function typedocFixes()
@@ -258,7 +292,7 @@ gulp.task(
 
 			// Step 2-A: Fix for issue with search that places a [BACK-SLASH] instead of a [SLASH].
 			console.log('TypeDocs: applying fixes');
-			const SEARCH_FOLDER = DOCS + '/assets/js';
+			const SEARCH_FOLDER = PATH.DOCS + '/assets/js';
 			gulp
 				.src(SEARCH_FOLDER + '/search.js')
 				.pipe(replace('\\\\', '/'))
@@ -266,22 +300,22 @@ gulp.task(
 				.pipe(gulp.dest(SEARCH_FOLDER));
 
 			// Step 2-B: Refactor (rewrite) html files.
-			gulp.src(DOCS + '/**/*.html')
+			gulp.src(PATH.DOCS + '/**/*.html')
 				.pipe(replace('/_', '/'))
 				.pipe(replace(' href="_', ' href="'))
 				.pipe(rename(function(path)
 				{
 					path.basename = path.basename.replace(/^_/, '');
 				}))
-				.pipe(gulp.dest(DOCS))
-				.on(EVENT_END, cleanup);
+				.pipe(gulp.dest(PATH.DOCS))
+				.on(EVENT.END, cleanup);
 
 		}
 
 		function cleanup()
 		{
 			// Step 3: Delete all old underscored html files.
-			del.sync(DOCS + '/**/_*.html', function()
+			del.sync(PATH.DOCS + '/**/_*.html', function()
 			{
 				console.log('TypeDocs: fixes complete');
 				done();
@@ -310,14 +344,14 @@ function bumpVersion(type)
 
 }
 
-gulp.task(TASK_VERSION_BUMP_PATCH, function() { bumpVersion('patch'); });
+gulp.task(TASK.VERSION_BUMP_PATCH, function() { bumpVersion('patch'); });
 
-gulp.task(TASK_VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
+gulp.task(TASK.VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 
-gulp.task(TASK_NUGET_PACK,
+gulp.task(TASK.NUGET_PACK,
 	[
-		TASK_TYPESCRIPT,
-		TASK_DIST_AMD
+		TASK.SOURCE,
+		TASK.DIST_AMD
 	],
 	function(callback) {
 
@@ -351,8 +385,8 @@ gulp.task(TASK_NUGET_PACK,
 	});
 
 
-gulp.task(TASK_DEFAULT, [
-	TASK_TYPESCRIPT,
-	TASK_DIST,
-	TASK_TYPEDOC
+gulp.task(TASK.DEFAULT, [
+	TASK.SOURCE,
+	TASK.DIST,
+	TASK.TYPEDOC
 ]);

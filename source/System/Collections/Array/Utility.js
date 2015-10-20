@@ -2,7 +2,21 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Types', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../../Types', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+    ///<reference path="IArray.d.ts"/>
+    ///<reference path="../../FunctionTypes.d.ts"/>
+    var Types_1 = require('../../Types');
+    var Compare_1 = require('../../Compare');
+    var ArgumentException_1 = require('../../Exceptions/ArgumentException');
+    var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
+    var ArgumentOutOfRangeException_1 = require('../../Exceptions/ArgumentOutOfRangeException');
     function initialize(length) {
         var array;
         if (length > 65536)

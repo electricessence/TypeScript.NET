@@ -3,7 +3,25 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+    ///<reference path="ILinkedListNode.d.ts"/>
+    ///<reference path="ILinkedList.d.ts"/>
+    var Values = require('../Compare');
+    var TextUtility = require('../Text/Utility');
+    var ArrayUtility = require('../Collections/Array/Utility');
+    var Enumerator = require('./Enumeration/Enumerator');
+    var EnumeratorBase_1 = require('./Enumeration/EnumeratorBase');
+    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
+    var ArgumentException_1 = require('../Exceptions/ArgumentException');
+    var ArgumentNullException_1 = require('../Exceptions/ArgumentNullException');
+    var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
     var Node = (function () {
         function Node(value, prev, next) {
             this.value = value;

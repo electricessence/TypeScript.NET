@@ -2,7 +2,18 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types', '../Exceptions/InvalidOperationException'], function (require, exports, Types_1, InvalidOperationException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Types', '../Exceptions/InvalidOperationException'], function (require, exports) {
+    ///<reference path="ISerializable.d.ts"/>
+    ///<reference path="../Primitive.d.ts"/>
+    var Types_1 = require('../Types');
+    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
     var EMPTY = '', TRUE = 'true', FALSE = 'false';
     function toString(value, defaultForUnknown) {
         var v = value;

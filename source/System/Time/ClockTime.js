@@ -3,7 +3,23 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', './HowMany', './TimeSpan'], function (require, exports, Compare_1, HowMany, TimeSpan_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Compare', './HowMany', './TimeSpan'], function (require, exports) {
+    ///<reference path="ITimeMeasurement.d.ts"/>
+    ///<reference path="ITimeTotal.d.ts"/>
+    ///<reference path="../IEquatable.d.ts"/>
+    ///<reference path="../IComparable.d.ts"/>
+    ///<reference path="../IFormattable.d.ts"/>
+    ///<reference path="../IFormatProvider.d.ts"/>
+    var Compare_1 = require('../Compare');
+    var HowMany = require('./HowMany');
+    var TimeSpan_1 = require('./TimeSpan');
     var ClockTime = (function () {
         function ClockTime() {
             var args = [];

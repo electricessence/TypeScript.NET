@@ -2,7 +2,18 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../../Compare', '../../Types'], function (require, exports, Values, Types_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../../Compare', '../../Types'], function (require, exports) {
+    ///<reference path="IArray.d.ts"/>
+    ///<reference path="../../FunctionTypes.d.ts"/>
+    var Values = require('../../Compare');
+    var Types_1 = require('../../Types');
     function validateSize(a, b) {
         if (a && b && a === b || !a && !b)
             return true;

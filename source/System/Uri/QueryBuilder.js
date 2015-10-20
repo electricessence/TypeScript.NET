@@ -7,7 +7,21 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary'], function (require, exports, Types_1, QueryParams, OrderedStringKeyDictionary_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary'], function (require, exports) {
+    ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
+    ///<reference path="../Serialization/ISerializable.d.ts"/>
+    ///<reference path="IUriComponentFormattable.d.ts"/>
+    ///<reference path="../Primitive.d.ts"/>
+    var Types_1 = require('../Types');
+    var QueryParams = require('./QueryParams');
+    var OrderedStringKeyDictionary_1 = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
     var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     var QueryBuilder = (function (_super) {
         __extends(QueryBuilder, _super);

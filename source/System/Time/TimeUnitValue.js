@@ -2,7 +2,21 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', './TimeUnit', './TimeSpan'], function (require, exports, Compare_1, TimeUnit_1, TimeSpan_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Compare', './TimeUnit', './TimeSpan'], function (require, exports) {
+    ///<reference path="ITimeMeasurement.d.ts"/>
+    ///<reference path="../IEquatable.d.ts"/>
+    ///<reference path="../IComparable.d.ts"/>
+    ///<reference path="../IFormattable.d.ts"/>
+    var Compare_1 = require('../Compare');
+    var TimeUnit_1 = require('./TimeUnit');
+    var TimeSpan_1 = require('./TimeSpan');
     var TimeUnitValue = (function () {
         function TimeUnitValue(value, _type) {
             this.value = value;

@@ -8,7 +8,33 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function (require, exports, Values, Arrays, ArrayUtility, Enumerator, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, Utility_1, DisposableBase_1, ObjectDisposedException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function (require, exports) {
+    ///<reference path="../System/FunctionTypes.d.ts"/>
+    ///<reference path="../System/Collections/Array/IArray.d.ts"/>
+    ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
+    ///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
+    ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+    var Values = require('../System/Compare');
+    var Arrays = require('../System/Collections/Array/Compare');
+    var ArrayUtility = require('../System/Collections/Array/Utility');
+    var Enumerator = require('../System/Collections/Enumeration/Enumerator');
+    var Types_1 = require('../System/Types');
+    var Integer_1 = require('../System/Integer');
+    var Functions_1 = require('../System/Functions');
+    var ArrayEnumerator_1 = require('../System/Collections/Enumeration/ArrayEnumerator');
+    var EnumeratorBase_1 = require('../System/Collections/Enumeration/EnumeratorBase');
+    var Dictionary_1 = require('../System/Collections/Dictionaries/Dictionary');
+    var Queue_1 = require('../System/Collections/Queue');
+    var Utility_1 = require('../System/Disposable/Utility');
+    var DisposableBase_1 = require('../System/Disposable/DisposableBase');
+    var ObjectDisposedException_1 = require('../System/Disposable/ObjectDisposedException');
     var enumeratorFrom = Enumerator.from;
     var enumeratorForEach = Enumerator.forEach;
     'use strict';

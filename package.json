@@ -1,6 +1,6 @@
 {
   "name": "TypeScript.NET",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "license": "MIT",
   "author": "electricessence <oren@electrified.net>",
   "description": "A JavaScript Friendly .NET Based Library Ported to TypeScript.",
@@ -27,6 +27,7 @@
     "gulp-typescript": "^2.8.3",
     "gulp-uglify": "^1.4.1",
     "mocha": "^2.3.3",
+    "q": "^1.4.1",
     "semver": "^5.0.3",
     "tsd": "^0.6.4",
     "typedoc": "^0.3.10",

@@ -3,7 +3,23 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Compare', '../Types', './HowMany', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports, Compare_1, Types_1, HowMany, TimeUnit_1, TimeUnitValue_1, ClockTime_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Compare', '../Types', './HowMany', './TimeUnit', './TimeUnitValue', './ClockTime'], function (require, exports) {
+    ///<reference path="ITimeMeasurement.d.ts"/>
+    ///<reference path="../IEquatable.d.ts"/>
+    ///<reference path="../IComparable.d.ts"/>
+    var Compare_1 = require('../Compare');
+    var Types_1 = require('../Types');
+    var HowMany = require('./HowMany');
+    var TimeUnit_1 = require('./TimeUnit');
+    var TimeUnitValue_1 = require('./TimeUnitValue');
+    var ClockTime_1 = require('./ClockTime');
     var TimeSpan = (function () {
         function TimeSpan(value, units) {
             if (units === void 0) { units = TimeUnit_1.default.Milliseconds; }

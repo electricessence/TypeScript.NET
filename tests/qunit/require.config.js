@@ -5,7 +5,7 @@ require.config({
     urlArgs: 't=' + (new Date()).getTime(),
     paths: {
         "QUnit": "../../bower_components" + "/qunit/qunit/qunit",
-        "source": "../../dist/" + "amd"
+        "source": "../../source" + "/"
     },
     shim: {
         'QUnit': {

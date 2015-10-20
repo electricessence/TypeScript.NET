@@ -2,7 +2,19 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require", "exports", '../Types', '../Serialization/Utility'], function (require, exports, Types_1, Serialization) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Types', '../Serialization/Utility'], function (require, exports) {
+    ///<reference path="IUriComponentFormattable.d.ts"/>
+    ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
+    ///<reference path="../Primitive.d.ts"/>
+    var Types_1 = require('../Types');
+    var Serialization = require('../Serialization/Utility');
     var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     function encode(values, prefixIfNotEmpty) {
         if (!values)

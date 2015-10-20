@@ -3,7 +3,23 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-define(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports, Types_1, QueryParams, Utility_1, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+    ///<reference path="IUri.d.ts"/>
+    ///<reference path="../IEquatable.d.ts"/>
+    ///<reference path="../Primitive.d.ts"/>
+    var Types_1 = require('../Types');
+    var QueryParams = require('../Uri/QueryParams');
+    var Utility_1 = require('../Text/Utility');
+    var Scheme_1 = require('../Uri/Scheme');
+    var ArgumentException_1 = require('../Exceptions/ArgumentException');
+    var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
     var Uri = (function () {
         function Uri(scheme, userInfo, host, port, path, query, fragment) {
             var _ = this;

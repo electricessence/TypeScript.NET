@@ -7,7 +7,19 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", '../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], function (require, exports, shallowCopy_1, DisposableBase_1, AU) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], function (require, exports) {
+    ///<reference path="../Disposable/IDisposable.d.ts"/>
+    ///<reference path="IEventDispatcher.d.ts"/>
+    var shallowCopy_1 = require('../Utility/shallowCopy');
+    var DisposableBase_1 = require('../Disposable/DisposableBase');
+    var AU = require('../Collections/Array/Utility');
     var EventDispatcherEntry = (function (_super) {
         __extends(EventDispatcherEntry, _super);
         function EventDispatcherEntry(type, listener, useCapture, priority) {

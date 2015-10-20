@@ -9,7 +9,17 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './SubscribableBase'], function (require, exports, SubscribableBase_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", './SubscribableBase'], function (require, exports) {
+    ///<reference path="IObserver.d.ts"/>
+    ///<reference path="IObservable.d.ts"/>
+    var SubscribableBase_1 = require('./SubscribableBase');
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {

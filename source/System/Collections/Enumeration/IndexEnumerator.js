@@ -3,7 +3,15 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define(["require", "exports", './EnumeratorBase'], function (require, exports, EnumeratorBase_1) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", './EnumeratorBase'], function (require, exports) {
+    var EnumeratorBase_1 = require('./EnumeratorBase');
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
         function IndexEnumerator(sourceFactory) {
