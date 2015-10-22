@@ -1,1 +1,1 @@
-{"version":3,"file":"Compare.js","sourceRoot":"","sources":["Compare.ts"],"names":[],"mappings":"AAAA,qCAAqC;;;;;;;;;IAGrC,IAAI,MAAM,GAAG,OAAO,CAAC,qCAAqC,CAAC,CAAC"}
+{"version":3,"sources":["arrays/compare.ts"],"names":[],"mappings":"AAAA,qCAAqC;;;;;;;;;IAGrC,IAAI,MAAM,GAAG,OAAO,CAAC,qCAAqC,CAAC,CAAC","file":"Arrays/Compare.js","sourcesContent":["///<reference path=\"../import.d.ts\"/>\r\n\r\nimport * as ArrayCompare from 'source/System/Collections/Array/Compare';\r\nvar assert = require('../../../node_modules/assert/assert');\r\n"]}

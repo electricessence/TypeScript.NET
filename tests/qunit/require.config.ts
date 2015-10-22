@@ -8,7 +8,7 @@ require.config({
 
     paths: {
         "QUnit": "../../bower_components"+"/qunit/qunit/qunit",
-        "source": "../../source"+"/"
+        "source": "../../dist/amd"+""
     },
 
     shim: {

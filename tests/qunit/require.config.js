@@ -5,7 +5,7 @@ require.config({
     urlArgs: 't=' + (new Date()).getTime(),
     paths: {
         "QUnit": "../../bower_components" + "/qunit/qunit/qunit",
-        "source": "../../source" + "/"
+        "source": "../../dist/amd" + ""
     },
     shim: {
         'QUnit': {
@@ -16,5 +16,4 @@ require.config({
         }
     }
 });
-
 //# sourceMappingURL=require.config.js.map

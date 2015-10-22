@@ -9,4 +9,5 @@
 })(["require", "exports"], function (require, exports) {
     var assert = require('../../../node_modules/assert/assert');
 });
+
 //# sourceMappingURL=Compare.js.map
