@@ -19,10 +19,10 @@ const TASK = Object.freeze({
 	DIST: 'dist',
 	DIST_ES6: 'dist.' + TARGET.ES6,
 	DIST_AMD: 'dist.' + MODULE.AMD,
-	DIST_UMD: 'dist.' + MODULE.UMD+'.min',
+	DIST_UMD: 'dist.' + MODULE.UMD + '.min',
 	DIST_COMMONJS: 'dist.' + MODULE.COMMONJS,
 	DIST_SYSTEMJS: 'dist.' + MODULE.SYSTEMJS,
-	TYPESCRIPT_QUNIT: TYPESCRIPT + '.qunit (amd)',
+	TYPESCRIPT_QUNIT: TYPESCRIPT + '.qunit',
 	TYPESCRIPT_MOCHA: TYPESCRIPT + '.mocha',
 	BUILD: 'build',
 	TYPEDOC: 'typedoc',
@@ -187,7 +187,7 @@ gulp.task(
 	// This renders the same output as WebStorm's configuration.
 	TASK.SOURCE, function()
 	{
-		return tsc.at('./source', ES5, UMD);
+		return tsc.at('./source', TARGET.ES5, MODULE.UMD);
 	}
 );
 
@@ -212,7 +212,7 @@ gulp.task(
 	TASK.DIST_UMD, function()
 	{
 		return tsc.distMini(
-			MODULE.UMD+'.min', TARGET.ES5, MODULE.UMD);
+			MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD);
 	});
 
 gulp.task(
@@ -244,27 +244,35 @@ gulp.task(
 	TASK.TYPESCRIPT_QUNIT, function()
 	{
 		// Can't figure out why the TSC doesn't work the same for this folder as it does for the source folder. :(
-		return tsc.atV2('./tests/qunit',TARGET.ES5,MODULE.UMD);
+		return tsc.atV2('./tests/qunit', TARGET.ES5, MODULE.UMD);
 	}
 );
 
 gulp.task(
 	TASK.TYPESCRIPT_MOCHA, function()
 	{
-		return tsc.at('./tests/mocha', TARGET.ES5, MODULE.UMD);
+		return tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.UMD);
 	}
+);
+
+
+gulp.task(
+	TASK.BUILD + ".tests", [
+		TASK.TYPESCRIPT_QUNIT,
+		TASK.TYPESCRIPT_MOCHA
+	]
 );
 
 gulp.task(
 	TASK.BUILD, [
 		TASK.SOURCE,
 		TASK.DIST,
-		TASK.TYPESCRIPT_QUNIT
+		TASK.BUILD + ".tests"
 	]
 );
 
 gulp.task(
-	TASK.TYPEDOC, function(done)
+	TASK.TYPEDOC, function()
 	{
 		var typedocOptions = {
 			name: 'TypeScript.NET',

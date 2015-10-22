@@ -1,1 +1,1 @@
--m amd -t es5 --removeComments --sourceMap --noImplicitAny
+-m umd -t es5 --removeComments --sourceMap --noImplicitAny

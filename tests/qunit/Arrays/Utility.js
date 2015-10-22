@@ -68,27 +68,6 @@
             assert.ok(!ArrayUtility.removeIndex(s, 15), "Index [15] doesn't exist");
             assert.equal(s.length, len, ".length should be the same");
         });
-        QUnit.test("Array/Utility.remove", function (assert) {
-            var s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
-            var len = s.length;
-            assert.equal(ArrayUtility.remove(s, 9), 1, "Only 9 removed once");
-            assert.equal(s.length, len - 1, ".length should be less by one");
-            assert.equal(s[1], 8, "Index [1] is now 8");
-            len = s.length;
-            assert.equal(ArrayUtility.remove(s, 2), 2, "2 removed twice");
-            assert.equal(s.length, len - 2, ".length should be less by two");
-            assert.equal(s[7], 1, "Index [7] is now 1");
-            assert.equal(s[10], 3, "Index [10] is now 3");
-            len = s.length;
-            assert.equal(ArrayUtility.remove(s, 15), 0, "15 does not exist");
-            assert.equal(s.length, len, ".length should be the same");
-            len = s.length;
-            assert.ok(ArrayUtility.removeIndex(s, 5), "Index [5] removed");
-            assert.equal(s.length, len - 1, ".length should be less by one");
-            len = s.length;
-            assert.ok(!ArrayUtility.removeIndex(s, 15), "Index [15] doesn't exist");
-            assert.equal(s.length, len, ".length should be the same");
-        });
         QUnit.test("Array/Utility.repeat", function (assert) {
             var value = 10, count = 3;
             var r = ArrayUtility.repeat(value, count);
