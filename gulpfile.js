@@ -270,10 +270,10 @@ gulp.task(
 			name: 'TypeScript.NET',
 			out: PATH.DOCS,
 
-			module: MODULE.AMD,
+			module: MODULE.UMD,
 			target: TARGET.ES5,
 
-//			excludeNotExported: true // Disable till fixed.
+			excludeNotExported: true,
 			includeDeclarations: true,
 			ignoreCompilerErrors: false,
 			version: true
@@ -284,43 +284,7 @@ gulp.task(
 		return gulp
 			.src(PATH.SOURCE)
 			.pipe(typedoc(typedocOptions))
-			.on(EVENT.END, typedocFixes);
-
-
-		function typedocFixes()
-		{
-
-			// Step 2-A: Fix for issue with search that places a [BACK-SLASH] instead of a [SLASH].
-			console.log('TypeDocs: applying fixes');
-			const SEARCH_FOLDER = PATH.DOCS + '/assets/js';
-			gulp
-				.src(SEARCH_FOLDER + '/search.js')
-				.pipe(replace('\\\\', '/'))
-				.pipe(replace('/_', '/'))
-				.pipe(gulp.dest(SEARCH_FOLDER));
-
-			// Step 2-B: Refactor (rewrite) html files.
-			gulp.src(PATH.DOCS + '/**/*.html')
-				.pipe(replace('/_', '/'))
-				.pipe(replace(' href="_', ' href="'))
-				.pipe(rename(function(path)
-				{
-					path.basename = path.basename.replace(/^_/, '');
-				}))
-				.pipe(gulp.dest(PATH.DOCS))
-				.on(EVENT.END, cleanup);
-
-		}
-
-		function cleanup()
-		{
-			// Step 3: Delete all old underscored html files.
-			del.sync(PATH.DOCS + '/**/_*.html', function()
-			{
-				console.log('TypeDocs: fixes complete');
-				done();
-			});
-		}
+			;
 
 	});
 
