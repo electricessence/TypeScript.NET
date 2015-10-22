@@ -11,7 +11,7 @@ as C#, it was important to allow for flexibility of use.
 ```Enumerable.from(source)``` will return an ```Enumerable``` wrapper for LINQ access to the source.
 
 Source values that work:
-* Any object which has a ```.getEnumerator()``` method attached to it.  See IEnumerator in System/Collections/Enumerable.
+* Any object which has a ```.getEnumerator()``` method attached to it.  See ```IEnumerator``` in System/Collections/Enumerable.
 * Arrays or objects analogous to arrays (have a ```.length``` property and index by number).
 
 #### TypeScript
