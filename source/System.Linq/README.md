@@ -11,8 +11,8 @@ as C#, it was important to allow for flexibility of use.
 ```Enumerable.from(source)``` will return an ```Enumerable``` wrapper for LINQ access to the source.
 
 Source values that work:
-* Any object which has a .getEnumerator() method attached to it.  See IEnumerator in System/Collections/Enumerable.
-* Arrays or objects analogous to arrays (have a .length property and index by number).
+* Any object which has a ```.getEnumerator()``` method attached to it.  See ```IEnumerator``` in System/Collections/Enumerable.
+* Arrays or objects analogous to arrays (have a ```.length``` property and index by number).
 
 #### TypeScript
 ```typescript
@@ -28,7 +28,7 @@ console.log(
 );
 ```
 
-### JavaScript (requirejs, ES5)
+#### JavaScript (requirejs, ES5)
 ```javascript
 require('[path or alias to source folder]/System.Linq/Linq',function(Enumerable){
 	 
@@ -43,7 +43,7 @@ require('[path or alias to source folder]/System.Linq/Linq',function(Enumerable)
 });
 ```
 
-### JavaScript (NodeJS, ES5)
+#### JavaScript (NodeJS, ES5)
 ```javascript
 var Enumerable = require('[path or alias to source folder]/System.Linq/Linq');
 	 
