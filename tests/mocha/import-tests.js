@@ -37,14 +37,20 @@
             });
         });
         if (importFiles) {
-            getFilesAt(root + dirPath, '.js')
+            var files = getFilesAt(root + dirPath, '.js'), count = files.length;
+            files
                 .sort()
                 .forEach(function (filename) {
                 var filePath = dirPath + '/' + filename;
                 console.log(" ", filename);
-                describe(filename.replace(/\.js$/, ''), function () {
+                var name = filename.replace(/\.js$/, '');
+                var i = function () {
                     require('./' + filePath);
-                });
+                };
+                if (count == 1 && name == path)
+                    i();
+                else
+                    describe(name, i);
             });
         }
     }

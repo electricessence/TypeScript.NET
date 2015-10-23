@@ -20,7 +20,7 @@ function getDirectoriesAt(path:string):string[]
 		.filter((name)=>fs.statSync(path + '/' + name).isDirectory());
 }
 
-function importRecursive(path:string="", importFiles:boolean = false, base:string = "")
+function importRecursive(path:string = "", importFiles:boolean = false, base:string = "")
 {
 	var dirPath = base + path;
 	if(importFiles) console.log(dirPath);
@@ -28,7 +28,7 @@ function importRecursive(path:string="", importFiles:boolean = false, base:strin
 		.sort()
 		.forEach((dirname)=>
 		{
-			describe(dirname+'/', ()=>
+			describe(dirname + '/', ()=>
 			{
 				importRecursive(dirname, true, dirPath + '/');
 			});
@@ -36,17 +36,26 @@ function importRecursive(path:string="", importFiles:boolean = false, base:strin
 
 	if(importFiles)
 	{
-		getFilesAt(root + dirPath, '.js')
+		var files = getFilesAt(root + dirPath, '.js'), count = files.length;
+
+		files
 			.sort()
 			.forEach((filename)=>
 			{
 				var filePath = dirPath + '/' + filename;
 				console.log(" ", filename);
 
-				describe(filename.replace(/\.js$/, ''), ()=>
+				var name = filename.replace(/\.js$/, '');
+
+				var i = ()=>
 				{
 					require('./' + filePath);
-				});
+				};
+
+				// Allows for simple default instead of recursive.
+				if(count==1 && name==path) i();
+				else describe(name, i);
+
 			});
 	}
 
