@@ -1,4 +1,4 @@
-///<reference path="../import.d.ts"/>
+///<reference path="../../../import.d.ts"/>
 (function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -7,7 +7,7 @@
         define(deps, factory);
     }
 })(["require", "exports"], function (require, exports) {
-    var assert = require('../../../node_modules/assert/assert');
+    var assert = require('../../../../../node_modules/assert/assert');
 });
 
 //# sourceMappingURL=Compare.js.map

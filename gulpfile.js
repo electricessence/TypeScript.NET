@@ -249,7 +249,10 @@ gulp.task(
 );
 
 gulp.task(
-	TASK.TYPESCRIPT_MOCHA, function()
+	TASK.TYPESCRIPT_MOCHA, [
+		TASK.SOURCE,
+		TASK.DIST_COMMONJS // Common JS is compiled due to babel smoke test in mocha tests.
+	], function()
 	{
 		return tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.UMD);
 	}
