@@ -1,0 +1,6 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+!function(e,t){if("object"==typeof module&&"object"==typeof module.exports){var r=t(require,exports);void 0!==r&&(module.exports=r)}else"function"==typeof define&&define.amd&&define(e,t)}(["require","exports","../Types","../Exceptions/InvalidOperationException"],function(e,t){function r(e,t){var r=e;switch(typeof r){case i["default"].NULL:case i["default"].UNDEFINED:case i["default"].STRING:return r;case i["default"].BOOLEAN:return r?o:s;case i["default"].NUMBER:return u+r;default:if(i["default"].of(r).member("serialize").isFunction)return r.serialize();if(arguments.length>1)return t;var a=new n["default"]("Attempting to serialize unidentifiable type.");throw a.data.value=r,a}}function a(e,t,r){if(e)switch(t&&(e=e.toLowerCase()),e){case i["default"].NULL:return null;case i["default"].UNDEFINED:return void 0;case o:return!0;case s:return!1;default:var a=e.replace(/^\s+|,|\s+$/g,u);if(a)if(/^\d+$/g.test(a)){var n=parseInt(a);if(!isNaN(n))return n}else{var f=parseFloat(e);if(!isNaN(f))return f}r&&(e=r(e))}return e}var i=e("../Types"),n=e("../Exceptions/InvalidOperationException"),u="",o="true",s="false";t.toString=r,t.toPrimitive=a});
+//# sourceMappingURL=Utility.js.map
