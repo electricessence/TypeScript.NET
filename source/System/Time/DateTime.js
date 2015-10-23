@@ -9,9 +9,10 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", './HowMany'], function (require, exports) {
+})(["require", "exports", './HowMany', './ClockTime'], function (require, exports) {
     ///<reference path='ITimeTotal.d.ts'/>
     var HowMany = require('./HowMany');
+    var ClockTime_1 = require('./ClockTime');
     var DateTime = (function () {
         function DateTime(value) {
             if (value === void 0) { value = new Date(); }
@@ -46,6 +47,14 @@
         DateTime.prototype.add = function (time) {
             return this.addMilliseconds(time.total.milliseconds);
         };
+        Object.defineProperty(DateTime.prototype, "timeOfDay", {
+            get: function () {
+                var d = this._value;
+                return new ClockTime_1.default(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+            },
+            enumerable: true,
+            configurable: true
+        });
         DateTime.now = function () {
             return new DateTime();
         };
@@ -56,10 +65,6 @@
         DateTime.tomorrow = function () {
             var today = DateTime.today();
             return today.addDays(1);
-        };
-        DateTime.daysAgo = function (days) {
-            var today = DateTime.today();
-            return today.addDays(-days);
         };
         return DateTime;
     })();

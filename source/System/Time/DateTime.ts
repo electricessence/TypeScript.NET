@@ -5,6 +5,7 @@
 
 ///<reference path='ITimeTotal.d.ts'/>
 import * as HowMany from './HowMany';
+import ClockTime from './ClockTime';
 
 export default
 class DateTime
@@ -53,8 +54,22 @@ class DateTime
 		return this.addMilliseconds(days*HowMany.Milliseconds.Per.Day);
 	}
 
+	/**
+	 * Receives an ITimeTotal value and adds based on the total milliseconds.
+	 * @param {ITimeTotal} time
+	 * @returns {DateTime}
+	 */
 	add(time:ITimeTotal):DateTime {
 		return this.addMilliseconds(time.total.milliseconds);
+	}
+
+	get timeOfDay():ClockTime {
+		var d = this._value;
+		return new ClockTime(
+			d.getHours(),
+			d.getMinutes(),
+			d.getSeconds(),
+			d.getMilliseconds())
 	}
 
 	static now():DateTime
@@ -78,12 +93,6 @@ class DateTime
 	{
 		var today:DateTime = DateTime.today();
 		return today.addDays(1);
-	}
-
-	static daysAgo(days:number):DateTime
-	{
-		var today:DateTime = DateTime.today();
-		return today.addDays(-days);
 	}
 
 }

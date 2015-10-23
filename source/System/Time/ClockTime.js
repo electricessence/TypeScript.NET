@@ -70,7 +70,7 @@
                 var _ = this, r = _._ms;
                 if (r === undefined)
                     _._ms = r =
-                        (this._totalMilliseconds % 3600000) | 0;
+                        (this._totalMilliseconds % 1000) | 0;
                 return r;
             },
             enumerable: true,
@@ -81,7 +81,8 @@
                 var _ = this, r = _._seconds;
                 if (r === undefined)
                     _._seconds = r =
-                        ((this._totalMilliseconds / 3600000) % 60) | 0;
+                        ((this._totalMilliseconds / 1000)
+                            % 60) | 0;
                 return r;
             },
             enumerable: true,
@@ -92,9 +93,8 @@
                 var _ = this, r = _._minutes;
                 if (r === undefined)
                     _._minutes = r =
-                        ((this._totalMilliseconds
-                            / 3600000
-                            / 60) % 60) | 0;
+                        ((this._totalMilliseconds / 60000)
+                            % 60) | 0;
                 return r;
             },
             enumerable: true,
@@ -105,10 +105,8 @@
                 var _ = this, r = _._hours;
                 if (r === undefined)
                     _._hours = r =
-                        ((this._totalMilliseconds
-                            / 3600000
-                            / 60
-                            / 60) % 24) | 0;
+                        ((this._totalMilliseconds / 3600000)
+                            % 24) | 0;
                 return r;
             },
             enumerable: true,
@@ -119,11 +117,7 @@
                 var _ = this, r = _._days;
                 if (r === undefined)
                     _._days = r =
-                        (this._totalMilliseconds
-                            / 3600000
-                            / 60
-                            / 60
-                            / 24) | 0;
+                        (this._totalMilliseconds / 86400000) | 0;
                 return r;
             },
             enumerable: true,

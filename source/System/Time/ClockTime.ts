@@ -63,7 +63,8 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 	get ticks():number
 	{
 		var _ = this, r = _._ticks;
-		if(r===undefined) {
+		if(r===undefined)
+		{
 			var ms = Math.abs(_._totalMilliseconds);
 			_._ticks = r = (ms - Math.floor(ms))*HowMany.Ticks.Per.Millisecond;
 		}
@@ -77,7 +78,7 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._ms;
 		if(r===undefined)
 			_._ms = r =
-				(this._totalMilliseconds%HowMany.Milliseconds.Per.Hour) | 0;
+				(this._totalMilliseconds%HowMany.Milliseconds.Per.Second) | 0;
 		return r;
 	}
 
@@ -88,7 +89,8 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._seconds;
 		if(r===undefined)
 			_._seconds = r =
-				((this._totalMilliseconds/HowMany.Milliseconds.Per.Hour)%HowMany.Seconds.Per.Minute) | 0;
+				((this._totalMilliseconds/HowMany.Milliseconds.Per.Second)
+				%HowMany.Seconds.Per.Minute) | 0;
 		return r;
 	}
 
@@ -98,9 +100,8 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._minutes;
 		if(r===undefined)
 			_._minutes = r =
-				((this._totalMilliseconds
-				/HowMany.Milliseconds.Per.Hour
-				/HowMany.Seconds.Per.Minute)%HowMany.Minutes.Per.Hour) | 0;
+				((this._totalMilliseconds/HowMany.Milliseconds.Per.Minute)
+				%HowMany.Minutes.Per.Hour) | 0;
 
 		return r;
 	}
@@ -111,10 +112,8 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._hours;
 		if(r===undefined)
 			_._hours = r =
-				((this._totalMilliseconds
-				/HowMany.Milliseconds.Per.Hour
-				/HowMany.Seconds.Per.Minute
-				/HowMany.Minutes.Per.Hour)%HowMany.Hours.Per.Day) | 0;
+				((this._totalMilliseconds/HowMany.Milliseconds.Per.Hour)
+				%HowMany.Hours.Per.Day) | 0;
 		return r;
 
 	}
@@ -125,15 +124,12 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		var _ = this, r = _._days;
 		if(r===undefined)
 			_._days = r =
-				(this._totalMilliseconds
-				/HowMany.Milliseconds.Per.Hour
-				/HowMany.Seconds.Per.Minute
-				/HowMany.Minutes.Per.Hour
-				/HowMany.Hours.Per.Day) | 0;
+				(this._totalMilliseconds/HowMany.Milliseconds.Per.Day) | 0;
 		return r;
 	}
 
-	get total():ITimeMeasurement {
+	get total():ITimeMeasurement
+	{
 		return this.toTimeSpan();
 	}
 
