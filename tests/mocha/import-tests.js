@@ -1,5 +1,13 @@
 ///<reference path="import"/>
-define(["require", "exports", "fs"], function (require, exports, fs) {
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", "fs"], function (require, exports) {
+    var fs = require("fs");
     var root = "./tests/mocha/";
     function getFilesAt(path, ext) {
         return fs
@@ -49,4 +57,5 @@ define(["require", "exports", "fs"], function (require, exports, fs) {
     console.log("Importing Tests:");
     importRecursive();
 });
+
 //# sourceMappingURL=import-tests.js.map

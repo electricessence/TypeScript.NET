@@ -125,7 +125,7 @@ var ClockTime = (function () {
         get: function get() {
             var _ = this,
                 r = _._days;
-            if (r === undefined) _._days = r = this._totalMilliseconds / 3600000 / 60 / 60 / 24 | 0;
+            if (r === undefined) _._days = r = this._totalMilliseconds / 86400000 | 0;
             return r;
         }
     }, {
