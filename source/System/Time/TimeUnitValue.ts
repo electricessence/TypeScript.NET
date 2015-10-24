@@ -9,98 +9,58 @@
 ///<reference path="../IFormattable.d.ts"/>
 import {areEqual, compare} from '../Compare';
 import TimeUnit from './TimeUnit';
-import TimeSpan from './TimeSpan';
+import TimeQuantity from './TimeQuantity';
 
-// This class allows for passing around a specific measure of time coerced by its unit type.
+/**
+ * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.
+ */
 export default
-class TimeUnitValue implements IEquatable<TimeUnitValue>, IComparable<TimeUnitValue>, ITimeTotal
+class TimeUnitValue extends TimeQuantity
 {
 
-	constructor(public value:number, private _type:TimeUnit)
+	constructor(value:number|ITimeQuantity, private _units:TimeUnit)
 	{
-		assertValidUnit(_type);
+		super(typeof(value)=='number'
+			? <number>value
+			: getUnitQuantityFrom(<ITimeQuantity>value, _units));
+		TimeUnit.assertValid(_units);
 	}
 
-
-	// Attempts to convert value to current unit type.
-	// If not coercible, it returns null.
-	coerce(other:TimeSpan):TimeUnitValue;
-	coerce(other:TimeUnitValue):TimeUnitValue;
-	coerce(other:any):TimeUnitValue
+	get value():number
 	{
-		var type = this._type;
-		assertValidUnit(type);
-
-		if(other instanceof TimeSpan) {
-			other = other.toTimeUnitValue(type);
-		}
-		else if(other instanceof TimeUnitValue) {
-			if(type!==other.type)
-				other = other.to(type);
-		}
-		else
-			return null;
-
-		return other;
+		return this._quantity;
 	}
 
-	equals(other:TimeSpan):boolean;
-	equals(other:TimeUnitValue):boolean;
-	equals(other:any):boolean
+	set value(v:number)
 	{
-		var o:TimeUnitValue = this.coerce(other);
-		if(o==null)
-			return false;
-
-		return areEqual(this.value, o.value);
+		this._total = null;
+		this._quantity = v;
 	}
 
-
-	compareTo(other:TimeSpan):number;
-	compareTo(other:TimeUnitValue):number;
-	compareTo(other:any):number
+	getTotalMilliseconds():number
 	{
-		if(other==null) return 1 | 0;
-
-		assertComparisonType(other);
-
-		return compare(this.value, this.coerce(other).value);
-
+		return TimeUnit.toMilliseconds(this._quantity, this._units);
 	}
 
 	// To avoid confusion, the unit type can only be set once at construction.
-	get type():TimeUnit
+	get units():TimeUnit
 	{
-		return this._type;
+		return this._units;
 	}
 
-	toTimeSpan():TimeSpan
+	to(units:TimeUnit = this.units):TimeUnitValue
 	{
-		return new TimeSpan(this.value, this.type);
+		return TimeUnitValue.from(this,units);
 	}
 
-	get total():ITimeMeasurement {
-		return this.toTimeSpan();
-	}
-
-	to(units:TimeUnit = this.type):TimeUnitValue
+	static from(value:number|ITimeQuantity, units:TimeUnit = TimeUnit.Milliseconds):TimeUnitValue
 	{
-		return this.toTimeSpan().toTimeUnitValue(units);
+		return new TimeUnitValue(value, units);
 	}
 
 }
 
-function assertComparisonType(other:any):void
+function getUnitQuantityFrom(q:ITimeQuantity, units:TimeUnit)
 {
-	if(!(other instanceof TimeUnitValue || other instanceof TimeSpan))
-		throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
-}
-
-
-function assertValidUnit(unit:TimeUnit):boolean
-{
-	if(isNaN(unit) || unit>TimeUnit.Days || unit<TimeUnit.Ticks || Math.floor(unit)!==unit)
-		throw new Error("Invalid TimeUnit.");
-
-	return true;
+	return TimeUnit.fromMilliseconds(q.getTotalMilliseconds(), units);
 }

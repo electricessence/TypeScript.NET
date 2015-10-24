@@ -3,6 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+/**
+ * This interface guarantees there will be a value property for all time units.
+ */
 interface ITimeMeasurement
 {
 	ticks: number;
@@ -12,3 +15,4 @@ interface ITimeMeasurement
 	hours: number;
 	days: number;
 }
+

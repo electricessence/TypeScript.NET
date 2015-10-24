@@ -13,161 +13,69 @@ import * as HowMany from './HowMany';
 import TimeUnit from './TimeUnit';
 import TimeUnitValue from './TimeUnitValue';
 import ClockTime from './ClockTime';
+import TimeQuantity from './TimeQuantity';
 
-
+/**
+ * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
+ */
 export default
-class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<TimeSpan>, ITimeTotal
+class TimeSpan extends TimeQuantity implements ITimeMeasurement
 {
 
-	private _milliseconds:number;
+	ticks: number;
+	milliseconds: number;
+	seconds: number;
+	minutes: number;
+	hours: number;
+	days: number;
 
 	// In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
 	constructor(value:number, units:TimeUnit = TimeUnit.Milliseconds)
 	{
-		this._milliseconds = TimeSpan.convertToMilliseconds(value, units);
-	}
+		var ms = TimeUnit.toMilliseconds(value, units);
+		super(ms);
 
-	equals(other:TimeUnitValue):boolean;
-	equals(other:TimeSpan):boolean;
-	equals(other:any):boolean
-	{
-		var otherMS:number = getMilliseconds(other);
-
-		if(other===undefined) // undefined is used instead of NaN since NaN could be a valid value.
-			return false;
-
-		return areEqual(this._milliseconds, otherMS);
-	}
-
-
-	compareTo(other:TimeUnitValue):number;
-	compareTo(other:TimeSpan):number;
-	compareTo(other:any):number
-	{
-		if(other==null) return 1 | 0;
-
-		assertComparisonType(other);
-
-		return compare(this._milliseconds, getMilliseconds(other));
-
-	}
-
-	toTimeUnitValue(units:TimeUnit = TimeUnit.Milliseconds):TimeUnitValue
-	{
-		return new TimeUnitValue(this.getTotal(units), units);
-	}
-
-	static convertToMilliseconds(value:number, units:TimeUnit = TimeUnit.Milliseconds):number
-	{
-		// noinspection FallThroughInSwitchStatementJS
-		switch(units)
-		{
-			case TimeUnit.Days:
-				value *= HowMany.Hours.Per.Day;
-			case TimeUnit.Hours:
-				value *= HowMany.Minutes.Per.Hour;
-			case TimeUnit.Minutes:
-				value *= HowMany.Seconds.Per.Minute;
-			case TimeUnit.Seconds:
-				value *= HowMany.Milliseconds.Per.Second;
-			case TimeUnit.Milliseconds:
-				return value;
-			case TimeUnit.Ticks:
-				return value/HowMany.Ticks.Per.Millisecond;
-			default:
-				throw new Error("Invalid TimeUnit.");
-		}
-	}
-
-	getTotal(units:TimeUnit):number
-	{
 		var _ = this;
-		switch(units)
-		{
-			case TimeUnit.Days:
-				return _.days;
-			case TimeUnit.Hours:
-				return _.hours;
-			case TimeUnit.Minutes:
-				return _.minutes;
-			case TimeUnit.Seconds:
-				return _.seconds;
-			case TimeUnit.Milliseconds:
-				return _._milliseconds;
-			case TimeUnit.Ticks:
-				return _._milliseconds*HowMany.Ticks.Per.Millisecond;
-			default:
-				throw new Error("Invalid TimeUnit.");
-		}
+		_.ticks = ms*HowMany.Ticks.Per.Millisecond;
+		_.milliseconds = ms;
+		_.seconds = ms/HowMany.Milliseconds.Per.Second;
+		_.minutes = ms/HowMany.Milliseconds.Per.Minute;
+		_.hours = ms/HowMany.Milliseconds.Per.Hour;
+		_.days = ms/HowMany.Milliseconds.Per.Day;
 	}
 
-	get ticks():number
-	{
-		return this._milliseconds
-			*HowMany.Ticks.Per.Millisecond;
-	}
-
-	get milliseconds():number
-	{
-		return this._milliseconds;
-	}
-
-	get seconds():number
-	{
-		return this._milliseconds
-			/HowMany.Milliseconds.Per.Second;
-	}
-
-	get minutes():number
-	{
-		return this.seconds
-			/HowMany.Seconds.Per.Minute;
-	}
-
-	get hours():number
-	{
-		return this.minutes
-			/HowMany.Minutes.Per.Hour;
-	}
-
-	get days():number
-	{
-		return this.hours
-			/HowMany.Hours.Per.Day;
-	}
-
-	// Provides an interface only way of acquiring the getTotal time.
-	get total():ITimeMeasurement
+	/**
+	 * Provides an standard interface for acquiring the total time.
+	 * @returns {TimeSpan}
+	 */
+	get total():TimeSpan
 	{
 		return this;
 	}
 
+	private _time:ClockTime;
 	// Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
 	get time():ClockTime
 	{
-		return new ClockTime(this._milliseconds);
+		var _ = this, t = _._time;
+		if(!t) _._time = t = new ClockTime(_.getTotalMilliseconds());
+		return t;
 	}
 
-	add(other:ClockTime):TimeSpan;
-	add(other:TimeUnitValue):TimeSpan;
-	add(other:TimeSpan):TimeSpan;
-	add(other:any):TimeSpan
+	add(other:ITimeQuantity):TimeSpan
 	{
 		if(Type.isNumber(other))
 			throw new Error(
-				"Use .addUnit to add a numerical value amount.  " +
-				".add only supports ClockTime, TimeSpan, and TimeUnitValue."
+				"Use .addUnit(value:number,units:TimeUnit) to add a numerical value amount.  Default units are milliseconds.\n" +
+				".add only supports quantifiable time values (ITimeTotal)."
 			);
 
-		if(other instanceof TimeUnitValue || other instanceof ClockTime)
-			other = other.toTimeSpan();
-
-		return new TimeSpan(this._milliseconds + other.milliseconds);
+		return new TimeSpan(this.getTotalMilliseconds() + other.total.milliseconds);
 	}
 
 	addUnit(value:number, units:TimeUnit = TimeUnit.Milliseconds):TimeSpan
 	{
-		return new TimeSpan(this._milliseconds + TimeSpan.convertToMilliseconds(value, units));
+		return new TimeSpan(this.getTotalMilliseconds() + TimeUnit.toMilliseconds(value, units));
 	}
 
 
@@ -206,40 +114,6 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 		return new TimeSpan(value, TimeUnit.Ticks);
 	}
 
-	static fromTime(
-		hours:number,
-		minutes:number,
-		seconds:number = 0,
-		milliseconds:number = 0):TimeSpan
-	{
-		return new TimeSpan(
-			TimeSpan.millisecondsFromTime(
-				hours, minutes, seconds, milliseconds
-			)
-		);
-	}
-
-	static millisecondsFromTime(
-		hours:number,
-		minutes:number,
-		seconds:number = 0,
-		milliseconds:number = 0):number
-	{
-		var value = hours;
-		value *= HowMany.Minutes.Per.Hour;
-		value += minutes;
-		value *= HowMany.Seconds.Per.Minute;
-		value += seconds;
-		value *= HowMany.Milliseconds.Per.Second;
-		value += milliseconds;
-		return value;
-	}
-
-	static between(first:Date, last:Date):TimeSpan
-	{
-		return new TimeSpan(last.getTime() - first.getTime());
-	}
-
 
 	static get zero():TimeSpan
 	{
@@ -247,29 +121,5 @@ class TimeSpan implements ITimeMeasurement, IEquatable<TimeSpan>, IComparable<Ti
 	}
 }
 
-
-function assertComparisonType(other:any):void
-{
-	if(!(other instanceof TimeUnitValue || other instanceof TimeSpan))
-		throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
-}
-
-
-function getMilliseconds(other:any):number
-{
-	if(other instanceof TimeUnitValue)
-	{
-		var o:TimeUnitValue = other;
-		return o.type===TimeUnit.Milliseconds
-			? o.value
-			: o.toTimeSpan().milliseconds;
-	}
-	else if(other instanceof TimeSpan)
-	{
-		return other._milliseconds;
-	}
-
-	return undefined;
-}
 
 var timeSpanZero:TimeSpan;

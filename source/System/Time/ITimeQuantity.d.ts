@@ -5,6 +5,7 @@
 
 ///<reference path="ITimeMeasurement.d.ts"/>
 
-interface ITimeTotal {
+interface ITimeQuantity {
+	getTotalMilliseconds():number;
 	total:ITimeMeasurement;
 }

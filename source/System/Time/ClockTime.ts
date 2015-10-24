@@ -5,143 +5,86 @@
  */
 
 ///<reference path="ITimeMeasurement.d.ts"/>
-///<reference path="ITimeTotal.d.ts"/>
+///<reference path="ITimeQuantity.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
 ///<reference path="../IFormattable.d.ts"/>
 ///<reference path="../IFormatProvider.d.ts"/>
 import {areEqual,compare} from '../Compare';
 import * as HowMany from './HowMany';
-import TimeSpan from './TimeSpan';
+import TimeQuantity from './TimeQuantity';
 
 
 export default
-class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<ClockTime>, IFormattable, ITimeTotal
+class ClockTime extends TimeQuantity
 {
-	private _totalMilliseconds:number;
-	get totalMilliseconds():number
-	{
-		return this._totalMilliseconds;
-	}
 
-	// Could be in reverse or negative...
-	get direction():number
-	{
-		return compare(this._totalMilliseconds, 0);
-	}
+	days:number;
+	hour:number;
+	minute:number;
+	second:number;
+	millisecond:number;
+	tick:number;
 
 	constructor(milliseconds:number);
 	constructor(hours:number, minutes:number, seconds?:number, milliseconds?:number);
 	constructor(...args:number[])
 	{
-		this._totalMilliseconds =
+		super(
 			args.length>1
-				? TimeSpan.millisecondsFromTime(
+				? ClockTime.millisecondsFromTime(
 				args[0] || 0,
 				args[1] || 0,
 				args.length>2 && args[2] || 0,
 				args.length>3 && args[3] || 0
 			)
-				: (args.length>0 && args[0] || 0);
+				: (args.length>0 && args[0] || 0)
+		);
+
+		var _ = this;
+		var ms = Math.abs(_.getTotalMilliseconds());
+		var msi = Math.floor(ms);
+
+		_.tick = (ms - msi)*HowMany.Ticks.Per.Millisecond;
+
+		_.days = (msi/HowMany.Milliseconds.Per.Day) | 0;
+		msi -= _.days * HowMany.Milliseconds.Per.Day;
+
+		_.hour = (msi/HowMany.Milliseconds.Per.Hour) | 0;
+		msi -= _.hour * HowMany.Milliseconds.Per.Hour;
+
+		_.minute = (msi/HowMany.Milliseconds.Per.Minute) | 0;
+		msi -= _.minute * HowMany.Milliseconds.Per.Minute;
+
+		_.second = (msi/HowMany.Milliseconds.Per.Second) | 0;
+		msi -= _.second * HowMany.Milliseconds.Per.Second;
+
+		_.millisecond = msi;
+
+		Object.freeze(_);
 	}
 
-
-	equals(other:ClockTime):boolean
-	{
-		return areEqual(this._totalMilliseconds, other.totalMilliseconds);
-	}
-
-	compareTo(other:ClockTime):number
-	{
-		if(other==null) return 1 | 0;
-
-		return compare(this._totalMilliseconds, other.totalMilliseconds);
-	}
-
-
-	private _ticks:number;
-	get ticks():number
-	{
-		var _ = this, r = _._ticks;
-		if(r===undefined)
-		{
-			var ms = Math.abs(_._totalMilliseconds);
-			_._ticks = r = (ms - Math.floor(ms))*HowMany.Ticks.Per.Millisecond;
-		}
-		return r;
-	}
-
-	private _ms:number;
-
-	get milliseconds():number
-	{
-		var _ = this, r = _._ms;
-		if(r===undefined)
-			_._ms = r =
-				(this._totalMilliseconds%HowMany.Milliseconds.Per.Second) | 0;
-		return r;
-	}
-
-
-	private _seconds:number;
-	get seconds():number
-	{
-		var _ = this, r = _._seconds;
-		if(r===undefined)
-			_._seconds = r =
-				((this._totalMilliseconds/HowMany.Milliseconds.Per.Second)
-				%HowMany.Seconds.Per.Minute) | 0;
-		return r;
-	}
-
-	private _minutes:number;
-	get minutes():number
-	{
-		var _ = this, r = _._minutes;
-		if(r===undefined)
-			_._minutes = r =
-				((this._totalMilliseconds/HowMany.Milliseconds.Per.Minute)
-				%HowMany.Minutes.Per.Hour) | 0;
-
-		return r;
-	}
-
-	private _hours:number;
-	get hours():number
-	{
-		var _ = this, r = _._hours;
-		if(r===undefined)
-			_._hours = r =
-				((this._totalMilliseconds/HowMany.Milliseconds.Per.Hour)
-				%HowMany.Hours.Per.Day) | 0;
-		return r;
-
-	}
-
-	private _days:number;
-	get days():number
-	{
-		var _ = this, r = _._days;
-		if(r===undefined)
-			_._days = r =
-				(this._totalMilliseconds/HowMany.Milliseconds.Per.Day) | 0;
-		return r;
-	}
-
-	get total():ITimeMeasurement
-	{
-		return this.toTimeSpan();
-	}
-
-	toTimeSpan():TimeSpan
-	{
-		return new TimeSpan(this._totalMilliseconds);
-	}
 
 	// Static version for relative consistency.  Constructor does allow this format.
 	static from(hours:number, minutes:number, seconds:number = 0, milliseconds:number = 0):ClockTime
 	{
 		return new ClockTime(hours, minutes, seconds, milliseconds);
+	}
+
+	static millisecondsFromTime(
+		hours:number,
+		minutes:number,
+		seconds:number = 0,
+		milliseconds:number = 0):number
+	{
+		var value = hours;
+		value *= HowMany.Minutes.Per.Hour;
+		value += minutes;
+		value *= HowMany.Seconds.Per.Minute;
+		value += seconds;
+		value *= HowMany.Milliseconds.Per.Second;
+		value += milliseconds;
+		return value;
 	}
 
 	toString(/*format?:string, formatProvider?:IFormatProvider*/):string
@@ -154,14 +97,14 @@ class ClockTime implements ITimeMeasurement, IEquatable<ClockTime>, IComparable<
 		if(_.days)
 			a.push(pluralize(_.days, "day"));
 
-		if(_.hours)
-			a.push(pluralize(_.hours, "hour"));
+		if(_.hour)
+			a.push(pluralize(_.hour, "hour"));
 
-		if(_.minutes)
-			a.push(pluralize(_.minutes, "minute"));
+		if(_.minute)
+			a.push(pluralize(_.minute, "minute"));
 
-		if(_.seconds)
-			a.push(pluralize(_.seconds, "second"));
+		if(_.second)
+			a.push(pluralize(_.second, "second"));
 
 		if(a.length>1)
 			a.splice(a.length - 1, 0, "and");

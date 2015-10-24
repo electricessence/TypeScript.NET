@@ -62,7 +62,7 @@ var Uri = (function () {
     _createClass(Uri, [{
         key: 'equals',
         value: function equals(other) {
-            return this.absoluteUri == Uri.toString(other);
+            return this === other || this.absoluteUri == Uri.toString(other);
         }
     }, {
         key: 'copyTo',

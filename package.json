@@ -1,6 +1,6 @@
 {
   "name": "TypeScript.NET",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "license": "MIT",
   "author": "electricessence <oren@electrified.net>",
   "description": "A JavaScript Friendly .NET Based Library Ported to TypeScript.",

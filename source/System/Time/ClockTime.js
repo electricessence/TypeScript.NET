@@ -3,6 +3,11 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 (function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -10,151 +15,68 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../Compare', './HowMany', './TimeSpan'], function (require, exports) {
-    ///<reference path="ITimeMeasurement.d.ts"/>
-    ///<reference path="ITimeTotal.d.ts"/>
-    ///<reference path="../IEquatable.d.ts"/>
-    ///<reference path="../IComparable.d.ts"/>
-    ///<reference path="../IFormattable.d.ts"/>
-    ///<reference path="../IFormatProvider.d.ts"/>
-    var Compare_1 = require('../Compare');
+})(["require", "exports", './HowMany', './TimeQuantity'], function (require, exports) {
     var HowMany = require('./HowMany');
-    var TimeSpan_1 = require('./TimeSpan');
-    var ClockTime = (function () {
+    var TimeQuantity_1 = require('./TimeQuantity');
+    var ClockTime = (function (_super) {
+        __extends(ClockTime, _super);
         function ClockTime() {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i - 0] = arguments[_i];
             }
-            this._totalMilliseconds =
-                args.length > 1
-                    ? TimeSpan_1.default.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
-                    : (args.length > 0 && args[0] || 0);
+            _super.call(this, args.length > 1
+                ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
+                : (args.length > 0 && args[0] || 0));
+            var _ = this;
+            var ms = Math.abs(_.getTotalMilliseconds());
+            var msi = Math.floor(ms);
+            _.tick = (ms - msi) * 10000;
+            _.days = (msi / 86400000) | 0;
+            msi -= _.days * 86400000;
+            _.hour = (msi / 3600000) | 0;
+            msi -= _.hour * 3600000;
+            _.minute = (msi / 60000) | 0;
+            msi -= _.minute * 60000;
+            _.second = (msi / 1000) | 0;
+            msi -= _.second * 1000;
+            _.millisecond = msi;
+            Object.freeze(_);
         }
-        Object.defineProperty(ClockTime.prototype, "totalMilliseconds", {
-            get: function () {
-                return this._totalMilliseconds;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "direction", {
-            get: function () {
-                return Compare_1.compare(this._totalMilliseconds, 0);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ClockTime.prototype.equals = function (other) {
-            return Compare_1.areEqual(this._totalMilliseconds, other.totalMilliseconds);
-        };
-        ClockTime.prototype.compareTo = function (other) {
-            if (other == null)
-                return 1 | 0;
-            return Compare_1.compare(this._totalMilliseconds, other.totalMilliseconds);
-        };
-        Object.defineProperty(ClockTime.prototype, "ticks", {
-            get: function () {
-                var _ = this, r = _._ticks;
-                if (r === undefined) {
-                    var ms = Math.abs(_._totalMilliseconds);
-                    _._ticks = r = (ms - Math.floor(ms)) * 10000;
-                }
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "milliseconds", {
-            get: function () {
-                var _ = this, r = _._ms;
-                if (r === undefined)
-                    _._ms = r =
-                        (this._totalMilliseconds % 1000) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "seconds", {
-            get: function () {
-                var _ = this, r = _._seconds;
-                if (r === undefined)
-                    _._seconds = r =
-                        ((this._totalMilliseconds / 1000)
-                            % 60) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "minutes", {
-            get: function () {
-                var _ = this, r = _._minutes;
-                if (r === undefined)
-                    _._minutes = r =
-                        ((this._totalMilliseconds / 60000)
-                            % 60) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "hours", {
-            get: function () {
-                var _ = this, r = _._hours;
-                if (r === undefined)
-                    _._hours = r =
-                        ((this._totalMilliseconds / 3600000)
-                            % 24) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "days", {
-            get: function () {
-                var _ = this, r = _._days;
-                if (r === undefined)
-                    _._days = r =
-                        (this._totalMilliseconds / 86400000) | 0;
-                return r;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(ClockTime.prototype, "total", {
-            get: function () {
-                return this.toTimeSpan();
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ClockTime.prototype.toTimeSpan = function () {
-            return new TimeSpan_1.default(this._totalMilliseconds);
-        };
         ClockTime.from = function (hours, minutes, seconds, milliseconds) {
             if (seconds === void 0) { seconds = 0; }
             if (milliseconds === void 0) { milliseconds = 0; }
             return new ClockTime(hours, minutes, seconds, milliseconds);
+        };
+        ClockTime.millisecondsFromTime = function (hours, minutes, seconds, milliseconds) {
+            if (seconds === void 0) { seconds = 0; }
+            if (milliseconds === void 0) { milliseconds = 0; }
+            var value = hours;
+            value *= 60;
+            value += minutes;
+            value *= 60;
+            value += seconds;
+            value *= 1000;
+            value += milliseconds;
+            return value;
         };
         ClockTime.prototype.toString = function () {
             /* INSERT CUSTOM FORMATTING CODE HERE */
             var _ = this, a = [];
             if (_.days)
                 a.push(pluralize(_.days, "day"));
-            if (_.hours)
-                a.push(pluralize(_.hours, "hour"));
-            if (_.minutes)
-                a.push(pluralize(_.minutes, "minute"));
-            if (_.seconds)
-                a.push(pluralize(_.seconds, "second"));
+            if (_.hour)
+                a.push(pluralize(_.hour, "hour"));
+            if (_.minute)
+                a.push(pluralize(_.minute, "minute"));
+            if (_.second)
+                a.push(pluralize(_.second, "second"));
             if (a.length > 1)
                 a.splice(a.length - 1, 0, "and");
             return a.join(", ").replace(", and, ", " and ");
         };
         return ClockTime;
-    })();
+    })(TimeQuantity_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ClockTime;
     function pluralize(value, label) {

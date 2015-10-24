@@ -24,19 +24,26 @@ var _ClockTime = require('./ClockTime');
 
 var _ClockTime2 = _interopRequireDefault(_ClockTime);
 
+var _TimeSpan = require('./TimeSpan');
+
+var _TimeSpan2 = _interopRequireDefault(_TimeSpan);
+
 var DateTime = (function () {
     function DateTime() {
         var value = arguments.length <= 0 || arguments[0] === undefined ? new Date() : arguments[0];
+        var kind = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
 
         _classCallCheck(this, DateTime);
 
         var _ = this;
-        if (value instanceof DateTime) _._value = value.jsDate;else if (value instanceof Date) _.setJsDate(value);else _._value = value == undefined ? new Date() : new Date(value);
+        _._kind = kind;
+        if (value instanceof DateTime) _._value = value.jsDate;else if (value instanceof Date) _._setJsDate(value);else _._value = value == undefined ? new Date() : new Date(value);
     }
 
     _createClass(DateTime, [{
-        key: 'setJsDate',
-        value: function setJsDate(value) {
+        key: '_setJsDate',
+        value: function _setJsDate(value) {
+            this._time = null;
             this._value = new Date(value.getTime());
         }
     }, {
@@ -57,31 +64,86 @@ var DateTime = (function () {
             return this.addMilliseconds(time.total.milliseconds);
         }
     }, {
+        key: 'timePassedSince',
+        value: function timePassedSince(previous) {
+            return DateTime.between(previous, this);
+        }
+    }, {
         key: 'jsDate',
         get: function get() {
             return new Date(this._value.getTime());
         }
     }, {
+        key: 'kind',
+        get: function get() {
+            return this._kind;
+        }
+    }, {
+        key: 'year',
+        get: function get() {
+            return this._value.getFullYear();
+        }
+    }, {
+        key: 'month',
+        get: function get() {
+            return this._value.getMonth();
+        }
+    }, {
+        key: 'day',
+        get: function get() {
+            return this._value.getDate();
+        }
+    }, {
+        key: 'dayOfWeek',
+        get: function get() {
+            return this._value.getDay();
+        }
+    }, {
+        key: 'date',
+        get: function get() {
+            var _ = this;
+            return new DateTime(new Date(_.year, _.month, _.day), _._kind);
+        }
+    }, {
         key: 'timeOfDay',
         get: function get() {
-            var d = this._value;
-            return new _ClockTime2['default'](d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+            var _ = this,
+                t = _._time;
+            if (!t) {
+                var d = this._value;
+                _._time = t = new _ClockTime2['default'](d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+            }
+            return t;
+        }
+    }, {
+        key: 'utc',
+        get: function get() {
+            var _ = this;
+            if (_._kind != 1) return new DateTime(_, _._kind);
+            var d = _._value;
+            return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2);
         }
     }], [{
+        key: 'between',
+        value: function between(first, last) {
+            var f = first instanceof DateTime ? first._value : first,
+                l = last instanceof DateTime ? last._value : last;
+            return new _TimeSpan2['default'](f.getTime() - l.getTime());
+        }
+    }, {
         key: 'now',
-        value: function now() {
+        get: function get() {
             return new DateTime();
         }
     }, {
         key: 'today',
-        value: function today() {
-            var now = new Date();
-            return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+        get: function get() {
+            return DateTime.now.date;
         }
     }, {
         key: 'tomorrow',
-        value: function tomorrow() {
-            var today = DateTime.today();
+        get: function get() {
+            var today = DateTime.today;
             return today.addDays(1);
         }
     }]);
@@ -89,8 +151,7 @@ var DateTime = (function () {
     return DateTime;
 })();
 
-exports['default'] = DateTime;
-
 Object.freeze(DateTime);
+exports['default'] = DateTime;
 module.exports = exports['default'];
 //# sourceMappingURL=DateTime.js.map

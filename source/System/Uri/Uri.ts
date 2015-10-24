@@ -90,7 +90,7 @@ class Uri implements IUri, IEquatable<IUri>
 	 */
 	equals(other:IUri):boolean
 	{
-		return this.absoluteUri==Uri.toString(other);
+		return this===other || this.absoluteUri==Uri.toString(other);
 	}
 
 
