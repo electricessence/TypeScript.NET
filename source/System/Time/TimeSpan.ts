@@ -11,7 +11,6 @@ import {areEqual,compare} from '../Compare';
 import Type from '../Types';
 import * as HowMany from './HowMany';
 import TimeUnit from './TimeUnit';
-import TimeUnitValue from './TimeUnitValue';
 import ClockTime from './ClockTime';
 import TimeQuantity from './TimeQuantity';
 

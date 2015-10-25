@@ -1,5 +1,6 @@
 /*
  * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
@@ -28,6 +29,10 @@ var _TimeSpan = require('./TimeSpan');
 
 var _TimeSpan2 = _interopRequireDefault(_TimeSpan);
 
+var _TimeStamp = require('./TimeStamp');
+
+var _TimeStamp2 = _interopRequireDefault(_TimeStamp);
+
 var DateTime = (function () {
     function DateTime() {
         var value = arguments.length <= 0 || arguments[0] === undefined ? new Date() : arguments[0];
@@ -37,10 +42,15 @@ var DateTime = (function () {
 
         var _ = this;
         _._kind = kind;
-        if (value instanceof DateTime) _._value = value.jsDate;else if (value instanceof Date) _._setJsDate(value);else _._value = value == undefined ? new Date() : new Date(value);
+        if (value instanceof DateTime) _._value = value.toJsDate();else if (value instanceof Date) _._setJsDate(value);else _._value = value == undefined ? new Date() : new Date(value);
     }
 
     _createClass(DateTime, [{
+        key: 'toJsDate',
+        value: function toJsDate() {
+            return new Date(this._value.getTime());
+        }
+    }, {
         key: '_setJsDate',
         value: function _setJsDate(value) {
             this._time = null;
@@ -50,7 +60,25 @@ var DateTime = (function () {
         key: 'addMilliseconds',
         value: function addMilliseconds(ms) {
             ms = ms || 0;
-            return new DateTime(this._value.getTime() + ms);
+            return new DateTime(this._value.getTime() + ms, this._kind);
+        }
+    }, {
+        key: 'addSeconds',
+        value: function addSeconds(seconds) {
+            seconds = seconds || 0;
+            return this.addMilliseconds(seconds * 1000);
+        }
+    }, {
+        key: 'addMinutes',
+        value: function addMinutes(minutes) {
+            minutes = minutes || 0;
+            return this.addMilliseconds(minutes * 60000);
+        }
+    }, {
+        key: 'addHours',
+        value: function addHours(hours) {
+            hours = hours || 0;
+            return this.addMilliseconds(hours * 3600000);
         }
     }, {
         key: 'addDays',
@@ -59,9 +87,30 @@ var DateTime = (function () {
             return this.addMilliseconds(days * 86400000);
         }
     }, {
+        key: 'addMonths',
+        value: function addMonths(months) {
+            months = months || 0;
+            var d = this.toJsDate();
+            d.setMonth(d.getMonth() + months);
+            return new DateTime(d, this._kind);
+        }
+    }, {
+        key: 'addYears',
+        value: function addYears(years) {
+            years = years || 0;
+            var d = this.toJsDate();
+            d.setFullYear(d.getFullYear() + years);
+            return new DateTime(d, this._kind);
+        }
+    }, {
         key: 'add',
         value: function add(time) {
-            return this.addMilliseconds(time.total.milliseconds);
+            return this.addMilliseconds(time.getTotalMilliseconds());
+        }
+    }, {
+        key: 'subtract',
+        value: function subtract(time) {
+            return this.addMilliseconds(-time.getTotalMilliseconds());
         }
     }, {
         key: 'timePassedSince',
@@ -69,9 +118,9 @@ var DateTime = (function () {
             return DateTime.between(previous, this);
         }
     }, {
-        key: 'jsDate',
-        get: function get() {
-            return new Date(this._value.getTime());
+        key: 'toTimeStamp',
+        value: function toTimeStamp() {
+            return _TimeStamp2['default'].from(this);
         }
     }, {
         key: 'kind',
@@ -116,7 +165,7 @@ var DateTime = (function () {
             return t;
         }
     }, {
-        key: 'utc',
+        key: 'toUniversalTime',
         get: function get() {
             var _ = this;
             if (_._kind != 1) return new DateTime(_, _._kind);
@@ -129,6 +178,16 @@ var DateTime = (function () {
             var f = first instanceof DateTime ? first._value : first,
                 l = last instanceof DateTime ? last._value : last;
             return new _TimeSpan2['default'](f.getTime() - l.getTime());
+        }
+    }, {
+        key: 'isLeapYear',
+        value: function isLeapYear(year) {
+            return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+        }
+    }, {
+        key: 'daysInMonth',
+        value: function daysInMonth(year, month) {
+            return new Date(year, month + 1, 0).getDate();
         }
     }, {
         key: 'now',

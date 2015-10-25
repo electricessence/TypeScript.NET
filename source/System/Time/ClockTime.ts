@@ -10,13 +10,14 @@
 ///<reference path="../IComparable.d.ts"/>
 ///<reference path="../IFormattable.d.ts"/>
 ///<reference path="../IFormatProvider.d.ts"/>
+///<reference path="ITimeStamp.d.ts"/>
 import {areEqual,compare} from '../Compare';
 import * as HowMany from './HowMany';
 import TimeQuantity from './TimeQuantity';
 
 
 export default
-class ClockTime extends TimeQuantity
+class ClockTime extends TimeQuantity implements IClockTime
 {
 
 	days:number;

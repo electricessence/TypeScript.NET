@@ -1,20 +1,24 @@
 /*
  * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
 ///<reference path='ITimeQuantity.d.ts'/>
-///<reference path="ICalendarDate.d.ts"/>
+///<reference path="ITimeStamp.d.ts"/>
+///<reference path="IDateTime.d.ts"/>
 import * as HowMany from './HowMany';
 import ClockTime from './ClockTime';
 import TimeSpan from './TimeSpan';
+import TimeStamp from './TimeStamp';
+import {Gregorian} from './Calendars';
 
 
-class DateTime implements ICalendarDate
+class DateTime implements ICalendarDate, IDateTime
 {
 	private _value:Date;
 
-	get jsDate():Date
+	toJsDate():Date
 	{
 		return new Date(this._value.getTime()); // return a clone.
 	}
@@ -35,7 +39,7 @@ class DateTime implements ICalendarDate
 		var _ = this;
 		_._kind = kind;
 		if(value instanceof DateTime)
-			_._value = value.jsDate;
+			_._value = value.toJsDate();
 		else if(value instanceof Date)
 			_._setJsDate(value);
 		else
@@ -55,13 +59,17 @@ class DateTime implements ICalendarDate
 		return this._value.getFullYear();
 	}
 
-	get month():number
+	/**
+	 * Returns the Gregorian Month (zero indexed).
+	 * @returns {number}
+	 */
+	get month():Gregorian.Month
 	{
 		return this._value.getMonth();
 	}
 
 	/**
-	 * An integer between 1 and 31.
+	 * Returns the day of the month.  An integer between 1 and 31.
 	 * @returns {number}
 	 */
 	get day():number
@@ -69,7 +77,7 @@ class DateTime implements ICalendarDate
 		return this._value.getDate();
 	}
 
-	get dayOfWeek():DateTime.DayOfWeek
+	get dayOfWeek():Gregorian.DayOfWeek
 	{
 		return this._value.getDay();
 	}
@@ -108,7 +116,7 @@ class DateTime implements ICalendarDate
 	addMonths(months:number):DateTime
 	{
 		months = months || 0;
-		var d = this.jsDate;
+		var d = this.toJsDate();
 		d.setMonth(d.getMonth()+months);
 		return new DateTime(d, this._kind);
 	}
@@ -116,7 +124,7 @@ class DateTime implements ICalendarDate
 	addYears(years:number):DateTime
 	{
 		years = years || 0;
-		var d = this.jsDate;
+		var d = this.toJsDate();
 		d.setFullYear(d.getFullYear()+years);
 		return new DateTime(d, this._kind);
 	}
@@ -130,6 +138,26 @@ class DateTime implements ICalendarDate
 	add(time:ITimeQuantity):DateTime
 	{
 		return this.addMilliseconds(time.getTotalMilliseconds());
+	}
+
+	/**
+	 * Receives an ITimeQuantity value and subtracts based on the total milliseconds.
+	 * @param {ITimeQuantity} time
+	 * @returns {DateTime}
+	 */
+	subtract(time:ITimeQuantity):DateTime
+	{
+		return this.addMilliseconds(-time.getTotalMilliseconds());
+	}
+
+	/**
+	 * Returns a TimeSpan representing the amount of time between two dates.
+	 * @param previous
+	 * @returns {TimeSpan}
+	 */
+	timePassedSince(previous:Date|DateTime):TimeSpan
+	{
+		return DateTime.between(previous, this);
 	}
 
 	/**
@@ -150,6 +178,10 @@ class DateTime implements ICalendarDate
 
 	private _time:ClockTime;
 
+	/**
+	 * Returns the time of day represented by a ClockTime object.
+	 * @returns {ClockTime}
+	 */
 	get timeOfDay():ClockTime
 	{
 		var _ = this, t = _._time;
@@ -165,13 +197,27 @@ class DateTime implements ICalendarDate
 		return t;
 	}
 
+	/**
+	 * Returns a readonly object which contains all the date and time components.
+	 */
+	toTimeStamp():ITimeStamp {
+		return TimeStamp.from(this);
+	}
 
+	/**
+	 * Returns the now local time.
+	 * @returns {DateTime}
+	 */
 	static get now():DateTime
 	{
 		return new DateTime();
 	}
 
-	get utc():DateTime
+	/**
+	 * Returns a UTC version of this date if its kind is local.
+	 * @returns {DateTime}
+	 */
+	get toUniversalTime():DateTime
 	{
 		var _ = this;
 		if(_._kind!=DateTime.Kind.Local)
@@ -192,17 +238,30 @@ class DateTime implements ICalendarDate
 		);
 	}
 
+	/**
+	 * The date component for now.
+	 * @returns {DateTime}
+	 */
 	static get today():DateTime
 	{
 		return DateTime.now.date;
 	}
 
+	/**
+	 * Midnight tomorrow.
+	 * @returns {DateTime}
+	 */
 	static get tomorrow():DateTime
 	{
 		var today:DateTime = DateTime.today;
 		return today.addDays(1);
 	}
 
+	/**
+	 * Measures the difference between two dates as a TimeSpan.
+	 * @param first
+	 * @param last
+	 */
 	static between(first:Date|DateTime, last:Date|DateTime):TimeSpan
 	{
 		var f:Date = first instanceof DateTime ? first._value : <Date>first,
@@ -211,25 +270,33 @@ class DateTime implements ICalendarDate
 		return new TimeSpan(f.getTime() - l.getTime());
 	}
 
-	timePassedSince(previous:Date|DateTime):TimeSpan
-	{
-		return DateTime.between(previous, this);
+	/**
+	 * Calculates if the given year is a leap year using the formula:
+	 * ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)
+	 * @param year
+	 * @returns {boolean}
+	 */
+	static isLeapYear(year:number):boolean {
+		return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
 	}
+
+	/**
+	 * Returns the number of days for the specific year and month.
+	 * @param year
+	 * @param month
+	 * @returns {any}
+	 */
+	static daysInMonth(year:number, month:Gregorian.Month):number {
+		// Basically, add 1 month, subtract a day... What's the date?
+		return (new Date(year,month+1,0)).getDate();
+	}
+
 
 }
 
+// Extend DateTime's usefulness.
 module DateTime
 {
-	export const enum DayOfWeek {
-		Sunday,
-		Monday,
-		Tuesday,
-		Wednesday,
-		Thursday,
-		Friday,
-		Saturday
-	}
-
 	export const enum Kind {
 		Unspecified,
 		Local,

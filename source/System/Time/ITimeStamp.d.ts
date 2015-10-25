@@ -8,3 +8,15 @@ interface ICalendarDate {
 	month:number;
 	day:number;
 }
+
+interface IClockTime {
+	hour:number;
+	minute:number;
+	second:number;
+	millisecond:number;
+	tick:number;
+}
+
+interface ITimeStamp extends ICalendarDate, IClockTime {
+
+}
