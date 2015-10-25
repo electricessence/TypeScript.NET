@@ -105,14 +105,31 @@ class DateTime implements ICalendarDate
 		return this.addMilliseconds(days*HowMany.Milliseconds.Per.Day);
 	}
 
+	addMonths(months:number):DateTime
+	{
+		months = months || 0;
+		var d = this.jsDate;
+		d.setMonth(d.getMonth()+months);
+		return new DateTime(d, this._kind);
+	}
+
+	addYears(years:number):DateTime
+	{
+		years = years || 0;
+		var d = this.jsDate;
+		d.setFullYear(d.getFullYear()+years);
+		return new DateTime(d, this._kind);
+	}
+
+
 	/**
-	 * Receives an ITimeTotal value and adds based on the total milliseconds.
+	 * Receives an ITimeQuantity value and adds based on the total milliseconds.
 	 * @param {ITimeQuantity} time
 	 * @returns {DateTime}
 	 */
 	add(time:ITimeQuantity):DateTime
 	{
-		return this.addMilliseconds(time.total.milliseconds);
+		return this.addMilliseconds(time.getTotalMilliseconds());
 	}
 
 	/**

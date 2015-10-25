@@ -96,8 +96,20 @@
             days = days || 0;
             return this.addMilliseconds(days * 86400000);
         };
+        DateTime.prototype.addMonths = function (months) {
+            months = months || 0;
+            var d = this.jsDate;
+            d.setMonth(d.getMonth() + months);
+            return new DateTime(d, this._kind);
+        };
+        DateTime.prototype.addYears = function (years) {
+            years = years || 0;
+            var d = this.jsDate;
+            d.setFullYear(d.getFullYear() + years);
+            return new DateTime(d, this._kind);
+        };
         DateTime.prototype.add = function (time) {
-            return this.addMilliseconds(time.total.milliseconds);
+            return this.addMilliseconds(time.getTotalMilliseconds());
         };
         Object.defineProperty(DateTime.prototype, "date", {
             get: function () {
