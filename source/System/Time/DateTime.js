@@ -78,7 +78,19 @@
         });
         DateTime.prototype.addMilliseconds = function (ms) {
             ms = ms || 0;
-            return new DateTime(this._value.getTime() + ms);
+            return new DateTime(this._value.getTime() + ms, this._kind);
+        };
+        DateTime.prototype.addSeconds = function (seconds) {
+            seconds = seconds || 0;
+            return this.addMilliseconds(seconds * 1000);
+        };
+        DateTime.prototype.addMinutes = function (minutes) {
+            minutes = minutes || 0;
+            return this.addMilliseconds(minutes * 60000);
+        };
+        DateTime.prototype.addHours = function (hours) {
+            hours = hours || 0;
+            return this.addMilliseconds(hours * 3600000);
         };
         DateTime.prototype.addDays = function (days) {
             days = days || 0;

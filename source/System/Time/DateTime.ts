@@ -78,7 +78,25 @@ class DateTime implements ICalendarDate
 	addMilliseconds(ms:number):DateTime
 	{
 		ms = ms || 0;
-		return new DateTime(this._value.getTime() + ms);
+		return new DateTime(this._value.getTime() + ms, this._kind);
+	}
+
+	addSeconds(seconds:number):DateTime
+	{
+		seconds = seconds || 0;
+		return this.addMilliseconds(seconds*HowMany.Milliseconds.Per.Second);
+	}
+
+	addMinutes(minutes:number):DateTime
+	{
+		minutes = minutes || 0;
+		return this.addMilliseconds(minutes*HowMany.Milliseconds.Per.Minute);
+	}
+
+	addHours(hours:number):DateTime
+	{
+		hours = hours || 0;
+		return this.addMilliseconds(hours*HowMany.Milliseconds.Per.Hour);
 	}
 
 	addDays(days:number):DateTime
@@ -109,15 +127,17 @@ class DateTime implements ICalendarDate
 				_.month,
 				_.day
 			)
-			,_._kind
+			, _._kind
 		);
 	}
 
 	private _time:ClockTime;
+
 	get timeOfDay():ClockTime
 	{
 		var _ = this, t = _._time;
-		if(!t) {
+		if(!t)
+		{
 			var d = this._value;
 			_._time = t = new ClockTime(
 				d.getHours(),
@@ -138,7 +158,7 @@ class DateTime implements ICalendarDate
 	{
 		var _ = this;
 		if(_._kind!=DateTime.Kind.Local)
-			return new DateTime(_,_._kind);
+			return new DateTime(_, _._kind);
 
 		var d = _._value;
 		return new DateTime(
@@ -169,13 +189,14 @@ class DateTime implements ICalendarDate
 	static between(first:Date|DateTime, last:Date|DateTime):TimeSpan
 	{
 		var f:Date = first instanceof DateTime ? first._value : <Date>first,
-		    l:Date = last instanceof DateTime ? last._value: <Date>last;
+		    l:Date = last instanceof DateTime ? last._value : <Date>last;
 
 		return new TimeSpan(f.getTime() - l.getTime());
 	}
 
-	timePassedSince(previous:Date|DateTime):TimeSpan {
-		return DateTime.between(previous,this);
+	timePassedSince(previous:Date|DateTime):TimeSpan
+	{
+		return DateTime.between(previous, this);
 	}
 
 }
