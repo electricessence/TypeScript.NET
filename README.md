@@ -58,7 +58,7 @@ This all may be overkill, or possibly a use case was missed, so please don't hes
 
 #### Bower:
 ```
-bower install TypeScript.NET
+bower install typescript-dotnet
 ```
 This should also include require.js in your bower components directory.
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
