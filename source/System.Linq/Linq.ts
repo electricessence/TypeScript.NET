@@ -3362,7 +3362,7 @@ extends Enumerable<T>
 }
 
 export interface IGrouping<TKey, TElement>
-extends IEnumerable<TElement>
+extends Enumerable<TElement>
 {
 	key: TKey;
 }
