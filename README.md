@@ -1,7 +1,7 @@
 TypeScript.NET
 ==============
 
-##A JavaScript Friendly .NET Based Library Ported to TypeScript
+##A JavaScript Friendly .NET Based TypeScript Library
 
 The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
 Contributions are welcomed as the .NET Library (meaning it's class structure and classes, not necessarily its content) has a substantial amount of usefulness.  With the open sourcing of .NET, TypeScript seems the most logical means to take advantage of it.  Typing, generics, classes, modules, inheritance, all are required to make a resultant JavaScript library that takes advantage of this elegance.
@@ -12,7 +12,7 @@ There is of course some variance away from .NET's convention (camelCase methods 
 If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contribute it yourself! :)
 
 ## Why should I use this, let alone TypeScript?
-1) **It's 100% compatible with JavaScript.**  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :) 
+1) **It's 100% compatible with JavaScript.**  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :)
 
 2) TypeScript is lead by Anders Hejlsberg, the founder of C#.  You will feel quite at home in TypeScript if you are a fan of typed languages (like C#), but at the same time you'll get all the flexibility and compatibility of JavaScript.
 
@@ -54,7 +54,7 @@ Simply launch /tests/index.html to see existing unit tests and their status.
 Currently the unit test cover many example usages.
 
 # Documentation
-Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)  
+Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)
 View Documentation: http://electricessence.github.io/TypeScript.NET/documentation/
 
 # Learn, Connect & Evolve
