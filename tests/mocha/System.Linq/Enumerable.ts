@@ -202,7 +202,7 @@ it(".groupBy(selector)", ()=>
 
 
 	const COMPANY_A = "Microsoft", COMPANY_B = "Hell Corp.";
-	var objArray:{ Name:string, Id: number, Salary: number, Company: string }[] = [
+	var objArray = [
 		{ Name: "John", Id: 0, Salary: 1300.00, Company: COMPANY_A },
 		{ Name: "Peter", Id: 1, Salary: 4800.50, Company: COMPANY_A },
 		{ Name: "Sandra", Id: 2, Salary: 999.99, Company: COMPANY_A },

@@ -1365,8 +1365,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             return new OrderedEnumerable(this, keySelector, true);
         };
         Enumerable.prototype.groupBy = function (keySelector, elementSelector, compareSelector) {
-            if (elementSelector === void 0) { elementSelector = Functions.Identity; }
             var _ = this;
+            if (!elementSelector)
+                elementSelector = Functions.Identity;
             return new Enumerable(function () { return _.toLookup(keySelector, elementSelector, compareSelector)
                 .getEnumerator(); });
         };

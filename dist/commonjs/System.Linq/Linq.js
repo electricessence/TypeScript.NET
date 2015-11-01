@@ -1213,9 +1213,8 @@ var Enumerable = (function (_DisposableBase) {
     }, {
         key: 'groupBy',
         value: function groupBy(keySelector, elementSelector, compareSelector) {
-            if (elementSelector === undefined) elementSelector = Functions.Identity;
-
             var _ = this;
+            if (!elementSelector) elementSelector = Functions.Identity;
             return new Enumerable(function () {
                 return _.toLookup(keySelector, elementSelector, compareSelector).getEnumerator();
             });

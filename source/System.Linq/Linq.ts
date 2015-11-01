@@ -2497,12 +2497,20 @@ extends DisposableBase implements IEnumerable<T>
 
 	// Originally contained a result selector (not common use), but this could be done simply by a select statement after.
 
+
+
+	groupBy<TKey>(keySelector:Selector<T, TKey>):Enumerable<IGrouping<TKey, T>>;
 	groupBy<TKey, TElement, TCompare>(
 		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TElement> = Functions.Identity,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>
+		elementSelector:Selector<T, TElement>,
+		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>;
+	groupBy<TKey, TElement, TCompare>(
+		keySelector:Selector<T, TKey>,
+		elementSelector?:Selector<T, TElement>,
+		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, T>>|Enumerable<IGrouping<TKey, TElement>>
 	{
 		var _ = this;
+		if(!elementSelector) elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
 		return new Enumerable<IGrouping<TKey, TElement>>(
 			() => _.toLookup(keySelector, elementSelector, compareSelector)
 				.getEnumerator()
