@@ -13,13 +13,8 @@ If you have a .NET Library class that you want to see represented in TypeScript,
 
 ## Why should I use this, let alone TypeScript?
 1. **It's 100% compatible with JavaScript.**  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :)
-
-2. TypeScript is lead by Anders Hejlsberg, the founder of C#.  You will feel quite at home in TypeScript if you are a fan of typed languages (like C#), but at the same time you'll get all the flexibility and compatibility of JavaScript.
-See http://www.typescriptlang.org/ for more information about the TypeScript language.
-Also some more good info on Wikipedia: http://en.wikipedia.org/wiki/TypeScript.
-
+2. TypeScript is lead by Anders Hejlsberg, the founder of C#.  You will feel quite at home in TypeScript if you are a fan of typed languages (like C#), but at the same time you'll get all the flexibility and compatibility of JavaScript.  See [www.typescriptlang.org](http://www.typescriptlang.org/) for more information about the TypeScript language.  Also some more good info on [Wikipedia](http://en.wikipedia.org/wiki/TypeScript).
 3. The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It's still JavaScript, but with many bonuses including a growing community. :)
-
 4. Most major IDEs and text editors now support TypeScript either built in, or via a plug-in:
 * Visual Studio
 * VS Code
@@ -69,7 +64,7 @@ This should also include require.js in your bower components directory.
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
 
 #### Nuget:
-https://www.nuget.org/packages/TypeScript.NET.AMD/
+[www.nuget.org/packages/TypeScript.NET.AMD/](https://www.nuget.org/packages/TypeScript.NET.AMD/)
 ```
 PM> Install-Package TypeScript.NET.AMD
 ```
@@ -81,12 +76,14 @@ Mocha tests are in place for core functionality and expanding all the time.
 Currently the unit test cover many example usages.
 
 ## Documentation
-Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)
-View Documentation: http://electricessence.github.io/TypeScript.NET/documentation/
+Currently improving over time using JSDoc style comments and [TypeDoc](http://typedoc.io/).
+View Documentation: [electricessence.github.io/TypeScript.NET/documentation](http://electricessence.github.io/TypeScript.NET/documentation/)
 
 ## Discussion
-https://redd.it/3ok0bm TypeScript
-https://redd.it/3ojzbt .NET
+
+#### Reddit
+[.NET](https://redd.it/3ojzbt)
+[TypeScript](https://redd.it/3ok0bm)
 
 ## Learn, Connect & Evolve
-https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ
+[www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ](https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ)
