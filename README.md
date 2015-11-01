@@ -12,7 +12,7 @@ There is of course some variance away from .NET's convention (camelCase methods 
 If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contribute it yourself! :)
 
 ## Why should I use this, let alone TypeScript?
-1) **It's 100% compatible with JavaScript.**  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :) 
+1) **It's 100% compatible with JavaScript.**  Currently TypeScript.NET's target is ES5, so legacy JavaScript won't work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don't have to change your source code to target newer versions. :)
 
 2) TypeScript is lead by Anders Hejlsberg, the founder of C#.  You will feel quite at home in TypeScript if you are a fan of typed languages (like C#), but at the same time you'll get all the flexibility and compatibility of JavaScript.
 
@@ -48,31 +48,45 @@ After some time and effort, I've decided that this library should be module base
 * You can easily recompile the entire library into another **dist** folder fully minified using gulp.
 * An already minified with source-map version is provided in the **min** folder
 
-#### Bower Install:
+#### NPM:
+```
+npm install typescript-dotnet
+```
+Version 2.5 is the first NPM release.  The goal is to get this as user friendly as possible.
+Currently it is possible/supported to use TypeScript.NET in a number of different ways:
+1. Using TypeScript and import the source directly by relative reference.
+2. Node users can use ```dist/commonjs``` which uses ES6>Babel rendering for ease of use.
+3. Use ```dist/es6``` directly.
+4. requirejs can consume ```dist/amd``` or ```dist/umd.min``` for minified, web-friendly, source-mapped versions.
+5. Lastly, re-render your own version using the TypeScript compiler.
+
+This all may be overkill, or possibly a use case was missed, so please don't hesitate to log issues in GitHub.
+
+#### Bower:
 ```
 bower install TypeScript.NET
-```  
-This should also include require.js in your bower components directory.  
+```
+This should also include require.js in your bower components directory.
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
 
 #### Nuget:
-https://www.nuget.org/packages/TypeScript.NET.AMD/  
+https://www.nuget.org/packages/TypeScript.NET.AMD/
 ```
-PM> Install-Package TypeScript.NET.AMD 
-```  
+PM> Install-Package TypeScript.NET.AMD
+```
 
 ## Unit Tests
-Simply launch /tests/index.html to see existing unit tests and their status.
+Mocha tests are in place for core functionality and expanding all the time.
 
 ## Examples
 Currently the unit test cover many example usages.
 
 ## Documentation
-Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)  
+Currently improving over time using JSDoc style comments and TypeDoc. (http://typedoc.io/)
 View Documentation: http://electricessence.github.io/TypeScript.NET/documentation/
 
 ## Discussion
-https://redd.it/3ok0bm TypeScript  
+https://redd.it/3ok0bm TypeScript
 https://redd.it/3ojzbt .NET
 
 ## Learn, Connect & Evolve

@@ -1,6 +1,6 @@
 {
   "name": "TypeScript.NET",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "ignore": [
     ".gitignore",
     ".idea",
@@ -10,6 +10,7 @@
     "bower_components",
     "tests",
     "example",
+    "typings",
     "documentation",
     "dist/commonjs",
     "dist/es6",
@@ -17,7 +18,7 @@
   ],
   "homepage": "https://github.com/electricessence/TypeScript.NET",
   "authors": [
-    "electricessence <oren@electrified.net>"
+    "electricessence <npm@electrified.net>"
   ],
   "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
   "moduleType": [
@@ -26,8 +27,8 @@
   "keywords": [
     "JavaScript",
     "TypeScript",
-    "tsc",
-    ".net",
+    ".NET",
+    "dotnet",
     "TypeScript.NET",
     "LINQ"
   ],

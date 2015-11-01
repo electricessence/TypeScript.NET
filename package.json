@@ -1,14 +1,19 @@
 {
-  "name": "TypeScript.NET",
-  "version": "2.4.0",
+  "name": "typescript-dotnet",
+  "version": "2.5.0",
   "license": "MIT",
-  "author": "electricessence <oren@electrified.net>",
+  "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript Friendly .NET Based Library Ported to TypeScript.",
   "private": false,
   "repository": "https://github.com/electricessence/TypeScript.NET.git",
-  "scripts": {
-    "postinstall": "node node_modules/bower/bin/bower install && node node_modules/tsd/build/cli reinstall --resolve"
-  },
+  "keywords": [
+    "JavaScript",
+    "TypeScript",
+    ".NET",
+    "dotnet",
+    "TypeScript.NET",
+    "LINQ"
+  ],
   "devDependencies": {
     "assert": "^1.3.0",
     "babel": "^5.8.23",
@@ -18,7 +23,6 @@
     "gulp": "^3.9.0",
     "gulp-babel": "^5.3.0",
     "gulp-bump": "^1.0.0",
-    "gulp-html-minify": "0.0.12",
     "gulp-nuget-pack": "0.0.6",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
