@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet",
-  "version": "2.5.9",
+  "version": "2.5.10",
   "ignore": [
     ".gitignore",
     ".idea",
@@ -20,7 +20,7 @@
   "authors": [
     "electricessence <npm@electrified.net>"
   ],
-  "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
+  "description": "A JavaScript-Friendly .NET TypeScript Library.",
   "moduleType": [
     "amd"
   ],
