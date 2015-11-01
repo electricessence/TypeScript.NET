@@ -65,9 +65,9 @@ If you need another module type other than AMD, the TypeScript files are include
 
 #### Nuget:
 Versions are currently behind current and only serve AMD.
-[www.nuget.org/packages/TypeScript.NET.AMD/](https://www.nuget.org/packages/TypeScript.NET.AMD/)
+[www.nuget.org/packages/TypeScript.NET.Library/](https://www.nuget.org/packages/TypeScript.NET.Library/)
 ```
-PM> Install-Package TypeScript.NET.AMD
+PM> Install-Package TypeScript.NET.Library
 ```
 
 ## Unit Tests

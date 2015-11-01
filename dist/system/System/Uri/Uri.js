@@ -162,7 +162,7 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                     Object.freeze(_);
                 }
                 Uri.prototype.equals = function (other) {
-                    return this.absoluteUri == Uri.toString(other);
+                    return this === other || this.absoluteUri == Uri.toString(other);
                 };
                 Uri.from = function (url) {
                     var uri = (!url || Types_1.default.isString(url))

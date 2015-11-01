@@ -1285,8 +1285,10 @@ export class Enumerable extends DisposableBase {
     orderByDescending(keySelector = Functions.Identity) {
         return new OrderedEnumerable(this, keySelector, true);
     }
-    groupBy(keySelector, elementSelector = Functions.Identity, compareSelector) {
+    groupBy(keySelector, elementSelector, compareSelector) {
         var _ = this;
+        if (!elementSelector)
+            elementSelector = Functions.Identity;
         return new Enumerable(() => _.toLookup(keySelector, elementSelector, compareSelector)
             .getEnumerator());
     }
