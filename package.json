@@ -1,11 +1,14 @@
 {
   "name": "typescript-dotnet",
-  "version": "2.5.6",
+  "version": "2.5.7",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript Friendly .NET Based Library Ported to TypeScript.",
   "private": false,
-  "repository": "https://github.com/electricessence/TypeScript.NET.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/electricessence/TypeScript.NET.git"
+  },
   "keywords": [
     "JavaScript",
     "TypeScript",
