@@ -334,7 +334,7 @@ gulp.task(TASK.NUGET_PACK,
 		var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 		nugetpack({
 				id: "TypeScript.NET.Library",
-				title: pkg.name,
+				title: "TypeScript.NET",
 				version: pkg.version,
 				authors: "https://github.com/electricessence/",
 				description: pkg.description,
