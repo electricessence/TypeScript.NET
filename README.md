@@ -36,13 +36,14 @@ To name a few.
 After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
 
 * Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don't want.
+* Compiling modules into a monolithic library is easier than the reverse.
 * If you care about bundling and minification, **'r.js optimizer'** is probably the right way to go.
 * The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.
 * It is easy to change the module types. :)
 * You can easily recompile the entire library into another **dist** folder fully minified using gulp.
 * An already minified with source-map version is provided in the **min** folder
 
-#### NPM:
+#### [NPM]([http://www.npmjs.com/package/typescript-dotnet]):
 ```
 npm install typescript-dotnet
 ```
@@ -56,16 +57,14 @@ Currently it is possible/supported to use TypeScript.NET in a number of differen
 
 This all may be overkill, or possibly a use case was missed, so please don't hesitate to log issues in GitHub.
 
-#### Bower:
+#### [Bower](http://bower.io/search/?q=typescript-dotnet):
 ```
 bower install typescript-dotnet
 ```
 This should also include require.js in your bower components directory.
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
 
-#### Nuget:
-Versions are currently behind current and only serve AMD.
-[www.nuget.org/packages/TypeScript.NET.Library/](https://www.nuget.org/packages/TypeScript.NET.Library/)
+#### [Nuget](https://www.nuget.org/packages/TypeScript.NET.Library/):
 ```
 PM> Install-Package TypeScript.NET.Library
 ```
