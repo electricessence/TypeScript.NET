@@ -1452,18 +1452,11 @@ extends DisposableBase implements IEnumerable<T>
 				typeName = Type.FUNCTION;
 				break;
 			default:
-				typeName = null;
-				break;
+				return <Enumerable<any>>this
+					.where(x=>x instanceof type);
 		}
-		return <Enumerable<any>>((typeName===null)
-			? this.where(x=>
-		{
-			return x instanceof type;
-		})
-			: this.where(x=>
-		{
-			return typeof x===typeName;
-		}));
+		return <Enumerable<any>>this
+			.where(x=>typeof x===typeName);
 	}
 
 	except<TCompare>(

@@ -793,16 +793,11 @@ var __extends = (this && this.__extends) || function (d, b) {
                     typeName = Types_1.default.FUNCTION;
                     break;
                 default:
-                    typeName = null;
-                    break;
+                    return this
+                        .where(function (x) { return x instanceof type; });
             }
-            return ((typeName === null)
-                ? this.where(function (x) {
-                    return x instanceof type;
-                })
-                : this.where(function (x) {
-                    return typeof x === typeName;
-                }));
+            return this
+                .where(function (x) { return typeof x === typeName; });
         };
         Enumerable.prototype.except = function (second, compareSelector) {
             var _ = this, disposed = !_.throwIfDisposed();
