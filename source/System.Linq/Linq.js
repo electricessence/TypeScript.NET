@@ -16,6 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(deps, factory);
     }
 })(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function (require, exports) {
+    ///<reference path="../System/Primitive.d.ts"/>
     ///<reference path="../System/FunctionTypes.d.ts"/>
     ///<reference path="../System/Collections/Array/IArray.d.ts"/>
     ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>

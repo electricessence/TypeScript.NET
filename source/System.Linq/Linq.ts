@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+///<reference path="../System/Primitive.d.ts"/>
 ///<reference path="../System/FunctionTypes.d.ts"/>
 ///<reference path="../System/Collections/Array/IArray.d.ts"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
@@ -27,6 +28,8 @@ import ObjectDisposedException from '../System/Disposable/ObjectDisposedExceptio
 
 import enumeratorFrom = Enumerator.from;
 import enumeratorForEach = Enumerator.forEach;
+
+type Comparable = Primitive|IComparable<any>;
 
 'use strict';
 
@@ -2441,12 +2444,12 @@ extends DisposableBase implements IEnumerable<T>
 
 	// #region Ordering Methods
 
-	orderBy<TKey extends Primitive>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
+	orderBy<TKey extends Comparable>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
 	{
 		return new OrderedEnumerable<T,TKey>(this, keySelector, false);
 	}
 
-	orderByDescending<TKey extends Primitive>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
+	orderByDescending<TKey extends Comparable>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
 	{
 		return new OrderedEnumerable<T,TKey>(this, keySelector, true);
 	}
@@ -3619,7 +3622,7 @@ extends Enumerable<T>
 	thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 }
 
-class OrderedEnumerable<T,TOrderBy extends Primitive>
+class OrderedEnumerable<T,TOrderBy extends Comparable>
 extends Enumerable<T> implements IOrderedEnumerable<T>
 {
 
@@ -3706,7 +3709,7 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 }
 
 
-class SortContext<T, TOrderBy extends Primitive>
+class SortContext<T, TOrderBy extends Comparable>
 {
 
 	keys:TOrderBy[];
@@ -3720,7 +3723,7 @@ class SortContext<T, TOrderBy extends Primitive>
 		this.keys = null;
 	}
 
-	static create<T, TOrderBy extends Primitive>(
+	static create<T, TOrderBy extends Comparable>(
 		orderedEnumerable:OrderedEnumerable<T,TOrderBy>,
 		currentContext:SortContext<T, TOrderBy> = null,
 		comparison:Comparison<TOrderBy> = Values.compare):SortContext<T, TOrderBy>
