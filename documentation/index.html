@@ -98,13 +98,14 @@
 				<p>After some time and effort, I&#39;ve decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:</p>
 				<ul>
 					<li>Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don&#39;t want.</li>
+					<li>Compiling modules into a monolithic library is easier than the reverse.</li>
 					<li>If you care about bundling and minification, <strong>&#39;r.js optimizer&#39;</strong> is probably the right way to go.</li>
 					<li>The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.</li>
 					<li>It is easy to change the module types. :)</li>
 					<li>You can easily recompile the entire library into another <strong>dist</strong> folder fully minified using gulp.</li>
 					<li>An already minified with source-map version is provided in the <strong>min</strong> folder</li>
 				</ul>
-				<h4 id="npm-">NPM:</h4>
+				<h4 id="-npm-http-www-npmjs-com-package-typescript-dotnet-"><a href="[http://www.npmjs.com/package/typescript-dotnet]">NPM</a>:</h4>
 				<pre><code>npm <span class="hljs-operator"><span class="hljs-keyword">install</span> typescript-<span class="hljs-keyword">dotnet</span></span>
 </code></pre><p>Version 2.5 is the first NPM release.  The goal is to get this as user friendly as possible.
 				Currently it is possible/supported to use TypeScript.NET in a number of different ways:</p>
@@ -116,13 +117,11 @@
 					<li>Lastly, re-render your own version using the TypeScript compiler.</li>
 				</ol>
 				<p>This all may be overkill, or possibly a use case was missed, so please don&#39;t hesitate to log issues in GitHub.</p>
-				<h4 id="bower-">Bower:</h4>
+				<h4 id="-bower-http-bower-io-search-q-typescript-dotnet-"><a href="http://bower.io/search/?q=typescript-dotnet">Bower</a>:</h4>
 				<pre><code>bower <span class="hljs-operator"><span class="hljs-keyword">install</span> typescript-<span class="hljs-keyword">dotnet</span></span>
 </code></pre><p>This should also include require.js in your bower components directory.
 				If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.</p>
-				<h4 id="nuget-">Nuget:</h4>
-				<p>Versions are currently behind current and only serve AMD.
-				<a href="https://www.nuget.org/packages/TypeScript.NET.Library/">www.nuget.org/packages/TypeScript.NET.Library/</a></p>
+				<h4 id="-nuget-https-www-nuget-org-packages-typescript-net-library-"><a href="https://www.nuget.org/packages/TypeScript.NET.Library/">Nuget</a>:</h4>
 				<pre><code>PM&gt; Install-Package TypeScript<span class="hljs-class">.NET</span><span class="hljs-class">.Library</span>
 </code></pre><h2 id="unit-tests">Unit Tests</h2>
 				<p>Mocha tests are in place for core functionality and expanding all the time.</p>
