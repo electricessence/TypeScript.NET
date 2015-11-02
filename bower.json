@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet",
-  "version": "2.5.12",
+  "version": "2.5.14",
   "ignore": [
     ".bowercc",
     ".gitignore",
@@ -21,6 +21,7 @@
     "electricessence <npm@electrified.net>"
   ],
   "description": "A JavaScript-Friendly .NET TypeScript Library.",
+  "main": [],
   "moduleType": [
     "amd",
     "es6",
