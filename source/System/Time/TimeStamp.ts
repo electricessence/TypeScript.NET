@@ -7,6 +7,7 @@
 ///<reference path="IDateTime.d.ts"/>
 import {Gregorian} from './Calendars';
 import * as HowMany from './HowMany';
+import Type from '../Types';
 
 /**
  * An alternative to Date or DateTime.  Is a model representing the exact date and time.
@@ -39,7 +40,7 @@ class TimeStamp implements ITimeStamp, IDateTime
 
 	static from(d:Date|IDateTime):TimeStamp
 	{
-		if("toJsDate" in d)
+		if (!(d instanceof Date) && Type.hasMember(d,'toJsDate'))
 			d = (<IDateTime>d).toJsDate();
 		if(d instanceof Date)
 		{

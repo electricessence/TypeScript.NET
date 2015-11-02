@@ -40,7 +40,7 @@
             return Empty;
         if (source instanceof Array)
             return new ArrayEnumerator_1.default(source);
-        if (typeof source === Types_1.default.OBJECT) {
+        if (!Types_1.default.isPrimitive(source)) {
             if ("length" in source) {
                 var a = source;
                 return new IndexEnumerator_1.default(function () {

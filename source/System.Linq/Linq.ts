@@ -2373,13 +2373,19 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
+	//isEquivalent(second:IEnumerable<T> | IArray<T>,
+	//	equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
+	//{
+	//	return this
+	//		.orderBy(keySelector)
+	//		.sequenceEqual(Enumerable.from(second).orderBy(keySelector))
+	//}
+
 	union<TCompare>(
 		second:IEnumerable<T> | IArray<T>,
 		compareSelector:Selector<T, TCompare> = Functions.Identity):Enumerable<T>
 	{
-		var source = this;
-
-
+		var _ = this;
 		return new Enumerable<T>(
 			() =>
 			{
@@ -2390,7 +2396,7 @@ extends DisposableBase implements IEnumerable<T>
 				return new EnumeratorBase<T>(
 					() =>
 					{
-						firstEnumerator = source.getEnumerator();
+						firstEnumerator = _.getEnumerator();
 						keys = new Dictionary<T, any>(compareSelector);
 					},
 
@@ -2435,14 +2441,14 @@ extends DisposableBase implements IEnumerable<T>
 
 	// #region Ordering Methods
 
-	orderBy<TKey>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
+	orderBy<TKey extends Primitive>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
 	{
-		return new OrderedEnumerable<T>(this, keySelector, false);
+		return new OrderedEnumerable<T,TKey>(this, keySelector, false);
 	}
 
-	orderByDescending<TKey>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
+	orderByDescending<TKey extends Primitive>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
 	{
-		return new OrderedEnumerable<T>(this, keySelector, true);
+		return new OrderedEnumerable<T,TKey>(this, keySelector, true);
 	}
 
 	/*
@@ -2498,7 +2504,6 @@ extends DisposableBase implements IEnumerable<T>
 	// Originally contained a result selector (not common use), but this could be done simply by a select statement after.
 
 
-
 	groupBy<TKey>(keySelector:Selector<T, TKey>):Enumerable<IGrouping<TKey, T>>;
 	groupBy<TKey, TElement, TCompare>(
 		keySelector:Selector<T, TKey>,
@@ -2517,19 +2522,23 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-
+	partitionBy<TKey>(keySelector:Selector<T, TKey>):Enumerable<IGrouping<TKey, T>>;
 	partitionBy<TKey, TElement, TCompare>(
 		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TElement>
-			= Functions.Identity,
+		elementSelector:Selector<T, TElement>,
+		resultSelector?:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>,
+		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>;
+	partitionBy<TKey, TElement, TCompare>(
+		keySelector:Selector<T, TKey>,
+		elementSelector?:Selector<T, TElement>,
 		resultSelector:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>
 			= (key:TKey, elements:TElement[]) => new Grouping<TKey, TElement>(key, elements),
 		compareSelector:Selector<TKey, TCompare>
-			= Functions.Identity):Enumerable<IGrouping<TKey, TElement>>
+			= Functions.Identity):Enumerable<IGrouping<TKey, T>>|Enumerable<IGrouping<TKey, TElement>>
 	{
 
 		var _ = this;
-
+		if(!elementSelector) elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
 		return new Enumerable<IGrouping<TKey, TElement>>(
 			() =>
 			{
@@ -2645,7 +2654,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	aggregate(
 		func:(a:T, b:T) => T,
-		seed?:T)
+		seed?:T):T
 	{
 		return this.scan(func, seed).lastOrDefault();
 	}
@@ -2825,13 +2834,13 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	/* Note: Unlike previous implementations, you could pass a predicate into these methods.
-		 * But since under the hood it ends up calling .where(predicate) anyway,
-		 * it may be better to remove this to allow for a cleaner signature/override.
-		 * JavaScript/TypeScript does not easily allow for a strict method interface like C#.
-		 * Having to write extra override logic is error prone and confusing to the consumer.
-		 * Removing the predicate here may also cause the consumer of this method to think more about how they structure their query.
-		 * The end all difference is that the user must declare .where(predicate) before .first().
-		 * */
+	 * But since under the hood it ends up calling .where(predicate) anyway,
+	 * it may be better to remove this to allow for a cleaner signature/override.
+	 * JavaScript/TypeScript does not easily allow for a strict method interface like C#.
+	 * Having to write extra override logic is error prone and confusing to the consumer.
+	 * Removing the predicate here may also cause the consumer of this method to think more about how they structure their query.
+	 * The end all difference is that the user must declare .where(predicate) before .first(), .single(), or .last().
+	 * */
 
 	first():T
 	{
@@ -3610,32 +3619,33 @@ extends Enumerable<T>
 	thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 }
 
-class OrderedEnumerable<T>
+class OrderedEnumerable<T,TOrderBy extends Primitive>
 extends Enumerable<T> implements IOrderedEnumerable<T>
 {
 
 	constructor(
 		private source:IEnumerable<T>,
-		public keySelector:(value:T) => any,
+		public keySelector:(value:T) => TOrderBy,
 		public descending:boolean,
-		public parent?:OrderedEnumerable<T>)
+		public parent?:OrderedEnumerable<T,any>,
+		public comparer:Comparison<TOrderBy> = Values.compare)
 	{
 		super(null);
 	}
 
 	private createOrderedEnumerable(
-		keySelector:(value:T) => any,
+		keySelector:(value:T) => TOrderBy,
 		descending:boolean):IOrderedEnumerable<T>
 	{
-		return new OrderedEnumerable<T>(this.source, keySelector, descending, this);
+		return new OrderedEnumerable<T,TOrderBy>(this.source, keySelector, descending, this);
 	}
 
-	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>
+	thenBy(keySelector:(value:T) => TOrderBy):IOrderedEnumerable<T>
 	{
 		return this.createOrderedEnumerable(keySelector, false);
 	}
 
-	thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>
+	thenByDescending(keySelector:(value:T) => TOrderBy):IOrderedEnumerable<T>
 	{
 		return this.createOrderedEnumerable(keySelector, true);
 	}
@@ -3660,7 +3670,7 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 						indexes[i] = i;
 					}
 				);
-				var sortContext = SortContext.create(_);
+				var sortContext = SortContext.create(_, null, _.comparer);
 				sortContext.generateKeys(buffer);
 
 				indexes.sort((a, b) => sortContext.compare(a, b));
@@ -3695,7 +3705,8 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 	}
 }
 
-class SortContext<T, TOrderBy>
+
+class SortContext<T, TOrderBy extends Primitive>
 {
 
 	keys:TOrderBy[];
@@ -3703,20 +3714,23 @@ class SortContext<T, TOrderBy>
 	constructor(
 		public keySelector:(value:T) => TOrderBy,
 		public descending:boolean,
-		public child:SortContext<T, TOrderBy>)
+		public child:SortContext<T, TOrderBy>,
+		public comparison:Comparison<TOrderBy> = Values.compare)
 	{
 		this.keys = null;
 	}
 
-	static create<T, TOrderBy>(
-		orderedEnumerable:OrderedEnumerable<T>,
-		currentContext:SortContext<T, TOrderBy> = null):SortContext<T, TOrderBy>
+	static create<T, TOrderBy extends Primitive>(
+		orderedEnumerable:OrderedEnumerable<T,TOrderBy>,
+		currentContext:SortContext<T, TOrderBy> = null,
+		comparison:Comparison<TOrderBy> = Values.compare):SortContext<T, TOrderBy>
 	{
 		var context:SortContext<T, TOrderBy>
 			    = new SortContext<T, TOrderBy>(
 			orderedEnumerable.keySelector,
 			orderedEnumerable.descending,
-			currentContext
+			currentContext,
+			comparison
 		);
 
 		if(orderedEnumerable.parent)
@@ -3744,7 +3758,7 @@ class SortContext<T, TOrderBy>
 	compare(index1:number, index2:number):number
 	{
 		var _ = this, keys = _.keys;
-		var comparison = Values.compare(keys[index1], keys[index2]);
+		var comparison = _.comparison(keys[index1], keys[index2]);
 
 		if(comparison==0)
 		{

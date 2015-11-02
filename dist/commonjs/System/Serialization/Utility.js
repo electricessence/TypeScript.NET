@@ -27,7 +27,6 @@ var EMPTY = '',
 function toString(value, defaultForUnknown) {
     var v = value;
     switch (typeof v) {
-        case _Types2['default'].NULL:
         case _Types2['default'].UNDEFINED:
         case _Types2['default'].STRING:
             return v;
@@ -36,6 +35,7 @@ function toString(value, defaultForUnknown) {
         case _Types2['default'].NUMBER:
             return EMPTY + v;
         default:
+            if (v === null) return v;
             if (_Types2['default'].of(v).member('serialize').isFunction) return v.serialize();else if (arguments.length > 1) return defaultForUnknown;
             var ex = new _ExceptionsInvalidOperationException2['default']('Attempting to serialize unidentifiable type.');
             ex.data['value'] = v;
@@ -47,7 +47,7 @@ function toPrimitive(value, caseInsensitive, unknownHandler) {
     if (value) {
         if (caseInsensitive) value = value.toLowerCase();
         switch (value) {
-            case _Types2['default'].NULL:
+            case 'null':
                 return null;
             case _Types2['default'].UNDEFINED:
                 return undefined;

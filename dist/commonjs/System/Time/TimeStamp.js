@@ -10,6 +10,8 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -17,6 +19,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var _HowMany = require('./HowMany');
 
 var HowMany = _interopRequireWildcard(_HowMany);
+
+var _Types = require('../Types');
+
+var _Types2 = _interopRequireDefault(_Types);
 
 var TimeStamp = (function () {
     function TimeStamp(year, month) {
@@ -50,7 +56,7 @@ var TimeStamp = (function () {
     }], [{
         key: 'from',
         value: function from(d) {
-            if ("toJsDate" in d) d = d.toJsDate();
+            if (!(d instanceof Date) && _Types2['default'].hasMember(d, 'toJsDate')) d = d.toJsDate();
             if (d instanceof Date) {
                 return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
             } else {

@@ -9,15 +9,17 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../../Types', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+})(["require", "exports", '../../Types', '../../Integer', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
     ///<reference path="IArray.d.ts"/>
     ///<reference path="../../FunctionTypes.d.ts"/>
     var Types_1 = require('../../Types');
+    var Integer_1 = require('../../Integer');
     var Compare_1 = require('../../Compare');
     var ArgumentException_1 = require('../../Exceptions/ArgumentException');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
     var ArgumentOutOfRangeException_1 = require('../../Exceptions/ArgumentOutOfRangeException');
     function initialize(length) {
+        Integer_1.default.assert(length, 'length');
         var array;
         if (length > 65536)
             array = new Array(length);
@@ -62,12 +64,13 @@
         return destination;
     }
     exports.copyTo = copyTo;
-    function contains(array, item) {
+    function contains(array, item, equalityComparer) {
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (array && array.length) {
             if (array instanceof Array)
                 return array.indexOf(item) != -1;
             for (var i = 0; i < array.length; ++i) {
-                if (Compare_1.areEqual(array[i], item))
+                if (equalityComparer(array[i], item))
                     return true;
             }
         }
@@ -79,6 +82,8 @@
         if (max !== 0) {
             if (!max)
                 max = Infinity;
+            else if (max < 0)
+                throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
             for (var i = (array.length - 1); i >= 0; --i) {
                 if (array[i] === old) {
                     array[i] = newValue;
@@ -92,6 +97,8 @@
     }
     exports.replace = replace;
     function updateRange(array, value, index, length) {
+        Integer_1.default.assert(index, 'index');
+        Integer_1.default.assert(index, 'length');
         var end = index + length;
         for (var i = index; i < end; ++i) {
             array[i] = value;
@@ -102,11 +109,12 @@
         updateRange(array, null, index, length);
     }
     exports.clear = clear;
-    function register(array, item) {
+    function register(array, item, equalityComparer) {
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (!array)
             throw new ArgumentNullException_1.default('array', CBN);
         var len = array.length;
-        var ok = !len || !contains(array, item);
+        var ok = !len || !contains(array, item, equalityComparer);
         if (ok)
             array[len] = item;
         return ok;
@@ -127,7 +135,7 @@
     exports.findIndex = findIndex;
     function forEach(source, fn) {
         if (!source)
-            throw new Error("ArgumentNullException: 'source' cannot be null.");
+            throw new ArgumentNullException_1.default('source', CBN);
         if (fn) {
             for (var i = 0; i < source.length; ++i) {
                 if (fn(source[i]) === false)
@@ -139,7 +147,7 @@
     exports.forEach = forEach;
     function applyTo(target, fn) {
         if (!target)
-            throw new Error("ArgumentNullException: 'target' cannot be null.");
+            throw new ArgumentNullException_1.default('target', CBN);
         if (fn) {
             for (var i = 0; i < target.length; ++i) {
                 target[i] = fn(target[i]);
@@ -150,22 +158,28 @@
     exports.applyTo = applyTo;
     function removeIndex(array, index) {
         if (!array)
-            throw new Error("ArgumentNullException: 'array' cannot be null.");
+            throw new ArgumentNullException_1.default('array', CBN);
+        Integer_1.default.assert(index, 'index');
+        if (index < 0)
+            throw new ArgumentOutOfRangeException_1.default('index', index, CBL0);
         var exists = index < array.length;
         if (exists)
             array.splice(index, 1);
         return exists;
     }
     exports.removeIndex = removeIndex;
-    function remove(array, value, max) {
+    function remove(array, value, max, equalityComparer) {
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (!array)
-            throw new Error("ArgumentNullException: 'array' cannot be null.");
+            throw new ArgumentNullException_1.default('array', CBN);
         var count = 0;
         if (array && array.length && max !== 0) {
             if (!max)
                 max = Infinity;
+            else if (max < 0)
+                throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
             for (var i = (array.length - 1); i >= 0; --i) {
-                if (array[i] === value) {
+                if (equalityComparer(array[i], value)) {
                     array.splice(i, 1);
                     ++count;
                     if (!--max)
@@ -177,6 +191,9 @@
     }
     exports.remove = remove;
     function repeat(element, count) {
+        Integer_1.default.assert(count, 'count');
+        if (count < 0)
+            throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
         var result = [];
         while (count--) {
             result.push(element);

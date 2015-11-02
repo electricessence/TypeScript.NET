@@ -8,7 +8,6 @@ _BOOLEAN:string   = typeof true,
 _NUMBER:string    = typeof 0,
 _STRING:string    = typeof "",
 _OBJECT:string    = typeof {},
-_NULL:string      = typeof null,
 _UNDEFINED:string = typeof undefined,
 _FUNCTION:string  = typeof function() {};
 
@@ -36,6 +35,7 @@ export class TypeInfo
 	isUndefined:boolean;
 	isNull:boolean;
 	isNullOrUndefined:boolean;
+	isPrimitive:boolean;
 
 	constructor(target:any)
 	{
@@ -48,24 +48,36 @@ export class TypeInfo
 		_.isFunction = false;
 		_.isUndefined = false;
 		_.isNull = false;
+		_.isPrimitive = false;
 
 		switch(_.type = typeof target)
 		{
 			case _BOOLEAN:
 				_.isBoolean = true;
+				_.isPrimitive = true;
 				break;
 			case _NUMBER:
 				_.isNumber = true;
 				_.isTrueNaN = isNaN(target);
 				_.isFinite = isFinite(target);
 				_.isValidNumber = !_.isTrueNaN;
+				_.isPrimitive = true;
 				break;
 			case _STRING:
 				_.isString = true;
+				_.isPrimitive = true;
 				break;
 			case _OBJECT:
 				_.target = target;
-				_.isObject = true;
+				if(target===null) {
+					_.isNull = true;
+					_.isNullOrUndefined = true;
+					_.isPrimitive = true;
+				}
+				else
+				{
+					_.isObject = true;
+				}
 				break;
 			case _FUNCTION:
 				_.target = target;
@@ -74,11 +86,10 @@ export class TypeInfo
 			case _UNDEFINED:
 				_.isUndefined = true;
 				_.isNullOrUndefined = true;
+				_.isPrimitive = true;
 				break;
-			case _NULL:
-				_.isNull = true;
-				_.isNullOrUndefined = true;
-				break;
+			default:
+				throw "Fatal type failure.  Unknown type: " + _.type;
 		}
 
 		Object.freeze(_);
@@ -147,11 +158,6 @@ module Type
 	 */
 	export const OBJECT:string = _OBJECT;
 
-	/**
-	 * typeof null
-	 * @type {string}
-	 */
-	export const NULL:string = _NULL;
 
 	/**
 	 * typeof undefined
@@ -207,6 +213,28 @@ module Type
 	}
 
 	/**
+	 * Returns true if the value is a boolean, string, number, null, or undefined.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isPrimitive(value:any):boolean
+	{
+		var t = typeof value;
+		switch(t)
+		{
+			case _BOOLEAN:
+			case _STRING:
+			case _NUMBER:
+			case _UNDEFINED:
+				return true;
+			case _OBJECT:
+				return value===null;
+
+		}
+		return false;
+	}
+
+	/**
 	 * Returns true if the value parameter is a function.
 	 * @param value
 	 * @returns {boolean}
@@ -239,6 +267,10 @@ module Type
 	export function of(target:any):TypeInfo
 	{
 		return TypeInfo.getFor(target);
+	}
+
+	export function hasMember(value:any,property:string):boolean {
+		return value && !isPrimitive(value) && property in value;
 	}
 
 }

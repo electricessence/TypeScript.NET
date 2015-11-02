@@ -42,7 +42,8 @@ export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>
 	if(source instanceof Array)
 		return new ArrayEnumerator<T>(<T[]>source);
 
-	if(typeof source===Type.OBJECT)
+
+	if(!Type.isPrimitive(source))
 	{
 		if("length" in source)
 		{

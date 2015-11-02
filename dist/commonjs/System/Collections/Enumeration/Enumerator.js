@@ -60,7 +60,7 @@ var Empty = new EmptyEnumerator();
 function from(source) {
     if (!source) return Empty;
     if (source instanceof Array) return new _ArrayEnumerator2['default'](source);
-    if (typeof source === _Types2['default'].OBJECT) {
+    if (!_Types2['default'].isPrimitive(source)) {
         if ("length" in source) {
             var a = source;
             return new _IndexEnumerator2['default'](function () {

@@ -222,4 +222,3 @@ it(".groupBy(selector)", ()=>
 	assert.equal(group_B.sum(x => x.Salary),1000000000.00, "Expected sum to be correct.");
 
 });
-

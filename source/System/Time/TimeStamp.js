@@ -9,8 +9,9 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", './HowMany'], function (require, exports) {
+})(["require", "exports", './HowMany', '../Types'], function (require, exports) {
     var HowMany = require('./HowMany');
+    var Types_1 = require('../Types');
     var TimeStamp = (function () {
         function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {
             // TODO: Add validation or properly carry out of range values...
@@ -35,7 +36,7 @@
             return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
         };
         TimeStamp.from = function (d) {
-            if ("toJsDate" in d)
+            if (!(d instanceof Date) && Types_1.default.hasMember(d, 'toJsDate'))
                 d = d.toJsDate();
             if (d instanceof Date) {
                 return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());

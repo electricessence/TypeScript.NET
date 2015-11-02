@@ -18,7 +18,6 @@
     function toString(value, defaultForUnknown) {
         var v = value;
         switch (typeof v) {
-            case Types_1.default.NULL:
             case Types_1.default.UNDEFINED:
             case Types_1.default.STRING:
                 return v;
@@ -27,6 +26,8 @@
             case Types_1.default.NUMBER:
                 return EMPTY + v;
             default:
+                if (v === null)
+                    return v;
                 if (Types_1.default.of(v).member('serialize').isFunction)
                     return v.serialize();
                 else if (arguments.length > 1)
@@ -42,7 +43,7 @@
             if (caseInsensitive)
                 value = value.toLowerCase();
             switch (value) {
-                case Types_1.default.NULL:
+                case 'null':
                     return null;
                 case Types_1.default.UNDEFINED:
                     return undefined;

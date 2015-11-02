@@ -6,6 +6,7 @@
 ///<reference path="IArray.d.ts"/>
 ///<reference path="../../FunctionTypes.d.ts"/>
 import Type from '../../Types';
+import Integer from '../../Integer';
 import {areEqual} from '../../Compare';
 import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
@@ -19,6 +20,7 @@ import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeExce
  */
 export function initialize<T>(length:number):T[]
 {
+	Integer.assert(length, 'length');
 	// This logic is based upon JS performance tests that show a significant difference at the level of 65536.
 	var array:T[];
 	if(length>65536)
@@ -105,9 +107,12 @@ export function copyTo<T>(
  * If the array value is null, then false is returned.
  * @param array
  * @param item
+ * @param {function?} equalityComparer
  * @returns {boolean}
  */
-export function contains<T>(array:IArray<T>, item:T):boolean
+export function contains<T>(
+	array:IArray<T>, item:T,
+	equalityComparer:EqualityComparison<T> = areEqual):boolean
 {
 	if(array && array.length)
 	{
@@ -117,7 +122,7 @@ export function contains<T>(array:IArray<T>, item:T):boolean
 		for(let i = 0; i<array.length; ++i)
 		{
 			// 'areEqual' includes NaN==NaN evaluation.
-			if(areEqual(array[i], item))
+			if(equalityComparer(array[i], item))
 				return true;
 		}
 	}
@@ -145,6 +150,8 @@ export function replace<T>(
 	{
 		if(!max)
 			max = Infinity;
+		else if(max<0)
+			throw new ArgumentOutOfRangeException('max', max, CBL0);
 
 		for(let i = (array.length - 1); i>=0; --i)
 		{
@@ -175,6 +182,9 @@ export function updateRange<T>(
 	index:number,
 	length:number):void
 {
+	Integer.assert(index, 'index');
+	Integer.assert(index, 'length');
+
 	var end = index + length;
 	for(let i:number = index; i<end; ++i)
 	{
@@ -200,14 +210,17 @@ export function clear(
  * Ensures a value exists within an array.  If not found, adds to the end.
  * @param array
  * @param item
+ * @param {function?} equalityComparer
  * @returns {boolean}
  */
-export function register<T>(array:IArray<T>, item:T):boolean
+export function register<T>(
+	array:IArray<T>, item:T,
+	equalityComparer:EqualityComparison<T> = areEqual):boolean
 {
 	if(!array)
 		throw new ArgumentNullException('array', CBN);
 	var len = array.length; // avoid querying .length more than once. *
-	var ok = !len || !contains(array, item);
+	var ok = !len || !contains(array, item, equalityComparer);
 	if(ok) array[len] = item; // * push would query length again.
 	return ok;
 }
@@ -248,7 +261,7 @@ export function forEach<T>(
 	fn:(value:T, index?:number) => (void|boolean)):IArray<T>
 {
 	if(!source)
-		throw new Error("ArgumentNullException: 'source' cannot be null.");
+		throw new ArgumentNullException('source', CBN);
 
 	if(fn)
 	{
@@ -272,7 +285,7 @@ export function forEach<T>(
 export function applyTo<T>(target:IArray<T>, fn:(a:T) => T):IArray<T>
 {
 	if(!target)
-		throw new Error("ArgumentNullException: 'target' cannot be null.");
+		throw new ArgumentNullException('target', CBN);
 
 	if(fn)
 	{
@@ -293,7 +306,11 @@ export function applyTo<T>(target:IArray<T>, fn:(a:T) => T):IArray<T>
 export function removeIndex<T>(array:T[], index:number):boolean
 {
 	if(!array)
-		throw new Error("ArgumentNullException: 'array' cannot be null.");
+		throw new ArgumentNullException('array', CBN);
+
+	Integer.assert(index, 'index');
+	if(index<0) throw new ArgumentOutOfRangeException('index', index, CBL0);
+
 
 	var exists = index<array.length;
 	if(exists)
@@ -306,22 +323,27 @@ export function removeIndex<T>(array:T[], index:number):boolean
  * @param array
  * @param value
  * @param max
+ * @param {function?} equalityComparer
  * @returns {number} The number of times the value was found and removed.
  */
-export function remove<T>(array:T[], value:T, max?:number):number
+export function remove<T>(
+	array:T[], value:T, max?:number,
+	equalityComparer:EqualityComparison<T> = areEqual):number
 {
 	if(!array)
-		throw new Error("ArgumentNullException: 'array' cannot be null.");
+		throw new ArgumentNullException('array', CBN);
 
 	var count = 0;
 	if(array && array.length && max!==0)
 	{
 		if(!max)
 			max = Infinity;
+		else if(max<0)
+			throw new ArgumentOutOfRangeException('max', max, CBL0);
 
 		for(let i = (array.length - 1); i>=0; --i)
 		{
-			if(array[i]===value)
+			if(equalityComparer(array[i], value))
 			{
 				array.splice(i, 1);
 				++count;
@@ -342,6 +364,9 @@ export function remove<T>(array:T[], value:T, max?:number):number
  */
 export function repeat<T>(element:T, count:number):T[]
 {
+	Integer.assert(count, 'count');
+	if(count<0) throw new ArgumentOutOfRangeException('count', count, CBL0);
+
 	var result:T[] = [];
 	while(count--)
 	{
@@ -366,7 +391,7 @@ export function flatten(a:any[], recurseDepth:number = 0):any[]
 		var x = a[i];
 		if(x instanceof Array)
 		{
-			if(recurseDepth>0) x = flatten(x, recurseDepth-1);
+			if(recurseDepth>0) x = flatten(x, recurseDepth - 1);
 			for(var n = 0; n<x.length; n++) result.push(x[n]);
 		}
 		else result.push(x);

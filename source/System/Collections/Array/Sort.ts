@@ -47,8 +47,8 @@ function ensureArray<T>(value:T|T[]):T[]
  * @param equivalentToNaN
  * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
  */
-export function createComparer<TSource,T>(
-	selector:Selector<TSource|TSource[],T>,
+export function createComparer<TSource,TSelect extends Primitive>(
+	selector:Selector<TSource|TSource[],TSelect>,
 	order:Order | Order[] = Order.Ascending,
 	equivalentToNaN:any = NaN):Comparison<TSource|TSource[]>
 {

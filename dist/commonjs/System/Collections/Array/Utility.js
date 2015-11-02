@@ -29,6 +29,10 @@ var _Types = require('../../Types');
 
 var _Types2 = _interopRequireDefault(_Types);
 
+var _Integer = require('../../Integer');
+
+var _Integer2 = _interopRequireDefault(_Integer);
+
 var _Compare = require('../../Compare');
 
 var _ExceptionsArgumentException = require('../../Exceptions/ArgumentException');
@@ -44,6 +48,7 @@ var _ExceptionsArgumentOutOfRangeException = require('../../Exceptions/ArgumentO
 var _ExceptionsArgumentOutOfRangeException2 = _interopRequireDefault(_ExceptionsArgumentOutOfRangeException);
 
 function initialize(length) {
+    _Integer2['default'].assert(length, 'length');
     var array;
     if (length > 65536) array = new Array(length);else {
         array = [];
@@ -84,10 +89,12 @@ function copyTo(source, destination) {
 }
 
 function contains(array, item) {
+    var equalityComparer = arguments.length <= 2 || arguments[2] === undefined ? _Compare.areEqual : arguments[2];
+
     if (array && array.length) {
         if (array instanceof Array) return array.indexOf(item) != -1;
         for (var i = 0; i < array.length; ++i) {
-            if ((0, _Compare.areEqual)(array[i], item)) return true;
+            if (equalityComparer(array[i], item)) return true;
         }
     }
     return false;
@@ -96,7 +103,7 @@ function contains(array, item) {
 function replace(array, old, newValue, max) {
     var count = 0;
     if (max !== 0) {
-        if (!max) max = Infinity;
+        if (!max) max = Infinity;else if (max < 0) throw new _ExceptionsArgumentOutOfRangeException2['default']('max', max, CBL0);
         for (var i = array.length - 1; i >= 0; --i) {
             if (array[i] === old) {
                 array[i] = newValue;
@@ -109,6 +116,8 @@ function replace(array, old, newValue, max) {
 }
 
 function updateRange(array, value, index, length) {
+    _Integer2['default'].assert(index, 'index');
+    _Integer2['default'].assert(index, 'length');
     var end = index + length;
     for (var i = index; i < end; ++i) {
         array[i] = value;
@@ -120,9 +129,11 @@ function clear(array, index, length) {
 }
 
 function register(array, item) {
+    var equalityComparer = arguments.length <= 2 || arguments[2] === undefined ? _Compare.areEqual : arguments[2];
+
     if (!array) throw new _ExceptionsArgumentNullException2['default']('array', CBN);
     var len = array.length;
-    var ok = !len || !contains(array, item);
+    var ok = !len || !contains(array, item, equalityComparer);
     if (ok) array[len] = item;
     return ok;
 }
@@ -138,7 +149,7 @@ function findIndex(array, predicate) {
 }
 
 function forEach(source, fn) {
-    if (!source) throw new Error("ArgumentNullException: 'source' cannot be null.");
+    if (!source) throw new _ExceptionsArgumentNullException2['default']('source', CBN);
     if (fn) {
         for (var i = 0; i < source.length; ++i) {
             if (fn(source[i]) === false) break;
@@ -148,7 +159,7 @@ function forEach(source, fn) {
 }
 
 function applyTo(target, fn) {
-    if (!target) throw new Error("ArgumentNullException: 'target' cannot be null.");
+    if (!target) throw new _ExceptionsArgumentNullException2['default']('target', CBN);
     if (fn) {
         for (var i = 0; i < target.length; ++i) {
             target[i] = fn(target[i]);
@@ -158,19 +169,23 @@ function applyTo(target, fn) {
 }
 
 function removeIndex(array, index) {
-    if (!array) throw new Error("ArgumentNullException: 'array' cannot be null.");
+    if (!array) throw new _ExceptionsArgumentNullException2['default']('array', CBN);
+    _Integer2['default'].assert(index, 'index');
+    if (index < 0) throw new _ExceptionsArgumentOutOfRangeException2['default']('index', index, CBL0);
     var exists = index < array.length;
     if (exists) array.splice(index, 1);
     return exists;
 }
 
 function remove(array, value, max) {
-    if (!array) throw new Error("ArgumentNullException: 'array' cannot be null.");
+    var equalityComparer = arguments.length <= 3 || arguments[3] === undefined ? _Compare.areEqual : arguments[3];
+
+    if (!array) throw new _ExceptionsArgumentNullException2['default']('array', CBN);
     var count = 0;
     if (array && array.length && max !== 0) {
-        if (!max) max = Infinity;
+        if (!max) max = Infinity;else if (max < 0) throw new _ExceptionsArgumentOutOfRangeException2['default']('max', max, CBL0);
         for (var i = array.length - 1; i >= 0; --i) {
-            if (array[i] === value) {
+            if (equalityComparer(array[i], value)) {
                 array.splice(i, 1);
                 ++count;
                 if (! --max) break;
@@ -181,6 +196,8 @@ function remove(array, value, max) {
 }
 
 function repeat(element, count) {
+    _Integer2['default'].assert(count, 'count');
+    if (count < 0) throw new _ExceptionsArgumentOutOfRangeException2['default']('count', count, CBL0);
     var result = [];
     while (count--) {
         result.push(element);

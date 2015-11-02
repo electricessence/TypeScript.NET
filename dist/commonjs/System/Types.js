@@ -16,7 +16,6 @@ var _BOOLEAN = typeof true,
     _NUMBER = typeof 0,
     _STRING = typeof "",
     _OBJECT = typeof {},
-    _NULL = typeof null,
     _UNDEFINED = typeof undefined,
     _FUNCTION = typeof function () {};
 var typeInfoRegistry = {};
@@ -34,22 +33,32 @@ var TypeInfo = (function () {
         _.isFunction = false;
         _.isUndefined = false;
         _.isNull = false;
+        _.isPrimitive = false;
         switch (_.type = typeof target) {
             case _BOOLEAN:
                 _.isBoolean = true;
+                _.isPrimitive = true;
                 break;
             case _NUMBER:
                 _.isNumber = true;
                 _.isTrueNaN = isNaN(target);
                 _.isFinite = isFinite(target);
                 _.isValidNumber = !_.isTrueNaN;
+                _.isPrimitive = true;
                 break;
             case _STRING:
                 _.isString = true;
+                _.isPrimitive = true;
                 break;
             case _OBJECT:
                 _.target = target;
-                _.isObject = true;
+                if (target === null) {
+                    _.isNull = true;
+                    _.isNullOrUndefined = true;
+                    _.isPrimitive = true;
+                } else {
+                    _.isObject = true;
+                }
                 break;
             case _FUNCTION:
                 _.target = target;
@@ -58,11 +67,10 @@ var TypeInfo = (function () {
             case _UNDEFINED:
                 _.isUndefined = true;
                 _.isNullOrUndefined = true;
+                _.isPrimitive = true;
                 break;
-            case _NULL:
-                _.isNull = true;
-                _.isNullOrUndefined = true;
-                break;
+            default:
+                throw "Fatal type failure.  Unknown type: " + _.type;
         }
         Object.freeze(_);
     }
@@ -99,7 +107,6 @@ var Type;
     Type.NUMBER = _NUMBER;
     Type.STRING = _STRING;
     Type.OBJECT = _OBJECT;
-    Type.NULL = _NULL;
     Type.UNDEFINED = _UNDEFINED;
     Type.FUNCTION = _FUNCTION;
     function isBoolean(value) {
@@ -120,6 +127,20 @@ var Type;
         return typeof value === _STRING;
     }
     Type.isString = isString;
+    function isPrimitive(value) {
+        var t = typeof value;
+        switch (t) {
+            case _BOOLEAN:
+            case _STRING:
+            case _NUMBER:
+            case _UNDEFINED:
+                return true;
+            case _OBJECT:
+                return value === null;
+        }
+        return false;
+    }
+    Type.isPrimitive = isPrimitive;
     function isFunction(value) {
         return typeof value === _FUNCTION;
     }
@@ -136,6 +157,10 @@ var Type;
         return TypeInfo.getFor(target);
     }
     Type.of = of;
+    function hasMember(value, property) {
+        return value && !isPrimitive(value) && property in value;
+    }
+    Type.hasMember = hasMember;
 })(Type || (Type = {}));
 Object.freeze(Type);
 exports["default"] = Type;

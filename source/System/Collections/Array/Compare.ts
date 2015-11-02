@@ -5,6 +5,8 @@
 
 ///<reference path="IArray.d.ts"/>
 ///<reference path="../../FunctionTypes.d.ts"/>
+///<reference path="../../Primitive.d.ts"/>
+///<reference path="../../IComparable.d.ts"/>
 import * as Values from '../../Compare';
 import Type from '../../Types';
 
@@ -85,6 +87,9 @@ function copyAndSort<T>(a:IArray<T>, comparer:Comparison<T>):T[]
 	return b;
 }
 
+export function areEquivalent<T extends Primitive>(a:IArray<T>, b:IArray<T>):boolean;
+export function areEquivalent<T>(a:IArray<IComparable<T>>, b:IArray<IComparable<T>>):boolean;
+export function areEquivalent<T>(a:IArray<T>, b:IArray<T>, comparer:Comparison<T>):boolean;
 export function areEquivalent<T>(
 	a:IArray<T>, b:IArray<T>,
 	comparer:Comparison<T> = Values.compare):boolean

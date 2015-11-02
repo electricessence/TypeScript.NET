@@ -20,7 +20,6 @@ export function toString(
 	var v = <any>value;
 	switch(typeof v)
 	{
-		case Type.NULL:
 		case Type.UNDEFINED:
 		case Type.STRING:
 			return v;
@@ -29,6 +28,9 @@ export function toString(
 		case Type.NUMBER:
 			return EMPTY + v;
 		default:
+
+			if(v===null)
+				return v;
 
 			if(Type.of(v).member('serialize').isFunction)
 				return v.serialize();
@@ -56,7 +58,7 @@ export function toPrimitive(
 
 		switch(value)
 		{
-			case Type.NULL:
+			case 'null':
 				return null;
 			case Type.UNDEFINED:
 				return undefined;

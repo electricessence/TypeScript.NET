@@ -11,7 +11,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x53, _x54, _x55) { var _again = true; _function: while (_again) { var object = _x53, property = _x54, receiver = _x55; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x53 = parent; _x54 = property; _x55 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x55, _x56, _x57) { var _again = true; _function: while (_again) { var object = _x55, property = _x56, receiver = _x57; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x55 = parent; _x56 = property; _x57 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -1163,13 +1163,13 @@ var Enumerable = (function (_DisposableBase) {
         value: function union(second) {
             var compareSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
 
-            var source = this;
+            var _ = this;
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
                 var keys;
                 return new _SystemCollectionsEnumerationEnumeratorBase2['default'](function () {
-                    firstEnumerator = source.getEnumerator();
+                    firstEnumerator = _.getEnumerator();
                     keys = new _SystemCollectionsDictionariesDictionary2['default'](compareSelector);
                 }, function (yielder) {
                     var current;
@@ -1221,14 +1221,14 @@ var Enumerable = (function (_DisposableBase) {
         }
     }, {
         key: 'partitionBy',
-        value: function partitionBy(keySelector) {
-            var elementSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
+        value: function partitionBy(keySelector, elementSelector) {
             var resultSelector = arguments.length <= 2 || arguments[2] === undefined ? function (key, elements) {
                 return new Grouping(key, elements);
             } : arguments[2];
             var compareSelector = arguments.length <= 3 || arguments[3] === undefined ? Functions.Identity : arguments[3];
 
             var _ = this;
+            if (!elementSelector) elementSelector = Functions.Identity;
             return new Enumerable(function () {
                 var enumerator;
                 var key;
@@ -2301,6 +2301,8 @@ var OrderedEnumerable = (function (_Enumerable4) {
     _inherits(OrderedEnumerable, _Enumerable4);
 
     function OrderedEnumerable(source, keySelector, descending, parent) {
+        var comparer = arguments.length <= 4 || arguments[4] === undefined ? Values.compare : arguments[4];
+
         _classCallCheck(this, OrderedEnumerable);
 
         _get(Object.getPrototypeOf(OrderedEnumerable.prototype), 'constructor', this).call(this, null);
@@ -2308,6 +2310,7 @@ var OrderedEnumerable = (function (_Enumerable4) {
         this.keySelector = keySelector;
         this.descending = descending;
         this.parent = parent;
+        this.comparer = comparer;
     }
 
     _createClass(OrderedEnumerable, [{
@@ -2340,7 +2343,7 @@ var OrderedEnumerable = (function (_Enumerable4) {
                     buffer[i] = item;
                     indexes[i] = i;
                 });
-                var sortContext = SortContext.create(_);
+                var sortContext = SortContext.create(_, null, _.comparer);
                 sortContext.generateKeys(buffer);
                 indexes.sort(function (a, b) {
                     return sortContext.compare(a, b);
@@ -2370,11 +2373,14 @@ var OrderedEnumerable = (function (_Enumerable4) {
 
 var SortContext = (function () {
     function SortContext(keySelector, descending, child) {
+        var comparison = arguments.length <= 3 || arguments[3] === undefined ? Values.compare : arguments[3];
+
         _classCallCheck(this, SortContext);
 
         this.keySelector = keySelector;
         this.descending = descending;
         this.child = child;
+        this.comparison = comparison;
         this.keys = null;
     }
 
@@ -2396,7 +2402,7 @@ var SortContext = (function () {
         value: function compare(index1, index2) {
             var _ = this,
                 keys = _.keys;
-            var comparison = Values.compare(keys[index1], keys[index2]);
+            var comparison = _.comparison(keys[index1], keys[index2]);
             if (comparison == 0) {
                 var child = _.child;
                 return child ? child.compare(index1, index2) : Values.compare(index1, index2);
@@ -2407,8 +2413,9 @@ var SortContext = (function () {
         key: 'create',
         value: function create(orderedEnumerable) {
             var currentContext = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var comparison = arguments.length <= 2 || arguments[2] === undefined ? Values.compare : arguments[2];
 
-            var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+            var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext, comparison);
             if (orderedEnumerable.parent) return SortContext.create(orderedEnumerable.parent, context);
             return context;
         }
