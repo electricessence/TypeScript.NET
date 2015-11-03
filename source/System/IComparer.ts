@@ -1,11 +1,10 @@
-﻿/*
+/*
  * @author electricessence / https://github.com/electricessence/
+ * Based upon .NET source.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-// Is interchangeable with Array, but also allows for other similar constructs.
-interface IArray<T> // ArrayLike<T>
+interface IComparer<T>
 {
-	length: number;
-	[index: number]: T;
+	compare(a:T, b:T):number;
 }

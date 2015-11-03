@@ -7,15 +7,7 @@
 
 import Type from '../../Types';
 import {compare,CompareResult} from '../../Compare';
-
-/**
- * Enum representation of sorting order.
- */
-export const enum Order
-{
-	Ascending  = +1,
-	Descending = -1
-}
+import Order from '../Sorting/Order';
 
 function ensureArray<T>(value:T|T[]):T[]
 {

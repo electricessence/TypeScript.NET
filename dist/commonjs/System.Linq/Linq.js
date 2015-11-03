@@ -11,7 +11,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x55, _x56, _x57) { var _again = true; _function: while (_again) { var object = _x55, property = _x56, receiver = _x57; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x55 = parent; _x56 = property; _x57 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x53, _x54, _x55) { var _again = true; _function: while (_again) { var object = _x53, property = _x54, receiver = _x55; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x53 = parent; _x54 = property; _x55 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -74,6 +74,10 @@ var _SystemDisposableDisposableBase2 = _interopRequireDefault(_SystemDisposableD
 var _SystemDisposableObjectDisposedException = require('../System/Disposable/ObjectDisposedException');
 
 var _SystemDisposableObjectDisposedException2 = _interopRequireDefault(_SystemDisposableObjectDisposedException);
+
+var _SystemCollectionsSortingKeySortedContext = require("../System/Collections/Sorting/KeySortedContext");
+
+var _SystemCollectionsSortingKeySortedContext2 = _interopRequireDefault(_SystemCollectionsSortingKeySortedContext);
 
 var enumeratorFrom = Enumerator.from;
 var enumeratorForEach = Enumerator.forEach;
@@ -1200,14 +1204,24 @@ var Enumerable = (function (_DisposableBase) {
         value: function orderBy() {
             var keySelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
 
-            return new OrderedEnumerable(this, keySelector, false);
+            return new OrderedEnumerable(this, keySelector, 1);
+        }
+    }, {
+        key: 'orderUsing',
+        value: function orderUsing(comparison) {
+            return new OrderedEnumerable(this, null, 1, null, comparison);
+        }
+    }, {
+        key: 'orderUsingReversed',
+        value: function orderUsingReversed(comparison) {
+            return new OrderedEnumerable(this, null, -1, null, comparison);
         }
     }, {
         key: 'orderByDescending',
         value: function orderByDescending() {
             var keySelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
 
-            return new OrderedEnumerable(this, keySelector, true);
+            return new OrderedEnumerable(this, keySelector, -1);
         }
     }, {
         key: 'groupBy',
@@ -1894,6 +1908,17 @@ var Enumerable = (function (_DisposableBase) {
             }
         }
     }, {
+        key: 'map',
+        value: function map(enumerable, selector) {
+            return enumerable && (0, _SystemDisposableUtility.using)(Enumerator.from(enumerable), function (e) {
+                var result = [];
+                Enumerator.forEach(e, function (e, i) {
+                    result[i] = selector(e);
+                });
+                return result;
+            });
+        }
+    }, {
         key: 'max',
         value: function max(values) {
             return values.takeUntil(function (v) {
@@ -2299,7 +2324,7 @@ var WhereSelectEnumerable = (function (_Enumerable3) {
 var OrderedEnumerable = (function (_Enumerable4) {
     _inherits(OrderedEnumerable, _Enumerable4);
 
-    function OrderedEnumerable(source, keySelector, descending, parent) {
+    function OrderedEnumerable(source, keySelector, order, parent) {
         var comparer = arguments.length <= 4 || arguments[4] === undefined ? Values.compare : arguments[4];
 
         _classCallCheck(this, OrderedEnumerable);
@@ -2307,25 +2332,35 @@ var OrderedEnumerable = (function (_Enumerable4) {
         _get(Object.getPrototypeOf(OrderedEnumerable.prototype), 'constructor', this).call(this, null);
         this.source = source;
         this.keySelector = keySelector;
-        this.descending = descending;
+        this.order = order;
         this.parent = parent;
         this.comparer = comparer;
     }
 
     _createClass(OrderedEnumerable, [{
         key: 'createOrderedEnumerable',
-        value: function createOrderedEnumerable(keySelector, descending) {
-            return new OrderedEnumerable(this.source, keySelector, descending, this);
+        value: function createOrderedEnumerable(keySelector, order) {
+            return new OrderedEnumerable(this.source, keySelector, order, this);
         }
     }, {
         key: 'thenBy',
         value: function thenBy(keySelector) {
-            return this.createOrderedEnumerable(keySelector, false);
+            return this.createOrderedEnumerable(keySelector, 1);
+        }
+    }, {
+        key: 'thenUsing',
+        value: function thenUsing(comparison) {
+            return new OrderedEnumerable(this.source, null, 1, this, comparison);
         }
     }, {
         key: 'thenByDescending',
         value: function thenByDescending(keySelector) {
-            return this.createOrderedEnumerable(keySelector, true);
+            return this.createOrderedEnumerable(keySelector, -1);
+        }
+    }, {
+        key: 'thenUsingReversed',
+        value: function thenUsingReversed(comparison) {
+            return new OrderedEnumerable(this.source, null, -1, this, comparison);
         }
     }, {
         key: 'getEnumerator',
@@ -2336,17 +2371,8 @@ var OrderedEnumerable = (function (_Enumerable4) {
             var index = 0;
             return new _SystemCollectionsEnumerationEnumeratorBase2['default'](function () {
                 index = 0;
-                buffer = [];
-                indexes = [];
-                Enumerable.forEach(_.source, function (item, i) {
-                    buffer[i] = item;
-                    indexes[i] = i;
-                });
-                var sortContext = SortContext.create(_, null, _.comparer);
-                sortContext.generateKeys(buffer);
-                indexes.sort(function (a, b) {
-                    return sortContext.compare(a, b);
-                });
+                buffer = Enumerable.toArray(_.source);
+                indexes = createSortContext(_).generateSortedIndexes(buffer);
             }, function (yielder) {
                 return index < indexes.length ? yielder.yieldReturn(buffer[indexes[index++]]) : false;
             }, function () {
@@ -2362,7 +2388,7 @@ var OrderedEnumerable = (function (_Enumerable4) {
             _get(Object.getPrototypeOf(OrderedEnumerable.prototype), '_onDispose', this).call(this);
             this.source = null;
             this.keySelector = null;
-            this.descending = null;
+            this.order = null;
             this.parent = null;
         }
     }]);
@@ -2370,59 +2396,25 @@ var OrderedEnumerable = (function (_Enumerable4) {
     return OrderedEnumerable;
 })(Enumerable);
 
-var SortContext = (function () {
-    function SortContext(keySelector, descending, child) {
-        var comparison = arguments.length <= 3 || arguments[3] === undefined ? Values.compare : arguments[3];
+function createSortContext(_x56) {
+    var _arguments2 = arguments;
+    var _again2 = true;
 
-        _classCallCheck(this, SortContext);
+    _function2: while (_again2) {
+        var orderedEnumerable = _x56;
+        currentContext = context = undefined;
+        _again2 = false;
+        var currentContext = _arguments2.length <= 1 || _arguments2[1] === undefined ? null : _arguments2[1];
 
-        this.keySelector = keySelector;
-        this.descending = descending;
-        this.child = child;
-        this.comparison = comparison;
-        this.keys = null;
+        var context = new _SystemCollectionsSortingKeySortedContext2['default'](currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
+        if (orderedEnumerable.parent) {
+            _arguments2 = [_x56 = orderedEnumerable.parent, context];
+            _again2 = true;
+            continue _function2;
+        }
+        return context;
     }
-
-    _createClass(SortContext, [{
-        key: 'generateKeys',
-        value: function generateKeys(source) {
-            var _ = this;
-            var len = source.length;
-            var keySelector = _.keySelector;
-            var keys = new Array(len);
-            for (var i = 0; i < len; ++i) {
-                keys[i] = keySelector(source[i]);
-            }
-            _.keys = keys;
-            if (_.child) _.child.generateKeys(source);
-        }
-    }, {
-        key: 'compare',
-        value: function compare(index1, index2) {
-            var _ = this,
-                keys = _.keys;
-            var comparison = _.comparison(keys[index1], keys[index2]);
-            if (comparison == 0) {
-                var child = _.child;
-                return child ? child.compare(index1, index2) : Values.compare(index1, index2);
-            }
-            return _.descending ? -comparison : comparison;
-        }
-    }], [{
-        key: 'create',
-        value: function create(orderedEnumerable) {
-            var currentContext = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-            var comparison = arguments.length <= 2 || arguments[2] === undefined ? Values.compare : arguments[2];
-
-            var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext, comparison);
-            if (orderedEnumerable.parent) return SortContext.create(orderedEnumerable.parent, context);
-            return context;
-        }
-    }]);
-
-    return SortContext;
-})();
-
+}
 function throwIfDisposed(disposed) {
     var className = arguments.length <= 1 || arguments[1] === undefined ? "Enumerable" : arguments[1];
 

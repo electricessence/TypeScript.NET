@@ -25,9 +25,12 @@ import {dispose, disposeThese, using} from '../System/Disposable/Utility';
 import DisposableBase from '../System/Disposable/DisposableBase';
 import ArgumentException from '../System/Exceptions/ArgumentException';
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
+import Order from "../System/Collections/Sorting/Order";
+import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 
 import enumeratorFrom = Enumerator.from;
 import enumeratorForEach = Enumerator.forEach;
+
 
 type Comparable = Primitive|IComparable<any>;
 
@@ -52,9 +55,9 @@ var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 const
-LENGTH                 = 'length',
-GET_ENUMERATOR         = 'getEnumerator',
-UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
+	LENGTH                 = 'length',
+	GET_ENUMERATOR = 'getEnumerator',
+	UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
 // #endregion
 
 // TODO: Create UnsupportedEnumerableException.
@@ -569,7 +572,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	static forEach<T>(
-		enumerable:IEnumerable<T>,
+		enumerable:IEnumerable<T> | IArray<T>,
 		action:(element:T, index?:number) => any):void
 	{
 		if(enumerable)
@@ -579,6 +582,21 @@ extends DisposableBase implements IEnumerable<T>
 				Enumerator.forEach(e, action);
 			});
 		}
+	}
+
+	static map<T,TResult>(
+			enumerable:IEnumerable<T> | IArray<T>,
+			selector:Selector<T,TResult>):TResult[] {
+
+		return enumerable && using(Enumerator.from(enumerable), e=>
+		{
+			var result:TResult[] = [];
+			Enumerator.forEach(e, (e,i)=>{
+				result[i]=selector(e);
+			});
+			return result;
+		});
+
 	}
 
 	// Slightly optimized versions for numbers.
@@ -653,7 +671,7 @@ extends DisposableBase implements IEnumerable<T>
 
 		var dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
 		this.forEach(
-				x=>
+			x=>
 			{
 				var key = keySelector(x);
 				var element = elementSelector(x);
@@ -2353,9 +2371,9 @@ extends DisposableBase implements IEnumerable<T>
 	{
 		return using(
 			this.getEnumerator(),
-				e1=> using(
+			e1=> using(
 				Enumerable.from<T>(second).getEnumerator(),
-					e2=>
+				e2=>
 				{
 					while(e1.moveNext())
 					{
@@ -2439,12 +2457,20 @@ extends DisposableBase implements IEnumerable<T>
 
 	orderBy<TKey extends Comparable>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
 	{
-		return new OrderedEnumerable<T,TKey>(this, keySelector, false);
+		return new OrderedEnumerable<T,TKey>(this, keySelector, Order.Ascending);
+	}
+
+	orderUsing(comparison:Comparison<T>):IOrderedEnumerable<T> {
+		return new OrderedEnumerable<T,any>(this, null, Order.Ascending, null, comparison);
+	}
+
+	orderUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T> {
+		return new OrderedEnumerable<T,any>(this, null, Order.Descending, null, comparison);
 	}
 
 	orderByDescending<TKey extends Comparable>(keySelector:Selector<T, TKey> = Functions.Identity):IOrderedEnumerable<T>
 	{
-		return new OrderedEnumerable<T,TKey>(this, keySelector, true);
+		return new OrderedEnumerable<T,TKey>(this, keySelector, Order.Descending);
 	}
 
 	/*
@@ -2718,7 +2744,7 @@ extends DisposableBase implements IEnumerable<T>
 		var sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
 
 		this.forEach(
-				x=>
+			x=>
 			{
 				var value = selector(x);
 				if(isNaN(value))
@@ -2742,7 +2768,7 @@ extends DisposableBase implements IEnumerable<T>
 		var result = 1, exists:boolean = false;
 
 		this.forEach(
-				x=>
+			x=>
 			{
 				exists = true;
 				var value = selector(x);
@@ -2846,7 +2872,7 @@ extends DisposableBase implements IEnumerable<T>
 		var value:T = undefined;
 		var found:boolean = false;
 		_.forEach(
-				x =>
+			x =>
 			{
 				value = x;
 				found = true;
@@ -2866,7 +2892,7 @@ extends DisposableBase implements IEnumerable<T>
 		var value:T = undefined;
 		var found = false;
 		_.forEach(
-				x =>
+			x =>
 			{
 				value = x;
 				found = true;
@@ -2884,7 +2910,7 @@ extends DisposableBase implements IEnumerable<T>
 		var value:T = undefined;
 		var found:boolean = false;
 		_.forEach(
-				x =>
+			x =>
 			{
 				found = true;
 				value = x;
@@ -2903,7 +2929,7 @@ extends DisposableBase implements IEnumerable<T>
 		var value:T = undefined;
 		var found:boolean = false;
 		_.forEach(
-				x=>
+			x=>
 			{
 				found = true;
 				value = x;
@@ -2920,7 +2946,7 @@ extends DisposableBase implements IEnumerable<T>
 		var value:T = undefined;
 		var found:boolean = false;
 		_.forEach(
-				x=>
+			x=>
 			{
 				if(!found)
 				{
@@ -2944,7 +2970,7 @@ extends DisposableBase implements IEnumerable<T>
 		var value:T = undefined;
 		var found:boolean = false;
 		_.forEach(
-				x=>
+			x=>
 			{
 				if(!found)
 				{
@@ -3613,6 +3639,8 @@ extends Enumerable<T>
 {
 	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 	thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>;
+	thenUsing(comparison:Comparison<T>):IOrderedEnumerable<T>;
+	thenUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T>
 }
 
 class OrderedEnumerable<T,TOrderBy extends Comparable>
@@ -3622,28 +3650,36 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 	constructor(
 		private source:IEnumerable<T>,
 		public keySelector:(value:T) => TOrderBy,
-		public descending:boolean,
+		public order:Order,
 		public parent?:OrderedEnumerable<T,any>,
-		public comparer:Comparison<TOrderBy> = Values.compare)
+		public comparer:Comparison<T> = Values.compare)
 	{
 		super(null);
 	}
 
 	private createOrderedEnumerable(
 		keySelector:(value:T) => TOrderBy,
-		descending:boolean):IOrderedEnumerable<T>
+		order:Order):IOrderedEnumerable<T>
 	{
-		return new OrderedEnumerable<T,TOrderBy>(this.source, keySelector, descending, this);
+		return new OrderedEnumerable<T,TOrderBy>(this.source, keySelector, order, this);
 	}
 
 	thenBy(keySelector:(value:T) => TOrderBy):IOrderedEnumerable<T>
 	{
-		return this.createOrderedEnumerable(keySelector, false);
+		return this.createOrderedEnumerable(keySelector, Order.Ascending);
+	}
+
+	thenUsing(comparison:Comparison<T>):IOrderedEnumerable<T> {
+		return new OrderedEnumerable<T,any>(this.source, null, Order.Ascending, this, comparison);
 	}
 
 	thenByDescending(keySelector:(value:T) => TOrderBy):IOrderedEnumerable<T>
 	{
-		return this.createOrderedEnumerable(keySelector, true);
+		return this.createOrderedEnumerable(keySelector, Order.Descending);
+	}
+
+	thenUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T> {
+		return new OrderedEnumerable<T,any>(this.source, null, Order.Descending, this, comparison);
 	}
 
 	getEnumerator():EnumeratorBase<T>
@@ -3657,19 +3693,8 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 			() =>
 			{
 				index = 0;
-				buffer = [];
-				indexes = [];
-				Enumerable.forEach(
-					_.source, (item, i) =>
-					{
-						buffer[i] = item;
-						indexes[i] = i;
-					}
-				);
-				var sortContext = SortContext.create(_, null, _.comparer);
-				sortContext.generateKeys(buffer);
-
-				indexes.sort((a, b) => sortContext.compare(a, b));
+				buffer = Enumerable.toArray(_.source);
+				indexes = createSortContext(_).generateSortedIndexes(buffer);
 			},
 
 			(yielder)=>
@@ -3696,78 +3721,34 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 		super._onDispose();
 		this.source = null;
 		this.keySelector = null;
-		this.descending = null;
+		this.order = null;
 		this.parent = null;
 	}
+
 }
 
-
-class SortContext<T, TOrderBy extends Comparable>
+/**
+ * Recursively builds a SortContext chain.
+ * @param orderedEnumerable
+ * @param currentContext
+ * @returns {any}
+ */
+function createSortContext<T, TOrderBy extends Comparable>(
+	orderedEnumerable:OrderedEnumerable<T,TOrderBy>,
+	currentContext:IComparer<T> = null):KeySortedContext<T, TOrderBy>
 {
 
-	keys:TOrderBy[];
+	var context = new KeySortedContext<T, TOrderBy>(
+		currentContext,
+		orderedEnumerable.keySelector,
+		orderedEnumerable.order,
+		orderedEnumerable.comparer);
 
-	constructor(
-		public keySelector:(value:T) => TOrderBy,
-		public descending:boolean,
-		public child:SortContext<T, TOrderBy>,
-		public comparison:Comparison<TOrderBy> = Values.compare)
-	{
-		this.keys = null;
-	}
+	if(orderedEnumerable.parent)
+		return createSortContext(orderedEnumerable.parent, context);
 
-	static create<T, TOrderBy extends Comparable>(
-		orderedEnumerable:OrderedEnumerable<T,TOrderBy>,
-		currentContext:SortContext<T, TOrderBy> = null,
-		comparison:Comparison<TOrderBy> = Values.compare):SortContext<T, TOrderBy>
-	{
-		var context:SortContext<T, TOrderBy>
-			    = new SortContext<T, TOrderBy>(
-			orderedEnumerable.keySelector,
-			orderedEnumerable.descending,
-			currentContext,
-			comparison
-		);
-
-		if(orderedEnumerable.parent)
-			return SortContext.create(orderedEnumerable.parent, context);
-
-		return context;
-	}
-
-	generateKeys(source:IArray<T>):void
-	{
-		var _ = this;
-		var len = source.length;
-		var keySelector:(value:T) => TOrderBy = _.keySelector;
-		var keys = new Array<TOrderBy>(len);
-		for(let i = 0; i<len; ++i)
-		{
-			keys[i] = keySelector(source[i]);
-		}
-		_.keys = keys;
-
-		if(_.child)
-			_.child.generateKeys(source);
-	}
-
-	compare(index1:number, index2:number):number
-	{
-		var _ = this, keys = _.keys;
-		var comparison = _.comparison(keys[index1], keys[index2]);
-
-		if(comparison==0)
-		{
-			var child = _.child;
-			return child
-				? child.compare(index1, index2)
-				: Values.compare(index1, index2);
-		}
-
-		return _.descending ? -comparison : comparison;
-	}
+	return context;
 }
-
 
 // #region Helper Functions...
 // This allows for the use of a boolean instead of calling this.throwIfDisposed()
