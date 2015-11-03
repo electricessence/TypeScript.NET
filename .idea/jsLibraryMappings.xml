@@ -4,6 +4,5 @@
     <file url="file://$PROJECT_DIR$" libraries="{TypeScript.NET node_modules}" />
     <file url="PROJECT" libraries="{TypeScript.NET node_modules, bower_components}" />
     <includedPredefinedLibrary name="ECMAScript 6" />
-    <includedPredefinedLibrary name="Node.js Globals" />
   </component>
 </project>
