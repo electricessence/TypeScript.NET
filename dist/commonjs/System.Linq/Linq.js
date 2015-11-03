@@ -608,12 +608,11 @@ var Enumerable = (function (_DisposableBase) {
                     typeName = _SystemTypes2['default'].FUNCTION;
                     break;
                 default:
-                    typeName = null;
-                    break;
+                    return this.where(function (x) {
+                        return x instanceof type;
+                    });
             }
-            return typeName === null ? this.where(function (x) {
-                return x instanceof type;
-            }) : this.where(function (x) {
+            return this.where(function (x) {
                 return typeof x === typeName;
             });
         }

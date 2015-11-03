@@ -35,7 +35,7 @@ export default class Queue {
             }
             else {
                 var se = source;
-                _._array = AU.initialize((se instanceof Array || "length" in se)
+                _._array = AU.initialize((se instanceof Array || Type.hasMember(se, "length"))
                     ? se.length
                     : DEFAULT_CAPACITY);
                 forEach(se, (e) => _.enqueue(e));

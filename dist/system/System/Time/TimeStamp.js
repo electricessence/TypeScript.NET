@@ -2,13 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['./HowMany'], function(exports_1) {
-    var HowMany;
+System.register(['./HowMany', '../Types'], function(exports_1) {
+    var HowMany, Types_1;
     var TimeStamp;
     return {
         setters:[
             function (HowMany_1) {
                 HowMany = HowMany_1;
+            },
+            function (Types_1_1) {
+                Types_1 = Types_1_1;
             }],
         execute: function() {
             TimeStamp = (function () {
@@ -35,7 +38,7 @@ System.register(['./HowMany'], function(exports_1) {
                     return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
                 };
                 TimeStamp.from = function (d) {
-                    if ("toJsDate" in d)
+                    if (!(d instanceof Date) && Types_1.default.hasMember(d, 'toJsDate'))
                         d = d.toJsDate();
                     if (d instanceof Date) {
                         return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());

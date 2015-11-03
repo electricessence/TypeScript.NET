@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as HowMany from './HowMany';
+import Type from '../Types';
 export default class TimeStamp {
     constructor(year, month, day = 1, hour = 0, minute = 0, second = 0, millisecond = 0, tick = 0) {
         // TODO: Add validation or properly carry out of range values...
@@ -21,7 +22,7 @@ export default class TimeStamp {
         return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
     }
     static from(d) {
-        if ("toJsDate" in d)
+        if (!(d instanceof Date) && Type.hasMember(d, 'toJsDate'))
             d = d.toJsDate();
         if (d instanceof Date) {
             return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());

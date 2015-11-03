@@ -2,10 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
-    var Types_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
+System.register(['../../Types', '../../Integer', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+    var Types_1, Integer_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
     var CBN, CBL0;
     function initialize(length) {
+        Integer_1.default.assert(length, 'length');
         var array;
         if (length > 65536)
             array = new Array(length);
@@ -49,12 +50,13 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
         return destination;
     }
     exports_1("copyTo", copyTo);
-    function contains(array, item) {
+    function contains(array, item, equalityComparer) {
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (array && array.length) {
             if (array instanceof Array)
                 return array.indexOf(item) != -1;
             for (var i = 0; i < array.length; ++i) {
-                if (Compare_1.areEqual(array[i], item))
+                if (equalityComparer(array[i], item))
                     return true;
             }
         }
@@ -66,6 +68,8 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
         if (max !== 0) {
             if (!max)
                 max = Infinity;
+            else if (max < 0)
+                throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
             for (var i = (array.length - 1); i >= 0; --i) {
                 if (array[i] === old) {
                     array[i] = newValue;
@@ -79,6 +83,8 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
     }
     exports_1("replace", replace);
     function updateRange(array, value, index, length) {
+        Integer_1.default.assert(index, 'index');
+        Integer_1.default.assert(index, 'length');
         var end = index + length;
         for (var i = index; i < end; ++i) {
             array[i] = value;
@@ -89,11 +95,12 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
         updateRange(array, null, index, length);
     }
     exports_1("clear", clear);
-    function register(array, item) {
+    function register(array, item, equalityComparer) {
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (!array)
             throw new ArgumentNullException_1.default('array', CBN);
         var len = array.length;
-        var ok = !len || !contains(array, item);
+        var ok = !len || !contains(array, item, equalityComparer);
         if (ok)
             array[len] = item;
         return ok;
@@ -114,7 +121,7 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
     exports_1("findIndex", findIndex);
     function forEach(source, fn) {
         if (!source)
-            throw new Error("ArgumentNullException: 'source' cannot be null.");
+            throw new ArgumentNullException_1.default('source', CBN);
         if (fn) {
             for (var i = 0; i < source.length; ++i) {
                 if (fn(source[i]) === false)
@@ -126,7 +133,7 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
     exports_1("forEach", forEach);
     function applyTo(target, fn) {
         if (!target)
-            throw new Error("ArgumentNullException: 'target' cannot be null.");
+            throw new ArgumentNullException_1.default('target', CBN);
         if (fn) {
             for (var i = 0; i < target.length; ++i) {
                 target[i] = fn(target[i]);
@@ -137,22 +144,28 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
     exports_1("applyTo", applyTo);
     function removeIndex(array, index) {
         if (!array)
-            throw new Error("ArgumentNullException: 'array' cannot be null.");
+            throw new ArgumentNullException_1.default('array', CBN);
+        Integer_1.default.assert(index, 'index');
+        if (index < 0)
+            throw new ArgumentOutOfRangeException_1.default('index', index, CBL0);
         var exists = index < array.length;
         if (exists)
             array.splice(index, 1);
         return exists;
     }
     exports_1("removeIndex", removeIndex);
-    function remove(array, value, max) {
+    function remove(array, value, max, equalityComparer) {
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (!array)
-            throw new Error("ArgumentNullException: 'array' cannot be null.");
+            throw new ArgumentNullException_1.default('array', CBN);
         var count = 0;
         if (array && array.length && max !== 0) {
             if (!max)
                 max = Infinity;
+            else if (max < 0)
+                throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
             for (var i = (array.length - 1); i >= 0; --i) {
-                if (array[i] === value) {
+                if (equalityComparer(array[i], value)) {
                     array.splice(i, 1);
                     ++count;
                     if (!--max)
@@ -164,6 +177,9 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
     }
     exports_1("remove", remove);
     function repeat(element, count) {
+        Integer_1.default.assert(count, 'count');
+        if (count < 0)
+            throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
         var result = [];
         while (count--) {
             result.push(element);
@@ -192,6 +208,9 @@ System.register(['../../Types', '../../Compare', '../../Exceptions/ArgumentExcep
         setters:[
             function (Types_1_1) {
                 Types_1 = Types_1_1;
+            },
+            function (Integer_1_1) {
+                Integer_1 = Integer_1_1;
             },
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;

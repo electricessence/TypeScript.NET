@@ -818,16 +818,11 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             typeName = Types_1.default.FUNCTION;
                             break;
                         default:
-                            typeName = null;
-                            break;
+                            return this
+                                .where(function (x) { return x instanceof type; });
                     }
-                    return ((typeName === null)
-                        ? this.where(function (x) {
-                            return x instanceof type;
-                        })
-                        : this.where(function (x) {
-                            return typeof x === typeName;
-                        }));
+                    return this
+                        .where(function (x) { return typeof x === typeName; });
                 };
                 Enumerable.prototype.except = function (second, compareSelector) {
                     var _ = this, disposed = !_.throwIfDisposed();
@@ -1349,13 +1344,13 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 Enumerable.prototype.union = function (second, compareSelector) {
                     if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-                    var source = this;
+                    var _ = this;
                     return new Enumerable(function () {
                         var firstEnumerator;
                         var secondEnumerator;
                         var keys;
                         return new EnumeratorBase_1.default(function () {
-                            firstEnumerator = source.getEnumerator();
+                            firstEnumerator = _.getEnumerator();
                             keys = new Dictionary_1.default(compareSelector);
                         }, function (yielder) {
                             var current;
@@ -1398,10 +1393,11 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                         .getEnumerator(); });
                 };
                 Enumerable.prototype.partitionBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
-                    if (elementSelector === void 0) { elementSelector = Functions.Identity; }
                     if (resultSelector === void 0) { resultSelector = function (key, elements) { return new Grouping(key, elements); }; }
                     if (compareSelector === void 0) { compareSelector = Functions.Identity; }
                     var _ = this;
+                    if (!elementSelector)
+                        elementSelector = Functions.Identity;
                     return new Enumerable(function () {
                         var enumerator;
                         var key;
@@ -2066,12 +2062,14 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
             })(Enumerable);
             OrderedEnumerable = (function (_super) {
                 __extends(OrderedEnumerable, _super);
-                function OrderedEnumerable(source, keySelector, descending, parent) {
+                function OrderedEnumerable(source, keySelector, descending, parent, comparer) {
+                    if (comparer === void 0) { comparer = Values.compare; }
                     _super.call(this, null);
                     this.source = source;
                     this.keySelector = keySelector;
                     this.descending = descending;
                     this.parent = parent;
+                    this.comparer = comparer;
                 }
                 OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, descending) {
                     return new OrderedEnumerable(this.source, keySelector, descending, this);
@@ -2095,7 +2093,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             buffer[i] = item;
                             indexes[i] = i;
                         });
-                        var sortContext = SortContext.create(_);
+                        var sortContext = SortContext.create(_, null, _.comparer);
                         sortContext.generateKeys(buffer);
                         indexes.sort(function (a, b) { return sortContext.compare(a, b); });
                     }, function (yielder) {
@@ -2121,15 +2119,18 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 return OrderedEnumerable;
             })(Enumerable);
             SortContext = (function () {
-                function SortContext(keySelector, descending, child) {
+                function SortContext(keySelector, descending, child, comparison) {
+                    if (comparison === void 0) { comparison = Values.compare; }
                     this.keySelector = keySelector;
                     this.descending = descending;
                     this.child = child;
+                    this.comparison = comparison;
                     this.keys = null;
                 }
-                SortContext.create = function (orderedEnumerable, currentContext) {
+                SortContext.create = function (orderedEnumerable, currentContext, comparison) {
                     if (currentContext === void 0) { currentContext = null; }
-                    var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+                    if (comparison === void 0) { comparison = Values.compare; }
+                    var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext, comparison);
                     if (orderedEnumerable.parent)
                         return SortContext.create(orderedEnumerable.parent, context);
                     return context;
@@ -2148,7 +2149,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 SortContext.prototype.compare = function (index1, index2) {
                     var _ = this, keys = _.keys;
-                    var comparison = Values.compare(keys[index1], keys[index2]);
+                    var comparison = _.comparison(keys[index1], keys[index2]);
                     if (comparison == 0) {
                         var child = _.child;
                         return child

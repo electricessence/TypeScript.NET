@@ -21,7 +21,7 @@ export function from(source) {
         return Empty;
     if (source instanceof Array)
         return new ArrayEnumerator(source);
-    if (typeof source === Type.OBJECT) {
+    if (!Type.isPrimitive(source)) {
         if ("length" in source) {
             var a = source;
             return new IndexEnumerator(() => {

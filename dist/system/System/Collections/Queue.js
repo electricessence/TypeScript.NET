@@ -67,7 +67,7 @@ System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './E
                         }
                         else {
                             var se = source;
-                            _._array = AU.initialize((se instanceof Array || "length" in se)
+                            _._array = AU.initialize((se instanceof Array || Types_1.default.hasMember(se, "length"))
                                 ? se.length
                                 : DEFAULT_CAPACITY);
                             forEach_1.default(se, function (e) { return _.enqueue(e); });

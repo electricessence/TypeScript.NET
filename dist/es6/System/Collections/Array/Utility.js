@@ -3,11 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import Type from '../../Types';
+import Integer from '../../Integer';
 import { areEqual } from '../../Compare';
 import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeException';
 export function initialize(length) {
+    Integer.assert(length, 'length');
     var array;
     if (length > 65536)
         array = new Array(length);
@@ -44,12 +46,12 @@ export function copyTo(source, destination, sourceIndex = 0, destinationIndex = 
     }
     return destination;
 }
-export function contains(array, item) {
+export function contains(array, item, equalityComparer = areEqual) {
     if (array && array.length) {
         if (array instanceof Array)
             return array.indexOf(item) != -1;
         for (let i = 0; i < array.length; ++i) {
-            if (areEqual(array[i], item))
+            if (equalityComparer(array[i], item))
                 return true;
         }
     }
@@ -60,6 +62,8 @@ export function replace(array, old, newValue, max) {
     if (max !== 0) {
         if (!max)
             max = Infinity;
+        else if (max < 0)
+            throw new ArgumentOutOfRangeException('max', max, CBL0);
         for (let i = (array.length - 1); i >= 0; --i) {
             if (array[i] === old) {
                 array[i] = newValue;
@@ -72,6 +76,8 @@ export function replace(array, old, newValue, max) {
     return count;
 }
 export function updateRange(array, value, index, length) {
+    Integer.assert(index, 'index');
+    Integer.assert(index, 'length');
     var end = index + length;
     for (let i = index; i < end; ++i) {
         array[i] = value;
@@ -80,11 +86,11 @@ export function updateRange(array, value, index, length) {
 export function clear(array, index, length) {
     updateRange(array, null, index, length);
 }
-export function register(array, item) {
+export function register(array, item, equalityComparer = areEqual) {
     if (!array)
         throw new ArgumentNullException('array', CBN);
     var len = array.length;
-    var ok = !len || !contains(array, item);
+    var ok = !len || !contains(array, item, equalityComparer);
     if (ok)
         array[len] = item;
     return ok;
@@ -103,7 +109,7 @@ export function findIndex(array, predicate) {
 }
 export function forEach(source, fn) {
     if (!source)
-        throw new Error("ArgumentNullException: 'source' cannot be null.");
+        throw new ArgumentNullException('source', CBN);
     if (fn) {
         for (let i = 0; i < source.length; ++i) {
             if (fn(source[i]) === false)
@@ -114,7 +120,7 @@ export function forEach(source, fn) {
 }
 export function applyTo(target, fn) {
     if (!target)
-        throw new Error("ArgumentNullException: 'target' cannot be null.");
+        throw new ArgumentNullException('target', CBN);
     if (fn) {
         for (let i = 0; i < target.length; ++i) {
             target[i] = fn(target[i]);
@@ -124,21 +130,26 @@ export function applyTo(target, fn) {
 }
 export function removeIndex(array, index) {
     if (!array)
-        throw new Error("ArgumentNullException: 'array' cannot be null.");
+        throw new ArgumentNullException('array', CBN);
+    Integer.assert(index, 'index');
+    if (index < 0)
+        throw new ArgumentOutOfRangeException('index', index, CBL0);
     var exists = index < array.length;
     if (exists)
         array.splice(index, 1);
     return exists;
 }
-export function remove(array, value, max) {
+export function remove(array, value, max, equalityComparer = areEqual) {
     if (!array)
-        throw new Error("ArgumentNullException: 'array' cannot be null.");
+        throw new ArgumentNullException('array', CBN);
     var count = 0;
     if (array && array.length && max !== 0) {
         if (!max)
             max = Infinity;
+        else if (max < 0)
+            throw new ArgumentOutOfRangeException('max', max, CBL0);
         for (let i = (array.length - 1); i >= 0; --i) {
-            if (array[i] === value) {
+            if (equalityComparer(array[i], value)) {
                 array.splice(i, 1);
                 ++count;
                 if (!--max)
@@ -149,6 +160,9 @@ export function remove(array, value, max) {
     return count;
 }
 export function repeat(element, count) {
+    Integer.assert(count, 'count');
+    if (count < 0)
+        throw new ArgumentOutOfRangeException('count', count, CBL0);
     var result = [];
     while (count--) {
         result.push(element);

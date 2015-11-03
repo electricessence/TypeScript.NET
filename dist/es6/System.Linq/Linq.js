@@ -734,16 +734,11 @@ export class Enumerable extends DisposableBase {
                 typeName = Type.FUNCTION;
                 break;
             default:
-                typeName = null;
-                break;
+                return this
+                    .where(x => x instanceof type);
         }
-        return ((typeName === null)
-            ? this.where(x => {
-                return x instanceof type;
-            })
-            : this.where(x => {
-                return typeof x === typeName;
-            }));
+        return this
+            .where(x => typeof x === typeName);
     }
     except(second, compareSelector) {
         var _ = this, disposed = !_.throwIfDisposed();
@@ -1246,13 +1241,13 @@ export class Enumerable extends DisposableBase {
         }));
     }
     union(second, compareSelector = Functions.Identity) {
-        var source = this;
+        var _ = this;
         return new Enumerable(() => {
             var firstEnumerator;
             var secondEnumerator;
             var keys;
             return new EnumeratorBase(() => {
-                firstEnumerator = source.getEnumerator();
+                firstEnumerator = _.getEnumerator();
                 keys = new Dictionary(compareSelector);
             }, (yielder) => {
                 var current;
@@ -1292,8 +1287,10 @@ export class Enumerable extends DisposableBase {
         return new Enumerable(() => _.toLookup(keySelector, elementSelector, compareSelector)
             .getEnumerator());
     }
-    partitionBy(keySelector, elementSelector = Functions.Identity, resultSelector = (key, elements) => new Grouping(key, elements), compareSelector = Functions.Identity) {
+    partitionBy(keySelector, elementSelector, resultSelector = (key, elements) => new Grouping(key, elements), compareSelector = Functions.Identity) {
         var _ = this;
+        if (!elementSelector)
+            elementSelector = Functions.Identity;
         return new Enumerable(() => {
             var enumerator;
             var key;
@@ -1916,12 +1913,13 @@ class WhereSelectEnumerable extends Enumerable {
     }
 }
 class OrderedEnumerable extends Enumerable {
-    constructor(source, keySelector, descending, parent) {
+    constructor(source, keySelector, descending, parent, comparer = Values.compare) {
         super(null);
         this.source = source;
         this.keySelector = keySelector;
         this.descending = descending;
         this.parent = parent;
+        this.comparer = comparer;
     }
     createOrderedEnumerable(keySelector, descending) {
         return new OrderedEnumerable(this.source, keySelector, descending, this);
@@ -1945,7 +1943,7 @@ class OrderedEnumerable extends Enumerable {
                 buffer[i] = item;
                 indexes[i] = i;
             });
-            var sortContext = SortContext.create(_);
+            var sortContext = SortContext.create(_, null, _.comparer);
             sortContext.generateKeys(buffer);
             indexes.sort((a, b) => sortContext.compare(a, b));
         }, (yielder) => {
@@ -1970,14 +1968,15 @@ class OrderedEnumerable extends Enumerable {
     }
 }
 class SortContext {
-    constructor(keySelector, descending, child) {
+    constructor(keySelector, descending, child, comparison = Values.compare) {
         this.keySelector = keySelector;
         this.descending = descending;
         this.child = child;
+        this.comparison = comparison;
         this.keys = null;
     }
-    static create(orderedEnumerable, currentContext = null) {
-        var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+    static create(orderedEnumerable, currentContext = null, comparison = Values.compare) {
+        var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext, comparison);
         if (orderedEnumerable.parent)
             return SortContext.create(orderedEnumerable.parent, context);
         return context;
@@ -1996,7 +1995,7 @@ class SortContext {
     }
     compare(index1, index2) {
         var _ = this, keys = _.keys;
-        var comparison = Values.compare(keys[index1], keys[index2]);
+        var comparison = _.comparison(keys[index1], keys[index2]);
         if (comparison == 0) {
             var child = _.child;
             return child
