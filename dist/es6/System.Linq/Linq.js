@@ -6,7 +6,7 @@
 import * as Values from '../System/Compare';
 import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
-import * as Enumerator from '../System/Collections/Enumeration/Enumerator';
+import { from as enumeratorFrom, forEach as enumeratorForEach, isEnumerable } from '../System/Collections/Enumeration/Enumerator';
 import Type from '../System/Types';
 import Integer from '../System/Integer';
 import BaseFunctions from '../System/Functions';
@@ -16,9 +16,9 @@ import Dictionary from '../System/Collections/Dictionaries/Dictionary';
 import Queue from '../System/Collections/Queue';
 import { dispose, disposeThese, using } from '../System/Disposable/Utility';
 import DisposableBase from '../System/Disposable/DisposableBase';
+import Exception from "../System/Exception";
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
-var enumeratorFrom = Enumerator.from;
-var enumeratorForEach = Enumerator.forEach;
+import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 'use strict';
 class LinqFunctions extends BaseFunctions {
     Greater(a, b) {
@@ -30,7 +30,12 @@ class LinqFunctions extends BaseFunctions {
 }
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
-const LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator', UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
+const LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator';
+class UnsupportedEnumerableException extends Exception {
+    constructor() {
+        super("Unsupported enumerable.");
+    }
+}
 export class Enumerable extends DisposableBase {
     constructor(_enumeratorFactory, finalizer) {
         super(finalizer);
@@ -40,29 +45,27 @@ export class Enumerable extends DisposableBase {
         return new ArrayEnumerable(array);
     }
     static from(source) {
-        var type = Type.of(source);
-        if (type.isObject) {
-            if (source instanceof Enumerable)
+        if (Type.isObject(source)) {
+            if (Type.isInstanceOf(source, Enumerable))
                 return source;
-            if (source instanceof Array)
+            if (Array.isArray(source))
                 return new ArrayEnumerable(source);
-            if (type.member(GET_ENUMERATOR).isFunction)
+            if (isEnumerable(source))
                 return new Enumerable(() => source.getEnumerator());
-            if (type.member(LENGTH).isValidNumber)
+            if (Type.isArrayLike(source))
                 return new ArrayEnumerable(source);
         }
-        throw new Error(UNSUPPORTED_ENUMERABLE);
+        throw new UnsupportedEnumerableException();
     }
     static toArray(source) {
-        var type = Type.of(source);
-        if (type.isObject) {
-            if (source instanceof Array)
+        if (Type.isObject(source)) {
+            if (Array.isArray(source))
                 return source.slice();
-            if (type.member(LENGTH).isValidNumber)
+            if (Type.isArrayLike(source))
                 source = new ArrayEnumerable(source);
-            if (source instanceof Enumerable)
+            if (Type.isInstanceOf(source, Enumerable))
                 return source.toArray();
-            if (type.member(GET_ENUMERATOR).isFunction) {
+            if (isEnumerable(source)) {
                 var result = [];
                 enumeratorForEach(source.getEnumerator(), (e, i) => {
                     result[i] = e;
@@ -70,7 +73,7 @@ export class Enumerable extends DisposableBase {
                 return result;
             }
         }
-        throw new Error(UNSUPPORTED_ENUMERABLE);
+        throw new UnsupportedEnumerableException();
     }
     getEnumerator() {
         this.throwIfDisposed();
@@ -203,7 +206,7 @@ export class Enumerable extends DisposableBase {
         var type = typeof input;
         if (type != Type.STRING)
             throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-        if (pattern instanceof RegExp) {
+        if (Type.isInstanceOf(pattern, RegExp)) {
             flags += (pattern.ignoreCase) ? "i" : "";
             flags += (pattern.multiline) ? "m" : "";
             pattern = pattern.source;
@@ -272,10 +275,19 @@ export class Enumerable extends DisposableBase {
     }
     static forEach(enumerable, action) {
         if (enumerable) {
-            using(Enumerator.from(enumerable), e => {
-                Enumerator.forEach(e, action);
+            using(enumeratorFrom(enumerable), e => {
+                enumeratorForEach(e, action);
             });
         }
+    }
+    static map(enumerable, selector) {
+        return enumerable && using(enumeratorFrom(enumerable), e => {
+            var result = [];
+            enumeratorForEach(e, (e, i) => {
+                result[i] = selector(e);
+            });
+            return result;
+        });
     }
     static max(values) {
         return values
@@ -550,7 +562,7 @@ export class Enumerable extends DisposableBase {
                     }
                     if (enumerator.moveNext()) {
                         var c = enumerator.current;
-                        if (c instanceof Array) {
+                        if (Array.isArray(c)) {
                             middleEnumerator.dispose();
                             middleEnumerator = Enumerable.fromArray(c)
                                 .selectMany(Functions.Identity)
@@ -654,7 +666,7 @@ export class Enumerable extends DisposableBase {
                         var middleSeq = collectionSelector(enumerator.current, index++);
                         if (!middleSeq)
                             continue;
-                        middleEnumerator = Enumerator.from(middleSeq);
+                        middleEnumerator = enumeratorFrom(middleSeq);
                     }
                     if (middleEnumerator.moveNext())
                         return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
@@ -735,7 +747,7 @@ export class Enumerable extends DisposableBase {
                 break;
             default:
                 return this
-                    .where(x => x instanceof type);
+                    .where(x => Type.isInstanceOf(x, type));
         }
         return this
             .where(x => typeof x === typeName);
@@ -1275,10 +1287,16 @@ export class Enumerable extends DisposableBase {
         });
     }
     orderBy(keySelector = Functions.Identity) {
-        return new OrderedEnumerable(this, keySelector, false);
+        return new OrderedEnumerable(this, keySelector, 1);
+    }
+    orderUsing(comparison) {
+        return new OrderedEnumerable(this, null, 1, null, comparison);
+    }
+    orderUsingReversed(comparison) {
+        return new OrderedEnumerable(this, null, -1, null, comparison);
     }
     orderByDescending(keySelector = Functions.Identity) {
-        return new OrderedEnumerable(this, keySelector, true);
+        return new OrderedEnumerable(this, keySelector, -1);
     }
     groupBy(keySelector, elementSelector, compareSelector) {
         var _ = this;
@@ -1668,7 +1686,7 @@ class ArrayEnumerable extends Enumerable {
         var s = this.source;
         if (!s)
             return [];
-        if (s instanceof Array)
+        if (Array.isArray(s))
             return s.slice();
         var len = s.length, result = ArrayUtility.initialize(len);
         for (let i = 0; i < len; ++i) {
@@ -1778,15 +1796,15 @@ class ArrayEnumerable extends Enumerable {
         return new ArrayEnumerable(this._source);
     }
     sequenceEqual(second, equalityComparer = Values.areEqual) {
-        if (second instanceof Array)
+        if (Array.isArray(second))
             return Arrays.areEqual(this.source, second, true, equalityComparer);
-        if (second instanceof ArrayEnumerable)
+        if (Type.isInstanceOf(second, ArrayEnumerable))
             return second.sequenceEqual(this.source, equalityComparer);
         return super.sequenceEqual(second, equalityComparer);
     }
     toJoinedString(separator = "", selector = Functions.Identity) {
         var s = this._source;
-        return !selector && s instanceof Array
+        return !selector && Array.isArray(s)
             ? s.join(separator)
             : super.toJoinedString(separator, selector);
     }
@@ -1913,22 +1931,28 @@ class WhereSelectEnumerable extends Enumerable {
     }
 }
 class OrderedEnumerable extends Enumerable {
-    constructor(source, keySelector, descending, parent, comparer = Values.compare) {
+    constructor(source, keySelector, order, parent, comparer = Values.compare) {
         super(null);
         this.source = source;
         this.keySelector = keySelector;
-        this.descending = descending;
+        this.order = order;
         this.parent = parent;
         this.comparer = comparer;
     }
-    createOrderedEnumerable(keySelector, descending) {
-        return new OrderedEnumerable(this.source, keySelector, descending, this);
+    createOrderedEnumerable(keySelector, order) {
+        return new OrderedEnumerable(this.source, keySelector, order, this);
     }
     thenBy(keySelector) {
-        return this.createOrderedEnumerable(keySelector, false);
+        return this.createOrderedEnumerable(keySelector, 1);
+    }
+    thenUsing(comparison) {
+        return new OrderedEnumerable(this.source, null, 1, this, comparison);
     }
     thenByDescending(keySelector) {
-        return this.createOrderedEnumerable(keySelector, true);
+        return this.createOrderedEnumerable(keySelector, -1);
+    }
+    thenUsingReversed(comparison) {
+        return new OrderedEnumerable(this.source, null, -1, this, comparison);
     }
     getEnumerator() {
         var _ = this;
@@ -1937,15 +1961,8 @@ class OrderedEnumerable extends Enumerable {
         var index = 0;
         return new EnumeratorBase(() => {
             index = 0;
-            buffer = [];
-            indexes = [];
-            Enumerable.forEach(_.source, (item, i) => {
-                buffer[i] = item;
-                indexes[i] = i;
-            });
-            var sortContext = SortContext.create(_, null, _.comparer);
-            sortContext.generateKeys(buffer);
-            indexes.sort((a, b) => sortContext.compare(a, b));
+            buffer = Enumerable.toArray(_.source);
+            indexes = createSortContext(_).generateSortedIndexes(buffer);
         }, (yielder) => {
             return (index < indexes.length)
                 ? yielder.yieldReturn(buffer[indexes[index++]])
@@ -1963,47 +1980,15 @@ class OrderedEnumerable extends Enumerable {
         super._onDispose();
         this.source = null;
         this.keySelector = null;
-        this.descending = null;
+        this.order = null;
         this.parent = null;
     }
 }
-class SortContext {
-    constructor(keySelector, descending, child, comparison = Values.compare) {
-        this.keySelector = keySelector;
-        this.descending = descending;
-        this.child = child;
-        this.comparison = comparison;
-        this.keys = null;
-    }
-    static create(orderedEnumerable, currentContext = null, comparison = Values.compare) {
-        var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext, comparison);
-        if (orderedEnumerable.parent)
-            return SortContext.create(orderedEnumerable.parent, context);
-        return context;
-    }
-    generateKeys(source) {
-        var _ = this;
-        var len = source.length;
-        var keySelector = _.keySelector;
-        var keys = new Array(len);
-        for (let i = 0; i < len; ++i) {
-            keys[i] = keySelector(source[i]);
-        }
-        _.keys = keys;
-        if (_.child)
-            _.child.generateKeys(source);
-    }
-    compare(index1, index2) {
-        var _ = this, keys = _.keys;
-        var comparison = _.comparison(keys[index1], keys[index2]);
-        if (comparison == 0) {
-            var child = _.child;
-            return child
-                ? child.compare(index1, index2)
-                : Values.compare(index1, index2);
-        }
-        return _.descending ? -comparison : comparison;
-    }
+function createSortContext(orderedEnumerable, currentContext = null) {
+    var context = new KeySortedContext(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
+    if (orderedEnumerable.parent)
+        return createSortContext(orderedEnumerable.parent, context);
+    return context;
 }
 function throwIfDisposed(disposed, className = "Enumerable") {
     if (disposed)

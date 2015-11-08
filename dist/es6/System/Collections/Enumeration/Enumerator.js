@@ -19,24 +19,26 @@ const Empty = new EmptyEnumerator();
 export function from(source) {
     if (!source)
         return Empty;
-    if (source instanceof Array)
+    if (Array.isArray(source))
         return new ArrayEnumerator(source);
     if (!Type.isPrimitive(source)) {
-        if ("length" in source) {
-            var a = source;
+        if (Type.isArrayLike(source)) {
             return new IndexEnumerator(() => {
                 return {
-                    source: a,
-                    length: a.length,
+                    source: source,
+                    length: source.length,
                     pointer: 0,
                     step: 1
                 };
             });
         }
-        if ("getEnumerator" in source)
+        if (isEnumerable(source))
             return source.getEnumerator();
     }
     throw new Error("Unknown enumerable.");
+}
+export function isEnumerable(instance) {
+    return Type.hasMemberOfType(instance, "getEnumerator", Type.FUNCTION);
 }
 export function forEach(e, action) {
     if (e) {

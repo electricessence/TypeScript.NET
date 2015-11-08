@@ -9,7 +9,7 @@ export default function clone(source, depth = 0) {
     if (!Type.isObject(source))
         return source;
     var result;
-    if (source instanceof Array) {
+    if (Array.isArray(source)) {
         result = source.slice();
         if (depth > 0) {
             for (let i = 0; i < result.length; i++) {

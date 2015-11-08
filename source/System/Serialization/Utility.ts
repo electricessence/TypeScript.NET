@@ -32,7 +32,7 @@ export function toString(
 			if(v===null)
 				return v;
 
-			if(Type.of(v).member('serialize').isFunction)
+			if(isSerializable(v))
 				return v.serialize();
 			else if(arguments.length>1)
 				return defaultForUnknown;
@@ -43,6 +43,10 @@ export function toString(
 
 	}
 
+}
+
+export function isSerializable(instance:any):instance is ISerializable {
+	return Type.hasMemberOfType<ISerializable>(instance,'serialize',Type.FUNCTION);
 }
 
 export function toPrimitive(

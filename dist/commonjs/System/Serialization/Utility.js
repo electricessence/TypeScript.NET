@@ -8,6 +8,7 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 exports.toString = toString;
+exports.isSerializable = isSerializable;
 exports.toPrimitive = toPrimitive;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -36,11 +37,15 @@ function toString(value, defaultForUnknown) {
             return EMPTY + v;
         default:
             if (v === null) return v;
-            if (_Types2['default'].of(v).member('serialize').isFunction) return v.serialize();else if (arguments.length > 1) return defaultForUnknown;
+            if (isSerializable(v)) return v.serialize();else if (arguments.length > 1) return defaultForUnknown;
             var ex = new _ExceptionsInvalidOperationException2['default']('Attempting to serialize unidentifiable type.');
             ex.data['value'] = v;
             throw ex;
     }
+}
+
+function isSerializable(instance) {
+    return _Types2['default'].hasMemberOfType(instance, 'serialize', _Types2['default'].FUNCTION);
 }
 
 function toPrimitive(value, caseInsensitive, unknownHandler) {

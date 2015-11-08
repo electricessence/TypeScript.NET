@@ -48,7 +48,7 @@ export function copyTo(source, destination, sourceIndex = 0, destinationIndex = 
 }
 export function contains(array, item, equalityComparer = areEqual) {
     if (array && array.length) {
-        if (array instanceof Array)
+        if (Array.isArray(array))
             return array.indexOf(item) != -1;
         for (let i = 0; i < array.length; ++i) {
             if (equalityComparer(array[i], item))
@@ -102,7 +102,7 @@ export function findIndex(array, predicate) {
         throw new ArgumentException('predicate', 'Must be a function.');
     var len = array.length;
     for (let i = 0; i < len; ++i) {
-        if (i in array && predicate(array[i]))
+        if ((i) in (array) && predicate(array[i]))
             return i;
     }
     return -1;
@@ -173,7 +173,7 @@ export function flatten(a, recurseDepth = 0) {
     var result = [];
     for (var i = 0; i < a.length; i++) {
         var x = a[i];
-        if (x instanceof Array) {
+        if (Array.isArray(x)) {
             if (recurseDepth > 0)
                 x = flatten(x, recurseDepth - 1);
             for (var n = 0; n < x.length; n++)

@@ -13,7 +13,7 @@
 import * as Values from '../System/Compare';
 import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
-import * as Enumerator from '../System/Collections/Enumeration/Enumerator';
+import {from as enumeratorFrom, forEach as enumeratorForEach, isEnumerable} from '../System/Collections/Enumeration/Enumerator';
 import Type from '../System/Types';
 import Integer from '../System/Integer';
 import BaseFunctions from '../System/Functions';
@@ -23,17 +23,12 @@ import Dictionary from '../System/Collections/Dictionaries/Dictionary';
 import Queue from '../System/Collections/Queue';
 import {dispose, disposeThese, using} from '../System/Disposable/Utility';
 import DisposableBase from '../System/Disposable/DisposableBase';
+import Exception from "../System/Exception";
 import ArgumentException from '../System/Exceptions/ArgumentException';
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
 import Order from "../System/Collections/Sorting/Order";
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
-
-import enumeratorFrom = Enumerator.from;
-import enumeratorForEach = Enumerator.forEach;
-
-
 type Comparable = Primitive|IComparable<any>;
-
 'use strict';
 
 // #region Local Constants.
@@ -54,13 +49,16 @@ class LinqFunctions extends BaseFunctions
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
-const
-	LENGTH                 = 'length',
-	GET_ENUMERATOR = 'getEnumerator',
-	UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
 // #endregion
 
-// TODO: Create UnsupportedEnumerableException.
+class UnsupportedEnumerableException extends Exception
+{
+	constructor()
+	{
+		super("Unsupported enumerable.");
+	}
+}
+
 
 /**
  * Defined values for doAction.
@@ -104,8 +102,7 @@ extends DisposableBase implements IEnumerable<T>
 	 */
 	static from<T>(source:IEnumerable<T> | IArray<T>):Enumerable<T>
 	{
-		var type = Type.of(source);
-		if(type.isObject)
+		if(Type.isObject(source))
 		{
 			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
 				return source;
@@ -113,35 +110,34 @@ extends DisposableBase implements IEnumerable<T>
 			if(Array.isArray(source))
 				return new ArrayEnumerable<T>(source);
 
-			if(type.member(GET_ENUMERATOR).isFunction)
-				return new Enumerable(()=>(<IEnumerable<T>>source).getEnumerator());
+			if(isEnumerable<T>(source))
+				return new Enumerable(()=>source.getEnumerator());
 
-			if(type.member(LENGTH).isValidNumber)
-				return new ArrayEnumerable<T>(<IArray<T>>source);
+			if(Type.isArrayLike<T>(source))
+				return new ArrayEnumerable<T>(source);
 		}
 
-		throw new Error(UNSUPPORTED_ENUMERABLE);
+		throw new UnsupportedEnumerableException();
 	}
 
 	static toArray<T>(source:IEnumerable<T> | IArray<T>):T[]
 	{
-		var type = Type.of(source);
-		if(type.isObject)
+		if(Type.isObject(source))
 		{
 			if(Array.isArray(source))
 				return source.slice();
 
-			if(type.member(LENGTH).isValidNumber)
+			if(Type.isArrayLike<T>(source))
 				source = new ArrayEnumerable<T>(<IArray<T>>source);
 
 			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
 				return source.toArray();
 
-			if(type.member(GET_ENUMERATOR).isFunction)
+			if(isEnumerable<T>(source))
 			{
 				var result:T[] = [];
 				enumeratorForEach<T>(
-					(<IEnumerable<T>>source).getEnumerator(), (e, i) =>
+					source.getEnumerator(), (e, i) =>
 					{
 						result[i] = e;
 					}
@@ -150,7 +146,7 @@ extends DisposableBase implements IEnumerable<T>
 			}
 		}
 
-		throw new Error(UNSUPPORTED_ENUMERABLE);
+		throw new UnsupportedEnumerableException();
 	}
 
 
@@ -577,9 +573,9 @@ extends DisposableBase implements IEnumerable<T>
 	{
 		if(enumerable)
 		{
-			using(Enumerator.from(enumerable), e=>
+			using(enumeratorFrom(enumerable), e=>
 			{
-				Enumerator.forEach(e, action);
+				enumeratorForEach(e, action);
 			});
 		}
 	}
@@ -589,10 +585,10 @@ extends DisposableBase implements IEnumerable<T>
 		selector:Selector<T,TResult>):TResult[]
 	{
 
-		return enumerable && using(Enumerator.from(enumerable), e=>
+		return enumerable && using(enumeratorFrom(enumerable), e=>
 			{
 				var result:TResult[] = [];
-				Enumerator.forEach(e, (e, i)=>
+				enumeratorForEach(e, (e, i)=>
 				{
 					result[i] = selector(e);
 				});
@@ -1323,7 +1319,7 @@ extends DisposableBase implements IEnumerable<T>
 								if(!middleSeq)
 									continue;
 
-								middleEnumerator = Enumerator.from(middleSeq);
+								middleEnumerator = enumeratorFrom(middleSeq);
 							}
 
 							if(middleEnumerator.moveNext())

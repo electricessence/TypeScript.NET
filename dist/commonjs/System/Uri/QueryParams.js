@@ -9,6 +9,7 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports.encode = encode;
 exports.encodeValue = encodeValue;
+exports.isUriComponentFormattable = isUriComponentFormattable;
 exports.parse = parse;
 exports.parseToMap = parseToMap;
 exports.parseToArray = parseToArray;
@@ -87,14 +88,18 @@ function encode(values, prefixIfNotEmpty) {
 }
 
 function encodeValue(value) {
-    var v = value;
-    if (typeof v == _Types2['default'].OBJECT && "toUriComponent" in v) {
-        v = v.toUriComponent();
+    var v = null;
+    if (isUriComponentFormattable(value)) {
+        v = value.toUriComponent();
         if (v && v.indexOf('&') != 1) throw '.toUriComponent() did not encode the value.';
     } else {
         v = encodeURIComponent(Serialization.toString(v));
     }
     return v;
+}
+
+function isUriComponentFormattable(instance) {
+    return _Types2['default'].hasMemberOfType(instance, "toUriComponent", _Types2['default'].FUNCTION);
 }
 
 function parse(query, entryHandler) {

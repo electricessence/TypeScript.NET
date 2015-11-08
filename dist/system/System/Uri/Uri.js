@@ -209,7 +209,7 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                     return this.absoluteUri;
                 };
                 Uri.toString = function (uri) {
-                    return uri instanceof Uri
+                    return Types_1.default.isInstanceOf(uri, Uri)
                         ? uri.absoluteUri
                         : uriToString(uri);
                 };

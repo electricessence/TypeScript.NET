@@ -73,7 +73,7 @@ class Uri {
         return this.absoluteUri;
     }
     static toString(uri) {
-        return uri instanceof Uri
+        return Type.isInstanceOf(uri, Uri)
             ? uri.absoluteUri
             : uriToString(uri);
     }

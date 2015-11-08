@@ -127,7 +127,7 @@
             throw new ArgumentException_1.default('predicate', 'Must be a function.');
         var len = array.length;
         for (var i = 0; i < len; ++i) {
-            if (i in array && predicate(array[i]))
+            if ((i) in (array) && predicate(array[i]))
                 return i;
         }
         return -1;

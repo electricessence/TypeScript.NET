@@ -49,7 +49,7 @@ export default class OrderedStringKeyDictionary extends StringKeyDictionary {
     removeByIndex(index) {
         return this.setByIndex(index, undefined);
     }
-    get keys() {
+    getKeys() {
         var _ = this;
         return _._order.filter(key => _.containsKey(key));
     }

@@ -7,6 +7,8 @@ System.register([], function(exports_1) {
     return {
         setters:[],
         execute: function() {
+            ///<reference path="Primitive.d.ts"/>
+            ///<reference path="Collections/Array/IArray.d.ts"/>
             _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof undefined, _FUNCTION = typeof function () { };
             typeInfoRegistry = {};
             TypeInfo = (function () {
@@ -64,7 +66,7 @@ System.register([], function(exports_1) {
                 }
                 TypeInfo.prototype.member = function (name) {
                     var t = this.target;
-                    return TypeInfo.getFor(t && name in t
+                    return TypeInfo.getFor(t && (name) in (t)
                         ? t[name]
                         : undefined);
                 };
@@ -138,9 +140,21 @@ System.register([], function(exports_1) {
                 }
                 Type.of = of;
                 function hasMember(value, property) {
-                    return value && !isPrimitive(value) && property in value;
+                    return value && !isPrimitive(value) && (property) in (value);
                 }
                 Type.hasMember = hasMember;
+                function hasMemberOfType(instance, property, type) {
+                    return hasMember(instance, property) && typeof (instance[property]) === type;
+                }
+                Type.hasMemberOfType = hasMemberOfType;
+                function isInstanceOf(instance, type) {
+                    return (instance) instanceof (type);
+                }
+                Type.isInstanceOf = isInstanceOf;
+                function isArrayLike(instance) {
+                    return (instance) instanceof (Array) || hasMember(instance, "length");
+                }
+                Type.isArrayLike = isArrayLike;
             })(Type || (Type = {}));
             Object.freeze(Type);
             exports_1("default",Type);

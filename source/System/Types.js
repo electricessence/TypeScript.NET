@@ -69,7 +69,7 @@
         }
         TypeInfo.prototype.member = function (name) {
             var t = this.target;
-            return TypeInfo.getFor(t && name in t
+            return TypeInfo.getFor(t && (name) in (t)
                 ? t[name]
                 : undefined);
         };
@@ -144,9 +144,13 @@
         }
         Type.of = of;
         function hasMember(value, property) {
-            return value && !isPrimitive(value) && property in value;
+            return value && !isPrimitive(value) && (property) in (value);
         }
         Type.hasMember = hasMember;
+        function hasMemberOfType(instance, property, type) {
+            return hasMember(instance, property) && typeof (instance[property]) === type;
+        }
+        Type.hasMemberOfType = hasMemberOfType;
         function isInstanceOf(instance, type) {
             return (instance) instanceof (type);
         }

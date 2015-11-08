@@ -26,7 +26,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._map = {};
         }
         StringKeyDictionary.prototype.containsKey = function (key) {
-            return key in this._map;
+            return (key) in (this._map);
         };
         StringKeyDictionary.prototype.containsValue = function (value) {
             var map = this._map, equal = Compare_1.areEqual;
@@ -43,13 +43,13 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _ = this, map = _._map, old = map[key];
             if (old !== value) {
                 if (value === undefined) {
-                    if (key in map) {
+                    if ((key) in (map)) {
                         delete map[key];
                         --_._count;
                     }
                 }
                 else {
-                    if (!(key in map))
+                    if (!((key) in (map)))
                         ++_._count;
                     map[key] = value;
                 }

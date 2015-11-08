@@ -7,12 +7,12 @@
 ///<reference path="Collections/Array/IArray.d.ts"/>
 
 const
-_BOOLEAN:string   = typeof true,
-_NUMBER:string    = typeof 0,
-_STRING:string    = typeof "",
-_OBJECT:string    = typeof {},
-_UNDEFINED:string = typeof undefined,
-_FUNCTION:string  = typeof function() {};
+	_BOOLEAN:string = typeof true,
+	_NUMBER:string  = typeof 0,
+	_STRING:string  = typeof "",
+	_OBJECT:string  = typeof {},
+	_UNDEFINED:string = typeof undefined,
+	_FUNCTION:string = typeof function() {};
 
 // Only used for primitives.
 var typeInfoRegistry:{[key:string]:TypeInfo} = {};
@@ -72,7 +72,8 @@ export class TypeInfo
 				break;
 			case _OBJECT:
 				_.target = target;
-				if(target===null) {
+				if(target===null)
+				{
 					_.isNull = true;
 					_.isNullOrUndefined = true;
 					_.isPrimitive = true;
@@ -109,7 +110,7 @@ export class TypeInfo
 	{
 		var t = this.target;
 		return TypeInfo.getFor(
-			t && name in t
+			t && (name)in(t)
 				? t[name]
 				: undefined);
 	}
@@ -273,17 +274,24 @@ module Type
 		return TypeInfo.getFor(target);
 	}
 
-	export function hasMember(value:any,property:string):boolean {
-		return value && !isPrimitive(value) && property in value;
+	export function hasMember(value:any, property:string):boolean
+	{
+		return value && !isPrimitive(value) && (property)in(value);
 	}
 
-	// Substitute instanceof until WebStorm's reformatting is fixed.
-	export function isInstanceOf<T>(instance:any,type:any):instance is T
+	export function hasMemberOfType<T>(instance:any, property:string, type:string):instance is T
+	{
+		return hasMember(instance, property) && typeof(instance[property])===type;
+	}
+
+	// Substitute 'instanceof' until WebStorm's reformatting is fixed.
+	export function isInstanceOf<T>(instance:any, type:any):instance is T
 	{
 		return (instance)instanceof(type);
 	}
 
-	export function isArrayLike<T>(instance:any):instance is IArray<T> {
+	export function isArrayLike<T>(instance:any):instance is IArray<T>
+	{
 		return (instance)instanceof(Array) || hasMember(instance, "length");
 	}
 

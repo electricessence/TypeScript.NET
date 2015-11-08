@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], function (require, exports) {
+})(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], function (require, exports) {
     ///<reference path="../System/Primitive.d.ts"/>
     ///<reference path="../System/FunctionTypes.d.ts"/>
     ///<reference path="../System/Collections/Array/IArray.d.ts"/>
@@ -25,7 +25,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Values = require('../System/Compare');
     var Arrays = require('../System/Collections/Array/Compare');
     var ArrayUtility = require('../System/Collections/Array/Utility');
-    var Enumerator = require('../System/Collections/Enumeration/Enumerator');
+    var Enumerator_1 = require('../System/Collections/Enumeration/Enumerator');
     var Types_1 = require('../System/Types');
     var Integer_1 = require('../System/Integer');
     var Functions_1 = require('../System/Functions');
@@ -35,10 +35,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Queue_1 = require('../System/Collections/Queue');
     var Utility_1 = require('../System/Disposable/Utility');
     var DisposableBase_1 = require('../System/Disposable/DisposableBase');
+    var Exception_1 = require("../System/Exception");
     var ObjectDisposedException_1 = require('../System/Disposable/ObjectDisposedException');
     var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext");
-    var enumeratorFrom = Enumerator.from;
-    var enumeratorForEach = Enumerator.forEach;
     'use strict';
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
@@ -55,7 +54,13 @@ var __extends = (this && this.__extends) || function (d, b) {
     })(Functions_1.default);
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
-    var LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator', UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
+    var UnsupportedEnumerableException = (function (_super) {
+        __extends(UnsupportedEnumerableException, _super);
+        function UnsupportedEnumerableException() {
+            _super.call(this, "Unsupported enumerable.");
+        }
+        return UnsupportedEnumerableException;
+    })(Exception_1.default);
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(_enumeratorFactory, finalizer) {
@@ -66,37 +71,35 @@ var __extends = (this && this.__extends) || function (d, b) {
             return new ArrayEnumerable(array);
         };
         Enumerable.from = function (source) {
-            var type = Types_1.default.of(source);
-            if (type.isObject) {
+            if (Types_1.default.isObject(source)) {
                 if (Types_1.default.isInstanceOf(source, Enumerable))
                     return source;
                 if (Array.isArray(source))
                     return new ArrayEnumerable(source);
-                if (type.member(GET_ENUMERATOR).isFunction)
+                if (Enumerator_1.isEnumerable(source))
                     return new Enumerable(function () { return source.getEnumerator(); });
-                if (type.member(LENGTH).isValidNumber)
+                if (Types_1.default.isArrayLike(source))
                     return new ArrayEnumerable(source);
             }
-            throw new Error(UNSUPPORTED_ENUMERABLE);
+            throw new UnsupportedEnumerableException();
         };
         Enumerable.toArray = function (source) {
-            var type = Types_1.default.of(source);
-            if (type.isObject) {
+            if (Types_1.default.isObject(source)) {
                 if (Array.isArray(source))
                     return source.slice();
-                if (type.member(LENGTH).isValidNumber)
+                if (Types_1.default.isArrayLike(source))
                     source = new ArrayEnumerable(source);
                 if (Types_1.default.isInstanceOf(source, Enumerable))
                     return source.toArray();
-                if (type.member(GET_ENUMERATOR).isFunction) {
+                if (Enumerator_1.isEnumerable(source)) {
                     var result = [];
-                    enumeratorForEach(source.getEnumerator(), function (e, i) {
+                    Enumerator_1.forEach(source.getEnumerator(), function (e, i) {
                         result[i] = e;
                     });
                     return result;
                 }
             }
-            throw new Error(UNSUPPORTED_ENUMERABLE);
+            throw new UnsupportedEnumerableException();
         };
         Enumerable.prototype.getEnumerator = function () {
             this.throwIfDisposed();
@@ -319,15 +322,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.forEach = function (enumerable, action) {
             if (enumerable) {
-                Utility_1.using(Enumerator.from(enumerable), function (e) {
-                    Enumerator.forEach(e, action);
+                Utility_1.using(Enumerator_1.from(enumerable), function (e) {
+                    Enumerator_1.forEach(e, action);
                 });
             }
         };
         Enumerable.map = function (enumerable, selector) {
-            return enumerable && Utility_1.using(Enumerator.from(enumerable), function (e) {
+            return enumerable && Utility_1.using(Enumerator_1.from(enumerable), function (e) {
                 var result = [];
-                Enumerator.forEach(e, function (e, i) {
+                Enumerator_1.forEach(e, function (e, i) {
                     result[i] = selector(e);
                 });
                 return result;
@@ -723,7 +726,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                             var middleSeq = collectionSelector(enumerator.current, index++);
                             if (!middleSeq)
                                 continue;
-                            middleEnumerator = Enumerator.from(middleSeq);
+                            middleEnumerator = Enumerator_1.from(middleSeq);
                         }
                         if (middleEnumerator.moveNext())
                             return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
@@ -1042,7 +1045,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return new EnumeratorBase_1.default(function () {
                     index = 0;
                     firstEnumerator = _.getEnumerator();
-                    secondEnumerator = enumeratorFrom(second);
+                    secondEnumerator = Enumerator_1.from(second);
                 }, function (yielder) {
                     return firstEnumerator.moveNext() && secondEnumerator.moveNext()
                         && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
@@ -1072,7 +1075,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                                 if (secondTemp.count) {
                                     var next = secondTemp.dequeue();
                                     if (next)
-                                        secondEnumerator = enumeratorFrom(next);
+                                        secondEnumerator = Enumerator_1.from(next);
                                 }
                                 else
                                     return yielder.yieldBreak();
@@ -1152,7 +1155,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     if (firstEnumerator != null) {
                         if (firstEnumerator.moveNext())
                             return yielder.yieldReturn(firstEnumerator.current);
-                        secondEnumerator = enumeratorFrom(other);
+                        secondEnumerator = Enumerator_1.from(other);
                         firstEnumerator.dispose();
                         firstEnumerator = null;
                     }
@@ -1179,7 +1182,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }, function (yielder) {
                     while (true) {
                         while (!enumerator && queue.count) {
-                            enumerator = enumeratorFrom(queue.dequeue());
+                            enumerator = Enumerator_1.from(queue.dequeue());
                         }
                         if (enumerator && enumerator.moveNext())
                             return yielder.yieldReturn(enumerator.current);
@@ -1222,7 +1225,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return new EnumeratorBase_1.default(function () {
                     count = 0;
                     firstEnumerator = _.getEnumerator();
-                    secondEnumerator = enumeratorFrom(other);
+                    secondEnumerator = Enumerator_1.from(other);
                     isEnumerated = false;
                 }, function (yielder) {
                     if (count == n) {

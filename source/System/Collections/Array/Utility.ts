@@ -53,8 +53,8 @@ export function copy<T>(
 }
 
 const
-CBN  = 'Cannot be null.',
-CBL0 = 'Cannot be less than zero.';
+	CBN = 'Cannot be null.',
+	CBL0 = 'Cannot be less than zero.';
 
 /**
  * Copies one array to another.
@@ -241,7 +241,7 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 	var len = array.length;
 	for(let i = 0; i<len; ++i)
 	{
-		if(i in array && predicate(array[i]))
+		if((i)in(array) && predicate(array[i]))
 			return i;
 	}
 

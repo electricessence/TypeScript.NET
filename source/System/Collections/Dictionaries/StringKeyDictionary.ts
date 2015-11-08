@@ -17,13 +17,16 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	private _map:IMap<TValue> = {};
 
 
-	containsKey(key:string):boolean {
-		return key in this._map;
+	containsKey(key:string):boolean
+	{
+		return (key)in(this._map);
 	}
 
-	containsValue(value:TValue):boolean {
+	containsValue(value:TValue):boolean
+	{
 		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
-		for(let key in map) {
+		for(let key in map)
+		{
 			if(map.hasOwnProperty(key) && equal(map[key], value))
 				return true;
 		}
@@ -31,22 +34,28 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	}
 
 
-	getValue(key:string):TValue {
+	getValue(key:string):TValue
+	{
 		return this._map[key];
 	}
 
-	setValue(key:string, value:TValue):boolean {
+	setValue(key:string, value:TValue):boolean
+	{
 		var _ = this, map = _._map, old = map[key];
-		if(old!==value) {
+		if(old!==value)
+		{
 
-			if(value===undefined) {
-				if(key in map) {
+			if(value===undefined)
+			{
+				if((key)in(map))
+				{
 					delete map[key];
 					--_._count;
 				}
 			}
-			else {
-				if(!(key in map))
+			else
+			{
+				if(!((key)in(map)))
 					++_._count;
 				map[key] = value;
 			}
@@ -58,12 +67,15 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	}
 
 	// Returns true if any value is updated...
-	importMap(values:IMap<TValue>):boolean {
+	importMap(values:IMap<TValue>):boolean
+	{
 		var _ = this;
 		return _.handleUpdate(
-			() => {
+			() =>
+			{
 				var changed:boolean = false;
-				for(let key in values) {
+				for(let key in values)
+				{
 					if(values.hasOwnProperty(key) && _.setValue(key, values[key]))
 						changed = true;
 				}
@@ -72,9 +84,11 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 		);
 	}
 
-	toMap(selector?:(key:string, value:TValue) => TValue):IMap<TValue> {
+	toMap(selector?:(key:string, value:TValue) => TValue):IMap<TValue>
+	{
 		var _ = this, result:IMap<TValue> = {};
-		for(let key in _._map) {
+		for(let key in _._map)
+		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 			{
 				var value = _._map[key];
@@ -87,10 +101,12 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 		return result;
 	}
 
-	protected getKeys():string[] {
+	protected getKeys():string[]
+	{
 
 		var _ = this, result:string[] = [];
-		for(let key in _._map) {
+		for(let key in _._map)
+		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 				result.push(key);
 		}
@@ -99,10 +115,12 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 	}
 
-	protected getValues():TValue[] {
+	protected getValues():TValue[]
+	{
 
 		var _ = this, result:TValue[] = [];
-		for(let key in _._map) {
+		for(let key in _._map)
+		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 				result.push(_._map[key]);
 		}
@@ -110,7 +128,8 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 		return result;
 	}
 
-	protected getCount():number {
+	protected getCount():number
+	{
 		return this._count;
 	}
 

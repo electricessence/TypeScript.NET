@@ -22,9 +22,9 @@ export default class TimeStamp {
         return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
     }
     static from(d) {
-        if (!(d instanceof Date) && Type.hasMember(d, 'toJsDate'))
+        if (!(Type.isInstanceOf(d, Date)) && Type.hasMember(d, 'toJsDate'))
             d = d.toJsDate();
-        if (d instanceof Date) {
+        if (Type.isInstanceOf(d, Date)) {
             return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
         }
         else {

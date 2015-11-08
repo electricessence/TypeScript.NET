@@ -21,7 +21,7 @@ export default class QueryBuilder extends OrderedStringKeyDictionary {
         QueryParams.parse(values, (key, value) => {
             if (_.containsKey(key)) {
                 var prev = _.getValue(key);
-                if (prev instanceof Array)
+                if (Array.isArray(prev))
                     prev.push(value);
                 else
                     _.setValue(key, [prev, value]);
@@ -39,7 +39,7 @@ export default class QueryBuilder extends OrderedStringKeyDictionary {
         var keys = this.keys;
         for (let k of keys) {
             var value = this.getValue(k);
-            for (let v of value instanceof Array ? value : [value]) {
+            for (let v of Array.isArray(value) ? value : [value]) {
                 entries.push(k + KEY_VALUE_SEPARATOR
                     + QueryParams.encodeValue(v));
             }

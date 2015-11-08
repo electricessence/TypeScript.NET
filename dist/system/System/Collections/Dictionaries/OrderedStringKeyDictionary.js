@@ -71,14 +71,10 @@ System.register(['../Array/Utility', './StringKeyDictionary', '../../Exceptions/
                 OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
                     return this.setByIndex(index, undefined);
                 };
-                Object.defineProperty(OrderedStringKeyDictionary.prototype, "keys", {
-                    get: function () {
-                        var _ = this;
-                        return _._order.filter(function (key) { return _.containsKey(key); });
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
+                OrderedStringKeyDictionary.prototype.getKeys = function () {
+                    var _ = this;
+                    return _._order.filter(function (key) { return _.containsKey(key); });
+                };
                 return OrderedStringKeyDictionary;
             })(StringKeyDictionary_1.default);
             exports_1("default", OrderedStringKeyDictionary);

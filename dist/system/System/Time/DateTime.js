@@ -3,11 +3,14 @@
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['./HowMany', './ClockTime', './TimeSpan', './TimeStamp'], function(exports_1) {
-    var HowMany, ClockTime_1, TimeSpan_1, TimeStamp_1;
+System.register(['../Types', './HowMany', './ClockTime', './TimeSpan', './TimeStamp'], function(exports_1) {
+    var Types_1, HowMany, ClockTime_1, TimeSpan_1, TimeStamp_1;
     var DateTime;
     return {
         setters:[
+            function (Types_1_1) {
+                Types_1 = Types_1_1;
+            },
             function (HowMany_1) {
                 HowMany = HowMany_1;
             },
@@ -27,9 +30,9 @@ System.register(['./HowMany', './ClockTime', './TimeSpan', './TimeStamp'], funct
                     if (kind === void 0) { kind = 1; }
                     var _ = this;
                     _._kind = kind;
-                    if (value instanceof DateTime)
+                    if (Types_1.default.isInstanceOf(value, DateTime))
                         _._value = value.toJsDate();
-                    else if (value instanceof Date)
+                    else if (Types_1.default.isInstanceOf(value, Date))
                         _._setJsDate(value);
                     else
                         _._value = value == undefined
@@ -176,7 +179,7 @@ System.register(['./HowMany', './ClockTime', './TimeSpan', './TimeStamp'], funct
                     configurable: true
                 });
                 DateTime.between = function (first, last) {
-                    var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
+                    var f = Types_1.default.isInstanceOf(first, DateTime) ? first._value : first, l = Types_1.default.isInstanceOf(last, DateTime) ? last._value : last;
                     return new TimeSpan_1.default(f.getTime() - l.getTime());
                 };
                 DateTime.isLeapYear = function (year) {

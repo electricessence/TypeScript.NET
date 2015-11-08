@@ -9,7 +9,7 @@ export function encode(values, prefixIfNotEmpty) {
     if (!values)
         return '';
     var entries = [];
-    if (values instanceof Array) {
+    if (Array.isArray(values)) {
         for (let kvp of values) {
             if (kvp)
                 entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
@@ -25,9 +25,9 @@ export function encode(values, prefixIfNotEmpty) {
         + entries.join(ENTRY_SEPARATOR);
 }
 export function encodeValue(value) {
-    var v = value;
-    if (typeof v == Type.OBJECT && "toUriComponent" in v) {
-        v = v.toUriComponent();
+    var v = null;
+    if (isUriComponentFormattable(value)) {
+        v = value.toUriComponent();
         if (v && v.indexOf('&') != 1)
             throw '.toUriComponent() did not encode the value.';
     }
@@ -35,6 +35,9 @@ export function encodeValue(value) {
         v = encodeURIComponent(Serialization.toString(v));
     }
     return v;
+}
+export function isUriComponentFormattable(instance) {
+    return Type.hasMemberOfType(instance, "toUriComponent", Type.FUNCTION);
 }
 export function parse(query, entryHandler, deserialize = true, decodeValues = true) {
     if (query && (query = query.replace(/^\s*\?+/, ''))) {
@@ -56,9 +59,9 @@ export function parse(query, entryHandler, deserialize = true, decodeValues = tr
 export function parseToMap(query, deserialize = true, decodeValues = true) {
     var result = {};
     parse(query, (key, value) => {
-        if (key in result) {
+        if ((key) in (result)) {
             var prev = result[key];
-            if (!(prev instanceof Array))
+            if (!(Array.isArray(prev)))
                 result[key] = prev = [prev];
             prev.push(value);
         }

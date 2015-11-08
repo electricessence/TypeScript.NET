@@ -49,7 +49,6 @@ class Exception implements Error, IDisposable
 	}
 
 
-
 	data:IMap<any>;
 
 	/**
@@ -67,7 +66,7 @@ class Exception implements Error, IDisposable
 		var _ = this, m = _.message;
 		m = m ? (': ' + m) : '';
 
-		return '['+_.name+ m +']';
+		return '[' + _.name + m + ']';
 	}
 
 	/**
@@ -77,7 +76,9 @@ class Exception implements Error, IDisposable
 	{
 		var data = this.data;
 		for(let k in data)
+		{
 			if(data.hasOwnProperty(k))
 				delete data[k];
+		}
 	}
 }

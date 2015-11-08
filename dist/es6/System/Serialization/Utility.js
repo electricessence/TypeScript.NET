@@ -18,7 +18,7 @@ export function toString(value, defaultForUnknown) {
         default:
             if (v === null)
                 return v;
-            if (Type.of(v).member('serialize').isFunction)
+            if (isSerializable(v))
                 return v.serialize();
             else if (arguments.length > 1)
                 return defaultForUnknown;
@@ -26,6 +26,9 @@ export function toString(value, defaultForUnknown) {
             ex.data['value'] = v;
             throw ex;
     }
+}
+export function isSerializable(instance) {
+    return Type.hasMemberOfType(instance, 'serialize', Type.FUNCTION);
 }
 export function toPrimitive(value, caseInsensitive, unknownHandler) {
     if (value) {

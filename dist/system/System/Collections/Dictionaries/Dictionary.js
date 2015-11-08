@@ -3,13 +3,13 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function(exports_1) {
+System.register(['../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, Types_1, Functions_1, DictionaryAbstractBase_1, EnumeratorBase_1;
+    var Compare_1, Types_1, Functions_1, DictionaryBase_1, EnumeratorBase_1;
     var HashEntry, EntryList, Dictionary;
     function callHasOwnProperty(target, key) {
         return Object.prototype.hasOwnProperty.call(target, key);
@@ -34,8 +34,8 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
             function (Functions_1_1) {
                 Functions_1 = Functions_1_1;
             },
-            function (DictionaryAbstractBase_1_1) {
-                DictionaryAbstractBase_1 = DictionaryAbstractBase_1_1;
+            function (DictionaryBase_1_1) {
+                DictionaryBase_1 = DictionaryBase_1_1;
             },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
@@ -206,13 +206,9 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     _._entries.clear();
                     return count;
                 };
-                Object.defineProperty(Dictionary.prototype, "count", {
-                    get: function () {
-                        return this._count;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
+                Dictionary.prototype.getCount = function () {
+                    return this._count;
+                };
                 Dictionary.prototype.getEnumerator = function () {
                     var _ = this, currentEntry;
                     return new EnumeratorBase_1.default(function () { currentEntry = _._entries.first; }, function (yielder) {
@@ -224,26 +220,18 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                         return yielder.yieldBreak();
                     });
                 };
-                Object.defineProperty(Dictionary.prototype, "keys", {
-                    get: function () {
-                        var _ = this, result = [];
-                        _._entries.forEach(function (entry) { return result.push(entry.key); });
-                        return result;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                Object.defineProperty(Dictionary.prototype, "values", {
-                    get: function () {
-                        var _ = this, result = [];
-                        _._entries.forEach(function (entry) { return result.push(entry.value); });
-                        return result;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
+                Dictionary.prototype.getKeys = function () {
+                    var _ = this, result = [];
+                    _._entries.forEach(function (entry) { return result.push(entry.key); });
+                    return result;
+                };
+                Dictionary.prototype.getValues = function () {
+                    var _ = this, result = [];
+                    _._entries.forEach(function (entry) { return result.push(entry.value); });
+                    return result;
+                };
                 return Dictionary;
-            })(DictionaryAbstractBase_1.default);
+            })(DictionaryBase_1.default);
             exports_1("default", Dictionary);
         }
     }

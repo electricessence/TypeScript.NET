@@ -53,7 +53,7 @@ System.register(['../../Types', '../../Integer', '../../Compare', '../../Excepti
     function contains(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (array && array.length) {
-            if (array instanceof Array)
+            if (Array.isArray(array))
                 return array.indexOf(item) != -1;
             for (var i = 0; i < array.length; ++i) {
                 if (equalityComparer(array[i], item))
@@ -113,7 +113,7 @@ System.register(['../../Types', '../../Integer', '../../Compare', '../../Excepti
             throw new ArgumentException_1.default('predicate', 'Must be a function.');
         var len = array.length;
         for (var i = 0; i < len; ++i) {
-            if (i in array && predicate(array[i]))
+            if ((i) in (array) && predicate(array[i]))
                 return i;
         }
         return -1;
@@ -192,7 +192,7 @@ System.register(['../../Types', '../../Integer', '../../Compare', '../../Excepti
         var result = [];
         for (var i = 0; i < a.length; i++) {
             var x = a[i];
-            if (x instanceof Array) {
+            if (Array.isArray(x)) {
                 if (recurseDepth > 0)
                     x = flatten(x, recurseDepth - 1);
                 for (var n = 0; n < x.length; n++)

@@ -35,8 +35,6 @@ var ArrayUtility = _interopRequireWildcard(_SystemCollectionsArrayUtility);
 
 var _SystemCollectionsEnumerationEnumerator = require('../System/Collections/Enumeration/Enumerator');
 
-var Enumerator = _interopRequireWildcard(_SystemCollectionsEnumerationEnumerator);
-
 var _SystemTypes = require('../System/Types');
 
 var _SystemTypes2 = _interopRequireDefault(_SystemTypes);
@@ -71,6 +69,10 @@ var _SystemDisposableDisposableBase = require('../System/Disposable/DisposableBa
 
 var _SystemDisposableDisposableBase2 = _interopRequireDefault(_SystemDisposableDisposableBase);
 
+var _SystemException = require("../System/Exception");
+
+var _SystemException2 = _interopRequireDefault(_SystemException);
+
 var _SystemDisposableObjectDisposedException = require('../System/Disposable/ObjectDisposedException');
 
 var _SystemDisposableObjectDisposedException2 = _interopRequireDefault(_SystemDisposableObjectDisposedException);
@@ -79,8 +81,6 @@ var _SystemCollectionsSortingKeySortedContext = require("../System/Collections/S
 
 var _SystemCollectionsSortingKeySortedContext2 = _interopRequireDefault(_SystemCollectionsSortingKeySortedContext);
 
-var enumeratorFrom = Enumerator.from;
-var enumeratorForEach = Enumerator.forEach;
 'use strict';
 
 var LinqFunctions = (function (_BaseFunctions) {
@@ -110,8 +110,19 @@ var LinqFunctions = (function (_BaseFunctions) {
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
 var LENGTH = 'length',
-    GET_ENUMERATOR = 'getEnumerator',
-    UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
+    GET_ENUMERATOR = 'getEnumerator';
+
+var UnsupportedEnumerableException = (function (_Exception) {
+    _inherits(UnsupportedEnumerableException, _Exception);
+
+    function UnsupportedEnumerableException() {
+        _classCallCheck(this, UnsupportedEnumerableException);
+
+        _get(Object.getPrototypeOf(UnsupportedEnumerableException.prototype), 'constructor', this).call(this, "Unsupported enumerable.");
+    }
+
+    return UnsupportedEnumerableException;
+})(_SystemException2['default']);
 
 var Enumerable = (function (_DisposableBase) {
     _inherits(Enumerable, _DisposableBase);
@@ -528,7 +539,7 @@ var Enumerable = (function (_DisposableBase) {
                         if (!middleEnumerator) {
                             var middleSeq = collectionSelector(enumerator.current, index++);
                             if (!middleSeq) continue;
-                            middleEnumerator = Enumerator.from(middleSeq);
+                            middleEnumerator = (0, _SystemCollectionsEnumerationEnumerator.from)(middleSeq);
                         }
                         if (middleEnumerator.moveNext()) return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
                         middleEnumerator.dispose();
@@ -877,7 +888,7 @@ var Enumerable = (function (_DisposableBase) {
                 return new _SystemCollectionsEnumerationEnumeratorBase2['default'](function () {
                     index = 0;
                     firstEnumerator = _.getEnumerator();
-                    secondEnumerator = enumeratorFrom(second);
+                    secondEnumerator = (0, _SystemCollectionsEnumerationEnumerator.from)(second);
                 }, function (yielder) {
                     return firstEnumerator.moveNext() && secondEnumerator.moveNext() && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
                 }, function () {
@@ -906,7 +917,7 @@ var Enumerable = (function (_DisposableBase) {
                             while (!secondEnumerator) {
                                 if (secondTemp.count) {
                                     var next = secondTemp.dequeue();
-                                    if (next) secondEnumerator = enumeratorFrom(next);
+                                    if (next) secondEnumerator = (0, _SystemCollectionsEnumerationEnumerator.from)(next);
                                 } else return yielder.yieldBreak();
                             }
                             if (secondEnumerator.moveNext()) return yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
@@ -985,7 +996,7 @@ var Enumerable = (function (_DisposableBase) {
                 }, function (yielder) {
                     if (firstEnumerator != null) {
                         if (firstEnumerator.moveNext()) return yielder.yieldReturn(firstEnumerator.current);
-                        secondEnumerator = enumeratorFrom(other);
+                        secondEnumerator = (0, _SystemCollectionsEnumerationEnumerator.from)(other);
                         firstEnumerator.dispose();
                         firstEnumerator = null;
                     }
@@ -1011,7 +1022,7 @@ var Enumerable = (function (_DisposableBase) {
                 }, function (yielder) {
                     while (true) {
                         while (!enumerator && queue.count) {
-                            enumerator = enumeratorFrom(queue.dequeue());
+                            enumerator = (0, _SystemCollectionsEnumerationEnumerator.from)(queue.dequeue());
                         }
                         if (enumerator && enumerator.moveNext()) return yielder.yieldReturn(enumerator.current);
                         if (enumerator) {
@@ -1055,7 +1066,7 @@ var Enumerable = (function (_DisposableBase) {
                 return new _SystemCollectionsEnumerationEnumeratorBase2['default'](function () {
                     count = 0;
                     firstEnumerator = _.getEnumerator();
-                    secondEnumerator = enumeratorFrom(other);
+                    secondEnumerator = (0, _SystemCollectionsEnumerationEnumerator.from)(other);
                     isEnumerated = false;
                 }, function (yielder) {
                     if (count == n) {
@@ -1632,34 +1643,32 @@ var Enumerable = (function (_DisposableBase) {
     }, {
         key: 'from',
         value: function from(source) {
-            var type = _SystemTypes2['default'].of(source);
-            if (type.isObject) {
+            if (_SystemTypes2['default'].isObject(source)) {
                 if (_SystemTypes2['default'].isInstanceOf(source, Enumerable)) return source;
                 if (Array.isArray(source)) return new ArrayEnumerable(source);
-                if (type.member(GET_ENUMERATOR).isFunction) return new Enumerable(function () {
+                if ((0, _SystemCollectionsEnumerationEnumerator.isEnumerable)(source)) return new Enumerable(function () {
                     return source.getEnumerator();
                 });
-                if (type.member(LENGTH).isValidNumber) return new ArrayEnumerable(source);
+                if (_SystemTypes2['default'].isArrayLike(source)) return new ArrayEnumerable(source);
             }
-            throw new Error(UNSUPPORTED_ENUMERABLE);
+            throw new UnsupportedEnumerableException();
         }
     }, {
         key: 'toArray',
         value: function toArray(source) {
-            var type = _SystemTypes2['default'].of(source);
-            if (type.isObject) {
+            if (_SystemTypes2['default'].isObject(source)) {
                 if (Array.isArray(source)) return source.slice();
-                if (type.member(LENGTH).isValidNumber) source = new ArrayEnumerable(source);
+                if (_SystemTypes2['default'].isArrayLike(source)) source = new ArrayEnumerable(source);
                 if (_SystemTypes2['default'].isInstanceOf(source, Enumerable)) return source.toArray();
-                if (type.member(GET_ENUMERATOR).isFunction) {
+                if ((0, _SystemCollectionsEnumerationEnumerator.isEnumerable)(source)) {
                     var result = [];
-                    enumeratorForEach(source.getEnumerator(), function (e, i) {
+                    (0, _SystemCollectionsEnumerationEnumerator.forEach)(source.getEnumerator(), function (e, i) {
                         result[i] = e;
                     });
                     return result;
                 }
             }
-            throw new Error(UNSUPPORTED_ENUMERABLE);
+            throw new UnsupportedEnumerableException();
         }
     }, {
         key: 'choice',
@@ -1902,17 +1911,17 @@ var Enumerable = (function (_DisposableBase) {
         key: 'forEach',
         value: function forEach(enumerable, action) {
             if (enumerable) {
-                (0, _SystemDisposableUtility.using)(Enumerator.from(enumerable), function (e) {
-                    Enumerator.forEach(e, action);
+                (0, _SystemDisposableUtility.using)((0, _SystemCollectionsEnumerationEnumerator.from)(enumerable), function (e) {
+                    (0, _SystemCollectionsEnumerationEnumerator.forEach)(e, action);
                 });
             }
         }
     }, {
         key: 'map',
         value: function map(enumerable, selector) {
-            return enumerable && (0, _SystemDisposableUtility.using)(Enumerator.from(enumerable), function (e) {
+            return enumerable && (0, _SystemDisposableUtility.using)((0, _SystemCollectionsEnumerationEnumerator.from)(enumerable), function (e) {
                 var result = [];
-                Enumerator.forEach(e, function (e, i) {
+                (0, _SystemCollectionsEnumerationEnumerator.forEach)(e, function (e, i) {
                     result[i] = selector(e);
                 });
                 return result;

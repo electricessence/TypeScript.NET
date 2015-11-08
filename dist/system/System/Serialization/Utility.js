@@ -18,7 +18,7 @@ System.register(['../Types', '../Exceptions/InvalidOperationException'], functio
             default:
                 if (v === null)
                     return v;
-                if (Types_1.default.of(v).member('serialize').isFunction)
+                if (isSerializable(v))
                     return v.serialize();
                 else if (arguments.length > 1)
                     return defaultForUnknown;
@@ -28,6 +28,10 @@ System.register(['../Types', '../Exceptions/InvalidOperationException'], functio
         }
     }
     exports_1("toString", toString);
+    function isSerializable(instance) {
+        return Types_1.default.hasMemberOfType(instance, 'serialize', Types_1.default.FUNCTION);
+    }
+    exports_1("isSerializable", isSerializable);
     function toPrimitive(value, caseInsensitive, unknownHandler) {
         if (value) {
             if (caseInsensitive)

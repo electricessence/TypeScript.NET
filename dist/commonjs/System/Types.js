@@ -163,6 +163,10 @@ var Type;
         return value && !isPrimitive(value) && property in value;
     }
     Type.hasMember = hasMember;
+    function hasMemberOfType(instance, property, type) {
+        return hasMember(instance, property) && typeof instance[property] === type;
+    }
+    Type.hasMemberOfType = hasMemberOfType;
     function isInstanceOf(instance, type) {
         return instance instanceof type;
     }

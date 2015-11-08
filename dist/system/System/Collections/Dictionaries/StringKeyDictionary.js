@@ -3,21 +3,21 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../../Compare', './DictionaryAbstractBase'], function(exports_1) {
+System.register(['../../Compare', './DictionaryBase'], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, DictionaryAbstractBase_1;
+    var Compare_1, DictionaryBase_1;
     var StringKeyDictionary;
     return {
         setters:[
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
-            function (DictionaryAbstractBase_1_1) {
-                DictionaryAbstractBase_1 = DictionaryAbstractBase_1_1;
+            function (DictionaryBase_1_1) {
+                DictionaryBase_1 = DictionaryBase_1_1;
             }],
         execute: function() {
             StringKeyDictionary = (function (_super) {
@@ -28,7 +28,7 @@ System.register(['../../Compare', './DictionaryAbstractBase'], function(exports_
                     this._map = {};
                 }
                 StringKeyDictionary.prototype.containsKey = function (key) {
-                    return key in this._map;
+                    return (key) in (this._map);
                 };
                 StringKeyDictionary.prototype.containsValue = function (value) {
                     var map = this._map, equal = Compare_1.areEqual;
@@ -45,13 +45,13 @@ System.register(['../../Compare', './DictionaryAbstractBase'], function(exports_
                     var _ = this, map = _._map, old = map[key];
                     if (old !== value) {
                         if (value === undefined) {
-                            if (key in map) {
+                            if ((key) in (map)) {
                                 delete map[key];
                                 --_._count;
                             }
                         }
                         else {
-                            if (!(key in map))
+                            if (!((key) in (map)))
                                 ++_._count;
                             map[key] = value;
                         }
@@ -84,39 +84,27 @@ System.register(['../../Compare', './DictionaryAbstractBase'], function(exports_
                     }
                     return result;
                 };
-                Object.defineProperty(StringKeyDictionary.prototype, "keys", {
-                    get: function () {
-                        var _ = this, result = [];
-                        for (var key in _._map) {
-                            if (_._map.hasOwnProperty(key))
-                                result.push(key);
-                        }
-                        return result;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                Object.defineProperty(StringKeyDictionary.prototype, "values", {
-                    get: function () {
-                        var _ = this, result = [];
-                        for (var key in _._map) {
-                            if (_._map.hasOwnProperty(key))
-                                result.push(_._map[key]);
-                        }
-                        return result;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
-                Object.defineProperty(StringKeyDictionary.prototype, "count", {
-                    get: function () {
-                        return this._count;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
+                StringKeyDictionary.prototype.getKeys = function () {
+                    var _ = this, result = [];
+                    for (var key in _._map) {
+                        if (_._map.hasOwnProperty(key))
+                            result.push(key);
+                    }
+                    return result;
+                };
+                StringKeyDictionary.prototype.getValues = function () {
+                    var _ = this, result = [];
+                    for (var key in _._map) {
+                        if (_._map.hasOwnProperty(key))
+                            result.push(_._map[key]);
+                    }
+                    return result;
+                };
+                StringKeyDictionary.prototype.getCount = function () {
+                    return this._count;
+                };
                 return StringKeyDictionary;
-            })(DictionaryAbstractBase_1.default);
+            })(DictionaryBase_1.default);
             exports_1("default", StringKeyDictionary);
         }
     }
