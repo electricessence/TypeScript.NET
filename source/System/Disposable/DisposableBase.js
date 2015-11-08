@@ -43,8 +43,7 @@
                 }
             }
         };
-        DisposableBase.prototype._onDispose = function () {
-        };
+        DisposableBase.prototype._onDispose = function () { };
         return DisposableBase;
     })();
     Object.defineProperty(exports, "__esModule", { value: true });

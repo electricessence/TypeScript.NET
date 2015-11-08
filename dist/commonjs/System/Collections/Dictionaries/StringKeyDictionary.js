@@ -21,12 +21,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 
 var _Compare = require('../../Compare');
 
-var _DictionaryAbstractBase2 = require('./DictionaryAbstractBase');
+var _DictionaryBase2 = require('./DictionaryBase');
 
-var _DictionaryAbstractBase3 = _interopRequireDefault(_DictionaryAbstractBase2);
+var _DictionaryBase3 = _interopRequireDefault(_DictionaryBase2);
 
-var StringKeyDictionary = (function (_DictionaryAbstractBase) {
-    _inherits(StringKeyDictionary, _DictionaryAbstractBase);
+var StringKeyDictionary = (function (_DictionaryBase) {
+    _inherits(StringKeyDictionary, _DictionaryBase);
 
     function StringKeyDictionary() {
         _classCallCheck(this, StringKeyDictionary);
@@ -108,8 +108,8 @@ var StringKeyDictionary = (function (_DictionaryAbstractBase) {
             return result;
         }
     }, {
-        key: 'keys',
-        get: function get() {
+        key: 'getKeys',
+        value: function getKeys() {
             var _ = this,
                 result = [];
             for (var key in _._map) {
@@ -118,8 +118,8 @@ var StringKeyDictionary = (function (_DictionaryAbstractBase) {
             return result;
         }
     }, {
-        key: 'values',
-        get: function get() {
+        key: 'getValues',
+        value: function getValues() {
             var _ = this,
                 result = [];
             for (var key in _._map) {
@@ -128,14 +128,14 @@ var StringKeyDictionary = (function (_DictionaryAbstractBase) {
             return result;
         }
     }, {
-        key: 'count',
-        get: function get() {
+        key: 'getCount',
+        value: function getCount() {
             return this._count;
         }
     }]);
 
     return StringKeyDictionary;
-})(_DictionaryAbstractBase3['default']);
+})(_DictionaryBase3['default']);
 
 exports['default'] = StringKeyDictionary;
 module.exports = exports['default'];

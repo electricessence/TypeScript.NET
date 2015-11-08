@@ -9,24 +9,23 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/NotImplementedException', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports) {
+})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports) {
     ///<reference path="IDictionary.d.ts"/>
     var Compare_1 = require('../../Compare');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
-    var NotImplementedException_1 = require('../../Exceptions/NotImplementedException');
     var ArgumentException_1 = require('../../Exceptions/ArgumentException');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
     var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
-    var DictionaryAbstractBase = (function () {
-        function DictionaryAbstractBase() {
+    var DictionaryBase = (function () {
+        function DictionaryBase() {
             this._updateRecursion = 0;
         }
-        Object.defineProperty(DictionaryAbstractBase.prototype, "isUpdating", {
+        Object.defineProperty(DictionaryBase.prototype, "isUpdating", {
             get: function () { return this._updateRecursion != 0; },
             enumerable: true,
             configurable: true
         });
-        DictionaryAbstractBase.prototype._onValueUpdate = function (key, value, old) {
+        DictionaryBase.prototype._onValueUpdate = function (key, value, old) {
             if (!Compare_1.areEqual(value, old, true)) {
                 var _ = this;
                 if (_.onValueChanged)
@@ -35,12 +34,12 @@
                     _._onUpdated();
             }
         };
-        DictionaryAbstractBase.prototype._onUpdated = function () {
+        DictionaryBase.prototype._onUpdated = function () {
             var _ = this;
             if (_.onUpdated)
                 _.onUpdated();
         };
-        DictionaryAbstractBase.prototype.handleUpdate = function (closure) {
+        DictionaryBase.prototype.handleUpdate = function (closure) {
             var _ = this, result;
             if (closure) {
                 _._updateRecursion++;
@@ -57,24 +56,22 @@
                 _._onUpdated();
             return result;
         };
-        Object.defineProperty(DictionaryAbstractBase.prototype, "isReadOnly", {
+        Object.defineProperty(DictionaryBase.prototype, "isReadOnly", {
             get: function () { return false; },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(DictionaryAbstractBase.prototype, "count", {
-            get: function () {
-                throw notImplemented("count");
-            },
+        Object.defineProperty(DictionaryBase.prototype, "count", {
+            get: function () { return this.getCount(); },
             enumerable: true,
             configurable: true
         });
-        DictionaryAbstractBase.prototype.add = function (item) {
+        DictionaryBase.prototype.add = function (item) {
             if (!item)
                 throw new ArgumentException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
             this.addByKeyValue(item.key, item.value);
         };
-        DictionaryAbstractBase.prototype.clear = function () {
+        DictionaryBase.prototype.clear = function () {
             var _ = this, keys = _.keys, count = keys.length;
             if (count)
                 _.handleUpdate(function () {
@@ -85,13 +82,13 @@
                 console.warn("Dictionary clear() results in mismatched count.");
             return count;
         };
-        DictionaryAbstractBase.prototype.contains = function (item) {
+        DictionaryBase.prototype.contains = function (item) {
             if (!item)
                 return false;
             var value = this.getValue(item.key);
             return Compare_1.areEqual(value, item.value);
         };
-        DictionaryAbstractBase.prototype.copyTo = function (array, index) {
+        DictionaryBase.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }
             if (!array)
                 throw new ArgumentNullException_1.default('array');
@@ -101,27 +98,27 @@
             }
             return array;
         };
-        DictionaryAbstractBase.prototype.toArray = function () {
+        DictionaryBase.prototype.toArray = function () {
             return this.copyTo([], 0);
         };
-        DictionaryAbstractBase.prototype.remove = function (item) {
+        DictionaryBase.prototype.remove = function (item) {
             if (!item)
                 return 0;
             var key = item.key, value = this.getValue(key);
             return (Compare_1.areEqual(value, item.value) && this.removeByKey(key))
                 ? 1 : 0;
         };
-        Object.defineProperty(DictionaryAbstractBase.prototype, "keys", {
-            get: function () { throw notImplemented("keys"); },
+        Object.defineProperty(DictionaryBase.prototype, "keys", {
+            get: function () { return this.getKeys(); },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(DictionaryAbstractBase.prototype, "values", {
-            get: function () { throw notImplemented("values"); },
+        Object.defineProperty(DictionaryBase.prototype, "values", {
+            get: function () { return this.getValues(); },
             enumerable: true,
             configurable: true
         });
-        DictionaryAbstractBase.prototype.addByKeyValue = function (key, value) {
+        DictionaryBase.prototype.addByKeyValue = function (key, value) {
             var _ = this;
             if (_.containsKey(key)) {
                 var ex = new InvalidOperationException_1.default("Adding a key/value when the key already exists.");
@@ -131,17 +128,11 @@
             }
             _.setValue(key, value);
         };
-        DictionaryAbstractBase.prototype.getValue = function (key) {
-            throw notImplemented("getValue(key: TKey): TValue", "When calling for key: " + key);
-        };
-        DictionaryAbstractBase.prototype.setValue = function (key, value) {
-            throw notImplemented("setValue(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + ".");
-        };
-        DictionaryAbstractBase.prototype.containsKey = function (key) {
+        DictionaryBase.prototype.containsKey = function (key) {
             var value = this.getValue(key);
             return value !== undefined;
         };
-        DictionaryAbstractBase.prototype.containsValue = function (value) {
+        DictionaryBase.prototype.containsValue = function (value) {
             var e = this.getEnumerator(), equal = Compare_1.areEqual;
             while (e.moveNext()) {
                 if (equal(e.current, value, true)) {
@@ -151,10 +142,10 @@
             }
             return false;
         };
-        DictionaryAbstractBase.prototype.removeByKey = function (key) {
+        DictionaryBase.prototype.removeByKey = function (key) {
             return this.setValue(key, undefined);
         };
-        DictionaryAbstractBase.prototype.removeByValue = function (value) {
+        DictionaryBase.prototype.removeByValue = function (value) {
             var _ = this, count = 0, equal = Compare_1.areEqual;
             _.keys.forEach(function (key) {
                 if (equal(_.getValue(key), value, true)) {
@@ -164,7 +155,7 @@
             });
             return count;
         };
-        DictionaryAbstractBase.prototype.importPairs = function (pairs) {
+        DictionaryBase.prototype.importPairs = function (pairs) {
             var _ = this;
             return _.handleUpdate(function () {
                 var changed = false;
@@ -175,7 +166,7 @@
                 return changed;
             });
         };
-        DictionaryAbstractBase.prototype.getEnumerator = function () {
+        DictionaryBase.prototype.getEnumerator = function () {
             var _ = this;
             var keys, len, i = 0;
             return new EnumeratorBase_1.default(function () {
@@ -190,14 +181,9 @@
                 return yielder.yieldBreak();
             });
         };
-        return DictionaryAbstractBase;
+        return DictionaryBase;
     })();
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = DictionaryAbstractBase;
-    function notImplemented(name, log) {
-        if (log === void 0) { log = ""; }
-        console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-        return new NotImplementedException_1.default("DictionaryAbstractBase." + name + ": Not implemented.");
-    }
+    exports.default = DictionaryBase;
 });
-//# sourceMappingURL=DictionaryAbstractBase.js.map
+//# sourceMappingURL=DictionaryBase.js.map

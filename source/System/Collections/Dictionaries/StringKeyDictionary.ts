@@ -5,13 +5,13 @@
  */
 
 import {areEqual} from '../../Compare';
-import DictionaryAbstractBase from './DictionaryAbstractBase';
+import DictionaryBase from './DictionaryBase';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 
 
 export default
 class StringKeyDictionary<TValue>
-extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<TValue>
+extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 {
 	private _count:number = 0;
 	private _map:IMap<TValue> = {};
@@ -87,7 +87,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 		return result;
 	}
 
-	get keys():string[] {
+	protected getKeys():string[] {
 
 		var _ = this, result:string[] = [];
 		for(let key in _._map) {
@@ -99,7 +99,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 
 	}
 
-	get values():TValue[] {
+	protected getValues():TValue[] {
 
 		var _ = this, result:TValue[] = [];
 		for(let key in _._map) {
@@ -110,7 +110,7 @@ extends DictionaryAbstractBase<string, TValue> implements IStringKeyDictionary<T
 		return result;
 	}
 
-	get count():number {
+	protected getCount():number {
 		return this._count;
 	}
 

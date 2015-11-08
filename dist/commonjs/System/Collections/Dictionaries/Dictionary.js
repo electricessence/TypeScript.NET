@@ -29,9 +29,9 @@ var _Functions = require('../../Functions');
 
 var _Functions2 = _interopRequireDefault(_Functions);
 
-var _DictionaryAbstractBase2 = require('./DictionaryAbstractBase');
+var _DictionaryBase = require('./DictionaryBase');
 
-var _DictionaryAbstractBase3 = _interopRequireDefault(_DictionaryAbstractBase2);
+var _DictionaryBase2 = _interopRequireDefault(_DictionaryBase);
 
 var _EnumerationEnumeratorBase = require('../Enumeration/EnumeratorBase');
 
@@ -252,6 +252,11 @@ var Dictionary = (function (_DictionaryAbstractBase) {
             return count;
         }
     }, {
+        key: 'getCount',
+        value: function getCount() {
+            return this._count;
+        }
+    }, {
         key: 'getEnumerator',
         value: function getEnumerator() {
             var _ = this,
@@ -268,13 +273,8 @@ var Dictionary = (function (_DictionaryAbstractBase) {
             });
         }
     }, {
-        key: 'count',
-        get: function get() {
-            return this._count;
-        }
-    }, {
-        key: 'keys',
-        get: function get() {
+        key: 'getKeys',
+        value: function getKeys() {
             var _ = this,
                 result = [];
             _._entries.forEach(function (entry) {
@@ -283,8 +283,8 @@ var Dictionary = (function (_DictionaryAbstractBase) {
             return result;
         }
     }, {
-        key: 'values',
-        get: function get() {
+        key: 'getValues',
+        value: function getValues() {
             var _ = this,
                 result = [];
             _._entries.forEach(function (entry) {
@@ -295,7 +295,7 @@ var Dictionary = (function (_DictionaryAbstractBase) {
     }]);
 
     return Dictionary;
-})(_DictionaryAbstractBase3['default']);
+})(_DictionaryBase2['default']);
 
 exports['default'] = Dictionary;
 module.exports = exports['default'];

@@ -20,6 +20,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var shallowCopy_1 = require('../Utility/shallowCopy');
     var DisposableBase_1 = require('../Disposable/DisposableBase');
     var AU = require('../Collections/Array/Utility');
+    var DISPOSING = 'disposing', DISPOSED = 'disposed';
     var EventDispatcherEntry = (function (_super) {
         __extends(EventDispatcherEntry, _super);
         function EventDispatcherEntry(type, listener, useCapture, priority) {
@@ -135,12 +136,12 @@ var __extends = (this && this.__extends) || function (d, b) {
             return true;
         };
         Object.defineProperty(EventDispatcher, "DISPOSING", {
-            get: function () { return "disposing"; },
+            get: function () { return DISPOSING; },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(EventDispatcher, "DISPOSED", {
-            get: function () { return "disposed"; },
+            get: function () { return DISPOSED; },
             enumerable: true,
             configurable: true
         });
@@ -155,9 +156,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _ = this;
             if (!_.wasDisposed && !_._isDisposing) {
                 _._isDisposing = true;
-                _.dispatchEvent(EventDispatcher.DISPOSING);
+                _.dispatchEvent(DISPOSING);
                 _super.prototype.dispose.call(this);
-                _.dispatchEvent(EventDispatcher.DISPOSED);
+                _.dispatchEvent(DISPOSED);
                 var l = _._listeners;
                 if (l) {
                     this._listeners = null;

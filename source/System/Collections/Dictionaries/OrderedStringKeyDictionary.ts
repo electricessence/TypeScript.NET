@@ -82,7 +82,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 		return this.setByIndex(index, undefined);
 	}
 
-	get keys():string[]
+	protected getKeys():string[]
 	{
 		var _ = this;
 		return _._order.filter(key=> _.containsKey(key));

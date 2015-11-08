@@ -67,14 +67,10 @@ var __extends = (this && this.__extends) || function (d, b) {
         OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
             return this.setByIndex(index, undefined);
         };
-        Object.defineProperty(OrderedStringKeyDictionary.prototype, "keys", {
-            get: function () {
-                var _ = this;
-                return _._order.filter(function (key) { return _.containsKey(key); });
-            },
-            enumerable: true,
-            configurable: true
-        });
+        OrderedStringKeyDictionary.prototype.getKeys = function () {
+            var _ = this;
+            return _._order.filter(function (key) { return _.containsKey(key); });
+        };
         return OrderedStringKeyDictionary;
     })(StringKeyDictionary_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });

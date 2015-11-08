@@ -8,7 +8,7 @@
 import {areEqual} from '../../Compare';
 import Type from '../../Types';
 import Functions from '../../Functions';
-import DictionaryAbstractBase from './DictionaryAbstractBase';
+import DictionaryAbstractBase from './DictionaryBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
 
 
@@ -211,7 +211,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		return count;
 	}
 
-	get count():number {
+	protected getCount():number {
 		return this._count;
 	}
 
@@ -232,13 +232,13 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 	}
 
 
-	get keys():TKey[] {
+	protected getKeys():TKey[] {
 		var _ = this, result:TKey[] = [];
 		_._entries.forEach(entry=> result.push(entry.key));
 		return result;
 	}
 
-	get values():TValue[] {
+	protected getValues():TValue[] {
 		var _ = this, result:TValue[] = [];
 		_._entries.forEach(entry=> result.push(entry.value));
 		return result;

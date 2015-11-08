@@ -96,8 +96,8 @@ var OrderedStringKeyDictionary = (function (_StringKeyDictionary) {
             return this.setByIndex(index, undefined);
         }
     }, {
-        key: 'keys',
-        get: function get() {
+        key: 'getKeys',
+        value: function getKeys() {
             var _ = this;
             return _._order.filter(function (key) {
                 return _.containsKey(key);

@@ -10,6 +10,8 @@ import shallowCopy from '../Utility/shallowCopy';
 import DisposableBase from '../Disposable/DisposableBase';
 import * as AU from '../Collections/Array/Utility';
 
+const DISPOSING:string = 'disposing',
+      DISPOSED:string = 'disposed';
 
 export default
 class EventDispatcherEntry extends DisposableBase
@@ -158,9 +160,9 @@ class EventDispatcher extends DisposableBase implements IEventDispatcher
 
 	}
 
-	static get DISPOSING() { return "disposing"; }
+	static get DISPOSING() { return DISPOSING; }
 
-	static get DISPOSED() { return "disposed"; }
+	static get DISPOSED() { return DISPOSED; }
 
 	// When dispatching events, we need a way to prevent recursion when disposing.
 	private _isDisposing:boolean = false;
@@ -175,11 +177,11 @@ class EventDispatcher extends DisposableBase implements IEventDispatcher
 		var _ = this;
 		if(!_.wasDisposed && !_._isDisposing) {
 			_._isDisposing = true;
-			_.dispatchEvent(EventDispatcher.DISPOSING);
+			_.dispatchEvent(DISPOSING);
 
 			super.dispose();
 
-			_.dispatchEvent(EventDispatcher.DISPOSED);
+			_.dispatchEvent(DISPOSED);
 
 			var l = _._listeners;
 			if(l) {

@@ -6,27 +6,27 @@
 ///<reference path="IDictionary.d.ts"/>
 import {areEqual} from '../../Compare';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
-import NotImplementedException from '../../Exceptions/NotImplementedException';
 import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import InvalidOperationException from '../../Exceptions/InvalidOperationException';
 
-
-
 // Design Note: Should DictionaryAbstractBase be IDisposable?
-export default
-class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
+abstract class DictionaryBase<TKey, TValue>
+implements IDictionary<TKey, TValue>
 {
 	// This allows for batch updates in order to improve the efficiency of responsive systems.
-	private _updateRecursion:number = 0;
+	private _updateRecursion:number;
+
+	constructor() {
+		this._updateRecursion = 0;
+	}
 
 	get isUpdating():boolean { return this._updateRecursion!=0; }
 
 	// Could implement an event dispatcher pattern here easily...
-	public onValueChanged:(key:TKey, value:TValue, old:TValue) => void;
+	onValueChanged:(key:TKey, value:TValue, old:TValue) => void;
 
-	// Pseudo-protected.
-	public _onValueUpdate(key:TKey, value:TValue, old:TValue):void
+	protected _onValueUpdate(key:TKey, value:TValue, old:TValue):void
 	{
 		if(!areEqual(value, old, true))
 		{
@@ -44,7 +44,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 	// Listening to every value update can get noisy.  Here we allow for batch update signaling.
 	// The consumer of this class can also wire up their own event system.
-	public onUpdated:() => void;
+	onUpdated:() => void;
 
 	private _onUpdated():void
 	{
@@ -54,7 +54,7 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	}
 
 	// Takes a closure that if returning true will propagate an update signal.
-	public handleUpdate(closure?:() => boolean):boolean
+	handleUpdate(closure?:() => boolean):boolean
 	{
 		var _ = this, result:boolean;
 		if(closure)
@@ -84,9 +84,8 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	/////////////////////////////////////////
 	get isReadOnly():boolean { return false; }
 
-	get count():number {
-		throw notImplemented("count");
-	}
+	protected abstract getCount():number;
+	get count():number { return this.getCount(); }
 
 	add(item:IKeyValuePair<TKey, TValue>):void
 	{
@@ -158,9 +157,12 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 	/////////////////////////////////////////
 	// IDictionary<TKey,TValue>
 	/////////////////////////////////////////
-	get keys():TKey[] { throw notImplemented("keys"); }
 
-	get values():TValue[] { throw notImplemented("values"); }
+	protected abstract getKeys():TKey[];
+	get keys():TKey[] { return this.getKeys(); }
+
+	protected abstract getValues():TValue[];
+	get values():TValue[] { return this.getValues(); }
 
 
 	addByKeyValue(key:TKey, value:TValue):void
@@ -176,19 +178,9 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 		_.setValue(key, value);
 	}
 
-	getValue(key:TKey):TValue
-	{
-		throw notImplemented(
-			"getValue(key: TKey): TValue", "When calling for key: " + key
-		);
-	}
+	abstract getValue(key:TKey):TValue;
 
-	setValue(key:TKey, value:TValue):boolean
-	{
-		throw notImplemented(
-			"setValue(key: TKey, value: TValue): boolean", "When setting " + key + ":" + value + "."
-		);
-	}
+	abstract setValue(key:TKey, value:TValue):boolean;
 
 	containsKey(key:TKey):boolean
 	{
@@ -277,8 +269,6 @@ class DictionaryAbstractBase<TKey, TValue> implements IDictionary<TKey, TValue>
 
 }
 
-function notImplemented<T>(name:string, log:string = ""):any
-{
-	console.log("DictionaryAbstractBase sub-class has not overridden " + name + ". " + log);
-	return new NotImplementedException("DictionaryAbstractBase." + name + ": Not implemented.");
-}
+
+
+export default DictionaryBase;

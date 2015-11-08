@@ -15,12 +15,12 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryAbstractBase', '../Enumeration/EnumeratorBase'], function (require, exports) {
+})(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], function (require, exports) {
     ///<reference path="../../FunctionTypes.d.ts"/>
     var Compare_1 = require('../../Compare');
     var Types_1 = require('../../Types');
     var Functions_1 = require('../../Functions');
-    var DictionaryAbstractBase_1 = require('./DictionaryAbstractBase');
+    var DictionaryBase_1 = require('./DictionaryBase');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
     var HashEntry = (function () {
         function HashEntry(key, value, prev, next) {
@@ -199,13 +199,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             _._entries.clear();
             return count;
         };
-        Object.defineProperty(Dictionary.prototype, "count", {
-            get: function () {
-                return this._count;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        Dictionary.prototype.getCount = function () {
+            return this._count;
+        };
         Dictionary.prototype.getEnumerator = function () {
             var _ = this, currentEntry;
             return new EnumeratorBase_1.default(function () { currentEntry = _._entries.first; }, function (yielder) {
@@ -217,26 +213,18 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return yielder.yieldBreak();
             });
         };
-        Object.defineProperty(Dictionary.prototype, "keys", {
-            get: function () {
-                var _ = this, result = [];
-                _._entries.forEach(function (entry) { return result.push(entry.key); });
-                return result;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Dictionary.prototype, "values", {
-            get: function () {
-                var _ = this, result = [];
-                _._entries.forEach(function (entry) { return result.push(entry.value); });
-                return result;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        Dictionary.prototype.getKeys = function () {
+            var _ = this, result = [];
+            _._entries.forEach(function (entry) { return result.push(entry.key); });
+            return result;
+        };
+        Dictionary.prototype.getValues = function () {
+            var _ = this, result = [];
+            _._entries.forEach(function (entry) { return result.push(entry.value); });
+            return result;
+        };
         return Dictionary;
-    })(DictionaryAbstractBase_1.default);
+    })(DictionaryBase_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Dictionary;
 });

@@ -55,7 +55,7 @@ var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 const
-	LENGTH                 = 'length',
+	LENGTH = 'length',
 	GET_ENUMERATOR = 'getEnumerator',
 	UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
 // #endregion
@@ -168,7 +168,7 @@ extends DisposableBase implements IEnumerable<T>
 	// #region IDisposable override...
 	protected _onDispose():void
 	{
-		super._onDispose();
+		super._onDispose(); // Just in case.
 		this._enumeratorFactory = null;
 	}
 

@@ -15,9 +15,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../../Compare', './DictionaryAbstractBase'], function (require, exports) {
+})(["require", "exports", '../../Compare', './DictionaryBase'], function (require, exports) {
     var Compare_1 = require('../../Compare');
-    var DictionaryAbstractBase_1 = require('./DictionaryAbstractBase');
+    var DictionaryBase_1 = require('./DictionaryBase');
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {
@@ -82,39 +82,27 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return result;
         };
-        Object.defineProperty(StringKeyDictionary.prototype, "keys", {
-            get: function () {
-                var _ = this, result = [];
-                for (var key in _._map) {
-                    if (_._map.hasOwnProperty(key))
-                        result.push(key);
-                }
-                return result;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StringKeyDictionary.prototype, "values", {
-            get: function () {
-                var _ = this, result = [];
-                for (var key in _._map) {
-                    if (_._map.hasOwnProperty(key))
-                        result.push(_._map[key]);
-                }
-                return result;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(StringKeyDictionary.prototype, "count", {
-            get: function () {
-                return this._count;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        StringKeyDictionary.prototype.getKeys = function () {
+            var _ = this, result = [];
+            for (var key in _._map) {
+                if (_._map.hasOwnProperty(key))
+                    result.push(key);
+            }
+            return result;
+        };
+        StringKeyDictionary.prototype.getValues = function () {
+            var _ = this, result = [];
+            for (var key in _._map) {
+                if (_._map.hasOwnProperty(key))
+                    result.push(_._map[key]);
+            }
+            return result;
+        };
+        StringKeyDictionary.prototype.getCount = function () {
+            return this._count;
+        };
         return StringKeyDictionary;
-    })(DictionaryAbstractBase_1.default);
+    })(DictionaryBase_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StringKeyDictionary;
 });

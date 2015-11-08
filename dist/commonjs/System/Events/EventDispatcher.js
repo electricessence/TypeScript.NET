@@ -32,6 +32,9 @@ var _CollectionsArrayUtility = require('../Collections/Array/Utility');
 
 var AU = _interopRequireWildcard(_CollectionsArrayUtility);
 
+var DISPOSING = 'disposing',
+    DISPOSED = 'disposed';
+
 var EventDispatcherEntry = (function (_DisposableBase) {
     _inherits(EventDispatcherEntry, _DisposableBase);
 
@@ -182,9 +185,9 @@ var EventDispatcher = (function (_DisposableBase2) {
             var _ = this;
             if (!_.wasDisposed && !_._isDisposing) {
                 _._isDisposing = true;
-                _.dispatchEvent(EventDispatcher.DISPOSING);
+                _.dispatchEvent(DISPOSING);
                 _get(Object.getPrototypeOf(EventDispatcher.prototype), 'dispose', this).call(this);
-                _.dispatchEvent(EventDispatcher.DISPOSED);
+                _.dispatchEvent(DISPOSED);
                 var l = _._listeners;
                 if (l) {
                     this._listeners = null;
@@ -202,12 +205,12 @@ var EventDispatcher = (function (_DisposableBase2) {
     }], [{
         key: 'DISPOSING',
         get: function get() {
-            return "disposing";
+            return DISPOSING;
         }
     }, {
         key: 'DISPOSED',
         get: function get() {
-            return "disposed";
+            return DISPOSED;
         }
     }]);
 
