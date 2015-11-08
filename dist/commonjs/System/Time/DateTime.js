@@ -11,11 +11,15 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _Types = require('../Types');
+
+var _Types2 = _interopRequireDefault(_Types);
 
 var _HowMany = require('./HowMany');
 
@@ -42,7 +46,7 @@ var DateTime = (function () {
 
         var _ = this;
         _._kind = kind;
-        if (value instanceof DateTime) _._value = value.toJsDate();else if (value instanceof Date) _._setJsDate(value);else _._value = value == undefined ? new Date() : new Date(value);
+        if (_Types2['default'].isInstanceOf(value, DateTime)) _._value = value.toJsDate();else if (_Types2['default'].isInstanceOf(value, Date)) _._setJsDate(value);else _._value = value == undefined ? new Date() : new Date(value);
     }
 
     _createClass(DateTime, [{
@@ -175,8 +179,8 @@ var DateTime = (function () {
     }], [{
         key: 'between',
         value: function between(first, last) {
-            var f = first instanceof DateTime ? first._value : first,
-                l = last instanceof DateTime ? last._value : last;
+            var f = _Types2['default'].isInstanceOf(first, DateTime) ? first._value : first,
+                l = _Types2['default'].isInstanceOf(last, DateTime) ? last._value : last;
             return new _TimeSpan2['default'](f.getTime() - l.getTime());
         }
     }, {

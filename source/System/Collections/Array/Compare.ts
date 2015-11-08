@@ -74,7 +74,7 @@ export function areEqual<T>(
 function copyAndSort<T>(a:IArray<T>, comparer:Comparison<T>):T[]
 {
 	if(!a) return null;
-	if(a instanceof Array) return (<Array<T>>a).slice();
+	if(Array.isArray(a)) return (<Array<T>>a).slice();
 	var len = a.length, b:T[];
 	if(len>65536) b = new Array(len);
 	else

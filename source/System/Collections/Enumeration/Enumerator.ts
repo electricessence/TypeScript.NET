@@ -39,7 +39,7 @@ export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>
 	if(!source)
 		return Empty;
 
-	if(source instanceof Array)
+	if(Array.isArray(source))
 		return new ArrayEnumerator<T>(<T[]>source);
 
 

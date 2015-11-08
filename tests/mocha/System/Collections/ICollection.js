@@ -85,7 +85,7 @@
                 }
             }
             catch (ex) {
-                if (ex instanceof NotImplementedException_1.default) {
+                if ((ex) instanceof (NotImplementedException_1.default)) {
                 }
                 else {
                     throw ex;

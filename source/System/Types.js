@@ -10,6 +10,8 @@
         define(deps, factory);
     }
 })(["require", "exports"], function (require, exports) {
+    ///<reference path="Primitive.d.ts"/>
+    ///<reference path="Collections/Array/IArray.d.ts"/>
     var _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof undefined, _FUNCTION = typeof function () { };
     var typeInfoRegistry = {};
     var TypeInfo = (function () {
@@ -145,6 +147,14 @@
             return value && !isPrimitive(value) && property in value;
         }
         Type.hasMember = hasMember;
+        function isInstanceOf(instance, type) {
+            return (instance) instanceof (type);
+        }
+        Type.isInstanceOf = isInstanceOf;
+        function isArrayLike(instance) {
+            return (instance) instanceof (Array) || hasMember(instance, "length");
+        }
+        Type.isArrayLike = isArrayLike;
     })(Type || (Type = {}));
     Object.freeze(Type);
     Object.defineProperty(exports, "__esModule", { value: true });

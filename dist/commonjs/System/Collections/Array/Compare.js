@@ -57,7 +57,7 @@ function areEqual(a, b, strict) {
 
 function copyAndSort(a, comparer) {
     if (!a) return null;
-    if (a instanceof Array) return a.slice();
+    if (Array.isArray(a)) return a.slice();
     var len = a.length,
         b;
     if (len > 65536) b = new Array(len);else {

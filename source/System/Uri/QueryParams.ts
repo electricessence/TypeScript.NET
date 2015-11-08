@@ -28,7 +28,7 @@ export function encode(
 	if(!values) return '';
 	var entries:string[] = [];
 
-	if(values instanceof Array)
+	if(Array.isArray(values))
 	{
 		for(let kvp of values)
 		{
@@ -121,7 +121,7 @@ export function parseToMap(
 		(key, value)=> {
 			if(key in result) {
 				var prev:any = result[key];
-				if(!(prev instanceof Array))
+				if(!(Array.isArray(prev)))
 					result[key] = prev = [prev];
 				prev.push(value);
 			}

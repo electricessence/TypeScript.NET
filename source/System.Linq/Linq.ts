@@ -55,7 +55,7 @@ var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 const
-	LENGTH = 'length',
+	LENGTH                 = 'length',
 	GET_ENUMERATOR = 'getEnumerator',
 	UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
 // #endregion
@@ -107,10 +107,10 @@ extends DisposableBase implements IEnumerable<T>
 		var type = Type.of(source);
 		if(type.isObject)
 		{
-			if(source instanceof Enumerable)
+			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
 				return source;
 
-			if(source instanceof Array)
+			if(Array.isArray(source))
 				return new ArrayEnumerable<T>(source);
 
 			if(type.member(GET_ENUMERATOR).isFunction)
@@ -128,13 +128,13 @@ extends DisposableBase implements IEnumerable<T>
 		var type = Type.of(source);
 		if(type.isObject)
 		{
-			if(source instanceof Array)
+			if(Array.isArray(source))
 				return source.slice();
 
 			if(type.member(LENGTH).isValidNumber)
 				source = new ArrayEnumerable<T>(<IArray<T>>source);
 
-			if(source instanceof Enumerable)
+			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
 				return source.toArray();
 
 			if(type.member(GET_ENUMERATOR).isFunction)
@@ -444,7 +444,7 @@ extends DisposableBase implements IEnumerable<T>
 		if(type!=Type.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
-		if(pattern instanceof RegExp)
+		if(Type.isInstanceOf(pattern, RegExp))
 		{
 			flags += (pattern.ignoreCase) ? "i" : "";
 			flags += (pattern.multiline) ? "m" : "";
@@ -585,17 +585,19 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	static map<T,TResult>(
-			enumerable:IEnumerable<T> | IArray<T>,
-			selector:Selector<T,TResult>):TResult[] {
+		enumerable:IEnumerable<T> | IArray<T>,
+		selector:Selector<T,TResult>):TResult[]
+	{
 
 		return enumerable && using(Enumerator.from(enumerable), e=>
-		{
-			var result:TResult[] = [];
-			Enumerator.forEach(e, (e,i)=>{
-				result[i]=selector(e);
+			{
+				var result:TResult[] = [];
+				Enumerator.forEach(e, (e, i)=>
+				{
+					result[i] = selector(e);
+				});
+				return result;
 			});
-			return result;
-		});
 
 	}
 
@@ -1115,7 +1117,7 @@ extends DisposableBase implements IEnumerable<T>
 							if(enumerator.moveNext())
 							{
 								var c = enumerator.current;
-								if(c instanceof Array)
+								if(Array.isArray(c))
 								{
 									middleEnumerator.dispose();
 									middleEnumerator = Enumerable.fromArray<any>(c)
@@ -1471,7 +1473,7 @@ extends DisposableBase implements IEnumerable<T>
 				break;
 			default:
 				return <Enumerable<any>>this
-					.where(x=>x instanceof type);
+					.where(x=>Type.isInstanceOf(x, type));
 		}
 		return <Enumerable<any>>this
 			.where(x=>typeof x===typeName);
@@ -2460,11 +2462,13 @@ extends DisposableBase implements IEnumerable<T>
 		return new OrderedEnumerable<T,TKey>(this, keySelector, Order.Ascending);
 	}
 
-	orderUsing(comparison:Comparison<T>):IOrderedEnumerable<T> {
+	orderUsing(comparison:Comparison<T>):IOrderedEnumerable<T>
+	{
 		return new OrderedEnumerable<T,any>(this, null, Order.Ascending, null, comparison);
 	}
 
-	orderUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T> {
+	orderUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T>
+	{
 		return new OrderedEnumerable<T,any>(this, null, Order.Descending, null, comparison);
 	}
 
@@ -3204,7 +3208,7 @@ extends Enumerable<T>
 		if(!s)
 			return [];
 
-		if(s instanceof Array)
+		if(Array.isArray(s))
 			return (<any>s).slice();
 
 		var len = s.length, result:T[] = ArrayUtility.initialize<T>(len);
@@ -3380,10 +3384,10 @@ extends Enumerable<T>
 		second:IEnumerable<T> | IArray<T>,
 		equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	{
-		if(second instanceof Array)
+		if(Array.isArray(second))
 			return Arrays.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
 
-		if(second instanceof ArrayEnumerable)
+		if(Type.isInstanceOf(second, ArrayEnumerable))
 			return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
 
 		return super.sequenceEqual(second, equalityComparer);
@@ -3393,12 +3397,13 @@ extends Enumerable<T>
 	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
 	{
 		var s = this._source;
-		return !selector && s instanceof Array
+		return !selector && Array.isArray(s)
 			? (<Array<T>>s).join(separator)
 			: super.toJoinedString(separator, selector);
 	}
 
 }
+
 
 export interface IGrouping<TKey, TElement>
 extends Enumerable<TElement>
@@ -3669,7 +3674,8 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 		return this.createOrderedEnumerable(keySelector, Order.Ascending);
 	}
 
-	thenUsing(comparison:Comparison<T>):IOrderedEnumerable<T> {
+	thenUsing(comparison:Comparison<T>):IOrderedEnumerable<T>
+	{
 		return new OrderedEnumerable<T,any>(this.source, null, Order.Ascending, this, comparison);
 	}
 
@@ -3678,7 +3684,8 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 		return this.createOrderedEnumerable(keySelector, Order.Descending);
 	}
 
-	thenUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T> {
+	thenUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T>
+	{
 		return new OrderedEnumerable<T,any>(this.source, null, Order.Descending, this, comparison);
 	}
 

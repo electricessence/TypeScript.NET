@@ -59,7 +59,7 @@ var Empty = new EmptyEnumerator();
 
 function from(source) {
     if (!source) return Empty;
-    if (source instanceof Array) return new _ArrayEnumerator2['default'](source);
+    if (Array.isArray(source)) return new _ArrayEnumerator2['default'](source);
     if (!_Types2['default'].isPrimitive(source)) {
         if ("length" in source) {
             var a = source;

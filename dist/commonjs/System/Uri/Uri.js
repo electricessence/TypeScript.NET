@@ -160,7 +160,7 @@ var Uri = (function () {
     }, {
         key: 'toString',
         value: function toString(uri) {
-            return uri instanceof Uri ? uri.absoluteUri : uriToString(uri);
+            return _Types2['default'].isInstanceOf(uri, Uri) ? uri.absoluteUri : uriToString(uri);
         }
     }, {
         key: 'getAuthority',

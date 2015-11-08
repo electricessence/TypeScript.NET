@@ -74,7 +74,7 @@ var Queue = (function () {
                 _._array = capacity ? AU.initialize(capacity) : emptyArray;
             } else {
                 var se = source;
-                _._array = AU.initialize(se instanceof Array || _Types2['default'].hasMember(se, "length") ? se.length : DEFAULT_CAPACITY);
+                _._array = AU.initialize(_Types2['default'].isArrayLike(se) ? se.length : DEFAULT_CAPACITY);
                 (0, _EnumerationForEach2['default'])(se, function (e) {
                     return _.enqueue(e);
                 });

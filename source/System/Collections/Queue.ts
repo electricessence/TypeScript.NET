@@ -63,8 +63,8 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 			{
 				var se = <IEnumerable<T> | IArray<T>> source;
 				_._array = AU.initialize<T>(
-					(se instanceof Array || Type.hasMember(se, "length"))
-						? (<IArray<T>>se).length
+						Type.isArrayLike(se)
+						? se.length
 						: DEFAULT_CAPACITY
 				);
 

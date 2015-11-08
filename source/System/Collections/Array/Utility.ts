@@ -117,7 +117,7 @@ export function contains<T>(
 	if(array && array.length)
 	{
 
-		if(array instanceof Array) return array.indexOf(item)!= -1;
+		if(Array.isArray(array)) return array.indexOf(item)!= -1;
 
 		for(let i = 0; i<array.length; ++i)
 		{
@@ -389,7 +389,7 @@ export function flatten(a:any[], recurseDepth:number = 0):any[]
 	for(var i = 0; i<a.length; i++)
 	{
 		var x = a[i];
-		if(x instanceof Array)
+		if(Array.isArray(x))
 		{
 			if(recurseDepth>0) x = flatten(x, recurseDepth - 1);
 			for(var n = 0; n<x.length; n++) result.push(x[n]);

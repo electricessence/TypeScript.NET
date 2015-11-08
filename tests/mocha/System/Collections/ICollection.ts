@@ -103,7 +103,7 @@ function assertRemoving<T>(c:ICollection<T>)
 		}
 		catch(ex)
 		{
-			if(ex instanceof NotImplementedException)
+			if((ex)instanceof(NotImplementedException))
 			{
 				//console.log(ex);
 			}

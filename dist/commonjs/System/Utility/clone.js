@@ -21,7 +21,7 @@ function clone(source) {
     if (depth < 0) return source;
     if (!_Types2['default'].isObject(source)) return source;
     var result;
-    if (source instanceof Array) {
+    if (Array.isArray(source)) {
         result = source.slice();
         if (depth > 0) {
             for (var i = 0; i < result.length; i++) {

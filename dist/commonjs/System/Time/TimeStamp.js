@@ -56,8 +56,8 @@ var TimeStamp = (function () {
     }], [{
         key: 'from',
         value: function from(d) {
-            if (!(d instanceof Date) && _Types2['default'].hasMember(d, 'toJsDate')) d = d.toJsDate();
-            if (d instanceof Date) {
+            if (!_Types2['default'].isInstanceOf(d, Date) && _Types2['default'].hasMember(d, 'toJsDate')) d = d.toJsDate();
+            if (_Types2['default'].isInstanceOf(d, Date)) {
                 return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
             } else {
                 throw Error('Invalid date type.');

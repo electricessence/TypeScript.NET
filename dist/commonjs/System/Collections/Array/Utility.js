@@ -92,7 +92,7 @@ function contains(array, item) {
     var equalityComparer = arguments.length <= 2 || arguments[2] === undefined ? _Compare.areEqual : arguments[2];
 
     if (array && array.length) {
-        if (array instanceof Array) return array.indexOf(item) != -1;
+        if (Array.isArray(array)) return array.indexOf(item) != -1;
         for (var i = 0; i < array.length; ++i) {
             if (equalityComparer(array[i], item)) return true;
         }
@@ -211,7 +211,7 @@ function flatten(a) {
     var result = [];
     for (var i = 0; i < a.length; i++) {
         var x = a[i];
-        if (x instanceof Array) {
+        if (Array.isArray(x)) {
             if (recurseDepth > 0) x = flatten(x, recurseDepth - 1);
             for (var n = 0; n < x.length; n++) result.push(x[n]);
         } else result.push(x);

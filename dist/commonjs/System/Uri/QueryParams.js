@@ -31,7 +31,7 @@ var ENTRY_SEPARATOR = "&",
 function encode(values, prefixIfNotEmpty) {
     if (!values) return '';
     var entries = [];
-    if (values instanceof Array) {
+    if (Array.isArray(values)) {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -145,7 +145,7 @@ function parseToMap(query) {
     parse(query, function (key, value) {
         if (key in result) {
             var prev = result[key];
-            if (!(prev instanceof Array)) result[key] = prev = [prev];
+            if (!Array.isArray(prev)) result[key] = prev = [prev];
             prev.push(value);
         } else result[key] = value;
     }, deserialize, decodeValues);

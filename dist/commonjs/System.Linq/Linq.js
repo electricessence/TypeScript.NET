@@ -429,7 +429,7 @@ var Enumerable = (function (_DisposableBase) {
                         }
                         if (enumerator.moveNext()) {
                             var c = enumerator.current;
-                            if (c instanceof Array) {
+                            if (Array.isArray(c)) {
                                 middleEnumerator.dispose();
                                 middleEnumerator = Enumerable.fromArray(c).selectMany(Functions.Identity).flatten().getEnumerator();
                                 continue;
@@ -613,7 +613,7 @@ var Enumerable = (function (_DisposableBase) {
                     break;
                 default:
                     return this.where(function (x) {
-                        return x instanceof type;
+                        return _SystemTypes2['default'].isInstanceOf(x, type);
                     });
             }
             return this.where(function (x) {
@@ -1634,8 +1634,8 @@ var Enumerable = (function (_DisposableBase) {
         value: function from(source) {
             var type = _SystemTypes2['default'].of(source);
             if (type.isObject) {
-                if (source instanceof Enumerable) return source;
-                if (source instanceof Array) return new ArrayEnumerable(source);
+                if (_SystemTypes2['default'].isInstanceOf(source, Enumerable)) return source;
+                if (Array.isArray(source)) return new ArrayEnumerable(source);
                 if (type.member(GET_ENUMERATOR).isFunction) return new Enumerable(function () {
                     return source.getEnumerator();
                 });
@@ -1648,9 +1648,9 @@ var Enumerable = (function (_DisposableBase) {
         value: function toArray(source) {
             var type = _SystemTypes2['default'].of(source);
             if (type.isObject) {
-                if (source instanceof Array) return source.slice();
+                if (Array.isArray(source)) return source.slice();
                 if (type.member(LENGTH).isValidNumber) source = new ArrayEnumerable(source);
-                if (source instanceof Enumerable) return source.toArray();
+                if (_SystemTypes2['default'].isInstanceOf(source, Enumerable)) return source.toArray();
                 if (type.member(GET_ENUMERATOR).isFunction) {
                     var result = [];
                     enumeratorForEach(source.getEnumerator(), function (e, i) {
@@ -1824,7 +1824,7 @@ var Enumerable = (function (_DisposableBase) {
 
             var type = typeof input;
             if (type != _SystemTypes2['default'].STRING) throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-            if (pattern instanceof RegExp) {
+            if (_SystemTypes2['default'].isInstanceOf(pattern, RegExp)) {
                 flags += pattern.ignoreCase ? "i" : "";
                 flags += pattern.multiline ? "m" : "";
                 pattern = pattern.source;
@@ -1968,7 +1968,7 @@ var ArrayEnumerable = (function (_Enumerable) {
         value: function toArray() {
             var s = this.source;
             if (!s) return [];
-            if (s instanceof Array) return s.slice();
+            if (Array.isArray(s)) return s.slice();
             var len = s.length,
                 result = ArrayUtility.initialize(len);
             for (var i = 0; i < len; ++i) {
@@ -2115,8 +2115,8 @@ var ArrayEnumerable = (function (_Enumerable) {
         value: function sequenceEqual(second) {
             var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Values.areEqual : arguments[1];
 
-            if (second instanceof Array) return Arrays.areEqual(this.source, second, true, equalityComparer);
-            if (second instanceof ArrayEnumerable) return second.sequenceEqual(this.source, equalityComparer);
+            if (Array.isArray(second)) return Arrays.areEqual(this.source, second, true, equalityComparer);
+            if (_SystemTypes2['default'].isInstanceOf(second, ArrayEnumerable)) return second.sequenceEqual(this.source, equalityComparer);
             return _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'sequenceEqual', this).call(this, second, equalityComparer);
         }
     }, {
@@ -2126,7 +2126,7 @@ var ArrayEnumerable = (function (_Enumerable) {
             var selector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
 
             var s = this._source;
-            return !selector && s instanceof Array ? s.join(separator) : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'toJoinedString', this).call(this, separator, selector);
+            return !selector && Array.isArray(s) ? s.join(separator) : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'toJoinedString', this).call(this, separator, selector);
         }
     }, {
         key: 'source',

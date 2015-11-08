@@ -3,6 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+///<reference path="Primitive.d.ts"/>
+///<reference path="Collections/Array/IArray.d.ts"/>
+
 const
 _BOOLEAN:string   = typeof true,
 _NUMBER:string    = typeof 0,
@@ -130,6 +133,7 @@ export class TypeInfo
 		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
 		return info;
 	}
+
 }
 
 module Type
@@ -176,7 +180,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isBoolean(value:any):boolean
+	export function isBoolean(value:any):value is boolean
 	{
 		return typeof value===_BOOLEAN;
 	}
@@ -187,7 +191,7 @@ module Type
 	 * @param allowNaN
 	 * @returns {boolean}
 	 */
-	export function isNumber(value:any, allowNaN:boolean = true):boolean
+	export function isNumber(value:any, allowNaN:boolean = true):value is number
 	{
 		return typeof value===_NUMBER && (allowNaN || !isNaN(value));
 	}
@@ -197,7 +201,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isTrueNaN(value:any):boolean
+	export function isTrueNaN(value:any):value is number
 	{
 		return typeof value===_NUMBER && isNaN(value);
 	}
@@ -207,7 +211,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isString(value:any):boolean
+	export function isString(value:any):value is string
 	{
 		return typeof value===_STRING;
 	}
@@ -217,7 +221,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isPrimitive(value:any):boolean
+	export function isPrimitive(value:any):value is Primitive
 	{
 		var t = typeof value;
 		switch(t)
@@ -239,7 +243,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isFunction(value:any):boolean
+	export function isFunction(value:any):value is Function
 	{
 		return typeof value===_FUNCTION;
 	}
@@ -271,6 +275,16 @@ module Type
 
 	export function hasMember(value:any,property:string):boolean {
 		return value && !isPrimitive(value) && property in value;
+	}
+
+	// Substitute instanceof until WebStorm's reformatting is fixed.
+	export function isInstanceOf<T>(instance:any,type:any):instance is T
+	{
+		return (instance)instanceof(type);
+	}
+
+	export function isArrayLike<T>(instance:any):instance is IArray<T> {
+		return (instance)instanceof(Array) || hasMember(instance, "length");
 	}
 
 }

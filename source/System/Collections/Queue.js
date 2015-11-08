@@ -47,7 +47,7 @@
                 }
                 else {
                     var se = source;
-                    _._array = AU.initialize((se instanceof Array || Types_1.default.hasMember(se, "length"))
+                    _._array = AU.initialize(Types_1.default.isArrayLike(se)
                         ? se.length
                         : DEFAULT_CAPACITY);
                     forEach_1.default(se, function (e) { return _.enqueue(e); });

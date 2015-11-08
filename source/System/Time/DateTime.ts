@@ -7,6 +7,7 @@
 ///<reference path='ITimeQuantity.d.ts'/>
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="IDateTime.d.ts"/>
+import Type from '../Types';
 import * as HowMany from './HowMany';
 import ClockTime from './ClockTime';
 import TimeSpan from './TimeSpan';
@@ -38,9 +39,9 @@ class DateTime implements ICalendarDate, IDateTime
 	{
 		var _ = this;
 		_._kind = kind;
-		if(value instanceof DateTime)
+		if(Type.isInstanceOf<DateTime>(value,DateTime))
 			_._value = value.toJsDate();
-		else if(value instanceof Date)
+		else if(Type.isInstanceOf<Date>(value,Date))
 			_._setJsDate(value);
 		else
 			_._value = value==undefined
@@ -264,8 +265,8 @@ class DateTime implements ICalendarDate, IDateTime
 	 */
 	static between(first:Date|DateTime, last:Date|DateTime):TimeSpan
 	{
-		var f:Date = first instanceof DateTime ? first._value : <Date>first,
-		    l:Date = last instanceof DateTime ? last._value : <Date>last;
+		var f:Date = Type.isInstanceOf<DateTime>(first,DateTime) ? first._value : <Date>first,
+		    l:Date = Type.isInstanceOf<DateTime>(last,DateTime) ? last._value : <Date>last;
 
 		return new TimeSpan(f.getTime() - l.getTime());
 	}

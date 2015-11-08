@@ -38,7 +38,7 @@
     function from(source) {
         if (!source)
             return Empty;
-        if (source instanceof Array)
+        if (Array.isArray(source))
             return new ArrayEnumerator_1.default(source);
         if (!Types_1.default.isPrimitive(source)) {
             if ("length" in source) {

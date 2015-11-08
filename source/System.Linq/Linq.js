@@ -68,9 +68,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         Enumerable.from = function (source) {
             var type = Types_1.default.of(source);
             if (type.isObject) {
-                if (source instanceof Enumerable)
+                if (Types_1.default.isInstanceOf(source, Enumerable))
                     return source;
-                if (source instanceof Array)
+                if (Array.isArray(source))
                     return new ArrayEnumerable(source);
                 if (type.member(GET_ENUMERATOR).isFunction)
                     return new Enumerable(function () { return source.getEnumerator(); });
@@ -82,11 +82,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         Enumerable.toArray = function (source) {
             var type = Types_1.default.of(source);
             if (type.isObject) {
-                if (source instanceof Array)
+                if (Array.isArray(source))
                     return source.slice();
                 if (type.member(LENGTH).isValidNumber)
                     source = new ArrayEnumerable(source);
-                if (source instanceof Enumerable)
+                if (Types_1.default.isInstanceOf(source, Enumerable))
                     return source.toArray();
                 if (type.member(GET_ENUMERATOR).isFunction) {
                     var result = [];
@@ -248,7 +248,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var type = typeof input;
             if (type != Types_1.default.STRING)
                 throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-            if (pattern instanceof RegExp) {
+            if (Types_1.default.isInstanceOf(pattern, RegExp)) {
                 flags += (pattern.ignoreCase) ? "i" : "";
                 flags += (pattern.multiline) ? "m" : "";
                 pattern = pattern.source;
@@ -619,7 +619,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         }
                         if (enumerator.moveNext()) {
                             var c = enumerator.current;
-                            if (c instanceof Array) {
+                            if (Array.isArray(c)) {
                                 middleEnumerator.dispose();
                                 middleEnumerator = Enumerable.fromArray(c)
                                     .selectMany(Functions.Identity)
@@ -804,7 +804,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     break;
                 default:
                     return this
-                        .where(function (x) { return x instanceof type; });
+                        .where(function (x) { return Types_1.default.isInstanceOf(x, type); });
             }
             return this
                 .where(function (x) { return typeof x === typeName; });
@@ -1784,7 +1784,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var s = this.source;
             if (!s)
                 return [];
-            if (s instanceof Array)
+            if (Array.isArray(s))
                 return s.slice();
             var len = s.length, result = ArrayUtility.initialize(len);
             for (var i = 0; i < len; ++i) {
@@ -1899,9 +1899,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-            if (second instanceof Array)
+            if (Array.isArray(second))
                 return Arrays.areEqual(this.source, second, true, equalityComparer);
-            if (second instanceof ArrayEnumerable)
+            if (Types_1.default.isInstanceOf(second, ArrayEnumerable))
                 return second.sequenceEqual(this.source, equalityComparer);
             return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
         };
@@ -1909,7 +1909,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (separator === void 0) { separator = ""; }
             if (selector === void 0) { selector = Functions.Identity; }
             var s = this._source;
-            return !selector && s instanceof Array
+            return !selector && Array.isArray(s)
                 ? s.join(separator)
                 : _super.prototype.toJoinedString.call(this, separator, selector);
         };

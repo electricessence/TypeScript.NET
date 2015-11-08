@@ -80,7 +80,7 @@
             }
         }
         catch (ex) {
-            if (ex instanceof NotImplementedException_1.default) {
+            if ((ex) instanceof (NotImplementedException_1.default)) {
                 console.log(ex);
             }
             else {

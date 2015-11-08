@@ -2,6 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+///<reference path="Primitive.d.ts"/>
+///<reference path="Collections/Array/IArray.d.ts"/>
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -161,6 +163,14 @@ var Type;
         return value && !isPrimitive(value) && property in value;
     }
     Type.hasMember = hasMember;
+    function isInstanceOf(instance, type) {
+        return instance instanceof type;
+    }
+    Type.isInstanceOf = isInstanceOf;
+    function isArrayLike(instance) {
+        return instance instanceof Array || hasMember(instance, "length");
+    }
+    Type.isArrayLike = isArrayLike;
 })(Type || (Type = {}));
 Object.freeze(Type);
 exports["default"] = Type;
