@@ -10,7 +10,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Values, Arrays, ArrayUtility, Enumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, Utility_1, DisposableBase_1, Exception_1, ObjectDisposedException_1, KeySortedContext_1;
-    var LinqFunctions, Functions, LENGTH, GET_ENUMERATOR, UnsupportedEnumerableException, Enumerable, ArrayEnumerable, Grouping, Lookup, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable;
+    var LinqFunctions, Functions, UnsupportedEnumerableException, Enumerable, ArrayEnumerable, Grouping, Lookup, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable;
     function createSortContext(orderedEnumerable, currentContext) {
         if (currentContext === void 0) { currentContext = null; }
         var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
@@ -90,7 +90,6 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
             })(Functions_1.default);
             Functions = new LinqFunctions();
             Object.freeze(Functions);
-            LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator';
             UnsupportedEnumerableException = (function (_super) {
                 __extends(UnsupportedEnumerableException, _super);
                 function UnsupportedEnumerableException() {

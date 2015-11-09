@@ -109,8 +109,6 @@ var LinqFunctions = (function (_BaseFunctions) {
 
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
-var LENGTH = 'length',
-    GET_ENUMERATOR = 'getEnumerator';
 
 var UnsupportedEnumerableException = (function (_Exception) {
     _inherits(UnsupportedEnumerableException, _Exception);

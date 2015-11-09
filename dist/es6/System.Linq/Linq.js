@@ -30,7 +30,6 @@ class LinqFunctions extends BaseFunctions {
 }
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
-const LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator';
 class UnsupportedEnumerableException extends Exception {
     constructor() {
         super("Unsupported enumerable.");
