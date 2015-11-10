@@ -192,7 +192,7 @@ bower_components
 .idea/misc.xml
 .idea/workspace.xml
 .idea/tasks.xml
-.idea/dictionaries
+.idea/dictionaries/*.xml
 .idea/typescript-compiler.xml
 
 # TypeScript

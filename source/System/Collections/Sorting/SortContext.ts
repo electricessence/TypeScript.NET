@@ -4,7 +4,7 @@
  */
 
 ///<reference path="../../FunctionTypes.d.ts"/>
-///<reference path="../../IComparer.ts"/>
+///<reference path="../../IComparer.d.ts"/>
 ///<reference path="../Array/IArray.d.ts"/>
 import * as Values from '../../Compare'
 import Order from './Order'
