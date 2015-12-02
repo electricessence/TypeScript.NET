@@ -39,6 +39,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ObjectDisposedException_1 = require('../System/Disposable/ObjectDisposedException');
     var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext");
     'use strict';
+    var VOID0 = void 0;
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
         function LinqFunctions() {
@@ -378,7 +379,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 var key = keySelector(x);
                 var element = elementSelector(x);
                 var array = dict.getValue(key);
-                if (array !== undefined)
+                if (array !== VOID0)
                     array.push(element);
                 else
                     dict.addByKeyValue(key, [element]);
@@ -658,7 +659,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         Enumerable.prototype.scan = function (func, seed) {
-            var isUseSeed = seed !== undefined;
+            var isUseSeed = seed !== VOID0;
             var _ = this;
             return new Enumerable(function () {
                 var enumerator;
@@ -719,7 +720,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     middleEnumerator = undefined;
                     index = 0;
                 }, function (yielder) {
-                    if (middleEnumerator === undefined && !enumerator.moveNext())
+                    if (middleEnumerator === VOID0 && !enumerator.moveNext())
                         return false;
                     do {
                         if (!middleEnumerator) {
@@ -754,7 +755,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     throwIfDisposed(disposed);
                     while (enumerator.moveNext()) {
                         var result = selector(enumerator.current, index++);
-                        if (result !== null && result !== undefined)
+                        if (result !== null && result !== VOID0)
                             return yielder.yieldReturn(result);
                     }
                     return false;
@@ -1108,7 +1109,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     while (true) {
                         if (innerElements != null) {
                             var innerElement = innerElements[innerCount++];
-                            if (innerElement !== undefined)
+                            if (innerElement !== VOID0)
                                 return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
                             innerElement = null;
                             innerCount = 0;
@@ -1342,7 +1343,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     keys = new Dictionary_1.default(compareSelector);
                 }, function (yielder) {
                     var current;
-                    if (secondEnumerator === undefined) {
+                    if (secondEnumerator === VOID0) {
                         while (firstEnumerator.moveNext()) {
                             current = firstEnumerator.current;
                             if (!keys.containsKey(current)) {

@@ -18,6 +18,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 })(["require", "exports", '../../Compare', './DictionaryBase'], function (require, exports) {
     var Compare_1 = require('../../Compare');
     var DictionaryBase_1 = require('./DictionaryBase');
+    var VOID0 = void 0;
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {
@@ -42,7 +43,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         StringKeyDictionary.prototype.setValue = function (key, value) {
             var _ = this, map = _._map, old = map[key];
             if (old !== value) {
-                if (value === undefined) {
+                if (value === VOID0) {
                     if ((key) in (map)) {
                         delete map[key];
                         --_._count;
@@ -76,7 +77,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     var value = _._map[key];
                     if (selector)
                         value = selector(key, value);
-                    if (value !== undefined)
+                    if (value !== VOID0)
                         result[key] = value;
                 }
             }

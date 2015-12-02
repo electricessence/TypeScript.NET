@@ -44,7 +44,7 @@ class DateTime implements ICalendarDate, IDateTime
 		else if(Type.isInstanceOf<Date>(value,Date))
 			_._setJsDate(value);
 		else
-			_._value = value==undefined
+			_._value = value===void(0)
 				? new Date()
 				: new Date(value);
 	}

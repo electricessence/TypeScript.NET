@@ -22,6 +22,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Functions_1 = require('../../Functions');
     var DictionaryBase_1 = require('./DictionaryBase');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
+    var VOID0 = void 0;
     var HashEntry = (function () {
         function HashEntry(key, value, prev, next) {
             this.key = key;
@@ -93,7 +94,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function computeHashCode(obj) {
         if (obj === null)
             return "null";
-        if (obj === undefined)
+        if (obj === VOID0)
             return "undefined";
         return (typeof obj.toString === Types_1.default.FUNCTION)
             ? obj.toString()
@@ -123,7 +124,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                             throw new Error("Key already exists.");
                         var changed = !equal(old.value, value);
                         if (changed) {
-                            if (value === undefined) {
+                            if (value === VOID0) {
                                 entries.remove(old);
                                 array.splice(i, 1);
                                 if (!array.length)
@@ -143,7 +144,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 array.push(entry = entry || new HashEntry(key, value));
             }
             else {
-                if (value === undefined) {
+                if (value === VOID0) {
                     if (allowOverwrite)
                         return false;
                     else

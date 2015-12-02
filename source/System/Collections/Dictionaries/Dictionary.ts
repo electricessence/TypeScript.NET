@@ -11,6 +11,7 @@ import Functions from '../../Functions';
 import DictionaryAbstractBase from './DictionaryBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
 
+const VOID0:any = void 0;
 
 // LinkedList for Dictionary
 class HashEntry<TKey, TValue>
@@ -101,7 +102,7 @@ function callHasOwnProperty(target:any, key:string)
 function computeHashCode(obj:any):string
 {
 	if(obj===null) return "null";
-	if(obj===undefined) return "undefined";
+	if(obj===VOID0) return "undefined";
 
 	return (typeof obj.toString===Type.FUNCTION)
 		? obj.toString()
@@ -143,7 +144,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 					var changed = !equal(old.value, value);
 					if(changed)
 					{
-						if(value===undefined)
+						if(value===VOID0)
 						{
 							entries.remove(old);
 							array.splice(i, 1);
@@ -167,7 +168,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 		}
 		else
 		{
-			if(value===undefined)
+			if(value===VOID0)
 			{
 				if(allowOverwrite)
 					return false;

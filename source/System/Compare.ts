@@ -8,6 +8,8 @@
 import Type from './Types';
 import isTrueNaN = Type.isTrueNaN;
 
+const VOID0:any = void 0;
+
 export const enum CompareResult {
 	Equal   = 0,
 	Greater = 1,
@@ -38,10 +40,10 @@ export function compare(a:any, b:any, strict:boolean = true):CompareResult
 
 	// Allow for special inequality..
 
-	if(a>b || strict && (a===0 && b==0 || a===null && b===undefined))
+	if(a>b || strict && (a===0 && b==0 || a===null && b===VOID0))
 		return CompareResult.Greater;
 
-	if(b>a || strict && (b===0 && a==0 || b===null && a===undefined))
+	if(b>a || strict && (b===0 && a==0 || b===null && a===VOID0))
 		return CompareResult.Less;
 
 	return NaN;

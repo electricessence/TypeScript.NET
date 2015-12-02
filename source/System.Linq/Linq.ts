@@ -32,6 +32,9 @@ type Comparable = Primitive|IComparable<any>;
 'use strict';
 
 // #region Local Constants.
+
+const VOID0:any = void 0;
+
 // Leave internal to avoid accidental overwriting.
 class LinqFunctions extends BaseFunctions
 {
@@ -666,7 +669,6 @@ extends DisposableBase implements IEnumerable<T>
 		elementSelector:Selector<T, TValue> = Functions.Identity,
 		compareSelector:Selector<TKey, TCompare> = Functions.Identity):ILookup<TKey, TValue>
 	{
-
 		var dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
 		this.forEach(
 			x=>
@@ -675,7 +677,7 @@ extends DisposableBase implements IEnumerable<T>
 				var element = elementSelector(x);
 
 				var array = dict.getValue(key);
-				if(array!==undefined) array.push(element);
+				if(array!==VOID0) array.push(element);
 				else dict.addByKeyValue(key, [element]);
 			}
 		);
@@ -1177,7 +1179,7 @@ extends DisposableBase implements IEnumerable<T>
 	scan(func:(a:T, b:T) => T, seed?:T):Enumerable<T>
 	{
 
-		var isUseSeed = seed!==undefined; // For now...
+		var isUseSeed = seed!==VOID0; // For now...
 		var _ = this;
 
 		return new Enumerable<T>(
@@ -1303,7 +1305,7 @@ extends DisposableBase implements IEnumerable<T>
 					{
 
 						// Just started, and nothing to enumerate? End.
-						if(middleEnumerator===undefined && !enumerator.moveNext())
+						if(middleEnumerator===VOID0 && !enumerator.moveNext())
 							return false;
 
 						// moveNext has been called at least once...
@@ -1378,7 +1380,7 @@ extends DisposableBase implements IEnumerable<T>
 						while(enumerator.moveNext())
 						{
 							var result = selector(enumerator.current, index++);
-							if(result!==null && result!==undefined)
+							if(result!==null && result!==VOID0)
 								return yielder.yieldReturn(result);
 						}
 
@@ -1992,7 +1994,7 @@ extends DisposableBase implements IEnumerable<T>
 							if(innerElements!=null)
 							{
 								var innerElement = innerElements[innerCount++];
-								if(innerElement!==undefined)
+								if(innerElement!==VOID0)
 									return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
 
 								innerElement = null;
@@ -2415,7 +2417,7 @@ extends DisposableBase implements IEnumerable<T>
 					(yielder)=>
 					{
 						var current:T;
-						if(secondEnumerator===undefined)
+						if(secondEnumerator===VOID0)
 						{
 							while(firstEnumerator.moveNext())
 							{

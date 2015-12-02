@@ -16,6 +16,7 @@
     var ArgumentException_1 = require('../../Exceptions/ArgumentException');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
     var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
+    var VOID0 = void 0;
     var DictionaryBase = (function () {
         function DictionaryBase() {
             this._updateRecursion = 0;
@@ -130,7 +131,7 @@
         };
         DictionaryBase.prototype.containsKey = function (key) {
             var value = this.getValue(key);
-            return value !== undefined;
+            return value !== VOID0;
         };
         DictionaryBase.prototype.containsValue = function (value) {
             var e = this.getEnumerator(), equal = Compare_1.areEqual;
@@ -175,7 +176,7 @@
             }, function (yielder) {
                 while (i < len) {
                     var key = keys[i++], value = _.getValue(key);
-                    if (value !== undefined)
+                    if (value !== VOID0)
                         return yielder.yieldReturn({ key: key, value: value });
                 }
                 return yielder.yieldBreak();

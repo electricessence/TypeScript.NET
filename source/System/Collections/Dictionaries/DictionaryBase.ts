@@ -10,6 +10,8 @@ import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import InvalidOperationException from '../../Exceptions/InvalidOperationException';
 
+const VOID0:any = void 0;
+
 // Design Note: Should DictionaryAbstractBase be IDisposable?
 abstract class DictionaryBase<TKey, TValue>
 implements IDictionary<TKey, TValue>
@@ -185,7 +187,7 @@ implements IDictionary<TKey, TValue>
 	containsKey(key:TKey):boolean
 	{
 		var value = this.getValue(key);
-		return value!==undefined;
+		return value!==VOID0;
 	}
 
 	containsValue(value:TValue):boolean
@@ -257,7 +259,7 @@ implements IDictionary<TKey, TValue>
 				while(i<len)
 				{
 					var key = keys[i++], value = _.getValue(key);
-					if(value!==undefined) // Still valid?
+					if(value!==VOID0) // Still valid?
 						return yielder.yieldReturn({key: key, value: value});
 				}
 

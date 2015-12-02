@@ -8,6 +8,7 @@ import {areEqual} from '../../Compare';
 import DictionaryBase from './DictionaryBase';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 
+const VOID0:any = void 0;
 
 export default
 class StringKeyDictionary<TValue>
@@ -45,7 +46,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 		if(old!==value)
 		{
 
-			if(value===undefined)
+			if(value===VOID0)
 			{
 				if((key)in(map))
 				{
@@ -94,7 +95,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 				var value = _._map[key];
 				if(selector)
 					value = selector(key, value);
-				if(value!==undefined)
+				if(value!==VOID0)
 					result[key] = value;
 			}
 		}
