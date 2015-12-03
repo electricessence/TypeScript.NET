@@ -11,6 +11,7 @@ import Queue from "../Collections/Queue";
 declare module process
 {
 	export function nextTick(callback:Function):void;
+
 	export function toString():string;
 }
 
@@ -30,36 +31,52 @@ interface TaskQueueEntry
 "use strict";
 
 var requestTick:()=>void;
-var isNodeJS:boolean = false;
 var flushing:boolean = false;
+var isNodeJS:boolean = false;
 
 // Use the fastest possible means to execute a task in a future turn
 // of the event loop.
 
 
-
 function flush():void
 {
-	/* jshint loopfunc: true */
-	var entry:ILinkedListNode<TaskQueueEntry>;
+	// Since it's possible to trigger promises/events that add more during a flush:
+	// Snapshot the contents first.
 
-	while(entry = immediateQueue.first)
+	var entries = immediateQueue.toArray();
+	immediateQueue.clear();
+
+	for(let e of entries)
 	{
-		let e = entry.value, domain = e.domain;
-		entry.remove();
+		let domain = e.domain;
 		if(domain) domain.enter();
 		runSingle(e.task, domain);
 	}
 
-	var task:Function;
-	while(task = laterQueue.dequeue())
+	for(let task of laterQueue.dump())
 	{
 		runSingle(task);
 	}
 
-	flushing = false;
+	// If any have been added... Re-request the tick..
+	if(immediateQueue.count || laterQueue.count)
+	{
+		requestTick();
+	}
+	else
+	{
+		flushing = false;
+	}
 }
 
+function requestFlush():void
+{
+	if(!flushing)
+	{
+		flushing = true;
+		requestTick();
+	}
+}
 
 // linked list of tasks.  Using a real linked list to allow for removal.
 var immediateQueue:LinkedList<TaskQueueEntry> = new LinkedList<TaskQueueEntry>();
@@ -114,25 +131,22 @@ function runSingle(task:Function, domain?:IDomain):void
 	}
 }
 
-function requestFlush():void {
-	if(!flushing)
-	{
-		flushing = true;
-		requestTick();
-	}
-}
 
-module TaskManager {
+module TaskManager
+{
 
 
 	export function defer(task:Function, delay?:number):()=>boolean
 	{
-		if(Type.isNumber(delay,false) && delay>=0) {
+		if(Type.isNumber(delay, false) && delay>=0)
+		{
 
 			var timeout:number = 0;
 
-			var cancel = ()=>{
-				if(timeout) {
+			var cancel = ()=>
+			{
+				if(timeout)
+				{
 					clearTimeout(timeout);
 					timeout = 0;
 					return true;
@@ -140,17 +154,18 @@ module TaskManager {
 				return false;
 			};
 
-			timeout = setTimeout(()=>{
+			timeout = setTimeout(()=>
+			{
 				cancel();
 				task();
-			},delay);
+			}, delay);
 
 			return cancel;
 		}
 
 		var entry = {
-			task:task,
-			domain:isNodeJS && (<any>process)['domain']
+			task: task,
+			domain: isNodeJS && (<any>process)['domain']
 		};
 
 		immediateQueue.add(entry);
@@ -171,7 +186,6 @@ module TaskManager {
 	}
 
 }
-
 
 
 if(Type.isObject(process)

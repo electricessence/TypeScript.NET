@@ -16,22 +16,36 @@
     var Queue_1 = require("../Collections/Queue");
     "use strict";
     var requestTick;
-    var isNodeJS = false;
     var flushing = false;
+    var isNodeJS = false;
     function flush() {
-        var entry;
-        while (entry = immediateQueue.first) {
-            var e = entry.value, domain = e.domain;
-            entry.remove();
+        // Since it's possible to trigger promises/events that add more during a flush:
+        // Snapshot the contents first.
+        var entries = immediateQueue.toArray();
+        immediateQueue.clear();
+        for (var _i = 0; _i < entries.length; _i++) {
+            var e = entries[_i];
+            var domain = e.domain;
             if (domain)
                 domain.enter();
             runSingle(e.task, domain);
         }
-        var task;
-        while (task = laterQueue.dequeue()) {
+        for (var _a = 0, _b = laterQueue.dump(); _a < _b.length; _a++) {
+            var task = _b[_a];
             runSingle(task);
         }
-        flushing = false;
+        if (immediateQueue.count || laterQueue.count) {
+            requestTick();
+        }
+        else {
+            flushing = false;
+        }
+    }
+    function requestFlush() {
+        if (!flushing) {
+            flushing = true;
+            requestTick();
+        }
     }
     var immediateQueue = new LinkedList_1.default();
     var laterQueue = new Queue_1.default();
@@ -58,12 +72,6 @@
         }
         if (domain) {
             domain.exit();
-        }
-    }
-    function requestFlush() {
-        if (!flushing) {
-            flushing = true;
-            requestTick();
         }
     }
     var TaskManager;
