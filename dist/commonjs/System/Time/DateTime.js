@@ -46,7 +46,7 @@ var DateTime = (function () {
 
         var _ = this;
         _._kind = kind;
-        if (_Types2['default'].isInstanceOf(value, DateTime)) _._value = value.toJsDate();else if (_Types2['default'].isInstanceOf(value, Date)) _._setJsDate(value);else _._value = value == undefined ? new Date() : new Date(value);
+        if (_Types2['default'].isInstanceOf(value, DateTime)) _._value = value.toJsDate();else if (_Types2['default'].isInstanceOf(value, Date)) _._setJsDate(value);else _._value = value === void 0 ? new Date() : new Date(value);
     }
 
     _createClass(DateTime, [{

@@ -37,6 +37,8 @@ var _EnumerationEnumeratorBase = require('../Enumeration/EnumeratorBase');
 
 var _EnumerationEnumeratorBase2 = _interopRequireDefault(_EnumerationEnumeratorBase);
 
+var VOID0 = void 0;
+
 var HashEntry = function HashEntry(key, value, prev, next) {
     _classCallCheck(this, HashEntry);
 
@@ -112,7 +114,7 @@ function callHasOwnProperty(target, key) {
 }
 function computeHashCode(obj) {
     if (obj === null) return "null";
-    if (obj === undefined) return "undefined";
+    if (obj === VOID0) return "undefined";
     return typeof obj.toString === _Types2['default'].FUNCTION ? obj.toString() : Object.prototype.toString.call(obj);
 }
 
@@ -150,7 +152,7 @@ var Dictionary = (function (_DictionaryAbstractBase) {
                         if (!allowOverwrite) throw new Error("Key already exists.");
                         var changed = !equal(old.value, value);
                         if (changed) {
-                            if (value === undefined) {
+                            if (value === VOID0) {
                                 entries.remove(old);
                                 array.splice(i, 1);
                                 if (!array.length) delete buckets[hash];
@@ -167,7 +169,7 @@ var Dictionary = (function (_DictionaryAbstractBase) {
                 }
                 array.push(entry = entry || new HashEntry(key, value));
             } else {
-                if (value === undefined) {
+                if (value === VOID0) {
                     if (allowOverwrite) return false;else throw new Error("Cannot add 'undefined' value.");
                 }
                 buckets[hash] = [entry = new HashEntry(key, value)];

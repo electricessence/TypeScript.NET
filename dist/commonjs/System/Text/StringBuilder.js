@@ -19,6 +19,8 @@ var _Types = require('../Types');
 
 var _Types2 = _interopRequireDefault(_Types);
 
+var VOID0 = void 0;
+
 var StringBuilder = (function () {
     function StringBuilder() {
         _classCallCheck(this, StringBuilder);
@@ -37,7 +39,7 @@ var StringBuilder = (function () {
     _createClass(StringBuilder, [{
         key: "appendSingle",
         value: function appendSingle(item) {
-            if (item !== null && item !== undefined) {
+            if (item !== null && item !== VOID0) {
                 var _ = this;
                 _._latest = null;
                 switch (typeof item) {
@@ -83,7 +85,7 @@ var StringBuilder = (function () {
         value: function appendLines(items) {
             var _ = this;
             items.forEach(function (i) {
-                if (i !== null && i !== undefined) {
+                if (i !== null && i !== VOID0) {
                     _.appendSingle(i);
                     _._partArray.push("\r\n");
                 }
