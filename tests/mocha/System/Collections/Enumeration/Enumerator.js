@@ -46,5 +46,4 @@
         assert.equal(count, len);
     });
 });
-
 //# sourceMappingURL=Enumerator.js.map

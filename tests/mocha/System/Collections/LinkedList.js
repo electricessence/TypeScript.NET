@@ -12,5 +12,4 @@
     ICollectionTests.NumberCollection('LinkedList', new LinkedList_1.default());
     ICollectionTests.InstanceCollection('LinkedList', new LinkedList_1.default());
 });
-
 //# sourceMappingURL=LinkedList.js.map

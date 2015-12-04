@@ -12,5 +12,4 @@
     ICollectionTests.NumberCollection('Queue', new Queue_1.default());
     ICollectionTests.InstanceCollection('Queue', new Queue_1.default());
 });
-
 //# sourceMappingURL=Queue.js.map
