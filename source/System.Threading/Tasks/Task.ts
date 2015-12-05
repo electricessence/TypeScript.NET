@@ -1,4 +1,3 @@
-
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -10,20 +9,18 @@
 
 ///<reference path="ITask"/>
 ///<reference path="TaskCreationOptions.d.ts"/>
+///<reference path="../../System/Promises/IPromise.d.ts"/>
 import Type from "../../System/Types";
 import TimeSpan from "../../System/Time/TimeSpan";
 import DisposableBase from "../../System/Disposable/DisposableBase";
 import CancellationToken from "../CancellationToken";
 
 export default class Task<TResult>
-extends DisposableBase
-implements ITask<TResult>
+extends DisposableBase implements ITask<TResult>
 {
-
-
 	constructor(
-		private _task:(state?:Object) => TResult,
-		private _asyncState?:Object,
+		private _task:(state?:any) => TResult,
+		private _asyncState?:any,
 		private _cancellationToken?:CancellationToken,
 		private _creationOptions:TaskCreationOptions = TaskCreationOptions.None)
 	{
@@ -51,7 +48,7 @@ implements ITask<TResult>
 		return this._exception;
 	}
 
-	get asyncState():Object
+	get asyncState():any
 	{
 		return this._asyncState;
 	}
@@ -100,32 +97,131 @@ implements ITask<TResult>
 	{
 	}
 
-	wait():void;
-	wait(token:CancellationToken):void;
-	wait(milliseconds:number, token?:CancellationToken):void;
-	wait(time:TimeSpan, token?:CancellationToken):void;
-	wait(
-		timeOrCancel?:CancellationToken | number | TimeSpan,
+	then<TResult>(
+		onFulfilled:(value:TResult)=>(IPromise<TResult>|TResult),
+		onRejected:(reason:any)=>(IPromise<TResult>|TResult)):IPromise<TResult>
+	{
+		throw 'not implemented yet';
+	}
+
+
+	/**
+	 * Waits for the task to be done then passes the task to the continuationAction.
+	 * @param continuationAction
+	 */
+	waitWith(
+		continuationAction:(task:ITask<TResult>)=>void):void;
+
+	/**
+	 * Waits for the task to be done then passes the task to the continuationAction.
+	 * @param continuationAction
+	 * @param token
+	 */
+	waitWith(
+		continuationAction:(task:ITask<TResult>)=>void,
+		token:CancellationToken):void;
+
+	/**
+	 * Waits for the task to be done or milliseconds to pass then passes the task to the continuationAction.
+	 * @param continuationAction
+	 * @param milliseconds
+	 * @param token
+	 */
+	waitWith(
+		continuationAction:(task:ITask<TResult>)=>void,
+		milliseconds:number,
+		token?:CancellationToken):void;
+
+
+	/**
+	 * Waits for the task to be done or time to pass then passes the task to the continuationAction.
+	 * @param continuationAction
+	 * @param time
+	 * @param token
+	 */
+	waitWith(
+		continuationAction:(task:ITask<TResult>)=>void,
+		time:ITimeQuantity,
+		token?:CancellationToken):void;
+
+	waitWith(
+		continuationAction:(task:ITask<TResult>)=>void,
+		timeOrCancel?:CancellationToken | number | ITimeQuantity,
 		token?:CancellationToken):void
 	{
-		if(timeOrCancel instanceof CancellationToken)
+		if(Type.isInstanceOf<CancellationToken>(timeOrCancel, CancellationToken))
 			token = timeOrCancel;
 
-		var milliseconds:number
-			= Type.isNumber(timeOrCancel)
-			? <number>timeOrCancel
+		var milliseconds:number = Type.isNumber(timeOrCancel)
+			? timeOrCancel
 			: 0;
 
-		if(timeOrCancel instanceof TimeSpan)
-			milliseconds = (<TimeSpan>timeOrCancel).milliseconds;
+		if(Type.isInstanceOf<TimeSpan>(timeOrCancel, TimeSpan))
+			milliseconds = timeOrCancel.milliseconds;
 
 		// TODO: Above is just the scaffold.  Next up, respond to parameters.
 
+		return null;
 	}
 
 	equals(other:Task<TResult>):boolean
 	{
-		return this==other || this.id==other.id;
+		return this===other || this.id===other.id;
+	}
+
+
+	delay(milliseconds:number):ITask<TResult>;
+	delay(time:ITimeQuantity):ITask<TResult>;
+	delay(time:number|ITimeQuantity):ITask<TResult>
+	{
+		throw 'not implemented yet';
+	}
+
+
+	continueWith<TContinue>(continuationAction:(task:ITask<TResult>)=>TContinue):ITask<TContinue>;
+
+	continueWith<TContinue>(
+		continuationAction:(task:ITask<TResult>)=>TContinue,
+		continuationOptions:TaskContinuationOptions,
+		scheduler:ITaskScheduler):ITask<TContinue>;
+
+	continueWith<TContinue>(
+		continuationAction:(task:ITask<TResult>)=>TContinue,
+		scheduler:ITaskScheduler):ITask<TContinue>;
+
+	continueWith<TContinue>(
+		continuationAction:(task:ITask<TResult>)=>TContinue,
+		cancellationToken:CancellationToken,
+		continuationOptions:TaskContinuationOptions,
+		scheduler:ITaskScheduler):ITask<TContinue>;
+
+	continueWith<TContinue, TState>(
+		continuationAction:(
+			task:ITask<TResult>,
+			state:TState)=>TContinue,
+		state:TState,
+		cancellationToken:CancellationToken,
+		continuationOptions:TaskContinuationOptions,
+		scheduler:ITaskScheduler):ITask<TContinue>;
+
+	continueWith<TContinue, TState>(
+		continuationAction:(
+			task:ITask<TResult>,
+			state:TState)=>TContinue,
+		state:TState,
+		continuationOptions:TaskContinuationOptions,
+		scheduler:ITaskScheduler):ITask<TContinue>;
+
+	continueWith<TContinue, TState>(
+		continuationAction:(
+			task:ITask<TResult>,
+			state:TState)=>TContinue,
+		a?:TState|CancellationToken|ITaskScheduler|TaskContinuationOptions,
+		b?:CancellationToken|ITaskScheduler|TaskContinuationOptions,
+		c?:ITaskScheduler|TaskContinuationOptions,
+		d?:ITaskScheduler):ITask<TContinue>
+	{
+		throw 'not implemented yet';
 	}
 
 	private _scheduler:ITaskScheduler;
@@ -193,25 +289,25 @@ const enum InternalTaskOptions
 	 */
 	InternalOptionsMask = 0x0000FF00,
 
-	ChildReplica = 0x0100,
-	ContinuationTask = 0x0200,
-	PromiseTask = 0x0400,
-	SelfReplicating = 0x0800,
+	ChildReplica        = 0x0100,
+	ContinuationTask    = 0x0200,
+	PromiseTask         = 0x0400,
+	SelfReplicating     = 0x0800,
 
 	/**
 	 *  Store the presence of TaskContinuationOptions.LazyCancellation, since it does not directly
 	 *  translate into any TaskCreationOptions.
 	 */
-	LazyCancellation = 0x1000,
+	LazyCancellation    = 0x1000,
 
 	/**
 	 * Specifies that the task will be queued by the runtime before handing it over to the user.
 	 *  This flag will be used to skip the cancellation-token registration step, which is only meant for unstarted tasks.
 	 */
-	QueuedByRuntime = 0x2000,
+	QueuedByRuntime     = 0x2000,
 
 	/**
 	 *  Denotes that Dispose should be a complete nop for a Task.  Used when constructing tasks that are meant to be cached/reused.
 	 */
-	DoNotDispose = 0x4000
+	DoNotDispose        = 0x4000
 }

@@ -8,7 +8,7 @@ const noneToken = new CancellationToken();
 Object.freeze(noneToken);
 
 
-class CancellationToken
+export default class CancellationToken
 {
 	canBeCancelled:boolean;
 	isCancellationRequested:boolean;
@@ -27,5 +27,3 @@ class CancellationToken
 	 {
 	 }*/
 }
-
-export default CancellationToken;

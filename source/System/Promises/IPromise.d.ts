@@ -25,3 +25,9 @@ interface IPromise<T>
 		onFulfilled:(value:T) => TResult | IPromise<TResult>,
 		onRejected:(reason:any) => TResult | IPromise<TResult>): IPromise<TResult>;
 }
+
+interface IPromiseCatchFinally<T> extends IPromise<T>
+{
+	'catch'<TResult>(onRejected:(reason:any) => TResult | IPromise<TResult>): IPromise<TResult>;
+	'finally'(finallyCallback:() => any): IPromise<T>;
+}

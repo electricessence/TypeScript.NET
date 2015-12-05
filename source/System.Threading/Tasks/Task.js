@@ -20,6 +20,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 })(["require", "exports", "../../System/Types", "../../System/Time/TimeSpan", "../../System/Disposable/DisposableBase", "../CancellationToken"], function (require, exports) {
     ///<reference path="ITask"/>
     ///<reference path="TaskCreationOptions.d.ts"/>
+    ///<reference path="../../System/Promises/IPromise.d.ts"/>
     var Types_1 = require("../../System/Types");
     var TimeSpan_1 = require("../../System/Time/TimeSpan");
     var DisposableBase_1 = require("../../System/Disposable/DisposableBase");
@@ -110,17 +111,27 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Task.prototype.start = function (scheduler) {
         };
-        Task.prototype.wait = function (timeOrCancel, token) {
-            if (timeOrCancel instanceof CancellationToken_1.default)
+        Task.prototype.then = function (onFulfilled, onRejected) {
+            throw 'not implemented yet';
+        };
+        Task.prototype.waitWith = function (continuationAction, timeOrCancel, token) {
+            if (Types_1.default.isInstanceOf(timeOrCancel, CancellationToken_1.default))
                 token = timeOrCancel;
             var milliseconds = Types_1.default.isNumber(timeOrCancel)
                 ? timeOrCancel
                 : 0;
-            if (timeOrCancel instanceof TimeSpan_1.default)
+            if (Types_1.default.isInstanceOf(timeOrCancel, TimeSpan_1.default))
                 milliseconds = timeOrCancel.milliseconds;
+            return null;
         };
         Task.prototype.equals = function (other) {
-            return this == other || this.id == other.id;
+            return this === other || this.id === other.id;
+        };
+        Task.prototype.delay = function (time) {
+            throw 'not implemented yet';
+        };
+        Task.prototype.continueWith = function (continuationAction, a, b, c, d) {
+            throw 'not implemented yet';
         };
         Object.defineProperty(Task.prototype, "_executingTaskScheduler", {
             get: function () {
