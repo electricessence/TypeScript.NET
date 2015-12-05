@@ -7,8 +7,8 @@
 ///<reference path="../../IComparer.d.ts"/>
 ///<reference path="../../Primitive.d.ts"/>
 ///<reference path="../Array/IArray.d.ts"/>
+///<reference path="Order.d.ts"/>
 import * as Values from '../../Compare'
-import Order from './Order'
 import SortContext from "./SortContext";
 import Functions from "../../Functions";
 

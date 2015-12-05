@@ -5,7 +5,7 @@
 
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="IDateTime.d.ts"/>
-import {Gregorian} from './Calendars';
+///<reference path="Calendars.d.ts"/>
 import * as HowMany from './HowMany';
 import Type from '../Types';
 

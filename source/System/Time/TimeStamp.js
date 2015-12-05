@@ -10,6 +10,9 @@
         define(deps, factory);
     }
 })(["require", "exports", './HowMany', '../Types'], function (require, exports) {
+    ///<reference path="ITimeStamp.d.ts"/>
+    ///<reference path="IDateTime.d.ts"/>
+    ///<reference path="Calendars.d.ts"/>
     var HowMany = require('./HowMany');
     var Types_1 = require('../Types');
     var TimeStamp = (function () {

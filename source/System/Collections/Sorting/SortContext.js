@@ -13,6 +13,7 @@
     ///<reference path="../../FunctionTypes.d.ts"/>
     ///<reference path="../../IComparer.d.ts"/>
     ///<reference path="../Array/IArray.d.ts"/>
+    ///<reference path="Order.d.ts"/>
     var Values = require('../../Compare');
     var SortContext = (function () {
         function SortContext(_next, _comparer, _order) {
