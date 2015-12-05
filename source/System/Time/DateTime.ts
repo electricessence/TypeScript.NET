@@ -8,8 +8,8 @@
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="IDateTime.d.ts"/>
 ///<reference path="Calendars.d.ts"/>
+///<reference path="HowMany.ts"/>
 import Type from '../Types';
-import * as HowMany from './HowMany';
 import ClockTime from './ClockTime';
 import TimeSpan from './TimeSpan';
 import TimeStamp from './TimeStamp';

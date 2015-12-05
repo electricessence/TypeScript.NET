@@ -10,9 +10,9 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", './HowMany'], function (require, exports) {
+})(["require", "exports"], function (require, exports) {
     ///<reference path="ITimeQuantity.d.ts"/>
-    var HowMany = require('./HowMany');
+    ///<reference path="HowMany.ts"/>
     var TimeUnit;
     (function (TimeUnit) {
         TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";

@@ -1,6 +1,6 @@
 ///<reference path="../../import.d.ts"/>
+///<reference path="../../../../source/System/Time/HowMany.ts"/>
 
-import * as HowMany from '../../../../source/System/Time/HowMany';
 import ClockTime from '../../../../source/System/Time/ClockTime';
 import Integer from '../../../../source/System/Integer';
 var assert = require('../../../../node_modules/assert/assert');

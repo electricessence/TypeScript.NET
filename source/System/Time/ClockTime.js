@@ -15,8 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", './HowMany', './TimeQuantity'], function (require, exports) {
-    var HowMany = require('./HowMany');
+})(["require", "exports", './TimeQuantity'], function (require, exports) {
     var TimeQuantity_1 = require('./TimeQuantity');
     var ClockTime = (function (_super) {
         __extends(ClockTime, _super);

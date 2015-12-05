@@ -10,13 +10,13 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../Types', './HowMany', './ClockTime', './TimeSpan', './TimeStamp'], function (require, exports) {
+})(["require", "exports", '../Types', './ClockTime', './TimeSpan', './TimeStamp'], function (require, exports) {
     ///<reference path='ITimeQuantity.d.ts'/>
     ///<reference path="ITimeStamp.d.ts"/>
     ///<reference path="IDateTime.d.ts"/>
     ///<reference path="Calendars.d.ts"/>
+    ///<reference path="HowMany.ts"/>
     var Types_1 = require('../Types');
-    var HowMany = require('./HowMany');
     var ClockTime_1 = require('./ClockTime');
     var TimeSpan_1 = require('./TimeSpan');
     var TimeStamp_1 = require('./TimeStamp');
