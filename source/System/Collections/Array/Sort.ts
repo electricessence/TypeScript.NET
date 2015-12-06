@@ -5,9 +5,10 @@
 
 ///<reference path="../../FunctionTypes.d.ts"/>
 ///<reference path="../Sorting/Order.d.ts"/>
+///<reference path="../../CompareResult.d.ts"/>
 
 import Type from '../../Types';
-import {compare,CompareResult} from '../../Compare';
+import {compare} from '../../Compare';
 
 function ensureArray<T>(value:T|T[]):T[]
 {

@@ -66,8 +66,8 @@
             requestTick();
         }
     }
-    var TaskManager;
-    (function (TaskManager) {
+    var TaskScheduler;
+    (function (TaskScheduler) {
         function defer(task, delay) {
             if (Types_1.default.isNumber(delay, false) && delay >= 0) {
                 var timeout = 0;
@@ -93,13 +93,13 @@
             requestFlush();
             return function () { return !!immediateQueue.remove(entry); };
         }
-        TaskManager.defer = defer;
+        TaskScheduler.defer = defer;
         function runAfterDeferred(task) {
             laterQueue.enqueue(task);
             requestFlush();
         }
-        TaskManager.runAfterDeferred = runAfterDeferred;
-    })(TaskManager || (TaskManager = {}));
+        TaskScheduler.runAfterDeferred = runAfterDeferred;
+    })(TaskScheduler || (TaskScheduler = {}));
     if (Types_1.default.isObject(process)
         && process.toString() === "[object process]"
         && process.nextTick) {
@@ -139,6 +139,6 @@
         };
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = TaskManager;
+    exports.default = TaskScheduler;
 });
-//# sourceMappingURL=TaskManager.js.map
+//# sourceMappingURL=TaskScheduler.js.map

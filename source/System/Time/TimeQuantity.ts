@@ -29,7 +29,7 @@ class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuanti
 
 	/**
 	 * +1, 0, or -1 depending on the time direction.
-	 * @returns {CompareResult}
+	 * @returns {number}
 	 */
 	get direction():number
 	{
