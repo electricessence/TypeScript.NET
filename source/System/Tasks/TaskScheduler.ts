@@ -122,7 +122,7 @@ function requestFlush():void {
 	}
 }
 
-module TaskManager {
+module TaskScheduler {
 
 
 	export function defer(task:Function, delay?:number):()=>boolean
@@ -245,4 +245,4 @@ else
 	};
 }
 
-export default TaskManager;
+export default TaskScheduler;

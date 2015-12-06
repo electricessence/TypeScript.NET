@@ -11,6 +11,8 @@
     }
 })(["require", "exports", '../../Types', '../../Compare'], function (require, exports) {
     ///<reference path="../../FunctionTypes.d.ts"/>
+    ///<reference path="../Sorting/Order.d.ts"/>
+    ///<reference path="../../CompareResult.d.ts"/>
     var Types_1 = require('../../Types');
     var Compare_1 = require('../../Compare');
     function ensureArray(value) {

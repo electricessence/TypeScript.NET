@@ -9,12 +9,12 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../Compare', './HowMany', './TimeUnit'], function (require, exports) {
+})(["require", "exports", '../Compare', './TimeUnit'], function (require, exports) {
     ///<reference path="ITimeQuantity.d.ts"/>
     ///<reference path="../IEquatable.d.ts"/>
     ///<reference path="../IComparable.d.ts"/>
+    ///<reference path="HowMany.ts"/>
     var Compare_1 = require('../Compare');
-    var HowMany = require('./HowMany');
     var TimeUnit_1 = require('./TimeUnit');
     var TimeQuantity = (function () {
         function TimeQuantity(_quantity) {

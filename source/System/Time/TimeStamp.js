@@ -9,8 +9,11 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", './HowMany', '../Types'], function (require, exports) {
-    var HowMany = require('./HowMany');
+})(["require", "exports", '../Types'], function (require, exports) {
+    ///<reference path="ITimeStamp.d.ts"/>
+    ///<reference path="IDateTime.d.ts"/>
+    ///<reference path="Calendars.d.ts"/>
+    ///<reference path="HowMany.ts"/>
     var Types_1 = require('../Types');
     var TimeStamp = (function () {
         function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {

@@ -15,9 +15,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../Types', './HowMany', './TimeUnit', './ClockTime', './TimeQuantity'], function (require, exports) {
+})(["require", "exports", '../Types', './TimeUnit', './ClockTime', './TimeQuantity'], function (require, exports) {
     var Types_1 = require('../Types');
-    var HowMany = require('./HowMany');
     var TimeUnit_1 = require('./TimeUnit');
     var ClockTime_1 = require('./ClockTime');
     var TimeQuantity_1 = require('./TimeQuantity');

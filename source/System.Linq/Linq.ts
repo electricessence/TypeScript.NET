@@ -10,6 +10,7 @@
 ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
 ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+///<reference path="../System/Collections/Sorting/Order.d.ts"/>
 import * as Values from '../System/Compare';
 import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
@@ -26,7 +27,6 @@ import DisposableBase from '../System/Disposable/DisposableBase';
 import Exception from "../System/Exception";
 import ArgumentException from '../System/Exceptions/ArgumentException';
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
-import Order from "../System/Collections/Sorting/Order";
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 type Comparable = Primitive|IComparable<any>;
 'use strict';

@@ -22,6 +22,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
     ///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
     ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+    ///<reference path="../System/Collections/Sorting/Order.d.ts"/>
     var Values = require('../System/Compare');
     var Arrays = require('../System/Collections/Array/Compare');
     var ArrayUtility = require('../System/Collections/Array/Utility');
