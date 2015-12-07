@@ -19,7 +19,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>, IObserver<T>
 	{
 		processAction(
 			this._getSubscribers(),
-			(s) => { s.onNext && s.onNext(value); }
+			s => { s.onNext && s.onNext(value); }
 		);
 	}
 
@@ -27,7 +27,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>, IObserver<T>
 	{
 		processAction(
 			this._getSubscribers(),
-			(s) => { s.onError && s.onError(error); }
+			s => { s.onError && s.onError(error); }
 		);
 	}
 
@@ -35,7 +35,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>, IObserver<T>
 	{
 		processAction(
 			this._unsubscribeAll(true),
-			(s) => { s.onCompleted && s.onCompleted(); }
+			s => { s.onCompleted && s.onCompleted(); }
 		);
 	}
 }
@@ -44,8 +44,7 @@ const OBSERVER_ERROR_MESSAGE:string = 'One or more observers had errors when att
 
 function processAction<T>(
 	observers:IObserver<T>[],
-	handler:(s:IObserver<T>)=>void,
-	dispose:boolean = true)
+	handler:(s:IObserver<T>)=>void)
 {
 	var observersErrors:{observer:IObserver<T>,ex:any}[] = null;
 
@@ -63,8 +62,7 @@ function processAction<T>(
 		}
 	}
 
-	if(dispose)
-		observers.length = 0;
+	observers.length = 0;
 
 	if(observersErrors && observersErrors.length)
 	{
