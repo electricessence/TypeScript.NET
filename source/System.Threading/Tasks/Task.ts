@@ -242,31 +242,32 @@ extends DisposableBase implements ITask<TResult>
 		 // we will return false so that TaskScheduler.ExecuteTask can throw an exception back to the custom scheduler.
 		 // However we don't want this exception to be throw if the task was already canceled, because it's a
 		 // legitimate scenario for custom schedulers to dequeue a task and mark it as canceled (example: throttling scheduler)
+
 		 if (!AtomicStateUpdate(TASK_STATE_DELEGATE_INVOKED,
-		 TASK_STATE_DELEGATE_INVOKED | TASK_STATE_COMPLETED_MASK,
-		 ref previousState) && (previousState & TASK_STATE_CANCELED) == 0)
+		    TASK_STATE_DELEGATE_INVOKED | TASK_STATE_COMPLETED_MASK,
+		    ref previousState) && (previousState & TASK_STATE_CANCELED) == 0)
 		 {
-		 // This task has already been invoked.  Don't invoke it again.
-		 return false;
+		    // This task has already been invoked.  Don't invoke it again.
+		    return false;
 		 }
 		 }
 		 else
 		 {
-		 // Remember that we started running the task delegate.
-		 m_stateFlags |= TASK_STATE_DELEGATE_INVOKED;
+		    // Remember that we started running the task delegate.
+		    m_stateFlags |= TASK_STATE_DELEGATE_INVOKED;
 		 }
 
 		 if (!IsCancellationRequested && !IsCanceled)
 		 {
-		 ExecuteWithThreadLocal(ref t_currentTask);
+		    ExecuteWithThreadLocal(ref t_currentTask);
 		 }
 		 else if (!IsCanceled)
 		 {
-		 int prevState = Interlocked.Exchange(ref m_stateFlags, m_stateFlags | TASK_STATE_CANCELED);
-		 if ((prevState & TASK_STATE_CANCELED) == 0)
-		 {
-		 CancellationCleanupLogic();
-		 }
+		    int prevState = Interlocked.Exchange(ref m_stateFlags, m_stateFlags | TASK_STATE_CANCELED);
+			if ((prevState & TASK_STATE_CANCELED) == 0)
+			{
+			    CancellationCleanupLogic();
+			}
 		 }
 		 */
 		return true;
