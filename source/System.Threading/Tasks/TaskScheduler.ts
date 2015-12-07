@@ -2,8 +2,8 @@
 
 ///<reference path="../../System/Collections/Array/IArray"/>
 ///<reference path="ITaskScheduler.d.ts"/>
-import Task = require('./Task');
-import Queue from "../../System/Collections/Queue";
+import Task from './Task';
+import Queue from '../../System/Collections/Queue';
 
 var _lastId:number = 0 | 0;
 var _defaultScheduler:TaskScheduler;
