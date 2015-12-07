@@ -20,7 +20,7 @@ import InvalidOperationException from '../Exceptions/InvalidOperationException';
 import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
 
 const MINIMUM_GROW:number = 4;
-// var SHRINK_THRESHOLD: number = 32; // Unused?
+const SHRINK_THRESHOLD:number = 32; // Unused?
 // var GROW_FACTOR: number = 200;  // double each time
 const GROW_FACTOR_HALF:number = 100;
 const DEFAULT_CAPACITY:number = MINIMUM_GROW;
@@ -63,7 +63,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 			{
 				var se = <IEnumerable<T> | IArray<T>> source;
 				_._array = AU.initialize<T>(
-						Type.isArrayLike(se)
+					Type.isArrayLike(se)
 						? se.length
 						: DEFAULT_CAPACITY
 				);
@@ -95,6 +95,10 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	}
 
 
+	/**
+	 * Clears out the array and returns the number of items that were removed.
+	 * @returns {number}
+	 */
 	clear():number
 	{
 		var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
@@ -111,7 +115,40 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		_._size = 0;
 		_._version++;
 
+		_.trimExcess();
+
 		return size;
+	}
+
+	/**
+	 * Dequeues entries into an array.
+	 */
+	dump(max:number = Infinity):T[]
+	{
+		if(Type.isNumber(max, false) && max<0)
+			throw new ArgumentOutOfRangeException('max', max, 'must be greater than or equal to 0.');
+
+		var _ = this, result:T[] = [];
+
+		if(isFinite(max))
+		{
+			Integer.assert(max, 'max');
+			while(max-- && _._size)
+			{
+				result.push(_.dequeue());
+			}
+		}
+		else
+		{
+			while(_._size)
+			{
+				result.push(_.dequeue());
+			}
+		}
+
+		_.trimExcess();
+
+		return result;
 	}
 
 	contains(item:T):boolean
@@ -268,11 +305,15 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		_._version++;
 	}
 
-	dequeue():T
+	dequeue(throwIfEmpty:boolean = false):T
 	{
 		var _ = this;
 		if(_._size==0)
-			throw new InvalidOperationException("Cannot dequeue an empty queue.");
+		{
+			if(throwIfEmpty)
+				throw new InvalidOperationException("Cannot dequeue an empty queue.");
+			return void 0;
+		}
 
 		var array = _._array, head = _._head;
 
@@ -283,13 +324,21 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		_._size--;
 
 
-		/* Need a scheme for shrinking
-		 if (_._size < _._capacity / 2)
-		 {
-		 }*/
+		if(_._size<_._capacity/2)
+		{
+			_.trimExcess(SHRINK_THRESHOLD);
+		}
 
 		_._version++;
 		return removed;
+	}
+
+	tryDequeue(out:(value:T)=>void):boolean
+	{
+		if(!this._size) return false;
+		var d = this.dequeue();
+		if(out) out(d);
+		return true;
 	}
 
 	private _getElement(index:number):T
@@ -308,11 +357,11 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		return this._array[this._head];
 	}
 
-	trimExcess():void
+	trimExcess(threshold?:number):void
 	{
 		var _ = this;
 		var size = _._size;
-		if(size<Math.floor(_._capacity*0.9))
+		if(size<Math.floor(_._capacity*0.9) && (isNaN(threshold) || threshold<size))
 			_.setCapacity(size);
 	}
 
