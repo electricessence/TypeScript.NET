@@ -9,6 +9,7 @@ Object.defineProperty(exports, '__esModule', {
 });
 exports.encode = encode;
 exports.encodeValue = encodeValue;
+exports.isUriComponentFormattable = isUriComponentFormattable;
 exports.parse = parse;
 exports.parseToMap = parseToMap;
 exports.parseToArray = parseToArray;
@@ -31,7 +32,7 @@ var ENTRY_SEPARATOR = "&",
 function encode(values, prefixIfNotEmpty) {
     if (!values) return '';
     var entries = [];
-    if (values instanceof Array) {
+    if (Array.isArray(values)) {
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -87,14 +88,18 @@ function encode(values, prefixIfNotEmpty) {
 }
 
 function encodeValue(value) {
-    var v = value;
-    if (typeof v == _Types2['default'].OBJECT && "toUriComponent" in v) {
-        v = v.toUriComponent();
+    var v = null;
+    if (isUriComponentFormattable(value)) {
+        v = value.toUriComponent();
         if (v && v.indexOf('&') != 1) throw '.toUriComponent() did not encode the value.';
     } else {
         v = encodeURIComponent(Serialization.toString(v));
     }
     return v;
+}
+
+function isUriComponentFormattable(instance) {
+    return _Types2['default'].hasMemberOfType(instance, "toUriComponent", _Types2['default'].FUNCTION);
 }
 
 function parse(query, entryHandler) {
@@ -145,7 +150,7 @@ function parseToMap(query) {
     parse(query, function (key, value) {
         if (key in result) {
             var prev = result[key];
-            if (!(prev instanceof Array)) result[key] = prev = [prev];
+            if (!Array.isArray(prev)) result[key] = prev = [prev];
             prev.push(value);
         } else result[key] = value;
     }, deserialize, decodeValues);

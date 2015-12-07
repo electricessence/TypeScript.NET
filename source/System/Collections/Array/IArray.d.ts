@@ -4,7 +4,7 @@
  */
 
 // Is interchangeable with Array, but also allows for other similar constructs.
-interface IArray<T>
+interface IArray<T> // ArrayLike<T>
 {
 	length: number;
 	[index: number]: T;

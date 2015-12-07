@@ -14,7 +14,7 @@ export default function clone(source:any, depth:number = 0):any
 	if(!Type.isObject(source)) return source;
 
 	var result:any;
-	if(source instanceof Array)
+	if(Array.isArray(source))
 	{
 		result = (<any>source).slice();
 		if(depth>0)

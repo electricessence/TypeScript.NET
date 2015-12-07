@@ -18,6 +18,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ArrayUtility = require('../Array/Utility');
     var StringKeyDictionary_1 = require('./StringKeyDictionary');
     var ArgumentOutOfRangeException_1 = require('../../Exceptions/ArgumentOutOfRangeException');
+    var VOID0 = void 0;
     var OrderedStringKeyDictionary = (function (_super) {
         __extends(OrderedStringKeyDictionary, _super);
         function OrderedStringKeyDictionary() {
@@ -32,9 +33,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {
             var _ = this, exists = _.indexOfKey(key) != -1;
-            if (!exists && (value !== undefined || keepIndex))
+            if (!exists && (value !== VOID0 || keepIndex))
                 _._order.push(key);
-            else if (exists && value === undefined && !keepIndex)
+            else if (exists && value === VOID0 && !keepIndex)
                 ArrayUtility.remove(_._order, key);
             return _super.prototype.setValue.call(this, key, value);
         };
@@ -67,14 +68,10 @@ var __extends = (this && this.__extends) || function (d, b) {
         OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
             return this.setByIndex(index, undefined);
         };
-        Object.defineProperty(OrderedStringKeyDictionary.prototype, "keys", {
-            get: function () {
-                var _ = this;
-                return _._order.filter(function (key) { return _.containsKey(key); });
-            },
-            enumerable: true,
-            configurable: true
-        });
+        OrderedStringKeyDictionary.prototype.getKeys = function () {
+            var _ = this;
+            return _._order.filter(function (key) { return _.containsKey(key); });
+        };
         return OrderedStringKeyDictionary;
     })(StringKeyDictionary_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });

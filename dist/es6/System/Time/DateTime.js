@@ -1,52 +1,132 @@
 /*
  * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import Type from '../Types';
 import * as HowMany from './HowMany';
-export default class DateTime {
-    constructor(value = new Date()) {
+import ClockTime from './ClockTime';
+import TimeSpan from './TimeSpan';
+import TimeStamp from './TimeStamp';
+class DateTime {
+    constructor(value = new Date(), kind = 1) {
         var _ = this;
-        if (value instanceof DateTime)
-            _._value = value.jsDate;
-        else if (value instanceof Date)
-            _.setJsDate(value);
+        _._kind = kind;
+        if (Type.isInstanceOf(value, DateTime))
+            _._value = value.toJsDate();
+        else if (Type.isInstanceOf(value, Date))
+            _._setJsDate(value);
         else
             _._value = value == undefined
                 ? new Date()
                 : new Date(value);
     }
-    get jsDate() {
+    toJsDate() {
         return new Date(this._value.getTime());
     }
-    setJsDate(value) {
+    _setJsDate(value) {
+        this._time = null;
         this._value = new Date(value.getTime());
+    }
+    get kind() {
+        return this._kind;
+    }
+    get year() {
+        return this._value.getFullYear();
+    }
+    get month() {
+        return this._value.getMonth();
+    }
+    get day() {
+        return this._value.getDate();
+    }
+    get dayOfWeek() {
+        return this._value.getDay();
     }
     addMilliseconds(ms) {
         ms = ms || 0;
-        return new DateTime(this._value.getTime() + ms);
+        return new DateTime(this._value.getTime() + ms, this._kind);
+    }
+    addSeconds(seconds) {
+        seconds = seconds || 0;
+        return this.addMilliseconds(seconds * 1000);
+    }
+    addMinutes(minutes) {
+        minutes = minutes || 0;
+        return this.addMilliseconds(minutes * 60000);
+    }
+    addHours(hours) {
+        hours = hours || 0;
+        return this.addMilliseconds(hours * 3600000);
     }
     addDays(days) {
         days = days || 0;
         return this.addMilliseconds(days * 86400000);
     }
-    add(time) {
-        return this.addMilliseconds(time.total.milliseconds);
+    addMonths(months) {
+        months = months || 0;
+        var d = this.toJsDate();
+        d.setMonth(d.getMonth() + months);
+        return new DateTime(d, this._kind);
     }
-    static now() {
+    addYears(years) {
+        years = years || 0;
+        var d = this.toJsDate();
+        d.setFullYear(d.getFullYear() + years);
+        return new DateTime(d, this._kind);
+    }
+    add(time) {
+        return this.addMilliseconds(time.getTotalMilliseconds());
+    }
+    subtract(time) {
+        return this.addMilliseconds(-time.getTotalMilliseconds());
+    }
+    timePassedSince(previous) {
+        return DateTime.between(previous, this);
+    }
+    get date() {
+        var _ = this;
+        return new DateTime(new Date(_.year, _.month, _.day), _._kind);
+    }
+    get timeOfDay() {
+        var _ = this, t = _._time;
+        if (!t) {
+            var d = this._value;
+            _._time = t = new ClockTime(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+        }
+        return t;
+    }
+    toTimeStamp() {
+        return TimeStamp.from(this);
+    }
+    static get now() {
         return new DateTime();
     }
-    static today() {
-        var now = new Date();
-        return new DateTime(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+    get toUniversalTime() {
+        var _ = this;
+        if (_._kind != 1)
+            return new DateTime(_, _._kind);
+        var d = _._value;
+        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2);
     }
-    static tomorrow() {
-        var today = DateTime.today();
+    static get today() {
+        return DateTime.now.date;
+    }
+    static get tomorrow() {
+        var today = DateTime.today;
         return today.addDays(1);
     }
-    static daysAgo(days) {
-        var today = DateTime.today();
-        return today.addDays(-days);
+    static between(first, last) {
+        var f = Type.isInstanceOf(first, DateTime) ? first._value : first, l = Type.isInstanceOf(last, DateTime) ? last._value : last;
+        return new TimeSpan(f.getTime() - l.getTime());
+    }
+    static isLeapYear(year) {
+        return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+    }
+    static daysInMonth(year, month) {
+        return (new Date(year, month + 1, 0)).getDate();
     }
 }
 Object.freeze(DateTime);
+export default DateTime;
 //# sourceMappingURL=DateTime.js.map

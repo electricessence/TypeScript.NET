@@ -18,10 +18,24 @@ System.register(['./Types', './Exceptions/ArgumentException'], function(exports_
             }],
         execute: function() {
             (function (Integer) {
-                function random(max) {
+                function r(max) {
                     return (Math.random() * max) | 0;
                 }
+                function random(max) {
+                    assert(max, 'max');
+                    if (max == 0)
+                        return 0;
+                    max += max > 0 ? 1 : -1;
+                    return r(max);
+                }
                 Integer.random = random;
+                var random;
+                (function (random) {
+                    function under(boundary) {
+                        return r(boundary);
+                    }
+                    random.under = under;
+                })(random = Integer.random || (Integer.random = {}));
                 function is(n) {
                     return Types_1.default.isNumber(n, false) && n == (n | 0);
                 }

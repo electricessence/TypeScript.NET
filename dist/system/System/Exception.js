@@ -33,9 +33,10 @@ System.register([], function(exports_1) {
                 };
                 Exception.prototype.dispose = function () {
                     var data = this.data;
-                    for (var k in data)
+                    for (var k in data) {
                         if (data.hasOwnProperty(k))
                             delete data[k];
+                    }
                 };
                 return Exception;
             })();

@@ -15,8 +15,8 @@ import * as Serialization from '../Serialization/Utility';
  */
 
 const
-ENTRY_SEPARATOR     = "&",
-KEY_VALUE_SEPARATOR = "=";
+	ENTRY_SEPARATOR = "&",
+	KEY_VALUE_SEPARATOR = "=";
 
 /**
  * Returns the encoded URI string
@@ -28,7 +28,7 @@ export function encode(
 	if(!values) return '';
 	var entries:string[] = [];
 
-	if(values instanceof Array)
+	if(Array.isArray(values))
 	{
 		for(let kvp of values)
 		{
@@ -55,10 +55,10 @@ export function encode(
  */
 export function encodeValue(value:Primitive|ISerializable|IUriComponentFormattable):string
 {
-	var v = <any>value;
-	if(typeof v==Type.OBJECT && "toUriComponent" in v)
+	var v:string = null;
+	if(isUriComponentFormattable(value))
 	{
-		v = v.toUriComponent();
+		v = value.toUriComponent();
 		if(v && v.indexOf('&')!=1)
 			throw '.toUriComponent() did not encode the value.';
 	}
@@ -67,6 +67,16 @@ export function encodeValue(value:Primitive|ISerializable|IUriComponentFormattab
 		v = encodeURIComponent(Serialization.toString(v));
 	}
 	return v;
+}
+
+/**
+ * A shortcut for identifying an IUriComponentFormattable object.
+ * @param instance
+ * @returns {boolean}
+ */
+export function isUriComponentFormattable(instance:any):instance is IUriComponentFormattable
+{
+	return Type.hasMemberOfType<IUriComponentFormattable>(instance, "toUriComponent", Type.FUNCTION);
 }
 
 /**
@@ -118,10 +128,12 @@ export function parseToMap(
 {
 	var result:IMap<Primitive|Primitive[]> = {};
 	parse(query,
-		(key, value)=> {
-			if(key in result) {
+		(key, value)=>
+		{
+			if((key)in(result))
+			{
 				var prev:any = result[key];
-				if(!(prev instanceof Array))
+				if(!(Array.isArray(prev)))
 					result[key] = prev = [prev];
 				prev.push(value);
 			}

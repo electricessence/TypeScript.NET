@@ -8,7 +8,6 @@ System.register(['../Types', '../Exceptions/InvalidOperationException'], functio
     function toString(value, defaultForUnknown) {
         var v = value;
         switch (typeof v) {
-            case Types_1.default.NULL:
             case Types_1.default.UNDEFINED:
             case Types_1.default.STRING:
                 return v;
@@ -17,7 +16,9 @@ System.register(['../Types', '../Exceptions/InvalidOperationException'], functio
             case Types_1.default.NUMBER:
                 return EMPTY + v;
             default:
-                if (Types_1.default.of(v).member('serialize').isFunction)
+                if (v === null)
+                    return v;
+                if (isSerializable(v))
                     return v.serialize();
                 else if (arguments.length > 1)
                     return defaultForUnknown;
@@ -27,12 +28,16 @@ System.register(['../Types', '../Exceptions/InvalidOperationException'], functio
         }
     }
     exports_1("toString", toString);
+    function isSerializable(instance) {
+        return Types_1.default.hasMemberOfType(instance, 'serialize', Types_1.default.FUNCTION);
+    }
+    exports_1("isSerializable", isSerializable);
     function toPrimitive(value, caseInsensitive, unknownHandler) {
         if (value) {
             if (caseInsensitive)
                 value = value.toLowerCase();
             switch (value) {
-                case Types_1.default.NULL:
+                case 'null':
                     return null;
                 case Types_1.default.UNDEFINED:
                     return undefined;

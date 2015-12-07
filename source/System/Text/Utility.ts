@@ -11,11 +11,19 @@ export function escapeRegExp(source:string):string {
 	return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
+/**
+ * Can trim any character or set of characters from the ends of a string.
+ * Uses a Regex escapement to replace them with empty.
+ * @param source
+ * @param chars A string or array of characters desired to be trimmed.
+ * @param ignoreCase
+ * @returns {string}
+ */
 export function trim(source:string, chars?:string|string[],ignoreCase?:boolean):string
 {
 	if(chars) {
 		if(chars===EMPTY) return source;
-		var escaped = escapeRegExp(chars instanceof Array ? chars.join() : <string>chars);
+		var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : <string>chars);
 		return source.replace(new RegExp('^['+escaped+']+|['+escaped+']+$','g'+(ignoreCase?'i':'')),EMPTY);
 	}
 
@@ -46,7 +54,7 @@ export function format(source:string, ...args:any[])
  */
 export function supplant(source:string, params:{[key:string]:any}|any[]):string
 {
-	var oIsArray = params instanceof Array;
+	var oIsArray = Array.isArray(params);
 	return source.replace(/\{([^{}]*)\}/g,
 		(a:string, b:string):any=>
 		{

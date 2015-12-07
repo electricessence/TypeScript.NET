@@ -8,6 +8,7 @@
 import Type from '../Types';
 import LinkedList from '../Collections/LinkedList';
 
+const VOID0:any = void 0;
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -39,7 +40,7 @@ class StringBuilder implements IDisposable
 
 	private appendSingle(item:any):void
 	{
-		if(item!==null && item!==undefined) {
+		if(item!==null && item!==VOID0) {
 			var _ = this;
 			_._latest = null;
 			switch(typeof item) {
@@ -78,7 +79,7 @@ class StringBuilder implements IDisposable
 		items.forEach(
 				i=>
 			{
-				if(i!==null && i!==undefined) {
+				if(i!==null && i!==VOID0) {
 					_.appendSingle(i);
 					_._partArray.push("\r\n");
 				}

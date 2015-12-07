@@ -10,90 +10,75 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Compare = require('../Compare');
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _TimeUnit = require('./TimeUnit');
 
 var _TimeUnit2 = _interopRequireDefault(_TimeUnit);
 
-var _TimeSpan = require('./TimeSpan');
+var _TimeQuantity2 = require('./TimeQuantity');
 
-var _TimeSpan2 = _interopRequireDefault(_TimeSpan);
+var _TimeQuantity3 = _interopRequireDefault(_TimeQuantity2);
 
-var TimeUnitValue = (function () {
-    function TimeUnitValue(value, _type) {
+var TimeUnitValue = (function (_TimeQuantity) {
+    _inherits(TimeUnitValue, _TimeQuantity);
+
+    function TimeUnitValue(value, _units) {
         _classCallCheck(this, TimeUnitValue);
 
-        this.value = value;
-        this._type = _type;
-        assertValidUnit(_type);
+        _get(Object.getPrototypeOf(TimeUnitValue.prototype), 'constructor', this).call(this, typeof value == 'number' ? value : getUnitQuantityFrom(value, _units));
+        this._units = _units;
+        _TimeUnit2['default'].assertValid(_units);
     }
 
     _createClass(TimeUnitValue, [{
-        key: 'coerce',
-        value: function coerce(other) {
-            var type = this._type;
-            assertValidUnit(type);
-            if (other instanceof _TimeSpan2['default']) {
-                other = other.toTimeUnitValue(type);
-            } else if (other instanceof TimeUnitValue) {
-                if (type !== other.type) other = other.to(type);
-            } else return null;
-            return other;
-        }
-    }, {
-        key: 'equals',
-        value: function equals(other) {
-            var o = this.coerce(other);
-            if (o == null) return false;
-            return (0, _Compare.areEqual)(this.value, o.value);
-        }
-    }, {
-        key: 'compareTo',
-        value: function compareTo(other) {
-            if (other == null) return 1 | 0;
-            assertComparisonType(other);
-            return (0, _Compare.compare)(this.value, this.coerce(other).value);
-        }
-    }, {
-        key: 'toTimeSpan',
-        value: function toTimeSpan() {
-            return new _TimeSpan2['default'](this.value, this.type);
+        key: 'getTotalMilliseconds',
+        value: function getTotalMilliseconds() {
+            return _TimeUnit2['default'].toMilliseconds(this._quantity, this._units);
         }
     }, {
         key: 'to',
         value: function to() {
-            var units = arguments.length <= 0 || arguments[0] === undefined ? this.type : arguments[0];
+            var units = arguments.length <= 0 || arguments[0] === undefined ? this.units : arguments[0];
 
-            return this.toTimeSpan().toTimeUnitValue(units);
+            return TimeUnitValue.from(this, units);
         }
     }, {
-        key: 'type',
+        key: 'value',
         get: function get() {
-            return this._type;
+            return this._quantity;
+        },
+        set: function set(v) {
+            this._total = null;
+            this._quantity = v;
         }
     }, {
-        key: 'total',
+        key: 'units',
         get: function get() {
-            return this.toTimeSpan();
+            return this._units;
+        }
+    }], [{
+        key: 'from',
+        value: function from(value) {
+            var units = arguments.length <= 1 || arguments[1] === undefined ? _TimeUnit2['default'].Milliseconds : arguments[1];
+
+            return new TimeUnitValue(value, units);
         }
     }]);
 
     return TimeUnitValue;
-})();
+})(_TimeQuantity3['default']);
 
 exports['default'] = TimeUnitValue;
 
-function assertComparisonType(other) {
-    if (!(other instanceof TimeUnitValue || other instanceof _TimeSpan2['default'])) throw new Error("Invalid comparison type.  Must be of type TimeUnitValue or TimeSpan.");
-}
-function assertValidUnit(unit) {
-    if (isNaN(unit) || unit > _TimeUnit2['default'].Days || unit < _TimeUnit2['default'].Ticks || Math.floor(unit) !== unit) throw new Error("Invalid TimeUnit.");
-    return true;
+function getUnitQuantityFrom(q, units) {
+    return _TimeUnit2['default'].fromMilliseconds(q.getTotalMilliseconds(), units);
 }
 module.exports = exports['default'];
 //# sourceMappingURL=TimeUnitValue.js.map

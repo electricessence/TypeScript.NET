@@ -4,15 +4,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { areEqual } from '../../Compare';
-import DictionaryAbstractBase from './DictionaryAbstractBase';
-export default class StringKeyDictionary extends DictionaryAbstractBase {
+import DictionaryBase from './DictionaryBase';
+export default class StringKeyDictionary extends DictionaryBase {
     constructor(...args) {
         super(...args);
         this._count = 0;
         this._map = {};
     }
     containsKey(key) {
-        return key in this._map;
+        return (key) in (this._map);
     }
     containsValue(value) {
         var map = this._map, equal = areEqual;
@@ -29,13 +29,13 @@ export default class StringKeyDictionary extends DictionaryAbstractBase {
         var _ = this, map = _._map, old = map[key];
         if (old !== value) {
             if (value === undefined) {
-                if (key in map) {
+                if ((key) in (map)) {
                     delete map[key];
                     --_._count;
                 }
             }
             else {
-                if (!(key in map))
+                if (!((key) in (map)))
                     ++_._count;
                 map[key] = value;
             }
@@ -68,7 +68,7 @@ export default class StringKeyDictionary extends DictionaryAbstractBase {
         }
         return result;
     }
-    get keys() {
+    getKeys() {
         var _ = this, result = [];
         for (let key in _._map) {
             if (_._map.hasOwnProperty(key))
@@ -76,7 +76,7 @@ export default class StringKeyDictionary extends DictionaryAbstractBase {
         }
         return result;
     }
-    get values() {
+    getValues() {
         var _ = this, result = [];
         for (let key in _._map) {
             if (_._map.hasOwnProperty(key))
@@ -84,7 +84,7 @@ export default class StringKeyDictionary extends DictionaryAbstractBase {
         }
         return result;
     }
-    get count() {
+    getCount() {
         return this._count;
     }
 }

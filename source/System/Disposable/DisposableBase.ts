@@ -8,8 +8,7 @@
 
 import ObjectDisposedException from './ObjectDisposedException';
 
-export default
-class DisposableBase implements IDisposableAware
+abstract class DisposableBase implements IDisposableAware
 {
 
 	constructor(private _finalizer?:() => void)
@@ -55,11 +54,9 @@ class DisposableBase implements IDisposableAware
 		}
 	}
 
-	// Override this to handle destruction...
-	// Be sure to call super._onDestroy() in deeper sub classes...
-	protected _onDispose():void
-	{
-
-	}
+	// Placeholder for overrides.
+	protected _onDispose():void { }
 
 }
+
+export default DisposableBase;

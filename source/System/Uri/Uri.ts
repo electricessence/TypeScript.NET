@@ -90,7 +90,7 @@ class Uri implements IUri, IEquatable<IUri>
 	 */
 	equals(other:IUri):boolean
 	{
-		return this.absoluteUri==Uri.toString(other);
+		return this===other || this.absoluteUri==Uri.toString(other);
 	}
 
 
@@ -225,7 +225,7 @@ class Uri implements IUri, IEquatable<IUri>
 	 */
 	static toString(uri:IUri):string
 	{
-		return uri instanceof Uri
+		return Type.isInstanceOf<Uri>(uri,Uri)
 			? (<Uri>uri).absoluteUri
 			: uriToString(uri);
 	}

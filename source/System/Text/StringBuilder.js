@@ -13,6 +13,7 @@
 })(["require", "exports", '../Types'], function (require, exports) {
     ///<reference path="../Disposable/IDisposable.d.ts"/>
     var Types_1 = require('../Types');
+    var VOID0 = void 0;
     var StringBuilder = (function () {
         function StringBuilder() {
             var initial = [];
@@ -25,7 +26,7 @@
             _.appendThese(initial);
         }
         StringBuilder.prototype.appendSingle = function (item) {
-            if (item !== null && item !== undefined) {
+            if (item !== null && item !== VOID0) {
                 var _ = this;
                 _._latest = null;
                 switch (typeof item) {
@@ -61,7 +62,7 @@
         StringBuilder.prototype.appendLines = function (items) {
             var _ = this;
             items.forEach(function (i) {
-                if (i !== null && i !== undefined) {
+                if (i !== null && i !== VOID0) {
                     _.appendSingle(i);
                     _._partArray.push("\r\n");
                 }

@@ -15,16 +15,18 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function (require, exports) {
+})(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], function (require, exports) {
+    ///<reference path="../System/Primitive.d.ts"/>
     ///<reference path="../System/FunctionTypes.d.ts"/>
     ///<reference path="../System/Collections/Array/IArray.d.ts"/>
     ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
     ///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
     ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+    ///<reference path="../System/Collections/Sorting/Order.d.ts"/>
     var Values = require('../System/Compare');
     var Arrays = require('../System/Collections/Array/Compare');
     var ArrayUtility = require('../System/Collections/Array/Utility');
-    var Enumerator = require('../System/Collections/Enumeration/Enumerator');
+    var Enumerator_1 = require('../System/Collections/Enumeration/Enumerator');
     var Types_1 = require('../System/Types');
     var Integer_1 = require('../System/Integer');
     var Functions_1 = require('../System/Functions');
@@ -34,10 +36,11 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Queue_1 = require('../System/Collections/Queue');
     var Utility_1 = require('../System/Disposable/Utility');
     var DisposableBase_1 = require('../System/Disposable/DisposableBase');
+    var Exception_1 = require("../System/Exception");
     var ObjectDisposedException_1 = require('../System/Disposable/ObjectDisposedException');
-    var enumeratorFrom = Enumerator.from;
-    var enumeratorForEach = Enumerator.forEach;
+    var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext");
     'use strict';
+    var VOID0 = void 0;
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
         function LinqFunctions() {
@@ -53,7 +56,13 @@ var __extends = (this && this.__extends) || function (d, b) {
     })(Functions_1.default);
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
-    var LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator', UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
+    var UnsupportedEnumerableException = (function (_super) {
+        __extends(UnsupportedEnumerableException, _super);
+        function UnsupportedEnumerableException() {
+            _super.call(this, "Unsupported enumerable.");
+        }
+        return UnsupportedEnumerableException;
+    })(Exception_1.default);
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(_enumeratorFactory, finalizer) {
@@ -64,37 +73,35 @@ var __extends = (this && this.__extends) || function (d, b) {
             return new ArrayEnumerable(array);
         };
         Enumerable.from = function (source) {
-            var type = Types_1.default.of(source);
-            if (type.isObject) {
-                if (source instanceof Enumerable)
+            if (Types_1.default.isObject(source)) {
+                if (Types_1.default.isInstanceOf(source, Enumerable))
                     return source;
-                if (source instanceof Array)
+                if (Array.isArray(source))
                     return new ArrayEnumerable(source);
-                if (type.member(GET_ENUMERATOR).isFunction)
+                if (Enumerator_1.isEnumerable(source))
                     return new Enumerable(function () { return source.getEnumerator(); });
-                if (type.member(LENGTH).isValidNumber)
+                if (Types_1.default.isArrayLike(source))
                     return new ArrayEnumerable(source);
             }
-            throw new Error(UNSUPPORTED_ENUMERABLE);
+            throw new UnsupportedEnumerableException();
         };
         Enumerable.toArray = function (source) {
-            var type = Types_1.default.of(source);
-            if (type.isObject) {
-                if (source instanceof Array)
+            if (Types_1.default.isObject(source)) {
+                if (Array.isArray(source))
                     return source.slice();
-                if (type.member(LENGTH).isValidNumber)
+                if (Types_1.default.isArrayLike(source))
                     source = new ArrayEnumerable(source);
-                if (source instanceof Enumerable)
+                if (Types_1.default.isInstanceOf(source, Enumerable))
                     return source.toArray();
-                if (type.member(GET_ENUMERATOR).isFunction) {
+                if (Enumerator_1.isEnumerable(source)) {
                     var result = [];
-                    enumeratorForEach(source.getEnumerator(), function (e, i) {
+                    Enumerator_1.forEach(source.getEnumerator(), function (e, i) {
                         result[i] = e;
                     });
                     return result;
                 }
             }
-            throw new Error(UNSUPPORTED_ENUMERABLE);
+            throw new UnsupportedEnumerableException();
         };
         Enumerable.prototype.getEnumerator = function () {
             this.throwIfDisposed();
@@ -246,7 +253,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var type = typeof input;
             if (type != Types_1.default.STRING)
                 throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-            if (pattern instanceof RegExp) {
+            if (Types_1.default.isInstanceOf(pattern, RegExp)) {
                 flags += (pattern.ignoreCase) ? "i" : "";
                 flags += (pattern.multiline) ? "m" : "";
                 pattern = pattern.source;
@@ -317,10 +324,19 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.forEach = function (enumerable, action) {
             if (enumerable) {
-                Utility_1.using(Enumerator.from(enumerable), function (e) {
-                    Enumerator.forEach(e, action);
+                Utility_1.using(Enumerator_1.from(enumerable), function (e) {
+                    Enumerator_1.forEach(e, action);
                 });
             }
+        };
+        Enumerable.map = function (enumerable, selector) {
+            return enumerable && Utility_1.using(Enumerator_1.from(enumerable), function (e) {
+                var result = [];
+                Enumerator_1.forEach(e, function (e, i) {
+                    result[i] = selector(e);
+                });
+                return result;
+            });
         };
         Enumerable.max = function (values) {
             return values
@@ -364,7 +380,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 var key = keySelector(x);
                 var element = elementSelector(x);
                 var array = dict.getValue(key);
-                if (array !== undefined)
+                if (array !== VOID0)
                     array.push(element);
                 else
                     dict.addByKeyValue(key, [element]);
@@ -608,7 +624,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         }
                         if (enumerator.moveNext()) {
                             var c = enumerator.current;
-                            if (c instanceof Array) {
+                            if (Array.isArray(c)) {
                                 middleEnumerator.dispose();
                                 middleEnumerator = Enumerable.fromArray(c)
                                     .selectMany(Functions.Identity)
@@ -644,7 +660,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         Enumerable.prototype.scan = function (func, seed) {
-            var isUseSeed = seed !== undefined;
+            var isUseSeed = seed !== VOID0;
             var _ = this;
             return new Enumerable(function () {
                 var enumerator;
@@ -705,14 +721,14 @@ var __extends = (this && this.__extends) || function (d, b) {
                     middleEnumerator = undefined;
                     index = 0;
                 }, function (yielder) {
-                    if (middleEnumerator === undefined && !enumerator.moveNext())
+                    if (middleEnumerator === VOID0 && !enumerator.moveNext())
                         return false;
                     do {
                         if (!middleEnumerator) {
                             var middleSeq = collectionSelector(enumerator.current, index++);
                             if (!middleSeq)
                                 continue;
-                            middleEnumerator = Enumerator.from(middleSeq);
+                            middleEnumerator = Enumerator_1.from(middleSeq);
                         }
                         if (middleEnumerator.moveNext())
                             return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
@@ -740,7 +756,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     throwIfDisposed(disposed);
                     while (enumerator.moveNext()) {
                         var result = selector(enumerator.current, index++);
-                        if (result !== null && result !== undefined)
+                        if (result !== null && result !== VOID0)
                             return yielder.yieldReturn(result);
                     }
                     return false;
@@ -792,16 +808,11 @@ var __extends = (this && this.__extends) || function (d, b) {
                     typeName = Types_1.default.FUNCTION;
                     break;
                 default:
-                    typeName = null;
-                    break;
+                    return this
+                        .where(function (x) { return Types_1.default.isInstanceOf(x, type); });
             }
-            return ((typeName === null)
-                ? this.where(function (x) {
-                    return x instanceof type;
-                })
-                : this.where(function (x) {
-                    return typeof x === typeName;
-                }));
+            return this
+                .where(function (x) { return typeof x === typeName; });
         };
         Enumerable.prototype.except = function (second, compareSelector) {
             var _ = this, disposed = !_.throwIfDisposed();
@@ -1036,7 +1047,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return new EnumeratorBase_1.default(function () {
                     index = 0;
                     firstEnumerator = _.getEnumerator();
-                    secondEnumerator = enumeratorFrom(second);
+                    secondEnumerator = Enumerator_1.from(second);
                 }, function (yielder) {
                     return firstEnumerator.moveNext() && secondEnumerator.moveNext()
                         && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
@@ -1066,7 +1077,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                                 if (secondTemp.count) {
                                     var next = secondTemp.dequeue();
                                     if (next)
-                                        secondEnumerator = enumeratorFrom(next);
+                                        secondEnumerator = Enumerator_1.from(next);
                                 }
                                 else
                                     return yielder.yieldBreak();
@@ -1099,7 +1110,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     while (true) {
                         if (innerElements != null) {
                             var innerElement = innerElements[innerCount++];
-                            if (innerElement !== undefined)
+                            if (innerElement !== VOID0)
                                 return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
                             innerElement = null;
                             innerCount = 0;
@@ -1146,7 +1157,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     if (firstEnumerator != null) {
                         if (firstEnumerator.moveNext())
                             return yielder.yieldReturn(firstEnumerator.current);
-                        secondEnumerator = enumeratorFrom(other);
+                        secondEnumerator = Enumerator_1.from(other);
                         firstEnumerator.dispose();
                         firstEnumerator = null;
                     }
@@ -1173,7 +1184,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }, function (yielder) {
                     while (true) {
                         while (!enumerator && queue.count) {
-                            enumerator = enumeratorFrom(queue.dequeue());
+                            enumerator = Enumerator_1.from(queue.dequeue());
                         }
                         if (enumerator && enumerator.moveNext())
                             return yielder.yieldReturn(enumerator.current);
@@ -1216,7 +1227,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return new EnumeratorBase_1.default(function () {
                     count = 0;
                     firstEnumerator = _.getEnumerator();
-                    secondEnumerator = enumeratorFrom(other);
+                    secondEnumerator = Enumerator_1.from(other);
                     isEnumerated = false;
                 }, function (yielder) {
                     if (count == n) {
@@ -1323,17 +1334,17 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.prototype.union = function (second, compareSelector) {
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-            var source = this;
+            var _ = this;
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
                 var keys;
                 return new EnumeratorBase_1.default(function () {
-                    firstEnumerator = source.getEnumerator();
+                    firstEnumerator = _.getEnumerator();
                     keys = new Dictionary_1.default(compareSelector);
                 }, function (yielder) {
                     var current;
-                    if (secondEnumerator === undefined) {
+                    if (secondEnumerator === VOID0) {
                         while (firstEnumerator.moveNext()) {
                             current = firstEnumerator.current;
                             if (!keys.containsKey(current)) {
@@ -1358,23 +1369,31 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.prototype.orderBy = function (keySelector) {
             if (keySelector === void 0) { keySelector = Functions.Identity; }
-            return new OrderedEnumerable(this, keySelector, false);
+            return new OrderedEnumerable(this, keySelector, 1);
+        };
+        Enumerable.prototype.orderUsing = function (comparison) {
+            return new OrderedEnumerable(this, null, 1, null, comparison);
+        };
+        Enumerable.prototype.orderUsingReversed = function (comparison) {
+            return new OrderedEnumerable(this, null, -1, null, comparison);
         };
         Enumerable.prototype.orderByDescending = function (keySelector) {
             if (keySelector === void 0) { keySelector = Functions.Identity; }
-            return new OrderedEnumerable(this, keySelector, true);
+            return new OrderedEnumerable(this, keySelector, -1);
         };
         Enumerable.prototype.groupBy = function (keySelector, elementSelector, compareSelector) {
-            if (elementSelector === void 0) { elementSelector = Functions.Identity; }
             var _ = this;
+            if (!elementSelector)
+                elementSelector = Functions.Identity;
             return new Enumerable(function () { return _.toLookup(keySelector, elementSelector, compareSelector)
                 .getEnumerator(); });
         };
         Enumerable.prototype.partitionBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
-            if (elementSelector === void 0) { elementSelector = Functions.Identity; }
             if (resultSelector === void 0) { resultSelector = function (key, elements) { return new Grouping(key, elements); }; }
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
             var _ = this;
+            if (!elementSelector)
+                elementSelector = Functions.Identity;
             return new Enumerable(function () {
                 var enumerator;
                 var key;
@@ -1770,7 +1789,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var s = this.source;
             if (!s)
                 return [];
-            if (s instanceof Array)
+            if (Array.isArray(s))
                 return s.slice();
             var len = s.length, result = ArrayUtility.initialize(len);
             for (var i = 0; i < len; ++i) {
@@ -1885,9 +1904,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-            if (second instanceof Array)
+            if (Array.isArray(second))
                 return Arrays.areEqual(this.source, second, true, equalityComparer);
-            if (second instanceof ArrayEnumerable)
+            if (Types_1.default.isInstanceOf(second, ArrayEnumerable))
                 return second.sequenceEqual(this.source, equalityComparer);
             return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
         };
@@ -1895,7 +1914,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (separator === void 0) { separator = ""; }
             if (selector === void 0) { selector = Functions.Identity; }
             var s = this._source;
-            return !selector && s instanceof Array
+            return !selector && Array.isArray(s)
                 ? s.join(separator)
                 : _super.prototype.toJoinedString.call(this, separator, selector);
         };
@@ -2039,21 +2058,29 @@ var __extends = (this && this.__extends) || function (d, b) {
     })(Enumerable);
     var OrderedEnumerable = (function (_super) {
         __extends(OrderedEnumerable, _super);
-        function OrderedEnumerable(source, keySelector, descending, parent) {
+        function OrderedEnumerable(source, keySelector, order, parent, comparer) {
+            if (comparer === void 0) { comparer = Values.compare; }
             _super.call(this, null);
             this.source = source;
             this.keySelector = keySelector;
-            this.descending = descending;
+            this.order = order;
             this.parent = parent;
+            this.comparer = comparer;
         }
-        OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, descending) {
-            return new OrderedEnumerable(this.source, keySelector, descending, this);
+        OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {
+            return new OrderedEnumerable(this.source, keySelector, order, this);
         };
         OrderedEnumerable.prototype.thenBy = function (keySelector) {
-            return this.createOrderedEnumerable(keySelector, false);
+            return this.createOrderedEnumerable(keySelector, 1);
+        };
+        OrderedEnumerable.prototype.thenUsing = function (comparison) {
+            return new OrderedEnumerable(this.source, null, 1, this, comparison);
         };
         OrderedEnumerable.prototype.thenByDescending = function (keySelector) {
-            return this.createOrderedEnumerable(keySelector, true);
+            return this.createOrderedEnumerable(keySelector, -1);
+        };
+        OrderedEnumerable.prototype.thenUsingReversed = function (comparison) {
+            return new OrderedEnumerable(this.source, null, -1, this, comparison);
         };
         OrderedEnumerable.prototype.getEnumerator = function () {
             var _ = this;
@@ -2062,15 +2089,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             var index = 0;
             return new EnumeratorBase_1.default(function () {
                 index = 0;
-                buffer = [];
-                indexes = [];
-                Enumerable.forEach(_.source, function (item, i) {
-                    buffer[i] = item;
-                    indexes[i] = i;
-                });
-                var sortContext = SortContext.create(_);
-                sortContext.generateKeys(buffer);
-                indexes.sort(function (a, b) { return sortContext.compare(a, b); });
+                buffer = Enumerable.toArray(_.source);
+                indexes = createSortContext(_).generateSortedIndexes(buffer);
             }, function (yielder) {
                 return (index < indexes.length)
                     ? yielder.yieldReturn(buffer[indexes[index++]])
@@ -2088,50 +2108,18 @@ var __extends = (this && this.__extends) || function (d, b) {
             _super.prototype._onDispose.call(this);
             this.source = null;
             this.keySelector = null;
-            this.descending = null;
+            this.order = null;
             this.parent = null;
         };
         return OrderedEnumerable;
     })(Enumerable);
-    var SortContext = (function () {
-        function SortContext(keySelector, descending, child) {
-            this.keySelector = keySelector;
-            this.descending = descending;
-            this.child = child;
-            this.keys = null;
-        }
-        SortContext.create = function (orderedEnumerable, currentContext) {
-            if (currentContext === void 0) { currentContext = null; }
-            var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
-            if (orderedEnumerable.parent)
-                return SortContext.create(orderedEnumerable.parent, context);
-            return context;
-        };
-        SortContext.prototype.generateKeys = function (source) {
-            var _ = this;
-            var len = source.length;
-            var keySelector = _.keySelector;
-            var keys = new Array(len);
-            for (var i = 0; i < len; ++i) {
-                keys[i] = keySelector(source[i]);
-            }
-            _.keys = keys;
-            if (_.child)
-                _.child.generateKeys(source);
-        };
-        SortContext.prototype.compare = function (index1, index2) {
-            var _ = this, keys = _.keys;
-            var comparison = Values.compare(keys[index1], keys[index2]);
-            if (comparison == 0) {
-                var child = _.child;
-                return child
-                    ? child.compare(index1, index2)
-                    : Values.compare(index1, index2);
-            }
-            return _.descending ? -comparison : comparison;
-        };
-        return SortContext;
-    })();
+    function createSortContext(orderedEnumerable, currentContext) {
+        if (currentContext === void 0) { currentContext = null; }
+        var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
+        if (orderedEnumerable.parent)
+            return createSortContext(orderedEnumerable.parent, context);
+        return context;
+    }
     function throwIfDisposed(disposed, className) {
         if (className === void 0) { className = "Enumerable"; }
         if (disposed)

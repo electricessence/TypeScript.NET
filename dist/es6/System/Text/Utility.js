@@ -11,7 +11,7 @@ export function trim(source, chars, ignoreCase) {
     if (chars) {
         if (chars === EMPTY)
             return source;
-        var escaped = escapeRegExp(chars instanceof Array ? chars.join() : chars);
+        var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
         return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), EMPTY);
     }
     return source.replace(/^\s+|\s+$/g, EMPTY);
@@ -20,7 +20,7 @@ export function format(source, ...args) {
     return supplant(source, args);
 }
 export function supplant(source, params) {
-    var oIsArray = params instanceof Array;
+    var oIsArray = Array.isArray(params);
     return source.replace(/\{([^{}]*)\}/g, (a, b) => {
         var n = b;
         if (oIsArray) {

@@ -8,26 +8,29 @@ System.register(['../../Types', './ArrayEnumerator', './IndexEnumerator'], funct
     function from(source) {
         if (!source)
             return Empty;
-        if (source instanceof Array)
+        if (Array.isArray(source))
             return new ArrayEnumerator_1.default(source);
-        if (typeof source === Types_1.default.OBJECT) {
-            if ("length" in source) {
-                var a = source;
+        if (!Types_1.default.isPrimitive(source)) {
+            if (Types_1.default.isArrayLike(source)) {
                 return new IndexEnumerator_1.default(function () {
                     return {
-                        source: a,
-                        length: a.length,
+                        source: source,
+                        length: source.length,
                         pointer: 0,
                         step: 1
                     };
                 });
             }
-            if ("getEnumerator" in source)
+            if (isEnumerable(source))
                 return source.getEnumerator();
         }
         throw new Error("Unknown enumerable.");
     }
     exports_1("from", from);
+    function isEnumerable(instance) {
+        return Types_1.default.hasMemberOfType(instance, "getEnumerator", Types_1.default.FUNCTION);
+    }
+    exports_1("isEnumerable", isEnumerable);
     function forEach(e, action) {
         if (e) {
             var index = 0;

@@ -32,6 +32,8 @@ var _ExceptionsArgumentOutOfRangeException = require('../../Exceptions/ArgumentO
 
 var _ExceptionsArgumentOutOfRangeException2 = _interopRequireDefault(_ExceptionsArgumentOutOfRangeException);
 
+var VOID0 = void 0;
+
 var OrderedStringKeyDictionary = (function (_StringKeyDictionary) {
     _inherits(OrderedStringKeyDictionary, _StringKeyDictionary);
 
@@ -57,7 +59,7 @@ var OrderedStringKeyDictionary = (function (_StringKeyDictionary) {
         value: function setValue(key, value, keepIndex) {
             var _ = this,
                 exists = _.indexOfKey(key) != -1;
-            if (!exists && (value !== undefined || keepIndex)) _._order.push(key);else if (exists && value === undefined && !keepIndex) ArrayUtility.remove(_._order, key);
+            if (!exists && (value !== VOID0 || keepIndex)) _._order.push(key);else if (exists && value === VOID0 && !keepIndex) ArrayUtility.remove(_._order, key);
             return _get(Object.getPrototypeOf(OrderedStringKeyDictionary.prototype), 'setValue', this).call(this, key, value);
         }
     }, {
@@ -96,8 +98,8 @@ var OrderedStringKeyDictionary = (function (_StringKeyDictionary) {
             return this.setByIndex(index, undefined);
         }
     }, {
-        key: 'keys',
-        get: function get() {
+        key: 'getKeys',
+        value: function getKeys() {
             var _ = this;
             return _._order.filter(function (key) {
                 return _.containsKey(key);

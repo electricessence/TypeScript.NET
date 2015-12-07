@@ -60,7 +60,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 				if(_.containsKey(key))
 				{
 					var prev = _.getValue(key);
-					if(prev instanceof Array)
+					if(Array.isArray(prev))
 						prev.push(value);
 					else
 						_.setValue(key, [<UriComponentValue>prev, value]);
@@ -93,7 +93,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 			var value = this.getValue(k);
 			// Since the values can either be UriComponentValues or an array of UriComponentValues..
 			// This creates a single code path for both options.
-			for(let v of value instanceof Array ? value : [value])
+			for(let v of Array.isArray(value) ? value : [value])
 			{
 				entries.push(
 					k + KEY_VALUE_SEPARATOR

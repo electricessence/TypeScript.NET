@@ -61,7 +61,7 @@ var QueryBuilder = (function (_OrderedStringKeyDictionary) {
             QueryParams.parse(values, function (key, value) {
                 if (_.containsKey(key)) {
                     var prev = _.getValue(key);
-                    if (prev instanceof Array) prev.push(value);else _.setValue(key, [prev, value]);
+                    if (Array.isArray(prev)) prev.push(value);else _.setValue(key, [prev, value]);
                 } else _.setValue(key, value);
             }, deserialize, decodeValues);
             return this;
@@ -85,7 +85,7 @@ var QueryBuilder = (function (_OrderedStringKeyDictionary) {
                     var _iteratorError2 = undefined;
 
                     try {
-                        for (var _iterator2 = (value instanceof Array ? value : [value])[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        for (var _iterator2 = (Array.isArray(value) ? value : [value])[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                             var v = _step2.value;
 
                             entries.push(k + KEY_VALUE_SEPARATOR + QueryParams.encodeValue(v));

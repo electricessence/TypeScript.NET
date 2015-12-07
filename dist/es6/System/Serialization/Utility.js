@@ -8,7 +8,6 @@ const EMPTY = '', TRUE = 'true', FALSE = 'false';
 export function toString(value, defaultForUnknown) {
     var v = value;
     switch (typeof v) {
-        case Type.NULL:
         case Type.UNDEFINED:
         case Type.STRING:
             return v;
@@ -17,7 +16,9 @@ export function toString(value, defaultForUnknown) {
         case Type.NUMBER:
             return EMPTY + v;
         default:
-            if (Type.of(v).member('serialize').isFunction)
+            if (v === null)
+                return v;
+            if (isSerializable(v))
                 return v.serialize();
             else if (arguments.length > 1)
                 return defaultForUnknown;
@@ -26,12 +27,15 @@ export function toString(value, defaultForUnknown) {
             throw ex;
     }
 }
+export function isSerializable(instance) {
+    return Type.hasMemberOfType(instance, 'serialize', Type.FUNCTION);
+}
 export function toPrimitive(value, caseInsensitive, unknownHandler) {
     if (value) {
         if (caseInsensitive)
             value = value.toLowerCase();
         switch (value) {
-            case Type.NULL:
+            case 'null':
                 return null;
             case Type.UNDEFINED:
                 return undefined;

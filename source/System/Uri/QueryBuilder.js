@@ -42,7 +42,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             QueryParams.parse(values, function (key, value) {
                 if (_.containsKey(key)) {
                     var prev = _.getValue(key);
-                    if (prev instanceof Array)
+                    if (Array.isArray(prev))
                         prev.push(value);
                     else
                         _.setValue(key, [prev, value]);
@@ -62,7 +62,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             for (var _i = 0; _i < keys.length; _i++) {
                 var k = keys[_i];
                 var value = this.getValue(k);
-                for (var _a = 0, _b = value instanceof Array ? value : [value]; _a < _b.length; _a++) {
+                for (var _a = 0, _b = Array.isArray(value) ? value : [value]; _a < _b.length; _a++) {
                     var v = _b[_a];
                     entries.push(k + KEY_VALUE_SEPARATOR
                         + QueryParams.encodeValue(v));

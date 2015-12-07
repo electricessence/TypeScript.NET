@@ -1,0 +1,10 @@
+.gitignore
+.bowerrc
+.idea
+.nuget
+gulpfile.js
+node_modules
+bower_components
+tests
+documentation
+typings

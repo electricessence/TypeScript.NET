@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import ObjectDisposedException from './ObjectDisposedException';
-export default class DisposableBase {
+class DisposableBase {
     constructor(_finalizer) {
         this._finalizer = _finalizer;
         this._wasDisposed = false;
@@ -29,7 +29,7 @@ export default class DisposableBase {
             }
         }
     }
-    _onDispose() {
-    }
+    _onDispose() { }
 }
+export default DisposableBase;
 //# sourceMappingURL=DisposableBase.js.map

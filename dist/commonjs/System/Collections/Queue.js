@@ -54,6 +54,7 @@ var _ExceptionsArgumentOutOfRangeException = require('../Exceptions/ArgumentOutO
 var _ExceptionsArgumentOutOfRangeException2 = _interopRequireDefault(_ExceptionsArgumentOutOfRangeException);
 
 var MINIMUM_GROW = 4;
+var SHRINK_THRESHOLD = 32;
 var GROW_FACTOR_HALF = 100;
 var DEFAULT_CAPACITY = MINIMUM_GROW;
 var emptyArray = [];
@@ -74,7 +75,7 @@ var Queue = (function () {
                 _._array = capacity ? AU.initialize(capacity) : emptyArray;
             } else {
                 var se = source;
-                _._array = AU.initialize(se instanceof Array || "length" in se ? se.length : DEFAULT_CAPACITY);
+                _._array = AU.initialize(_Types2['default'].isArrayLike(se) ? se.length : DEFAULT_CAPACITY);
                 (0, _EnumerationForEach2['default'])(se, function (e) {
                     return _.enqueue(e);
                 });
@@ -105,7 +106,29 @@ var Queue = (function () {
             _._tail = 0;
             _._size = 0;
             _._version++;
+            _.trimExcess();
             return size;
+        }
+    }, {
+        key: 'dump',
+        value: function dump() {
+            var max = arguments.length <= 0 || arguments[0] === undefined ? Infinity : arguments[0];
+
+            if (_Types2['default'].isNumber(max, false) && max < 0) throw new _ExceptionsArgumentOutOfRangeException2['default']('max', max, 'must be greater than or equal to 0.');
+            var _ = this,
+                result = [];
+            if (isFinite(max)) {
+                _Integer2['default'].assert(max, 'max');
+                while (max-- && _._size) {
+                    result.push(_.dequeue());
+                }
+            } else {
+                while (_._size) {
+                    result.push(_.dequeue());
+                }
+            }
+            _.trimExcess();
+            return result;
         }
     }, {
         key: 'contains',
@@ -230,16 +253,32 @@ var Queue = (function () {
     }, {
         key: 'dequeue',
         value: function dequeue() {
+            var throwIfEmpty = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+
             var _ = this;
-            if (_._size == 0) throw new _ExceptionsInvalidOperationException2['default']("Cannot dequeue an empty queue.");
+            if (_._size == 0) {
+                if (throwIfEmpty) throw new _ExceptionsInvalidOperationException2['default']("Cannot dequeue an empty queue.");
+                return void 0;
+            }
             var array = _._array,
                 head = _._head;
             var removed = _._array[head];
             array[head] = null;
             _._head = (head + 1) % _._capacity;
             _._size--;
+            if (_._size < _._capacity / 2) {
+                _.trimExcess(SHRINK_THRESHOLD);
+            }
             _._version++;
             return removed;
+        }
+    }, {
+        key: 'tryDequeue',
+        value: function tryDequeue(out) {
+            if (!this._size) return false;
+            var d = this.dequeue();
+            if (out) out(d);
+            return true;
         }
     }, {
         key: '_getElement',
@@ -256,10 +295,10 @@ var Queue = (function () {
         }
     }, {
         key: 'trimExcess',
-        value: function trimExcess() {
+        value: function trimExcess(threshold) {
             var _ = this;
             var size = _._size;
-            if (size < Math.floor(_._capacity * 0.9)) _.setCapacity(size);
+            if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size)) _.setCapacity(size);
         }
     }, {
         key: 'getEnumerator',

@@ -3,14 +3,21 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', '../System/Disposable/ObjectDisposedException'], function(exports_1) {
+System.register(['../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], function(exports_1) {
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Values, Arrays, ArrayUtility, Enumerator, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, Utility_1, DisposableBase_1, ObjectDisposedException_1;
-    var enumeratorFrom, enumeratorForEach, LinqFunctions, Functions, LENGTH, GET_ENUMERATOR, UNSUPPORTED_ENUMERABLE, Enumerable, ArrayEnumerable, Grouping, Lookup, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable, SortContext;
+    var Values, Arrays, ArrayUtility, Enumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, Utility_1, DisposableBase_1, Exception_1, ObjectDisposedException_1, KeySortedContext_1;
+    var LinqFunctions, Functions, UnsupportedEnumerableException, Enumerable, ArrayEnumerable, Grouping, Lookup, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable;
+    function createSortContext(orderedEnumerable, currentContext) {
+        if (currentContext === void 0) { currentContext = null; }
+        var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
+        if (orderedEnumerable.parent)
+            return createSortContext(orderedEnumerable.parent, context);
+        return context;
+    }
     function throwIfDisposed(disposed, className) {
         if (className === void 0) { className = "Enumerable"; }
         if (disposed)
@@ -27,8 +34,8 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
             function (ArrayUtility_1) {
                 ArrayUtility = ArrayUtility_1;
             },
-            function (Enumerator_1) {
-                Enumerator = Enumerator_1;
+            function (Enumerator_1_1) {
+                Enumerator_1 = Enumerator_1_1;
             },
             function (Types_1_1) {
                 Types_1 = Types_1_1;
@@ -57,12 +64,16 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
+            function (Exception_1_1) {
+                Exception_1 = Exception_1_1;
+            },
             function (ObjectDisposedException_1_1) {
                 ObjectDisposedException_1 = ObjectDisposedException_1_1;
+            },
+            function (KeySortedContext_1_1) {
+                KeySortedContext_1 = KeySortedContext_1_1;
             }],
         execute: function() {
-            enumeratorFrom = Enumerator.from;
-            enumeratorForEach = Enumerator.forEach;
             'use strict';
             LinqFunctions = (function (_super) {
                 __extends(LinqFunctions, _super);
@@ -79,7 +90,13 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
             })(Functions_1.default);
             Functions = new LinqFunctions();
             Object.freeze(Functions);
-            LENGTH = 'length', GET_ENUMERATOR = 'getEnumerator', UNSUPPORTED_ENUMERABLE = "Unsupported enumerable.";
+            UnsupportedEnumerableException = (function (_super) {
+                __extends(UnsupportedEnumerableException, _super);
+                function UnsupportedEnumerableException() {
+                    _super.call(this, "Unsupported enumerable.");
+                }
+                return UnsupportedEnumerableException;
+            })(Exception_1.default);
             Enumerable = (function (_super) {
                 __extends(Enumerable, _super);
                 function Enumerable(_enumeratorFactory, finalizer) {
@@ -90,37 +107,35 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     return new ArrayEnumerable(array);
                 };
                 Enumerable.from = function (source) {
-                    var type = Types_1.default.of(source);
-                    if (type.isObject) {
-                        if (source instanceof Enumerable)
+                    if (Types_1.default.isObject(source)) {
+                        if (Types_1.default.isInstanceOf(source, Enumerable))
                             return source;
-                        if (source instanceof Array)
+                        if (Array.isArray(source))
                             return new ArrayEnumerable(source);
-                        if (type.member(GET_ENUMERATOR).isFunction)
+                        if (Enumerator_1.isEnumerable(source))
                             return new Enumerable(function () { return source.getEnumerator(); });
-                        if (type.member(LENGTH).isValidNumber)
+                        if (Types_1.default.isArrayLike(source))
                             return new ArrayEnumerable(source);
                     }
-                    throw new Error(UNSUPPORTED_ENUMERABLE);
+                    throw new UnsupportedEnumerableException();
                 };
                 Enumerable.toArray = function (source) {
-                    var type = Types_1.default.of(source);
-                    if (type.isObject) {
-                        if (source instanceof Array)
+                    if (Types_1.default.isObject(source)) {
+                        if (Array.isArray(source))
                             return source.slice();
-                        if (type.member(LENGTH).isValidNumber)
+                        if (Types_1.default.isArrayLike(source))
                             source = new ArrayEnumerable(source);
-                        if (source instanceof Enumerable)
+                        if (Types_1.default.isInstanceOf(source, Enumerable))
                             return source.toArray();
-                        if (type.member(GET_ENUMERATOR).isFunction) {
+                        if (Enumerator_1.isEnumerable(source)) {
                             var result = [];
-                            enumeratorForEach(source.getEnumerator(), function (e, i) {
+                            Enumerator_1.forEach(source.getEnumerator(), function (e, i) {
                                 result[i] = e;
                             });
                             return result;
                         }
                     }
-                    throw new Error(UNSUPPORTED_ENUMERABLE);
+                    throw new UnsupportedEnumerableException();
                 };
                 Enumerable.prototype.getEnumerator = function () {
                     this.throwIfDisposed();
@@ -272,7 +287,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     var type = typeof input;
                     if (type != Types_1.default.STRING)
                         throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-                    if (pattern instanceof RegExp) {
+                    if (Types_1.default.isInstanceOf(pattern, RegExp)) {
                         flags += (pattern.ignoreCase) ? "i" : "";
                         flags += (pattern.multiline) ? "m" : "";
                         pattern = pattern.source;
@@ -343,10 +358,19 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 Enumerable.forEach = function (enumerable, action) {
                     if (enumerable) {
-                        Utility_1.using(Enumerator.from(enumerable), function (e) {
-                            Enumerator.forEach(e, action);
+                        Utility_1.using(Enumerator_1.from(enumerable), function (e) {
+                            Enumerator_1.forEach(e, action);
                         });
                     }
+                };
+                Enumerable.map = function (enumerable, selector) {
+                    return enumerable && Utility_1.using(Enumerator_1.from(enumerable), function (e) {
+                        var result = [];
+                        Enumerator_1.forEach(e, function (e, i) {
+                            result[i] = selector(e);
+                        });
+                        return result;
+                    });
                 };
                 Enumerable.max = function (values) {
                     return values
@@ -634,7 +658,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                                 }
                                 if (enumerator.moveNext()) {
                                     var c = enumerator.current;
-                                    if (c instanceof Array) {
+                                    if (Array.isArray(c)) {
                                         middleEnumerator.dispose();
                                         middleEnumerator = Enumerable.fromArray(c)
                                             .selectMany(Functions.Identity)
@@ -738,7 +762,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                                     var middleSeq = collectionSelector(enumerator.current, index++);
                                     if (!middleSeq)
                                         continue;
-                                    middleEnumerator = Enumerator.from(middleSeq);
+                                    middleEnumerator = Enumerator_1.from(middleSeq);
                                 }
                                 if (middleEnumerator.moveNext())
                                     return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
@@ -818,16 +842,11 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             typeName = Types_1.default.FUNCTION;
                             break;
                         default:
-                            typeName = null;
-                            break;
+                            return this
+                                .where(function (x) { return Types_1.default.isInstanceOf(x, type); });
                     }
-                    return ((typeName === null)
-                        ? this.where(function (x) {
-                            return x instanceof type;
-                        })
-                        : this.where(function (x) {
-                            return typeof x === typeName;
-                        }));
+                    return this
+                        .where(function (x) { return typeof x === typeName; });
                 };
                 Enumerable.prototype.except = function (second, compareSelector) {
                     var _ = this, disposed = !_.throwIfDisposed();
@@ -1062,7 +1081,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                         return new EnumeratorBase_1.default(function () {
                             index = 0;
                             firstEnumerator = _.getEnumerator();
-                            secondEnumerator = enumeratorFrom(second);
+                            secondEnumerator = Enumerator_1.from(second);
                         }, function (yielder) {
                             return firstEnumerator.moveNext() && secondEnumerator.moveNext()
                                 && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
@@ -1092,7 +1111,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                                         if (secondTemp.count) {
                                             var next = secondTemp.dequeue();
                                             if (next)
-                                                secondEnumerator = enumeratorFrom(next);
+                                                secondEnumerator = Enumerator_1.from(next);
                                         }
                                         else
                                             return yielder.yieldBreak();
@@ -1172,7 +1191,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             if (firstEnumerator != null) {
                                 if (firstEnumerator.moveNext())
                                     return yielder.yieldReturn(firstEnumerator.current);
-                                secondEnumerator = enumeratorFrom(other);
+                                secondEnumerator = Enumerator_1.from(other);
                                 firstEnumerator.dispose();
                                 firstEnumerator = null;
                             }
@@ -1199,7 +1218,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                         }, function (yielder) {
                             while (true) {
                                 while (!enumerator && queue.count) {
-                                    enumerator = enumeratorFrom(queue.dequeue());
+                                    enumerator = Enumerator_1.from(queue.dequeue());
                                 }
                                 if (enumerator && enumerator.moveNext())
                                     return yielder.yieldReturn(enumerator.current);
@@ -1242,7 +1261,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                         return new EnumeratorBase_1.default(function () {
                             count = 0;
                             firstEnumerator = _.getEnumerator();
-                            secondEnumerator = enumeratorFrom(other);
+                            secondEnumerator = Enumerator_1.from(other);
                             isEnumerated = false;
                         }, function (yielder) {
                             if (count == n) {
@@ -1349,13 +1368,13 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 Enumerable.prototype.union = function (second, compareSelector) {
                     if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-                    var source = this;
+                    var _ = this;
                     return new Enumerable(function () {
                         var firstEnumerator;
                         var secondEnumerator;
                         var keys;
                         return new EnumeratorBase_1.default(function () {
-                            firstEnumerator = source.getEnumerator();
+                            firstEnumerator = _.getEnumerator();
                             keys = new Dictionary_1.default(compareSelector);
                         }, function (yielder) {
                             var current;
@@ -1384,23 +1403,31 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 Enumerable.prototype.orderBy = function (keySelector) {
                     if (keySelector === void 0) { keySelector = Functions.Identity; }
-                    return new OrderedEnumerable(this, keySelector, false);
+                    return new OrderedEnumerable(this, keySelector, 1);
+                };
+                Enumerable.prototype.orderUsing = function (comparison) {
+                    return new OrderedEnumerable(this, null, 1, null, comparison);
+                };
+                Enumerable.prototype.orderUsingReversed = function (comparison) {
+                    return new OrderedEnumerable(this, null, -1, null, comparison);
                 };
                 Enumerable.prototype.orderByDescending = function (keySelector) {
                     if (keySelector === void 0) { keySelector = Functions.Identity; }
-                    return new OrderedEnumerable(this, keySelector, true);
+                    return new OrderedEnumerable(this, keySelector, -1);
                 };
                 Enumerable.prototype.groupBy = function (keySelector, elementSelector, compareSelector) {
-                    if (elementSelector === void 0) { elementSelector = Functions.Identity; }
                     var _ = this;
+                    if (!elementSelector)
+                        elementSelector = Functions.Identity;
                     return new Enumerable(function () { return _.toLookup(keySelector, elementSelector, compareSelector)
                         .getEnumerator(); });
                 };
                 Enumerable.prototype.partitionBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
-                    if (elementSelector === void 0) { elementSelector = Functions.Identity; }
                     if (resultSelector === void 0) { resultSelector = function (key, elements) { return new Grouping(key, elements); }; }
                     if (compareSelector === void 0) { compareSelector = Functions.Identity; }
                     var _ = this;
+                    if (!elementSelector)
+                        elementSelector = Functions.Identity;
                     return new Enumerable(function () {
                         var enumerator;
                         var key;
@@ -1796,7 +1823,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     var s = this.source;
                     if (!s)
                         return [];
-                    if (s instanceof Array)
+                    if (Array.isArray(s))
                         return s.slice();
                     var len = s.length, result = ArrayUtility.initialize(len);
                     for (var i = 0; i < len; ++i) {
@@ -1911,9 +1938,9 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-                    if (second instanceof Array)
+                    if (Array.isArray(second))
                         return Arrays.areEqual(this.source, second, true, equalityComparer);
-                    if (second instanceof ArrayEnumerable)
+                    if (Types_1.default.isInstanceOf(second, ArrayEnumerable))
                         return second.sequenceEqual(this.source, equalityComparer);
                     return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
                 };
@@ -1921,7 +1948,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     if (separator === void 0) { separator = ""; }
                     if (selector === void 0) { selector = Functions.Identity; }
                     var s = this._source;
-                    return !selector && s instanceof Array
+                    return !selector && Array.isArray(s)
                         ? s.join(separator)
                         : _super.prototype.toJoinedString.call(this, separator, selector);
                 };
@@ -2065,21 +2092,29 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
             })(Enumerable);
             OrderedEnumerable = (function (_super) {
                 __extends(OrderedEnumerable, _super);
-                function OrderedEnumerable(source, keySelector, descending, parent) {
+                function OrderedEnumerable(source, keySelector, order, parent, comparer) {
+                    if (comparer === void 0) { comparer = Values.compare; }
                     _super.call(this, null);
                     this.source = source;
                     this.keySelector = keySelector;
-                    this.descending = descending;
+                    this.order = order;
                     this.parent = parent;
+                    this.comparer = comparer;
                 }
-                OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, descending) {
-                    return new OrderedEnumerable(this.source, keySelector, descending, this);
+                OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {
+                    return new OrderedEnumerable(this.source, keySelector, order, this);
                 };
                 OrderedEnumerable.prototype.thenBy = function (keySelector) {
-                    return this.createOrderedEnumerable(keySelector, false);
+                    return this.createOrderedEnumerable(keySelector, 1);
+                };
+                OrderedEnumerable.prototype.thenUsing = function (comparison) {
+                    return new OrderedEnumerable(this.source, null, 1, this, comparison);
                 };
                 OrderedEnumerable.prototype.thenByDescending = function (keySelector) {
-                    return this.createOrderedEnumerable(keySelector, true);
+                    return this.createOrderedEnumerable(keySelector, -1);
+                };
+                OrderedEnumerable.prototype.thenUsingReversed = function (comparison) {
+                    return new OrderedEnumerable(this.source, null, -1, this, comparison);
                 };
                 OrderedEnumerable.prototype.getEnumerator = function () {
                     var _ = this;
@@ -2088,15 +2123,8 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     var index = 0;
                     return new EnumeratorBase_1.default(function () {
                         index = 0;
-                        buffer = [];
-                        indexes = [];
-                        Enumerable.forEach(_.source, function (item, i) {
-                            buffer[i] = item;
-                            indexes[i] = i;
-                        });
-                        var sortContext = SortContext.create(_);
-                        sortContext.generateKeys(buffer);
-                        indexes.sort(function (a, b) { return sortContext.compare(a, b); });
+                        buffer = Enumerable.toArray(_.source);
+                        indexes = createSortContext(_).generateSortedIndexes(buffer);
                     }, function (yielder) {
                         return (index < indexes.length)
                             ? yielder.yieldReturn(buffer[indexes[index++]])
@@ -2114,50 +2142,11 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     _super.prototype._onDispose.call(this);
                     this.source = null;
                     this.keySelector = null;
-                    this.descending = null;
+                    this.order = null;
                     this.parent = null;
                 };
                 return OrderedEnumerable;
             })(Enumerable);
-            SortContext = (function () {
-                function SortContext(keySelector, descending, child) {
-                    this.keySelector = keySelector;
-                    this.descending = descending;
-                    this.child = child;
-                    this.keys = null;
-                }
-                SortContext.create = function (orderedEnumerable, currentContext) {
-                    if (currentContext === void 0) { currentContext = null; }
-                    var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
-                    if (orderedEnumerable.parent)
-                        return SortContext.create(orderedEnumerable.parent, context);
-                    return context;
-                };
-                SortContext.prototype.generateKeys = function (source) {
-                    var _ = this;
-                    var len = source.length;
-                    var keySelector = _.keySelector;
-                    var keys = new Array(len);
-                    for (var i = 0; i < len; ++i) {
-                        keys[i] = keySelector(source[i]);
-                    }
-                    _.keys = keys;
-                    if (_.child)
-                        _.child.generateKeys(source);
-                };
-                SortContext.prototype.compare = function (index1, index2) {
-                    var _ = this, keys = _.keys;
-                    var comparison = Values.compare(keys[index1], keys[index2]);
-                    if (comparison == 0) {
-                        var child = _.child;
-                        return child
-                            ? child.compare(index1, index2)
-                            : Values.compare(index1, index2);
-                    }
-                    return _.descending ? -comparison : comparison;
-                };
-                return SortContext;
-            })();
             exports_1("default",Enumerable);
         }
     }

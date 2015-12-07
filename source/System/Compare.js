@@ -10,20 +10,29 @@
         define(deps, factory);
     }
 })(["require", "exports", './Types'], function (require, exports) {
+    ///<reference path="IComparable.d.ts"/>
+    ///<reference path="Primitive.d.ts"/>
+    ///<reference path="CompareResult.d.ts"/>
     var Types_1 = require('./Types');
     var isTrueNaN = Types_1.default.isTrueNaN;
+    var VOID0 = void 0;
     function areEqual(a, b, strict) {
         if (strict === void 0) { strict = true; }
         return a === b || !strict && a == b || isTrueNaN(a) && isTrueNaN(b);
     }
     exports.areEqual = areEqual;
+    var COMPARE_TO = "compareTo";
     function compare(a, b, strict) {
         if (strict === void 0) { strict = true; }
         if (areEqual(a, b, strict))
             return 0;
-        if (a > b || strict && (a === 0 && b == 0 || a === null && b === undefined))
+        if (a && Types_1.default.hasMember(a, COMPARE_TO))
+            return a.compareTo(b);
+        else if (b && Types_1.default.hasMember(b, COMPARE_TO))
+            return -b.compareTo(a);
+        if (a > b || strict && (a === 0 && b == 0 || a === null && b === VOID0))
             return 1;
-        if (b > a || strict && (b === 0 && a == 0 || b === null && a === undefined))
+        if (b > a || strict && (b === 0 && a == 0 || b === null && a === VOID0))
             return -1;
         return NaN;
     }

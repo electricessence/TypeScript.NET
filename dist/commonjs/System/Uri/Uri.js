@@ -62,7 +62,7 @@ var Uri = (function () {
     _createClass(Uri, [{
         key: 'equals',
         value: function equals(other) {
-            return this.absoluteUri == Uri.toString(other);
+            return this === other || this.absoluteUri == Uri.toString(other);
         }
     }, {
         key: 'copyTo',
@@ -160,7 +160,7 @@ var Uri = (function () {
     }, {
         key: 'toString',
         value: function toString(uri) {
-            return uri instanceof Uri ? uri.absoluteUri : uriToString(uri);
+            return _Types2['default'].isInstanceOf(uri, Uri) ? uri.absoluteUri : uriToString(uri);
         }
     }, {
         key: 'getAuthority',

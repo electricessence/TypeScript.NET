@@ -26,9 +26,10 @@ export default class Exception {
     }
     dispose() {
         var data = this.data;
-        for (let k in data)
+        for (let k in data) {
             if (data.hasOwnProperty(k))
                 delete data[k];
+        }
     }
 }
 //# sourceMappingURL=Exception.js.map

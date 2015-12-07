@@ -4,22 +4,15 @@
  */
 
 ///<reference path="../../FunctionTypes.d.ts"/>
+///<reference path="../Sorting/Order.d.ts"/>
+///<reference path="../../CompareResult.d.ts"/>
 
 import Type from '../../Types';
-import {compare,CompareResult} from '../../Compare';
-
-/**
- * Enum representation of sorting order.
- */
-export const enum Order
-{
-	Ascending  = +1,
-	Descending = -1
-}
+import {compare} from '../../Compare';
 
 function ensureArray<T>(value:T|T[]):T[]
 {
-	return value instanceof Array
+	return Array.isArray(value)
 		? <T[]>value
 		: [<T>value];
 }
@@ -47,8 +40,8 @@ function ensureArray<T>(value:T|T[]):T[]
  * @param equivalentToNaN
  * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
  */
-export function createComparer<TSource,T>(
-	selector:Selector<TSource|TSource[],T>,
+export function createComparer<TSource,TSelect extends Primitive>(
+	selector:Selector<TSource|TSource[],TSelect>,
 	order:Order | Order[] = Order.Ascending,
 	equivalentToNaN:any = NaN):Comparison<TSource|TSource[]>
 {
@@ -61,7 +54,7 @@ export function createComparer<TSource,T>(
 		var bValue = ensureArray(selector(b));
 		var len = Math.min(aValue.length, bValue.length);
 
-		var oArray:Order[] = order instanceof Array ? <Order[]>order : null;
+		var oArray:Order[] = Array.isArray(order) ? order : null;
 		for(let i = 0; i<len; i++)
 		{
 			var vA = aValue[i], vB = bValue[i],

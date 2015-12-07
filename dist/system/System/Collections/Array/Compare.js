@@ -45,7 +45,7 @@ System.register(['../../Compare', '../../Types'], function(exports_1) {
     function copyAndSort(a, comparer) {
         if (!a)
             return null;
-        if (a instanceof Array)
+        if (Array.isArray(a))
             return a.slice();
         var len = a.length, b;
         if (len > 65536)

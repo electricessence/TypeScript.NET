@@ -13,7 +13,7 @@ System.register(['../Types'], function(exports_1) {
         if (chars) {
             if (chars === EMPTY)
                 return source;
-            var escaped = escapeRegExp(chars instanceof Array ? chars.join() : chars);
+            var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
             return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), EMPTY);
         }
         return source.replace(/^\s+|\s+$/g, EMPTY);
@@ -28,7 +28,7 @@ System.register(['../Types'], function(exports_1) {
     }
     exports_1("format", format);
     function supplant(source, params) {
-        var oIsArray = params instanceof Array;
+        var oIsArray = Array.isArray(params);
         return source.replace(/\{([^{}]*)\}/g, function (a, b) {
             var n = b;
             if (oIsArray) {

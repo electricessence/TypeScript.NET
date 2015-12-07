@@ -31,7 +31,7 @@ class Uri {
         Object.freeze(_);
     }
     equals(other) {
-        return this.absoluteUri == Uri.toString(other);
+        return this === other || this.absoluteUri == Uri.toString(other);
     }
     static from(url) {
         var uri = (!url || Type.isString(url))
@@ -73,7 +73,7 @@ class Uri {
         return this.absoluteUri;
     }
     static toString(uri) {
-        return uri instanceof Uri
+        return Type.isInstanceOf(uri, Uri)
             ? uri.absoluteUri
             : uriToString(uri);
     }

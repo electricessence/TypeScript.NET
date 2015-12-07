@@ -6,7 +6,7 @@
 import { areEqual } from '../../Compare';
 import Type from '../../Types';
 import Functions from '../../Functions';
-import DictionaryAbstractBase from './DictionaryAbstractBase';
+import DictionaryAbstractBase from './DictionaryBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
 class HashEntry {
     constructor(key, value, prev, next) {
@@ -148,9 +148,10 @@ export default class Dictionary extends DictionaryAbstractBase {
         if (!callHasOwnProperty(buckets, hash))
             return undefined;
         var array = buckets[hash];
-        for (let entry of array)
+        for (let entry of array) {
             if (comparer(entry.key) === compareKey)
                 return entry.value;
+        }
         return undefined;
     }
     setValue(key, value) {
@@ -179,7 +180,7 @@ export default class Dictionary extends DictionaryAbstractBase {
         _._entries.clear();
         return count;
     }
-    get count() {
+    getCount() {
         return this._count;
     }
     getEnumerator() {
@@ -193,12 +194,12 @@ export default class Dictionary extends DictionaryAbstractBase {
             return yielder.yieldBreak();
         });
     }
-    get keys() {
+    getKeys() {
         var _ = this, result = [];
         _._entries.forEach(entry => result.push(entry.key));
         return result;
     }
-    get values() {
+    getValues() {
         var _ = this, result = [];
         _._entries.forEach(entry => result.push(entry.value));
         return result;

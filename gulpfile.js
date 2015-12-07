@@ -325,8 +325,7 @@ gulp.task(TASK.VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 
 gulp.task(TASK.NUGET_PACK,
 	[
-		TASK.SOURCE,
-		TASK.DIST_AMD
+		TASK.BUILD
 	],
 	function(callback) {
 
@@ -334,8 +333,8 @@ gulp.task(TASK.NUGET_PACK,
 
 		var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 		nugetpack({
-				id: "TypeScript.NET.AMD",
-				title: pkg.name,
+				id: "TypeScript.NET.Library",
+				title: "TypeScript.NET",
 				version: pkg.version,
 				authors: "https://github.com/electricessence/",
 				description: pkg.description,
@@ -344,14 +343,13 @@ gulp.task(TASK.NUGET_PACK,
 				projectUrl: "https://github.com/electricessence/TypeScript.NET",
 				licenseUrl: "https://raw.githubusercontent.com/electricessence/TypeScript.NET/master/LICENSE.md",
 				tags: "typescript tsc .NET TypeScript.NET LINQ",
-				excludes: ["js/**/*.dev.js"],
+				excludes: [],
 				outputDir: ".nuget"
 			},
 
 			[
 				'source',
-				'min',
-				'*.json',
+				'dist',
 				'*.md'
 			],
 

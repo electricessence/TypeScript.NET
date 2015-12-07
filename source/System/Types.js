@@ -10,7 +10,9 @@
         define(deps, factory);
     }
 })(["require", "exports"], function (require, exports) {
-    var _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _NULL = typeof null, _UNDEFINED = typeof undefined, _FUNCTION = typeof function () { };
+    ///<reference path="Primitive.d.ts"/>
+    ///<reference path="Collections/Array/IArray.d.ts"/>
+    var _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof undefined, _FUNCTION = typeof function () { };
     var typeInfoRegistry = {};
     var TypeInfo = (function () {
         function TypeInfo(target) {
@@ -23,22 +25,33 @@
             _.isFunction = false;
             _.isUndefined = false;
             _.isNull = false;
+            _.isPrimitive = false;
             switch (_.type = typeof target) {
                 case _BOOLEAN:
                     _.isBoolean = true;
+                    _.isPrimitive = true;
                     break;
                 case _NUMBER:
                     _.isNumber = true;
                     _.isTrueNaN = isNaN(target);
                     _.isFinite = isFinite(target);
                     _.isValidNumber = !_.isTrueNaN;
+                    _.isPrimitive = true;
                     break;
                 case _STRING:
                     _.isString = true;
+                    _.isPrimitive = true;
                     break;
                 case _OBJECT:
                     _.target = target;
-                    _.isObject = true;
+                    if (target === null) {
+                        _.isNull = true;
+                        _.isNullOrUndefined = true;
+                        _.isPrimitive = true;
+                    }
+                    else {
+                        _.isObject = true;
+                    }
                     break;
                 case _FUNCTION:
                     _.target = target;
@@ -47,17 +60,16 @@
                 case _UNDEFINED:
                     _.isUndefined = true;
                     _.isNullOrUndefined = true;
+                    _.isPrimitive = true;
                     break;
-                case _NULL:
-                    _.isNull = true;
-                    _.isNullOrUndefined = true;
-                    break;
+                default:
+                    throw "Fatal type failure.  Unknown type: " + _.type;
             }
             Object.freeze(_);
         }
         TypeInfo.prototype.member = function (name) {
             var t = this.target;
-            return TypeInfo.getFor(t && name in t
+            return TypeInfo.getFor(t && (name) in (t)
                 ? t[name]
                 : undefined);
         };
@@ -82,7 +94,6 @@
         Type.NUMBER = _NUMBER;
         Type.STRING = _STRING;
         Type.OBJECT = _OBJECT;
-        Type.NULL = _NULL;
         Type.UNDEFINED = _UNDEFINED;
         Type.FUNCTION = _FUNCTION;
         function isBoolean(value) {
@@ -102,6 +113,20 @@
             return typeof value === _STRING;
         }
         Type.isString = isString;
+        function isPrimitive(value) {
+            var t = typeof value;
+            switch (t) {
+                case _BOOLEAN:
+                case _STRING:
+                case _NUMBER:
+                case _UNDEFINED:
+                    return true;
+                case _OBJECT:
+                    return value === null;
+            }
+            return false;
+        }
+        Type.isPrimitive = isPrimitive;
         function isFunction(value) {
             return typeof value === _FUNCTION;
         }
@@ -118,6 +143,22 @@
             return TypeInfo.getFor(target);
         }
         Type.of = of;
+        function hasMember(value, property) {
+            return value && !isPrimitive(value) && (property) in (value);
+        }
+        Type.hasMember = hasMember;
+        function hasMemberOfType(instance, property, type) {
+            return hasMember(instance, property) && typeof (instance[property]) === type;
+        }
+        Type.hasMemberOfType = hasMemberOfType;
+        function isInstanceOf(instance, type) {
+            return (instance) instanceof (type);
+        }
+        Type.isInstanceOf = isInstanceOf;
+        function isArrayLike(instance) {
+            return (instance) instanceof (Array) || hasMember(instance, "length");
+        }
+        Type.isArrayLike = isArrayLike;
     })(Type || (Type = {}));
     Object.freeze(Type);
     Object.defineProperty(exports, "__esModule", { value: true });

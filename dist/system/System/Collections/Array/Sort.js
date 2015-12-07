@@ -5,7 +5,7 @@
 System.register(['../../Types', '../../Compare'], function(exports_1) {
     var Types_1, Compare_1;
     function ensureArray(value) {
-        return value instanceof Array
+        return Array.isArray(value)
             ? value
             : [value];
     }
@@ -17,7 +17,7 @@ System.register(['../../Types', '../../Compare'], function(exports_1) {
             var aValue = ensureArray(selector(a));
             var bValue = ensureArray(selector(b));
             var len = Math.min(aValue.length, bValue.length);
-            var oArray = order instanceof Array ? order : null;
+            var oArray = Array.isArray(order) ? order : null;
             for (var i = 0; i < len; i++) {
                 var vA = aValue[i], vB = bValue[i], o = oArray
                     ? (i < oArray.length ? oArray[i] : 1)

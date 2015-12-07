@@ -3,10 +3,14 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register([], function(exports_1) {
+System.register(['./HowMany'], function(exports_1) {
+    var HowMany;
     var TimeUnit;
     return {
-        setters:[],
+        setters:[
+            function (HowMany_1) {
+                HowMany = HowMany_1;
+            }],
         execute: function() {
             (function (TimeUnit) {
                 TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
@@ -15,6 +19,57 @@ System.register([], function(exports_1) {
                 TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
                 TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
                 TimeUnit[TimeUnit["Days"] = 5] = "Days";
+            })(TimeUnit || (TimeUnit = {}));
+            (function (TimeUnit) {
+                function toMilliseconds(value, units) {
+                    if (units === void 0) { units = TimeUnit.Milliseconds; }
+                    switch (units) {
+                        case TimeUnit.Days:
+                            value *= 24;
+                        case TimeUnit.Hours:
+                            value *= 60;
+                        case TimeUnit.Minutes:
+                            value *= 60;
+                        case TimeUnit.Seconds:
+                            value *= 1000;
+                        case TimeUnit.Milliseconds:
+                            return value;
+                        case TimeUnit.Ticks:
+                            return value / 10000;
+                        default:
+                            throw new Error("Invalid TimeUnit.");
+                    }
+                }
+                TimeUnit.toMilliseconds = toMilliseconds;
+                function fromMilliseconds(ms, units) {
+                    switch (units) {
+                        case TimeUnit.Days:
+                            return ms / 86400000;
+                        case TimeUnit.Hours:
+                            return ms / 3600000;
+                        case TimeUnit.Minutes:
+                            return ms / 60000;
+                        case TimeUnit.Seconds:
+                            return ms / 1000;
+                        case TimeUnit.Milliseconds:
+                            return ms;
+                        case TimeUnit.Ticks:
+                            return ms * 10000;
+                        default:
+                            throw new Error("Invalid TimeUnit.");
+                    }
+                }
+                TimeUnit.fromMilliseconds = fromMilliseconds;
+                function from(quantity, unit) {
+                    return quantity && fromMilliseconds(quantity.getTotalMilliseconds(), unit);
+                }
+                TimeUnit.from = from;
+                function assertValid(unit) {
+                    if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit)
+                        throw new Error("Invalid TimeUnit.");
+                    return true;
+                }
+                TimeUnit.assertValid = assertValid;
             })(TimeUnit || (TimeUnit = {}));
             Object.freeze(TimeUnit);
             exports_1("default",TimeUnit);

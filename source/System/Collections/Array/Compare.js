@@ -12,6 +12,8 @@
 })(["require", "exports", '../../Compare', '../../Types'], function (require, exports) {
     ///<reference path="IArray.d.ts"/>
     ///<reference path="../../FunctionTypes.d.ts"/>
+    ///<reference path="../../Primitive.d.ts"/>
+    ///<reference path="../../IComparable.d.ts"/>
     var Values = require('../../Compare');
     var Types_1 = require('../../Types');
     function validateSize(a, b) {
@@ -55,7 +57,7 @@
     function copyAndSort(a, comparer) {
         if (!a)
             return null;
-        if (a instanceof Array)
+        if (Array.isArray(a))
             return a.slice();
         var len = a.length, b;
         if (len > 65536)

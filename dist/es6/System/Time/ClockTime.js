@@ -3,102 +3,52 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { areEqual, compare } from '../Compare';
 import * as HowMany from './HowMany';
-import TimeSpan from './TimeSpan';
-export default class ClockTime {
+import TimeQuantity from './TimeQuantity';
+export default class ClockTime extends TimeQuantity {
     constructor(...args) {
-        this._totalMilliseconds =
-            args.length > 1
-                ? TimeSpan.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
-                : (args.length > 0 && args[0] || 0);
-    }
-    get totalMilliseconds() {
-        return this._totalMilliseconds;
-    }
-    get direction() {
-        return compare(this._totalMilliseconds, 0);
-    }
-    equals(other) {
-        return areEqual(this._totalMilliseconds, other.totalMilliseconds);
-    }
-    compareTo(other) {
-        if (other == null)
-            return 1 | 0;
-        return compare(this._totalMilliseconds, other.totalMilliseconds);
-    }
-    get ticks() {
-        var _ = this, r = _._ticks;
-        if (r === undefined) {
-            var ms = Math.abs(_._totalMilliseconds);
-            _._ticks = r = (ms - Math.floor(ms)) * 10000;
-        }
-        return r;
-    }
-    get milliseconds() {
-        var _ = this, r = _._ms;
-        if (r === undefined)
-            _._ms = r =
-                (this._totalMilliseconds % 3600000) | 0;
-        return r;
-    }
-    get seconds() {
-        var _ = this, r = _._seconds;
-        if (r === undefined)
-            _._seconds = r =
-                ((this._totalMilliseconds / 3600000) % 60) | 0;
-        return r;
-    }
-    get minutes() {
-        var _ = this, r = _._minutes;
-        if (r === undefined)
-            _._minutes = r =
-                ((this._totalMilliseconds
-                    / 3600000
-                    / 60) % 60) | 0;
-        return r;
-    }
-    get hours() {
-        var _ = this, r = _._hours;
-        if (r === undefined)
-            _._hours = r =
-                ((this._totalMilliseconds
-                    / 3600000
-                    / 60
-                    / 60) % 24) | 0;
-        return r;
-    }
-    get days() {
-        var _ = this, r = _._days;
-        if (r === undefined)
-            _._days = r =
-                (this._totalMilliseconds
-                    / 3600000
-                    / 60
-                    / 60
-                    / 24) | 0;
-        return r;
-    }
-    get total() {
-        return this.toTimeSpan();
-    }
-    toTimeSpan() {
-        return new TimeSpan(this._totalMilliseconds);
+        super(args.length > 1
+            ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
+            : (args.length > 0 && args[0] || 0));
+        var _ = this;
+        var ms = Math.abs(_.getTotalMilliseconds());
+        var msi = Math.floor(ms);
+        _.tick = (ms - msi) * 10000;
+        _.days = (msi / 86400000) | 0;
+        msi -= _.days * 86400000;
+        _.hour = (msi / 3600000) | 0;
+        msi -= _.hour * 3600000;
+        _.minute = (msi / 60000) | 0;
+        msi -= _.minute * 60000;
+        _.second = (msi / 1000) | 0;
+        msi -= _.second * 1000;
+        _.millisecond = msi;
+        Object.freeze(_);
     }
     static from(hours, minutes, seconds = 0, milliseconds = 0) {
         return new ClockTime(hours, minutes, seconds, milliseconds);
+    }
+    static millisecondsFromTime(hours, minutes, seconds = 0, milliseconds = 0) {
+        var value = hours;
+        value *= 60;
+        value += minutes;
+        value *= 60;
+        value += seconds;
+        value *= 1000;
+        value += milliseconds;
+        return value;
     }
     toString() {
         /* INSERT CUSTOM FORMATTING CODE HERE */
         var _ = this, a = [];
         if (_.days)
             a.push(pluralize(_.days, "day"));
-        if (_.hours)
-            a.push(pluralize(_.hours, "hour"));
-        if (_.minutes)
-            a.push(pluralize(_.minutes, "minute"));
-        if (_.seconds)
-            a.push(pluralize(_.seconds, "second"));
+        if (_.hour)
+            a.push(pluralize(_.hour, "hour"));
+        if (_.minute)
+            a.push(pluralize(_.minute, "minute"));
+        if (_.second)
+            a.push(pluralize(_.second, "second"));
         if (a.length > 1)
             a.splice(a.length - 1, 0, "and");
         return a.join(", ").replace(", and, ", " and ");

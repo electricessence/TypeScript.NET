@@ -1,13 +1,36 @@
 ///<reference path="../../import.d.ts"/>
-define(["require", "exports", '../../../../source/System/Time/ClockTime'], function (require, exports, ClockTime_1) {
+///<reference path="../../../../source/System/Time/HowMany.ts"/>
+(function (deps, factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(deps, factory);
+    }
+})(["require", "exports", '../../../../source/System/Time/ClockTime', '../../../../source/System/Integer'], function (require, exports) {
+    var ClockTime_1 = require('../../../../source/System/Time/ClockTime');
+    var Integer_1 = require('../../../../source/System/Integer');
     var assert = require('../../../../node_modules/assert/assert');
-    var hour = 23, minute = 36, second = 15, millisecond = 876;
-    var c = new ClockTime_1.default(hour, minute, second, millisecond);
-    it('should match time values', function () {
-        assert.equal(c.hours, hour);
-        assert.equal(c.minutes, minute);
-        assert.equal(c.seconds, second);
-        assert.equal(c.milliseconds, millisecond);
+    var days = Integer_1.default.random.under(365), hour = Integer_1.default.random.under(24), minute = Integer_1.default.random.under(60), second = Integer_1.default.random.under(60), millisecond = Integer_1.default.random.under(1000);
+    var c1 = new ClockTime_1.default(hour, minute, second, millisecond);
+    var c2 = new ClockTime_1.default(days * 86400000
+        + hour * 3600000
+        + minute * 60000
+        + second * 1000
+        + millisecond);
+    it('should match constructor values', function () {
+        assert.equal(c1.hour, hour);
+        assert.equal(c1.minute, minute);
+        assert.equal(c1.second, second);
+        assert.equal(c1.millisecond, millisecond);
+    });
+    it('should match summed values', function () {
+        assert.equal(c2.days, days);
+        assert.equal(c2.hour, hour);
+        assert.equal(c2.minute, minute);
+        assert.equal(c2.second, second);
+        assert.equal(c2.millisecond, millisecond);
     });
 });
+
 //# sourceMappingURL=ClockTime.js.map

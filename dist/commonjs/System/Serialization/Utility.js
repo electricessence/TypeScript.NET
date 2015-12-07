@@ -8,6 +8,7 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 exports.toString = toString;
+exports.isSerializable = isSerializable;
 exports.toPrimitive = toPrimitive;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -27,7 +28,6 @@ var EMPTY = '',
 function toString(value, defaultForUnknown) {
     var v = value;
     switch (typeof v) {
-        case _Types2['default'].NULL:
         case _Types2['default'].UNDEFINED:
         case _Types2['default'].STRING:
             return v;
@@ -36,18 +36,23 @@ function toString(value, defaultForUnknown) {
         case _Types2['default'].NUMBER:
             return EMPTY + v;
         default:
-            if (_Types2['default'].of(v).member('serialize').isFunction) return v.serialize();else if (arguments.length > 1) return defaultForUnknown;
+            if (v === null) return v;
+            if (isSerializable(v)) return v.serialize();else if (arguments.length > 1) return defaultForUnknown;
             var ex = new _ExceptionsInvalidOperationException2['default']('Attempting to serialize unidentifiable type.');
             ex.data['value'] = v;
             throw ex;
     }
 }
 
+function isSerializable(instance) {
+    return _Types2['default'].hasMemberOfType(instance, 'serialize', _Types2['default'].FUNCTION);
+}
+
 function toPrimitive(value, caseInsensitive, unknownHandler) {
     if (value) {
         if (caseInsensitive) value = value.toLowerCase();
         switch (value) {
-            case _Types2['default'].NULL:
+            case 'null':
                 return null;
             case _Types2['default'].UNDEFINED:
                 return undefined;

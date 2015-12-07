@@ -1,41 +1,39 @@
 {
-  "name": "TypeScript.NET",
-  "version": "2.3.0",
+  "name": "typescript-dotnet",
+  "version": "2.5.19",
   "ignore": [
+    ".bowercc",
     ".gitignore",
+    ".npmignore",
     ".idea",
     ".nuget",
     "gulpfile.js",
     "node_modules",
     "bower_components",
-    "tests",
-    "example",
     "documentation",
-    "dist/commonjs",
-    "dist/es6",
-    "dist/system"
+    "tests",
+    "typings",
+    "tsc-flags.txt",
+    "tsd.json"
   ],
   "homepage": "https://github.com/electricessence/TypeScript.NET",
   "authors": [
-    "electricessence <oren@electrified.net>"
+    "electricessence <npm@electrified.net>"
   ],
-  "description": "A JavaScript Friendly .NET Library Ported to TypeScript.",
+  "description": "A JavaScript-Friendly .NET TypeScript Library.",
+  "main": [],
   "moduleType": [
-    "amd"
+    "amd",
+    "es6",
+    "node"
   ],
   "keywords": [
     "JavaScript",
     "TypeScript",
-    "tsc",
-    ".net",
+    ".NET",
+    "dotnet",
     "TypeScript.NET",
     "LINQ"
   ],
-  "license": "MIT",
-  "dependencies": {
-    "requirejs": "~2.1.20"
-  },
-  "devDependencies": {
-    "qunit": "~1.19.0"
-  }
+  "license": "MIT"
 }

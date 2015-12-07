@@ -5,6 +5,7 @@
 import shallowCopy from '../Utility/shallowCopy';
 import DisposableBase from '../Disposable/DisposableBase';
 import * as AU from '../Collections/Array/Utility';
+const DISPOSING = 'disposing', DISPOSED = 'disposed';
 export default class EventDispatcherEntry extends DisposableBase {
     constructor(type, listener, useCapture = false, priority = 0) {
         super();
@@ -98,8 +99,8 @@ class EventDispatcher extends DisposableBase {
         });
         return true;
     }
-    static get DISPOSING() { return "disposing"; }
-    static get DISPOSED() { return "disposed"; }
+    static get DISPOSING() { return DISPOSING; }
+    static get DISPOSED() { return DISPOSED; }
     get isDisposing() {
         return this._isDisposing;
     }
@@ -107,9 +108,9 @@ class EventDispatcher extends DisposableBase {
         var _ = this;
         if (!_.wasDisposed && !_._isDisposing) {
             _._isDisposing = true;
-            _.dispatchEvent(EventDispatcher.DISPOSING);
+            _.dispatchEvent(DISPOSING);
             super.dispose();
-            _.dispatchEvent(EventDispatcher.DISPOSED);
+            _.dispatchEvent(DISPOSED);
             var l = _._listeners;
             if (l) {
                 this._listeners = null;

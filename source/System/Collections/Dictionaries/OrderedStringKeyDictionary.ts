@@ -7,6 +7,8 @@ import * as ArrayUtility from '../Array/Utility';
 import StringKeyDictionary from './StringKeyDictionary';
 import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeException'
 
+const VOID0:any = void 0;
+
 export default
 class OrderedStringKeyDictionary<TValue>
 extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue>
@@ -34,9 +36,9 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	setValue(key:string, value:TValue, keepIndex?:boolean):boolean
 	{
 		var _ = this, exists = _.indexOfKey(key)!= -1;
-		if(!exists && (value!==undefined || keepIndex))
+		if(!exists && (value!==VOID0 || keepIndex))
 			_._order.push(key);
-		else if(exists && value===undefined && !keepIndex)
+		else if(exists && value===VOID0 && !keepIndex)
 			ArrayUtility.remove(_._order, key);
 
 		return super.setValue(key, value);
@@ -82,7 +84,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 		return this.setByIndex(index, undefined);
 	}
 
-	get keys():string[]
+	protected getKeys():string[]
 	{
 		var _ = this;
 		return _._order.filter(key=> _.containsKey(key));

@@ -20,7 +20,7 @@
         if (!values)
             return '';
         var entries = [];
-        if (values instanceof Array) {
+        if (Array.isArray(values)) {
             for (var _i = 0; _i < values.length; _i++) {
                 var kvp = values[_i];
                 if (kvp)
@@ -39,9 +39,9 @@
     }
     exports.encode = encode;
     function encodeValue(value) {
-        var v = value;
-        if (typeof v == Types_1.default.OBJECT && "toUriComponent" in v) {
-            v = v.toUriComponent();
+        var v = null;
+        if (isUriComponentFormattable(value)) {
+            v = value.toUriComponent();
             if (v && v.indexOf('&') != 1)
                 throw '.toUriComponent() did not encode the value.';
         }
@@ -51,6 +51,10 @@
         return v;
     }
     exports.encodeValue = encodeValue;
+    function isUriComponentFormattable(instance) {
+        return Types_1.default.hasMemberOfType(instance, "toUriComponent", Types_1.default.FUNCTION);
+    }
+    exports.isUriComponentFormattable = isUriComponentFormattable;
     function parse(query, entryHandler, deserialize, decodeValues) {
         if (deserialize === void 0) { deserialize = true; }
         if (decodeValues === void 0) { decodeValues = true; }
@@ -77,9 +81,9 @@
         if (decodeValues === void 0) { decodeValues = true; }
         var result = {};
         parse(query, function (key, value) {
-            if (key in result) {
+            if ((key) in (result)) {
                 var prev = result[key];
-                if (!(prev instanceof Array))
+                if (!(Array.isArray(prev)))
                     result[key] = prev = [prev];
                 prev.push(value);
             }

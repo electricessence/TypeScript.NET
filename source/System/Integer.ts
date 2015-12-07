@@ -14,10 +14,48 @@ function Integer(n:number):number
 module Integer
 {
 
+	function r(max:number):number {
+		return (Math.random()*max) | 0;
+	}
 
+	/**
+	 * Returns a random integer from zero to the max.
+	 * Negative numbers are allowed.
+	 *
+	 * Examples:<br/>
+	 * ```Integer.random(1)``` will return 0 or 1.<br/>
+	 * ```Integer.random(-2)``` will return 0, -1, or -2.<br/>
+	 *
+	 * @param max
+	 * @returns {number}
+	 */
 	export function random(max:number):number
 	{
-		return (Math.random()*max) | 0;
+		assert(max,'max');
+		if(max==0) return 0;
+		max += max > 0 ? 1 : -1;
+		return r(max);
+	}
+
+	export module random {
+
+		/**
+		 * Returns a random integer from zero up to the boundary value.
+		 * Negative and fractional numbers are allowed.
+		 *
+		 * Example:<br/>
+		 * ```Integer.random(-2)``` will return 0, or -1.<br/>
+		 * ```Integer.random(5)``` will return 0, 1, 2, 3 or 4.<br/>
+		 *
+		 * @param boundary
+		 * @returns {number}
+		 */
+		export function under(boundary:number):number
+		{
+			return r(boundary)
+		}
+
+
 	}
 
 	export function is(n:number):boolean

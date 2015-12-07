@@ -3,14 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+///<reference path="Primitive.d.ts"/>
+///<reference path="Collections/Array/IArray.d.ts"/>
+
 const
-_BOOLEAN:string   = typeof true,
-_NUMBER:string    = typeof 0,
-_STRING:string    = typeof "",
-_OBJECT:string    = typeof {},
-_NULL:string      = typeof null,
-_UNDEFINED:string = typeof undefined,
-_FUNCTION:string  = typeof function() {};
+	_BOOLEAN:string = typeof true,
+	_NUMBER:string  = typeof 0,
+	_STRING:string  = typeof "",
+	_OBJECT:string  = typeof {},
+	_UNDEFINED:string = typeof undefined,
+	_FUNCTION:string = typeof function() {};
 
 // Only used for primitives.
 var typeInfoRegistry:{[key:string]:TypeInfo} = {};
@@ -36,6 +38,7 @@ export class TypeInfo
 	isUndefined:boolean;
 	isNull:boolean;
 	isNullOrUndefined:boolean;
+	isPrimitive:boolean;
 
 	constructor(target:any)
 	{
@@ -48,24 +51,37 @@ export class TypeInfo
 		_.isFunction = false;
 		_.isUndefined = false;
 		_.isNull = false;
+		_.isPrimitive = false;
 
 		switch(_.type = typeof target)
 		{
 			case _BOOLEAN:
 				_.isBoolean = true;
+				_.isPrimitive = true;
 				break;
 			case _NUMBER:
 				_.isNumber = true;
 				_.isTrueNaN = isNaN(target);
 				_.isFinite = isFinite(target);
 				_.isValidNumber = !_.isTrueNaN;
+				_.isPrimitive = true;
 				break;
 			case _STRING:
 				_.isString = true;
+				_.isPrimitive = true;
 				break;
 			case _OBJECT:
 				_.target = target;
-				_.isObject = true;
+				if(target===null)
+				{
+					_.isNull = true;
+					_.isNullOrUndefined = true;
+					_.isPrimitive = true;
+				}
+				else
+				{
+					_.isObject = true;
+				}
 				break;
 			case _FUNCTION:
 				_.target = target;
@@ -74,11 +90,10 @@ export class TypeInfo
 			case _UNDEFINED:
 				_.isUndefined = true;
 				_.isNullOrUndefined = true;
+				_.isPrimitive = true;
 				break;
-			case _NULL:
-				_.isNull = true;
-				_.isNullOrUndefined = true;
-				break;
+			default:
+				throw "Fatal type failure.  Unknown type: " + _.type;
 		}
 
 		Object.freeze(_);
@@ -95,7 +110,7 @@ export class TypeInfo
 	{
 		var t = this.target;
 		return TypeInfo.getFor(
-			t && name in t
+			t && (name)in(t)
 				? t[name]
 				: undefined);
 	}
@@ -119,6 +134,7 @@ export class TypeInfo
 		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
 		return info;
 	}
+
 }
 
 module Type
@@ -147,11 +163,6 @@ module Type
 	 */
 	export const OBJECT:string = _OBJECT;
 
-	/**
-	 * typeof null
-	 * @type {string}
-	 */
-	export const NULL:string = _NULL;
 
 	/**
 	 * typeof undefined
@@ -170,7 +181,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isBoolean(value:any):boolean
+	export function isBoolean(value:any):value is boolean
 	{
 		return typeof value===_BOOLEAN;
 	}
@@ -181,7 +192,7 @@ module Type
 	 * @param allowNaN
 	 * @returns {boolean}
 	 */
-	export function isNumber(value:any, allowNaN:boolean = true):boolean
+	export function isNumber(value:any, allowNaN:boolean = true):value is number
 	{
 		return typeof value===_NUMBER && (allowNaN || !isNaN(value));
 	}
@@ -191,7 +202,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isTrueNaN(value:any):boolean
+	export function isTrueNaN(value:any):value is number
 	{
 		return typeof value===_NUMBER && isNaN(value);
 	}
@@ -201,9 +212,31 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isString(value:any):boolean
+	export function isString(value:any):value is string
 	{
 		return typeof value===_STRING;
+	}
+
+	/**
+	 * Returns true if the value is a boolean, string, number, null, or undefined.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isPrimitive(value:any):value is Primitive
+	{
+		var t = typeof value;
+		switch(t)
+		{
+			case _BOOLEAN:
+			case _STRING:
+			case _NUMBER:
+			case _UNDEFINED:
+				return true;
+			case _OBJECT:
+				return value===null;
+
+		}
+		return false;
 	}
 
 	/**
@@ -211,7 +244,7 @@ module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isFunction(value:any):boolean
+	export function isFunction(value:any):value is Function
 	{
 		return typeof value===_FUNCTION;
 	}
@@ -239,6 +272,27 @@ module Type
 	export function of(target:any):TypeInfo
 	{
 		return TypeInfo.getFor(target);
+	}
+
+	export function hasMember(value:any, property:string):boolean
+	{
+		return value && !isPrimitive(value) && (property)in(value);
+	}
+
+	export function hasMemberOfType<T>(instance:any, property:string, type:string):instance is T
+	{
+		return hasMember(instance, property) && typeof(instance[property])===type;
+	}
+
+	// Substitute 'instanceof' until WebStorm's reformatting is fixed.
+	export function isInstanceOf<T>(instance:any, type:any):instance is T
+	{
+		return (instance)instanceof(type);
+	}
+
+	export function isArrayLike<T>(instance:any):instance is IArray<T>
+	{
+		return (instance)instanceof(Array) || hasMember(instance, "length");
 	}
 
 }

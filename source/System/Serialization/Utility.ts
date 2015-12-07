@@ -20,7 +20,6 @@ export function toString(
 	var v = <any>value;
 	switch(typeof v)
 	{
-		case Type.NULL:
 		case Type.UNDEFINED:
 		case Type.STRING:
 			return v;
@@ -30,7 +29,10 @@ export function toString(
 			return EMPTY + v;
 		default:
 
-			if(Type.of(v).member('serialize').isFunction)
+			if(v===null)
+				return v;
+
+			if(isSerializable(v))
 				return v.serialize();
 			else if(arguments.length>1)
 				return defaultForUnknown;
@@ -41,6 +43,10 @@ export function toString(
 
 	}
 
+}
+
+export function isSerializable(instance:any):instance is ISerializable {
+	return Type.hasMemberOfType<ISerializable>(instance,'serialize',Type.FUNCTION);
 }
 
 export function toPrimitive(
@@ -56,7 +62,7 @@ export function toPrimitive(
 
 		switch(value)
 		{
-			case Type.NULL:
+			case 'null':
 				return null;
 			case Type.UNDEFINED:
 				return undefined;

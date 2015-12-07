@@ -1,5 +1,6 @@
 ﻿///<reference path="../import.d.ts"/>
 
+import {contains} from '../../../source/System/Collections/Array/Utility';
 import Enumerable from '../../../source/System.Linq/Linq';
 var assert = require('../../../node_modules/assert/assert');
 
@@ -200,5 +201,24 @@ it(".groupBy(selector)", ()=>
 	assert.equal(B_distinct.count(), B.count(), "Number of groups should match distinct values.");
 
 
-});
+	const COMPANY_A = "Microsoft", COMPANY_B = "Hell Corp.";
+	var objArray = [
+		{ Name: "John", Id: 0, Salary: 1300.00, Company: COMPANY_A },
+		{ Name: "Peter", Id: 1, Salary: 4800.50, Company: COMPANY_A },
+		{ Name: "Sandra", Id: 2, Salary: 999.99, Company: COMPANY_A },
+		{ Name: "Me", Id: 3, Salary: 1000000000.00, Company: COMPANY_B }
+	];
+	var groups = Enumerable.from(objArray).groupBy(x => x.Company);
+	var companies = groups.select(x => x.key).toArray();
 
+	assert.equal(companies.length,2, "2 groups expected.");
+	assert.ok(contains(companies,COMPANY_A), "Expect "+COMPANY_A);
+	assert.ok(contains(companies,COMPANY_B), "Expect "+COMPANY_B);
+	var group_A = groups.where(g=>g.key==COMPANY_A).single();
+	var group_B = groups.where(g=>g.key==COMPANY_B).single();
+	assert.equal(group_A.count(),3, "Expected count of 3.");
+	assert.equal(group_A.sum(x => x.Salary),7100.49, "Expected sum to be correct.");
+	assert.equal(group_B.count(),1, "Expected count of 1.");
+	assert.equal(group_B.sum(x => x.Salary),1000000000.00, "Expected sum to be correct.");
+
+});

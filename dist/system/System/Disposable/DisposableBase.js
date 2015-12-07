@@ -42,11 +42,10 @@ System.register(['./ObjectDisposedException'], function(exports_1) {
                         }
                     }
                 };
-                DisposableBase.prototype._onDispose = function () {
-                };
+                DisposableBase.prototype._onDispose = function () { };
                 return DisposableBase;
             })();
-            exports_1("default", DisposableBase);
+            exports_1("default",DisposableBase);
         }
     }
 });

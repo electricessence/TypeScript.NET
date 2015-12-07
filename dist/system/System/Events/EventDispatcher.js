@@ -9,7 +9,7 @@ System.register(['../Utility/shallowCopy', '../Disposable/DisposableBase', '../C
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var shallowCopy_1, DisposableBase_1, AU;
-    var EventDispatcherEntry, EventDispatcher;
+    var DISPOSING, DISPOSED, EventDispatcherEntry, EventDispatcher;
     return {
         setters:[
             function (shallowCopy_1_1) {
@@ -22,6 +22,7 @@ System.register(['../Utility/shallowCopy', '../Disposable/DisposableBase', '../C
                 AU = AU_1;
             }],
         execute: function() {
+            DISPOSING = 'disposing', DISPOSED = 'disposed';
             EventDispatcherEntry = (function (_super) {
                 __extends(EventDispatcherEntry, _super);
                 function EventDispatcherEntry(type, listener, useCapture, priority) {
@@ -136,12 +137,12 @@ System.register(['../Utility/shallowCopy', '../Disposable/DisposableBase', '../C
                     return true;
                 };
                 Object.defineProperty(EventDispatcher, "DISPOSING", {
-                    get: function () { return "disposing"; },
+                    get: function () { return DISPOSING; },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(EventDispatcher, "DISPOSED", {
-                    get: function () { return "disposed"; },
+                    get: function () { return DISPOSED; },
                     enumerable: true,
                     configurable: true
                 });
@@ -156,9 +157,9 @@ System.register(['../Utility/shallowCopy', '../Disposable/DisposableBase', '../C
                     var _ = this;
                     if (!_.wasDisposed && !_._isDisposing) {
                         _._isDisposing = true;
-                        _.dispatchEvent(EventDispatcher.DISPOSING);
+                        _.dispatchEvent(DISPOSING);
                         _super.prototype.dispose.call(this);
-                        _.dispatchEvent(EventDispatcher.DISPOSED);
+                        _.dispatchEvent(DISPOSED);
                         var l = _._listeners;
                         if (l) {
                             this._listeners = null;

@@ -39,32 +39,37 @@ export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>
 	if(!source)
 		return Empty;
 
-	if(source instanceof Array)
+	if(Array.isArray(source))
 		return new ArrayEnumerator<T>(<T[]>source);
 
-	if(typeof source===Type.OBJECT)
+
+	if(!Type.isPrimitive(source))
 	{
-		if("length" in source)
+		if(Type.isArrayLike<T>(source))
 		{
-			var a = <IArray<T>>source;
 			return new IndexEnumerator<T>(
 				() =>
 				{
 					return {
-						source: <{[index: number]: T}>a,
-						length: a.length,
+						source: source,
+						length: source.length,
 						pointer: 0,
 						step: 1
 					}
 				}
 			);
 		}
-		if("getEnumerator" in source)
-			return (<any>source).getEnumerator();
+		if(isEnumerable<T>(source))
+			return source.getEnumerator();
 
 	}
 
 	throw new Error("Unknown enumerable.");
+}
+
+export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
+{
+	return Type.hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", Type.FUNCTION);
 }
 
 export function forEach<T>(
