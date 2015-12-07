@@ -82,6 +82,7 @@ var _SystemCollectionsSortingKeySortedContext = require("../System/Collections/S
 var _SystemCollectionsSortingKeySortedContext2 = _interopRequireDefault(_SystemCollectionsSortingKeySortedContext);
 
 'use strict';
+var VOID0 = void 0;
 
 var LinqFunctions = (function (_BaseFunctions) {
     _inherits(LinqFunctions, _BaseFunctions);
@@ -185,7 +186,7 @@ var Enumerable = (function (_DisposableBase) {
                 var key = keySelector(x);
                 var element = elementSelector(x);
                 var array = dict.getValue(key);
-                if (array !== undefined) array.push(element);else dict.addByKeyValue(key, [element]);
+                if (array !== VOID0) array.push(element);else dict.addByKeyValue(key, [element]);
             });
             return new Lookup(dict);
         }
@@ -473,7 +474,7 @@ var Enumerable = (function (_DisposableBase) {
     }, {
         key: 'scan',
         value: function scan(func, seed) {
-            var isUseSeed = seed !== undefined;
+            var isUseSeed = seed !== VOID0;
             var _ = this;
             return new Enumerable(function () {
                 var enumerator;
@@ -532,7 +533,7 @@ var Enumerable = (function (_DisposableBase) {
                     middleEnumerator = undefined;
                     index = 0;
                 }, function (yielder) {
-                    if (middleEnumerator === undefined && !enumerator.moveNext()) return false;
+                    if (middleEnumerator === VOID0 && !enumerator.moveNext()) return false;
                     do {
                         if (!middleEnumerator) {
                             var middleSeq = collectionSelector(enumerator.current, index++);
@@ -567,7 +568,7 @@ var Enumerable = (function (_DisposableBase) {
                     throwIfDisposed(disposed);
                     while (enumerator.moveNext()) {
                         var result = selector(enumerator.current, index++);
-                        if (result !== null && result !== undefined) return yielder.yieldReturn(result);
+                        if (result !== null && result !== VOID0) return yielder.yieldReturn(result);
                     }
                     return false;
                 }, function () {
@@ -947,7 +948,7 @@ var Enumerable = (function (_DisposableBase) {
                     while (true) {
                         if (innerElements != null) {
                             var innerElement = innerElements[innerCount++];
-                            if (innerElement !== undefined) return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
+                            if (innerElement !== VOID0) return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
                             innerElement = null;
                             innerCount = 0;
                         }
@@ -1185,7 +1186,7 @@ var Enumerable = (function (_DisposableBase) {
                     keys = new _SystemCollectionsDictionariesDictionary2['default'](compareSelector);
                 }, function (yielder) {
                     var current;
-                    if (secondEnumerator === undefined) {
+                    if (secondEnumerator === VOID0) {
                         while (firstEnumerator.moveNext()) {
                             current = firstEnumerator.current;
                             if (!keys.containsKey(current)) {

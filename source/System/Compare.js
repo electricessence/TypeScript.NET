@@ -1,5 +1,3 @@
-///<reference path="IComparable.d.ts"/>
-///<reference path="Primitive.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -12,6 +10,9 @@
         define(deps, factory);
     }
 })(["require", "exports", './Types'], function (require, exports) {
+    ///<reference path="IComparable.d.ts"/>
+    ///<reference path="Primitive.d.ts"/>
+    ///<reference path="CompareResult.d.ts"/>
     var Types_1 = require('./Types');
     var isTrueNaN = Types_1.default.isTrueNaN;
     var VOID0 = void 0;

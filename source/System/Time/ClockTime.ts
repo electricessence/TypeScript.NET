@@ -11,8 +11,8 @@
 ///<reference path="../IFormattable.d.ts"/>
 ///<reference path="../IFormatProvider.d.ts"/>
 ///<reference path="ITimeStamp.d.ts"/>
+///<reference path="HowMany.ts"/>
 import {areEqual,compare} from '../Compare';
-import * as HowMany from './HowMany';
 import TimeQuantity from './TimeQuantity';
 
 

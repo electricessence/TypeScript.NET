@@ -1,5 +1,3 @@
-///<reference path="IComparable.d.ts"/>
-///<reference path="Primitive.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -19,6 +17,7 @@ var _Types = require('./Types');
 var _Types2 = _interopRequireDefault(_Types);
 
 var isTrueNaN = _Types2["default"].isTrueNaN;
+var VOID0 = void 0;
 
 function areEqual(a, b) {
     var strict = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
@@ -33,8 +32,8 @@ function compare(a, b) {
 
     if (areEqual(a, b, strict)) return 0;
     if (a && _Types2["default"].hasMember(a, COMPARE_TO)) return a.compareTo(b);else if (b && _Types2["default"].hasMember(b, COMPARE_TO)) return -b.compareTo(a);
-    if (a > b || strict && (a === 0 && b == 0 || a === null && b === undefined)) return 1;
-    if (b > a || strict && (b === 0 && a == 0 || b === null && a === undefined)) return -1;
+    if (a > b || strict && (a === 0 && b == 0 || a === null && b === VOID0)) return 1;
+    if (b > a || strict && (b === 0 && a == 0 || b === null && a === VOID0)) return -1;
     return NaN;
 }
 //# sourceMappingURL=Compare.js.map

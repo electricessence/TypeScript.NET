@@ -32,6 +32,8 @@ var _ExceptionsInvalidOperationException = require('../../Exceptions/InvalidOper
 
 var _ExceptionsInvalidOperationException2 = _interopRequireDefault(_ExceptionsInvalidOperationException);
 
+var VOID0 = void 0;
+
 var DictionaryBase = (function () {
     function DictionaryBase() {
         _classCallCheck(this, DictionaryBase);
@@ -139,7 +141,7 @@ var DictionaryBase = (function () {
         key: 'containsKey',
         value: function containsKey(key) {
             var value = this.getValue(key);
-            return value !== undefined;
+            return value !== VOID0;
         }
     }, {
         key: 'containsValue',
@@ -200,7 +202,7 @@ var DictionaryBase = (function () {
                 while (i < len) {
                     var key = keys[i++],
                         value = _.getValue(key);
-                    if (value !== undefined) return yielder.yieldReturn({ key: key, value: value });
+                    if (value !== VOID0) return yielder.yieldReturn({ key: key, value: value });
                 }
                 return yielder.yieldBreak();
             });

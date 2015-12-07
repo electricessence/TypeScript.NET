@@ -19,6 +19,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     ///<reference path="../../IComparer.d.ts"/>
     ///<reference path="../../Primitive.d.ts"/>
     ///<reference path="../Array/IArray.d.ts"/>
+    ///<reference path="Order.d.ts"/>
     var Values = require('../../Compare');
     var SortContext_1 = require("./SortContext");
     var Functions_1 = require("../../Functions");

@@ -6,8 +6,8 @@
 ///<reference path="../../FunctionTypes.d.ts"/>
 ///<reference path="../../IComparer.d.ts"/>
 ///<reference path="../Array/IArray.d.ts"/>
+///<reference path="Order.d.ts"/>
 import * as Values from '../../Compare'
-import Order from './Order'
 import Integer from '../../Integer'
 import forEach from "../Enumeration/forEach"
 

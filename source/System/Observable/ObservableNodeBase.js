@@ -39,8 +39,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ObservableNodeBase;
     var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
-    function processAction(observers, handler, dispose) {
-        if (dispose === void 0) { dispose = true; }
+    function processAction(observers, handler) {
         var observersErrors = null;
         for (var _i = 0; _i < observers.length; _i++) {
             var s = observers[_i];
@@ -52,8 +51,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 observersErrors.push({ observer: s, ex: ex });
             }
         }
-        if (dispose)
-            observers.length = 0;
+        observers.length = 0;
         if (observersErrors && observersErrors.length) {
             if (console && console.error)
                 console.error(OBSERVER_ERROR_MESSAGE, observersErrors);

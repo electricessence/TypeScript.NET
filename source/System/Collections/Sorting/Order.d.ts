@@ -1,10 +1,8 @@
 /**
  * Enum representation of sorting order.
  */
-const enum Order
+declare const enum Order
 {
 	Ascending  = +1,
 	Descending = -1
 }
-
-export default Order;

@@ -7,9 +7,9 @@
 ///<reference path="ITimeMeasurement.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
+///<reference path="HowMany.ts"/>
 import {areEqual,compare} from '../Compare';
 import Type from '../Types';
-import * as HowMany from './HowMany';
 import TimeUnit from './TimeUnit';
 import ClockTime from './ClockTime';
 import TimeQuantity from './TimeQuantity';

@@ -25,6 +25,8 @@ var _DictionaryBase2 = require('./DictionaryBase');
 
 var _DictionaryBase3 = _interopRequireDefault(_DictionaryBase2);
 
+var VOID0 = void 0;
+
 var StringKeyDictionary = (function (_DictionaryBase) {
     _inherits(StringKeyDictionary, _DictionaryBase);
 
@@ -67,7 +69,7 @@ var StringKeyDictionary = (function (_DictionaryBase) {
                 map = _._map,
                 old = map[key];
             if (old !== value) {
-                if (value === undefined) {
+                if (value === VOID0) {
                     if (key in map) {
                         delete map[key];
                         --_._count;
@@ -102,7 +104,7 @@ var StringKeyDictionary = (function (_DictionaryBase) {
                 if (_._map.hasOwnProperty(key)) {
                     var value = _._map[key];
                     if (selector) value = selector(key, value);
-                    if (value !== undefined) result[key] = value;
+                    if (value !== VOID0) result[key] = value;
                 }
             }
             return result;

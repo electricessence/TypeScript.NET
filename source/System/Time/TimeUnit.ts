@@ -5,7 +5,7 @@
  */
 
 ///<reference path="ITimeQuantity.d.ts"/>
-import * as HowMany from './HowMany';
+///<reference path="HowMany.ts"/>
 
 
 enum TimeUnit

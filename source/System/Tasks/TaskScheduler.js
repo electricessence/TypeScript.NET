@@ -16,36 +16,22 @@
     var Queue_1 = require("../Collections/Queue");
     "use strict";
     var requestTick;
-    var flushing = false;
     var isNodeJS = false;
+    var flushing = false;
     function flush() {
-        // Since it's possible to trigger promises/events that add more during a flush:
-        // Snapshot the contents first.
-        var entries = immediateQueue.toArray();
-        immediateQueue.clear();
-        for (var _i = 0; _i < entries.length; _i++) {
-            var e = entries[_i];
-            var domain = e.domain;
+        var entry;
+        while (entry = immediateQueue.first) {
+            var e = entry.value, domain = e.domain;
+            entry.remove();
             if (domain)
                 domain.enter();
             runSingle(e.task, domain);
         }
-        for (var _a = 0, _b = laterQueue.dump(); _a < _b.length; _a++) {
-            var task = _b[_a];
+        var task;
+        while (task = laterQueue.dequeue()) {
             runSingle(task);
         }
-        if (immediateQueue.count || laterQueue.count) {
-            requestTick();
-        }
-        else {
-            flushing = false;
-        }
-    }
-    function requestFlush() {
-        if (!flushing) {
-            flushing = true;
-            requestTick();
-        }
+        flushing = false;
     }
     var immediateQueue = new LinkedList_1.default();
     var laterQueue = new Queue_1.default();
@@ -74,8 +60,14 @@
             domain.exit();
         }
     }
-    var TaskManager;
-    (function (TaskManager) {
+    function requestFlush() {
+        if (!flushing) {
+            flushing = true;
+            requestTick();
+        }
+    }
+    var TaskScheduler;
+    (function (TaskScheduler) {
         function defer(task, delay) {
             if (Types_1.default.isNumber(delay, false) && delay >= 0) {
                 var timeout = 0;
@@ -101,13 +93,13 @@
             requestFlush();
             return function () { return !!immediateQueue.remove(entry); };
         }
-        TaskManager.defer = defer;
+        TaskScheduler.defer = defer;
         function runAfterDeferred(task) {
             laterQueue.enqueue(task);
             requestFlush();
         }
-        TaskManager.runAfterDeferred = runAfterDeferred;
-    })(TaskManager || (TaskManager = {}));
+        TaskScheduler.runAfterDeferred = runAfterDeferred;
+    })(TaskScheduler || (TaskScheduler = {}));
     if (Types_1.default.isObject(process)
         && process.toString() === "[object process]"
         && process.nextTick) {
@@ -147,6 +139,6 @@
         };
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = TaskManager;
+    exports.default = TaskScheduler;
 });
-//# sourceMappingURL=TaskManager.js.map
+//# sourceMappingURL=TaskScheduler.js.map

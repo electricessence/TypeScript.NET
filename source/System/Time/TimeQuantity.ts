@@ -6,8 +6,8 @@
 ///<reference path="ITimeQuantity.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
+///<reference path="HowMany.ts"/>
 import {areEqual,compare} from '../Compare';
-import * as HowMany from './HowMany';
 import TimeUnit from './TimeUnit';
 
 /**
@@ -29,7 +29,7 @@ class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuanti
 
 	/**
 	 * +1, 0, or -1 depending on the time direction.
-	 * @returns {CompareResult}
+	 * @returns {number}
 	 */
 	get direction():number
 	{
