@@ -5,8 +5,8 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", "../../System/Collections/Queue"], function (require, exports) {
-    var Queue_1 = require("../../System/Collections/Queue");
+})(["require", "exports", '../../System/Collections/Queue'], function (require, exports) {
+    var Queue_1 = require('../../System/Collections/Queue');
     var _lastId = 0 | 0;
     var _defaultScheduler;
     var _currentScheduler;

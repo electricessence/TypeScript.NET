@@ -32,4 +32,5 @@
         assert.equal(c2.millisecond, millisecond);
     });
 });
+
 //# sourceMappingURL=ClockTime.js.map
