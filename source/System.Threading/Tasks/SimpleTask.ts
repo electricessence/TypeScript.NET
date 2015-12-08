@@ -51,10 +51,11 @@ function applyInternal<T>(
 
 	var cancel = ()=>
 	{
-		var ok = okToRun();
-		if(ok) status = TaskStatus.Canceled;
+		if(okToRun()) status = TaskStatus.Canceled;
+		else return false;
+
 		task = null; // Release reference.
-		return ok;
+		return true;
 	};
 
 	var run = ()=>

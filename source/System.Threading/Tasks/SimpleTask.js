@@ -44,11 +44,12 @@
             return false;
         };
         var cancel = function () {
-            var ok = okToRun();
-            if (ok)
+            if (okToRun())
                 status = 7;
+            else
+                return false;
             task = null;
-            return ok;
+            return true;
         };
         var run = function () {
             if (okToRun())
