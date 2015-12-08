@@ -10,10 +10,11 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../Types', "../Collections/LinkedList", "../Collections/Queue"], function (require, exports) {
-    var Types_1 = require('../Types');
-    var LinkedList_1 = require("../Collections/LinkedList");
-    var Queue_1 = require("../Collections/Queue");
+})(["require", "exports", '../System/Types', "../System/Collections/LinkedList", "../System/Collections/Queue"], function (require, exports) {
+    ///<reference path="ICancellable.d.ts"/>
+    var Types_1 = require('../System/Types');
+    var LinkedList_1 = require("../System/Collections/LinkedList");
+    var Queue_1 = require("../System/Collections/Queue");
     "use strict";
     var requestTick;
     var isNodeJS = false;
@@ -66,40 +67,24 @@
             requestTick();
         }
     }
-    var TaskScheduler;
-    (function (TaskScheduler) {
-        function defer(task, delay) {
-            if (Types_1.default.isNumber(delay, false) && delay >= 0) {
-                var timeout = 0;
-                var cancel = function () {
-                    if (timeout) {
-                        clearTimeout(timeout);
-                        timeout = 0;
-                        return true;
-                    }
-                    return false;
-                };
-                timeout = setTimeout(function () {
-                    cancel();
-                    task();
-                }, delay);
-                return cancel;
-            }
+    var NextTick;
+    (function (NextTick) {
+        function queue(task) {
             var entry = {
                 task: task,
                 domain: isNodeJS && process['domain']
             };
             immediateQueue.add(entry);
             requestFlush();
-            return function () { return !!immediateQueue.remove(entry); };
+            return Object.freeze({ cancel: function () { return !!immediateQueue.remove(entry); } });
         }
-        TaskScheduler.defer = defer;
-        function runAfterDeferred(task) {
+        NextTick.queue = queue;
+        function runAfter(task) {
             laterQueue.enqueue(task);
             requestFlush();
         }
-        TaskScheduler.runAfterDeferred = runAfterDeferred;
-    })(TaskScheduler || (TaskScheduler = {}));
+        NextTick.runAfter = runAfter;
+    })(NextTick || (NextTick = {}));
     if (Types_1.default.isObject(process)
         && process.toString() === "[object process]"
         && process.nextTick) {
@@ -139,6 +124,6 @@
         };
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = TaskScheduler;
+    exports.default = NextTick;
 });
-//# sourceMappingURL=TaskScheduler.js.map
+//# sourceMappingURL=NextTick.js.map

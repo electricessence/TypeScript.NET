@@ -66,10 +66,9 @@ export default class TaskScheduler implements ITaskScheduler
 				_._workerId = 0;
 				//noinspection JSUnusedAssignment
 				_currentScheduler = this;
-				while(_._queue.count)
-				{
-					_._tryExecuteTask(_._queue.dequeue());
-				}
+				var currentTasks = _._queue.dump();
+				for(let task of currentTasks)
+					_._tryExecuteTask(task);
 				_currentScheduler = null;
 			});
 		}

@@ -4,13 +4,15 @@
  * Based on code from: https://github.com/kriskowal/q
  */
 
-import Type from '../Types';
-import LinkedList from "../Collections/LinkedList";
-import Queue from "../Collections/Queue";
+///<reference path="ICancellable.d.ts"/>
+import Type from '../System/Types';
+import LinkedList from "../System/Collections/LinkedList";
+import Queue from "../System/Collections/Queue";
 
 declare module process
 {
 	export function nextTick(callback:Function):void;
+
 	export function toString():string;
 }
 
@@ -35,7 +37,6 @@ var flushing:boolean = false;
 
 // Use the fastest possible means to execute a task in a future turn
 // of the event loop.
-
 
 
 function flush():void
@@ -114,7 +115,8 @@ function runSingle(task:Function, domain?:IDomain):void
 	}
 }
 
-function requestFlush():void {
+function requestFlush():void
+{
 	if(!flushing)
 	{
 		flushing = true;
@@ -122,56 +124,33 @@ function requestFlush():void {
 	}
 }
 
-module TaskScheduler {
-
-
-	export function defer(task:Function, delay?:number):()=>boolean
+module NextTick
+{
+	export function queue(task:Function):ICancellable
 	{
-		if(Type.isNumber(delay,false) && delay>=0) {
-
-			var timeout:number = 0;
-
-			var cancel = ()=>{
-				if(timeout) {
-					clearTimeout(timeout);
-					timeout = 0;
-					return true;
-				}
-				return false;
-			};
-
-			timeout = setTimeout(()=>{
-				cancel();
-				task();
-			},delay);
-
-			return cancel;
-		}
-
 		var entry = {
-			task:task,
-			domain:isNodeJS && (<any>process)['domain']
+			task: task,
+			domain: isNodeJS && (<any>process)['domain']
 		};
 
 		immediateQueue.add(entry);
 
 		requestFlush();
 
-		return ()=>!!immediateQueue.remove(entry)
+		return Object.freeze({cancel: ()=>!!immediateQueue.remove(entry)});
 	}
 
 
 	// runs a task after all other tasks have been run
 	// this is useful for unhandled rejection tracking that needs to happen
-	// after all `then`d tasks have been run.
-	export function runAfterDeferred(task:Function):void
+	// after all `then` tasks have been run.
+	export function runAfter(task:Function):void
 	{
 		laterQueue.enqueue(task);
 		requestFlush();
 	}
 
 }
-
 
 
 if(Type.isObject(process)
@@ -245,4 +224,4 @@ else
 	};
 }
 
-export default TaskScheduler;
+export default NextTick;

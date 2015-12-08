@@ -61,8 +61,10 @@
                 _._workerId = setTimeout(function () {
                     _._workerId = 0;
                     _currentScheduler = _this;
-                    while (_._queue.count) {
-                        _._tryExecuteTask(_._queue.dequeue());
+                    var currentTasks = _._queue.dump();
+                    for (var _i = 0; _i < currentTasks.length; _i++) {
+                        var task = currentTasks[_i];
+                        _._tryExecuteTask(task);
                     }
                     _currentScheduler = null;
                 });
