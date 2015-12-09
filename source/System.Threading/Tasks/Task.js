@@ -17,7 +17,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", "../../System/Types", "../../System/Time/TimeSpan", "../../System/Disposable/DisposableBase", "../CancellationToken"], function (require, exports) {
+})(["require", "exports", "../../System/Types", "../../System/Time/TimeSpan", "../../System/Disposable/DisposableBase", "../CancellationToken", "./TaskFactory"], function (require, exports) {
     ///<reference path="ITask"/>
     ///<reference path="TaskCreationOptions.d.ts"/>
     ///<reference path="../../System/Promises/IPromise.d.ts"/>
@@ -25,6 +25,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     var TimeSpan_1 = require("../../System/Time/TimeSpan");
     var DisposableBase_1 = require("../../System/Disposable/DisposableBase");
     var CancellationToken_1 = require("../CancellationToken");
+    var TaskFactory_1 = require("./TaskFactory");
+    var _factory = new TaskFactory_1.default();
+    var _current;
     var Task = (function (_super) {
         __extends(Task, _super);
         function Task(_task, _asyncState, _cancellationToken, _creationOptions) {
@@ -81,33 +84,41 @@ var __extends = (this && this.__extends) || function (d, b) {
         });
         Object.defineProperty(Task.prototype, "isRunning", {
             get: function () {
-                return this._status == 3;
+                return this._status === 3;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Task.prototype, "isCancelled", {
             get: function () {
-                return this._status == 7;
+                return this._status === 7;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Task.prototype, "isCompleted", {
             get: function () {
-                return this._status == 6;
+                return this._status === 6;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Task.prototype, "isFaulted", {
             get: function () {
-                return this._status == 8;
+                return this._status === 8;
             },
             enumerable: true,
             configurable: true
         });
+        Task.run = function (task, asyncState, cancellationToken, creationOptions) {
+            if (creationOptions === void 0) { creationOptions = 0; }
+            var t = new Task(task, asyncState, cancellationToken, creationOptions);
+            t._startUnsafe();
+            return t;
+        };
         Task.prototype.runSynchronously = function (scheduler) {
+        };
+        Task.prototype._startUnsafe = function (scheduler) {
         };
         Task.prototype.start = function (scheduler) {
         };

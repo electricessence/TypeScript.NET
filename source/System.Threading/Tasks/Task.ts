@@ -14,10 +14,18 @@ import Type from "../../System/Types";
 import TimeSpan from "../../System/Time/TimeSpan";
 import DisposableBase from "../../System/Disposable/DisposableBase";
 import CancellationToken from "../CancellationToken";
+import TaskFactory from "./TaskFactory";
+
+const _factory:TaskFactory = new TaskFactory();
+var _current:Task<any>;
+
 
 export default class Task<TResult>
 extends DisposableBase implements ITask<TResult>
 {
+	private _scheduler:ITaskScheduler;
+	private _parent:Task<any>;
+
 	constructor(
 		private _task:(state?:any) => TResult,
 		private _asyncState?:any,
@@ -68,29 +76,44 @@ extends DisposableBase implements ITask<TResult>
 
 	get isRunning():boolean
 	{
-		return this._status==TaskStatus.Running;
+		return this._status===TaskStatus.Running;
 	}
 
 	get isCancelled():boolean
 	{
-		return this._status==TaskStatus.Canceled;
+		return this._status===TaskStatus.Canceled;
 	}
 
 	get isCompleted():boolean
 	{
-		return this._status==TaskStatus.RanToCompletion;
+		return this._status===TaskStatus.RanToCompletion;
 	}
 
 	get isFaulted():boolean
 	{
-		return this._status==TaskStatus.Faulted;
+		return this._status===TaskStatus.Faulted;
 	}
 
 	// #endregion
 
+	static run<TResult>(
+			task:(state?:any) => TResult,
+			asyncState?:any,
+			cancellationToken?:CancellationToken,
+			creationOptions:TaskCreationOptions = TaskCreationOptions.None):Task<TResult> {
+
+		var t = new Task<TResult>(task,asyncState,cancellationToken,creationOptions);
+		t._startUnsafe();
+		return t;
+	}
 
 	runSynchronously(scheduler?:ITaskScheduler):void
 	{
+	}
+
+	protected _startUnsafe(scheduler?:ITaskScheduler):void
+	{
+
 	}
 
 	start(scheduler?:ITaskScheduler):void
@@ -224,7 +247,6 @@ extends DisposableBase implements ITask<TResult>
 		throw 'not implemented yet';
 	}
 
-	private _scheduler:ITaskScheduler;
 	// Internal...
 	get _executingTaskScheduler():ITaskScheduler
 	{
