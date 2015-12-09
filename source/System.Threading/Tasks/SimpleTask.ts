@@ -1,5 +1,3 @@
-///<reference path="ITaskState.d.ts"/>
-///<reference path="..\..\System\Promises\IPromise.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -12,6 +10,7 @@
 
 ///<reference path="ISimpleTask.d.ts"/>
 ///<reference path="TaskStatus.d.ts"/>
+///<reference path="ITaskState.d.ts"/>
 
 class SimpleTask<TResult> implements ISimpleTask<TResult>
 {

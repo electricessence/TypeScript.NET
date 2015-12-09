@@ -2,8 +2,11 @@
 
 ///<reference path="../../System/Collections/Array/IArray"/>
 ///<reference path="ITaskScheduler.d.ts"/>
+///<reference path="..\ICancellable.d.ts"/>
 import Task from './Task';
 import Queue from '../../System/Collections/Queue';
+import ArgumentNullException from '../../System/Exceptions/ArgumentNullException';
+import NextTick from '../NextTick';
 
 var _lastId:number = 0 | 0;
 var _defaultScheduler:TaskScheduler;
@@ -14,7 +17,9 @@ const MAX_INT32_SIGNED = 2147483647 | 0;
 
 export default class TaskScheduler implements ITaskScheduler
 {
-	constructor(private _maximumConcurrencyLevel:number = MAX_INT32_SIGNED)
+	constructor(
+		//private _maximumConcurrencyLevel:number = MAX_INT32_SIGNED // Is currently irrelevant
+	)
 	{
 		this._id = ++_lastId;
 		this._queue = new Queue<ITask<any>>();
@@ -22,19 +27,19 @@ export default class TaskScheduler implements ITaskScheduler
 
 	static get current():ITaskScheduler
 	{
-		return _currentScheduler || TaskScheduler.defaultInstance;
+		return _currentScheduler || TaskScheduler.default;
 	}
 
-	static get defaultInstance():ITaskScheduler
+	static get 'default'():ITaskScheduler
 	{
 		if(!_defaultScheduler) _defaultScheduler = new TaskScheduler();
 		return _defaultScheduler;
 	}
 
-	static fromCurrentSynchronizationContext():ITaskScheduler
-	{
-		return null;// placeholder.
-	}
+	//static fromCurrentSynchronizationContext():ITaskScheduler
+	//{
+	//	return null;// placeholder.
+	//}
 
 
 	private _id:number;
@@ -43,10 +48,11 @@ export default class TaskScheduler implements ITaskScheduler
 		return this._id;
 	}
 
-	get maximumConcurrencyLevel():number //int
-	{
-		return this._maximumConcurrencyLevel;
-	}
+	// Currently irrelevant?
+	//get maximumConcurrencyLevel():number //int
+	//{
+	//	return this._maximumConcurrencyLevel;
+	//}
 
 	private _queue:Queue<ITask<any>>;
 	_getScheduledTasks():IArray<ITask<any>>
@@ -54,16 +60,16 @@ export default class TaskScheduler implements ITaskScheduler
 		return this._queue.toArray();
 	}
 
-	private _workerId:number;
+	private _worker:ICancellable;
 
 	private _ensureWorkerReady():void
 	{
 		var _ = this;
-		if(!_._workerId)
+		if(!_._worker)
 		{
-			_._workerId = setTimeout(() =>
+			_._worker = NextTick.queue(() =>
 			{
-				_._workerId = 0;
+				_._worker = null;
 				//noinspection JSUnusedAssignment
 				_currentScheduler = this;
 				var currentTasks = _._queue.dump();
@@ -77,7 +83,7 @@ export default class TaskScheduler implements ITaskScheduler
 	queueTask<T>(task:ITask<T>):void
 	{
 		if(!task)
-			throw new Error("ArgumentNullException");
+			throw new ArgumentNullException("task");
 		this._queue.enqueue(task);
 		this._ensureWorkerReady();
 	}
@@ -99,7 +105,7 @@ export default class TaskScheduler implements ITaskScheduler
 
 
 	// Internal
-	tryExecuteTaskInline<T>(task:ITask<T>, taskWasPreviouslyQueued:boolean):boolean
+	_tryExecuteTaskInline<T>(task:ITask<T>, taskWasPreviouslyQueued:boolean):boolean
 	{
 		if(taskWasPreviouslyQueued && !this._tryDequeue(task))
 			return false;

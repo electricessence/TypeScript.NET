@@ -11,7 +11,7 @@
 interface ITaskScheduler
 {
 	id: number; // int
-	maximumConcurrencyLevel: number; //int
+	//maximumConcurrencyLevel: number; //int
 
 	queueTask(task:ITask<any>):void;
 }
