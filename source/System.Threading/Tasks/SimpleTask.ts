@@ -13,7 +13,7 @@
 ///<reference path="ISimpleTask.d.ts"/>
 ///<reference path="TaskStatus.d.ts"/>
 
-class SimpleTask<T> implements ISimpleTask<T>, IPromise<T>
+class SimpleTask<T> implements ISimpleTask<T>
 {
 
 	constructor(
