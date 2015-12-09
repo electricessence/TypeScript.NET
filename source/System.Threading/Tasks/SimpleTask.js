@@ -1,3 +1,5 @@
+///<reference path="ITaskState.d.ts"/>
+///<reference path="..\..\System\Promises\IPromise.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -12,9 +14,80 @@
 })(["require", "exports"], function (require, exports) {
     ///<reference path="ISimpleTask.d.ts"/>
     ///<reference path="TaskStatus.d.ts"/>
-    var VOID0 = void 0;
-    var STATUS = 'status';
-    var RESULT = 'result';
+    var SimpleTask = (function () {
+        function SimpleTask(context, task, args) {
+            this._context = context;
+            this._task = task;
+            this._args = args;
+        }
+        SimpleTask.prototype._okToRun = function () {
+            var _ = this;
+            if (_._status <= 2) {
+                if (_._timeout)
+                    clearTimeout(_._timeout);
+                return true;
+            }
+            return false;
+        };
+        Object.defineProperty(SimpleTask.prototype, "status", {
+            get: function () {
+                return this._status;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SimpleTask.prototype, "result", {
+            get: function () {
+                return this._result;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SimpleTask.prototype, "exception", {
+            get: function () {
+                return this._exception;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SimpleTask.prototype.runSynchronous = function () {
+            var _ = this;
+            if (_._okToRun())
+                _._status = 3;
+            else
+                return false;
+            try {
+                if (_._task)
+                    _._result = _._task.apply(_._context, _._args);
+                _._status = 6;
+            }
+            catch (ex) {
+                _._status = 8;
+                _._exception = ex;
+            }
+            _._task = null;
+            return true;
+        };
+        SimpleTask.prototype.defer = function (delay) {
+            var _ = this;
+            if (_._okToRun())
+                _._status = 2;
+            else
+                return false;
+            _._timeout = setTimeout(function () { return _.runSynchronous(); }, delay);
+            return true;
+        };
+        SimpleTask.prototype.cancel = function () {
+            var _ = this;
+            if (_._okToRun())
+                _._status = 7;
+            else
+                return false;
+            _._task = null;
+            return true;
+        };
+        return SimpleTask;
+    })();
     function create(task) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -32,67 +105,7 @@
     }
     exports.apply = apply;
     function applyInternal(context, task, args) {
-        var status = 0;
-        var timeout = 0;
-        var taskResult;
-        var okToRun = function () {
-            if (status <= 2) {
-                if (timeout)
-                    clearTimeout(timeout);
-                return true;
-            }
-            return false;
-        };
-        var cancel = function () {
-            if (okToRun())
-                status = 7;
-            else
-                return false;
-            task = null;
-            return true;
-        };
-        var run = function () {
-            if (okToRun())
-                status = 3;
-            else
-                return false;
-            try {
-                if (task)
-                    taskResult = task.apply(context, args);
-                status = 6;
-            }
-            catch (ex) {
-                status = 8;
-            }
-            task = null;
-            return true;
-        };
-        var defer = function (delay) {
-            if (okToRun())
-                status = 2;
-            else
-                return false;
-            timeout = setTimeout(run, delay);
-            return true;
-        };
-        var result = {
-            status: VOID0,
-            result: VOID0,
-            cancel: cancel,
-            defer: defer,
-            runSynchronous: run
-        };
-        Object.defineProperty(result, STATUS, {
-            get: function () { return status; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(result, RESULT, {
-            get: function () { return taskResult; },
-            enumerable: true,
-            configurable: true
-        });
-        return Object.freeze(result);
+        return new SimpleTask(context, task, args);
     }
     function defer(task, delay) {
         var args = [];
