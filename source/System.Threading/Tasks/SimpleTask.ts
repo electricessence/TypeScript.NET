@@ -13,26 +13,20 @@
 ///<reference path="ISimpleTask.d.ts"/>
 ///<reference path="TaskStatus.d.ts"/>
 
-class SimpleTask<T> implements ISimpleTask<T>
+class SimpleTask<TResult> implements ISimpleTask<TResult>
 {
 
-	constructor(
-		context:Object,
-		task:(...args:any[])=>T,
-		args:any[])
-	{
-		this._context = context;
-		this._task = task;
-		this._args = args;
-	}
-
-	protected _context:Object;
-	protected _task:(...args:any[])=>T;
-	protected _args:any[];
 	protected _timeout:number;
 	protected _status:TaskStatus;
-	protected _result:T;
+	protected _result:TResult;
 	protected _exception:any;
+
+	constructor(
+		protected _context:Object,
+		protected _task:(...args:any[])=>TResult,
+		protected _args:any[])
+	{
+	}
 
 	protected _okToRun():boolean
 	{
@@ -50,7 +44,7 @@ class SimpleTask<T> implements ISimpleTask<T>
 		return this._status;
 	}
 
-	get result():T
+	get result():TResult
 	{
 		return this._result;
 	}

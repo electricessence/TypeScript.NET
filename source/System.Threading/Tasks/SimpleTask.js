@@ -15,10 +15,10 @@
     ///<reference path="ISimpleTask.d.ts"/>
     ///<reference path="TaskStatus.d.ts"/>
     var SimpleTask = (function () {
-        function SimpleTask(context, task, args) {
-            this._context = context;
-            this._task = task;
-            this._args = args;
+        function SimpleTask(_context, _task, _args) {
+            this._context = _context;
+            this._task = _task;
+            this._args = _args;
         }
         SimpleTask.prototype._okToRun = function () {
             var _ = this;

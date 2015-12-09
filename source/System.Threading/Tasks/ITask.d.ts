@@ -8,28 +8,26 @@
 
 ///<reference path="../../System/IEquatable"/>
 ///<reference path="../../System/Disposable/IDisposable"/>
+///<reference path="../../System/Time/ITimeQuantity.d.ts"/>
+///<reference path="../../System/Promises/IPromise.d.ts"/>
 ///<reference path="../CancellationToken.d.ts"/>
 ///<reference path="ITaskScheduler"/>
 ///<reference path="TaskCreationOptions"/>
 ///<reference path="TaskStatus"/>
-///<reference path="../../System/Time/ITimeQuantity.d.ts"/>
-///<reference path="../../System/Promises/IPromise.d.ts"/>
 ///<reference path="TaskContinuationOptions.d.ts"/>
+///<reference path="ITaskState.d.ts"/>
 
 interface ITask<TResult>
-extends IDisposable, IEquatable<ITask<TResult>>, IPromise<TResult>
+extends ITaskState<TResult>, IDisposable, IEquatable<ITask<TResult>>, IPromise<TResult>
 {
 	asyncState: Object;
 	creationOptions: TaskCreationOptions;
-	exception: Error;
 	//factory: TaskFactory<TResult>;
 	id: number; // int
 	isRunning: boolean;
 	isCancelled: boolean;
 	isCompleted: boolean;
 	isFaulted: boolean;
-	result: TResult;
-	status: TaskStatus;
 
 	runSynchronously(scheduler?:ITaskScheduler): void;
 	start(scheduler?:ITaskScheduler): void;
