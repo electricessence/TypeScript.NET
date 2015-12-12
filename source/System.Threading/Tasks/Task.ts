@@ -172,14 +172,14 @@ extends DisposableBase implements ITask<TResult>
 		timeOrCancel?:CancellationToken | number | ITimeQuantity,
 		token?:CancellationToken):void
 	{
-		if(Type.isInstanceOf<CancellationToken>(timeOrCancel, CancellationToken))
+		if(timeOrCancel instanceof CancellationToken)
 			token = timeOrCancel;
 
 		var milliseconds:number = Type.isNumber(timeOrCancel)
 			? timeOrCancel
 			: 0;
 
-		if(Type.isInstanceOf<TimeSpan>(timeOrCancel, TimeSpan))
+		if(timeOrCancel instanceof TimeSpan)
 			milliseconds = timeOrCancel.milliseconds;
 
 		// TODO: Above is just the scaffold.  Next up, respond to parameters.

@@ -126,12 +126,12 @@ var __extends = (this && this.__extends) || function (d, b) {
             throw 'not implemented yet';
         };
         Task.prototype.waitWith = function (continuationAction, timeOrCancel, token) {
-            if (Types_1.default.isInstanceOf(timeOrCancel, CancellationToken_1.default))
+            if (timeOrCancel instanceof CancellationToken_1.default)
                 token = timeOrCancel;
             var milliseconds = Types_1.default.isNumber(timeOrCancel)
                 ? timeOrCancel
                 : 0;
-            if (Types_1.default.isInstanceOf(timeOrCancel, TimeSpan_1.default))
+            if (timeOrCancel instanceof TimeSpan_1.default)
                 milliseconds = timeOrCancel.milliseconds;
             return null;
         };
