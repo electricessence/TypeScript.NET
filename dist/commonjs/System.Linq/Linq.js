@@ -623,7 +623,7 @@ var Enumerable = (function (_DisposableBase) {
                     break;
                 default:
                     return this.where(function (x) {
-                        return _SystemTypes2['default'].isInstanceOf(x, type);
+                        return x instanceof type;
                     });
             }
             return this.where(function (x) {
@@ -1643,7 +1643,7 @@ var Enumerable = (function (_DisposableBase) {
         key: 'from',
         value: function from(source) {
             if (_SystemTypes2['default'].isObject(source)) {
-                if (_SystemTypes2['default'].isInstanceOf(source, Enumerable)) return source;
+                if (source instanceof Enumerable) return source;
                 if (Array.isArray(source)) return new ArrayEnumerable(source);
                 if ((0, _SystemCollectionsEnumerationEnumerator.isEnumerable)(source)) return new Enumerable(function () {
                     return source.getEnumerator();
@@ -1658,7 +1658,7 @@ var Enumerable = (function (_DisposableBase) {
             if (_SystemTypes2['default'].isObject(source)) {
                 if (Array.isArray(source)) return source.slice();
                 if (_SystemTypes2['default'].isArrayLike(source)) source = new ArrayEnumerable(source);
-                if (_SystemTypes2['default'].isInstanceOf(source, Enumerable)) return source.toArray();
+                if (source instanceof Enumerable) return source.toArray();
                 if ((0, _SystemCollectionsEnumerationEnumerator.isEnumerable)(source)) {
                     var result = [];
                     (0, _SystemCollectionsEnumerationEnumerator.forEach)(source.getEnumerator(), function (e, i) {
@@ -1832,7 +1832,7 @@ var Enumerable = (function (_DisposableBase) {
 
             var type = typeof input;
             if (type != _SystemTypes2['default'].STRING) throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-            if (_SystemTypes2['default'].isInstanceOf(pattern, RegExp)) {
+            if (pattern instanceof RegExp) {
                 flags += pattern.ignoreCase ? "i" : "";
                 flags += pattern.multiline ? "m" : "";
                 pattern = pattern.source;
@@ -2124,7 +2124,7 @@ var ArrayEnumerable = (function (_Enumerable) {
             var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Values.areEqual : arguments[1];
 
             if (Array.isArray(second)) return Arrays.areEqual(this.source, second, true, equalityComparer);
-            if (_SystemTypes2['default'].isInstanceOf(second, ArrayEnumerable)) return second.sequenceEqual(this.source, equalityComparer);
+            if (second instanceof ArrayEnumerable) return second.sequenceEqual(this.source, equalityComparer);
             return _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'sequenceEqual', this).call(this, second, equalityComparer);
         }
     }, {

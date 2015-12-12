@@ -74,7 +74,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.from = function (source) {
             if (Types_1.default.isObject(source)) {
-                if (Types_1.default.isInstanceOf(source, Enumerable))
+                if (source instanceof Enumerable)
                     return source;
                 if (Array.isArray(source))
                     return new ArrayEnumerable(source);
@@ -91,7 +91,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     return source.slice();
                 if (Types_1.default.isArrayLike(source))
                     source = new ArrayEnumerable(source);
-                if (Types_1.default.isInstanceOf(source, Enumerable))
+                if (source instanceof Enumerable)
                     return source.toArray();
                 if (Enumerator_1.isEnumerable(source)) {
                     var result = [];
@@ -253,7 +253,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var type = typeof input;
             if (type != Types_1.default.STRING)
                 throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-            if (Types_1.default.isInstanceOf(pattern, RegExp)) {
+            if (pattern instanceof RegExp) {
                 flags += (pattern.ignoreCase) ? "i" : "";
                 flags += (pattern.multiline) ? "m" : "";
                 pattern = pattern.source;
@@ -809,7 +809,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     break;
                 default:
                     return this
-                        .where(function (x) { return Types_1.default.isInstanceOf(x, type); });
+                        .where(function (x) { return x instanceof type; });
             }
             return this
                 .where(function (x) { return typeof x === typeName; });
@@ -1906,7 +1906,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
             if (Array.isArray(second))
                 return Arrays.areEqual(this.source, second, true, equalityComparer);
-            if (Types_1.default.isInstanceOf(second, ArrayEnumerable))
+            if (second instanceof ArrayEnumerable)
                 return second.sequenceEqual(this.source, equalityComparer);
             return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
         };

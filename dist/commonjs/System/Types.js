@@ -167,10 +167,6 @@ var Type;
         return hasMember(instance, property) && typeof instance[property] === type;
     }
     Type.hasMemberOfType = hasMemberOfType;
-    function isInstanceOf(instance, type) {
-        return instance instanceof type;
-    }
-    Type.isInstanceOf = isInstanceOf;
     function isArrayLike(instance) {
         return instance instanceof Array || hasMember(instance, "length");
     }
