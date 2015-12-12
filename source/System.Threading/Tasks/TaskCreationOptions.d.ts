@@ -45,4 +45,11 @@ declare const enum TaskCreationOptions
 	 *  like StartNew or ContinueWith that are performed in the created task will see TaskScheduler.Default as the current scheduler.
 	 */
 	HideScheduler = 0x10,
+
+
+	/**
+	 * Forces continuations added to the current task to be executed asynchronously.
+	 * This option has precedence over TaskContinuationOptions.ExecuteSynchronously
+	 */
+	RunContinuationsAsynchronously = 0x40
 }
