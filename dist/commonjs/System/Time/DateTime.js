@@ -15,10 +15,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var _Types = require('../Types');
-
-var _Types2 = _interopRequireDefault(_Types);
-
 var _ClockTime = require('./ClockTime');
 
 var _ClockTime2 = _interopRequireDefault(_ClockTime);
@@ -40,7 +36,7 @@ var DateTime = (function () {
 
         var _ = this;
         _._kind = kind;
-        if (_Types2['default'].isInstanceOf(value, DateTime)) _._value = value.toJsDate();else if (_Types2['default'].isInstanceOf(value, Date)) _._setJsDate(value);else _._value = value === void 0 ? new Date() : new Date(value);
+        if (value instanceof DateTime) _._value = value.toJsDate();else if (value instanceof Date) _._setJsDate(value);else _._value = value === void 0 ? new Date() : new Date(value);
     }
 
     _createClass(DateTime, [{
@@ -173,8 +169,8 @@ var DateTime = (function () {
     }], [{
         key: 'between',
         value: function between(first, last) {
-            var f = _Types2['default'].isInstanceOf(first, DateTime) ? first._value : first,
-                l = _Types2['default'].isInstanceOf(last, DateTime) ? last._value : last;
+            var f = first instanceof DateTime ? first._value : first,
+                l = last instanceof DateTime ? last._value : last;
             return new _TimeSpan2['default'](f.getTime() - l.getTime());
         }
     }, {

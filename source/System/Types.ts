@@ -284,17 +284,10 @@ module Type
 		return hasMember(instance, property) && typeof(instance[property])===type;
 	}
 
-	// Substitute 'instanceof' until WebStorm's reformatting is fixed.
-	export function isInstanceOf<T>(instance:any, type:any):instance is T
-	{
-		return (instance)instanceof(type);
-	}
-
 	export function isArrayLike<T>(instance:any):instance is IArray<T>
 	{
-		return (instance)instanceof(Array) || hasMember(instance, "length");
+		return instance instanceof Array || hasMember(instance, "length");
 	}
-
 }
 
 Object.freeze(Type);

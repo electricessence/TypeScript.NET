@@ -107,7 +107,7 @@ extends DisposableBase implements IEnumerable<T>
 	{
 		if(Type.isObject(source))
 		{
-			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
+			if(source instanceof Enumerable)
 				return source;
 
 			if(Array.isArray(source))
@@ -133,7 +133,7 @@ extends DisposableBase implements IEnumerable<T>
 			if(Type.isArrayLike<T>(source))
 				source = new ArrayEnumerable<T>(<IArray<T>>source);
 
-			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
+			if(source instanceof  Enumerable)
 				return source.toArray();
 
 			if(isEnumerable<T>(source))
@@ -443,7 +443,7 @@ extends DisposableBase implements IEnumerable<T>
 		if(type!=Type.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
-		if(Type.isInstanceOf(pattern, RegExp))
+		if(pattern instanceof  RegExp)
 		{
 			flags += (pattern.ignoreCase) ? "i" : "";
 			flags += (pattern.multiline) ? "m" : "";
@@ -1471,7 +1471,7 @@ extends DisposableBase implements IEnumerable<T>
 				break;
 			default:
 				return <Enumerable<any>>this
-					.where(x=>Type.isInstanceOf(x, type));
+					.where(x=>x instanceof  type);
 		}
 		return <Enumerable<any>>this
 			.where(x=>typeof x===typeName);
@@ -3385,7 +3385,7 @@ extends Enumerable<T>
 		if(Array.isArray(second))
 			return Arrays.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
 
-		if(Type.isInstanceOf(second, ArrayEnumerable))
+		if(second instanceof  ArrayEnumerable)
 			return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
 
 		return super.sequenceEqual(second, equalityComparer);

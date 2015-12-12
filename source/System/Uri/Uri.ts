@@ -225,7 +225,7 @@ class Uri implements IUri, IEquatable<IUri>
 	 */
 	static toString(uri:IUri):string
 	{
-		return Type.isInstanceOf<Uri>(uri,Uri)
+		return uri instanceof Uri
 			? (<Uri>uri).absoluteUri
 			: uriToString(uri);
 	}

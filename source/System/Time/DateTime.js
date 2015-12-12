@@ -10,13 +10,7 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../Types', './ClockTime', './TimeSpan', './TimeStamp'], function (require, exports) {
-    ///<reference path='ITimeQuantity.d.ts'/>
-    ///<reference path="ITimeStamp.d.ts"/>
-    ///<reference path="IDateTime.d.ts"/>
-    ///<reference path="Calendars.d.ts"/>
-    ///<reference path="HowMany.ts"/>
-    var Types_1 = require('../Types');
+})(["require", "exports", './ClockTime', './TimeSpan', './TimeStamp'], function (require, exports) {
     var ClockTime_1 = require('./ClockTime');
     var TimeSpan_1 = require('./TimeSpan');
     var TimeStamp_1 = require('./TimeStamp');
@@ -26,9 +20,9 @@
             if (kind === void 0) { kind = 1; }
             var _ = this;
             _._kind = kind;
-            if (Types_1.default.isInstanceOf(value, DateTime))
+            if (value instanceof DateTime)
                 _._value = value.toJsDate();
-            else if (Types_1.default.isInstanceOf(value, Date))
+            else if (value instanceof Date)
                 _._setJsDate(value);
             else
                 _._value = value === void (0)
@@ -175,7 +169,7 @@
             configurable: true
         });
         DateTime.between = function (first, last) {
-            var f = Types_1.default.isInstanceOf(first, DateTime) ? first._value : first, l = Types_1.default.isInstanceOf(last, DateTime) ? last._value : last;
+            var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
             return new TimeSpan_1.default(f.getTime() - l.getTime());
         };
         DateTime.isLeapYear = function (year) {

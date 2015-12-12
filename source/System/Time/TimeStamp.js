@@ -39,9 +39,9 @@
             return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
         };
         TimeStamp.from = function (d) {
-            if (!(Types_1.default.isInstanceOf(d, Date)) && Types_1.default.hasMember(d, 'toJsDate'))
+            if (!(d instanceof Date) && Types_1.default.hasMember(d, 'toJsDate'))
                 d = d.toJsDate();
-            if (Types_1.default.isInstanceOf(d, Date)) {
+            if (d instanceof Date) {
                 return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
             }
             else {

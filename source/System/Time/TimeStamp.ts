@@ -40,9 +40,9 @@ class TimeStamp implements ITimeStamp, IDateTime
 
 	static from(d:Date|IDateTime):TimeStamp
 	{
-		if (!(Type.isInstanceOf<Date>(d,Date)) && Type.hasMember(d,'toJsDate'))
+		if (!(d instanceof Date) && Type.hasMember(d,'toJsDate'))
 			d = (<IDateTime>d).toJsDate();
-		if(Type.isInstanceOf<Date>(d,Date))
+		if(d instanceof Date)
 		{
 			return new TimeStamp(
 				d.getFullYear(),
