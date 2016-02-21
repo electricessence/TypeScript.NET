@@ -1,21 +1,17 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", './TimeQuantity'], factory);
     }
-})(["require", "exports", './TimeQuantity'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var TimeQuantity_1 = require('./TimeQuantity');
     var ClockTime = (function (_super) {
         __extends(ClockTime, _super);
@@ -60,7 +56,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             return value;
         };
         ClockTime.prototype.toString = function () {
-            /* INSERT CUSTOM FORMATTING CODE HERE */
             var _ = this, a = [];
             if (_.days)
                 a.push(pluralize(_.days, "day"));
@@ -75,7 +70,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return a.join(", ").replace(", and, ", " and ");
         };
         return ClockTime;
-    })(TimeQuantity_1.default);
+    }(TimeQuantity_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ClockTime;
     function pluralize(value, label) {

@@ -1,14 +1,15 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based on .NET DateTime's interface.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-
 ///<reference path='ITimeQuantity.d.ts'/>
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="IDateTime.d.ts"/>
 ///<reference path="Calendars.d.ts"/>
 ///<reference path="HowMany.ts"/>
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+'use strict'; // For compatibility with (let, const, function, class);
+
 import Type from '../Types';
 import ClockTime from './ClockTime';
 import TimeSpan from './TimeSpan';

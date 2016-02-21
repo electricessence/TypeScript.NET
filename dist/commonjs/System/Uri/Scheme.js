@@ -1,13 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
- */
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 var UriScheme;
 (function (UriScheme) {
     UriScheme[UriScheme["file"] = 0] = "file";
@@ -31,6 +22,6 @@ UriScheme[UriScheme.tcp] = TCP;
 UriScheme[PIPE] = UriScheme.pipe;
 UriScheme[TCP] = UriScheme.tcp;
 Object.freeze(UriScheme);
-exports["default"] = UriScheme;
-module.exports = exports["default"];
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = UriScheme;
 //# sourceMappingURL=Scheme.js.map

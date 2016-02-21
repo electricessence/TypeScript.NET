@@ -1,19 +1,12 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
- */
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], factory);
     }
-})(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
-    ///<reference path="IUri.d.ts"/>
-    ///<reference path="../IEquatable.d.ts"/>
-    ///<reference path="../Primitive.d.ts"/>
+})(function (require, exports) {
+    'use strict';
     var Types_1 = require('../Types');
     var QueryParams = require('../Uri/QueryParams');
     var Utility_1 = require('../Text/Utility');
@@ -97,25 +90,25 @@
             return getAuthority(uri);
         };
         return Uri;
-    })();
-    var Uri;
-    (function (Uri) {
-        (function (Fields) {
-            Fields[Fields["scheme"] = 0] = "scheme";
-            Fields[Fields["userInfo"] = 1] = "userInfo";
-            Fields[Fields["host"] = 2] = "host";
-            Fields[Fields["port"] = 3] = "port";
-            Fields[Fields["path"] = 4] = "path";
-            Fields[Fields["query"] = 5] = "query";
-            Fields[Fields["fragment"] = 6] = "fragment";
-        })(Uri.Fields || (Uri.Fields = {}));
-        var Fields = Uri.Fields;
-        Object.freeze(Fields);
-    })(Uri || (Uri = {}));
+    }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Uri;
+    (function (Fields) {
+        Fields[Fields["scheme"] = 0] = "scheme";
+        Fields[Fields["userInfo"] = 1] = "userInfo";
+        Fields[Fields["host"] = 2] = "host";
+        Fields[Fields["port"] = 3] = "port";
+        Fields[Fields["path"] = 4] = "path";
+        Fields[Fields["query"] = 5] = "query";
+        Fields[Fields["fragment"] = 6] = "fragment";
+    })(exports.Fields || (exports.Fields = {}));
+    var Fields = exports.Fields;
+    Object.freeze(Fields);
     function copyUri(from, to) {
-        if (to === void 0) { to = {}; }
         var i = 0, field;
-        while (field = Uri.Fields[i++]) {
+        if (!to)
+            to = {};
+        while (field = Fields[i++]) {
             var value = from[field];
             if (value)
                 to[field] = value;
@@ -170,8 +163,6 @@
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
-        // scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
-        // {scheme}{authority}{path}{query}{fragment}
         var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
         return EMPTY
             + ((scheme && (scheme + ':')) || EMPTY)
@@ -226,7 +217,5 @@
         out(copyUri(result));
         return null;
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Uri;
 });
 //# sourceMappingURL=Uri.js.map

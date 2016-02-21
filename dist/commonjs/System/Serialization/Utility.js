@@ -1,60 +1,42 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-exports.toString = toString;
-exports.isSerializable = isSerializable;
-exports.toPrimitive = toPrimitive;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _Types = require('../Types');
-
-var _Types2 = _interopRequireDefault(_Types);
-
-var _ExceptionsInvalidOperationException = require('../Exceptions/InvalidOperationException');
-
-var _ExceptionsInvalidOperationException2 = _interopRequireDefault(_ExceptionsInvalidOperationException);
-
-var EMPTY = '',
-    TRUE = 'true',
-    FALSE = 'false';
-
+"use strict";
+var Types_1 = require('../Types');
+var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
+var EMPTY = '', TRUE = 'true', FALSE = 'false';
 function toString(value, defaultForUnknown) {
     var v = value;
     switch (typeof v) {
-        case _Types2['default'].UNDEFINED:
-        case _Types2['default'].STRING:
+        case Types_1.default.UNDEFINED:
+        case Types_1.default.STRING:
             return v;
-        case _Types2['default'].BOOLEAN:
+        case Types_1.default.BOOLEAN:
             return v ? TRUE : FALSE;
-        case _Types2['default'].NUMBER:
+        case Types_1.default.NUMBER:
             return EMPTY + v;
         default:
-            if (v === null) return v;
-            if (isSerializable(v)) return v.serialize();else if (arguments.length > 1) return defaultForUnknown;
-            var ex = new _ExceptionsInvalidOperationException2['default']('Attempting to serialize unidentifiable type.');
+            if (v === null)
+                return v;
+            if (isSerializable(v))
+                return v.serialize();
+            else if (arguments.length > 1)
+                return defaultForUnknown;
+            var ex = new InvalidOperationException_1.default('Attempting to serialize unidentifiable type.');
             ex.data['value'] = v;
             throw ex;
     }
 }
-
+exports.toString = toString;
 function isSerializable(instance) {
-    return _Types2['default'].hasMemberOfType(instance, 'serialize', _Types2['default'].FUNCTION);
+    return Types_1.default.hasMemberOfType(instance, 'serialize', Types_1.default.FUNCTION);
 }
-
+exports.isSerializable = isSerializable;
 function toPrimitive(value, caseInsensitive, unknownHandler) {
     if (value) {
-        if (caseInsensitive) value = value.toLowerCase();
+        if (caseInsensitive)
+            value = value.toLowerCase();
         switch (value) {
             case 'null':
                 return null;
-            case _Types2['default'].UNDEFINED:
+            case Types_1.default.UNDEFINED:
                 return undefined;
             case TRUE:
                 return true;
@@ -65,16 +47,21 @@ function toPrimitive(value, caseInsensitive, unknownHandler) {
                 if (cleaned) {
                     if (/^\d+$/g.test(cleaned)) {
                         var int = parseInt(cleaned);
-                        if (!isNaN(int)) return int;
-                    } else {
+                        if (!isNaN(int))
+                            return int;
+                    }
+                    else {
                         var number = parseFloat(value);
-                        if (!isNaN(number)) return number;
+                        if (!isNaN(number))
+                            return number;
                     }
                 }
-                if (unknownHandler) value = unknownHandler(value);
+                if (unknownHandler)
+                    value = unknownHandler(value);
                 break;
         }
     }
     return value;
 }
+exports.toPrimitive = toPrimitive;
 //# sourceMappingURL=Utility.js.map

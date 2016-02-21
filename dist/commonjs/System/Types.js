@@ -1,31 +1,8 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-///<reference path="Primitive.d.ts"/>
-///<reference path="Collections/Array/IArray.d.ts"/>
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _BOOLEAN = typeof true,
-    _NUMBER = typeof 0,
-    _STRING = typeof "",
-    _OBJECT = typeof {},
-    _UNDEFINED = typeof undefined,
-    _FUNCTION = typeof function () {};
+'use strict';
+var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { };
 var typeInfoRegistry = {};
-
 var TypeInfo = (function () {
     function TypeInfo(target) {
-        _classCallCheck(this, TypeInfo);
-
         var _ = this;
         _.isBoolean = false;
         _.isNumber = false;
@@ -58,7 +35,8 @@ var TypeInfo = (function () {
                     _.isNull = true;
                     _.isNullOrUndefined = true;
                     _.isPrimitive = true;
-                } else {
+                }
+                else {
                     _.isObject = true;
                 }
                 break;
@@ -76,33 +54,27 @@ var TypeInfo = (function () {
         }
         Object.freeze(_);
     }
-
-    _createClass(TypeInfo, [{
-        key: "member",
-        value: function member(name) {
-            var t = this.target;
-            return TypeInfo.getFor(t && name in t ? t[name] : undefined);
+    TypeInfo.prototype.member = function (name) {
+        var t = this.target;
+        return TypeInfo.getFor(t && (name) in (t)
+            ? t[name]
+            : undefined);
+    };
+    TypeInfo.getFor = function (target) {
+        var type = typeof target;
+        switch (type) {
+            case _OBJECT:
+            case _FUNCTION:
+                return new TypeInfo(target);
         }
-    }], [{
-        key: "getFor",
-        value: function getFor(target) {
-            var type = typeof target;
-            switch (type) {
-                case _OBJECT:
-                case _FUNCTION:
-                    return new TypeInfo(target);
-            }
-            var info = typeInfoRegistry[type];
-            if (!info) typeInfoRegistry[type] = info = new TypeInfo(target);
-            return info;
-        }
-    }]);
-
+        var info = typeInfoRegistry[type];
+        if (!info)
+            typeInfoRegistry[type] = info = new TypeInfo(target);
+        return info;
+    };
     return TypeInfo;
-})();
-
+}());
 exports.TypeInfo = TypeInfo;
-
 var Type;
 (function (Type) {
     Type.BOOLEAN = _BOOLEAN;
@@ -115,9 +87,9 @@ var Type;
         return typeof value === _BOOLEAN;
     }
     Type.isBoolean = isBoolean;
-    function isNumber(value) {
-        var allowNaN = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
-
+    function isNumber(value, allowNaN) {
+        if (allowNaN === VOID0)
+            allowNaN = true;
         return typeof value === _NUMBER && (allowNaN || !isNaN(value));
     }
     Type.isNumber = isNumber;
@@ -160,11 +132,11 @@ var Type;
     }
     Type.of = of;
     function hasMember(value, property) {
-        return value && !isPrimitive(value) && property in value;
+        return value && !isPrimitive(value) && (property) in (value);
     }
     Type.hasMember = hasMember;
     function hasMemberOfType(instance, property, type) {
-        return hasMember(instance, property) && typeof instance[property] === type;
+        return hasMember(instance, property) && typeof (instance[property]) === type;
     }
     Type.hasMemberOfType = hasMemberOfType;
     function isArrayLike(instance) {
@@ -173,5 +145,6 @@ var Type;
     Type.isArrayLike = isArrayLike;
 })(Type || (Type = {}));
 Object.freeze(Type);
-exports["default"] = Type;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Type;
 //# sourceMappingURL=Types.js.map

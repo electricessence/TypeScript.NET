@@ -2,10 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 ///<reference path="IUriComponentFormattable.d.ts"/>
 ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
 ///<reference path="../Primitive.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
 
@@ -83,8 +84,8 @@ export function isUriComponentFormattable(instance:any):instance is IUriComponen
  * Parses a string for valid query param entries and pipes them through a handler.
  * @param query
  * @param entryHandler
- * @param deserialize
- * @param decodeValues
+ * @param deserialize Default is true.
+ * @param decodeValues Default is true.
  */
 export function parse(
 	query:string,
@@ -117,8 +118,8 @@ export function parse(
 /**
  * Parses a string for valid query params and returns a key-value map of the entries.
  * @param query
- * @param deserialize
- * @param decodeValues
+ * @param deserialize Default is true.
+ * @param decodeValues Default is true.
  * @returns {IMap<Primitive>}
  */
 export function parseToMap(
@@ -148,8 +149,8 @@ export function parseToMap(
 /**
  * Parses a string for valid query params and returns a key-value pair array of the entries.
  * @param query
- * @param deserialize
- * @param decodeValues
+ * @param deserialize Default is true.
+ * @param decodeValues Default is true.
  * @returns {IKeyValuePair<string, Primitive>[]}
  */
 export function parseToArray(

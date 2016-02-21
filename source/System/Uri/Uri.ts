@@ -1,12 +1,13 @@
+///<reference path="IUri.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../Primitive.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
+'use strict'; // For compatibility with (let, const, function, class);
 
-///<reference path="IUri.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
 import Type from '../Types';
 import * as QueryParams from '../Uri/QueryParams';
 import {trim} from '../Text/Utility';
@@ -21,7 +22,7 @@ import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeExcepti
  *
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  */
-class Uri implements IUri, IEquatable<IUri>
+export default class Uri implements IUri, IEquatable<IUri>
 {
 
 	scheme:string;
@@ -118,7 +119,7 @@ class Uri implements IUri, IEquatable<IUri>
 	/**
 	 * Parses a URL into it's components.
 	 * @param url The url to parse.
-	 * @param throwIfInvalid
+	 * @param throwIfInvalid Defaults to true.
 	 * @returns {IUri} Returns a map of the values or *null* if invalid and *throwIfInvalid* is <b>false</b>.
 	 */
 	static parse(url:string, throwIfInvalid:boolean = true):IUri
@@ -243,22 +244,21 @@ class Uri implements IUri, IEquatable<IUri>
 
 }
 
-module Uri {
-	export enum Fields {
-		scheme,
-		userInfo,
-		host,
-		port,
-		path,
-		query,
-		fragment
-	}
-	Object.freeze(Fields);
+export enum Fields {
+	scheme,
+	userInfo,
+	host,
+	port,
+	path,
+	query,
+	fragment
 }
+Object.freeze(Fields);
 
-function copyUri(from:IUri, to:IUri = {}) {
+function copyUri(from:IUri, to?:IUri) {
 	var i = 0, field:string;
-	while(field = Uri.Fields[i++]) {
+	if(!to) to = {};
+	while(field = Fields[i++]) {
 		var value = (<any>from)[field];
 		if(value) (<any>to)[field] = value;
 	}
@@ -442,5 +442,3 @@ function tryParse(url:string, out:(result:IUri)=>void):Exception
 	return null;
 
 }
-
-export default Uri;

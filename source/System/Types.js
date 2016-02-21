@@ -1,18 +1,13 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports"], factory);
     }
-})(["require", "exports"], function (require, exports) {
-    ///<reference path="Primitive.d.ts"/>
-    ///<reference path="Collections/Array/IArray.d.ts"/>
-    var _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof undefined, _FUNCTION = typeof function () { };
+})(function (require, exports) {
+    'use strict';
+    var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { };
     var typeInfoRegistry = {};
     var TypeInfo = (function () {
         function TypeInfo(target) {
@@ -86,7 +81,7 @@
             return info;
         };
         return TypeInfo;
-    })();
+    }());
     exports.TypeInfo = TypeInfo;
     var Type;
     (function (Type) {
@@ -101,7 +96,8 @@
         }
         Type.isBoolean = isBoolean;
         function isNumber(value, allowNaN) {
-            if (allowNaN === void 0) { allowNaN = true; }
+            if (allowNaN === VOID0)
+                allowNaN = true;
             return typeof value === _NUMBER && (allowNaN || !isNaN(value));
         }
         Type.isNumber = isNumber;

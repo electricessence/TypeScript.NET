@@ -3,14 +3,15 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", './EnumeratorBase'], factory);
     }
-})(["require", "exports", './EnumeratorBase'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var EnumeratorBase_1 = require('./EnumeratorBase');
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
@@ -50,7 +51,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         }
         return IndexEnumerator;
-    })(EnumeratorBase_1.default);
+    }(EnumeratorBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IndexEnumerator;
 });

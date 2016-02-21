@@ -3,10 +3,10 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 ///<reference path="ILinkedListNode.d.ts"/>
 ///<reference path="ILinkedList.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import * as Values from '../Compare';
 import * as TextUtility from '../Text/Utility';
 import * as ArrayUtility from '../Collections/Array/Utility';

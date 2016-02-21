@@ -3,14 +3,16 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 ///<reference path="../System/Primitive.d.ts"/>
 ///<reference path="../System/FunctionTypes.d.ts"/>
 ///<reference path="../System/Collections/Array/IArray.d.ts"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
 ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+///<reference path="../System/IComparer.d.ts"/>
 ///<reference path="../System/Collections/Sorting/Order.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import * as Values from '../System/Compare';
 import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
@@ -29,7 +31,6 @@ import ArgumentException from '../System/Exceptions/ArgumentException';
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 type Comparable = Primitive|IComparable<any>;
-'use strict';
 
 // #region Local Constants.
 

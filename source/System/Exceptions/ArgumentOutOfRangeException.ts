@@ -7,6 +7,7 @@
 import Type from '../Types';
 import Exception from '../Exception';
 import ArgumentException from './ArgumentException';
+'use strict'; // For compatibility with (let, const, function, class);
 
 
 const NAME:string = 'ArgumentOutOfRangeException';

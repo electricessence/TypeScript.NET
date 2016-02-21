@@ -1,15 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-///<reference path="ITimeQuantity.d.ts"/>
-///<reference path="HowMany.ts"/>
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 var TimeUnit;
 (function (TimeUnit) {
     TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
@@ -21,9 +10,8 @@ var TimeUnit;
 })(TimeUnit || (TimeUnit = {}));
 var TimeUnit;
 (function (TimeUnit) {
-    function toMilliseconds(value) {
-        var units = arguments.length <= 1 || arguments[1] === undefined ? TimeUnit.Milliseconds : arguments[1];
-
+    function toMilliseconds(value, units) {
+        if (units === void 0) { units = TimeUnit.Milliseconds; }
         switch (units) {
             case TimeUnit.Days:
                 value *= 24;
@@ -66,12 +54,13 @@ var TimeUnit;
     }
     TimeUnit.from = from;
     function assertValid(unit) {
-        if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit) throw new Error("Invalid TimeUnit.");
+        if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit)
+            throw new Error("Invalid TimeUnit.");
         return true;
     }
     TimeUnit.assertValid = assertValid;
 })(TimeUnit || (TimeUnit = {}));
 Object.freeze(TimeUnit);
-exports["default"] = TimeUnit;
-module.exports = exports["default"];
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = TimeUnit;
 //# sourceMappingURL=TimeUnit.js.map

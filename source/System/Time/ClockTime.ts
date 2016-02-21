@@ -1,9 +1,3 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-
 ///<reference path="ITimeMeasurement.d.ts"/>
 ///<reference path="ITimeQuantity.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
@@ -12,6 +6,13 @@
 ///<reference path="../IFormatProvider.d.ts"/>
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="HowMany.ts"/>
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+'use strict'; // For compatibility with (let, const, function, class);
+
 import {areEqual,compare} from '../Compare';
 import TimeQuantity from './TimeQuantity';
 

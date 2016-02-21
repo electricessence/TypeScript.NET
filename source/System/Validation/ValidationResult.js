@@ -1,17 +1,12 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports"], factory);
     }
-})(["require", "exports"], function (require, exports) {
-    /// <reference path="IValidationResult.d.ts"/>
-    ///<reference path="../IEquatable.d.ts"/>
+})(function (require, exports) {
+    'use strict';
     var valid = new ValidationResult(true);
     var ValidationResult = (function () {
         function ValidationResult(isValid, message, data) {
@@ -41,7 +36,7 @@
             return new ValidationResult(false, message, data);
         };
         return ValidationResult;
-    })();
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ValidationResult;
 });

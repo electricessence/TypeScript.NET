@@ -1,19 +1,13 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Types'], factory);
     }
-})(["require", "exports", '../Types'], function (require, exports) {
-    ///<reference path="IDisposable.d.ts"/>
-    ///<reference path="../Collections/Array/IArray.d.ts"/>
-    var Types_1 = require('../Types');
+})(function (require, exports) {
     'use strict';
+    var Types_1 = require('../Types');
     function dispose() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {

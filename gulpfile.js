@@ -219,8 +219,8 @@ gulp.task(
 	TASK.DIST_COMMONJS, function()
 	{
 
-		return tsc.distPostProcess(
-			MODULE.COMMONJS, TARGET.ES6, MODULE.COMMONJS, babel);
+		return tsc.dist(
+			MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS);
 	}
 );
 

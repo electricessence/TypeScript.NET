@@ -1,24 +1,17 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary'], factory);
     }
-})(["require", "exports", '../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary'], function (require, exports) {
-    ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
-    ///<reference path="../Serialization/ISerializable.d.ts"/>
-    ///<reference path="IUriComponentFormattable.d.ts"/>
-    ///<reference path="../Primitive.d.ts"/>
+})(function (require, exports) {
+    'use strict';
     var Types_1 = require('../Types');
     var QueryParams = require('./QueryParams');
     var OrderedStringKeyDictionary_1 = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
@@ -59,8 +52,8 @@ var __extends = (this && this.__extends) || function (d, b) {
         QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
             var entries = [];
             var keys = this.keys;
-            for (var _i = 0; _i < keys.length; _i++) {
-                var k = keys[_i];
+            for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
+                var k = keys_1[_i];
                 var value = this.getValue(k);
                 for (var _a = 0, _b = Array.isArray(value) ? value : [value]; _a < _b.length; _a++) {
                     var v = _b[_a];
@@ -75,7 +68,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.encode();
         };
         return QueryBuilder;
-    })(OrderedStringKeyDictionary_1.default);
+    }(OrderedStringKeyDictionary_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = QueryBuilder;
 });

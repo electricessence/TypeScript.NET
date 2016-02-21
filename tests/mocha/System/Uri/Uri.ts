@@ -39,7 +39,7 @@ describe('.queryParams', ()=>
 
 describe('es6 > babel > commonjs', ()=>
 {
-	const Uri2 = require('../../../../dist/commonjs/System/Uri/Uri');
+	const Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
 
 	var u2 = Uri2.from(path + query);
 

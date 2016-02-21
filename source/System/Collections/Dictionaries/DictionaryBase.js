@@ -1,22 +1,18 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], factory);
     }
-})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports) {
-    ///<reference path="IDictionary.d.ts"/>
+})(function (require, exports) {
+    'use strict';
     var Compare_1 = require('../../Compare');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
     var ArgumentException_1 = require('../../Exceptions/ArgumentException');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
     var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
-    var VOID0 = void 0;
+    var VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_KEY = ITEM + DOT + KEY, ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
     var DictionaryBase = (function () {
         function DictionaryBase() {
             this._updateRecursion = 0;
@@ -68,9 +64,10 @@
             configurable: true
         });
         DictionaryBase.prototype.add = function (item) {
+            var _this = this;
             if (!item)
-                throw new ArgumentException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-            this.addByKeyValue(item.key, item.value);
+                throw new ArgumentNullException_1.default(ITEM, 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+            extractKeyValue(item, function (key, value) { return _this.addByKeyValue(key, value); });
         };
         DictionaryBase.prototype.clear = function () {
             var _ = this, keys = _.keys, count = keys.length;
@@ -84,10 +81,13 @@
             return count;
         };
         DictionaryBase.prototype.contains = function (item) {
+            var _this = this;
             if (!item)
                 return false;
-            var value = this.getValue(item.key);
-            return Compare_1.areEqual(value, item.value);
+            return extractKeyValue(item, function (key, value) {
+                var v = _this.getValue(key);
+                return Compare_1.areEqual(value, v);
+            });
         };
         DictionaryBase.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }
@@ -103,11 +103,14 @@
             return this.copyTo([], 0);
         };
         DictionaryBase.prototype.remove = function (item) {
+            var _this = this;
             if (!item)
                 return 0;
-            var key = item.key, value = this.getValue(key);
-            return (Compare_1.areEqual(value, item.value) && this.removeByKey(key))
-                ? 1 : 0;
+            return extractKeyValue(item, function (key, value) {
+                var v = _this.getValue(key);
+                return (Compare_1.areEqual(value, v) && _this.removeByKey(key))
+                    ? 1 : 0;
+            });
         };
         Object.defineProperty(DictionaryBase.prototype, "keys", {
             get: function () { return this.getKeys(); },
@@ -160,10 +163,10 @@
             var _ = this;
             return _.handleUpdate(function () {
                 var changed = false;
-                pairs.forEach(function (pair) {
-                    _.setValue(pair.key, pair.value);
+                pairs.forEach(function (pair) { return extractKeyValue(pair, function (key, value) {
+                    _.setValue(key, value);
                     changed = true;
-                });
+                }); });
                 return changed;
             });
         };
@@ -183,7 +186,44 @@
             });
         };
         return DictionaryBase;
-    })();
+    }());
+    function isKVP(kvp) {
+        return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
+    }
+    function assertKey(key, name) {
+        if (name === void 0) { name = ITEM; }
+        assertNotUndefined(key, name + DOT + KEY);
+        if (key === null)
+            throw new ArgumentNullException_1.default(name + DOT + KEY);
+        return key;
+    }
+    function assertTuple(tuple, name) {
+        if (name === void 0) { name = ITEM; }
+        if (tuple.length != 2)
+            throw new ArgumentException_1.default(name, 'KeyValuePair tuples must be of length 2.');
+        assertKey(tuple[0], name);
+    }
+    function assertNotUndefined(value, name) {
+        if (value === VOID0)
+            throw new ArgumentException_1.default(name, CANNOT_BE_UNDEFINED);
+        return value;
+    }
+    function extractKeyValue(item, to) {
+        var _ = this, key, value;
+        if (item instanceof Array) {
+            assertTuple(item);
+            key = item[0];
+            value = assertNotUndefined(item[1], ITEM_1);
+        }
+        else if (isKVP(item)) {
+            key = assertKey(item.key);
+            value = assertNotUndefined(item.value, ITEM_VALUE);
+        }
+        else {
+            throw new ArgumentException_1.default(ITEM, INVALID_KVP_MESSAGE);
+        }
+        return to(key, value);
+    }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DictionaryBase;
 });
