@@ -17,7 +17,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", "../../System/Types", "../../System/Time/TimeSpan", "../../System/Disposable/DisposableBase", "../CancellationToken", "./TaskFactory", "../../System/Exceptions/ArgumentNullException", "./TaskScheduler", "../../System/Exceptions/InvalidOperationException"], function (require, exports) {
+})(["require", "exports", "../../System/Types", "../../System/Time/TimeSpan", "../../System/Disposable/DisposableBase", "../CancellationToken", "./TaskFactory", "../../System/Exceptions/ArgumentNullException", "./TaskScheduler", "../../System/Exceptions/InvalidOperationException", "../ThreadAbortException", "./TaskSchedulerException", "./TaskCancelledException", "../../System/Exceptions/AggregateException"], function (require, exports) {
     ///<reference path="ITask"/>
     ///<reference path="TaskCreationOptions.d.ts"/>
     ///<reference path="../../System/Promises/IPromise.d.ts"/>
@@ -30,6 +30,10 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ArgumentNullException_1 = require("../../System/Exceptions/ArgumentNullException");
     var TaskScheduler_1 = require("./TaskScheduler");
     var InvalidOperationException_1 = require("../../System/Exceptions/InvalidOperationException");
+    var ThreadAbortException_1 = require("../ThreadAbortException");
+    var TaskSchedulerException_1 = require("./TaskSchedulerException");
+    var TaskCancelledException_1 = require("./TaskCancelledException");
+    var AggregateException_1 = require("../../System/Exceptions/AggregateException");
     var _factory = new TaskFactory_1.default();
     var _current;
     var Task = (function (_super) {
@@ -45,7 +49,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._internalOptions = _internalOptions;
             this._scheduler = _scheduler;
             this._result = void 0;
-            this._status = 0;
+            this._stateFlags = 33554432 | _options;
         }
         Object.defineProperty(Task.prototype, "id", {
             get: function () {
@@ -173,12 +177,12 @@ var __extends = (this && this.__extends) || function (d, b) {
                 scheduler.internalQueueTask(this);
             }
             catch (e) {
-                if (e instanceof ThreadAbortException) {
+                if (e instanceof ThreadAbortException_1.default) {
                     _._addException(e);
                     _._finishThreadAbortedTask(true, false);
                     return;
                 }
-                _._addException(new TaskSchedulerException(e));
+                _._addException(new TaskSchedulerException_1.default(e));
                 _._finish(false);
                 if ((_._options & 512) == 0) {
                     m_contingentProperties.m_exceptionsHolder.MarkAsHandled(false);
@@ -197,15 +201,24 @@ var __extends = (this && this.__extends) || function (d, b) {
         Task.prototype.getExceptions = function (includeTaskCanceledExceptions) {
             var canceledException = null;
             if (includeTaskCanceledExceptions && this.isCancelled) {
-                canceledException = new TaskCanceledException(this);
+                canceledException = new TaskCancelledException_1.default(this);
             }
             if (this.exceptionRecorded) {
                 return m_contingentProperties.m_exceptionsHolder.CreateExceptionObject(false, canceledException);
             }
             else if (canceledException != null) {
-                return new AggregateException(canceledException);
+                return new AggregateException_1.default(canceledException);
             }
             return null;
+        };
+        Task.completedTask = function (canceled, creationOptions, ct) {
+            var task = new Task();
+            if (canceled) {
+                task._stateFlags = 4194304 | 1048576 | creationOptions;
+            }
+            else
+                task._stateFlags = 16777216 | creationOptions;
+            return task;
         };
         Task.prototype.runSynchronously = function (scheduler) {
         };

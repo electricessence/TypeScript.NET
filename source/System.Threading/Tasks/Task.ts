@@ -21,6 +21,10 @@ import TaskScheduler from "./TaskScheduler";
 import InvalidOperationException from "../../System/Exceptions/InvalidOperationException";
 import Exception from "../../System/Exception";
 import NullReferenceException from "../../System/Exceptions/NullReferenceException";
+import ThreadAbortException from "../ThreadAbortException";
+import TaskSchedulerException from "./TaskSchedulerException";
+import TaskCancelledException from "./TaskCancelledException";
+import AggregateException from "../../System/Exceptions/AggregateException";
 
 const _factory:TaskFactory = new TaskFactory();
 var _current:Task<any>;
@@ -40,7 +44,7 @@ extends DisposableBase implements ITask<TResult>
 	{
 		super();
 		this._result = void 0; // Assume 'void' in the beginning.
-		this._status = TaskStatus.Created;
+		this._stateFlags = TaskState.WaitingForActivation | _options;
 	}
 
 	private _id:number;
@@ -268,7 +272,7 @@ extends DisposableBase implements ITask<TResult>
 		var canceledException:Exception = null;
 		if(includeTaskCanceledExceptions && this.isCancelled)
 		{
-			canceledException = new TaskCanceledException(this);
+			canceledException = new TaskCancelledException(this);
 		}
 
 		if(this.exceptionRecorded)
@@ -279,11 +283,31 @@ extends DisposableBase implements ITask<TResult>
 		}
 		else if(canceledException!=null)
 		{
-			// No exceptions, but there was a cancelation. Aggregate and return it.
+			// No exceptions, but there was a cancellation. Aggregate and return it.
 			return new AggregateException(canceledException);
 		}
 
 		return null;
+	}
+
+	private static completedTask(
+		canceled?:boolean,
+		creationOptions?:TaskCreationOptions,
+		ct?:CancellationToken):Task<void>
+	{
+		var task = new Task<void>();
+		if(canceled)
+		{
+			task._stateFlags = TaskState.Canceled | TaskState.CancellationAcknowledged | creationOptions;
+			//ContingentProperties props;
+			//m_contingentProperties = props = new ContingentProperties(); // can't have children, so just instantiate directly
+			//props.m_cancellationToken = ct;
+			//props.m_internalCancellationRequested = CANCELLATION_REQUESTED;
+		}
+		else
+			task._stateFlags = TaskState.RanToCompletion | creationOptions;
+
+		return task;
 	}
 
 

@@ -24,7 +24,6 @@ extends ITaskState<TResult>, IDisposable, IEquatable<ITask<TResult>>, IPromise<T
 	creationOptions: TaskCreationOptions;
 	//factory: TaskFactory<TResult>;
 	id: number; // int
-	isRunning: boolean;
 	isCancelled: boolean;
 	isCompleted: boolean;
 	isFaulted: boolean;
