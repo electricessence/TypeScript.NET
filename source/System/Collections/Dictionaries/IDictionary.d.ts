@@ -4,24 +4,12 @@
  */
 
 ///<reference path="../ICollection.d.ts"/>
+///<reference path="../../KeyValuePair.d.ts"/>
 
 interface IMap<TValue>
 {
 	[key: string]: TValue
 }
-
-interface IKeyValuePair<TKey, TValue>
-{
-	key: TKey;
-	value: TValue;
-}
-
-declare type KeyValuePair<TKey,TValue> = IKeyValuePair<TKey,TValue> | [TKey,TValue];
-
-interface IStringKeyValuePair<TValue> extends IKeyValuePair<string, TValue>
-{ }
-
-declare type StringKeyValuePair<TValue> = IStringKeyValuePair<TValue> | [string,TValue];
 
 interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TValue>>
 {

@@ -1,10 +1,7 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function(exports_1) {
-    var Compare_1, EnumeratorBase_1, ArgumentException_1, ArgumentNullException_1, InvalidOperationException_1;
-    var DictionaryBase;
+System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract'], function(exports_1) {
+    'use strict';
+    var Compare_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1;
+    var VOID0, DictionaryBase;
     return {
         setters:[
             function (Compare_1_1) {
@@ -13,16 +10,17 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
             },
-            function (ArgumentException_1_1) {
-                ArgumentException_1 = ArgumentException_1_1;
-            },
             function (ArgumentNullException_1_1) {
                 ArgumentNullException_1 = ArgumentNullException_1_1;
             },
             function (InvalidOperationException_1_1) {
                 InvalidOperationException_1 = InvalidOperationException_1_1;
+            },
+            function (KeyValueExtract_1_1) {
+                KeyValueExtract_1 = KeyValueExtract_1_1;
             }],
         execute: function() {
+            VOID0 = void (0);
             DictionaryBase = (function () {
                 function DictionaryBase() {
                     this._updateRecursion = 0;
@@ -74,9 +72,10 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
                     configurable: true
                 });
                 DictionaryBase.prototype.add = function (item) {
+                    var _this = this;
                     if (!item)
-                        throw new ArgumentException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-                    this.addByKeyValue(item.key, item.value);
+                        throw new ArgumentNullException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+                    KeyValueExtract_1.default(item, function (key, value) { return _this.addByKeyValue(key, value); });
                 };
                 DictionaryBase.prototype.clear = function () {
                     var _ = this, keys = _.keys, count = keys.length;
@@ -90,10 +89,13 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
                     return count;
                 };
                 DictionaryBase.prototype.contains = function (item) {
+                    var _this = this;
                     if (!item)
                         return false;
-                    var value = this.getValue(item.key);
-                    return Compare_1.areEqual(value, item.value);
+                    return KeyValueExtract_1.default(item, function (key, value) {
+                        var v = _this.getValue(key);
+                        return Compare_1.areEqual(value, v);
+                    });
                 };
                 DictionaryBase.prototype.copyTo = function (array, index) {
                     if (index === void 0) { index = 0; }
@@ -109,11 +111,14 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
                     return this.copyTo([], 0);
                 };
                 DictionaryBase.prototype.remove = function (item) {
+                    var _this = this;
                     if (!item)
                         return 0;
-                    var key = item.key, value = this.getValue(key);
-                    return (Compare_1.areEqual(value, item.value) && this.removeByKey(key))
-                        ? 1 : 0;
+                    return KeyValueExtract_1.default(item, function (key, value) {
+                        var v = _this.getValue(key);
+                        return (Compare_1.areEqual(value, v) && _this.removeByKey(key))
+                            ? 1 : 0;
+                    });
                 };
                 Object.defineProperty(DictionaryBase.prototype, "keys", {
                     get: function () { return this.getKeys(); },
@@ -137,7 +142,7 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
                 };
                 DictionaryBase.prototype.containsKey = function (key) {
                     var value = this.getValue(key);
-                    return value !== undefined;
+                    return value !== VOID0;
                 };
                 DictionaryBase.prototype.containsValue = function (value) {
                     var e = this.getEnumerator(), equal = Compare_1.areEqual;
@@ -166,10 +171,10 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
                     var _ = this;
                     return _.handleUpdate(function () {
                         var changed = false;
-                        pairs.forEach(function (pair) {
-                            _.setValue(pair.key, pair.value);
+                        pairs.forEach(function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
+                            _.setValue(key, value);
                             changed = true;
-                        });
+                        }); });
                         return changed;
                     });
                 };
@@ -182,14 +187,14 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
                     }, function (yielder) {
                         while (i < len) {
                             var key = keys[i++], value = _.getValue(key);
-                            if (value !== undefined)
+                            if (value !== VOID0)
                                 return yielder.yieldReturn({ key: key, value: value });
                         }
                         return yielder.yieldBreak();
                     });
                 };
                 return DictionaryBase;
-            })();
+            }());
             exports_1("default",DictionaryBase);
         }
     }

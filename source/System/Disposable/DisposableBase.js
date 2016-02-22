@@ -1,12 +1,17 @@
-(function (factory) {
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+///<reference path="IDisposableAware.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ObjectDisposedException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", './ObjectDisposedException'], function (require, exports) {
     var ObjectDisposedException_1 = require('./ObjectDisposedException');
     var DisposableBase = (function () {
         function DisposableBase(_finalizer) {
@@ -29,9 +34,11 @@
         DisposableBase.prototype.dispose = function () {
             var _ = this;
             if (!_._wasDisposed) {
+                // Preemptively set wasDisposed in order to prevent repeated disposing.
+                // NOTE: in true multi-threaded scenarios, this needs to be synchronized.
                 _._wasDisposed = true;
                 try {
-                    _._onDispose();
+                    _._onDispose(); // Protected override.
                 }
                 finally {
                     if (_._finalizer)
@@ -39,9 +46,10 @@
                 }
             }
         };
+        // Placeholder for overrides.
         DisposableBase.prototype._onDispose = function () { };
         return DisposableBase;
-    }());
+    })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DisposableBase;
 });

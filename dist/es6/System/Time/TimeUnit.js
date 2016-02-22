@@ -1,9 +1,3 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-import * as HowMany from './HowMany';
 var TimeUnit;
 (function (TimeUnit) {
     TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";

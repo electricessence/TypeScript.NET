@@ -1,5 +1,3 @@
-///<reference path="../../typings/requirejs/require.d.ts"/>
-///<reference path="../../typings/qunit/qunit.d.ts"/>
 require.config({
     baseUrl: './',
     urlArgs: 't=' + (new Date()).getTime(),
@@ -16,4 +14,5 @@ require.config({
         }
     }
 });
+
 //# sourceMappingURL=require.config.js.map

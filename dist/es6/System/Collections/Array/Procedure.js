@@ -1,7 +1,3 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 export function sum(source, ignoreNaN = false) {
     if (!source || !source.length)
         return 0;

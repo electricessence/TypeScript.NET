@@ -13,13 +13,21 @@ var QueryBuilder = (function (_super) {
     function QueryBuilder(query, decodeValues) {
         if (decodeValues === void 0) { decodeValues = true; }
         _super.call(this);
+        this.importQuery(query, decodeValues);
+    }
+    QueryBuilder.prototype.importQuery = function (query, decodeValues) {
+        if (decodeValues === void 0) { decodeValues = true; }
         if (Types_1.default.isString(query)) {
             this.importFromString(query, decodeValues);
+        }
+        else if (Array.isArray(query)) {
+            this.importPairs(query);
         }
         else {
             this.importMap(query);
         }
-    }
+        return this;
+    };
     QueryBuilder.prototype.importFromString = function (values, deserialize, decodeValues) {
         if (deserialize === void 0) { deserialize = true; }
         if (decodeValues === void 0) { decodeValues = true; }

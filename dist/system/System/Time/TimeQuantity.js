@@ -1,17 +1,11 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(['../Compare', './HowMany', './TimeUnit'], function(exports_1) {
-    var Compare_1, HowMany, TimeUnit_1;
+System.register(['../Compare', './TimeUnit'], function(exports_1) {
+    'use strict';
+    var Compare_1, TimeUnit_1;
     var TimeQuantity;
     return {
         setters:[
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
-            },
-            function (HowMany_1) {
-                HowMany = HowMany_1;
             },
             function (TimeUnit_1_1) {
                 TimeUnit_1 = TimeUnit_1_1;
@@ -61,7 +55,7 @@ System.register(['../Compare', './HowMany', './TimeUnit'], function(exports_1) {
                     return TimeUnit_1.default.fromMilliseconds(this.getTotalMilliseconds(), units);
                 };
                 return TimeQuantity;
-            })();
+            }());
             exports_1("default", TimeQuantity);
         }
     }

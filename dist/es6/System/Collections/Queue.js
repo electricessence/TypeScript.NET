@@ -1,8 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import * as Values from '../Compare';
 import * as AU from './Array/Utility';
 import Type from '../Types';
@@ -13,6 +9,7 @@ import NotImplementedException from '../Exceptions/NotImplementedException';
 import InvalidOperationException from '../Exceptions/InvalidOperationException';
 import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
 const MINIMUM_GROW = 4;
+const SHRINK_THRESHOLD = 32;
 const GROW_FACTOR_HALF = 100;
 const DEFAULT_CAPACITY = MINIMUM_GROW;
 var emptyArray = [];
@@ -65,7 +62,26 @@ export default class Queue {
         _._tail = 0;
         _._size = 0;
         _._version++;
+        _.trimExcess();
         return size;
+    }
+    dump(max = Infinity) {
+        if (Type.isNumber(max, false) && max < 0)
+            throw new ArgumentOutOfRangeException('max', max, 'must be greater than or equal to 0.');
+        var _ = this, result = [];
+        if (isFinite(max)) {
+            Integer.assert(max, 'max');
+            while (max-- && _._size) {
+                result.push(_.dequeue());
+            }
+        }
+        else {
+            while (_._size) {
+                result.push(_.dequeue());
+            }
+        }
+        _.trimExcess();
+        return result;
     }
     contains(item) {
         var _ = this;
@@ -161,17 +177,31 @@ export default class Queue {
         _._size = size + 1;
         _._version++;
     }
-    dequeue() {
+    dequeue(throwIfEmpty = false) {
         var _ = this;
-        if (_._size == 0)
-            throw new InvalidOperationException("Cannot dequeue an empty queue.");
+        if (_._size == 0) {
+            if (throwIfEmpty)
+                throw new InvalidOperationException("Cannot dequeue an empty queue.");
+            return void 0;
+        }
         var array = _._array, head = _._head;
         var removed = _._array[head];
         array[head] = null;
         _._head = (head + 1) % _._capacity;
         _._size--;
+        if (_._size < _._capacity / 2) {
+            _.trimExcess(SHRINK_THRESHOLD);
+        }
         _._version++;
         return removed;
+    }
+    tryDequeue(out) {
+        if (!this._size)
+            return false;
+        var d = this.dequeue();
+        if (out)
+            out(d);
+        return true;
     }
     _getElement(index) {
         assertIntegerZeroOrGreater(index, "index");
@@ -183,10 +213,10 @@ export default class Queue {
             throw new InvalidOperationException("Cannot call peek on an empty queue.");
         return this._array[this._head];
     }
-    trimExcess() {
+    trimExcess(threshold) {
         var _ = this;
         var size = _._size;
-        if (size < Math.floor(_._capacity * 0.9))
+        if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size))
             _.setCapacity(size);
     }
     getEnumerator() {

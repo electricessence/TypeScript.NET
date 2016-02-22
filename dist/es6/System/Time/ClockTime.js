@@ -1,9 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-import * as HowMany from './HowMany';
+'use strict';
 import TimeQuantity from './TimeQuantity';
 export default class ClockTime extends TimeQuantity {
     constructor(...args) {
@@ -39,7 +34,6 @@ export default class ClockTime extends TimeQuantity {
         return value;
     }
     toString() {
-        /* INSERT CUSTOM FORMATTING CODE HERE */
         var _ = this, a = [];
         if (_.days)
             a.push(pluralize(_.days, "day"));

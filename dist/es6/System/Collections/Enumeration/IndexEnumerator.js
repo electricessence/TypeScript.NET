@@ -1,3 +1,4 @@
+'use strict';
 import EnumeratorBase from './EnumeratorBase';
 export default class IndexEnumerator extends EnumeratorBase {
     constructor(sourceFactory) {

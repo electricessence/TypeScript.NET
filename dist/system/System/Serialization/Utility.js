@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Types', '../Exceptions/InvalidOperationException'], function(exports_1) {
+    "use strict";
     var Types_1, InvalidOperationException_1;
     var EMPTY, TRUE, FALSE;
     function toString(value, defaultForUnknown) {

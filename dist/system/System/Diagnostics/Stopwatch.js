@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Time/TimeSpan'], function(exports_1) {
+    'use strict';
     var TimeSpan_1;
     var Stopwatch;
     return {
@@ -110,7 +107,7 @@ System.register(['../Time/TimeSpan'], function(exports_1) {
                     configurable: true
                 });
                 return Stopwatch;
-            })();
+            }());
             exports_1("default", Stopwatch);
         }
     }

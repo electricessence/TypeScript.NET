@@ -1,18 +1,24 @@
-(function (factory) {
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+'use strict'; // For compatibility with (let, const, function, class);
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract'], function (require, exports) {
+    ///<reference path="IDictionary.d.ts"/>
     var Compare_1 = require('../../Compare');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
-    var ArgumentException_1 = require('../../Exceptions/ArgumentException');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
     var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
-    var VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_KEY = ITEM + DOT + KEY, ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
+    var KeyValueExtract_1 = require('../../KeyValueExtract');
+    var VOID0 = void (0);
+    // Design Note: Should DictionaryAbstractBase be IDisposable?
     var DictionaryBase = (function () {
         function DictionaryBase() {
             this._updateRecursion = 0;
@@ -27,6 +33,7 @@
                 var _ = this;
                 if (_.onValueChanged)
                     _.onValueChanged(key, value, old);
+                // If the update recursion is zero, then we are finished with updates.
                 if (_._updateRecursion == 0)
                     _._onUpdated();
             }
@@ -36,6 +43,7 @@
             if (_.onUpdated)
                 _.onUpdated();
         };
+        // Takes a closure that if returning true will propagate an update signal.
         DictionaryBase.prototype.handleUpdate = function (closure) {
             var _ = this, result;
             if (closure) {
@@ -54,6 +62,9 @@
             return result;
         };
         Object.defineProperty(DictionaryBase.prototype, "isReadOnly", {
+            /////////////////////////////////////////
+            // ICollection<T>
+            /////////////////////////////////////////
             get: function () { return false; },
             enumerable: true,
             configurable: true
@@ -66,8 +77,8 @@
         DictionaryBase.prototype.add = function (item) {
             var _this = this;
             if (!item)
-                throw new ArgumentNullException_1.default(ITEM, 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-            extractKeyValue(item, function (key, value) { return _this.addByKeyValue(key, value); });
+                throw new ArgumentNullException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+            KeyValueExtract_1.default(item, function (key, value) { return _this.addByKeyValue(key, value); });
         };
         DictionaryBase.prototype.clear = function () {
             var _ = this, keys = _.keys, count = keys.length;
@@ -82,9 +93,11 @@
         };
         DictionaryBase.prototype.contains = function (item) {
             var _this = this;
+            // Should never have a null object in the collection.
             if (!item)
                 return false;
-            return extractKeyValue(item, function (key, value) {
+            return KeyValueExtract_1.default(item, function (key, value) {
+                // Leave as variable for debugging...
                 var v = _this.getValue(key);
                 return Compare_1.areEqual(value, v);
             });
@@ -93,6 +106,8 @@
             if (index === void 0) { index = 0; }
             if (!array)
                 throw new ArgumentNullException_1.default('array');
+            // This is a generic implementation that will work for all derived classes.
+            // It can be overridden and optimized.
             var e = this.getEnumerator();
             while (e.moveNext()) {
                 array[index++] = e.current;
@@ -106,7 +121,8 @@
             var _this = this;
             if (!item)
                 return 0;
-            return extractKeyValue(item, function (key, value) {
+            return KeyValueExtract_1.default(item, function (key, value) {
+                // Leave as variable for debugging...
                 var v = _this.getValue(key);
                 return (Compare_1.areEqual(value, v) && _this.removeByKey(key))
                     ? 1 : 0;
@@ -163,7 +179,7 @@
             var _ = this;
             return _.handleUpdate(function () {
                 var changed = false;
-                pairs.forEach(function (pair) { return extractKeyValue(pair, function (key, value) {
+                pairs.forEach(function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
                     _.setValue(key, value);
                     changed = true;
                 }); });
@@ -186,44 +202,7 @@
             });
         };
         return DictionaryBase;
-    }());
-    function isKVP(kvp) {
-        return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
-    }
-    function assertKey(key, name) {
-        if (name === void 0) { name = ITEM; }
-        assertNotUndefined(key, name + DOT + KEY);
-        if (key === null)
-            throw new ArgumentNullException_1.default(name + DOT + KEY);
-        return key;
-    }
-    function assertTuple(tuple, name) {
-        if (name === void 0) { name = ITEM; }
-        if (tuple.length != 2)
-            throw new ArgumentException_1.default(name, 'KeyValuePair tuples must be of length 2.');
-        assertKey(tuple[0], name);
-    }
-    function assertNotUndefined(value, name) {
-        if (value === VOID0)
-            throw new ArgumentException_1.default(name, CANNOT_BE_UNDEFINED);
-        return value;
-    }
-    function extractKeyValue(item, to) {
-        var _ = this, key, value;
-        if (item instanceof Array) {
-            assertTuple(item);
-            key = item[0];
-            value = assertNotUndefined(item[1], ITEM_1);
-        }
-        else if (isKVP(item)) {
-            key = assertKey(item.key);
-            value = assertNotUndefined(item.value, ITEM_VALUE);
-        }
-        else {
-            throw new ArgumentException_1.default(ITEM, INVALID_KVP_MESSAGE);
-        }
-        return to(key, value);
-    }
+    })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DictionaryBase;
 });

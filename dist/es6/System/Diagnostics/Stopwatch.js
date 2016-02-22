@@ -1,7 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import TimeSpan from '../Time/TimeSpan';
 export default class Stopwatch {
     constructor() {

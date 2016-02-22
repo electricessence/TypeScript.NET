@@ -1,15 +1,11 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(['./HowMany', './TimeQuantity'], function(exports_1) {
+System.register(['./TimeQuantity'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var HowMany, TimeQuantity_1;
+    var TimeQuantity_1;
     var ClockTime;
     function pluralize(value, label) {
         if (Math.abs(value) !== 1)
@@ -18,9 +14,6 @@ System.register(['./HowMany', './TimeQuantity'], function(exports_1) {
     }
     return {
         setters:[
-            function (HowMany_1) {
-                HowMany = HowMany_1;
-            },
             function (TimeQuantity_1_1) {
                 TimeQuantity_1 = TimeQuantity_1_1;
             }],
@@ -68,7 +61,6 @@ System.register(['./HowMany', './TimeQuantity'], function(exports_1) {
                     return value;
                 };
                 ClockTime.prototype.toString = function () {
-                    /* INSERT CUSTOM FORMATTING CODE HERE */
                     var _ = this, a = [];
                     if (_.days)
                         a.push(pluralize(_.days, "day"));
@@ -83,7 +75,7 @@ System.register(['./HowMany', './TimeQuantity'], function(exports_1) {
                     return a.join(", ").replace(", and, ", " and ");
                 };
                 return ClockTime;
-            })(TimeQuantity_1.default);
+            }(TimeQuantity_1.default));
             exports_1("default", ClockTime);
         }
     }

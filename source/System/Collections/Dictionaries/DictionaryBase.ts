@@ -10,19 +10,9 @@ import EnumeratorBase from '../Enumeration/EnumeratorBase';
 import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import InvalidOperationException from '../../Exceptions/InvalidOperationException';
+import extractKeyValue from '../../KeyValueExtract';
 
-const
-	VOID0:any                  = void 0,
-	DOT:string                 = '.',
-	KEY:string                 = 'key',
-	VALUE:string               = 'value',
-	ITEM:string                = 'item',
-	ITEM_1:string              = ITEM + '[1]',
-	ITEM_KEY:string            = ITEM + DOT + KEY,
-	ITEM_VALUE:string          = ITEM + DOT + VALUE,
-	INVALID_KVP_MESSAGE:string = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.',
-	CANNOT_BE_UNDEFINED:string = 'Cannot equal undefined.';
-
+const VOID0:any = void(0);
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?
 abstract class DictionaryBase<TKey, TValue>
@@ -107,7 +97,7 @@ implements IDictionary<TKey, TValue>
 	{
 		if(!item)
 			throw new ArgumentNullException(
-				ITEM, 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.'
+				'item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.'
 			);
 
 		extractKeyValue(item,
@@ -300,65 +290,6 @@ implements IDictionary<TKey, TValue>
 	}
 
 
-}
-
-
-function isKVP<TKey,TValue>(kvp:any):kvp is IKeyValuePair<TKey,TValue>
-{
-	return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
-}
-
-function assertKey<TKey>(key:TKey, name:string = ITEM):TKey
-{
-	assertNotUndefined(key, name + DOT + KEY);
-	if(key===null)
-		throw new ArgumentNullException(name + DOT + KEY);
-
-	return key;
-}
-
-
-function assertTuple(tuple:IArray<any>, name:string = ITEM):void
-{
-	if(tuple.length!=2)
-		throw new ArgumentException(name, 'KeyValuePair tuples must be of length 2.');
-
-	assertKey(tuple[0], name);
-}
-
-
-function assertNotUndefined<T>(value:T, name:string):T
-{
-	if(value===VOID0)
-		throw new ArgumentException(name, CANNOT_BE_UNDEFINED);
-
-	return value;
-}
-
-
-function extractKeyValue<TKey, TValue, TResult>(
-	item:KeyValuePair<TKey, TValue>,
-	to:(key:TKey, value:TValue)=>TResult):TResult
-{
-
-	var _ = this, key:TKey, value:TValue;
-	if(item instanceof Array)
-	{
-		assertTuple(item);
-		key = item[0];
-		value = assertNotUndefined(item[1], ITEM_1);
-	}
-	else if(isKVP<TKey,TValue>(item))
-	{
-		key = assertKey(item.key);
-		value = assertNotUndefined(item.value, ITEM_VALUE);
-	}
-	else
-	{
-		throw new ArgumentException(ITEM, INVALID_KVP_MESSAGE);
-	}
-
-	return to(key, value);
 }
 
 

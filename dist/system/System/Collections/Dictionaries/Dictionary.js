@@ -1,23 +1,19 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Compare_1, Types_1, Functions_1, DictionaryBase_1, EnumeratorBase_1;
-    var HashEntry, EntryList, Dictionary;
+    var VOID0, HashEntry, EntryList, Dictionary;
     function callHasOwnProperty(target, key) {
         return Object.prototype.hasOwnProperty.call(target, key);
     }
     function computeHashCode(obj) {
         if (obj === null)
             return "null";
-        if (obj === undefined)
+        if (obj === VOID0)
             return "undefined";
         return (typeof obj.toString === Types_1.default.FUNCTION)
             ? obj.toString()
@@ -41,6 +37,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                 EnumeratorBase_1 = EnumeratorBase_1_1;
             }],
         execute: function() {
+            VOID0 = void 0;
             HashEntry = (function () {
                 function HashEntry(key, value, prev, next) {
                     this.key = key;
@@ -49,7 +46,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     this.next = next;
                 }
                 return HashEntry;
-            })();
+            }());
             EntryList = (function () {
                 function EntryList(first, last) {
                     this.first = first;
@@ -105,7 +102,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     }
                 };
                 return EntryList;
-            })();
+            }());
             Dictionary = (function (_super) {
                 __extends(Dictionary, _super);
                 function Dictionary(compareSelector) {
@@ -130,7 +127,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                                     throw new Error("Key already exists.");
                                 var changed = !equal(old.value, value);
                                 if (changed) {
-                                    if (value === undefined) {
+                                    if (value === VOID0) {
                                         entries.remove(old);
                                         array.splice(i, 1);
                                         if (!array.length)
@@ -150,7 +147,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                         array.push(entry = entry || new HashEntry(key, value));
                     }
                     else {
-                        if (value === undefined) {
+                        if (value === VOID0) {
                             if (allowOverwrite)
                                 return false;
                             else
@@ -173,8 +170,8 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     if (!callHasOwnProperty(buckets, hash))
                         return undefined;
                     var array = buckets[hash];
-                    for (var _i = 0; _i < array.length; _i++) {
-                        var entry = array[_i];
+                    for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
+                        var entry = array_1[_i];
                         if (comparer(entry.key) === compareKey)
                             return entry.value;
                     }
@@ -231,7 +228,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     return result;
                 };
                 return Dictionary;
-            })(DictionaryBase_1.default);
+            }(DictionaryBase_1.default));
             exports_1("default", Dictionary);
         }
     }

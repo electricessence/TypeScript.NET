@@ -21,6 +21,7 @@ import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeExcepti
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
  *
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
+ * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
  */
 export default class Uri implements IUri, IEquatable<IUri>
 {
@@ -50,8 +51,8 @@ export default class Uri implements IUri, IEquatable<IUri>
 		host:string,
 		port:number,
 		path:string,
-		query:string|IUriComponentMap|IKeyValuePair<string,Primitive>[],
-		fragment:string)
+		query?:string|IUriComponentMap|StringKeyValuePair<Primitive>[],
+		fragment?:string)
 	{
 		var _ = this;
 		_.scheme = getScheme(scheme) || null;
@@ -65,7 +66,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 
 
 		if(!Type.isString(query))
-			query = QueryParams.encode(<IUriComponentMap|IKeyValuePair<string,Primitive>[]>query);
+			query = QueryParams.encode(<IUriComponentMap|StringKeyValuePair<Primitive>[]>query);
 
 		_.query = formatQuery(<string>query) || null;
 		Object.freeze(_.queryParams
@@ -148,6 +149,13 @@ export default class Uri implements IUri, IEquatable<IUri>
 	{
 		return copyUri(this,map);
 	}
+
+	updateQuery(query:string|IUriComponentMap|StringKeyValuePair<Primitive>[]):Uri {
+		var map = this.toMap();
+		map.query = <any>query;
+		return Uri.from(map);
+	}
+
 
 	/**
 	 * Is provided for sub classes to override this value.

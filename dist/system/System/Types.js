@@ -1,15 +1,10 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register([], function(exports_1) {
-    var _BOOLEAN, _NUMBER, _STRING, _OBJECT, _UNDEFINED, _FUNCTION, typeInfoRegistry, TypeInfo, Type;
+    'use strict';
+    var VOID0, _BOOLEAN, _NUMBER, _STRING, _OBJECT, _UNDEFINED, _FUNCTION, typeInfoRegistry, TypeInfo, Type;
     return {
         setters:[],
         execute: function() {
-            ///<reference path="Primitive.d.ts"/>
-            ///<reference path="Collections/Array/IArray.d.ts"/>
-            _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof undefined, _FUNCTION = typeof function () { };
+            VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { };
             typeInfoRegistry = {};
             TypeInfo = (function () {
                 function TypeInfo(target) {
@@ -83,7 +78,7 @@ System.register([], function(exports_1) {
                     return info;
                 };
                 return TypeInfo;
-            })();
+            }());
             exports_1("TypeInfo", TypeInfo);
             (function (Type) {
                 Type.BOOLEAN = _BOOLEAN;
@@ -97,7 +92,8 @@ System.register([], function(exports_1) {
                 }
                 Type.isBoolean = isBoolean;
                 function isNumber(value, allowNaN) {
-                    if (allowNaN === void 0) { allowNaN = true; }
+                    if (allowNaN === VOID0)
+                        allowNaN = true;
                     return typeof value === _NUMBER && (allowNaN || !isNaN(value));
                 }
                 Type.isNumber = isNumber;
@@ -147,12 +143,8 @@ System.register([], function(exports_1) {
                     return hasMember(instance, property) && typeof (instance[property]) === type;
                 }
                 Type.hasMemberOfType = hasMemberOfType;
-                function isInstanceOf(instance, type) {
-                    return (instance) instanceof (type);
-                }
-                Type.isInstanceOf = isInstanceOf;
                 function isArrayLike(instance) {
-                    return (instance) instanceof (Array) || hasMember(instance, "length");
+                    return instance instanceof Array || hasMember(instance, "length");
                 }
                 Type.isArrayLike = isArrayLike;
             })(Type || (Type = {}));

@@ -1,16 +1,12 @@
-///<reference path="IDictionary.d.ts"/>
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Compare', './DictionaryBase'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Compare_1, DictionaryBase_1;
-    var StringKeyDictionary;
+    var VOID0, StringKeyDictionary;
     return {
         setters:[
             function (Compare_1_1) {
@@ -20,6 +16,7 @@ System.register(['../../Compare', './DictionaryBase'], function(exports_1) {
                 DictionaryBase_1 = DictionaryBase_1_1;
             }],
         execute: function() {
+            VOID0 = void 0;
             StringKeyDictionary = (function (_super) {
                 __extends(StringKeyDictionary, _super);
                 function StringKeyDictionary() {
@@ -44,7 +41,7 @@ System.register(['../../Compare', './DictionaryBase'], function(exports_1) {
                 StringKeyDictionary.prototype.setValue = function (key, value) {
                     var _ = this, map = _._map, old = map[key];
                     if (old !== value) {
-                        if (value === undefined) {
+                        if (value === VOID0) {
                             if ((key) in (map)) {
                                 delete map[key];
                                 --_._count;
@@ -78,7 +75,7 @@ System.register(['../../Compare', './DictionaryBase'], function(exports_1) {
                             var value = _._map[key];
                             if (selector)
                                 value = selector(key, value);
-                            if (value !== undefined)
+                            if (value !== VOID0)
                                 result[key] = value;
                         }
                     }
@@ -104,7 +101,7 @@ System.register(['../../Compare', './DictionaryBase'], function(exports_1) {
                     return this._count;
                 };
                 return StringKeyDictionary;
-            })(DictionaryBase_1.default);
+            }(DictionaryBase_1.default));
             exports_1("default", StringKeyDictionary);
         }
     }

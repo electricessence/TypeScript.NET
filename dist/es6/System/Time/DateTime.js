@@ -1,10 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based on .NET DateTime's interface.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-import Type from '../Types';
-import * as HowMany from './HowMany';
+'use strict';
 import ClockTime from './ClockTime';
 import TimeSpan from './TimeSpan';
 import TimeStamp from './TimeStamp';
@@ -12,12 +6,12 @@ class DateTime {
     constructor(value = new Date(), kind = 1) {
         var _ = this;
         _._kind = kind;
-        if (Type.isInstanceOf(value, DateTime))
+        if (value instanceof DateTime)
             _._value = value.toJsDate();
-        else if (Type.isInstanceOf(value, Date))
+        else if (value instanceof Date)
             _._setJsDate(value);
         else
-            _._value = value == undefined
+            _._value = value === void (0)
                 ? new Date()
                 : new Date(value);
     }
@@ -117,7 +111,7 @@ class DateTime {
         return today.addDays(1);
     }
     static between(first, last) {
-        var f = Type.isInstanceOf(first, DateTime) ? first._value : first, l = Type.isInstanceOf(last, DateTime) ? last._value : last;
+        var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
         return new TimeSpan(f.getTime() - l.getTime());
     }
     static isLeapYear(year) {

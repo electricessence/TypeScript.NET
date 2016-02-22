@@ -1,15 +1,12 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Array/Utility', './StringKeyDictionary', '../../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1;
-    var OrderedStringKeyDictionary;
+    var VOID0, OrderedStringKeyDictionary;
     return {
         setters:[
             function (ArrayUtility_1) {
@@ -22,6 +19,7 @@ System.register(['../Array/Utility', './StringKeyDictionary', '../../Exceptions/
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             }],
         execute: function() {
+            VOID0 = void 0;
             OrderedStringKeyDictionary = (function (_super) {
                 __extends(OrderedStringKeyDictionary, _super);
                 function OrderedStringKeyDictionary() {
@@ -36,9 +34,9 @@ System.register(['../Array/Utility', './StringKeyDictionary', '../../Exceptions/
                 };
                 OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {
                     var _ = this, exists = _.indexOfKey(key) != -1;
-                    if (!exists && (value !== undefined || keepIndex))
+                    if (!exists && (value !== VOID0 || keepIndex))
                         _._order.push(key);
-                    else if (exists && value === undefined && !keepIndex)
+                    else if (exists && value === VOID0 && !keepIndex)
                         ArrayUtility.remove(_._order, key);
                     return _super.prototype.setValue.call(this, key, value);
                 };
@@ -76,7 +74,7 @@ System.register(['../Array/Utility', './StringKeyDictionary', '../../Exceptions/
                     return _._order.filter(function (key) { return _.containsKey(key); });
                 };
                 return OrderedStringKeyDictionary;
-            })(StringKeyDictionary_1.default);
+            }(StringKeyDictionary_1.default));
             exports_1("default", OrderedStringKeyDictionary);
         }
     }

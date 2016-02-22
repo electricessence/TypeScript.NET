@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Compare', "./SortContext", "../../Functions"], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -40,7 +37,7 @@ System.register(['../../Compare', "./SortContext", "../../Functions"], function(
                     return _._order * d;
                 };
                 return KeySortedContext;
-            })(SortContext_1.default);
+            }(SortContext_1.default));
             exports_1("default", KeySortedContext);
         }
     }

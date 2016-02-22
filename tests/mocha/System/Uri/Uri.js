@@ -28,6 +28,13 @@
             assert.equal(u.queryParams[params[1][0]], params[1][1]);
         });
     });
+    describe('KVP versus Tuple', function () {
+        it('should be equal', function () {
+            var uTuples = new Uri_1.default(u.scheme, u.userInfo, u.host, u.port, u.path, params);
+            var uKvp = new Uri_1.default(u.scheme, u.userInfo, u.host, u.port, u.path, u.queryParams);
+            assert.equal(uTuples.toString(), uKvp.toString());
+        });
+    });
     describe('es6 > babel > commonjs', function () {
         var Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
         var u2 = Uri2.from(path + query);

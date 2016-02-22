@@ -1,17 +1,30 @@
+///<reference path="ITimeMeasurement.d.ts"/>
+///<reference path="ITimeQuantity.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../IComparable.d.ts"/>
+///<reference path="../IFormattable.d.ts"/>
+///<reference path="../IFormatProvider.d.ts"/>
+///<reference path="ITimeStamp.d.ts"/>
+///<reference path="HowMany.ts"/>
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './TimeQuantity'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", './TimeQuantity'], function (require, exports) {
     var TimeQuantity_1 = require('./TimeQuantity');
     var ClockTime = (function (_super) {
         __extends(ClockTime, _super);
@@ -26,18 +39,19 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _ = this;
             var ms = Math.abs(_.getTotalMilliseconds());
             var msi = Math.floor(ms);
-            _.tick = (ms - msi) * 10000;
-            _.days = (msi / 86400000) | 0;
-            msi -= _.days * 86400000;
-            _.hour = (msi / 3600000) | 0;
-            msi -= _.hour * 3600000;
-            _.minute = (msi / 60000) | 0;
-            msi -= _.minute * 60000;
-            _.second = (msi / 1000) | 0;
-            msi -= _.second * 1000;
+            _.tick = (ms - msi) * 10000 /* Millisecond */;
+            _.days = (msi / 86400000 /* Day */) | 0;
+            msi -= _.days * 86400000 /* Day */;
+            _.hour = (msi / 3600000 /* Hour */) | 0;
+            msi -= _.hour * 3600000 /* Hour */;
+            _.minute = (msi / 60000 /* Minute */) | 0;
+            msi -= _.minute * 60000 /* Minute */;
+            _.second = (msi / 1000 /* Second */) | 0;
+            msi -= _.second * 1000 /* Second */;
             _.millisecond = msi;
             Object.freeze(_);
         }
+        // Static version for relative consistency.  Constructor does allow this format.
         ClockTime.from = function (hours, minutes, seconds, milliseconds) {
             if (seconds === void 0) { seconds = 0; }
             if (milliseconds === void 0) { milliseconds = 0; }
@@ -47,15 +61,16 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (seconds === void 0) { seconds = 0; }
             if (milliseconds === void 0) { milliseconds = 0; }
             var value = hours;
-            value *= 60;
+            value *= 60 /* Hour */;
             value += minutes;
-            value *= 60;
+            value *= 60 /* Minute */;
             value += seconds;
-            value *= 1000;
+            value *= 1000 /* Second */;
             value += milliseconds;
             return value;
         };
         ClockTime.prototype.toString = function () {
+            /* INSERT CUSTOM FORMATTING CODE HERE */
             var _ = this, a = [];
             if (_.days)
                 a.push(pluralize(_.days, "day"));
@@ -70,9 +85,10 @@ var __extends = (this && this.__extends) || function (d, b) {
             return a.join(", ").replace(", and, ", " and ");
         };
         return ClockTime;
-    }(TimeQuantity_1.default));
+    })(TimeQuantity_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ClockTime;
+    // Temporary until the full TimeSpanFormat is available.
     function pluralize(value, label) {
         if (Math.abs(value) !== 1)
             label += "s";

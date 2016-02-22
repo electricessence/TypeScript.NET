@@ -1,24 +1,17 @@
 'use strict';
 var Types_1 = require('../Types');
 var Serialization = require('../Serialization/Utility');
+var KeyValueExtract_1 = require('../KeyValueExtract');
 var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
 function encode(values, prefixIfNotEmpty) {
     if (!values)
         return '';
-    var entries = [];
+    var entries;
     if (Array.isArray(values)) {
-        for (var _i = 0, values_1 = values; _i < values_1.length; _i++) {
-            var kvp = values_1[_i];
-            if (kvp)
-                entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
-        }
+        entries = values.map(function (kvp) { return KeyValueExtract_1.default(kvp, function (key, value) { return key + KEY_VALUE_SEPARATOR + encodeValue(value); }); });
     }
     else {
-        var keys = Object.keys(values);
-        for (var _a = 0, keys_1 = keys; _a < keys_1.length; _a++) {
-            var k = keys_1[_a];
-            entries.push(k + KEY_VALUE_SEPARATOR + encodeValue(values[k]));
-        }
+        entries = Object.keys(values).map(function (key) { return key + KEY_VALUE_SEPARATOR + encodeValue(values[key]); });
     }
     return (entries.length && prefixIfNotEmpty ? '?' : '')
         + entries.join(ENTRY_SEPARATOR);

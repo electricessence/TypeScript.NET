@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register([], function(exports_1) {
+    'use strict';
     var Functions, rootFunctions;
     return {
         setters:[],
@@ -15,7 +12,7 @@ System.register([], function(exports_1) {
                 Functions.prototype.False = function () { return false; };
                 Functions.prototype.Blank = function () { };
                 return Functions;
-            })();
+            }());
             rootFunctions = new Functions();
             (function (Functions) {
                 Functions.Identity = rootFunctions.Identity;

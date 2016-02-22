@@ -1,8 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import * as Values from '../System/Compare';
 import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
@@ -19,7 +15,7 @@ import DisposableBase from '../System/Disposable/DisposableBase';
 import Exception from "../System/Exception";
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
-'use strict';
+const VOID0 = void 0;
 class LinqFunctions extends BaseFunctions {
     Greater(a, b) {
         return a > b ? a : b;
@@ -45,7 +41,7 @@ export class Enumerable extends DisposableBase {
     }
     static from(source) {
         if (Type.isObject(source)) {
-            if (Type.isInstanceOf(source, Enumerable))
+            if (source instanceof Enumerable)
                 return source;
             if (Array.isArray(source))
                 return new ArrayEnumerable(source);
@@ -62,7 +58,7 @@ export class Enumerable extends DisposableBase {
                 return source.slice();
             if (Type.isArrayLike(source))
                 source = new ArrayEnumerable(source);
-            if (Type.isInstanceOf(source, Enumerable))
+            if (source instanceof Enumerable)
                 return source.toArray();
             if (isEnumerable(source)) {
                 var result = [];
@@ -205,7 +201,7 @@ export class Enumerable extends DisposableBase {
         var type = typeof input;
         if (type != Type.STRING)
             throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-        if (Type.isInstanceOf(pattern, RegExp)) {
+        if (pattern instanceof RegExp) {
             flags += (pattern.ignoreCase) ? "i" : "";
             flags += (pattern.multiline) ? "m" : "";
             pattern = pattern.source;
@@ -328,7 +324,7 @@ export class Enumerable extends DisposableBase {
             var key = keySelector(x);
             var element = elementSelector(x);
             var array = dict.getValue(key);
-            if (array !== undefined)
+            if (array !== VOID0)
                 array.push(element);
             else
                 dict.addByKeyValue(key, [element]);
@@ -597,7 +593,7 @@ export class Enumerable extends DisposableBase {
         });
     }
     scan(func, seed) {
-        var isUseSeed = seed !== undefined;
+        var isUseSeed = seed !== VOID0;
         var _ = this;
         return new Enumerable(() => {
             var enumerator;
@@ -658,7 +654,7 @@ export class Enumerable extends DisposableBase {
                 middleEnumerator = undefined;
                 index = 0;
             }, (yielder) => {
-                if (middleEnumerator === undefined && !enumerator.moveNext())
+                if (middleEnumerator === VOID0 && !enumerator.moveNext())
                     return false;
                 do {
                     if (!middleEnumerator) {
@@ -693,7 +689,7 @@ export class Enumerable extends DisposableBase {
                 throwIfDisposed(disposed);
                 while (enumerator.moveNext()) {
                     var result = selector(enumerator.current, index++);
-                    if (result !== null && result !== undefined)
+                    if (result !== null && result !== VOID0)
                         return yielder.yieldReturn(result);
                 }
                 return false;
@@ -746,7 +742,7 @@ export class Enumerable extends DisposableBase {
                 break;
             default:
                 return this
-                    .where(x => Type.isInstanceOf(x, type));
+                    .where(x => x instanceof type);
         }
         return this
             .where(x => typeof x === typeName);
@@ -1041,7 +1037,7 @@ export class Enumerable extends DisposableBase {
                 while (true) {
                     if (innerElements != null) {
                         var innerElement = innerElements[innerCount++];
-                        if (innerElement !== undefined)
+                        if (innerElement !== VOID0)
                             return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
                         innerElement = null;
                         innerCount = 0;
@@ -1262,7 +1258,7 @@ export class Enumerable extends DisposableBase {
                 keys = new Dictionary(compareSelector);
             }, (yielder) => {
                 var current;
-                if (secondEnumerator === undefined) {
+                if (secondEnumerator === VOID0) {
                     while (firstEnumerator.moveNext()) {
                         current = firstEnumerator.current;
                         if (!keys.containsKey(current)) {
@@ -1571,7 +1567,6 @@ export class Enumerable extends DisposableBase {
         var sharedEnumerator;
         return new Enumerable(() => {
             return new EnumeratorBase(() => {
-                // assertIsNotDisposed(disposed);  This doesn't need an assertion since disposing the underlying enumerable disposes the enumerator.
                 if (!sharedEnumerator)
                     sharedEnumerator = _.getEnumerator();
             }, (yielder) => sharedEnumerator.moveNext()
@@ -1797,7 +1792,7 @@ class ArrayEnumerable extends Enumerable {
     sequenceEqual(second, equalityComparer = Values.areEqual) {
         if (Array.isArray(second))
             return Arrays.areEqual(this.source, second, true, equalityComparer);
-        if (Type.isInstanceOf(second, ArrayEnumerable))
+        if (second instanceof ArrayEnumerable)
             return second.sequenceEqual(this.source, equalityComparer);
         return super.sequenceEqual(second, equalityComparer);
     }

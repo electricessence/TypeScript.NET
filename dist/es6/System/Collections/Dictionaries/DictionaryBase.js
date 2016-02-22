@@ -1,12 +1,10 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import { areEqual } from '../../Compare';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
-import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import InvalidOperationException from '../../Exceptions/InvalidOperationException';
+import extractKeyValue from '../../KeyValueExtract';
+const VOID0 = void (0);
 class DictionaryBase {
     constructor() {
         this._updateRecursion = 0;
@@ -47,8 +45,8 @@ class DictionaryBase {
     get count() { return this.getCount(); }
     add(item) {
         if (!item)
-            throw new ArgumentException('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-        this.addByKeyValue(item.key, item.value);
+            throw new ArgumentNullException('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+        extractKeyValue(item, (key, value) => this.addByKeyValue(key, value));
     }
     clear() {
         var _ = this, keys = _.keys, count = keys.length;
@@ -64,8 +62,10 @@ class DictionaryBase {
     contains(item) {
         if (!item)
             return false;
-        var value = this.getValue(item.key);
-        return areEqual(value, item.value);
+        return extractKeyValue(item, (key, value) => {
+            let v = this.getValue(key);
+            return areEqual(value, v);
+        });
     }
     copyTo(array, index = 0) {
         if (!array)
@@ -82,9 +82,11 @@ class DictionaryBase {
     remove(item) {
         if (!item)
             return 0;
-        var key = item.key, value = this.getValue(key);
-        return (areEqual(value, item.value) && this.removeByKey(key))
-            ? 1 : 0;
+        return extractKeyValue(item, (key, value) => {
+            let v = this.getValue(key);
+            return (areEqual(value, v) && this.removeByKey(key))
+                ? 1 : 0;
+        });
     }
     get keys() { return this.getKeys(); }
     get values() { return this.getValues(); }
@@ -100,7 +102,7 @@ class DictionaryBase {
     }
     containsKey(key) {
         var value = this.getValue(key);
-        return value !== undefined;
+        return value !== VOID0;
     }
     containsValue(value) {
         var e = this.getEnumerator(), equal = areEqual;
@@ -129,10 +131,10 @@ class DictionaryBase {
         var _ = this;
         return _.handleUpdate(() => {
             var changed = false;
-            pairs.forEach(pair => {
-                _.setValue(pair.key, pair.value);
+            pairs.forEach(pair => extractKeyValue(pair, (key, value) => {
+                _.setValue(key, value);
                 changed = true;
-            });
+            }));
             return changed;
         });
     }
@@ -145,7 +147,7 @@ class DictionaryBase {
         }, (yielder) => {
             while (i < len) {
                 var key = keys[i++], value = _.getValue(key);
-                if (value !== undefined)
+                if (value !== VOID0)
                     return yielder.yieldReturn({ key: key, value: value });
             }
             return yielder.yieldBreak();

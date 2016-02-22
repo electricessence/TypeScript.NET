@@ -1,9 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import { areEqual, compare } from '../Compare';
-import * as HowMany from './HowMany';
 import TimeUnit from './TimeUnit';
 export default class TimeQuantity {
     constructor(_quantity = 0) {

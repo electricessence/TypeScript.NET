@@ -1,23 +1,30 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], function (require, exports) {
+    ///<reference path="../../FunctionTypes.d.ts"/>
     var Compare_1 = require('../../Compare');
     var Types_1 = require('../../Types');
     var Functions_1 = require('../../Functions');
     var DictionaryBase_1 = require('./DictionaryBase');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
     var VOID0 = void 0;
+    // LinkedList for Dictionary
     var HashEntry = (function () {
         function HashEntry(key, value, prev, next) {
             this.key = key;
@@ -26,7 +33,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.next = next;
         }
         return HashEntry;
-    }());
+    })();
     var EntryList = (function () {
         function EntryList(first, last) {
             this.first = first;
@@ -82,7 +89,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
         };
         return EntryList;
-    }());
+    })();
+    // static utility methods
     function callHasOwnProperty(target, key) {
         return Object.prototype.hasOwnProperty.call(target, key);
     }
@@ -162,8 +170,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (!callHasOwnProperty(buckets, hash))
                 return undefined;
             var array = buckets[hash];
-            for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
-                var entry = array_1[_i];
+            for (var _i = 0; _i < array.length; _i++) {
+                var entry = array[_i];
                 if (comparer(entry.key) === compareKey)
                     return entry.value;
             }
@@ -186,7 +194,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return false;
         };
         Dictionary.prototype.clear = function () {
-            var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this);
+            var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this); // Remove one by one to allow for signaling.
+            // Ensure reset and clean...
             _._count = 0;
             for (var key in buckets) {
                 if (buckets.hasOwnProperty(key))
@@ -220,7 +229,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return result;
         };
         return Dictionary;
-    }(DictionaryBase_1.default));
+    })(DictionaryBase_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Dictionary;
 });

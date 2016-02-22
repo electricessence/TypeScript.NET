@@ -1,9 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+    'use strict';
     var Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
     var Node, LinkedList, LinkedListNode;
     function ensureExternal(node, list) {
@@ -65,7 +61,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                         throw new InvalidOperationException_1.default("Adding a node that is already placed.");
                 };
                 return Node;
-            })();
+            }());
             LinkedList = (function () {
                 function LinkedList(source) {
                     var _ = this, c = 0, first = null, last = null;
@@ -324,7 +320,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     this._addNodeAfter(getInternal(node, this), getInternal(after, this));
                 };
                 return LinkedList;
-            })();
+            }());
             exports_1("default", LinkedList);
             LinkedListNode = (function () {
                 function LinkedListNode(_list, _node) {
@@ -378,7 +374,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     this._list.removeNode(this);
                 };
                 return LinkedListNode;
-            })();
+            }());
         }
     }
 });

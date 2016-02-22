@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Compare'], function(exports_1) {
+    'use strict';
     var Values;
     var SortContext;
     return {
@@ -40,7 +37,7 @@ System.register(['../../Compare'], function(exports_1) {
                     return _._order * d;
                 };
                 return SortContext;
-            })();
+            }());
             exports_1("default", SortContext);
         }
     }

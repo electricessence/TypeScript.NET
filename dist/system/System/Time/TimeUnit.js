@@ -1,16 +1,8 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(['./HowMany'], function(exports_1) {
-    var HowMany;
+System.register([], function(exports_1) {
+    "use strict";
     var TimeUnit;
     return {
-        setters:[
-            function (HowMany_1) {
-                HowMany = HowMany_1;
-            }],
+        setters:[],
         execute: function() {
             (function (TimeUnit) {
                 TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";

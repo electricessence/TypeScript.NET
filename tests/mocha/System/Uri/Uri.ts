@@ -26,6 +26,8 @@ describe('.query', ()=>
 	});
 });
 
+
+
 describe('.queryParams', ()=>
 {
 	it('should equal contain correct values', ()=>
@@ -33,8 +35,25 @@ describe('.queryParams', ()=>
 		assert.equal(u.queryParams[params[0][0]], params[0][1]);
 		assert.equal(u.queryParams[params[1][0]], params[1][1]);
 	});
+
+
 });
 
+
+describe('KVP versus Tuple', ()=>
+{
+
+	it('should be equal', ()=>
+	{
+		var uTuples = new Uri(u.scheme,u.userInfo,u.host,u.port,u.path,<any>params);
+		var uKvp = new Uri(u.scheme,u.userInfo,u.host,u.port,u.path,u.queryParams);
+
+		assert.equal(uTuples.toString(),uKvp.toString());
+	});
+
+
+
+});
 
 
 describe('es6 > babel > commonjs', ()=>

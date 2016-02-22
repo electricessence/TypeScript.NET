@@ -1,7 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import DisposableBase from '../../Disposable/DisposableBase';
 class Yielder {
     get current() { return this._current; }

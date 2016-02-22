@@ -1,36 +1,49 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', './TimeUnit', './ClockTime', './TimeQuantity'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../Types', './TimeUnit', './ClockTime', './TimeQuantity'], function (require, exports) {
     var Types_1 = require('../Types');
     var TimeUnit_1 = require('./TimeUnit');
     var ClockTime_1 = require('./ClockTime');
     var TimeQuantity_1 = require('./TimeQuantity');
+    /**
+     * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
+     */
     var TimeSpan = (function (_super) {
         __extends(TimeSpan, _super);
+        // In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
         function TimeSpan(value, units) {
             if (units === void 0) { units = TimeUnit_1.default.Milliseconds; }
             var ms = TimeUnit_1.default.toMilliseconds(value, units);
             _super.call(this, ms);
             var _ = this;
-            _.ticks = ms * 10000;
+            _.ticks = ms * 10000 /* Millisecond */;
             _.milliseconds = ms;
-            _.seconds = ms / 1000;
-            _.minutes = ms / 60000;
-            _.hours = ms / 3600000;
-            _.days = ms / 86400000;
+            _.seconds = ms / 1000 /* Second */;
+            _.minutes = ms / 60000 /* Minute */;
+            _.hours = ms / 3600000 /* Hour */;
+            _.days = ms / 86400000 /* Day */;
         }
         Object.defineProperty(TimeSpan.prototype, "total", {
+            /**
+             * Provides an standard interface for acquiring the total time.
+             * @returns {TimeSpan}
+             */
             get: function () {
                 return this;
             },
@@ -38,6 +51,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             configurable: true
         });
         Object.defineProperty(TimeSpan.prototype, "time", {
+            // Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
             get: function () {
                 var _ = this, t = _._time;
                 if (!t)
@@ -86,7 +100,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             configurable: true
         });
         return TimeSpan;
-    }(TimeQuantity_1.default));
+    })(TimeQuantity_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TimeSpan;
     var timeSpanZero;

@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Types'], function(exports_1) {
+    "use strict";
     var Types_1;
     function clone(source, depth) {
         if (depth === void 0) { depth = 0; }

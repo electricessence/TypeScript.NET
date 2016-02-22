@@ -1,13 +1,10 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import { areEqual } from '../../Compare';
 import Type from '../../Types';
 import Functions from '../../Functions';
 import DictionaryAbstractBase from './DictionaryBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
+const VOID0 = void 0;
 class HashEntry {
     constructor(key, value, prev, next) {
         this.key = key;
@@ -77,7 +74,7 @@ function callHasOwnProperty(target, key) {
 function computeHashCode(obj) {
     if (obj === null)
         return "null";
-    if (obj === undefined)
+    if (obj === VOID0)
         return "undefined";
     return (typeof obj.toString === Type.FUNCTION)
         ? obj.toString()
@@ -105,7 +102,7 @@ export default class Dictionary extends DictionaryAbstractBase {
                         throw new Error("Key already exists.");
                     var changed = !equal(old.value, value);
                     if (changed) {
-                        if (value === undefined) {
+                        if (value === VOID0) {
                             entries.remove(old);
                             array.splice(i, 1);
                             if (!array.length)
@@ -125,7 +122,7 @@ export default class Dictionary extends DictionaryAbstractBase {
             array.push(entry = entry || new HashEntry(key, value));
         }
         else {
-            if (value === undefined) {
+            if (value === VOID0) {
                 if (allowOverwrite)
                     return false;
                 else

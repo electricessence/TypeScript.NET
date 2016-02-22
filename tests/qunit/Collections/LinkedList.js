@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", './ICollection', 'source/System/Collections/LinkedList'], factory);
     }
-})(["require", "exports", './ICollection', 'source/System/Collections/LinkedList'], function (require, exports) {
+})(function (require, exports) {
     var ICollectionTests = require('./ICollection');
     var LinkedList_1 = require('source/System/Collections/LinkedList');
     function run() {
@@ -16,4 +16,5 @@
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = run;
 });
+
 //# sourceMappingURL=LinkedList.js.map

@@ -1,15 +1,12 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
- */
 System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+    'use strict';
     var Types_1, QueryParams, Utility_1, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1;
-    var Uri, SLASH, SLASH2, QM, HASH, EMPTY, AT;
+    var Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     function copyUri(from, to) {
-        if (to === void 0) { to = {}; }
         var i = 0, field;
-        while (field = Uri.Fields[i++]) {
+        if (!to)
+            to = {};
+        while (field = Fields[i++]) {
             var value = from[field];
             if (value)
                 to[field] = value;
@@ -63,8 +60,6 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
-        // scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
-        // {scheme}{authority}{path}{query}{fragment}
         var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
         return EMPTY
             + ((scheme && (scheme + ':')) || EMPTY)
@@ -186,6 +181,11 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                 Uri.prototype.copyTo = function (map) {
                     return copyUri(this, map);
                 };
+                Uri.prototype.updateQuery = function (query) {
+                    var map = this.toMap();
+                    map.query = query;
+                    return Uri.from(map);
+                };
                 Uri.prototype.getAbsoluteUri = function () {
                     return uriToString(this);
                 };
@@ -209,7 +209,7 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                     return this.absoluteUri;
                 };
                 Uri.toString = function (uri) {
-                    return Types_1.default.isInstanceOf(uri, Uri)
+                    return uri instanceof Uri
                         ? uri.absoluteUri
                         : uriToString(uri);
                 };
@@ -217,22 +217,20 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                     return getAuthority(uri);
                 };
                 return Uri;
-            })();
-            (function (Uri) {
-                (function (Fields) {
-                    Fields[Fields["scheme"] = 0] = "scheme";
-                    Fields[Fields["userInfo"] = 1] = "userInfo";
-                    Fields[Fields["host"] = 2] = "host";
-                    Fields[Fields["port"] = 3] = "port";
-                    Fields[Fields["path"] = 4] = "path";
-                    Fields[Fields["query"] = 5] = "query";
-                    Fields[Fields["fragment"] = 6] = "fragment";
-                })(Uri.Fields || (Uri.Fields = {}));
-                var Fields = Uri.Fields;
-                Object.freeze(Fields);
-            })(Uri || (Uri = {}));
+            }());
+            exports_1("default", Uri);
+            (function (Fields) {
+                Fields[Fields["scheme"] = 0] = "scheme";
+                Fields[Fields["userInfo"] = 1] = "userInfo";
+                Fields[Fields["host"] = 2] = "host";
+                Fields[Fields["port"] = 3] = "port";
+                Fields[Fields["path"] = 4] = "path";
+                Fields[Fields["query"] = 5] = "query";
+                Fields[Fields["fragment"] = 6] = "fragment";
+            })(Fields || (Fields = {}));
+            exports_1("Fields", Fields);
+            Object.freeze(Fields);
             SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
-            exports_1("default",Uri);
         }
     }
 });

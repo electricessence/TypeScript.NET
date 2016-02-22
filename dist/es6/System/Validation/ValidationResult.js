@@ -1,9 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-/// <reference path="IValidationResult.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
+'use strict';
 const valid = new ValidationResult(true);
 export default class ValidationResult {
     constructor(isValid = false, message = null, data = null) {

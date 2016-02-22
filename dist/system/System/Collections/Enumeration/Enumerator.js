@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Types', './ArrayEnumerator', './IndexEnumerator'], function(exports_1) {
+    'use strict';
     var Types_1, ArrayEnumerator_1, IndexEnumerator_1;
     var EmptyEnumerator, Empty;
     function from(source) {
@@ -69,7 +66,7 @@ System.register(['../../Types', './ArrayEnumerator', './IndexEnumerator'], funct
                 EmptyEnumerator.prototype.reset = function () { };
                 EmptyEnumerator.prototype.dispose = function () { };
                 return EmptyEnumerator;
-            })();
+            }());
             Empty = new EmptyEnumerator();
         }
     }

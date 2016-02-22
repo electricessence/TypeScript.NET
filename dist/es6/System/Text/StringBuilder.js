@@ -1,9 +1,6 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import Type from '../Types';
+const VOID0 = void 0;
 export default class StringBuilder {
     constructor(...initial) {
         var _ = this;
@@ -12,7 +9,7 @@ export default class StringBuilder {
         _.appendThese(initial);
     }
     appendSingle(item) {
-        if (item !== null && item !== undefined) {
+        if (item !== null && item !== VOID0) {
             var _ = this;
             _._latest = null;
             switch (typeof item) {
@@ -40,7 +37,7 @@ export default class StringBuilder {
     appendLines(items) {
         var _ = this;
         items.forEach(i => {
-            if (i !== null && i !== undefined) {
+            if (i !== null && i !== VOID0) {
                 _.appendSingle(i);
                 _._partArray.push("\r\n");
             }

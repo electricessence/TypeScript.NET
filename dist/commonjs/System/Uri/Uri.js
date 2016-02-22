@@ -51,6 +51,11 @@ var Uri = (function () {
     Uri.prototype.copyTo = function (map) {
         return copyUri(this, map);
     };
+    Uri.prototype.updateQuery = function (query) {
+        var map = this.toMap();
+        map.query = query;
+        return Uri.from(map);
+    };
     Uri.prototype.getAbsoluteUri = function () {
         return uriToString(this);
     };

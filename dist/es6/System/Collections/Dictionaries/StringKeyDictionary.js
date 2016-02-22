@@ -1,10 +1,7 @@
-///<reference path="IDictionary.d.ts"/>
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import { areEqual } from '../../Compare';
 import DictionaryBase from './DictionaryBase';
+const VOID0 = void 0;
 export default class StringKeyDictionary extends DictionaryBase {
     constructor(...args) {
         super(...args);
@@ -28,7 +25,7 @@ export default class StringKeyDictionary extends DictionaryBase {
     setValue(key, value) {
         var _ = this, map = _._map, old = map[key];
         if (old !== value) {
-            if (value === undefined) {
+            if (value === VOID0) {
                 if ((key) in (map)) {
                     delete map[key];
                     --_._count;
@@ -62,7 +59,7 @@ export default class StringKeyDictionary extends DictionaryBase {
                 var value = _._map[key];
                 if (selector)
                     value = selector(key, value);
-                if (value !== undefined)
+                if (value !== VOID0)
                     result[key] = value;
             }
         }
