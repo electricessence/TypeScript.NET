@@ -3,6 +3,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 ///<reference path="../System/Primitive.d.ts"/>
 ///<reference path="../System/FunctionTypes.d.ts"/>
 ///<reference path="../System/Collections/Array/IArray.d.ts"/>

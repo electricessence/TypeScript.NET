@@ -11,9 +11,20 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './TimeUnit', './TimeQuantity'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    /*
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
+    ///<reference path="ITimeMeasurement.d.ts"/>
+    ///<reference path="../IEquatable.d.ts"/>
+    ///<reference path="../IComparable.d.ts"/>
+    ///<reference path="../IFormattable.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var TimeUnit_1 = require('./TimeUnit');
     var TimeQuantity_1 = require('./TimeQuantity');
+    /**
+     * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.
+     */
     var TimeUnitValue = (function (_super) {
         __extends(TimeUnitValue, _super);
         function TimeUnitValue(value, _units) {
@@ -38,6 +49,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return TimeUnit_1.default.toMilliseconds(this._quantity, this._units);
         };
         Object.defineProperty(TimeUnitValue.prototype, "units", {
+            // To avoid confusion, the unit type can only be set once at construction.
             get: function () {
                 return this._units;
             },

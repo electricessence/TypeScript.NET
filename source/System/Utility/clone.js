@@ -1,3 +1,7 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -12,6 +16,7 @@
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
             return source;
+        // return primitives as is.
         if (!Types_1.default.isObject(source))
             return source;
         var result;
@@ -27,6 +32,7 @@
             result = {};
             if (depth > 0)
                 for (var k in source) {
+                    //noinspection JSUnfilteredForInLoop
                     result[k] = clone(source[k], depth - 1);
                 }
         }

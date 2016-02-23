@@ -11,7 +11,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './IndexEnumerator', '../../Types'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    /*
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
+    ///<reference path="../Array/IArray.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var IndexEnumerator_1 = require('./IndexEnumerator');
     var Types_1 = require('../../Types');
     var ArrayEnumerator = (function (_super) {

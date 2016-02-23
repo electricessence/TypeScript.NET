@@ -11,7 +11,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './Disposable/DisposableBase'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    /*
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
+    ///<reference path="ILazy.d.ts"/>
+    ///<reference path="FunctionTypes.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var DisposableBase_1 = require('./Disposable/DisposableBase');
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
@@ -28,12 +34,14 @@ var __extends = (this && this.__extends) || function (d, b) {
             configurable: true
         });
         Object.defineProperty(Lazy.prototype, "canReset", {
+            // Adding a 'resettable' mechanism allows for simply resetting a lazy instead of re-instantiating a new one.
             get: function () {
                 return !this.wasDisposed && !!(this._closure);
             },
             enumerable: true,
             configurable: true
         });
+        // Returns true if successfully reset.
         Lazy.prototype.reset = function (throwIfCannotReset) {
             var _ = this;
             if (throwIfCannotReset)

@@ -1,3 +1,9 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+///<reference path="ISerializable.d.ts"/>
+///<reference path="../Primitive.d.ts"/>
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -64,6 +70,8 @@
                                 return number;
                         }
                     }
+                    // TODO: Handle Dates...  Possibly JSON?
+                    // Instead of throwing we allow for handling...
                     if (unknownHandler)
                         value = unknownHandler(value);
                     break;

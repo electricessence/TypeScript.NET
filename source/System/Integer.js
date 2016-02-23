@@ -1,3 +1,7 @@
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -17,6 +21,17 @@
         function r(max) {
             return (Math.random() * max) | 0;
         }
+        /**
+         * Returns a random integer from zero to the max.
+         * Negative numbers are allowed.
+         *
+         * Examples:<br/>
+         * ```Integer.random(1)``` will return 0 or 1.<br/>
+         * ```Integer.random(-2)``` will return 0, -1, or -2.<br/>
+         *
+         * @param max
+         * @returns {number}
+         */
         function random(max) {
             assert(max, 'max');
             if (max == 0)
@@ -27,6 +42,17 @@
         Integer.random = random;
         var random;
         (function (random) {
+            /**
+             * Returns a random integer from zero up to the boundary value.
+             * Negative and fractional numbers are allowed.
+             *
+             * Example:<br/>
+             * ```Integer.random(-2)``` will return 0, or -1.<br/>
+             * ```Integer.random(5)``` will return 0, 1, 2, 3 or 4.<br/>
+             *
+             * @param boundary
+             * @returns {number}
+             */
             function under(boundary) {
                 return r(boundary);
             }

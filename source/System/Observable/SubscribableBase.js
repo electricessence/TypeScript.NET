@@ -6,10 +6,19 @@
         define(["require", "exports", '../Collections/LinkedList', '../Disposable/Utility', './Subscription'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    /*
+     * @author electricessence / https://github.com/electricessence/
+     * Based upon .NET source.
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+     */
+    ///<reference path="../Disposable/IDisposable.d.ts"/>
+    ///<reference path="../FunctionTypes.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var LinkedList_1 = require('../Collections/LinkedList');
     var DisposeUtility = require('../Disposable/Utility');
     var Subscription_1 = require('./Subscription');
+    // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
     var SubscribableBase = (function () {
         function SubscribableBase() {
             this.__subscriptions = new LinkedList_1.default();
@@ -31,6 +40,7 @@
             }
             return node;
         };
+        // It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
         SubscribableBase.prototype.subscribe = function (subscriber) {
             var _ = this;
             var n = _._findEntryNode(subscriber);
@@ -45,7 +55,7 @@
             if (n) {
                 var s = n.value;
                 n.remove();
-                s.dispose();
+                s.dispose(); // Prevent further usage of a dead subscription.
             }
         };
         SubscribableBase.prototype._unsubscribeAll = function (returnSubscribers) {
@@ -53,7 +63,7 @@
             var _ = this, _s = _.__subscriptions;
             var s = _s.toArray();
             var u = returnSubscribers ? s.map(function (o) { return o.subscriber; }) : null;
-            _s.clear();
+            _s.clear(); // Reset...
             DisposeUtility.disposeThese(s);
             return u;
         };

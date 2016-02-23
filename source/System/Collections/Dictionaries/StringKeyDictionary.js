@@ -11,7 +11,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", '../../Compare', './DictionaryBase'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    /*
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
+    ///<reference path="IDictionary.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var Compare_1 = require('../../Compare');
     var DictionaryBase_1 = require('./DictionaryBase');
     var VOID0 = void 0;
@@ -55,6 +60,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return false;
         };
+        // Returns true if any value is updated...
         StringKeyDictionary.prototype.importMap = function (values) {
             var _ = this;
             return _.handleUpdate(function () {

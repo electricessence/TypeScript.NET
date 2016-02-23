@@ -11,7 +11,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", '../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    /*
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
+    ///<reference path="../Disposable/IDisposable.d.ts"/>
+    ///<reference path="IEventDispatcher.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var shallowCopy_1 = require('../Utility/shallowCopy');
     var DisposableBase_1 = require('../Disposable/DisposableBase');
     var AU = require('../Collections/Array/Utility');
@@ -31,7 +37,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             _.listener = listener;
             _.useCapture = useCapture;
             _.priority = priority;
+            // _.useWeakReference = useWeakReference;
         }
+        // useWeakReference: boolean;
         EventDispatcherEntry.prototype.dispose = function () {
             this.listener = null;
         };
@@ -64,6 +72,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         __extends(EventDispatcher, _super);
         function EventDispatcher() {
             _super.apply(this, arguments);
+            // When dispatching events, we need a way to prevent recursion when disposing.
             this._isDisposing = false;
         }
         EventDispatcher.prototype.addEventListener = function (type, listener, useCapture, priority) {
@@ -72,8 +81,11 @@ var __extends = (this && this.__extends) || function (d, b) {
             var l = this._listeners;
             if (!l)
                 this._listeners = l = [];
-            l.push(new EventDispatcherEntry(type, listener, useCapture, priority));
+            // flash/vibe.js means of adding is indiscriminate and will double add listeners...
+            // we can then avoid double adds by including a 'registerEventListener' method.
+            l.push(new EventDispatcherEntry(type, listener, useCapture, priority)); //, useWeakReference));
         };
+        // Allow for simple add once mechanism.
         EventDispatcher.prototype.registerEventListener = function (type, listener, useCapture, priority) {
             if (useCapture === void 0) { useCapture = false; }
             if (priority === void 0) { priority = 0; }
@@ -116,12 +128,14 @@ var __extends = (this && this.__extends) || function (d, b) {
             else
                 event = e;
             var type = event.type;
-            var entries = [];
+            // noinspection JSMismatchedCollectionQueryUpdate
+            var entries = []; //, propagate = true, prevent = false;
             l.forEach(function (e) { if (e.type == type)
                 entries.push(e); });
             if (!entries.length)
                 return false;
             entries.sort(function (a, b) { return b.priority - a.priority; });
+            // For now... Just use simple...
             entries.forEach(function (entry) {
                 var newEvent = Object.create(Event);
                 shallowCopy_1.default(event, newEvent);
@@ -147,7 +161,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             enumerable: true,
             configurable: true
         });
+        // Override the public method here since EventDispatcher will end up doing things a bit differently from here on.
         EventDispatcher.prototype.dispose = function () {
+            // Having a disposing event can allow for child objects to automatically release themselves when their parent is disposed.
             var _ = this;
             if (!_.wasDisposed && !_._isDisposing) {
                 _._isDisposing = true;

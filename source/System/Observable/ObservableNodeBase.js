@@ -11,8 +11,17 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './SubscribableBase'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    /*
+     * @author electricessence / https://github.com/electricessence/
+     * Based upon .NET source.
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+     */
+    ///<reference path="IObserver.d.ts"/>
+    ///<reference path="IObservable.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var SubscribableBase_1 = require('./SubscribableBase');
+    // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {
@@ -41,6 +50,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             catch (ex) {
                 observersErrors = observersErrors || [];
+                // Don't let one error prevent others from recieving information.
                 observersErrors.push({ observer: s, ex: ex });
             }
         }
