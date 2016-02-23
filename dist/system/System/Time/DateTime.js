@@ -1,5 +1,6 @@
-System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1) {
+System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var ClockTime_1, TimeSpan_1, TimeStamp_1;
     var DateTime;
     return {

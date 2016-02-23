@@ -1,15 +1,12 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "./Exceptions/ArgumentException", "./Exceptions/ArgumentNullException"], factory);
     }
-})(["require", "exports", "./Exceptions/ArgumentException", "./Exceptions/ArgumentNullException"], function (require, exports) {
+})(function (require, exports) {
+    "use strict";
     var ArgumentException_1 = require("./Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
     var VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_KEY = ITEM + DOT + KEY, ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';

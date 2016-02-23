@@ -3,9 +3,9 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+///<reference path="../Disposable/IDisposable.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-///<reference path="../Disposable/IDisposable.d.ts"/>
 import Type from '../Types';
 import LinkedList from '../Collections/LinkedList';
 

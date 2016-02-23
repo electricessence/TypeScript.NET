@@ -1,5 +1,6 @@
-System.register(['../../Types', '../../Compare'], function(exports_1) {
+System.register(['../../Types', '../../Compare'], function(exports_1, context_1) {
     "use strict";
+    var __moduleName = context_1 && context_1.id;
     var Types_1, Compare_1;
     function ensureArray(value) {
         return Array.isArray(value)

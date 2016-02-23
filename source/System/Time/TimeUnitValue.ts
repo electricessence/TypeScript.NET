@@ -2,12 +2,12 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 ///<reference path="ITimeMeasurement.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
 ///<reference path="../IFormattable.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import {areEqual, compare} from '../Compare';
 import TimeUnit from './TimeUnit';
 import TimeQuantity from './TimeQuantity';

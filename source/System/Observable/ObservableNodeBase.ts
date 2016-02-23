@@ -4,10 +4,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 ///<reference path="IObserver.d.ts"/>
 ///<reference path="IObservable.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import SubscribableBase from './SubscribableBase';
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.

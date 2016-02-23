@@ -1,5 +1,6 @@
-System.register(['../../Disposable/Utility', '../../Collections/Enumeration/Enumerator'], function(exports_1) {
+System.register(['../../Disposable/Utility', '../../Collections/Enumeration/Enumerator'], function(exports_1, context_1) {
     "use strict";
+    var __moduleName = context_1 && context_1.id;
     var Utility_1, Enumerator;
     function forEach(enumerable, action) {
         if (enumerable) {

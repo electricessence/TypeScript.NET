@@ -1,5 +1,6 @@
-System.register(['../Compare', './TimeUnit'], function(exports_1) {
+System.register(['../Compare', './TimeUnit'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var Compare_1, TimeUnit_1;
     var TimeQuantity;
     return {

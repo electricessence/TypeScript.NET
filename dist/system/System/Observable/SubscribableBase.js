@@ -1,5 +1,6 @@
-System.register(['../Collections/LinkedList', '../Disposable/Utility', './Subscription'], function(exports_1) {
+System.register(['../Collections/LinkedList', '../Disposable/Utility', './Subscription'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var LinkedList_1, DisposeUtility, Subscription_1;
     var SubscribableBase;
     return {

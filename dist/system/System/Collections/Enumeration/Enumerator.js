@@ -1,5 +1,6 @@
-System.register(['../../Types', './ArrayEnumerator', './IndexEnumerator'], function(exports_1) {
+System.register(['../../Types', './ArrayEnumerator', './IndexEnumerator'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var Types_1, ArrayEnumerator_1, IndexEnumerator_1;
     var EmptyEnumerator, Empty;
     function from(source) {

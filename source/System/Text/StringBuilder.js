@@ -1,29 +1,14 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-'use strict'; // For compatibility with (let, const, function, class);
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Types'], factory);
     }
-})(["require", "exports", '../Types'], function (require, exports) {
-    ///<reference path="../Disposable/IDisposable.d.ts"/>
+})(function (require, exports) {
+    'use strict';
     var Types_1 = require('../Types');
     var VOID0 = void 0;
-    /*****************************
-     * IMPORTANT NOTES ABOUT PERFORMANCE:
-     * http://jsperf.com/string-concatenation-looped
-     * http://jsperf.com/adding-strings-to-an-array
-     * http://jsperf.com/string-concatenation-versus-array-operations-with-join
-     *
-     * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
-     * StringBuilder will really show it's benefit likely somewhere above 1000 items.
-     *****************************/
     var StringBuilder = (function () {
         function StringBuilder() {
             var initial = [];
@@ -45,7 +30,7 @@
                         item = item.toString();
                         break;
                 }
-                _._partArray.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
+                _._partArray.push(item);
             }
         };
         StringBuilder.prototype.appendThese = function (items) {
@@ -80,17 +65,6 @@
             return _;
         };
         Object.defineProperty(StringBuilder.prototype, "isEmpty", {
-            /** /// These methods can only efficiently be added if not using a single array.
-             insert(index: number, value: string, count: number = 1): StringBuilder
-             {
-        
-            }
-        
-             remove(startIndex:number, length:number): StringBuilder
-             {
-        
-            }
-             /**/
             get: function () {
                 return this._partArray.length === 0;
             },
@@ -114,7 +88,7 @@
             this.clear();
         };
         return StringBuilder;
-    })();
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StringBuilder;
 });

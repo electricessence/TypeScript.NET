@@ -1,5 +1,6 @@
-System.register(['../../Compare', '../../Types'], function(exports_1) {
+System.register(['../../Compare', '../../Types'], function(exports_1, context_1) {
     "use strict";
+    var __moduleName = context_1 && context_1.id;
     var Values, Types_1;
     function validateSize(a, b) {
         if (a && b && a === b || !a && !b)

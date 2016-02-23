@@ -1,11 +1,12 @@
-(function (factory) {
+///<reference path="../../../import.d.ts"/>
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports"], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
+})(["require", "exports"], function (require, exports) {
     var assert = require('../../../../../node_modules/assert/assert');
 });
 

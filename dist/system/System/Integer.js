@@ -1,5 +1,6 @@
-System.register(['./Types', './Exceptions/ArgumentException'], function(exports_1) {
+System.register(['./Types', './Exceptions/ArgumentException'], function(exports_1, context_1) {
     "use strict";
+    var __moduleName = context_1 && context_1.id;
     var Types_1, ArgumentException_1;
     var Integer;
     function Integer(n) {

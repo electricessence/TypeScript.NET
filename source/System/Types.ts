@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 ///<reference path="Primitive.d.ts"/>
 ///<reference path="Collections/Array/IArray.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 
 const
 	VOID0:any = void(0),

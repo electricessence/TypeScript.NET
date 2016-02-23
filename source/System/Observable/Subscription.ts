@@ -4,12 +4,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
-
 ///<reference path="ISubscribable.d.ts"/>
 ///<reference path="IObservable.d.ts"/>
 ///<reference path="../Disposable/IDisposableAware.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
 
 /**
  * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.

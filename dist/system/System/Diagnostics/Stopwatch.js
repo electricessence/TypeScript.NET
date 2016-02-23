@@ -1,5 +1,6 @@
-System.register(['../Time/TimeSpan'], function(exports_1) {
+System.register(['../Time/TimeSpan'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var TimeSpan_1;
     var Stopwatch;
     return {

@@ -1,11 +1,12 @@
-(function (factory) {
+///<reference path="../../../import.d.ts"/>
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../../../../source/System/Types', '../../../../../source/System/Collections/Queue', '../../../../../source/System/Collections/Enumeration/Enumerator'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", '../../../../../source/System/Types', '../../../../../source/System/Collections/Queue', '../../../../../source/System/Collections/Enumeration/Enumerator'], function (require, exports) {
     var Types_1 = require('../../../../../source/System/Types');
     var Queue_1 = require('../../../../../source/System/Collections/Queue');
     var Enumerator = require('../../../../../source/System/Collections/Enumeration/Enumerator');

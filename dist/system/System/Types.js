@@ -1,5 +1,6 @@
-System.register([], function(exports_1) {
+System.register([], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var VOID0, _BOOLEAN, _NUMBER, _STRING, _OBJECT, _UNDEFINED, _FUNCTION, typeInfoRegistry, TypeInfo, Type;
     return {
         setters:[],

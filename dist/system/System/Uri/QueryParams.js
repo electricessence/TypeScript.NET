@@ -1,5 +1,6 @@
-System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract'], function(exports_1) {
+System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var Types_1, Serialization, KeyValueExtract_1;
     var ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, Separator;
     function encode(values, prefixIfNotEmpty) {

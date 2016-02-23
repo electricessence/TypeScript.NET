@@ -3,12 +3,12 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 ///<reference path="ICollection.d.ts"/>
 ///<reference path="IList.d.ts"/>
 ///<reference path="Enumeration/IEnumerateEach.d.ts"/>
 ///<reference path="../FunctionTypes.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import * as Values from '../Compare';
 import * as AU from './Array/Utility';
 import Type from '../Types';

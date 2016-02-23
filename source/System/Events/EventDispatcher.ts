@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 ///<reference path="../Disposable/IDisposable.d.ts"/>
 ///<reference path="IEventDispatcher.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 
 import shallowCopy from '../Utility/shallowCopy';
 import DisposableBase from '../Disposable/DisposableBase';

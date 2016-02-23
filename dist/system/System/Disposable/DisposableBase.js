@@ -1,5 +1,6 @@
-System.register(['./ObjectDisposedException'], function(exports_1) {
+System.register(['./ObjectDisposedException'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var ObjectDisposedException_1;
     var DisposableBase;
     return {

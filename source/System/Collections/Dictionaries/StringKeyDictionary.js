@@ -1,22 +1,17 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../Compare', './DictionaryBase'], factory);
     }
-})(["require", "exports", '../../Compare', './DictionaryBase'], function (require, exports) {
-    ///<reference path="IDictionary.d.ts"/>
+})(function (require, exports) {
+    'use strict';
     var Compare_1 = require('../../Compare');
     var DictionaryBase_1 = require('./DictionaryBase');
     var VOID0 = void 0;
@@ -60,7 +55,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return false;
         };
-        // Returns true if any value is updated...
         StringKeyDictionary.prototype.importMap = function (values) {
             var _ = this;
             return _.handleUpdate(function () {
@@ -105,7 +99,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this._count;
         };
         return StringKeyDictionary;
-    })(DictionaryBase_1.default);
+    }(DictionaryBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StringKeyDictionary;
 });

@@ -1,16 +1,12 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-'use strict'; // For compatibility with (let, const, function, class);
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Time/TimeSpan'], factory);
     }
-})(["require", "exports", '../Time/TimeSpan'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var TimeSpan_1 = require('../Time/TimeSpan');
     var Stopwatch = (function () {
         function Stopwatch() {
@@ -37,7 +33,6 @@
             return new TimeSpan_1.default(Stopwatch.getTimestampMilliseconds() - start);
         };
         Stopwatch.prototype.record = function (closure) {
-            // Although a reasonably thread safe way to record, it may not correctly represent time in an async scenario.
             var e = Stopwatch.measure(closure);
             this._elapsed += e.milliseconds;
             return e;
@@ -62,8 +57,6 @@
             _._isRunning = false;
             _._startTimeStamp = NaN;
         };
-        // Effectively calls a stop start and continues timing...
-        // Can also be called to effectively start a lap before calling it again to get the elapsed lap time.
         Stopwatch.prototype.lap = function () {
             var _ = this;
             if (_._isRunning) {
@@ -114,7 +107,7 @@
             configurable: true
         });
         return Stopwatch;
-    })();
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Stopwatch;
 });

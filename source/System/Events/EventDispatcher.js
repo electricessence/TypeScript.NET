@@ -1,23 +1,17 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], factory);
     }
-})(["require", "exports", '../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], function (require, exports) {
-    ///<reference path="../Disposable/IDisposable.d.ts"/>
-    ///<reference path="IEventDispatcher.d.ts"/>
+})(function (require, exports) {
+    'use strict';
     var shallowCopy_1 = require('../Utility/shallowCopy');
     var DisposableBase_1 = require('../Disposable/DisposableBase');
     var AU = require('../Collections/Array/Utility');
@@ -37,9 +31,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             _.listener = listener;
             _.useCapture = useCapture;
             _.priority = priority;
-            // _.useWeakReference = useWeakReference;
         }
-        // useWeakReference: boolean;
         EventDispatcherEntry.prototype.dispose = function () {
             this.listener = null;
         };
@@ -65,14 +57,13 @@ var __extends = (this && this.__extends) || function (d, b) {
                 && _.priority == other.priority;
         };
         return EventDispatcherEntry;
-    })(DisposableBase_1.default);
+    }(DisposableBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = EventDispatcherEntry;
     var EventDispatcher = (function (_super) {
         __extends(EventDispatcher, _super);
         function EventDispatcher() {
             _super.apply(this, arguments);
-            // When dispatching events, we need a way to prevent recursion when disposing.
             this._isDisposing = false;
         }
         EventDispatcher.prototype.addEventListener = function (type, listener, useCapture, priority) {
@@ -81,11 +72,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             var l = this._listeners;
             if (!l)
                 this._listeners = l = [];
-            // flash/vibe.js means of adding is indiscriminate and will double add listeners...
-            // we can then avoid double adds by including a 'registerEventListener' method.
-            l.push(new EventDispatcherEntry(type, listener, useCapture, priority)); //, useWeakReference));
+            l.push(new EventDispatcherEntry(type, listener, useCapture, priority));
         };
-        // Allow for simple add once mechanism.
         EventDispatcher.prototype.registerEventListener = function (type, listener, useCapture, priority) {
             if (useCapture === void 0) { useCapture = false; }
             if (priority === void 0) { priority = 0; }
@@ -128,14 +116,12 @@ var __extends = (this && this.__extends) || function (d, b) {
             else
                 event = e;
             var type = event.type;
-            // noinspection JSMismatchedCollectionQueryUpdate
-            var entries = []; //, propagate = true, prevent = false;
+            var entries = [];
             l.forEach(function (e) { if (e.type == type)
                 entries.push(e); });
             if (!entries.length)
                 return false;
             entries.sort(function (a, b) { return b.priority - a.priority; });
-            // For now... Just use simple...
             entries.forEach(function (entry) {
                 var newEvent = Object.create(Event);
                 shallowCopy_1.default(event, newEvent);
@@ -161,9 +147,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             enumerable: true,
             configurable: true
         });
-        // Override the public method here since EventDispatcher will end up doing things a bit differently from here on.
         EventDispatcher.prototype.dispose = function () {
-            // Having a disposing event can allow for child objects to automatically release themselves when their parent is disposed.
             var _ = this;
             if (!_.wasDisposed && !_._isDisposing) {
                 _._isDisposing = true;
@@ -178,6 +162,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
         };
         return EventDispatcher;
-    })(DisposableBase_1.default);
+    }(DisposableBase_1.default));
 });
 //# sourceMappingURL=EventDispatcher.js.map

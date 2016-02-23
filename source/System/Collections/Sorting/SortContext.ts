@@ -2,12 +2,12 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 ///<reference path="../../FunctionTypes.d.ts"/>
 ///<reference path="../../IComparer.d.ts"/>
 ///<reference path="../Array/IArray.d.ts"/>
 ///<reference path="Order.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import * as Values from '../../Compare'
 import Integer from '../../Integer'
 import forEach from "../Enumeration/forEach"

@@ -1,11 +1,13 @@
-(function (factory) {
+///<reference path="../../import.d.ts"/>
+///<reference path="../../../../source/System/Collections/ICollection.d.ts"/>
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../../../source/System/Collections/Array/Utility', '../../../../source/System/Exceptions/NotImplementedException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", '../../../../source/System/Collections/Array/Utility', '../../../../source/System/Exceptions/NotImplementedException'], function (require, exports) {
     var AU = require('../../../../source/System/Collections/Array/Utility');
     var NotImplementedException_1 = require('../../../../source/System/Exceptions/NotImplementedException');
     var assert = require('../../../../node_modules/assert/assert');

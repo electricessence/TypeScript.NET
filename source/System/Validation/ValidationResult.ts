@@ -2,10 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 /// <reference path="IValidationResult.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
 
 const valid = new ValidationResult(true);
 

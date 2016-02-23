@@ -1,5 +1,6 @@
-System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var Types_1, QueryParams, Utility_1, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1;
     var Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     function copyUri(from, to) {

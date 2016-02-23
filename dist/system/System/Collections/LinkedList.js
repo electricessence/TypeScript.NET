@@ -1,5 +1,6 @@
-System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1, context_1) {
     'use strict';
+    var __moduleName = context_1 && context_1.id;
     var Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
     var Node, LinkedList, LinkedListNode;
     function ensureExternal(node, list) {

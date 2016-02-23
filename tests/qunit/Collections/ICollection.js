@@ -1,11 +1,14 @@
-(function (factory) {
+///<reference path="../../../source/System/Collections/ICollection.d.ts"/>
+///<reference path="../../../typings/qunit/qunit.d.ts"/>
+///<amd-dependency path="QUnit"/>
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", 'source/System/Text/Utility', 'source/System/Collections/Array/Utility', 'source/System/Exceptions/NotImplementedException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "QUnit", 'source/System/Text/Utility', 'source/System/Collections/Array/Utility', 'source/System/Exceptions/NotImplementedException'], function (require, exports) {
     var Text = require('source/System/Text/Utility');
     var AU = require('source/System/Collections/Array/Utility');
     var NotImplementedException_1 = require('source/System/Exceptions/NotImplementedException');

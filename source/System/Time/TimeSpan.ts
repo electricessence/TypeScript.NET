@@ -3,12 +3,12 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
-
 ///<reference path="ITimeMeasurement.d.ts"/>
 ///<reference path="../IEquatable.d.ts"/>
 ///<reference path="../IComparable.d.ts"/>
 ///<reference path="HowMany.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import {areEqual,compare} from '../Compare';
 import Type from '../Types';
 import TimeUnit from './TimeUnit';

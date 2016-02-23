@@ -1,11 +1,11 @@
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ICollection', 'source/System/Collections/LinkedList'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", './ICollection', 'source/System/Collections/LinkedList'], function (require, exports) {
     var ICollectionTests = require('./ICollection');
     var LinkedList_1 = require('source/System/Collections/LinkedList');
     function run() {
