@@ -1,27 +1,16 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(['../Types', '../Serialization/Utility'], function(exports_1) {
-    var Types_1, Serialization;
+System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract'], function(exports_1) {
+    'use strict';
+    var Types_1, Serialization, KeyValueExtract_1;
     var ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, Separator;
     function encode(values, prefixIfNotEmpty) {
         if (!values)
             return '';
-        var entries = [];
+        var entries;
         if (Array.isArray(values)) {
-            for (var _i = 0; _i < values.length; _i++) {
-                var kvp = values[_i];
-                if (kvp)
-                    entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
-            }
+            entries = values.map(function (kvp) { return KeyValueExtract_1.default(kvp, function (key, value) { return key + KEY_VALUE_SEPARATOR + encodeValue(value); }); });
         }
         else {
-            var keys = Object.keys(values);
-            for (var _a = 0; _a < keys.length; _a++) {
-                var k = keys[_a];
-                entries.push(k + KEY_VALUE_SEPARATOR + encodeValue(values[k]));
-            }
+            entries = Object.keys(values).map(function (key) { return key + KEY_VALUE_SEPARATOR + encodeValue(values[key]); });
         }
         return (entries.length && prefixIfNotEmpty ? '?' : '')
             + entries.join(ENTRY_SEPARATOR);
@@ -49,8 +38,8 @@ System.register(['../Types', '../Serialization/Utility'], function(exports_1) {
         if (decodeValues === void 0) { decodeValues = true; }
         if (query && (query = query.replace(/^\s*\?+/, ''))) {
             var entries = query.split(ENTRY_SEPARATOR);
-            for (var _i = 0; _i < entries.length; _i++) {
-                var entry = entries[_i];
+            for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+                var entry = entries_1[_i];
                 var si = entry.indexOf(KEY_VALUE_SEPARATOR);
                 if (si != -1) {
                     var key = entry.substring(0, si);
@@ -97,6 +86,9 @@ System.register(['../Types', '../Serialization/Utility'], function(exports_1) {
             },
             function (Serialization_1) {
                 Serialization = Serialization_1;
+            },
+            function (KeyValueExtract_1_1) {
+                KeyValueExtract_1 = KeyValueExtract_1_1;
             }],
         execute: function() {
             ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";

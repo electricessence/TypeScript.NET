@@ -1,23 +1,16 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(['../Types', './HowMany', './TimeUnit', './ClockTime', './TimeQuantity'], function(exports_1) {
+System.register(['../Types', './TimeUnit', './ClockTime', './TimeQuantity'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, HowMany, TimeUnit_1, ClockTime_1, TimeQuantity_1;
+    var Types_1, TimeUnit_1, ClockTime_1, TimeQuantity_1;
     var TimeSpan, timeSpanZero;
     return {
         setters:[
             function (Types_1_1) {
                 Types_1 = Types_1_1;
-            },
-            function (HowMany_1) {
-                HowMany = HowMany_1;
             },
             function (TimeUnit_1_1) {
                 TimeUnit_1 = TimeUnit_1_1;
@@ -99,7 +92,7 @@ System.register(['../Types', './HowMany', './TimeUnit', './ClockTime', './TimeQu
                     configurable: true
                 });
                 return TimeSpan;
-            })(TimeQuantity_1.default);
+            }(TimeQuantity_1.default));
             exports_1("default", TimeSpan);
         }
     }

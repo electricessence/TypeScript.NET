@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Utility/shallowCopy', '../Disposable/DisposableBase', '../Collections/Array/Utility'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -64,7 +61,7 @@ System.register(['../Utility/shallowCopy', '../Disposable/DisposableBase', '../C
                         && _.priority == other.priority;
                 };
                 return EventDispatcherEntry;
-            })(DisposableBase_1.default);
+            }(DisposableBase_1.default));
             exports_1("default", EventDispatcherEntry);
             EventDispatcher = (function (_super) {
                 __extends(EventDispatcher, _super);
@@ -168,7 +165,7 @@ System.register(['../Utility/shallowCopy', '../Disposable/DisposableBase', '../C
                     }
                 };
                 return EventDispatcher;
-            })(DisposableBase_1.default);
+            }(DisposableBase_1.default));
         }
     }
 });

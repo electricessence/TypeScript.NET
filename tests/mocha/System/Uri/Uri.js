@@ -1,12 +1,11 @@
-///<reference path="../../import.d.ts"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../../../source/System/Uri/Uri'], factory);
     }
-})(["require", "exports", '../../../../source/System/Uri/Uri'], function (require, exports) {
+})(function (require, exports) {
     var Uri_1 = require('../../../../source/System/Uri/Uri');
     var assert = require('../../../../node_modules/assert/assert');
     var path = '/one/two/three.html';
@@ -29,8 +28,15 @@
             assert.equal(u.queryParams[params[1][0]], params[1][1]);
         });
     });
+    describe('KVP versus Tuple', function () {
+        it('should be equal', function () {
+            var uTuples = new Uri_1.default(u.scheme, u.userInfo, u.host, u.port, u.path, params);
+            var uKvp = new Uri_1.default(u.scheme, u.userInfo, u.host, u.port, u.path, u.queryParams);
+            assert.equal(uTuples.toString(), uKvp.toString());
+        });
+    });
     describe('es6 > babel > commonjs', function () {
-        var Uri2 = require('../../../../dist/commonjs/System/Uri/Uri');
+        var Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
         var u2 = Uri2.from(path + query);
         describe('.path', function () {
             it('should equal ' + path, function () {

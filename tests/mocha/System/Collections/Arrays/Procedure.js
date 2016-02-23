@@ -1,12 +1,11 @@
-///<reference path="../../../import"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../../../../source/System/Collections/Array/Procedure'], factory);
     }
-})(["require", "exports", '../../../../../source/System/Collections/Array/Procedure'], function (require, exports) {
+})(function (require, exports) {
     var ArrayProcedure = require('../../../../../source/System/Collections/Array/Procedure');
     var assert = require('../../../../../node_modules/assert/assert');
     var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity, a = [5, minA, -1, maxA, -2, NaN, 20], b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20], sum = 5 + minA + (-1) + maxA + (-2) + 20, average = sum / 6, product = 5 * minA * (-1) * maxA * (-2) * 20;

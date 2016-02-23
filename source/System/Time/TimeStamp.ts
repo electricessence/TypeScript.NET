@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="IDateTime.d.ts"/>
@@ -40,9 +41,9 @@ class TimeStamp implements ITimeStamp, IDateTime
 
 	static from(d:Date|IDateTime):TimeStamp
 	{
-		if (!(Type.isInstanceOf<Date>(d,Date)) && Type.hasMember(d,'toJsDate'))
+		if (!(d instanceof Date) && Type.hasMember(d,'toJsDate'))
 			d = (<IDateTime>d).toJsDate();
-		if(Type.isInstanceOf<Date>(d,Date))
+		if(d instanceof Date)
 		{
 			return new TimeStamp(
 				d.getFullYear(),

@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 
 ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
 ///<reference path="../Serialization/ISerializable.d.ts"/>
@@ -26,19 +27,32 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 {
 
 	constructor(
-		query:string|IUriComponentMap,
+		query:string|IUriComponentMap|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[],
 		decodeValues:boolean = true)
 	{
 		super();
+
+		this.importQuery(query,decodeValues);
+	}
+
+	importQuery(
+		query:string|IUriComponentMap|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[],
+		decodeValues:boolean = true):QueryBuilder {
 
 		if(Type.isString(query))
 		{
 			this.importFromString(<string>query, decodeValues);
 		}
+		else if(Array.isArray(query))
+		{
+			this.importPairs(query);
+		}
 		else
 		{
 			this.importMap(<IUriComponentMap>query);
 		}
+
+		return this;
 	}
 
 	/**
@@ -75,11 +89,12 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 	}
 
 	static init(
-		query:string|IUriComponentMap,
+		query:string|IUriComponentMap|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[],
 		decodeValues:boolean = true):QueryBuilder
 	{
 		return new QueryBuilder(query, decodeValues);
 	}
+
 
 	/**
 	 * Returns the encoded URI string

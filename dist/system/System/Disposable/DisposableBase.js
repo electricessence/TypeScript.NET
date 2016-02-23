@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['./ObjectDisposedException'], function(exports_1) {
+    'use strict';
     var ObjectDisposedException_1;
     var DisposableBase;
     return {
@@ -44,7 +41,7 @@ System.register(['./ObjectDisposedException'], function(exports_1) {
                 };
                 DisposableBase.prototype._onDispose = function () { };
                 return DisposableBase;
-            })();
+            }());
             exports_1("default",DisposableBase);
         }
     }

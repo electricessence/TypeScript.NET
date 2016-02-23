@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register([], function(exports_1) {
+    "use strict";
     var Error, EvalError, RangeError, ReferenceError, SyntaxError, TypeError, URIError;
     return {
         setters:[],

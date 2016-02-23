@@ -2,16 +2,18 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 
 ///<reference path="Primitive.d.ts"/>
 ///<reference path="Collections/Array/IArray.d.ts"/>
 
 const
+	VOID0:any = void(0),
 	_BOOLEAN:string = typeof true,
 	_NUMBER:string  = typeof 0,
 	_STRING:string  = typeof "",
 	_OBJECT:string  = typeof {},
-	_UNDEFINED:string = typeof undefined,
+	_UNDEFINED:string = typeof VOID0,
 	_FUNCTION:string = typeof function() {};
 
 // Only used for primitives.
@@ -189,11 +191,12 @@ module Type
 	/**
 	 * Returns true if the value parameter is a number.
 	 * @param value
-	 * @param allowNaN
+	 * @param allowNaN Default is true.
 	 * @returns {boolean}
 	 */
-	export function isNumber(value:any, allowNaN:boolean = true):value is number
+	export function isNumber(value:any, allowNaN?:boolean):value is number
 	{
+		if(allowNaN===VOID0) allowNaN = true;
 		return typeof value===_NUMBER && (allowNaN || !isNaN(value));
 	}
 
@@ -284,17 +287,10 @@ module Type
 		return hasMember(instance, property) && typeof(instance[property])===type;
 	}
 
-	// Substitute 'instanceof' until WebStorm's reformatting is fixed.
-	export function isInstanceOf<T>(instance:any, type:any):instance is T
-	{
-		return (instance)instanceof(type);
-	}
-
 	export function isArrayLike<T>(instance:any):instance is IArray<T>
 	{
-		return (instance)instanceof(Array) || hasMember(instance, "length");
+		return instance instanceof Array || hasMember(instance, "length");
 	}
-
 }
 
 Object.freeze(Type);

@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Types', '../../Integer', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+    "use strict";
     var Types_1, Integer_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
     var CBN, CBL0;
     function initialize(length) {
@@ -204,6 +201,53 @@ System.register(['../../Types', '../../Integer', '../../Compare', '../../Excepti
         return result;
     }
     exports_1("flatten", flatten);
+    function dispatchUnsafe(listeners, payload, trap) {
+        if (listeners && listeners.length) {
+            for (var i = 0, len = listeners.length; i < len; i++) {
+                var fn = listeners[i];
+                if (!fn)
+                    continue;
+                try {
+                    fn(payload);
+                }
+                catch (ex) {
+                    if (!trap)
+                        throw ex;
+                    else if (Types_1.default.isFunction(trap))
+                        trap(ex, i);
+                }
+            }
+        }
+    }
+    exports_1("dispatchUnsafe", dispatchUnsafe);
+    function dispatch(listeners, payload, trap) {
+        dispatchUnsafe(copy(listeners), payload, trap);
+    }
+    exports_1("dispatch", dispatch);
+    function dispatchMapped(listeners, payload, trap) {
+        if (!listeners)
+            return null;
+        var result = copy(listeners);
+        if (listeners.length) {
+            for (var i = 0, len = result.length; i < len; i++) {
+                var fn = result[i];
+                try {
+                    result[i] = fn
+                        ? fn(payload)
+                        : undefined;
+                }
+                catch (ex) {
+                    result[i] = undefined;
+                    if (!trap)
+                        throw ex;
+                    else if (Types_1.default.isFunction(trap))
+                        trap(ex, i);
+                }
+            }
+        }
+        return result;
+    }
+    exports_1("dispatchMapped", dispatchMapped);
     return {
         setters:[
             function (Types_1_1) {

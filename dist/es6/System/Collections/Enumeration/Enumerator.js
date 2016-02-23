@@ -1,7 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import Type from '../../Types';
 import ArrayEnumerator from './ArrayEnumerator';
 import IndexEnumerator from './IndexEnumerator';

@@ -2,12 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 
 ///<reference path="IDisposable.d.ts"/>
 ///<reference path="../Collections/Array/IArray.d.ts"/>
 import Type from '../Types';
-
-'use strict';
 
 /**
  * Takes any number of disposables as arguments and attempts to dispose them.

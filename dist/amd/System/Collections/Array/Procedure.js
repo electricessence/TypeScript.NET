@@ -1,6 +1,2 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 define(["require","exports"],function(n,r){function e(n,r){if(void 0===r&&(r=!1),!n||!n.length)return 0;var e=0;return r?n.forEach(function(n){isNaN(n)||(e+=n)}):n.every(function(n){return e+=n,!isNaN(e)}),e}function i(n,r){if(void 0===r&&(r=!1),!n||!n.length)return NaN;var e,i=0;return r?(e=0,n.forEach(function(n){isNaN(n)||(i+=n,e++)})):(e=n.length,n.every(function(n){return i+=n,!isNaN(i)})),!e||isNaN(i)?NaN:i/e}function t(n,r){if(void 0===r&&(r=!1),!n||!n.length)return NaN;var e=1;if(r){var i=!1;n.forEach(function(n){isNaN(n)||(e*=n,i||(i=!0))}),i||(e=NaN)}else n.every(function(n){return isNaN(n)?(e=NaN,!1):(e*=n,!0)});return e}function u(n,r,e,i){if(!n||!n.length)return NaN;var t=r;if(e){var u=!1;n.forEach(function(n){isNaN(n)||(i(n,t)&&(t=n),u||(u=!0))}),u||(t=NaN)}else n.every(function(n){return isNaN(n)?(t=NaN,!1):(i(n,t)&&(t=n),!0)});return t}function N(n,r){return void 0===r&&(r=!1),u(n,+(1/0),r,function(n,r){return r>n})}function a(n,r){return void 0===r&&(r=!1),u(n,-(1/0),r,function(n,r){return n>r})}r.sum=e,r.average=i,r.product=t,r.min=N,r.max=a});
 //# sourceMappingURL=Procedure.js.map

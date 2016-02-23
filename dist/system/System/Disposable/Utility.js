@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Types'], function(exports_1) {
+    'use strict';
     var Types_1;
     function dispose() {
         var disposables = [];
@@ -89,7 +86,6 @@ System.register(['../Types'], function(exports_1) {
                 Types_1 = Types_1_1;
             }],
         execute: function() {
-            'use strict';
         }
     }
 });

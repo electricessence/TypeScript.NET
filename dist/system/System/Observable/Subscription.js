@@ -1,17 +1,9 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
 System.register([], function(exports_1) {
+    'use strict';
     var Subscription;
     return {
         setters:[],
         execute: function() {
-            ///<reference path="ISubscribable.d.ts"/>
-            ///<reference path="IObservable.d.ts"/>
-            ///<reference path="../Disposable/IDisposableAware.d.ts"/>
             Subscription = (function () {
                 function Subscription(_subscribable, _subscriber) {
                     this._subscribable = _subscribable;
@@ -43,7 +35,7 @@ System.register([], function(exports_1) {
                     }
                 };
                 return Subscription;
-            })();
+            }());
             exports_1("default", Subscription);
         }
     }

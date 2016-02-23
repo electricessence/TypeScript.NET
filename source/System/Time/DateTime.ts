@@ -1,14 +1,15 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based on .NET DateTime's interface.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-
 ///<reference path='ITimeQuantity.d.ts'/>
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="IDateTime.d.ts"/>
 ///<reference path="Calendars.d.ts"/>
 ///<reference path="HowMany.ts"/>
+/*
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+'use strict'; // For compatibility with (let, const, function, class);
+
 import Type from '../Types';
 import ClockTime from './ClockTime';
 import TimeSpan from './TimeSpan';
@@ -39,9 +40,9 @@ class DateTime implements ICalendarDate, IDateTime
 	{
 		var _ = this;
 		_._kind = kind;
-		if(Type.isInstanceOf<DateTime>(value,DateTime))
+		if(value instanceof DateTime)
 			_._value = value.toJsDate();
-		else if(Type.isInstanceOf<Date>(value,Date))
+		else if(value instanceof Date)
 			_._setJsDate(value);
 		else
 			_._value = value===void(0)
@@ -265,8 +266,8 @@ class DateTime implements ICalendarDate, IDateTime
 	 */
 	static between(first:Date|DateTime, last:Date|DateTime):TimeSpan
 	{
-		var f:Date = Type.isInstanceOf<DateTime>(first,DateTime) ? first._value : <Date>first,
-		    l:Date = Type.isInstanceOf<DateTime>(last,DateTime) ? last._value : <Date>last;
+		var f:Date = first instanceof DateTime ? first._value : <Date>first,
+		    l:Date = last instanceof DateTime ? last._value : <Date>last;
 
 		return new TimeSpan(f.getTime() - l.getTime());
 	}

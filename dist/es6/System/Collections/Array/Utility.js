@@ -1,7 +1,3 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import Type from '../../Types';
 import Integer from '../../Integer';
 import { areEqual } from '../../Compare';
@@ -181,6 +177,50 @@ export function flatten(a, recurseDepth = 0) {
         }
         else
             result.push(x);
+    }
+    return result;
+}
+export function dispatchUnsafe(listeners, payload, trap) {
+    if (listeners && listeners.length) {
+        for (let i = 0, len = listeners.length; i < len; i++) {
+            let fn = listeners[i];
+            if (!fn)
+                continue;
+            try {
+                fn(payload);
+            }
+            catch (ex) {
+                if (!trap)
+                    throw ex;
+                else if (Type.isFunction(trap))
+                    trap(ex, i);
+            }
+        }
+    }
+}
+export function dispatch(listeners, payload, trap) {
+    dispatchUnsafe(copy(listeners), payload, trap);
+}
+export function dispatchMapped(listeners, payload, trap) {
+    if (!listeners)
+        return null;
+    var result = copy(listeners);
+    if (listeners.length) {
+        for (let i = 0, len = result.length; i < len; i++) {
+            let fn = result[i];
+            try {
+                result[i] = fn
+                    ? fn(payload)
+                    : undefined;
+            }
+            catch (ex) {
+                result[i] = undefined;
+                if (!trap)
+                    throw ex;
+                else if (Type.isFunction(trap))
+                    trap(ex, i);
+            }
+        }
     }
     return result;
 }

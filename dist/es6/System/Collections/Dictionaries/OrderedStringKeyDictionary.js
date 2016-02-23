@@ -1,10 +1,8 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import * as ArrayUtility from '../Array/Utility';
 import StringKeyDictionary from './StringKeyDictionary';
 import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeException';
+const VOID0 = void 0;
 export default class OrderedStringKeyDictionary extends StringKeyDictionary {
     constructor() {
         super();
@@ -18,9 +16,9 @@ export default class OrderedStringKeyDictionary extends StringKeyDictionary {
     }
     setValue(key, value, keepIndex) {
         var _ = this, exists = _.indexOfKey(key) != -1;
-        if (!exists && (value !== undefined || keepIndex))
+        if (!exists && (value !== VOID0 || keepIndex))
             _._order.push(key);
-        else if (exists && value === undefined && !keepIndex)
+        else if (exists && value === VOID0 && !keepIndex)
             ArrayUtility.remove(_._order, key);
         return super.setValue(key, value);
     }

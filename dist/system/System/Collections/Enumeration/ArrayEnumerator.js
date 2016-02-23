@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['./IndexEnumerator', '../../Types'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -30,7 +27,7 @@ System.register(['./IndexEnumerator', '../../Types'], function(exports_1) {
                     });
                 }
                 return ArrayEnumerator;
-            })(IndexEnumerator_1.default);
+            }(IndexEnumerator_1.default));
             exports_1("default", ArrayEnumerator);
         }
     }

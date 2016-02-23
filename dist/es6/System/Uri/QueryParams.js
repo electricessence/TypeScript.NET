@@ -1,25 +1,17 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
+import extractKeyValue from '../KeyValueExtract';
 const ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
 export function encode(values, prefixIfNotEmpty) {
     if (!values)
         return '';
-    var entries = [];
+    var entries;
     if (Array.isArray(values)) {
-        for (let kvp of values) {
-            if (kvp)
-                entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
-        }
+        entries = values.map(kvp => extractKeyValue(kvp, (key, value) => key + KEY_VALUE_SEPARATOR + encodeValue(value)));
     }
     else {
-        var keys = Object.keys(values);
-        for (let k of keys) {
-            entries.push(k + KEY_VALUE_SEPARATOR + encodeValue(values[k]));
-        }
+        entries = Object.keys(values).map(key => key + KEY_VALUE_SEPARATOR + encodeValue(values[key]));
     }
     return (entries.length && prefixIfNotEmpty ? '?' : '')
         + entries.join(ENTRY_SEPARATOR);

@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 (function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -15,6 +16,9 @@
     ///<reference path="Calendars.d.ts"/>
     ///<reference path="HowMany.ts"/>
     var Types_1 = require('../Types');
+    /**
+     * An alternative to Date or DateTime.  Is a model representing the exact date and time.
+     */
     var TimeStamp = (function () {
         function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {
             // TODO: Add validation or properly carry out of range values...
@@ -36,12 +40,12 @@
         }
         TimeStamp.prototype.toJsDate = function () {
             var _ = this;
-            return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
+            return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000 /* Millisecond */);
         };
         TimeStamp.from = function (d) {
-            if (!(Types_1.default.isInstanceOf(d, Date)) && Types_1.default.hasMember(d, 'toJsDate'))
+            if (!(d instanceof Date) && Types_1.default.hasMember(d, 'toJsDate'))
                 d = d.toJsDate();
-            if (Types_1.default.isInstanceOf(d, Date)) {
+            if (d instanceof Date) {
                 return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
             }
             else {

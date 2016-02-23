@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
+'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -20,6 +21,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     ///<reference path="IObserver.d.ts"/>
     ///<reference path="IObservable.d.ts"/>
     var SubscribableBase_1 = require('./SubscribableBase');
+    // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {
@@ -48,6 +50,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             catch (ex) {
                 observersErrors = observersErrors || [];
+                // Don't let one error prevent others from recieving information.
                 observersErrors.push({ observer: s, ex: ex });
             }
         }

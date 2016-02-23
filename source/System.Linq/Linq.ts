@@ -3,14 +3,16 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 ///<reference path="../System/Primitive.d.ts"/>
 ///<reference path="../System/FunctionTypes.d.ts"/>
 ///<reference path="../System/Collections/Array/IArray.d.ts"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
 ///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
 ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
+///<reference path="../System/IComparer.d.ts"/>
 ///<reference path="../System/Collections/Sorting/Order.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import * as Values from '../System/Compare';
 import * as Arrays from '../System/Collections/Array/Compare';
 import * as ArrayUtility from '../System/Collections/Array/Utility';
@@ -29,7 +31,6 @@ import ArgumentException from '../System/Exceptions/ArgumentException';
 import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 type Comparable = Primitive|IComparable<any>;
-'use strict';
 
 // #region Local Constants.
 
@@ -107,7 +108,7 @@ extends DisposableBase implements IEnumerable<T>
 	{
 		if(Type.isObject(source))
 		{
-			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
+			if(source instanceof Enumerable)
 				return source;
 
 			if(Array.isArray(source))
@@ -133,7 +134,7 @@ extends DisposableBase implements IEnumerable<T>
 			if(Type.isArrayLike<T>(source))
 				source = new ArrayEnumerable<T>(<IArray<T>>source);
 
-			if(Type.isInstanceOf<Enumerable<T>>(source, Enumerable))
+			if(source instanceof  Enumerable)
 				return source.toArray();
 
 			if(isEnumerable<T>(source))
@@ -443,7 +444,7 @@ extends DisposableBase implements IEnumerable<T>
 		if(type!=Type.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
-		if(Type.isInstanceOf(pattern, RegExp))
+		if(pattern instanceof  RegExp)
 		{
 			flags += (pattern.ignoreCase) ? "i" : "";
 			flags += (pattern.multiline) ? "m" : "";
@@ -1471,7 +1472,7 @@ extends DisposableBase implements IEnumerable<T>
 				break;
 			default:
 				return <Enumerable<any>>this
-					.where(x=>Type.isInstanceOf(x, type));
+					.where(x=>x instanceof  type);
 		}
 		return <Enumerable<any>>this
 			.where(x=>typeof x===typeName);
@@ -3385,7 +3386,7 @@ extends Enumerable<T>
 		if(Array.isArray(second))
 			return Arrays.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
 
-		if(Type.isInstanceOf(second, ArrayEnumerable))
+		if(second instanceof  ArrayEnumerable)
 			return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
 
 		return super.sequenceEqual(second, equalityComparer);

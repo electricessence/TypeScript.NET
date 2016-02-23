@@ -1,7 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import Type from '../Types';
 import * as QueryParams from './QueryParams';
 import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
@@ -9,12 +6,19 @@ const ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
 export default class QueryBuilder extends OrderedStringKeyDictionary {
     constructor(query, decodeValues = true) {
         super();
+        this.importQuery(query, decodeValues);
+    }
+    importQuery(query, decodeValues = true) {
         if (Type.isString(query)) {
             this.importFromString(query, decodeValues);
+        }
+        else if (Array.isArray(query)) {
+            this.importPairs(query);
         }
         else {
             this.importMap(query);
         }
+        return this;
     }
     importFromString(values, deserialize = true, decodeValues = true) {
         var _ = this;

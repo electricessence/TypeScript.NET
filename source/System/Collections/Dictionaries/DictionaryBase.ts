@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 
 ///<reference path="IDictionary.d.ts"/>
 import {areEqual} from '../../Compare';
@@ -9,8 +10,9 @@ import EnumeratorBase from '../Enumeration/EnumeratorBase';
 import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import InvalidOperationException from '../../Exceptions/InvalidOperationException';
+import extractKeyValue from '../../KeyValueExtract';
 
-const VOID0:any = void 0;
+const VOID0:any = void(0);
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?
 abstract class DictionaryBase<TKey, TValue>
@@ -19,7 +21,8 @@ implements IDictionary<TKey, TValue>
 	// This allows for batch updates in order to improve the efficiency of responsive systems.
 	private _updateRecursion:number;
 
-	constructor() {
+	constructor()
+	{
 		this._updateRecursion = 0;
 	}
 
@@ -87,17 +90,18 @@ implements IDictionary<TKey, TValue>
 	get isReadOnly():boolean { return false; }
 
 	protected abstract getCount():number;
+
 	get count():number { return this.getCount(); }
 
-	add(item:IKeyValuePair<TKey, TValue>):void
+	add(item:KeyValuePair<TKey, TValue>):void
 	{
 		if(!item)
-			throw new ArgumentException(
-				'item',
-				'Dictionaries must use a valid key/value pair. \''+item+'\' is not allowed.'
+			throw new ArgumentNullException(
+				'item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.'
 			);
 
-		this.addByKeyValue(item.key, item.value);
+		extractKeyValue(item,
+			(key, value)=>this.addByKeyValue(key, value));
 	}
 
 	clear():number
@@ -119,13 +123,19 @@ implements IDictionary<TKey, TValue>
 		return count;
 	}
 
-	contains(item:IKeyValuePair<TKey, TValue>):boolean
+	contains(item:KeyValuePair<TKey, TValue>):boolean
 	{
 		// Should never have a null object in the collection.
 		if(!item) return false;
 
-		var value = this.getValue(item.key);
-		return areEqual(value, item.value);
+		return extractKeyValue(item,
+			(key, value)=>
+			{
+				// Leave as variable for debugging...
+				let v = this.getValue(key);
+				return areEqual(value, v);
+			});
+
 	}
 
 	copyTo(array:IKeyValuePair<TKey, TValue>[], index:number = 0):IKeyValuePair<TKey, TValue>[]
@@ -143,17 +153,25 @@ implements IDictionary<TKey, TValue>
 	}
 
 
-	toArray():IKeyValuePair<TKey,TValue>[] {
-		return this.copyTo([],0);
+	toArray():IKeyValuePair<TKey,TValue>[]
+	{
+		return this.copyTo([], 0);
 	}
 
-	remove(item:IKeyValuePair<TKey, TValue>):number
+	remove(item:IKeyValuePair<TKey, TValue>|[TKey,TValue]):number
 	{
 		if(!item) return 0;
 
-		var key = item.key, value = this.getValue(key);
-		return (areEqual(value, item.value) && this.removeByKey(key))
-			? 1 : 0;
+		return extractKeyValue(item,
+			(key, value)=>
+			{
+				// Leave as variable for debugging...
+				let v = this.getValue(key);
+				return (areEqual(value, v) && this.removeByKey(key))
+					? 1 : 0;
+			});
+
+
 	}
 
 	/////////////////////////////////////////
@@ -161,16 +179,19 @@ implements IDictionary<TKey, TValue>
 	/////////////////////////////////////////
 
 	protected abstract getKeys():TKey[];
+
 	get keys():TKey[] { return this.getKeys(); }
 
 	protected abstract getValues():TValue[];
+
 	get values():TValue[] { return this.getValues(); }
 
 
 	addByKeyValue(key:TKey, value:TValue):void
 	{
 		var _ = this;
-		if(_.containsKey(key)) {
+		if(_.containsKey(key))
+		{
 			var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
 			ex.data['key'] = key;
 			ex.data['value'] = value;
@@ -224,7 +245,7 @@ implements IDictionary<TKey, TValue>
 		return count;
 	}
 
-	importPairs(pairs:IKeyValuePair<TKey, TValue>[]):boolean
+	importPairs(pairs:KeyValuePair<TKey, TValue>[]):boolean
 	{
 		var _ = this;
 		return _.handleUpdate(
@@ -232,11 +253,11 @@ implements IDictionary<TKey, TValue>
 			{
 				var changed:boolean = false;
 				pairs.forEach(
-						pair=>
+					pair=>extractKeyValue(pair, (key, value)=>
 					{
-						_.setValue(pair.key, pair.value);
+						_.setValue(key, value);
 						changed = true;
-					}
+					})
 				);
 				return changed;
 			}
@@ -270,7 +291,6 @@ implements IDictionary<TKey, TValue>
 
 
 }
-
 
 
 export default DictionaryBase;

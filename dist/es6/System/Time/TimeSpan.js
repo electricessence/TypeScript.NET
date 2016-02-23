@@ -1,10 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+'use strict';
 import Type from '../Types';
-import * as HowMany from './HowMany';
 import TimeUnit from './TimeUnit';
 import ClockTime from './ClockTime';
 import TimeQuantity from './TimeQuantity';

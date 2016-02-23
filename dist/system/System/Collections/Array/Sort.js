@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Types', '../../Compare'], function(exports_1) {
+    "use strict";
     var Types_1, Compare_1;
     function ensureArray(value) {
         return Array.isArray(value)

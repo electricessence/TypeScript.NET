@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -23,7 +24,8 @@ var __extends = (this && this.__extends) || function (d, b) {
         __extends(OrderedStringKeyDictionary, _super);
         function OrderedStringKeyDictionary() {
             _super.call(this);
-            this._order = [];
+            // noinspection JSMismatchedCollectionQueryUpdate
+            this._order = []; // Maintains indexes.
         }
         OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
             return this._order.indexOf(key, 0);
@@ -31,6 +33,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
             return this.getValue(this._order[index]);
         };
+        // adding keepIndex allows for clearing a value while still retaining it's index.
         OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {
             var _ = this, exists = _.indexOfKey(key) != -1;
             if (!exists && (value !== VOID0 || keepIndex))
@@ -47,6 +50,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than the count.');
             return _.setValue(order[index], value);
         };
+        // importValues([x,y,z]);
         OrderedStringKeyDictionary.prototype.importValues = function (values) {
             var _ = this;
             return _.handleUpdate(function () {
@@ -58,6 +62,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return changed;
             });
         };
+        // setValues(x,y,z);
         OrderedStringKeyDictionary.prototype.setValues = function () {
             var values = [];
             for (var _i = 0; _i < arguments.length; _i++) {

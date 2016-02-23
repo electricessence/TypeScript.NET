@@ -1,17 +1,14 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Types'], function(exports_1) {
+    'use strict';
     var Types_1;
-    var StringBuilder;
+    var VOID0, StringBuilder;
     return {
         setters:[
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             }],
         execute: function() {
+            VOID0 = void 0;
             StringBuilder = (function () {
                 function StringBuilder() {
                     var initial = [];
@@ -24,7 +21,7 @@ System.register(['../Types'], function(exports_1) {
                     _.appendThese(initial);
                 }
                 StringBuilder.prototype.appendSingle = function (item) {
-                    if (item !== null && item !== undefined) {
+                    if (item !== null && item !== VOID0) {
                         var _ = this;
                         _._latest = null;
                         switch (typeof item) {
@@ -60,7 +57,7 @@ System.register(['../Types'], function(exports_1) {
                 StringBuilder.prototype.appendLines = function (items) {
                     var _ = this;
                     items.forEach(function (i) {
-                        if (i !== null && i !== undefined) {
+                        if (i !== null && i !== VOID0) {
                             _.appendSingle(i);
                             _._partArray.push("\r\n");
                         }
@@ -91,7 +88,7 @@ System.register(['../Types'], function(exports_1) {
                     this.clear();
                 };
                 return StringBuilder;
-            })();
+            }());
             exports_1("default", StringBuilder);
         }
     }

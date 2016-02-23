@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Compare', '../../Types'], function(exports_1) {
+    "use strict";
     var Values, Types_1;
     function validateSize(a, b) {
         if (a && b && a === b || !a && !b)

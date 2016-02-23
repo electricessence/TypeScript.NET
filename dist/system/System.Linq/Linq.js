@@ -1,16 +1,12 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Values, Arrays, ArrayUtility, Enumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, Utility_1, DisposableBase_1, Exception_1, ObjectDisposedException_1, KeySortedContext_1;
-    var LinqFunctions, Functions, UnsupportedEnumerableException, Enumerable, ArrayEnumerable, Grouping, Lookup, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable;
+    var VOID0, LinqFunctions, Functions, UnsupportedEnumerableException, Enumerable, ArrayEnumerable, Grouping, Lookup, WhereEnumerable, WhereSelectEnumerable, OrderedEnumerable;
     function createSortContext(orderedEnumerable, currentContext) {
         if (currentContext === void 0) { currentContext = null; }
         var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
@@ -74,7 +70,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 KeySortedContext_1 = KeySortedContext_1_1;
             }],
         execute: function() {
-            'use strict';
+            VOID0 = void 0;
             LinqFunctions = (function (_super) {
                 __extends(LinqFunctions, _super);
                 function LinqFunctions() {
@@ -87,7 +83,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     return a < b ? a : b;
                 };
                 return LinqFunctions;
-            })(Functions_1.default);
+            }(Functions_1.default));
             Functions = new LinqFunctions();
             Object.freeze(Functions);
             UnsupportedEnumerableException = (function (_super) {
@@ -96,7 +92,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     _super.call(this, "Unsupported enumerable.");
                 }
                 return UnsupportedEnumerableException;
-            })(Exception_1.default);
+            }(Exception_1.default));
             Enumerable = (function (_super) {
                 __extends(Enumerable, _super);
                 function Enumerable(_enumeratorFactory, finalizer) {
@@ -108,7 +104,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 Enumerable.from = function (source) {
                     if (Types_1.default.isObject(source)) {
-                        if (Types_1.default.isInstanceOf(source, Enumerable))
+                        if (source instanceof Enumerable)
                             return source;
                         if (Array.isArray(source))
                             return new ArrayEnumerable(source);
@@ -125,7 +121,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             return source.slice();
                         if (Types_1.default.isArrayLike(source))
                             source = new ArrayEnumerable(source);
-                        if (Types_1.default.isInstanceOf(source, Enumerable))
+                        if (source instanceof Enumerable)
                             return source.toArray();
                         if (Enumerator_1.isEnumerable(source)) {
                             var result = [];
@@ -287,7 +283,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     var type = typeof input;
                     if (type != Types_1.default.STRING)
                         throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-                    if (Types_1.default.isInstanceOf(pattern, RegExp)) {
+                    if (pattern instanceof RegExp) {
                         flags += (pattern.ignoreCase) ? "i" : "";
                         flags += (pattern.multiline) ? "m" : "";
                         pattern = pattern.source;
@@ -414,7 +410,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                         var key = keySelector(x);
                         var element = elementSelector(x);
                         var array = dict.getValue(key);
-                        if (array !== undefined)
+                        if (array !== VOID0)
                             array.push(element);
                         else
                             dict.addByKeyValue(key, [element]);
@@ -694,7 +690,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     });
                 };
                 Enumerable.prototype.scan = function (func, seed) {
-                    var isUseSeed = seed !== undefined;
+                    var isUseSeed = seed !== VOID0;
                     var _ = this;
                     return new Enumerable(function () {
                         var enumerator;
@@ -755,7 +751,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             middleEnumerator = undefined;
                             index = 0;
                         }, function (yielder) {
-                            if (middleEnumerator === undefined && !enumerator.moveNext())
+                            if (middleEnumerator === VOID0 && !enumerator.moveNext())
                                 return false;
                             do {
                                 if (!middleEnumerator) {
@@ -790,7 +786,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             throwIfDisposed(disposed);
                             while (enumerator.moveNext()) {
                                 var result = selector(enumerator.current, index++);
-                                if (result !== null && result !== undefined)
+                                if (result !== null && result !== VOID0)
                                     return yielder.yieldReturn(result);
                             }
                             return false;
@@ -843,7 +839,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             break;
                         default:
                             return this
-                                .where(function (x) { return Types_1.default.isInstanceOf(x, type); });
+                                .where(function (x) { return x instanceof type; });
                     }
                     return this
                         .where(function (x) { return typeof x === typeName; });
@@ -1144,7 +1140,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             while (true) {
                                 if (innerElements != null) {
                                     var innerElement = innerElements[innerCount++];
-                                    if (innerElement !== undefined)
+                                    if (innerElement !== VOID0)
                                         return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
                                     innerElement = null;
                                     innerCount = 0;
@@ -1378,7 +1374,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                             keys = new Dictionary_1.default(compareSelector);
                         }, function (yielder) {
                             var current;
-                            if (secondEnumerator === undefined) {
+                            if (secondEnumerator === VOID0) {
                                 while (firstEnumerator.moveNext()) {
                                     current = firstEnumerator.current;
                                     if (!keys.containsKey(current)) {
@@ -1700,7 +1696,6 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     var sharedEnumerator;
                     return new Enumerable(function () {
                         return new EnumeratorBase_1.default(function () {
-                            // assertIsNotDisposed(disposed);  This doesn't need an assertion since disposing the underlying enumerable disposes the enumerator.
                             if (!sharedEnumerator)
                                 sharedEnumerator = _.getEnumerator();
                         }, function (yielder) {
@@ -1792,7 +1787,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     });
                 };
                 return Enumerable;
-            })(DisposableBase_1.default);
+            }(DisposableBase_1.default));
             exports_1("Enumerable", Enumerable);
             ArrayEnumerable = (function (_super) {
                 __extends(ArrayEnumerable, _super);
@@ -1940,7 +1935,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
                     if (Array.isArray(second))
                         return Arrays.areEqual(this.source, second, true, equalityComparer);
-                    if (Types_1.default.isInstanceOf(second, ArrayEnumerable))
+                    if (second instanceof ArrayEnumerable)
                         return second.sequenceEqual(this.source, equalityComparer);
                     return _super.prototype.sequenceEqual.call(this, second, equalityComparer);
                 };
@@ -1953,7 +1948,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                         : _super.prototype.toJoinedString.call(this, separator, selector);
                 };
                 return ArrayEnumerable;
-            })(Enumerable);
+            }(Enumerable));
             Grouping = (function (_super) {
                 __extends(Grouping, _super);
                 function Grouping(_groupKey, elements) {
@@ -1968,7 +1963,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     configurable: true
                 });
                 return Grouping;
-            })(ArrayEnumerable);
+            }(ArrayEnumerable));
             Lookup = (function () {
                 function Lookup(_dictionary) {
                     this._dictionary = _dictionary;
@@ -2001,7 +1996,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     });
                 };
                 return Lookup;
-            })();
+            }());
             WhereEnumerable = (function (_super) {
                 __extends(WhereEnumerable, _super);
                 function WhereEnumerable(prevSource, prevPredicate) {
@@ -2043,7 +2038,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     this.prevSource = null;
                 };
                 return WhereEnumerable;
-            })(Enumerable);
+            }(Enumerable));
             WhereSelectEnumerable = (function (_super) {
                 __extends(WhereSelectEnumerable, _super);
                 function WhereSelectEnumerable(prevSource, prevPredicate, prevSelector) {
@@ -2089,7 +2084,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     _.prevSelector = null;
                 };
                 return WhereSelectEnumerable;
-            })(Enumerable);
+            }(Enumerable));
             OrderedEnumerable = (function (_super) {
                 __extends(OrderedEnumerable, _super);
                 function OrderedEnumerable(source, keySelector, order, parent, comparer) {
@@ -2146,7 +2141,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                     this.parent = null;
                 };
                 return OrderedEnumerable;
-            })(Enumerable);
+            }(Enumerable));
             exports_1("default",Enumerable);
         }
     }

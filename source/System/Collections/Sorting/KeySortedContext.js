@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -26,7 +27,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var KeySortedContext = (function (_super) {
         __extends(KeySortedContext, _super);
         function KeySortedContext(next, _keySelector, order, comparer) {
-            if (order === void 0) { order = 1; }
+            if (order === void 0) { order = 1 /* Ascending */; }
             if (comparer === void 0) { comparer = Values.compare; }
             _super.call(this, next, comparer, order);
             this._keySelector = _keySelector;
@@ -35,6 +36,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _ = this, ks = _._keySelector;
             if (!ks || ks == Functions_1.default.Identity)
                 return _super.prototype.compare.call(this, a, b);
+            // We force <any> here since it can be a Primitive or IComparable<any>
             var d = Values.compare(ks(a), ks(b));
             if (d == 0 && _._next)
                 return _._next.compare(a, b);

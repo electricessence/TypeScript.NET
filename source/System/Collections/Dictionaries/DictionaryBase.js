@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 (function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -9,14 +10,15 @@
     else if (typeof define === 'function' && define.amd) {
         define(deps, factory);
     }
-})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException'], function (require, exports) {
+})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract'], function (require, exports) {
     ///<reference path="IDictionary.d.ts"/>
     var Compare_1 = require('../../Compare');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
-    var ArgumentException_1 = require('../../Exceptions/ArgumentException');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
     var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
-    var VOID0 = void 0;
+    var KeyValueExtract_1 = require('../../KeyValueExtract');
+    var VOID0 = void (0);
+    // Design Note: Should DictionaryAbstractBase be IDisposable?
     var DictionaryBase = (function () {
         function DictionaryBase() {
             this._updateRecursion = 0;
@@ -31,6 +33,7 @@
                 var _ = this;
                 if (_.onValueChanged)
                     _.onValueChanged(key, value, old);
+                // If the update recursion is zero, then we are finished with updates.
                 if (_._updateRecursion == 0)
                     _._onUpdated();
             }
@@ -40,6 +43,7 @@
             if (_.onUpdated)
                 _.onUpdated();
         };
+        // Takes a closure that if returning true will propagate an update signal.
         DictionaryBase.prototype.handleUpdate = function (closure) {
             var _ = this, result;
             if (closure) {
@@ -58,6 +62,9 @@
             return result;
         };
         Object.defineProperty(DictionaryBase.prototype, "isReadOnly", {
+            /////////////////////////////////////////
+            // ICollection<T>
+            /////////////////////////////////////////
             get: function () { return false; },
             enumerable: true,
             configurable: true
@@ -68,9 +75,10 @@
             configurable: true
         });
         DictionaryBase.prototype.add = function (item) {
+            var _this = this;
             if (!item)
-                throw new ArgumentException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-            this.addByKeyValue(item.key, item.value);
+                throw new ArgumentNullException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+            KeyValueExtract_1.default(item, function (key, value) { return _this.addByKeyValue(key, value); });
         };
         DictionaryBase.prototype.clear = function () {
             var _ = this, keys = _.keys, count = keys.length;
@@ -84,15 +92,22 @@
             return count;
         };
         DictionaryBase.prototype.contains = function (item) {
+            var _this = this;
+            // Should never have a null object in the collection.
             if (!item)
                 return false;
-            var value = this.getValue(item.key);
-            return Compare_1.areEqual(value, item.value);
+            return KeyValueExtract_1.default(item, function (key, value) {
+                // Leave as variable for debugging...
+                var v = _this.getValue(key);
+                return Compare_1.areEqual(value, v);
+            });
         };
         DictionaryBase.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }
             if (!array)
                 throw new ArgumentNullException_1.default('array');
+            // This is a generic implementation that will work for all derived classes.
+            // It can be overridden and optimized.
             var e = this.getEnumerator();
             while (e.moveNext()) {
                 array[index++] = e.current;
@@ -103,11 +118,15 @@
             return this.copyTo([], 0);
         };
         DictionaryBase.prototype.remove = function (item) {
+            var _this = this;
             if (!item)
                 return 0;
-            var key = item.key, value = this.getValue(key);
-            return (Compare_1.areEqual(value, item.value) && this.removeByKey(key))
-                ? 1 : 0;
+            return KeyValueExtract_1.default(item, function (key, value) {
+                // Leave as variable for debugging...
+                var v = _this.getValue(key);
+                return (Compare_1.areEqual(value, v) && _this.removeByKey(key))
+                    ? 1 : 0;
+            });
         };
         Object.defineProperty(DictionaryBase.prototype, "keys", {
             get: function () { return this.getKeys(); },
@@ -160,10 +179,10 @@
             var _ = this;
             return _.handleUpdate(function () {
                 var changed = false;
-                pairs.forEach(function (pair) {
-                    _.setValue(pair.key, pair.value);
+                pairs.forEach(function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
+                    _.setValue(key, value);
                     changed = true;
-                });
+                }); });
                 return changed;
             });
         };

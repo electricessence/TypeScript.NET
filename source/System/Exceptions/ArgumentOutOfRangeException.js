@@ -17,6 +17,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     }
 })(["require", "exports", './ArgumentException'], function (require, exports) {
     var ArgumentException_1 = require('./ArgumentException');
+    'use strict'; // For compatibility with (let, const, function, class);
     var NAME = 'ArgumentOutOfRangeException';
     var ArgumentOutOfRangeException = (function (_super) {
         __extends(ArgumentOutOfRangeException, _super);

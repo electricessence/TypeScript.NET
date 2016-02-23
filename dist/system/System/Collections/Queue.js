@@ -1,11 +1,7 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1) {
+    'use strict';
     var Values, AU, Types_1, Integer_1, EnumeratorBase_1, forEach_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1;
-    var MINIMUM_GROW, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
+    var MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     function assertZeroOrGreater(value, property) {
         if (value < 0)
             throw new ArgumentOutOfRangeException_1.default(property, value, "Must be greater than zero");
@@ -45,6 +41,7 @@ System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './E
             }],
         execute: function() {
             MINIMUM_GROW = 4;
+            SHRINK_THRESHOLD = 32;
             GROW_FACTOR_HALF = 100;
             DEFAULT_CAPACITY = MINIMUM_GROW;
             emptyArray = [];
@@ -105,7 +102,27 @@ System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './E
                     _._tail = 0;
                     _._size = 0;
                     _._version++;
+                    _.trimExcess();
                     return size;
+                };
+                Queue.prototype.dump = function (max) {
+                    if (max === void 0) { max = Infinity; }
+                    if (Types_1.default.isNumber(max, false) && max < 0)
+                        throw new ArgumentOutOfRangeException_1.default('max', max, 'must be greater than or equal to 0.');
+                    var _ = this, result = [];
+                    if (isFinite(max)) {
+                        Integer_1.default.assert(max, 'max');
+                        while (max-- && _._size) {
+                            result.push(_.dequeue());
+                        }
+                    }
+                    else {
+                        while (_._size) {
+                            result.push(_.dequeue());
+                        }
+                    }
+                    _.trimExcess();
+                    return result;
                 };
                 Queue.prototype.contains = function (item) {
                     var _ = this;
@@ -202,17 +219,32 @@ System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './E
                     _._size = size + 1;
                     _._version++;
                 };
-                Queue.prototype.dequeue = function () {
+                Queue.prototype.dequeue = function (throwIfEmpty) {
+                    if (throwIfEmpty === void 0) { throwIfEmpty = false; }
                     var _ = this;
-                    if (_._size == 0)
-                        throw new InvalidOperationException_1.default("Cannot dequeue an empty queue.");
+                    if (_._size == 0) {
+                        if (throwIfEmpty)
+                            throw new InvalidOperationException_1.default("Cannot dequeue an empty queue.");
+                        return void 0;
+                    }
                     var array = _._array, head = _._head;
                     var removed = _._array[head];
                     array[head] = null;
                     _._head = (head + 1) % _._capacity;
                     _._size--;
+                    if (_._size < _._capacity / 2) {
+                        _.trimExcess(SHRINK_THRESHOLD);
+                    }
                     _._version++;
                     return removed;
+                };
+                Queue.prototype.tryDequeue = function (out) {
+                    if (!this._size)
+                        return false;
+                    var d = this.dequeue();
+                    if (out)
+                        out(d);
+                    return true;
                 };
                 Queue.prototype._getElement = function (index) {
                     assertIntegerZeroOrGreater(index, "index");
@@ -224,10 +256,10 @@ System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './E
                         throw new InvalidOperationException_1.default("Cannot call peek on an empty queue.");
                     return this._array[this._head];
                 };
-                Queue.prototype.trimExcess = function () {
+                Queue.prototype.trimExcess = function (threshold) {
                     var _ = this;
                     var size = _._size;
-                    if (size < Math.floor(_._capacity * 0.9))
+                    if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size))
                         _.setCapacity(size);
                 };
                 Queue.prototype.getEnumerator = function () {
@@ -246,7 +278,7 @@ System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './E
                     });
                 };
                 return Queue;
-            })();
+            }());
             exports_1("default", Queue);
         }
     }

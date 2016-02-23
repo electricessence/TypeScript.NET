@@ -1,12 +1,13 @@
+///<reference path="IUri.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../Primitive.d.ts"/>
 /*
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
+'use strict'; // For compatibility with (let, const, function, class);
 
-///<reference path="IUri.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
 import Type from '../Types';
 import * as QueryParams from '../Uri/QueryParams';
 import {trim} from '../Text/Utility';
@@ -20,8 +21,9 @@ import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeExcepti
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
  *
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
+ * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
  */
-class Uri implements IUri, IEquatable<IUri>
+export default class Uri implements IUri, IEquatable<IUri>
 {
 
 	scheme:string;
@@ -49,8 +51,8 @@ class Uri implements IUri, IEquatable<IUri>
 		host:string,
 		port:number,
 		path:string,
-		query:string|IUriComponentMap|IKeyValuePair<string,Primitive>[],
-		fragment:string)
+		query?:string|IUriComponentMap|StringKeyValuePair<Primitive>[],
+		fragment?:string)
 	{
 		var _ = this;
 		_.scheme = getScheme(scheme) || null;
@@ -64,7 +66,7 @@ class Uri implements IUri, IEquatable<IUri>
 
 
 		if(!Type.isString(query))
-			query = QueryParams.encode(<IUriComponentMap|IKeyValuePair<string,Primitive>[]>query);
+			query = QueryParams.encode(<IUriComponentMap|StringKeyValuePair<Primitive>[]>query);
 
 		_.query = formatQuery(<string>query) || null;
 		Object.freeze(_.queryParams
@@ -118,7 +120,7 @@ class Uri implements IUri, IEquatable<IUri>
 	/**
 	 * Parses a URL into it's components.
 	 * @param url The url to parse.
-	 * @param throwIfInvalid
+	 * @param throwIfInvalid Defaults to true.
 	 * @returns {IUri} Returns a map of the values or *null* if invalid and *throwIfInvalid* is <b>false</b>.
 	 */
 	static parse(url:string, throwIfInvalid:boolean = true):IUri
@@ -147,6 +149,13 @@ class Uri implements IUri, IEquatable<IUri>
 	{
 		return copyUri(this,map);
 	}
+
+	updateQuery(query:string|IUriComponentMap|StringKeyValuePair<Primitive>[]):Uri {
+		var map = this.toMap();
+		map.query = <any>query;
+		return Uri.from(map);
+	}
+
 
 	/**
 	 * Is provided for sub classes to override this value.
@@ -225,7 +234,7 @@ class Uri implements IUri, IEquatable<IUri>
 	 */
 	static toString(uri:IUri):string
 	{
-		return Type.isInstanceOf<Uri>(uri,Uri)
+		return uri instanceof Uri
 			? (<Uri>uri).absoluteUri
 			: uriToString(uri);
 	}
@@ -243,22 +252,21 @@ class Uri implements IUri, IEquatable<IUri>
 
 }
 
-module Uri {
-	export enum Fields {
-		scheme,
-		userInfo,
-		host,
-		port,
-		path,
-		query,
-		fragment
-	}
-	Object.freeze(Fields);
+export enum Fields {
+	scheme,
+	userInfo,
+	host,
+	port,
+	path,
+	query,
+	fragment
 }
+Object.freeze(Fields);
 
-function copyUri(from:IUri, to:IUri = {}) {
+function copyUri(from:IUri, to?:IUri) {
 	var i = 0, field:string;
-	while(field = Uri.Fields[i++]) {
+	if(!to) to = {};
+	while(field = Fields[i++]) {
 		var value = (<any>from)[field];
 		if(value) (<any>to)[field] = value;
 	}
@@ -442,5 +450,3 @@ function tryParse(url:string, out:(result:IUri)=>void):Exception
 	return null;
 
 }
-
-export default Uri;

@@ -16,16 +16,23 @@
     ///<reference path="../../IComparable.d.ts"/>
     var Values = require('../../Compare');
     var Types_1 = require('../../Types');
+    /*  validateSize: Utility for quick validation/invalidation of array equality.
+        Why this way?  Why not pass a closure for the last return?
+        Reason: Performance and avoiding the creation of new functions/closures. */
     function validateSize(a, b) {
+        // Both valid and are same object, or both are null/undefined.
         if (a && b && a === b || !a && !b)
             return true;
+        // At this point, at least one has to be non-null.
         if (!a || !b)
             return false;
         var len = a.length;
         if (len !== b.length)
             return false;
+        // If both are arrays and have zero length, they are equal.
         if (len === 0)
             return true;
+        // Return the length for downstream processing.
         return len;
     }
     function areAllEqual(arrays, strict, equalityComparer) {
@@ -76,6 +83,8 @@
         var len = validateSize(a, b);
         if (Types_1.default.isBoolean(len))
             return len;
+        // There might be a better more performant way to do this, but for the moment, this
+        // works quite well.
         a = copyAndSort(a, comparer);
         b = copyAndSort(b, comparer);
         for (var i = 0; i < len; ++i) {

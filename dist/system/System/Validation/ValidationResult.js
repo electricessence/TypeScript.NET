@@ -1,14 +1,9 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register([], function(exports_1) {
+    'use strict';
     var valid, ValidationResult;
     return {
         setters:[],
         execute: function() {
-            /// <reference path="IValidationResult.d.ts"/>
-            ///<reference path="../IEquatable.d.ts"/>
             valid = new ValidationResult(true);
             ValidationResult = (function () {
                 function ValidationResult(isValid, message, data) {
@@ -38,7 +33,7 @@ System.register([], function(exports_1) {
                     return new ValidationResult(false, message, data);
                 };
                 return ValidationResult;
-            })();
+            }());
             exports_1("default", ValidationResult);
         }
     }

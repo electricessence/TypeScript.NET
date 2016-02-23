@@ -3,6 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 (function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -25,7 +26,8 @@
     var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
     var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
     var MINIMUM_GROW = 4;
-    var SHRINK_THRESHOLD = 32;
+    var SHRINK_THRESHOLD = 32; // Unused?
+    // var GROW_FACTOR: number = 200;  // double each time
     var GROW_FACTOR_HALF = 100;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
     var emptyArray = [];
@@ -58,6 +60,7 @@
             _._capacity = _._array.length;
         }
         Object.defineProperty(Queue.prototype, "count", {
+            // #region ICollection<T> implementation
             get: function () {
                 return this._size;
             },
@@ -74,6 +77,10 @@
         Queue.prototype.add = function (item) {
             this.enqueue(item);
         };
+        /**
+         * Clears out the array and returns the number of items that were removed.
+         * @returns {number}
+         */
         Queue.prototype.clear = function () {
             var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
             if (head < tail)
@@ -89,6 +96,9 @@
             _.trimExcess();
             return size;
         };
+        /**
+         * Dequeues entries into an array.
+         */
         Queue.prototype.dump = function (max) {
             if (max === void 0) { max = Infinity; }
             if (Types_1.default.isNumber(max, false) && max < 0)
@@ -144,6 +154,8 @@
             throw new NotImplementedException_1.default("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                 " since it would require destroying the underlying array to remove the item.");
         };
+        // #endregion
+        // Results in a complete reset.  Allows for easy cleanup elsewhere.
         Queue.prototype.dispose = function () {
             var _ = this;
             _.clear();
@@ -154,6 +166,7 @@
             _._version = 0;
         };
         Queue.prototype.forEach = function (action) {
+            // Until implementing a changed enumeration mechanism, a copy needs to be used.
             var _ = this, copy = _.toArray(), len = _._size;
             for (var i = 0; i < len; i++) {
                 if (action(copy[i], i) === false)
@@ -166,11 +179,13 @@
             if (capacity == len)
                 return;
             var head = _._head, tail = _._tail, size = _._size;
+            // Special case where we can simply extend the length of the array. (JavaScript only)
             if (array != emptyArray && capacity > len && head < tail) {
                 array.length = _._capacity = capacity;
                 _._version++;
                 return;
             }
+            // We create a new array because modifying an existing one could be slow.
             var newArray = AU.initialize(capacity);
             if (size > 0) {
                 if (head < tail) {

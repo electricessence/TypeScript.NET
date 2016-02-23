@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Disposable/DisposableBase'], function(exports_1) {
+    'use strict';
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
@@ -33,7 +30,7 @@ System.register(['../../Disposable/DisposableBase'], function(exports_1) {
                     return false;
                 };
                 return Yielder;
-            })();
+            }());
             (function (EnumeratorState) {
                 EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
                 EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
@@ -103,7 +100,7 @@ System.register(['../../Disposable/DisposableBase'], function(exports_1) {
                     }
                 };
                 return EnumeratorBase;
-            })(DisposableBase_1.default);
+            }(DisposableBase_1.default));
             exports_1("default", EnumeratorBase);
         }
     }

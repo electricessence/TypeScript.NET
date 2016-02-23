@@ -2,12 +2,14 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 ///<reference path="IUriComponentFormattable.d.ts"/>
 ///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
 ///<reference path="../Primitive.d.ts"/>
+'use strict'; // For compatibility with (let, const, function, class);
+
 import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
+import extractKeyValue from '../KeyValueExtract';
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -15,33 +17,32 @@ import * as Serialization from '../Serialization/Utility';
  */
 
 const
-	ENTRY_SEPARATOR = "&",
+	ENTRY_SEPARATOR     = "&",
 	KEY_VALUE_SEPARATOR = "=";
 
 /**
  * Returns the encoded URI string
  */
 export function encode(
-	values:IUriComponentMap|IKeyValuePair<string,Primitive>[],
+	values:IUriComponentMap|StringKeyValuePair<Primitive>[],
 	prefixIfNotEmpty?:boolean):string
 {
 	if(!values) return '';
-	var entries:string[] = [];
+	var entries:string[];
 
 	if(Array.isArray(values))
 	{
-		for(let kvp of values)
-		{
-			if(kvp) entries.push(kvp.key + KEY_VALUE_SEPARATOR + encodeValue(kvp.value));
-		}
+		entries = values.map(
+			kvp=>extractKeyValue(kvp,
+				(key, value)=>key + KEY_VALUE_SEPARATOR + encodeValue(value)
+			)
+		);
 	}
 	else
 	{
-		var keys = Object.keys(values);
-		for(let k of keys)
-		{
-			entries.push(k + KEY_VALUE_SEPARATOR + encodeValue((<any>values)[k]));
-		}
+		entries = Object.keys(values).map(
+			key=> key + KEY_VALUE_SEPARATOR + encodeValue((<any>values)[key])
+		);
 	}
 
 	return (entries.length && prefixIfNotEmpty ? '?' : '')
@@ -83,8 +84,8 @@ export function isUriComponentFormattable(instance:any):instance is IUriComponen
  * Parses a string for valid query param entries and pipes them through a handler.
  * @param query
  * @param entryHandler
- * @param deserialize
- * @param decodeValues
+ * @param deserialize Default is true.
+ * @param decodeValues Default is true.
  */
 export function parse(
 	query:string,
@@ -117,8 +118,8 @@ export function parse(
 /**
  * Parses a string for valid query params and returns a key-value map of the entries.
  * @param query
- * @param deserialize
- * @param decodeValues
+ * @param deserialize Default is true.
+ * @param decodeValues Default is true.
  * @returns {IMap<Primitive>}
  */
 export function parseToMap(
@@ -148,16 +149,16 @@ export function parseToMap(
 /**
  * Parses a string for valid query params and returns a key-value pair array of the entries.
  * @param query
- * @param deserialize
- * @param decodeValues
+ * @param deserialize Default is true.
+ * @param decodeValues Default is true.
  * @returns {IKeyValuePair<string, Primitive>[]}
  */
 export function parseToArray(
 	query:string,
 	deserialize:boolean = true,
-	decodeValues:boolean = true):IKeyValuePair<string,Primitive>[]
+	decodeValues:boolean = true):IStringKeyValuePair<Primitive>[]
 {
-	var result:IKeyValuePair<string,Primitive>[] = [];
+	var result:IStringKeyValuePair<Primitive>[] = [];
 	parse(query,
 		(key, value)=> {result.push({key: key, value: value});},
 		deserialize,
@@ -165,6 +166,7 @@ export function parseToArray(
 	);
 	return result;
 }
+
 
 export module Separator
 {

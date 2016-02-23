@@ -1,15 +1,11 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
- */
+'use strict';
 import Type from '../Types';
 import * as QueryParams from '../Uri/QueryParams';
 import { trim } from '../Text/Utility';
 import UriScheme from '../Uri/Scheme';
 import ArgumentException from '../Exceptions/ArgumentException';
 import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
-class Uri {
+export default class Uri {
     constructor(scheme, userInfo, host, port, path, query, fragment) {
         var _ = this;
         _.scheme = getScheme(scheme) || null;
@@ -54,6 +50,11 @@ class Uri {
     copyTo(map) {
         return copyUri(this, map);
     }
+    updateQuery(query) {
+        var map = this.toMap();
+        map.query = query;
+        return Uri.from(map);
+    }
     getAbsoluteUri() {
         return uriToString(this);
     }
@@ -73,7 +74,7 @@ class Uri {
         return this.absoluteUri;
     }
     static toString(uri) {
-        return Type.isInstanceOf(uri, Uri)
+        return uri instanceof Uri
             ? uri.absoluteUri
             : uriToString(uri);
     }
@@ -81,22 +82,22 @@ class Uri {
         return getAuthority(uri);
     }
 }
-(function (Uri) {
-    (function (Fields) {
-        Fields[Fields["scheme"] = 0] = "scheme";
-        Fields[Fields["userInfo"] = 1] = "userInfo";
-        Fields[Fields["host"] = 2] = "host";
-        Fields[Fields["port"] = 3] = "port";
-        Fields[Fields["path"] = 4] = "path";
-        Fields[Fields["query"] = 5] = "query";
-        Fields[Fields["fragment"] = 6] = "fragment";
-    })(Uri.Fields || (Uri.Fields = {}));
-    var Fields = Uri.Fields;
-    Object.freeze(Fields);
-})(Uri || (Uri = {}));
-function copyUri(from, to = {}) {
+export var Fields;
+(function (Fields) {
+    Fields[Fields["scheme"] = 0] = "scheme";
+    Fields[Fields["userInfo"] = 1] = "userInfo";
+    Fields[Fields["host"] = 2] = "host";
+    Fields[Fields["port"] = 3] = "port";
+    Fields[Fields["path"] = 4] = "path";
+    Fields[Fields["query"] = 5] = "query";
+    Fields[Fields["fragment"] = 6] = "fragment";
+})(Fields || (Fields = {}));
+Object.freeze(Fields);
+function copyUri(from, to) {
     var i = 0, field;
-    while (field = Uri.Fields[i++]) {
+    if (!to)
+        to = {};
+    while (field = Fields[i++]) {
         var value = from[field];
         if (value)
             to[field] = value;
@@ -151,8 +152,6 @@ function getPathAndQuery(uri) {
         + (formatQuery(query) || EMPTY);
 }
 function uriToString(uri) {
-    // scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
-    // {scheme}{authority}{path}{query}{fragment}
     var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
     return EMPTY
         + ((scheme && (scheme + ':')) || EMPTY)
@@ -207,5 +206,4 @@ function tryParse(url, out) {
     out(copyUri(result));
     return null;
 }
-export default Uri;
 //# sourceMappingURL=Uri.js.map

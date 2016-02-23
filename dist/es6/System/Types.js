@@ -1,10 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-///<reference path="Primitive.d.ts"/>
-///<reference path="Collections/Array/IArray.d.ts"/>
-const _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof undefined, _FUNCTION = typeof function () { };
+'use strict';
+const VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { };
 var typeInfoRegistry = {};
 export class TypeInfo {
     constructor(target) {
@@ -90,7 +85,9 @@ var Type;
         return typeof value === _BOOLEAN;
     }
     Type.isBoolean = isBoolean;
-    function isNumber(value, allowNaN = true) {
+    function isNumber(value, allowNaN) {
+        if (allowNaN === VOID0)
+            allowNaN = true;
         return typeof value === _NUMBER && (allowNaN || !isNaN(value));
     }
     Type.isNumber = isNumber;
@@ -140,12 +137,8 @@ var Type;
         return hasMember(instance, property) && typeof (instance[property]) === type;
     }
     Type.hasMemberOfType = hasMemberOfType;
-    function isInstanceOf(instance, type) {
-        return (instance) instanceof (type);
-    }
-    Type.isInstanceOf = isInstanceOf;
     function isArrayLike(instance) {
-        return (instance) instanceof (Array) || hasMember(instance, "length");
+        return instance instanceof Array || hasMember(instance, "length");
     }
     Type.isArrayLike = isArrayLike;
 })(Type || (Type = {}));

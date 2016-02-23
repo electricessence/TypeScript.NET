@@ -2,6 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict'; // For compatibility with (let, const, function, class);
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -33,12 +34,14 @@ var __extends = (this && this.__extends) || function (d, b) {
             configurable: true
         });
         Object.defineProperty(Lazy.prototype, "canReset", {
+            // Adding a 'resettable' mechanism allows for simply resetting a lazy instead of re-instantiating a new one.
             get: function () {
                 return !this.wasDisposed && !!(this._closure);
             },
             enumerable: true,
             configurable: true
         });
+        // Returns true if successfully reset.
         Lazy.prototype.reset = function (throwIfCannotReset) {
             var _ = this;
             if (throwIfCannotReset)

@@ -1,8 +1,5 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(['../../Disposable/Utility', '../../Collections/Enumeration/Enumerator'], function(exports_1) {
+    "use strict";
     var Utility_1, Enumerator;
     function forEach(enumerable, action) {
         if (enumerable) {

@@ -1,12 +1,4 @@
-/*
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
-///<reference path="ISubscribable.d.ts"/>
-///<reference path="IObservable.d.ts"/>
-///<reference path="../Disposable/IDisposableAware.d.ts"/>
+'use strict';
 export default class Subscription {
     constructor(_subscribable, _subscriber) {
         this._subscribable = _subscribable;
