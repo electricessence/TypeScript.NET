@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 "use strict";
 function sum(source, ignoreNaN) {
     if (ignoreNaN === void 0) { ignoreNaN = false; }

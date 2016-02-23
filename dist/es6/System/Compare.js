@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import Type from './Types';
 var isTrueNaN = Type.isTrueNaN;
 const VOID0 = void 0;

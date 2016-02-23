@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 'use strict';
 var Compare_1 = require('../../Compare');
 var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');

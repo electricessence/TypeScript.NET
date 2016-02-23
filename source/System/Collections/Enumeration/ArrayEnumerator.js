@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -11,12 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './IndexEnumerator', '../../Types'], factory);
     }
 })(function (require, exports) {
-    /*
-     * @author electricessence / https://github.com/electricessence/
-     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-     */
-    ///<reference path="../Array/IArray.d.ts"/>
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var IndexEnumerator_1 = require('./IndexEnumerator');
     var Types_1 = require('../../Types');
     var ArrayEnumerator = (function (_super) {

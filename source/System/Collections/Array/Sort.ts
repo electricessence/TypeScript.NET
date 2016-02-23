@@ -1,7 +1,8 @@
-/*
+/*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 ///<reference path="../../FunctionTypes.d.ts"/>
 ///<reference path="../Sorting/Order.d.ts"/>
 ///<reference path="../../CompareResult.d.ts"/>

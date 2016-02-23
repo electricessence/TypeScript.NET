@@ -1,7 +1,8 @@
-﻿/*
+﻿/*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 ///<reference path="Primitive.d.ts"/>
 ///<reference path="Collections/Array/IArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);

@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -11,20 +16,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], factory);
     }
 })(function (require, exports) {
-    /*
-     * @author electricessence / https://github.com/electricessence/
-     * Original: http://linqjs.codeplex.com/
-     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-     */
-    ///<reference path="../../FunctionTypes.d.ts"/>
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var Compare_1 = require('../../Compare');
     var Types_1 = require('../../Types');
     var Functions_1 = require('../../Functions');
     var DictionaryBase_1 = require('./DictionaryBase');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
     var VOID0 = void 0;
-    // LinkedList for Dictionary
     var HashEntry = (function () {
         function HashEntry(key, value, prev, next) {
             this.key = key;
@@ -90,7 +88,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return EntryList;
     }());
-    // static utility methods
     function callHasOwnProperty(target, key) {
         return Object.prototype.hasOwnProperty.call(target, key);
     }
@@ -194,8 +191,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return false;
         };
         Dictionary.prototype.clear = function () {
-            var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this); // Remove one by one to allow for signaling.
-            // Ensure reset and clean...
+            var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this);
             _._count = 0;
             for (var key in buckets) {
                 if (buckets.hasOwnProperty(key))

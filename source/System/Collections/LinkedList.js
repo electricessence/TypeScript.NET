@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -6,14 +11,7 @@
         define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], factory);
     }
 })(function (require, exports) {
-    /*
-     * @author electricessence / https://github.com/electricessence/
-     * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
-     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-     */
-    ///<reference path="ILinkedListNode.d.ts"/>
-    ///<reference path="ILinkedList.d.ts"/>
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var Values = require('../Compare');
     var TextUtility = require('../Text/Utility');
     var ArrayUtility = require('../Collections/Array/Utility');
@@ -23,14 +21,6 @@
     var ArgumentException_1 = require('../Exceptions/ArgumentException');
     var ArgumentNullException_1 = require('../Exceptions/ArgumentNullException');
     var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
-    /*****************************
-     * IMPORTANT NOTES ABOUT PERFORMANCE:
-     * http://jsperf.com/simulating-a-queue
-     *
-     * Adding to an array is very fast, but modifying is slow.
-     * LinkedList wins when modifying contents.
-     * http://stackoverflow.com/questions/166884/array-versus-linked-list
-     *****************************/
     var Node = (function () {
         function Node(value, prev, next) {
             this.value = value;
@@ -77,7 +67,6 @@
             _._last = last;
             _._count = c;
         }
-        // #region Internals.
         LinkedList.prototype._addFirst = function (entry) {
             var _ = this, first = _._first;
             var prev = new Node(entry, null, first);
@@ -134,8 +123,6 @@
             }
             return null;
         };
-        // #endregion
-        // #region IEnumerateEach<T>
         LinkedList.prototype.forEach = function (action, useCopy) {
             if (useCopy === void 0) { useCopy = false; }
             if (useCopy) {
@@ -150,22 +137,17 @@
                 }
             }
         };
-        // #endregion
-        // #region IEnumerable<T>
         LinkedList.prototype.getEnumerator = function () {
             var _ = this, current;
             return new EnumeratorBase_1.default(function () {
                 current = new Node(null, null, _._first);
-            }, // Initialize anchor...
-            function (yielder) {
+            }, function (yielder) {
                 return (current = current.next)
                     ? yielder.yieldReturn(current.value)
                     : yielder.yieldBreak();
             });
         };
         Object.defineProperty(LinkedList.prototype, "count", {
-            // #endregion
-            // #region ICollection<T>
             get: function () {
                 return this._count;
             },
@@ -231,7 +213,6 @@
             return removedCount;
         };
         Object.defineProperty(LinkedList.prototype, "first", {
-            // #endregion
             get: function () {
                 return ensureExternal(this._first, this);
             },
@@ -245,7 +226,6 @@
             enumerable: true,
             configurable: true
         });
-        // get methods are available for convenience but is an n*index operation.
         LinkedList.prototype._getNodeAt = function (index) {
             if (index < 0)
                 throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
@@ -295,7 +275,6 @@
                 _._count -= 1;
             }
         };
-        // Returns true if successful and false if not found (already removed).
         LinkedList.prototype.removeNode = function (node) {
             var _ = this;
             var n = getInternal(node, _);
@@ -333,7 +312,6 @@
     }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = LinkedList;
-    // Use an internal node class to prevent mucking up the LinkedList.
     var LinkedListNode = (function () {
         function LinkedListNode(_list, _node) {
             this._list = _list;

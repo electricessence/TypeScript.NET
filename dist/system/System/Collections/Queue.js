@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;

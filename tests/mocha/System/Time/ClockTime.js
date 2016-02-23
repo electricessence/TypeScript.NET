@@ -1,13 +1,11 @@
-///<reference path="../../import.d.ts"/>
-///<reference path="../../../../source/System/Time/HowMany.ts"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../../../source/System/Time/ClockTime', '../../../../source/System/Integer'], factory);
     }
-})(["require", "exports", '../../../../source/System/Time/ClockTime', '../../../../source/System/Integer'], function (require, exports) {
+})(function (require, exports) {
     var ClockTime_1 = require('../../../../source/System/Time/ClockTime');
     var Integer_1 = require('../../../../source/System/Integer');
     var assert = require('../../../../node_modules/assert/assert');

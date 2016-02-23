@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -11,18 +16,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './SystemException', '../Text/Utility'], factory);
     }
 })(function (require, exports) {
-    /*
-     * @author electricessence / https://github.com/electricessence/
-     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-     * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
-     */
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var SystemException_1 = require('./SystemException');
     var Utility_1 = require('../Text/Utility');
     var NAME = 'ArgumentException';
     var ArgumentException = (function (_super) {
         __extends(ArgumentException, _super);
-        // For simplicity and consistency, lets stick with 1 signature.
         function ArgumentException(paramName, message, innerException, beforeSealing) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }

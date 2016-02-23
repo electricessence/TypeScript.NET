@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+ */
 System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;

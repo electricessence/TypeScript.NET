@@ -1,12 +1,11 @@
-///<reference path="../import.d.ts"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../../source/System/Integer'], factory);
     }
-})(["require", "exports", '../../../source/System/Integer'], function (require, exports) {
+})(function (require, exports) {
     var Integer_1 = require('../../../source/System/Integer');
     var assert = require('../../../node_modules/assert/assert');
     var TEST_FLOAT = 10.915, TEST_INT = 10;

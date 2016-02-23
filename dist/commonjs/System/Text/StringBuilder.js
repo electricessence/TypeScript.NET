@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 'use strict';
 var Types_1 = require('../Types');
 var VOID0 = void 0;

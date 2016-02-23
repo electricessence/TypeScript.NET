@@ -1,10 +1,8 @@
-/*
+/*!
  * @author electricessence / https://github.com/electricessence/
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="ITimeQuantity.d.ts"/>
-///<reference path="HowMany.ts"/>
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -22,25 +20,24 @@
         TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
         TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
         TimeUnit[TimeUnit["Days"] = 5] = "Days";
-    })(TimeUnit || (TimeUnit = {})); // Earth Days
+    })(TimeUnit || (TimeUnit = {}));
     var TimeUnit;
     (function (TimeUnit) {
         function toMilliseconds(value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }
-            // noinspection FallThroughInSwitchStatementJS
             switch (units) {
                 case TimeUnit.Days:
-                    value *= 24 /* Day */;
+                    value *= 24;
                 case TimeUnit.Hours:
-                    value *= 60 /* Hour */;
+                    value *= 60;
                 case TimeUnit.Minutes:
-                    value *= 60 /* Minute */;
+                    value *= 60;
                 case TimeUnit.Seconds:
-                    value *= 1000 /* Second */;
+                    value *= 1000;
                 case TimeUnit.Milliseconds:
                     return value;
                 case TimeUnit.Ticks:
-                    return value / 10000 /* Millisecond */;
+                    return value / 10000;
                 default:
                     throw new Error("Invalid TimeUnit.");
             }
@@ -49,17 +46,17 @@
         function fromMilliseconds(ms, units) {
             switch (units) {
                 case TimeUnit.Days:
-                    return ms / 86400000 /* Day */;
+                    return ms / 86400000;
                 case TimeUnit.Hours:
-                    return ms / 3600000 /* Hour */;
+                    return ms / 3600000;
                 case TimeUnit.Minutes:
-                    return ms / 60000 /* Minute */;
+                    return ms / 60000;
                 case TimeUnit.Seconds:
-                    return ms / 1000 /* Second */;
+                    return ms / 1000;
                 case TimeUnit.Milliseconds:
                     return ms;
                 case TimeUnit.Ticks:
-                    return ms * 10000 /* Millisecond */;
+                    return ms * 10000;
                 default:
                     throw new Error("Invalid TimeUnit.");
             }

@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;

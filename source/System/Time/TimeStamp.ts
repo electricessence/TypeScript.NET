@@ -1,7 +1,8 @@
-/*
+/*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 ///<reference path="ITimeStamp.d.ts"/>
 ///<reference path="IDateTime.d.ts"/>
 ///<reference path="Calendars.d.ts"/>

@@ -1,7 +1,8 @@
-/*
+/*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 ///<reference path="ILazy.d.ts"/>
 ///<reference path="FunctionTypes.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);

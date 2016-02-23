@@ -3,11 +3,12 @@
 ///<reference path="IDateTime.d.ts"/>
 ///<reference path="Calendars.d.ts"/>
 ///<reference path="HowMany.ts"/>
-/*
+/*!
  * @author electricessence / https://github.com/electricessence/
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 'use strict'; // For compatibility with (let, const, function, class);
 
 import Type from '../Types';

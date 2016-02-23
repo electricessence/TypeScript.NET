@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based on .NET DateTime's interface.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 'use strict';
 var ClockTime_1 = require('./ClockTime');
 var TimeSpan_1 = require('./TimeSpan');

@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+ */
 'use strict';
 var Types_1 = require('../Types');
 var QueryParams = require('../Uri/QueryParams');

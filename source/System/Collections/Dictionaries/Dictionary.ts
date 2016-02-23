@@ -1,8 +1,9 @@
-﻿/*
+﻿/*!
  * @author electricessence / https://github.com/electricessence/
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
 ///<reference path="../../FunctionTypes.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 

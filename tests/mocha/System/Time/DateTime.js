@@ -1,12 +1,11 @@
-///<reference path="../../import.d.ts"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../../../source/System/Time/DateTime'], factory);
     }
-})(["require", "exports", '../../../../source/System/Time/DateTime'], function (require, exports) {
+})(function (require, exports) {
     var DateTime_1 = require('../../../../source/System/Time/DateTime');
     var assert = require('../../../../node_modules/assert/assert');
     describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {

@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based on code from: https://github.com/kriskowal/q
+ */
 "use strict";
 var Types_1 = require('../Types');
 var LinkedList_1 = require("../Collections/LinkedList");

@@ -1,12 +1,11 @@
-///<reference path="../../../import"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../../../../source/System/Collections/Array/Compare', '../../../../../source/System/Collections/Array/Utility'], factory);
     }
-})(["require", "exports", '../../../../../source/System/Collections/Array/Compare', '../../../../../source/System/Collections/Array/Utility'], function (require, exports) {
+})(function (require, exports) {
     var Arrays = require('../../../../../source/System/Collections/Array/Compare');
     var ArrayUtility = require('../../../../../source/System/Collections/Array/Utility');
     var assert = require('../../../../../node_modules/assert/assert');

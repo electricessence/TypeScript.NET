@@ -1,4 +1,4 @@
-/*
+/*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
@@ -18,7 +18,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 })(function (require, exports) {
     "use strict";
     var ArgumentException_1 = require('./ArgumentException');
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var NAME = 'ArgumentOutOfRangeException';
     var ArgumentOutOfRangeException = (function (_super) {
         __extends(ArgumentOutOfRangeException, _super);
