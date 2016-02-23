@@ -74,18 +74,37 @@ export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
 	return Type.hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", Type.FUNCTION);
 }
 
+export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
+{
+	return Type.hasMemberOfType<IEnumerator<T>>(instance, "moveNext", Type.FUNCTION);
+}
+
 export function forEach<T>(
-	e:IEnumerator<T>,
+	e:T[]|IEnumerator<T>|IEnumerable<T>,
 	action:(element:T, index?:number) => any):void
 {
 	if(e)
 	{
-		var index = 0;
-		// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-		while(e.moveNext())
+		if(Array.isArray(e))
 		{
-			if(action(e.current, index++)===false)
-				break;
+			e.forEach(action);
+			return;
+		}
+
+		if(isEnumerable<T>(e))
+		{
+			e = (<IEnumerable<T>>e).getEnumerator();
+		}
+
+		if(isEnumerator<T>(e))
+		{
+			var index = 0;
+			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+			while(e.moveNext())
+			{
+				if(action(e.current, index++)===false)
+					break;
+			}
 		}
 	}
 }

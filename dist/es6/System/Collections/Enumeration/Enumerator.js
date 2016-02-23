@@ -41,12 +41,24 @@ export function from(source) {
 export function isEnumerable(instance) {
     return Type.hasMemberOfType(instance, "getEnumerator", Type.FUNCTION);
 }
+export function isEnumerator(instance) {
+    return Type.hasMemberOfType(instance, "moveNext", Type.FUNCTION);
+}
 export function forEach(e, action) {
     if (e) {
-        var index = 0;
-        while (e.moveNext()) {
-            if (action(e.current, index++) === false)
-                break;
+        if (Array.isArray(e)) {
+            e.forEach(action);
+            return;
+        }
+        if (isEnumerable(e)) {
+            e = e.getEnumerator();
+        }
+        if (isEnumerator(e)) {
+            var index = 0;
+            while (e.moveNext()) {
+                if (action(e.current, index++) === false)
+                    break;
+            }
         }
     }
 }

@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract'], function(exports_1, context_1) {
+System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract', '../Enumeration/Enumerator'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1;
+    var Compare_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1, Enumerator_1;
     var VOID0, DictionaryBase;
     return {
         setters:[
@@ -23,6 +23,9 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
             },
             function (KeyValueExtract_1_1) {
                 KeyValueExtract_1 = KeyValueExtract_1_1;
+            },
+            function (Enumerator_1_1) {
+                Enumerator_1 = Enumerator_1_1;
             }],
         execute: function() {
             VOID0 = void (0);
@@ -174,9 +177,11 @@ System.register(['../../Compare', '../Enumeration/EnumeratorBase', '../../Except
                 };
                 DictionaryBase.prototype.importPairs = function (pairs) {
                     var _ = this;
+                    if (!pairs)
+                        return false;
                     return _.handleUpdate(function () {
                         var changed = false;
-                        pairs.forEach(function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
+                        Enumerator_1.forEach(pairs, function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
                             _.setValue(key, value);
                             changed = true;
                         }); });

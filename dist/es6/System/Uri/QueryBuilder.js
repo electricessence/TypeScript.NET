@@ -6,17 +6,21 @@
 import Type from '../Types';
 import * as QueryParams from './QueryParams';
 import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
+import { isEnumerable } from '../Collections/Enumeration/Enumerator';
 const ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
 export default class QueryBuilder extends OrderedStringKeyDictionary {
     constructor(query, decodeValues = true) {
         super();
         this.importQuery(query, decodeValues);
     }
+    static init(query, decodeValues = true) {
+        return new QueryBuilder(query, decodeValues);
+    }
     importQuery(query, decodeValues = true) {
         if (Type.isString(query)) {
             this.importFromString(query, decodeValues);
         }
-        else if (Array.isArray(query)) {
+        else if (Array.isArray(query) || isEnumerable(query)) {
             this.importPairs(query);
         }
         else {
@@ -38,9 +42,6 @@ export default class QueryBuilder extends OrderedStringKeyDictionary {
                 _.setValue(key, value);
         }, deserialize, decodeValues);
         return this;
-    }
-    static init(query, decodeValues = true) {
-        return new QueryBuilder(query, decodeValues);
     }
     encode(prefixIfNotEmpty) {
         var entries = [];

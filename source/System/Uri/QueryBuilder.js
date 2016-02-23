@@ -12,13 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary'], factory);
+        define(["require", "exports", '../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary', '../Collections/Enumeration/Enumerator'], factory);
     }
 })(function (require, exports) {
     'use strict';
     var Types_1 = require('../Types');
     var QueryParams = require('./QueryParams');
     var OrderedStringKeyDictionary_1 = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
+    var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
     var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     var QueryBuilder = (function (_super) {
         __extends(QueryBuilder, _super);
@@ -27,12 +28,16 @@ var __extends = (this && this.__extends) || function (d, b) {
             _super.call(this);
             this.importQuery(query, decodeValues);
         }
+        QueryBuilder.init = function (query, decodeValues) {
+            if (decodeValues === void 0) { decodeValues = true; }
+            return new QueryBuilder(query, decodeValues);
+        };
         QueryBuilder.prototype.importQuery = function (query, decodeValues) {
             if (decodeValues === void 0) { decodeValues = true; }
             if (Types_1.default.isString(query)) {
                 this.importFromString(query, decodeValues);
             }
-            else if (Array.isArray(query)) {
+            else if (Array.isArray(query) || Enumerator_1.isEnumerable(query)) {
                 this.importPairs(query);
             }
             else {
@@ -56,10 +61,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                     _.setValue(key, value);
             }, deserialize, decodeValues);
             return this;
-        };
-        QueryBuilder.init = function (query, decodeValues) {
-            if (decodeValues === void 0) { decodeValues = true; }
-            return new QueryBuilder(query, decodeValues);
         };
         QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
             var entries = [];

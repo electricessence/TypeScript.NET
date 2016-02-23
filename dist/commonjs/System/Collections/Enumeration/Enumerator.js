@@ -50,12 +50,25 @@ function isEnumerable(instance) {
     return Types_1.default.hasMemberOfType(instance, "getEnumerator", Types_1.default.FUNCTION);
 }
 exports.isEnumerable = isEnumerable;
+function isEnumerator(instance) {
+    return Types_1.default.hasMemberOfType(instance, "moveNext", Types_1.default.FUNCTION);
+}
+exports.isEnumerator = isEnumerator;
 function forEach(e, action) {
     if (e) {
-        var index = 0;
-        while (e.moveNext()) {
-            if (action(e.current, index++) === false)
-                break;
+        if (Array.isArray(e)) {
+            e.forEach(action);
+            return;
+        }
+        if (isEnumerable(e)) {
+            e = e.getEnumerator();
+        }
+        if (isEnumerator(e)) {
+            var index = 0;
+            while (e.moveNext()) {
+                if (action(e.current, index++) === false)
+                    break;
+            }
         }
     }
 }

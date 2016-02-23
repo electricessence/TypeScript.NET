@@ -12,6 +12,7 @@ import ArgumentException from '../../Exceptions/ArgumentException';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import InvalidOperationException from '../../Exceptions/InvalidOperationException';
 import extractKeyValue from '../../KeyValueExtract';
+import {forEach} from '../Enumeration/Enumerator';
 
 const VOID0:any = void(0);
 
@@ -246,14 +247,15 @@ implements IDictionary<TKey, TValue>
 		return count;
 	}
 
-	importPairs(pairs:KeyValuePair<TKey, TValue>[]):boolean
+	importPairs(pairs:KeyValuePair<TKey, TValue>[]|IEnumerable<KeyValuePair<TKey, TValue>>):boolean
 	{
 		var _ = this;
+		if(!pairs) return false;
 		return _.handleUpdate(
 			() =>
 			{
-				var changed:boolean = false;
-				pairs.forEach(
+				let changed:boolean = false;
+				forEach(pairs,
 					pair=>extractKeyValue(pair, (key, value)=>
 					{
 						_.setValue(key, value);

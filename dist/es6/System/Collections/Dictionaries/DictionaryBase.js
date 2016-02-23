@@ -8,6 +8,7 @@ import EnumeratorBase from '../Enumeration/EnumeratorBase';
 import ArgumentNullException from '../../Exceptions/ArgumentNullException';
 import InvalidOperationException from '../../Exceptions/InvalidOperationException';
 import extractKeyValue from '../../KeyValueExtract';
+import { forEach } from '../Enumeration/Enumerator';
 const VOID0 = void (0);
 class DictionaryBase {
     constructor() {
@@ -133,9 +134,11 @@ class DictionaryBase {
     }
     importPairs(pairs) {
         var _ = this;
+        if (!pairs)
+            return false;
         return _.handleUpdate(() => {
-            var changed = false;
-            pairs.forEach(pair => extractKeyValue(pair, (key, value) => {
+            let changed = false;
+            forEach(pairs, pair => extractKeyValue(pair, (key, value) => {
                 _.setValue(key, value);
                 changed = true;
             }));

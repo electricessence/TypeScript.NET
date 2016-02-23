@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary'], function(exports_1, context_1) {
+System.register(['../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary', '../Collections/Enumeration/Enumerator'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,7 +10,7 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, QueryParams, OrderedStringKeyDictionary_1;
+    var Types_1, QueryParams, OrderedStringKeyDictionary_1, Enumerator_1;
     var ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, QueryBuilder;
     return {
         setters:[
@@ -22,6 +22,9 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
             },
             function (OrderedStringKeyDictionary_1_1) {
                 OrderedStringKeyDictionary_1 = OrderedStringKeyDictionary_1_1;
+            },
+            function (Enumerator_1_1) {
+                Enumerator_1 = Enumerator_1_1;
             }],
         execute: function() {
             ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
@@ -32,12 +35,16 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
                     _super.call(this);
                     this.importQuery(query, decodeValues);
                 }
+                QueryBuilder.init = function (query, decodeValues) {
+                    if (decodeValues === void 0) { decodeValues = true; }
+                    return new QueryBuilder(query, decodeValues);
+                };
                 QueryBuilder.prototype.importQuery = function (query, decodeValues) {
                     if (decodeValues === void 0) { decodeValues = true; }
                     if (Types_1.default.isString(query)) {
                         this.importFromString(query, decodeValues);
                     }
-                    else if (Array.isArray(query)) {
+                    else if (Array.isArray(query) || Enumerator_1.isEnumerable(query)) {
                         this.importPairs(query);
                     }
                     else {
@@ -61,10 +68,6 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
                             _.setValue(key, value);
                     }, deserialize, decodeValues);
                     return this;
-                };
-                QueryBuilder.init = function (query, decodeValues) {
-                    if (decodeValues === void 0) { decodeValues = true; }
-                    return new QueryBuilder(query, decodeValues);
                 };
                 QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
                     var entries = [];

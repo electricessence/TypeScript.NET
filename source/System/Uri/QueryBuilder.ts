@@ -13,6 +13,8 @@ import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
 import * as QueryParams from './QueryParams';
 import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
+import {isEnumerable} from '../Collections/Enumeration/Enumerator';
+
 
 const
 ENTRY_SEPARATOR     = "&",
@@ -28,7 +30,10 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 {
 
 	constructor(
-		query:string|IUriComponentMap|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[],
+		query:string
+			|IUriComponentMap
+			|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[]
+			|IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>,
 		decodeValues:boolean = true)
 	{
 		super();
@@ -36,15 +41,29 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 		this.importQuery(query,decodeValues);
 	}
 
+
+	static init(
+		query:string
+			|IUriComponentMap
+			|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[]
+			|IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>,
+		decodeValues:boolean = true):QueryBuilder
+	{
+		return new QueryBuilder(query, decodeValues);
+	}
+
 	importQuery(
-		query:string|IUriComponentMap|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[],
+		query:string
+			|IUriComponentMap
+			|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[]
+			|IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>,
 		decodeValues:boolean = true):QueryBuilder {
 
 		if(Type.isString(query))
 		{
 			this.importFromString(<string>query, decodeValues);
 		}
-		else if(Array.isArray(query))
+		else if(Array.isArray(query) || isEnumerable(query))
 		{
 			this.importPairs(query);
 		}
@@ -89,12 +108,6 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 		return this;
 	}
 
-	static init(
-		query:string|IUriComponentMap|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[],
-		decodeValues:boolean = true):QueryBuilder
-	{
-		return new QueryBuilder(query, decodeValues);
-	}
 
 
 	/**

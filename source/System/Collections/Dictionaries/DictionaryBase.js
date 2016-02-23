@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract'], factory);
+        define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract', '../Enumeration/Enumerator'], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -16,6 +16,7 @@
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
     var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
     var KeyValueExtract_1 = require('../../KeyValueExtract');
+    var Enumerator_1 = require('../Enumeration/Enumerator');
     var VOID0 = void (0);
     var DictionaryBase = (function () {
         function DictionaryBase() {
@@ -165,9 +166,11 @@
         };
         DictionaryBase.prototype.importPairs = function (pairs) {
             var _ = this;
+            if (!pairs)
+                return false;
             return _.handleUpdate(function () {
                 var changed = false;
-                pairs.forEach(function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
+                Enumerator_1.forEach(pairs, function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
                     _.setValue(key, value);
                     changed = true;
                 }); });
