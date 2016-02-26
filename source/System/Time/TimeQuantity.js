@@ -2,15 +2,19 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+///<reference path="ITimeQuantity.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../IComparable.d.ts"/>
+///<reference path="HowMany.ts"/>
+'use strict';
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Compare', './TimeUnit'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../Compare', './TimeUnit'], function (require, exports) {
     var Compare_1 = require('../Compare');
     var TimeUnit_1 = require('./TimeUnit');
     var TimeQuantity = (function () {
@@ -57,7 +61,7 @@
             return TimeUnit_1.default.fromMilliseconds(this.getTotalMilliseconds(), units);
         };
         return TimeQuantity;
-    }());
+    })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TimeQuantity;
 });

@@ -3,15 +3,16 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+///<reference path="../Disposable/IDisposable.d.ts"/>
+'use strict';
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../Types'], function (require, exports) {
     var Types_1 = require('../Types');
     var VOID0 = void 0;
     var StringBuilder = (function () {
@@ -93,7 +94,7 @@
             this.clear();
         };
         return StringBuilder;
-    }());
+    })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StringBuilder;
 });

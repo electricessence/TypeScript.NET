@@ -4,15 +4,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-(function (factory) {
+///<reference path="ISubscribable.d.ts"/>
+///<reference path="IObservable.d.ts"/>
+///<reference path="../Disposable/IDisposableAware.d.ts"/>
+'use strict';
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports"], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports"], function (require, exports) {
     var Subscription = (function () {
         function Subscription(_subscribable, _subscriber) {
             this._subscribable = _subscribable;
@@ -44,7 +47,7 @@
             }
         };
         return Subscription;
-    }());
+    })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Subscription;
 });

@@ -2,20 +2,20 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict';
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './EnumeratorBase'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", './EnumeratorBase'], function (require, exports) {
     var EnumeratorBase_1 = require('./EnumeratorBase');
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
@@ -55,7 +55,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         }
         return IndexEnumerator;
-    }(EnumeratorBase_1.default));
+    })(EnumeratorBase_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IndexEnumerator;
 });

@@ -2,15 +2,17 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './Types'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    "use strict";
+})(["require", "exports", './Types'], function (require, exports) {
+    ///<reference path="IComparable.d.ts"/>
+    ///<reference path="Primitive.d.ts"/>
+    ///<reference path="CompareResult.d.ts"/>
     var Types_1 = require('./Types');
     var isTrueNaN = Types_1.default.isTrueNaN;
     var VOID0 = void 0;

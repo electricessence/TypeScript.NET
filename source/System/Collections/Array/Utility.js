@@ -2,15 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Types', '../../Integer', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    "use strict";
+})(["require", "exports", '../../Types', '../../Integer', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+    ///<reference path="IArray.d.ts"/>
+    ///<reference path="../../FunctionTypes.d.ts"/>
     var Types_1 = require('../../Types');
     var Integer_1 = require('../../Integer');
     var Compare_1 = require('../../Compare');

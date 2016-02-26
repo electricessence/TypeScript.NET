@@ -2,20 +2,20 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+'use strict';
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Array/Utility', './StringKeyDictionary', '../../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../Array/Utility', './StringKeyDictionary', '../../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
     var ArrayUtility = require('../Array/Utility');
     var StringKeyDictionary_1 = require('./StringKeyDictionary');
     var ArgumentOutOfRangeException_1 = require('../../Exceptions/ArgumentOutOfRangeException');
@@ -74,7 +74,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return _._order.filter(function (key) { return _.containsKey(key); });
         };
         return OrderedStringKeyDictionary;
-    }(StringKeyDictionary_1.default));
+    })(StringKeyDictionary_1.default);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = OrderedStringKeyDictionary;
 });

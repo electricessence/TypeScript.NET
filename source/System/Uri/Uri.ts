@@ -27,7 +27,7 @@ import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeExcepti
 export default class Uri implements IUri, IEquatable<IUri>
 {
 
-	scheme:string;
+	scheme:SchemeValue;
 	userInfo:string;
 	host:string;
 	port:number;
@@ -47,12 +47,12 @@ export default class Uri implements IUri, IEquatable<IUri>
 	 * @param fragment The escaped URI fragment.
 	 */
 	constructor(
-		scheme:UriScheme|string,
+		scheme:UriScheme|SchemeValue,
 		userInfo:string,
 		host:string,
 		port:number,
 		path:string,
-		query?:string|IUriComponentMap|StringKeyValuePair<Primitive>[],
+		query?:string|IUriComponentMap|UriComponentArray,
 		fragment?:string)
 	{
 		var _ = this;
@@ -151,7 +151,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 		return copyUri(this,map);
 	}
 
-	updateQuery(query:string|IUriComponentMap|StringKeyValuePair<Primitive>[]):Uri {
+	updateQuery(query:string|IUriComponentMap|UriComponentArray):Uri {
 		var map = this.toMap();
 		map.query = <any>query;
 		return Uri.from(map);
@@ -276,7 +276,7 @@ function copyUri(from:IUri, to?:IUri) {
 
 const SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
 
-function getScheme(scheme:UriScheme|string):string
+function getScheme(scheme:UriScheme|string):SchemeValue
 {
 	var s:any = scheme;
 	if(Type.isString(s))

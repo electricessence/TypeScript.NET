@@ -5,7 +5,7 @@
  */
 
 // TODO: Possibly use string literals instead.
-enum UriScheme {
+enum Scheme {
 	/**
 	 * The resource is a file on the local computer.
 	 */
@@ -87,12 +87,12 @@ enum UriScheme {
 const PIPE = 'net.pipe';
 const TCP = 'net.tcp';
 
-UriScheme[UriScheme.pipe] = PIPE;
-UriScheme[UriScheme.tcp] = TCP;
+Scheme[Scheme.pipe] = PIPE;
+Scheme[Scheme.tcp] = TCP;
 
-(<any>UriScheme)[PIPE] = UriScheme.pipe;
-(<any>UriScheme)[TCP] = UriScheme.tcp;
+(<any>Scheme)[PIPE] = Scheme.pipe;
+(<any>Scheme)[TCP] = Scheme.tcp;
 
-Object.freeze(UriScheme);
+Object.freeze(Scheme);
 
-export default UriScheme;
+export default Scheme;

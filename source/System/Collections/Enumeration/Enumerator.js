@@ -2,15 +2,19 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+///<reference path="../../Disposable/IDisposable.d.ts"/>
+///<reference path="IEnumerable.d.ts"/>
+///<reference path="IEnumerator.d.ts"/>
+///<reference path="IYield.d.ts"/>
+'use strict';
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumerator'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumerator'], function (require, exports) {
     var Types_1 = require('../../Types');
     var ArrayEnumerator_1 = require('./ArrayEnumerator');
     var IndexEnumerator_1 = require('./IndexEnumerator');
@@ -30,7 +34,7 @@
         EmptyEnumerator.prototype.reset = function () { };
         EmptyEnumerator.prototype.dispose = function () { };
         return EmptyEnumerator;
-    }());
+    })();
     var Empty = new EmptyEnumerator();
     function from(source) {
         if (!source)

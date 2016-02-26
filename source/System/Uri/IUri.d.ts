@@ -4,6 +4,8 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 
+///<reference path="SchemeValue.d.ts"/>
+
 /**
  * https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  *
@@ -18,7 +20,7 @@ interface IUrn {
 	/**
 	 * The scheme name for this URI.
 	 */
-	scheme?:string;
+	scheme?:SchemeValue; // string literal
 
 	/**
 	 * The absolute path of the URI.

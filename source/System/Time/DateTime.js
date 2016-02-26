@@ -1,17 +1,22 @@
+///<reference path='ITimeQuantity.d.ts'/>
+///<reference path="ITimeStamp.d.ts"/>
+///<reference path="IDateTime.d.ts"/>
+///<reference path="Calendars.d.ts"/>
+///<reference path="HowMany.ts"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+'use strict';
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ClockTime', './TimeSpan', './TimeStamp'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", './ClockTime', './TimeSpan', './TimeStamp'], function (require, exports) {
     var ClockTime_1 = require('./ClockTime');
     var TimeSpan_1 = require('./TimeSpan');
     var TimeStamp_1 = require('./TimeStamp');
@@ -180,7 +185,7 @@
             return (new Date(year, month + 1, 0)).getDate();
         };
         return DateTime;
-    }());
+    })();
     Object.freeze(DateTime);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DateTime;

@@ -3,15 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
-(function (factory) {
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', "../Collections/LinkedList", "../Collections/Queue"], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    "use strict";
+})(["require", "exports", '../Types', "../Collections/LinkedList", "../Collections/Queue"], function (require, exports) {
     var Types_1 = require('../Types');
     var LinkedList_1 = require("../Collections/LinkedList");
     var Queue_1 = require("../Collections/Queue");

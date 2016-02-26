@@ -3,15 +3,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-(function (factory) {
+///<reference path="IUri.d.ts"/>
+///<reference path="../IEquatable.d.ts"/>
+///<reference path="../Primitive.d.ts"/>
+'use strict';
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
     var Types_1 = require('../Types');
     var QueryParams = require('../Uri/QueryParams');
     var Utility_1 = require('../Text/Utility');
@@ -100,7 +103,7 @@
             return getAuthority(uri);
         };
         return Uri;
-    }());
+    })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Uri;
     (function (Fields) {
@@ -173,6 +176,8 @@
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
+        // scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
+        // {scheme}{authority}{path}{query}{fragment}
         var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
         return EMPTY
             + ((scheme && (scheme + ':')) || EMPTY)

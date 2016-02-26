@@ -3,15 +3,19 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+///<reference path="ICollection.d.ts"/>
+///<reference path="IList.d.ts"/>
+///<reference path="Enumeration/IEnumerateEach.d.ts"/>
+///<reference path="../FunctionTypes.d.ts"/>
+'use strict';
+(function (deps, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(deps, factory);
     }
-})(function (require, exports) {
-    'use strict';
+})(["require", "exports", '../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
     var Values = require('../Compare');
     var AU = require('./Array/Utility');
     var Types_1 = require('../Types');
@@ -259,7 +263,7 @@
             });
         };
         return Queue;
-    }());
+    })();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Queue;
     function assertZeroOrGreater(value, property) {
