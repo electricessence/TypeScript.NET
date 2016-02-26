@@ -1,13 +1,12 @@
-///<reference path='../../typings/qunit/qunit.d.ts'/>
-///<amd-dependency path='QUnit'/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "QUnit", 'source/System/Integer'], factory);
     }
-})(["require", "exports", "QUnit", 'source/System/Integer'], function (require, exports) {
+})(function (require, exports) {
+    "use strict";
     var Integer_1 = require('source/System/Integer');
     function run() {
         var TEST_FLOAT = 10.915, TEST_INT = 10;

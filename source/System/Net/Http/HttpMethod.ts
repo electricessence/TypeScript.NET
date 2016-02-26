@@ -4,12 +4,14 @@
  * Based on: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
  */
 
+///<reference path="HttpMethodValue.d.ts"/>
+
 export const
-	OPTIONS:string = 'OPTIONS',
-	HEAD:string    = 'HEAD',
-	GET:string     = 'GET',
-	PUT:string     = 'PUT',
-	POST:string    = 'POST',
-	DELETE:string  = 'DELETE',
-	TRACE:string   = 'TRACE',
-	CONNECT:string = 'CONNECT';
+	OPTIONS:HttpMethodValue = 'OPTIONS',
+	HEAD:HttpMethodValue    = 'HEAD',
+	GET:HttpMethodValue     = 'GET',
+	PUT:HttpMethodValue     = 'PUT',
+	POST:HttpMethodValue    = 'POST',
+	DELETE:HttpMethodValue  = 'DELETE',
+	TRACE:HttpMethodValue   = 'TRACE',
+	CONNECT:HttpMethodValue = 'CONNECT';

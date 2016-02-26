@@ -6,19 +6,31 @@
 import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
 import extractKeyValue from '../KeyValueExtract';
+import { isEnumerable, forEach } from '../Collections/Enumeration/Enumerator';
 const ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
 export function encode(values, prefixIfNotEmpty) {
     if (!values)
         return '';
-    var entries;
-    if (Array.isArray(values)) {
-        entries = values.map(kvp => extractKeyValue(kvp, (key, value) => key + KEY_VALUE_SEPARATOR + encodeValue(value)));
+    var entries = [];
+    if (Array.isArray(values) || isEnumerable(values)) {
+        forEach(values, entry => extractKeyValue(entry, (key, value) => appendKeyValue(entries, key, value)));
     }
     else {
-        entries = Object.keys(values).map(key => key + KEY_VALUE_SEPARATOR + encodeValue(values[key]));
+        Object.keys(values).forEach(key => appendKeyValue(entries, key, values[key]));
     }
     return (entries.length && prefixIfNotEmpty ? '?' : '')
         + entries.join(ENTRY_SEPARATOR);
+}
+function appendKeyValueSingle(entries, key, value) {
+    entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
+}
+function appendKeyValue(entries, key, value) {
+    if (Array.isArray(value) || isEnumerable(value)) {
+        forEach(value, v => appendKeyValueSingle(entries, key, v));
+    }
+    else {
+        appendKeyValueSingle(entries, key, value);
+    }
 }
 export function encodeValue(value) {
     var v = null;

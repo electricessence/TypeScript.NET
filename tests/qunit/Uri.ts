@@ -91,7 +91,7 @@ export default function run()
 
 		assert.throws(()=>{
 			Uri.from({
-				scheme:'x y z'
+				scheme:<any>'x y z'
 			});
 		});
 
@@ -102,7 +102,7 @@ export default function run()
 
 		assert.throws(()=>{
 			Uri.from({
-				scheme:'https:s'
+				scheme:<any>'https:s'
 			});
 		});
 

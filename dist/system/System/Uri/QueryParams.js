@@ -2,25 +2,38 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract'], function(exports_1, context_1) {
+System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract', '../Collections/Enumeration/Enumerator'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var Types_1, Serialization, KeyValueExtract_1;
+    var Types_1, Serialization, KeyValueExtract_1, Enumerator_1;
     var ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, Separator;
     function encode(values, prefixIfNotEmpty) {
         if (!values)
             return '';
-        var entries;
-        if (Array.isArray(values)) {
-            entries = values.map(function (kvp) { return KeyValueExtract_1.default(kvp, function (key, value) { return key + KEY_VALUE_SEPARATOR + encodeValue(value); }); });
+        var entries = [];
+        if (Array.isArray(values) || Enumerator_1.isEnumerable(values)) {
+            Enumerator_1.forEach(values, function (entry) {
+                return KeyValueExtract_1.default(entry, function (key, value) { return appendKeyValue(entries, key, value); });
+            });
         }
         else {
-            entries = Object.keys(values).map(function (key) { return key + KEY_VALUE_SEPARATOR + encodeValue(values[key]); });
+            Object.keys(values).forEach(function (key) { return appendKeyValue(entries, key, values[key]); });
         }
         return (entries.length && prefixIfNotEmpty ? '?' : '')
             + entries.join(ENTRY_SEPARATOR);
     }
     exports_1("encode", encode);
+    function appendKeyValueSingle(entries, key, value) {
+        entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
+    }
+    function appendKeyValue(entries, key, value) {
+        if (Array.isArray(value) || Enumerator_1.isEnumerable(value)) {
+            Enumerator_1.forEach(value, function (v) { return appendKeyValueSingle(entries, key, v); });
+        }
+        else {
+            appendKeyValueSingle(entries, key, value);
+        }
+    }
     function encodeValue(value) {
         var v = null;
         if (isUriComponentFormattable(value)) {
@@ -94,6 +107,9 @@ System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract'], 
             },
             function (KeyValueExtract_1_1) {
                 KeyValueExtract_1 = KeyValueExtract_1_1;
+            },
+            function (Enumerator_1_1) {
+                Enumerator_1 = Enumerator_1_1;
             }],
         execute: function() {
             ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";

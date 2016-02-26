@@ -7,28 +7,42 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', '../Serialization/Utility', '../KeyValueExtract'], factory);
+        define(["require", "exports", '../Types', '../Serialization/Utility', '../KeyValueExtract', '../Collections/Enumeration/Enumerator'], factory);
     }
 })(function (require, exports) {
     'use strict';
     var Types_1 = require('../Types');
     var Serialization = require('../Serialization/Utility');
     var KeyValueExtract_1 = require('../KeyValueExtract');
+    var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
     var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     function encode(values, prefixIfNotEmpty) {
         if (!values)
             return '';
-        var entries;
-        if (Array.isArray(values)) {
-            entries = values.map(function (kvp) { return KeyValueExtract_1.default(kvp, function (key, value) { return key + KEY_VALUE_SEPARATOR + encodeValue(value); }); });
+        var entries = [];
+        if (Array.isArray(values) || Enumerator_1.isEnumerable(values)) {
+            Enumerator_1.forEach(values, function (entry) {
+                return KeyValueExtract_1.default(entry, function (key, value) { return appendKeyValue(entries, key, value); });
+            });
         }
         else {
-            entries = Object.keys(values).map(function (key) { return key + KEY_VALUE_SEPARATOR + encodeValue(values[key]); });
+            Object.keys(values).forEach(function (key) { return appendKeyValue(entries, key, values[key]); });
         }
         return (entries.length && prefixIfNotEmpty ? '?' : '')
             + entries.join(ENTRY_SEPARATOR);
     }
     exports.encode = encode;
+    function appendKeyValueSingle(entries, key, value) {
+        entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
+    }
+    function appendKeyValue(entries, key, value) {
+        if (Array.isArray(value) || Enumerator_1.isEnumerable(value)) {
+            Enumerator_1.forEach(value, function (v) { return appendKeyValueSingle(entries, key, v); });
+        }
+        else {
+            appendKeyValueSingle(entries, key, value);
+        }
+    }
     function encodeValue(value) {
         var v = null;
         if (isUriComponentFormattable(value)) {

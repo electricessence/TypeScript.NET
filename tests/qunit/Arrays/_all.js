@@ -1,13 +1,12 @@
-///<reference path="../../../typings/qunit/qunit.d.ts"/>
-/// <amd-dependency path="QUnit"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "QUnit", './Utility', './Procedure', './Compare'], factory);
     }
-})(["require", "exports", "QUnit", './Utility', './Procedure', './Compare'], function (require, exports) {
+})(function (require, exports) {
+    "use strict";
     var Utility_1 = require('./Utility');
     var Procedure_1 = require('./Procedure');
     var Compare_1 = require('./Compare');

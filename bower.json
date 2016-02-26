@@ -1,39 +1,39 @@
 {
-  "name": "typescript-dotnet",
-  "version": "2.6.4",
-  "ignore": [
-    ".bowercc",
-    ".gitignore",
-    ".npmignore",
-    ".idea",
-    ".nuget",
-    "gulpfile.js",
-    "node_modules",
-    "bower_components",
-    "documentation",
-    "tests",
-    "typings",
-    "tsc-flags.txt",
-    "tsd.json"
-  ],
-  "homepage": "https://github.com/electricessence/TypeScript.NET",
-  "authors": [
-    "electricessence <npm@electrified.net>"
-  ],
-  "description": "A JavaScript-Friendly .NET TypeScript Library.",
-  "main": [],
-  "moduleType": [
-    "amd",
-    "es6",
-    "node"
-  ],
-  "keywords": [
-    "JavaScript",
-    "TypeScript",
-    ".NET",
-    "dotnet",
-    "TypeScript.NET",
-    "LINQ"
-  ],
-  "license": "MIT"
+	"name": "typescript-dotnet",
+	"version": "2.6.4",
+	"ignore": [
+		".bowercc",
+		".gitignore",
+		".npmignore",
+		".idea",
+		".nuget",
+		"gulpfile.js",
+		"node_modules",
+		"bower_components",
+		"documentation",
+		"tests",
+		"typings",
+		"tsc-flags.txt",
+		"tsd.json"
+	],
+	"homepage": "https://github.com/electricessence/TypeScript.NET",
+	"authors": [
+		"electricessence <npm@electrified.net>"
+	],
+	"description": "A JavaScript-Friendly .NET TypeScript Library.",
+	"main": [],
+	"moduleType": [
+		"amd",
+		"es6",
+		"node"
+	],
+	"keywords": [
+		"JavaScript",
+		"TypeScript",
+		".NET",
+		"dotnet",
+		"TypeScript.NET",
+		"LINQ"
+	],
+	"license": "MIT"
 }

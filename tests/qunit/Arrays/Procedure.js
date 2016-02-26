@@ -1,13 +1,12 @@
-///<reference path="../../../typings/qunit/qunit.d.ts"/>
-///<amd-dependency path="QUnit"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "QUnit", 'source/System/Collections/Array/Procedure'], factory);
     }
-})(["require", "exports", "QUnit", 'source/System/Collections/Array/Procedure'], function (require, exports) {
+})(function (require, exports) {
+    "use strict";
     var ArrayProcedure = require('source/System/Collections/Array/Procedure');
     function run() {
         var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity;

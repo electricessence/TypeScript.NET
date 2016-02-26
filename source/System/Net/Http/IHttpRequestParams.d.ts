@@ -14,6 +14,7 @@ interface IHttpRequestParamsBase {
 	 */
 	method?:HttpMethodValue;
 	uri:string|IUri;
+	data?:any;
 }
 
 interface IHttpRequestParams extends IHttpRequestParamsBase {

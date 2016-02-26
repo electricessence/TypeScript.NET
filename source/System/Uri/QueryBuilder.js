@@ -20,7 +20,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     var QueryParams = require('./QueryParams');
     var OrderedStringKeyDictionary_1 = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
     var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
-    var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     var QueryBuilder = (function (_super) {
         __extends(QueryBuilder, _super);
         function QueryBuilder(query, decodeValues) {
@@ -63,19 +62,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this;
         };
         QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
-            var entries = [];
-            var keys = this.keys;
-            for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
-                var k = keys_1[_i];
-                var value = this.getValue(k);
-                for (var _a = 0, _b = Array.isArray(value) ? value : [value]; _a < _b.length; _a++) {
-                    var v = _b[_a];
-                    entries.push(k + KEY_VALUE_SEPARATOR
-                        + QueryParams.encodeValue(v));
-                }
-            }
-            return (entries.length && prefixIfNotEmpty ? '?' : '')
-                + entries.join(ENTRY_SEPARATOR);
+            return QueryParams.encode(this, prefixIfNotEmpty);
         };
         QueryBuilder.prototype.toString = function () {
             return this.encode();

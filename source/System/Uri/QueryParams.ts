@@ -11,6 +11,7 @@
 import Type from '../Types';
 import * as Serialization from '../Serialization/Utility';
 import extractKeyValue from '../KeyValueExtract';
+import {isEnumerable,forEach} from '../Collections/Enumeration/Enumerator';
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -18,31 +19,34 @@ import extractKeyValue from '../KeyValueExtract';
  */
 
 const
-	ENTRY_SEPARATOR     = "&",
+	ENTRY_SEPARATOR = "&",
 	KEY_VALUE_SEPARATOR = "=";
+
 
 /**
  * Returns the encoded URI string
+ * @param values
+ * @param prefixIfNotEmpty
+ * @returns {string}
  */
 export function encode(
-	values:IUriComponentMap|StringKeyValuePair<Primitive>[],
+	values:IUriComponentMap|QueryParamArray|QueryParamEnumerable,
 	prefixIfNotEmpty?:boolean):string
 {
 	if(!values) return '';
-	var entries:string[];
+	var entries:string[] = [];
 
-	if(Array.isArray(values))
+	if(Array.isArray(values) || isEnumerable(values))
 	{
-		entries = values.map(
-			kvp=>extractKeyValue(kvp,
-				(key, value)=>key + KEY_VALUE_SEPARATOR + encodeValue(value)
-			)
+		forEach(values, entry=>
+			extractKeyValue(entry,
+				(key, value)=> appendKeyValue(entries, key, value))
 		);
 	}
 	else
 	{
-		entries = Object.keys(values).map(
-			key=> key + KEY_VALUE_SEPARATOR + encodeValue((<any>values)[key])
+		Object.keys(values).forEach(
+			key=> appendKeyValue(entries, key, values[key])
 		);
 	}
 
@@ -50,12 +54,36 @@ export function encode(
 		+ entries.join(ENTRY_SEPARATOR);
 }
 
+function appendKeyValueSingle(
+	entries:string[],
+	key:string,
+	value:UriComponentValue):void
+{
+	entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
+}
+
+// According to spec, if there is an array of values with the same key, then each value is replicated with that key.
+function appendKeyValue(
+	entries:string[],
+	key:string,
+	value:UriComponentValue|UriComponentValue[]|IEnumerable<UriComponentValue>):void
+{
+	if(Array.isArray(value) || isEnumerable(value))
+	{
+		forEach(value, v=> appendKeyValueSingle(entries, key, v));
+	}
+	else
+	{
+		appendKeyValueSingle(entries, key, value)
+	}
+}
+
 /**
  * Converts any primitive, serializable or uri-component object to an encoded string.
  * @param value
  * @returns {string}
  */
-export function encodeValue(value:Primitive|ISerializable|IUriComponentFormattable):string
+export function encodeValue(value:UriComponentValue):string
 {
 	var v:string = null;
 	if(isUriComponentFormattable(value))

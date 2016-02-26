@@ -52,7 +52,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 		host:string,
 		port:number,
 		path:string,
-		query?:string|IUriComponentMap|UriComponentArray,
+		query?:QueryParamsConvertible,
 		fragment?:string)
 	{
 		var _ = this;
@@ -88,7 +88,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 
 	/**
 	 *  Compares the values of another IUri via toString comparison.
- 	 * @param other
+	 * @param other
 	 * @returns {boolean}
 	 */
 	equals(other:IUri):boolean
@@ -99,22 +99,23 @@ export default class Uri implements IUri, IEquatable<IUri>
 
 	/**
 	 * Parses or clones values from existing Uri values.
-	 * @param url
-	 * @returns {Uri} An validated Uri object with the values.
+	 * @param uri
+	 * @param defaults
+	 * @returns {Uri}
 	 */
-	static from(url:string|IUri):Uri
+	static from(uri:string|IUri, defaults?:IUri):Uri
 	{
-		var uri = (!url || Type.isString(url))
-			? Uri.parse(<string>url) : <IUri>url;
+		var u = (!uri || Type.isString(uri))
+			? Uri.parse(<string>uri) : <IUri>uri;
 
 		return new Uri(
-			uri.scheme,
-			uri.userInfo,
-			uri.host,
-			uri.port,
-			uri.path,
-			uri.query,
-			uri.fragment
+			u.scheme || defaults && defaults.scheme,
+			u.userInfo || defaults && defaults.userInfo,
+			u.host || defaults && defaults.host,
+			isNaN(u.port) ? defaults && defaults.port : u.port,
+			u.path || defaults && defaults.path,
+			u.query || defaults && defaults.query,
+			u.fragment || defaults && defaults.fragment
 		);
 	}
 
@@ -127,7 +128,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 	static parse(url:string, throwIfInvalid:boolean = true):IUri
 	{
 		var result:IUri = null;
-		var ex = tryParse(url,(out)=>{result = out;});
+		var ex = tryParse(url, (out)=> {result = out;});
 		if(throwIfInvalid && ex) throw ex;
 		return result;
 	}
@@ -138,20 +139,23 @@ export default class Uri implements IUri, IEquatable<IUri>
 	 * @param out A delegate to capture the value.
 	 * @returns {boolean} True if valid.  False if invalid.
 	 */
-	static tryParse(url:string,out:(result:IUri)=>void):boolean {
-		return !tryParse(url,out); // return type is Exception.
+	static tryParse(url:string, out:(result:IUri)=>void):boolean
+	{
+		return !tryParse(url, out); // return type is Exception.
 	}
 
-	static copyOf(map:IUri):IUri {
+	static copyOf(map:IUri):IUri
+	{
 		return copyUri(map);
 	}
 
 	copyTo(map:IUri):IUri
 	{
-		return copyUri(this,map);
+		return copyUri(this, map);
 	}
 
-	updateQuery(query:string|IUriComponentMap|UriComponentArray):Uri {
+	updateQuery(query:QueryParamsConvertible):Uri
+	{
 		var map = this.toMap();
 		map.query = <any>query;
 		return Uri.from(map);
@@ -264,10 +268,12 @@ export enum Fields {
 }
 Object.freeze(Fields);
 
-function copyUri(from:IUri, to?:IUri) {
+function copyUri(from:IUri, to?:IUri)
+{
 	var i = 0, field:string;
 	if(!to) to = {};
-	while(field = Fields[i++]) {
+	while(field = Fields[i++])
+	{
 		var value = (<any>from)[field];
 		if(value) (<any>to)[field] = value;
 	}
@@ -309,7 +315,7 @@ function getAuthority(uri:IUri):string
 		if(uri.userInfo)
 			throw new ArgumentException('host', 'Cannot include user info when there is no host.');
 
-		if(Type.isNumber(uri.port,false))
+		if(Type.isNumber(uri.port, false))
 			throw new ArgumentException('host', 'Cannot include a port when there is no host.');
 	}
 
@@ -342,8 +348,8 @@ function formatFragment(fragment:string):string
 function getPathAndQuery(uri:IUri):string
 {
 
-	var path  = uri.path,
-	    query = uri.query;
+	var path = uri.path,
+		query = uri.query;
 
 	return EMPTY
 		+ (path && ((path.indexOf(SLASH)== -1 ? SLASH : EMPTY) + path) || EMPTY)
@@ -356,10 +362,10 @@ function uriToString(uri:IUri):string
 	// scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
 	// {scheme}{authority}{path}{query}{fragment}
 
-	var scheme       = getScheme(uri.scheme),
-	    authority    = getAuthority(uri),
-	    pathAndQuery = getPathAndQuery(uri),
-	    fragment     = formatFragment(uri.fragment);
+	var scheme = getScheme(uri.scheme),
+		authority = getAuthority(uri),
+		pathAndQuery = getPathAndQuery(uri),
+		fragment = formatFragment(uri.fragment);
 
 	return EMPTY
 		+ ((scheme && (scheme + ':')) || EMPTY)
@@ -368,7 +374,6 @@ function uriToString(uri:IUri):string
 		+ (fragment || EMPTY)
 
 }
-
 
 
 function tryParse(url:string, out:(result:IUri)=>void):Exception
@@ -405,13 +410,15 @@ function tryParse(url:string, out:(result:IUri)=>void):Exception
 	{
 		var scheme = trim(url.substring(0, i)), c = /:$/;
 		if(!c.test(scheme))
-			return new ArgumentException('url','Scheme was improperly formatted');
+			return new ArgumentException('url', 'Scheme was improperly formatted');
 
 		scheme = trim(scheme.replace(c, EMPTY));
 		try
 		{
 			result.scheme = getScheme(scheme) || undefined;
-		} catch(ex) {
+		}
+		catch(ex)
+		{
 			return ex;
 		}
 
@@ -440,7 +447,7 @@ function tryParse(url:string, out:(result:IUri)=>void):Exception
 	{
 		var port = parseInt(trim(url.substring(i + 1)));
 		if(isNaN(port))
-			return new ArgumentException('url','Port was invalid.');
+			return new ArgumentException('url', 'Port was invalid.');
 
 		result.port = port;
 		url = url.substring(0, i);

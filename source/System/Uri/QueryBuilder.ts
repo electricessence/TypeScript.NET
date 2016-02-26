@@ -16,10 +16,6 @@ import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStrin
 import {isEnumerable} from '../Collections/Enumeration/Enumerator';
 
 
-const
-ENTRY_SEPARATOR     = "&",
-KEY_VALUE_SEPARATOR = "=";
-
 /**
  * Provides a means for parsing and building a set of parameters.
  *
@@ -30,10 +26,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 {
 
 	constructor(
-		query:string
-			|IUriComponentMap
-			|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[]
-			|IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>,
+		query:QueryParamsConvertible,
 		decodeValues:boolean = true)
 	{
 		super();
@@ -43,20 +36,14 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 
 
 	static init(
-		query:string
-			|IUriComponentMap
-			|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[]
-			|IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>,
+		query:QueryParamsConvertible,
 		decodeValues:boolean = true):QueryBuilder
 	{
 		return new QueryBuilder(query, decodeValues);
 	}
 
 	importQuery(
-		query:string
-			|IUriComponentMap
-			|StringKeyValuePair<UriComponentValue|UriComponentValue[]>[]
-			|IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>,
+		query:QueryParamsConvertible,
 		decodeValues:boolean = true):QueryBuilder {
 
 		if(Type.isString(query))
@@ -115,23 +102,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 	 */
 	encode(prefixIfNotEmpty?:boolean):string
 	{
-		var entries:string[] = [];
-		var keys = this.keys;
-		for(let k of keys)
-		{
-			var value = this.getValue(k);
-			// Since the values can either be UriComponentValues or an array of UriComponentValues..
-			// This creates a single code path for both options.
-			for(let v of Array.isArray(value) ? value : [value])
-			{
-				entries.push(
-					k + KEY_VALUE_SEPARATOR
-					+ QueryParams.encodeValue(<UriComponentValue>v));
-			}
-		}
-
-		return (entries.length && prefixIfNotEmpty ? '?' : '')
-			+ entries.join(ENTRY_SEPARATOR);
+		return QueryParams.encode(this, prefixIfNotEmpty);
 	}
 
 	toString():string

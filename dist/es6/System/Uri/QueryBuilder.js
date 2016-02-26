@@ -7,7 +7,6 @@ import Type from '../Types';
 import * as QueryParams from './QueryParams';
 import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
 import { isEnumerable } from '../Collections/Enumeration/Enumerator';
-const ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
 export default class QueryBuilder extends OrderedStringKeyDictionary {
     constructor(query, decodeValues = true) {
         super();
@@ -44,17 +43,7 @@ export default class QueryBuilder extends OrderedStringKeyDictionary {
         return this;
     }
     encode(prefixIfNotEmpty) {
-        var entries = [];
-        var keys = this.keys;
-        for (let k of keys) {
-            var value = this.getValue(k);
-            for (let v of Array.isArray(value) ? value : [value]) {
-                entries.push(k + KEY_VALUE_SEPARATOR
-                    + QueryParams.encodeValue(v));
-            }
-        }
-        return (entries.length && prefixIfNotEmpty ? '?' : '')
-            + entries.join(ENTRY_SEPARATOR);
+        return QueryParams.encode(this, prefixIfNotEmpty);
     }
     toString() {
         return this.encode();

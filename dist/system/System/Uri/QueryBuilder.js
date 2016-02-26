@@ -11,7 +11,7 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Types_1, QueryParams, OrderedStringKeyDictionary_1, Enumerator_1;
-    var ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, QueryBuilder;
+    var QueryBuilder;
     return {
         setters:[
             function (Types_1_1) {
@@ -27,7 +27,6 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
                 Enumerator_1 = Enumerator_1_1;
             }],
         execute: function() {
-            ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
             QueryBuilder = (function (_super) {
                 __extends(QueryBuilder, _super);
                 function QueryBuilder(query, decodeValues) {
@@ -70,19 +69,7 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
                     return this;
                 };
                 QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
-                    var entries = [];
-                    var keys = this.keys;
-                    for (var _i = 0, keys_1 = keys; _i < keys_1.length; _i++) {
-                        var k = keys_1[_i];
-                        var value = this.getValue(k);
-                        for (var _a = 0, _b = Array.isArray(value) ? value : [value]; _a < _b.length; _a++) {
-                            var v = _b[_a];
-                            entries.push(k + KEY_VALUE_SEPARATOR
-                                + QueryParams.encodeValue(v));
-                        }
-                    }
-                    return (entries.length && prefixIfNotEmpty ? '?' : '')
-                        + entries.join(ENTRY_SEPARATOR);
+                    return QueryParams.encode(this, prefixIfNotEmpty);
                 };
                 QueryBuilder.prototype.toString = function () {
                     return this.encode();

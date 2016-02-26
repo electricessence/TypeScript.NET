@@ -170,10 +170,10 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                 Uri.prototype.equals = function (other) {
                     return this === other || this.absoluteUri == Uri.toString(other);
                 };
-                Uri.from = function (url) {
-                    var uri = (!url || Types_1.default.isString(url))
-                        ? Uri.parse(url) : url;
-                    return new Uri(uri.scheme, uri.userInfo, uri.host, uri.port, uri.path, uri.query, uri.fragment);
+                Uri.from = function (uri, defaults) {
+                    var u = (!uri || Types_1.default.isString(uri))
+                        ? Uri.parse(uri) : uri;
+                    return new Uri(u.scheme || defaults && defaults.scheme, u.userInfo || defaults && defaults.userInfo, u.host || defaults && defaults.host, isNaN(u.port) ? defaults && defaults.port : u.port, u.path || defaults && defaults.path, u.query || defaults && defaults.query, u.fragment || defaults && defaults.fragment);
                 };
                 Uri.parse = function (url, throwIfInvalid) {
                     if (throwIfInvalid === void 0) { throwIfInvalid = true; }

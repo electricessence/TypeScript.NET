@@ -19,5 +19,11 @@ extends IMap<UriComponentValue|UriComponentValue[]> {
 
 }
 
-declare type UriComponentArray
+declare type QueryParamArray
 	= StringKeyValuePair<UriComponentValue|UriComponentValue[]>[];
+
+declare type QueryParamEnumerable
+	= IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>;
+
+declare type QueryParamsConvertible
+	= string | IUriComponentMap | QueryParamArray | QueryParamEnumerable;

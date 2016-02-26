@@ -16,8 +16,6 @@ var Types_1 = require('../Types');
 var QueryParams = require('./QueryParams');
 var OrderedStringKeyDictionary_1 = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
 var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
-var ENTRY_SEPARATOR = "&",
-    KEY_VALUE_SEPARATOR = "=";
 
 var QueryBuilder = function (_OrderedStringKeyDict) {
     _inherits(QueryBuilder, _OrderedStringKeyDict);
@@ -65,58 +63,7 @@ var QueryBuilder = function (_OrderedStringKeyDict) {
     }, {
         key: 'encode',
         value: function encode(prefixIfNotEmpty) {
-            var entries = [];
-            var keys = this.keys;
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = keys[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var k = _step.value;
-
-                    var value = this.getValue(k);
-                    var _iteratorNormalCompletion2 = true;
-                    var _didIteratorError2 = false;
-                    var _iteratorError2 = undefined;
-
-                    try {
-                        for (var _iterator2 = (Array.isArray(value) ? value : [value])[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                            var v = _step2.value;
-
-                            entries.push(k + KEY_VALUE_SEPARATOR + QueryParams.encodeValue(v));
-                        }
-                    } catch (err) {
-                        _didIteratorError2 = true;
-                        _iteratorError2 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                _iterator2.return();
-                            }
-                        } finally {
-                            if (_didIteratorError2) {
-                                throw _iteratorError2;
-                            }
-                        }
-                    }
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
-            return (entries.length && prefixIfNotEmpty ? '?' : '') + entries.join(ENTRY_SEPARATOR);
+            return QueryParams.encode(this, prefixIfNotEmpty);
         }
     }, {
         key: 'toString',

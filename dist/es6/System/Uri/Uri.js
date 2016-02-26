@@ -34,10 +34,10 @@ export default class Uri {
     equals(other) {
         return this === other || this.absoluteUri == Uri.toString(other);
     }
-    static from(url) {
-        var uri = (!url || Type.isString(url))
-            ? Uri.parse(url) : url;
-        return new Uri(uri.scheme, uri.userInfo, uri.host, uri.port, uri.path, uri.query, uri.fragment);
+    static from(uri, defaults) {
+        var u = (!uri || Type.isString(uri))
+            ? Uri.parse(uri) : uri;
+        return new Uri(u.scheme || defaults && defaults.scheme, u.userInfo || defaults && defaults.userInfo, u.host || defaults && defaults.host, isNaN(u.port) ? defaults && defaults.port : u.port, u.path || defaults && defaults.path, u.query || defaults && defaults.query, u.fragment || defaults && defaults.fragment);
     }
     static parse(url, throwIfInvalid = true) {
         var result = null;

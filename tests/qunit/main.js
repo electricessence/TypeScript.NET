@@ -1,13 +1,12 @@
-///<reference path="../../typings/qunit/qunit.d.ts"/>
-/// <amd-dependency path="QUnit"/>
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "QUnit", './Arrays/_all', './Collections/_all', './Linq/_all', './Uri', './Integer'], factory);
     }
-})(["require", "exports", "QUnit", './Arrays/_all', './Collections/_all', './Linq/_all', './Uri', './Integer'], function (require, exports) {
+})(function (require, exports) {
+    "use strict";
     var _all_1 = require('./Arrays/_all');
     var _all_2 = require('./Collections/_all');
     var _all_3 = require('./Linq/_all');
