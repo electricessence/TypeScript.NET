@@ -18,3 +18,6 @@ interface IUriComponentMap
 extends IMap<UriComponentValue|UriComponentValue[]> {
 
 }
+
+declare type UriComponentArray
+	= StringKeyValuePair<UriComponentValue|UriComponentValue[]>[];

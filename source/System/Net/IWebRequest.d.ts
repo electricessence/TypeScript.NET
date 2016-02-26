@@ -9,7 +9,7 @@
 
 interface IWebRequest {
 
-	authenticationLevel:Authenticationlevel;
+	authenticationLevel:AuthenticationLevel;
 	cachePolicy:IRequestCachePolicy;
 	connectionGroupName:string;
 

@@ -5,7 +5,7 @@
  */
 
 
-declare const enum Authenticationlevel
+declare const enum AuthenticationLevel
 {
 	/**
 	 * No authentication is required for the client and server.
