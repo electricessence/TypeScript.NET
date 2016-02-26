@@ -4,6 +4,7 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
  */
 
+// TODO: Possibly use string literals instead.
 enum UriScheme {
 	/**
 	 * The resource is a file on the local computer.
