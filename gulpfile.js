@@ -86,7 +86,7 @@ const tsc = (function() {
 	function fromTo(from, to, target, module) {
 
 		console.log('TypeScript Render:', target, module, from==to ? from : (from + ' >> ' + to));
-		// In order to mirror WebStorm's compiler option, gulp-tsc is used.
+		// In order to mirror WebStorm's compiler option (the tsc), gulp-tsc is used.
 		return gulp
 			.src([from + '/**/*.ts'])
 			.pipe(c(getOptions(to, target, module)))
@@ -219,8 +219,11 @@ gulp.task(
 	TASK.DIST_COMMONJS, function()
 	{
 
-		return tsc.dist(
-			MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS);
+		return tsc.distPostProcess(
+			MODULE.COMMONJS, TARGET.ES6, MODULE.COMMONJS, babel);
+
+		//return tsc.dist(
+		//	MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS);
 	}
 );
 

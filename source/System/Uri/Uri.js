@@ -3,18 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-///<reference path="IUri.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
-'use strict';
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], factory);
     }
-})(["require", "exports", '../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var Types_1 = require('../Types');
     var QueryParams = require('../Uri/QueryParams');
     var Utility_1 = require('../Text/Utility');
@@ -103,7 +100,7 @@
             return getAuthority(uri);
         };
         return Uri;
-    })();
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Uri;
     (function (Fields) {
@@ -176,8 +173,6 @@
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
-        // scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
-        // {scheme}{authority}{path}{query}{fragment}
         var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
         return EMPTY
             + ((scheme && (scheme + ':')) || EMPTY)
@@ -205,7 +200,12 @@
             if (!c.test(scheme))
                 return new ArgumentException_1.default('url', 'Scheme was improperly formatted');
             scheme = Utility_1.trim(scheme.replace(c, EMPTY));
-            result.scheme = scheme || undefined;
+            try {
+                result.scheme = getScheme(scheme) || undefined;
+            }
+            catch (ex) {
+                return ex;
+            }
             url = url.substring(i + 2);
         }
         i = url.indexOf(SLASH);

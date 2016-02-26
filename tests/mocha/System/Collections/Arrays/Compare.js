@@ -6,6 +6,7 @@
         define(["require", "exports"], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var assert = require('../../../../../node_modules/assert/assert');
 });
 

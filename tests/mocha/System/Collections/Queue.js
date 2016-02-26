@@ -6,6 +6,7 @@
         define(["require", "exports", './ICollection', '../../../../source/System/Collections/Queue'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var ICollectionTests = require('./ICollection');
     var Queue_1 = require('../../../../source/System/Collections/Queue');
     ICollectionTests.StringCollection('Queue', new Queue_1.default());

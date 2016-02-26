@@ -93,7 +93,12 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
             if (!c.test(scheme))
                 return new ArgumentException_1.default('url', 'Scheme was improperly formatted');
             scheme = Utility_1.trim(scheme.replace(c, EMPTY));
-            result.scheme = scheme || undefined;
+            try {
+                result.scheme = getScheme(scheme) || undefined;
+            }
+            catch (ex) {
+                return ex;
+            }
             url = url.substring(i + 2);
         }
         i = url.indexOf(SLASH);

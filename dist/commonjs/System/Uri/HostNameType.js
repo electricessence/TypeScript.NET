@@ -4,6 +4,7 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.UriHostNameType%28v=vs.110%29.aspx
  */
 "use strict";
+
 var UriHostNameType;
 (function (UriHostNameType) {
     UriHostNameType[UriHostNameType["Basic"] = 0] = "Basic";

@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require","exports","../../Disposable/Utility","../../Collections/Enumeration/Enumerator"],function(e,n,o,i){function t(e,n){e&&o.using(i.from(e),function(e){i.forEach(e,n)})}Object.defineProperty(n,"__esModule",{value:!0}),n["default"]=t});
+define(["require","exports","../../Disposable/Utility","../../Collections/Enumeration/Enumerator"],function(e,t,i,n){"use strict";function o(e,t){e&&i.using(n.from(e),function(e){n.forEach(e,t)})}Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=o});
 //# sourceMappingURL=forEach.js.map

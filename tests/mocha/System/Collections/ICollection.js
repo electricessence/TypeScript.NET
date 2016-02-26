@@ -6,6 +6,7 @@
         define(["require", "exports", '../../../../source/System/Collections/Array/Utility', '../../../../source/System/Exceptions/NotImplementedException'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var AU = require('../../../../source/System/Collections/Array/Utility');
     var NotImplementedException_1 = require('../../../../source/System/Exceptions/NotImplementedException');
     var assert = require('../../../../node_modules/assert/assert');
@@ -23,8 +24,8 @@
     function assertAdding(c, a) {
         it(".add(value)", function () {
             var count;
-            for (var _i = 0; _i < a.length; _i++) {
-                var v = a[_i];
+            for (var _i = 0, a_1 = a; _i < a_1.length; _i++) {
+                var v = a_1[_i];
                 assertIsNumber(count = c.count, "before adding");
                 c.add(v);
                 assertIsNumber(c.count, "after adding");
@@ -45,8 +46,8 @@
             assert.equal(a.length, count, "An empty array's length should match the count if copied to.");
             c.clear();
             assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
-            for (var _i = 0; _i < a.length; _i++) {
-                var v = a[_i];
+            for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
+                var v = a_2[_i];
                 c.add(v);
             }
             var extraSize = 10;
@@ -57,8 +58,8 @@
             assert.equal(b.length, 2 * count + extraSize - 1, "An array's length should be equal to index+count if the count exceeds the length.");
             c.clear();
             assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
-            for (var _a = 0; _a < a.length; _a++) {
-                var v = a[_a];
+            for (var _a = 0, a_3 = a; _a < a_3.length; _a++) {
+                var v = a_3[_a];
                 c.add(v);
             }
             assert.equal(c.count, a.length, "A collection's count should be equal to the number of items added.");
@@ -74,8 +75,8 @@
             c.copyTo(a);
             assertIsNumber(c.count);
             try {
-                for (var _i = 0; _i < a.length; _i++) {
-                    var v = a[_i];
+                for (var _i = 0, a_4 = a; _i < a_4.length; _i++) {
+                    var v = a_4[_i];
                     count -= c.remove(v);
                     assertIsNumber(c.count, "after removing");
                     assert.equal(c.count, count, "'count' should increment after removing.");

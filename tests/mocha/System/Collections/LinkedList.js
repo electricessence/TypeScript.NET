@@ -6,6 +6,7 @@
         define(["require", "exports", './ICollection', '../../../../source/System/Collections/LinkedList'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var ICollectionTests = require('./ICollection');
     var LinkedList_1 = require('../../../../source/System/Collections/LinkedList');
     ICollectionTests.StringCollection('LinkedList', new LinkedList_1.default());

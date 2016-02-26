@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+
 var Types_1 = require('./Types');
 var ArgumentException_1 = require('./Exceptions/ArgumentException');
 function Integer(n) {
@@ -11,12 +12,11 @@ function Integer(n) {
 var Integer;
 (function (Integer) {
     function r(max) {
-        return (Math.random() * max) | 0;
+        return Math.random() * max | 0;
     }
     function random(max) {
         assert(max, 'max');
-        if (max == 0)
-            return 0;
+        if (max == 0) return 0;
         max += max > 0 ? 1 : -1;
         return r(max);
     }

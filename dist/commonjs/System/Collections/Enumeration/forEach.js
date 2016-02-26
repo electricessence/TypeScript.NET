@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+
 var Utility_1 = require('../../Disposable/Utility');
 var Enumerator = require('../../Collections/Enumeration/Enumerator');
 function forEach(enumerable, action) {

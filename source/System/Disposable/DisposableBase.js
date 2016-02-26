@@ -2,16 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="IDisposableAware.d.ts"/>
-'use strict';
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", './ObjectDisposedException'], factory);
     }
-})(["require", "exports", './ObjectDisposedException'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var ObjectDisposedException_1 = require('./ObjectDisposedException');
     var DisposableBase = (function () {
         function DisposableBase(_finalizer) {
@@ -46,7 +45,7 @@
         };
         DisposableBase.prototype._onDispose = function () { };
         return DisposableBase;
-    })();
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DisposableBase;
 });

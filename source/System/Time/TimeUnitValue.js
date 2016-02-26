@@ -2,24 +2,20 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="ITimeMeasurement.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../IComparable.d.ts"/>
-///<reference path="../IFormattable.d.ts"/>
-'use strict';
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", './TimeUnit', './TimeQuantity'], factory);
     }
-})(["require", "exports", './TimeUnit', './TimeQuantity'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var TimeUnit_1 = require('./TimeUnit');
     var TimeQuantity_1 = require('./TimeQuantity');
     var TimeUnitValue = (function (_super) {
@@ -61,7 +57,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return new TimeUnitValue(value, units);
         };
         return TimeUnitValue;
-    })(TimeQuantity_1.default);
+    }(TimeQuantity_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TimeUnitValue;
     function getUnitQuantityFrom(q, units) {

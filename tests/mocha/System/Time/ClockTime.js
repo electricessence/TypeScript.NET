@@ -6,6 +6,7 @@
         define(["require", "exports", '../../../../source/System/Time/ClockTime', '../../../../source/System/Integer'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var ClockTime_1 = require('../../../../source/System/Time/ClockTime');
     var Integer_1 = require('../../../../source/System/Integer');
     var assert = require('../../../../node_modules/assert/assert');

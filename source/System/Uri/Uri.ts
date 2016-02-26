@@ -407,8 +407,13 @@ function tryParse(url:string, out:(result:IUri)=>void):Exception
 		if(!c.test(scheme))
 			return new ArgumentException('url','Scheme was improperly formatted');
 
-		scheme = trim(scheme.replace(c,EMPTY));
-		result.scheme = scheme || undefined;
+		scheme = trim(scheme.replace(c, EMPTY));
+		try
+		{
+			result.scheme = getScheme(scheme) || undefined;
+		} catch(ex) {
+			return ex;
+		}
 
 		url = url.substring(i + 2);
 	}

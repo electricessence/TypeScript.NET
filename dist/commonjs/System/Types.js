@@ -3,10 +3,26 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var VOID0 = void 0,
+    _BOOLEAN = _typeof(true),
+    _NUMBER = _typeof(0),
+    _STRING = _typeof(""),
+    _OBJECT = _typeof({}),
+    _UNDEFINED = typeof VOID0 === "undefined" ? "undefined" : _typeof(VOID0),
+    _FUNCTION = _typeof(function () {});
 var typeInfoRegistry = {};
-var TypeInfo = (function () {
+
+var TypeInfo = function () {
     function TypeInfo(target) {
+        _classCallCheck(this, TypeInfo);
+
         var _ = this;
         _.isBoolean = false;
         _.isNumber = false;
@@ -17,7 +33,7 @@ var TypeInfo = (function () {
         _.isUndefined = false;
         _.isNull = false;
         _.isPrimitive = false;
-        switch (_.type = typeof target) {
+        switch (_.type = typeof target === "undefined" ? "undefined" : _typeof(target)) {
             case _BOOLEAN:
                 _.isBoolean = true;
                 _.isPrimitive = true;
@@ -39,8 +55,7 @@ var TypeInfo = (function () {
                     _.isNull = true;
                     _.isNullOrUndefined = true;
                     _.isPrimitive = true;
-                }
-                else {
+                } else {
                     _.isObject = true;
                 }
                 break;
@@ -58,26 +73,31 @@ var TypeInfo = (function () {
         }
         Object.freeze(_);
     }
-    TypeInfo.prototype.member = function (name) {
-        var t = this.target;
-        return TypeInfo.getFor(t && (name) in (t)
-            ? t[name]
-            : undefined);
-    };
-    TypeInfo.getFor = function (target) {
-        var type = typeof target;
-        switch (type) {
-            case _OBJECT:
-            case _FUNCTION:
-                return new TypeInfo(target);
+
+    _createClass(TypeInfo, [{
+        key: "member",
+        value: function member(name) {
+            var t = this.target;
+            return TypeInfo.getFor(t && name in t ? t[name] : undefined);
         }
-        var info = typeInfoRegistry[type];
-        if (!info)
-            typeInfoRegistry[type] = info = new TypeInfo(target);
-        return info;
-    };
+    }], [{
+        key: "getFor",
+        value: function getFor(target) {
+            var type = typeof target === "undefined" ? "undefined" : _typeof(target);
+            switch (type) {
+                case _OBJECT:
+                case _FUNCTION:
+                    return new TypeInfo(target);
+            }
+            var info = typeInfoRegistry[type];
+            if (!info) typeInfoRegistry[type] = info = new TypeInfo(target);
+            return info;
+        }
+    }]);
+
     return TypeInfo;
-}());
+}();
+
 exports.TypeInfo = TypeInfo;
 var Type;
 (function (Type) {
@@ -88,25 +108,24 @@ var Type;
     Type.UNDEFINED = _UNDEFINED;
     Type.FUNCTION = _FUNCTION;
     function isBoolean(value) {
-        return typeof value === _BOOLEAN;
+        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _BOOLEAN;
     }
     Type.isBoolean = isBoolean;
     function isNumber(value, allowNaN) {
-        if (allowNaN === VOID0)
-            allowNaN = true;
-        return typeof value === _NUMBER && (allowNaN || !isNaN(value));
+        if (allowNaN === VOID0) allowNaN = true;
+        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _NUMBER && (allowNaN || !isNaN(value));
     }
     Type.isNumber = isNumber;
     function isTrueNaN(value) {
-        return typeof value === _NUMBER && isNaN(value);
+        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _NUMBER && isNaN(value);
     }
     Type.isTrueNaN = isTrueNaN;
     function isString(value) {
-        return typeof value === _STRING;
+        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _STRING;
     }
     Type.isString = isString;
     function isPrimitive(value) {
-        var t = typeof value;
+        var t = typeof value === "undefined" ? "undefined" : _typeof(value);
         switch (t) {
             case _BOOLEAN:
             case _STRING:
@@ -120,11 +139,11 @@ var Type;
     }
     Type.isPrimitive = isPrimitive;
     function isFunction(value) {
-        return typeof value === _FUNCTION;
+        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _FUNCTION;
     }
     Type.isFunction = isFunction;
     function isObject(value) {
-        return typeof value === _OBJECT;
+        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _OBJECT;
     }
     Type.isObject = isObject;
     function numberOrNaN(value) {
@@ -136,11 +155,11 @@ var Type;
     }
     Type.of = of;
     function hasMember(value, property) {
-        return value && !isPrimitive(value) && (property) in (value);
+        return value && !isPrimitive(value) && property in value;
     }
     Type.hasMember = hasMember;
     function hasMemberOfType(instance, property, type) {
-        return hasMember(instance, property) && typeof (instance[property]) === type;
+        return hasMember(instance, property) && _typeof(instance[property]) === type;
     }
     Type.hasMemberOfType = hasMemberOfType;
     function isArrayLike(instance) {

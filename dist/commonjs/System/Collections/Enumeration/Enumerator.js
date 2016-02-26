@@ -3,32 +3,45 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var Types_1 = require('../../Types');
 var ArrayEnumerator_1 = require('./ArrayEnumerator');
 var IndexEnumerator_1 = require('./IndexEnumerator');
-var EmptyEnumerator = (function () {
+
+var EmptyEnumerator = function () {
     function EmptyEnumerator() {
+        _classCallCheck(this, EmptyEnumerator);
     }
-    Object.defineProperty(EmptyEnumerator.prototype, "current", {
-        get: function () {
+
+    _createClass(EmptyEnumerator, [{
+        key: 'moveNext',
+        value: function moveNext() {
+            return false;
+        }
+    }, {
+        key: 'reset',
+        value: function reset() {}
+    }, {
+        key: 'dispose',
+        value: function dispose() {}
+    }, {
+        key: 'current',
+        get: function get() {
             return undefined;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    EmptyEnumerator.prototype.moveNext = function () {
-        return false;
-    };
-    EmptyEnumerator.prototype.reset = function () { };
-    EmptyEnumerator.prototype.dispose = function () { };
+        }
+    }]);
+
     return EmptyEnumerator;
-}());
+}();
+
 var Empty = new EmptyEnumerator();
 function from(source) {
-    if (!source)
-        return Empty;
-    if (Array.isArray(source))
-        return new ArrayEnumerator_1.default(source);
+    if (!source) return Empty;
+    if (Array.isArray(source)) return new ArrayEnumerator_1.default(source);
     if (!Types_1.default.isPrimitive(source)) {
         if (Types_1.default.isArrayLike(source)) {
             return new IndexEnumerator_1.default(function () {
@@ -40,8 +53,7 @@ function from(source) {
                 };
             });
         }
-        if (isEnumerable(source))
-            return source.getEnumerator();
+        if (isEnumerable(source)) return source.getEnumerator();
     }
     throw new Error("Unknown enumerable.");
 }
@@ -66,8 +78,7 @@ function forEach(e, action) {
         if (isEnumerator(e)) {
             var index = 0;
             while (e.moveNext()) {
-                if (action(e.current, index++) === false)
-                    break;
+                if (action(e.current, index++) === false) break;
             }
         }
     }

@@ -4,6 +4,7 @@
  * Based on code from: https://github.com/kriskowal/q
  */
 "use strict";
+
 var Types_1 = require('../Types');
 var LinkedList_1 = require("../Collections/LinkedList");
 var Queue_1 = require("../Collections/Queue");
@@ -14,10 +15,10 @@ var flushing = false;
 function flush() {
     var entry;
     while (entry = immediateQueue.first) {
-        var e = entry.value, domain = e.domain;
+        var e = entry.value,
+            domain = e.domain;
         entry.remove();
-        if (domain)
-            domain.enter();
+        if (domain) domain.enter();
         runSingle(e.task, domain);
     }
     var task;
@@ -31,8 +32,7 @@ var laterQueue = new Queue_1.default();
 function runSingle(task, domain) {
     try {
         task();
-    }
-    catch (e) {
+    } catch (e) {
         if (isNodeJS) {
             if (domain) {
                 domain.exit();
@@ -42,8 +42,7 @@ function runSingle(task, domain) {
                 domain.enter();
             }
             throw e;
-        }
-        else {
+        } else {
             setTimeout(function () {
                 throw e;
             }, 0);
@@ -64,7 +63,7 @@ var TaskScheduler;
     function defer(task, delay) {
         if (Types_1.default.isNumber(delay, false) && delay >= 0) {
             var timeout = 0;
-            var cancel = function () {
+            var cancel = function cancel() {
                 if (timeout) {
                     clearTimeout(timeout);
                     timeout = 0;
@@ -84,7 +83,9 @@ var TaskScheduler;
         };
         immediateQueue.add(entry);
         requestFlush();
-        return function () { return !!immediateQueue.remove(entry); };
+        return function () {
+            return !!immediateQueue.remove(entry);
+        };
     }
     TaskScheduler.defer = defer;
     function runAfterDeferred(task) {
@@ -93,41 +94,35 @@ var TaskScheduler;
     }
     TaskScheduler.runAfterDeferred = runAfterDeferred;
 })(TaskScheduler || (TaskScheduler = {}));
-if (Types_1.default.isObject(process)
-    && process.toString() === "[object process]"
-    && process.nextTick) {
+if (Types_1.default.isObject(process) && process.toString() === "[object process]" && process.nextTick) {
     isNodeJS = true;
-    requestTick = function () {
+    requestTick = function requestTick() {
         process.nextTick(flush);
     };
-}
-else if (typeof setImmediate === "function") {
+} else if (typeof setImmediate === "function") {
     if (typeof window !== "undefined") {
         requestTick = setImmediate.bind(window, flush);
-    }
-    else {
-        requestTick = function () {
+    } else {
+        requestTick = function requestTick() {
             setImmediate(flush);
         };
     }
-}
-else if (typeof MessageChannel !== "undefined") {
+} else if (typeof MessageChannel !== "undefined") {
     var channel = new MessageChannel();
     channel.port1.onmessage = function () {
         requestTick = requestPortTick;
         channel.port1.onmessage = flush;
         flush();
     };
-    var requestPortTick = function () {
+    var requestPortTick = function requestPortTick() {
         channel.port2.postMessage(0);
     };
-    requestTick = function () {
+    requestTick = function requestTick() {
         setTimeout(flush, 0);
         requestPortTick();
     };
-}
-else {
-    requestTick = function () {
+} else {
+    requestTick = function requestTick() {
         setTimeout(flush, 0);
     };
 }

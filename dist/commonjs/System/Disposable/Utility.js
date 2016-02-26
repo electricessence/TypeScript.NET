@@ -3,34 +3,32 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
+
 var Types_1 = require('../Types');
 function dispose() {
-    var disposables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        disposables[_i - 0] = arguments[_i];
+    for (var _len = arguments.length, disposables = Array(_len), _key = 0; _key < _len; _key++) {
+        disposables[_key] = arguments[_key];
     }
+
     disposeTheseInternal(disposables, false);
 }
 exports.dispose = dispose;
 function disposeWithoutException() {
-    var disposables = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        disposables[_i - 0] = arguments[_i];
+    for (var _len2 = arguments.length, disposables = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        disposables[_key2] = arguments[_key2];
     }
+
     return disposeTheseInternal(disposables, true);
 }
 exports.disposeWithoutException = disposeWithoutException;
 function disposeThese(disposables, trapExceptions) {
-    return disposables && disposables.length
-        ? disposeTheseInternal(disposables.slice(), trapExceptions)
-        : null;
+    return disposables && disposables.length ? disposeTheseInternal(disposables.slice(), trapExceptions) : null;
 }
 exports.disposeThese = disposeThese;
 function using(disposable, closure) {
     try {
         return closure(disposable);
-    }
-    finally {
+    } finally {
         disposeSingle(disposable, false);
     }
 }
@@ -40,45 +38,38 @@ function disposeSingle(disposable, trapExceptions) {
         if (trapExceptions) {
             try {
                 disposable.dispose();
-            }
-            catch (ex) {
+            } catch (ex) {
                 return ex;
             }
-        }
-        else
-            disposable.dispose();
+        } else disposable.dispose();
     }
     return null;
 }
-function disposeTheseInternal(disposables, trapExceptions, index) {
-    if (index === void 0) { index = 0; }
+function disposeTheseInternal(disposables, trapExceptions) {
+    var index = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
     var exceptions;
     var len = disposables.length;
     for (; index < len; index++) {
         var next = disposables[index];
-        if (!next)
-            continue;
+        if (!next) continue;
         if (trapExceptions) {
             var ex = disposeSingle(next, true);
             if (ex) {
-                if (!exceptions)
-                    exceptions = [];
+                if (!exceptions) exceptions = [];
                 exceptions.push(ex);
             }
-        }
-        else {
+        } else {
             var success = false;
             try {
                 disposeSingle(next, false);
                 success = true;
-            }
-            finally {
+            } finally {
                 if (!success && index + 1 < len) {
                     disposeTheseInternal(disposables, false, index + 1);
                 }
             }
-            if (!success)
-                break;
+            if (!success) break;
         }
     }
     return exceptions;

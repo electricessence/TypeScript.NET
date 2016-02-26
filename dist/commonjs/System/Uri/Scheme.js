@@ -4,29 +4,30 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
  */
 "use strict";
-var UriScheme;
-(function (UriScheme) {
-    UriScheme[UriScheme["file"] = 0] = "file";
-    UriScheme[UriScheme["ftp"] = 1] = "ftp";
-    UriScheme[UriScheme["gopher"] = 2] = "gopher";
-    UriScheme[UriScheme["http"] = 3] = "http";
-    UriScheme[UriScheme["https"] = 4] = "https";
-    UriScheme[UriScheme["ldap"] = 5] = "ldap";
-    UriScheme[UriScheme["mailto"] = 6] = "mailto";
-    UriScheme[UriScheme["pipe"] = 7] = "pipe";
-    UriScheme[UriScheme["tcp"] = 8] = "tcp";
-    UriScheme[UriScheme["news"] = 9] = "news";
-    UriScheme[UriScheme["nntp"] = 10] = "nntp";
-    UriScheme[UriScheme["telnet"] = 11] = "telnet";
-    UriScheme[UriScheme["uuid"] = 12] = "uuid";
-})(UriScheme || (UriScheme = {}));
+
+var Scheme;
+(function (Scheme) {
+    Scheme[Scheme["file"] = 0] = "file";
+    Scheme[Scheme["ftp"] = 1] = "ftp";
+    Scheme[Scheme["gopher"] = 2] = "gopher";
+    Scheme[Scheme["http"] = 3] = "http";
+    Scheme[Scheme["https"] = 4] = "https";
+    Scheme[Scheme["ldap"] = 5] = "ldap";
+    Scheme[Scheme["mailto"] = 6] = "mailto";
+    Scheme[Scheme["pipe"] = 7] = "pipe";
+    Scheme[Scheme["tcp"] = 8] = "tcp";
+    Scheme[Scheme["news"] = 9] = "news";
+    Scheme[Scheme["nntp"] = 10] = "nntp";
+    Scheme[Scheme["telnet"] = 11] = "telnet";
+    Scheme[Scheme["uuid"] = 12] = "uuid";
+})(Scheme || (Scheme = {}));
 var PIPE = 'net.pipe';
 var TCP = 'net.tcp';
-UriScheme[UriScheme.pipe] = PIPE;
-UriScheme[UriScheme.tcp] = TCP;
-UriScheme[PIPE] = UriScheme.pipe;
-UriScheme[TCP] = UriScheme.tcp;
-Object.freeze(UriScheme);
+Scheme[Scheme.pipe] = PIPE;
+Scheme[Scheme.tcp] = TCP;
+Scheme[PIPE] = Scheme.pipe;
+Scheme[TCP] = Scheme.tcp;
+Object.freeze(Scheme);
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = UriScheme;
+exports.default = Scheme;
 //# sourceMappingURL=Scheme.js.map

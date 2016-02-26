@@ -3,28 +3,20 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="../System/Primitive.d.ts"/>
-///<reference path="../System/FunctionTypes.d.ts"/>
-///<reference path="../System/Collections/Array/IArray.d.ts"/>
-///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
-///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
-///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="../System/IComparer.d.ts"/>
-///<reference path="../System/Collections/Sorting/Order.d.ts"/>
-'use strict';
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], factory);
     }
-})(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var Values = require('../System/Compare');
     var Arrays = require('../System/Collections/Array/Compare');
     var ArrayUtility = require('../System/Collections/Array/Utility');
@@ -54,7 +46,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return a < b ? a : b;
         };
         return LinqFunctions;
-    })(Functions_1.default);
+    }(Functions_1.default));
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
     var UnsupportedEnumerableException = (function (_super) {
@@ -63,7 +55,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             _super.call(this, "Unsupported enumerable.");
         }
         return UnsupportedEnumerableException;
-    })(Exception_1.default);
+    }(Exception_1.default));
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(_enumeratorFactory, finalizer) {
@@ -1667,7 +1659,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             var sharedEnumerator;
             return new Enumerable(function () {
                 return new EnumeratorBase_1.default(function () {
-                    // assertIsNotDisposed(disposed);  This doesn't need an assertion since disposing the underlying enumerable disposes the enumerator.
                     if (!sharedEnumerator)
                         sharedEnumerator = _.getEnumerator();
                 }, function (yielder) {
@@ -1759,7 +1750,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         return Enumerable;
-    })(DisposableBase_1.default);
+    }(DisposableBase_1.default));
     exports.Enumerable = Enumerable;
     var ArrayEnumerable = (function (_super) {
         __extends(ArrayEnumerable, _super);
@@ -1920,7 +1911,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 : _super.prototype.toJoinedString.call(this, separator, selector);
         };
         return ArrayEnumerable;
-    })(Enumerable);
+    }(Enumerable));
     var Grouping = (function (_super) {
         __extends(Grouping, _super);
         function Grouping(_groupKey, elements) {
@@ -1935,7 +1926,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             configurable: true
         });
         return Grouping;
-    })(ArrayEnumerable);
+    }(ArrayEnumerable));
     var Lookup = (function () {
         function Lookup(_dictionary) {
             this._dictionary = _dictionary;
@@ -1968,7 +1959,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         return Lookup;
-    })();
+    }());
     var WhereEnumerable = (function (_super) {
         __extends(WhereEnumerable, _super);
         function WhereEnumerable(prevSource, prevPredicate) {
@@ -2010,7 +2001,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.prevSource = null;
         };
         return WhereEnumerable;
-    })(Enumerable);
+    }(Enumerable));
     var WhereSelectEnumerable = (function (_super) {
         __extends(WhereSelectEnumerable, _super);
         function WhereSelectEnumerable(prevSource, prevPredicate, prevSelector) {
@@ -2056,7 +2047,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             _.prevSelector = null;
         };
         return WhereSelectEnumerable;
-    })(Enumerable);
+    }(Enumerable));
     var OrderedEnumerable = (function (_super) {
         __extends(OrderedEnumerable, _super);
         function OrderedEnumerable(source, keySelector, order, parent, comparer) {
@@ -2113,7 +2104,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.parent = null;
         };
         return OrderedEnumerable;
-    })(Enumerable);
+    }(Enumerable));
     function createSortContext(orderedEnumerable, currentContext) {
         if (currentContext === void 0) { currentContext = null; }
         var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);

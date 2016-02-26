@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+
 exports.Error = 'Error';
 exports.EvalError = 'EvalError';
 exports.RangeError = 'RangeError';

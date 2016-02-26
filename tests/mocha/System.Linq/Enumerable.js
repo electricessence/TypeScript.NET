@@ -6,6 +6,7 @@
         define(["require", "exports", '../../../source/System/Collections/Array/Utility', '../../../source/System.Linq/Linq'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var Utility_1 = require('../../../source/System/Collections/Array/Utility');
     var Linq_1 = require('../../../source/System.Linq/Linq');
     var assert = require('../../../node_modules/assert/assert');

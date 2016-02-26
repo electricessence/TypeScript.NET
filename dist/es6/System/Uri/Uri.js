@@ -184,7 +184,12 @@ function tryParse(url, out) {
         if (!c.test(scheme))
             return new ArgumentException('url', 'Scheme was improperly formatted');
         scheme = trim(scheme.replace(c, EMPTY));
-        result.scheme = scheme || undefined;
+        try {
+            result.scheme = getScheme(scheme) || undefined;
+        }
+        catch (ex) {
+            return ex;
+        }
         url = url.substring(i + 2);
     }
     i = url.indexOf(SLASH);

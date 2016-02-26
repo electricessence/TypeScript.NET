@@ -3,101 +3,124 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var DisposableBase_1 = require('../../Disposable/DisposableBase');
-var Yielder = (function () {
+
+var Yielder = function () {
     function Yielder() {
+        _classCallCheck(this, Yielder);
     }
-    Object.defineProperty(Yielder.prototype, "current", {
-        get: function () { return this._current; },
-        enumerable: true,
-        configurable: true
-    });
-    Yielder.prototype.yieldReturn = function (value) {
-        this._current = value;
-        return true;
-    };
-    Yielder.prototype.yieldBreak = function () {
-        this._current = null;
-        return false;
-    };
+
+    _createClass(Yielder, [{
+        key: 'yieldReturn',
+        value: function yieldReturn(value) {
+            this._current = value;
+            return true;
+        }
+    }, {
+        key: 'yieldBreak',
+        value: function yieldBreak() {
+            this._current = null;
+            return false;
+        }
+    }, {
+        key: 'current',
+        get: function get() {
+            return this._current;
+        }
+    }]);
+
     return Yielder;
-}());
+}();
+
 var EnumeratorState;
 (function (EnumeratorState) {
     EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
     EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
     EnumeratorState[EnumeratorState["After"] = 2] = "After";
 })(EnumeratorState || (EnumeratorState = {}));
-var EnumeratorBase = (function (_super) {
-    __extends(EnumeratorBase, _super);
+
+var EnumeratorBase = function (_DisposableBase_1$def) {
+    _inherits(EnumeratorBase, _DisposableBase_1$def);
+
     function EnumeratorBase(initializer, tryGetNext, disposer) {
-        _super.call(this);
-        this.initializer = initializer;
-        this.tryGetNext = tryGetNext;
-        this.disposer = disposer;
-        this.reset();
+        _classCallCheck(this, EnumeratorBase);
+
+        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EnumeratorBase).call(this));
+
+        _this.initializer = initializer;
+        _this.tryGetNext = tryGetNext;
+        _this.disposer = disposer;
+        _this.reset();
+        return _this;
     }
-    Object.defineProperty(EnumeratorBase.prototype, "current", {
-        get: function () {
-            return this._yielder.current;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    EnumeratorBase.prototype.reset = function () {
-        var _ = this;
-        _._yielder = new Yielder();
-        _._state = EnumeratorState.Before;
-    };
-    EnumeratorBase.prototype.moveNext = function () {
-        var _ = this;
-        try {
-            switch (_._state) {
-                case EnumeratorState.Before:
-                    _._state = EnumeratorState.Running;
-                    var initializer = _.initializer;
-                    if (initializer)
-                        initializer();
-                case EnumeratorState.Running:
-                    if (_.tryGetNext(_._yielder)) {
-                        return true;
-                    }
-                    else {
-                        this.dispose();
+
+    _createClass(EnumeratorBase, [{
+        key: 'reset',
+        value: function reset() {
+            var _ = this;
+            _._yielder = new Yielder();
+            _._state = EnumeratorState.Before;
+        }
+    }, {
+        key: 'moveNext',
+        value: function moveNext() {
+            var _ = this;
+            try {
+                switch (_._state) {
+                    case EnumeratorState.Before:
+                        _._state = EnumeratorState.Running;
+                        var initializer = _.initializer;
+                        if (initializer) initializer();
+                    case EnumeratorState.Running:
+                        if (_.tryGetNext(_._yielder)) {
+                            return true;
+                        } else {
+                            this.dispose();
+                            return false;
+                        }
+                    case EnumeratorState.After:
                         return false;
-                    }
-                case EnumeratorState.After:
-                    return false;
+                }
+            } catch (e) {
+                this.dispose();
+                throw e;
             }
         }
-        catch (e) {
-            this.dispose();
-            throw e;
+    }, {
+        key: '_onDispose',
+        value: function _onDispose() {
+            var _ = this,
+                disposer = _.disposer;
+            _.initializer = null;
+            _.disposer = null;
+            var yielder = _._yielder;
+            _._yielder = null;
+            if (yielder) yielder.yieldBreak();
+            try {
+                if (disposer) disposer();
+            } finally {
+                this._state = EnumeratorState.After;
+            }
         }
-    };
-    EnumeratorBase.prototype._onDispose = function () {
-        var _ = this, disposer = _.disposer;
-        _.initializer = null;
-        _.disposer = null;
-        var yielder = _._yielder;
-        _._yielder = null;
-        if (yielder)
-            yielder.yieldBreak();
-        try {
-            if (disposer)
-                disposer();
+    }, {
+        key: 'current',
+        get: function get() {
+            return this._yielder.current;
         }
-        finally {
-            this._state = EnumeratorState.After;
-        }
-    };
+    }]);
+
     return EnumeratorBase;
-}(DisposableBase_1.default));
+}(DisposableBase_1.default);
+
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EnumeratorBase;
 //# sourceMappingURL=EnumeratorBase.js.map

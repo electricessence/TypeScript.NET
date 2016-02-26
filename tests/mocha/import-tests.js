@@ -6,6 +6,7 @@
         define(["require", "exports", "fs"], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var fs = require("fs");
     var root = "./tests/mocha/";
     function getFilesAt(path, ext) {

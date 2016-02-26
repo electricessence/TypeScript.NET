@@ -2,18 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="IUriComponentFormattable.d.ts"/>
-///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
-'use strict';
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../Types', '../Serialization/Utility', '../KeyValueExtract'], factory);
     }
-})(["require", "exports", '../Types', '../Serialization/Utility', '../KeyValueExtract'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var Types_1 = require('../Types');
     var Serialization = require('../Serialization/Utility');
     var KeyValueExtract_1 = require('../KeyValueExtract');
@@ -54,8 +51,8 @@
         if (decodeValues === void 0) { decodeValues = true; }
         if (query && (query = query.replace(/^\s*\?+/, ''))) {
             var entries = query.split(ENTRY_SEPARATOR);
-            for (var _i = 0; _i < entries.length; _i++) {
-                var entry = entries[_i];
+            for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+                var entry = entries_1[_i];
                 var si = entry.indexOf(KEY_VALUE_SEPARATOR);
                 if (si != -1) {
                     var key = entry.substring(0, si);

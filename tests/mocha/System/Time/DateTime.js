@@ -6,6 +6,7 @@
         define(["require", "exports", '../../../../source/System/Time/DateTime'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var DateTime_1 = require('../../../../source/System/Time/DateTime');
     var assert = require('../../../../node_modules/assert/assert');
     describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {

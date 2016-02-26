@@ -6,6 +6,7 @@
         define(["require", "exports", '../../../../source/System/Uri/Uri'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var Uri_1 = require('../../../../source/System/Uri/Uri');
     var assert = require('../../../../node_modules/assert/assert');
     var path = '/one/two/three.html';

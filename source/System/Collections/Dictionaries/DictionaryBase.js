@@ -2,16 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-///<reference path="IDictionary.d.ts"/>
-'use strict';
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract', '../Enumeration/Enumerator'], factory);
     }
-})(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract', '../Enumeration/Enumerator'], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var Compare_1 = require('../../Compare');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
@@ -194,7 +193,7 @@
             });
         };
         return DictionaryBase;
-    })();
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DictionaryBase;
 });

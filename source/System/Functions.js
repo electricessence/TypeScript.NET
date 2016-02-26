@@ -2,15 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports"], factory);
     }
-})(["require", "exports"], function (require, exports) {
+})(function (require, exports) {
+    'use strict';
     var Functions = (function () {
         function Functions() {
         }
@@ -19,7 +19,7 @@
         Functions.prototype.False = function () { return false; };
         Functions.prototype.Blank = function () { };
         return Functions;
-    })();
+    }());
     var rootFunctions = new Functions();
     var Functions;
     (function (Functions) {

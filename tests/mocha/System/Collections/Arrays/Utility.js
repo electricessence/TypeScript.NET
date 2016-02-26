@@ -6,6 +6,7 @@
         define(["require", "exports", '../../../../../source/System/Collections/Array/Compare', '../../../../../source/System/Collections/Array/Utility'], factory);
     }
 })(function (require, exports) {
+    "use strict";
     var Arrays = require('../../../../../source/System/Collections/Array/Compare');
     var ArrayUtility = require('../../../../../source/System/Collections/Array/Utility');
     var assert = require('../../../../../node_modules/assert/assert');
