@@ -3,7 +3,7 @@
 Exported in this module is the ```Enumerable``` class which contains
 all available LINQ methods you would expect.
 
-Because the notion of 'extensions' in JavaScript is not a simple and elegant
+Because the notion of 'extensions' in JavaScript is not as simple and elegant
 as C#, it was important to allow for flexibility of use.
 
 ### Usage
@@ -14,7 +14,7 @@ Source values that work:
 * Any object which has a ```.getEnumerator()``` method attached to it.  See ```IEnumerator``` in System/Collections/Enumerable.
 * Arrays or objects analogous to arrays (have a ```.length``` property and index by number).
 
-#### TypeScript
+#### TypeScript or ES6
 ```typescript
 import Enumerable from '[path or alias to source folder]/System.Linq/Linq';
  

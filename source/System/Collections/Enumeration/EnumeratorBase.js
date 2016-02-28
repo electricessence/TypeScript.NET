@@ -15,7 +15,10 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", '../../Disposable/DisposableBase'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    ///<reference path="../../Disposable/IDisposable.d.ts"/>
+    ///<reference path="IEnumerator.d.ts"/>
+    ///<reference path="IYield.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var DisposableBase_1 = require('../../Disposable/DisposableBase');
     var Yielder = (function () {
         function Yielder() {
@@ -35,14 +38,17 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return Yielder;
     }());
+    // IEnumerator State
     var EnumeratorState;
     (function (EnumeratorState) {
         EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
         EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
         EnumeratorState[EnumeratorState["After"] = 2] = "After";
     })(EnumeratorState || (EnumeratorState = {}));
+    // Naming this class EnumeratorBase to avoid collision with IE.
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
+        // "Enumerator" is conflict JScript's "Enumerator"
         function EnumeratorBase(initializer, tryGetNext, disposer) {
             _super.call(this);
             this.initializer = initializer;
@@ -71,6 +77,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         var initializer = _.initializer;
                         if (initializer)
                             initializer();
+                    // fall through
                     case EnumeratorState.Running:
                         if (_.tryGetNext(_._yielder)) {
                             return true;
@@ -101,6 +108,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     disposer();
             }
             finally {
+                //if(this._state==EnumeratorState.Running)
                 this._state = EnumeratorState.After;
             }
         };

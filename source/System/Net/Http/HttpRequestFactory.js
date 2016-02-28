@@ -15,11 +15,16 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Uri/Uri", "../../Disposable/DisposableBase", "./HttpMethod"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    ///<reference path="IHttpRequestAdapter.d.ts"/>
+    ///<reference path="HttpMethodValue.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var Uri_1 = require("../../Uri/Uri");
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var HttpMethod_1 = require("./HttpMethod");
+    /**
+     * This class exposes a factory for making requests to prepared uri and params.
+     */
     var HttpRequestFactory = (function (_super) {
         __extends(HttpRequestFactory, _super);
         function HttpRequestFactory(_http, uriDefaults) {
@@ -31,6 +36,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._uriDefaults = Uri_1.default.from(uriDefaults);
         }
         HttpRequestFactory.prototype._onDispose = function () {
+            // super._onDispose(); // Not required for first level inheritance.
             this._http = null;
             this._uriDefaults = null;
         };

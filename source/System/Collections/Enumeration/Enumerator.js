@@ -10,7 +10,11 @@
         define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumerator'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    ///<reference path="../../Disposable/IDisposable.d.ts"/>
+    ///<reference path="IEnumerable.d.ts"/>
+    ///<reference path="IEnumerator.d.ts"/>
+    ///<reference path="IYield.d.ts"/>
+    'use strict'; // For compatibility with (let, const, function, class);
     var Types_1 = require('../../Types');
     var ArrayEnumerator_1 = require('./ArrayEnumerator');
     var IndexEnumerator_1 = require('./IndexEnumerator');
@@ -32,7 +36,9 @@
         return EmptyEnumerator;
     }());
     var Empty = new EmptyEnumerator();
+    // Could be array, or IEnumerable...
     function from(source) {
+        // To simplify and prevent null reference exceptions:
         if (!source)
             return Empty;
         if (Array.isArray(source))
@@ -73,6 +79,7 @@
             }
             if (isEnumerator(e)) {
                 var index = 0;
+                // Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
                 while (e.moveNext()) {
                     if (action(e.current, index++) === false)
                         break;

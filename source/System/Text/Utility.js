@@ -17,6 +17,14 @@
         return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     }
     exports.escapeRegExp = escapeRegExp;
+    /**
+     * Can trim any character or set of characters from the ends of a string.
+     * Uses a Regex escapement to replace them with empty.
+     * @param source
+     * @param chars A string or array of characters desired to be trimmed.
+     * @param ignoreCase
+     * @returns {string}
+     */
     function trim(source, chars, ignoreCase) {
         if (chars) {
             if (chars === exports.EMPTY)
@@ -27,6 +35,12 @@
         return source.replace(/^\s+|\s+$/g, exports.EMPTY);
     }
     exports.trim = trim;
+    /**
+     * Takes any arg
+     * @param source
+     * @param args
+     * @returns {string}
+     */
     function format(source) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -35,6 +49,16 @@
         return supplant(source, args);
     }
     exports.format = format;
+    //
+    /**
+     * This takes a string and replaces '{string}' with the respected parameter.
+     * Also allows for passing an array in order to use '{n}' notation.
+     * Not limited to an array's indexes.  For example, {length} is allowed.
+     * Based upon Crockford's supplant function.
+     * @param source
+     * @param params
+     * @returns {string}
+     */
     function supplant(source, params) {
         var oIsArray = Array.isArray(params);
         return source.replace(/\{([^{}]*)\}/g, function (a, b) {

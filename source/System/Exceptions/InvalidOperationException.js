@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './SystemException'], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    'use strict'; // For compatibility with (let, const, function, class);
     var SystemException_1 = require('./SystemException');
     var NAME = 'InvalidOperationException';
     var InvalidOperationException = (function (_super) {
