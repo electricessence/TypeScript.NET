@@ -12,7 +12,6 @@
     }
 })(function (require, exports) {
     "use strict";
-    ///<reference path="HttpMethodValue.d.ts"/>
     exports.OPTIONS = 'OPTIONS', exports.HEAD = 'HEAD', exports.GET = 'GET', exports.PUT = 'PUT', exports.POST = 'POST', exports.DELETE = 'DELETE', exports.TRACE = 'TRACE', exports.CONNECT = 'CONNECT';
 });
 //# sourceMappingURL=HttpMethod.js.map

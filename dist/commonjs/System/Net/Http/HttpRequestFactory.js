@@ -33,6 +33,12 @@ var HttpRequestFactory = function (_DisposableBase_1$def) {
     }
 
     _createClass(HttpRequestFactory, [{
+        key: "_onDispose",
+        value: function _onDispose() {
+            this._http = null;
+            this._uriDefaults = null;
+        }
+    }, {
         key: "uri",
         value: function uri(_uri) {
             var _ = this;

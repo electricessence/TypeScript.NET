@@ -82,7 +82,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 		// This should validate the uri...
 		_.absoluteUri = _.getAbsoluteUri();
 
-		_.baseUri = _.absoluteUri.replace('(?|#).*','');
+		_.baseUri = _.absoluteUri.replace(/[?#].*/,'');
 
 		// Intended to be read-only.  Call .toMap() to get a writable copy.
 		Object.freeze(_);

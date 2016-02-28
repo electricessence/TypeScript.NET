@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './EnumeratorBase'], factory);
     }
 })(function (require, exports) {
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var EnumeratorBase_1 = require('./EnumeratorBase');
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);

@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", './ArgumentException'], factory);
     }
 })(function (require, exports) {
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var ArgumentException_1 = require('./ArgumentException');
     var NAME = 'ArgumentNullException';
     var ArgumentNullException = (function (_super) {

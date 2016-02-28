@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", '../Exception'], factory);
     }
 })(function (require, exports) {
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var Exception_1 = require('../Exception');
     var NAME = 'SystemException';
     var SystemException = (function (_super) {
@@ -24,15 +24,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         function SystemException() {
             _super.apply(this, arguments);
         }
-        /*
-            constructor(
-                message:string = null,
-                innerException:Error = null,
-                beforeSealing?:(ex:any)=>void)
-            {
-                super(message, innerException, beforeSealing);
-            }
-        */
         SystemException.prototype.getName = function () {
             return NAME;
         };

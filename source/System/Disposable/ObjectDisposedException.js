@@ -16,13 +16,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", '../Exceptions/InvalidOperationException'], factory);
     }
 })(function (require, exports) {
-    ///<reference path="IDisposableAware.d.ts"/>
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
     var NAME = 'ObjectDisposedException';
     var ObjectDisposedException = (function (_super) {
         __extends(ObjectDisposedException, _super);
-        // For simplicity and consistency, lets stick with 1 signature.
         function ObjectDisposedException(objectName, message, innerException) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }

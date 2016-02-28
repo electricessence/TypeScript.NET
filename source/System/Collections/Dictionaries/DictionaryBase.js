@@ -10,8 +10,7 @@
         define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract', '../Enumeration/Enumerator'], factory);
     }
 })(function (require, exports) {
-    ///<reference path="IDictionary.d.ts"/>
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var Compare_1 = require('../../Compare');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
     var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
@@ -19,7 +18,6 @@
     var KeyValueExtract_1 = require('../../KeyValueExtract');
     var Enumerator_1 = require('../Enumeration/Enumerator');
     var VOID0 = void (0);
-    // Design Note: Should DictionaryAbstractBase be IDisposable?
     var DictionaryBase = (function () {
         function DictionaryBase() {
             this._updateRecursion = 0;
@@ -34,7 +32,6 @@
                 var _ = this;
                 if (_.onValueChanged)
                     _.onValueChanged(key, value, old);
-                // If the update recursion is zero, then we are finished with updates.
                 if (_._updateRecursion == 0)
                     _._onUpdated();
             }
@@ -44,7 +41,6 @@
             if (_.onUpdated)
                 _.onUpdated();
         };
-        // Takes a closure that if returning true will propagate an update signal.
         DictionaryBase.prototype.handleUpdate = function (closure) {
             var _ = this, result;
             if (closure) {
@@ -63,9 +59,6 @@
             return result;
         };
         Object.defineProperty(DictionaryBase.prototype, "isReadOnly", {
-            /////////////////////////////////////////
-            // ICollection<T>
-            /////////////////////////////////////////
             get: function () { return false; },
             enumerable: true,
             configurable: true
@@ -94,11 +87,9 @@
         };
         DictionaryBase.prototype.contains = function (item) {
             var _this = this;
-            // Should never have a null object in the collection.
             if (!item)
                 return false;
             return KeyValueExtract_1.default(item, function (key, value) {
-                // Leave as variable for debugging...
                 var v = _this.getValue(key);
                 return Compare_1.areEqual(value, v);
             });
@@ -107,8 +98,6 @@
             if (index === void 0) { index = 0; }
             if (!array)
                 throw new ArgumentNullException_1.default('array');
-            // This is a generic implementation that will work for all derived classes.
-            // It can be overridden and optimized.
             var e = this.getEnumerator();
             while (e.moveNext()) {
                 array[index++] = e.current;
@@ -123,7 +112,6 @@
             if (!item)
                 return 0;
             return KeyValueExtract_1.default(item, function (key, value) {
-                // Leave as variable for debugging...
                 var v = _this.getValue(key);
                 return (Compare_1.areEqual(value, v) && _this.removeByKey(key))
                     ? 1 : 0;

@@ -18,6 +18,11 @@
             assert.equal(u.path, path);
         });
     });
+    describe('.baseUri', function () {
+        it('should equal ' + path, function () {
+            assert.equal(u.baseUri, path);
+        });
+    });
     describe('.query', function () {
         it('should equal ' + query, function () {
             assert.equal(u.query, query);

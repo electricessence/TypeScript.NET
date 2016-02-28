@@ -15,8 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", '../../Compare', './DictionaryBase'], factory);
     }
 })(function (require, exports) {
-    ///<reference path="IDictionary.d.ts"/>
-    'use strict'; // For compatibility with (let, const, function, class);
+    'use strict';
     var Compare_1 = require('../../Compare');
     var DictionaryBase_1 = require('./DictionaryBase');
     var VOID0 = void 0;
@@ -60,7 +59,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return false;
         };
-        // Returns true if any value is updated...
         StringKeyDictionary.prototype.importMap = function (values) {
             var _ = this;
             return _.handleUpdate(function () {
