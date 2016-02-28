@@ -35,6 +35,12 @@ export default class HttpRequestFactory extends DisposableBase
 		this._uriDefaults = Uri.from(uriDefaults);
 	}
 
+	protected _onDispose() {
+		// super._onDispose(); // Not required for first level inheritance.
+		this._http = null;
+		this._uriDefaults = null;
+	}
+
 	uri(uri:string|IUri):HttpRequestFactory
 	{
 

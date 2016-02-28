@@ -30,6 +30,10 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new ArgumentNullException_1.default('_http');
             this._uriDefaults = Uri_1.default.from(uriDefaults);
         }
+        HttpRequestFactory.prototype._onDispose = function () {
+            this._http = null;
+            this._uriDefaults = null;
+        };
         HttpRequestFactory.prototype.uri = function (uri) {
             var _ = this;
             _.throwIfDisposed();
