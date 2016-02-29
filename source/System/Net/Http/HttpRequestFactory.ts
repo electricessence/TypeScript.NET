@@ -35,6 +35,12 @@ export default class HttpRequestFactory extends DisposableBase
 		this._uriDefaults = Uri.from(uriDefaults);
 	}
 
+	protected _onDispose() {
+		// super._onDispose(); // Not required for first level inheritance.
+		this._http = null;
+		this._uriDefaults = null;
+	}
+
 	uri(uri:string|IUri):HttpRequestFactory
 	{
 
@@ -67,22 +73,22 @@ export default class HttpRequestFactory extends DisposableBase
 
 	get<TResult>():IPromise<TResult>
 	{
-		return this.request(GET);
+		return this.request<TResult>(GET);
 	}
 
 	put<TResult>():IPromise<TResult>
 	{
-		return this.request(PUT);
+		return this.request<TResult>(PUT);
 	}
 
 	post<TResult>(data:any):IPromise<TResult>
 	{
-		return this.request(POST, data);
+		return this.request<TResult>(POST, data);
 	}
 
 	'delete'<TResult>():IPromise<TResult>
 	{
-		return this.request(DELETE);
+		return this.request<TResult>(DELETE);
 	}
 
 }

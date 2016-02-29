@@ -18,6 +18,14 @@ describe('.path', ()=>
 	});
 });
 
+describe('.baseUri', ()=>
+{
+	it('should equal ' + path, ()=>
+	{
+		assert.equal(u.baseUri, path);
+	});
+});
+
 describe('.query', ()=>
 {
 	it('should equal ' + query, ()=>

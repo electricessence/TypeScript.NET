@@ -82,6 +82,8 @@ export default class Uri implements IUri, IEquatable<IUri>
 		// This should validate the uri...
 		_.absoluteUri = _.getAbsoluteUri();
 
+		_.baseUri = _.absoluteUri.replace(/[?#].*/,'');
+
 		// Intended to be read-only.  Call .toMap() to get a writable copy.
 		Object.freeze(_);
 	}
@@ -200,6 +202,11 @@ export default class Uri implements IUri, IEquatable<IUri>
 	 * Gets the path and Query properties separated by a question mark (?).
 	 */
 	pathAndQuery:string;
+
+	/**
+	 * Gets the full path without the query or fragment.
+	 */
+	baseUri:string;
 
 	/**
 	 * The segments that represent a path.<br/>

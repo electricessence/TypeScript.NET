@@ -33,6 +33,7 @@ var Uri = function () {
         _.pathAndQuery = _.getPathAndQuery() || null;
         _.fragment = formatFragment(fragment) || null;
         _.absoluteUri = _.getAbsoluteUri();
+        _.baseUri = _.absoluteUri.replace(/[?#].*/, '');
         Object.freeze(_);
     }
 
