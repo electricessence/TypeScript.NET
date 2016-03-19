@@ -61,13 +61,13 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	private setKV(key:TKey, value:TValue, allowOverwrite:boolean):boolean
 	{
-		var _          = this,
-		    buckets    = _._buckets,
-		    entries    = _._entries,
-		    comparer   = _._compareSelector,
+		var _           = this,
+		    buckets     = _._buckets,
+		    entries     = _._entries,
+		    comparer    = _._compareSelector,
 
-		    compareKey = comparer(key),
-		    hash       = computeHashCode(compareKey),
+		    compareKey  = comparer(key),
+		    hash:string = computeHashCode(compareKey), // TODO: need to find a way to guarantee hashing is a string?
 
 		    entry:HashEntry<TKey, TValue>;
 
@@ -214,7 +214,8 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	{
 		var _ = this, result:TKey[] = [];
 		var e = _._entries.first;
-		while(e) {
+		while(e)
+		{
 			result.push(e.key);
 			e = e.next;
 		}
@@ -225,7 +226,8 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	{
 		var _ = this, result:TValue[] = [];
 		var e = _._entries.first;
-		while(e) {
+		while(e)
+		{
 			result.push(e.value);
 			e = e.next;
 		}
