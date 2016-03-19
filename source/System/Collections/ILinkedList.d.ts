@@ -11,8 +11,20 @@
 ///<reference path="ILinkedListNode.d.ts"/>
 
 
+interface ILinkedNodeList<TNode extends ILinkedNode<TNode>>
+{
+	first:TNode;
+	last:TNode;
+
+	getNodeAt(index:number):TNode;
+	removeNode(node:TNode):boolean;
+	addNodeBefore(node:TNode, before:TNode):void;
+	addNodeAfter(node:TNode, after:TNode):void;
+
+}
+
 interface ILinkedList<T>
-extends ICollection<T>, IEnumerateEach<T>
+extends ILinkedNodeList<ILinkedListNode<T>>, ICollection<T>, IEnumerateEach<T>
 {
 
 	toArray():T[];
@@ -21,16 +33,12 @@ extends ICollection<T>, IEnumerateEach<T>
 	last:ILinkedListNode<T>;
 
 	getValueAt(index:number):T;
-	getNodeAt(index:number):ILinkedListNode<T>;
 	find(entry:T):ILinkedListNode<T>;
 	findLast(entry:T):ILinkedListNode<T>;
 	addFirst(entry:T):void;
 	addLast(entry:T):void;
 	removeFirst():void;
 	removeLast():void;
-	removeNode(node:ILinkedListNode<T>):boolean;
 	addAfter(node:ILinkedListNode<T>, entry:T):void;
-	addNodeBefore(node:ILinkedListNode<T>, before:ILinkedListNode<T>):void;
-	addNodeAfter(node:ILinkedListNode<T>, after:ILinkedListNode<T>):void;
 
 }

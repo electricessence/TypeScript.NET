@@ -7,14 +7,14 @@
 import { areEqual } from '../../Compare';
 import Type from '../../Types';
 import Functions from '../../Functions';
-import DictionaryAbstractBase from './DictionaryBase';
+import DictionaryBase from './DictionaryBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
 const VOID0 = void 0;
 class HashEntry {
-    constructor(key, value, prev, next) {
+    constructor(key, value, previous, next) {
         this.key = key;
         this.value = value;
-        this.prev = prev;
+        this.previous = previous;
         this.next = next;
     }
 }
@@ -27,7 +27,7 @@ class EntryList {
         var _ = this;
         if (_.last != null) {
             _.last.next = entry;
-            entry.prev = _.last;
+            entry.previous = _.last;
             _.last = entry;
         }
         else
@@ -35,14 +35,14 @@ class EntryList {
     }
     replace(entry, newEntry) {
         var _ = this;
-        if (entry.prev != null) {
-            entry.prev.next = newEntry;
-            newEntry.prev = entry.prev;
+        if (entry.previous != null) {
+            entry.previous.next = newEntry;
+            newEntry.previous = entry.previous;
         }
         else
             _.first = newEntry;
         if (entry.next != null) {
-            entry.next.prev = newEntry;
+            entry.next.previous = newEntry;
             newEntry.next = entry.next;
         }
         else
@@ -50,14 +50,14 @@ class EntryList {
     }
     remove(entry) {
         var _ = this;
-        if (entry.prev != null)
-            entry.prev.next = entry.next;
+        if (entry.previous != null)
+            entry.previous.next = entry.next;
         else
             _.first = entry.next;
         if (entry.next != null)
-            entry.next.prev = entry.prev;
+            entry.next.previous = entry.previous;
         else
-            _.last = entry.prev;
+            _.last = entry.previous;
     }
     clear() {
         var _ = this;
@@ -85,18 +85,16 @@ function computeHashCode(obj) {
         ? obj.toString()
         : Object.prototype.toString.call(obj);
 }
-export default class Dictionary extends DictionaryAbstractBase {
-    constructor(compareSelector = Functions.Identity) {
+export default class Dictionary extends DictionaryBase {
+    constructor(_compareSelector = Functions.Identity) {
         super();
-        this.compareSelector = compareSelector;
+        this._compareSelector = _compareSelector;
         this._count = 0;
         this._entries = new EntryList();
         this._buckets = {};
     }
     setKV(key, value, allowOverwrite) {
-        var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
-        var compareKey = comparer(key);
-        var hash = computeHashCode(compareKey), entry;
+        var _ = this, buckets = _._buckets, entries = _._entries, comparer = _._compareSelector, compareKey = comparer(key), hash = computeHashCode(compareKey), entry;
         if (callHasOwnProperty(buckets, hash)) {
             var equal = areEqual;
             var array = buckets[hash];
@@ -144,7 +142,7 @@ export default class Dictionary extends DictionaryAbstractBase {
         this.setKV(key, value, false);
     }
     getValue(key) {
-        var buckets = this._buckets, comparer = this.compareSelector;
+        var buckets = this._buckets, comparer = this._compareSelector;
         var compareKey = comparer(key);
         var hash = computeHashCode(compareKey);
         if (!callHasOwnProperty(buckets, hash))
@@ -160,7 +158,7 @@ export default class Dictionary extends DictionaryAbstractBase {
         return this.setKV(key, value, true);
     }
     containsKey(key) {
-        var _ = this, buckets = _._buckets, comparer = _.compareSelector;
+        var _ = this, buckets = _._buckets, comparer = _._compareSelector;
         var compareKey = comparer(key);
         var hash = computeHashCode(compareKey);
         if (!callHasOwnProperty(buckets, hash))

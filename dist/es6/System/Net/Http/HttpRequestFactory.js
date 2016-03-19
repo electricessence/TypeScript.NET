@@ -16,6 +16,10 @@ export default class HttpRequestFactory extends DisposableBase {
             throw new ArgumentNullException('_http');
         this._uriDefaults = Uri.from(uriDefaults);
     }
+    _onDispose() {
+        this._http = null;
+        this._uriDefaults = null;
+    }
     uri(uri) {
         var _ = this;
         _.throwIfDisposed();

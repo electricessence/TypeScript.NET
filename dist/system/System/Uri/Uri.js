@@ -165,6 +165,7 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                     _.pathAndQuery = _.getPathAndQuery() || null;
                     _.fragment = formatFragment(fragment) || null;
                     _.absoluteUri = _.getAbsoluteUri();
+                    _.baseUri = _.absoluteUri.replace(/[?#].*/, '');
                     Object.freeze(_);
                 }
                 Uri.prototype.equals = function (other) {

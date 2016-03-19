@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], factory);
+        define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase', '../LinkedNodeList'], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -22,71 +22,16 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Functions_1 = require('../../Functions');
     var DictionaryBase_1 = require('./DictionaryBase');
     var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
+    var LinkedNodeList_1 = require('../LinkedNodeList');
     var VOID0 = void 0;
     var HashEntry = (function () {
-        function HashEntry(key, value, prev, next) {
+        function HashEntry(key, value, previous, next) {
             this.key = key;
             this.value = value;
-            this.prev = prev;
+            this.previous = previous;
             this.next = next;
         }
         return HashEntry;
-    }());
-    var EntryList = (function () {
-        function EntryList(first, last) {
-            this.first = first;
-            this.last = last;
-        }
-        EntryList.prototype.addLast = function (entry) {
-            var _ = this;
-            if (_.last != null) {
-                _.last.next = entry;
-                entry.prev = _.last;
-                _.last = entry;
-            }
-            else
-                _.first = _.last = entry;
-        };
-        EntryList.prototype.replace = function (entry, newEntry) {
-            var _ = this;
-            if (entry.prev != null) {
-                entry.prev.next = newEntry;
-                newEntry.prev = entry.prev;
-            }
-            else
-                _.first = newEntry;
-            if (entry.next != null) {
-                entry.next.prev = newEntry;
-                newEntry.next = entry.next;
-            }
-            else
-                _.last = newEntry;
-        };
-        EntryList.prototype.remove = function (entry) {
-            var _ = this;
-            if (entry.prev != null)
-                entry.prev.next = entry.next;
-            else
-                _.first = entry.next;
-            if (entry.next != null)
-                entry.next.prev = entry.prev;
-            else
-                _.last = entry.prev;
-        };
-        EntryList.prototype.clear = function () {
-            var _ = this;
-            while (_.last) {
-                _.remove(_.last);
-            }
-        };
-        EntryList.prototype.forEach = function (closure) {
-            var _ = this, currentEntry = _.first;
-            while (currentEntry) {
-                closure(currentEntry);
-                currentEntry = currentEntry.next;
-            }
-        };
-        return EntryList;
     }());
     function callHasOwnProperty(target, key) {
         return Object.prototype.hasOwnProperty.call(target, key);
@@ -102,18 +47,16 @@ var __extends = (this && this.__extends) || function (d, b) {
     }
     var Dictionary = (function (_super) {
         __extends(Dictionary, _super);
-        function Dictionary(compareSelector) {
-            if (compareSelector === void 0) { compareSelector = Functions_1.default.Identity; }
+        function Dictionary(_compareSelector) {
+            if (_compareSelector === void 0) { _compareSelector = Functions_1.default.Identity; }
             _super.call(this);
-            this.compareSelector = compareSelector;
+            this._compareSelector = _compareSelector;
             this._count = 0;
-            this._entries = new EntryList();
+            this._entries = new LinkedNodeList_1.default();
             this._buckets = {};
         }
         Dictionary.prototype.setKV = function (key, value, allowOverwrite) {
-            var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
-            var compareKey = comparer(key);
-            var hash = computeHashCode(compareKey), entry;
+            var _ = this, buckets = _._buckets, entries = _._entries, comparer = _._compareSelector, compareKey = comparer(key), hash = computeHashCode(compareKey), entry;
             if (callHasOwnProperty(buckets, hash)) {
                 var equal = Compare_1.areEqual;
                 var array = buckets[hash];
@@ -125,7 +68,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         var changed = !equal(old.value, value);
                         if (changed) {
                             if (value === VOID0) {
-                                entries.remove(old);
+                                entries.removeNode(old);
                                 array.splice(i, 1);
                                 if (!array.length)
                                     delete buckets[hash];
@@ -153,7 +96,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 buckets[hash] = [entry = new HashEntry(key, value)];
             }
             ++_._count;
-            entries.addLast(entry);
+            entries.addNode(entry);
             _._onValueUpdate(key, value, undefined);
             return true;
         };
@@ -161,7 +104,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.setKV(key, value, false);
         };
         Dictionary.prototype.getValue = function (key) {
-            var buckets = this._buckets, comparer = this.compareSelector;
+            var buckets = this._buckets, comparer = this._compareSelector;
             var compareKey = comparer(key);
             var hash = computeHashCode(compareKey);
             if (!callHasOwnProperty(buckets, hash))
@@ -178,7 +121,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.setKV(key, value, true);
         };
         Dictionary.prototype.containsKey = function (key) {
-            var _ = this, buckets = _._buckets, comparer = _.compareSelector;
+            var _ = this, buckets = _._buckets, comparer = _._compareSelector;
             var compareKey = comparer(key);
             var hash = computeHashCode(compareKey);
             if (!callHasOwnProperty(buckets, hash))
@@ -216,12 +159,20 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Dictionary.prototype.getKeys = function () {
             var _ = this, result = [];
-            _._entries.forEach(function (entry) { return result.push(entry.key); });
+            var e = _._entries.first;
+            while (e) {
+                result.push(e.key);
+                e = e.next;
+            }
             return result;
         };
         Dictionary.prototype.getValues = function () {
             var _ = this, result = [];
-            _._entries.forEach(function (entry) { return result.push(entry.value); });
+            var e = _._entries.first;
+            while (e) {
+                result.push(e.value);
+                e = e.next;
+            }
             return result;
         };
         return Dictionary;

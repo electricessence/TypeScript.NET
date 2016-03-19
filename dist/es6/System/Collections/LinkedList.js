@@ -13,14 +13,14 @@ import InvalidOperationException from '../Exceptions/InvalidOperationException';
 import ArgumentException from '../Exceptions/ArgumentException';
 import ArgumentNullException from '../Exceptions/ArgumentNullException';
 import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
-class Node {
-    constructor(value, prev, next) {
+class InternalNode {
+    constructor(value, previous, next) {
         this.value = value;
-        this.prev = prev;
+        this.previous = previous;
         this.next = next;
     }
     assertDetached() {
-        if (this.next || this.prev)
+        if (this.next || this.previous)
             throw new InvalidOperationException("Adding a node that is already placed.");
     }
 }
@@ -47,11 +47,11 @@ export default class LinkedList {
         var _ = this, c = 0, first = null, last = null;
         var e = Enumerator.from(source);
         if (e.moveNext()) {
-            first = last = new Node(e.current);
+            first = last = new InternalNode(e.current);
             ++c;
         }
         while (e.moveNext()) {
-            last = last.next = new Node(e.current, last);
+            last = last.next = new InternalNode(e.current, last);
             ++c;
         }
         _._first = first;
@@ -60,9 +60,9 @@ export default class LinkedList {
     }
     _addFirst(entry) {
         var _ = this, first = _._first;
-        var prev = new Node(entry, null, first);
+        var prev = new InternalNode(entry, null, first);
         if (first)
-            first.prev = prev;
+            first.previous = prev;
         else
             _._last = prev;
         _._first = prev;
@@ -71,7 +71,7 @@ export default class LinkedList {
     }
     _addLast(entry) {
         var _ = this, last = _._last;
-        var next = new Node(entry, last);
+        var next = new InternalNode(entry, last);
         if (last)
             last.next = next;
         else
@@ -83,16 +83,16 @@ export default class LinkedList {
     _addNodeBefore(n, inserting) {
         inserting.assertDetached();
         inserting.next = n;
-        inserting.prev = n.prev;
-        n.prev.next = inserting;
-        n.prev = inserting;
+        inserting.previous = n.previous;
+        n.previous.next = inserting;
+        n.previous = inserting;
         this._count += 1;
     }
     _addNodeAfter(n, inserting) {
         inserting.assertDetached();
-        inserting.prev = n;
+        inserting.previous = n;
         inserting.next = n.next;
-        n.next.prev = inserting;
+        n.next.previous = inserting;
         n.next = inserting;
         this._count += 1;
     }
@@ -110,7 +110,7 @@ export default class LinkedList {
         while (prev) {
             if (equals(entry, prev.value))
                 return prev;
-            prev = prev.prev;
+            prev = prev.previous;
         }
         return null;
     }
@@ -130,7 +130,7 @@ export default class LinkedList {
     getEnumerator() {
         var _ = this, current;
         return new EnumeratorBase(() => {
-            current = new Node(null, null, _._first);
+            current = new InternalNode(null, null, _._first);
         }, (yielder) => (current = current.next)
             ? yielder.yieldReturn(current.value)
             : yielder.yieldBreak());
@@ -171,13 +171,13 @@ export default class LinkedList {
         var _ = this;
         var node = _._findFirst(entry);
         if (node) {
-            var prev = node.prev, next = node.next;
+            var prev = node.previous, next = node.next;
             if (prev)
                 prev.next = next;
             else
                 _._first = next;
             if (next)
-                next.prev = prev;
+                next.previous = prev;
             else
                 _._last = prev;
             _._count -= 1;
@@ -232,14 +232,14 @@ export default class LinkedList {
             var next = first.next;
             _._first = next;
             if (next)
-                next.prev = null;
+                next.previous = null;
             _._count -= 1;
         }
     }
     removeLast() {
         var _ = this, last = _._last;
         if (last) {
-            var prev = last.prev;
+            var prev = last.previous;
             _._last = prev;
             if (prev)
                 prev.next = null;
@@ -249,7 +249,7 @@ export default class LinkedList {
     removeNode(node) {
         var _ = this;
         var n = getInternal(node, _);
-        var prev = n.prev, next = n.next, a = false, b = false;
+        var prev = n.previous, next = n.next, a = false, b = false;
         if (prev)
             prev.next = next;
         else if (_._first == n)
@@ -257,7 +257,7 @@ export default class LinkedList {
         else
             a = true;
         if (next)
-            next.prev = prev;
+            next.previous = prev;
         else if (_._last == n)
             _._last = prev;
         else
@@ -268,10 +268,10 @@ export default class LinkedList {
         return !a && !b;
     }
     addBefore(node, entry) {
-        this._addNodeBefore(getInternal(node, this), new Node(entry));
+        this._addNodeBefore(getInternal(node, this), new InternalNode(entry));
     }
     addAfter(node, entry) {
-        this._addNodeAfter(getInternal(node, this), new Node(entry));
+        this._addNodeAfter(getInternal(node, this), new InternalNode(entry));
     }
     addNodeBefore(node, before) {
         this._addNodeBefore(getInternal(node, this), getInternal(before, this));
@@ -289,7 +289,7 @@ class LinkedListNode {
         return this._list;
     }
     get previous() {
-        return ensureExternal(this._node.prev, this._list);
+        return ensureExternal(this._node.previous, this._list);
     }
     get next() {
         return ensureExternal(this._node.next, this._list);

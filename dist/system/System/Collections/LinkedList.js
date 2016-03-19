@@ -7,7 +7,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var Values, TextUtility, ArrayUtility, Enumerator, EnumeratorBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
-    var Node, LinkedList, LinkedListNode;
+    var InternalNode, LinkedList, LinkedListNode;
     function ensureExternal(node, list) {
         if (!node)
             return null;
@@ -56,28 +56,28 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             }],
         execute: function() {
-            Node = (function () {
-                function Node(value, prev, next) {
+            InternalNode = (function () {
+                function InternalNode(value, previous, next) {
                     this.value = value;
-                    this.prev = prev;
+                    this.previous = previous;
                     this.next = next;
                 }
-                Node.prototype.assertDetached = function () {
-                    if (this.next || this.prev)
+                InternalNode.prototype.assertDetached = function () {
+                    if (this.next || this.previous)
                         throw new InvalidOperationException_1.default("Adding a node that is already placed.");
                 };
-                return Node;
+                return InternalNode;
             }());
             LinkedList = (function () {
                 function LinkedList(source) {
                     var _ = this, c = 0, first = null, last = null;
                     var e = Enumerator.from(source);
                     if (e.moveNext()) {
-                        first = last = new Node(e.current);
+                        first = last = new InternalNode(e.current);
                         ++c;
                     }
                     while (e.moveNext()) {
-                        last = last.next = new Node(e.current, last);
+                        last = last.next = new InternalNode(e.current, last);
                         ++c;
                     }
                     _._first = first;
@@ -86,9 +86,9 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                 }
                 LinkedList.prototype._addFirst = function (entry) {
                     var _ = this, first = _._first;
-                    var prev = new Node(entry, null, first);
+                    var prev = new InternalNode(entry, null, first);
                     if (first)
-                        first.prev = prev;
+                        first.previous = prev;
                     else
                         _._last = prev;
                     _._first = prev;
@@ -97,7 +97,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                 };
                 LinkedList.prototype._addLast = function (entry) {
                     var _ = this, last = _._last;
-                    var next = new Node(entry, last);
+                    var next = new InternalNode(entry, last);
                     if (last)
                         last.next = next;
                     else
@@ -109,16 +109,16 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                 LinkedList.prototype._addNodeBefore = function (n, inserting) {
                     inserting.assertDetached();
                     inserting.next = n;
-                    inserting.prev = n.prev;
-                    n.prev.next = inserting;
-                    n.prev = inserting;
+                    inserting.previous = n.previous;
+                    n.previous.next = inserting;
+                    n.previous = inserting;
                     this._count += 1;
                 };
                 LinkedList.prototype._addNodeAfter = function (n, inserting) {
                     inserting.assertDetached();
-                    inserting.prev = n;
+                    inserting.previous = n;
                     inserting.next = n.next;
-                    n.next.prev = inserting;
+                    n.next.previous = inserting;
                     n.next = inserting;
                     this._count += 1;
                 };
@@ -136,7 +136,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     while (prev) {
                         if (equals(entry, prev.value))
                             return prev;
-                        prev = prev.prev;
+                        prev = prev.previous;
                     }
                     return null;
                 };
@@ -157,7 +157,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                 LinkedList.prototype.getEnumerator = function () {
                     var _ = this, current;
                     return new EnumeratorBase_1.default(function () {
-                        current = new Node(null, null, _._first);
+                        current = new InternalNode(null, null, _._first);
                     }, function (yielder) {
                         return (current = current.next)
                             ? yielder.yieldReturn(current.value)
@@ -209,13 +209,13 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     var _ = this;
                     var node = _._findFirst(entry);
                     if (node) {
-                        var prev = node.prev, next = node.next;
+                        var prev = node.previous, next = node.next;
                         if (prev)
                             prev.next = next;
                         else
                             _._first = next;
                         if (next)
-                            next.prev = prev;
+                            next.previous = prev;
                         else
                             _._last = prev;
                         _._count -= 1;
@@ -278,14 +278,14 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                         var next = first.next;
                         _._first = next;
                         if (next)
-                            next.prev = null;
+                            next.previous = null;
                         _._count -= 1;
                     }
                 };
                 LinkedList.prototype.removeLast = function () {
                     var _ = this, last = _._last;
                     if (last) {
-                        var prev = last.prev;
+                        var prev = last.previous;
                         _._last = prev;
                         if (prev)
                             prev.next = null;
@@ -295,7 +295,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                 LinkedList.prototype.removeNode = function (node) {
                     var _ = this;
                     var n = getInternal(node, _);
-                    var prev = n.prev, next = n.next, a = false, b = false;
+                    var prev = n.previous, next = n.next, a = false, b = false;
                     if (prev)
                         prev.next = next;
                     else if (_._first == n)
@@ -303,7 +303,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     else
                         a = true;
                     if (next)
-                        next.prev = prev;
+                        next.previous = prev;
                     else if (_._last == n)
                         _._last = prev;
                     else
@@ -314,10 +314,10 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     return !a && !b;
                 };
                 LinkedList.prototype.addBefore = function (node, entry) {
-                    this._addNodeBefore(getInternal(node, this), new Node(entry));
+                    this._addNodeBefore(getInternal(node, this), new InternalNode(entry));
                 };
                 LinkedList.prototype.addAfter = function (node, entry) {
-                    this._addNodeAfter(getInternal(node, this), new Node(entry));
+                    this._addNodeAfter(getInternal(node, this), new InternalNode(entry));
                 };
                 LinkedList.prototype.addNodeBefore = function (node, before) {
                     this._addNodeBefore(getInternal(node, this), getInternal(before, this));
@@ -342,7 +342,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                 });
                 Object.defineProperty(LinkedListNode.prototype, "previous", {
                     get: function () {
-                        return ensureExternal(this._node.prev, this._list);
+                        return ensureExternal(this._node.previous, this._list);
                     },
                     enumerable: true,
                     configurable: true

@@ -5,94 +5,28 @@
  */
 
 ///<reference path="../../FunctionTypes.d.ts"/>
+///<reference path="../ILinkedListNode.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
 import {areEqual} from '../../Compare';
 import Type from '../../Types';
 import Functions from '../../Functions';
-import DictionaryAbstractBase from './DictionaryBase';
+import DictionaryBase from './DictionaryBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
+import LinkedNodeList from '../LinkedNodeList';
 
 const VOID0:any = void 0;
 
 // LinkedList for Dictionary
 class HashEntry<TKey, TValue>
+implements ILinkedNode<HashEntry<TKey, TValue>>
 {
 	constructor(
 		public key?:TKey,
 		public value?:TValue,
-		public prev?:HashEntry<TKey, TValue>,
+		public previous?:HashEntry<TKey, TValue>,
 		public next?:HashEntry<TKey, TValue>)
 	{ }
-}
-
-class EntryList<TKey, TValue>
-{
-	constructor(
-		public first?:HashEntry<TKey, TValue>,
-		public last?:HashEntry<TKey, TValue>)
-	{ }
-
-	addLast(entry:HashEntry<TKey, TValue>):void
-	{
-		var _ = this;
-		if(_.last!=null)
-		{
-			_.last.next = entry;
-			entry.prev = _.last;
-			_.last = entry;
-		}
-		else
-			_.first = _.last = entry;
-	}
-
-	replace(entry:HashEntry<TKey, TValue>, newEntry:HashEntry<TKey, TValue>):void
-	{
-		var _ = this;
-		if(entry.prev!=null)
-		{
-			entry.prev.next = newEntry;
-			newEntry.prev = entry.prev;
-		}
-		else _.first = newEntry;
-
-		if(entry.next!=null)
-		{
-			entry.next.prev = newEntry;
-			newEntry.next = entry.next;
-		}
-		else _.last = newEntry;
-
-	}
-
-	remove(entry:HashEntry<TKey, TValue>):void
-	{
-		var _ = this;
-		if(entry.prev!=null) entry.prev.next = entry.next;
-		else _.first = entry.next;
-
-		if(entry.next!=null) entry.next.prev = entry.prev;
-		else _.last = entry.prev;
-	}
-
-	clear():void
-	{
-		var _ = this;
-		while(_.last)
-		{
-			_.remove(_.last);
-		}
-	}
-
-	forEach(closure:(entry:HashEntry<TKey, TValue>) => void):void
-	{
-		var _ = this, currentEntry:HashEntry<TKey, TValue> = _.first;
-		while(currentEntry)
-		{
-			closure(currentEntry);
-			currentEntry = currentEntry.next;
-		}
-	}
 }
 
 // static utility methods
@@ -113,13 +47,13 @@ function computeHashCode(obj:any):string
 
 
 export default
-class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
+class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 {
 	private _count:number = 0;
-	private _entries = new EntryList<TKey, TValue>();
+	private _entries = new LinkedNodeList<HashEntry<TKey, TValue>>();
 	private _buckets:IMap<HashEntry<TKey, TValue>[]> = {};
 
-	constructor(private compareSelector:Selector<TKey,any> = Functions.Identity)
+	constructor(private _compareSelector:Selector<TKey,any> = Functions.Identity)
 	{
 		super();
 	}
@@ -127,9 +61,15 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 
 	private setKV(key:TKey, value:TValue, allowOverwrite:boolean):boolean
 	{
-		var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
-		var compareKey = comparer(key);
-		var hash = computeHashCode(compareKey), entry:HashEntry<TKey, TValue>;
+		var _          = this,
+		    buckets    = _._buckets,
+		    entries    = _._entries,
+		    comparer   = _._compareSelector,
+
+		    compareKey = comparer(key),
+		    hash       = computeHashCode(compareKey),
+
+		    entry:HashEntry<TKey, TValue>;
 
 		if(callHasOwnProperty(buckets, hash))
 		{
@@ -148,7 +88,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 					{
 						if(value===VOID0)
 						{
-							entries.remove(old);
+							entries.removeNode(old);
 							array.splice(i, 1);
 							if(!array.length)
 								delete buckets[hash];
@@ -180,7 +120,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 			buckets[hash] = [entry = new HashEntry<TKey, TValue>(key, value)];
 		}
 		++_._count;
-		entries.addLast(entry);
+		entries.addNode(entry);
 		_._onValueUpdate(key, value, undefined);
 		return true;
 	}
@@ -192,7 +132,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 
 	getValue(key:TKey):TValue
 	{
-		var buckets = this._buckets, comparer = this.compareSelector;
+		var buckets = this._buckets, comparer = this._compareSelector;
 		var compareKey = comparer(key);
 		var hash = computeHashCode(compareKey);
 		if(!callHasOwnProperty(buckets, hash)) return undefined;
@@ -213,7 +153,7 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 
 	containsKey(key:TKey):boolean
 	{
-		var _ = this, buckets = _._buckets, comparer = _.compareSelector;
+		var _ = this, buckets = _._buckets, comparer = _._compareSelector;
 		var compareKey = comparer(key);
 		var hash = computeHashCode(compareKey);
 		if(!callHasOwnProperty(buckets, hash)) return false;
@@ -273,14 +213,22 @@ class Dictionary<TKey, TValue> extends DictionaryAbstractBase<TKey, TValue>
 	protected getKeys():TKey[]
 	{
 		var _ = this, result:TKey[] = [];
-		_._entries.forEach(entry=> result.push(entry.key));
+		var e = _._entries.first;
+		while(e) {
+			result.push(e.key);
+			e = e.next;
+		}
 		return result;
 	}
 
 	protected getValues():TValue[]
 	{
 		var _ = this, result:TValue[] = [];
-		_._entries.forEach(entry=> result.push(entry.value));
+		var e = _._entries.first;
+		while(e) {
+			result.push(e.value);
+			e = e.next;
+		}
 		return result;
 	}
 

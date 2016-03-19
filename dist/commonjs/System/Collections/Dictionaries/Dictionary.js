@@ -5,11 +5,11 @@
  */
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -22,77 +22,17 @@ var Types_1 = require('../../Types');
 var Functions_1 = require('../../Functions');
 var DictionaryBase_1 = require('./DictionaryBase');
 var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
+var LinkedNodeList_1 = require('../LinkedNodeList');
 var VOID0 = void 0;
 
-var HashEntry = function HashEntry(key, value, prev, next) {
+var HashEntry = function HashEntry(key, value, previous, next) {
     _classCallCheck(this, HashEntry);
 
     this.key = key;
     this.value = value;
-    this.prev = prev;
+    this.previous = previous;
     this.next = next;
 };
-
-var EntryList = function () {
-    function EntryList(first, last) {
-        _classCallCheck(this, EntryList);
-
-        this.first = first;
-        this.last = last;
-    }
-
-    _createClass(EntryList, [{
-        key: 'addLast',
-        value: function addLast(entry) {
-            var _ = this;
-            if (_.last != null) {
-                _.last.next = entry;
-                entry.prev = _.last;
-                _.last = entry;
-            } else _.first = _.last = entry;
-        }
-    }, {
-        key: 'replace',
-        value: function replace(entry, newEntry) {
-            var _ = this;
-            if (entry.prev != null) {
-                entry.prev.next = newEntry;
-                newEntry.prev = entry.prev;
-            } else _.first = newEntry;
-            if (entry.next != null) {
-                entry.next.prev = newEntry;
-                newEntry.next = entry.next;
-            } else _.last = newEntry;
-        }
-    }, {
-        key: 'remove',
-        value: function remove(entry) {
-            var _ = this;
-            if (entry.prev != null) entry.prev.next = entry.next;else _.first = entry.next;
-            if (entry.next != null) entry.next.prev = entry.prev;else _.last = entry.prev;
-        }
-    }, {
-        key: 'clear',
-        value: function clear() {
-            var _ = this;
-            while (_.last) {
-                _.remove(_.last);
-            }
-        }
-    }, {
-        key: 'forEach',
-        value: function forEach(closure) {
-            var _ = this,
-                currentEntry = _.first;
-            while (currentEntry) {
-                closure(currentEntry);
-                currentEntry = currentEntry.next;
-            }
-        }
-    }]);
-
-    return EntryList;
-}();
 
 function callHasOwnProperty(target, key) {
     return Object.prototype.hasOwnProperty.call(target, key);
@@ -107,15 +47,15 @@ var Dictionary = function (_DictionaryBase_1$def) {
     _inherits(Dictionary, _DictionaryBase_1$def);
 
     function Dictionary() {
-        var compareSelector = arguments.length <= 0 || arguments[0] === undefined ? Functions_1.default.Identity : arguments[0];
+        var _compareSelector = arguments.length <= 0 || arguments[0] === undefined ? Functions_1.default.Identity : arguments[0];
 
         _classCallCheck(this, Dictionary);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Dictionary).call(this));
 
-        _this.compareSelector = compareSelector;
+        _this._compareSelector = _compareSelector;
         _this._count = 0;
-        _this._entries = new EntryList();
+        _this._entries = new LinkedNodeList_1.default();
         _this._buckets = {};
         return _this;
     }
@@ -126,9 +66,9 @@ var Dictionary = function (_DictionaryBase_1$def) {
             var _ = this,
                 buckets = _._buckets,
                 entries = _._entries,
-                comparer = _.compareSelector;
-            var compareKey = comparer(key);
-            var hash = computeHashCode(compareKey),
+                comparer = _._compareSelector,
+                compareKey = comparer(key),
+                hash = computeHashCode(compareKey),
                 entry;
             if (callHasOwnProperty(buckets, hash)) {
                 var equal = Compare_1.areEqual;
@@ -140,7 +80,7 @@ var Dictionary = function (_DictionaryBase_1$def) {
                         var changed = !equal(old.value, value);
                         if (changed) {
                             if (value === VOID0) {
-                                entries.remove(old);
+                                entries.removeNode(old);
                                 array.splice(i, 1);
                                 if (!array.length) delete buckets[hash];
                                 --_._count;
@@ -162,7 +102,7 @@ var Dictionary = function (_DictionaryBase_1$def) {
                 buckets[hash] = [entry = new HashEntry(key, value)];
             }
             ++_._count;
-            entries.addLast(entry);
+            entries.addNode(entry);
             _._onValueUpdate(key, value, undefined);
             return true;
         }
@@ -175,7 +115,7 @@ var Dictionary = function (_DictionaryBase_1$def) {
         key: 'getValue',
         value: function getValue(key) {
             var buckets = this._buckets,
-                comparer = this.compareSelector;
+                comparer = this._compareSelector;
             var compareKey = comparer(key);
             var hash = computeHashCode(compareKey);
             if (!callHasOwnProperty(buckets, hash)) return undefined;
@@ -217,7 +157,7 @@ var Dictionary = function (_DictionaryBase_1$def) {
         value: function containsKey(key) {
             var _ = this,
                 buckets = _._buckets,
-                comparer = _.compareSelector;
+                comparer = _._compareSelector;
             var compareKey = comparer(key);
             var hash = computeHashCode(compareKey);
             if (!callHasOwnProperty(buckets, hash)) return false;
@@ -266,9 +206,11 @@ var Dictionary = function (_DictionaryBase_1$def) {
         value: function getKeys() {
             var _ = this,
                 result = [];
-            _._entries.forEach(function (entry) {
-                return result.push(entry.key);
-            });
+            var e = _._entries.first;
+            while (e) {
+                result.push(e.key);
+                e = e.next;
+            }
             return result;
         }
     }, {
@@ -276,9 +218,11 @@ var Dictionary = function (_DictionaryBase_1$def) {
         value: function getValues() {
             var _ = this,
                 result = [];
-            _._entries.forEach(function (entry) {
-                return result.push(entry.value);
-            });
+            var e = _._entries.first;
+            while (e) {
+                result.push(e.value);
+                e = e.next;
+            }
             return result;
         }
     }]);

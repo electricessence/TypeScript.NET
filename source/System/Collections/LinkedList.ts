@@ -30,13 +30,16 @@ import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeExcepti
  * http://stackoverflow.com/questions/166884/array-versus-linked-list
  *****************************/
 
-
-class Node<T>
+/*
+ * An internal node is used to manage the order without exposing underlying link chain to the consumer.
+ */
+class InternalNode<T>
+implements ILinkedNode<InternalNode<T>>, INodeWithValue<T>
 {
 	constructor(
 		public value?:T,
-		public prev?:Node<T>,
-		public next?:Node<T>)
+		public previous?:InternalNode<T>,
+		public next?:InternalNode<T>)
 	{
 	}
 
@@ -44,14 +47,14 @@ class Node<T>
 
 	assertDetached():void
 	{
-		if(this.next || this.prev)
+		if(this.next || this.previous)
 			throw new InvalidOperationException(
 				"Adding a node that is already placed.");
 	}
 
 }
 
-function ensureExternal<T>(node:Node<T>, list:LinkedList<T>):ILinkedListNode<T>
+function ensureExternal<T>(node:InternalNode<T>, list:LinkedList<T>):ILinkedListNode<T>
 {
 	if(!node)
 		return null;
@@ -63,7 +66,7 @@ function ensureExternal<T>(node:Node<T>, list:LinkedList<T>):ILinkedListNode<T>
 	return external;
 }
 
-function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):Node<T>
+function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNode<T>
 {
 	if(!node)
 		throw new ArgumentNullException(
@@ -73,7 +76,7 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):Node<T>
 		throw new InvalidOperationException(
 			"Provided node does not belong to this list.");
 
-	var n:Node<T> = (<any>node)._node;
+	var n:InternalNode<T> = (<any>node)._node;
 	if(!n)
 		throw new InvalidOperationException(
 			"Provided node is not valid.");
@@ -85,26 +88,26 @@ export default
 class LinkedList<T>
 implements ILinkedList<T>
 {
-	private _first:Node<T>;
-	private _last:Node<T>;
+	private _first:InternalNode<T>;
+	private _last:InternalNode<T>;
 	private _count:number;
 
 	constructor(source?:IEnumerable<T>);
 	constructor(source?:IArray<T>);
 	constructor(source:any)
 	{
-		var _ = this, c = 0, first:Node<T> = null, last:Node<T> = null;
+		var _ = this, c = 0, first:InternalNode<T> = null, last:InternalNode<T> = null;
 		var e = Enumerator.from<T>(source);
 
 		if(e.moveNext())
 		{
-			first = last = new Node<T>(e.current);
+			first = last = new InternalNode<T>(e.current);
 			++c;
 		}
 
 		while(e.moveNext())
 		{
-			last = last.next = new Node<T>(e.current, last);
+			last = last.next = new InternalNode<T>(e.current, last);
 			++c;
 		}
 
@@ -115,65 +118,65 @@ implements ILinkedList<T>
 
 	// #region Internals.
 
-	private _addFirst(entry:T):Node<T>
+	private _addFirst(entry:T):InternalNode<T>
 	{
 		var _ = this, first = _._first;
-		var prev = new Node(entry, null, first);
+		var prev = new InternalNode(entry, null, first);
 		if(first)
-			first.prev = prev;
+			first.previous = prev;
 		else
 			_._last = prev;
 
 		_._first = prev;
 
-		_._count += 1;
+		_._count++;
 
 		return prev;
 	}
 
-	private _addLast(entry:T):Node<T>
+	private _addLast(entry:T):InternalNode<T>
 	{
 		var _ = this, last = _._last;
-		var next = new Node(entry, last);
+		var next = new InternalNode(entry, last);
 		if(last)
 			last.next = next;
 		else
 			_._first = next;
 
 		_._last = next;
-		_._count += 1;
+		_._count++;
 
 		return next;
 	}
 
-	private _addNodeBefore(n:Node<T>, inserting:Node<T>):void
+	private _addNodeBefore(n:InternalNode<T>, inserting:InternalNode<T>):void
 	{
 		inserting.assertDetached();
 
 		inserting.next = n;
-		inserting.prev = n.prev;
+		inserting.previous = n.previous;
 
-		n.prev.next = inserting;
-		n.prev = inserting;
+		n.previous.next = inserting;
+		n.previous = inserting;
 
-		this._count += 1;
+		this._count++;
 	}
 
 
-	private _addNodeAfter(n:Node<T>, inserting:Node<T>):void
+	private _addNodeAfter(n:InternalNode<T>, inserting:InternalNode<T>):void
 	{
 		inserting.assertDetached();
 
-		inserting.prev = n;
+		inserting.previous = n;
 		inserting.next = n.next;
 
-		n.next.prev = inserting;
+		n.next.previous = inserting;
 		n.next = inserting;
 
-		this._count += 1;
+		this._count++;
 	}
 
-	private _findFirst(entry:T):Node<T>
+	private _findFirst(entry:T):InternalNode<T>
 	{
 		var equals = Values.areEqual,
 		    next   = this._first;
@@ -186,7 +189,7 @@ implements ILinkedList<T>
 		return null;
 	}
 
-	private _findLast(entry:T):Node<T>
+	private _findLast(entry:T):InternalNode<T>
 	{
 		var equals = Values.areEqual,
 		    prev   = this._last;
@@ -194,7 +197,7 @@ implements ILinkedList<T>
 		{
 			if(equals(entry, prev.value))
 				return prev;
-			prev = prev.prev;
+			prev = prev.previous;
 		}
 		return null;
 	}
@@ -228,11 +231,11 @@ implements ILinkedList<T>
 	// #region IEnumerable<T>
 	getEnumerator():IEnumerator<T>
 	{
-		var _ = this, current:Node<T>;
+		var _ = this, current:InternalNode<T>;
 		return new EnumeratorBase<T>(
 			() =>
 			{
-				current = new Node(null, null, _._first);
+				current = new InternalNode(null, null, _._first);
 			}, // Initialize anchor...
 			(yielder)=>
 				(current = current.next)
@@ -299,16 +302,16 @@ implements ILinkedList<T>
 	removeOnce(entry:T):boolean
 	{
 		var _ = this;
-		var node:Node<T> = _._findFirst(entry);
+		var node:InternalNode<T> = _._findFirst(entry);
 		if(node)
 		{
-			var prev = node.prev, next = node.next;
+			var prev = node.previous, next = node.next;
 			if(prev) prev.next = next;
 			else _._first = next;
-			if(next) next.prev = prev;
+			if(next) next.previous = prev;
 			else _._last = prev;
 
-			_._count -= 1;
+			_._count--;
 		}
 
 		return node!=null;
@@ -341,7 +344,7 @@ implements ILinkedList<T>
 
 	// get methods are available for convenience but is an n*index operation.
 
-	private _getNodeAt(index:number):Node<T>
+	private _getNodeAt(index:number):InternalNode<T>
 	{
 		if(index<0)
 			throw new ArgumentOutOfRangeException(
@@ -399,9 +402,9 @@ implements ILinkedList<T>
 			var next = first.next;
 			_._first = next;
 			if(next) // Might have been the last.
-				next.prev = null;
+				next.previous = null;
 
-			_._count -= 1;
+			_._count--;
 		}
 	}
 
@@ -410,12 +413,12 @@ implements ILinkedList<T>
 		var _ = this, last = _._last;
 		if(last)
 		{
-			var prev = last.prev;
+			var prev = last.previous;
 			_._last = prev;
 			if(prev) // Might have been the first.
 				prev.next = null;
 
-			_._count -= 1;
+			_._count--;
 		}
 	}
 
@@ -423,15 +426,15 @@ implements ILinkedList<T>
 	removeNode(node:ILinkedListNode<T>):boolean
 	{
 		var _ = this;
-		var n:Node<T> = getInternal(node, _);
-		var prev = n.prev, next = n.next, a:boolean = false, b:boolean = false;
+		var n:InternalNode<T> = getInternal(node, _);
+		var prev = n.previous, next = n.next, a:boolean = false, b:boolean = false;
 
 
 		if(prev) prev.next = next;
 		else if(_._first==n) _._first = next;
 		else a = true;
 
-		if(next) next.prev = prev;
+		if(next) next.previous = prev;
 		else if(_._last==n) _._last = prev;
 		else b = true;
 
@@ -445,7 +448,10 @@ implements ILinkedList<T>
 			);
 		}
 
-		return !a && !b;
+		var removed = !a && !b;
+		if(removed) _._count--;
+
+		return removed;
 
 	}
 
@@ -453,7 +459,7 @@ implements ILinkedList<T>
 	{
 		this._addNodeBefore(
 			getInternal(node, this),
-			new Node(entry)
+			new InternalNode(entry)
 		);
 	}
 
@@ -462,7 +468,7 @@ implements ILinkedList<T>
 	{
 		this._addNodeAfter(
 			getInternal(node, this),
-			new Node(entry)
+			new InternalNode(entry)
 		);
 	}
 
@@ -490,7 +496,7 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 {
 	constructor(
 		private _list:LinkedList<T>,
-		private _node:Node<T>)
+		private _node:InternalNode<T>)
 	{
 	}
 
@@ -501,7 +507,7 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 
 	get previous():ILinkedListNode<T>
 	{
-		return ensureExternal(this._node.prev, this._list);
+		return ensureExternal(this._node.previous, this._list);
 	}
 
 	get next():ILinkedListNode<T>

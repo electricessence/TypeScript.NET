@@ -6,15 +6,24 @@
 
 ///<reference path="ILinkedList.d.ts"/>
 
+
+interface ILinkedNode<TNode extends ILinkedNode<TNode>>
+{
+	previous:TNode;
+	next:TNode;
+}
+
+interface INodeWithValue<TValue>
+{
+	value:TValue;
+}
+
+
 // Use an interface in order to prevent external construction of LinkedListNode
 interface ILinkedListNode<T>
+extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T>
 {
-
 	list: ILinkedList<T>;
-
-	previous: ILinkedListNode<T>;
-	next: ILinkedListNode<T>;
-	value: T;
 
 	addBefore(entry:T): void;
 	addAfter(entry:T): void;

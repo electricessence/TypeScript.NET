@@ -45,10 +45,10 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
         execute: function() {
             VOID0 = void 0;
             HashEntry = (function () {
-                function HashEntry(key, value, prev, next) {
+                function HashEntry(key, value, previous, next) {
                     this.key = key;
                     this.value = value;
-                    this.prev = prev;
+                    this.previous = previous;
                     this.next = next;
                 }
                 return HashEntry;
@@ -62,7 +62,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     var _ = this;
                     if (_.last != null) {
                         _.last.next = entry;
-                        entry.prev = _.last;
+                        entry.previous = _.last;
                         _.last = entry;
                     }
                     else
@@ -70,14 +70,14 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                 };
                 EntryList.prototype.replace = function (entry, newEntry) {
                     var _ = this;
-                    if (entry.prev != null) {
-                        entry.prev.next = newEntry;
-                        newEntry.prev = entry.prev;
+                    if (entry.previous != null) {
+                        entry.previous.next = newEntry;
+                        newEntry.previous = entry.previous;
                     }
                     else
                         _.first = newEntry;
                     if (entry.next != null) {
-                        entry.next.prev = newEntry;
+                        entry.next.previous = newEntry;
                         newEntry.next = entry.next;
                     }
                     else
@@ -85,14 +85,14 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                 };
                 EntryList.prototype.remove = function (entry) {
                     var _ = this;
-                    if (entry.prev != null)
-                        entry.prev.next = entry.next;
+                    if (entry.previous != null)
+                        entry.previous.next = entry.next;
                     else
                         _.first = entry.next;
                     if (entry.next != null)
-                        entry.next.prev = entry.prev;
+                        entry.next.previous = entry.previous;
                     else
-                        _.last = entry.prev;
+                        _.last = entry.previous;
                 };
                 EntryList.prototype.clear = function () {
                     var _ = this;
@@ -111,18 +111,16 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
             }());
             Dictionary = (function (_super) {
                 __extends(Dictionary, _super);
-                function Dictionary(compareSelector) {
-                    if (compareSelector === void 0) { compareSelector = Functions_1.default.Identity; }
+                function Dictionary(_compareSelector) {
+                    if (_compareSelector === void 0) { _compareSelector = Functions_1.default.Identity; }
                     _super.call(this);
-                    this.compareSelector = compareSelector;
+                    this._compareSelector = _compareSelector;
                     this._count = 0;
                     this._entries = new EntryList();
                     this._buckets = {};
                 }
                 Dictionary.prototype.setKV = function (key, value, allowOverwrite) {
-                    var _ = this, buckets = _._buckets, entries = _._entries, comparer = _.compareSelector;
-                    var compareKey = comparer(key);
-                    var hash = computeHashCode(compareKey), entry;
+                    var _ = this, buckets = _._buckets, entries = _._entries, comparer = _._compareSelector, compareKey = comparer(key), hash = computeHashCode(compareKey), entry;
                     if (callHasOwnProperty(buckets, hash)) {
                         var equal = Compare_1.areEqual;
                         var array = buckets[hash];
@@ -170,7 +168,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     this.setKV(key, value, false);
                 };
                 Dictionary.prototype.getValue = function (key) {
-                    var buckets = this._buckets, comparer = this.compareSelector;
+                    var buckets = this._buckets, comparer = this._compareSelector;
                     var compareKey = comparer(key);
                     var hash = computeHashCode(compareKey);
                     if (!callHasOwnProperty(buckets, hash))
@@ -187,7 +185,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     return this.setKV(key, value, true);
                 };
                 Dictionary.prototype.containsKey = function (key) {
-                    var _ = this, buckets = _._buckets, comparer = _.compareSelector;
+                    var _ = this, buckets = _._buckets, comparer = _._compareSelector;
                     var compareKey = comparer(key);
                     var hash = computeHashCode(compareKey);
                     if (!callHasOwnProperty(buckets, hash))

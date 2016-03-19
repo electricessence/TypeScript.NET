@@ -29,6 +29,7 @@ export default class Uri {
         _.pathAndQuery = _.getPathAndQuery() || null;
         _.fragment = formatFragment(fragment) || null;
         _.absoluteUri = _.getAbsoluteUri();
+        _.baseUri = _.absoluteUri.replace(/[?#].*/, '');
         Object.freeze(_);
     }
     equals(other) {
