@@ -66,7 +66,7 @@ export default class LinkedList {
         else
             _._last = prev;
         _._first = prev;
-        _._count += 1;
+        _._count++;
         return prev;
     }
     _addLast(entry) {
@@ -77,7 +77,7 @@ export default class LinkedList {
         else
             _._first = next;
         _._last = next;
-        _._count += 1;
+        _._count++;
         return next;
     }
     _addNodeBefore(n, inserting) {
@@ -86,7 +86,7 @@ export default class LinkedList {
         inserting.previous = n.previous;
         n.previous.next = inserting;
         n.previous = inserting;
-        this._count += 1;
+        this._count++;
     }
     _addNodeAfter(n, inserting) {
         inserting.assertDetached();
@@ -94,7 +94,7 @@ export default class LinkedList {
         inserting.next = n.next;
         n.next.previous = inserting;
         n.next = inserting;
-        this._count += 1;
+        this._count++;
     }
     _findFirst(entry) {
         var equals = Values.areEqual, next = this._first;
@@ -180,7 +180,7 @@ export default class LinkedList {
                 next.previous = prev;
             else
                 _._last = prev;
-            _._count -= 1;
+            _._count--;
         }
         return node != null;
     }
@@ -233,7 +233,7 @@ export default class LinkedList {
             _._first = next;
             if (next)
                 next.previous = null;
-            _._count -= 1;
+            _._count--;
         }
     }
     removeLast() {
@@ -243,7 +243,7 @@ export default class LinkedList {
             _._last = prev;
             if (prev)
                 prev.next = null;
-            _._count -= 1;
+            _._count--;
         }
     }
     removeNode(node) {
@@ -265,7 +265,10 @@ export default class LinkedList {
         if (a !== b) {
             throw new ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
         }
-        return !a && !b;
+        var removed = !a && !b;
+        if (removed)
+            _._count--;
+        return removed;
     }
     addBefore(node, entry) {
         this._addNodeBefore(getInternal(node, this), new InternalNode(entry));

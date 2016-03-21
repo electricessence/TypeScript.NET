@@ -9,6 +9,7 @@ import Type from '../../Types';
 import Functions from '../../Functions';
 import DictionaryBase from './DictionaryBase';
 import EnumeratorBase from '../Enumeration/EnumeratorBase';
+import LinkedNodeList from '../LinkedNodeList';
 const VOID0 = void 0;
 class HashEntry {
     constructor(key, value, previous, next) {
@@ -16,61 +17,6 @@ class HashEntry {
         this.value = value;
         this.previous = previous;
         this.next = next;
-    }
-}
-class EntryList {
-    constructor(first, last) {
-        this.first = first;
-        this.last = last;
-    }
-    addLast(entry) {
-        var _ = this;
-        if (_.last != null) {
-            _.last.next = entry;
-            entry.previous = _.last;
-            _.last = entry;
-        }
-        else
-            _.first = _.last = entry;
-    }
-    replace(entry, newEntry) {
-        var _ = this;
-        if (entry.previous != null) {
-            entry.previous.next = newEntry;
-            newEntry.previous = entry.previous;
-        }
-        else
-            _.first = newEntry;
-        if (entry.next != null) {
-            entry.next.previous = newEntry;
-            newEntry.next = entry.next;
-        }
-        else
-            _.last = newEntry;
-    }
-    remove(entry) {
-        var _ = this;
-        if (entry.previous != null)
-            entry.previous.next = entry.next;
-        else
-            _.first = entry.next;
-        if (entry.next != null)
-            entry.next.previous = entry.previous;
-        else
-            _.last = entry.previous;
-    }
-    clear() {
-        var _ = this;
-        while (_.last) {
-            _.remove(_.last);
-        }
-    }
-    forEach(closure) {
-        var _ = this, currentEntry = _.first;
-        while (currentEntry) {
-            closure(currentEntry);
-            currentEntry = currentEntry.next;
-        }
     }
 }
 function callHasOwnProperty(target, key) {
@@ -90,7 +36,7 @@ export default class Dictionary extends DictionaryBase {
         super();
         this._compareSelector = _compareSelector;
         this._count = 0;
-        this._entries = new EntryList();
+        this._entries = new LinkedNodeList();
         this._buckets = {};
     }
     setKV(key, value, allowOverwrite) {
@@ -106,7 +52,7 @@ export default class Dictionary extends DictionaryBase {
                     var changed = !equal(old.value, value);
                     if (changed) {
                         if (value === VOID0) {
-                            entries.remove(old);
+                            entries.removeNode(old);
                             array.splice(i, 1);
                             if (!array.length)
                                 delete buckets[hash];
@@ -134,7 +80,7 @@ export default class Dictionary extends DictionaryBase {
             buckets[hash] = [entry = new HashEntry(key, value)];
         }
         ++_._count;
-        entries.addLast(entry);
+        entries.addNode(entry);
         _._onValueUpdate(key, value, undefined);
         return true;
     }
@@ -196,12 +142,20 @@ export default class Dictionary extends DictionaryBase {
     }
     getKeys() {
         var _ = this, result = [];
-        _._entries.forEach(entry => result.push(entry.key));
+        var e = _._entries.first;
+        while (e) {
+            result.push(e.key);
+            e = e.next;
+        }
         return result;
     }
     getValues() {
         var _ = this, result = [];
-        _._entries.forEach(entry => result.push(entry.value));
+        var e = _._entries.first;
+        while (e) {
+            result.push(e.value);
+            e = e.next;
+        }
         return result;
     }
 }

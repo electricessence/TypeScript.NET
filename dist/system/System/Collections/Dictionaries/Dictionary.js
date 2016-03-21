@@ -3,7 +3,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase'], function(exports_1, context_1) {
+System.register(['../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase', '../LinkedNodeList'], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,8 +11,8 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, Types_1, Functions_1, DictionaryBase_1, EnumeratorBase_1;
-    var VOID0, HashEntry, EntryList, Dictionary;
+    var Compare_1, Types_1, Functions_1, DictionaryBase_1, EnumeratorBase_1, LinkedNodeList_1;
+    var VOID0, HashEntry, Dictionary;
     function callHasOwnProperty(target, key) {
         return Object.prototype.hasOwnProperty.call(target, key);
     }
@@ -41,6 +41,9 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
             },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
+            },
+            function (LinkedNodeList_1_1) {
+                LinkedNodeList_1 = LinkedNodeList_1_1;
             }],
         execute: function() {
             VOID0 = void 0;
@@ -53,62 +56,6 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                 }
                 return HashEntry;
             }());
-            EntryList = (function () {
-                function EntryList(first, last) {
-                    this.first = first;
-                    this.last = last;
-                }
-                EntryList.prototype.addLast = function (entry) {
-                    var _ = this;
-                    if (_.last != null) {
-                        _.last.next = entry;
-                        entry.previous = _.last;
-                        _.last = entry;
-                    }
-                    else
-                        _.first = _.last = entry;
-                };
-                EntryList.prototype.replace = function (entry, newEntry) {
-                    var _ = this;
-                    if (entry.previous != null) {
-                        entry.previous.next = newEntry;
-                        newEntry.previous = entry.previous;
-                    }
-                    else
-                        _.first = newEntry;
-                    if (entry.next != null) {
-                        entry.next.previous = newEntry;
-                        newEntry.next = entry.next;
-                    }
-                    else
-                        _.last = newEntry;
-                };
-                EntryList.prototype.remove = function (entry) {
-                    var _ = this;
-                    if (entry.previous != null)
-                        entry.previous.next = entry.next;
-                    else
-                        _.first = entry.next;
-                    if (entry.next != null)
-                        entry.next.previous = entry.previous;
-                    else
-                        _.last = entry.previous;
-                };
-                EntryList.prototype.clear = function () {
-                    var _ = this;
-                    while (_.last) {
-                        _.remove(_.last);
-                    }
-                };
-                EntryList.prototype.forEach = function (closure) {
-                    var _ = this, currentEntry = _.first;
-                    while (currentEntry) {
-                        closure(currentEntry);
-                        currentEntry = currentEntry.next;
-                    }
-                };
-                return EntryList;
-            }());
             Dictionary = (function (_super) {
                 __extends(Dictionary, _super);
                 function Dictionary(_compareSelector) {
@@ -116,7 +63,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                     _super.call(this);
                     this._compareSelector = _compareSelector;
                     this._count = 0;
-                    this._entries = new EntryList();
+                    this._entries = new LinkedNodeList_1.default();
                     this._buckets = {};
                 }
                 Dictionary.prototype.setKV = function (key, value, allowOverwrite) {
@@ -132,7 +79,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                                 var changed = !equal(old.value, value);
                                 if (changed) {
                                     if (value === VOID0) {
-                                        entries.remove(old);
+                                        entries.removeNode(old);
                                         array.splice(i, 1);
                                         if (!array.length)
                                             delete buckets[hash];
@@ -160,7 +107,7 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                         buckets[hash] = [entry = new HashEntry(key, value)];
                     }
                     ++_._count;
-                    entries.addLast(entry);
+                    entries.addNode(entry);
                     _._onValueUpdate(key, value, undefined);
                     return true;
                 };
@@ -223,12 +170,20 @@ System.register(['../../Compare', '../../Types', '../../Functions', './Dictionar
                 };
                 Dictionary.prototype.getKeys = function () {
                     var _ = this, result = [];
-                    _._entries.forEach(function (entry) { return result.push(entry.key); });
+                    var e = _._entries.first;
+                    while (e) {
+                        result.push(e.key);
+                        e = e.next;
+                    }
                     return result;
                 };
                 Dictionary.prototype.getValues = function () {
                     var _ = this, result = [];
-                    _._entries.forEach(function (entry) { return result.push(entry.value); });
+                    var e = _._entries.first;
+                    while (e) {
+                        result.push(e.value);
+                        e = e.next;
+                    }
                     return result;
                 };
                 return Dictionary;

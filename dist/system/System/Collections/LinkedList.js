@@ -92,7 +92,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     else
                         _._last = prev;
                     _._first = prev;
-                    _._count += 1;
+                    _._count++;
                     return prev;
                 };
                 LinkedList.prototype._addLast = function (entry) {
@@ -103,7 +103,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     else
                         _._first = next;
                     _._last = next;
-                    _._count += 1;
+                    _._count++;
                     return next;
                 };
                 LinkedList.prototype._addNodeBefore = function (n, inserting) {
@@ -112,7 +112,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     inserting.previous = n.previous;
                     n.previous.next = inserting;
                     n.previous = inserting;
-                    this._count += 1;
+                    this._count++;
                 };
                 LinkedList.prototype._addNodeAfter = function (n, inserting) {
                     inserting.assertDetached();
@@ -120,7 +120,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     inserting.next = n.next;
                     n.next.previous = inserting;
                     n.next = inserting;
-                    this._count += 1;
+                    this._count++;
                 };
                 LinkedList.prototype._findFirst = function (entry) {
                     var equals = Values.areEqual, next = this._first;
@@ -218,7 +218,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                             next.previous = prev;
                         else
                             _._last = prev;
-                        _._count -= 1;
+                        _._count--;
                     }
                     return node != null;
                 };
@@ -279,7 +279,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                         _._first = next;
                         if (next)
                             next.previous = null;
-                        _._count -= 1;
+                        _._count--;
                     }
                 };
                 LinkedList.prototype.removeLast = function () {
@@ -289,7 +289,7 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                         _._last = prev;
                         if (prev)
                             prev.next = null;
-                        _._count -= 1;
+                        _._count--;
                     }
                 };
                 LinkedList.prototype.removeNode = function (node) {
@@ -311,7 +311,10 @@ System.register(['../Compare', '../Text/Utility', '../Collections/Array/Utility'
                     if (a !== b) {
                         throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
                     }
-                    return !a && !b;
+                    var removed = !a && !b;
+                    if (removed)
+                        _._count--;
+                    return removed;
                 };
                 LinkedList.prototype.addBefore = function (node, entry) {
                     this._addNodeBefore(getInternal(node, this), new InternalNode(entry));
