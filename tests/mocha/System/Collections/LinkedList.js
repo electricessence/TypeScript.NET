@@ -3,13 +3,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ICollection', '../../../../source/System/Collections/LinkedList', '../../../../source/System/Collections/Array/Compare'], factory);
+        define(["require", "exports", "./ICollection", "../../../../source/System/Collections/LinkedList", "../../../../source/System/Collections/Array/Compare"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ICollectionTests = require('./ICollection');
-    var LinkedList_1 = require('../../../../source/System/Collections/LinkedList');
-    var Compare_1 = require('../../../../source/System/Collections/Array/Compare');
+    var ICollectionTests = require("./ICollection");
+    var LinkedList_1 = require("../../../../source/System/Collections/LinkedList");
+    var Compare_1 = require("../../../../source/System/Collections/Array/Compare");
     var assert = require('../../../../node_modules/assert/assert');
     ICollectionTests.StringCollection('LinkedList', new LinkedList_1.default());
     ICollectionTests.NumberCollection('LinkedList', new LinkedList_1.default());
@@ -42,5 +42,4 @@
         });
     });
 });
-
 //# sourceMappingURL=LinkedList.js.map

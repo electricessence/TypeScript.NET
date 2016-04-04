@@ -7,14 +7,14 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Text/Utility', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException'], factory);
+        define(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var TextUtility = require('../Text/Utility');
-    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
-    var ArgumentException_1 = require('../Exceptions/ArgumentException');
-    var ArgumentNullException_1 = require('../Exceptions/ArgumentNullException');
+    var TextUtility = require("../Text/Utility");
+    var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+    var ArgumentException_1 = require("../Exceptions/ArgumentException");
+    var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var LinkedNodeList = (function () {
         function LinkedNodeList() {
             this._first = null;
