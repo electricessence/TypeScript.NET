@@ -6,12 +6,10 @@
 ///<reference path="ILinkedListNode.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as TextUtility from '../Text/Utility';
-
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
-
-import ArgumentException from '../Exceptions/ArgumentException';
-import ArgumentNullException from '../Exceptions/ArgumentNullException';
+import * as TextUtility from "../Text/Utility";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 
 
 /*****************************
@@ -49,7 +47,6 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 	/**
 	 * The first node.  Will be null if the collection is empty.
-	 * @returns {TNode}
 	 */
 	get first():TNode
 	{
@@ -58,7 +55,6 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 	/**
 	 * The last node.
-	 * @returns {TNode}
 	 */
 	get last():TNode
 	{
@@ -82,6 +78,21 @@ implements ILinkedNodeList<TNode>, IDisposable
 		return i;
 	}
 
+	forEach(
+		action:Predicate<TNode> | Action<TNode>):void
+	{
+		var current:TNode = null,
+		    next:TNode = this.first, // Be sure to track the next node so if current node is removed.
+		    index:number = 0;
+
+		do {
+			current = next;
+			next = current && current.next;
+		}
+		while (current
+			&& <any>action(current, index++)!==false);
+	}
+
 	/**
 	 * Erases the linked node's references to each other and returns the number of nodes.
 	 * @returns {number}
@@ -96,8 +107,9 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 		while(n) {
 			cF++;
-			n.previous = null;
+			let current = n;
 			n = n.next;
+			current.next = null;
 		}
 
 		// Last, clear in the reverse direction.
@@ -106,11 +118,12 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 		while(n) {
 			cL++;
-			n.next = null;
+			let current = n;
 			n = n.previous;
+			current.previous = null;
 		}
 
-		if(cF!==cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing.');
+		if(cF!==cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: '+cF+", Reverse: "+cL);
 
 		return cF;
 	}
@@ -137,7 +150,6 @@ implements ILinkedNodeList<TNode>, IDisposable
 	/**
 	 * Gets the index of a particular node.
 	 * @param index
-	 * @returns {TNode}
 	 */
 	getNodeAt(index:number):TNode
 	{
@@ -160,16 +172,15 @@ implements ILinkedNodeList<TNode>, IDisposable
 	 * @returns {boolean}
 	 */
 	indexOf(node:TNode):number {
-		if(node!=null && (node.previous || node.next)) {
+		if(node && (node.previous || node.next)) {
 
 			var index = 0;
-			var c = this._first;
-			while(c) {
+			var c:TNode, n:TNode = this._first;
+			do {
+				c = n;
 				if(c===node) return index;
 				index++;
-				c = c.next;
-			}
-
+			} while((n = c && c.next));
 		}
 
 		return -1;
@@ -256,10 +267,12 @@ implements ILinkedNodeList<TNode>, IDisposable
 		}
 
 		if(before) {
-			node.previous = before.previous;
+			let prev = before.previous;
+			node.previous = prev;
 			node.next = before;
 
 			before.previous = node;
+			if(prev) prev.next = node;
 			if(before==_._first) _._last = node;
 		} else {
 			_._first = _._last = node;
@@ -283,10 +296,12 @@ implements ILinkedNodeList<TNode>, IDisposable
 		}
 
 		if(after) {
-			node.next = after.next;
+			let next = after.next;
+			node.next = next;
 			node.previous = after;
 
 			after.next = node;
+			if(next) next.previous = node;
 			if(after==_._last) _._last = node;
 		} else {
 			_._first = _._last = node;

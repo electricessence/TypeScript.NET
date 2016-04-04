@@ -8,17 +8,13 @@
 ///<reference path="ILinkedList.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as Values from '../Compare';
-import * as TextUtility from '../Text/Utility';
-import * as ArrayUtility from '../Collections/Array/Utility';
-import * as Enumerator from './Enumeration/Enumerator';
-import EnumeratorBase from './Enumeration/EnumeratorBase';
-
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
-
-import ArgumentException from '../Exceptions/ArgumentException';
-import ArgumentNullException from '../Exceptions/ArgumentNullException';
-import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
+import * as Values from "../Compare";
+import * as ArrayUtility from "../Collections/Array/Utility";
+import * as Enumerator from "./Enumeration/Enumerator";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import LinkedNodeList from "./LinkedNodeList";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 
 
 /*****************************
@@ -88,121 +84,26 @@ export default
 class LinkedList<T>
 implements ILinkedList<T>
 {
-	private _first:InternalNode<T>;
-	private _last:InternalNode<T>;
+	private _listInternal:LinkedNodeList<InternalNode<T>>;
 	private _count:number;
 
 	constructor(source?:IEnumerable<T>);
 	constructor(source?:IArray<T>);
 	constructor(source:any)
 	{
-		var _ = this, c = 0, first:InternalNode<T> = null, last:InternalNode<T> = null;
+		var _ = this, c = 0;
 		var e = Enumerator.from<T>(source);
 
-		if(e.moveNext())
-		{
-			first = last = new InternalNode<T>(e.current);
-			++c;
-		}
+		var list = _._listInternal = new LinkedNodeList<InternalNode<T>>();
 
 		while(e.moveNext())
 		{
-			last = last.next = new InternalNode<T>(e.current, last);
+			list.addNode( new InternalNode<T>(e.current) );
 			++c;
 		}
 
-		_._first = first;
-		_._last = last;
 		_._count = c;
 	}
-
-	// #region Internals.
-
-	private _addFirst(entry:T):InternalNode<T>
-	{
-		var _ = this, first = _._first;
-		var prev = new InternalNode(entry, null, first);
-		if(first)
-			first.previous = prev;
-		else
-			_._last = prev;
-
-		_._first = prev;
-
-		_._count++;
-
-		return prev;
-	}
-
-	private _addLast(entry:T):InternalNode<T>
-	{
-		var _ = this, last = _._last;
-		var next = new InternalNode(entry, last);
-		if(last)
-			last.next = next;
-		else
-			_._first = next;
-
-		_._last = next;
-		_._count++;
-
-		return next;
-	}
-
-	private _addNodeBefore(n:InternalNode<T>, inserting:InternalNode<T>):void
-	{
-		inserting.assertDetached();
-
-		inserting.next = n;
-		inserting.previous = n.previous;
-
-		n.previous.next = inserting;
-		n.previous = inserting;
-
-		this._count++;
-	}
-
-
-	private _addNodeAfter(n:InternalNode<T>, inserting:InternalNode<T>):void
-	{
-		inserting.assertDetached();
-
-		inserting.previous = n;
-		inserting.next = n.next;
-
-		n.next.previous = inserting;
-		n.next = inserting;
-
-		this._count++;
-	}
-
-	private _findFirst(entry:T):InternalNode<T>
-	{
-		var equals = Values.areEqual,
-		    next   = this._first;
-		while(next)
-		{
-			if(equals(entry, next.value))
-				return next;
-			next = next.next;
-		}
-		return null;
-	}
-
-	private _findLast(entry:T):InternalNode<T>
-	{
-		var equals = Values.areEqual,
-		    prev   = this._last;
-		while(prev)
-		{
-			if(equals(entry, prev.value))
-				return prev;
-			prev = prev.previous;
-		}
-		return null;
-	}
-
-	// #endregion
 
 
 	// #region IEnumerateEach<T>
@@ -218,11 +119,7 @@ implements ILinkedList<T>
 		}
 		else
 		{
-			var next = this._first, index:number = 0;
-			while(next && <any>action(next.value, index++)!==false)
-			{
-				next = next.next;
-			}
+			this._listInternal.forEach((node, i)=>action(node.value, i));
 		}
 	}
 
@@ -231,20 +128,59 @@ implements ILinkedList<T>
 	// #region IEnumerable<T>
 	getEnumerator():IEnumerator<T>
 	{
-		var _ = this, current:InternalNode<T>;
+		var _ = this,
+		    current:InternalNode<T>,
+		    next:InternalNode<T>;
+
 		return new EnumeratorBase<T>(
 			() =>
 			{
-				current = new InternalNode(null, null, _._first);
-			}, // Initialize anchor...
+				// Initialize anchor...
+				current = null;
+				next = _._listInternal.first;
+			},
 			(yielder)=>
-				(current = current.next)
-					? yielder.yieldReturn(current.value)
-					: yielder.yieldBreak()
+			{
+
+				if(next)
+				{
+					current = next;
+					next = current && current.next;
+					return yielder.yieldReturn(current.value);
+				}
+
+				return yielder.yieldBreak();
+			}
 		);
 	}
 
 	// #endregion
+
+	private _findFirst(entry:T):InternalNode<T>
+	{
+		var equals = Values.areEqual,
+		    next   = this._listInternal.first;
+		while(next)
+		{
+			if(equals(entry, next.value))
+				return next;
+			next = next.next;
+		}
+		return null;
+	}
+
+	private _findLast(entry:T):InternalNode<T>
+	{
+		var equals = Values.areEqual,
+		    prev   = this._listInternal.last;
+		while(prev)
+		{
+			if(equals(entry, prev.value))
+				return prev;
+			prev = prev.previous;
+		}
+		return null;
+	}
 
 	// #region ICollection<T>
 	get count():number
@@ -252,6 +188,7 @@ implements ILinkedList<T>
 		return this._count;
 	}
 
+	//noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
 	get isReadOnly():boolean
 	{
 		return false;
@@ -259,18 +196,15 @@ implements ILinkedList<T>
 
 	add(entry:T):void
 	{
-		this._addLast(entry);
+		this._listInternal.addNode(new InternalNode(entry));
+		this._count++;
 	}
 
 
 	clear():number
 	{
-		var _ = this;
-		_._first = null;
-		_._last = null;
-		var count = _._count;
-		_._count = 0;
-		return count;
+		this._count = 0;
+		return this._listInternal.clear();
 	}
 
 
@@ -283,12 +217,19 @@ implements ILinkedList<T>
 
 	copyTo(array:T[], index:number = 0):T[]
 	{
-		this.forEach(
-			(entry, i) =>
-			{
-				array[index + i] = entry;
-			}
-		);
+		if(!array) throw new ArgumentNullException('array');
+
+		if(this._listInternal.first)
+		{
+			var minLength = index + this._count;
+			if(array.length<minLength) array.length = minLength; // Preset the length if need be.
+			this.forEach(
+				(entry, i) =>
+				{
+					array[index + i] = entry;
+				}
+			);
+		}
 
 		return array;
 	}
@@ -301,30 +242,24 @@ implements ILinkedList<T>
 
 	removeOnce(entry:T):boolean
 	{
-		var _ = this;
-		var node:InternalNode<T> = _._findFirst(entry);
-		if(node)
-		{
-			var prev = node.previous, next = node.next;
-			if(prev) prev.next = next;
-			else _._first = next;
-			if(next) next.previous = prev;
-			else _._last = prev;
-
-			_._count--;
-		}
-
-		return node!=null;
-
+		return this.remove(entry, 1)!==0;
 	}
 
-	remove(entry:T):number
+	remove(entry:T, max:number = Infinity):number
 	{
-		var _ = this, removedCount:number = 0;
-		while(_.removeOnce(entry))
+		var equals = Values.areEqual;
+		var _ = this, list = _._listInternal, removedCount:number = 0;
+
+		list.forEach(node=>
 		{
-			++removedCount;
-		}
+			if(equals(entry, node.value) && list.removeNode(node))
+			{
+				--_._count;
+				++removedCount;
+			}
+			return removedCount<max;
+		});
+
 		return removedCount;
 
 	}
@@ -334,44 +269,25 @@ implements ILinkedList<T>
 
 	get first():ILinkedListNode<T>
 	{
-		return ensureExternal(this._first, this);
+		return ensureExternal(this._listInternal.first, this);
 	}
 
 	get last():ILinkedListNode<T>
 	{
-		return ensureExternal(this._last, this);
+		return ensureExternal(this._listInternal.last, this);
 	}
 
 	// get methods are available for convenience but is an n*index operation.
 
-	private _getNodeAt(index:number):InternalNode<T>
-	{
-		if(index<0)
-			throw new ArgumentOutOfRangeException(
-				'index', index, 'Is less than zero.');
-
-		if(index>=this._count)
-			throw new ArgumentOutOfRangeException(
-				'index', index, 'Is greater than count.');
-
-		var next = this._first, i:number = 0;
-		while(next && index<i++)
-		{
-			next = next.next;
-		}
-
-		return next;
-
-	}
 
 	getValueAt(index:number):T
 	{
-		return this._getNodeAt(index).value;
+		return this._listInternal.getNodeAt(index).value;
 	}
 
 	getNodeAt(index:number):ILinkedListNode<T>
 	{
-		return ensureExternal(this._getNodeAt(index), this);
+		return ensureExternal(this._listInternal.getNodeAt(index), this);
 	}
 
 	find(entry:T):ILinkedListNode<T>
@@ -386,106 +302,77 @@ implements ILinkedList<T>
 
 	addFirst(entry:T):void
 	{
-		this._addFirst(entry);
+		this._listInternal.addNodeBefore(new InternalNode(entry));
+		++this._count;
 	}
 
 	addLast(entry:T):void
 	{
-		this._addLast(entry);
+		this.add(entry);
 	}
 
 	removeFirst():void
 	{
-		var _ = this, first = _._first;
-		if(first)
-		{
-			var next = first.next;
-			_._first = next;
-			if(next) // Might have been the last.
-				next.previous = null;
-
+		var _ = this, first = _._listInternal.first;
+		if(first && _._listInternal.removeNode(first)) {
 			_._count--;
 		}
 	}
 
 	removeLast():void
 	{
-		var _ = this, last = _._last;
-		if(last)
-		{
-			var prev = last.previous;
-			_._last = prev;
-			if(prev) // Might have been the first.
-				prev.next = null;
-
-			_._count--;
+		var _ = this, last = _._listInternal.last;
+		if(last && _._listInternal.removeNode(last)) {
+			--_._count;
 		}
 	}
 
 	// Returns true if successful and false if not found (already removed).
 	removeNode(node:ILinkedListNode<T>):boolean
 	{
-		var _ = this;
-		var n:InternalNode<T> = getInternal(node, _);
-		var prev = n.previous, next = n.next, a:boolean = false, b:boolean = false;
+		var _ = this,
+		    removed = _._listInternal.removeNode(getInternal(node, _));
 
-
-		if(prev) prev.next = next;
-		else if(_._first==n) _._first = next;
-		else a = true;
-
-		if(next) next.previous = prev;
-		else if(_._last==n) _._last = prev;
-		else b = true;
-
-		if(a!==b)
-		{
-			throw new ArgumentException(
-				'node', TextUtility.format(
-					"Provided node is has no {0} reference but is not the {1} node!",
-					a ? "previous" : "next", a ? "first" : "last"
-				)
-			);
-		}
-
-		var removed = !a && !b;
-		if(removed) _._count--;
+		if(removed) --_._count;
 
 		return removed;
-
 	}
 
-	addBefore(node:ILinkedListNode<T>, entry:T):void
+	addBefore(before:ILinkedListNode<T>, entry:T):void
 	{
-		this._addNodeBefore(
-			getInternal(node, this),
-			new InternalNode(entry)
+		this._listInternal.addNodeBefore(
+			new InternalNode(entry),
+			getInternal(before, this)
 		);
+		++this._count;
 	}
 
 
-	addAfter(node:ILinkedListNode<T>, entry:T):void
+	addAfter(after:ILinkedListNode<T>, entry:T):void
 	{
-		this._addNodeAfter(
-			getInternal(node, this),
-			new InternalNode(entry)
+		this._listInternal.addNodeAfter(
+			new InternalNode(entry),
+			getInternal(after, this)
 		);
+		++this._count;
 	}
 
 	addNodeBefore(node:ILinkedListNode<T>, before:ILinkedListNode<T>):void
 	{
-		this._addNodeBefore(
-			getInternal(node, this),
-			getInternal(before, this)
+		this._listInternal.addNodeBefore(
+			getInternal(before, this),
+			getInternal(node, this)
 		);
+		++this._count;
 	}
 
 	addNodeAfter(node:ILinkedListNode<T>, after:ILinkedListNode<T>):void
 	{
-		this._addNodeAfter(
-			getInternal(node, this),
-			getInternal(after, this)
+		this._listInternal.addNodeAfter(
+			getInternal(after, this),
+			getInternal(node, this)
 		);
+		++this._count;
 	}
 
 
@@ -496,7 +383,7 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 {
 	constructor(
 		private _list:LinkedList<T>,
-		private _node:InternalNode<T>)
+		private _nodeInternal:InternalNode<T>)
 	{
 	}
 
@@ -507,22 +394,22 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 
 	get previous():ILinkedListNode<T>
 	{
-		return ensureExternal(this._node.previous, this._list);
+		return ensureExternal(this._nodeInternal.previous, this._list);
 	}
 
 	get next():ILinkedListNode<T>
 	{
-		return ensureExternal(this._node.next, this._list);
+		return ensureExternal(this._nodeInternal.next, this._list);
 	}
 
 	get value():T
 	{
-		return this._node.value;
+		return this._nodeInternal.value;
 	}
 
 	set value(v:T)
 	{
-		this._node.value = v;
+		this._nodeInternal.value = v;
 	}
 
 	addBefore(entry:T):void

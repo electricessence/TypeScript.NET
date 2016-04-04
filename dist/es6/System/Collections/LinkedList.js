@@ -4,15 +4,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import * as Values from '../Compare';
-import * as TextUtility from '../Text/Utility';
-import * as ArrayUtility from '../Collections/Array/Utility';
-import * as Enumerator from './Enumeration/Enumerator';
-import EnumeratorBase from './Enumeration/EnumeratorBase';
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
-import ArgumentException from '../Exceptions/ArgumentException';
-import ArgumentNullException from '../Exceptions/ArgumentNullException';
-import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
+import * as Values from "../Compare";
+import * as ArrayUtility from "../Collections/Array/Utility";
+import * as Enumerator from "./Enumeration/Enumerator";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import LinkedNodeList from "./LinkedNodeList";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 class InternalNode {
     constructor(value, previous, next) {
         this.value = value;
@@ -44,75 +42,14 @@ function getInternal(node, list) {
 }
 export default class LinkedList {
     constructor(source) {
-        var _ = this, c = 0, first = null, last = null;
+        var _ = this, c = 0;
         var e = Enumerator.from(source);
-        if (e.moveNext()) {
-            first = last = new InternalNode(e.current);
-            ++c;
-        }
+        var list = _._listInternal = new LinkedNodeList();
         while (e.moveNext()) {
-            last = last.next = new InternalNode(e.current, last);
+            list.addNode(new InternalNode(e.current));
             ++c;
         }
-        _._first = first;
-        _._last = last;
         _._count = c;
-    }
-    _addFirst(entry) {
-        var _ = this, first = _._first;
-        var prev = new InternalNode(entry, null, first);
-        if (first)
-            first.previous = prev;
-        else
-            _._last = prev;
-        _._first = prev;
-        _._count++;
-        return prev;
-    }
-    _addLast(entry) {
-        var _ = this, last = _._last;
-        var next = new InternalNode(entry, last);
-        if (last)
-            last.next = next;
-        else
-            _._first = next;
-        _._last = next;
-        _._count++;
-        return next;
-    }
-    _addNodeBefore(n, inserting) {
-        inserting.assertDetached();
-        inserting.next = n;
-        inserting.previous = n.previous;
-        n.previous.next = inserting;
-        n.previous = inserting;
-        this._count++;
-    }
-    _addNodeAfter(n, inserting) {
-        inserting.assertDetached();
-        inserting.previous = n;
-        inserting.next = n.next;
-        n.next.previous = inserting;
-        n.next = inserting;
-        this._count++;
-    }
-    _findFirst(entry) {
-        var equals = Values.areEqual, next = this._first;
-        while (next) {
-            if (equals(entry, next.value))
-                return next;
-            next = next.next;
-        }
-        return null;
-    }
-    _findLast(entry) {
-        var equals = Values.areEqual, prev = this._last;
-        while (prev) {
-            if (equals(entry, prev.value))
-                return prev;
-            prev = prev.previous;
-        }
-        return null;
     }
     forEach(action, useCopy = false) {
         if (useCopy) {
@@ -121,19 +58,40 @@ export default class LinkedList {
             array.length = 0;
         }
         else {
-            var next = this._first, index = 0;
-            while (next && action(next.value, index++) !== false) {
-                next = next.next;
-            }
+            this._listInternal.forEach((node, i) => action(node.value, i));
         }
     }
     getEnumerator() {
-        var _ = this, current;
+        var _ = this, current, next;
         return new EnumeratorBase(() => {
-            current = new InternalNode(null, null, _._first);
-        }, (yielder) => (current = current.next)
-            ? yielder.yieldReturn(current.value)
-            : yielder.yieldBreak());
+            current = null;
+            next = _._listInternal.first;
+        }, (yielder) => {
+            if (next) {
+                current = next;
+                next = current && current.next;
+                return yielder.yieldReturn(current.value);
+            }
+            return yielder.yieldBreak();
+        });
+    }
+    _findFirst(entry) {
+        var equals = Values.areEqual, next = this._listInternal.first;
+        while (next) {
+            if (equals(entry, next.value))
+                return next;
+            next = next.next;
+        }
+        return null;
+    }
+    _findLast(entry) {
+        var equals = Values.areEqual, prev = this._listInternal.last;
+        while (prev) {
+            if (equals(entry, prev.value))
+                return prev;
+            prev = prev.previous;
+        }
+        return null;
     }
     get count() {
         return this._count;
@@ -142,15 +100,12 @@ export default class LinkedList {
         return false;
     }
     add(entry) {
-        this._addLast(entry);
+        this._listInternal.addNode(new InternalNode(entry));
+        this._count++;
     }
     clear() {
-        var _ = this;
-        _._first = null;
-        _._last = null;
-        var count = _._count;
-        _._count = 0;
-        return count;
+        this._count = 0;
+        return this._listInternal.clear();
     }
     contains(entry) {
         var found = false, equals = Values.areEqual;
@@ -158,9 +113,16 @@ export default class LinkedList {
         return found;
     }
     copyTo(array, index = 0) {
-        this.forEach((entry, i) => {
-            array[index + i] = entry;
-        });
+        if (!array)
+            throw new ArgumentNullException('array');
+        if (this._listInternal.first) {
+            var minLength = index + this._count;
+            if (array.length < minLength)
+                array.length = minLength;
+            this.forEach((entry, i) => {
+                array[index + i] = entry;
+            });
+        }
         return array;
     }
     toArray() {
@@ -168,51 +130,31 @@ export default class LinkedList {
         return this.copyTo(array);
     }
     removeOnce(entry) {
-        var _ = this;
-        var node = _._findFirst(entry);
-        if (node) {
-            var prev = node.previous, next = node.next;
-            if (prev)
-                prev.next = next;
-            else
-                _._first = next;
-            if (next)
-                next.previous = prev;
-            else
-                _._last = prev;
-            _._count--;
-        }
-        return node != null;
+        return this.remove(entry, 1) !== 0;
     }
-    remove(entry) {
-        var _ = this, removedCount = 0;
-        while (_.removeOnce(entry)) {
-            ++removedCount;
-        }
+    remove(entry, max = Infinity) {
+        var equals = Values.areEqual;
+        var _ = this, list = _._listInternal, removedCount = 0;
+        list.forEach(node => {
+            if (equals(entry, node.value) && list.removeNode(node)) {
+                --_._count;
+                ++removedCount;
+            }
+            return removedCount < max;
+        });
         return removedCount;
     }
     get first() {
-        return ensureExternal(this._first, this);
+        return ensureExternal(this._listInternal.first, this);
     }
     get last() {
-        return ensureExternal(this._last, this);
-    }
-    _getNodeAt(index) {
-        if (index < 0)
-            throw new ArgumentOutOfRangeException('index', index, 'Is less than zero.');
-        if (index >= this._count)
-            throw new ArgumentOutOfRangeException('index', index, 'Is greater than count.');
-        var next = this._first, i = 0;
-        while (next && index < i++) {
-            next = next.next;
-        }
-        return next;
+        return ensureExternal(this._listInternal.last, this);
     }
     getValueAt(index) {
-        return this._getNodeAt(index).value;
+        return this._listInternal.getNodeAt(index).value;
     }
     getNodeAt(index) {
-        return ensureExternal(this._getNodeAt(index), this);
+        return ensureExternal(this._listInternal.getNodeAt(index), this);
     }
     find(entry) {
         return ensureExternal(this._findFirst(entry), this);
@@ -221,87 +163,66 @@ export default class LinkedList {
         return ensureExternal(this._findLast(entry), this);
     }
     addFirst(entry) {
-        this._addFirst(entry);
+        this._listInternal.addNodeBefore(new InternalNode(entry));
+        ++this._count;
     }
     addLast(entry) {
-        this._addLast(entry);
+        this.add(entry);
     }
     removeFirst() {
-        var _ = this, first = _._first;
-        if (first) {
-            var next = first.next;
-            _._first = next;
-            if (next)
-                next.previous = null;
+        var _ = this, first = _._listInternal.first;
+        if (first && _._listInternal.removeNode(first)) {
             _._count--;
         }
     }
     removeLast() {
-        var _ = this, last = _._last;
-        if (last) {
-            var prev = last.previous;
-            _._last = prev;
-            if (prev)
-                prev.next = null;
-            _._count--;
+        var _ = this, last = _._listInternal.last;
+        if (last && _._listInternal.removeNode(last)) {
+            --_._count;
         }
     }
     removeNode(node) {
-        var _ = this;
-        var n = getInternal(node, _);
-        var prev = n.previous, next = n.next, a = false, b = false;
-        if (prev)
-            prev.next = next;
-        else if (_._first == n)
-            _._first = next;
-        else
-            a = true;
-        if (next)
-            next.previous = prev;
-        else if (_._last == n)
-            _._last = prev;
-        else
-            b = true;
-        if (a !== b) {
-            throw new ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
-        }
-        var removed = !a && !b;
+        var _ = this, removed = _._listInternal.removeNode(getInternal(node, _));
         if (removed)
-            _._count--;
+            --_._count;
         return removed;
     }
-    addBefore(node, entry) {
-        this._addNodeBefore(getInternal(node, this), new InternalNode(entry));
+    addBefore(before, entry) {
+        this._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, this));
+        ++this._count;
     }
-    addAfter(node, entry) {
-        this._addNodeAfter(getInternal(node, this), new InternalNode(entry));
+    addAfter(after, entry) {
+        this._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, this));
+        ++this._count;
     }
     addNodeBefore(node, before) {
-        this._addNodeBefore(getInternal(node, this), getInternal(before, this));
+        this._listInternal.addNodeBefore(getInternal(before, this), getInternal(node, this));
+        ++this._count;
     }
     addNodeAfter(node, after) {
-        this._addNodeAfter(getInternal(node, this), getInternal(after, this));
+        this._listInternal.addNodeAfter(getInternal(after, this), getInternal(node, this));
+        ++this._count;
     }
 }
 class LinkedListNode {
-    constructor(_list, _node) {
+    constructor(_list, _nodeInternal) {
         this._list = _list;
-        this._node = _node;
+        this._nodeInternal = _nodeInternal;
     }
     get list() {
         return this._list;
     }
     get previous() {
-        return ensureExternal(this._node.previous, this._list);
+        return ensureExternal(this._nodeInternal.previous, this._list);
     }
     get next() {
-        return ensureExternal(this._node.next, this._list);
+        return ensureExternal(this._nodeInternal.next, this._list);
     }
     get value() {
-        return this._node.value;
+        return this._nodeInternal.value;
     }
     set value(v) {
-        this._node.value = v;
+        this._nodeInternal.value = v;
     }
     addBefore(entry) {
         this._list.addBefore(this, entry);

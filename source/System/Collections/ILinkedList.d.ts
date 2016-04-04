@@ -24,7 +24,9 @@ interface ILinkedNodeList<TNode extends ILinkedNode<TNode>>
 }
 
 interface ILinkedList<T>
-extends ILinkedNodeList<ILinkedListNode<T>>, ICollection<T>, IEnumerateEach<T>
+extends ILinkedNodeList<ILinkedListNode<T>>,
+	ICollection<T>,
+	IEnumerateEach<T>
 {
 
 	toArray():T[];

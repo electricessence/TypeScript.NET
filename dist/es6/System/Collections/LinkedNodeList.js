@@ -26,24 +26,34 @@ export default class LinkedNodeList {
         }
         return i;
     }
+    forEach(action) {
+        var current = null, next = this.first, index = 0;
+        do {
+            current = next;
+            next = current && current.next;
+        } while (current
+            && action(current, index++) !== false);
+    }
     clear() {
         var _ = this, n, cF = 0, cL = 0;
         n = _._first;
         _._first = null;
         while (n) {
             cF++;
-            n.previous = null;
+            let current = n;
             n = n.next;
+            current.next = null;
         }
         n = _._last;
         _._last = null;
         while (n) {
             cL++;
-            n.next = null;
+            let current = n;
             n = n.previous;
+            current.previous = null;
         }
         if (cF !== cL)
-            console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing.');
+            console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
         return cF;
     }
     dispose() {
@@ -62,15 +72,15 @@ export default class LinkedNodeList {
         return next;
     }
     indexOf(node) {
-        if (node != null && (node.previous || node.next)) {
+        if (node && (node.previous || node.next)) {
             var index = 0;
-            var c = this._first;
-            while (c) {
+            var c, n = this._first;
+            do {
+                c = n;
                 if (c === node)
                     return index;
                 index++;
-                c = c.next;
-            }
+            } while ((n = c && c.next));
         }
         return -1;
     }
@@ -112,9 +122,12 @@ export default class LinkedNodeList {
             before = _._first;
         }
         if (before) {
-            node.previous = before.previous;
+            let prev = before.previous;
+            node.previous = prev;
             node.next = before;
             before.previous = node;
+            if (prev)
+                prev.next = node;
             if (before == _._first)
                 _._last = node;
         }
@@ -129,9 +142,12 @@ export default class LinkedNodeList {
             after = _._last;
         }
         if (after) {
-            node.next = after.next;
+            let next = after.next;
+            node.next = next;
             node.previous = after;
             after.next = node;
+            if (next)
+                next.previous = node;
             if (after == _._last)
                 _._last = node;
         }

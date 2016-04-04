@@ -9,15 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Values = require('../Compare');
-var TextUtility = require('../Text/Utility');
-var ArrayUtility = require('../Collections/Array/Utility');
-var Enumerator = require('./Enumeration/Enumerator');
-var EnumeratorBase_1 = require('./Enumeration/EnumeratorBase');
-var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
-var ArgumentException_1 = require('../Exceptions/ArgumentException');
-var ArgumentNullException_1 = require('../Exceptions/ArgumentNullException');
-var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
+var Values = require("../Compare");
+var ArrayUtility = require("../Collections/Array/Utility");
+var Enumerator = require("./Enumeration/Enumerator");
+var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
+var LinkedNodeList_1 = require("./LinkedNodeList");
+var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 
 var InternalNode = function () {
     function InternalNode(value, previous, next) {
@@ -29,7 +27,7 @@ var InternalNode = function () {
     }
 
     _createClass(InternalNode, [{
-        key: 'assertDetached',
+        key: "assertDetached",
         value: function assertDetached() {
             if (this.next || this.previous) throw new InvalidOperationException_1.default("Adding a node that is already placed.");
         }
@@ -57,89 +55,18 @@ var LinkedList = function () {
         _classCallCheck(this, LinkedList);
 
         var _ = this,
-            c = 0,
-            first = null,
-            last = null;
+            c = 0;
         var e = Enumerator.from(source);
-        if (e.moveNext()) {
-            first = last = new InternalNode(e.current);
-            ++c;
-        }
+        var list = _._listInternal = new LinkedNodeList_1.default();
         while (e.moveNext()) {
-            last = last.next = new InternalNode(e.current, last);
+            list.addNode(new InternalNode(e.current));
             ++c;
         }
-        _._first = first;
-        _._last = last;
         _._count = c;
     }
 
     _createClass(LinkedList, [{
-        key: '_addFirst',
-        value: function _addFirst(entry) {
-            var _ = this,
-                first = _._first;
-            var prev = new InternalNode(entry, null, first);
-            if (first) first.previous = prev;else _._last = prev;
-            _._first = prev;
-            _._count++;
-            return prev;
-        }
-    }, {
-        key: '_addLast',
-        value: function _addLast(entry) {
-            var _ = this,
-                last = _._last;
-            var next = new InternalNode(entry, last);
-            if (last) last.next = next;else _._first = next;
-            _._last = next;
-            _._count++;
-            return next;
-        }
-    }, {
-        key: '_addNodeBefore',
-        value: function _addNodeBefore(n, inserting) {
-            inserting.assertDetached();
-            inserting.next = n;
-            inserting.previous = n.previous;
-            n.previous.next = inserting;
-            n.previous = inserting;
-            this._count++;
-        }
-    }, {
-        key: '_addNodeAfter',
-        value: function _addNodeAfter(n, inserting) {
-            inserting.assertDetached();
-            inserting.previous = n;
-            inserting.next = n.next;
-            n.next.previous = inserting;
-            n.next = inserting;
-            this._count++;
-        }
-    }, {
-        key: '_findFirst',
-        value: function _findFirst(entry) {
-            var equals = Values.areEqual,
-                next = this._first;
-            while (next) {
-                if (equals(entry, next.value)) return next;
-                next = next.next;
-            }
-            return null;
-        }
-    }, {
-        key: '_findLast',
-        value: function _findLast(entry) {
-            var equals = Values.areEqual,
-                prev = this._last;
-            while (prev) {
-                if (equals(entry, prev.value)) return prev;
-                prev = prev.previous;
-            }
-            return null;
-        }
-    }, {
-        key: 'forEach',
+        key: "forEach",
         value: function forEach(action) {
             var useCopy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
@@ -148,41 +75,65 @@ var LinkedList = function () {
                 ArrayUtility.forEach(array, action);
                 array.length = 0;
             } else {
-                var next = this._first,
-                    index = 0;
-                while (next && action(next.value, index++) !== false) {
-                    next = next.next;
-                }
+                this._listInternal.forEach(function (node, i) {
+                    return action(node.value, i);
+                });
             }
         }
     }, {
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             var _ = this,
-                current;
+                current,
+                next;
             return new EnumeratorBase_1.default(function () {
-                current = new InternalNode(null, null, _._first);
+                current = null;
+                next = _._listInternal.first;
             }, function (yielder) {
-                return (current = current.next) ? yielder.yieldReturn(current.value) : yielder.yieldBreak();
+                if (next) {
+                    current = next;
+                    next = current && current.next;
+                    return yielder.yieldReturn(current.value);
+                }
+                return yielder.yieldBreak();
             });
         }
     }, {
-        key: 'add',
+        key: "_findFirst",
+        value: function _findFirst(entry) {
+            var equals = Values.areEqual,
+                next = this._listInternal.first;
+            while (next) {
+                if (equals(entry, next.value)) return next;
+                next = next.next;
+            }
+            return null;
+        }
+    }, {
+        key: "_findLast",
+        value: function _findLast(entry) {
+            var equals = Values.areEqual,
+                prev = this._listInternal.last;
+            while (prev) {
+                if (equals(entry, prev.value)) return prev;
+                prev = prev.previous;
+            }
+            return null;
+        }
+    }, {
+        key: "add",
         value: function add(entry) {
-            this._addLast(entry);
+            this._listInternal.addNode(new InternalNode(entry));
+            this._count++;
         }
     }, {
-        key: 'clear',
+        key: "clear",
         value: function clear() {
-            var _ = this;
-            _._first = null;
-            _._last = null;
-            var count = _._count;
-            _._count = 0;
-            return count;
+            this._count = 0;
+            return this._listInternal.clear();
         }
     }, {
-        key: 'contains',
+        key: "contains",
         value: function contains(entry) {
             var found = false,
                 equals = Values.areEqual;
@@ -192,168 +143,149 @@ var LinkedList = function () {
             return found;
         }
     }, {
-        key: 'copyTo',
+        key: "copyTo",
         value: function copyTo(array) {
             var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
-            this.forEach(function (entry, i) {
-                array[index + i] = entry;
-            });
+            if (!array) throw new ArgumentNullException_1.default('array');
+            if (this._listInternal.first) {
+                var minLength = index + this._count;
+                if (array.length < minLength) array.length = minLength;
+                this.forEach(function (entry, i) {
+                    array[index + i] = entry;
+                });
+            }
             return array;
         }
     }, {
-        key: 'toArray',
+        key: "toArray",
         value: function toArray() {
             var array = ArrayUtility.initialize(this._count);
             return this.copyTo(array);
         }
     }, {
-        key: 'removeOnce',
+        key: "removeOnce",
         value: function removeOnce(entry) {
-            var _ = this;
-            var node = _._findFirst(entry);
-            if (node) {
-                var prev = node.previous,
-                    next = node.next;
-                if (prev) prev.next = next;else _._first = next;
-                if (next) next.previous = prev;else _._last = prev;
-                _._count--;
-            }
-            return node != null;
+            return this.remove(entry, 1) !== 0;
         }
     }, {
-        key: 'remove',
+        key: "remove",
         value: function remove(entry) {
+            var max = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
+
+            var equals = Values.areEqual;
             var _ = this,
+                list = _._listInternal,
                 removedCount = 0;
-            while (_.removeOnce(entry)) {
-                ++removedCount;
-            }
+            list.forEach(function (node) {
+                if (equals(entry, node.value) && list.removeNode(node)) {
+                    --_._count;
+                    ++removedCount;
+                }
+                return removedCount < max;
+            });
             return removedCount;
         }
     }, {
-        key: '_getNodeAt',
-        value: function _getNodeAt(index) {
-            if (index < 0) throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
-            if (index >= this._count) throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than count.');
-            var next = this._first,
-                i = 0;
-            while (next && index < i++) {
-                next = next.next;
-            }
-            return next;
-        }
-    }, {
-        key: 'getValueAt',
+        key: "getValueAt",
         value: function getValueAt(index) {
-            return this._getNodeAt(index).value;
+            return this._listInternal.getNodeAt(index).value;
         }
     }, {
-        key: 'getNodeAt',
+        key: "getNodeAt",
         value: function getNodeAt(index) {
-            return ensureExternal(this._getNodeAt(index), this);
+            return ensureExternal(this._listInternal.getNodeAt(index), this);
         }
     }, {
-        key: 'find',
+        key: "find",
         value: function find(entry) {
             return ensureExternal(this._findFirst(entry), this);
         }
     }, {
-        key: 'findLast',
+        key: "findLast",
         value: function findLast(entry) {
             return ensureExternal(this._findLast(entry), this);
         }
     }, {
-        key: 'addFirst',
+        key: "addFirst",
         value: function addFirst(entry) {
-            this._addFirst(entry);
+            this._listInternal.addNodeBefore(new InternalNode(entry));
+            ++this._count;
         }
     }, {
-        key: 'addLast',
+        key: "addLast",
         value: function addLast(entry) {
-            this._addLast(entry);
+            this.add(entry);
         }
     }, {
-        key: 'removeFirst',
+        key: "removeFirst",
         value: function removeFirst() {
             var _ = this,
-                first = _._first;
-            if (first) {
-                var next = first.next;
-                _._first = next;
-                if (next) next.previous = null;
+                first = _._listInternal.first;
+            if (first && _._listInternal.removeNode(first)) {
                 _._count--;
             }
         }
     }, {
-        key: 'removeLast',
+        key: "removeLast",
         value: function removeLast() {
             var _ = this,
-                last = _._last;
-            if (last) {
-                var prev = last.previous;
-                _._last = prev;
-                if (prev) prev.next = null;
-                _._count--;
+                last = _._listInternal.last;
+            if (last && _._listInternal.removeNode(last)) {
+                --_._count;
             }
         }
     }, {
-        key: 'removeNode',
+        key: "removeNode",
         value: function removeNode(node) {
-            var _ = this;
-            var n = getInternal(node, _);
-            var prev = n.previous,
-                next = n.next,
-                a = false,
-                b = false;
-            if (prev) prev.next = next;else if (_._first == n) _._first = next;else a = true;
-            if (next) next.previous = prev;else if (_._last == n) _._last = prev;else b = true;
-            if (a !== b) {
-                throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
-            }
-            var removed = !a && !b;
-            if (removed) _._count--;
+            var _ = this,
+                removed = _._listInternal.removeNode(getInternal(node, _));
+            if (removed) --_._count;
             return removed;
         }
     }, {
-        key: 'addBefore',
-        value: function addBefore(node, entry) {
-            this._addNodeBefore(getInternal(node, this), new InternalNode(entry));
+        key: "addBefore",
+        value: function addBefore(before, entry) {
+            this._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, this));
+            ++this._count;
         }
     }, {
-        key: 'addAfter',
-        value: function addAfter(node, entry) {
-            this._addNodeAfter(getInternal(node, this), new InternalNode(entry));
+        key: "addAfter",
+        value: function addAfter(after, entry) {
+            this._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, this));
+            ++this._count;
         }
     }, {
-        key: 'addNodeBefore',
+        key: "addNodeBefore",
         value: function addNodeBefore(node, before) {
-            this._addNodeBefore(getInternal(node, this), getInternal(before, this));
+            this._listInternal.addNodeBefore(getInternal(before, this), getInternal(node, this));
+            ++this._count;
         }
     }, {
-        key: 'addNodeAfter',
+        key: "addNodeAfter",
         value: function addNodeAfter(node, after) {
-            this._addNodeAfter(getInternal(node, this), getInternal(after, this));
+            this._listInternal.addNodeAfter(getInternal(after, this), getInternal(node, this));
+            ++this._count;
         }
     }, {
-        key: 'count',
+        key: "count",
         get: function get() {
             return this._count;
         }
     }, {
-        key: 'isReadOnly',
+        key: "isReadOnly",
         get: function get() {
             return false;
         }
     }, {
-        key: 'first',
+        key: "first",
         get: function get() {
-            return ensureExternal(this._first, this);
+            return ensureExternal(this._listInternal.first, this);
         }
     }, {
-        key: 'last',
+        key: "last",
         get: function get() {
-            return ensureExternal(this._last, this);
+            return ensureExternal(this._listInternal.last, this);
         }
     }]);
 
@@ -364,60 +296,60 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LinkedList;
 
 var LinkedListNode = function () {
-    function LinkedListNode(_list, _node) {
+    function LinkedListNode(_list, _nodeInternal) {
         _classCallCheck(this, LinkedListNode);
 
         this._list = _list;
-        this._node = _node;
+        this._nodeInternal = _nodeInternal;
     }
 
     _createClass(LinkedListNode, [{
-        key: 'addBefore',
+        key: "addBefore",
         value: function addBefore(entry) {
             this._list.addBefore(this, entry);
         }
     }, {
-        key: 'addAfter',
+        key: "addAfter",
         value: function addAfter(entry) {
             this._list.addAfter(this, entry);
         }
     }, {
-        key: 'addNodeBefore',
+        key: "addNodeBefore",
         value: function addNodeBefore(before) {
             this._list.addNodeBefore(this, before);
         }
     }, {
-        key: 'addNodeAfter',
+        key: "addNodeAfter",
         value: function addNodeAfter(after) {
             this._list.addNodeAfter(this, after);
         }
     }, {
-        key: 'remove',
+        key: "remove",
         value: function remove() {
             this._list.removeNode(this);
         }
     }, {
-        key: 'list',
+        key: "list",
         get: function get() {
             return this._list;
         }
     }, {
-        key: 'previous',
+        key: "previous",
         get: function get() {
-            return ensureExternal(this._node.previous, this._list);
+            return ensureExternal(this._nodeInternal.previous, this._list);
         }
     }, {
-        key: 'next',
+        key: "next",
         get: function get() {
-            return ensureExternal(this._node.next, this._list);
+            return ensureExternal(this._nodeInternal.next, this._list);
         }
     }, {
-        key: 'value',
+        key: "value",
         get: function get() {
-            return this._node.value;
+            return this._nodeInternal.value;
         },
         set: function set(v) {
-            this._node.value = v;
+            this._nodeInternal.value = v;
         }
     }]);
 

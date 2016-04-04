@@ -8,19 +8,17 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Compare', '../Text/Utility', '../Collections/Array/Utility', './Enumeration/Enumerator', './Enumeration/EnumeratorBase', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentException', '../Exceptions/ArgumentNullException', '../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(["require", "exports", "../Compare", "../Collections/Array/Utility", "./Enumeration/Enumerator", "./Enumeration/EnumeratorBase", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Values = require('../Compare');
-    var TextUtility = require('../Text/Utility');
-    var ArrayUtility = require('../Collections/Array/Utility');
-    var Enumerator = require('./Enumeration/Enumerator');
-    var EnumeratorBase_1 = require('./Enumeration/EnumeratorBase');
-    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
-    var ArgumentException_1 = require('../Exceptions/ArgumentException');
-    var ArgumentNullException_1 = require('../Exceptions/ArgumentNullException');
-    var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
+    var Values = require("../Compare");
+    var ArrayUtility = require("../Collections/Array/Utility");
+    var Enumerator = require("./Enumeration/Enumerator");
+    var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
+    var LinkedNodeList_1 = require("./LinkedNodeList");
+    var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+    var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var InternalNode = (function () {
         function InternalNode(value, previous, next) {
             this.value = value;
@@ -53,76 +51,15 @@
     }
     var LinkedList = (function () {
         function LinkedList(source) {
-            var _ = this, c = 0, first = null, last = null;
+            var _ = this, c = 0;
             var e = Enumerator.from(source);
-            if (e.moveNext()) {
-                first = last = new InternalNode(e.current);
-                ++c;
-            }
+            var list = _._listInternal = new LinkedNodeList_1.default();
             while (e.moveNext()) {
-                last = last.next = new InternalNode(e.current, last);
+                list.addNode(new InternalNode(e.current));
                 ++c;
             }
-            _._first = first;
-            _._last = last;
             _._count = c;
         }
-        LinkedList.prototype._addFirst = function (entry) {
-            var _ = this, first = _._first;
-            var prev = new InternalNode(entry, null, first);
-            if (first)
-                first.previous = prev;
-            else
-                _._last = prev;
-            _._first = prev;
-            _._count++;
-            return prev;
-        };
-        LinkedList.prototype._addLast = function (entry) {
-            var _ = this, last = _._last;
-            var next = new InternalNode(entry, last);
-            if (last)
-                last.next = next;
-            else
-                _._first = next;
-            _._last = next;
-            _._count++;
-            return next;
-        };
-        LinkedList.prototype._addNodeBefore = function (n, inserting) {
-            inserting.assertDetached();
-            inserting.next = n;
-            inserting.previous = n.previous;
-            n.previous.next = inserting;
-            n.previous = inserting;
-            this._count++;
-        };
-        LinkedList.prototype._addNodeAfter = function (n, inserting) {
-            inserting.assertDetached();
-            inserting.previous = n;
-            inserting.next = n.next;
-            n.next.previous = inserting;
-            n.next = inserting;
-            this._count++;
-        };
-        LinkedList.prototype._findFirst = function (entry) {
-            var equals = Values.areEqual, next = this._first;
-            while (next) {
-                if (equals(entry, next.value))
-                    return next;
-                next = next.next;
-            }
-            return null;
-        };
-        LinkedList.prototype._findLast = function (entry) {
-            var equals = Values.areEqual, prev = this._last;
-            while (prev) {
-                if (equals(entry, prev.value))
-                    return prev;
-                prev = prev.previous;
-            }
-            return null;
-        };
         LinkedList.prototype.forEach = function (action, useCopy) {
             if (useCopy === void 0) { useCopy = false; }
             if (useCopy) {
@@ -131,21 +68,40 @@
                 array.length = 0;
             }
             else {
-                var next = this._first, index = 0;
-                while (next && action(next.value, index++) !== false) {
-                    next = next.next;
-                }
+                this._listInternal.forEach(function (node, i) { return action(node.value, i); });
             }
         };
         LinkedList.prototype.getEnumerator = function () {
-            var _ = this, current;
+            var _ = this, current, next;
             return new EnumeratorBase_1.default(function () {
-                current = new InternalNode(null, null, _._first);
+                current = null;
+                next = _._listInternal.first;
             }, function (yielder) {
-                return (current = current.next)
-                    ? yielder.yieldReturn(current.value)
-                    : yielder.yieldBreak();
+                if (next) {
+                    current = next;
+                    next = current && current.next;
+                    return yielder.yieldReturn(current.value);
+                }
+                return yielder.yieldBreak();
             });
+        };
+        LinkedList.prototype._findFirst = function (entry) {
+            var equals = Values.areEqual, next = this._listInternal.first;
+            while (next) {
+                if (equals(entry, next.value))
+                    return next;
+                next = next.next;
+            }
+            return null;
+        };
+        LinkedList.prototype._findLast = function (entry) {
+            var equals = Values.areEqual, prev = this._listInternal.last;
+            while (prev) {
+                if (equals(entry, prev.value))
+                    return prev;
+                prev = prev.previous;
+            }
+            return null;
         };
         Object.defineProperty(LinkedList.prototype, "count", {
             get: function () {
@@ -162,15 +118,12 @@
             configurable: true
         });
         LinkedList.prototype.add = function (entry) {
-            this._addLast(entry);
+            this._listInternal.addNode(new InternalNode(entry));
+            this._count++;
         };
         LinkedList.prototype.clear = function () {
-            var _ = this;
-            _._first = null;
-            _._last = null;
-            var count = _._count;
-            _._count = 0;
-            return count;
+            this._count = 0;
+            return this._listInternal.clear();
         };
         LinkedList.prototype.contains = function (entry) {
             var found = false, equals = Values.areEqual;
@@ -179,9 +132,16 @@
         };
         LinkedList.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }
-            this.forEach(function (entry, i) {
-                array[index + i] = entry;
-            });
+            if (!array)
+                throw new ArgumentNullException_1.default('array');
+            if (this._listInternal.first) {
+                var minLength = index + this._count;
+                if (array.length < minLength)
+                    array.length = minLength;
+                this.forEach(function (entry, i) {
+                    array[index + i] = entry;
+                });
+            }
             return array;
         };
         LinkedList.prototype.toArray = function () {
@@ -189,59 +149,40 @@
             return this.copyTo(array);
         };
         LinkedList.prototype.removeOnce = function (entry) {
-            var _ = this;
-            var node = _._findFirst(entry);
-            if (node) {
-                var prev = node.previous, next = node.next;
-                if (prev)
-                    prev.next = next;
-                else
-                    _._first = next;
-                if (next)
-                    next.previous = prev;
-                else
-                    _._last = prev;
-                _._count--;
-            }
-            return node != null;
+            return this.remove(entry, 1) !== 0;
         };
-        LinkedList.prototype.remove = function (entry) {
-            var _ = this, removedCount = 0;
-            while (_.removeOnce(entry)) {
-                ++removedCount;
-            }
+        LinkedList.prototype.remove = function (entry, max) {
+            if (max === void 0) { max = Infinity; }
+            var equals = Values.areEqual;
+            var _ = this, list = _._listInternal, removedCount = 0;
+            list.forEach(function (node) {
+                if (equals(entry, node.value) && list.removeNode(node)) {
+                    --_._count;
+                    ++removedCount;
+                }
+                return removedCount < max;
+            });
             return removedCount;
         };
         Object.defineProperty(LinkedList.prototype, "first", {
             get: function () {
-                return ensureExternal(this._first, this);
+                return ensureExternal(this._listInternal.first, this);
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(LinkedList.prototype, "last", {
             get: function () {
-                return ensureExternal(this._last, this);
+                return ensureExternal(this._listInternal.last, this);
             },
             enumerable: true,
             configurable: true
         });
-        LinkedList.prototype._getNodeAt = function (index) {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
-            if (index >= this._count)
-                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than count.');
-            var next = this._first, i = 0;
-            while (next && index < i++) {
-                next = next.next;
-            }
-            return next;
-        };
         LinkedList.prototype.getValueAt = function (index) {
-            return this._getNodeAt(index).value;
+            return this._listInternal.getNodeAt(index).value;
         };
         LinkedList.prototype.getNodeAt = function (index) {
-            return ensureExternal(this._getNodeAt(index), this);
+            return ensureExternal(this._listInternal.getNodeAt(index), this);
         };
         LinkedList.prototype.find = function (entry) {
             return ensureExternal(this._findFirst(entry), this);
@@ -250,75 +191,54 @@
             return ensureExternal(this._findLast(entry), this);
         };
         LinkedList.prototype.addFirst = function (entry) {
-            this._addFirst(entry);
+            this._listInternal.addNodeBefore(new InternalNode(entry));
+            ++this._count;
         };
         LinkedList.prototype.addLast = function (entry) {
-            this._addLast(entry);
+            this.add(entry);
         };
         LinkedList.prototype.removeFirst = function () {
-            var _ = this, first = _._first;
-            if (first) {
-                var next = first.next;
-                _._first = next;
-                if (next)
-                    next.previous = null;
+            var _ = this, first = _._listInternal.first;
+            if (first && _._listInternal.removeNode(first)) {
                 _._count--;
             }
         };
         LinkedList.prototype.removeLast = function () {
-            var _ = this, last = _._last;
-            if (last) {
-                var prev = last.previous;
-                _._last = prev;
-                if (prev)
-                    prev.next = null;
-                _._count--;
+            var _ = this, last = _._listInternal.last;
+            if (last && _._listInternal.removeNode(last)) {
+                --_._count;
             }
         };
         LinkedList.prototype.removeNode = function (node) {
-            var _ = this;
-            var n = getInternal(node, _);
-            var prev = n.previous, next = n.next, a = false, b = false;
-            if (prev)
-                prev.next = next;
-            else if (_._first == n)
-                _._first = next;
-            else
-                a = true;
-            if (next)
-                next.previous = prev;
-            else if (_._last == n)
-                _._last = prev;
-            else
-                b = true;
-            if (a !== b) {
-                throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
-            }
-            var removed = !a && !b;
+            var _ = this, removed = _._listInternal.removeNode(getInternal(node, _));
             if (removed)
-                _._count--;
+                --_._count;
             return removed;
         };
-        LinkedList.prototype.addBefore = function (node, entry) {
-            this._addNodeBefore(getInternal(node, this), new InternalNode(entry));
+        LinkedList.prototype.addBefore = function (before, entry) {
+            this._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, this));
+            ++this._count;
         };
-        LinkedList.prototype.addAfter = function (node, entry) {
-            this._addNodeAfter(getInternal(node, this), new InternalNode(entry));
+        LinkedList.prototype.addAfter = function (after, entry) {
+            this._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, this));
+            ++this._count;
         };
         LinkedList.prototype.addNodeBefore = function (node, before) {
-            this._addNodeBefore(getInternal(node, this), getInternal(before, this));
+            this._listInternal.addNodeBefore(getInternal(before, this), getInternal(node, this));
+            ++this._count;
         };
         LinkedList.prototype.addNodeAfter = function (node, after) {
-            this._addNodeAfter(getInternal(node, this), getInternal(after, this));
+            this._listInternal.addNodeAfter(getInternal(after, this), getInternal(node, this));
+            ++this._count;
         };
         return LinkedList;
     }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = LinkedList;
     var LinkedListNode = (function () {
-        function LinkedListNode(_list, _node) {
+        function LinkedListNode(_list, _nodeInternal) {
             this._list = _list;
-            this._node = _node;
+            this._nodeInternal = _nodeInternal;
         }
         Object.defineProperty(LinkedListNode.prototype, "list", {
             get: function () {
@@ -329,24 +249,24 @@
         });
         Object.defineProperty(LinkedListNode.prototype, "previous", {
             get: function () {
-                return ensureExternal(this._node.previous, this._list);
+                return ensureExternal(this._nodeInternal.previous, this._list);
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(LinkedListNode.prototype, "next", {
             get: function () {
-                return ensureExternal(this._node.next, this._list);
+                return ensureExternal(this._nodeInternal.next, this._list);
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(LinkedListNode.prototype, "value", {
             get: function () {
-                return this._node.value;
+                return this._nodeInternal.value;
             },
             set: function (v) {
-                this._node.value = v;
+                this._nodeInternal.value = v;
             },
             enumerable: true,
             configurable: true

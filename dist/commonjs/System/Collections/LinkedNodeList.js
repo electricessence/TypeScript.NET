@@ -22,6 +22,17 @@ var LinkedNodeList = function () {
     }
 
     _createClass(LinkedNodeList, [{
+        key: 'forEach',
+        value: function forEach(action) {
+            var current = null,
+                next = this.first,
+                index = 0;
+            do {
+                current = next;
+                next = current && current.next;
+            } while (current && action(current, index++) !== false);
+        }
+    }, {
         key: 'clear',
         value: function clear() {
             var _ = this,
@@ -32,17 +43,19 @@ var LinkedNodeList = function () {
             _._first = null;
             while (n) {
                 cF++;
-                n.previous = null;
+                var current = n;
                 n = n.next;
+                current.next = null;
             }
             n = _._last;
             _._last = null;
             while (n) {
                 cL++;
-                n.next = null;
+                var _current = n;
                 n = n.previous;
+                _current.previous = null;
             }
-            if (cF !== cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing.');
+            if (cF !== cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
             return cF;
         }
     }, {
@@ -69,14 +82,15 @@ var LinkedNodeList = function () {
     }, {
         key: 'indexOf',
         value: function indexOf(node) {
-            if (node != null && (node.previous || node.next)) {
+            if (node && (node.previous || node.next)) {
                 var index = 0;
-                var c = this._first;
-                while (c) {
+                var c,
+                    n = this._first;
+                do {
+                    c = n;
                     if (c === node) return index;
                     index++;
-                    c = c.next;
-                }
+                } while (n = c && c.next);
             }
             return -1;
         }
@@ -120,9 +134,11 @@ var LinkedNodeList = function () {
                 before = _._first;
             }
             if (before) {
-                node.previous = before.previous;
+                var prev = before.previous;
+                node.previous = prev;
                 node.next = before;
                 before.previous = node;
+                if (prev) prev.next = node;
                 if (before == _._first) _._last = node;
             } else {
                 _._first = _._last = node;
@@ -137,9 +153,11 @@ var LinkedNodeList = function () {
                 after = _._last;
             }
             if (after) {
-                node.next = after.next;
+                var next = after.next;
+                node.next = next;
                 node.previous = after;
                 after.next = node;
+                if (next) next.previous = node;
                 if (after == _._last) _._last = node;
             } else {
                 _._first = _._last = node;
