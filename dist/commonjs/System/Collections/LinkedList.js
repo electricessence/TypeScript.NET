@@ -45,7 +45,7 @@ function ensureExternal(node, list) {
 function getInternal(node, list) {
     if (!node) throw new ArgumentNullException_1.default("Cannot be null.");
     if (node.list != list) throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
-    var n = node._node;
+    var n = node._nodeInternal;
     if (!n) throw new InvalidOperationException_1.default("Provided node is not valid.");
     return n;
 }

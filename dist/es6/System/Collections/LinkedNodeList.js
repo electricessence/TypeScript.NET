@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import * as TextUtility from '../Text/Utility';
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
-import ArgumentException from '../Exceptions/ArgumentException';
-import ArgumentNullException from '../Exceptions/ArgumentNullException';
+import * as TextUtility from "../Text/Utility";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentNullException from "../Exceptions/ArgumentNullException";
 export default class LinkedNodeList {
     constructor() {
         this._first = null;

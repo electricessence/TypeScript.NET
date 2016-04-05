@@ -72,7 +72,7 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNod
 		throw new InvalidOperationException(
 			"Provided node does not belong to this list.");
 
-	var n:InternalNode<T> = (<any>node)._node;
+	var n:InternalNode<T> = (<any>node)._nodeInternal;
 	if(!n)
 		throw new InvalidOperationException(
 			"Provided node is not valid.");

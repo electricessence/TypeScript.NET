@@ -8,10 +8,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var TextUtility = require('../Text/Utility');
-var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
-var ArgumentException_1 = require('../Exceptions/ArgumentException');
-var ArgumentNullException_1 = require('../Exceptions/ArgumentNullException');
+var TextUtility = require("../Text/Utility");
+var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+var ArgumentException_1 = require("../Exceptions/ArgumentException");
+var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 
 var LinkedNodeList = function () {
     function LinkedNodeList() {
@@ -22,7 +22,7 @@ var LinkedNodeList = function () {
     }
 
     _createClass(LinkedNodeList, [{
-        key: 'forEach',
+        key: "forEach",
         value: function forEach(action) {
             var current = null,
                 next = this.first,
@@ -33,7 +33,7 @@ var LinkedNodeList = function () {
             } while (current && action(current, index++) !== false);
         }
     }, {
-        key: 'clear',
+        key: "clear",
         value: function clear() {
             var _ = this,
                 n,
@@ -59,17 +59,17 @@ var LinkedNodeList = function () {
             return cF;
         }
     }, {
-        key: 'dispose',
+        key: "dispose",
         value: function dispose() {
             this.clear();
         }
     }, {
-        key: 'contains',
+        key: "contains",
         value: function contains(node) {
             return this.indexOf(node) != -1;
         }
     }, {
-        key: 'getNodeAt',
+        key: "getNodeAt",
         value: function getNodeAt(index) {
             if (index < 0) return null;
             var next = this._first,
@@ -80,7 +80,7 @@ var LinkedNodeList = function () {
             return next;
         }
     }, {
-        key: 'indexOf',
+        key: "indexOf",
         value: function indexOf(node) {
             if (node && (node.previous || node.next)) {
                 var index = 0;
@@ -95,17 +95,17 @@ var LinkedNodeList = function () {
             return -1;
         }
     }, {
-        key: 'removeFirst',
+        key: "removeFirst",
         value: function removeFirst() {
             return this.removeNode(this._first);
         }
     }, {
-        key: 'removeLast',
+        key: "removeLast",
         value: function removeLast() {
             return this.removeNode(this._last);
         }
     }, {
-        key: 'removeNode',
+        key: "removeNode",
         value: function removeNode(node) {
             if (node == null) throw new ArgumentNullException_1.default('node');
             var _ = this;
@@ -121,12 +121,12 @@ var LinkedNodeList = function () {
             return !a && !b;
         }
     }, {
-        key: 'addNode',
+        key: "addNode",
         value: function addNode(node) {
             this.addNodeAfter(node);
         }
     }, {
-        key: 'addNodeBefore',
+        key: "addNodeBefore",
         value: function addNodeBefore(node, before) {
             assertValidDetached(node);
             var _ = this;
@@ -145,7 +145,7 @@ var LinkedNodeList = function () {
             }
         }
     }, {
-        key: 'addNodeAfter',
+        key: "addNodeAfter",
         value: function addNodeAfter(node, after) {
             assertValidDetached(node);
             var _ = this;
@@ -164,7 +164,7 @@ var LinkedNodeList = function () {
             }
         }
     }, {
-        key: 'replace',
+        key: "replace",
         value: function replace(node, replacement) {
             if (node == null) throw new ArgumentNullException_1.default('node');
             assertValidDetached(replacement, 'replacement');
@@ -177,17 +177,17 @@ var LinkedNodeList = function () {
             if (node == _._last) _._last = replacement;
         }
     }, {
-        key: 'first',
+        key: "first",
         get: function get() {
             return this._first;
         }
     }, {
-        key: 'last',
+        key: "last",
         get: function get() {
             return this._last;
         }
     }, {
-        key: 'count',
+        key: "count",
         get: function get() {
             var next = this._first,
                 i = 0;
