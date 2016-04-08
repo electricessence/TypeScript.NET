@@ -33,6 +33,16 @@ var LinkedNodeList = function () {
             } while (current && action(current, index++) !== false);
         }
     }, {
+        key: "map",
+        value: function map(selector) {
+            if (!selector) throw new ArgumentNullException_1.default('selector');
+            var result = [];
+            this.forEach(function (node) {
+                result.push(selector(node));
+            });
+            return result;
+        }
+    }, {
         key: "clear",
         value: function clear() {
             var _ = this,
@@ -78,6 +88,18 @@ var LinkedNodeList = function () {
                 next = next.next;
             }
             return next;
+        }
+    }, {
+        key: "find",
+        value: function find(condition) {
+            var node = null;
+            this.forEach(function (n, i) {
+                if (condition(n, i)) {
+                    node = n;
+                    return false;
+                }
+            });
+            return node;
         }
     }, {
         key: "indexOf",
