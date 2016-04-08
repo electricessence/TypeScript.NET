@@ -6,7 +6,7 @@
 ///<reference path="IComparable.d.ts"/>
 ///<reference path="Primitive.d.ts"/>
 ///<reference path="CompareResult.d.ts"/>
-import Type from './Types';
+import Type from "./Types";
 import isTrueNaN = Type.isTrueNaN;
 
 const VOID0:any = void 0;
@@ -29,9 +29,9 @@ export function compare(a:any, b:any, strict:boolean = true):CompareResult
 		return CompareResult.Equal;
 
 	if(a && Type.hasMember(a, COMPARE_TO))
-		return a.compareTo(b);
+		return a.compareTo(b); // If a has compareTo, use it.
 	else if(b && Type.hasMember(b, COMPARE_TO))
-		return -b.compareTo(a);
+		return -b.compareTo(a); // a doesn't have compareTo? check if b does and invert.
 
 	// Allow for special inequality..
 

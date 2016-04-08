@@ -217,52 +217,5 @@
         return result;
     }
     exports.flatten = flatten;
-    function dispatchUnsafe(listeners, payload, trap) {
-        if (listeners && listeners.length) {
-            for (var i = 0, len = listeners.length; i < len; i++) {
-                var fn = listeners[i];
-                if (!fn)
-                    continue;
-                try {
-                    fn(payload);
-                }
-                catch (ex) {
-                    if (!trap)
-                        throw ex;
-                    else if (Types_1.default.isFunction(trap))
-                        trap(ex, i);
-                }
-            }
-        }
-    }
-    exports.dispatchUnsafe = dispatchUnsafe;
-    function dispatch(listeners, payload, trap) {
-        dispatchUnsafe(copy(listeners), payload, trap);
-    }
-    exports.dispatch = dispatch;
-    function dispatchMapped(listeners, payload, trap) {
-        if (!listeners)
-            return null;
-        var result = copy(listeners);
-        if (listeners.length) {
-            for (var i = 0, len = result.length; i < len; i++) {
-                var fn = result[i];
-                try {
-                    result[i] = fn
-                        ? fn(payload)
-                        : undefined;
-                }
-                catch (ex) {
-                    result[i] = undefined;
-                    if (!trap)
-                        throw ex;
-                    else if (Types_1.default.isFunction(trap))
-                        trap(ex, i);
-                }
-            }
-        }
-        return result;
-    }
-    exports.dispatchMapped = dispatchMapped;
 });
 //# sourceMappingURL=Utility.js.map
