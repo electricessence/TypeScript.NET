@@ -4,7 +4,7 @@
  */
 "use strict";
 
-var Types_1 = require('./Types');
+var Types_1 = require("./Types");
 var isTrueNaN = Types_1.default.isTrueNaN;
 var VOID0 = void 0;
 function areEqual(a, b) {

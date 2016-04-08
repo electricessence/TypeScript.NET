@@ -7,12 +7,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Types', './Utility'], factory);
+        define(["require", "exports", "../../Types", "./Utility"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('../../Types');
-    var Utility_1 = require('./Utility');
+    var Types_1 = require("../../Types");
+    var Utility_1 = require("./Utility");
     function unsafe(listeners, payload, trap) {
         if (listeners && listeners.length) {
             for (var i = 0, len = listeners.length; i < len; i++) {

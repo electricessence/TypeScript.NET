@@ -7,11 +7,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './Types'], factory);
+        define(["require", "exports", "./Types"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('./Types');
+    var Types_1 = require("./Types");
     var isTrueNaN = Types_1.default.isTrueNaN;
     var VOID0 = void 0;
     function areEqual(a, b, strict) {

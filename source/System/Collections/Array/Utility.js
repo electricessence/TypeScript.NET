@@ -7,16 +7,16 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Types', '../../Integer', '../../Compare', '../../Exceptions/ArgumentException', '../../Exceptions/ArgumentNullException', '../../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(["require", "exports", "../../Types", "../../Integer", "../../Compare", "../../Exceptions/ArgumentException", "../../Exceptions/ArgumentNullException", "../../Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('../../Types');
-    var Integer_1 = require('../../Integer');
-    var Compare_1 = require('../../Compare');
-    var ArgumentException_1 = require('../../Exceptions/ArgumentException');
-    var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
-    var ArgumentOutOfRangeException_1 = require('../../Exceptions/ArgumentOutOfRangeException');
+    var Types_1 = require("../../Types");
+    var Integer_1 = require("../../Integer");
+    var Compare_1 = require("../../Compare");
+    var ArgumentException_1 = require("../../Exceptions/ArgumentException");
+    var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
+    var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
     function initialize(length) {
         Integer_1.default.assert(length, 'length');
         var array;
