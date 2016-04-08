@@ -9,9 +9,9 @@
 ///<reference path="../FunctionTypes.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import LinkedList from '../Collections/LinkedList';
-import * as DisposeUtility from '../Disposable/Utility'
-import Subscription from './Subscription';
+import LinkedNodeList from "../Collections/LinkedNodeList";
+import * as DisposeUtility from "../Disposable/Utility";
+import Subscription from "./Subscription";
 
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
 
@@ -21,36 +21,27 @@ implements IDisposable
 {
 
 	// Use a linked list since it's much easier to remove a subscriber from anywhere in the list.
-	private __subscriptions:LinkedList<Subscription<TSubscriber>>;
+	private __subscriptions:LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>;
 
-	protected _getSubscribers():TSubscriber[] {
-		return this.__subscriptions
-			.toArray()
-			.map(s=>s.subscriber);
+	protected _getSubscribers():TSubscriber[]
+	{
+		return this
+			.__subscriptions
+			.map(node=>node.value && node.value.subscriber);
 	}
 
 	constructor()
 	{
-		this.__subscriptions = new LinkedList<Subscription<TSubscriber>>();
+		this.__subscriptions
+			= new LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>();
 	}
 
 	private _findEntryNode(
-		subscriber:TSubscriber):ILinkedListNode<Subscription<TSubscriber>>
+		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>
 	{
-		var node = this.__subscriptions.first;
-		while(node)
-		{
-			if(node.value.subscriber===subscriber)
-			{
-				break;
-			}
-			else
-			{
-				node = node.next;
-			}
-		}
-
-		return node;
+		return this
+			.__subscriptions
+			.find(n=>n.value.subscriber===subscriber);
 	}
 
 	// It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
@@ -62,25 +53,30 @@ implements IDisposable
 			return n.value;
 
 		var s = new Subscription(_, subscriber);
-		_.__subscriptions.add(s);
+		_.__subscriptions.addNode({
+			value: s,
+			previous: null, next: null
+		});
 
 		return s;
 	}
 
 	unsubscribe(subscriber:TSubscriber):void
 	{
-		var n = this._findEntryNode(subscriber);
+		var _ = this;
+		var n = _._findEntryNode(subscriber);
 		if(n)
 		{
 			var s = n.value;
-			n.remove();
+			_.__subscriptions.removeNode(n);
 			s.dispose(); // Prevent further usage of a dead subscription.
 		}
 	}
 
-	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[] {
+	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[]
+	{
 		var _ = this, _s = _.__subscriptions;
-		var s = _s.toArray();
+		var s = _s.map(n=>n.value);
 		var u = returnSubscribers ? s.map(o=>o.subscriber) : null;
 		_s.clear(); // Reset...
 
@@ -89,11 +85,13 @@ implements IDisposable
 		return u;
 	}
 
-	unsubscribeAll():void {
+	unsubscribeAll():void
+	{
 		this._unsubscribeAll();
 	}
 
-	dispose() {
+	dispose()
+	{
 		this._unsubscribeAll();
 	}
 

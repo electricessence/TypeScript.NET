@@ -66,7 +66,8 @@ implements ILinkedNodeList<TNode>, IDisposable
 	 * Iteratively counts the number of linked nodes and returns the value.
 	 * @returns {number}
 	 */
-	get count():number {
+	get count():number
+	{
 
 		var next = this._first, i:number = 0;
 		while(next)
@@ -82,15 +83,27 @@ implements ILinkedNodeList<TNode>, IDisposable
 		action:Predicate<TNode> | Action<TNode>):void
 	{
 		var current:TNode = null,
-		    next:TNode = this.first, // Be sure to track the next node so if current node is removed.
-		    index:number = 0;
+		    next:TNode    = this.first, // Be sure to track the next node so if current node is removed.
+		    index:number  = 0;
 
 		do {
 			current = next;
 			next = current && current.next;
 		}
-		while (current
-			&& <any>action(current, index++)!==false);
+		while(current
+		&& <any>action(current, index++)!==false);
+	}
+
+	map<T>(selector:Selector<TNode,T>):T[]
+	{
+		if(!selector) throw new ArgumentNullException('selector');
+
+		var result:T[] = [];
+		this.forEach(node=>
+		{
+			result.push(selector(node));
+		});
+		return result;
 	}
 
 	/**
@@ -105,7 +118,8 @@ implements ILinkedNodeList<TNode>, IDisposable
 		n = _._first;
 		_._first = null;
 
-		while(n) {
+		while(n)
+		{
 			cF++;
 			let current = n;
 			n = n.next;
@@ -116,14 +130,15 @@ implements ILinkedNodeList<TNode>, IDisposable
 		n = _._last;
 		_._last = null;
 
-		while(n) {
+		while(n)
+		{
 			cL++;
 			let current = n;
 			n = n.previous;
 			current.previous = null;
 		}
 
-		if(cF!==cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: '+cF+", Reverse: "+cL);
+		if(cF!==cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
 
 		return cF;
 	}
@@ -143,7 +158,7 @@ implements ILinkedNodeList<TNode>, IDisposable
 	 */
 	contains(node:TNode):boolean
 	{
-		return this.indexOf(node)!=-1;
+		return this.indexOf(node)!= -1;
 	}
 
 
@@ -166,13 +181,26 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 	}
 
+	find(condition:Predicate<TNode>):TNode {
+		var node:TNode = null;
+		this.forEach((n,i)=>{
+			if(condition(n,i)) {
+				node = n;
+				return false;
+			}
+		});
+		return node;
+	}
+
 	/**
 	 * Iterates the list to find the specified node and returns its index.
 	 * @param node
 	 * @returns {boolean}
 	 */
-	indexOf(node:TNode):number {
-		if(node && (node.previous || node.next)) {
+	indexOf(node:TNode):number
+	{
+		if(node && (node.previous || node.next))
+		{
 
 			var index = 0;
 			var c:TNode, n:TNode = this._first;
@@ -180,7 +208,8 @@ implements ILinkedNodeList<TNode>, IDisposable
 				c = n;
 				if(c===node) return index;
 				index++;
-			} while((n = c && c.next));
+			}
+			while((n = c && c.next));
 		}
 
 		return -1;
@@ -245,7 +274,8 @@ implements ILinkedNodeList<TNode>, IDisposable
 	 * Adds a node to the end of the list.
 	 * @param node
 	 */
-	addNode(node:TNode):void {
+	addNode(node:TNode):void
+	{
 		this.addNodeAfter(node);
 	}
 
@@ -262,11 +292,13 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 		var _ = this;
 
-		if(!before) {
+		if(!before)
+		{
 			before = _._first;
 		}
 
-		if(before) {
+		if(before)
+		{
 			let prev = before.previous;
 			node.previous = prev;
 			node.next = before;
@@ -274,7 +306,9 @@ implements ILinkedNodeList<TNode>, IDisposable
 			before.previous = node;
 			if(prev) prev.next = node;
 			if(before==_._first) _._last = node;
-		} else {
+		}
+		else
+		{
 			_._first = _._last = node;
 		}
 	}
@@ -291,11 +325,13 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 		var _ = this;
 
-		if(!after) {
+		if(!after)
+		{
 			after = _._last;
 		}
 
-		if(after) {
+		if(after)
+		{
 			let next = after.next;
 			node.next = next;
 			node.previous = after;
@@ -303,7 +339,9 @@ implements ILinkedNodeList<TNode>, IDisposable
 			after.next = node;
 			if(next) next.previous = node;
 			if(after==_._last) _._last = node;
-		} else {
+		}
+		else
+		{
 			_._first = _._last = node;
 		}
 	}
@@ -313,12 +351,13 @@ implements ILinkedNodeList<TNode>, IDisposable
 	 * @param node
 	 * @param replacement
 	 */
-	replace(node:TNode, replacement:TNode):void {
+	replace(node:TNode, replacement:TNode):void
+	{
 
 		if(node==null)
 			throw new ArgumentNullException('node');
 
-		assertValidDetached(replacement,'replacement');
+		assertValidDetached(replacement, 'replacement');
 
 		var _ = this;
 		replacement.previous = node.previous;
@@ -333,7 +372,8 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 }
 
-function assertValidDetached<TNode extends ILinkedNode<TNode>>(node:TNode, propName:string = 'node') {
+function assertValidDetached<TNode extends ILinkedNode<TNode>>(node:TNode, propName:string = 'node')
+{
 
 	if(node==null)
 		throw new ArgumentNullException(propName);

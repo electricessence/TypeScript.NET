@@ -54,6 +54,15 @@
             } while (current
                 && action(current, index++) !== false);
         };
+        LinkedNodeList.prototype.map = function (selector) {
+            if (!selector)
+                throw new ArgumentNullException_1.default('selector');
+            var result = [];
+            this.forEach(function (node) {
+                result.push(selector(node));
+            });
+            return result;
+        };
         LinkedNodeList.prototype.clear = function () {
             var _ = this, n, cF = 0, cL = 0;
             n = _._first;
@@ -90,6 +99,16 @@
                 next = next.next;
             }
             return next;
+        };
+        LinkedNodeList.prototype.find = function (condition) {
+            var node = null;
+            this.forEach(function (n, i) {
+                if (condition(n, i)) {
+                    node = n;
+                    return false;
+                }
+            });
+            return node;
         };
         LinkedNodeList.prototype.indexOf = function (node) {
             if (node && (node.previous || node.next)) {

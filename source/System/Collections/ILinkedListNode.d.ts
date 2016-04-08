@@ -18,10 +18,14 @@ interface INodeWithValue<TValue>
 	value:TValue;
 }
 
+interface ILinkedNodeWithValue<T>
+extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T> {
+
+}
 
 // Use an interface in order to prevent external construction of LinkedListNode
 interface ILinkedListNode<T>
-extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T>
+extends ILinkedNodeWithValue<T>
 {
 	list: ILinkedList<T>;
 
