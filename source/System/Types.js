@@ -131,8 +131,9 @@
             return typeof value === _FUNCTION;
         }
         Type.isFunction = isFunction;
-        function isObject(value) {
-            return typeof value === _OBJECT;
+        function isObject(value, allowNull) {
+            if (allowNull === void 0) { allowNull = false; }
+            return typeof value === _OBJECT && (allowNull || value !== null);
         }
         Type.isObject = isObject;
         function numberOrNaN(value) {

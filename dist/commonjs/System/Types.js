@@ -143,7 +143,9 @@ var Type;
     }
     Type.isFunction = isFunction;
     function isObject(value) {
-        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _OBJECT;
+        var allowNull = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+        return (typeof value === "undefined" ? "undefined" : _typeof(value)) === _OBJECT && (allowNull || value !== null);
     }
     Type.isObject = isObject;
     function numberOrNaN(value) {

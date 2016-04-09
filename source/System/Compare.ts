@@ -11,8 +11,13 @@ import isTrueNaN = Type.isTrueNaN;
 
 const VOID0:any = void 0;
 
-
-// Used for special equals cases like NaN.
+/**
+ * Used for special comparison including NaN.
+ * @param a
+ * @param b
+ * @param strict
+ * @returns {boolean|any}
+ */
 export function areEqual(a:any, b:any, strict:boolean = true):boolean
 {
 	return a===b || !strict && a==b || isTrueNaN(a) && isTrueNaN(b);
@@ -20,6 +25,11 @@ export function areEqual(a:any, b:any, strict:boolean = true):boolean
 
 const COMPARE_TO = "compareTo";
 
+/**
+ * Compares two comparable objects or primitives.
+ * @param a
+ * @param b
+ */
 export function compare<T>(a:IComparable<T>, b:IComparable<T>):number;
 export function compare<T extends Primitive>(a:T, b:T, strict?:boolean):CompareResult;
 export function compare(a:any, b:any, strict:boolean = true):CompareResult
@@ -42,4 +52,65 @@ export function compare(a:any, b:any, strict:boolean = true):CompareResult
 		return CompareResult.Less;
 
 	return NaN;
+}
+
+/**
+ * Determines if two primitives are equal or if two objects have the same key/value combinations.
+ * @param a
+ * @param b
+ * @param nullEquivalency If true, null/undefined will be equivalent to an empty object {}.
+ * @param extraDepth
+ * @returns {boolean}
+ */
+export function areEquivalent(a:any, b:any, nullEquivalency:boolean = true, extraDepth:number = 0):boolean
+{
+
+	// Take a step by step approach to ensure efficiency.
+	if(areEqual(a, b, true)) return true;
+
+	if(a===null || a===VOID0 || b==null || b===VOID0)
+	{
+		if(!nullEquivalency) return false;
+
+		if(Type.isObject(a))
+		{
+			return !Object.keys(a).length;
+		}
+
+		if(Type.isObject(b))
+		{
+			return !Object.keys(b).length;
+		}
+
+		return (a===null || a===VOID0) && (b==null || b===VOID0);
+	}
+
+	if(Type.isObject(a) && Type.isObject(b))
+	{
+
+		var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
+		if(len!=bKeys.length)
+			return false;
+
+		aKeys.sort();
+		bKeys.sort();
+
+		for(let i = 0; i<len; ++i)
+		{
+			let key = aKeys[i];
+			if(key!==bKeys[i] || !areEqual(a[key], b[key], true)) return false;
+		}
+
+		// Doesn't track circular references but allows for controlling the amount of recursion.
+		if(extraDepth>0) {
+
+			for(let key of aKeys) {
+				if(!areEquivalent(a[key], b[key], nullEquivalency, extraDepth-1)) return false;
+			}
+		}
+
+		return true;
+	}
+
+	return false;
 }

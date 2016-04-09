@@ -256,11 +256,12 @@ module Type
 	/**
 	 * Returns true if the value parameter is an object.
 	 * @param value
+	 * @param allowNull If false (default) null is not considered an object.
 	 * @returns {boolean}
 	 */
-	export function isObject(value:any):boolean
+	export function isObject(value:any, allowNull:boolean = false):boolean
 	{
-		return typeof value===_OBJECT;
+		return typeof value===_OBJECT && (allowNull || value!==null) ;
 	}
 
 	/**

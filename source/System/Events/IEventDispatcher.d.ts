@@ -4,14 +4,11 @@
  */
 
 ///<reference path="../Disposable/IDisposable.d.ts"/>
+///<reference path="IEventListener.d.ts"/>
 
-interface IEventDispatcher extends EventTarget, IDisposable {
-
-	addEventListener(type: string, listener: EventListener, useCapture?: boolean, priority?: number):void;//, useWeakReference?: boolean);
+interface IEventDispatcher extends IDisposable {
+	addEventListener(type: string, listener: IEventListener):void;
 	dispatchEvent(event: Event): boolean;
 	hasEventListener(type: string): boolean;
-	removeEventListener(type: string, listener: EventListener, useCapture?: boolean): void;
-	// willTrigger(type: string);
-	// toString(): string;
-
+	removeEventListener(type: string, listener: IEventListener): void;
 }

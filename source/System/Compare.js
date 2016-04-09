@@ -35,5 +35,44 @@
         return NaN;
     }
     exports.compare = compare;
+    function areEquivalent(a, b, nullEquivalency, extraDepth) {
+        if (nullEquivalency === void 0) { nullEquivalency = true; }
+        if (extraDepth === void 0) { extraDepth = 0; }
+        if (areEqual(a, b, true))
+            return true;
+        if (a === null || a === VOID0 || b == null || b === VOID0) {
+            if (!nullEquivalency)
+                return false;
+            if (Types_1.default.isObject(a)) {
+                return !Object.keys(a).length;
+            }
+            if (Types_1.default.isObject(b)) {
+                return !Object.keys(b).length;
+            }
+            return (a === null || a === VOID0) && (b == null || b === VOID0);
+        }
+        if (Types_1.default.isObject(a) && Types_1.default.isObject(b)) {
+            var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
+            if (len != bKeys.length)
+                return false;
+            aKeys.sort();
+            bKeys.sort();
+            for (var i = 0; i < len; ++i) {
+                var key = aKeys[i];
+                if (key !== bKeys[i] || !areEqual(a[key], b[key], true))
+                    return false;
+            }
+            if (extraDepth > 0) {
+                for (var _i = 0, aKeys_1 = aKeys; _i < aKeys_1.length; _i++) {
+                    var key = aKeys_1[_i];
+                    if (!areEquivalent(a[key], b[key], nullEquivalency, extraDepth - 1))
+                        return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    exports.areEquivalent = areEquivalent;
 });
 //# sourceMappingURL=Compare.js.map
