@@ -10,6 +10,7 @@ import * as TextUtility from "../Text/Utility";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
 
 
 /*****************************
@@ -368,6 +369,53 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 		if(node==_._first) _._first = replacement;
 		if(node==_._last) _._last = replacement;
+	}
+
+	static valueEnumeratorFrom<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>):IEnumerator<T> {
+
+		if(!list) throw new ArgumentNullException('list');
+
+		var _ = this,
+		    current:ILinkedNodeWithValue<T>,
+		    next:ILinkedNodeWithValue<T>;
+
+		return new EnumeratorBase<T>(
+			() =>
+			{
+				// Initialize anchor...
+				current = null;
+				next = list.first;
+			},
+			(yielder)=>
+			{
+
+				if(next)
+				{
+					current = next;
+					next = current && current.next;
+					return yielder.yieldReturn(current.value);
+				}
+
+				return yielder.yieldBreak();
+			}
+		);
+	}
+
+	static copyValues<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>, array:T[], index:number = 0):T[]
+	{
+		if(list && list.first)
+		{
+			if(!array) throw new ArgumentNullException('array');
+
+			list.forEach(
+				(node, i) =>
+				{
+					array[index + i] = node.value;
+				}
+			);
+		}
+
+		return array;
 	}
 
 }

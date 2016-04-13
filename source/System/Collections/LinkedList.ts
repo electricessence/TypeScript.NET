@@ -11,7 +11,6 @@
 import * as Values from "../Compare";
 import * as ArrayUtility from "../Collections/Array/Utility";
 import * as Enumerator from "./Enumeration/Enumerator";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
 import LinkedNodeList from "./LinkedNodeList";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
@@ -98,7 +97,7 @@ implements ILinkedList<T>
 
 		while(e.moveNext())
 		{
-			list.addNode( new InternalNode<T>(e.current) );
+			list.addNode(new InternalNode<T>(e.current));
 			++c;
 		}
 
@@ -128,30 +127,7 @@ implements ILinkedList<T>
 	// #region IEnumerable<T>
 	getEnumerator():IEnumerator<T>
 	{
-		var _ = this,
-		    current:InternalNode<T>,
-		    next:InternalNode<T>;
-
-		return new EnumeratorBase<T>(
-			() =>
-			{
-				// Initialize anchor...
-				current = null;
-				next = _._listInternal.first;
-			},
-			(yielder)=>
-			{
-
-				if(next)
-				{
-					current = next;
-					next = current && current.next;
-					return yielder.yieldReturn(current.value);
-				}
-
-				return yielder.yieldBreak();
-			}
-		);
+		return LinkedNodeList.valueEnumeratorFrom<T>(<any>this._listInternal);
 	}
 
 	// #endregion
@@ -219,19 +195,10 @@ implements ILinkedList<T>
 	{
 		if(!array) throw new ArgumentNullException('array');
 
-		if(this._listInternal.first)
-		{
-			var minLength = index + this._count;
-			if(array.length<minLength) array.length = minLength; // Preset the length if need be.
-			this.forEach(
-				(entry, i) =>
-				{
-					array[index + i] = entry;
-				}
-			);
-		}
+		var minLength = index + this._count;
+		if(array.length<minLength) array.length = minLength;
+		return LinkedNodeList.copyValues(<any>this._listInternal, array, index);
 
-		return array;
 	}
 
 	toArray():T[]
@@ -314,7 +281,8 @@ implements ILinkedList<T>
 	removeFirst():void
 	{
 		var _ = this, first = _._listInternal.first;
-		if(first && _._listInternal.removeNode(first)) {
+		if(first && _._listInternal.removeNode(first))
+		{
 			_._count--;
 		}
 	}
@@ -322,7 +290,8 @@ implements ILinkedList<T>
 	removeLast():void
 	{
 		var _ = this, last = _._listInternal.last;
-		if(last && _._listInternal.removeNode(last)) {
+		if(last && _._listInternal.removeNode(last))
+		{
 			--_._count;
 		}
 	}
@@ -330,7 +299,7 @@ implements ILinkedList<T>
 	// Returns true if successful and false if not found (already removed).
 	removeNode(node:ILinkedListNode<T>):boolean
 	{
-		var _ = this,
+		var _       = this,
 		    removed = _._listInternal.removeNode(getInternal(node, _));
 
 		if(removed) --_._count;

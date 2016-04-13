@@ -8,14 +8,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "../Collections/Array/Utility", "./Enumeration/Enumerator", "./Enumeration/EnumeratorBase", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports", "../Compare", "../Collections/Array/Utility", "./Enumeration/Enumerator", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException"], factory);
     }
 })(function (require, exports) {
     'use strict';
     var Values = require("../Compare");
     var ArrayUtility = require("../Collections/Array/Utility");
     var Enumerator = require("./Enumeration/Enumerator");
-    var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -72,18 +71,7 @@
             }
         };
         LinkedList.prototype.getEnumerator = function () {
-            var _ = this, current, next;
-            return new EnumeratorBase_1.default(function () {
-                current = null;
-                next = _._listInternal.first;
-            }, function (yielder) {
-                if (next) {
-                    current = next;
-                    next = current && current.next;
-                    return yielder.yieldReturn(current.value);
-                }
-                return yielder.yieldBreak();
-            });
+            return LinkedNodeList_1.default.valueEnumeratorFrom(this._listInternal);
         };
         LinkedList.prototype._findFirst = function (entry) {
             var equals = Values.areEqual, next = this._listInternal.first;
@@ -134,15 +122,10 @@
             if (index === void 0) { index = 0; }
             if (!array)
                 throw new ArgumentNullException_1.default('array');
-            if (this._listInternal.first) {
-                var minLength = index + this._count;
-                if (array.length < minLength)
-                    array.length = minLength;
-                this.forEach(function (entry, i) {
-                    array[index + i] = entry;
-                });
-            }
-            return array;
+            var minLength = index + this._count;
+            if (array.length < minLength)
+                array.length = minLength;
+            return LinkedNodeList_1.default.copyValues(this._listInternal, array, index);
         };
         LinkedList.prototype.toArray = function () {
             var array = ArrayUtility.initialize(this._count);

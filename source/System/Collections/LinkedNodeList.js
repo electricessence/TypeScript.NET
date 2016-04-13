@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -15,6 +15,7 @@
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
+    var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
     var LinkedNodeList = (function () {
         function LinkedNodeList() {
             this._first = null;
@@ -209,6 +210,33 @@
                 _._first = replacement;
             if (node == _._last)
                 _._last = replacement;
+        };
+        LinkedNodeList.valueEnumeratorFrom = function (list) {
+            if (!list)
+                throw new ArgumentNullException_1.default('list');
+            var _ = this, current, next;
+            return new EnumeratorBase_1.default(function () {
+                current = null;
+                next = list.first;
+            }, function (yielder) {
+                if (next) {
+                    current = next;
+                    next = current && current.next;
+                    return yielder.yieldReturn(current.value);
+                }
+                return yielder.yieldBreak();
+            });
+        };
+        LinkedNodeList.copyValues = function (list, array, index) {
+            if (index === void 0) { index = 0; }
+            if (list && list.first) {
+                if (!array)
+                    throw new ArgumentNullException_1.default('array');
+                list.forEach(function (node, i) {
+                    array[index + i] = node.value;
+                });
+            }
+            return array;
         };
         return LinkedNodeList;
     }());

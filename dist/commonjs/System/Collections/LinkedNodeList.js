@@ -12,6 +12,7 @@ var TextUtility = require("../Text/Utility");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
+var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
 
 var LinkedNodeList = function () {
     function LinkedNodeList() {
@@ -218,6 +219,38 @@ var LinkedNodeList = function () {
                 next = next.next;
             }
             return i;
+        }
+    }], [{
+        key: "valueEnumeratorFrom",
+        value: function valueEnumeratorFrom(list) {
+            if (!list) throw new ArgumentNullException_1.default('list');
+            var _ = this,
+                current,
+                next;
+            return new EnumeratorBase_1.default(function () {
+                current = null;
+                next = list.first;
+            }, function (yielder) {
+                if (next) {
+                    current = next;
+                    next = current && current.next;
+                    return yielder.yieldReturn(current.value);
+                }
+                return yielder.yieldBreak();
+            });
+        }
+    }, {
+        key: "copyValues",
+        value: function copyValues(list, array) {
+            var index = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
+            if (list && list.first) {
+                if (!array) throw new ArgumentNullException_1.default('array');
+                list.forEach(function (node, i) {
+                    array[index + i] = node.value;
+                });
+            }
+            return array;
         }
     }]);
 
