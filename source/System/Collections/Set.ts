@@ -178,6 +178,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		{
 			var type = typeof item;
 			var t = this._registry[type];
+			if(!t) this._registry[type] = t = {};
 			var node:ILinkedNodeWithValue<T> = {
 				value: item,
 				previous: null,
@@ -192,7 +193,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 	clear():number
 	{
 		this._count = 0;
-		wipe(this._registry,2);
+		wipe(this._registry, 2);
 		return this._set.clear();
 	}
 
@@ -229,11 +230,17 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 
 	remove(item:T):number
 	{
-		var node = this._getNode(item);
-		if(node && this._set.removeNode(node))
+		var t    = this._registry[typeof item],
+		    node = t && t[<any>item];
+
+		if(node)
 		{
-			--this._count;
-			return 1;
+			delete t[<any>item];
+			if(this._set.removeNode(node))
+			{
+				--this._count;
+				return 1;
+			}
 		}
 		return 0;
 	}

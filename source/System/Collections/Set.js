@@ -150,6 +150,8 @@
             if (!this.contains(item)) {
                 var type = typeof item;
                 var t = this._registry[type];
+                if (!t)
+                    this._registry[type] = t = {};
                 var node = {
                     value: item,
                     previous: null,
@@ -188,10 +190,13 @@
             return this._set.map(function (n) { return n.value; });
         };
         Set.prototype.remove = function (item) {
-            var node = this._getNode(item);
-            if (node && this._set.removeNode(node)) {
-                --this._count;
-                return 1;
+            var t = this._registry[typeof item], node = t && t[item];
+            if (node) {
+                delete t[item];
+                if (this._set.removeNode(node)) {
+                    --this._count;
+                    return 1;
+                }
             }
             return 0;
         };
