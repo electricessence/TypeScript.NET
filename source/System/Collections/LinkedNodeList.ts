@@ -420,7 +420,7 @@ implements ILinkedNodeList<TNode>, IDisposable
 
 }
 
-function assertValidDetached<TNode extends ILinkedNode<TNode>>(node:TNode, propName:string = 'node')
+function assertValidDetached<TNode extends ILinkedNode<any>>(node:TNode, propName:string = 'node')
 {
 
 	if(node==null)
