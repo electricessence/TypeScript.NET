@@ -7,23 +7,30 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/forEach", "../Disposable/Utility"], factory);
+        define(["require", "exports", "../Types", "./LinkedNodeList", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/forEach", "./Enumeration/Enumerator", "../Disposable/Utility"], factory);
     }
 })(function (require, exports) {
     "use strict";
+    var Types_1 = require("../Types");
     var LinkedNodeList_1 = require("./LinkedNodeList");
+    var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var forEach_1 = require("./Enumeration/forEach");
+    var Enumerator_1 = require("./Enumeration/Enumerator");
     var Utility_1 = require("../Disposable/Utility");
     var OTHER = 'other';
     var Set = (function () {
         function Set(source) {
-            this._registry = {};
-            this._set = new LinkedNodeList_1.default();
             this._count = 0;
             if (source)
                 this.unionWith(source);
         }
+        Set.prototype._getSet = function () {
+            var s = this._set;
+            if (!s)
+                this._set = s = new LinkedNodeList_1.default();
+            return s;
+        };
         Object.defineProperty(Set.prototype, "count", {
             get: function () {
                 return this._count;
@@ -49,12 +56,12 @@
             if (!other)
                 throw new ArgumentNullException_1.default(OTHER);
             if (other instanceof Set) {
-                var s_1 = this._set;
-                s_1.forEach(function (n) {
-                    if (!other.contains(n.value) && s_1.removeNode(n)) {
-                        --_this._count;
-                    }
-                });
+                var s = this._set;
+                if (s)
+                    s.forEach(function (n) {
+                        if (!other.contains(n.value))
+                            _this.remove(n.value);
+                    });
             }
             else {
                 Utility_1.using(new Set(other), function (o) { return _this.intersectWith(o); });
@@ -74,7 +81,7 @@
                 throw new ArgumentNullException_1.default(OTHER);
             var result = true, count;
             if (other instanceof Set) {
-                result = this.isSubsetOf(other);
+                result = this.isSupersetOf(other);
                 count = other._count;
             }
             else {
@@ -149,29 +156,38 @@
         Set.prototype.add = function (item) {
             if (!this.contains(item)) {
                 var type = typeof item;
-                var t = this._registry[type];
+                if (!Types_1.default.isPrimitive(type))
+                    throw new ArgumentException_1.default("item", "A Set can only index primitives.  Complex objects require a HashSet.");
+                var r = this._registry;
+                var t = r && r[type];
+                if (!r)
+                    this._registry = r = {};
                 if (!t)
-                    this._registry[type] = t = {};
+                    r[type] = t = {};
                 var node = {
                     value: item,
                     previous: null,
                     next: null
                 };
-                this._set.addNode(node);
+                this._getSet().addNode(node);
                 t[item] = node;
                 ++this._count;
             }
         };
         Set.prototype.clear = function () {
-            this._count = 0;
-            wipe(this._registry, 2);
-            return this._set.clear();
+            var _ = this;
+            _._count = 0;
+            wipe(_._registry, 2);
+            var s = _._set;
+            return s ? s.clear() : 0;
         };
         Set.prototype.dispose = function () {
             this.clear();
+            this._set = null;
+            this._registry = null;
         };
         Set.prototype._getNode = function (item) {
-            var t = this._registry[typeof item];
+            var r = this._registry, t = r && r[typeof item];
             return t && t[item];
         };
         Set.prototype.contains = function (item) {
@@ -181,19 +197,24 @@
             if (index === void 0) { index = 0; }
             if (!array)
                 throw new ArgumentNullException_1.default('array');
-            var minLength = index + this._count;
+            var s = this._set, c = this._count;
+            if (!s || !c)
+                return array;
+            var minLength = index + c;
             if (array.length < minLength)
                 array.length = minLength;
-            return LinkedNodeList_1.default.copyValues(this._set, array, index);
+            return LinkedNodeList_1.default.copyValues(s, array, index);
         };
         Set.prototype.toArray = function () {
-            return this._set.map(function (n) { return n.value; });
+            var s = this._set;
+            return s ? s.map(function (n) { return n.value; }) : [];
         };
         Set.prototype.remove = function (item) {
-            var t = this._registry[typeof item], node = t && t[item];
+            var r = this._registry, t = r && r[typeof item], node = t && t[item];
             if (node) {
                 delete t[item];
-                if (this._set.removeNode(node)) {
+                var s = this._set;
+                if (s && s.removeNode(node)) {
                     --this._count;
                     return 1;
                 }
@@ -201,7 +222,10 @@
             return 0;
         };
         Set.prototype.getEnumerator = function () {
-            return LinkedNodeList_1.default.valueEnumeratorFrom(this._set);
+            var s = this._set;
+            return s && this._count
+                ? LinkedNodeList_1.default.valueEnumeratorFrom(s)
+                : Enumerator_1.empty;
         };
         return Set;
     }());
@@ -209,7 +233,7 @@
     exports.default = Set;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
-        if (depth) {
+        if (map && depth) {
             for (var _i = 0, _a = Object.keys(map); _i < _a.length; _i++) {
                 var key = _a[_i];
                 var v = map[key];

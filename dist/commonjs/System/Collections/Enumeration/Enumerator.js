@@ -39,6 +39,8 @@ var EmptyEnumerator = function () {
 }();
 
 var Empty = new EmptyEnumerator();
+Object.freeze(Empty);
+exports.empty = Empty;
 function from(source) {
     if (!source) return Empty;
     if (Array.isArray(source)) return new ArrayEnumerator_1.default(source);

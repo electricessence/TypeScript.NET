@@ -9,10 +9,9 @@
 ///<reference path="IYield.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from '../../Types';
-import DisposableBase from '../../Disposable/DisposableBase';
-import ArrayEnumerator from './ArrayEnumerator';
-import IndexEnumerator from './IndexEnumerator';
+import Type from "../../Types";
+import ArrayEnumerator from "./ArrayEnumerator";
+import IndexEnumerator from "./IndexEnumerator";
 
 
 class EmptyEnumerator implements IEnumerator<any>
@@ -33,6 +32,9 @@ class EmptyEnumerator implements IEnumerator<any>
 }
 
 const Empty = new EmptyEnumerator();
+Object.freeze(Empty);
+
+export const empty:IEnumerator<any> = Empty;
 
 // Could be array, or IEnumerable...
 export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>

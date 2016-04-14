@@ -4,11 +4,14 @@
  */
 
 ///<reference path="../Primitive.d.ts"/>
+///<reference path="ISet.d.ts"/>
+import Type from "../Types";
 import LinkedNodeList from "./LinkedNodeList";
+import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import forEach from "./Enumeration/forEach";
+import {empty as emptyEnumerator} from "./Enumeration/Enumerator";
 import {using} from "../Disposable/Utility";
-// import Type from "../Types";
 
 const OTHER = 'other';
 
@@ -16,14 +19,17 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 {
 	constructor(source?:IEnumerable<T>|IArray<T>)
 	{
-		this._registry = {};
-		this._set = new LinkedNodeList<ILinkedNodeWithValue<T>>();
 		this._count = 0;
 		if(source) this.unionWith(source);
 	}
 
 	private _registry:IMap<IMap<ILinkedNodeWithValue<T>>>;
 	private _set:LinkedNodeList<ILinkedNodeWithValue<T>>;
+	private _getSet():LinkedNodeList<ILinkedNodeWithValue<T>> {
+		var s = this._set;
+		if(!s) this._set = s = new LinkedNodeList<ILinkedNodeWithValue<T>>();
+		return s;
+	}
 
 	private _count:number;
 	get count():number
@@ -51,12 +57,10 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		if(other instanceof Set)
 		{
 			let s = this._set;
-			s.forEach(n=>
+			if(s) s.forEach(n=>
 			{
-				if(!other.contains(n.value) && s.removeNode(n))
-				{
-					--this._count;
-				}
+				if(!other.contains(n.value))
+					this.remove(n.value);
 			});
 		}
 		else
@@ -81,7 +85,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		var result = true, count:number;
 		if(other instanceof Set)
 		{
-			result = this.isSubsetOf(other);
+			result = this.isSupersetOf(other);
 			count = other._count;
 		}
 		else
@@ -177,14 +181,19 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		if(!this.contains(item))
 		{
 			var type = typeof item;
-			var t = this._registry[type];
-			if(!t) this._registry[type] = t = {};
+			if(!Type.isPrimitive(type))
+				throw new ArgumentException("item","A Set can only index primitives.  Complex objects require a HashSet.");
+
+			var r = this._registry;
+			var t = r && r[type];
+			if(!r) this._registry = r = {};
+			if(!t) r[type] = t = {};
 			var node:ILinkedNodeWithValue<T> = {
 				value: item,
 				previous: null,
 				next: null
 			};
-			this._set.addNode(node);
+			this._getSet().addNode(node);
 			t[<any>item] = node;
 			++this._count;
 		}
@@ -192,19 +201,23 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 
 	clear():number
 	{
-		this._count = 0;
-		wipe(this._registry, 2);
-		return this._set.clear();
+		var _ = this;
+		_._count = 0;
+		wipe(_._registry, 2);
+		var s = _._set;
+		return s ? s.clear() : 0;
 	}
 
 	dispose():void
 	{
 		this.clear();
+		this._set = null;
+		this._registry = null;
 	}
 
 	private _getNode(item:T):ILinkedNodeWithValue<T>
 	{
-		var t = this._registry[typeof item];
+		var r = this._registry, t = r && r[typeof item];
 
 		return t && t[<any>item];
 	}
@@ -218,25 +231,30 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 	{
 		if(!array) throw new ArgumentNullException('array');
 
-		var minLength = index + this._count;
+		var s = this._set, c = this._count;
+		if(!s || !c) return array;
+
+		var minLength = index + c;
 		if(array.length<minLength) array.length = minLength;
-		return LinkedNodeList.copyValues(this._set, array, index);
+		return LinkedNodeList.copyValues(s, array, index);
 	}
 
 	toArray():T[]
 	{
-		return this._set.map(n=>n.value);
+		var s = this._set;
+		return s ? s.map(n=>n.value) : [];
 	}
 
 	remove(item:T):number
 	{
-		var t    = this._registry[typeof item],
+		var r = this._registry, t = r && r[typeof item],
 		    node = t && t[<any>item];
 
 		if(node)
 		{
 			delete t[<any>item];
-			if(this._set.removeNode(node))
+			var s = this._set;
+			if(s && s.removeNode(node))
 			{
 				--this._count;
 				return 1;
@@ -247,14 +265,17 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 
 	getEnumerator():IEnumerator<T>
 	{
-		return LinkedNodeList.valueEnumeratorFrom<T>(this._set);
+		var s = this._set;
+		return s && this._count
+			? LinkedNodeList.valueEnumeratorFrom<T>(s)
+			: emptyEnumerator;
 	}
 
 }
 
 function wipe(map:IMap<any>, depth:number = 1):void
 {
-	if(depth)
+	if(map && depth)
 	{
 		for(var key of Object.keys(map))
 		{

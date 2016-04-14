@@ -32,6 +32,8 @@
         return EmptyEnumerator;
     }());
     var Empty = new EmptyEnumerator();
+    Object.freeze(Empty);
+    exports.empty = Empty;
     function from(source) {
         if (!source)
             return Empty;
