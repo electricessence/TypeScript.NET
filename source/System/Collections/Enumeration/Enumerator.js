@@ -7,13 +7,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Types', './ArrayEnumerator', './IndexEnumerator'], factory);
+        define(["require", "exports", "../../Types", "./ArrayEnumerator", "./IndexEnumerator"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Types_1 = require('../../Types');
-    var ArrayEnumerator_1 = require('./ArrayEnumerator');
-    var IndexEnumerator_1 = require('./IndexEnumerator');
+    var Types_1 = require("../../Types");
+    var ArrayEnumerator_1 = require("./ArrayEnumerator");
+    var IndexEnumerator_1 = require("./IndexEnumerator");
     var EmptyEnumerator = (function () {
         function EmptyEnumerator() {
         }

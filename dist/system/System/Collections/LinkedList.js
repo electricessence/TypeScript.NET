@@ -3,10 +3,10 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Compare", "../Collections/Array/Utility", "./Enumeration/Enumerator", "./Enumeration/EnumeratorBase", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException"], function(exports_1, context_1) {
+System.register(["../Compare", "../Collections/Array/Utility", "./Enumeration/Enumerator", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var Values, ArrayUtility, Enumerator, EnumeratorBase_1, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1;
+    var Values, ArrayUtility, Enumerator, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1;
     var InternalNode, LinkedList, LinkedListNode;
     function ensureExternal(node, list) {
         if (!node)
@@ -36,9 +36,6 @@ System.register(["../Compare", "../Collections/Array/Utility", "./Enumeration/En
             },
             function (Enumerator_1) {
                 Enumerator = Enumerator_1;
-            },
-            function (EnumeratorBase_1_1) {
-                EnumeratorBase_1 = EnumeratorBase_1_1;
             },
             function (LinkedNodeList_1_1) {
                 LinkedNodeList_1 = LinkedNodeList_1_1;
@@ -85,18 +82,7 @@ System.register(["../Compare", "../Collections/Array/Utility", "./Enumeration/En
                     }
                 };
                 LinkedList.prototype.getEnumerator = function () {
-                    var _ = this, current, next;
-                    return new EnumeratorBase_1.default(function () {
-                        current = null;
-                        next = _._listInternal.first;
-                    }, function (yielder) {
-                        if (next) {
-                            current = next;
-                            next = current && current.next;
-                            return yielder.yieldReturn(current.value);
-                        }
-                        return yielder.yieldBreak();
-                    });
+                    return LinkedNodeList_1.default.valueEnumeratorFrom(this._listInternal);
                 };
                 LinkedList.prototype._findFirst = function (entry) {
                     var equals = Values.areEqual, next = this._listInternal.first;
@@ -147,15 +133,10 @@ System.register(["../Compare", "../Collections/Array/Utility", "./Enumeration/En
                     if (index === void 0) { index = 0; }
                     if (!array)
                         throw new ArgumentNullException_1.default('array');
-                    if (this._listInternal.first) {
-                        var minLength = index + this._count;
-                        if (array.length < minLength)
-                            array.length = minLength;
-                        this.forEach(function (entry, i) {
-                            array[index + i] = entry;
-                        });
-                    }
-                    return array;
+                    var minLength = index + this._count;
+                    if (array.length < minLength)
+                        array.length = minLength;
+                    return LinkedNodeList_1.default.copyValues(this._listInternal, array, index);
                 };
                 LinkedList.prototype.toArray = function () {
                     var array = ArrayUtility.initialize(this._count);

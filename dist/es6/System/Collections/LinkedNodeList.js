@@ -7,6 +7,7 @@ import * as TextUtility from "../Text/Utility";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
 export default class LinkedNodeList {
     constructor() {
         this._first = null;
@@ -33,6 +34,15 @@ export default class LinkedNodeList {
             next = current && current.next;
         } while (current
             && action(current, index++) !== false);
+    }
+    map(selector) {
+        if (!selector)
+            throw new ArgumentNullException('selector');
+        var result = [];
+        this.forEach(node => {
+            result.push(selector(node));
+        });
+        return result;
     }
     clear() {
         var _ = this, n, cF = 0, cL = 0;
@@ -70,6 +80,16 @@ export default class LinkedNodeList {
             next = next.next;
         }
         return next;
+    }
+    find(condition) {
+        var node = null;
+        this.forEach((n, i) => {
+            if (condition(n, i)) {
+                node = n;
+                return false;
+            }
+        });
+        return node;
     }
     indexOf(node) {
         if (node && (node.previous || node.next)) {
@@ -170,6 +190,32 @@ export default class LinkedNodeList {
             _._first = replacement;
         if (node == _._last)
             _._last = replacement;
+    }
+    static valueEnumeratorFrom(list) {
+        if (!list)
+            throw new ArgumentNullException('list');
+        var _ = this, current, next;
+        return new EnumeratorBase(() => {
+            current = null;
+            next = list.first;
+        }, (yielder) => {
+            if (next) {
+                current = next;
+                next = current && current.next;
+                return yielder.yieldReturn(current.value);
+            }
+            return yielder.yieldBreak();
+        });
+    }
+    static copyValues(list, array, index = 0) {
+        if (list && list.first) {
+            if (!array)
+                throw new ArgumentNullException('array');
+            list.forEach((node, i) => {
+                array[index + i] = node.value;
+            });
+        }
+        return array;
     }
 }
 function assertValidDetached(node, propName = 'node') {

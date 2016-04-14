@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Types_1 = require('../../Types');
-var ArrayEnumerator_1 = require('./ArrayEnumerator');
-var IndexEnumerator_1 = require('./IndexEnumerator');
+var Types_1 = require("../../Types");
+var ArrayEnumerator_1 = require("./ArrayEnumerator");
+var IndexEnumerator_1 = require("./IndexEnumerator");
 
 var EmptyEnumerator = function () {
     function EmptyEnumerator() {
@@ -18,18 +18,18 @@ var EmptyEnumerator = function () {
     }
 
     _createClass(EmptyEnumerator, [{
-        key: 'moveNext',
+        key: "moveNext",
         value: function moveNext() {
             return false;
         }
     }, {
-        key: 'reset',
+        key: "reset",
         value: function reset() {}
     }, {
-        key: 'dispose',
+        key: "dispose",
         value: function dispose() {}
     }, {
-        key: 'current',
+        key: "current",
         get: function get() {
             return undefined;
         }

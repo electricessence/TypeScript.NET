@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException"], function(exports_1, context_1) {
+System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1;
+    var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1;
     var LinkedNodeList;
     function assertValidDetached(node, propName) {
         if (propName === void 0) { propName = 'node'; }
@@ -27,6 +27,9 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
             },
             function (ArgumentNullException_1_1) {
                 ArgumentNullException_1 = ArgumentNullException_1_1;
+            },
+            function (EnumeratorBase_1_1) {
+                EnumeratorBase_1 = EnumeratorBase_1_1;
             }],
         execute: function() {
             LinkedNodeList = (function () {
@@ -68,6 +71,15 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     } while (current
                         && action(current, index++) !== false);
                 };
+                LinkedNodeList.prototype.map = function (selector) {
+                    if (!selector)
+                        throw new ArgumentNullException_1.default('selector');
+                    var result = [];
+                    this.forEach(function (node) {
+                        result.push(selector(node));
+                    });
+                    return result;
+                };
                 LinkedNodeList.prototype.clear = function () {
                     var _ = this, n, cF = 0, cL = 0;
                     n = _._first;
@@ -104,6 +116,16 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                         next = next.next;
                     }
                     return next;
+                };
+                LinkedNodeList.prototype.find = function (condition) {
+                    var node = null;
+                    this.forEach(function (n, i) {
+                        if (condition(n, i)) {
+                            node = n;
+                            return false;
+                        }
+                    });
+                    return node;
                 };
                 LinkedNodeList.prototype.indexOf = function (node) {
                     if (node && (node.previous || node.next)) {
@@ -204,6 +226,33 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                         _._first = replacement;
                     if (node == _._last)
                         _._last = replacement;
+                };
+                LinkedNodeList.valueEnumeratorFrom = function (list) {
+                    if (!list)
+                        throw new ArgumentNullException_1.default('list');
+                    var _ = this, current, next;
+                    return new EnumeratorBase_1.default(function () {
+                        current = null;
+                        next = list.first;
+                    }, function (yielder) {
+                        if (next) {
+                            current = next;
+                            next = current && current.next;
+                            return yielder.yieldReturn(current.value);
+                        }
+                        return yielder.yieldBreak();
+                    });
+                };
+                LinkedNodeList.copyValues = function (list, array, index) {
+                    if (index === void 0) { index = 0; }
+                    if (list && list.first) {
+                        if (!array)
+                            throw new ArgumentNullException_1.default('array');
+                        list.forEach(function (node, i) {
+                            array[index + i] = node.value;
+                        });
+                    }
+                    return array;
                 };
                 return LinkedNodeList;
             }());

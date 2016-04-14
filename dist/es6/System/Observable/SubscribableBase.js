@@ -5,29 +5,23 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 'use strict';
-import LinkedList from '../Collections/LinkedList';
-import * as DisposeUtility from '../Disposable/Utility';
-import Subscription from './Subscription';
+import LinkedNodeList from "../Collections/LinkedNodeList";
+import * as DisposeUtility from "../Disposable/Utility";
+import Subscription from "./Subscription";
 export default class SubscribableBase {
     constructor() {
-        this.__subscriptions = new LinkedList();
+        this.__subscriptions
+            = new LinkedNodeList();
     }
     _getSubscribers() {
-        return this.__subscriptions
-            .toArray()
-            .map(s => s.subscriber);
+        return this
+            .__subscriptions
+            .map(node => node.value && node.value.subscriber);
     }
     _findEntryNode(subscriber) {
-        var node = this.__subscriptions.first;
-        while (node) {
-            if (node.value.subscriber === subscriber) {
-                break;
-            }
-            else {
-                node = node.next;
-            }
-        }
-        return node;
+        return this
+            .__subscriptions
+            .find(n => n.value.subscriber === subscriber);
     }
     subscribe(subscriber) {
         var _ = this;
@@ -35,20 +29,24 @@ export default class SubscribableBase {
         if (n)
             return n.value;
         var s = new Subscription(_, subscriber);
-        _.__subscriptions.add(s);
+        _.__subscriptions.addNode({
+            value: s,
+            previous: null, next: null
+        });
         return s;
     }
     unsubscribe(subscriber) {
-        var n = this._findEntryNode(subscriber);
+        var _ = this;
+        var n = _._findEntryNode(subscriber);
         if (n) {
             var s = n.value;
-            n.remove();
+            _.__subscriptions.removeNode(n);
             s.dispose();
         }
     }
     _unsubscribeAll(returnSubscribers = false) {
         var _ = this, _s = _.__subscriptions;
-        var s = _s.toArray();
+        var s = _s.map(n => n.value);
         var u = returnSubscribers ? s.map(o => o.subscriber) : null;
         _s.clear();
         DisposeUtility.disposeThese(s);

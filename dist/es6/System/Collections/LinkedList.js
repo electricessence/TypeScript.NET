@@ -7,7 +7,6 @@
 import * as Values from "../Compare";
 import * as ArrayUtility from "../Collections/Array/Utility";
 import * as Enumerator from "./Enumeration/Enumerator";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
 import LinkedNodeList from "./LinkedNodeList";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
@@ -62,18 +61,7 @@ export default class LinkedList {
         }
     }
     getEnumerator() {
-        var _ = this, current, next;
-        return new EnumeratorBase(() => {
-            current = null;
-            next = _._listInternal.first;
-        }, (yielder) => {
-            if (next) {
-                current = next;
-                next = current && current.next;
-                return yielder.yieldReturn(current.value);
-            }
-            return yielder.yieldBreak();
-        });
+        return LinkedNodeList.valueEnumeratorFrom(this._listInternal);
     }
     _findFirst(entry) {
         var equals = Values.areEqual, next = this._listInternal.first;
@@ -115,15 +103,10 @@ export default class LinkedList {
     copyTo(array, index = 0) {
         if (!array)
             throw new ArgumentNullException('array');
-        if (this._listInternal.first) {
-            var minLength = index + this._count;
-            if (array.length < minLength)
-                array.length = minLength;
-            this.forEach((entry, i) => {
-                array[index + i] = entry;
-            });
-        }
-        return array;
+        var minLength = index + this._count;
+        if (array.length < minLength)
+            array.length = minLength;
+        return LinkedNodeList.copyValues(this._listInternal, array, index);
     }
     toArray() {
         var array = ArrayUtility.initialize(this._count);

@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import Type from '../../Types';
-import ArrayEnumerator from './ArrayEnumerator';
-import IndexEnumerator from './IndexEnumerator';
+import Type from "../../Types";
+import ArrayEnumerator from "./ArrayEnumerator";
+import IndexEnumerator from "./IndexEnumerator";
 class EmptyEnumerator {
     get current() {
         return undefined;
@@ -17,6 +17,8 @@ class EmptyEnumerator {
     dispose() { }
 }
 const Empty = new EmptyEnumerator();
+Object.freeze(Empty);
+export const empty = Empty;
 export function from(source) {
     if (!source)
         return Empty;
