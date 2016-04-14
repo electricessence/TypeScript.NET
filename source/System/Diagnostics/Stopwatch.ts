@@ -4,8 +4,12 @@
  */
 'use strict'; // For compatibility with (let, const, function, class);
 
-import TimeSpan from '../Time/TimeSpan';
+import TimeSpan from "../Time/TimeSpan";
 
+function getTimestampMilliseconds():number
+{
+	return (new Date()).getTime();
+}
 
 export default
 class Stopwatch
@@ -13,7 +17,7 @@ class Stopwatch
 
 	static getTimestampMilliseconds():number
 	{
-		return (new Date()).getTime();
+		return getTimestampMilliseconds();
 	}
 
 	private _elapsed:number;
@@ -39,9 +43,9 @@ class Stopwatch
 
 	static measure(closure:()=>void):TimeSpan
 	{
-		var start = Stopwatch.getTimestampMilliseconds();
+		var start = getTimestampMilliseconds();
 		closure();
-		return new TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
+		return new TimeSpan(getTimestampMilliseconds() - start);
 	}
 
 	record(closure:() => void):TimeSpan
@@ -56,7 +60,7 @@ class Stopwatch
 	{
 		var _ = this;
 		if(!_._isRunning) {
-			_._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+			_._startTimeStamp = getTimestampMilliseconds();
 			_._isRunning = true;
 		}
 	}
@@ -84,7 +88,7 @@ class Stopwatch
 	{
 		var _ = this;
 		if(_._isRunning) {
-			var t = Stopwatch.getTimestampMilliseconds();
+			var t = getTimestampMilliseconds();
 			var s = _._startTimeStamp;
 			var e = t - s;
 			_._startTimeStamp = t;
@@ -98,7 +102,7 @@ class Stopwatch
 	get currentLapMilliseconds():number
 	{
 		return this._isRunning
-			? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp)
+			? (getTimestampMilliseconds() - this._startTimeStamp)
 			: 0;
 	}
 

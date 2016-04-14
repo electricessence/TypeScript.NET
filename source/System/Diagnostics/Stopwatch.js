@@ -8,12 +8,15 @@
 })(function (require, exports) {
     'use strict';
     var TimeSpan_1 = require('../Time/TimeSpan');
+    function getTimestampMilliseconds() {
+        return (new Date()).getTime();
+    }
     var Stopwatch = (function () {
         function Stopwatch() {
             this.reset();
         }
         Stopwatch.getTimestampMilliseconds = function () {
-            return (new Date()).getTime();
+            return getTimestampMilliseconds();
         };
         Object.defineProperty(Stopwatch.prototype, "isRunning", {
             get: function () {
@@ -28,9 +31,9 @@
             return s;
         };
         Stopwatch.measure = function (closure) {
-            var start = Stopwatch.getTimestampMilliseconds();
+            var start = getTimestampMilliseconds();
             closure();
-            return new TimeSpan_1.default(Stopwatch.getTimestampMilliseconds() - start);
+            return new TimeSpan_1.default(getTimestampMilliseconds() - start);
         };
         Stopwatch.prototype.record = function (closure) {
             var e = Stopwatch.measure(closure);
@@ -40,7 +43,7 @@
         Stopwatch.prototype.start = function () {
             var _ = this;
             if (!_._isRunning) {
-                _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+                _._startTimeStamp = getTimestampMilliseconds();
                 _._isRunning = true;
             }
         };
@@ -60,7 +63,7 @@
         Stopwatch.prototype.lap = function () {
             var _ = this;
             if (_._isRunning) {
-                var t = Stopwatch.getTimestampMilliseconds();
+                var t = getTimestampMilliseconds();
                 var s = _._startTimeStamp;
                 var e = t - s;
                 _._startTimeStamp = t;
@@ -73,7 +76,7 @@
         Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
             get: function () {
                 return this._isRunning
-                    ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp)
+                    ? (getTimestampMilliseconds() - this._startTimeStamp)
                     : 0;
             },
             enumerable: true,
