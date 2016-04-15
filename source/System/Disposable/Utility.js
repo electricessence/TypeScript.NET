@@ -20,6 +20,14 @@
         disposeTheseInternal(disposables, false);
     }
     exports.dispose = dispose;
+    function disposeDeferred() {
+        var disposables = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            disposables[_i - 0] = arguments[_i];
+        }
+        disposeTheseDeferred(disposables);
+    }
+    exports.disposeDeferred = disposeDeferred;
     function disposeWithoutException() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -34,6 +42,15 @@
             : null;
     }
     exports.disposeThese = disposeThese;
+    function disposeTheseDeferred(disposables, delay) {
+        if (delay === void 0) { delay = 0; }
+        if (disposables && disposables.length) {
+            if (!(delay >= 0))
+                delay = 0;
+            setTimeout(disposeTheseInternal, delay, disposables.slice(), true);
+        }
+    }
+    exports.disposeTheseDeferred = disposeTheseDeferred;
     function using(disposable, closure) {
         try {
             return closure(disposable);

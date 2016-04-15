@@ -7,7 +7,7 @@
 ///<reference path="../Collections/Array/IArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from '../Types';
+import Type from "../Types";
 
 /**
  * Takes any number of disposables as arguments and attempts to dispose them.
@@ -21,6 +21,9 @@ export function dispose(...disposables:IDisposable[]):void
 	disposeTheseInternal(disposables, false);
 }
 
+export function disposeDeferred(...disposables:IDisposable[]):void {
+	disposeTheseDeferred(disposables);
+}
 
 /**
  * Takes any number of disposables and traps any errors that occur when disposing.
@@ -34,6 +37,8 @@ export function disposeWithoutException(...disposables:IDisposable[]):any[]
 	return disposeTheseInternal(disposables, true);
 }
 
+
+
 /**
  * Takes an array of disposable objects and ensures they are disposed.
  * @param disposables
@@ -45,6 +50,13 @@ export function disposeThese(disposables:IDisposable[], trapExceptions?:boolean)
 	return disposables && disposables.length
 		? disposeTheseInternal(disposables.slice(), trapExceptions)
 		: null;
+}
+
+export function disposeTheseDeferred(disposables:IDisposable[], delay:number = 0):void {
+	if(disposables && disposables.length) {
+		if(!(delay>=0)) delay = 0;
+		setTimeout(disposeTheseInternal,delay,disposables.slice(), true);
+	}
 }
 
 /**
@@ -154,3 +166,4 @@ function disposeTheseInternal(
 
 	return exceptions;
 }
+
