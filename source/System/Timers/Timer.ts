@@ -27,11 +27,11 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 	}
 
 	static startNew(
-		interval:number,
+		millisecondInterval:number,
 		maxCount:number = Infinity,
-		initialDelay:number = interval):Timer
+		initialDelay:number = millisecondInterval):Timer
 	{
-		var t = new Timer(interval, maxCount, interval);
+		var t = new Timer(millisecondInterval, maxCount, millisecondInterval);
 		t.start();
 		return t;
 	}

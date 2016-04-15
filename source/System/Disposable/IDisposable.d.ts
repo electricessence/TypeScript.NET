@@ -4,6 +4,7 @@
  */
 
 // Allows for simple type checking that includes types that don't declare themselves as IDisposable but do have a dispose() method.
-interface IDisposable {
-	dispose(): void;
+interface IDisposable
+{
+	dispose():void;
 }

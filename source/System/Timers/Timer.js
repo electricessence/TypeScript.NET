@@ -32,10 +32,10 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (_interval < 0)
                 throw "'interval' cannot be negative.";
         }
-        Timer.startNew = function (interval, maxCount, initialDelay) {
+        Timer.startNew = function (millisecondInterval, maxCount, initialDelay) {
             if (maxCount === void 0) { maxCount = Infinity; }
-            if (initialDelay === void 0) { initialDelay = interval; }
-            var t = new Timer(interval, maxCount, interval);
+            if (initialDelay === void 0) { initialDelay = millisecondInterval; }
+            var t = new Timer(millisecondInterval, maxCount, millisecondInterval);
             t.start();
             return t;
         };
