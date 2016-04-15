@@ -164,11 +164,7 @@
                     this._registry = r = {};
                 if (!t)
                     r[type] = t = {};
-                var node = {
-                    value: item,
-                    previous: null,
-                    next: null
-                };
+                var node = { value: item };
                 this._getSet().addNode(node);
                 t[item] = node;
                 ++this._count;

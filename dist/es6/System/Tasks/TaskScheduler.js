@@ -4,7 +4,7 @@
  * Based on code from: https://github.com/kriskowal/q
  */
 import Type from '../Types';
-import LinkedList from "../Collections/LinkedList";
+import LinkedNodeList from "../Collections/LinkedNodeList";
 import Queue from "../Collections/Queue";
 "use strict";
 var requestTick;
@@ -13,19 +13,19 @@ var flushing = false;
 function flush() {
     var entry;
     while (entry = immediateQueue.first) {
-        let e = entry.value, domain = e.domain;
-        entry.remove();
+        let { task, domain } = entry;
+        immediateQueue.removeNode(entry);
         if (domain)
             domain.enter();
-        runSingle(e.task, domain);
+        runSingle(task, domain);
     }
-    var task;
+    let task;
     while (task = laterQueue.dequeue()) {
         runSingle(task);
     }
     flushing = false;
 }
-var immediateQueue = new LinkedList();
+var immediateQueue = new LinkedNodeList();
 var laterQueue = new Queue();
 function runSingle(task, domain) {
     try {
@@ -81,9 +81,9 @@ var TaskScheduler;
             task: task,
             domain: isNodeJS && process['domain']
         };
-        immediateQueue.add(entry);
+        immediateQueue.addNode(entry);
         requestFlush();
-        return () => !!immediateQueue.remove(entry);
+        return () => !!immediateQueue.removeNode(entry);
     }
     TaskScheduler.defer = defer;
     function runAfterDeferred(task) {

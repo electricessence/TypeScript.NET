@@ -4,7 +4,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var TimeSpan_1 = require('../Time/TimeSpan');
+var TimeSpan_1 = require("../Time/TimeSpan");
+function _getTimestampMilliseconds() {
+    return new Date().getTime();
+}
 
 var Stopwatch = function () {
     function Stopwatch() {
@@ -14,23 +17,23 @@ var Stopwatch = function () {
     }
 
     _createClass(Stopwatch, [{
-        key: 'record',
+        key: "record",
         value: function record(closure) {
             var e = Stopwatch.measure(closure);
             this._elapsed += e.milliseconds;
             return e;
         }
     }, {
-        key: 'start',
+        key: "start",
         value: function start() {
             var _ = this;
             if (!_._isRunning) {
-                _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+                _._startTimeStamp = _getTimestampMilliseconds();
                 _._isRunning = true;
             }
         }
     }, {
-        key: 'stop',
+        key: "stop",
         value: function stop() {
             var _ = this;
             if (_._isRunning) {
@@ -39,7 +42,7 @@ var Stopwatch = function () {
             }
         }
     }, {
-        key: 'reset',
+        key: "reset",
         value: function reset() {
             var _ = this;
             _._elapsed = 0;
@@ -47,11 +50,11 @@ var Stopwatch = function () {
             _._startTimeStamp = NaN;
         }
     }, {
-        key: 'lap',
+        key: "lap",
         value: function lap() {
             var _ = this;
             if (_._isRunning) {
-                var t = Stopwatch.getTimestampMilliseconds();
+                var t = _getTimestampMilliseconds();
                 var s = _._startTimeStamp;
                 var e = t - s;
                 _._startTimeStamp = t;
@@ -60,22 +63,22 @@ var Stopwatch = function () {
             } else return TimeSpan_1.default.zero;
         }
     }, {
-        key: 'isRunning',
+        key: "isRunning",
         get: function get() {
             return this._isRunning;
         }
     }, {
-        key: 'currentLapMilliseconds',
+        key: "currentLapMilliseconds",
         get: function get() {
-            return this._isRunning ? Stopwatch.getTimestampMilliseconds() - this._startTimeStamp : 0;
+            return this._isRunning ? _getTimestampMilliseconds() - this._startTimeStamp : 0;
         }
     }, {
-        key: 'currentLap',
+        key: "currentLap",
         get: function get() {
             return this._isRunning ? new TimeSpan_1.default(this.currentLapMilliseconds) : TimeSpan_1.default.zero;
         }
     }, {
-        key: 'elapsedMilliseconds',
+        key: "elapsedMilliseconds",
         get: function get() {
             var _ = this;
             var timeElapsed = _._elapsed;
@@ -83,28 +86,28 @@ var Stopwatch = function () {
             return timeElapsed;
         }
     }, {
-        key: 'elapsed',
+        key: "elapsed",
         get: function get() {
             return new TimeSpan_1.default(this.elapsedMilliseconds);
         }
     }], [{
-        key: 'getTimestampMilliseconds',
+        key: "getTimestampMilliseconds",
         value: function getTimestampMilliseconds() {
-            return new Date().getTime();
+            return _getTimestampMilliseconds();
         }
     }, {
-        key: 'startNew',
+        key: "startNew",
         value: function startNew() {
             var s = new Stopwatch();
             s.start();
             return s;
         }
     }, {
-        key: 'measure',
+        key: "measure",
         value: function measure(closure) {
-            var start = Stopwatch.getTimestampMilliseconds();
+            var start = _getTimestampMilliseconds();
             closure();
-            return new TimeSpan_1.default(Stopwatch.getTimestampMilliseconds() - start);
+            return new TimeSpan_1.default(_getTimestampMilliseconds() - start);
         }
     }]);
 

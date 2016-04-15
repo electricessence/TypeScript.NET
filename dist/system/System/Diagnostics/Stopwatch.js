@@ -1,8 +1,11 @@
-System.register(['../Time/TimeSpan'], function(exports_1, context_1) {
+System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var TimeSpan_1;
     var Stopwatch;
+    function getTimestampMilliseconds() {
+        return (new Date()).getTime();
+    }
     return {
         setters:[
             function (TimeSpan_1_1) {
@@ -14,7 +17,7 @@ System.register(['../Time/TimeSpan'], function(exports_1, context_1) {
                     this.reset();
                 }
                 Stopwatch.getTimestampMilliseconds = function () {
-                    return (new Date()).getTime();
+                    return getTimestampMilliseconds();
                 };
                 Object.defineProperty(Stopwatch.prototype, "isRunning", {
                     get: function () {
@@ -29,9 +32,9 @@ System.register(['../Time/TimeSpan'], function(exports_1, context_1) {
                     return s;
                 };
                 Stopwatch.measure = function (closure) {
-                    var start = Stopwatch.getTimestampMilliseconds();
+                    var start = getTimestampMilliseconds();
                     closure();
-                    return new TimeSpan_1.default(Stopwatch.getTimestampMilliseconds() - start);
+                    return new TimeSpan_1.default(getTimestampMilliseconds() - start);
                 };
                 Stopwatch.prototype.record = function (closure) {
                     var e = Stopwatch.measure(closure);
@@ -41,7 +44,7 @@ System.register(['../Time/TimeSpan'], function(exports_1, context_1) {
                 Stopwatch.prototype.start = function () {
                     var _ = this;
                     if (!_._isRunning) {
-                        _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+                        _._startTimeStamp = getTimestampMilliseconds();
                         _._isRunning = true;
                     }
                 };
@@ -61,7 +64,7 @@ System.register(['../Time/TimeSpan'], function(exports_1, context_1) {
                 Stopwatch.prototype.lap = function () {
                     var _ = this;
                     if (_._isRunning) {
-                        var t = Stopwatch.getTimestampMilliseconds();
+                        var t = getTimestampMilliseconds();
                         var s = _._startTimeStamp;
                         var e = t - s;
                         _._startTimeStamp = t;
@@ -74,7 +77,7 @@ System.register(['../Time/TimeSpan'], function(exports_1, context_1) {
                 Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
                     get: function () {
                         return this._isRunning
-                            ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp)
+                            ? (getTimestampMilliseconds() - this._startTimeStamp)
                             : 0;
                     },
                     enumerable: true,

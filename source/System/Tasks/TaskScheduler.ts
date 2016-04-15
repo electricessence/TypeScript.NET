@@ -4,8 +4,9 @@
  * Based on code from: https://github.com/kriskowal/q
  */
 
-import Type from '../Types';
-import LinkedList from "../Collections/LinkedList";
+///<reference path="../Collections/ILinkedListNode.d.ts"/>
+import Type from "../Types";
+import LinkedNodeList from "../Collections/LinkedNodeList";
 import Queue from "../Collections/Queue";
 
 declare module process
@@ -21,6 +22,7 @@ interface IDomain
 }
 
 interface TaskQueueEntry
+extends ILinkedNode<TaskQueueEntry>
 {
 	task:Function;
 	domain?:IDomain;
@@ -41,17 +43,16 @@ var flushing:boolean = false;
 function flush():void
 {
 	/* jshint loopfunc: true */
-	var entry:ILinkedListNode<TaskQueueEntry>;
-
+	var entry:TaskQueueEntry;
 	while(entry = immediateQueue.first)
 	{
-		let e = entry.value, domain = e.domain;
-		entry.remove();
+		let {task,domain} = entry;
+		immediateQueue.removeNode(entry);
 		if(domain) domain.enter();
-		runSingle(e.task, domain);
+		runSingle(task, domain);
 	}
 
-	var task:Function;
+	let task:Function;
 	while(task = laterQueue.dequeue())
 	{
 		runSingle(task);
@@ -62,7 +63,7 @@ function flush():void
 
 
 // linked list of tasks.  Using a real linked list to allow for removal.
-var immediateQueue:LinkedList<TaskQueueEntry> = new LinkedList<TaskQueueEntry>();
+var immediateQueue = new LinkedNodeList<TaskQueueEntry>();
 
 // queue for late tasks, used by unhandled rejection tracking
 var laterQueue:Queue<Function> = new Queue<Function>();
@@ -148,16 +149,16 @@ module TaskScheduler {
 			return cancel;
 		}
 
-		var entry = {
+		var entry:TaskQueueEntry = {
 			task:task,
 			domain:isNodeJS && (<any>process)['domain']
 		};
 
-		immediateQueue.add(entry);
+		immediateQueue.addNode(entry);
 
 		requestFlush();
 
-		return ()=>!!immediateQueue.remove(entry)
+		return ()=>!!immediateQueue.removeNode(entry)
 	}
 
 
@@ -178,14 +179,16 @@ if(Type.isObject(process)
 	&& process.toString()==="[object process]"
 	&& process.nextTick)
 {
-	// Ensure Q is in a real Node environment, with a `process.nextTick`.
-	// To see through fake Node environments:
-	// * Mocha test runner - exposes a `process` global without a `nextTick`
-	// * Browserify - exposes a `process.nexTick` function that uses
-	//   `setTimeout`. In this case `setImmediate` is preferred because
-	//    it is faster. Browserify's `process.toString()` yields
-	//   "[object Object]", while in a real Node environment
-	//   `process.nextTick()` yields "[object process]".
+	/*
+	Ensure is in a real Node environment, with a `process.nextTick`.
+	To see through fake Node environments:
+	* Mocha test runner - exposes a `process` global without a `nextTick`
+	* Browserify - exposes a `process.nexTick` function that uses
+	  `setTimeout`. In this case `setImmediate` is preferred because
+	   it is faster. Browserify's `process.toString()` yields
+	  "[object Object]", while in a real Node environment
+	  `process.nextTick()` yields "[object process]".
+	*/
 	isNodeJS = true;
 
 	requestTick = ()=>

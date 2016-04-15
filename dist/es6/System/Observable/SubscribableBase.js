@@ -29,10 +29,7 @@ export default class SubscribableBase {
         if (n)
             return n.value;
         var s = new Subscription(_, subscriber);
-        _.__subscriptions.addNode({
-            value: s,
-            previous: null, next: null
-        });
+        _.__subscriptions.addNode({ value: s });
         return s;
     }
     unsubscribe(subscriber) {

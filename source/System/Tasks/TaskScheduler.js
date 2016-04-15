@@ -8,12 +8,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', "../Collections/LinkedList", "../Collections/Queue"], factory);
+        define(["require", "exports", '../Types', "../Collections/LinkedNodeList", "../Collections/Queue"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Types_1 = require('../Types');
-    var LinkedList_1 = require("../Collections/LinkedList");
+    var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
     var Queue_1 = require("../Collections/Queue");
     "use strict";
     var requestTick;
@@ -22,11 +22,11 @@
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
-            var e = entry.value, domain = e.domain;
-            entry.remove();
+            var task_1 = entry.task, domain = entry.domain;
+            immediateQueue.removeNode(entry);
             if (domain)
                 domain.enter();
-            runSingle(e.task, domain);
+            runSingle(task_1, domain);
         }
         var task;
         while (task = laterQueue.dequeue()) {
@@ -34,7 +34,7 @@
         }
         flushing = false;
     }
-    var immediateQueue = new LinkedList_1.default();
+    var immediateQueue = new LinkedNodeList_1.default();
     var laterQueue = new Queue_1.default();
     function runSingle(task, domain) {
         try {
@@ -90,9 +90,9 @@
                 task: task,
                 domain: isNodeJS && process['domain']
             };
-            immediateQueue.add(entry);
+            immediateQueue.addNode(entry);
             requestFlush();
-            return function () { return !!immediateQueue.remove(entry); };
+            return function () { return !!immediateQueue.removeNode(entry); };
         }
         TaskScheduler.defer = defer;
         function runAfterDeferred(task) {

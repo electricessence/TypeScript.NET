@@ -6,7 +6,7 @@
 "use strict";
 
 var Types_1 = require('../Types');
-var LinkedList_1 = require("../Collections/LinkedList");
+var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
 var Queue_1 = require("../Collections/Queue");
 "use strict";
 var requestTick;
@@ -15,19 +15,21 @@ var flushing = false;
 function flush() {
     var entry;
     while (entry = immediateQueue.first) {
-        var e = entry.value,
-            domain = e.domain;
-        entry.remove();
+        var _entry = entry;
+        var _task = _entry.task;
+        var domain = _entry.domain;
+
+        immediateQueue.removeNode(entry);
         if (domain) domain.enter();
-        runSingle(e.task, domain);
+        runSingle(_task, domain);
     }
-    var task;
+    var task = undefined;
     while (task = laterQueue.dequeue()) {
         runSingle(task);
     }
     flushing = false;
 }
-var immediateQueue = new LinkedList_1.default();
+var immediateQueue = new LinkedNodeList_1.default();
 var laterQueue = new Queue_1.default();
 function runSingle(task, domain) {
     try {
@@ -81,10 +83,10 @@ var TaskScheduler;
             task: task,
             domain: isNodeJS && process['domain']
         };
-        immediateQueue.add(entry);
+        immediateQueue.addNode(entry);
         requestFlush();
         return function () {
-            return !!immediateQueue.remove(entry);
+            return !!immediateQueue.removeNode(entry);
         };
     }
     TaskScheduler.defer = defer;

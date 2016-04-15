@@ -1,11 +1,14 @@
 'use strict';
-import TimeSpan from '../Time/TimeSpan';
+import TimeSpan from "../Time/TimeSpan";
+function getTimestampMilliseconds() {
+    return (new Date()).getTime();
+}
 export default class Stopwatch {
     constructor() {
         this.reset();
     }
     static getTimestampMilliseconds() {
-        return (new Date()).getTime();
+        return getTimestampMilliseconds();
     }
     get isRunning() {
         return this._isRunning;
@@ -16,9 +19,9 @@ export default class Stopwatch {
         return s;
     }
     static measure(closure) {
-        var start = Stopwatch.getTimestampMilliseconds();
+        var start = getTimestampMilliseconds();
         closure();
-        return new TimeSpan(Stopwatch.getTimestampMilliseconds() - start);
+        return new TimeSpan(getTimestampMilliseconds() - start);
     }
     record(closure) {
         var e = Stopwatch.measure(closure);
@@ -28,7 +31,7 @@ export default class Stopwatch {
     start() {
         var _ = this;
         if (!_._isRunning) {
-            _._startTimeStamp = Stopwatch.getTimestampMilliseconds();
+            _._startTimeStamp = getTimestampMilliseconds();
             _._isRunning = true;
         }
     }
@@ -48,7 +51,7 @@ export default class Stopwatch {
     lap() {
         var _ = this;
         if (_._isRunning) {
-            var t = Stopwatch.getTimestampMilliseconds();
+            var t = getTimestampMilliseconds();
             var s = _._startTimeStamp;
             var e = t - s;
             _._startTimeStamp = t;
@@ -60,7 +63,7 @@ export default class Stopwatch {
     }
     get currentLapMilliseconds() {
         return this._isRunning
-            ? (Stopwatch.getTimestampMilliseconds() - this._startTimeStamp)
+            ? (getTimestampMilliseconds() - this._startTimeStamp)
             : 0;
     }
     get currentLap() {

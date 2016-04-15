@@ -9,8 +9,8 @@
 
 interface ILinkedNode<TNode extends ILinkedNode<TNode>>
 {
-	previous:TNode;
-	next:TNode;
+	previous?:TNode;
+	next?:TNode;
 }
 
 interface INodeWithValue<TValue>
@@ -27,6 +27,9 @@ extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T> {
 interface ILinkedListNode<T>
 extends ILinkedNodeWithValue<T>
 {
+	previous:ILinkedListNode<T>;
+	next:ILinkedListNode<T>;
+
 	list: ILinkedList<T>;
 
 	addBefore(entry:T): void;

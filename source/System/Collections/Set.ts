@@ -188,11 +188,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 			var t = r && r[type];
 			if(!r) this._registry = r = {};
 			if(!t) r[type] = t = {};
-			var node:ILinkedNodeWithValue<T> = {
-				value: item,
-				previous: null,
-				next: null
-			};
+			var node:ILinkedNodeWithValue<T> = { value: item };
 			this._getSet().addNode(node);
 			t[<any>item] = node;
 			++this._count;

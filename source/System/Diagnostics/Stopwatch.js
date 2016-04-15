@@ -3,11 +3,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Time/TimeSpan'], factory);
+        define(["require", "exports", "../Time/TimeSpan"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var TimeSpan_1 = require('../Time/TimeSpan');
+    var TimeSpan_1 = require("../Time/TimeSpan");
     function getTimestampMilliseconds() {
         return (new Date()).getTime();
     }

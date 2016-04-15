@@ -42,10 +42,7 @@ var SubscribableBase = function () {
             var n = _._findEntryNode(subscriber);
             if (n) return n.value;
             var s = new Subscription_1.default(_, subscriber);
-            _.__subscriptions.addNode({
-                value: s,
-                previous: null, next: null
-            });
+            _.__subscriptions.addNode({ value: s });
             return s;
         }
     }, {

@@ -3,19 +3,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
-System.register(['../Types', "../Collections/LinkedList", "../Collections/Queue"], function(exports_1, context_1) {
+System.register(['../Types', "../Collections/LinkedNodeList", "../Collections/Queue"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, LinkedList_1, Queue_1;
+    var Types_1, LinkedNodeList_1, Queue_1;
     var requestTick, isNodeJS, flushing, immediateQueue, laterQueue, TaskScheduler, channel, requestPortTick;
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
-            var e = entry.value, domain = e.domain;
-            entry.remove();
+            var task_1 = entry.task, domain = entry.domain;
+            immediateQueue.removeNode(entry);
             if (domain)
                 domain.enter();
-            runSingle(e.task, domain);
+            runSingle(task_1, domain);
         }
         var task;
         while (task = laterQueue.dequeue()) {
@@ -59,8 +59,8 @@ System.register(['../Types', "../Collections/LinkedList", "../Collections/Queue"
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
-            function (LinkedList_1_1) {
-                LinkedList_1 = LinkedList_1_1;
+            function (LinkedNodeList_1_1) {
+                LinkedNodeList_1 = LinkedNodeList_1_1;
             },
             function (Queue_1_1) {
                 Queue_1 = Queue_1_1;
@@ -69,7 +69,7 @@ System.register(['../Types', "../Collections/LinkedList", "../Collections/Queue"
             "use strict";
             isNodeJS = false;
             flushing = false;
-            immediateQueue = new LinkedList_1.default();
+            immediateQueue = new LinkedNodeList_1.default();
             laterQueue = new Queue_1.default();
             (function (TaskScheduler) {
                 function defer(task, delay) {
@@ -93,9 +93,9 @@ System.register(['../Types', "../Collections/LinkedList", "../Collections/Queue"
                         task: task,
                         domain: isNodeJS && process['domain']
                     };
-                    immediateQueue.add(entry);
+                    immediateQueue.addNode(entry);
                     requestFlush();
-                    return function () { return !!immediateQueue.remove(entry); };
+                    return function () { return !!immediateQueue.removeNode(entry); };
                 }
                 TaskScheduler.defer = defer;
                 function runAfterDeferred(task) {
