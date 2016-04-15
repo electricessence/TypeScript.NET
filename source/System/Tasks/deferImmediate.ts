@@ -123,7 +123,7 @@ function requestFlush():void
 	}
 }
 
-export default function deferImmediate(task:Function):ICancellableDefer
+export default function deferImmediate(task:Function):ICancellable
 {
 	var entry:TaskQueueEntry = {
 		task: task,
@@ -134,9 +134,10 @@ export default function deferImmediate(task:Function):ICancellableDefer
 
 	requestFlush();
 
-	var cancel:any = ()=>!!immediateQueue.removeNode(entry);
-	cancel.dispose = cancel.cancel = cancel;
-	return cancel;
+	return {
+		cancel:()=>!!immediateQueue.removeNode(entry),
+		dispose:()=>{ this.cancel(); }
+	}
 }
 
 

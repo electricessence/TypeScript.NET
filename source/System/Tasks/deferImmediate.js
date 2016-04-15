@@ -68,15 +68,17 @@
         }
     }
     function deferImmediate(task) {
+        var _this = this;
         var entry = {
             task: task,
             domain: isNodeJS && process['domain']
         };
         immediateQueue.addNode(entry);
         requestFlush();
-        var cancel = function () { return !!immediateQueue.removeNode(entry); };
-        cancel.dispose = cancel.cancel = cancel;
-        return cancel;
+        return {
+            cancel: function () { return !!immediateQueue.removeNode(entry); },
+            dispose: function () { _this.cancel(); }
+        };
     }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = deferImmediate;

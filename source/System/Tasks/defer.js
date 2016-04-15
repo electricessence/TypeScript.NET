@@ -2,6 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -11,26 +16,74 @@
     }
 })(function (require, exports) {
     "use strict";
-    function defer(task, delay) {
-        if (!(delay >= 0))
-            delay = 0;
-        var id = 0;
-        var cancel = function () {
+    var DeferBase = (function () {
+        function DeferBase() {
+        }
+        DeferBase.prototype.dispose = function () {
+            this.cancel();
+        };
+        return DeferBase;
+    }());
+    var Defer = (function (_super) {
+        __extends(Defer, _super);
+        function Defer(task, delay) {
+            _super.call(this);
+            if (!(delay >= 0))
+                delay = 0;
+            this._id = setTimeout(Defer.handler, delay, task, this);
+        }
+        Defer.prototype.cancel = function () {
+            var id = this._id;
             if (id) {
                 clearTimeout(id);
-                id = 0;
+                this._id = 0;
                 return true;
             }
             return false;
         };
-        cancel.dispose = cancel.cancel = cancel;
-        id = setTimeout(function () {
-            cancel();
+        Defer.handler = function (task, d) {
+            d.cancel();
             task();
-        }, delay);
-        return cancel;
+        };
+        return Defer;
+    }(DeferBase));
+    var DeferInterval = (function (_super) {
+        __extends(DeferInterval, _super);
+        function DeferInterval(task, interval, _remaining) {
+            if (_remaining === void 0) { _remaining = Infinity; }
+            _super.call(this);
+            this._remaining = _remaining;
+            if (interval === null || interval === void (0))
+                throw "'interval' must be a valid number.";
+            if (interval < 0)
+                throw "'interval' cannot be negative.";
+            this._id = setInterval(DeferInterval.handler, interval, task, this);
+        }
+        DeferInterval.prototype.cancel = function () {
+            var id = this._id;
+            if (id) {
+                clearInterval(id);
+                this._id = 0;
+                return true;
+            }
+            return false;
+        };
+        DeferInterval.handler = function (task, d) {
+            if (!(--d._remaining))
+                d.cancel();
+            task();
+        };
+        return DeferInterval;
+    }(DeferBase));
+    function defer(task, delay) {
+        return new Defer(task, delay);
     }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = defer;
+    function interval(task, interval, count) {
+        if (count === void 0) { count = Infinity; }
+        return new DeferInterval(task, interval, count);
+    }
+    exports.interval = interval;
 });
 //# sourceMappingURL=defer.js.map
