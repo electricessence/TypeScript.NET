@@ -36,7 +36,7 @@
         entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
     }
     function appendKeyValue(entries, key, value) {
-        if (Types_1.default.isArrayLike(value) || Enumerator_1.isEnumerable(value)) {
+        if (Enumerator_1.isEnumerableOrArrayLike(value)) {
             Enumerator_1.forEach(value, function (v) { return appendKeyValueSingle(entries, key, v); });
         }
         else {

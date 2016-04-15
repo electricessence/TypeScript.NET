@@ -11,7 +11,11 @@
 import Type from "../Types";
 import * as Serialization from "../Serialization/Utility";
 import extractKeyValue from "../KeyValueExtract";
-import {isEnumerable, forEach} from "../Collections/Enumeration/Enumerator";
+import {
+	isEnumerable,
+	forEach,
+	isEnumerableOrArrayLike
+} from "../Collections/Enumeration/Enumerator";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -19,7 +23,7 @@ import {isEnumerable, forEach} from "../Collections/Enumeration/Enumerator";
  */
 
 const
-	ENTRY_SEPARATOR = "&",
+	ENTRY_SEPARATOR     = "&",
 	KEY_VALUE_SEPARATOR = "=";
 
 
@@ -68,7 +72,7 @@ function appendKeyValue(
 	key:string,
 	value:UriComponentValue|IEnumerableOrArray<UriComponentValue>):void
 {
-	if(Type.isArrayLike(value) || isEnumerable(value))
+	if(isEnumerableOrArrayLike(value))
 	{
 		forEach(value, v=> appendKeyValueSingle(entries, key, v));
 	}
@@ -160,7 +164,7 @@ export function parseToMap(
 	parse(query,
 		(key, value)=>
 		{
-			if((key)in(result))
+			if((key) in (result))
 			{
 				var prev:any = result[key];
 				if(!(Array.isArray(prev)))

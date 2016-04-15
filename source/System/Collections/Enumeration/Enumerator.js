@@ -60,6 +60,10 @@
         return Types_1.default.hasMemberOfType(instance, "getEnumerator", Types_1.default.FUNCTION);
     }
     exports.isEnumerable = isEnumerable;
+    function isEnumerableOrArrayLike(instance) {
+        return Types_1.default.isArrayLike(instance) || isEnumerable(instance);
+    }
+    exports.isEnumerableOrArrayLike = isEnumerableOrArrayLike;
     function isEnumerator(instance) {
         return Types_1.default.hasMemberOfType(instance, "moveNext", Types_1.default.FUNCTION);
     }

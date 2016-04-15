@@ -77,6 +77,12 @@ export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
 	return Type.hasMemberOfType<IEnumerable<T>>(instance, "getEnumerator", Type.FUNCTION);
 }
 
+export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerableOrArray<T>
+{
+	return Type.isArrayLike(instance) || isEnumerable(instance);
+}
+
+
 export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
 {
 	return Type.hasMemberOfType<IEnumerator<T>>(instance, "moveNext", Type.FUNCTION);
