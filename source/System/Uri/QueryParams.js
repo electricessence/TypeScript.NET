@@ -7,14 +7,14 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', '../Serialization/Utility', '../KeyValueExtract', '../Collections/Enumeration/Enumerator'], factory);
+        define(["require", "exports", "../Types", "../Serialization/Utility", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Types_1 = require('../Types');
-    var Serialization = require('../Serialization/Utility');
-    var KeyValueExtract_1 = require('../KeyValueExtract');
-    var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
+    var Types_1 = require("../Types");
+    var Serialization = require("../Serialization/Utility");
+    var KeyValueExtract_1 = require("../KeyValueExtract");
+    var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
     var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
     function encode(values, prefixIfNotEmpty) {
         if (!values)

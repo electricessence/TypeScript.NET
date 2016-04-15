@@ -8,19 +8,19 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "./Enumeration/forEach", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Values = require('../Compare');
-    var AU = require('./Array/Utility');
-    var Types_1 = require('../Types');
-    var Integer_1 = require('../Integer');
-    var EnumeratorBase_1 = require('./Enumeration/EnumeratorBase');
-    var forEach_1 = require('./Enumeration/forEach');
-    var NotImplementedException_1 = require('../Exceptions/NotImplementedException');
-    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
-    var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
+    var Values = require("../Compare");
+    var AU = require("./Array/Utility");
+    var Types_1 = require("../Types");
+    var Integer_1 = require("../Integer");
+    var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
+    var forEach_1 = require("./Enumeration/forEach");
+    var NotImplementedException_1 = require("../Exceptions/NotImplementedException");
+    var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+    var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
     var MINIMUM_GROW = 4;
     var SHRINK_THRESHOLD = 32;
     var GROW_FACTOR_HALF = 100;

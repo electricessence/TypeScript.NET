@@ -7,16 +7,16 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', '../Enumeration/EnumeratorBase', '../../Exceptions/ArgumentNullException', '../../Exceptions/InvalidOperationException', '../../KeyValueExtract', '../Enumeration/Enumerator'], factory);
+        define(["require", "exports", "../../Compare", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../Enumeration/Enumerator"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Compare_1 = require('../../Compare');
-    var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
-    var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
-    var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
-    var KeyValueExtract_1 = require('../../KeyValueExtract');
-    var Enumerator_1 = require('../Enumeration/Enumerator');
+    var Compare_1 = require("../../Compare");
+    var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
+    var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
+    var InvalidOperationException_1 = require("../../Exceptions/InvalidOperationException");
+    var KeyValueExtract_1 = require("../../KeyValueExtract");
+    var Enumerator_1 = require("../Enumeration/Enumerator");
     var VOID0 = void (0);
     var DictionaryBase = (function () {
         function DictionaryBase() {
