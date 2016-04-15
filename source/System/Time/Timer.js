@@ -1,0 +1,100 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "../Observable/ObservableBase"], factory);
+    }
+})(function (require, exports) {
+    "use strict";
+    var ObservableBase_1 = require("../Observable/ObservableBase");
+    var Timer = (function (_super) {
+        __extends(Timer, _super);
+        function Timer(_interval, _maxCount, _initialDelay) {
+            if (_maxCount === void 0) { _maxCount = Infinity; }
+            if (_initialDelay === void 0) { _initialDelay = _interval; }
+            _super.call(this);
+            this._interval = _interval;
+            this._maxCount = _maxCount;
+            this._initialDelay = _initialDelay;
+            this._count = 0;
+        }
+        Timer.startNew = function (interval, maxCount, initialDelay) {
+            if (maxCount === void 0) { maxCount = Infinity; }
+            if (initialDelay === void 0) { initialDelay = interval; }
+            var t = new Timer(interval, maxCount, interval);
+            t.start();
+            return t;
+        };
+        Object.defineProperty(Timer.prototype, "isRunning", {
+            get: function () {
+                return !!this._cancel;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Timer.prototype, "count", {
+            get: function () {
+                return this._count;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Timer.prototype.start = function () {
+            var _ = this;
+            if (!_._cancel && _._count < _._maxCount) {
+                if (_._count || _._initialDelay == _._interval) {
+                    var i_1 = setInterval(Timer._onTick, _._interval, _);
+                    _._cancel = function () {
+                        clearInterval(i_1);
+                    };
+                }
+                else {
+                    var i_2 = setTimeout(Timer._onTick, _._initialDelay, _, true);
+                    _._cancel = function () {
+                        clearTimeout(i_2);
+                    };
+                }
+            }
+        };
+        Timer.prototype.stop = function () {
+            if (this._cancel) {
+                this._cancel();
+                this._cancel = null;
+            }
+        };
+        Timer.prototype.reset = function () {
+            this.stop();
+            this._count = 0;
+        };
+        Timer._onTick = function (timer, reInitTimer) {
+            var index = timer._count++, max = timer._maxCount, isComplete = timer._count >= max;
+            if (reInitTimer) {
+                timer.stop();
+                timer.start();
+            }
+            if (isComplete) {
+                timer.stop();
+            }
+            if (index < max) {
+                timer._onNext(index);
+            }
+            if (isComplete) {
+                timer._onCompleted();
+            }
+        };
+        return Timer;
+    }(ObservableBase_1.default));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Timer;
+});
+//# sourceMappingURL=Timer.js.map
