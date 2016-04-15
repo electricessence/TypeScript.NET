@@ -48,8 +48,9 @@ export function isEnumerator(instance) {
 }
 export function forEach(e, action) {
     if (e) {
-        if (Array.isArray(e)) {
-            e.forEach(action);
+        if (Type.isArrayLike(e)) {
+            for (let i = 0; i < e.length; ++i)
+                action(e[i], i);
             return;
         }
         if (isEnumerable(e)) {

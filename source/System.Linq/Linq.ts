@@ -12,24 +12,28 @@
 ///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
 ///<reference path="../System/IComparer.d.ts"/>
 ///<reference path="../System/Collections/Sorting/Order.d.ts"/>
+///<reference path="../System/Collections/IEnumerableOrArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as Values from '../System/Compare';
-import * as Arrays from '../System/Collections/Array/Compare';
-import * as ArrayUtility from '../System/Collections/Array/Utility';
-import {from as enumeratorFrom, forEach as enumeratorForEach, isEnumerable} from '../System/Collections/Enumeration/Enumerator';
-import Type from '../System/Types';
-import Integer from '../System/Integer';
-import BaseFunctions from '../System/Functions';
-import ArrayEnumerator from '../System/Collections/Enumeration/ArrayEnumerator';
-import EnumeratorBase from '../System/Collections/Enumeration/EnumeratorBase';
-import Dictionary from '../System/Collections/Dictionaries/Dictionary';
-import Queue from '../System/Collections/Queue';
-import {dispose, disposeThese, using} from '../System/Disposable/Utility';
-import DisposableBase from '../System/Disposable/DisposableBase';
+import * as Values from "../System/Compare";
+import * as Arrays from "../System/Collections/Array/Compare";
+import * as ArrayUtility from "../System/Collections/Array/Utility";
+import {
+	from as enumeratorFrom,
+	forEach as enumeratorForEach,
+	isEnumerable
+} from "../System/Collections/Enumeration/Enumerator";
+import Type from "../System/Types";
+import Integer from "../System/Integer";
+import BaseFunctions from "../System/Functions";
+import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
+import EnumeratorBase from "../System/Collections/Enumeration/EnumeratorBase";
+import Dictionary from "../System/Collections/Dictionaries/Dictionary";
+import Queue from "../System/Collections/Queue";
+import {dispose, disposeThese, using} from "../System/Disposable/Utility";
+import DisposableBase from "../System/Disposable/DisposableBase";
 import Exception from "../System/Exception";
-import ArgumentException from '../System/Exceptions/ArgumentException';
-import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
+import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 type Comparable = Primitive|IComparable<any>;
 
@@ -105,7 +109,7 @@ extends DisposableBase implements IEnumerable<T>
 	 *
 	 * Is not limited to TypeScript usages.
 	 */
-	static from<T>(source:IEnumerable<T> | IArray<T>):Enumerable<T>
+	static from<T>(source:IEnumerableOrArray<T>):Enumerable<T>
 	{
 		if(Type.isObject(source))
 		{
@@ -125,7 +129,7 @@ extends DisposableBase implements IEnumerable<T>
 		throw new UnsupportedEnumerableException();
 	}
 
-	static toArray<T>(source:IEnumerable<T> | IArray<T>):T[]
+	static toArray<T>(source:IEnumerableOrArray<T>):T[]
 	{
 		if(Type.isObject(source))
 		{
@@ -135,7 +139,7 @@ extends DisposableBase implements IEnumerable<T>
 			if(Type.isArrayLike<T>(source))
 				source = new ArrayEnumerable<T>(<IArray<T>>source);
 
-			if(source instanceof  Enumerable)
+			if(source instanceof Enumerable)
 				return source.toArray();
 
 			if(isEnumerable<T>(source))
@@ -445,7 +449,7 @@ extends DisposableBase implements IEnumerable<T>
 		if(type!=Type.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
-		if(pattern instanceof  RegExp)
+		if(pattern instanceof RegExp)
 		{
 			flags += (pattern.ignoreCase) ? "i" : "";
 			flags += (pattern.multiline) ? "m" : "";
@@ -573,7 +577,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	static forEach<T>(
-		enumerable:IEnumerable<T> | IArray<T>,
+		enumerable:IEnumerableOrArray<T>,
 		action:(element:T, index?:number) => any):void
 	{
 		if(enumerable)
@@ -586,7 +590,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	static map<T,TResult>(
-		enumerable:IEnumerable<T> | IArray<T>,
+		enumerable:IEnumerableOrArray<T>,
 		selector:Selector<T,TResult>):TResult[]
 	{
 
@@ -1274,19 +1278,16 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 
-	selectMany<TResult>(collectionSelector:Selector<T, IEnumerable<TResult | IArray<TResult>>>):Enumerable<TResult>;
+	selectMany<TResult>(
+		collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):Enumerable<TResult>;
 
 	selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerable<TElement> | IArray<TResult>> | Selector<T, IArray<TElement>>,
-		resultSelector?:(collection:T, element:TElement) => TResult):Enumerable<TResult>;
-
-	selectMany<TResult>(
-		collectionSelector:Selector<T, any>,
-		resultSelector?:(collection:any, middle:any) => TResult):Enumerable<TResult>
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		resultSelector?:(collection:T, element:TElement) => TResult):Enumerable<TResult>
 	{
 		var _ = this;
 		if(!resultSelector)
-			resultSelector = (a, b) => b;
+			resultSelector = (a:T, b:any) => <TResult>b;
 
 		return new Enumerable<TResult>(
 			() =>
@@ -1453,7 +1454,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	}
 
-	ofType<TType>(type:{ new (): TType }):Enumerable<TType>;
+	ofType<TType>(type:{ new ():TType }):Enumerable<TType>;
 	ofType<TType>(type:any):Enumerable<TType>
 	{
 		var typeName:string;
@@ -1473,14 +1474,14 @@ extends DisposableBase implements IEnumerable<T>
 				break;
 			default:
 				return <Enumerable<any>>this
-					.where(x=>x instanceof  type);
+					.where(x=>x instanceof type);
 		}
 		return <Enumerable<any>>this
 			.where(x=>typeof x===typeName);
 	}
 
 	except<TCompare>(
-		second:IEnumerable<T>,
+		second:IEnumerableOrArray<T>,
 		compareSelector?:Selector<T, TCompare>):Enumerable<T>
 	{
 		var _ = this, disposed = !_.throwIfDisposed();
@@ -1536,7 +1537,7 @@ extends DisposableBase implements IEnumerable<T>
 		return this.except(null, compareSelector);
 	}
 
-	// [0,0,0,1,1,1,2,2,2,0,0,0] results in [0,1,2,0];
+	// [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
 	distinctUntilChanged<TCompare>(compareSelector?:Selector<T, TCompare>):Enumerable<T>
 	{
 
@@ -1864,7 +1865,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	zip<TSecond, TResult>(
-		second:IEnumerable<TSecond> | IArray<TSecond>,
+		second:IEnumerableOrArray<TSecond>,
 		resultSelector:(first:T, second:TSecond, index?:number) => TResult):Enumerable<TResult>
 	{
 		var _ = this;
@@ -1897,7 +1898,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	zipMultiple<TSecond, TResult>(
-		second:IArray<IEnumerable<TSecond> | IArray<TSecond>>,
+		second:IArray<IEnumerableOrArray<TSecond>>,
 		resultSelector:(first:T, second:TSecond, index?:number) => TResult):Enumerable<TResult>
 	{
 		var _ = this;
@@ -1965,7 +1966,7 @@ extends DisposableBase implements IEnumerable<T>
 	// #region Join Methods
 
 	join<TInner, TKey, TResult, TCompare>(
-		inner:IEnumerable<TInner> | IArray<TInner>,
+		inner:IEnumerableOrArray<TInner>,
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
@@ -2025,7 +2026,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	groupJoin<TInner, TKey, TResult, TCompare>(
-		inner:IEnumerable<TInner> | IArray<TInner>,
+		inner:IEnumerableOrArray<TInner>,
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[]) => TResult,
@@ -2065,7 +2066,7 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	concatWith(other:IEnumerable<T> | IArray<T>):Enumerable<T>
+	concatWith(other:IEnumerableOrArray<T>):Enumerable<T>
 	{
 		var _ = this;
 
@@ -2103,7 +2104,7 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	merge(enumerables:IArray<IEnumerable<T> | IArray<T>>):Enumerable<T>
+	merge(enumerables:IArray<IEnumerableOrArray<T>>):Enumerable<T>
 	{
 		var _ = this;
 
@@ -2117,14 +2118,14 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				var enumerator:IEnumerator<T>;
-				var queue:Queue<IEnumerable<T> | IArray<T>>;
+				var queue:Queue<IEnumerableOrArray<T>>;
 
 				return new EnumeratorBase<T>(
 					() =>
 					{
 						// 1) First get our values...
 						enumerator = _.getEnumerator();
-						queue = new Queue<IEnumerable<T> | IArray<T>>(enumerables);
+						queue = new Queue<IEnumerableOrArray<T>>(enumerables);
 					},
 
 					(yielder) =>
@@ -2160,7 +2161,7 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	concat(...enumerables:Array<IEnumerable<T> | IArray<T>>):Enumerable<T>
+	concat(...enumerables:Array<IEnumerableOrArray<T>>):Enumerable<T>
 	{
 		var _ = this;
 		if(enumerables.length==0)
@@ -2173,7 +2174,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 
-	insertAt(index:number, other:IEnumerable<T> | IArray<T>):Enumerable<T>
+	insertAt(index:number, other:IEnumerableOrArray<T>):Enumerable<T>
 	{
 		if(isNaN(index) || index<0 || !isFinite(index))
 			throw new Error("'index' is invalid or out of bounds.");
@@ -2233,7 +2234,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 
-	alternateMultiple(sequence:IEnumerable<T> | IArray<T>):Enumerable<T>
+	alternateMultiple(sequence:IEnumerableOrArray<T>):Enumerable<T>
 	{
 		var _ = this;
 
@@ -2317,7 +2318,7 @@ extends DisposableBase implements IEnumerable<T>
 
 
 	intersect<TCompare>(
-		second:IEnumerable<T> | IArray<T>,
+		second:IEnumerableOrArray<T>,
 		compareSelector?:Selector<T, TCompare>):Enumerable<T>
 	{
 		var _ = this;
@@ -2368,7 +2369,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	sequenceEqual(
-		second:IEnumerable<T> | IArray<T>,
+		second:IEnumerableOrArray<T>,
 		equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	{
 		return using(
@@ -2389,7 +2390,7 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	//isEquivalent(second:IEnumerable<T> | IArray<T>,
+	//isEquivalent(second:IEnumerableOrArray<T>,
 	//	equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	//{
 	//	return this
@@ -2398,7 +2399,7 @@ extends DisposableBase implements IEnumerable<T>
 	//}
 
 	union<TCompare>(
-		second:IEnumerable<T> | IArray<T>,
+		second:IEnumerableOrArray<T>,
 		compareSelector:Selector<T, TCompare> = Functions.Identity):Enumerable<T>
 	{
 		var _ = this;
@@ -3381,14 +3382,14 @@ extends Enumerable<T>
 	}
 
 	sequenceEqual(
-		second:IEnumerable<T> | IArray<T>,
+		second:IEnumerableOrArray<T>,
 		equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 	{
-		if(Array.isArray(second))
-			return Arrays.areEqual(this.source, <IArray<T>>second, true, equalityComparer);
+		if(Type.isArrayLike(second))
+			return Arrays.areEqual(this.source, second, true, equalityComparer);
 
-		if(second instanceof  ArrayEnumerable)
-			return (<ArrayEnumerable<T>>second).sequenceEqual(this.source, equalityComparer);
+		if(second instanceof ArrayEnumerable)
+			return second.sequenceEqual(this.source, equalityComparer);
 
 		return super.sequenceEqual(second, equalityComparer);
 	}
@@ -3408,7 +3409,7 @@ extends Enumerable<T>
 export interface IGrouping<TKey, TElement>
 extends Enumerable<TElement>
 {
-	key: TKey;
+	key:TKey;
 }
 
 class Grouping<TKey, TElement>
@@ -3430,9 +3431,9 @@ extends ArrayEnumerable<TElement> implements IGrouping<TKey, TElement>
 export interface ILookup<TKey, TElement>
 extends IEnumerable<IGrouping<TKey, TElement>>
 {
-	count: number;
-	get(key:TKey): TElement[];
-	contains(key:TKey): boolean;
+	count:number;
+	get(key:TKey):TElement[];
+	contains(key:TKey):boolean;
 }
 
 class Lookup<TKey, TElement>

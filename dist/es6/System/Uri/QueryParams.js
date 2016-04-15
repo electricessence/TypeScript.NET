@@ -25,7 +25,7 @@ function appendKeyValueSingle(entries, key, value) {
     entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
 }
 function appendKeyValue(entries, key, value) {
-    if (Array.isArray(value) || isEnumerable(value)) {
+    if (Type.isArrayLike(value) || isEnumerable(value)) {
         forEach(value, v => appendKeyValueSingle(entries, key, v));
     }
     else {

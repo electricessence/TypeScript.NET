@@ -3,9 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import Type from '../Types';
+import Type from "../Types";
 export function dispose(...disposables) {
     disposeTheseInternal(disposables, false);
+}
+export function disposeDeferred(...disposables) {
+    disposeTheseDeferred(disposables);
 }
 export function disposeWithoutException(...disposables) {
     return disposeTheseInternal(disposables, true);
@@ -14,6 +17,13 @@ export function disposeThese(disposables, trapExceptions) {
     return disposables && disposables.length
         ? disposeTheseInternal(disposables.slice(), trapExceptions)
         : null;
+}
+export function disposeTheseDeferred(disposables, delay = 0) {
+    if (disposables && disposables.length) {
+        if (!(delay >= 0))
+            delay = 0;
+        setTimeout(disposeTheseInternal, delay, disposables.slice(), true);
+    }
 }
 export function using(disposable, closure) {
     try {

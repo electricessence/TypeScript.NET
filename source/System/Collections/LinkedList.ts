@@ -6,6 +6,7 @@
 
 ///<reference path="ILinkedListNode.d.ts"/>
 ///<reference path="ILinkedList.d.ts"/>
+///<reference path="IEnumerableOrArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
 import * as Values from "../Compare";
@@ -86,9 +87,7 @@ implements ILinkedList<T>
 	private _listInternal:LinkedNodeList<InternalNode<T>>;
 	private _count:number;
 
-	constructor(source?:IEnumerable<T>);
-	constructor(source?:IArray<T>);
-	constructor(source:any)
+	constructor(source?:IEnumerableOrArray<T>)
 	{
 		var _ = this, c = 0;
 		var e = Enumerator.from<T>(source);

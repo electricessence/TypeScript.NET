@@ -5,6 +5,7 @@
 
 ///<reference path="../Primitive.d.ts"/>
 ///<reference path="ISet.d.ts"/>
+///<reference path="IEnumerableOrArray.d.ts"/>
 import Type from "../Types";
 import LinkedNodeList from "./LinkedNodeList";
 import ArgumentException from "../Exceptions/ArgumentException";
@@ -17,7 +18,7 @@ const OTHER = 'other';
 
 export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 {
-	constructor(source?:IEnumerable<T>|IArray<T>)
+	constructor(source?:IEnumerableOrArray<T>)
 	{
 		this._count = 0;
 		if(source) this.unionWith(source);
@@ -25,7 +26,9 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 
 	private _registry:IMap<IMap<ILinkedNodeWithValue<T>>>;
 	private _set:LinkedNodeList<ILinkedNodeWithValue<T>>;
-	private _getSet():LinkedNodeList<ILinkedNodeWithValue<T>> {
+
+	private _getSet():LinkedNodeList<ILinkedNodeWithValue<T>>
+	{
 		var s = this._set;
 		if(!s) this._set = s = new LinkedNodeList<ILinkedNodeWithValue<T>>();
 		return s;
@@ -40,7 +43,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 	//noinspection JSMethodCanBeStatic
 	get isReadOnly():boolean { return true; }
 
-	exceptWith(other:IEnumerable<T>|IArray<T>):void
+	exceptWith(other:IEnumerableOrArray<T>):void
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -50,7 +53,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		});
 	}
 
-	intersectWith(other:IEnumerable<T>|IArray<T>):void
+	intersectWith(other:IEnumerableOrArray<T>):void
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -69,7 +72,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		}
 	}
 
-	isProperSubsetOf(other:IEnumerable<T>|IArray<T>):boolean
+	isProperSubsetOf(other:IEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -78,7 +81,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 			: using(new Set(other), o=> o.isProperSupersetOf(this));
 	}
 
-	isProperSupersetOf(other:IEnumerable<T>|IArray<T>):boolean
+	isProperSupersetOf(other:IEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -104,7 +107,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		return result && this._count>count;
 	}
 
-	isSubsetOf(other:IEnumerable<T>|IArray<T>):boolean
+	isSubsetOf(other:IEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -113,7 +116,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 			: using(new Set(other), o=> o.isSupersetOf(this));
 	}
 
-	isSupersetOf(other:IEnumerable<T>|IArray<T>):boolean
+	isSupersetOf(other:IEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -125,7 +128,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		return result;
 	}
 
-	overlaps(other:IEnumerable<T>|IArray<T>):boolean
+	overlaps(other:IEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -137,7 +140,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		return result;
 	}
 
-	setEquals(other:IEnumerable<T>|IArray<T>):boolean
+	setEquals(other:IEnumerableOrArray<T>):boolean
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -148,7 +151,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 			&& this.isSubsetOf(other);
 	}
 
-	symmetricExceptWith(other:IEnumerable<T>|IArray<T>):void
+	symmetricExceptWith(other:IEnumerableOrArray<T>):void
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
@@ -168,7 +171,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		}
 	}
 
-	unionWith(other:IEnumerable<T>|IArray<T>):void
+	unionWith(other:IEnumerableOrArray<T>):void
 	{
 		forEach(other, v=>
 		{
@@ -182,13 +185,13 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		{
 			var type = typeof item;
 			if(!Type.isPrimitive(type))
-				throw new ArgumentException("item","A Set can only index primitives.  Complex objects require a HashSet.");
+				throw new ArgumentException("item", "A Set can only index primitives.  Complex objects require a HashSet.");
 
 			var r = this._registry;
 			var t = r && r[type];
 			if(!r) this._registry = r = {};
 			if(!t) r[type] = t = {};
-			var node:ILinkedNodeWithValue<T> = { value: item };
+			var node:ILinkedNodeWithValue<T> = {value: item};
 			this._getSet().addNode(node);
 			t[<any>item] = node;
 			++this._count;
@@ -244,7 +247,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 	remove(item:T):number
 	{
 		var r = this._registry, t = r && r[typeof item],
-		    node = t && t[<any>item];
+		    node                  = t && t[<any>item];
 
 		if(node)
 		{

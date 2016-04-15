@@ -70,9 +70,10 @@ function isEnumerator(instance) {
 exports.isEnumerator = isEnumerator;
 function forEach(e, action) {
     if (e) {
-        if (Array.isArray(e)) {
-            e.forEach(action);
-            return;
+        if (Types_1.default.isArrayLike(e)) {
+            for (var i = 0; i < e.length; ++i) {
+                action(e[i], i);
+            }return;
         }
         if (isEnumerable(e)) {
             e = e.getEnumerator();

@@ -6,13 +6,12 @@
 ///<reference path="IDictionary.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import {areEqual} from '../../Compare';
-import EnumeratorBase from '../Enumeration/EnumeratorBase';
-import ArgumentException from '../../Exceptions/ArgumentException';
-import ArgumentNullException from '../../Exceptions/ArgumentNullException';
-import InvalidOperationException from '../../Exceptions/InvalidOperationException';
-import extractKeyValue from '../../KeyValueExtract';
-import {forEach} from '../Enumeration/Enumerator';
+import {areEqual} from "../../Compare";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import InvalidOperationException from "../../Exceptions/InvalidOperationException";
+import extractKeyValue from "../../KeyValueExtract";
+import {forEach} from "../Enumeration/Enumerator";
 
 const VOID0:any = void(0);
 
@@ -247,7 +246,7 @@ implements IDictionary<TKey, TValue>
 		return count;
 	}
 
-	importPairs(pairs:KeyValuePair<TKey, TValue>[]|IEnumerable<KeyValuePair<TKey, TValue>>):boolean
+	importPairs(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>):boolean
 	{
 		var _ = this;
 		if(!pairs) return false;

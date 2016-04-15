@@ -39,8 +39,9 @@ System.register(["../../Types", "./ArrayEnumerator", "./IndexEnumerator"], funct
     exports_1("isEnumerator", isEnumerator);
     function forEach(e, action) {
         if (e) {
-            if (Array.isArray(e)) {
-                e.forEach(action);
+            if (Types_1.default.isArrayLike(e)) {
+                for (var i = 0; i < e.length; ++i)
+                    action(e[i], i);
                 return;
             }
             if (isEnumerable(e)) {

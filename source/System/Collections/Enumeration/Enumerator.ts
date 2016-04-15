@@ -7,6 +7,7 @@
 ///<reference path="IEnumerable.d.ts"/>
 ///<reference path="IEnumerator.d.ts"/>
 ///<reference path="IYield.d.ts"/>
+///<reference path="../IEnumerableOrArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
 import Type from "../../Types";
@@ -37,7 +38,7 @@ Object.freeze(Empty);
 export const empty:IEnumerator<any> = Empty;
 
 // Could be array, or IEnumerable...
-export function from<T>(source:IEnumerable<T> | IArray<T>):IEnumerator<T>
+export function from<T>(source:IEnumerableOrArray<T>):IEnumerator<T>
 {
 	// To simplify and prevent null reference exceptions:
 	if(!source)
@@ -82,14 +83,14 @@ export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
 }
 
 export function forEach<T>(
-	e:T[]|IEnumerator<T>|IEnumerable<T>,
+	e:IEnumerableOrArray<T>|IEnumerator<T>,
 	action:(element:T, index?:number) => any):void
 {
 	if(e)
 	{
-		if(Array.isArray(e))
+		if(Type.isArrayLike<T>(e))
 		{
-			e.forEach(action);
+			for(let i=0;i<e.length;++i) action(e[i],i);
 			return;
 		}
 

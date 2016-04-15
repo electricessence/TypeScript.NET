@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types'], function(exports_1, context_1) {
+System.register(["../Types"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var Types_1;
@@ -14,6 +14,14 @@ System.register(['../Types'], function(exports_1, context_1) {
         disposeTheseInternal(disposables, false);
     }
     exports_1("dispose", dispose);
+    function disposeDeferred() {
+        var disposables = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            disposables[_i - 0] = arguments[_i];
+        }
+        disposeTheseDeferred(disposables);
+    }
+    exports_1("disposeDeferred", disposeDeferred);
     function disposeWithoutException() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -28,6 +36,15 @@ System.register(['../Types'], function(exports_1, context_1) {
             : null;
     }
     exports_1("disposeThese", disposeThese);
+    function disposeTheseDeferred(disposables, delay) {
+        if (delay === void 0) { delay = 0; }
+        if (disposables && disposables.length) {
+            if (!(delay >= 0))
+                delay = 0;
+            setTimeout(disposeTheseInternal, delay, disposables.slice(), true);
+        }
+    }
+    exports_1("disposeTheseDeferred", disposeTheseDeferred);
     function using(disposable, closure) {
         try {
             return closure(disposable);

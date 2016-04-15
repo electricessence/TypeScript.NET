@@ -8,17 +8,18 @@
 ///<reference path="IList.d.ts"/>
 ///<reference path="Enumeration/IEnumerateEach.d.ts"/>
 ///<reference path="../FunctionTypes.d.ts"/>
+///<reference path="IEnumerableOrArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as Values from '../Compare';
-import * as AU from './Array/Utility';
-import Type from '../Types';
-import Integer from '../Integer';
-import EnumeratorBase from './Enumeration/EnumeratorBase';
-import forEach from './Enumeration/forEach';
-import NotImplementedException from '../Exceptions/NotImplementedException';
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
-import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
+import * as Values from "../Compare";
+import * as AU from "./Array/Utility";
+import Type from "../Types";
+import Integer from "../Integer";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import forEach from "./Enumeration/forEach";
+import NotImplementedException from "../Exceptions/NotImplementedException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
 
 const MINIMUM_GROW:number = 4;
 const SHRINK_THRESHOLD:number = 32; // Unused?
@@ -39,7 +40,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	private _version:number;
 
 
-	constructor(source?:IEnumerable<T> | IArray<T> | number)
+	constructor(source?:IEnumerableOrArray<T> | number)
 	{
 		var _ = this;
 		_._head = 0;
@@ -62,7 +63,7 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 			}
 			else
 			{
-				var se = <IEnumerable<T> | IArray<T>> source;
+				var se = <IEnumerableOrArray<T>> source;
 				_._array = AU.initialize<T>(
 					Type.isArrayLike(se)
 						? se.length

@@ -5,11 +5,12 @@
 
 ///<reference path="IEnumerable.d.ts"/>
 ///<reference path="../Array/IArray.d.ts"/>
-import {using} from '../../Disposable/Utility';
-import * as Enumerator from '../../Collections/Enumeration/Enumerator';
+///<reference path="../IEnumerableOrArray.d.ts"/>
+import {using} from "../../Disposable/Utility";
+import * as Enumerator from "../../Collections/Enumeration/Enumerator";
 
 export default function forEach<T>(
-    enumerable:IEnumerable<T> | IArray<T>,
+    enumerable:IEnumerableOrArray<T>,
     action:(element:T, index?:number) => any):void
 {
     if (enumerable) {

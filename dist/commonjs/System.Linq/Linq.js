@@ -17,21 +17,21 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Values = require('../System/Compare');
-var Arrays = require('../System/Collections/Array/Compare');
-var ArrayUtility = require('../System/Collections/Array/Utility');
-var Enumerator_1 = require('../System/Collections/Enumeration/Enumerator');
-var Types_1 = require('../System/Types');
-var Integer_1 = require('../System/Integer');
-var Functions_1 = require('../System/Functions');
-var ArrayEnumerator_1 = require('../System/Collections/Enumeration/ArrayEnumerator');
-var EnumeratorBase_1 = require('../System/Collections/Enumeration/EnumeratorBase');
-var Dictionary_1 = require('../System/Collections/Dictionaries/Dictionary');
-var Queue_1 = require('../System/Collections/Queue');
-var Utility_1 = require('../System/Disposable/Utility');
-var DisposableBase_1 = require('../System/Disposable/DisposableBase');
+var Values = require("../System/Compare");
+var Arrays = require("../System/Collections/Array/Compare");
+var ArrayUtility = require("../System/Collections/Array/Utility");
+var Enumerator_1 = require("../System/Collections/Enumeration/Enumerator");
+var Types_1 = require("../System/Types");
+var Integer_1 = require("../System/Integer");
+var Functions_1 = require("../System/Functions");
+var ArrayEnumerator_1 = require("../System/Collections/Enumeration/ArrayEnumerator");
+var EnumeratorBase_1 = require("../System/Collections/Enumeration/EnumeratorBase");
+var Dictionary_1 = require("../System/Collections/Dictionaries/Dictionary");
+var Queue_1 = require("../System/Collections/Queue");
+var Utility_1 = require("../System/Disposable/Utility");
+var DisposableBase_1 = require("../System/Disposable/DisposableBase");
 var Exception_1 = require("../System/Exception");
-var ObjectDisposedException_1 = require('../System/Disposable/ObjectDisposedException');
+var ObjectDisposedException_1 = require("../System/Disposable/ObjectDisposedException");
 var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext");
 var VOID0 = void 0;
 
@@ -45,12 +45,12 @@ var LinqFunctions = function (_Functions_1$default) {
     }
 
     _createClass(LinqFunctions, [{
-        key: 'Greater',
+        key: "Greater",
         value: function Greater(a, b) {
             return a > b ? a : b;
         }
     }, {
-        key: 'Lesser',
+        key: "Lesser",
         value: function Lesser(a, b) {
             return a < b ? a : b;
         }
@@ -87,19 +87,19 @@ var Enumerable = function (_DisposableBase_1$def) {
     }
 
     _createClass(Enumerable, [{
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             this.throwIfDisposed();
             return this._enumeratorFactory();
         }
     }, {
-        key: '_onDispose',
+        key: "_onDispose",
         value: function _onDispose() {
-            _get(Object.getPrototypeOf(Enumerable.prototype), '_onDispose', this).call(this);
+            _get(Object.getPrototypeOf(Enumerable.prototype), "_onDispose", this).call(this);
             this._enumeratorFactory = null;
         }
     }, {
-        key: 'forEach',
+        key: "forEach",
         value: function forEach(action) {
             var _ = this;
             _.throwIfDisposed();
@@ -111,7 +111,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'toArray',
+        key: "toArray",
         value: function toArray(predicate) {
             var result = [];
             if (predicate) return this.where(predicate).toArray();
@@ -121,7 +121,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return result;
         }
     }, {
-        key: 'asEnumerable',
+        key: "asEnumerable",
         value: function asEnumerable() {
             var _ = this;
             return new Enumerable(function () {
@@ -129,7 +129,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'toLookup',
+        key: "toLookup",
         value: function toLookup(keySelector) {
             var elementSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
             var compareSelector = arguments.length <= 2 || arguments[2] === undefined ? Functions.Identity : arguments[2];
@@ -144,7 +144,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return new Lookup(dict);
         }
     }, {
-        key: 'toMap',
+        key: "toMap",
         value: function toMap(keySelector, elementSelector) {
             var obj = {};
             this.forEach(function (x) {
@@ -153,7 +153,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return obj;
         }
     }, {
-        key: 'toDictionary',
+        key: "toDictionary",
         value: function toDictionary(keySelector, elementSelector) {
             var compareSelector = arguments.length <= 2 || arguments[2] === undefined ? Functions.Identity : arguments[2];
 
@@ -164,7 +164,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return dict;
         }
     }, {
-        key: 'toJoinedString',
+        key: "toJoinedString",
         value: function toJoinedString() {
             var separator = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
             var selector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
@@ -172,7 +172,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return this.select(selector).toArray().join(separator);
         }
     }, {
-        key: 'doAction',
+        key: "doAction",
         value: function doAction(action) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -199,7 +199,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'force',
+        key: "force",
         value: function force() {
             var defaultAction = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
@@ -209,7 +209,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'skip',
+        key: "skip",
         value: function skip(count) {
             var _ = this;
             _.throwIfDisposed();
@@ -222,7 +222,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'skipWhile',
+        key: "skipWhile",
         value: function skipWhile(predicate) {
             this.throwIfDisposed();
             var skipping = true;
@@ -232,7 +232,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'take',
+        key: "take",
         value: function take(count) {
             if (!count || isNaN(count) || count < 0) return Enumerable.empty();
             var _ = this;
@@ -245,7 +245,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'takeWhile',
+        key: "takeWhile",
         value: function takeWhile(predicate) {
             this.throwIfDisposed();
             return this.doAction(function (element, index) {
@@ -253,7 +253,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'takeUntil',
+        key: "takeUntil",
         value: function takeUntil(predicate, includeUntilValue) {
             this.throwIfDisposed();
             if (!includeUntilValue) return this.doAction(function (element, index) {
@@ -267,7 +267,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'takeExceptLast',
+        key: "takeExceptLast",
         value: function takeExceptLast() {
             var count = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
 
@@ -294,7 +294,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'takeFromLast',
+        key: "takeFromLast",
         value: function takeFromLast(count) {
             if (!count || isNaN(count) || count <= 0) return Enumerable.empty();
             var _ = this;
@@ -303,7 +303,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return _.reverse().take(count);
         }
     }, {
-        key: 'traverseBreadthFirst',
+        key: "traverseBreadthFirst",
         value: function traverseBreadthFirst(func, resultSelector) {
             var _ = this;
             return new Enumerable(function () {
@@ -340,7 +340,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'traverseDepthFirst',
+        key: "traverseDepthFirst",
         value: function traverseDepthFirst(func, resultSelector) {
             var _ = this;
             return new Enumerable(function () {
@@ -373,7 +373,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'flatten',
+        key: "flatten",
         value: function flatten() {
             var _ = this;
             return new Enumerable(function () {
@@ -408,7 +408,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'pairwise',
+        key: "pairwise",
         value: function pairwise(selector) {
             var _ = this;
             return new Enumerable(function () {
@@ -425,7 +425,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'scan',
+        key: "scan",
         value: function scan(func, seed) {
             var isUseSeed = seed !== VOID0;
             var _ = this;
@@ -448,7 +448,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'select',
+        key: "select",
         value: function select(selector) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -471,7 +471,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'selectMany',
+        key: "selectMany",
         value: function selectMany(collectionSelector, resultSelector) {
             var _ = this;
             if (!resultSelector) resultSelector = function resultSelector(a, b) {
@@ -506,7 +506,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'choose',
+        key: "choose",
         value: function choose(selector) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -532,7 +532,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'where',
+        key: "where",
         value: function where(predicate) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -558,7 +558,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'ofType',
+        key: "ofType",
         value: function ofType(type) {
             var typeName;
             switch (type) {
@@ -580,11 +580,11 @@ var Enumerable = function (_DisposableBase_1$def) {
                     });
             }
             return this.where(function (x) {
-                return (typeof x === 'undefined' ? 'undefined' : _typeof(x)) === typeName;
+                return (typeof x === "undefined" ? "undefined" : _typeof(x)) === typeName;
             });
         }
     }, {
-        key: 'except',
+        key: "except",
         value: function except(second, compareSelector) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -617,12 +617,12 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'distinct',
+        key: "distinct",
         value: function distinct(compareSelector) {
             return this.except(null, compareSelector);
         }
     }, {
-        key: 'distinctUntilChanged',
+        key: "distinctUntilChanged",
         value: function distinctUntilChanged(compareSelector) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -654,7 +654,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'reverse',
+        key: "reverse",
         value: function reverse() {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -675,7 +675,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'shuffle',
+        key: "shuffle",
         value: function shuffle() {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -703,7 +703,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'count',
+        key: "count",
         value: function count(predicate) {
             var _ = this;
             _.throwIfDisposed();
@@ -720,7 +720,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return count;
         }
     }, {
-        key: 'all',
+        key: "all",
         value: function all(predicate) {
             var result = true;
             this.forEach(function (x) {
@@ -732,12 +732,12 @@ var Enumerable = function (_DisposableBase_1$def) {
             return result;
         }
     }, {
-        key: 'every',
+        key: "every",
         value: function every(predicate) {
             return this.all(predicate);
         }
     }, {
-        key: 'any',
+        key: "any",
         value: function any(predicate) {
             var result = false;
             if (predicate) {
@@ -754,17 +754,17 @@ var Enumerable = function (_DisposableBase_1$def) {
             return result;
         }
     }, {
-        key: 'some',
+        key: "some",
         value: function some(predicate) {
             return this.any(predicate);
         }
     }, {
-        key: 'isEmpty',
+        key: "isEmpty",
         value: function isEmpty() {
             return !this.any();
         }
     }, {
-        key: 'contains',
+        key: "contains",
         value: function contains(value, compareSelector) {
             return compareSelector ? this.any(function (v) {
                 return compareSelector(v) === compareSelector(value);
@@ -773,7 +773,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'indexOf',
+        key: "indexOf",
         value: function indexOf(value, compareSelector) {
             var found = -1;
             if (compareSelector) this.forEach(function (element, i) {
@@ -790,7 +790,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return found;
         }
     }, {
-        key: 'lastIndexOf',
+        key: "lastIndexOf",
         value: function lastIndexOf(value, compareSelector) {
             var result = -1;
             if (compareSelector) this.forEach(function (element, i) {
@@ -801,7 +801,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return result;
         }
     }, {
-        key: 'defaultIfEmpty',
+        key: "defaultIfEmpty",
         value: function defaultIfEmpty() {
             var defaultValue = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
@@ -830,7 +830,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'zip',
+        key: "zip",
         value: function zip(second, resultSelector) {
             var _ = this;
             return new Enumerable(function () {
@@ -849,7 +849,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'zipMultiple',
+        key: "zipMultiple",
         value: function zipMultiple(second, resultSelector) {
             var _ = this;
             if (!second.length) return Enumerable.empty();
@@ -884,7 +884,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'join',
+        key: "join",
         value: function join(inner, outerKeySelector, innerKeySelector, resultSelector) {
             var compareSelector = arguments.length <= 4 || arguments[4] === undefined ? Functions.Identity : arguments[4];
 
@@ -918,7 +918,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'groupJoin',
+        key: "groupJoin",
         value: function groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector) {
             var compareSelector = arguments.length <= 4 || arguments[4] === undefined ? Functions.Identity : arguments[4];
 
@@ -937,7 +937,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'concatWith',
+        key: "concatWith",
         value: function concatWith(other) {
             var _ = this;
             return new Enumerable(function () {
@@ -960,7 +960,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'merge',
+        key: "merge",
         value: function merge(enumerables) {
             var _ = this;
             if (!enumerables.length) return _;
@@ -990,7 +990,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'concat',
+        key: "concat",
         value: function concat() {
             var _ = this;
 
@@ -1003,7 +1003,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return _.merge(enumerables);
         }
     }, {
-        key: 'insertAt',
+        key: "insertAt",
         value: function insertAt(index, other) {
             if (isNaN(index) || index < 0 || !isFinite(index)) throw new Error("'index' is invalid or out of bounds.");
             Integer_1.default.assert(index, "index");
@@ -1036,7 +1036,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'alternateMultiple',
+        key: "alternateMultiple",
         value: function alternateMultiple(sequence) {
             var _ = this;
             return new Enumerable(function () {
@@ -1068,12 +1068,12 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'alternateSingle',
+        key: "alternateSingle",
         value: function alternateSingle(value) {
             return this.alternateMultiple(Enumerable.make(value));
         }
     }, {
-        key: 'alternate',
+        key: "alternate",
         value: function alternate() {
             for (var _len2 = arguments.length, sequence = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
                 sequence[_key2] = arguments[_key2];
@@ -1082,7 +1082,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return this.alternateMultiple(sequence);
         }
     }, {
-        key: 'intersect',
+        key: "intersect",
         value: function intersect(second, compareSelector) {
             var _ = this;
             return new Enumerable(function () {
@@ -1111,7 +1111,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'sequenceEqual',
+        key: "sequenceEqual",
         value: function sequenceEqual(second) {
             var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Values.areEqual : arguments[1];
 
@@ -1125,7 +1125,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'union',
+        key: "union",
         value: function union(second) {
             var compareSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
 
@@ -1163,31 +1163,31 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'orderBy',
+        key: "orderBy",
         value: function orderBy() {
             var keySelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
 
             return new OrderedEnumerable(this, keySelector, 1);
         }
     }, {
-        key: 'orderUsing',
+        key: "orderUsing",
         value: function orderUsing(comparison) {
             return new OrderedEnumerable(this, null, 1, null, comparison);
         }
     }, {
-        key: 'orderUsingReversed',
+        key: "orderUsingReversed",
         value: function orderUsingReversed(comparison) {
             return new OrderedEnumerable(this, null, -1, null, comparison);
         }
     }, {
-        key: 'orderByDescending',
+        key: "orderByDescending",
         value: function orderByDescending() {
             var keySelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
 
             return new OrderedEnumerable(this, keySelector, -1);
         }
     }, {
-        key: 'groupBy',
+        key: "groupBy",
         value: function groupBy(keySelector, elementSelector, compareSelector) {
             var _ = this;
             if (!elementSelector) elementSelector = Functions.Identity;
@@ -1196,7 +1196,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'partitionBy',
+        key: "partitionBy",
         value: function partitionBy(keySelector, elementSelector) {
             var resultSelector = arguments.length <= 2 || arguments[2] === undefined ? function (key, elements) {
                 return new Grouping(key, elements);
@@ -1244,7 +1244,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'buffer',
+        key: "buffer",
         value: function buffer(size) {
             if (size < 1 || !isFinite(size)) throw new Error("Invalid buffer size.");
             Integer_1.default.assert(size, "size");
@@ -1268,12 +1268,12 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'aggregate',
+        key: "aggregate",
         value: function aggregate(func, seed) {
             return this.scan(func, seed).lastOrDefault();
         }
     }, {
-        key: 'average',
+        key: "average",
         value: function average() {
             var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.default.numberOrNaN : arguments[0];
 
@@ -1293,17 +1293,17 @@ var Enumerable = function (_DisposableBase_1$def) {
             return isNaN(sum) || !count ? NaN : sum / count;
         }
     }, {
-        key: 'max',
+        key: "max",
         value: function max() {
             return this.aggregate(Functions.Greater);
         }
     }, {
-        key: 'min',
+        key: "min",
         value: function min() {
             return this.aggregate(Functions.Lesser);
         }
     }, {
-        key: 'maxBy',
+        key: "maxBy",
         value: function maxBy() {
             var keySelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
 
@@ -1312,7 +1312,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'minBy',
+        key: "minBy",
         value: function minBy() {
             var keySelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
 
@@ -1321,7 +1321,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'sum',
+        key: "sum",
         value: function sum() {
             var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.default.numberOrNaN : arguments[0];
 
@@ -1338,7 +1338,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return isNaN(sum) ? NaN : sumInfinite ? sumInfinite * Infinity : sum;
         }
     }, {
-        key: 'product',
+        key: "product",
         value: function product() {
             var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.default.numberOrNaN : arguments[0];
 
@@ -1360,7 +1360,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return exists && isNaN(result) ? NaN : result;
         }
     }, {
-        key: 'elementAt',
+        key: "elementAt",
         value: function elementAt(index) {
             if (isNaN(index) || index < 0 || !isFinite(index)) throw new Error("'index' is invalid or out of bounds.");
             Integer_1.default.assert(index, "index");
@@ -1380,7 +1380,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return value;
         }
     }, {
-        key: 'elementAtOrDefault',
+        key: "elementAtOrDefault",
         value: function elementAtOrDefault(index) {
             var defaultValue = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
@@ -1401,7 +1401,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return !found ? defaultValue : value;
         }
     }, {
-        key: 'first',
+        key: "first",
         value: function first() {
             var _ = this;
             _.throwIfDisposed();
@@ -1416,7 +1416,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return value;
         }
     }, {
-        key: 'firstOrDefault',
+        key: "firstOrDefault",
         value: function firstOrDefault() {
             var defaultValue = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
@@ -1432,7 +1432,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return !found ? defaultValue : value;
         }
     }, {
-        key: 'last',
+        key: "last",
         value: function last() {
             var _ = this;
             _.throwIfDisposed();
@@ -1446,7 +1446,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return value;
         }
     }, {
-        key: 'lastOrDefault',
+        key: "lastOrDefault",
         value: function lastOrDefault() {
             var defaultValue = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
@@ -1461,7 +1461,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return !found ? defaultValue : value;
         }
     }, {
-        key: 'single',
+        key: "single",
         value: function single() {
             var _ = this;
             _.throwIfDisposed();
@@ -1477,7 +1477,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return value;
         }
     }, {
-        key: 'singleOrDefault',
+        key: "singleOrDefault",
         value: function singleOrDefault() {
             var defaultValue = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
@@ -1494,7 +1494,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return !found ? defaultValue : value;
         }
     }, {
-        key: 'share',
+        key: "share",
         value: function share() {
             var _ = this;
             _.throwIfDisposed();
@@ -1510,7 +1510,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'memoize',
+        key: "memoize",
         value: function memoize() {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -1540,7 +1540,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'catchError',
+        key: "catchError",
         value: function catchError(handler) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -1565,7 +1565,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'finallyAction',
+        key: "finallyAction",
         value: function finallyAction(action) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
@@ -1587,12 +1587,12 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }], [{
-        key: 'fromArray',
+        key: "fromArray",
         value: function fromArray(array) {
             return new ArrayEnumerable(array);
         }
     }, {
-        key: 'from',
+        key: "from",
         value: function from(source) {
             if (Types_1.default.isObject(source)) {
                 if (source instanceof Enumerable) return source;
@@ -1605,7 +1605,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             throw new UnsupportedEnumerableException();
         }
     }, {
-        key: 'toArray',
+        key: "toArray",
         value: function toArray(source) {
             if (Types_1.default.isObject(source)) {
                 if (Array.isArray(source)) return source.slice();
@@ -1622,7 +1622,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             throw new UnsupportedEnumerableException();
         }
     }, {
-        key: 'choice',
+        key: "choice",
         value: function choice(values) {
             return new Enumerable(function () {
                 return new EnumeratorBase_1.default(null, function (yielder) {
@@ -1631,7 +1631,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'cycle',
+        key: "cycle",
         value: function cycle(values) {
             return new Enumerable(function () {
                 var index = 0;
@@ -1644,14 +1644,14 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'empty',
+        key: "empty",
         value: function empty() {
             return new Enumerable(function () {
                 return new EnumeratorBase_1.default(null, Functions.False);
             });
         }
     }, {
-        key: 'repeat',
+        key: "repeat",
         value: function repeat(element) {
             var count = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
 
@@ -1671,7 +1671,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'repeatWithFinalize',
+        key: "repeatWithFinalize",
         value: function repeatWithFinalize(initializer, finalizer) {
             return new Enumerable(function () {
                 var element;
@@ -1685,12 +1685,12 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'make',
+        key: "make",
         value: function make(element) {
             return Enumerable.repeat(element, 1);
         }
     }, {
-        key: 'range',
+        key: "range",
         value: function range() {
             var start = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
             var count = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
@@ -1723,7 +1723,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'rangeDown',
+        key: "rangeDown",
         value: function rangeDown() {
             var start = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
             var count = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
@@ -1733,7 +1733,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return Enumerable.range(start, count, step);
         }
     }, {
-        key: 'toInfinity',
+        key: "toInfinity",
         value: function toInfinity() {
             var start = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
             var step = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
@@ -1741,7 +1741,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return Enumerable.range(start, Infinity, step);
         }
     }, {
-        key: 'toNegativeInfinity',
+        key: "toNegativeInfinity",
         value: function toNegativeInfinity() {
             var start = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
             var step = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
@@ -1749,7 +1749,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             return Enumerable.rangeDown(start, Infinity, step);
         }
     }, {
-        key: 'rangeTo',
+        key: "rangeTo",
         value: function rangeTo() {
             var start = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
             var to = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
@@ -1778,11 +1778,11 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'matches',
+        key: "matches",
         value: function matches(input, pattern) {
             var flags = arguments.length <= 2 || arguments[2] === undefined ? "" : arguments[2];
 
-            var type = typeof input === 'undefined' ? 'undefined' : _typeof(input);
+            var type = typeof input === "undefined" ? "undefined" : _typeof(input);
             if (type != Types_1.default.STRING) throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
             if (pattern instanceof RegExp) {
                 flags += pattern.ignoreCase ? "i" : "";
@@ -1801,7 +1801,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'generate',
+        key: "generate",
         value: function generate(factory) {
             var count = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
 
@@ -1825,7 +1825,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'unfold',
+        key: "unfold",
         value: function unfold(seed, valueFactory) {
             var skipSeed = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
@@ -1845,7 +1845,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'defer',
+        key: "defer",
         value: function defer(enumerableFactory) {
             return new Enumerable(function () {
                 var enumerator;
@@ -1859,7 +1859,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'forEach',
+        key: "forEach",
         value: function forEach(enumerable, action) {
             if (enumerable) {
                 Utility_1.using(Enumerator_1.from(enumerable), function (e) {
@@ -1868,7 +1868,7 @@ var Enumerable = function (_DisposableBase_1$def) {
             }
         }
     }, {
-        key: 'map',
+        key: "map",
         value: function map(enumerable, selector) {
             return enumerable && Utility_1.using(Enumerator_1.from(enumerable), function (e) {
                 var result = [];
@@ -1879,14 +1879,14 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: 'max',
+        key: "max",
         value: function max(values) {
             return values.takeUntil(function (v) {
                 return v == +Infinity;
             }, true).aggregate(Functions.Greater);
         }
     }, {
-        key: 'min',
+        key: "min",
         value: function min(values) {
             return values.takeUntil(function (v) {
                 return v == -Infinity;
@@ -1920,13 +1920,13 @@ var ArrayEnumerable = function (_Enumerable) {
     }
 
     _createClass(ArrayEnumerable, [{
-        key: '_onDispose',
+        key: "_onDispose",
         value: function _onDispose() {
-            _get(Object.getPrototypeOf(ArrayEnumerable.prototype), '_onDispose', this).call(this);
+            _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "_onDispose", this).call(this);
             this._source = null;
         }
     }, {
-        key: 'toArray',
+        key: "toArray",
         value: function toArray() {
             var s = this.source;
             if (!s) return [];
@@ -1939,12 +1939,12 @@ var ArrayEnumerable = function (_Enumerable) {
             return result;
         }
     }, {
-        key: 'asEnumerable',
+        key: "asEnumerable",
         value: function asEnumerable() {
             return new ArrayEnumerable(this._source);
         }
     }, {
-        key: 'forEach',
+        key: "forEach",
         value: function forEach(action) {
             var _ = this;
             _.throwIfDisposed();
@@ -1956,33 +1956,33 @@ var ArrayEnumerable = function (_Enumerable) {
             }
         }
     }, {
-        key: 'any',
+        key: "any",
         value: function any(predicate) {
             var _ = this;
             _.throwIfDisposed();
             var source = _._source,
                 len = source ? source.length : 0;
-            return len && (!predicate || _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'any', this).call(this, predicate));
+            return len && (!predicate || _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "any", this).call(this, predicate));
         }
     }, {
-        key: 'count',
+        key: "count",
         value: function count(predicate) {
             var _ = this;
             _.throwIfDisposed();
             var source = _._source,
                 len = source ? source.length : 0;
-            return len && (predicate ? _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'count', this).call(this, predicate) : len);
+            return len && (predicate ? _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "count", this).call(this, predicate) : len);
         }
     }, {
-        key: 'elementAt',
+        key: "elementAt",
         value: function elementAt(index) {
             var _ = this;
             _.throwIfDisposed();
             var source = _._source;
-            return index < source.length && index >= 0 ? source[index] : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'elementAt', this).call(this, index);
+            return index < source.length && index >= 0 ? source[index] : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "elementAt", this).call(this, index);
         }
     }, {
-        key: 'elementAtOrDefault',
+        key: "elementAtOrDefault",
         value: function elementAtOrDefault(index) {
             var defaultValue = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
@@ -1992,15 +1992,15 @@ var ArrayEnumerable = function (_Enumerable) {
             return index < source.length && index >= 0 ? source[index] : defaultValue;
         }
     }, {
-        key: 'first',
+        key: "first",
         value: function first() {
             var _ = this;
             _.throwIfDisposed();
             var source = _._source;
-            return source && source.length ? source[0] : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'first', this).call(this);
+            return source && source.length ? source[0] : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "first", this).call(this);
         }
     }, {
-        key: 'firstOrDefault',
+        key: "firstOrDefault",
         value: function firstOrDefault() {
             var defaultValue = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
@@ -2010,16 +2010,16 @@ var ArrayEnumerable = function (_Enumerable) {
             return source && source.length ? source[0] : defaultValue;
         }
     }, {
-        key: 'last',
+        key: "last",
         value: function last() {
             var _ = this;
             _.throwIfDisposed();
             var source = _._source,
                 len = source.length;
-            return len ? source[len - 1] : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'last', this).call(this);
+            return len ? source[len - 1] : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "last", this).call(this);
         }
     }, {
-        key: 'lastOrDefault',
+        key: "lastOrDefault",
         value: function lastOrDefault() {
             var defaultValue = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
@@ -2030,7 +2030,7 @@ var ArrayEnumerable = function (_Enumerable) {
             return len ? source[len - 1] : defaultValue;
         }
     }, {
-        key: 'skip',
+        key: "skip",
         value: function skip(count) {
             var _ = this;
             if (!count || count < 0) return _.asEnumerable();
@@ -2041,7 +2041,7 @@ var ArrayEnumerable = function (_Enumerable) {
             });
         }
     }, {
-        key: 'takeExceptLast',
+        key: "takeExceptLast",
         value: function takeExceptLast() {
             var count = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
 
@@ -2050,7 +2050,7 @@ var ArrayEnumerable = function (_Enumerable) {
             return _.take(len - count);
         }
     }, {
-        key: 'takeFromLast',
+        key: "takeFromLast",
         value: function takeFromLast(count) {
             if (!count || count < 0) return Enumerable.empty();
             var _ = this,
@@ -2058,7 +2058,7 @@ var ArrayEnumerable = function (_Enumerable) {
             return _.skip(len - count);
         }
     }, {
-        key: 'reverse',
+        key: "reverse",
         value: function reverse() {
             var _ = this;
             return new Enumerable(function () {
@@ -2068,30 +2068,30 @@ var ArrayEnumerable = function (_Enumerable) {
             });
         }
     }, {
-        key: 'memoize',
+        key: "memoize",
         value: function memoize() {
             return new ArrayEnumerable(this._source);
         }
     }, {
-        key: 'sequenceEqual',
+        key: "sequenceEqual",
         value: function sequenceEqual(second) {
             var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Values.areEqual : arguments[1];
 
-            if (Array.isArray(second)) return Arrays.areEqual(this.source, second, true, equalityComparer);
+            if (Types_1.default.isArrayLike(second)) return Arrays.areEqual(this.source, second, true, equalityComparer);
             if (second instanceof ArrayEnumerable) return second.sequenceEqual(this.source, equalityComparer);
-            return _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'sequenceEqual', this).call(this, second, equalityComparer);
+            return _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "sequenceEqual", this).call(this, second, equalityComparer);
         }
     }, {
-        key: 'toJoinedString',
+        key: "toJoinedString",
         value: function toJoinedString() {
             var separator = arguments.length <= 0 || arguments[0] === undefined ? "" : arguments[0];
             var selector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
 
             var s = this._source;
-            return !selector && Array.isArray(s) ? s.join(separator) : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), 'toJoinedString', this).call(this, separator, selector);
+            return !selector && Array.isArray(s) ? s.join(separator) : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "toJoinedString", this).call(this, separator, selector);
         }
     }, {
-        key: 'source',
+        key: "source",
         get: function get() {
             return this._source;
         }
@@ -2113,7 +2113,7 @@ var Grouping = function (_ArrayEnumerable) {
     }
 
     _createClass(Grouping, [{
-        key: 'key',
+        key: "key",
         get: function get() {
             return this._groupKey;
         }
@@ -2130,17 +2130,17 @@ var Lookup = function () {
     }
 
     _createClass(Lookup, [{
-        key: 'get',
+        key: "get",
         value: function get(key) {
             return this._dictionary.getValue(key);
         }
     }, {
-        key: 'contains',
+        key: "contains",
         value: function contains(key) {
             return this._dictionary.containsKey(key);
         }
     }, {
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             var _ = this;
             var enumerator;
@@ -2155,7 +2155,7 @@ var Lookup = function () {
             });
         }
     }, {
-        key: 'count',
+        key: "count",
         get: function get() {
             return this._dictionary.count;
         }
@@ -2178,9 +2178,9 @@ var WhereEnumerable = function (_Enumerable2) {
     }
 
     _createClass(WhereEnumerable, [{
-        key: 'where',
+        key: "where",
         value: function where(predicate) {
-            if (predicate.length > 1) return _get(Object.getPrototypeOf(WhereEnumerable.prototype), 'where', this).call(this, predicate);
+            if (predicate.length > 1) return _get(Object.getPrototypeOf(WhereEnumerable.prototype), "where", this).call(this, predicate);
             var prevPredicate = this.prevPredicate;
             var composedPredicate = function composedPredicate(x) {
                 return prevPredicate(x) && predicate(x);
@@ -2188,13 +2188,13 @@ var WhereEnumerable = function (_Enumerable2) {
             return new WhereEnumerable(this.prevSource, composedPredicate);
         }
     }, {
-        key: 'select',
+        key: "select",
         value: function select(selector) {
-            if (selector.length > 1) return _get(Object.getPrototypeOf(WhereEnumerable.prototype), 'select', this).call(this, selector);
+            if (selector.length > 1) return _get(Object.getPrototypeOf(WhereEnumerable.prototype), "select", this).call(this, selector);
             return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
         }
     }, {
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             var predicate = this.prevPredicate;
             var source = this.prevSource;
@@ -2211,9 +2211,9 @@ var WhereEnumerable = function (_Enumerable2) {
             });
         }
     }, {
-        key: '_onDispose',
+        key: "_onDispose",
         value: function _onDispose() {
-            _get(Object.getPrototypeOf(WhereEnumerable.prototype), '_onDispose', this).call(this);
+            _get(Object.getPrototypeOf(WhereEnumerable.prototype), "_onDispose", this).call(this);
             this.prevPredicate = null;
             this.prevSource = null;
         }
@@ -2237,15 +2237,15 @@ var WhereSelectEnumerable = function (_Enumerable3) {
     }
 
     _createClass(WhereSelectEnumerable, [{
-        key: 'where',
+        key: "where",
         value: function where(predicate) {
-            if (predicate.length > 1) return _get(Object.getPrototypeOf(WhereSelectEnumerable.prototype), 'where', this).call(this, predicate);
+            if (predicate.length > 1) return _get(Object.getPrototypeOf(WhereSelectEnumerable.prototype), "where", this).call(this, predicate);
             return new WhereEnumerable(this, predicate);
         }
     }, {
-        key: 'select',
+        key: "select",
         value: function select(selector) {
-            if (selector.length > 1) return _get(Object.getPrototypeOf(WhereSelectEnumerable.prototype), 'select', this).call(this, selector);
+            if (selector.length > 1) return _get(Object.getPrototypeOf(WhereSelectEnumerable.prototype), "select", this).call(this, selector);
             var _ = this;
             var prevSelector = _.prevSelector;
             var composedSelector = function composedSelector(x) {
@@ -2254,7 +2254,7 @@ var WhereSelectEnumerable = function (_Enumerable3) {
             return new WhereSelectEnumerable(_.prevSource, _.prevPredicate, composedSelector);
         }
     }, {
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             var _ = this,
                 predicate = _.prevPredicate,
@@ -2276,10 +2276,10 @@ var WhereSelectEnumerable = function (_Enumerable3) {
             });
         }
     }, {
-        key: '_onDispose',
+        key: "_onDispose",
         value: function _onDispose() {
             var _ = this;
-            _get(Object.getPrototypeOf(WhereSelectEnumerable.prototype), '_onDispose', this).call(this);
+            _get(Object.getPrototypeOf(WhereSelectEnumerable.prototype), "_onDispose", this).call(this);
             _.prevPredicate = null;
             _.prevSource = null;
             _.prevSelector = null;
@@ -2308,32 +2308,32 @@ var OrderedEnumerable = function (_Enumerable4) {
     }
 
     _createClass(OrderedEnumerable, [{
-        key: 'createOrderedEnumerable',
+        key: "createOrderedEnumerable",
         value: function createOrderedEnumerable(keySelector, order) {
             return new OrderedEnumerable(this.source, keySelector, order, this);
         }
     }, {
-        key: 'thenBy',
+        key: "thenBy",
         value: function thenBy(keySelector) {
             return this.createOrderedEnumerable(keySelector, 1);
         }
     }, {
-        key: 'thenUsing',
+        key: "thenUsing",
         value: function thenUsing(comparison) {
             return new OrderedEnumerable(this.source, null, 1, this, comparison);
         }
     }, {
-        key: 'thenByDescending',
+        key: "thenByDescending",
         value: function thenByDescending(keySelector) {
             return this.createOrderedEnumerable(keySelector, -1);
         }
     }, {
-        key: 'thenUsingReversed',
+        key: "thenUsingReversed",
         value: function thenUsingReversed(comparison) {
             return new OrderedEnumerable(this.source, null, -1, this, comparison);
         }
     }, {
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             var _ = this;
             var buffer;
@@ -2353,9 +2353,9 @@ var OrderedEnumerable = function (_Enumerable4) {
             });
         }
     }, {
-        key: '_onDispose',
+        key: "_onDispose",
         value: function _onDispose() {
-            _get(Object.getPrototypeOf(OrderedEnumerable.prototype), '_onDispose', this).call(this);
+            _get(Object.getPrototypeOf(OrderedEnumerable.prototype), "_onDispose", this).call(this);
             this.source = null;
             this.keySelector = null;
             this.order = null;

@@ -4,21 +4,21 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import * as Values from '../System/Compare';
-import * as Arrays from '../System/Collections/Array/Compare';
-import * as ArrayUtility from '../System/Collections/Array/Utility';
-import { from as enumeratorFrom, forEach as enumeratorForEach, isEnumerable } from '../System/Collections/Enumeration/Enumerator';
-import Type from '../System/Types';
-import Integer from '../System/Integer';
-import BaseFunctions from '../System/Functions';
-import ArrayEnumerator from '../System/Collections/Enumeration/ArrayEnumerator';
-import EnumeratorBase from '../System/Collections/Enumeration/EnumeratorBase';
-import Dictionary from '../System/Collections/Dictionaries/Dictionary';
-import Queue from '../System/Collections/Queue';
-import { dispose, disposeThese, using } from '../System/Disposable/Utility';
-import DisposableBase from '../System/Disposable/DisposableBase';
+import * as Values from "../System/Compare";
+import * as Arrays from "../System/Collections/Array/Compare";
+import * as ArrayUtility from "../System/Collections/Array/Utility";
+import { from as enumeratorFrom, forEach as enumeratorForEach, isEnumerable } from "../System/Collections/Enumeration/Enumerator";
+import Type from "../System/Types";
+import Integer from "../System/Integer";
+import BaseFunctions from "../System/Functions";
+import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
+import EnumeratorBase from "../System/Collections/Enumeration/EnumeratorBase";
+import Dictionary from "../System/Collections/Dictionaries/Dictionary";
+import Queue from "../System/Collections/Queue";
+import { dispose, disposeThese, using } from "../System/Disposable/Utility";
+import DisposableBase from "../System/Disposable/DisposableBase";
 import Exception from "../System/Exception";
-import ObjectDisposedException from '../System/Disposable/ObjectDisposedException';
+import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 const VOID0 = void 0;
 class LinqFunctions extends BaseFunctions {
@@ -1795,7 +1795,7 @@ class ArrayEnumerable extends Enumerable {
         return new ArrayEnumerable(this._source);
     }
     sequenceEqual(second, equalityComparer = Values.areEqual) {
-        if (Array.isArray(second))
+        if (Type.isArrayLike(second))
             return Arrays.areEqual(this.source, second, true, equalityComparer);
         if (second instanceof ArrayEnumerable)
             return second.sequenceEqual(this.source, equalityComparer);

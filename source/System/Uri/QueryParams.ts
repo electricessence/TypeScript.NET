@@ -8,10 +8,10 @@
 ///<reference path="../Primitive.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from '../Types';
-import * as Serialization from '../Serialization/Utility';
-import extractKeyValue from '../KeyValueExtract';
-import {isEnumerable,forEach} from '../Collections/Enumeration/Enumerator';
+import Type from "../Types";
+import * as Serialization from "../Serialization/Utility";
+import extractKeyValue from "../KeyValueExtract";
+import {isEnumerable, forEach} from "../Collections/Enumeration/Enumerator";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -66,9 +66,9 @@ function appendKeyValueSingle(
 function appendKeyValue(
 	entries:string[],
 	key:string,
-	value:UriComponentValue|UriComponentValue[]|IEnumerable<UriComponentValue>):void
+	value:UriComponentValue|IEnumerableOrArray<UriComponentValue>):void
 {
-	if(Array.isArray(value) || isEnumerable(value))
+	if(Type.isArrayLike(value) || isEnumerable(value))
 	{
 		forEach(value, v=> appendKeyValueSingle(entries, key, v));
 	}

@@ -13,25 +13,25 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], factory);
+        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/Utility", "../System/Disposable/DisposableBase", "../System/Exception", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Values = require('../System/Compare');
-    var Arrays = require('../System/Collections/Array/Compare');
-    var ArrayUtility = require('../System/Collections/Array/Utility');
-    var Enumerator_1 = require('../System/Collections/Enumeration/Enumerator');
-    var Types_1 = require('../System/Types');
-    var Integer_1 = require('../System/Integer');
-    var Functions_1 = require('../System/Functions');
-    var ArrayEnumerator_1 = require('../System/Collections/Enumeration/ArrayEnumerator');
-    var EnumeratorBase_1 = require('../System/Collections/Enumeration/EnumeratorBase');
-    var Dictionary_1 = require('../System/Collections/Dictionaries/Dictionary');
-    var Queue_1 = require('../System/Collections/Queue');
-    var Utility_1 = require('../System/Disposable/Utility');
-    var DisposableBase_1 = require('../System/Disposable/DisposableBase');
+    var Values = require("../System/Compare");
+    var Arrays = require("../System/Collections/Array/Compare");
+    var ArrayUtility = require("../System/Collections/Array/Utility");
+    var Enumerator_1 = require("../System/Collections/Enumeration/Enumerator");
+    var Types_1 = require("../System/Types");
+    var Integer_1 = require("../System/Integer");
+    var Functions_1 = require("../System/Functions");
+    var ArrayEnumerator_1 = require("../System/Collections/Enumeration/ArrayEnumerator");
+    var EnumeratorBase_1 = require("../System/Collections/Enumeration/EnumeratorBase");
+    var Dictionary_1 = require("../System/Collections/Dictionaries/Dictionary");
+    var Queue_1 = require("../System/Collections/Queue");
+    var Utility_1 = require("../System/Disposable/Utility");
+    var DisposableBase_1 = require("../System/Disposable/DisposableBase");
     var Exception_1 = require("../System/Exception");
-    var ObjectDisposedException_1 = require('../System/Disposable/ObjectDisposedException');
+    var ObjectDisposedException_1 = require("../System/Disposable/ObjectDisposedException");
     var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext");
     var VOID0 = void 0;
     var LinqFunctions = (function (_super) {
@@ -1896,7 +1896,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-            if (Array.isArray(second))
+            if (Types_1.default.isArrayLike(second))
                 return Arrays.areEqual(this.source, second, true, equalityComparer);
             if (second instanceof ArrayEnumerable)
                 return second.sequenceEqual(this.source, equalityComparer);

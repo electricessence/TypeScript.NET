@@ -3,7 +3,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../System/Compare', '../System/Collections/Array/Compare', '../System/Collections/Array/Utility', '../System/Collections/Enumeration/Enumerator', '../System/Types', '../System/Integer', '../System/Functions', '../System/Collections/Enumeration/ArrayEnumerator', '../System/Collections/Enumeration/EnumeratorBase', '../System/Collections/Dictionaries/Dictionary', '../System/Collections/Queue', '../System/Disposable/Utility', '../System/Disposable/DisposableBase', "../System/Exception", '../System/Disposable/ObjectDisposedException', "../System/Collections/Sorting/KeySortedContext"], function(exports_1, context_1) {
+System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/Utility", "../System/Disposable/DisposableBase", "../System/Exception", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -1939,7 +1939,7 @@ System.register(['../System/Compare', '../System/Collections/Array/Compare', '..
                 };
                 ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-                    if (Array.isArray(second))
+                    if (Types_1.default.isArrayLike(second))
                         return Arrays.areEqual(this.source, second, true, equalityComparer);
                     if (second instanceof ArrayEnumerable)
                         return second.sequenceEqual(this.source, equalityComparer);
