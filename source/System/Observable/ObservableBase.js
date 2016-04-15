@@ -14,11 +14,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './SubscribableBase'], factory);
+        define(["require", "exports", "./SubscribableBase"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var SubscribableBase_1 = require('./SubscribableBase');
+    var SubscribableBase_1 = require("./SubscribableBase");
     var ObservableBase = (function (_super) {
         __extends(ObservableBase, _super);
         function ObservableBase() {

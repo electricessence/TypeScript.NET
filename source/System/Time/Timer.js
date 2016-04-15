@@ -76,6 +76,10 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.stop();
             this._count = 0;
         };
+        Timer.prototype.dispose = function () {
+            this.stop();
+            _super.prototype.dispose.call(this);
+        };
         Timer._onTick = function (timer, reInitTimer) {
             var index = timer._count++, max = timer._maxCount, isComplete = timer._count >= max;
             if (reInitTimer) {

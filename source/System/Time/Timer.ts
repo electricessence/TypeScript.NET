@@ -88,6 +88,11 @@ export default class Timer extends ObservableBase<number>
 		this._count = 0;
 	}
 
+	dispose():void {
+		this.stop();
+		super.dispose();
+	}
+
 	// We use a private static here so there's no need to create a handler every time.
 	private static _onTick(
 		timer:Timer,
