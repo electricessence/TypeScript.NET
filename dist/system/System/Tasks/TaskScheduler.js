@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
-System.register(['../Types', "../Collections/LinkedNodeList", "../Collections/Queue"], function(exports_1, context_1) {
+System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, LinkedNodeList_1, Queue_1;
-    var requestTick, isNodeJS, flushing, immediateQueue, laterQueue, TaskScheduler, channel, requestPortTick;
+    var requestTick, isNodeJS, flushing, immediateQueue, laterQueue, channel, requestPortTick;
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
@@ -54,6 +54,37 @@ System.register(['../Types', "../Collections/LinkedNodeList", "../Collections/Qu
             requestTick();
         }
     }
+    function defer(task, delay) {
+        if (Types_1.default.isNumber(delay, false) && delay >= 0) {
+            var timeout = 0;
+            var cancel = function () {
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = 0;
+                    return true;
+                }
+                return false;
+            };
+            timeout = setTimeout(function () {
+                cancel();
+                task();
+            }, delay);
+            return cancel;
+        }
+        var entry = {
+            task: task,
+            domain: isNodeJS && process['domain']
+        };
+        immediateQueue.addNode(entry);
+        requestFlush();
+        return function () { return !!immediateQueue.removeNode(entry); };
+    }
+    exports_1("default", defer);
+    function runAfterDeferred(task) {
+        laterQueue.enqueue(task);
+        requestFlush();
+    }
+    exports_1("runAfterDeferred", runAfterDeferred);
     return {
         setters:[
             function (Types_1_1) {
@@ -71,39 +102,6 @@ System.register(['../Types', "../Collections/LinkedNodeList", "../Collections/Qu
             flushing = false;
             immediateQueue = new LinkedNodeList_1.default();
             laterQueue = new Queue_1.default();
-            (function (TaskScheduler) {
-                function defer(task, delay) {
-                    if (Types_1.default.isNumber(delay, false) && delay >= 0) {
-                        var timeout = 0;
-                        var cancel = function () {
-                            if (timeout) {
-                                clearTimeout(timeout);
-                                timeout = 0;
-                                return true;
-                            }
-                            return false;
-                        };
-                        timeout = setTimeout(function () {
-                            cancel();
-                            task();
-                        }, delay);
-                        return cancel;
-                    }
-                    var entry = {
-                        task: task,
-                        domain: isNodeJS && process['domain']
-                    };
-                    immediateQueue.addNode(entry);
-                    requestFlush();
-                    return function () { return !!immediateQueue.removeNode(entry); };
-                }
-                TaskScheduler.defer = defer;
-                function runAfterDeferred(task) {
-                    laterQueue.enqueue(task);
-                    requestFlush();
-                }
-                TaskScheduler.runAfterDeferred = runAfterDeferred;
-            })(TaskScheduler || (TaskScheduler = {}));
             if (Types_1.default.isObject(process)
                 && process.toString() === "[object process]"
                 && process.nextTick) {
@@ -142,7 +140,6 @@ System.register(['../Types', "../Collections/LinkedNodeList", "../Collections/Qu
                     setTimeout(flush, 0);
                 };
             }
-            exports_1("default",TaskScheduler);
         }
     }
 });

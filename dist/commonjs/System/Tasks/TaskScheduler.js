@@ -5,7 +5,7 @@
  */
 "use strict";
 
-var Types_1 = require('../Types');
+var Types_1 = require("../Types");
 var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
 var Queue_1 = require("../Collections/Queue");
 "use strict";
@@ -60,42 +60,40 @@ function requestFlush() {
         requestTick();
     }
 }
-var TaskScheduler;
-(function (TaskScheduler) {
-    function defer(task, delay) {
-        if (Types_1.default.isNumber(delay, false) && delay >= 0) {
-            var timeout = 0;
-            var cancel = function cancel() {
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = 0;
-                    return true;
-                }
-                return false;
-            };
-            timeout = setTimeout(function () {
-                cancel();
-                task();
-            }, delay);
-            return cancel;
-        }
-        var entry = {
-            task: task,
-            domain: isNodeJS && process['domain']
+function defer(task, delay) {
+    if (Types_1.default.isNumber(delay, false) && delay >= 0) {
+        var timeout = 0;
+        var cancel = function cancel() {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = 0;
+                return true;
+            }
+            return false;
         };
-        immediateQueue.addNode(entry);
-        requestFlush();
-        return function () {
-            return !!immediateQueue.removeNode(entry);
-        };
+        timeout = setTimeout(function () {
+            cancel();
+            task();
+        }, delay);
+        return cancel;
     }
-    TaskScheduler.defer = defer;
-    function runAfterDeferred(task) {
-        laterQueue.enqueue(task);
-        requestFlush();
-    }
-    TaskScheduler.runAfterDeferred = runAfterDeferred;
-})(TaskScheduler || (TaskScheduler = {}));
+    var entry = {
+        task: task,
+        domain: isNodeJS && process['domain']
+    };
+    immediateQueue.addNode(entry);
+    requestFlush();
+    return function () {
+        return !!immediateQueue.removeNode(entry);
+    };
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = defer;
+function runAfterDeferred(task) {
+    laterQueue.enqueue(task);
+    requestFlush();
+}
+exports.runAfterDeferred = runAfterDeferred;
 if (Types_1.default.isObject(process) && process.toString() === "[object process]" && process.nextTick) {
     isNodeJS = true;
     requestTick = function requestTick() {
@@ -128,6 +126,4 @@ if (Types_1.default.isObject(process) && process.toString() === "[object process
         setTimeout(flush, 0);
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = TaskScheduler;
 //# sourceMappingURL=TaskScheduler.js.map

@@ -12,6 +12,7 @@ import Queue from "../Collections/Queue";
 declare module process
 {
 	export function nextTick(callback:Function):void;
+
 	export function toString():string;
 }
 
@@ -21,8 +22,7 @@ interface IDomain
 	exit():void;
 }
 
-interface TaskQueueEntry
-extends ILinkedNode<TaskQueueEntry>
+interface TaskQueueEntry extends ILinkedNode<TaskQueueEntry>
 {
 	task:Function;
 	domain?:IDomain;
@@ -39,14 +39,13 @@ var flushing:boolean = false;
 // of the event loop.
 
 
-
 function flush():void
 {
 	/* jshint loopfunc: true */
 	var entry:TaskQueueEntry;
 	while(entry = immediateQueue.first)
 	{
-		let {task,domain} = entry;
+		let {task, domain} = entry;
 		immediateQueue.removeNode(entry);
 		if(domain) domain.enter();
 		runSingle(task, domain);
@@ -115,7 +114,8 @@ function runSingle(task:Function, domain?:IDomain):void
 	}
 }
 
-function requestFlush():void {
+function requestFlush():void
+{
 	if(!flushing)
 	{
 		flushing = true;
@@ -123,56 +123,29 @@ function requestFlush():void {
 	}
 }
 
-module TaskScheduler {
+export default function deferImmediate(task:Function):()=>boolean
+{
+	var entry:TaskQueueEntry = {
+		task: task,
+		domain: isNodeJS && (<any>process)['domain']
+	};
 
+	immediateQueue.addNode(entry);
 
-	export function defer(task:Function, delay?:number):()=>boolean
-	{
-		if(Type.isNumber(delay,false) && delay>=0) {
+	requestFlush();
 
-			var timeout:number = 0;
-
-			var cancel = ()=>{
-				if(timeout) {
-					clearTimeout(timeout);
-					timeout = 0;
-					return true;
-				}
-				return false;
-			};
-
-			timeout = setTimeout(()=>{
-				cancel();
-				task();
-			},delay);
-
-			return cancel;
-		}
-
-		var entry:TaskQueueEntry = {
-			task:task,
-			domain:isNodeJS && (<any>process)['domain']
-		};
-
-		immediateQueue.addNode(entry);
-
-		requestFlush();
-
-		return ()=>!!immediateQueue.removeNode(entry)
-	}
-
-
-	// runs a task after all other tasks have been run
-	// this is useful for unhandled rejection tracking that needs to happen
-	// after all `then`d tasks have been run.
-	export function runAfterDeferred(task:Function):void
-	{
-		laterQueue.enqueue(task);
-		requestFlush();
-	}
-
+	return ()=>!!immediateQueue.removeNode(entry)
 }
 
+
+// runs a task after all other tasks have been run
+// this is useful for unhandled rejection tracking that needs to happen
+// after all `then`d tasks have been run.
+export function runAfterDeferred(task:Function):void
+{
+	laterQueue.enqueue(task);
+	requestFlush();
+}
 
 
 if(Type.isObject(process)
@@ -247,5 +220,3 @@ else
 		setTimeout(flush, 0);
 	};
 }
-
-export default TaskScheduler;

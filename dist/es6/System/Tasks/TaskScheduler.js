@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
-import Type from '../Types';
+import Type from "../Types";
 import LinkedNodeList from "../Collections/LinkedNodeList";
 import Queue from "../Collections/Queue";
 "use strict";
@@ -58,40 +58,35 @@ function requestFlush() {
         requestTick();
     }
 }
-var TaskScheduler;
-(function (TaskScheduler) {
-    function defer(task, delay) {
-        if (Type.isNumber(delay, false) && delay >= 0) {
-            var timeout = 0;
-            var cancel = () => {
-                if (timeout) {
-                    clearTimeout(timeout);
-                    timeout = 0;
-                    return true;
-                }
-                return false;
-            };
-            timeout = setTimeout(() => {
-                cancel();
-                task();
-            }, delay);
-            return cancel;
-        }
-        var entry = {
-            task: task,
-            domain: isNodeJS && process['domain']
+export default function defer(task, delay) {
+    if (Type.isNumber(delay, false) && delay >= 0) {
+        var timeout = 0;
+        var cancel = () => {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = 0;
+                return true;
+            }
+            return false;
         };
-        immediateQueue.addNode(entry);
-        requestFlush();
-        return () => !!immediateQueue.removeNode(entry);
+        timeout = setTimeout(() => {
+            cancel();
+            task();
+        }, delay);
+        return cancel;
     }
-    TaskScheduler.defer = defer;
-    function runAfterDeferred(task) {
-        laterQueue.enqueue(task);
-        requestFlush();
-    }
-    TaskScheduler.runAfterDeferred = runAfterDeferred;
-})(TaskScheduler || (TaskScheduler = {}));
+    var entry = {
+        task: task,
+        domain: isNodeJS && process['domain']
+    };
+    immediateQueue.addNode(entry);
+    requestFlush();
+    return () => !!immediateQueue.removeNode(entry);
+}
+export function runAfterDeferred(task) {
+    laterQueue.enqueue(task);
+    requestFlush();
+}
 if (Type.isObject(process)
     && process.toString() === "[object process]"
     && process.nextTick) {
@@ -130,5 +125,4 @@ else {
         setTimeout(flush, 0);
     };
 }
-export default TaskScheduler;
 //# sourceMappingURL=TaskScheduler.js.map
