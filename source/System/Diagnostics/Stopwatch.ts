@@ -2,6 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+
+///<reference path="../Timers/ITimer.d.ts"/>
+
 'use strict'; // For compatibility with (let, const, function, class);
 
 import TimeSpan from "../Time/TimeSpan";
@@ -12,7 +15,7 @@ function getTimestampMilliseconds():number
 }
 
 export default
-class Stopwatch
+class Stopwatch implements ITimer
 {
 
 	static getTimestampMilliseconds():number

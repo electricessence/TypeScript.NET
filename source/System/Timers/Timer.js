@@ -12,11 +12,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Observable/ObservableBase"], factory);
+        define(["require", "exports", "./../Observable/ObservableBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ObservableBase_1 = require("../Observable/ObservableBase");
+    var ObservableBase_1 = require("./../Observable/ObservableBase");
     var Timer = (function (_super) {
         __extends(Timer, _super);
         function Timer(_interval, _maxCount, _initialDelay) {
@@ -27,6 +27,10 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._maxCount = _maxCount;
             this._initialDelay = _initialDelay;
             this._count = 0;
+            if (_interval === null || _interval === void (0))
+                throw "'interval' must be a valid number.";
+            if (_interval < 0)
+                throw "'interval' cannot be negative.";
         }
         Timer.startNew = function (interval, maxCount, initialDelay) {
             if (maxCount === void 0) { maxCount = Infinity; }
@@ -67,23 +71,28 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
         };
         Timer.prototype.stop = function () {
-            if (this._cancel) {
-                this._cancel();
-                this._cancel = null;
-            }
+            this.cancel();
         };
         Timer.prototype.reset = function () {
             this.stop();
             this._count = 0;
         };
+        Timer.prototype.cancel = function () {
+            if (this._cancel) {
+                this._cancel();
+                this._cancel = null;
+                return true;
+            }
+            return false;
+        };
         Timer.prototype.dispose = function () {
-            this.stop();
+            this.cancel();
             _super.prototype.dispose.call(this);
         };
         Timer._onTick = function (timer, reInitTimer) {
             var index = timer._count++, max = timer._maxCount, isComplete = timer._count >= max;
             if (reInitTimer) {
-                timer.stop();
+                timer.cancel();
                 timer.start();
             }
             if (isComplete) {

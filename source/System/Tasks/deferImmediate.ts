@@ -22,7 +22,7 @@ interface IDomain
 	exit():void;
 }
 
-interface TaskQueueEntry extends ILinkedNode<TaskQueueEntry>
+interface ITaskQueueEntry extends ILinkedNode<ITaskQueueEntry>
 {
 	task:Function;
 	domain?:IDomain;
@@ -42,7 +42,7 @@ var flushing:boolean = false;
 function flush():void
 {
 	/* jshint loopfunc: true */
-	var entry:TaskQueueEntry;
+	var entry:ITaskQueueEntry;
 	while(entry = immediateQueue.first)
 	{
 		let {task, domain} = entry;
@@ -62,7 +62,7 @@ function flush():void
 
 
 // linked list of tasks.  Using a real linked list to allow for removal.
-var immediateQueue = new LinkedNodeList<TaskQueueEntry>();
+var immediateQueue = new LinkedNodeList<ITaskQueueEntry>();
 
 // queue for late tasks, used by unhandled rejection tracking
 var laterQueue:Queue<Function> = new Queue<Function>();
@@ -125,7 +125,7 @@ function requestFlush():void
 
 export default function deferImmediate(task:Function):ICancellable
 {
-	var entry:TaskQueueEntry = {
+	var entry:ITaskQueueEntry = {
 		task: task,
 		domain: isNodeJS && (<any>process)['domain']
 	};

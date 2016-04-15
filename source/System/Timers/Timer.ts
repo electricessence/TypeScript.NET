@@ -3,9 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import ObservableBase from "../Observable/ObservableBase";
+///<reference path="../Tasks/ICancellable.d.ts"/>
+///<reference path="ITimer.d.ts"/>
+import ObservableBase from "./../Observable/ObservableBase";
 
-export default class Timer extends ObservableBase<number>
+export default class Timer extends ObservableBase<number> implements ITimer, ICancellable
 {
 
 	private _cancel:()=>void;
@@ -17,6 +19,11 @@ export default class Timer extends ObservableBase<number>
 		private _initialDelay = _interval)
 	{
 		super();
+
+		if(_interval===null || _interval=== void(0))
+			throw "'interval' must be a valid number.";
+		if(_interval<0)
+			throw "'interval' cannot be negative.";
 	}
 
 	static startNew(
@@ -75,11 +82,7 @@ export default class Timer extends ObservableBase<number>
 
 	stop():void
 	{
-		if(this._cancel)
-		{
-			this._cancel();
-			this._cancel = null;
-		}
+		this.cancel();
 	}
 
 	reset():void
@@ -88,8 +91,18 @@ export default class Timer extends ObservableBase<number>
 		this._count = 0;
 	}
 
+	cancel():boolean {
+		if(this._cancel)
+		{
+			this._cancel();
+			this._cancel = null;
+			return true;
+		}
+		return false;
+	}
+
 	dispose():void {
-		this.stop();
+		this.cancel();
 		super.dispose();
 	}
 
@@ -104,7 +117,7 @@ export default class Timer extends ObservableBase<number>
 
 		if(reInitTimer)
 		{
-			timer.stop();
+			timer.cancel();
 			timer.start();
 		}
 
