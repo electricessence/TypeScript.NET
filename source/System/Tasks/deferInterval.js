@@ -11,26 +11,28 @@
     }
 })(function (require, exports) {
     "use strict";
-    function defer(task, delay) {
-        if (!(delay >= 0))
-            delay = 0;
+    function deferInterval(task, interval, count) {
+        if (count === void 0) { count = Infinity; }
+        if (!(interval >= 0))
+            interval = 0;
         var id = 0;
         var cancel = function () {
             if (id) {
-                clearTimeout(id);
+                clearInterval(id);
                 id = 0;
                 return true;
             }
             return false;
         };
         cancel.dispose = cancel.cancel = cancel;
-        id = setTimeout(function () {
-            cancel();
+        id = setInterval(function () {
+            if (!(--count))
+                cancel();
             task();
-        }, delay);
+        }, interval);
         return cancel;
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = defer;
+    exports.default = deferInterval;
 });
-//# sourceMappingURL=defer.js.map
+//# sourceMappingURL=deferInterval.js.map

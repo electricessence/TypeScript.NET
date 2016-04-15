@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-export default function defer(task:Function, delay?:number):ICancellableDefer
+export default function deferInterval(task:Function, interval:number, count:number = Infinity):ICancellableDefer
 {
 	// Note: NaN will always evaluate false.
-	if(!(delay>=0)) delay = 0;
+	if(!(interval>=0)) interval = 0;
 
 	var id:number = 0;
 
@@ -14,7 +14,7 @@ export default function defer(task:Function, delay?:number):ICancellableDefer
 	{
 		if(id)
 		{
-			clearTimeout(id);
+			clearInterval(id);
 			id = 0;
 			return true;
 		}
@@ -22,11 +22,11 @@ export default function defer(task:Function, delay?:number):ICancellableDefer
 	};
 	cancel.dispose = cancel.cancel = cancel;
 
-	id = setTimeout(()=>
+	id = setInterval(()=>
 	{
-		cancel();
+		if(!(--count)) cancel();
 		task();
-	}, delay);
+	}, interval);
 
 	return cancel;
 

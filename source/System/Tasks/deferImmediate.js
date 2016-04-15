@@ -74,7 +74,9 @@
         };
         immediateQueue.addNode(entry);
         requestFlush();
-        return function () { return !!immediateQueue.removeNode(entry); };
+        var cancel = function () { return !!immediateQueue.removeNode(entry); };
+        cancel.dispose = cancel.cancel = cancel;
+        return cancel;
     }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = deferImmediate;
