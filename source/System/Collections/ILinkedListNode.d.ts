@@ -7,7 +7,7 @@
 ///<reference path="ILinkedList.d.ts"/>
 
 
-interface ILinkedNode<TNode extends ILinkedNode<TNode>>
+interface ILinkedNode<TNode extends ILinkedNode<any>>
 {
 	previous?:TNode;
 	next?:TNode;

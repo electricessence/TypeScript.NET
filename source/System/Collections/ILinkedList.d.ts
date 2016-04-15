@@ -11,7 +11,7 @@
 ///<reference path="ILinkedListNode.d.ts"/>
 
 
-interface ILinkedNodeList<TNode extends ILinkedNode<TNode>>
+interface ILinkedNodeList<TNode extends ILinkedNode<any>>
 {
 	first:TNode;
 	last:TNode;
