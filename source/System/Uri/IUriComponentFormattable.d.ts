@@ -20,10 +20,13 @@ extends IMap<UriComponentValue|UriComponentValue[]> {
 }
 
 declare type QueryParamArray
-	= StringKeyValuePair<UriComponentValue|UriComponentValue[]>[];
+	= IArray<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>;
 
 declare type QueryParamEnumerable
 	= IEnumerable<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>;
 
+declare type QueryParamEnumerableOrArray
+	= IEnumerableOrArray<StringKeyValuePair<UriComponentValue|UriComponentValue[]>>;
+
 declare type QueryParamsConvertible
-	= string | IUriComponentMap | QueryParamArray | QueryParamEnumerable;
+	= string | IUriComponentMap | QueryParamEnumerableOrArray;

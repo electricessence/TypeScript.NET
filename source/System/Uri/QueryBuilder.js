@@ -36,7 +36,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (Types_1.default.isString(query)) {
                 this.importFromString(query, decodeValues);
             }
-            else if (Array.isArray(query) || Enumerator_1.isEnumerable(query)) {
+            else if (Enumerator_1.isEnumerableOrArrayLike(query)) {
                 this.importPairs(query);
             }
             else {

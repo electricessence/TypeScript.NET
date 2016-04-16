@@ -20,7 +20,7 @@
         if (!values)
             return '';
         var entries = [];
-        if (Array.isArray(values) || Enumerator_1.isEnumerable(values)) {
+        if (Enumerator_1.isEnumerableOrArrayLike(values)) {
             Enumerator_1.forEach(values, function (entry) {
                 return KeyValueExtract_1.default(entry, function (key, value) { return appendKeyValue(entries, key, value); });
             });

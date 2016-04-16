@@ -9,11 +9,10 @@
 ///<reference path="../Primitive.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from '../Types';
-import * as Serialization from '../Serialization/Utility';
-import * as QueryParams from './QueryParams';
-import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
-import {isEnumerable} from '../Collections/Enumeration/Enumerator';
+import Type from "../Types";
+import * as QueryParams from "./QueryParams";
+import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
+import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 
 
 /**
@@ -50,7 +49,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 		{
 			this.importFromString(<string>query, decodeValues);
 		}
-		else if(Array.isArray(query) || isEnumerable(query))
+		else if(isEnumerableOrArrayLike(query))
 		{
 			this.importPairs(query);
 		}

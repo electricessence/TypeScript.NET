@@ -11,11 +11,7 @@
 import Type from "../Types";
 import * as Serialization from "../Serialization/Utility";
 import extractKeyValue from "../KeyValueExtract";
-import {
-	isEnumerable,
-	forEach,
-	isEnumerableOrArrayLike
-} from "../Collections/Enumeration/Enumerator";
+import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -34,13 +30,13 @@ const
  * @returns {string}
  */
 export function encode(
-	values:IUriComponentMap|QueryParamArray|QueryParamEnumerable,
+	values:IUriComponentMap | QueryParamEnumerableOrArray,
 	prefixIfNotEmpty?:boolean):string
 {
 	if(!values) return '';
 	var entries:string[] = [];
 
-	if(Array.isArray(values) || isEnumerable(values))
+	if(isEnumerableOrArrayLike(values))
 	{
 		forEach(values, entry=>
 			extractKeyValue(entry,
