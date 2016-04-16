@@ -10,4 +10,4 @@ export default function (d:any, b:any):void {
 	d.prototype = b === null
 		? Object.create(b)
 		: (__.prototype = b.prototype, new (<any>__)());
-};
+}

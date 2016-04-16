@@ -3,17 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="Enumeration/IEnumerable.d.ts"/>
+///<reference path="IReadOnlyCollection.d.ts"/>
 
-interface ICollection<T> extends IEnumerable<T>
+interface ICollection<T> extends IReadOnlyCollection<T>
 {
-	count: number;
-	isReadOnly: boolean;
-
 	add(item:T): void;
-	clear(): number;
-	contains(item:T): boolean;
-	copyTo(array:T[], index?:number): T[];
-	toArray():T[];
 	remove(item:T): number;  // Number of times removed.
+	clear(): number;
 }
