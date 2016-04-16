@@ -12,14 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary', '../Collections/Enumeration/Enumerator'], factory);
+        define(["require", "exports", "../Types", "./QueryParams", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Types_1 = require('../Types');
-    var QueryParams = require('./QueryParams');
-    var OrderedStringKeyDictionary_1 = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
-    var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
+    var Types_1 = require("../Types");
+    var QueryParams = require("./QueryParams");
+    var OrderedStringKeyDictionary_1 = require("../Collections/Dictionaries/OrderedStringKeyDictionary");
+    var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
     var QueryBuilder = (function (_super) {
         __extends(QueryBuilder, _super);
         function QueryBuilder(query, decodeValues) {

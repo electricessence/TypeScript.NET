@@ -3,16 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import Type from '../Types';
-import * as Serialization from '../Serialization/Utility';
-import extractKeyValue from '../KeyValueExtract';
-import { isEnumerable, forEach } from '../Collections/Enumeration/Enumerator';
+import Type from "../Types";
+import * as Serialization from "../Serialization/Utility";
+import extractKeyValue from "../KeyValueExtract";
+import { forEach, isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
 const ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
 export function encode(values, prefixIfNotEmpty) {
     if (!values)
         return '';
     var entries = [];
-    if (Array.isArray(values) || isEnumerable(values)) {
+    if (isEnumerableOrArrayLike(values)) {
         forEach(values, entry => extractKeyValue(entry, (key, value) => appendKeyValue(entries, key, value)));
     }
     else {
@@ -25,7 +25,7 @@ function appendKeyValueSingle(entries, key, value) {
     entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
 }
 function appendKeyValue(entries, key, value) {
-    if (Type.isArrayLike(value) || isEnumerable(value)) {
+    if (isEnumerableOrArrayLike(value)) {
         forEach(value, v => appendKeyValueSingle(entries, key, v));
     }
     else {

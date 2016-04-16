@@ -33,6 +33,10 @@ System.register(["../../Types", "./ArrayEnumerator", "./IndexEnumerator"], funct
         return Types_1.default.hasMemberOfType(instance, "getEnumerator", Types_1.default.FUNCTION);
     }
     exports_1("isEnumerable", isEnumerable);
+    function isEnumerableOrArrayLike(instance) {
+        return Types_1.default.isArrayLike(instance) || isEnumerable(instance);
+    }
+    exports_1("isEnumerableOrArrayLike", isEnumerableOrArrayLike);
     function isEnumerator(instance) {
         return Types_1.default.hasMemberOfType(instance, "moveNext", Types_1.default.FUNCTION);
     }

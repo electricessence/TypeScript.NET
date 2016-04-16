@@ -4,16 +4,16 @@
  */
 'use strict';
 
-var Types_1 = require('../Types');
-var Serialization = require('../Serialization/Utility');
-var KeyValueExtract_1 = require('../KeyValueExtract');
-var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
+var Types_1 = require("../Types");
+var Serialization = require("../Serialization/Utility");
+var KeyValueExtract_1 = require("../KeyValueExtract");
+var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
 var ENTRY_SEPARATOR = "&",
     KEY_VALUE_SEPARATOR = "=";
 function encode(values, prefixIfNotEmpty) {
     if (!values) return '';
     var entries = [];
-    if (Array.isArray(values) || Enumerator_1.isEnumerable(values)) {
+    if (Enumerator_1.isEnumerableOrArrayLike(values)) {
         Enumerator_1.forEach(values, function (entry) {
             return KeyValueExtract_1.default(entry, function (key, value) {
                 return appendKeyValue(entries, key, value);
@@ -31,7 +31,7 @@ function appendKeyValueSingle(entries, key, value) {
     entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
 }
 function appendKeyValue(entries, key, value) {
-    if (Types_1.default.isArrayLike(value) || Enumerator_1.isEnumerable(value)) {
+    if (Enumerator_1.isEnumerableOrArrayLike(value)) {
         Enumerator_1.forEach(value, function (v) {
             return appendKeyValueSingle(entries, key, v);
         });

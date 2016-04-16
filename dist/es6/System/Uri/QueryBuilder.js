@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import Type from '../Types';
-import * as QueryParams from './QueryParams';
-import OrderedStringKeyDictionary from '../Collections/Dictionaries/OrderedStringKeyDictionary';
-import { isEnumerable } from '../Collections/Enumeration/Enumerator';
+import Type from "../Types";
+import * as QueryParams from "./QueryParams";
+import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
+import { isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
 export default class QueryBuilder extends OrderedStringKeyDictionary {
     constructor(query, decodeValues = true) {
         super();
@@ -19,7 +19,7 @@ export default class QueryBuilder extends OrderedStringKeyDictionary {
         if (Type.isString(query)) {
             this.importFromString(query, decodeValues);
         }
-        else if (Array.isArray(query) || isEnumerable(query)) {
+        else if (isEnumerableOrArrayLike(query)) {
             this.importPairs(query);
         }
         else {

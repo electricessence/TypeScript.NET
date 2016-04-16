@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Compare', './Array/Utility', '../Types', '../Integer', './Enumeration/EnumeratorBase', './Enumeration/forEach', '../Exceptions/NotImplementedException', '../Exceptions/InvalidOperationException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1, context_1) {
+System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "./Enumeration/forEach", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var Values, AU, Types_1, Integer_1, EnumeratorBase_1, forEach_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1;

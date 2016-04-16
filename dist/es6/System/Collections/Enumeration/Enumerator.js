@@ -43,6 +43,9 @@ export function from(source) {
 export function isEnumerable(instance) {
     return Type.hasMemberOfType(instance, "getEnumerator", Type.FUNCTION);
 }
+export function isEnumerableOrArrayLike(instance) {
+    return Type.isArrayLike(instance) || isEnumerable(instance);
+}
 export function isEnumerator(instance) {
     return Type.hasMemberOfType(instance, "moveNext", Type.FUNCTION);
 }

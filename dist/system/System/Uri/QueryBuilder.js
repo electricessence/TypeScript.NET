@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types', './QueryParams', '../Collections/Dictionaries/OrderedStringKeyDictionary', '../Collections/Enumeration/Enumerator'], function(exports_1, context_1) {
+System.register(["../Types", "./QueryParams", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -43,7 +43,7 @@ System.register(['../Types', './QueryParams', '../Collections/Dictionaries/Order
                     if (Types_1.default.isString(query)) {
                         this.importFromString(query, decodeValues);
                     }
-                    else if (Array.isArray(query) || Enumerator_1.isEnumerable(query)) {
+                    else if (Enumerator_1.isEnumerableOrArrayLike(query)) {
                         this.importPairs(query);
                     }
                     else {

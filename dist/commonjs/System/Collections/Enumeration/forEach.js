@@ -4,8 +4,8 @@
  */
 "use strict";
 
-var Utility_1 = require('../../Disposable/Utility');
-var Enumerator = require('../../Collections/Enumeration/Enumerator');
+var Utility_1 = require("../../Disposable/Utility");
+var Enumerator = require("../../Collections/Enumeration/Enumerator");
 function forEach(enumerable, action) {
     if (enumerable) {
         Utility_1.using(Enumerator.from(enumerable), function (e) {

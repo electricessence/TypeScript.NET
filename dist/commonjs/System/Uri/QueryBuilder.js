@@ -12,10 +12,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Types_1 = require('../Types');
-var QueryParams = require('./QueryParams');
-var OrderedStringKeyDictionary_1 = require('../Collections/Dictionaries/OrderedStringKeyDictionary');
-var Enumerator_1 = require('../Collections/Enumeration/Enumerator');
+var Types_1 = require("../Types");
+var QueryParams = require("./QueryParams");
+var OrderedStringKeyDictionary_1 = require("../Collections/Dictionaries/OrderedStringKeyDictionary");
+var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
 
 var QueryBuilder = function (_OrderedStringKeyDict) {
     _inherits(QueryBuilder, _OrderedStringKeyDict);
@@ -32,13 +32,13 @@ var QueryBuilder = function (_OrderedStringKeyDict) {
     }
 
     _createClass(QueryBuilder, [{
-        key: 'importQuery',
+        key: "importQuery",
         value: function importQuery(query) {
             var decodeValues = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
             if (Types_1.default.isString(query)) {
                 this.importFromString(query, decodeValues);
-            } else if (Array.isArray(query) || Enumerator_1.isEnumerable(query)) {
+            } else if (Enumerator_1.isEnumerableOrArrayLike(query)) {
                 this.importPairs(query);
             } else {
                 this.importMap(query);
@@ -46,7 +46,7 @@ var QueryBuilder = function (_OrderedStringKeyDict) {
             return this;
         }
     }, {
-        key: 'importFromString',
+        key: "importFromString",
         value: function importFromString(values) {
             var deserialize = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
             var decodeValues = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
@@ -61,17 +61,17 @@ var QueryBuilder = function (_OrderedStringKeyDict) {
             return this;
         }
     }, {
-        key: 'encode',
+        key: "encode",
         value: function encode(prefixIfNotEmpty) {
             return QueryParams.encode(this, prefixIfNotEmpty);
         }
     }, {
-        key: 'toString',
+        key: "toString",
         value: function toString() {
             return this.encode();
         }
     }], [{
-        key: 'init',
+        key: "init",
         value: function init(query) {
             var decodeValues = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 

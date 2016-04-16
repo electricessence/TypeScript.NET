@@ -4,15 +4,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import * as Values from '../Compare';
-import * as AU from './Array/Utility';
-import Type from '../Types';
-import Integer from '../Integer';
-import EnumeratorBase from './Enumeration/EnumeratorBase';
-import forEach from './Enumeration/forEach';
-import NotImplementedException from '../Exceptions/NotImplementedException';
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
-import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
+import * as Values from "../Compare";
+import * as AU from "./Array/Utility";
+import Type from "../Types";
+import Integer from "../Integer";
+import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import forEach from "./Enumeration/forEach";
+import NotImplementedException from "../Exceptions/NotImplementedException";
+import InvalidOperationException from "../Exceptions/InvalidOperationException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
 const MINIMUM_GROW = 4;
 const SHRINK_THRESHOLD = 32;
 const GROW_FACTOR_HALF = 100;

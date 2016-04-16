@@ -8,12 +8,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Compare_1 = require('../../Compare');
-var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
-var ArgumentNullException_1 = require('../../Exceptions/ArgumentNullException');
-var InvalidOperationException_1 = require('../../Exceptions/InvalidOperationException');
-var KeyValueExtract_1 = require('../../KeyValueExtract');
-var Enumerator_1 = require('../Enumeration/Enumerator');
+var Compare_1 = require("../../Compare");
+var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
+var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
+var InvalidOperationException_1 = require("../../Exceptions/InvalidOperationException");
+var KeyValueExtract_1 = require("../../KeyValueExtract");
+var Enumerator_1 = require("../Enumeration/Enumerator");
 var VOID0 = void 0;
 
 var DictionaryBase = function () {
@@ -24,7 +24,7 @@ var DictionaryBase = function () {
     }
 
     _createClass(DictionaryBase, [{
-        key: '_onValueUpdate',
+        key: "_onValueUpdate",
         value: function _onValueUpdate(key, value, old) {
             if (!Compare_1.areEqual(value, old, true)) {
                 var _ = this;
@@ -33,13 +33,13 @@ var DictionaryBase = function () {
             }
         }
     }, {
-        key: '_onUpdated',
+        key: "_onUpdated",
         value: function _onUpdated() {
             var _ = this;
             if (_.onUpdated) _.onUpdated();
         }
     }, {
-        key: 'handleUpdate',
+        key: "handleUpdate",
         value: function handleUpdate(closure) {
             var _ = this,
                 result;
@@ -55,7 +55,7 @@ var DictionaryBase = function () {
             return result;
         }
     }, {
-        key: 'add',
+        key: "add",
         value: function add(item) {
             var _this = this;
 
@@ -65,7 +65,7 @@ var DictionaryBase = function () {
             });
         }
     }, {
-        key: 'clear',
+        key: "clear",
         value: function clear() {
             var _ = this,
                 keys = _.keys,
@@ -80,7 +80,7 @@ var DictionaryBase = function () {
             return count;
         }
     }, {
-        key: 'contains',
+        key: "contains",
         value: function contains(item) {
             var _this2 = this;
 
@@ -91,7 +91,7 @@ var DictionaryBase = function () {
             });
         }
     }, {
-        key: 'copyTo',
+        key: "copyTo",
         value: function copyTo(array) {
             var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
@@ -103,12 +103,12 @@ var DictionaryBase = function () {
             return array;
         }
     }, {
-        key: 'toArray',
+        key: "toArray",
         value: function toArray() {
             return this.copyTo([], 0);
         }
     }, {
-        key: 'remove',
+        key: "remove",
         value: function remove(item) {
             var _this3 = this;
 
@@ -119,7 +119,7 @@ var DictionaryBase = function () {
             });
         }
     }, {
-        key: 'addByKeyValue',
+        key: "addByKeyValue",
         value: function addByKeyValue(key, value) {
             var _ = this;
             if (_.containsKey(key)) {
@@ -131,13 +131,13 @@ var DictionaryBase = function () {
             _.setValue(key, value);
         }
     }, {
-        key: 'containsKey',
+        key: "containsKey",
         value: function containsKey(key) {
             var value = this.getValue(key);
             return value !== VOID0;
         }
     }, {
-        key: 'containsValue',
+        key: "containsValue",
         value: function containsValue(value) {
             var e = this.getEnumerator(),
                 equal = Compare_1.areEqual;
@@ -150,12 +150,12 @@ var DictionaryBase = function () {
             return false;
         }
     }, {
-        key: 'removeByKey',
+        key: "removeByKey",
         value: function removeByKey(key) {
             return this.setValue(key, undefined);
         }
     }, {
-        key: 'removeByValue',
+        key: "removeByValue",
         value: function removeByValue(value) {
             var _ = this,
                 count = 0,
@@ -169,7 +169,7 @@ var DictionaryBase = function () {
             return count;
         }
     }, {
-        key: 'importPairs',
+        key: "importPairs",
         value: function importPairs(pairs) {
             var _ = this;
             if (!pairs) return false;
@@ -185,7 +185,7 @@ var DictionaryBase = function () {
             });
         }
     }, {
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             var _ = this;
             var keys,
@@ -204,27 +204,27 @@ var DictionaryBase = function () {
             });
         }
     }, {
-        key: 'isUpdating',
+        key: "isUpdating",
         get: function get() {
             return this._updateRecursion != 0;
         }
     }, {
-        key: 'isReadOnly',
+        key: "isReadOnly",
         get: function get() {
             return false;
         }
     }, {
-        key: 'count',
+        key: "count",
         get: function get() {
             return this.getCount();
         }
     }, {
-        key: 'keys',
+        key: "keys",
         get: function get() {
             return this.getKeys();
         }
     }, {
-        key: 'values',
+        key: "values",
         get: function get() {
             return this.getValues();
         }

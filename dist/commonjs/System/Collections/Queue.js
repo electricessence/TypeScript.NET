@@ -9,15 +9,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Values = require('../Compare');
-var AU = require('./Array/Utility');
-var Types_1 = require('../Types');
-var Integer_1 = require('../Integer');
-var EnumeratorBase_1 = require('./Enumeration/EnumeratorBase');
-var forEach_1 = require('./Enumeration/forEach');
-var NotImplementedException_1 = require('../Exceptions/NotImplementedException');
-var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
-var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
+var Values = require("../Compare");
+var AU = require("./Array/Utility");
+var Types_1 = require("../Types");
+var Integer_1 = require("../Integer");
+var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
+var forEach_1 = require("./Enumeration/forEach");
+var NotImplementedException_1 = require("../Exceptions/NotImplementedException");
+var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
 var MINIMUM_GROW = 4;
 var SHRINK_THRESHOLD = 32;
 var GROW_FACTOR_HALF = 100;
@@ -51,12 +51,12 @@ var Queue = function () {
     }
 
     _createClass(Queue, [{
-        key: 'add',
+        key: "add",
         value: function add(item) {
             this.enqueue(item);
         }
     }, {
-        key: 'clear',
+        key: "clear",
         value: function clear() {
             var _ = this,
                 array = _._array,
@@ -75,7 +75,7 @@ var Queue = function () {
             return size;
         }
     }, {
-        key: 'dump',
+        key: "dump",
         value: function dump() {
             var max = arguments.length <= 0 || arguments[0] === undefined ? Infinity : arguments[0];
 
@@ -96,7 +96,7 @@ var Queue = function () {
             return result;
         }
     }, {
-        key: 'contains',
+        key: "contains",
         value: function contains(item) {
             var _ = this;
             var array = _._array,
@@ -110,7 +110,7 @@ var Queue = function () {
             return false;
         }
     }, {
-        key: 'copyTo',
+        key: "copyTo",
         value: function copyTo(target) {
             var arrayIndex = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
@@ -131,7 +131,7 @@ var Queue = function () {
             return target;
         }
     }, {
-        key: 'toArray',
+        key: "toArray",
         value: function toArray() {
             var _ = this,
                 size = _._size;
@@ -139,12 +139,12 @@ var Queue = function () {
             return size ? _.copyTo(arr) : arr;
         }
     }, {
-        key: 'remove',
+        key: "remove",
         value: function remove(item) {
             throw new NotImplementedException_1.default("ICollection\<T\>.remove is not implemented in Queue\<T\>" + " since it would require destroying the underlying array to remove the item.");
         }
     }, {
-        key: 'dispose',
+        key: "dispose",
         value: function dispose() {
             var _ = this;
             _.clear();
@@ -155,7 +155,7 @@ var Queue = function () {
             _._version = 0;
         }
     }, {
-        key: 'forEach',
+        key: "forEach",
         value: function forEach(action) {
             var _ = this,
                 copy = _.toArray(),
@@ -165,7 +165,7 @@ var Queue = function () {
             }
         }
     }, {
-        key: 'setCapacity',
+        key: "setCapacity",
         value: function setCapacity(capacity) {
             assertIntegerZeroOrGreater(capacity, "capacity");
             var _ = this,
@@ -196,7 +196,7 @@ var Queue = function () {
             _._version++;
         }
     }, {
-        key: 'enqueue',
+        key: "enqueue",
         value: function enqueue(item) {
             var _ = this,
                 array = _._array,
@@ -216,7 +216,7 @@ var Queue = function () {
             _._version++;
         }
     }, {
-        key: 'dequeue',
+        key: "dequeue",
         value: function dequeue() {
             var throwIfEmpty = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
@@ -238,7 +238,7 @@ var Queue = function () {
             return removed;
         }
     }, {
-        key: 'tryDequeue',
+        key: "tryDequeue",
         value: function tryDequeue(out) {
             if (!this._size) return false;
             var d = this.dequeue();
@@ -246,27 +246,27 @@ var Queue = function () {
             return true;
         }
     }, {
-        key: '_getElement',
+        key: "_getElement",
         value: function _getElement(index) {
             assertIntegerZeroOrGreater(index, "index");
             var _ = this;
             return _._array[(_._head + index) % _._capacity];
         }
     }, {
-        key: 'peek',
+        key: "peek",
         value: function peek() {
             if (this._size == 0) throw new InvalidOperationException_1.default("Cannot call peek on an empty queue.");
             return this._array[this._head];
         }
     }, {
-        key: 'trimExcess',
+        key: "trimExcess",
         value: function trimExcess(threshold) {
             var _ = this;
             var size = _._size;
             if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size)) _.setCapacity(size);
         }
     }, {
-        key: 'getEnumerator',
+        key: "getEnumerator",
         value: function getEnumerator() {
             var _ = this;
             var index;
@@ -281,12 +281,12 @@ var Queue = function () {
             });
         }
     }, {
-        key: 'count',
+        key: "count",
         get: function get() {
             return this._size;
         }
     }, {
-        key: 'isReadOnly',
+        key: "isReadOnly",
         get: function get() {
             return false;
         }

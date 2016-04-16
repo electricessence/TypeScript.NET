@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract', '../Collections/Enumeration/Enumerator'], function(exports_1, context_1) {
+System.register(["../Types", "../Serialization/Utility", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var Types_1, Serialization, KeyValueExtract_1, Enumerator_1;
@@ -11,7 +11,7 @@ System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract', '
         if (!values)
             return '';
         var entries = [];
-        if (Array.isArray(values) || Enumerator_1.isEnumerable(values)) {
+        if (Enumerator_1.isEnumerableOrArrayLike(values)) {
             Enumerator_1.forEach(values, function (entry) {
                 return KeyValueExtract_1.default(entry, function (key, value) { return appendKeyValue(entries, key, value); });
             });
@@ -27,7 +27,7 @@ System.register(['../Types', '../Serialization/Utility', '../KeyValueExtract', '
         entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
     }
     function appendKeyValue(entries, key, value) {
-        if (Types_1.default.isArrayLike(value) || Enumerator_1.isEnumerable(value)) {
+        if (Enumerator_1.isEnumerableOrArrayLike(value)) {
             Enumerator_1.forEach(value, function (v) { return appendKeyValueSingle(entries, key, v); });
         }
         else {

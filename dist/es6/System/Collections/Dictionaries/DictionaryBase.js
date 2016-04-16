@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import { areEqual } from '../../Compare';
-import EnumeratorBase from '../Enumeration/EnumeratorBase';
-import ArgumentNullException from '../../Exceptions/ArgumentNullException';
-import InvalidOperationException from '../../Exceptions/InvalidOperationException';
-import extractKeyValue from '../../KeyValueExtract';
-import { forEach } from '../Enumeration/Enumerator';
+import { areEqual } from "../../Compare";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import InvalidOperationException from "../../Exceptions/InvalidOperationException";
+import extractKeyValue from "../../KeyValueExtract";
+import { forEach } from "../Enumeration/Enumerator";
 const VOID0 = void (0);
 class DictionaryBase {
     constructor() {
