@@ -118,9 +118,7 @@
             if (!other)
                 throw new ArgumentNullException_1.default(OTHER);
             var result = false;
-            forEach_1.default(other, function (v) {
-                return !(result = _this.contains(v));
-            });
+            forEach_1.default(other, function (v) { return !(result = _this.contains(v)); });
             return result;
         };
         Set.prototype.setEquals = function (other) {

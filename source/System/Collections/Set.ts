@@ -133,10 +133,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		if(!other) throw new ArgumentNullException(OTHER);
 
 		var result = false;
-		forEach(other, v=>
-		{
-			return !(result = this.contains(v));
-		});
+		forEach(other, v => !(result = this.contains(v)));
 		return result;
 	}
 
