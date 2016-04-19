@@ -5,9 +5,9 @@
 
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as ArrayUtility from '../Array/Utility';
-import StringKeyDictionary from './StringKeyDictionary';
-import ArgumentOutOfRangeException from '../../Exceptions/ArgumentOutOfRangeException'
+import * as ArrayUtility from "../Array/Utility";
+import StringKeyDictionary from "./StringKeyDictionary";
+import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
 
 const VOID0:any = void 0;
 
@@ -26,17 +26,20 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 
 	indexOfKey(key:string):number
 	{
-		return this._order.indexOf(key, 0);
+		var o = this._order;
+		return o.length ? o.indexOf(key, 0) : -1;
 	}
 
 	getValueByIndex(index:number):TValue
 	{
-		return this.getValue(this._order[index]);
+		var o = this._order;
+		return index<o.length ? this.getValue(o[index]) : VOID0;
 	}
 
 	// adding keepIndex allows for clearing a value while still retaining it's index.
 	setValue(key:string, value:TValue, keepIndex?:boolean):boolean
 	{
+		// TODO: This may be inefficient and could be improved.
 		var _ = this, exists = _.indexOfKey(key)!= -1;
 		if(!exists && (value!==VOID0 || keepIndex))
 			_._order.push(key);
@@ -83,13 +86,13 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 
 	removeByIndex(index:number):boolean
 	{
-		return this.setByIndex(index, undefined);
+		return this.setByIndex(index, VOID0);
 	}
 
 	protected getKeys():string[]
 	{
-		var _ = this;
-		return _._order.filter(key=> _.containsKey(key));
+		var _ = this, o = _._order;
+		return o.length && o.filter(key=> _.containsKey(key)) || [];
 	}
 
 }

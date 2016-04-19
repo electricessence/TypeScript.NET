@@ -8,18 +8,18 @@
 ///<reference path="../ILinkedListNode.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import {areEqual} from '../../Compare';
-import Type from '../../Types';
-import Functions from '../../Functions';
-import DictionaryBase from './DictionaryBase';
-import EnumeratorBase from '../Enumeration/EnumeratorBase';
-import LinkedNodeList from '../LinkedNodeList';
+import {areEqual} from "../../Compare";
+import Type from "../../Types";
+import Functions from "../../Functions";
+import DictionaryBase from "./DictionaryBase";
+import EnumeratorBase from "../Enumeration/EnumeratorBase";
+import LinkedNodeList from "../LinkedNodeList";
 
 const VOID0:any = void 0;
 
 // LinkedList for Dictionary
 class HashEntry<TKey, TValue>
-implements ILinkedNode<HashEntry<TKey, TValue>>
+implements ILinkedNode<HashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue>
 {
 	constructor(
 		public key?:TKey,
@@ -130,43 +130,37 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		this.setKV(key, value, false);
 	}
 
-	getValue(key:TKey):TValue
+	protected _getEntry(key:TKey):HashEntry<TKey,TValue>
 	{
-		var buckets = this._buckets, comparer = this._compareSelector;
-		var compareKey = comparer(key);
-		var hash = computeHashCode(compareKey);
-		if(!callHasOwnProperty(buckets, hash)) return undefined;
-
-		var array = buckets[hash];
-		for(let entry of array)
+		var _ = this;
+		if(key!==null && key!==VOID0 && _._count)
 		{
-			if(comparer(entry.key)===compareKey) return entry.value;
+			var buckets = _._buckets, comparer = _._compareSelector;
+			var compareKey = comparer(key);
+			var hash = computeHashCode(compareKey);
+			if(callHasOwnProperty(buckets, hash))
+			{
+				var array = buckets[hash];
+				for(let entry of array)
+				{
+					if(comparer(entry.key)===compareKey)
+						return entry;
+				}
+			}
 		}
 
-		return undefined;
+		return null;
+	}
+
+	getValue(key:TKey):TValue {
+		var e = this._getEntry(key);
+		return e ? e.value : VOID0;
 	}
 
 	setValue(key:TKey, value:TValue):boolean
 	{
 		return this.setKV(key, value, true);
 	}
-
-	containsKey(key:TKey):boolean
-	{
-		var _ = this, buckets = _._buckets, comparer = _._compareSelector;
-		var compareKey = comparer(key);
-		var hash = computeHashCode(compareKey);
-		if(!callHasOwnProperty(buckets, hash)) return false;
-
-		var array = buckets[hash];
-		for(let i = 0, len = array.length; i<len; i++)
-		{
-			if(comparer(array[i].key)===compareKey) return true;
-		}
-
-		return false;
-	}
-
 
 	clear():number
 	{

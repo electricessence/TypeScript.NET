@@ -87,7 +87,7 @@
         };
         DictionaryBase.prototype.contains = function (item) {
             var _this = this;
-            if (!item)
+            if (!item || !this.getCount())
                 return false;
             return KeyValueExtract_1.default(item, function (key, value) {
                 var v = _this.getValue(key);
@@ -138,8 +138,7 @@
             _.setValue(key, value);
         };
         DictionaryBase.prototype.containsKey = function (key) {
-            var value = this.getValue(key);
-            return value !== VOID0;
+            return !!this._getEntry(key);
         };
         DictionaryBase.prototype.containsValue = function (value) {
             var e = this.getEnumerator(), equal = Compare_1.areEqual;
@@ -152,7 +151,7 @@
             return false;
         };
         DictionaryBase.prototype.removeByKey = function (key) {
-            return this.setValue(key, undefined);
+            return this.setValue(key, VOID0);
         };
         DictionaryBase.prototype.removeByValue = function (value) {
             var _ = this, count = 0, equal = Compare_1.areEqual;

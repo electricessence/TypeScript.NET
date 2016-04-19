@@ -114,6 +114,8 @@
             return this._listInternal.clear();
         };
         LinkedList.prototype.contains = function (entry) {
+            if (!this._count)
+                return false;
             var found = false, equals = Values.areEqual;
             this.forEach(function (e) { return !(found = equals(entry, e)); });
             return found;

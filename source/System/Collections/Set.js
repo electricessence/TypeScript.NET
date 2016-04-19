@@ -185,7 +185,7 @@
             return t && t[item];
         };
         Set.prototype.contains = function (item) {
-            return !!this._getNode(item);
+            return !(!this._count || !this._getNode(item));
         };
         Set.prototype.copyTo = function (array, index) {
             if (index === void 0) { index = 0; }

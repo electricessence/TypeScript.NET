@@ -13,16 +13,16 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', '../../Types', '../../Functions', './DictionaryBase', '../Enumeration/EnumeratorBase', '../LinkedNodeList'], factory);
+        define(["require", "exports", "../../Compare", "../../Types", "../../Functions", "./DictionaryBase", "../Enumeration/EnumeratorBase", "../LinkedNodeList"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Compare_1 = require('../../Compare');
-    var Types_1 = require('../../Types');
-    var Functions_1 = require('../../Functions');
-    var DictionaryBase_1 = require('./DictionaryBase');
-    var EnumeratorBase_1 = require('../Enumeration/EnumeratorBase');
-    var LinkedNodeList_1 = require('../LinkedNodeList');
+    var Compare_1 = require("../../Compare");
+    var Types_1 = require("../../Types");
+    var Functions_1 = require("../../Functions");
+    var DictionaryBase_1 = require("./DictionaryBase");
+    var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
+    var LinkedNodeList_1 = require("../LinkedNodeList");
     var VOID0 = void 0;
     var HashEntry = (function () {
         function HashEntry(key, value, previous, next) {
@@ -103,35 +103,29 @@ var __extends = (this && this.__extends) || function (d, b) {
         Dictionary.prototype.addByKeyValue = function (key, value) {
             this.setKV(key, value, false);
         };
-        Dictionary.prototype.getValue = function (key) {
-            var buckets = this._buckets, comparer = this._compareSelector;
-            var compareKey = comparer(key);
-            var hash = computeHashCode(compareKey);
-            if (!callHasOwnProperty(buckets, hash))
-                return undefined;
-            var array = buckets[hash];
-            for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
-                var entry = array_1[_i];
-                if (comparer(entry.key) === compareKey)
-                    return entry.value;
+        Dictionary.prototype._getEntry = function (key) {
+            var _ = this;
+            if (key !== null && key !== VOID0 && _._count) {
+                var buckets = _._buckets, comparer = _._compareSelector;
+                var compareKey = comparer(key);
+                var hash = computeHashCode(compareKey);
+                if (callHasOwnProperty(buckets, hash)) {
+                    var array = buckets[hash];
+                    for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
+                        var entry = array_1[_i];
+                        if (comparer(entry.key) === compareKey)
+                            return entry;
+                    }
+                }
             }
-            return undefined;
+            return null;
+        };
+        Dictionary.prototype.getValue = function (key) {
+            var e = this._getEntry(key);
+            return e ? e.value : VOID0;
         };
         Dictionary.prototype.setValue = function (key, value) {
             return this.setKV(key, value, true);
-        };
-        Dictionary.prototype.containsKey = function (key) {
-            var _ = this, buckets = _._buckets, comparer = _._compareSelector;
-            var compareKey = comparer(key);
-            var hash = computeHashCode(compareKey);
-            if (!callHasOwnProperty(buckets, hash))
-                return false;
-            var array = buckets[hash];
-            for (var i = 0, len = array.length; i < len; i++) {
-                if (comparer(array[i].key) === compareKey)
-                    return true;
-            }
-            return false;
         };
         Dictionary.prototype.clear = function () {
             var _ = this, buckets = _._buckets, count = _super.prototype.clear.call(this);

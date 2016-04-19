@@ -185,6 +185,7 @@ implements ILinkedList<T>
 
 	contains(entry:T):boolean
 	{
+		if(!this._count) return false;
 		var found:boolean = false, equals = Values.areEqual;
 		this.forEach(e => !(found = equals(entry, e)));
 		return found;

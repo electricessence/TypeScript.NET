@@ -12,13 +12,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Array/Utility', './StringKeyDictionary', '../../Exceptions/ArgumentOutOfRangeException'], factory);
+        define(["require", "exports", "../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var ArrayUtility = require('../Array/Utility');
-    var StringKeyDictionary_1 = require('./StringKeyDictionary');
-    var ArgumentOutOfRangeException_1 = require('../../Exceptions/ArgumentOutOfRangeException');
+    var ArrayUtility = require("../Array/Utility");
+    var StringKeyDictionary_1 = require("./StringKeyDictionary");
+    var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
     var VOID0 = void 0;
     var OrderedStringKeyDictionary = (function (_super) {
         __extends(OrderedStringKeyDictionary, _super);
@@ -27,10 +27,12 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._order = [];
         }
         OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
-            return this._order.indexOf(key, 0);
+            var o = this._order;
+            return o.length ? o.indexOf(key, 0) : -1;
         };
         OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
-            return this.getValue(this._order[index]);
+            var o = this._order;
+            return index < o.length ? this.getValue(o[index]) : VOID0;
         };
         OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {
             var _ = this, exists = _.indexOfKey(key) != -1;
@@ -67,11 +69,11 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.importValues(values);
         };
         OrderedStringKeyDictionary.prototype.removeByIndex = function (index) {
-            return this.setByIndex(index, undefined);
+            return this.setByIndex(index, VOID0);
         };
         OrderedStringKeyDictionary.prototype.getKeys = function () {
-            var _ = this;
-            return _._order.filter(function (key) { return _.containsKey(key); });
+            var _ = this, o = _._order;
+            return o.length && o.filter(function (key) { return _.containsKey(key); }) || [];
         };
         return OrderedStringKeyDictionary;
     }(StringKeyDictionary_1.default));

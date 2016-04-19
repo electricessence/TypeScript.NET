@@ -220,7 +220,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 
 	contains(item:T):boolean
 	{
-		return !!this._getNode(item);
+		return !(!this._count || !this._getNode(item));
 	}
 
 	copyTo(array:T[], index:number = 0):T[]

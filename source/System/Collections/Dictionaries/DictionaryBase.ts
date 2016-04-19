@@ -127,7 +127,7 @@ implements IDictionary<TKey, TValue>
 	contains(item:KeyValuePair<TKey, TValue>):boolean
 	{
 		// Should never have a null object in the collection.
-		if(!item) return false;
+		if(!item || !this.getCount()) return false;
 
 		return extractKeyValue(item,
 			(key, value)=>
@@ -202,14 +202,15 @@ implements IDictionary<TKey, TValue>
 		_.setValue(key, value);
 	}
 
+	protected abstract _getEntry(key:TKey):IKeyValuePair<TKey,TValue>;
+
 	abstract getValue(key:TKey):TValue;
 
 	abstract setValue(key:TKey, value:TValue):boolean;
 
 	containsKey(key:TKey):boolean
 	{
-		var value = this.getValue(key);
-		return value!==VOID0;
+		return !!this._getEntry(key);
 	}
 
 	containsValue(value:TValue):boolean
@@ -229,7 +230,7 @@ implements IDictionary<TKey, TValue>
 
 	removeByKey(key:TKey):boolean
 	{
-		return this.setValue(key, undefined);
+		return this.setValue(key, VOID0);
 	}
 
 	removeByValue(value:TValue):number

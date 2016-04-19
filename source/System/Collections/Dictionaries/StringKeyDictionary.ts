@@ -6,9 +6,8 @@
 ///<reference path="IDictionary.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import {areEqual} from '../../Compare';
-import DictionaryBase from './DictionaryBase';
-import ArgumentNullException from '../../Exceptions/ArgumentNullException';
+import {areEqual} from "../../Compare";
+import DictionaryBase from "./DictionaryBase";
 
 const VOID0:any = void 0;
 
@@ -19,14 +18,23 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	private _count:number = 0;
 	private _map:IMap<TValue> = {};
 
+	protected _getEntry(key:string):IKeyValuePair<string,TValue> {
+		return !this.containsKey(key)
+			? null : {
+			key:key,
+			value:this.getValue(key)
+		}
+	}
 
 	containsKey(key:string):boolean
 	{
+		if(key===null || key===VOID0 || !this._count) return false;
 		return (key)in(this._map);
 	}
 
 	containsValue(value:TValue):boolean
 	{
+		if(!this._count) return false;
 		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
 		for(let key in map)
 		{
@@ -39,6 +47,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 	getValue(key:string):TValue
 	{
+		if(key===null || key===VOID0 || !this._count) return VOID0;
 		return this._map[key];
 	}
 
@@ -90,7 +99,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	toMap(selector?:(key:string, value:TValue) => TValue):IMap<TValue>
 	{
 		var _ = this, result:IMap<TValue> = {};
-		for(let key in _._map)
+		if(_._count) for(let key in _._map)
 		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 			{
@@ -108,7 +117,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	{
 
 		var _ = this, result:string[] = [];
-		for(let key in _._map)
+		if(_._count) for(let key in _._map)
 		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 				result.push(key);
@@ -122,7 +131,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	{
 
 		var _ = this, result:TValue[] = [];
-		for(let key in _._map)
+		if(_._count) for(let key in _._map)
 		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 				result.push(_._map[key]);

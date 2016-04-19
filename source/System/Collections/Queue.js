@@ -106,8 +106,10 @@
             return result;
         };
         Queue.prototype.contains = function (item) {
-            var _ = this;
-            var array = _._array, index = _._head, count = _._size, len = _._capacity;
+            var _ = this, count = _._size;
+            if (!count)
+                return false;
+            var array = _._array, index = _._head, len = _._capacity;
             while (count-- > 0) {
                 if (Values.areEqual(array[index], item))
                     return true;

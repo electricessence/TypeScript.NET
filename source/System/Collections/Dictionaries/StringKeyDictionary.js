@@ -12,12 +12,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', './DictionaryBase'], factory);
+        define(["require", "exports", "../../Compare", "./DictionaryBase"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Compare_1 = require('../../Compare');
-    var DictionaryBase_1 = require('./DictionaryBase');
+    var Compare_1 = require("../../Compare");
+    var DictionaryBase_1 = require("./DictionaryBase");
     var VOID0 = void 0;
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
@@ -26,10 +26,21 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._count = 0;
             this._map = {};
         }
+        StringKeyDictionary.prototype._getEntry = function (key) {
+            return !this.containsKey(key)
+                ? null : {
+                key: key,
+                value: this.getValue(key)
+            };
+        };
         StringKeyDictionary.prototype.containsKey = function (key) {
+            if (key === null || key === VOID0 || !this._count)
+                return false;
             return (key) in (this._map);
         };
         StringKeyDictionary.prototype.containsValue = function (value) {
+            if (!this._count)
+                return false;
             var map = this._map, equal = Compare_1.areEqual;
             for (var key in map) {
                 if (map.hasOwnProperty(key) && equal(map[key], value))
@@ -38,6 +49,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return false;
         };
         StringKeyDictionary.prototype.getValue = function (key) {
+            if (key === null || key === VOID0 || !this._count)
+                return VOID0;
             return this._map[key];
         };
         StringKeyDictionary.prototype.setValue = function (key, value) {
@@ -72,31 +85,34 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         StringKeyDictionary.prototype.toMap = function (selector) {
             var _ = this, result = {};
-            for (var key in _._map) {
-                if (_._map.hasOwnProperty(key)) {
-                    var value = _._map[key];
-                    if (selector)
-                        value = selector(key, value);
-                    if (value !== VOID0)
-                        result[key] = value;
+            if (_._count)
+                for (var key in _._map) {
+                    if (_._map.hasOwnProperty(key)) {
+                        var value = _._map[key];
+                        if (selector)
+                            value = selector(key, value);
+                        if (value !== VOID0)
+                            result[key] = value;
+                    }
                 }
-            }
             return result;
         };
         StringKeyDictionary.prototype.getKeys = function () {
             var _ = this, result = [];
-            for (var key in _._map) {
-                if (_._map.hasOwnProperty(key))
-                    result.push(key);
-            }
+            if (_._count)
+                for (var key in _._map) {
+                    if (_._map.hasOwnProperty(key))
+                        result.push(key);
+                }
             return result;
         };
         StringKeyDictionary.prototype.getValues = function () {
             var _ = this, result = [];
-            for (var key in _._map) {
-                if (_._map.hasOwnProperty(key))
-                    result.push(_._map[key]);
-            }
+            if (_._count)
+                for (var key in _._map) {
+                    if (_._map.hasOwnProperty(key))
+                        result.push(_._map[key]);
+                }
             return result;
         };
         StringKeyDictionary.prototype.getCount = function () {
