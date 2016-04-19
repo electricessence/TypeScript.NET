@@ -37,13 +37,13 @@
             random.under = under;
         })(random = Integer.random || (Integer.random = {}));
         function is(n) {
-            return Types_1.default.isNumber(n, false) && n == (n | 0);
+            return Types_1.default.isNumber(n, false) && isFinite(n) && n == (n | 0);
         }
         Integer.is = is;
         function assert(n, argumentName) {
             var i = is(n);
             if (!i) {
-                throw new ArgumentException_1.default(argumentName || 'n', "Must be an integer.");
+                throw new ArgumentException_1.default(argumentName || 'n', "Must be a integer.");
             }
             return i;
         }

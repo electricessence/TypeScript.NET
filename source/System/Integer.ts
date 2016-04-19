@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from './Types';
-import ArgumentException from './Exceptions/ArgumentException';
+import Type from "./Types";
+import ArgumentException from "./Exceptions/ArgumentException";
 
 function Integer(n:number):number
 {
@@ -60,7 +60,7 @@ module Integer
 
 	export function is(n:number):boolean
 	{
-		return Type.isNumber(n, false) && n==(n | 0);
+		return Type.isNumber(n, false) && isFinite(n) && n==(n | 0);
 	}
 
 	export function assert(n:number, argumentName?:string):boolean
@@ -68,7 +68,7 @@ module Integer
 		var i = is(n);
 		if(!i)
 		{
-			throw new ArgumentException(argumentName || 'n', "Must be an integer.");
+			throw new ArgumentException(argumentName || 'n', "Must be a integer.");
 		}
 		return i;
 	}
