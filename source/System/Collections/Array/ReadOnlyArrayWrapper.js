@@ -12,17 +12,17 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Array/Utility", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../ReadOnlyCollectionBase"], factory);
+        define(["require", "exports", "./Utility", "../../Exceptions/ArgumentNullException", "../Enumeration/Enumerator", "../ReadOnlyCollectionBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ArrayUtility = require("./Array/Utility");
-    var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
-    var Enumerator_1 = require("./Enumeration/Enumerator");
+    var ArrayUtility = require("./Utility");
+    var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
+    var Enumerator_1 = require("../Enumeration/Enumerator");
     var ReadOnlyCollectionBase_1 = require("../ReadOnlyCollectionBase");
-    var ReadOnlyCollectionWrapper = (function (_super) {
-        __extends(ReadOnlyCollectionWrapper, _super);
-        function ReadOnlyCollectionWrapper(a) {
+    var ReadOnlyArrayWrapper = (function (_super) {
+        __extends(ReadOnlyArrayWrapper, _super);
+        function ReadOnlyArrayWrapper(a) {
             _super.call(this);
             if (!a)
                 throw new ArgumentNullException_1.default('collection');
@@ -33,9 +33,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             _.getEnumerator = function () { return Enumerator_1.from(a); };
             _.getValueAt = function (i) { return a[i]; };
         }
-        return ReadOnlyCollectionWrapper;
+        return ReadOnlyArrayWrapper;
     }(ReadOnlyCollectionBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = ReadOnlyCollectionWrapper;
+    exports.default = ReadOnlyArrayWrapper;
 });
 //# sourceMappingURL=ReadOnlyArrayWrapper.js.map

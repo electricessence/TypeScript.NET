@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import * as ArrayUtility from "./Array/Utility";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import {from as enumeratorFrom} from "./Enumeration/Enumerator";
+import * as ArrayUtility from "./Utility";
+import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import {from as enumeratorFrom} from "../Enumeration/Enumerator";
 import ReadOnlyCollection from "../ReadOnlyCollectionBase";
 
-export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollection<T>
+export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollection<T>
 {
 
 	constructor(a:IArray<T>)
