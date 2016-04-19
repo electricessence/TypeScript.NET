@@ -53,8 +53,10 @@ export function copy<T>(
 }
 
 const
-	CBN = 'Cannot be null.',
-	CBL0 = 'Cannot be less than zero.';
+	CBN  = 'Cannot be null.',
+	CB0  = 'Cannot be zero.',
+	CBL0 = 'Cannot be less than zero.',
+	VFN  = 'Must be a valid finite number';
 
 /**
  * Copies one array to another.
@@ -241,7 +243,7 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 	var len = array.length;
 	for(let i = 0; i<len; ++i)
 	{
-		if((i)in(array) && predicate(array[i]))
+		if((i) in (array) && predicate(array[i]))
 			return i;
 	}
 
@@ -367,13 +369,56 @@ export function repeat<T>(element:T, count:number):T[]
 	Integer.assert(count, 'count');
 	if(count<0) throw new ArgumentOutOfRangeException('count', count, CBL0);
 
-	var result:T[] = [];
-	while(count--)
+	var result = initialize<T>(count);
+	for(let i = 0; i<count; ++i)
 	{
-		result.push(element);
+		result[i] = element;
 	}
 
 	return result;
+}
+
+/**
+ * Returns a range of numbers based upon the first value and the step value.
+ * @param first
+ * @param count
+ * @param step
+ * @returns {number[]}
+ */
+
+export function range(
+	first:number,
+	count:number,
+	step:number = 1):number[]
+{
+	if(isNaN(first) || !isFinite(first)) throw new ArgumentOutOfRangeException('first', first, VFN);
+	if(isNaN(count) || !isFinite(count)) throw new ArgumentOutOfRangeException('count', count, VFN);
+	if(count<0) throw new ArgumentOutOfRangeException('count', count, CBL0);
+
+	var result = initialize<number>(count);
+	for(let i = 0; i<count; ++i)
+	{
+		result[i] = first;
+		first += step;
+	}
+
+	return result;
+}
+
+/**
+ * Returns a range of numbers based upon the first value and the step value excluding any numbers at or beyond the until value.
+ * @param first
+ * @param until
+ * @param step
+ * @returns {number[]}
+ */
+export function rangeUntil(
+	first:number,
+	until:number,
+	step:number = 1):number[]
+{
+	if(step==0) throw new ArgumentOutOfRangeException('step', step, CB0);
+	return range(first, (until - first)/step, step);
 }
 
 /**

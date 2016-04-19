@@ -37,7 +37,7 @@
         return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
     }
     exports.copy = copy;
-    var CBN = 'Cannot be null.', CBL0 = 'Cannot be less than zero.';
+    var CBN = 'Cannot be null.', CB0 = 'Cannot be zero.', CBL0 = 'Cannot be less than zero.', VFN = 'Must be a valid finite number';
     function copyTo(source, destination, sourceIndex, destinationIndex, length) {
         if (sourceIndex === void 0) { sourceIndex = 0; }
         if (destinationIndex === void 0) { destinationIndex = 0; }
@@ -193,13 +193,36 @@
         Integer_1.default.assert(count, 'count');
         if (count < 0)
             throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
-        var result = [];
-        while (count--) {
-            result.push(element);
+        var result = initialize(count);
+        for (var i = 0; i < count; ++i) {
+            result[i] = element;
         }
         return result;
     }
     exports.repeat = repeat;
+    function range(first, count, step) {
+        if (step === void 0) { step = 1; }
+        if (isNaN(first) || !isFinite(first))
+            throw new ArgumentOutOfRangeException_1.default('first', first, VFN);
+        if (isNaN(count) || !isFinite(count))
+            throw new ArgumentOutOfRangeException_1.default('count', count, VFN);
+        if (count < 0)
+            throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
+        var result = initialize(count);
+        for (var i = 0; i < count; ++i) {
+            result[i] = first;
+            first += step;
+        }
+        return result;
+    }
+    exports.range = range;
+    function rangeUntil(first, until, step) {
+        if (step === void 0) { step = 1; }
+        if (step == 0)
+            throw new ArgumentOutOfRangeException_1.default('step', step, CB0);
+        return range(first, (until - first) / step, step);
+    }
+    exports.rangeUntil = rangeUntil;
     function flatten(a, recurseDepth) {
         if (recurseDepth === void 0) { recurseDepth = 0; }
         var result = [];
