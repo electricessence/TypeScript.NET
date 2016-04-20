@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/Utility", "../System/Disposable/DisposableBase", "../System/Exception", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext"], factory);
+        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/Utility", "../System/Disposable/DisposableBase", "../System/Exception", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -33,6 +33,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Exception_1 = require("../System/Exception");
     var ObjectDisposedException_1 = require("../System/Disposable/ObjectDisposedException");
     var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext");
+    var ArgumentNullException_1 = require("../System/Exceptions/ArgumentNullException");
+    var ArgumentOutOfRangeException_1 = require("../System/Exceptions/ArgumentOutOfRangeException");
     var VOID0 = void 0;
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
@@ -353,13 +355,21 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         Enumerable.prototype.toArray = function (predicate) {
-            var result = [];
-            if (predicate)
-                return this.where(predicate).toArray();
+            return predicate
+                ? this.where(predicate).toArray()
+                : this.copyTo([]);
+        };
+        Enumerable.prototype.copyTo = function (target, index) {
+            if (index === void 0) { index = 0; }
+            if (!target)
+                throw new ArgumentNullException_1.default("target");
+            Integer_1.default.assert(index);
+            if (index < 0)
+                throw new ArgumentOutOfRangeException_1.default("index", index, "Must be zero or greater");
             this.forEach(function (x, i) {
-                result[i] = x;
+                target[i + index] = x;
             });
-            return result;
+            return target;
         };
         Enumerable.prototype.asEnumerable = function () {
             var _ = this;

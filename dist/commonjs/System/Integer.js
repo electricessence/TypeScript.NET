@@ -4,8 +4,8 @@
  */
 "use strict";
 
-var Types_1 = require('./Types');
-var ArgumentException_1 = require('./Exceptions/ArgumentException');
+var Types_1 = require("./Types");
+var ArgumentException_1 = require("./Exceptions/ArgumentException");
 function Integer(n) {
     return n | 0;
 }

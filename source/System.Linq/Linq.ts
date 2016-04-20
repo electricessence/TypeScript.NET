@@ -35,6 +35,8 @@ import DisposableBase from "../System/Disposable/DisposableBase";
 import Exception from "../System/Exception";
 import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
+import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
+import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
 type Comparable = Primitive|IComparable<any>;
 
 // #region Local Constants.
@@ -650,16 +652,22 @@ extends DisposableBase implements IEnumerable<T>
 	// #region Conversion Methods
 	toArray(predicate?:Predicate<T>):T[]
 	{
-		var result:T[] = [];
+		return predicate
+			? this.where(predicate).toArray()
+			: this.copyTo([]);
+	}
 
-		if(predicate) return this.where(predicate).toArray();
+	copyTo(target:T[],index:number = 0):T[] {
+		if(!target) throw new ArgumentNullException("target");
+		Integer.assert(index);
+		if(index<0) throw new ArgumentOutOfRangeException("index",index,"Must be zero or greater");
 
 		this.forEach((x, i)=>
 		{
-			result[i] = x
+			target[i+index] = x
 		});
 
-		return result;
+		return target;
 	}
 
 	// Return a default (unfiltered) enumerable.

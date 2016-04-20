@@ -7,12 +7,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './Types', './Exceptions/ArgumentException'], factory);
+        define(["require", "exports", "./Types", "./Exceptions/ArgumentException"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('./Types');
-    var ArgumentException_1 = require('./Exceptions/ArgumentException');
+    var Types_1 = require("./Types");
+    var ArgumentException_1 = require("./Exceptions/ArgumentException");
     function Integer(n) {
         return n | 0;
     }
