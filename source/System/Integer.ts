@@ -55,6 +55,11 @@ module Integer
 			return r(boundary)
 		}
 
+		export function select<T>(source:T[]):T {
+			return source && source.length
+				? source[r(source.length)]
+				: void(0);
+		}
 
 	}
 

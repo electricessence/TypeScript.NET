@@ -27,6 +27,10 @@ var Integer;
             return r(boundary);
         }
         random.under = under;
+        function select(source) {
+            return source && source.length ? source[r(source.length)] : void 0;
+        }
+        random.select = select;
     })(random = Integer.random || (Integer.random = {}));
     function is(n) {
         return Types_1.default.isNumber(n, false) && isFinite(n) && n == (n | 0);
