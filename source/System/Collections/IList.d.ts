@@ -26,6 +26,6 @@ interface IList<T> extends ICollection<T>
 	indexOf(item:T): number;
 	insert(index:number, value:T):void;
 
-	removeAt(index:number): void;
+	removeAt(index:number): boolean;
 
 }

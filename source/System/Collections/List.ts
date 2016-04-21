@@ -9,42 +9,9 @@
 import ArrayEnumerator from "./Enumeration/ArrayEnumerator";
 import {areEqual} from "../Compare";
 import {remove, indexOf, contains, copyTo, removeIndex} from "./Array/Utility";
-import forEach from "./Enumeration/forEach";
-export default class List<T> implements IList<T>
+import {forEach} from "./Enumeration/Enumerator";
+export default class List<T> implements IList<T>, IEnumerateEach<T>
 {
-	get(index:number):T
-	{
-		return this._source[index];
-	}
-
-	set(index:number, value:T):boolean
-	{
-		var s = this._source;
-		if(index<s.length && !areEqual(value, s[index]))
-		{
-			s[index] = value;
-			return true;
-		}
-		return false;
-	}
-
-	indexOf(item:T):number
-	{
-		return indexOf(
-			this._source, item,
-			this._equalityComparer);
-	}
-
-	insert(index:number, value:T):void
-	{
-		this._source.splice(index,0,value);
-	}
-
-	removeAt(index:number):void
-	{
-		removeIndex(this._source,index);
-	}
-
 	protected _source:T[];
 
 	constructor(
@@ -60,6 +27,10 @@ export default class List<T> implements IList<T>
 		}
 	}
 
+
+	protected _onModified():void {}
+
+
 	get count():number
 	{
 		return this._source.length;
@@ -73,19 +44,66 @@ export default class List<T> implements IList<T>
 	add(item:T):void
 	{
 		this._source.push(item);
+		this._onModified();
 	}
 
 	importValues(values:IEnumerableOrArray<T>):void
 	{
-		// Use this.add in case add is overridden.
-		forEach(values, v=> { this.add(v); });
+		forEach(values, v=> { this._source.push(v); });
+		this._onModified();
+	}
+
+	get(index:number):T
+	{
+		return this._source[index];
+	}
+
+	set(index:number, value:T):boolean
+	{
+		var s = this._source;
+		if(index<s.length && areEqual(value, s[index]))
+			return false;
+
+		s[index] = value;
+		this._onModified();
+		return true;
+	}
+
+	indexOf(item:T):number
+	{
+		return indexOf(
+			this._source, item,
+			this._equalityComparer);
+	}
+
+	insert(index:number, value:T):void
+	{
+		var s = this._source;
+		if(index<s.length)
+		{
+			this._source.splice(index, 0, value);
+		} else {
+			this._source[index] = value;
+		}
+		this._onModified();
+	}
+
+	removeAt(index:number):boolean
+	{
+		if(removeIndex(this._source,index)) {
+			this._onModified();
+			return true;
+		}
+		return false;
 	}
 
 	remove(item:T):number
 	{
-		return remove(
+		var n = remove(
 			this._source, item, Infinity,
 			this._equalityComparer);
+		this._onModified();
+		return n;
 	}
 
 	clear():number
@@ -115,6 +133,12 @@ export default class List<T> implements IList<T>
 	getEnumerator():IEnumerator<T>
 	{
 		return new ArrayEnumerator(this._source);
+	}
+
+	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):void
+	{
+		var s = this._source;
+		forEach(useCopy?s.slice():s,action);
 	}
 
 }

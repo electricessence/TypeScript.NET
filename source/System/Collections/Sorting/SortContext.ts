@@ -9,9 +9,7 @@
 ///<reference path="Order.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as Values from '../../Compare'
-import Integer from '../../Integer'
-import forEach from "../Enumeration/forEach"
+import * as Values from "../../Compare";
 
 export default
 class SortContext<T> implements IComparer<T>

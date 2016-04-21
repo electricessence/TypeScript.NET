@@ -16,7 +16,7 @@ import * as AU from "./Array/Utility";
 import Type from "../Types";
 import Integer from "../Integer";
 import EnumeratorBase from "./Enumeration/EnumeratorBase";
-import forEach from "./Enumeration/forEach";
+import {forEach} from "./Enumeration/Enumerator";
 import NotImplementedException from "../Exceptions/NotImplementedException";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";

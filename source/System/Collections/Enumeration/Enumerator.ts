@@ -96,12 +96,15 @@ export function forEach<T>(
 	{
 		if(Type.isArrayLike<T>(e))
 		{
-			for(let i=0;i<e.length;++i) action(e[i],i);
+			for(let i=0;i<e.length;++i)
+				if(action(e[i],i)===false)
+					break;
 			return;
 		}
 
 		if(isEnumerable<T>(e))
 		{
+			// EnumeratorBase auto-disposes when complete.
 			e = (<IEnumerable<T>>e).getEnumerator();
 		}
 

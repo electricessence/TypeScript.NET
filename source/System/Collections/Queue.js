@@ -8,7 +8,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "./Enumeration/forEach", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException"], factory);
+        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "./Enumeration/Enumerator", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -17,7 +17,7 @@
     var Types_1 = require("../Types");
     var Integer_1 = require("../Integer");
     var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
-    var forEach_1 = require("./Enumeration/forEach");
+    var Enumerator_1 = require("./Enumeration/Enumerator");
     var NotImplementedException_1 = require("../Exceptions/NotImplementedException");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
@@ -48,7 +48,7 @@
                     _._array = AU.initialize(Types_1.default.isArrayLike(se)
                         ? se.length
                         : DEFAULT_CAPACITY);
-                    forEach_1.default(se, function (e) { return _.enqueue(e); });
+                    Enumerator_1.forEach(se, function (e) { return _.enqueue(e); });
                     _._version = 0;
                 }
             }

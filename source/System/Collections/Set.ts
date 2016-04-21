@@ -10,8 +10,7 @@ import Type from "../Types";
 import LinkedNodeList from "./LinkedNodeList";
 import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import forEach from "./Enumeration/forEach";
-import {empty as emptyEnumerator} from "./Enumeration/Enumerator";
+import {forEach, empty as emptyEnumerator} from "./Enumeration/Enumerator";
 import {using} from "../Disposable/Utility";
 
 const OTHER = 'other';

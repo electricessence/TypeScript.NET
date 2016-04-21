@@ -72,7 +72,8 @@
         if (e) {
             if (Types_1.default.isArrayLike(e)) {
                 for (var i = 0; i < e.length; ++i)
-                    action(e[i], i);
+                    if (action(e[i], i) === false)
+                        break;
                 return;
             }
             if (isEnumerable(e)) {

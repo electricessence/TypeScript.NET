@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./LinkedNodeList", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/forEach", "./Enumeration/Enumerator", "../Disposable/Utility"], factory);
+        define(["require", "exports", "../Types", "./LinkedNodeList", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/Enumerator", "../Disposable/Utility"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -15,8 +15,8 @@
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
-    var forEach_1 = require("./Enumeration/forEach");
     var Enumerator_1 = require("./Enumeration/Enumerator");
+    var Enumerator_2 = require("./Enumeration/Enumerator");
     var Utility_1 = require("../Disposable/Utility");
     var OTHER = 'other';
     var Set = (function () {
@@ -47,7 +47,7 @@
             var _this = this;
             if (!other)
                 throw new ArgumentNullException_1.default(OTHER);
-            forEach_1.default(other, function (v) {
+            Enumerator_1.forEach(other, function (v) {
                 _this.remove(v);
             });
         };
@@ -86,7 +86,7 @@
             }
             else {
                 Utility_1.using(new Set(), function (o) {
-                    forEach_1.default(other, function (v) {
+                    Enumerator_1.forEach(other, function (v) {
                         o.add(v);
                         return result = _this.contains(v);
                     });
@@ -108,7 +108,7 @@
             if (!other)
                 throw new ArgumentNullException_1.default(OTHER);
             var result = true;
-            forEach_1.default(other, function (v) {
+            Enumerator_1.forEach(other, function (v) {
                 return result = _this.contains(v);
             });
             return result;
@@ -118,7 +118,7 @@
             if (!other)
                 throw new ArgumentNullException_1.default(OTHER);
             var result = false;
-            forEach_1.default(other, function (v) { return !(result = _this.contains(v)); });
+            Enumerator_1.forEach(other, function (v) { return !(result = _this.contains(v)); });
             return result;
         };
         Set.prototype.setEquals = function (other) {
@@ -134,7 +134,7 @@
             if (!other)
                 throw new ArgumentNullException_1.default(OTHER);
             if (other instanceof Set) {
-                forEach_1.default(other, function (v) {
+                Enumerator_1.forEach(other, function (v) {
                     if (_this.contains(v))
                         _this.remove(v);
                     else
@@ -147,7 +147,7 @@
         };
         Set.prototype.unionWith = function (other) {
             var _this = this;
-            forEach_1.default(other, function (v) {
+            Enumerator_1.forEach(other, function (v) {
                 _this.add(v);
             });
         };
@@ -219,7 +219,7 @@
             var s = this._set;
             return s && this._count
                 ? LinkedNodeList_1.default.valueEnumeratorFrom(s)
-                : Enumerator_1.empty;
+                : Enumerator_2.empty;
         };
         return Set;
     }());
