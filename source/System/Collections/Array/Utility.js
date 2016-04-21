@@ -63,17 +63,22 @@
         return destination;
     }
     exports.copyTo = copyTo;
-    function contains(array, item, equalityComparer) {
+    function indexOf(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (array && array.length) {
             if (Array.isArray(array) && !Types_1.default.isTrueNaN(item))
-                return array.indexOf(item) != -1;
+                return array.indexOf(item);
             for (var i = 0; i < array.length; ++i) {
                 if (equalityComparer(array[i], item))
-                    return true;
+                    return i;
             }
         }
-        return false;
+        return -1;
+    }
+    exports.indexOf = indexOf;
+    function contains(array, item, equalityComparer) {
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
+        return indexOf(array, item, equalityComparer) != -1;
     }
     exports.contains = contains;
     function replace(array, old, newValue, max) {

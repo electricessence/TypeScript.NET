@@ -5,9 +5,10 @@ import LinkedList from "../../../../source/System/Collections/LinkedList";
 import {areEqual} from "../../../../source/System/Collections/Array/Compare";
 var assert = require('../../../../node_modules/assert/assert');
 
-ICollectionTests.StringCollection('LinkedList',new LinkedList<string>());
-ICollectionTests.NumberCollection('LinkedList',new LinkedList<number>());
-ICollectionTests.InstanceCollection('LinkedList',new LinkedList<Object>());
+const CLASS_NAME = 'LinkedList';
+ICollectionTests.StringCollection(CLASS_NAME,new LinkedList<string>());
+ICollectionTests.NumberCollection(CLASS_NAME,new LinkedList<number>());
+ICollectionTests.InstanceCollection(CLASS_NAME,new LinkedList<Object>());
 
 describe('.addAfter & .addBefore', ()=>
 {

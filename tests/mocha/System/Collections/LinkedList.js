@@ -11,9 +11,10 @@
     var LinkedList_1 = require("../../../../source/System/Collections/LinkedList");
     var Compare_1 = require("../../../../source/System/Collections/Array/Compare");
     var assert = require('../../../../node_modules/assert/assert');
-    ICollectionTests.StringCollection('LinkedList', new LinkedList_1.default());
-    ICollectionTests.NumberCollection('LinkedList', new LinkedList_1.default());
-    ICollectionTests.InstanceCollection('LinkedList', new LinkedList_1.default());
+    var CLASS_NAME = 'LinkedList';
+    ICollectionTests.StringCollection(CLASS_NAME, new LinkedList_1.default());
+    ICollectionTests.NumberCollection(CLASS_NAME, new LinkedList_1.default());
+    ICollectionTests.InstanceCollection(CLASS_NAME, new LinkedList_1.default());
     describe('.addAfter & .addBefore', function () {
         var part1 = [1, 2, 3], part2 = [5, 6, 7];
         var parts = part1.concat(part2), len1 = parts.length;

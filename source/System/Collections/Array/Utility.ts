@@ -104,6 +104,36 @@ export function copyTo<T,TDestination extends IArray<any>>(
 	return destination;
 }
 
+
+/**
+ * Checks to see where the provided array contains an item/value.
+ * If the array value is null, then -1 is returned.
+ * @param array
+ * @param item
+ * @param {function?} equalityComparer
+ * @returns {number}
+ */
+export function indexOf<T>(
+	array:IArray<T>, item:T,
+	equalityComparer:EqualityComparison<T> = areEqual):number
+{
+	if(array && array.length)
+	{
+		// NaN NEVER evaluates its equality so be careful.
+		if(Array.isArray(array) && !Type.isTrueNaN(item))
+			return array.indexOf(item);
+
+		for(let i = 0; i<array.length; ++i)
+		{
+			// 'areEqual' includes NaN==NaN evaluation.
+			if(equalityComparer(array[i], item))
+				return i;
+		}
+	}
+
+	return -1;
+}
+
 /**
  * Checks to see if the provided array contains an item.
  * If the array value is null, then false is returned.
@@ -116,21 +146,7 @@ export function contains<T>(
 	array:IArray<T>, item:T,
 	equalityComparer:EqualityComparison<T> = areEqual):boolean
 {
-	if(array && array.length)
-	{
-		// NaN NEVER evaluates its equality so be careful.
-		if(Array.isArray(array) && !Type.isTrueNaN(item))
-			return array.indexOf(item)!= -1;
-
-		for(let i = 0; i<array.length; ++i)
-		{
-			// 'areEqual' includes NaN==NaN evaluation.
-			if(equalityComparer(array[i], item))
-				return true;
-		}
-	}
-
-	return false;
+	return indexOf(array,item,equalityComparer)!=-1;
 }
 
 /**
