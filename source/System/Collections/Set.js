@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./LinkedNodeList", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/Enumerator", "../Disposable/Utility"], factory);
+        define(["require", "exports", "../Types", "./LinkedNodeList", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../Disposable/Utility"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -16,7 +16,6 @@
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var Enumerator_1 = require("./Enumeration/Enumerator");
-    var Enumerator_2 = require("./Enumeration/Enumerator");
     var Utility_1 = require("../Disposable/Utility");
     var OTHER = 'other';
     var Set = (function () {
@@ -219,7 +218,7 @@
             var s = this._set;
             return s && this._count
                 ? LinkedNodeList_1.default.valueEnumeratorFrom(s)
-                : Enumerator_2.empty;
+                : Enumerator_1.empty;
         };
         return Set;
     }());

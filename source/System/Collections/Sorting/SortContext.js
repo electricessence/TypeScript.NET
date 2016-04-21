@@ -7,11 +7,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare'], factory);
+        define(["require", "exports", "../../Compare"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Values = require('../../Compare');
+    var Values = require("../../Compare");
     var SortContext = (function () {
         function SortContext(_next, _comparer, _order) {
             if (_comparer === void 0) { _comparer = Values.compare; }
