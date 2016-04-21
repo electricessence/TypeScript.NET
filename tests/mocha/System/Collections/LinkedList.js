@@ -42,5 +42,4 @@
         });
     });
 });
-
 //# sourceMappingURL=LinkedList.js.map

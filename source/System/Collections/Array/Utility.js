@@ -66,7 +66,7 @@
     function contains(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (array && array.length) {
-            if (Array.isArray(array))
+            if (Array.isArray(array) && !Types_1.default.isTrueNaN(item))
                 return array.indexOf(item) != -1;
             for (var i = 0; i < array.length; ++i) {
                 if (equalityComparer(array[i], item))

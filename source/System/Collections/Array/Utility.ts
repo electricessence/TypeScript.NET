@@ -118,8 +118,9 @@ export function contains<T>(
 {
 	if(array && array.length)
 	{
-
-		if(Array.isArray(array)) return array.indexOf(item)!= -1;
+		// NaN NEVER evaluates its equality so be careful.
+		if(Array.isArray(array) && !Type.isTrueNaN(item))
+			return array.indexOf(item)!= -1;
 
 		for(let i = 0; i<array.length; ++i)
 		{
