@@ -1794,7 +1794,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (Array.isArray(s))
                 return s.slice();
             var len = s.length, result = ArrayUtility.initialize(len);
-            for (var i = 0; i < len; ++i) {
+            for (var i = 0; i < len; i++) {
                 result[i] = s[i];
             }
             return result;
@@ -1807,7 +1807,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             _.throwIfDisposed();
             var source = _._source;
             if (source) {
-                for (var i = 0; i < source.length; ++i) {
+                for (var i = 0; i < source.length; i++) {
                     if (action(source[i], i) === false)
                         break;
                 }

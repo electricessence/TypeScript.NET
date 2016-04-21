@@ -54,6 +54,8 @@ function ensureExternal<T>(node:InternalNode<T>, list:LinkedList<T>):ILinkedList
 {
 	if(!node)
 		return null;
+	if(!list)
+		throw new ArgumentNullException("list");
 
 	var external:ILinkedListNode<T> = node.external;
 	if(!external)
@@ -65,8 +67,9 @@ function ensureExternal<T>(node:InternalNode<T>, list:LinkedList<T>):ILinkedList
 function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNode<T>
 {
 	if(!node)
-		throw new ArgumentNullException(
-			"Cannot be null.");
+		throw new ArgumentNullException("node");
+	if(!list)
+		throw new ArgumentNullException("list");
 
 	if(node.list!=list)
 		throw new InvalidOperationException(
@@ -249,7 +252,9 @@ implements ILinkedList<T>
 
 	getValueAt(index:number):T
 	{
-		return this._listInternal.getNodeAt(index).value;
+		var node = this._listInternal.getNodeAt(index);
+		if(!node)
+		return node && node.value || void(0);
 	}
 
 	getNodeAt(index:number):ILinkedListNode<T>

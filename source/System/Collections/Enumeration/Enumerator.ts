@@ -96,7 +96,7 @@ export function forEach<T>(
 	{
 		if(Type.isArrayLike<T>(e))
 		{
-			for(let i=0;i<e.length;++i)
+			for(let i=0;i<e.length; i++)
 				if(action(e[i],i)===false)
 					break;
 			return;

@@ -95,7 +95,7 @@ export function areEquivalent(a:any, b:any, nullEquivalency:boolean = true, extr
 		aKeys.sort();
 		bKeys.sort();
 
-		for(let i = 0; i<len; ++i)
+		for(let i = 0; i<len; i++)
 		{
 			let key = aKeys[i];
 			if(key!==bKeys[i] || !areEqual(a[key], b[key], true)) return false;

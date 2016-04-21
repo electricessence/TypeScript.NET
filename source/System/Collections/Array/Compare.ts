@@ -7,8 +7,8 @@
 ///<reference path="../../FunctionTypes.d.ts"/>
 ///<reference path="../../Primitive.d.ts"/>
 ///<reference path="../../IComparable.d.ts"/>
-import * as Values from '../../Compare';
-import Type from '../../Types';
+import * as Values from "../../Compare";
+import Type from "../../Types";
 
 /*  validateSize: Utility for quick validation/invalidation of array equality.
 	Why this way?  Why not pass a closure for the last return?
@@ -45,7 +45,7 @@ export function areAllEqual(
 	if(arrays.length<2)
 		throw new Error("Cannot compare a set of arrays less than 2.");
 	var first = arrays[0];
-	for(let i = 0, l = arrays.length; i<l; ++i)
+	for(let i = 0, l = arrays.length; i<l; i++)
 	{
 		if(!areEqual(first, arrays[i], strict, equalityComparer))
 			return false;
@@ -61,7 +61,7 @@ export function areEqual<T>(
 	var len = validateSize(a, b);
 	if(Type.isBoolean(len)) return <boolean>len;
 
-	for(let i = 0; i<len; ++i)
+	for(let i = 0; i<len; i++)
 	{
 		if(!equalityComparer(a[i], b[i], strict))
 			return false;
@@ -102,7 +102,7 @@ export function areEquivalent<T>(
 	a = copyAndSort(a, comparer);
 	b = copyAndSort(b, comparer);
 
-	for(let i = 0; i<len; ++i)
+	for(let i = 0; i<len; i++)
 	{
 		if(comparer(a[i], b[i])!==0)
 			return false;

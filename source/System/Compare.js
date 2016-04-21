@@ -57,7 +57,7 @@
                 return false;
             aKeys.sort();
             bKeys.sort();
-            for (var i = 0; i < len; ++i) {
+            for (var i = 0; i < len; i++) {
                 var key = aKeys[i];
                 if (key !== bKeys[i] || !areEqual(a[key], b[key], true))
                     return false;

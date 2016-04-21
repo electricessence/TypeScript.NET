@@ -3221,7 +3221,7 @@ extends Enumerable<T>
 			return (<any>s).slice();
 
 		var len = s.length, result:T[] = ArrayUtility.initialize<T>(len);
-		for(let i = 0; i<len; ++i)
+		for(let i = 0; i<len; i++)
 		{
 			result[i] = s[i];
 		}
@@ -3245,7 +3245,7 @@ extends Enumerable<T>
 		{
 
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			for(let i = 0; i<source.length; ++i)
+			for(let i = 0; i<source.length; i++)
 			{
 				// _.assertIsNotDisposed(); // Assertion here is unnecessary since we already have a reference to the source array.
 				if(<any>action(source[i], i)===false)

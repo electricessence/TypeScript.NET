@@ -3,12 +3,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../../../../source/System/Collections/Array/Compare', '../../../../../source/System/Collections/Array/Utility'], factory);
+        define(["require", "exports", "../../../../../source/System/Collections/Array/Compare", "../../../../../source/System/Collections/Array/Utility", "../../../../../source/System/Diagnostics/Stopwatch"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Arrays = require('../../../../../source/System/Collections/Array/Compare');
-    var ArrayUtility = require('../../../../../source/System/Collections/Array/Utility');
+    var Arrays = require("../../../../../source/System/Collections/Array/Compare");
+    var ArrayUtility = require("../../../../../source/System/Collections/Array/Utility");
+    var Stopwatch_1 = require("../../../../../source/System/Diagnostics/Stopwatch");
     var assert = require('../../../../../node_modules/assert/assert');
     var minA = -10, maxA = 2000;
     function initTestArray() {
@@ -97,6 +98,19 @@
             }
         });
     });
+    function measureRepeated(closure) {
+        var repeat = 50;
+        var ms = 0;
+        for (var i = 0; i < repeat; i++) {
+            ms += Stopwatch_1.default.measure(closure).total.milliseconds;
+        }
+        return ms;
+    }
+    function outputMeasured(suffix, closure) {
+        it(measureRepeated(closure) + " milliseconds: " + suffix, function () {
+            assert.ok(true);
+        });
+    }
 });
 
 //# sourceMappingURL=Utility.js.map

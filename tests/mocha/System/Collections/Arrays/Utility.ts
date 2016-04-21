@@ -1,7 +1,8 @@
 ///<reference path="../../../import"/>
 
-import * as Arrays from '../../../../../source/System/Collections/Array/Compare';
-import * as ArrayUtility from '../../../../../source/System/Collections/Array/Utility';
+import * as Arrays from "../../../../../source/System/Collections/Array/Compare";
+import * as ArrayUtility from "../../../../../source/System/Collections/Array/Utility";
+import Stopwatch from "../../../../../source/System/Diagnostics/Stopwatch";
 var assert = require('../../../../../node_modules/assert/assert');
 
 
@@ -136,3 +137,148 @@ describe(".repeat(value,count)", ()=>
 		}
 	});
 });
+
+function measureRepeated(closure:()=>void):number {
+	const repeat = 50;
+	var ms = 0;
+
+	for(let i=0;i<repeat; i++) {
+		ms += Stopwatch.measure(closure).total.milliseconds;
+	}
+
+	return ms;
+}
+
+function outputMeasured(suffix:string,closure:()=>void):void {
+	it(measureRepeated(closure)+" milliseconds: "+suffix, ()=>{
+		assert.ok(true);
+	});
+}
+
+/*
+ * The below code proves (for Node.js and Mocha) that best practice with arrays is:
+ * 1) Initialize them.  Set their capacity when constructed or set the length before iterating.
+ * 2) Standard for loops are typically compiler optimized well and i++ may be compiler optimized as well (better than ++i).
+ */
+//
+// describe("Array Performance", ()=>
+// {
+// 	const max = 1000000;
+// 	outputMeasured("Array.push(i)", ()=>
+// 	{
+// 		let a:number[] = [];
+// 		for(let i = 0; i<max; i++)
+// 		{
+// 			a.push(i);
+// 		}
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});
+//
+// 	outputMeasured("Array[i] = i", ()=>
+// 	{
+// 		let a:number[] = [];
+// 		for(let i = 0; i<max; i++)
+// 		{
+// 			a[i] = i;
+// 		}
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});
+//
+// /*
+// 	// Proven to be terrible!
+// 	outputMeasured("Array.forEach (preset capacity ++i)", ()=>
+// 	{
+// 		let a:number[] = [];
+// 		a.length = max;
+// 		a.forEach((v,i)=>{
+// 			a[i] = v;
+// 		});
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});*/
+//
+// 	outputMeasured("Array[i] = i (preset capacity i++)", ()=>
+// 	{
+// 		let a:number[] = new Array<number>(max);
+// 		for(let i = 0; i<max; i++)
+// 		{
+// 			a[i] = i;
+// 		}
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});
+//
+// 	outputMeasured("Array[i] = i (preset length)", ()=>
+// 	{
+// 		let a:number[] = [];
+// 		a.length = max;
+// 		for(let i = 0; i<max; i++)
+// 		{
+// 			a[i] = i;
+// 		}
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});
+//
+// 	outputMeasured("Array[i] = i (for reverse no-init)", ()=>
+// 	{
+// 		let a:number[] = [];
+// 		for(let i=max-1;i>=0; i--) {
+// 			a[i] = i;
+// 		}
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});
+//
+// 	outputMeasured("Array[i] = i (for reverse)", ()=>
+// 	{
+// 		let a:number[] = new Array<number>(max);
+// 		for(let i=max-1;i>=0; i--) {
+// 			a[i] = i;
+// 		}
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});
+//
+// 	outputMeasured("Array[m] = m (while reverse)", ()=>
+// 	{
+// 		let a:number[] = new Array<number>(max);
+// 		let m = max;
+// 		while(m--) {
+// 			a[m] = m;
+// 		}
+// 		// To ensure compiler doesn't dismiss the array, must consume the array at least once.
+// 		return a[max-1];
+// 	});
+//
+// 	outputMeasured("LinkedList.add(i)", ()=>
+// 	{
+// 		let a = new LinkedList<number>();
+// 		for(let i = 0; i<max; i++)
+// 		{
+// 			a.add(i);
+// 		}
+// 	});
+//
+//
+//
+// 	outputMeasured("LinkedListNode.next = next", ()=>
+// 	{
+// 		let root:LinkedNextNode = { value: -1, next:null };
+// 		let next = root;
+// 		for(let i = 0; i<max; i++)
+// 		{
+// 			next = next.next = { value: i, next:null };
+// 		}
+// 		return root;
+// 	});
+//
+//
+// });
+//
+// interface LinkedNextNode {
+// 	value:number;
+// 	next:LinkedNextNode;
+// }

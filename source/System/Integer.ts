@@ -5,6 +5,7 @@
 
 import Type from "./Types";
 import ArgumentException from "./Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
 
 function Integer(n:number):number
 {
@@ -14,7 +15,8 @@ function Integer(n:number):number
 module Integer
 {
 
-	function r(max:number):number {
+	function r(max:number):number
+	{
 		return (Math.random()*max) | 0;
 	}
 
@@ -31,13 +33,14 @@ module Integer
 	 */
 	export function random(max:number):number
 	{
-		assert(max,'max');
+		assert(max, 'max');
 		if(max==0) return 0;
-		max += max > 0 ? 1 : -1;
+		max += max>0 ? 1 : -1;
 		return r(max);
 	}
 
-	export module random {
+	export module random
+	{
 
 		/**
 		 * Returns a random integer from zero up to the boundary value.
@@ -55,7 +58,8 @@ module Integer
 			return r(boundary)
 		}
 
-		export function select<T>(source:T[]):T {
+		export function select<T>(source:T[]):T
+		{
 			return source && source.length
 				? source[r(source.length)]
 				: void(0);
@@ -72,9 +76,23 @@ module Integer
 	{
 		var i = is(n);
 		if(!i)
-		{
 			throw new ArgumentException(argumentName || 'n', "Must be a integer.");
-		}
+		return i;
+	}
+
+	export function assertZeroOrGreater(n:number, argumentName?:string):boolean
+	{
+		var i = assert(n, argumentName) && n>=0;
+		if(!i)
+			throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Cannot be less than zero.");
+		return i;
+	}
+
+	export function assertPositive(n:number, argumentName?:string):boolean
+	{
+		var i = assert(n, argumentName) && n>0;
+		if(!i)
+			throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be greater than zero.");
 		return i;
 	}
 

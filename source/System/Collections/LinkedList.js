@@ -33,6 +33,8 @@
     function ensureExternal(node, list) {
         if (!node)
             return null;
+        if (!list)
+            throw new ArgumentNullException_1.default("list");
         var external = node.external;
         if (!external)
             node.external = external = new LinkedListNode(list, node);
@@ -40,7 +42,9 @@
     }
     function getInternal(node, list) {
         if (!node)
-            throw new ArgumentNullException_1.default("Cannot be null.");
+            throw new ArgumentNullException_1.default("node");
+        if (!list)
+            throw new ArgumentNullException_1.default("list");
         if (node.list != list)
             throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
         var n = node._nodeInternal;
@@ -164,7 +168,9 @@
             configurable: true
         });
         LinkedList.prototype.getValueAt = function (index) {
-            return this._listInternal.getNodeAt(index).value;
+            var node = this._listInternal.getNodeAt(index);
+            if (!node)
+                return node && node.value || void (0);
         };
         LinkedList.prototype.getNodeAt = function (index) {
             return ensureExternal(this._listInternal.getNodeAt(index), this);

@@ -95,8 +95,10 @@ export function copyTo<T,TDestination extends IArray<any>>(
 		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
 
 	length = Math.min(length, maxLength);
+	var newLength = destinationIndex + length;
+	if(newLength>destination.length) destination.length = newLength;
 
-	for(let i = 0; i<length; ++i)
+	for(let i = 0; i<length; i++)
 	{
 		destination[destinationIndex + i] = source[sourceIndex + i];
 	}
@@ -117,13 +119,15 @@ export function indexOf<T>(
 	array:IArray<T>, item:T,
 	equalityComparer:EqualityComparison<T> = areEqual):number
 {
-	if(array && array.length)
+
+	var len = array && array.length;
+	if(len)
 	{
 		// NaN NEVER evaluates its equality so be careful.
 		if(Array.isArray(array) && !Type.isTrueNaN(item))
 			return array.indexOf(item);
 
-		for(let i = 0; i<array.length; ++i)
+		for(let i = 0; i<len; i++)
 		{
 			// 'areEqual' includes NaN==NaN evaluation.
 			if(equalityComparer(array[i], item))
@@ -146,7 +150,7 @@ export function contains<T>(
 	array:IArray<T>, item:T,
 	equalityComparer:EqualityComparison<T> = areEqual):boolean
 {
-	return indexOf(array,item,equalityComparer)!=-1;
+	return indexOf(array, item, equalityComparer)!= -1;
 }
 
 /**
@@ -163,24 +167,19 @@ export function replace<T>(
 	newValue:T,
 	max?:number):number
 {
+	if(!array || !array.length || max===0) return 0;
+	if(max<0) throw new ArgumentOutOfRangeException('max', max, CBL0);
+	if(!max) max = Infinity;
 
 	var count = 0;
-	if(max!==0)
-	{
-		if(!max)
-			max = Infinity;
-		else if(max<0)
-			throw new ArgumentOutOfRangeException('max', max, CBL0);
 
-		for(let i = (array.length - 1); i>=0; --i)
+	for(let i = 0,len=array.length;i<len;i++)
+	{
+		if(array[i]===old)
 		{
-			if(array[i]===old)
-			{
-				array[i] = newValue;
-				++count;
-				if(!--max)
-					break;
-			}
+			array[i] = newValue;
+			++count;
+			if(count==max) break;
 		}
 	}
 
@@ -192,20 +191,22 @@ export function replace<T>(
  * Replaces values of an array across a range of indexes.
  * @param array
  * @param value
- * @param index
- * @param length
+ * @param start
+ * @param stop
  */
 export function updateRange<T>(
-	array:T[],
+	array:IArray<T>,
 	value:T,
-	index:number,
-	length:number):void
+	start:number = 0,
+	stop?:number):void
 {
-	Integer.assert(index, 'index');
-	Integer.assert(index, 'length');
+	if(!array) return;
+	Integer.assertZeroOrGreater(start, 'start');
+	if(!stop && stop!==0) stop = array.length;
+	Integer.assert(stop, 'stop');
+	if(stop<start) throw new ArgumentOutOfRangeException("stop", stop, "is less than start");
 
-	var end = index + length;
-	for(let i:number = index; i<end; ++i)
+	for(let i:number = start; i<stop; i++)
 	{
 		array[i] = value;
 	}
@@ -214,15 +215,15 @@ export function updateRange<T>(
 /**
  * Clears (sets to null) values of an array across a range of indexes.
  * @param array
- * @param index
- * @param length
+ * @param start
+ * @param stop
  */
 export function clear(
-	array:any[],
-	index:number,
-	length:number):void
+	array:IArray<any>,
+	start:number = 0,
+	stop?:number):void
 {
-	updateRange(array, null, index, length);
+	updateRange(array, null, start, stop);
 }
 
 /**
@@ -257,12 +258,22 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 		throw new ArgumentNullException('array', CBN);
 	if(!Type.isFunction(predicate))
 		throw new ArgumentException('predicate', 'Must be a function.');
+
 	var len = array.length;
-	for(let i = 0; i<len; ++i)
-	{
-		if((i) in (array) && predicate(array[i]))
-			return i;
+	if(Array.isArray(array)) {
+		for(let i = 0; i<len; i++)
+		{
+			if(predicate(array[i]))
+				return i;
+		}
+	} else {
+		for(let i = 0; i<len; i++)
+		{
+			if((i) in (array) && predicate(array[i]))
+				return i;
+		}
 	}
+
 
 	return -1;
 }
@@ -272,25 +283,21 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
  * Allows for using "false" to cause forEach to break.
  * Can also be applied to a structure that indexes like an array, but may not be.
  * @param source
- * @param fn
- * @returns {IArray<T>}
+ * @param action
  */
 export function forEach<T>(
 	source:IArray<T>,
-	fn:(value:T, index?:number) => (void|boolean)):IArray<T>
+	action:Predicate<T> | Action<T>):void
 {
-	if(!source)
-		throw new ArgumentNullException('source', CBN);
-
-	if(fn)
+	if(source && action)
 	{
-		for(let i = 0; i<source.length; ++i)
+		// Don't cache the length since it is possible that the underlying array changed.
+		for(let i = 0; i<source.length; i++)
 		{
-			if(fn(source[i])===false)
+			if(action(source[i])===false)
 				break;
 		}
 	}
-	return source;
 }
 
 
@@ -299,21 +306,16 @@ export function forEach<T>(
  * Can also be applied to a structure that indexes like an array, but may not be.
  * @param target
  * @param fn
- * @returns {IArray<T>}
  */
-export function applyTo<T>(target:IArray<T>, fn:(a:T) => T):IArray<T>
+export function applyTo<T>(target:IArray<T>, fn:(a:T) => T):void
 {
-	if(!target)
-		throw new ArgumentNullException('target', CBN);
-
-	if(fn)
+	if(target && fn)
 	{
-		for(let i = 0; i<target.length; ++i)
+		for(let i = 0; i<target.length; i++)
 		{
 			target[i] = fn(target[i]);
 		}
 	}
-	return target;
 }
 
 /**
@@ -349,28 +351,38 @@ export function remove<T>(
 	array:T[], value:T, max?:number,
 	equalityComparer:EqualityComparison<T> = areEqual):number
 {
-	if(!array)
-		throw new ArgumentNullException('array', CBN);
+	if(!array || !array.length || max===0) return 0;
+	if(max<0) throw new ArgumentOutOfRangeException('max', max, CBL0);
 
 	var count = 0;
-	if(array && array.length && max!==0)
-	{
-		if(!max)
-			max = Infinity;
-		else if(max<0)
-			throw new ArgumentOutOfRangeException('max', max, CBL0);
-
-		for(let i = (array.length - 1); i>=0; --i)
+	if(!max || !isFinite(max)) {
+		// Don't track the indexes and remove in reverse.
+		for(let i = (array.length - 1); i>=0; i--)
 		{
 			if(equalityComparer(array[i], value))
 			{
 				array.splice(i, 1);
 				++count;
-				if(!--max)
-					break;
 			}
 		}
+	} else {
+		// Since the user will expect it to happen in forward order...
+		var found:number[] = []; // indexes;
+		for(let i = 0, len = array.length; i<len; i++)
+		{
+			if(equalityComparer(array[i], value))
+			{
+				found.push(i);
+				++count;
+				if(count==max) break;
+			}
+		}
+
+		for(let i = found.length-1;i>=0;i--) {
+			array.splice(found[i], 1);
+		}
 	}
+
 
 	return count;
 }
@@ -387,7 +399,7 @@ export function repeat<T>(element:T, count:number):T[]
 	if(count<0) throw new ArgumentOutOfRangeException('count', count, CBL0);
 
 	var result = initialize<T>(count);
-	for(let i = 0; i<count; ++i)
+	for(let i = 0; i<count; i++)
 	{
 		result[i] = element;
 	}
@@ -413,7 +425,7 @@ export function range(
 	if(count<0) throw new ArgumentOutOfRangeException('count', count, CBL0);
 
 	var result = initialize<number>(count);
-	for(let i = 0; i<count; ++i)
+	for(let i = 0; i<count; i++)
 	{
 		result[i] = first;
 		first += step;

@@ -57,7 +57,10 @@
         if (isFinite(length) && length > maxLength)
             throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
         length = Math.min(length, maxLength);
-        for (var i = 0; i < length; ++i) {
+        var newLength = destinationIndex + length;
+        if (newLength > destination.length)
+            destination.length = newLength;
+        for (var i = 0; i < length; i++) {
             destination[destinationIndex + i] = source[sourceIndex + i];
         }
         return destination;
@@ -65,10 +68,11 @@
     exports.copyTo = copyTo;
     function indexOf(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        if (array && array.length) {
+        var len = array && array.length;
+        if (len) {
             if (Array.isArray(array) && !Types_1.default.isTrueNaN(item))
                 return array.indexOf(item);
-            for (var i = 0; i < array.length; ++i) {
+            for (var i = 0; i < len; i++) {
                 if (equalityComparer(array[i], item))
                     return i;
             }
@@ -82,35 +86,42 @@
     }
     exports.contains = contains;
     function replace(array, old, newValue, max) {
+        if (!array || !array.length || max === 0)
+            return 0;
+        if (max < 0)
+            throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
+        if (!max)
+            max = Infinity;
         var count = 0;
-        if (max !== 0) {
-            if (!max)
-                max = Infinity;
-            else if (max < 0)
-                throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
-            for (var i = (array.length - 1); i >= 0; --i) {
-                if (array[i] === old) {
-                    array[i] = newValue;
-                    ++count;
-                    if (!--max)
-                        break;
-                }
+        for (var i = 0, len = array.length; i < len; i++) {
+            if (array[i] === old) {
+                array[i] = newValue;
+                ++count;
+                if (count == max)
+                    break;
             }
         }
         return count;
     }
     exports.replace = replace;
-    function updateRange(array, value, index, length) {
-        Integer_1.default.assert(index, 'index');
-        Integer_1.default.assert(index, 'length');
-        var end = index + length;
-        for (var i = index; i < end; ++i) {
+    function updateRange(array, value, start, stop) {
+        if (start === void 0) { start = 0; }
+        if (!array)
+            return;
+        Integer_1.default.assertZeroOrGreater(start, 'start');
+        if (!stop && stop !== 0)
+            stop = array.length;
+        Integer_1.default.assert(stop, 'stop');
+        if (stop < start)
+            throw new ArgumentOutOfRangeException_1.default("stop", stop, "is less than start");
+        for (var i = start; i < stop; i++) {
             array[i] = value;
         }
     }
     exports.updateRange = updateRange;
-    function clear(array, index, length) {
-        updateRange(array, null, index, length);
+    function clear(array, start, stop) {
+        if (start === void 0) { start = 0; }
+        updateRange(array, null, start, stop);
     }
     exports.clear = clear;
     function register(array, item, equalityComparer) {
@@ -130,34 +141,36 @@
         if (!Types_1.default.isFunction(predicate))
             throw new ArgumentException_1.default('predicate', 'Must be a function.');
         var len = array.length;
-        for (var i = 0; i < len; ++i) {
-            if ((i) in (array) && predicate(array[i]))
-                return i;
+        if (Array.isArray(array)) {
+            for (var i = 0; i < len; i++) {
+                if (predicate(array[i]))
+                    return i;
+            }
+        }
+        else {
+            for (var i = 0; i < len; i++) {
+                if ((i) in (array) && predicate(array[i]))
+                    return i;
+            }
         }
         return -1;
     }
     exports.findIndex = findIndex;
-    function forEach(source, fn) {
-        if (!source)
-            throw new ArgumentNullException_1.default('source', CBN);
-        if (fn) {
-            for (var i = 0; i < source.length; ++i) {
-                if (fn(source[i]) === false)
+    function forEach(source, action) {
+        if (source && action) {
+            for (var i = 0; i < source.length; i++) {
+                if (action(source[i]) === false)
                     break;
             }
         }
-        return source;
     }
     exports.forEach = forEach;
     function applyTo(target, fn) {
-        if (!target)
-            throw new ArgumentNullException_1.default('target', CBN);
-        if (fn) {
-            for (var i = 0; i < target.length; ++i) {
+        if (target && fn) {
+            for (var i = 0; i < target.length; i++) {
                 target[i] = fn(target[i]);
             }
         }
-        return target;
     }
     exports.applyTo = applyTo;
     function removeIndex(array, index) {
@@ -174,21 +187,31 @@
     exports.removeIndex = removeIndex;
     function remove(array, value, max, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        if (!array)
-            throw new ArgumentNullException_1.default('array', CBN);
+        if (!array || !array.length || max === 0)
+            return 0;
+        if (max < 0)
+            throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
         var count = 0;
-        if (array && array.length && max !== 0) {
-            if (!max)
-                max = Infinity;
-            else if (max < 0)
-                throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
-            for (var i = (array.length - 1); i >= 0; --i) {
+        if (!max || !isFinite(max)) {
+            for (var i = (array.length - 1); i >= 0; i--) {
                 if (equalityComparer(array[i], value)) {
                     array.splice(i, 1);
                     ++count;
-                    if (!--max)
+                }
+            }
+        }
+        else {
+            var found = [];
+            for (var i = 0, len = array.length; i < len; i++) {
+                if (equalityComparer(array[i], value)) {
+                    found.push(i);
+                    ++count;
+                    if (count == max)
                         break;
                 }
+            }
+            for (var i = found.length - 1; i >= 0; i--) {
+                array.splice(found[i], 1);
             }
         }
         return count;
@@ -199,7 +222,7 @@
         if (count < 0)
             throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
         var result = initialize(count);
-        for (var i = 0; i < count; ++i) {
+        for (var i = 0; i < count; i++) {
             result[i] = element;
         }
         return result;
@@ -214,7 +237,7 @@
         if (count < 0)
             throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
         var result = initialize(count);
-        for (var i = 0; i < count; ++i) {
+        for (var i = 0; i < count; i++) {
             result[i] = first;
             first += step;
         }

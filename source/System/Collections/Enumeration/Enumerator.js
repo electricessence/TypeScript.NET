@@ -71,7 +71,7 @@
     function forEach(e, action) {
         if (e) {
             if (Types_1.default.isArrayLike(e)) {
-                for (var i = 0; i < e.length; ++i)
+                for (var i = 0; i < e.length; i++)
                     if (action(e[i], i) === false)
                         break;
                 return;
