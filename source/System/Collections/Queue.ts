@@ -11,7 +11,7 @@
 ///<reference path="IEnumerableOrArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as Values from "../Compare";
+import {areEqual} from "../Compare";
 import * as AU from "./Array/Utility";
 import Type from "../Types";
 import Integer from "../Integer";
@@ -20,6 +20,7 @@ import {forEach} from "./Enumeration/Enumerator";
 import NotImplementedException from "../Exceptions/NotImplementedException";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import CollectionBase from "./CollectionBase";
 
 const MINIMUM_GROW:number = 4;
 const SHRINK_THRESHOLD:number = 32; // Unused?
@@ -29,7 +30,8 @@ const DEFAULT_CAPACITY:number = MINIMUM_GROW;
 var emptyArray:any[] = [];
 
 export default
-class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
+class Queue<T>
+extends CollectionBase<T>
 {
 
 	private _array:T[];
@@ -39,9 +41,11 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	private _capacity:number;   // Maps to _array.length;
 	private _version:number;
 
-
-	constructor(source?:IEnumerableOrArray<T> | number)
+	constructor(
+		source?:IEnumerableOrArray<T> | number,
+		equalityComparer:EqualityComparison<T> = areEqual)
 	{
+		super(null,equalityComparer);
 		var _ = this;
 		_._head = 0;
 		_._tail = 0;
@@ -79,29 +83,42 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		_._capacity = _._array.length;
 	}
 
-	// #region ICollection<T> implementation
-
-	get count():number
+	protected getCount():number
 	{
 		return this._size;
 	}
 
-	get isReadOnly():boolean
+	protected _addInternal(item:T):boolean
 	{
-		return false;
+		var _ = this, array = _._array, size = _._size, len = _._capacity;
+		if(size==len)
+		{
+			var newCapacity = len*GROW_FACTOR_HALF;
+			if(newCapacity<len + MINIMUM_GROW)
+				newCapacity = len + MINIMUM_GROW;
+
+			_.setCapacity(newCapacity);
+			array = _._array;
+			len = _._capacity;
+		}
+
+		var tail = _._tail;
+		array[tail] = item;
+		_._tail = (tail + 1)%len;
+		_._size = size + 1;
+		_._version++;
+		return true;
 	}
 
-	add(item:T):void
+	protected _removeInternal(item:T, max?:number):number
 	{
-		this.enqueue(item);
+		throw new NotImplementedException(
+			"ICollection\<T\>.remove is not implemented in Queue\<T\>" +
+			" since it would require destroying the underlying array to remove the item."
+		);
 	}
 
-
-	/**
-	 * Clears out the array and returns the number of items that were removed.
-	 * @returns {number}
-	 */
-	clear():number
+	protected _clearInternal():number
 	{
 		var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
 		if(head<tail)
@@ -122,110 +139,10 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		return size;
 	}
 
-	/**
-	 * Dequeues entries into an array.
-	 */
-	dump(max:number = Infinity):T[]
+	protected _onDispose():void
 	{
-		if(Type.isNumber(max, false) && max<0)
-			throw new ArgumentOutOfRangeException('max', max, 'must be greater than or equal to 0.');
-
-		var _ = this, result:T[] = [];
-
-		if(isFinite(max))
-		{
-			Integer.assert(max, 'max');
-			while(max-- && _._size)
-			{
-				result.push(_.dequeue());
-			}
-		}
-		else
-		{
-			while(_._size)
-			{
-				result.push(_.dequeue());
-			}
-		}
-
-		_.trimExcess();
-
-		return result;
-	}
-
-	contains(item:T):boolean
-	{
-		var _ = this, count = _._size;
-		if(!count) return false;
-		
-		var array = _._array, index = _._head, len = _._capacity;
-
-		while(count-->0)
-		{
-			if(Values.areEqual(array[index], item)) // May need a equality compare here.
-				return true;
-
-			index = (index + 1)%len;
-		}
-
-		return false;
-	}
-
-
-	copyTo(target:T[], arrayIndex:number = 0):T[]
-	{
-		if(target==null)
-			throw new Error("ArgumentNullException: array cannot be null.");
-
-		assertIntegerZeroOrGreater(arrayIndex, "arrayIndex");
-
-		var _ = this, size = _._size;
-
-		if(!size) return;
-
-		var numToCopy = size,
-		    source    = _._array,
-		    len       = _._capacity,
-		    head      = _._head,
-		    lh        = len - head,
-		    firstPart
-		              = (lh<size)
-			    ? lh
-			    : size;
-
-		AU.copyTo(source, target, head, arrayIndex, firstPart);
-		numToCopy -= firstPart;
-
-		if(numToCopy>0)
-			AU.copyTo(source, target, 0, arrayIndex + len - head, numToCopy);
-
-		return target;
-	}
-
-
-	toArray():T[]
-	{
-		var _ = this, size = _._size;
-		var arr:T[] = AU.initialize<T>(size);
-		return size ? _.copyTo(arr) : arr;
-	}
-
-	remove(item:T):number
-	{
-		throw new NotImplementedException(
-			"ICollection\<T\>.remove is not implemented in Queue\<T\>" +
-			" since it would require destroying the underlying array to remove the item."
-		);
-	}
-
-
-	// #endregion
-
-	// Results in a complete reset.  Allows for easy cleanup elsewhere.
-	dispose():void
-	{
+		super._onDispose();
 		var _ = this;
-		_.clear();
 		if(_._array!=emptyArray)
 		{
 			_._array.length = _._capacity = 0;
@@ -235,15 +152,42 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 	}
 
 
+	/**
+	 * Dequeues entries into an array.
+	 */
+	dump(max:number = Infinity):T[]
+	{
+		var _ = this, result:T[] = [];
+
+		if(isFinite(max))
+		{
+			Integer.assertZeroOrGreater(max);
+			if(max!==0)
+			{
+				while(max-- && _._size)
+				{
+					result.push(_._dequeueInternal());
+				}
+				_._onModified();
+			}
+		}
+		else
+		{
+			while(_._size)
+			{
+				result.push(_._dequeueInternal());
+			}
+			_._onModified();
+		}
+
+		_.trimExcess();
+
+		return result;
+	}
+
 	forEach(action:Predicate<T> | Action<T>):void
 	{
-		// Until implementing a changed enumeration mechanism, a copy needs to be used.
-		var _ = this, copy = _.toArray(), len = _._size;
-		for(let i = 0; i<len; i++)
-		{
-			if(<any>action(copy[i], i)===false)
-				break;
-		}
+		super.forEach(action,true);
 	}
 
 	setCapacity(capacity:number):void
@@ -290,26 +234,11 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 
 	enqueue(item:T):void
 	{
-		var _ = this, array = _._array, size = _._size, len = _._capacity;
-		if(size==len)
-		{
-			var newCapacity = len*GROW_FACTOR_HALF;
-			if(newCapacity<len + MINIMUM_GROW)
-				newCapacity = len + MINIMUM_GROW;
-
-			_.setCapacity(newCapacity);
-			array = _._array;
-			len = _._capacity;
-		}
-
-		var tail = _._tail;
-		array[tail] = item;
-		_._tail = (tail + 1)%len;
-		_._size = size + 1;
-		_._version++;
+		this.add(item);
 	}
 
-	dequeue(throwIfEmpty:boolean = false):T
+
+	protected _dequeueInternal(throwIfEmpty:boolean = false):T
 	{
 		var _ = this;
 		if(_._size==0)
@@ -334,8 +263,18 @@ class Queue<T> implements ICollection<T>, IEnumerateEach<T>, IDisposable
 		}
 
 		_._version++;
+
+
 		return removed;
 	}
+
+	dequeue(throwIfEmpty:boolean = false):T {
+		var modified = !!this._size;
+		var v = this._dequeueInternal(throwIfEmpty);
+		if(modified) this._onModified();
+		return v;
+	}
+
 
 	tryDequeue(out:(value:T)=>void):boolean
 	{

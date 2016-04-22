@@ -51,7 +51,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 		}
 		else if(isEnumerableOrArrayLike(query))
 		{
-			this.importPairs(query);
+			this.importEntries(query);
 		}
 		else
 		{

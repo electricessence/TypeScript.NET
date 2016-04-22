@@ -247,7 +247,7 @@ implements IDictionary<TKey, TValue>
 		return count;
 	}
 
-	importPairs(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>):boolean
+	importEntries(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>):boolean
 	{
 		var _ = this;
 		if(!pairs) return false;

@@ -7,7 +7,10 @@
 
 interface ICollection<T> extends IReadOnlyCollection<T>
 {
-	add(item:T): void;
-	remove(item:T): number;  // Number of times removed.
+	add(entry:T): void;
+	remove(entry:T, max?:number): number;  // Number of times removed.
 	clear(): number;
+	
+	importEntries(entries:IEnumerableOrArray<T>):boolean;
+	toArray():T[];
 }

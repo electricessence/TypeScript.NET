@@ -163,7 +163,7 @@
             });
             return count;
         };
-        DictionaryBase.prototype.importPairs = function (pairs) {
+        DictionaryBase.prototype.importEntries = function (pairs) {
             var _ = this;
             if (!pairs)
                 return false;

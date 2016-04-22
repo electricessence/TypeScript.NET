@@ -2,53 +2,72 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Enumeration/ArrayEnumerator", "../Compare", "./Array/Utility", "./Enumeration/Enumerator"], factory);
+        define(["require", "exports", "../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./Enumeration/ArrayEnumerator", "./CollectionBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ArrayEnumerator_1 = require("./Enumeration/ArrayEnumerator");
     var Compare_1 = require("../Compare");
     var Utility_1 = require("./Array/Utility");
     var Enumerator_1 = require("./Enumeration/Enumerator");
-    var List = (function () {
-        function List(source, _equalityComparer) {
-            if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
-            this._equalityComparer = _equalityComparer;
-            if (Array.isArray(source))
-                this._source = source.slice();
+    var Types_1 = require("../Types");
+    var ArrayEnumerator_1 = require("./Enumeration/ArrayEnumerator");
+    var CollectionBase_1 = require("./CollectionBase");
+    var List = (function (_super) {
+        __extends(List, _super);
+        function List(source, equalityComparer) {
+            if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
+            _super.call(this, null, equalityComparer);
+            var _ = this;
+            if (Array.isArray(source)) {
+                _._source = source.slice();
+            }
             else {
-                this._source = [];
-                this.importValues(source);
+                _._source = [];
+                _._importEntries(source);
             }
         }
-        List.prototype._onModified = function () { };
-        Object.defineProperty(List.prototype, "count", {
-            get: function () {
-                return this._source.length;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(List.prototype, "isReadOnly", {
-            get: function () {
-                return false;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        List.prototype.add = function (item) {
-            this._source.push(item);
-            this._onModified();
+        List.prototype.getCount = function () {
+            return this._source.length;
         };
-        List.prototype.importValues = function (values) {
-            var _this = this;
-            Enumerator_1.forEach(values, function (v) { _this._source.push(v); });
-            this._onModified();
+        List.prototype._addInternal = function (entry) {
+            this._source.push(entry);
+            return true;
+        };
+        List.prototype._removeInternal = function (entry, max) {
+            if (max === void 0) { max = Infinity; }
+            return Utility_1.remove(this._source, entry, max, this._equalityComparer);
+        };
+        List.prototype._clearInternal = function () {
+            var len = this._source.length;
+            this._source.length = 0;
+            return len;
+        };
+        List.prototype._importEntries = function (entries) {
+            if (Types_1.default.isArrayLike(entries)) {
+                var len = entries.length;
+                if (!len)
+                    return false;
+                var s = this._source;
+                var first = s.length;
+                s.length += len;
+                for (var i = 0; i < len; i++) {
+                    s[i + first] = entries[i];
+                }
+                return true;
+            }
+            else {
+                return _super.prototype._importEntries.call(this, entries);
+            }
         };
         List.prototype.get = function (index) {
             return this._source[index];
@@ -81,24 +100,11 @@
             }
             return false;
         };
-        List.prototype.remove = function (item) {
-            var n = Utility_1.remove(this._source, item, Infinity, this._equalityComparer);
-            this._onModified();
-            return n;
-        };
-        List.prototype.clear = function () {
-            var len = this._source.length;
-            this._source.length = 0;
-            return len;
-        };
         List.prototype.contains = function (item) {
             return Utility_1.contains(this._source, item, this._equalityComparer);
         };
-        List.prototype.copyTo = function (array, index) {
-            return Utility_1.copyTo(this._source, array, 0, index);
-        };
-        List.prototype.toArray = function () {
-            return this.copyTo([]);
+        List.prototype.copyTo = function (target, index) {
+            return Utility_1.copyTo(this._source, target, 0, index);
         };
         List.prototype.getEnumerator = function () {
             return new ArrayEnumerator_1.default(this._source);
@@ -108,7 +114,7 @@
             Enumerator_1.forEach(useCopy ? s.slice() : s, action);
         };
         return List;
-    }());
+    }(CollectionBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = List;
 });

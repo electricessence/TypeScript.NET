@@ -23,9 +23,7 @@ interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TVal
 	containsValue(value:TValue): boolean;
 	removeByKey(key:TKey): boolean;
 	removeByValue(value:TValue): number;
-
-	importPairs(pairs:IKeyValuePair<TKey, TValue>[]): boolean;
-
+	
 	// See ICollection<T> for the rest.
 }
 

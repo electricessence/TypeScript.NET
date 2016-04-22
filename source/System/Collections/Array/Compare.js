@@ -7,12 +7,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', '../../Types'], factory);
+        define(["require", "exports", "../../Compare", "../../Types"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Values = require('../../Compare');
-    var Types_1 = require('../../Types');
+    var Values = require("../../Compare");
+    var Types_1 = require("../../Types");
     function validateSize(a, b) {
         if (a && b && a === b || !a && !b)
             return true;

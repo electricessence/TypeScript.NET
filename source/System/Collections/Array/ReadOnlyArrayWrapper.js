@@ -12,26 +12,23 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Utility", "../../Exceptions/ArgumentNullException", "../Enumeration/Enumerator", "../ReadOnlyCollectionBase"], factory);
+        define(["require", "exports", "../../Exceptions/ArgumentNullException", "../Enumeration/Enumerator", "../ReadOnlyCollectionBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ArrayUtility = require("./Utility");
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var Enumerator_1 = require("../Enumeration/Enumerator");
     var ReadOnlyCollectionBase_1 = require("../ReadOnlyCollectionBase");
     var ReadOnlyArrayWrapper = (function (_super) {
         __extends(ReadOnlyArrayWrapper, _super);
-        function ReadOnlyArrayWrapper(a) {
+        function ReadOnlyArrayWrapper(array) {
             _super.call(this);
-            if (!a)
-                throw new ArgumentNullException_1.default('collection');
+            if (!array)
+                throw new ArgumentNullException_1.default('array');
             var _ = this;
-            _._getCount = function () { return a.length; };
-            _.contains = function (item) { return ArrayUtility.contains(a, item); };
-            _.copyTo = function (array, index) { return ArrayUtility.copyTo(a, array, 0, index); };
-            _.getEnumerator = function () { return Enumerator_1.from(a); };
-            _.getValueAt = function (i) { return a[i]; };
+            _._getCount = function () { return array.length; };
+            _.getEnumerator = function () { return Enumerator_1.from(array); };
+            _.getValueAt = function (i) { return array[i]; };
         }
         return ReadOnlyArrayWrapper;
     }(ReadOnlyCollectionBase_1.default));

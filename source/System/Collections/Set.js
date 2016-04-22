@@ -2,12 +2,17 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./LinkedNodeList", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../Disposable/Utility"], factory);
+        define(["require", "exports", "../Types", "./LinkedNodeList", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../Disposable/Utility", "../Compare", "./CollectionBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -17,12 +22,15 @@
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var Enumerator_1 = require("./Enumeration/Enumerator");
     var Utility_1 = require("../Disposable/Utility");
+    var Compare_1 = require("../Compare");
+    var CollectionBase_1 = require("./CollectionBase");
     var OTHER = 'other';
-    var Set = (function () {
+    var Set = (function (_super) {
+        __extends(Set, _super);
         function Set(source) {
+            _super.call(this, null, Compare_1.areEqual);
             this._count = 0;
-            if (source)
-                this.unionWith(source);
+            this._importEntries(source);
         }
         Set.prototype._getSet = function () {
             var s = this._set;
@@ -30,25 +38,19 @@
                 this._set = s = new LinkedNodeList_1.default();
             return s;
         };
-        Object.defineProperty(Set.prototype, "count", {
-            get: function () {
-                return this._count;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Set.prototype, "isReadOnly", {
-            get: function () { return true; },
-            enumerable: true,
-            configurable: true
-        });
+        Set.prototype.getCount = function () {
+            return this._count;
+        };
         Set.prototype.exceptWith = function (other) {
             var _this = this;
             if (!other)
                 throw new ArgumentNullException_1.default(OTHER);
+            var count = 0;
             Enumerator_1.forEach(other, function (v) {
-                _this.remove(v);
+                count += _this._removeInternal(v);
             });
+            if (count)
+                this._onModified();
         };
         Set.prototype.intersectWith = function (other) {
             var _this = this;
@@ -145,12 +147,9 @@
             }
         };
         Set.prototype.unionWith = function (other) {
-            var _this = this;
-            Enumerator_1.forEach(other, function (v) {
-                _this.add(v);
-            });
+            this.importEntries(other);
         };
-        Set.prototype.add = function (item) {
+        Set.prototype._addInternal = function (item) {
             if (!this.contains(item)) {
                 var type = typeof item;
                 if (!Types_1.default.isPrimitive(type))
@@ -165,17 +164,19 @@
                 this._getSet().addNode(node);
                 t[item] = node;
                 ++this._count;
+                return true;
             }
+            return false;
         };
-        Set.prototype.clear = function () {
+        Set.prototype._clearInternal = function () {
             var _ = this;
             _._count = 0;
             wipe(_._registry, 2);
             var s = _._set;
             return s ? s.clear() : 0;
         };
-        Set.prototype.dispose = function () {
-            this.clear();
+        Set.prototype._onDispose = function () {
+            _super.prototype._onDispose.call(this);
             this._set = null;
             this._registry = null;
         };
@@ -186,23 +187,10 @@
         Set.prototype.contains = function (item) {
             return !(!this._count || !this._getNode(item));
         };
-        Set.prototype.copyTo = function (array, index) {
-            if (index === void 0) { index = 0; }
-            if (!array)
-                throw new ArgumentNullException_1.default('array');
-            var s = this._set, c = this._count;
-            if (!s || !c)
-                return array;
-            var minLength = index + c;
-            if (array.length < minLength)
-                array.length = minLength;
-            return LinkedNodeList_1.default.copyValues(s, array, index);
-        };
-        Set.prototype.toArray = function () {
-            var s = this._set;
-            return s ? s.map(function (n) { return n.value; }) : [];
-        };
-        Set.prototype.remove = function (item) {
+        Set.prototype._removeInternal = function (item, max) {
+            if (max === void 0) { max = Infinity; }
+            if (max === 0)
+                return 0;
             var r = this._registry, t = r && r[typeof item], node = t && t[item];
             if (node) {
                 delete t[item];
@@ -221,7 +209,7 @@
                 : Enumerator_1.empty;
         };
         return Set;
-    }());
+    }(CollectionBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Set;
     function wipe(map, depth) {

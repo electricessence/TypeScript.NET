@@ -6,28 +6,43 @@
 ///<reference path="IReadOnlyCollection.d.ts"/>
 ///<reference path="Enumeration/IEnumerator.d.ts"/>
 
-abstract class ReadOnlyCollectionBase<T> implements IReadOnlyCollection<T>
-{
-	protected _getCount:()=>number;
+import CollectionBase from "./CollectionBase";
 
-	get count():number
+abstract class ReadOnlyCollectionBase<T>
+extends CollectionBase<T>
+{
+
+	protected _getCount:()=>number;
+	protected getCount():number
 	{
 		return this._getCount();
 	}
 
-	get isReadOnly():boolean
+	protected getIsReadOnly():boolean
 	{
 		return true;
 	}
 
-	contains:(item:T)=>boolean;
-	copyTo:(array:T[], index?:number)=>T[];
-	getEnumerator:()=>IEnumerator<T>;
-
-	toArray():T[]
+	protected _addInternal(entry:T):boolean
 	{
-		return this.copyTo([]);
+		return false;
 	}
+
+	protected _removeInternal(entry:T, max?:number):number
+	{
+		return 0;
+	}
+
+	protected _clearInternal():number
+	{
+		return 0;
+	}
+
+	protected _getEnumerator:()=>IEnumerator<T>;
+	getEnumerator():IEnumerator<T> {
+		return this._getEnumerator();
+	}
+
 }
 
 export default ReadOnlyCollectionBase;

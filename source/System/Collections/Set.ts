@@ -12,15 +12,21 @@ import ArgumentException from "../Exceptions/ArgumentException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import {forEach, empty as emptyEnumerator} from "./Enumeration/Enumerator";
 import {using} from "../Disposable/Utility";
+import {areEqual} from "../Compare";
+import CollectionBase from "./CollectionBase";
 
 const OTHER = 'other';
 
-export default class Set<T extends Primitive> implements ISet<T>, IDisposable
+export default class Set<T extends Primitive>
+extends CollectionBase<T>
+implements ISet<T>, IDisposable
 {
+
 	constructor(source?:IEnumerableOrArray<T>)
 	{
+		super(null,areEqual);
 		this._count = 0;
-		if(source) this.unionWith(source);
+		this._importEntries(source);
 	}
 
 	private _registry:IMap<IMap<ILinkedNodeWithValue<T>>>;
@@ -34,22 +40,21 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 	}
 
 	private _count:number;
-	get count():number
+	protected getCount():number
 	{
 		return this._count;
 	}
-
-	//noinspection JSMethodCanBeStatic
-	get isReadOnly():boolean { return true; }
 
 	exceptWith(other:IEnumerableOrArray<T>):void
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
+		var count = 0;
 		forEach(other, v=>
 		{
-			this.remove(v);
+			count += this._removeInternal(v);
 		});
+		if(count) this._onModified();
 	}
 
 	intersectWith(other:IEnumerableOrArray<T>):void
@@ -169,13 +174,10 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 
 	unionWith(other:IEnumerableOrArray<T>):void
 	{
-		forEach(other, v=>
-		{
-			this.add(v);
-		});
+		this.importEntries(other);
 	}
 
-	add(item:T):void
+	protected _addInternal(item:T):boolean
 	{
 		if(!this.contains(item))
 		{
@@ -191,10 +193,12 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 			this._getSet().addNode(node);
 			t[<any>item] = node;
 			++this._count;
+			return true;
 		}
+		return false;
 	}
 
-	clear():number
+	protected _clearInternal():number
 	{
 		var _ = this;
 		_._count = 0;
@@ -203,9 +207,9 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 		return s ? s.clear() : 0;
 	}
 
-	dispose():void
+	protected _onDispose():void
 	{
-		this.clear();
+		super._onDispose();
 		this._set = null;
 		this._registry = null;
 	}
@@ -221,29 +225,14 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 	{
 		return !(!this._count || !this._getNode(item));
 	}
-
-	copyTo(array:T[], index:number = 0):T[]
+	
+	protected _removeInternal(item:T, max:number = Infinity):number
 	{
-		if(!array) throw new ArgumentNullException('array');
+		if(max===0) return 0;
 
-		var s = this._set, c = this._count;
-		if(!s || !c) return array;
-
-		var minLength = index + c;
-		if(array.length<minLength) array.length = minLength;
-		return LinkedNodeList.copyValues(s, array, index);
-	}
-
-	toArray():T[]
-	{
-		var s = this._set;
-		return s ? s.map(n=>n.value) : [];
-	}
-
-	remove(item:T):number
-	{
-		var r = this._registry, t = r && r[typeof item],
-		    node                  = t && t[<any>item];
+		var r    = this._registry,
+		    t    = r && r[typeof item],
+		    node = t && t[<any>item];
 
 		if(node)
 		{
@@ -255,6 +244,7 @@ export default class Set<T extends Primitive> implements ISet<T>, IDisposable
 				return 1;
 			}
 		}
+
 		return 0;
 	}
 

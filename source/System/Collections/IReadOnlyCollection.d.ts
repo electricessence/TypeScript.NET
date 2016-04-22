@@ -5,12 +5,13 @@
 
 ///<reference path="Enumeration/IEnumerable.d.ts"/>
 
-interface IReadOnlyCollection<T> extends IEnumerable<T>
+interface IReadOnlyCollection<T>
+extends IEnumerable<T>
 {
 	count:number;
 	isReadOnly:boolean;
 	
-	contains(item:T):boolean;
-	copyTo(array:T[], index?:number):T[];
+	contains(entry:T):boolean;
+	copyTo<TTarget extends IArray<any>>(target:TTarget, index?:number):TTarget;
 	toArray():T[];
 }

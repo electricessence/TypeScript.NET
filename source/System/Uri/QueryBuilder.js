@@ -37,7 +37,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 this.importFromString(query, decodeValues);
             }
             else if (Enumerator_1.isEnumerableOrArrayLike(query)) {
-                this.importPairs(query);
+                this.importEntries(query);
             }
             else {
                 this.importMap(query);

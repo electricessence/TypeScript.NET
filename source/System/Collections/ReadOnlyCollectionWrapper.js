@@ -26,8 +26,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new ArgumentNullException_1.default('collection');
             var _ = this;
             _._getCount = function () { return c.count; };
-            _.contains = function (item) { return c.contains(item); };
-            _.copyTo = function (array, index) { return c.copyTo(array, index); };
             _.getEnumerator = function () { return c.getEnumerator(); };
         }
         return ReadOnlyCollectionWrapper;

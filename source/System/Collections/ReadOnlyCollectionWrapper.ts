@@ -17,8 +17,6 @@ export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollection<T>
 
 		var _ = this;
 		_._getCount = ()=>c.count;
-		_.contains = item=>c.contains(item);
-		_.copyTo = (array:T[], index?:number)=>c.copyTo(array, index);
 		_.getEnumerator = ()=> c.getEnumerator();
 	}
 }

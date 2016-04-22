@@ -33,7 +33,7 @@ import EnumeratorBase from "./Enumeration/EnumeratorBase";
  */
 export default
 class LinkedNodeList<TNode extends ILinkedNode<TNode>>
-implements ILinkedNodeList<TNode>, IDisposable
+implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 {
 
 	private _first:TNode;
@@ -80,6 +80,8 @@ implements ILinkedNodeList<TNode>, IDisposable
 		return i;
 	}
 
+	// Note, no need for 'useCopy' since this avoids any modification conflict.
+	// If iterating over a copy is necessary, a copy should be made manually.
 	forEach(
 		action:Predicate<TNode> | Action<TNode>):void
 	{
@@ -401,7 +403,10 @@ implements ILinkedNodeList<TNode>, IDisposable
 		);
 	}
 
-	static copyValues<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>, array:T[], index:number = 0):T[]
+	static copyValues<T,TDestination extends IArray<any>>(
+		list:LinkedNodeList<ILinkedNodeWithValue<T>>,
+		array:TDestination,
+		index:number = 0):TDestination
 	{
 		if(list && list.first)
 		{

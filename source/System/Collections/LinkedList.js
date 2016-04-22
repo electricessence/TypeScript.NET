@@ -3,21 +3,25 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "../Collections/Array/Utility", "./Enumeration/Enumerator", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Values = require("../Compare");
-    var ArrayUtility = require("../Collections/Array/Utility");
-    var Enumerator = require("./Enumeration/Enumerator");
+    var Compare_1 = require("../Compare");
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
+    var CollectionBase_1 = require("./CollectionBase");
     var InternalNode = (function () {
         function InternalNode(value, previous, next) {
             this.value = value;
@@ -52,33 +56,52 @@
             throw new InvalidOperationException_1.default("Provided node is not valid.");
         return n;
     }
-    var LinkedList = (function () {
-        function LinkedList(source) {
-            var _ = this, c = 0;
-            var e = Enumerator.from(source);
-            var list = _._listInternal = new LinkedNodeList_1.default();
-            while (e.moveNext()) {
-                list.addNode(new InternalNode(e.current));
-                ++c;
-            }
-            _._count = c;
+    var LinkedList = (function (_super) {
+        __extends(LinkedList, _super);
+        function LinkedList(source, equalityComparer) {
+            if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
+            _super.call(this, null, equalityComparer);
+            var _ = this;
+            _._count = 0;
+            _._listInternal = new LinkedNodeList_1.default();
+            _._importEntries(source);
         }
+        LinkedList.prototype.getCount = function () {
+            return this._count;
+        };
+        LinkedList.prototype._addInternal = function (entry) {
+            this._listInternal.addNode(new InternalNode(entry));
+            this._count++;
+            return true;
+        };
+        LinkedList.prototype._removeInternal = function (entry, max) {
+            if (max === void 0) { max = Infinity; }
+            var _ = this, equals = this._equalityComparer, list = _._listInternal, removedCount = 0;
+            list.forEach(function (node) {
+                if (equals(entry, node.value) && list.removeNode(node)) {
+                    _._count--;
+                    removedCount++;
+                }
+                return removedCount < max;
+            });
+            return removedCount;
+        };
+        LinkedList.prototype._clearInternal = function () {
+            this._count = 0;
+            return this._listInternal.clear();
+        };
         LinkedList.prototype.forEach = function (action, useCopy) {
             if (useCopy === void 0) { useCopy = false; }
-            if (useCopy) {
-                var array = this.toArray();
-                ArrayUtility.forEach(array, action);
-                array.length = 0;
-            }
-            else {
+            if (useCopy)
+                _super.prototype.forEach.call(this, action, useCopy);
+            else
                 this._listInternal.forEach(function (node, i) { return action(node.value, i); });
-            }
         };
         LinkedList.prototype.getEnumerator = function () {
             return LinkedNodeList_1.default.valueEnumeratorFrom(this._listInternal);
         };
         LinkedList.prototype._findFirst = function (entry) {
-            var equals = Values.areEqual, next = this._listInternal.first;
+            var _ = this, equals = _._equalityComparer, next = _._listInternal.first;
             while (next) {
                 if (equals(entry, next.value))
                     return next;
@@ -87,7 +110,7 @@
             return null;
         };
         LinkedList.prototype._findLast = function (entry) {
-            var equals = Values.areEqual, prev = this._listInternal.last;
+            var _ = this, equals = _._equalityComparer, prev = _._listInternal.last;
             while (prev) {
                 if (equals(entry, prev.value))
                     return prev;
@@ -95,63 +118,8 @@
             }
             return null;
         };
-        Object.defineProperty(LinkedList.prototype, "count", {
-            get: function () {
-                return this._count;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(LinkedList.prototype, "isReadOnly", {
-            get: function () {
-                return false;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        LinkedList.prototype.add = function (entry) {
-            this._listInternal.addNode(new InternalNode(entry));
-            this._count++;
-        };
-        LinkedList.prototype.clear = function () {
-            this._count = 0;
-            return this._listInternal.clear();
-        };
-        LinkedList.prototype.contains = function (entry) {
-            if (!this._count)
-                return false;
-            var found = false, equals = Values.areEqual;
-            this.forEach(function (e) { return !(found = equals(entry, e)); });
-            return found;
-        };
-        LinkedList.prototype.copyTo = function (array, index) {
-            if (index === void 0) { index = 0; }
-            if (!array)
-                throw new ArgumentNullException_1.default('array');
-            var minLength = index + this._count;
-            if (array.length < minLength)
-                array.length = minLength;
-            return LinkedNodeList_1.default.copyValues(this._listInternal, array, index);
-        };
-        LinkedList.prototype.toArray = function () {
-            var array = ArrayUtility.initialize(this._count);
-            return this.copyTo(array);
-        };
         LinkedList.prototype.removeOnce = function (entry) {
             return this.remove(entry, 1) !== 0;
-        };
-        LinkedList.prototype.remove = function (entry, max) {
-            if (max === void 0) { max = Infinity; }
-            var equals = Values.areEqual;
-            var _ = this, list = _._listInternal, removedCount = 0;
-            list.forEach(function (node) {
-                if (equals(entry, node.value) && list.removeNode(node)) {
-                    --_._count;
-                    ++removedCount;
-                }
-                return removedCount < max;
-            });
-            return removedCount;
         };
         Object.defineProperty(LinkedList.prototype, "first", {
             get: function () {
@@ -184,6 +152,7 @@
         LinkedList.prototype.addFirst = function (entry) {
             this._listInternal.addNodeBefore(new InternalNode(entry));
             ++this._count;
+            this._onModified();
         };
         LinkedList.prototype.addLast = function (entry) {
             this.add(entry);
@@ -192,38 +161,51 @@
             var _ = this, first = _._listInternal.first;
             if (first && _._listInternal.removeNode(first)) {
                 _._count--;
+                _._onModified();
             }
         };
         LinkedList.prototype.removeLast = function () {
             var _ = this, last = _._listInternal.last;
             if (last && _._listInternal.removeNode(last)) {
-                --_._count;
+                _._count--;
+                _._onModified();
             }
         };
         LinkedList.prototype.removeNode = function (node) {
-            var _ = this, removed = _._listInternal.removeNode(getInternal(node, _));
-            if (removed)
-                --_._count;
-            return removed;
+            var _ = this;
+            if (_._listInternal.removeNode(getInternal(node, _))) {
+                _._count--;
+                _._onModified();
+                return true;
+            }
+            return false;
         };
         LinkedList.prototype.addBefore = function (before, entry) {
-            this._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, this));
-            ++this._count;
+            var _ = this;
+            _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
+            _._count++;
+            _._onModified();
         };
         LinkedList.prototype.addAfter = function (after, entry) {
-            this._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, this));
-            ++this._count;
+            var _ = this;
+            _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
+            _._count++;
+            _._onModified();
         };
         LinkedList.prototype.addNodeBefore = function (node, before) {
-            this._listInternal.addNodeBefore(getInternal(before, this), getInternal(node, this));
-            ++this._count;
+            var _ = this;
+            _._listInternal.addNodeBefore(getInternal(before, _), getInternal(node, _));
+            _._count++;
+            _._onModified();
         };
         LinkedList.prototype.addNodeAfter = function (node, after) {
-            this._listInternal.addNodeAfter(getInternal(after, this), getInternal(node, this));
-            ++this._count;
+            var _ = this;
+            this._listInternal.addNodeAfter(getInternal(after, _), getInternal(node, _));
+            _._count++;
+            _._onModified();
         };
         return LinkedList;
-    }());
+    }(CollectionBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = LinkedList;
     var LinkedListNode = (function () {

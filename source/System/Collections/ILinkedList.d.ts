@@ -28,9 +28,6 @@ extends ILinkedNodeList<ILinkedListNode<T>>,
 	ICollection<T>,
 	IEnumerateEach<T>
 {
-
-	toArray():T[];
-
 	first:ILinkedListNode<T>;
 	last:ILinkedListNode<T>;
 

@@ -9,12 +9,11 @@
 ///<reference path="IEnumerableOrArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as Values from "../Compare";
-import * as ArrayUtility from "../Collections/Array/Utility";
-import * as Enumerator from "./Enumeration/Enumerator";
+import {areEqual} from "../Compare";
 import LinkedNodeList from "./LinkedNodeList";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import CollectionBase from "./CollectionBase";
 
 
 /*****************************
@@ -85,43 +84,66 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNod
 
 export default
 class LinkedList<T>
-implements ILinkedList<T>
+extends CollectionBase<T> implements ILinkedList<T>
 {
 	private _listInternal:LinkedNodeList<InternalNode<T>>;
 	private _count:number;
 
-	constructor(source?:IEnumerableOrArray<T>)
+	constructor(
+		source?:IEnumerableOrArray<T>,
+		equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		var _ = this, c = 0;
-		var e = Enumerator.from<T>(source);
+		super(null, equalityComparer);
+		var _ = this;
+		_._count = 0;
+		_._listInternal = new LinkedNodeList<InternalNode<T>>();
+		_._importEntries(source);
+	}
 
-		var list = _._listInternal = new LinkedNodeList<InternalNode<T>>();
+	protected getCount():number
+	{
+		return this._count;
+	}
 
-		while(e.moveNext())
+	protected _addInternal(entry:T):boolean
+	{
+		this._listInternal.addNode(new InternalNode(entry));
+		this._count++;
+		return true;
+	}
+	
+	protected _removeInternal(entry:T, max:number = Infinity):number
+	{
+		var _                                           = this,
+		    equals                                      = this._equalityComparer,
+		    list = _._listInternal, removedCount:number = 0;
+
+		list.forEach(node=>
 		{
-			list.addNode(new InternalNode<T>(e.current));
-			++c;
-		}
+			if(equals(entry, node.value) && list.removeNode(node))
+			{
+				_._count--;
+				removedCount++;
+			}
+			return removedCount<max;
+		});
 
-		_._count = c;
+		return removedCount;
+	}
+
+	protected _clearInternal():number
+	{
+		this._count = 0;
+		return this._listInternal.clear();
 	}
 
 
-	// #region IEnumerateEach<T>
 	forEach(
 		action:Predicate<T> | Action<T>,
 		useCopy:boolean = false):void
 	{
-		if(useCopy)
-		{
-			var array = this.toArray();
-			ArrayUtility.forEach(array, action);
-			array.length = 0;
-		}
-		else
-		{
-			this._listInternal.forEach((node, i)=>action(node.value, i));
-		}
+		if(useCopy) super.forEach(action, useCopy);
+		else this._listInternal.forEach((node, i)=>action(node.value, i));
 	}
 
 	// #endregion
@@ -136,8 +158,10 @@ implements ILinkedList<T>
 
 	private _findFirst(entry:T):InternalNode<T>
 	{
-		var equals = Values.areEqual,
-		    next   = this._listInternal.first;
+		//noinspection UnnecessaryLocalVariableJS
+		var _      = this,
+		    equals = _._equalityComparer,
+		    next   = _._listInternal.first;
 		while(next)
 		{
 			if(equals(entry, next.value))
@@ -149,8 +173,10 @@ implements ILinkedList<T>
 
 	private _findLast(entry:T):InternalNode<T>
 	{
-		var equals = Values.areEqual,
-		    prev   = this._listInternal.last;
+		//noinspection UnnecessaryLocalVariableJS
+		var _      = this,
+		    equals = _._equalityComparer,
+		    prev   = _._listInternal.last;
 		while(prev)
 		{
 			if(equals(entry, prev.value))
@@ -160,82 +186,10 @@ implements ILinkedList<T>
 		return null;
 	}
 
-	// #region ICollection<T>
-	get count():number
-	{
-		return this._count;
-	}
-
-	//noinspection JSMethodCanBeStatic,JSUnusedGlobalSymbols
-	get isReadOnly():boolean
-	{
-		return false;
-	}
-
-	add(entry:T):void
-	{
-		this._listInternal.addNode(new InternalNode(entry));
-		this._count++;
-	}
-
-
-	clear():number
-	{
-		this._count = 0;
-		return this._listInternal.clear();
-	}
-
-
-	contains(entry:T):boolean
-	{
-		if(!this._count) return false;
-		var found:boolean = false, equals = Values.areEqual;
-		this.forEach(e => !(found = equals(entry, e)));
-		return found;
-	}
-
-	copyTo(array:T[], index:number = 0):T[]
-	{
-		if(!array) throw new ArgumentNullException('array');
-
-		var minLength = index + this._count;
-		if(array.length<minLength) array.length = minLength;
-		return LinkedNodeList.copyValues(<any>this._listInternal, array, index);
-
-	}
-
-	toArray():T[]
-	{
-		var array = ArrayUtility.initialize<T>(this._count);
-		return this.copyTo(array);
-	}
-
 	removeOnce(entry:T):boolean
 	{
 		return this.remove(entry, 1)!==0;
 	}
-
-	remove(entry:T, max:number = Infinity):number
-	{
-		var equals = Values.areEqual;
-		var _ = this, list = _._listInternal, removedCount:number = 0;
-
-		list.forEach(node=>
-		{
-			if(equals(entry, node.value) && list.removeNode(node))
-			{
-				--_._count;
-				++removedCount;
-			}
-			return removedCount<max;
-		});
-
-		return removedCount;
-
-	}
-
-	// #endregion
-
 
 	get first():ILinkedListNode<T>
 	{
@@ -254,7 +208,7 @@ implements ILinkedList<T>
 	{
 		var node = this._listInternal.getNodeAt(index);
 		if(!node)
-		return node && node.value || void(0);
+			return node && node.value || void(0);
 	}
 
 	getNodeAt(index:number):ILinkedListNode<T>
@@ -276,6 +230,7 @@ implements ILinkedList<T>
 	{
 		this._listInternal.addNodeBefore(new InternalNode(entry));
 		++this._count;
+		this._onModified();
 	}
 
 	addLast(entry:T):void
@@ -289,6 +244,7 @@ implements ILinkedList<T>
 		if(first && _._listInternal.removeNode(first))
 		{
 			_._count--;
+			_._onModified();
 		}
 	}
 
@@ -297,56 +253,68 @@ implements ILinkedList<T>
 		var _ = this, last = _._listInternal.last;
 		if(last && _._listInternal.removeNode(last))
 		{
-			--_._count;
+			_._count--;
+			_._onModified();
 		}
 	}
 
 	// Returns true if successful and false if not found (already removed).
 	removeNode(node:ILinkedListNode<T>):boolean
 	{
-		var _       = this,
-		    removed = _._listInternal.removeNode(getInternal(node, _));
+		var _ = this;
 
-		if(removed) --_._count;
+		if(_._listInternal.removeNode(getInternal(node, _)))
+		{
+			_._count--;
+			_._onModified();
+			return true;
+		}
 
-		return removed;
+		return false;
 	}
 
 	addBefore(before:ILinkedListNode<T>, entry:T):void
 	{
-		this._listInternal.addNodeBefore(
+		var _ = this;
+		_._listInternal.addNodeBefore(
 			new InternalNode(entry),
-			getInternal(before, this)
+			getInternal(before, _)
 		);
-		++this._count;
+		_._count++;
+		_._onModified();
 	}
-
 
 	addAfter(after:ILinkedListNode<T>, entry:T):void
 	{
-		this._listInternal.addNodeAfter(
+		var _ = this;
+		_._listInternal.addNodeAfter(
 			new InternalNode(entry),
-			getInternal(after, this)
+			getInternal(after, _)
 		);
-		++this._count;
+		_._count++;
+		_._onModified();
 	}
 
 	addNodeBefore(node:ILinkedListNode<T>, before:ILinkedListNode<T>):void
 	{
-		this._listInternal.addNodeBefore(
-			getInternal(before, this),
-			getInternal(node, this)
+		var _ = this;
+		_._listInternal.addNodeBefore(
+			getInternal(before, _),
+			getInternal(node, _)
 		);
-		++this._count;
+		_._count++;
+		_._onModified();
 	}
 
 	addNodeAfter(node:ILinkedListNode<T>, after:ILinkedListNode<T>):void
 	{
+		var _ = this;
 		this._listInternal.addNodeAfter(
-			getInternal(after, this),
-			getInternal(node, this)
+			getInternal(after, _),
+			getInternal(node, _)
 		);
-		++this._count;
+		_._count++;
+		_._onModified();
 	}
 
 

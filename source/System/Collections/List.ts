@@ -6,51 +6,79 @@
 ///<reference path="ICollection.d.ts"/>
 
 // A means for interfacing an array with ICollection<T> and for use as a base class.
-import ArrayEnumerator from "./Enumeration/ArrayEnumerator";
 import {areEqual} from "../Compare";
 import {remove, indexOf, contains, copyTo, removeIndex} from "./Array/Utility";
 import {forEach} from "./Enumeration/Enumerator";
-export default class List<T> implements IList<T>, IEnumerateEach<T>
+import Type from "../Types";
+import ArrayEnumerator from "./Enumeration/ArrayEnumerator";
+import CollectionBase from "./CollectionBase";
+export default class List<T>
+extends CollectionBase<T>
+implements IList<T>, IEnumerateEach<T>
 {
+
 	protected _source:T[];
 
 	constructor(
 		source?:IEnumerableOrArray<T>,
-		private _equalityComparer:EqualityComparison<T> = areEqual)
+		equalityComparer:EqualityComparison<T> = areEqual)
 	{
+		super(null,equalityComparer);
+		var _ = this;
 		if(Array.isArray(source))
-			this._source = source.slice();
+		{
+			_._source = source.slice();
+		}
 		else
 		{
-			this._source = [];
-			this.importValues(source);
+			_._source = [];
+			_._importEntries(source);
 		}
 	}
 
-
-	protected _onModified():void {}
-
-
-	get count():number
+	protected getCount():number
 	{
 		return this._source.length;
 	}
 
-	get isReadOnly():boolean
+	protected _addInternal(entry:T):boolean
 	{
-		return false;
+		this._source.push(entry);
+		return true;
 	}
 
-	add(item:T):void
+	protected _removeInternal(entry:T, max:number = Infinity):number
 	{
-		this._source.push(item);
-		this._onModified();
+		return remove(
+			this._source, entry, max,
+			this._equalityComparer);
 	}
 
-	importValues(values:IEnumerableOrArray<T>):void
+	protected _clearInternal():number
 	{
-		forEach(values, v=> { this._source.push(v); });
-		this._onModified();
+		var len = this._source.length;
+		this._source.length = 0;
+		return len;	}
+
+	protected _importEntries(entries:IEnumerableOrArray<T>):boolean
+	{
+		if(Type.isArrayLike(entries))
+		{
+			var len = entries.length;
+			if(!len) return false;
+			var s = this._source;
+
+			var first = s.length;
+			s.length += len;
+			for(let i = 0;i<len;i++) {
+				s[i+first] = entries[i];
+			}
+
+			return true;
+		} else
+		{
+			return super._importEntries(entries);
+		}
 	}
 
 	get(index:number):T
@@ -82,7 +110,9 @@ export default class List<T> implements IList<T>, IEnumerateEach<T>
 		if(index<s.length)
 		{
 			this._source.splice(index, 0, value);
-		} else {
+		}
+		else
+		{
 			this._source[index] = value;
 		}
 		this._onModified();
@@ -90,29 +120,14 @@ export default class List<T> implements IList<T>, IEnumerateEach<T>
 
 	removeAt(index:number):boolean
 	{
-		if(removeIndex(this._source,index)) {
+		if(removeIndex(this._source, index))
+		{
 			this._onModified();
 			return true;
 		}
 		return false;
 	}
-
-	remove(item:T):number
-	{
-		var n = remove(
-			this._source, item, Infinity,
-			this._equalityComparer);
-		this._onModified();
-		return n;
-	}
-
-	clear():number
-	{
-		var len = this._source.length;
-		this._source.length = 0;
-		return len;
-	}
-
+	
 	contains(item:T):boolean
 	{
 		return contains(
@@ -120,16 +135,11 @@ export default class List<T> implements IList<T>, IEnumerateEach<T>
 			this._equalityComparer);
 	}
 
-	copyTo(array:T[], index?:number):T[]
+	copyTo<TTarget extends IArray<any>>(target:TTarget, index?:number):TTarget
 	{
-		return copyTo(this._source, array, 0, index);
+		return copyTo(this._source, target, 0, index);
 	}
-
-	toArray():T[]
-	{
-		return this.copyTo([]);
-	}
-
+	
 	getEnumerator():IEnumerator<T>
 	{
 		return new ArrayEnumerator(this._source);
@@ -138,7 +148,7 @@ export default class List<T> implements IList<T>, IEnumerateEach<T>
 	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):void
 	{
 		var s = this._source;
-		forEach(useCopy?s.slice():s,action);
+		forEach(useCopy ? s.slice() : s, action);
 	}
 
 }
