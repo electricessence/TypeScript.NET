@@ -5,9 +5,9 @@
 
 import ArgumentNullException from "../../Exceptions/ArgumentNullException";
 import {from as enumeratorFrom} from "../Enumeration/Enumerator";
-import ReadOnlyCollection from "../ReadOnlyCollectionBase";
+import ReadOnlyCollectionBase from "../ReadOnlyCollectionBase";
 
-export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollection<T>
+export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionBase<T>
 {
 
 	constructor(array:IArray<T>)
