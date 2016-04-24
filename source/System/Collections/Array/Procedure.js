@@ -83,6 +83,37 @@
         return result;
     }
     exports.product = product;
+    function quotient(source, ignoreNaN) {
+        if (ignoreNaN === void 0) { ignoreNaN = false; }
+        if (!source || source.length < 2)
+            return NaN;
+        var result = source[0];
+        var found = false;
+        source.every(function (n, i) {
+            if (i) {
+                if (n === 0) {
+                    result = NaN;
+                    return false;
+                }
+                if (isNaN(n)) {
+                    if (!ignoreNaN) {
+                        result = NaN;
+                        return false;
+                    }
+                }
+                else {
+                    result /= n;
+                    if (!found)
+                        found = true;
+                }
+            }
+            return true;
+        });
+        if (!found)
+            result = NaN;
+        return result;
+    }
+    exports.quotient = quotient;
     function ifSet(source, start, ignoreNaN, predicate) {
         if (!source || !source.length)
             return NaN;

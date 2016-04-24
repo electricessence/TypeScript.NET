@@ -1540,6 +1540,28 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
             return (exists && isNaN(result)) ? NaN : result;
         };
+        Enumerable.prototype.quotient = function (selector) {
+            if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
+            var count = 0;
+            var result = NaN;
+            this.forEach(function (x) {
+                var value = selector(x);
+                count++;
+                if (count === 1) {
+                    result = value;
+                }
+                else {
+                    if (isNaN(value) || value === 0 || !isFinite(value)) {
+                        result = NaN;
+                        return false;
+                    }
+                    result /= value;
+                }
+            });
+            if (count === 1)
+                result = NaN;
+            return result;
+        };
         Enumerable.prototype.elementAt = function (index) {
             if (isNaN(index) || index < 0 || !isFinite(index))
                 throw new Error("'index' is invalid or out of bounds.");

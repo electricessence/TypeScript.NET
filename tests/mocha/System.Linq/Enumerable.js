@@ -3,12 +3,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../../source/System/Collections/Array/Utility', '../../../source/System.Linq/Linq'], factory);
+        define(["require", "exports", "../../../source/System/Collections/Array/Utility", "../../../source/System.Linq/Linq"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Utility_1 = require('../../../source/System/Collections/Array/Utility');
-    var Linq_1 = require('../../../source/System.Linq/Linq');
+    var Utility_1 = require("../../../source/System/Collections/Array/Utility");
+    var Linq_1 = require("../../../source/System.Linq/Linq");
     var assert = require('../../../node_modules/assert/assert');
     var source = Object.freeze([
         {
@@ -156,4 +156,5 @@
         assert.equal(group_B.sum(function (x) { return x.Salary; }), 1000000000.00, "Expected sum to be correct.");
     });
 });
+
 //# sourceMappingURL=Enumerable.js.map

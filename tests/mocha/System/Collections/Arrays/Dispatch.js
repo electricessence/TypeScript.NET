@@ -25,4 +25,5 @@
         assert.equal(result, 2400);
     });
 });
+
 //# sourceMappingURL=Dispatch.js.map

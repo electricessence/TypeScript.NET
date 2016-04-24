@@ -98,6 +98,52 @@ export function product(source:number[], ignoreNaN:boolean = false):number
 	return result;
 }
 
+/**
+ * Takes the first number and divides it by all following.
+ * @param source
+ * @param ignoreNaN Will cause this skip any NaN values.
+ * @returns {number}
+ */
+export function quotient(source:number[], ignoreNaN:boolean = false):number
+{
+	if(!source || source.length<2)
+		return NaN;
+
+	var result = source[0];
+
+	var found = false;
+	source.every((n,i) =>
+	{
+		if(i) {
+			if(n===0)
+			{
+				result = NaN;
+				return false;
+			}
+			if(isNaN(n))
+			{
+				if(!ignoreNaN)
+				{
+					result = NaN;
+					return false;
+				}
+			}
+			else
+			{
+				result /= n;
+				if(!found) found = true;
+			}
+		}
+		return true;
+	});
+
+	if(!found)
+		result = NaN;
+
+	return result;
+}
+
+
 function ifSet(
 	source:number[],
 	start:number,

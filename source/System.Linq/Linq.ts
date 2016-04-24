@@ -2801,6 +2801,46 @@ extends DisposableBase implements IEnumerable<T>
 		return (exists && isNaN(result)) ? NaN : result;
 	}
 
+	/**
+	 * Takes the first number and divides it by all following.
+	 * @param selector
+	 * @returns {number}
+	 */
+	quotient(selector:Selector<T, number> = Type.numberOrNaN):number
+	{
+		var count = 0;
+		var result:number = NaN;
+
+		this.forEach(
+			x=>
+			{
+				var value = selector(x);
+				count++;
+
+				if(count===1)
+				{
+					result = value;
+				}
+				else
+				{
+					if(isNaN(value) || value===0 || !isFinite(value))
+					{
+						result = NaN;
+						return false;
+					}
+
+					result /= value;
+				}
+
+			}
+		);
+
+		if(count===1)
+			result = NaN;
+
+		return result;
+	}
+
 	// #endregion
 
 	// #region Single Value Return...
