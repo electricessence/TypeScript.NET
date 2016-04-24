@@ -1,7 +1,7 @@
 ﻿///<reference path="../import.d.ts"/>
 
-import {contains} from '../../../source/System/Collections/Array/Utility';
-import Enumerable from '../../../source/System.Linq/Linq';
+import {contains} from "../../../source/System/Collections/Array/Utility";
+import Enumerable from "../../../source/System.Linq/Linq";
 var assert = require('../../../node_modules/assert/assert');
 
 
@@ -13,7 +13,7 @@ interface TestItem
 }
 
 
-const source:{a:number,b:number,c:string}[] = Object.freeze([
+const source:TestItem[] = Object.freeze([
 	{
 		a: 1,
 		b: 2,

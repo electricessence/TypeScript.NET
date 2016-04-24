@@ -1385,10 +1385,11 @@ var __extends = (this && this.__extends) || function (d, b) {
             return new OrderedEnumerable(this, keySelector, -1);
         };
         Enumerable.prototype.groupBy = function (keySelector, elementSelector, compareSelector) {
-            var _ = this;
+            var _this = this;
+            if (elementSelector === void 0) { elementSelector = Functions.Identity; }
             if (!elementSelector)
                 elementSelector = Functions.Identity;
-            return new Enumerable(function () { return _.toLookup(keySelector, elementSelector, compareSelector)
+            return new Enumerable(function () { return _this.toLookup(keySelector, elementSelector, compareSelector)
                 .getEnumerator(); });
         };
         Enumerable.prototype.partitionBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
