@@ -1462,7 +1462,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	}
 
-	ofType<TType>(type:{ new ():TType }):Enumerable<TType>;
+	ofType<TType>(type:{ new (...params:any[]):TType }):Enumerable<TType>;
 	ofType<TType>(type:any):Enumerable<TType>
 	{
 		var typeName:string;
