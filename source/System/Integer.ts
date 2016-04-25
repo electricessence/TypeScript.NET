@@ -1,3 +1,4 @@
+///<reference path="Collections/Array/IArray.d.ts"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -59,11 +60,18 @@ module Integer
 			return min + next(range);
 		}
 
-		export function select<T>(source:T[]):T
+		export function select<T>(source:IArray<T>):T
 		{
 			return source && source.length
 				? source[r(source.length)]
 				: void(0);
+		}
+
+		export module select {
+			export function one<T>(source:IArray<T>):T
+			{
+				return random.select(source);
+			}
 		}
 
 	}

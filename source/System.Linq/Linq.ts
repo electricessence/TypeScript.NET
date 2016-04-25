@@ -189,7 +189,7 @@ extends DisposableBase implements IEnumerable<T>
 			() => new EnumeratorBase<T>(
 				null,
 				(yielder)=>
-					yielder.yieldReturn(values[Integer.random(values.length)])
+					yielder.yieldReturn(Integer.random.select(values))
 			)
 		);
 	}

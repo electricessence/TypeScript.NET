@@ -55,6 +55,13 @@
                     : void (0);
             }
             random.select = select;
+            var select;
+            (function (select) {
+                function one(source) {
+                    return random.select(source);
+                }
+                select.one = one;
+            })(select = random.select || (random.select = {}));
         })(random = Integer.random || (Integer.random = {}));
         function is(n) {
             return Types_1.default.isNumber(n, false) && isFinite(n) && n == (n | 0);

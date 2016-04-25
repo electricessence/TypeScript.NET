@@ -108,7 +108,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.choice = function (values) {
             return new Enumerable(function () { return new EnumeratorBase_1.default(null, function (yielder) {
-                return yielder.yieldReturn(values[Integer_1.default.random(values.length)]);
+                return yielder.yieldReturn(Integer_1.default.random.select(values));
             }); });
         };
         Enumerable.cycle = function (values) {
