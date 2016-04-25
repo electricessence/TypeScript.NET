@@ -1,16 +1,16 @@
 ///<reference path="../../import.d.ts"/>
 ///<reference path="../../../../source/System/Time/HowMany.ts"/>
 
-import ClockTime from '../../../../source/System/Time/ClockTime';
-import Integer from '../../../../source/System/Integer';
+import ClockTime from "../../../../source/System/Time/ClockTime";
+import Integer from "../../../../source/System/Integer";
 var assert = require('../../../../node_modules/assert/assert');
 
 const
-days        = Integer.random.under(365),
-hour        = Integer.random.under(24),
-minute      = Integer.random.under(60),
-second      = Integer.random.under(60),
-millisecond = Integer.random.under(1000);
+days        = Integer.random(365),
+hour        = Integer.random(24),
+minute      = Integer.random(60),
+second      = Integer.random(60),
+millisecond = Integer.random(1000);
 
 var c1 = new ClockTime(hour, minute, second, millisecond);
 var c2 = new ClockTime(

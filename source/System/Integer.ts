@@ -15,47 +15,48 @@ function Integer(n:number):number
 module Integer
 {
 
-	function r(max:number):number
+	function r(maxExclusive:number):number
 	{
-		return (Math.random()*max) | 0;
+		return (Math.random()*maxExclusive) | 0;
 	}
 
+
 	/**
-	 * Returns a random integer from zero to the max.
+	 * Returns a random integer from minInclusive to the maxExclusive.
 	 * Negative numbers are allowed.
 	 *
-	 * Examples:<br/>
-	 * ```Integer.random(1)``` will return 0 or 1.<br/>
-	 * ```Integer.random(-2)``` will return 0, -1, or -2.<br/>
-	 *
-	 * @param max
+	 * @param maxExclusive
 	 * @returns {number}
 	 */
-	export function random(max:number):number
+	export function random(maxExclusive:number):number
 	{
-		assert(max, 'max');
-		if(max==0) return 0;
-		max += max>0 ? 1 : -1;
-		return r(max);
+		assert(maxExclusive, 'maxExclusive');
+		return r(maxExclusive);
 	}
 
 	export module random
 	{
-
-		/**
-		 * Returns a random integer from zero up to the boundary value.
-		 * Negative and fractional numbers are allowed.
-		 *
-		 * Example:<br/>
-		 * ```Integer.random(-2)``` will return 0, or -1.<br/>
-		 * ```Integer.random(5)``` will return 0, 1, 2, 3 or 4.<br/>
-		 *
-		 * @param boundary
-		 * @returns {number}
-		 */
-		export function under(boundary:number):number
+		export function next(
+			boundary:number,
+			inclusive?:boolean):number
 		{
-			return r(boundary)
+			assert(boundary, 'max');
+			if(boundary===0) return 0;
+			if(inclusive) boundary += boundary/Math.abs(boundary);
+			return r(boundary);
+		}
+
+		export function nextInRange(
+			min:number,
+			max:number,
+			inclusive?:boolean):number
+		{
+			assert(min, 'min');
+			assert(max, 'max');
+			var range = max - min;
+			if(range===0) return min;
+			if(inclusive) range += range/Math.abs(range);
+			return min + next(range);
 		}
 
 		export function select<T>(source:T[]):T

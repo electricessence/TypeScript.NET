@@ -34,5 +34,4 @@
         });
     });
 });
-
 //# sourceMappingURL=Integer.js.map

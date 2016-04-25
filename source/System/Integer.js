@@ -19,23 +19,36 @@
     }
     var Integer;
     (function (Integer) {
-        function r(max) {
-            return (Math.random() * max) | 0;
+        function r(maxExclusive) {
+            return (Math.random() * maxExclusive) | 0;
         }
-        function random(max) {
-            assert(max, 'max');
-            if (max == 0)
-                return 0;
-            max += max > 0 ? 1 : -1;
-            return r(max);
+        function random(maxExclusive) {
+            assert(maxExclusive, 'maxExclusive');
+            return r(maxExclusive);
         }
         Integer.random = random;
         var random;
         (function (random) {
-            function under(boundary) {
+            function next(boundary, inclusive) {
+                assert(boundary, 'max');
+                if (boundary === 0)
+                    return 0;
+                if (inclusive)
+                    boundary += boundary / Math.abs(boundary);
                 return r(boundary);
             }
-            random.under = under;
+            random.next = next;
+            function nextInRange(min, max, inclusive) {
+                assert(min, 'min');
+                assert(max, 'max');
+                var range = max - min;
+                if (range === 0)
+                    return min;
+                if (inclusive)
+                    range += range / Math.abs(range);
+                return min + next(range);
+            }
+            random.nextInRange = nextInRange;
             function select(source) {
                 return source && source.length
                     ? source[r(source.length)]
