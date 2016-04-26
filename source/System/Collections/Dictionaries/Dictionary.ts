@@ -41,7 +41,7 @@ function getHashString(obj:any):string
 	if(obj===VOID0) return "undefined";
 
 	// See IHashable.
-	if(Type.hasMemberOfType(obj,"getHashCode",Type.FUNCTION))
+	if(Type.hasMemberOfType(obj, "getHashCode", Type.FUNCTION))
 	{
 		return obj.getHashCode();
 	}
@@ -124,7 +124,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	protected _setValueInternal(key:TKey, value:TValue):boolean
 	{
 		var _           = this,
-		    buckets = _._buckets,
+		    buckets     = _._buckets,
 		    entries     = _._entries,
 		    comparer    = _._keyComparer,
 		    compareKey  = comparer(key),
@@ -151,15 +151,16 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 				// We don't expose the internal hash entries so replacing the value is ok.
 				var old = bucketEntry.value.value;
 				bucketEntry.value.value = value;
-				return !areEqual(value,old);
+				return !areEqual(value, old);
 			}
 
 		}
-		else if(value!==VOID0) {
-			if(!bucket) bucket = _._getBucket(hash,true);
-			let entry = new HashEntry(key,value);
+		else if(value!==VOID0)
+		{
+			if(!bucket) bucket = _._getBucket(hash, true);
+			let entry = new HashEntry(key, value);
 			entries.addNode(entry);
-			bucket.addNode(new HashEntry(key,entry));
+			bucket.addNode(new HashEntry(key, entry));
 			return true;
 		}
 
