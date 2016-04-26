@@ -316,8 +316,7 @@ extends CollectionBase<T>
 			},
 			(yielder)=>
 			{
-				if(version!=_._version)
-					throw new InvalidOperationException("Collection was changed during enumeration.");
+				_.assertVersion(version);
 
 				if(index==_._size)
 					return yielder.yieldBreak();

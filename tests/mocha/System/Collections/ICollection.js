@@ -3,12 +3,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../../../source/System/Collections/Array/Utility', '../../../../source/System/Exceptions/NotImplementedException'], factory);
+        define(["require", "exports", "../../../../source/System/Collections/Array/Utility", "../../../../source/System/Exceptions/NotImplementedException"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var AU = require('../../../../source/System/Collections/Array/Utility');
-    var NotImplementedException_1 = require('../../../../source/System/Exceptions/NotImplementedException');
+    var AU = require("../../../../source/System/Collections/Array/Utility");
+    var NotImplementedException_1 = require("../../../../source/System/Exceptions/NotImplementedException");
     var assert = require('../../../../node_modules/assert/assert');
     function General(collection) {
         var count = collection.count;
@@ -140,5 +140,4 @@
     }
     exports.InstanceCollection = InstanceCollection;
 });
-
 //# sourceMappingURL=ICollection.js.map

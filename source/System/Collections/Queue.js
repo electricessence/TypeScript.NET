@@ -218,8 +218,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 version = _._version;
                 index = 0;
             }, function (yielder) {
-                if (version != _._version)
-                    throw new InvalidOperationException_1.default("Collection was changed during enumeration.");
+                _.assertVersion(version);
                 if (index == _._size)
                     return yielder.yieldBreak();
                 return yielder.yieldReturn(_._getElement(index++));
