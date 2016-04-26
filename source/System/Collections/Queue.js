@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "./Enumeration/Enumerator", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase"], factory);
+        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -22,7 +22,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Types_1 = require("../Types");
     var Integer_1 = require("../Integer");
     var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
-    var Enumerator_1 = require("./Enumeration/Enumerator");
     var NotImplementedException_1 = require("../Exceptions/NotImplementedException");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
@@ -41,7 +40,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             _._head = 0;
             _._tail = 0;
             _._size = 0;
-            _._version = 0;
             if (!source)
                 _._array = emptyArray;
             else {
@@ -57,8 +55,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     _._array = AU.initialize(Types_1.default.isArrayLike(se)
                         ? se.length
                         : DEFAULT_CAPACITY);
-                    Enumerator_1.forEach(se, function (e) { return _.enqueue(e); });
-                    _._version = 0;
+                    _._importEntries(se);
                 }
             }
             _._capacity = _._array.length;
@@ -80,7 +77,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             array[tail] = item;
             _._tail = (tail + 1) % len;
             _._size = size + 1;
-            _._version++;
             return true;
         };
         Queue.prototype._removeInternal = function (item, max) {
@@ -98,7 +94,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             _._head = 0;
             _._tail = 0;
             _._size = 0;
-            _._version++;
             _.trimExcess();
             return size;
         };
@@ -109,7 +104,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                 _._array.length = _._capacity = 0;
                 _._array = emptyArray;
             }
-            _._version = 0;
         };
         Queue.prototype.dump = function (max) {
             if (max === void 0) { max = Infinity; }
@@ -120,16 +114,15 @@ var __extends = (this && this.__extends) || function (d, b) {
                     while (max-- && _._size) {
                         result.push(_._dequeueInternal());
                     }
-                    _._onModified();
                 }
             }
             else {
                 while (_._size) {
                     result.push(_._dequeueInternal());
                 }
-                _._onModified();
             }
             _.trimExcess();
+            _._signalModification();
             return result;
         };
         Queue.prototype.forEach = function (action) {
@@ -160,7 +153,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             _._capacity = capacity;
             _._head = 0;
             _._tail = (size == capacity) ? 0 : size;
-            _._version++;
+            _._incrementModified();
+            _._signalModification();
         };
         Queue.prototype.enqueue = function (item) {
             this.add(item);
@@ -178,18 +172,18 @@ var __extends = (this && this.__extends) || function (d, b) {
             array[head] = null;
             _._head = (head + 1) % _._capacity;
             _._size--;
-            if (_._size < _._capacity / 2) {
-                _.trimExcess(SHRINK_THRESHOLD);
-            }
-            _._version++;
+            _._incrementModified();
             return removed;
         };
         Queue.prototype.dequeue = function (throwIfEmpty) {
             if (throwIfEmpty === void 0) { throwIfEmpty = false; }
-            var modified = !!this._size;
+            var _ = this;
+            _.assertModifiable();
+            var modified = !!_._size;
             var v = this._dequeueInternal(throwIfEmpty);
-            if (modified)
-                this._onModified();
+            if (modified && _._size < _._capacity / 2)
+                _.trimExcess(SHRINK_THRESHOLD);
+            _._signalModification();
             return v;
         };
         Queue.prototype.tryDequeue = function (out) {

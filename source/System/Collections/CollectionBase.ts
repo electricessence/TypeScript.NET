@@ -20,14 +20,17 @@ abstract class CollectionBase<T>
 extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 {
 
-
 	constructor(
 		source?:IEnumerableOrArray<T>,
 		protected _equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super();
-		this._disposableObjectName = NAME;
-		this._importEntries(source);
+		var _ = this;
+		_._disposableObjectName = NAME;
+		_._importEntries(source);
+		_._updateRecursion = 0;
+		_._modifiedCount = 0;
+		_._version = 0;
 	}
 
 
@@ -55,24 +58,104 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 			throw new InvalidOperationException(CMRO);
 	}
 
+	protected _version:number; // Provides an easy means of tracking changes and invalidating enumerables.
+	assertVersion(version:number):void
+	{
+		if(version!=this._version)
+			throw new InvalidOperationException("Collection was modified.");
+	}
+
+	/*
+	 * Note: Avoid changing modified count by any means but ++;
+	 * If setting modified count by the result of a closure it may be a negative number or NaN and ruin the pattern.
+	 */
+	private _modifiedCount:number;
+	private _updateRecursion:number;
+
 	protected _onModified():void {}
+
+	protected _signalModification():boolean
+	{
+		var _ = this;
+		if(_._modifiedCount && !this._updateRecursion)
+		{
+			_._modifiedCount = 0;
+			_._version++;
+			_._onModified(); // Not trapping errors to ensure overrides are properly implemented.
+			return true;
+		}
+		return false;
+	}
+
+	protected _incrementModified():void { this._modifiedCount++; }
+
+	get isUpdating():boolean { return this._updateRecursion!=0; }
+
+	/**
+	 * Takes a closure that if returning true will propagate an update signal.
+	 * Multiple update operations can be occurring at once or recursively and the onModified signal will only occur once they're done.
+	 * @param closure
+	 * @returns {boolean}
+	 */
+	handleUpdate(closure?:() => boolean):boolean
+	{
+		if(!closure) return false;
+		var _ = this;
+		_.assertModifiable();
+		_._updateRecursion++;
+		var updated:boolean = false;
+
+		try
+		{
+			if(updated = closure())
+				_._modifiedCount++;
+		}
+		finally
+		{
+			_._updateRecursion--;
+		}
+
+		_._signalModification();
+
+		return updated;
+	}
 
 	protected abstract _addInternal(entry:T):boolean;
 
+	/*
+	 * Note: for a slight amount more code, we avoid creating functions/closures.
+	 * Calling handleUpdate is the correct pattern, but if possible avoid creating another function scope.
+	 */
+
 	add(entry:T):void
 	{
-		this.assertModifiable();
-		if(this._addInternal(entry))
-			this._onModified();
+		var _ = this;
+		_.assertModifiable();
+		_._updateRecursion++;
+
+		try
+		{ if(_._addInternal(entry)) _._modifiedCount++; }
+		finally
+		{ _._updateRecursion--; }
+
+		_._signalModification();
 	}
 
 	protected abstract _removeInternal(entry:T, max?:number):number;
 
 	remove(entry:T, max:number = Infinity):number
 	{
-		this.assertModifiable();
-		var n = this._removeInternal(entry, max);
-		if(n) this._onModified();
+		var _ = this;
+		_.assertModifiable();
+		_._updateRecursion++;
+
+		var n:number;
+		try
+		{ if(n = _._removeInternal(entry, max)) _._modifiedCount++; }
+		finally
+		{ _._updateRecursion--; }
+
+		_._signalModification();
 		return n;
 	}
 
@@ -80,9 +163,18 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	clear():number
 	{
-		this.assertModifiable();
-		var n = this._clearInternal();
-		if(n) this._onModified();
+		var _ = this;
+		_.assertModifiable();
+		_._updateRecursion++;
+
+		var n:number;
+		try
+		{ if(n = _._clearInternal()) _._modifiedCount++; }
+		finally
+		{ _._updateRecursion--; }
+
+		_._signalModification();
+
 		return n;
 	}
 
@@ -90,27 +182,49 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	{
 		super._onDispose();
 		this._clearInternal();
+		this._version = 0;
+		this._updateRecursion = 0;
+		this._modifiedCount = 0;
 	}
 
-	protected _importEntries(entries:IEnumerableOrArray<T>):boolean
+	protected _importEntries(entries:IEnumerableOrArray<T>):number
 	{
-		var added = false;
+		var added = 0;
 		if(entries)
 		{
-			forEach(entries, e=>
+			if(Array.isArray(entries))
 			{
-				if(this._addInternal(e)) added = true;
-			});
+				// Optimize for avoiding a new closure.
+				for(let e of entries)
+				{
+					if(this._addInternal(e)) added++;
+				}
+			}
+			else
+			{
+				forEach(entries, e=>
+				{
+					if(this._addInternal(e)) added++;
+				});
+			}
 		}
 		return added;
 	}
 
-	importEntries(entries:IEnumerableOrArray<T>):boolean
+	importEntries(entries:IEnumerableOrArray<T>):number
 	{
-		this.assertModifiable();
-		var added = this._importEntries(entries);
-		if(added) this._onModified();
-		return added;
+		var _ = this;
+		_.assertModifiable();
+		_._updateRecursion++;
+
+		var n:number;
+		try
+		{ if(n = _._importEntries(entries)) _._modifiedCount++; }
+		finally
+		{ _._updateRecursion--; }
+
+		_._signalModification();
+		return n;
 	}
 
 	// Fundamentally the most important part of the collection.
@@ -126,11 +240,14 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):void
 	{
-		if(useCopy) {
+		if(useCopy)
+		{
 			var a = this.toArray();
 			forEach(a, action);
 			a.length = 0;
-		} else {
+		}
+		else
+		{
 			forEach(this.getEnumerator(), action);
 		}
 	}
@@ -144,11 +261,11 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		var count = this.getCount(), newLength = count + index;
 		if(target.length<newLength) target.length = newLength;
 
-		forEach(this.getEnumerator(),(e, i)=>
+		var e = this.getEnumerator();
+		while(e.moveNext()) // Disposes when finished.
 		{
-			target[i] = e;
-		});
-
+			target[index++] = e.current;
+		}
 		return target;
 	}
 

@@ -28,8 +28,12 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
             _super.call(this);
             this._equalityComparer = _equalityComparer;
-            this._disposableObjectName = NAME;
-            this._importEntries(source);
+            var _ = this;
+            _._disposableObjectName = NAME;
+            _._importEntries(source);
+            _._updateRecursion = 0;
+            _._modifiedCount = 0;
+            _._version = 0;
         }
         Object.defineProperty(CollectionBase.prototype, "count", {
             get: function () {
@@ -53,48 +57,129 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (this.getIsReadOnly())
                 throw new InvalidOperationException_1.default(CMRO);
         };
+        CollectionBase.prototype.assertVersion = function (version) {
+            if (version != this._version)
+                throw new InvalidOperationException_1.default("Collection was modified.");
+        };
         CollectionBase.prototype._onModified = function () { };
+        CollectionBase.prototype._signalModification = function () {
+            var _ = this;
+            if (_._modifiedCount && !this._updateRecursion) {
+                _._modifiedCount = 0;
+                _._version++;
+                _._onModified();
+                return true;
+            }
+            return false;
+        };
+        CollectionBase.prototype._incrementModified = function () { this._modifiedCount++; };
+        Object.defineProperty(CollectionBase.prototype, "isUpdating", {
+            get: function () { return this._updateRecursion != 0; },
+            enumerable: true,
+            configurable: true
+        });
+        CollectionBase.prototype.handleUpdate = function (closure) {
+            if (!closure)
+                return false;
+            var _ = this;
+            _.assertModifiable();
+            _._updateRecursion++;
+            var updated = false;
+            try {
+                if (updated = closure())
+                    _._modifiedCount++;
+            }
+            finally {
+                _._updateRecursion--;
+            }
+            _._signalModification();
+            return updated;
+        };
         CollectionBase.prototype.add = function (entry) {
-            this.assertModifiable();
-            if (this._addInternal(entry))
-                this._onModified();
+            var _ = this;
+            _.assertModifiable();
+            _._updateRecursion++;
+            try {
+                if (_._addInternal(entry))
+                    _._modifiedCount++;
+            }
+            finally {
+                _._updateRecursion--;
+            }
+            _._signalModification();
         };
         CollectionBase.prototype.remove = function (entry, max) {
             if (max === void 0) { max = Infinity; }
-            this.assertModifiable();
-            var n = this._removeInternal(entry, max);
-            if (n)
-                this._onModified();
+            var _ = this;
+            _.assertModifiable();
+            _._updateRecursion++;
+            var n;
+            try {
+                if (n = _._removeInternal(entry, max))
+                    _._modifiedCount++;
+            }
+            finally {
+                _._updateRecursion--;
+            }
+            _._signalModification();
             return n;
         };
         CollectionBase.prototype.clear = function () {
-            this.assertModifiable();
-            var n = this._clearInternal();
-            if (n)
-                this._onModified();
+            var _ = this;
+            _.assertModifiable();
+            _._updateRecursion++;
+            var n;
+            try {
+                if (n = _._clearInternal())
+                    _._modifiedCount++;
+            }
+            finally {
+                _._updateRecursion--;
+            }
+            _._signalModification();
             return n;
         };
         CollectionBase.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
             this._clearInternal();
+            this._version = 0;
+            this._updateRecursion = 0;
+            this._modifiedCount = 0;
         };
         CollectionBase.prototype._importEntries = function (entries) {
             var _this = this;
-            var added = false;
+            var added = 0;
             if (entries) {
-                Enumerator_1.forEach(entries, function (e) {
-                    if (_this._addInternal(e))
-                        added = true;
-                });
+                if (Array.isArray(entries)) {
+                    for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+                        var e = entries_1[_i];
+                        if (this._addInternal(e))
+                            added++;
+                    }
+                }
+                else {
+                    Enumerator_1.forEach(entries, function (e) {
+                        if (_this._addInternal(e))
+                            added++;
+                    });
+                }
             }
             return added;
         };
         CollectionBase.prototype.importEntries = function (entries) {
-            this.assertModifiable();
-            var added = this._importEntries(entries);
-            if (added)
-                this._onModified();
-            return added;
+            var _ = this;
+            _.assertModifiable();
+            _._updateRecursion++;
+            var n;
+            try {
+                if (n = _._importEntries(entries))
+                    _._modifiedCount++;
+            }
+            finally {
+                _._updateRecursion--;
+            }
+            _._signalModification();
+            return n;
         };
         CollectionBase.prototype.contains = function (entry) {
             if (!this.getCount())
@@ -120,9 +205,10 @@ var __extends = (this && this.__extends) || function (d, b) {
             var count = this.getCount(), newLength = count + index;
             if (target.length < newLength)
                 target.length = newLength;
-            Enumerator_1.forEach(this.getEnumerator(), function (e, i) {
-                target[i] = e;
-            });
+            var e = this.getEnumerator();
+            while (e.moveNext()) {
+                target[index++] = e.current;
+            }
             return target;
         };
         CollectionBase.prototype.toArray = function () {

@@ -35,12 +35,18 @@ function callHasOwnProperty(target:any, key:string)
 	return Object.prototype.hasOwnProperty.call(target, key);
 }
 
-function computeHashCode(obj:any):string
+function getHashString(obj:any):string
 {
 	if(obj===null) return "null";
 	if(obj===VOID0) return "undefined";
 
-	return (typeof obj.toString===Type.FUNCTION)
+	// See IHashable.
+	if(Type.hasMemberOfType(obj,"getHashCode",Type.FUNCTION))
+	{
+		return obj.getHashCode();
+	}
+
+	return (typeof obj.toString==Type.FUNCTION)
 		? obj.toString()
 		: Object.prototype.toString.call(obj);
 }
@@ -49,151 +55,159 @@ function computeHashCode(obj:any):string
 export default
 class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 {
-	private _count:number = 0;
-	private _entries = new LinkedNodeList<HashEntry<TKey, TValue>>();
-	private _buckets:IMap<HashEntry<TKey, TValue>[]> = {};
+	// Retains the order...
+	private _entries:LinkedNodeList<HashEntry<TKey, TValue>>;
+	private _buckets:IMap<LinkedNodeList<HashEntry<TKey, HashEntry<TKey, TValue>>>>;
 
-	constructor(private _compareSelector:Selector<TKey,any> = Functions.Identity)
+	constructor(
+		private _keyComparer:Selector<TKey,any> = Functions.Identity)
 	{
 		super();
+		this._entries = new LinkedNodeList<HashEntry<TKey, TValue>>();
+		this._buckets = {};
 	}
 
-
-	private setKV(key:TKey, value:TValue, allowOverwrite:boolean):boolean
-	{
-		var _           = this,
-		    buckets     = _._buckets,
-		    entries     = _._entries,
-		    comparer    = _._compareSelector,
-
-		    compareKey  = comparer(key),
-		    hash:string = computeHashCode(compareKey), // TODO: need to find a way to guarantee hashing is a string?
-
-		    entry:HashEntry<TKey, TValue>;
-
-		if(callHasOwnProperty(buckets, hash))
-		{
-			var equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
-			var array = buckets[hash];
-			for(let i = 0; i<array.length; i++)
-			{
-				var old = array[i];
-				if(comparer(old.key)===compareKey)
-				{
-					if(!allowOverwrite)
-						throw new Error("Key already exists.");
-
-					var changed = !equal(old.value, value);
-					if(changed)
-					{
-						if(value===VOID0)
-						{
-							entries.removeNode(old);
-							array.splice(i, 1);
-							if(!array.length)
-								delete buckets[hash];
-							--_._count;
-						}
-						else
-						{
-							entry = new HashEntry<TKey, TValue>(key, value);
-							entries.replace(old, entry);
-							array[i] = entry;
-						}
-
-						_._onValueUpdate(key, value, old.value);
-					}
-					return changed;
-				}
-			}
-			array.push(entry = entry || new HashEntry<TKey, TValue>(key, value));
-		}
-		else
-		{
-			if(value===VOID0)
-			{
-				if(allowOverwrite)
-					return false;
-				else
-					throw new Error("Cannot add 'undefined' value.");
-			}
-			buckets[hash] = [entry = new HashEntry<TKey, TValue>(key, value)];
-		}
-		++_._count;
-		entries.addNode(entry);
-		_._onValueUpdate(key, value, undefined);
-		return true;
-	}
-
-	addByKeyValue(key:TKey, value:TValue):void
-	{
-		this.setKV(key, value, false);
-	}
-
-	protected _getEntry(key:TKey):HashEntry<TKey,TValue>
-	{
-		var _ = this;
-		if(key!==null && key!==VOID0 && _._count)
-		{
-			var buckets = _._buckets, comparer = _._compareSelector;
-			var compareKey = comparer(key);
-			var hash = computeHashCode(compareKey);
-			if(callHasOwnProperty(buckets, hash))
-			{
-				var array = buckets[hash];
-				for(let entry of array)
-				{
-					if(comparer(entry.key)===compareKey)
-						return entry;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	getValue(key:TKey):TValue {
-		var e = this._getEntry(key);
-		return e ? e.value : VOID0;
-	}
-
-	setValue(key:TKey, value:TValue):boolean
-	{
-		return this.setKV(key, value, true);
-	}
-
-	clear():number
-	{
-		var _ = this, buckets = _._buckets, count = super.clear(); // Remove one by one to allow for signaling.
-
-		// Ensure reset and clean...
-		_._count = 0;
-		for(let key in buckets)
-		{
-			if(buckets.hasOwnProperty(key))
-				delete buckets[key];
-		}
-
-		_._entries.clear();
-
-		return count;
-	}
+	private _count:number = 0;
 
 	protected getCount():number
 	{
 		return this._count;
 	}
 
+
+	private _getBucket(
+		hash:string,
+		createIfMissing?:boolean):LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>
+	{
+		if(hash===null || hash===VOID0 || !createIfMissing && !this._count)
+			return null;
+
+		var buckets = this._buckets;
+		var bucket = callHasOwnProperty(buckets, hash) ? buckets[hash] : VOID0;
+
+		if(createIfMissing && !bucket)
+			buckets[hash]
+				= bucket
+				= new LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>();
+
+		return bucket;
+	}
+
+	private _getBucketEntry(
+		key:TKey,
+		hash?:string,
+		bucket?:LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>):HashEntry<TKey,HashEntry<TKey,TValue>>
+	{
+		if(key===null || key===VOID0 || !this._count)
+			return null;
+
+		var _          = this,
+		    comparer   = _._keyComparer,
+		    compareKey = comparer(key);
+
+		if(!bucket) bucket = _._getBucket(hash || getHashString(compareKey));
+
+		return bucket && bucket
+				.find(e=>comparer(e.key)===compareKey);
+	}
+
+	protected _getEntry(key:TKey):HashEntry<TKey,TValue>
+	{
+		var e = this._getBucketEntry(key);
+		return e && e.value;
+	}
+
+	getValue(key:TKey):TValue
+	{
+		var e = this._getEntry(key);
+		return e ? e.value : VOID0;
+	}
+
+	protected _setValueInternal(key:TKey, value:TValue):boolean
+	{
+		var _           = this,
+		    buckets = _._buckets,
+		    entries     = _._entries,
+		    comparer    = _._keyComparer,
+		    compareKey  = comparer(key),
+		    hash        = getHashString(compareKey),
+		    bucket      = _._getBucket(hash),
+		    bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+
+		// Entry exits? Delete or update
+		if(bucketEntry)
+		{
+			if(value===VOID0)
+			{
+				let x = bucket.removeNode(bucketEntry),
+				    y = entries.removeNode(bucketEntry.value);
+
+				if(y) _._count--;
+				if(x && !bucket.count) delete buckets[hash];
+
+				if(x!==y) throw "Entries and buckets are out of sync.";
+
+				if(x) return true;
+			}
+			else
+			{
+				// We don't expose the internal hash entries so replacing the value is ok.
+				var old = bucketEntry.value.value;
+				bucketEntry.value.value = value;
+				return !areEqual(value,old);
+			}
+
+		}
+		else if(value!==VOID0) {
+			if(!bucket) bucket = _._getBucket(hash,true);
+			let entry = new HashEntry(key,value);
+			entries.addNode(entry);
+			bucket.addNode(new HashEntry(key,entry));
+			_._count++;
+			return true;
+		}
+
+		return false;
+	}
+
+	protected _clearInternal():number
+	{
+		var _ = this, buckets = _._buckets;
+
+		// Ensure reset and clean...
+		_._count = 0;
+		for(let key in buckets)
+		{
+			if(buckets.hasOwnProperty(key))
+			{
+				let bucket = buckets[key];
+				delete buckets[key];
+				bucket.clear();
+			}
+		}
+
+		return _._entries.clear();
+	}
+
+	/*
+	 * Note: super.getEnumerator() works perfectly well,
+	 * but enumerating the internal linked node list is much more efficient.
+	 */
 	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
 	{
-		var _ = this, currentEntry:HashEntry<TKey, TValue>;
+		var _ = this, ver:number, currentEntry:HashEntry<TKey, TValue>;
 
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
-			() => { currentEntry = _._entries.first; },
+			() =>
+			{
+				ver = _._version;
+				currentEntry = _._entries.first;
+			},
 			(yielder) =>
 			{
 				if(currentEntry!=null)
 				{
+					_.assertVersion(ver);
 					var result = {key: currentEntry.key, value: currentEntry.value};
 					currentEntry = currentEntry.next;
 					return yielder.yieldReturn(result);

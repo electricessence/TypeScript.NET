@@ -53,21 +53,20 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return VOID0;
             return this._map[key];
         };
-        StringKeyDictionary.prototype.setValue = function (key, value) {
+        StringKeyDictionary.prototype._setValueInternal = function (key, value) {
             var _ = this, map = _._map, old = map[key];
             if (old !== value) {
                 if (value === VOID0) {
                     if ((key) in (map)) {
                         delete map[key];
-                        --_._count;
+                        _._count--;
                     }
                 }
                 else {
-                    if (!((key) in (map)))
-                        ++_._count;
+                    if (!map.hasOwnProperty(key))
+                        _._count++;
                     map[key] = value;
                 }
-                _._onValueUpdate(key, value, old);
                 return true;
             }
             return false;
@@ -98,21 +97,15 @@ var __extends = (this && this.__extends) || function (d, b) {
             return result;
         };
         StringKeyDictionary.prototype.getKeys = function () {
-            var _ = this, result = [];
-            if (_._count)
-                for (var key in _._map) {
-                    if (_._map.hasOwnProperty(key))
-                        result.push(key);
-                }
-            return result;
+            return Object.keys(this._map);
         };
         StringKeyDictionary.prototype.getValues = function () {
-            var _ = this, result = [];
-            if (_._count)
-                for (var key in _._map) {
-                    if (_._map.hasOwnProperty(key))
-                        result.push(_._map[key]);
-                }
+            if (!this._count)
+                return [];
+            var result = Object.keys(this._map);
+            for (var i = 0, len = result.length; i < len; i++) {
+                result[i] = this._map[result[i]];
+            }
             return result;
         };
         StringKeyDictionary.prototype.getCount = function () {

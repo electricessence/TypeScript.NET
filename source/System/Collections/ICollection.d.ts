@@ -11,6 +11,6 @@ interface ICollection<T> extends IReadOnlyCollection<T>
 	remove(entry:T, max?:number): number;  // Number of times removed.
 	clear(): number;
 	
-	importEntries(entries:IEnumerableOrArray<T>):boolean;
+	importEntries(entries:IEnumerableOrArray<T>):number;
 	toArray():T[];
 }

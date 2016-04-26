@@ -256,6 +256,14 @@ implements ISet<T>, IDisposable
 			: emptyEnumerator;
 	}
 
+	forEach(
+		action:Predicate<T> | Action<T>,
+		useCopy:boolean = false):void
+	{
+		if(useCopy) super.forEach(action, useCopy);
+		else this._set.forEach((node, i)=>action(node.value, i));
+	}
+
 }
 
 function wipe(map:IMap<any>, depth:number = 1):void

@@ -1,9 +1,8 @@
 ///<reference path="../../import.d.ts"/>
 ///<reference path="../../../../source/System/Collections/ICollection.d.ts"/>
 
-import * as Text from '../../../../source/System/Text/Utility';
-import * as AU from '../../../../source/System/Collections/Array/Utility';
-import NotImplementedException from '../../../../source/System/Exceptions/NotImplementedException';
+import * as AU from "../../../../source/System/Collections/Array/Utility";
+import NotImplementedException from "../../../../source/System/Exceptions/NotImplementedException";
 var assert = require('../../../../node_modules/assert/assert');
 
 /*

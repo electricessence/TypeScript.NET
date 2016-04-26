@@ -208,6 +208,13 @@ var __extends = (this && this.__extends) || function (d, b) {
                 ? LinkedNodeList_1.default.valueEnumeratorFrom(s)
                 : Enumerator_1.empty;
         };
+        Set.prototype.forEach = function (action, useCopy) {
+            if (useCopy === void 0) { useCopy = false; }
+            if (useCopy)
+                _super.prototype.forEach.call(this, action, useCopy);
+            else
+                this._set.forEach(function (node, i) { return action(node.value, i); });
+        };
         return Set;
     }(CollectionBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });

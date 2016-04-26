@@ -15,21 +15,23 @@ export default
 class StringKeyDictionary<TValue>
 extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 {
+
 	private _count:number = 0;
 	private _map:IMap<TValue> = {};
 
-	protected _getEntry(key:string):IKeyValuePair<string,TValue> {
+	protected _getEntry(key:string):IKeyValuePair<string,TValue>
+	{
 		return !this.containsKey(key)
 			? null : {
-			key:key,
-			value:this.getValue(key)
+			key: key,
+			value: this.getValue(key)
 		}
 	}
 
 	containsKey(key:string):boolean
 	{
 		if(key===null || key===VOID0 || !this._count) return false;
-		return (key)in(this._map);
+		return (key) in (this._map);
 	}
 
 	containsValue(value:TValue):boolean
@@ -51,7 +53,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 		return this._map[key];
 	}
 
-	setValue(key:string, value:TValue):boolean
+	protected _setValueInternal(key:string, value:TValue):boolean
 	{
 		var _ = this, map = _._map, old = map[key];
 		if(old!==value)
@@ -59,20 +61,19 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 			if(value===VOID0)
 			{
-				if((key)in(map))
+				if((key) in (map))
 				{
 					delete map[key];
-					--_._count;
+					_._count--;
 				}
 			}
 			else
 			{
-				if(!((key)in(map)))
-					++_._count;
+				if(!map.hasOwnProperty(key))
+					_._count++;
 				map[key] = value;
 			}
 
-			_._onValueUpdate(key, value, old);
 			return true;
 		}
 		return false;
@@ -115,26 +116,16 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 	protected getKeys():string[]
 	{
-
-		var _ = this, result:string[] = [];
-		if(_._count) for(let key in _._map)
-		{
-			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
-				result.push(key);
-		}
-
-		return result;
-
+		return Object.keys(this._map);
 	}
 
 	protected getValues():TValue[]
 	{
-
-		var _ = this, result:TValue[] = [];
-		if(_._count) for(let key in _._map)
+		if(!this._count) return [];
+		var result:any[] = Object.keys(this._map);
+		for(let i = 0, len = result.length; i<len; i++)
 		{
-			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
-				result.push(_._map[key]);
+			result[i] = this._map[result[i]];
 		}
 
 		return result;

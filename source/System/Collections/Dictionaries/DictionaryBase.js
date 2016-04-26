@@ -2,87 +2,48 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../Enumeration/Enumerator"], factory);
+        define(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract"], factory);
     }
 })(function (require, exports) {
     'use strict';
     var Compare_1 = require("../../Compare");
+    var Enumerator_1 = require("../Enumeration/Enumerator");
+    var CollectionBase_1 = require("../CollectionBase");
     var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var InvalidOperationException_1 = require("../../Exceptions/InvalidOperationException");
     var KeyValueExtract_1 = require("../../KeyValueExtract");
-    var Enumerator_1 = require("../Enumeration/Enumerator");
     var VOID0 = void (0);
-    var DictionaryBase = (function () {
-        function DictionaryBase() {
-            this._updateRecursion = 0;
+    var DictionaryBase = (function (_super) {
+        __extends(DictionaryBase, _super);
+        function DictionaryBase(source) {
+            _super.call(this, source);
         }
-        Object.defineProperty(DictionaryBase.prototype, "isUpdating", {
-            get: function () { return this._updateRecursion != 0; },
-            enumerable: true,
-            configurable: true
-        });
-        DictionaryBase.prototype._onValueUpdate = function (key, value, old) {
-            if (!Compare_1.areEqual(value, old, true)) {
-                var _ = this;
-                if (_.onValueChanged)
-                    _.onValueChanged(key, value, old);
-                if (_._updateRecursion == 0)
-                    _._onUpdated();
-            }
+        DictionaryBase.prototype._onValueModified = function (key, value, old) {
         };
-        DictionaryBase.prototype._onUpdated = function () {
-            var _ = this;
-            if (_.onUpdated)
-                _.onUpdated();
-        };
-        DictionaryBase.prototype.handleUpdate = function (closure) {
-            var _ = this, result;
-            if (closure) {
-                _._updateRecursion++;
-                try {
-                    result = closure();
-                }
-                finally {
-                    _._updateRecursion--;
-                }
-            }
-            else
-                result = _._updateRecursion == 0;
-            if (result && _._updateRecursion == 0)
-                _._onUpdated();
-            return result;
-        };
-        Object.defineProperty(DictionaryBase.prototype, "isReadOnly", {
-            get: function () { return false; },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(DictionaryBase.prototype, "count", {
-            get: function () { return this.getCount(); },
-            enumerable: true,
-            configurable: true
-        });
-        DictionaryBase.prototype.add = function (item) {
+        DictionaryBase.prototype._addInternal = function (item) {
             var _this = this;
             if (!item)
                 throw new ArgumentNullException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-            KeyValueExtract_1.default(item, function (key, value) { return _this.addByKeyValue(key, value); });
+            return KeyValueExtract_1.default(item, function (key, value) { return _this.addByKeyValue(key, value); });
         };
-        DictionaryBase.prototype.clear = function () {
-            var _ = this, keys = _.keys, count = keys.length;
-            if (count)
-                _.handleUpdate(function () {
-                    keys.forEach(function (key) { _.removeByKey(key); });
-                    return true;
-                });
-            if (_.count != 0)
-                console.warn("Dictionary clear() results in mismatched count.");
+        DictionaryBase.prototype._clearInternal = function () {
+            var _ = this, count = 0;
+            for (var _i = 0, _a = _.keys; _i < _a.length; _i++) {
+                var key = _a[_i];
+                if (_.removeByKey(key))
+                    count++;
+            }
             return count;
         };
         DictionaryBase.prototype.contains = function (item) {
@@ -94,20 +55,7 @@
                 return Compare_1.areEqual(value, v);
             });
         };
-        DictionaryBase.prototype.copyTo = function (array, index) {
-            if (index === void 0) { index = 0; }
-            if (!array)
-                throw new ArgumentNullException_1.default('array');
-            var e = this.getEnumerator();
-            while (e.moveNext()) {
-                array[index++] = e.current;
-            }
-            return array;
-        };
-        DictionaryBase.prototype.toArray = function () {
-            return this.copyTo([], 0);
-        };
-        DictionaryBase.prototype.remove = function (item) {
+        DictionaryBase.prototype._removeInternal = function (item) {
             var _this = this;
             if (!item)
                 return 0;
@@ -128,6 +76,8 @@
             configurable: true
         });
         DictionaryBase.prototype.addByKeyValue = function (key, value) {
+            if (value === VOID0)
+                throw new InvalidOperationException_1.default("Cannot add 'undefined' as a value.");
             var _ = this;
             if (_.containsKey(key)) {
                 var ex = new InvalidOperationException_1.default("Adding a key/value when the key already exists.");
@@ -135,7 +85,19 @@
                 ex.data['value'] = value;
                 throw ex;
             }
-            _.setValue(key, value);
+            return _.setValue(key, value);
+        };
+        DictionaryBase.prototype.setValue = function (key, value) {
+            var _ = this;
+            _.assertModifiable();
+            var changed = false, old = _.getValue(key);
+            if (!Compare_1.areEqual(value, old) && _._setValueInternal(key, value)) {
+                changed = true;
+                _._incrementModified();
+                _._onValueModified(key, value, old);
+            }
+            _._signalModification();
+            return changed;
         };
         DictionaryBase.prototype.containsKey = function (key) {
             return !!this._getEntry(key);
@@ -155,34 +117,38 @@
         };
         DictionaryBase.prototype.removeByValue = function (value) {
             var _ = this, count = 0, equal = Compare_1.areEqual;
-            _.keys.forEach(function (key) {
+            for (var _i = 0, _a = _.getKeys(); _i < _a.length; _i++) {
+                var key = _a[_i];
                 if (equal(_.getValue(key), value, true)) {
                     _.removeByKey(key);
-                    ++count;
+                    count++;
                 }
-            });
+            }
             return count;
         };
         DictionaryBase.prototype.importEntries = function (pairs) {
+            return _super.prototype.importEntries.call(this, pairs);
+        };
+        DictionaryBase.prototype._importEntries = function (pairs) {
             var _ = this;
             if (!pairs)
-                return false;
-            return _.handleUpdate(function () {
-                var changed = false;
-                Enumerator_1.forEach(pairs, function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
-                    _.setValue(key, value);
-                    changed = true;
-                }); });
-                return changed;
-            });
+                return 0;
+            var changed = 0;
+            Enumerator_1.forEach(pairs, function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
+                if (_._setValueInternal(key, value))
+                    changed++;
+            }); });
+            return changed;
         };
         DictionaryBase.prototype.getEnumerator = function () {
             var _ = this;
-            var keys, len, i = 0;
+            var ver, keys, len, i = 0;
             return new EnumeratorBase_1.default(function () {
-                keys = _.keys;
+                ver = _._version;
+                keys = _.getKeys();
                 len = keys.length;
             }, function (yielder) {
+                _.assertVersion(ver);
                 while (i < len) {
                     var key = keys[i++], value = _.getValue(key);
                     if (value !== VOID0)
@@ -192,7 +158,7 @@
             });
         };
         return DictionaryBase;
-    }());
+    }(CollectionBase_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DictionaryBase;
 });

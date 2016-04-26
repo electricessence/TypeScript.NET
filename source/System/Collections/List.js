@@ -56,14 +56,14 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (Types_1.default.isArrayLike(entries)) {
                 var len = entries.length;
                 if (!len)
-                    return false;
+                    return 0;
                 var s = this._source;
                 var first = s.length;
                 s.length += len;
                 for (var i = 0; i < len; i++) {
                     s[i + first] = entries[i];
                 }
-                return true;
+                return len;
             }
             else {
                 return _super.prototype._importEntries.call(this, entries);

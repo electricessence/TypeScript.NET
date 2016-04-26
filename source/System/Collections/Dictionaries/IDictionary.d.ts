@@ -6,6 +6,14 @@
 ///<reference path="../ICollection.d.ts"/>
 ///<reference path="../../KeyValuePair.d.ts"/>
 
+/**
+ * JavaScript hashing can only truly be done with strings.
+ * This provides a mechanism to enforce hashable
+ */
+interface IHashable {
+	getHashCode():string;
+}
+
 interface IMap<TValue>
 {
 	[key: string]: TValue
@@ -16,7 +24,7 @@ interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TVal
 	keys: TKey[];
 	values: TValue[];
 
-	addByKeyValue(key:TKey, value:TValue): void;
+	addByKeyValue(key:TKey, value:TValue): boolean;
 	getValue(key:TKey): TValue;
 	setValue(key:TKey, value:TValue): boolean;
 	containsKey(key:TKey): boolean;

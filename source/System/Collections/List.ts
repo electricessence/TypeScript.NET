@@ -60,12 +60,12 @@ implements IList<T>, IEnumerateEach<T>
 		this._source.length = 0;
 		return len;	}
 
-	protected _importEntries(entries:IEnumerableOrArray<T>):boolean
+	protected _importEntries(entries:IEnumerableOrArray<T>):number
 	{
 		if(Type.isArrayLike(entries))
 		{
 			var len = entries.length;
-			if(!len) return false;
+			if(!len) return 0;
 			var s = this._source;
 
 			var first = s.length;
@@ -74,7 +74,7 @@ implements IList<T>, IEnumerateEach<T>
 				s[i+first] = entries[i];
 			}
 
-			return true;
+			return len;
 		} else
 		{
 			return super._importEntries(entries);

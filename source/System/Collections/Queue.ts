@@ -16,7 +16,6 @@ import * as AU from "./Array/Utility";
 import Type from "../Types";
 import Integer from "../Integer";
 import EnumeratorBase from "./Enumeration/EnumeratorBase";
-import {forEach} from "./Enumeration/Enumerator";
 import NotImplementedException from "../Exceptions/NotImplementedException";
 import InvalidOperationException from "../Exceptions/InvalidOperationException";
 import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
@@ -39,7 +38,6 @@ extends CollectionBase<T>
 	private _tail:number;       // Last valid element in the queue
 	private _size:number;       // Number of elements.
 	private _capacity:number;   // Maps to _array.length;
-	private _version:number;
 
 	constructor(
 		source?:IEnumerableOrArray<T> | number,
@@ -50,7 +48,6 @@ extends CollectionBase<T>
 		_._head = 0;
 		_._tail = 0;
 		_._size = 0;
-		_._version = 0;
 
 		if(!source)
 			_._array = emptyArray;
@@ -74,9 +71,7 @@ extends CollectionBase<T>
 						: DEFAULT_CAPACITY
 				);
 
-				forEach<T>(se, (e:T)=> _.enqueue(e));
-
-				_._version = 0;
+				_._importEntries(se);
 			}
 		}
 
@@ -106,7 +101,6 @@ extends CollectionBase<T>
 		array[tail] = item;
 		_._tail = (tail + 1)%len;
 		_._size = size + 1;
-		_._version++;
 		return true;
 	}
 
@@ -132,7 +126,6 @@ extends CollectionBase<T>
 		_._head = 0;
 		_._tail = 0;
 		_._size = 0;
-		_._version++;
 
 		_.trimExcess();
 
@@ -148,7 +141,6 @@ extends CollectionBase<T>
 			_._array.length = _._capacity = 0;
 			_._array = emptyArray;
 		}
-		_._version = 0;
 	}
 
 
@@ -168,7 +160,6 @@ extends CollectionBase<T>
 				{
 					result.push(_._dequeueInternal());
 				}
-				_._onModified();
 			}
 		}
 		else
@@ -177,10 +168,10 @@ extends CollectionBase<T>
 			{
 				result.push(_._dequeueInternal());
 			}
-			_._onModified();
 		}
 
 		_.trimExcess();
+		_._signalModification();
 
 		return result;
 	}
@@ -229,7 +220,9 @@ extends CollectionBase<T>
 		_._capacity = capacity;
 		_._head = 0;
 		_._tail = (size==capacity) ? 0 : size;
-		_._version++;
+
+		_._incrementModified();
+		_._signalModification();
 	}
 
 	enqueue(item:T):void
@@ -256,22 +249,24 @@ extends CollectionBase<T>
 
 		_._size--;
 
-
-		if(_._size<_._capacity/2)
-		{
-			_.trimExcess(SHRINK_THRESHOLD);
-		}
-
-		_._version++;
-
+		_._incrementModified();
 
 		return removed;
 	}
 
 	dequeue(throwIfEmpty:boolean = false):T {
-		var modified = !!this._size;
+		var _ = this;
+		_.assertModifiable();
+
+		// A single dequeue shouldn't need update recursion tracking...
+		var modified = !!_._size;
 		var v = this._dequeueInternal(throwIfEmpty);
-		if(modified) this._onModified();
+
+		// This may preemptively trigger the _onModified.
+		if(modified && _._size<_._capacity/2)
+			_.trimExcess(SHRINK_THRESHOLD);
+
+		_._signalModification();
 		return v;
 	}
 
