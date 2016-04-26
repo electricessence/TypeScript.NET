@@ -38,11 +38,13 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 	private _first:TNode;
 	private _last:TNode;
+	unsafeCount:number;
 
 	constructor()
 	{
 		this._first = null;
 		this._last = null;
+		this.unsafeCount = 0;
 	}
 
 
@@ -142,6 +144,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		}
 
 		if(cF!==cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
+
+		_.unsafeCount = 0;
 
 		return cF;
 	}
@@ -269,7 +273,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			);
 		}
 
-		return !a && !b;
+		var removed = !a && !b;
+		if(removed) _.unsafeCount--;
+		return removed;
 
 	}
 
@@ -314,6 +320,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		{
 			_._first = _._last = node;
 		}
+
+		_.unsafeCount++;
 	}
 
 	/**
@@ -347,6 +355,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		{
 			_._first = _._last = node;
 		}
+
+		_.unsafeCount++;
+
 	}
 
 	/**

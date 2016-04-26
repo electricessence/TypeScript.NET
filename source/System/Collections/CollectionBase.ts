@@ -74,14 +74,20 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	protected _onModified():void {}
 
-	protected _signalModification():boolean
+	protected _signalModification(increment?:boolean):boolean
 	{
 		var _ = this;
+		if(increment) _._modifiedCount++;
 		if(_._modifiedCount && !this._updateRecursion)
 		{
 			_._modifiedCount = 0;
 			_._version++;
-			_._onModified(); // Not trapping errors to ensure overrides are properly implemented.
+			try {
+				_._onModified();
+			} catch (ex) {
+				// Avoid fatal errors which may have been caused by consumer.
+				console.error(ex);
+			}
 			return true;
 		}
 		return false;

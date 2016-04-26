@@ -153,8 +153,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             _._capacity = capacity;
             _._head = 0;
             _._tail = (size == capacity) ? 0 : size;
-            _._incrementModified();
-            _._signalModification();
+            _._signalModification(true);
         };
         Queue.prototype.enqueue = function (item) {
             this.add(item);

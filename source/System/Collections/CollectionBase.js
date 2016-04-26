@@ -62,12 +62,19 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new InvalidOperationException_1.default("Collection was modified.");
         };
         CollectionBase.prototype._onModified = function () { };
-        CollectionBase.prototype._signalModification = function () {
+        CollectionBase.prototype._signalModification = function (increment) {
             var _ = this;
+            if (increment)
+                _._modifiedCount++;
             if (_._modifiedCount && !this._updateRecursion) {
                 _._modifiedCount = 0;
                 _._version++;
-                _._onModified();
+                try {
+                    _._onModified();
+                }
+                catch (ex) {
+                    console.error(ex);
+                }
                 return true;
             }
             return false;

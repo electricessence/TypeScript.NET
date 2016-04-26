@@ -67,11 +67,9 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		this._buckets = {};
 	}
 
-	private _count:number = 0;
-
 	protected getCount():number
 	{
-		return this._count;
+		return this._entries.unsafeCount;
 	}
 
 
@@ -79,7 +77,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		hash:string,
 		createIfMissing?:boolean):LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>
 	{
-		if(hash===null || hash===VOID0 || !createIfMissing && !this._count)
+		if(hash===null || hash===VOID0 || !createIfMissing && !this.getCount())
 			return null;
 
 		var buckets = this._buckets;
@@ -98,7 +96,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		hash?:string,
 		bucket?:LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>):HashEntry<TKey,HashEntry<TKey,TValue>>
 	{
-		if(key===null || key===VOID0 || !this._count)
+		if(key===null || key===VOID0 || !this.getCount())
 			return null;
 
 		var _          = this,
@@ -142,7 +140,6 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 				let x = bucket.removeNode(bucketEntry),
 				    y = entries.removeNode(bucketEntry.value);
 
-				if(y) _._count--;
 				if(x && !bucket.count) delete buckets[hash];
 
 				if(x!==y) throw "Entries and buckets are out of sync.";
@@ -163,7 +160,6 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 			let entry = new HashEntry(key,value);
 			entries.addNode(entry);
 			bucket.addNode(new HashEntry(key,entry));
-			_._count++;
 			return true;
 		}
 
@@ -175,7 +171,6 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		var _ = this, buckets = _._buckets;
 
 		// Ensure reset and clean...
-		_._count = 0;
 		for(let key in buckets)
 		{
 			if(buckets.hasOwnProperty(key))

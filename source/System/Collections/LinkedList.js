@@ -62,32 +62,27 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
             _super.call(this, null, equalityComparer);
             var _ = this;
-            _._count = 0;
             _._listInternal = new LinkedNodeList_1.default();
             _._importEntries(source);
         }
         LinkedList.prototype.getCount = function () {
-            return this._count;
+            return this._listInternal.unsafeCount;
         };
         LinkedList.prototype._addInternal = function (entry) {
             this._listInternal.addNode(new InternalNode(entry));
-            this._count++;
             return true;
         };
         LinkedList.prototype._removeInternal = function (entry, max) {
             if (max === void 0) { max = Infinity; }
-            var _ = this, equals = this._equalityComparer, list = _._listInternal, removedCount = 0;
+            var _ = this, equals = _._equalityComparer, list = _._listInternal, removedCount = 0;
             list.forEach(function (node) {
-                if (equals(entry, node.value) && list.removeNode(node)) {
-                    _._count--;
+                if (equals(entry, node.value) && list.removeNode(node))
                     removedCount++;
-                }
                 return removedCount < max;
             });
             return removedCount;
         };
         LinkedList.prototype._clearInternal = function () {
-            this._count = 0;
             return this._listInternal.clear();
         };
         LinkedList.prototype.forEach = function (action, useCopy) {
@@ -151,31 +146,25 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         LinkedList.prototype.addFirst = function (entry) {
             this._listInternal.addNodeBefore(new InternalNode(entry));
-            ++this._count;
-            this._onModified();
+            this._signalModification(true);
         };
         LinkedList.prototype.addLast = function (entry) {
             this.add(entry);
         };
         LinkedList.prototype.removeFirst = function () {
             var _ = this, first = _._listInternal.first;
-            if (first && _._listInternal.removeNode(first)) {
-                _._count--;
-                _._onModified();
-            }
+            if (first && _._listInternal.removeNode(first))
+                _._signalModification(true);
         };
         LinkedList.prototype.removeLast = function () {
             var _ = this, last = _._listInternal.last;
-            if (last && _._listInternal.removeNode(last)) {
-                _._count--;
-                _._onModified();
-            }
+            if (last && _._listInternal.removeNode(last))
+                _._signalModification(true);
         };
         LinkedList.prototype.removeNode = function (node) {
             var _ = this;
             if (_._listInternal.removeNode(getInternal(node, _))) {
-                _._count--;
-                _._onModified();
+                _._signalModification(true);
                 return true;
             }
             return false;
@@ -183,26 +172,22 @@ var __extends = (this && this.__extends) || function (d, b) {
         LinkedList.prototype.addBefore = function (before, entry) {
             var _ = this;
             _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
-            _._count++;
-            _._onModified();
+            _._signalModification(true);
         };
         LinkedList.prototype.addAfter = function (after, entry) {
             var _ = this;
             _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
-            _._count++;
-            _._onModified();
+            _._signalModification(true);
         };
         LinkedList.prototype.addNodeBefore = function (node, before) {
             var _ = this;
             _._listInternal.addNodeBefore(getInternal(before, _), getInternal(node, _));
-            _._count++;
-            _._onModified();
+            _._signalModification(true);
         };
         LinkedList.prototype.addNodeAfter = function (node, after) {
             var _ = this;
             this._listInternal.addNodeAfter(getInternal(after, _), getInternal(node, _));
-            _._count++;
-            _._onModified();
+            _._signalModification(true);
         };
         return LinkedList;
     }(CollectionBase_1.default));

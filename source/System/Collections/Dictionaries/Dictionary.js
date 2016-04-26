@@ -54,15 +54,14 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (_keyComparer === void 0) { _keyComparer = Functions_1.default.Identity; }
             _super.call(this);
             this._keyComparer = _keyComparer;
-            this._count = 0;
             this._entries = new LinkedNodeList_1.default();
             this._buckets = {};
         }
         Dictionary.prototype.getCount = function () {
-            return this._count;
+            return this._entries.unsafeCount;
         };
         Dictionary.prototype._getBucket = function (hash, createIfMissing) {
-            if (hash === null || hash === VOID0 || !createIfMissing && !this._count)
+            if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
                 return null;
             var buckets = this._buckets;
             var bucket = callHasOwnProperty(buckets, hash) ? buckets[hash] : VOID0;
@@ -73,7 +72,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return bucket;
         };
         Dictionary.prototype._getBucketEntry = function (key, hash, bucket) {
-            if (key === null || key === VOID0 || !this._count)
+            if (key === null || key === VOID0 || !this.getCount())
                 return null;
             var _ = this, comparer = _._keyComparer, compareKey = comparer(key);
             if (!bucket)
@@ -94,8 +93,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (bucketEntry) {
                 if (value === VOID0) {
                     var x = bucket.removeNode(bucketEntry), y = entries.removeNode(bucketEntry.value);
-                    if (y)
-                        _._count--;
                     if (x && !bucket.count)
                         delete buckets[hash];
                     if (x !== y)
@@ -115,14 +112,12 @@ var __extends = (this && this.__extends) || function (d, b) {
                 var entry = new HashEntry(key, value);
                 entries.addNode(entry);
                 bucket.addNode(new HashEntry(key, entry));
-                _._count++;
                 return true;
             }
             return false;
         };
         Dictionary.prototype._clearInternal = function () {
             var _ = this, buckets = _._buckets;
-            _._count = 0;
             for (var key in buckets) {
                 if (buckets.hasOwnProperty(key)) {
                     var bucket = buckets[key];

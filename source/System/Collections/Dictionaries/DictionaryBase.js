@@ -93,10 +93,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             var changed = false, old = _.getValue(key);
             if (!Compare_1.areEqual(value, old) && _._setValueInternal(key, value)) {
                 changed = true;
-                _._incrementModified();
                 _._onValueModified(key, value, old);
             }
-            _._signalModification();
+            _._signalModification(changed);
             return changed;
         };
         DictionaryBase.prototype.containsKey = function (key) {

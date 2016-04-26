@@ -220,9 +220,8 @@ extends CollectionBase<T>
 		_._capacity = capacity;
 		_._head = 0;
 		_._tail = (size==capacity) ? 0 : size;
-
-		_._incrementModified();
-		_._signalModification();
+		
+		_._signalModification(true);
 	}
 
 	enqueue(item:T):void

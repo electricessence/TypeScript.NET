@@ -128,11 +128,10 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		if(!areEqual(value, old) && _._setValueInternal(key, value))
 		{
 			changed = true;
-			_._incrementModified();
 			_._onValueModified(key, value, old)
 		}
 
-		_._signalModification();
+		_._signalModification(changed);
 		return changed;
 	}
 

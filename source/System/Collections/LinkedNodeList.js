@@ -20,6 +20,7 @@
         function LinkedNodeList() {
             this._first = null;
             this._last = null;
+            this.unsafeCount = 0;
         }
         Object.defineProperty(LinkedNodeList.prototype, "first", {
             get: function () {
@@ -84,6 +85,7 @@
             }
             if (cF !== cL)
                 console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
+            _.unsafeCount = 0;
             return cF;
         };
         LinkedNodeList.prototype.dispose = function () {
@@ -150,7 +152,10 @@
             if (a !== b) {
                 throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
             }
-            return !a && !b;
+            var removed = !a && !b;
+            if (removed)
+                _.unsafeCount--;
+            return removed;
         };
         LinkedNodeList.prototype.addNode = function (node) {
             this.addNodeAfter(node);
@@ -174,6 +179,7 @@
             else {
                 _._first = _._last = node;
             }
+            _.unsafeCount++;
         };
         LinkedNodeList.prototype.addNodeAfter = function (node, after) {
             assertValidDetached(node);
@@ -194,6 +200,7 @@
             else {
                 _._first = _._last = node;
             }
+            _.unsafeCount++;
         };
         LinkedNodeList.prototype.replace = function (node, replacement) {
             if (node == null)

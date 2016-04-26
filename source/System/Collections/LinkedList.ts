@@ -87,7 +87,6 @@ class LinkedList<T>
 extends CollectionBase<T> implements ILinkedList<T>
 {
 	private _listInternal:LinkedNodeList<InternalNode<T>>;
-	private _count:number;
 
 	constructor(
 		source?:IEnumerableOrArray<T>,
@@ -95,36 +94,33 @@ extends CollectionBase<T> implements ILinkedList<T>
 	{
 		super(null, equalityComparer);
 		var _ = this;
-		_._count = 0;
 		_._listInternal = new LinkedNodeList<InternalNode<T>>();
 		_._importEntries(source);
 	}
 
 	protected getCount():number
 	{
-		return this._count;
+		return this._listInternal.unsafeCount;
 	}
 
 	protected _addInternal(entry:T):boolean
 	{
 		this._listInternal.addNode(new InternalNode(entry));
-		this._count++;
 		return true;
 	}
-	
+
 	protected _removeInternal(entry:T, max:number = Infinity):number
 	{
-		var _                                           = this,
-		    equals                                      = this._equalityComparer,
-		    list = _._listInternal, removedCount:number = 0;
+		var _            = this,
+		    equals       = _._equalityComparer,
+		    list         = _._listInternal,
+		    removedCount = 0;
 
 		list.forEach(node=>
 		{
 			if(equals(entry, node.value) && list.removeNode(node))
-			{
-				_._count--;
 				removedCount++;
-			}
+
 			return removedCount<max;
 		});
 
@@ -133,7 +129,6 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	protected _clearInternal():number
 	{
-		this._count = 0;
 		return this._listInternal.clear();
 	}
 
@@ -229,8 +224,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 	addFirst(entry:T):void
 	{
 		this._listInternal.addNodeBefore(new InternalNode(entry));
-		++this._count;
-		this._onModified();
+		this._signalModification(true);
 	}
 
 	addLast(entry:T):void
@@ -242,20 +236,14 @@ extends CollectionBase<T> implements ILinkedList<T>
 	{
 		var _ = this, first = _._listInternal.first;
 		if(first && _._listInternal.removeNode(first))
-		{
-			_._count--;
-			_._onModified();
-		}
+			_._signalModification(true);
 	}
 
 	removeLast():void
 	{
 		var _ = this, last = _._listInternal.last;
 		if(last && _._listInternal.removeNode(last))
-		{
-			_._count--;
-			_._onModified();
-		}
+			_._signalModification(true);
 	}
 
 	// Returns true if successful and false if not found (already removed).
@@ -265,8 +253,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 		if(_._listInternal.removeNode(getInternal(node, _)))
 		{
-			_._count--;
-			_._onModified();
+			_._signalModification(true);
 			return true;
 		}
 
@@ -280,8 +267,8 @@ extends CollectionBase<T> implements ILinkedList<T>
 			new InternalNode(entry),
 			getInternal(before, _)
 		);
-		_._count++;
-		_._onModified();
+
+		_._signalModification(true);
 	}
 
 	addAfter(after:ILinkedListNode<T>, entry:T):void
@@ -291,8 +278,8 @@ extends CollectionBase<T> implements ILinkedList<T>
 			new InternalNode(entry),
 			getInternal(after, _)
 		);
-		_._count++;
-		_._onModified();
+
+		_._signalModification(true);
 	}
 
 	addNodeBefore(node:ILinkedListNode<T>, before:ILinkedListNode<T>):void
@@ -302,8 +289,8 @@ extends CollectionBase<T> implements ILinkedList<T>
 			getInternal(before, _),
 			getInternal(node, _)
 		);
-		_._count++;
-		_._onModified();
+
+		_._signalModification(true);
 	}
 
 	addNodeAfter(node:ILinkedListNode<T>, after:ILinkedListNode<T>):void
@@ -313,8 +300,8 @@ extends CollectionBase<T> implements ILinkedList<T>
 			getInternal(after, _),
 			getInternal(node, _)
 		);
-		_._count++;
-		_._onModified();
+
+		_._signalModification(true);
 	}
 
 
