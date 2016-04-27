@@ -63,7 +63,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var id = this._id;
             if (id) {
                 clearInterval(id);
-                this._id = 0;
+                this._id = null;
                 return true;
             }
             return false;

@@ -1,13 +1,14 @@
-///<reference path="ICancellable.d.ts"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+///<reference path="ICancellable.d.ts"/>
 
 abstract class DeferBase implements ICancellable
 {
-	protected _id:number;
+	// It may be a Timer in node, should not be restricted to number.
+	protected _id:any;
 
 	abstract cancel():boolean;
 
@@ -73,7 +74,7 @@ class DeferInterval extends DeferBase
 		if(id)
 		{
 			clearInterval(id);
-			this._id = 0;
+			this._id = null;
 			return true;
 		}
 		return false;

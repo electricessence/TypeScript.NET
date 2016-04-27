@@ -1,3 +1,9 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+
+///<reference path="ICancellable.d.ts"/>
 import DisposableBase from "../Disposable/DisposableBase";
 
 /**
@@ -12,7 +18,7 @@ extends DisposableBase implements ICancellable
 		this._id = null;
 	}
 
-	protected _id:number;
+	protected _id:any;
 
 	get isScheduled():boolean {
 		return !!this._id;
