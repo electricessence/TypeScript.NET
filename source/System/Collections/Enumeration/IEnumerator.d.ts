@@ -4,10 +4,9 @@
  */
 
 ///<reference path='../../Disposable/IDisposable.d.ts'/>
-///<reference path="IGenerator.d.ts"/>
 
-// IReadOnlyGenerator is added for future compatibility.
-interface IEnumerator<T> extends IReadOnlyGenerator<T>, IDisposable {
+// IIterator is added for future compatibility.
+interface IEnumerator<T> extends IIterator<T>, IDisposable {
 
 	/**
 	 * The current value within the enumeration.

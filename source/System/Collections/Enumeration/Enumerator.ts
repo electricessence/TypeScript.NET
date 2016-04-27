@@ -8,6 +8,7 @@
 ///<reference path="IEnumerator.d.ts"/>
 ///<reference path="IYield.d.ts"/>
 ///<reference path="../IEnumerableOrArray.d.ts"/>
+///<reference path="IIterator.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
 import Type from "../../Types";
@@ -32,7 +33,7 @@ class EmptyEnumerator implements IEnumerator<any>
 		return VOID0;
 	}
 
-	next():IGeneratorResult<any>
+	next():IIteratorResult<any>
 	{
 		return {
 			value:VOID0,

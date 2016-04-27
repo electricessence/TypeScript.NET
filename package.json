@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",

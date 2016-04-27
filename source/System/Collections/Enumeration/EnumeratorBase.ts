@@ -6,6 +6,7 @@
 ///<reference path="../../Disposable/IDisposable.d.ts"/>
 ///<reference path="IEnumerator.d.ts"/>
 ///<reference path="IYield.d.ts"/>
+///<reference path="IIterator.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
 import DisposableBase from "../../Disposable/DisposableBase";
@@ -131,7 +132,7 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	/**
 	 * Exposed for compatibility with generators.
 	 */
-	next():IGeneratorResult<T>
+	next():IIteratorResult<T>
 	{
 		return this.moveNext() ?
 		{
