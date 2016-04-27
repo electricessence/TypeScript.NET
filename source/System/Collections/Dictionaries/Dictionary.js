@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../../Types", "../../Functions", "./DictionaryBase", "../Enumeration/EnumeratorBase", "../LinkedNodeList"], factory);
+        define(["require", "exports", "../../Compare", "../../Types", "../../Functions", "./DictionaryBase", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../ObjectPool"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -23,6 +23,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var DictionaryBase_1 = require("./DictionaryBase");
     var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
     var LinkedNodeList_1 = require("../LinkedNodeList");
+    var ObjectPool_1 = require("../ObjectPool");
     var VOID0 = void 0;
     var HashEntry = (function () {
         function HashEntry(key, value, previous, next) {
@@ -33,6 +34,16 @@ var __extends = (this && this.__extends) || function (d, b) {
         }
         return HashEntry;
     }());
+    var linkedListPool;
+    function linkedNodeList(recycle) {
+        if (!linkedListPool)
+            linkedListPool
+                = new ObjectPool_1.default(20, function () { return new LinkedNodeList_1.default(); });
+        if (!recycle)
+            return linkedListPool.take();
+        recycle.clear();
+        linkedListPool.add(recycle);
+    }
     function callHasOwnProperty(target, key) {
         return Object.prototype.hasOwnProperty.call(target, key);
     }
@@ -54,7 +65,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (_keyComparer === void 0) { _keyComparer = Functions_1.default.Identity; }
             _super.call(this);
             this._keyComparer = _keyComparer;
-            this._entries = new LinkedNodeList_1.default();
+            this._entries = linkedNodeList();
             this._buckets = {};
         }
         Dictionary.prototype.getCount = function () {
@@ -68,7 +79,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (createIfMissing && !bucket)
                 buckets[hash]
                     = bucket
-                        = new LinkedNodeList_1.default();
+                        = linkedNodeList();
             return bucket;
         };
         Dictionary.prototype._getBucketEntry = function (key, hash, bucket) {
@@ -93,8 +104,11 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (bucketEntry) {
                 if (value === VOID0) {
                     var x = bucket.removeNode(bucketEntry), y = entries.removeNode(bucketEntry.value);
-                    if (x && !bucket.count)
+                    if (x && !bucket.count) {
                         delete buckets[hash];
+                        linkedNodeList(bucket);
+                        bucket = null;
+                    }
                     if (x !== y)
                         throw "Entries and buckets are out of sync.";
                     if (x)
@@ -122,7 +136,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 if (buckets.hasOwnProperty(key)) {
                     var bucket = buckets[key];
                     delete buckets[key];
-                    bucket.clear();
+                    linkedNodeList(bucket);
                 }
             }
             return _._entries.clear();

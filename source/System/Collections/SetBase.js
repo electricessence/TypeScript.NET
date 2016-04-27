@@ -12,14 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../Disposable/Utility", "../Compare", "./CollectionBase"], factory);
+        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../Disposable/dispose", "../Compare", "./CollectionBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var Enumerator_1 = require("./Enumeration/Enumerator");
-    var Utility_1 = require("../Disposable/Utility");
+    var dispose_1 = require("../Disposable/dispose");
     var Compare_1 = require("../Compare");
     var CollectionBase_1 = require("./CollectionBase");
     var OTHER = 'other';
@@ -62,7 +62,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 _._signalModification();
             }
             else {
-                Utility_1.using(_.newUsing(other), function (o) { return _.intersectWith(o); });
+                dispose_1.using(_.newUsing(other), function (o) { return _.intersectWith(o); });
             }
         };
         SetBase.prototype.isProperSubsetOf = function (other) {
@@ -71,7 +71,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new ArgumentNullException_1.default(OTHER);
             return other instanceof SetBase
                 ? other.isProperSupersetOf(this)
-                : Utility_1.using(this.newUsing(other), function (o) { return o.isProperSupersetOf(_this); });
+                : dispose_1.using(this.newUsing(other), function (o) { return o.isProperSupersetOf(_this); });
         };
         SetBase.prototype.isProperSupersetOf = function (other) {
             var _this = this;
@@ -83,7 +83,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 count = other.getCount();
             }
             else {
-                Utility_1.using(this.newUsing(), function (o) {
+                dispose_1.using(this.newUsing(), function (o) {
                     Enumerator_1.forEach(other, function (v) {
                         o.add(v);
                         return result = _this.contains(v);
@@ -99,7 +99,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new ArgumentNullException_1.default(OTHER);
             return other instanceof SetBase
                 ? other.isSupersetOf(this)
-                : Utility_1.using(this.newUsing(other), function (o) { return o.isSupersetOf(_this); });
+                : dispose_1.using(this.newUsing(other), function (o) { return o.isSupersetOf(_this); });
         };
         SetBase.prototype.isSupersetOf = function (other) {
             var _this = this;
@@ -124,7 +124,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new ArgumentNullException_1.default(OTHER);
             return this.getCount() == (other instanceof SetBase
                 ? other.getCount()
-                : Utility_1.using(this.newUsing(other), function (o) { return o.getCount(); }))
+                : dispose_1.using(this.newUsing(other), function (o) { return o.getCount(); }))
                 && this.isSubsetOf(other);
         };
         SetBase.prototype.symmetricExceptWith = function (other) {
@@ -145,7 +145,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 _._signalModification();
             }
             else {
-                Utility_1.using(this.newUsing(other), function (o) { return _.symmetricExceptWith(o); });
+                dispose_1.using(this.newUsing(other), function (o) { return _.symmetricExceptWith(o); });
             }
         };
         SetBase.prototype.unionWith = function (other) {

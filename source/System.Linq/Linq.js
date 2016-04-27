@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/Utility", "../System/Disposable/DisposableBase", "../System/Exception", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException"], factory);
+        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Exception", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -28,7 +28,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var EnumeratorBase_1 = require("../System/Collections/Enumeration/EnumeratorBase");
     var Dictionary_1 = require("../System/Collections/Dictionaries/Dictionary");
     var Queue_1 = require("../System/Collections/Queue");
-    var Utility_1 = require("../System/Disposable/Utility");
+    var dispose_1 = require("../System/Disposable/dispose");
     var DisposableBase_1 = require("../System/Disposable/DisposableBase");
     var Exception_1 = require("../System/Exception");
     var ObjectDisposedException_1 = require("../System/Disposable/ObjectDisposedException");
@@ -313,19 +313,19 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return new EnumeratorBase_1.default(function () {
                     enumerator = enumerableFactory().getEnumerator();
                 }, function (yielder) { return enumerator.moveNext() && yielder.yieldReturn(enumerator.current); }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
         Enumerable.forEach = function (enumerable, action) {
             if (enumerable) {
-                Utility_1.using(Enumerator_1.from(enumerable), function (e) {
+                dispose_1.using(Enumerator_1.from(enumerable), function (e) {
                     Enumerator_1.forEach(e, action);
                 });
             }
         };
         Enumerable.map = function (enumerable, selector) {
-            return enumerable && Utility_1.using(Enumerator_1.from(enumerable), function (e) {
+            return enumerable && dispose_1.using(Enumerator_1.from(enumerable), function (e) {
                 var result = [];
                 Enumerator_1.forEach(e, function (e, i) {
                     result[i] = selector(e);
@@ -347,7 +347,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _ = this;
             _.throwIfDisposed();
             var index = 0;
-            Utility_1.using(_.getEnumerator(), function (e) {
+            dispose_1.using(_.getEnumerator(), function (e) {
                 while (_.throwIfDisposed() && e.moveNext()) {
                     if (action(e.current, index++) === false)
                         break;
@@ -428,7 +428,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -523,7 +523,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator, q);
+                    dispose_1.dispose(enumerator, q);
                 });
             });
         };
@@ -570,7 +570,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         }
                     }
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                     buffer.length = 0;
                 });
             });
@@ -600,10 +600,10 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                 }, function () {
                     try {
-                        Utility_1.dispose(enumerator);
+                        dispose_1.dispose(enumerator);
                     }
                     finally {
-                        Utility_1.disposeThese(enumeratorStack);
+                        dispose_1.dispose.these(enumeratorStack);
                     }
                 });
             });
@@ -642,7 +642,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         return false;
                     }
                 }, function () {
-                    Utility_1.dispose(enumerator, middleEnumerator);
+                    dispose_1.dispose(enumerator, middleEnumerator);
                 });
             });
         };
@@ -658,7 +658,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     return enumerator.moveNext()
                         && yielder.yieldReturn(selector(prev, enumerator.current));
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
@@ -684,7 +684,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         ? yielder.yieldReturn(value = func(value, enumerator.current))
                         : false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
@@ -705,7 +705,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         ? yielder.yieldReturn(selector(enumerator.current, index++))
                         : false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -740,7 +740,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     } while (enumerator.moveNext());
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator, middleEnumerator);
+                    dispose_1.dispose(enumerator, middleEnumerator);
                     enumerator = null;
                     middleEnumerator = null;
                 });
@@ -764,7 +764,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -789,7 +789,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -839,7 +839,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                     keys.clear();
                 });
             }, function () {
@@ -873,7 +873,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             }, function () {
                 disposed = true;
@@ -1037,7 +1037,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
@@ -1055,7 +1055,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     return firstEnumerator.moveNext() && secondEnumerator.moveNext()
                         && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
                 }, function () {
-                    Utility_1.dispose(firstEnumerator, secondEnumerator);
+                    dispose_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1093,7 +1093,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return yielder.yieldBreak();
                 }, function () {
-                    Utility_1.dispose(firstEnumerator, secondTemp);
+                    dispose_1.dispose(firstEnumerator, secondTemp);
                 });
             });
         };
@@ -1127,7 +1127,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         }
                     }
                 }, function () {
-                    Utility_1.dispose(outerEnumerator);
+                    dispose_1.dispose(outerEnumerator);
                 });
             });
         };
@@ -1145,7 +1145,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     return enumerator.moveNext()
                         && yielder.yieldReturn(resultSelector(enumerator.current, lookup.get(outerKeySelector(enumerator.current))));
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
@@ -1168,7 +1168,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         return yielder.yieldReturn(secondEnumerator.current);
                     return false;
                 }, function () {
-                    Utility_1.dispose(firstEnumerator, secondEnumerator);
+                    dispose_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1199,7 +1199,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         return yielder.yieldBreak();
                     }
                 }, function () {
-                    Utility_1.dispose(enumerator, queue);
+                    dispose_1.dispose(enumerator, queue);
                 });
             });
         };
@@ -1246,7 +1246,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         && secondEnumerator.moveNext()
                         && yielder.yieldReturn(secondEnumerator.current);
                 }, function () {
-                    Utility_1.dispose(firstEnumerator, secondEnumerator);
+                    dispose_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1283,7 +1283,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         buffer = enumerator.current;
                     return yielder.yieldReturn(latest);
                 }, function () {
-                    Utility_1.dispose(enumerator, alternateEnumerator);
+                    dispose_1.dispose(enumerator, alternateEnumerator);
                 });
             });
         };
@@ -1321,13 +1321,13 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return yielder.yieldBreak();
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
         Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-            return Utility_1.using(this.getEnumerator(), function (e1) { return Utility_1.using(Enumerable.from(second).getEnumerator(), function (e2) {
+            return dispose_1.using(this.getEnumerator(), function (e1) { return dispose_1.using(Enumerable.from(second).getEnumerator(), function (e2) {
                 while (e1.moveNext()) {
                     if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
                         return false;
@@ -1366,7 +1366,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(firstEnumerator, secondEnumerator);
+                    dispose_1.dispose(firstEnumerator, secondEnumerator);
                 });
             });
         };
@@ -1438,7 +1438,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return yielder.yieldReturn(result);
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                     group = null;
                 });
             });
@@ -1461,7 +1461,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     array.length = len;
                     return len && yielder.yieldReturn(array);
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
@@ -1699,7 +1699,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         && yielder.yieldReturn(sharedEnumerator.current);
                 });
             }, function () {
-                Utility_1.dispose(sharedEnumerator);
+                dispose_1.dispose(sharedEnumerator);
             });
         };
         Enumerable.prototype.memoize = function () {
@@ -1730,7 +1730,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 if (cache)
                     cache.length = 0;
                 cache = null;
-                Utility_1.dispose(enumerator);
+                dispose_1.dispose(enumerator);
                 enumerator = null;
             });
         };
@@ -1756,7 +1756,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                     return false;
                 }, function () {
-                    Utility_1.dispose(enumerator);
+                    dispose_1.dispose(enumerator);
                 });
             });
         };
@@ -1774,7 +1774,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                         : false;
                 }, function () {
                     try {
-                        Utility_1.dispose(enumerator);
+                        dispose_1.dispose(enumerator);
                     }
                     finally {
                         action();
@@ -1988,7 +1988,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 var current = enumerator.current;
                 return yielder.yieldReturn(new Grouping(current.key, current.value));
             }, function () {
-                Utility_1.dispose(enumerator);
+                dispose_1.dispose(enumerator);
             });
         };
         return Lookup;
@@ -2025,7 +2025,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }
                 return false;
             }, function () {
-                Utility_1.dispose(enumerator);
+                dispose_1.dispose(enumerator);
             });
         };
         WhereEnumerable.prototype._onDispose = function () {
@@ -2069,7 +2069,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }
                 return false;
             }, function () {
-                Utility_1.dispose(enumerator);
+                dispose_1.dispose(enumerator);
             });
         };
         WhereSelectEnumerable.prototype._onDispose = function () {

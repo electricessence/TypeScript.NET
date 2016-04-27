@@ -14,7 +14,7 @@ import shallowCopy from "../Utility/shallowCopy";
 import DisposableBase from "../Disposable/DisposableBase";
 import * as AU from "../Collections/Array/Utility";
 import EventDispatcherEntry from "./EventDispatcherEntry";
-import {disposeThese} from "../Disposable/Utility";
+import dispose from "../Disposable/dispose";
 
 const DISPOSING:string = 'disposing',
       DISPOSED:string  = 'disposed';
@@ -84,7 +84,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		type:string,
 		listener:IEventListener):void
 	{
-		disposeThese(this._entries.filter(entry=> entry.matches(type, listener)));
+		dispose.these(this._entries.filter(entry=> entry.matches(type, listener)));
 	}
 
 	dispatchEvent(type:string, params?:any):boolean;

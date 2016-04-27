@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Collections/Array/Utility", "./EventDispatcherEntry", "../Disposable/Utility"], factory);
+        define(["require", "exports", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Collections/Array/Utility", "./EventDispatcherEntry", "../Disposable/dispose"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -20,7 +20,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var DisposableBase_1 = require("../Disposable/DisposableBase");
     var AU = require("../Collections/Array/Utility");
     var EventDispatcherEntry_1 = require("./EventDispatcherEntry");
-    var Utility_1 = require("../Disposable/Utility");
+    var dispose_1 = require("../Disposable/dispose");
     var DISPOSING = 'disposing', DISPOSED = 'disposed';
     function entryFinalizer() {
         var p = this.params;
@@ -58,7 +58,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-            Utility_1.disposeThese(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+            dispose_1.default.these(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
         };
         EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
             var _this = this;

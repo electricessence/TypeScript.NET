@@ -14,6 +14,7 @@ import Functions from "../../Functions";
 import DictionaryBase from "./DictionaryBase";
 import EnumeratorBase from "../Enumeration/EnumeratorBase";
 import LinkedNodeList from "../LinkedNodeList";
+import ObjectPool from "../ObjectPool";
 
 const VOID0:any = void 0;
 
@@ -27,6 +28,18 @@ implements ILinkedNode<HashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue>
 		public previous?:HashEntry<TKey, TValue>,
 		public next?:HashEntry<TKey, TValue>)
 	{ }
+}
+
+var linkedListPool:ObjectPool<LinkedNodeList<any>>;
+function linkedNodeList():LinkedNodeList<any>;
+function linkedNodeList(recycle?:LinkedNodeList<any>):void;
+function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any> {
+	if(!linkedListPool)
+		linkedListPool
+			= new ObjectPool<LinkedNodeList<any>>(20,()=>new LinkedNodeList<any>());
+	if(!recycle) return linkedListPool.take();
+	recycle.clear();
+	linkedListPool.add(recycle);
 }
 
 // static utility methods
@@ -63,7 +76,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		private _keyComparer:Selector<TKey,any> = Functions.Identity)
 	{
 		super();
-		this._entries = new LinkedNodeList<HashEntry<TKey, TValue>>();
+		this._entries = linkedNodeList();
 		this._buckets = {};
 	}
 
@@ -86,7 +99,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		if(createIfMissing && !bucket)
 			buckets[hash]
 				= bucket
-				= new LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>();
+				= linkedNodeList();
 
 		return bucket;
 	}
@@ -140,7 +153,11 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 				let x = bucket.removeNode(bucketEntry),
 				    y = entries.removeNode(bucketEntry.value);
 
-				if(x && !bucket.count) delete buckets[hash];
+				if(x && !bucket.count) {
+					delete buckets[hash];
+					linkedNodeList(bucket);
+					bucket = null;
+				}
 
 				if(x!==y) throw "Entries and buckets are out of sync.";
 
@@ -178,7 +195,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 			{
 				let bucket = buckets[key];
 				delete buckets[key];
-				bucket.clear();
+				linkedNodeList(bucket);
 			}
 		}
 

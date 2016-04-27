@@ -30,7 +30,7 @@ import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
 import EnumeratorBase from "../System/Collections/Enumeration/EnumeratorBase";
 import Dictionary from "../System/Collections/Dictionaries/Dictionary";
 import Queue from "../System/Collections/Queue";
-import {dispose, disposeThese, using} from "../System/Disposable/Utility";
+import {dispose, using} from "../System/Disposable/dispose";
 import DisposableBase from "../System/Disposable/DisposableBase";
 import Exception from "../System/Exception";
 import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
@@ -1085,7 +1085,7 @@ extends DisposableBase implements IEnumerable<T>
 						}
 						finally
 						{
-							disposeThese(enumeratorStack);
+							dispose.these(enumeratorStack);
 						}
 					}
 				);

@@ -34,7 +34,7 @@ class Defer extends DeferBase
 		if(id)
 		{
 			clearTimeout(id);
-			this._id = 0;
+			this._id = null;
 			return true;
 		}
 		return false;

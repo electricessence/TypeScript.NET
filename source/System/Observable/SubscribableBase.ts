@@ -10,7 +10,7 @@
 'use strict'; // For compatibility with (let, const, function, class);
 
 import LinkedNodeList from "../Collections/LinkedNodeList";
-import * as DisposeUtility from "../Disposable/Utility";
+import dispose from "../Disposable/dispose";
 import Subscription from "./Subscription";
 
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
@@ -77,7 +77,7 @@ implements IDisposable
 		var u = returnSubscribers ? s.map(o=>o.subscriber) : null;
 		_s.clear(); // Reset...
 
-		DisposeUtility.disposeThese(s);
+		dispose.these(s);
 
 		return u;
 	}

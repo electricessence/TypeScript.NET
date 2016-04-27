@@ -9,12 +9,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/Utility", "./Subscription"], factory);
+        define(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription"], factory);
     }
 })(function (require, exports) {
     'use strict';
     var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
-    var DisposeUtility = require("../Disposable/Utility");
+    var dispose_1 = require("../Disposable/dispose");
     var Subscription_1 = require("./Subscription");
     var SubscribableBase = (function () {
         function SubscribableBase() {
@@ -55,7 +55,7 @@
             var s = _s.map(function (n) { return n.value; });
             var u = returnSubscribers ? s.map(function (o) { return o.subscriber; }) : null;
             _s.clear();
-            DisposeUtility.disposeThese(s);
+            dispose_1.default.these(s);
             return u;
         };
         SubscribableBase.prototype.unsubscribeAll = function () {

@@ -21,42 +21,47 @@ export function dispose(...disposables:IDisposable[]):void
 	disposeTheseInternal(disposables, false);
 }
 
-export function disposeDeferred(...disposables:IDisposable[]):void {
-	disposeTheseDeferred(disposables);
-}
+export module dispose {
 
-/**
- * Takes any number of disposables and traps any errors that occur when disposing.
- * Returns an array of the exceptions thrown.
- * @param disposables
- * @returns {any[]} Returns an array of exceptions that occurred, if there are any.
- */
-export function disposeWithoutException(...disposables:IDisposable[]):any[]
-{
-	// The disposables arguments array is effectively localized so it's safe.
-	return disposeTheseInternal(disposables, true);
-}
-
-
-
-/**
- * Takes an array of disposable objects and ensures they are disposed.
- * @param disposables
- * @param trapExceptions If true, prevents exceptions from being thrown when disposing.
- * @returns {any[]} If 'trapExceptions' is true, returns an array of exceptions that occurred, if there are any.
- */
-export function disposeThese(disposables:IDisposable[], trapExceptions?:boolean):any[]
-{
-	return disposables && disposables.length
-		? disposeTheseInternal(disposables.slice(), trapExceptions)
-		: null;
-}
-
-export function disposeTheseDeferred(disposables:IDisposable[], delay:number = 0):void {
-	if(disposables && disposables.length) {
-		if(!(delay>=0)) delay = 0;
-		setTimeout(disposeTheseInternal,delay,disposables.slice(), true);
+	export function deferred(...disposables:IDisposable[]):void {
+		these.deferred(disposables);
 	}
+
+
+	/**
+	 * Takes any number of disposables and traps any errors that occur when disposing.
+	 * Returns an array of the exceptions thrown.
+	 * @param disposables
+	 * @returns {any[]} Returns an array of exceptions that occurred, if there are any.
+	 */
+	export function withoutException(...disposables:IDisposable[]):any[]
+	{
+		// The disposables arguments array is effectively localized so it's safe.
+		return disposeTheseInternal(disposables, true);
+	}
+
+	/**
+	 * Takes an array of disposable objects and ensures they are disposed.
+	 * @param disposables
+	 * @param trapExceptions If true, prevents exceptions from being thrown when disposing.
+	 * @returns {any[]} If 'trapExceptions' is true, returns an array of exceptions that occurred, if there are any.
+	 */
+	export function these(disposables:IDisposable[], trapExceptions?:boolean):any[]
+	{
+		return disposables && disposables.length
+			? disposeTheseInternal(disposables.slice(), trapExceptions)
+			: null;
+	}
+
+	export module these {
+		export function deferred(disposables:IDisposable[], delay:number = 0):void {
+			if(disposables && disposables.length) {
+				if(!(delay>=0)) delay = 0;
+				setTimeout(disposeTheseInternal,delay,disposables.slice(), true);
+			}
+		}
+	}
+
 }
 
 /**
@@ -65,8 +70,8 @@ export function disposeTheseDeferred(disposables:IDisposable[], delay:number = 0
  * Usage:
  * ```typescript
  * using(new DisposableObject(),(myObj)=>{
- *   // do work with myObj
- * });
+     *   // do work with myObj
+     * });
  * // myObj automatically has it's dispose method called.
  * ```
  *
@@ -167,3 +172,4 @@ function disposeTheseInternal(
 	return exceptions;
 }
 
+export default dispose;

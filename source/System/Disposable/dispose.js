@@ -20,37 +20,43 @@
         disposeTheseInternal(disposables, false);
     }
     exports.dispose = dispose;
-    function disposeDeferred() {
-        var disposables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+    var dispose;
+    (function (dispose) {
+        function deferred() {
+            var disposables = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                disposables[_i - 0] = arguments[_i];
+            }
+            these.deferred(disposables);
         }
-        disposeTheseDeferred(disposables);
-    }
-    exports.disposeDeferred = disposeDeferred;
-    function disposeWithoutException() {
-        var disposables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+        dispose.deferred = deferred;
+        function withoutException() {
+            var disposables = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                disposables[_i - 0] = arguments[_i];
+            }
+            return disposeTheseInternal(disposables, true);
         }
-        return disposeTheseInternal(disposables, true);
-    }
-    exports.disposeWithoutException = disposeWithoutException;
-    function disposeThese(disposables, trapExceptions) {
-        return disposables && disposables.length
-            ? disposeTheseInternal(disposables.slice(), trapExceptions)
-            : null;
-    }
-    exports.disposeThese = disposeThese;
-    function disposeTheseDeferred(disposables, delay) {
-        if (delay === void 0) { delay = 0; }
-        if (disposables && disposables.length) {
-            if (!(delay >= 0))
-                delay = 0;
-            setTimeout(disposeTheseInternal, delay, disposables.slice(), true);
+        dispose.withoutException = withoutException;
+        function these(disposables, trapExceptions) {
+            return disposables && disposables.length
+                ? disposeTheseInternal(disposables.slice(), trapExceptions)
+                : null;
         }
-    }
-    exports.disposeTheseDeferred = disposeTheseDeferred;
+        dispose.these = these;
+        var these;
+        (function (these) {
+            function deferred(disposables, delay) {
+                if (delay === void 0) { delay = 0; }
+                if (disposables && disposables.length) {
+                    if (!(delay >= 0))
+                        delay = 0;
+                    setTimeout(disposeTheseInternal, delay, disposables.slice(), true);
+                }
+            }
+            these.deferred = deferred;
+        })(these = dispose.these || (dispose.these = {}));
+    })(dispose = exports.dispose || (exports.dispose = {}));
     function using(disposable, closure) {
         try {
             return closure(disposable);
@@ -108,5 +114,7 @@
         }
         return exceptions;
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = dispose;
 });
-//# sourceMappingURL=Utility.js.map
+//# sourceMappingURL=dispose.js.map

@@ -9,7 +9,7 @@
 import LinkedNodeList from "./LinkedNodeList";
 import ArgumentNullException from "../Exceptions/ArgumentNullException";
 import {forEach, empty as emptyEnumerator} from "./Enumeration/Enumerator";
-import {using} from "../Disposable/Utility";
+import {using} from "../Disposable/dispose";
 import {areEqual} from "../Compare";
 import CollectionBase from "./CollectionBase";
 
