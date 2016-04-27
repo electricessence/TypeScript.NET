@@ -5,11 +5,11 @@
 System.register([], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
-    var VOID0, _BOOLEAN, _NUMBER, _STRING, _OBJECT, _UNDEFINED, _FUNCTION, typeInfoRegistry, TypeInfo, Type;
+    var VOID0, _BOOLEAN, _NUMBER, _STRING, _OBJECT, _UNDEFINED, _FUNCTION, LENGTH, typeInfoRegistry, TypeInfo, Type;
     return {
         setters:[],
         execute: function() {
-            VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { };
+            VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
             typeInfoRegistry = {};
             TypeInfo = (function () {
                 function TypeInfo(target) {
@@ -150,7 +150,9 @@ System.register([], function(exports_1, context_1) {
                 }
                 Type.hasMemberOfType = hasMemberOfType;
                 function isArrayLike(instance) {
-                    return instance instanceof Array || hasMember(instance, "length");
+                    return instance instanceof Array
+                        || Type.isString(instance)
+                        || !Type.isFunction(instance) && hasMember(instance, LENGTH);
                 }
                 Type.isArrayLike = isArrayLike;
             })(Type || (Type = {}));

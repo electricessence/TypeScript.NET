@@ -34,17 +34,17 @@ export function from(source) {
         return Empty;
     if (Array.isArray(source))
         return new ArrayEnumerator(source);
+    if (Type.isArrayLike(source)) {
+        return new IndexEnumerator(() => {
+            return {
+                source: source,
+                length: source.length,
+                pointer: 0,
+                step: 1
+            };
+        });
+    }
     if (!Type.isPrimitive(source)) {
-        if (Type.isArrayLike(source)) {
-            return new IndexEnumerator(() => {
-                return {
-                    source: source,
-                    length: source.length,
-                    pointer: 0,
-                    step: 1
-                };
-            });
-        }
         if (isEnumerable(source))
             return source.getEnumerator();
     }

@@ -10,7 +10,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var EnumeratorBase_1 = require('./EnumeratorBase');
+var EnumeratorBase_1 = require("./EnumeratorBase");
 
 var IndexEnumerator = function (_EnumeratorBase_1$def) {
     _inherits(IndexEnumerator, _EnumeratorBase_1$def);
@@ -25,10 +25,10 @@ var IndexEnumerator = function (_EnumeratorBase_1$def) {
                 if (source.length < 0) throw new Error("length must be zero or greater");
                 if (source.length && source.step === 0) throw new Error("Invalid IndexEnumerator step value (0).");
                 var pointer = source.pointer;
-                if (!pointer) source.pointer = 0;else if (pointer != Math.floor(pointer)) throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
+                if (!pointer) pointer = 0;else if (pointer != Math.floor(pointer)) throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
                 source.pointer = pointer;
                 var step = source.step;
-                if (!step) source.step = 1;else if (step != Math.floor(step)) throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
+                if (!step) step = 1;else if (step != Math.floor(step)) throw new Error("Invalid IndexEnumerator step value (" + step + ") has decimal.");
                 source.step = step;
             }
         }, function (yielder) {

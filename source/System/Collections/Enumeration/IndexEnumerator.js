@@ -12,11 +12,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './EnumeratorBase'], factory);
+        define(["require", "exports", "./EnumeratorBase"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var EnumeratorBase_1 = require('./EnumeratorBase');
+    var EnumeratorBase_1 = require("./EnumeratorBase");
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
         function IndexEnumerator(sourceFactory) {
