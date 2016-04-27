@@ -42,7 +42,7 @@ class DeferInterval extends DeferBase {
         var id = this._id;
         if (id) {
             clearInterval(id);
-            this._id = 0;
+            this._id = null;
             return true;
         }
         return false;
