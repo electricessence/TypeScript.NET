@@ -14,12 +14,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Disposable/dispose", "../Disposable/DisposableBase", "../Tasks/TaskHandler"], factory);
+        define(["require", "exports", "./dispose", "./DisposableBase", "../Tasks/TaskHandler"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var dispose_1 = require("../Disposable/dispose");
-    var DisposableBase_1 = require("../Disposable/DisposableBase");
+    var dispose_1 = require("./dispose");
+    var DisposableBase_1 = require("./DisposableBase");
     var TaskHandler_1 = require("../Tasks/TaskHandler");
     var ObjectPool = (function (_super) {
         __extends(ObjectPool, _super);
@@ -52,8 +52,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             configurable: true
         });
         ObjectPool.prototype._trim = function () {
-            if (this._pool.length > this._maxSize)
-                this._pool.length = this._maxSize;
+            var pool = this._pool;
+            while (pool.length > this._maxSize)
+                dispose_1.default.withoutException(pool.pop());
         };
         ObjectPool.prototype.trim = function (defer) {
             this.throwIfDisposed();
@@ -63,6 +64,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._trimmer.cancel();
             this._flusher.cancel();
             this._autoFlusher.cancel();
+            dispose_1.default.these(this._pool, true);
             this._pool.length = 0;
         };
         ObjectPool.prototype.clear = function (defer) {

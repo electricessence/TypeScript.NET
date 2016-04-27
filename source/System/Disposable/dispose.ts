@@ -13,6 +13,8 @@ import Type from "../Types";
  * Takes any number of disposables as arguments and attempts to dispose them.
  * Any exceptions thrown within a dispose are not trapped.
  * Use 'disposeWithoutException' to automatically trap exceptions.
+ *
+ * Can accept <any> and will ignore objects that don't have a dispose() method.
  * @param disposables
  */
 export function dispose(...disposables:IDisposable[]):void
@@ -102,7 +104,7 @@ function disposeSingle(
 	disposable:IDisposable,
 	trapExceptions:boolean):any
 {
-	if(Type.of(disposable).member('dispose').isFunction)
+	if(disposable && Type.of(disposable).member('dispose').isFunction)
 	{
 		if(trapExceptions)
 		{

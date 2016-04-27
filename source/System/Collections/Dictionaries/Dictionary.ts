@@ -14,7 +14,7 @@ import Functions from "../../Functions";
 import DictionaryBase from "./DictionaryBase";
 import EnumeratorBase from "../Enumeration/EnumeratorBase";
 import LinkedNodeList from "../LinkedNodeList";
-import ObjectPool from "../ObjectPool";
+import ObjectPool from "../../Disposable/ObjectPool";
 
 const VOID0:any = void 0;
 

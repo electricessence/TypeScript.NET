@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../../Types", "../../Functions", "./DictionaryBase", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../ObjectPool"], factory);
+        define(["require", "exports", "../../Compare", "../../Types", "../../Functions", "./DictionaryBase", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool"], factory);
     }
 })(function (require, exports) {
     'use strict';
@@ -23,7 +23,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var DictionaryBase_1 = require("./DictionaryBase");
     var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
     var LinkedNodeList_1 = require("../LinkedNodeList");
-    var ObjectPool_1 = require("../ObjectPool");
+    var ObjectPool_1 = require("../../Disposable/ObjectPool");
     var VOID0 = void 0;
     var HashEntry = (function () {
         function HashEntry(key, value, previous, next) {

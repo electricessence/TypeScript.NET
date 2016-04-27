@@ -5,8 +5,8 @@
  * Uses .add(T) and .take():T
  */
 
-import dispose from "../Disposable/dispose";
-import DisposableBase from "../Disposable/DisposableBase";
+import dispose from "./dispose";
+import DisposableBase from "./DisposableBase";
 import TaskHandler from "../Tasks/TaskHandler";
 export default class ObjectPool<T> extends DisposableBase {
 
@@ -51,8 +51,9 @@ export default class ObjectPool<T> extends DisposableBase {
 	}
 
 	protected _trim():void {
-		if(this._pool.length>this._maxSize)
-			this._pool.length = this._maxSize;
+		var pool = this._pool;
+		while(pool.length>this._maxSize)
+			dispose.withoutException(<any>pool.pop());
 	}
 
 	/**
@@ -68,6 +69,7 @@ export default class ObjectPool<T> extends DisposableBase {
 		this._trimmer.cancel();
 		this._flusher.cancel();
 		this._autoFlusher.cancel();
+		dispose.these(<any>this._pool,true);
 		this._pool.length = 0;
 	}
 
