@@ -33,12 +33,13 @@ function linkedNodeList(recycle) {
 function callHasOwnProperty(target, key) {
     return Object.prototype.hasOwnProperty.call(target, key);
 }
+const NULL = "null", GET_HASH_CODE = "getHashCode";
 function getHashString(obj) {
     if (obj === null)
-        return "null";
+        return NULL;
     if (obj === VOID0)
-        return "undefined";
-    if (Type.hasMemberOfType(obj, "getHashCode", Type.FUNCTION)) {
+        return Type.UNDEFINED;
+    if (Type.hasMemberOfType(obj, GET_HASH_CODE, Type.FUNCTION)) {
         return obj.getHashCode();
     }
     return (typeof obj.toString == Type.FUNCTION)

@@ -1,7 +1,7 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implmentations.
+ * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
 "use strict";
@@ -135,7 +135,6 @@ var ObjectPool = function (_DisposableBase_1$def) {
                 if (m < ABSOLUTE_MAX_SIZE && _._pool.length > m) _._trimmer.execute(500);
             }
             _.extendAutoClear();
-            console.log("Add to pool: ", _._pool.length);
         }
     }, {
         key: "take",
@@ -146,7 +145,6 @@ var ObjectPool = function (_DisposableBase_1$def) {
                 len = _._pool.length;
             if (_._pool.length <= _._maxSize) _._trimmer.cancel();
             if (len) _.extendAutoClear();
-            console.log("Take from pool: ", _._pool.length);
             return e;
         }
     }, {
