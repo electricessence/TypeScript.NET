@@ -8,6 +8,8 @@
 import Type from "../../Types";
 import {copy} from "./Utility";
 
+const VOID0:any = void(0);
+
 interface DispatchErrorHandler
 {
 	(ex?:any, i?:number):void;
@@ -86,11 +88,11 @@ export function mapped<T,TResult>(
 			{
 				result[i] = fn // Ignore null refs.
 					? fn(payload)
-					: undefined;
+					: VOID0;
 			}
 			catch(ex)
 			{
-				result[i] = undefined;
+				result[i] = VOID0;
 				if(!trap)
 					throw ex;
 				else if(Type.isFunction(trap))
@@ -111,9 +113,11 @@ export function mapped<T,TResult>(
  * @param payload
  * @param trap
  */
-export default function dispatch<T>(
+export function dispatch<T>(
 	listeners:IArray<(payload:T)=>any>,
 	payload:T, trap?:boolean|DispatchErrorHandler):void
 {
 	unsafe(copy(listeners), payload, trap);
 }
+
+export default dispatch;

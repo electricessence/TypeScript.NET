@@ -37,9 +37,8 @@ function areEqual(a, b, strict) {
     return true;
 }
 exports.areEqual = areEqual;
-function copyAndSort(a, comparer) {
-    if (!a) return null;
-    if (Array.isArray(a)) return a.slice();
+function sort(a, comparer) {
+    if (!a || a.length < 2) return a;
     var len = a.length,
         b;
     if (len > 65536) b = new Array(len);else {
@@ -56,8 +55,8 @@ function areEquivalent(a, b) {
 
     var len = validateSize(a, b);
     if (Types_1.default.isBoolean(len)) return len;
-    a = copyAndSort(a, comparer);
-    b = copyAndSort(b, comparer);
+    a = sort(a, comparer);
+    b = sort(b, comparer);
     for (var i = 0; i < len; i++) {
         if (comparer(a[i], b[i]) !== 0) return false;
     }

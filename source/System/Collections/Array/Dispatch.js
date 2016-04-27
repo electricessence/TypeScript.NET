@@ -13,6 +13,7 @@
     "use strict";
     var Types_1 = require("../../Types");
     var Utility_1 = require("./Utility");
+    var VOID0 = void (0);
     function unsafe(listeners, payload, trap) {
         if (listeners && listeners.length) {
             for (var i = 0, len = listeners.length; i < len; i++) {
@@ -42,10 +43,10 @@
                 try {
                     result[i] = fn
                         ? fn(payload)
-                        : undefined;
+                        : VOID0;
                 }
                 catch (ex) {
-                    result[i] = undefined;
+                    result[i] = VOID0;
                     if (!trap)
                         throw ex;
                     else if (Types_1.default.isFunction(trap))
@@ -59,6 +60,7 @@
     function dispatch(listeners, payload, trap) {
         unsafe(Utility_1.copy(listeners), payload, trap);
     }
+    exports.dispatch = dispatch;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = dispatch;
 });

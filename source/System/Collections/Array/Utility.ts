@@ -84,6 +84,8 @@ export function copyTo<T,TDestination extends IArray<any>>(
 		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
 
 	var sourceLength = source.length;
+	if(!sourceLength)
+		return destination;
 	if(sourceIndex>=sourceLength)
 		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
 
@@ -294,7 +296,7 @@ export function forEach<T>(
 		// Don't cache the length since it is possible that the underlying array changed.
 		for(let i = 0; i<source.length; i++)
 		{
-			if(action(source[i])===false)
+			if(action(source[i],i)===false)
 				break;
 		}
 	}

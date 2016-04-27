@@ -71,18 +71,20 @@ export function areEqual<T>(
 
 }
 
-function copyAndSort<T>(a:IArray<T>, comparer:Comparison<T>):T[]
+function sort<T>(a:IArray<T>, comparer:Comparison<T>):IArray<T>
 {
-	if(!a) return null;
-	if(Array.isArray(a)) return (<Array<T>>a).slice();
+	if(!a || a.length<2) return a;
+
 	var len = a.length, b:T[];
-	if(len>65536) b = new Array(len);
-	else
-	{
+	if(len>65536)
+		b = new Array(len);
+	else {
 		b = [];
 		b.length = len;
 	}
-	for(let i = 0; i<len; i++) b[i] = a[i];
+	for(let i = 0; i<len; i++)
+		b[i] = a[i];
+
 	b.sort(comparer);
 	return b;
 }
@@ -99,8 +101,8 @@ export function areEquivalent<T>(
 
 	// There might be a better more performant way to do this, but for the moment, this
 	// works quite well.
-	a = copyAndSort(a, comparer);
-	b = copyAndSort(b, comparer);
+	a = sort(a, comparer);
+	b = sort(b, comparer);
 
 	for(let i = 0; i<len; i++)
 	{

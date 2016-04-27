@@ -41,6 +41,7 @@ function copyTo(source, destination) {
     if (!destination) throw new ArgumentNullException_1.default('destination', CBN);
     if (sourceIndex < 0) throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, CBL0);
     var sourceLength = source.length;
+    if (!sourceLength) return destination;
     if (sourceIndex >= sourceLength) throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
     if (destination.length < 0) throw new ArgumentOutOfRangeException_1.default('destinationIndex', destinationIndex, CBL0);
     var maxLength = source.length - sourceIndex;
@@ -138,7 +139,7 @@ exports.findIndex = findIndex;
 function forEach(source, action) {
     if (source && action) {
         for (var i = 0; i < source.length; i++) {
-            if (action(source[i]) === false) break;
+            if (action(source[i], i) === false) break;
         }
     }
 }
