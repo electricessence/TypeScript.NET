@@ -4,6 +4,7 @@
  */
 import Type from "../../Types";
 import { copy } from "./Utility";
+const VOID0 = void (0);
 export function unsafe(listeners, payload, trap) {
     if (listeners && listeners.length) {
         for (let i = 0, len = listeners.length; i < len; i++) {
@@ -32,10 +33,10 @@ export function mapped(listeners, payload, trap) {
             try {
                 result[i] = fn
                     ? fn(payload)
-                    : undefined;
+                    : VOID0;
             }
             catch (ex) {
-                result[i] = undefined;
+                result[i] = VOID0;
                 if (!trap)
                     throw ex;
                 else if (Type.isFunction(trap))
@@ -45,7 +46,8 @@ export function mapped(listeners, payload, trap) {
     }
     return result;
 }
-export default function dispatch(listeners, payload, trap) {
+export function dispatch(listeners, payload, trap) {
     unsafe(copy(listeners), payload, trap);
 }
+export default dispatch;
 //# sourceMappingURL=Dispatch.js.map

@@ -3,11 +3,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../../../../source/System/Collections/Array/Compare'], factory);
+        define(["require", "exports", "../../../../../source/System/Collections/Array/Compare"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ArrayCompare = require('../../../../../source/System/Collections/Array/Compare');
+    var ArrayCompare = require("../../../../../source/System/Collections/Array/Compare");
     var assert = require('../../../../../node_modules/assert/assert');
     var a1 = [1, 2, 3];
     var a2 = [1, 2, 3];

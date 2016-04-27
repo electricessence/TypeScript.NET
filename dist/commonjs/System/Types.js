@@ -16,7 +16,8 @@ var VOID0 = void 0,
     _STRING = _typeof(""),
     _OBJECT = _typeof({}),
     _UNDEFINED = typeof VOID0 === "undefined" ? "undefined" : _typeof(VOID0),
-    _FUNCTION = _typeof(function () {});
+    _FUNCTION = _typeof(function () {}),
+    LENGTH = "length";
 var typeInfoRegistry = {};
 
 var TypeInfo = function () {
@@ -165,7 +166,7 @@ var Type;
     }
     Type.hasMemberOfType = hasMemberOfType;
     function isArrayLike(instance) {
-        return instance instanceof Array || hasMember(instance, "length");
+        return instance instanceof Array || Type.isString(instance) || !Type.isFunction(instance) && hasMember(instance, LENGTH);
     }
     Type.isArrayLike = isArrayLike;
 })(Type || (Type = {}));

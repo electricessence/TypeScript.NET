@@ -15,7 +15,8 @@ const
 	_STRING:string  = typeof "",
 	_OBJECT:string  = typeof {},
 	_UNDEFINED:string = typeof VOID0,
-	_FUNCTION:string = typeof function() {};
+	_FUNCTION:string = typeof function() {},
+	LENGTH:string = "length";
 
 // Only used for primitives.
 var typeInfoRegistry:{[key:string]:TypeInfo} = {};
@@ -291,7 +292,19 @@ module Type
 
 	export function isArrayLike<T>(instance:any):instance is IArray<T>
 	{
-		return instance instanceof Array || hasMember(instance, "length");
+		/*
+		 * NOTE:
+		 *
+		 * Functions:
+		 * Enumerating a function although it has a .length property will yield nothing or unexpected results.
+		 * Effectively, a function is not like an array.
+		 *
+		 * Strings:
+		 * Behave like arrays but don't have the same exact methods.
+		 */
+		return instance instanceof Array
+			|| Type.isString(instance)
+			|| !Type.isFunction(instance) && hasMember(instance, LENGTH);
 	}
 }
 

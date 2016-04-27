@@ -22,6 +22,7 @@ var IndexEnumerator = function (_EnumeratorBase_1$def) {
         return _possibleConstructorReturn(this, Object.getPrototypeOf(IndexEnumerator).call(this, function () {
             source = sourceFactory();
             if (source && source.source) {
+                if (source.length < 0) throw new Error("length must be zero or greater");
                 if (source.length && source.step === 0) throw new Error("Invalid IndexEnumerator step value (0).");
                 var pointer = source.pointer;
                 if (!pointer) source.pointer = 0;else if (pointer != Math.floor(pointer)) throw new Error("Invalid IndexEnumerator pointer value (" + pointer + ") has decimal.");
@@ -32,7 +33,7 @@ var IndexEnumerator = function (_EnumeratorBase_1$def) {
             }
         }, function (yielder) {
             var len = source && source.source ? source.length : 0;
-            if (!len) return yielder.yieldBreak();
+            if (!len || isNaN(len)) return yielder.yieldBreak();
             var current = source.pointer;
             source.pointer += source.step;
             return current < len && current >= 0 ? yielder.yieldReturn(source.source[current]) : yielder.yieldBreak();

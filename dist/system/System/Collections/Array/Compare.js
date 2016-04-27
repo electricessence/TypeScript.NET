@@ -44,11 +44,9 @@ System.register(["../../Compare", "../../Types"], function(exports_1, context_1)
         return true;
     }
     exports_1("areEqual", areEqual);
-    function copyAndSort(a, comparer) {
-        if (!a)
-            return null;
-        if (Array.isArray(a))
-            return a.slice();
+    function sort(a, comparer) {
+        if (!a || a.length < 2)
+            return a;
         var len = a.length, b;
         if (len > 65536)
             b = new Array(len);
@@ -66,8 +64,8 @@ System.register(["../../Compare", "../../Types"], function(exports_1, context_1)
         var len = validateSize(a, b);
         if (Types_1.default.isBoolean(len))
             return len;
-        a = copyAndSort(a, comparer);
-        b = copyAndSort(b, comparer);
+        a = sort(a, comparer);
+        b = sort(b, comparer);
         for (var i = 0; i < len; i++) {
             if (comparer(a[i], b[i]) !== 0)
                 return false;

@@ -41,19 +41,5 @@
             assert.equal(uTuples.toString(), uKvp.toString());
         });
     });
-    describe('es6 > babel > commonjs', function () {
-        var Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
-        var u2 = Uri2.from(path + query);
-        describe('.path', function () {
-            it('should equal ' + path, function () {
-                assert.equal(u2.path, path);
-            });
-        });
-        describe('.query', function () {
-            it('should equal ' + query, function () {
-                assert.equal(u2.query, query);
-            });
-        });
-    });
 });
 //# sourceMappingURL=Uri.js.map

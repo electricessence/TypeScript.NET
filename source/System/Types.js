@@ -11,7 +11,7 @@
     }
 })(function (require, exports) {
     'use strict';
-    var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { };
+    var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
     var typeInfoRegistry = {};
     var TypeInfo = (function () {
         function TypeInfo(target) {
@@ -153,7 +153,9 @@
         }
         Type.hasMemberOfType = hasMemberOfType;
         function isArrayLike(instance) {
-            return instance instanceof Array || hasMember(instance, "length");
+            return instance instanceof Array
+                || Type.isString(instance)
+                || !Type.isFunction(instance) && hasMember(instance, LENGTH);
         }
         Type.isArrayLike = isArrayLike;
     })(Type || (Type = {}));

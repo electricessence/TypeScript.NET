@@ -1,6 +1,6 @@
 ///<reference path="../../import.d.ts"/>
 
-import Uri from '../../../../source/System/Uri/Uri';
+import Uri from "../../../../source/System/Uri/Uri";
 var assert = require('../../../../node_modules/assert/assert');
 
 const path = '/one/two/three.html';
@@ -63,26 +63,26 @@ describe('KVP versus Tuple', ()=>
 
 });
 
-
-describe('es6 > babel > commonjs', ()=>
-{
-	const Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
-
-	var u2 = Uri2.from(path + query);
-
-	describe('.path', ()=>
-	{
-		it('should equal ' + path, ()=>
-		{
-			assert.equal(u2.path, path);
-		});
-	});
-
-	describe('.query', ()=>
-	{
-		it('should equal ' + query, ()=>
-		{
-			assert.equal(u2.query, query);
-		});
-	});
-});
+// Disabled for code coverage report
+// describe('es6 > babel > commonjs', ()=>
+// {
+// 	const Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
+//
+// 	var u2 = Uri2.from(path + query);
+//
+// 	describe('.path', ()=>
+// 	{
+// 		it('should equal ' + path, ()=>
+// 		{
+// 			assert.equal(u2.path, path);
+// 		});
+// 	});
+//
+// 	describe('.query', ()=>
+// 	{
+// 		it('should equal ' + query, ()=>
+// 		{
+// 			assert.equal(u2.query, query);
+// 		});
+// 	});
+// });

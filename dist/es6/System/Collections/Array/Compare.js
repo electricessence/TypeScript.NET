@@ -38,11 +38,9 @@ export function areEqual(a, b, strict, equalityComparer = Values.areEqual) {
     }
     return true;
 }
-function copyAndSort(a, comparer) {
-    if (!a)
-        return null;
-    if (Array.isArray(a))
-        return a.slice();
+function sort(a, comparer) {
+    if (!a || a.length < 2)
+        return a;
     var len = a.length, b;
     if (len > 65536)
         b = new Array(len);
@@ -59,8 +57,8 @@ export function areEquivalent(a, b, comparer = Values.compare) {
     var len = validateSize(a, b);
     if (Type.isBoolean(len))
         return len;
-    a = copyAndSort(a, comparer);
-    b = copyAndSort(b, comparer);
+    a = sort(a, comparer);
+    b = sort(b, comparer);
     for (let i = 0; i < len; i++) {
         if (comparer(a[i], b[i]) !== 0)
             return false;

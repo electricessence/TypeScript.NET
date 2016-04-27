@@ -33,6 +33,8 @@ export function copyTo(source, destination, sourceIndex = 0, destinationIndex = 
     if (sourceIndex < 0)
         throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
     var sourceLength = source.length;
+    if (!sourceLength)
+        return destination;
     if (sourceIndex >= sourceLength)
         throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
     if (destination.length < 0)
@@ -130,7 +132,7 @@ export function findIndex(array, predicate) {
 export function forEach(source, action) {
     if (source && action) {
         for (let i = 0; i < source.length; i++) {
-            if (action(source[i]) === false)
+            if (action(source[i], i) === false)
                 break;
         }
     }

@@ -61,23 +61,23 @@ export function from<T>(source:IEnumerableOrArray<T>):IEnumerator<T>
 	if(Array.isArray(source))
 		return new ArrayEnumerator<T>(<T[]>source);
 
+	if(Type.isArrayLike<T>(source))
+	{
+		return new IndexEnumerator<T>(
+			() =>
+			{
+				return {
+					source: source,
+					length: source.length,
+					pointer: 0,
+					step: 1
+				}
+			}
+		);
+	}
 
 	if(!Type.isPrimitive(source))
 	{
-		if(Type.isArrayLike<T>(source))
-		{
-			return new IndexEnumerator<T>(
-				() =>
-				{
-					return {
-						source: source,
-						length: source.length,
-						pointer: 0,
-						step: 1
-					}
-				}
-			);
-		}
 		if(isEnumerable<T>(source))
 			return source.getEnumerator();
 

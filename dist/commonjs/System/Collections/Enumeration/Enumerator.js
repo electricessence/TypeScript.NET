@@ -58,17 +58,17 @@ exports.empty = Empty;
 function from(source) {
     if (!source) return Empty;
     if (Array.isArray(source)) return new ArrayEnumerator_1.default(source);
+    if (Types_1.default.isArrayLike(source)) {
+        return new IndexEnumerator_1.default(function () {
+            return {
+                source: source,
+                length: source.length,
+                pointer: 0,
+                step: 1
+            };
+        });
+    }
     if (!Types_1.default.isPrimitive(source)) {
-        if (Types_1.default.isArrayLike(source)) {
-            return new IndexEnumerator_1.default(function () {
-                return {
-                    source: source,
-                    length: source.length,
-                    pointer: 0,
-                    step: 1
-                };
-            });
-        }
         if (isEnumerable(source)) return source.getEnumerator();
     }
     throw new Error("Unknown enumerable.");
