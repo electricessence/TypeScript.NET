@@ -156,5 +156,4 @@
         assert.equal(group_B.sum(function (x) { return x.Salary; }), 1000000000.00, "Expected sum to be correct.");
     });
 });
-
 //# sourceMappingURL=Enumerable.js.map

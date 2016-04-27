@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/.nuget" />
       <excludeFolder url="file://$MODULE_DIR$/bower_components" />
+      <excludeFolder url="file://$MODULE_DIR$/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/documentation" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
