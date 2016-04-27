@@ -8,6 +8,7 @@
 import dispose from "./dispose";
 import DisposableBase from "./DisposableBase";
 import TaskHandler from "../Tasks/TaskHandler";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
 export default class ObjectPool<T> extends DisposableBase {
 
 	private _pool:T[];
@@ -25,12 +26,16 @@ export default class ObjectPool<T> extends DisposableBase {
 		private _generator:()=>T)
 	{
 		super();
-		this._disposableObjectName = "ObjectPool";
-		this._pool = [];
-		this._trimmer = new TaskHandler(()=>this._trim());
-		var clear = ()=>this._clear();
-		this._flusher = new TaskHandler(clear);
-		this._autoFlusher = new TaskHandler(clear);
+		if(_maxSize<1)
+			throw new ArgumentOutOfRangeException('_maxSize',_maxSize,"Must be at least 1.");
+
+		var _ = this;
+		_._disposableObjectName = "ObjectPool";
+		_._pool = [];
+		_._trimmer = new TaskHandler(()=>_._trim());
+		var clear = ()=>_._clear();
+		_._flusher = new TaskHandler(clear);
+		_._autoFlusher = new TaskHandler(clear);
 	}
 
 	/**
@@ -66,11 +71,12 @@ export default class ObjectPool<T> extends DisposableBase {
 	}
 
 	protected _clear():void {
-		this._trimmer.cancel();
-		this._flusher.cancel();
-		this._autoFlusher.cancel();
-		dispose.these(<any>this._pool,true);
-		this._pool.length = 0;
+		var _ = this, p = _._pool;
+		_._trimmer.cancel();
+		_._flusher.cancel();
+		_._autoFlusher.cancel();
+		dispose.these(<any>p,true);
+		p.length = 0;
 	}
 
 	/**
@@ -84,14 +90,13 @@ export default class ObjectPool<T> extends DisposableBase {
 	}
 
 	toArrayAndClear():T[] {
-		this.throwIfDisposed();
-		this._trimmer.cancel();
-		this._flusher.cancel();
-		var p = this._pool;
-		if(p) {
-			this._pool = [];
-			return p;
-		}
+		var _ = this;
+		_.throwIfDisposed();
+		_._trimmer.cancel();
+		_._flusher.cancel();
+		var p = _._pool;
+		_._pool = [];
+		return p;
 	}
 
 	/**
@@ -105,18 +110,19 @@ export default class ObjectPool<T> extends DisposableBase {
 	protected _onDispose():void
 	{
 		super._onDispose();
-		this._generator = null;
+		var _ = this;
+		_._generator = null;
 		dispose(
-			this._trimmer,
-			this._flusher,
-			this._autoFlusher
+			_._trimmer,
+			_._flusher,
+			_._autoFlusher
 		);
-		this._trimmer = null;
-		this._flusher = null;
-		this._autoFlusher = null;
+		_._trimmer = null;
+		_._flusher = null;
+		_._autoFlusher = null;
 
-		this._pool.length = 0;
-		this._pool = null;
+		_._pool.length = 0;
+		_._pool = null;
 	}
 
 	extendAutoClear():void {
