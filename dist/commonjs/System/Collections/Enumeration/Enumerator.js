@@ -11,6 +11,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Types_1 = require("../../Types");
 var ArrayEnumerator_1 = require("./ArrayEnumerator");
 var IndexEnumerator_1 = require("./IndexEnumerator");
+var VOID0 = void 0;
 
 var EmptyEnumerator = function () {
     function EmptyEnumerator() {
@@ -23,6 +24,19 @@ var EmptyEnumerator = function () {
             return false;
         }
     }, {
+        key: "nextValue",
+        value: function nextValue() {
+            return VOID0;
+        }
+    }, {
+        key: "next",
+        value: function next() {
+            return {
+                value: VOID0,
+                done: true
+            };
+        }
+    }, {
         key: "reset",
         value: function reset() {}
     }, {
@@ -31,7 +45,7 @@ var EmptyEnumerator = function () {
     }, {
         key: "current",
         get: function get() {
-            return undefined;
+            return VOID0;
         }
     }]);
 

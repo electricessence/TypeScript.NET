@@ -1,7 +1,7 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implmentations.
+ * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
 var __extends = (this && this.__extends) || function (d, b) {
@@ -22,6 +22,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var DisposableBase_1 = require("./DisposableBase");
     var TaskHandler_1 = require("../Tasks/TaskHandler");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
+    var OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
     var ObjectPool = (function (_super) {
         __extends(ObjectPool, _super);
         function ObjectPool(_maxSize, _generator) {
@@ -29,10 +30,13 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._maxSize = _maxSize;
             this._generator = _generator;
             this.autoClearTimeout = 5000;
-            if (_maxSize < 1)
-                throw new ArgumentOutOfRangeException_1.default('_maxSize', _maxSize, "Must be at least 1.");
+            if (isNaN(_maxSize) || _maxSize < 1)
+                throw new ArgumentOutOfRangeException_1.default(_MAX_SIZE, _maxSize, MUST_BE_GT1);
+            if (_maxSize > ABSOLUTE_MAX_SIZE)
+                throw new ArgumentOutOfRangeException_1.default(_MAX_SIZE, _maxSize, MUST_BE_LTM);
+            this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
             var _ = this;
-            _._disposableObjectName = "ObjectPool";
+            _._disposableObjectName = OBJECT_POOL;
             _._pool = [];
             _._trimmer = new TaskHandler_1.default(function () { return _._trim(); });
             var clear = function () { return _._clear(); };
@@ -56,8 +60,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         });
         ObjectPool.prototype._trim = function () {
             var pool = this._pool;
-            while (pool.length > this._maxSize)
+            while (pool.length > this._maxSize) {
                 dispose_1.default.withoutException(pool.pop());
+            }
         };
         ObjectPool.prototype.trim = function (defer) {
             this.throwIfDisposed();
@@ -99,16 +104,24 @@ var __extends = (this && this.__extends) || function (d, b) {
             _._pool = null;
         };
         ObjectPool.prototype.extendAutoClear = function () {
-            var _ = this, t = _.autoClearTimeout;
+            var _ = this;
+            _.throwIfDisposed();
+            var t = _.autoClearTimeout;
             if (isFinite(t) && !_._autoFlusher.isScheduled)
                 _._autoFlusher.execute(t);
         };
         ObjectPool.prototype.add = function (o) {
             var _ = this;
             _.throwIfDisposed();
-            _._pool.push(o);
-            if (_._pool.length > _._maxSize)
-                _._trimmer.execute(500);
+            if (_._pool.length >= _._localAbsMaxSize) {
+                dispose_1.default(o);
+            }
+            else {
+                _._pool.push(o);
+                var m = _._maxSize;
+                if (m < ABSOLUTE_MAX_SIZE && _._pool.length > m)
+                    _._trimmer.execute(500);
+            }
             _.extendAutoClear();
         };
         ObjectPool.prototype.take = function () {

@@ -12,27 +12,45 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var DisposableBase_1 = require('../../Disposable/DisposableBase');
+var DisposableBase_1 = require("../../Disposable/DisposableBase");
+var ObjectPool_1 = require("../../Disposable/ObjectPool");
+var VOID0 = void 0;
+var yielderPool;
+function yielder(recycle) {
+    if (!yielderPool) yielderPool = new ObjectPool_1.default(40, function () {
+        return new Yielder();
+    });
+    if (!recycle) return yielderPool.take();
+    recycle.yieldBreak();
+    yielderPool.add(recycle);
+}
 
 var Yielder = function () {
     function Yielder() {
         _classCallCheck(this, Yielder);
+
+        this._current = VOID0;
     }
 
     _createClass(Yielder, [{
-        key: 'yieldReturn',
+        key: "yieldReturn",
         value: function yieldReturn(value) {
             this._current = value;
             return true;
         }
     }, {
-        key: 'yieldBreak',
+        key: "yieldBreak",
         value: function yieldBreak() {
-            this._current = null;
+            this._current = VOID0;
             return false;
         }
     }, {
-        key: 'current',
+        key: "dispose",
+        value: function dispose() {
+            this.yieldBreak();
+        }
+    }, {
+        key: "current",
         get: function get() {
             return this._current;
         }
@@ -64,14 +82,16 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
     }
 
     _createClass(EnumeratorBase, [{
-        key: 'reset',
+        key: "reset",
         value: function reset() {
             var _ = this;
-            _._yielder = new Yielder();
+            _.throwIfDisposed();
+            var y = _._yielder;
+            if (y) y.yieldBreak();else _._yielder = yielder();
             _._state = EnumeratorState.Before;
         }
     }, {
-        key: 'moveNext',
+        key: "moveNext",
         value: function moveNext() {
             var _ = this;
             try {
@@ -96,15 +116,31 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
             }
         }
     }, {
-        key: '_onDispose',
+        key: "nextValue",
+        value: function nextValue() {
+            return this.moveNext() ? this._yielder.current : VOID0;
+        }
+    }, {
+        key: "next",
+        value: function next() {
+            return this.moveNext() ? {
+                value: this._yielder.current,
+                done: false
+            } : {
+                value: VOID0,
+                done: true
+            };
+        }
+    }, {
+        key: "_onDispose",
         value: function _onDispose() {
             var _ = this,
                 disposer = _.disposer;
             _.initializer = null;
             _.disposer = null;
-            var yielder = _._yielder;
+            var y = _._yielder;
             _._yielder = null;
-            if (yielder) yielder.yieldBreak();
+            yielder(y);
             try {
                 if (disposer) disposer();
             } finally {
@@ -112,7 +148,7 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
             }
         }
     }, {
-        key: 'current',
+        key: "current",
         get: function get() {
             return this._yielder.current;
         }

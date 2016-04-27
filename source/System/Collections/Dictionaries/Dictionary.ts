@@ -48,13 +48,14 @@ function callHasOwnProperty(target:any, key:string)
 	return Object.prototype.hasOwnProperty.call(target, key);
 }
 
+const NULL = "null", GET_HASH_CODE = "getHashCode";
 function getHashString(obj:any):string
 {
-	if(obj===null) return "null";
-	if(obj===VOID0) return "undefined";
+	if(obj===null) return NULL;
+	if(obj===VOID0) return Type.UNDEFINED;
 
 	// See IHashable.
-	if(Type.hasMemberOfType(obj, "getHashCode", Type.FUNCTION))
+	if(Type.hasMemberOfType(obj, GET_HASH_CODE, Type.FUNCTION))
 	{
 		return obj.getHashCode();
 	}

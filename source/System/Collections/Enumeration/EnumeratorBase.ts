@@ -8,26 +8,47 @@
 ///<reference path="IYield.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from '../../Types';
-import DisposableBase from '../../Disposable/DisposableBase'
+import DisposableBase from "../../Disposable/DisposableBase";
+import ObjectPool from "../../Disposable/ObjectPool";
 
+const VOID0:any = void(0);
 
-
-class Yielder<T> implements IYield<T>
+var yielderPool:ObjectPool<Yielder<any>>;
+function yielder():Yielder<any>;
+function yielder(recycle?:Yielder<any>):void;
+function yielder(recycle?:Yielder<any>):Yielder<any>
 {
-	private _current:T;
+	if(!yielderPool)
+		yielderPool
+			= new ObjectPool<Yielder<any>>(40, ()=>new Yielder<any>());
+	if(!recycle) return yielderPool.take();
+	recycle.yieldBreak();
+	yielderPool.add(recycle);
+}
+
+class Yielder<T> implements IYield<T>, IDisposable
+{
+	private _current:T = VOID0;
 	get current():T { return this._current; }
 
-	yieldReturn(value:T):boolean {
+	yieldReturn(value:T):boolean
+	{
 		this._current = value;
 		return true;
 	}
 
-	yieldBreak():boolean {
-		this._current = null;
+	yieldBreak():boolean
+	{
+		this._current = VOID0;
 		return false;
 	}
+
+	dispose():void
+	{
+		this.yieldBreak();
+	}
 }
+
 
 // IEnumerator State
 enum EnumeratorState { Before, Running, After }
@@ -40,7 +61,8 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	private _yielder:Yielder<T>;
 	private _state:EnumeratorState;
 
-	get current():T {
+	get current():T
+	{
 		return this._yielder.current;
 	}
 
@@ -55,16 +77,23 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	}
 
 
-	reset():void {
+	reset():void
+	{
 		var _ = this;
-		_._yielder = new Yielder<T>();
+		_.throwIfDisposed();
+		var y = _._yielder;
+		if(y) y.yieldBreak(); // Already exists? Reset.
+		else _._yielder = yielder(); // New? Get one from the object pool.
 		_._state = EnumeratorState.Before;
 	}
 
-	moveNext():boolean {
+	moveNext():boolean
+	{
 		var _ = this;
-		try {
-			switch(_._state) {
+		try
+		{
+			switch(_._state)
+			{
 				case EnumeratorState.Before:
 					_._state = EnumeratorState.Running;
 					var initializer = _.initializer;
@@ -72,10 +101,12 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 						initializer();
 				// fall through
 				case EnumeratorState.Running:
-					if(_.tryGetNext(_._yielder)) {
+					if(_.tryGetNext(_._yielder))
+					{
 						return true;
 					}
-					else {
+					else
+					{
 						this.dispose();
 						return false;
 					}
@@ -83,30 +114,54 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 					return false;
 			}
 		}
-		catch(e) {
+		catch(e)
+		{
 			this.dispose();
 			throw e;
 		}
 	}
 
-	protected _onDispose():void {
+	nextValue():T
+	{
+		return this.moveNext()
+			? this._yielder.current
+			: VOID0;
+	}
+
+	/**
+	 * Exposed for compatibility with generators.
+	 */
+	next():IGeneratorResult<T>
+	{
+		return this.moveNext() ?
+		{
+			value: this._yielder.current,
+			done: false
+		} : {
+			value: VOID0,
+			done: true
+		}
+	}
+
+	protected _onDispose():void
+	{
 		var _ = this, disposer = _.disposer;
 
 		_.initializer = null;
 		_.disposer = null;
 
-		var yielder = _._yielder;
+
+		var y = _._yielder;
 		_._yielder = null;
-		if(yielder)
-			yielder.yieldBreak();
+		yielder(y);
 
-		try {
-
+		try
+		{
 			if(disposer)
 				disposer();
-
 		}
-		finally {
+		finally
+		{
 			//if(this._state==EnumeratorState.Running)
 			this._state = EnumeratorState.After;
 		}

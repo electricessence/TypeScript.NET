@@ -12,13 +12,26 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Disposable/DisposableBase'], factory);
+        define(["require", "exports", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var DisposableBase_1 = require('../../Disposable/DisposableBase');
+    var DisposableBase_1 = require("../../Disposable/DisposableBase");
+    var ObjectPool_1 = require("../../Disposable/ObjectPool");
+    var VOID0 = void (0);
+    var yielderPool;
+    function yielder(recycle) {
+        if (!yielderPool)
+            yielderPool
+                = new ObjectPool_1.default(40, function () { return new Yielder(); });
+        if (!recycle)
+            return yielderPool.take();
+        recycle.yieldBreak();
+        yielderPool.add(recycle);
+    }
     var Yielder = (function () {
         function Yielder() {
+            this._current = VOID0;
         }
         Object.defineProperty(Yielder.prototype, "current", {
             get: function () { return this._current; },
@@ -30,8 +43,11 @@ var __extends = (this && this.__extends) || function (d, b) {
             return true;
         };
         Yielder.prototype.yieldBreak = function () {
-            this._current = null;
+            this._current = VOID0;
             return false;
+        };
+        Yielder.prototype.dispose = function () {
+            this.yieldBreak();
         };
         return Yielder;
     }());
@@ -59,7 +75,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         });
         EnumeratorBase.prototype.reset = function () {
             var _ = this;
-            _._yielder = new Yielder();
+            _.throwIfDisposed();
+            var y = _._yielder;
+            if (y)
+                y.yieldBreak();
+            else
+                _._yielder = yielder();
             _._state = EnumeratorState.Before;
         };
         EnumeratorBase.prototype.moveNext = function () {
@@ -88,14 +109,28 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw e;
             }
         };
+        EnumeratorBase.prototype.nextValue = function () {
+            return this.moveNext()
+                ? this._yielder.current
+                : VOID0;
+        };
+        EnumeratorBase.prototype.next = function () {
+            return this.moveNext() ?
+                {
+                    value: this._yielder.current,
+                    done: false
+                } : {
+                value: VOID0,
+                done: true
+            };
+        };
         EnumeratorBase.prototype._onDispose = function () {
             var _ = this, disposer = _.disposer;
             _.initializer = null;
             _.disposer = null;
-            var yielder = _._yielder;
+            var y = _._yielder;
             _._yielder = null;
-            if (yielder)
-                yielder.yieldBreak();
+            yielder(y);
             try {
                 if (disposer)
                     disposer();

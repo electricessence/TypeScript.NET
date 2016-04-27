@@ -4,9 +4,28 @@
  */
 
 ///<reference path='../../Disposable/IDisposable.d.ts'/>
+///<reference path="IGenerator.d.ts"/>
 
-interface IEnumerator<T> extends IDisposable {
+// IReadOnlyGenerator is added for future compatibility.
+interface IEnumerator<T> extends IReadOnlyGenerator<T>, IDisposable {
+
+	/**
+	 * The current value within the enumeration.
+	 */
 	current: T;
+
+	/**
+	 * Safely moves to the next entry and returns true if there is one.
+	 */
 	moveNext(): boolean;
+
+	/**
+	 * Restarts the enumeration.
+	 */
 	reset(): void;
+
+	/**
+	 * Calls .moveNext() and returns .current
+	 */
+	nextValue():T;
 }

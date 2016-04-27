@@ -45,10 +45,12 @@ function linkedNodeList(recycle) {
 function callHasOwnProperty(target, key) {
     return Object.prototype.hasOwnProperty.call(target, key);
 }
+var NULL = "null",
+    GET_HASH_CODE = "getHashCode";
 function getHashString(obj) {
-    if (obj === null) return "null";
-    if (obj === VOID0) return "undefined";
-    if (Types_1.default.hasMemberOfType(obj, "getHashCode", Types_1.default.FUNCTION)) {
+    if (obj === null) return NULL;
+    if (obj === VOID0) return Types_1.default.UNDEFINED;
+    if (Types_1.default.hasMemberOfType(obj, GET_HASH_CODE, Types_1.default.FUNCTION)) {
         return obj.getHashCode();
     }
     return _typeof(obj.toString) == Types_1.default.FUNCTION ? obj.toString() : Object.prototype.toString.call(obj);

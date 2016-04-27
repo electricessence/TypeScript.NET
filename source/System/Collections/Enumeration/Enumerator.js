@@ -14,18 +14,28 @@
     var Types_1 = require("../../Types");
     var ArrayEnumerator_1 = require("./ArrayEnumerator");
     var IndexEnumerator_1 = require("./IndexEnumerator");
+    var VOID0 = void (0);
     var EmptyEnumerator = (function () {
         function EmptyEnumerator() {
         }
         Object.defineProperty(EmptyEnumerator.prototype, "current", {
             get: function () {
-                return undefined;
+                return VOID0;
             },
             enumerable: true,
             configurable: true
         });
         EmptyEnumerator.prototype.moveNext = function () {
             return false;
+        };
+        EmptyEnumerator.prototype.nextValue = function () {
+            return VOID0;
+        };
+        EmptyEnumerator.prototype.next = function () {
+            return {
+                value: VOID0,
+                done: true
+            };
         };
         EmptyEnumerator.prototype.reset = function () { };
         EmptyEnumerator.prototype.dispose = function () { };

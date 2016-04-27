@@ -14,17 +14,30 @@ import Type from "../../Types";
 import ArrayEnumerator from "./ArrayEnumerator";
 import IndexEnumerator from "./IndexEnumerator";
 
+const VOID0:any = void(0);
 
 class EmptyEnumerator implements IEnumerator<any>
 {
 	get current():any
 	{
-		return undefined;
+		return VOID0;
 	}
 
 	moveNext():boolean
 	{
 		return false;
+	}
+
+	nextValue():any {
+		return VOID0;
+	}
+
+	next():IGeneratorResult<any>
+	{
+		return {
+			value:VOID0,
+			done:true
+		}
 	}
 
 	reset():void { }
