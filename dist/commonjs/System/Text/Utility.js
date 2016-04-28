@@ -6,7 +6,7 @@
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-var Types_1 = require('../Types');
+var Types_1 = require("../Types");
 exports.EMPTY = '';
 function escapeRegExp(source) {
     return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -38,7 +38,7 @@ function supplant(source, params) {
             if (!isNaN(i)) n = i;
         }
         var r = params[n];
-        switch (typeof r === 'undefined' ? 'undefined' : _typeof(r)) {
+        switch (typeof r === "undefined" ? "undefined" : _typeof(r)) {
             case Types_1.default.STRING:
             case Types_1.default.NUMBER:
             case Types_1.default.BOOLEAN:

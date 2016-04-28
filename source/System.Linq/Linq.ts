@@ -657,14 +657,15 @@ extends DisposableBase implements IEnumerable<T>
 			: this.copyTo([]);
 	}
 
-	copyTo(target:T[],index:number = 0):T[] {
+	copyTo(target:T[], index:number = 0):T[]
+	{
 		if(!target) throw new ArgumentNullException("target");
 		Integer.assert(index);
-		if(index<0) throw new ArgumentOutOfRangeException("index",index,"Must be zero or greater");
+		if(index<0) throw new ArgumentOutOfRangeException("index", index, "Must be zero or greater");
 
 		this.forEach((x, i)=>
 		{
-			target[i+index] = x
+			target[i + index] = x
 		});
 
 		return target;
@@ -735,7 +736,8 @@ extends DisposableBase implements IEnumerable<T>
 	 * This also automatically handles disposing the enumerator.
 	 */
 	doAction(
-		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>):Enumerable<T>
+		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
+		initializer?:()=>void):Enumerable<T>
 	{
 
 		var _ = this, disposed = !_.throwIfDisposed();
@@ -751,6 +753,7 @@ extends DisposableBase implements IEnumerable<T>
 					{
 						throwIfDisposed(disposed);
 
+						if(initializer) initializer();
 						index = 0;
 						enumerator = _.getEnumerator();
 					},
@@ -805,7 +808,7 @@ extends DisposableBase implements IEnumerable<T>
 
 		_.throwIfDisposed();
 
-		if(!count || isNaN(count) || count<0) // Out of bounds? Simply return this.
+		if(!(count>0)) // Out of bounds? Simply return this.
 			return _;
 
 		if(!isFinite(count)) // +Infinity equals skip all so return empty.
@@ -813,11 +816,9 @@ extends DisposableBase implements IEnumerable<T>
 
 		Integer.assert(count, "count");
 
-		var c:number = count;
-
 		return this.doAction(
 			(element:T, index?:number) =>
-				index<c
+				index<count
 					? EnumerableAction.Skip
 					: EnumerableAction.Return
 		);
@@ -827,25 +828,17 @@ extends DisposableBase implements IEnumerable<T>
 	{
 
 		this.throwIfDisposed();
-
-		var skipping:boolean = true;
-
 		return this.doAction(
 			(element:T, index?:number) =>
-			{
-				if(skipping)
-					skipping = predicate(element, index);
-
-				return skipping
+				predicate(element, index)
 					? EnumerableAction.Skip
-					: EnumerableAction.Return;
-			}
+					: EnumerableAction.Return
 		);
 	}
 
 	take(count:number):Enumerable<T>
 	{
-		if(!count || isNaN(count) || count<0) // Out of bounds? Empty.
+		if(!(count>0)) // Out of bounds? Empty.
 			return Enumerable.empty<T>();
 
 		var _ = this;
@@ -855,10 +848,9 @@ extends DisposableBase implements IEnumerable<T>
 			return _;
 
 		Integer.assert(count, "count");
-		var c = count;
 
 		// Once action returns false, the enumeration will stop.
-		return _.doAction((element:T, index?:number) => index<c);
+		return _.doAction((element:T, index?:number) => index<count);
 	}
 
 	takeWhile(predicate:Predicate<T>):Enumerable<T>
@@ -896,8 +888,11 @@ extends DisposableBase implements IEnumerable<T>
 					return EnumerableAction.Break;
 
 				found = predicate(element, index);
-
 				return EnumerableAction.Return;
+			},
+			()=>
+			{
+				found = false;
 			}
 		);
 	}
@@ -952,9 +947,9 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	takeFromLast(count:number):Enumerable<T>
+	skipToLast(count:number):Enumerable<T>
 	{
-		if(!count || isNaN(count) || count<=0) // Out of bounds? Empty.
+		if(!(count>0)) // Out of bounds? Empty.
 			return Enumerable.empty<T>();
 
 		var _ = this;
@@ -964,7 +959,10 @@ extends DisposableBase implements IEnumerable<T>
 
 		Integer.assert(count, "count");
 
-		return _.reverse().take(count);
+		// This sets up the query so nothing is done until move next is called.
+		return _.reverse()
+			.take(count)
+			.reverse();
 	}
 
 	// #endregion
@@ -1619,9 +1617,7 @@ extends DisposableBase implements IEnumerable<T>
 						index = buffer.length;
 					},
 
-					(yielder)=>
-					index>0
-					&& yielder.yieldReturn(buffer[--index]),
+					(yielder)=> index && yielder.yieldReturn(buffer[--index]),
 
 					() =>
 					{
@@ -3380,8 +3376,8 @@ extends Enumerable<T>
 
 		var _ = this;
 
-		if(!count || count<0) // Out of bounds? Simply return a unfiltered enumerable.
-			return _.asEnumerable();
+		if(!(count>0))
+			return _;
 
 		return new Enumerable<T>(
 			() => new ArrayEnumerator<T>(() => _._source, count)
@@ -3394,14 +3390,18 @@ extends Enumerable<T>
 		return _.take(len - count);
 	}
 
-	takeFromLast(count:number):Enumerable<T>
+	skipToLast(count:number):Enumerable<T>
 	{
-		if(!count || count<0) return Enumerable.empty<T>();
+		if(!(count>0))
+			return Enumerable.empty<T>();
 
-		var _   = this,
-		    len = _._source
-			    ? _._source.length
-			    : 0;
+		var _ = this;
+		if(!isFinite(count))
+			return _;
+
+		var len = _._source
+			? _._source.length
+			: 0;
 
 		return _.skip(len - count);
 	}

@@ -7,11 +7,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types'], factory);
+        define(["require", "exports", "../Types"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('../Types');
+    var Types_1 = require("../Types");
     exports.EMPTY = '';
     function escapeRegExp(source) {
         return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");

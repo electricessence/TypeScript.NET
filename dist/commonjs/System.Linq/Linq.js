@@ -183,7 +183,7 @@ var Enumerable = function (_DisposableBase_1$def) {
         }
     }, {
         key: "doAction",
-        value: function doAction(action) {
+        value: function doAction(action, initializer) {
             var _ = this,
                 disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
@@ -191,6 +191,7 @@ var Enumerable = function (_DisposableBase_1$def) {
                 var index = 0;
                 return new EnumeratorBase_1.default(function () {
                     throwIfDisposed(disposed);
+                    if (initializer) initializer();
                     index = 0;
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
@@ -223,35 +224,31 @@ var Enumerable = function (_DisposableBase_1$def) {
         value: function skip(count) {
             var _ = this;
             _.throwIfDisposed();
-            if (!count || isNaN(count) || count < 0) return _;
+            if (!(count > 0)) return _;
             if (!isFinite(count)) return Enumerable.empty();
             Integer_1.default.assert(count, "count");
-            var c = count;
             return this.doAction(function (element, index) {
-                return index < c ? 2 : 1;
+                return index < count ? 2 : 1;
             });
         }
     }, {
         key: "skipWhile",
         value: function skipWhile(predicate) {
             this.throwIfDisposed();
-            var skipping = true;
             return this.doAction(function (element, index) {
-                if (skipping) skipping = predicate(element, index);
-                return skipping ? 2 : 1;
+                return predicate(element, index) ? 2 : 1;
             });
         }
     }, {
         key: "take",
         value: function take(count) {
-            if (!count || isNaN(count) || count < 0) return Enumerable.empty();
+            if (!(count > 0)) return Enumerable.empty();
             var _ = this;
             _.throwIfDisposed();
             if (!isFinite(count)) return _;
             Integer_1.default.assert(count, "count");
-            var c = count;
             return _.doAction(function (element, index) {
-                return index < c;
+                return index < count;
             });
         }
     }, {
@@ -274,6 +271,8 @@ var Enumerable = function (_DisposableBase_1$def) {
                 if (found) return 0;
                 found = predicate(element, index);
                 return 1;
+            }, function () {
+                found = false;
             });
         }
     }, {
@@ -304,13 +303,13 @@ var Enumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
-        key: "takeFromLast",
-        value: function takeFromLast(count) {
-            if (!count || isNaN(count) || count <= 0) return Enumerable.empty();
+        key: "skipToLast",
+        value: function skipToLast(count) {
+            if (!(count > 0)) return Enumerable.empty();
             var _ = this;
             if (!isFinite(count)) return _.reverse();
             Integer_1.default.assert(count, "count");
-            return _.reverse().take(count);
+            return _.reverse().take(count).reverse();
         }
     }, {
         key: "traverseBreadthFirst",
@@ -676,7 +675,7 @@ var Enumerable = function (_DisposableBase_1$def) {
                     buffer = _.toArray();
                     index = buffer.length;
                 }, function (yielder) {
-                    return index > 0 && yielder.yieldReturn(buffer[--index]);
+                    return index && yielder.yieldReturn(buffer[--index]);
                 }, function () {
                     buffer.length = 0;
                 });
@@ -2070,7 +2069,7 @@ var ArrayEnumerable = function (_Enumerable) {
         key: "skip",
         value: function skip(count) {
             var _ = this;
-            if (!count || count < 0) return _.asEnumerable();
+            if (!(count > 0)) return _;
             return new Enumerable(function () {
                 return new ArrayEnumerator_1.default(function () {
                     return _._source;
@@ -2087,11 +2086,12 @@ var ArrayEnumerable = function (_Enumerable) {
             return _.take(len - count);
         }
     }, {
-        key: "takeFromLast",
-        value: function takeFromLast(count) {
-            if (!count || count < 0) return Enumerable.empty();
-            var _ = this,
-                len = _._source ? _._source.length : 0;
+        key: "skipToLast",
+        value: function skipToLast(count) {
+            if (!(count > 0)) return Enumerable.empty();
+            var _ = this;
+            if (!isFinite(count)) return _;
+            var len = _._source ? _._source.length : 0;
             return _.skip(len - count);
         }
     }, {
