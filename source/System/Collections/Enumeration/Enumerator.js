@@ -7,14 +7,35 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Types", "./ArrayEnumerator", "./IndexEnumerator"], factory);
+        define(["require", "exports", "../../Disposable/dispose", "../../Types", "./ArrayEnumerator", "./IndexEnumerator", "./UnsupportedEnumerableException"], factory);
     }
 })(function (require, exports) {
     'use strict';
+    var dispose_1 = require("../../Disposable/dispose");
     var Types_1 = require("../../Types");
     var ArrayEnumerator_1 = require("./ArrayEnumerator");
     var IndexEnumerator_1 = require("./IndexEnumerator");
-    var VOID0 = void (0);
+    var UnsupportedEnumerableException_1 = require("./UnsupportedEnumerableException");
+    var VOID0 = void (0), STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
+        'Would result in an infinite loop that could hang the current process.';
+    function throwIfEndless(isEndless) {
+        if (isEndless)
+            throw new UnsupportedEnumerableException_1.default(ENDLESS_EXCEPTION_MESSAGE);
+    }
+    exports.throwIfEndless = throwIfEndless;
+    function initArrayFrom(source) {
+        if (Array.isArray(source) || Types_1.default.isString(source)) {
+            var len = source.length;
+            if (isFinite(len)) {
+                if (len > 65535)
+                    return new Array(len);
+                var result = [];
+                result.length = len;
+                return result;
+            }
+        }
+        return [];
+    }
     var EmptyEnumerator = (function () {
         function EmptyEnumerator() {
         }
@@ -39,6 +60,13 @@
         };
         EmptyEnumerator.prototype.reset = function () { };
         EmptyEnumerator.prototype.dispose = function () { };
+        Object.defineProperty(EmptyEnumerator.prototype, "isEndless", {
+            get: function () {
+                return false;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return EmptyEnumerator;
     }());
     var Empty = new EmptyEnumerator();
@@ -79,25 +107,49 @@
     }
     exports.isEnumerator = isEnumerator;
     function forEach(e, action) {
-        if (e) {
+        if (e !== VOID0 && e !== null) {
             if (Types_1.default.isArrayLike(e)) {
-                for (var i = 0; i < e.length; i++)
+                throwIfEndless(!isFinite(e.length));
+                for (var i = 0; i < e.length; i++) {
                     if (action(e[i], i) === false)
                         break;
-                return;
-            }
-            if (isEnumerable(e)) {
-                e = e.getEnumerator();
+                }
+                return true;
             }
             if (isEnumerator(e)) {
+                throwIfEndless(e.isEndless);
                 var index = 0;
                 while (e.moveNext()) {
                     if (action(e.current, index++) === false)
                         break;
                 }
+                return true;
             }
+            if (isEnumerable(e)) {
+                dispose_1.using(e.getEnumerator(), function (f) { return forEach(f, action); });
+                return true;
+            }
+            return false;
         }
     }
     exports.forEach = forEach;
+    function toArray(source) {
+        if (source === STRING_EMPTY)
+            return [];
+        if (Array.isArray(source))
+            return source.slice();
+        var result = initArrayFrom(source);
+        if (!forEach(source, function (e, i) { result[i] = e; }))
+            throw new UnsupportedEnumerableException_1.default();
+        return result;
+    }
+    exports.toArray = toArray;
+    function map(source, selector) {
+        var result = initArrayFrom(source);
+        if (!forEach(source, function (e, i) { result[i] = selector(e); }))
+            throw new UnsupportedEnumerableException_1.default();
+        return result;
+    }
+    exports.map = map;
 });
 //# sourceMappingURL=Enumerator.js.map

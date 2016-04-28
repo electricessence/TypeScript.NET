@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types'], function(exports_1, context_1) {
+System.register(["../Types"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1;
@@ -12,9 +12,9 @@ System.register(['../Types'], function(exports_1, context_1) {
     }
     exports_1("escapeRegExp", escapeRegExp);
     function trim(source, chars, ignoreCase) {
+        if (chars === EMPTY)
+            return source;
         if (chars) {
-            if (chars === EMPTY)
-                return source;
             var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
             return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), EMPTY);
         }
@@ -45,7 +45,9 @@ System.register(['../Types'], function(exports_1, context_1) {
                 case Types_1.default.BOOLEAN:
                     return r;
                 default:
-                    return a;
+                    return (r && Types_1.default.hasMemberOfType(r, "toString", Types_1.default.FUNCTION))
+                        ? r.toString()
+                        : a;
             }
         });
     }

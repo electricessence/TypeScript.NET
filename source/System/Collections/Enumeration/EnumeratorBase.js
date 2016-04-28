@@ -59,16 +59,24 @@ var __extends = (this && this.__extends) || function (d, b) {
     })(EnumeratorState || (EnumeratorState = {}));
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
-        function EnumeratorBase(initializer, tryGetNext, disposer) {
+        function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
+            if (isEndless === void 0) { isEndless = false; }
             _super.call(this);
-            this.initializer = initializer;
-            this.tryGetNext = tryGetNext;
-            this.disposer = disposer;
+            this._initializer = _initializer;
+            this._tryGetNext = _tryGetNext;
             this.reset();
+            this._isEndless = isEndless === true || disposer === true;
         }
         Object.defineProperty(EnumeratorBase.prototype, "current", {
             get: function () {
                 return this._yielder.current;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(EnumeratorBase.prototype, "isEndless", {
+            get: function () {
+                return this._isEndless;
             },
             enumerable: true,
             configurable: true
@@ -89,11 +97,11 @@ var __extends = (this && this.__extends) || function (d, b) {
                 switch (_._state) {
                     case EnumeratorState.Before:
                         _._state = EnumeratorState.Running;
-                        var initializer = _.initializer;
+                        var initializer = _._initializer;
                         if (initializer)
                             initializer();
                     case EnumeratorState.Running:
-                        if (_.tryGetNext(_._yielder)) {
+                        if (_._tryGetNext(_._yielder)) {
                             return true;
                         }
                         else {
@@ -125,9 +133,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             };
         };
         EnumeratorBase.prototype._onDispose = function () {
-            var _ = this, disposer = _.disposer;
-            _.initializer = null;
-            _.disposer = null;
+            var _ = this, disposer = _._disposer;
+            _._initializer = null;
+            _._disposer = null;
             var y = _._yielder;
             _._yielder = null;
             yielder(y);

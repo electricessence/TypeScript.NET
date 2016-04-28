@@ -27,4 +27,9 @@ interface IEnumerator<T> extends IIterator<T>, IDisposable {
 	 * Calls .moveNext() and returns .current
 	 */
 	nextValue():T;
+
+	/**
+	 * Provides a way of flagging endless enumerations that may cause issues.
+	 */
+	isEndless?:boolean;
 }

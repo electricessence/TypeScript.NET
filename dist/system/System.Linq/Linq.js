@@ -455,13 +455,15 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (selector === void 0) { selector = Functions.Identity; }
                     return this.select(selector).toArray().join(separator);
                 };
-                Enumerable.prototype.doAction = function (action) {
+                Enumerable.prototype.doAction = function (action, initializer) {
                     var _ = this, disposed = !_.throwIfDisposed();
                     return new Enumerable(function () {
                         var enumerator;
                         var index = 0;
                         return new EnumeratorBase_1.default(function () {
                             throwIfDisposed(disposed);
+                            if (initializer)
+                                initializer();
                             index = 0;
                             enumerator = _.getEnumerator();
                         }, function (yielder) {
@@ -489,39 +491,34 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.prototype.skip = function (count) {
                     var _ = this;
                     _.throwIfDisposed();
-                    if (!count || isNaN(count) || count < 0)
+                    if (!(count > 0))
                         return _;
                     if (!isFinite(count))
                         return Enumerable.empty();
                     Integer_1.default.assert(count, "count");
-                    var c = count;
                     return this.doAction(function (element, index) {
-                        return index < c
+                        return index < count
                             ? 2
                             : 1;
                     });
                 };
                 Enumerable.prototype.skipWhile = function (predicate) {
                     this.throwIfDisposed();
-                    var skipping = true;
                     return this.doAction(function (element, index) {
-                        if (skipping)
-                            skipping = predicate(element, index);
-                        return skipping
+                        return predicate(element, index)
                             ? 2
                             : 1;
                     });
                 };
                 Enumerable.prototype.take = function (count) {
-                    if (!count || isNaN(count) || count < 0)
+                    if (!(count > 0))
                         return Enumerable.empty();
                     var _ = this;
                     _.throwIfDisposed();
                     if (!isFinite(count))
                         return _;
                     Integer_1.default.assert(count, "count");
-                    var c = count;
-                    return _.doAction(function (element, index) { return index < c; });
+                    return _.doAction(function (element, index) { return index < count; });
                 };
                 Enumerable.prototype.takeWhile = function (predicate) {
                     this.throwIfDisposed();
@@ -545,6 +542,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                             return 0;
                         found = predicate(element, index);
                         return 1;
+                    }, function () {
+                        found = false;
                     });
                 };
                 Enumerable.prototype.takeExceptLast = function (count) {
@@ -574,14 +573,16 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         });
                     });
                 };
-                Enumerable.prototype.takeFromLast = function (count) {
-                    if (!count || isNaN(count) || count <= 0)
+                Enumerable.prototype.skipToLast = function (count) {
+                    if (!(count > 0))
                         return Enumerable.empty();
                     var _ = this;
                     if (!isFinite(count))
                         return _.reverse();
                     Integer_1.default.assert(count, "count");
-                    return _.reverse().take(count);
+                    return _.reverse()
+                        .take(count)
+                        .reverse();
                 };
                 Enumerable.prototype.traverseBreadthFirst = function (func, resultSelector) {
                     var _ = this;
@@ -935,10 +936,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                             throwIfDisposed(disposed);
                             buffer = _.toArray();
                             index = buffer.length;
-                        }, function (yielder) {
-                            return index > 0
-                                && yielder.yieldReturn(buffer[--index]);
-                        }, function () {
+                        }, function (yielder) { return index && yielder.yieldReturn(buffer[--index]); }, function () {
                             buffer.length = 0;
                         });
                     }, function () {
@@ -1948,8 +1946,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 ArrayEnumerable.prototype.skip = function (count) {
                     var _ = this;
-                    if (!count || count < 0)
-                        return _.asEnumerable();
+                    if (!(count > 0))
+                        return _;
                     return new Enumerable(function () { return new ArrayEnumerator_1.default(function () { return _._source; }, count); });
                 };
                 ArrayEnumerable.prototype.takeExceptLast = function (count) {
@@ -1957,10 +1955,13 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this, len = _._source ? _._source.length : 0;
                     return _.take(len - count);
                 };
-                ArrayEnumerable.prototype.takeFromLast = function (count) {
-                    if (!count || count < 0)
+                ArrayEnumerable.prototype.skipToLast = function (count) {
+                    if (!(count > 0))
                         return Enumerable.empty();
-                    var _ = this, len = _._source
+                    var _ = this;
+                    if (!isFinite(count))
+                        return _;
+                    var len = _._source
                         ? _._source.length
                         : 0;
                     return _.skip(len - count);

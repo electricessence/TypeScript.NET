@@ -40,11 +40,6 @@ System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
                     closure();
                     return new TimeSpan_1.default(getTimestampMilliseconds() - start);
                 };
-                Stopwatch.prototype.record = function (closure) {
-                    var e = Stopwatch.measure(closure);
-                    this._elapsed += e.milliseconds;
-                    return e;
-                };
                 Stopwatch.prototype.start = function () {
                     var _ = this;
                     if (!_._isRunning) {

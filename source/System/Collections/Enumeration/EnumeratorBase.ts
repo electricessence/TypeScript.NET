@@ -50,10 +50,12 @@ class Yielder<T> implements IYield<T>, IDisposable
 	}
 }
 
+type ActionVoid = ()=>void;
 
 // IEnumerator State
 enum EnumeratorState { Before, Running, After }
 
+// "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
 export default
 class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
@@ -61,22 +63,41 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 	private _yielder:Yielder<T>;
 	private _state:EnumeratorState;
+	private _disposer:()=>void;
 
 	get current():T
 	{
 		return this._yielder.current;
 	}
 
-	// "Enumerator" is conflict JScript's "Enumerator"
 	constructor(
-		private initializer:() => void,
-		private tryGetNext:(yielder:IYield<T>) => boolean,
-		private disposer?:() => void)
+		initializer:() => void,
+		tryGetNext:(yielder:IYield<T>) => boolean,
+		isEndless?:boolean);
+	constructor(
+		initializer:() => void,
+		tryGetNext:(yielder:IYield<T>) => boolean,
+		disposer?:()=>void,
+		isEndless?:boolean);
+	constructor(
+		private _initializer:() => void,
+		private _tryGetNext:(yielder:IYield<T>) => boolean,
+		disposer?:ActionVoid|boolean,
+		isEndless:boolean = false)
 	{
 		super();
 		this.reset();
+		this._isEndless = isEndless===true || disposer===true;
 	}
 
+	private _isEndless:boolean;
+	/*
+	 * Provides a mechanism to indicate if this enumerable never ends.
+	 * If set to true, some operations that expect a finite result may throw.
+	 */
+	get isEndless():boolean {
+		return this._isEndless;
+	}
 
 	reset():void
 	{
@@ -97,12 +118,12 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			{
 				case EnumeratorState.Before:
 					_._state = EnumeratorState.Running;
-					var initializer = _.initializer;
+					var initializer = _._initializer;
 					if(initializer)
 						initializer();
 				// fall through
 				case EnumeratorState.Running:
-					if(_.tryGetNext(_._yielder))
+					if(_._tryGetNext(_._yielder))
 					{
 						return true;
 					}
@@ -146,10 +167,10 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 	protected _onDispose():void
 	{
-		var _ = this, disposer = _.disposer;
+		var _ = this, disposer = _._disposer;
 
-		_.initializer = null;
-		_.disposer = null;
+		_._initializer = null;
+		_._disposer = null;
 
 
 		var y = _._yielder;

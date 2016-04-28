@@ -2,15 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from '../Types';
+import Type from "../Types";
 export const EMPTY = '';
 export function escapeRegExp(source) {
     return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 export function trim(source, chars, ignoreCase) {
+    if (chars === EMPTY)
+        return source;
     if (chars) {
-        if (chars === EMPTY)
-            return source;
         var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
         return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), EMPTY);
     }
@@ -35,7 +35,9 @@ export function supplant(source, params) {
             case Type.BOOLEAN:
                 return r;
             default:
-                return a;
+                return (r && Type.hasMemberOfType(r, "toString", Type.FUNCTION))
+                    ? r.toString()
+                    : a;
         }
     });
 }

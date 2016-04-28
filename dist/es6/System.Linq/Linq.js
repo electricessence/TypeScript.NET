@@ -360,13 +360,15 @@ export class Enumerable extends DisposableBase {
     toJoinedString(separator = "", selector = Functions.Identity) {
         return this.select(selector).toArray().join(separator);
     }
-    doAction(action) {
+    doAction(action, initializer) {
         var _ = this, disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             var enumerator;
             var index = 0;
             return new EnumeratorBase(() => {
                 throwIfDisposed(disposed);
+                if (initializer)
+                    initializer();
                 index = 0;
                 enumerator = _.getEnumerator();
             }, (yielder) => {
@@ -393,37 +395,30 @@ export class Enumerable extends DisposableBase {
     skip(count) {
         var _ = this;
         _.throwIfDisposed();
-        if (!count || isNaN(count) || count < 0)
+        if (!(count > 0))
             return _;
         if (!isFinite(count))
             return Enumerable.empty();
         Integer.assert(count, "count");
-        var c = count;
-        return this.doAction((element, index) => index < c
+        return this.doAction((element, index) => index < count
             ? 2
             : 1);
     }
     skipWhile(predicate) {
         this.throwIfDisposed();
-        var skipping = true;
-        return this.doAction((element, index) => {
-            if (skipping)
-                skipping = predicate(element, index);
-            return skipping
-                ? 2
-                : 1;
-        });
+        return this.doAction((element, index) => predicate(element, index)
+            ? 2
+            : 1);
     }
     take(count) {
-        if (!count || isNaN(count) || count < 0)
+        if (!(count > 0))
             return Enumerable.empty();
         var _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
             return _;
         Integer.assert(count, "count");
-        var c = count;
-        return _.doAction((element, index) => index < c);
+        return _.doAction((element, index) => index < count);
     }
     takeWhile(predicate) {
         this.throwIfDisposed();
@@ -443,6 +438,8 @@ export class Enumerable extends DisposableBase {
                 return 0;
             found = predicate(element, index);
             return 1;
+        }, () => {
+            found = false;
         });
     }
     takeExceptLast(count = 1) {
@@ -471,14 +468,16 @@ export class Enumerable extends DisposableBase {
             });
         });
     }
-    takeFromLast(count) {
-        if (!count || isNaN(count) || count <= 0)
+    skipToLast(count) {
+        if (!(count > 0))
             return Enumerable.empty();
         var _ = this;
         if (!isFinite(count))
             return _.reverse();
         Integer.assert(count, "count");
-        return _.reverse().take(count);
+        return _.reverse()
+            .take(count)
+            .reverse();
     }
     traverseBreadthFirst(func, resultSelector) {
         var _ = this;
@@ -832,8 +831,7 @@ export class Enumerable extends DisposableBase {
                 throwIfDisposed(disposed);
                 buffer = _.toArray();
                 index = buffer.length;
-            }, (yielder) => index > 0
-                && yielder.yieldReturn(buffer[--index]), () => {
+            }, (yielder) => index && yielder.yieldReturn(buffer[--index]), () => {
                 buffer.length = 0;
             });
         }, () => {
@@ -1798,18 +1796,21 @@ class ArrayEnumerable extends Enumerable {
     }
     skip(count) {
         var _ = this;
-        if (!count || count < 0)
-            return _.asEnumerable();
+        if (!(count > 0))
+            return _;
         return new Enumerable(() => new ArrayEnumerator(() => _._source, count));
     }
     takeExceptLast(count = 1) {
         var _ = this, len = _._source ? _._source.length : 0;
         return _.take(len - count);
     }
-    takeFromLast(count) {
-        if (!count || count < 0)
+    skipToLast(count) {
+        if (!(count > 0))
             return Enumerable.empty();
-        var _ = this, len = _._source
+        var _ = this;
+        if (!isFinite(count))
+            return _;
+        var len = _._source
             ? _._source.length
             : 0;
         return _.skip(len - count);

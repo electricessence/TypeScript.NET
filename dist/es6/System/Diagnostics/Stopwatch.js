@@ -27,11 +27,6 @@ export default class Stopwatch {
         closure();
         return new TimeSpan(getTimestampMilliseconds() - start);
     }
-    record(closure) {
-        var e = Stopwatch.measure(closure);
-        this._elapsed += e.milliseconds;
-        return e;
-    }
     start() {
         var _ = this;
         if (!_._isRunning) {

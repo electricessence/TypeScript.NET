@@ -19,9 +19,13 @@ import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
 import {
+	empty as EmptyEnumerator,
 	from as enumeratorFrom,
-	forEach as enumeratorForEach,
-	isEnumerable
+	forEach,
+	toArray,
+	map,
+	isEnumerable,
+	throwIfEndless
 } from "../System/Collections/Enumeration/Enumerator";
 import Type from "../System/Types";
 import Integer from "../System/Integer";
@@ -32,7 +36,7 @@ import Dictionary from "../System/Collections/Dictionaries/Dictionary";
 import Queue from "../System/Collections/Queue";
 import {dispose, using} from "../System/Disposable/dispose";
 import DisposableBase from "../System/Disposable/DisposableBase";
-import Exception from "../System/Exception";
+import UnsupportedEnumerableException from "../System/Collections/Enumeration/UnsupportedEnumerableException";
 import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
@@ -60,16 +64,12 @@ class LinqFunctions extends BaseFunctions
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
-// #endregion
-
-class UnsupportedEnumerableException extends Exception
-{
-	constructor()
-	{
-		super("Unsupported enumerable.");
-	}
+// For re-use as a factory.
+function getEmptyEnumerator():IEnumerator<any> {
+	return EmptyEnumerator;
 }
 
+// #endregion
 
 /**
  * Defined values for doAction.
@@ -113,7 +113,7 @@ extends DisposableBase implements IEnumerable<T>
 	 */
 	static from<T>(source:IEnumerableOrArray<T>):Enumerable<T>
 	{
-		if(Type.isObject(source))
+		if(Type.isObject(source) || Type.isString(source))
 		{
 			if(source instanceof Enumerable)
 				return source;
@@ -131,33 +131,17 @@ extends DisposableBase implements IEnumerable<T>
 		throw new UnsupportedEnumerableException();
 	}
 
+	/**
+	 * Static helper for converting enumerables to an array.
+	 * @param source
+	 * @returns {any}
+	 */
 	static toArray<T>(source:IEnumerableOrArray<T>):T[]
 	{
-		if(Type.isObject(source))
-		{
-			if(Array.isArray(source))
-				return source.slice();
+		if(source instanceof Enumerable)
+			return source.toArray();
 
-			if(Type.isArrayLike<T>(source))
-				source = new ArrayEnumerable<T>(<IArray<T>>source);
-
-			if(source instanceof Enumerable)
-				return source.toArray();
-
-			if(isEnumerable<T>(source))
-			{
-				var result:T[] = [];
-				enumeratorForEach<T>(
-					source.getEnumerator(), (e, i) =>
-					{
-						result[i] = e;
-					}
-				);
-				return result;
-			}
-		}
-
-		throw new UnsupportedEnumerableException();
+		return toArray(source);
 	}
 
 
@@ -189,7 +173,8 @@ extends DisposableBase implements IEnumerable<T>
 			() => new EnumeratorBase<T>(
 				null,
 				(yielder)=>
-					yielder.yieldReturn(Integer.random.select(values))
+					yielder.yieldReturn(Integer.random.select(values)),
+				true // Is endless!
 			)
 		);
 	}
@@ -199,7 +184,7 @@ extends DisposableBase implements IEnumerable<T>
 		return new Enumerable<T>(
 			() =>
 			{
-				var index:number = 0; // Let the compiler know this is an int.
+				var index:number = 0;
 				return new EnumeratorBase<T>(
 					() =>
 					{
@@ -209,7 +194,8 @@ extends DisposableBase implements IEnumerable<T>
 					{
 						if(index>=values.length) index = 0;
 						return yielder.yieldReturn(values[index++]);
-					}
+					},
+					true // Is endless!
 				);
 			}
 		);
@@ -217,17 +203,13 @@ extends DisposableBase implements IEnumerable<T>
 
 	static empty<T>():Enumerable<T>
 	{
-		return new Enumerable<T>(
-			() => new EnumeratorBase<T>(
-				null,
-				Functions.False
-			)
-		);
+		// Could be single static instance, but for safety, we'll make a new one.
+		return new Enumerable<T>(getEmptyEnumerator);
 	}
 
 	static repeat<T>(element:T, count:number = Infinity):Enumerable<T>
 	{
-		if(isNaN(count) || count<=0)
+		if(!(count>0))
 			return Enumerable.empty<T>();
 
 		return isFinite(count) && Integer.assert(count, "count")
@@ -238,11 +220,7 @@ extends DisposableBase implements IEnumerable<T>
 				var index:number = 0;
 
 				return new EnumeratorBase<T>(
-					() =>
-					{
-						index = 0;
-					},
-
+					() => { index = 0; },
 					(yielder)=> (index++<c) && yielder.yieldReturn(element)
 				);
 			}
@@ -251,12 +229,13 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 				new EnumeratorBase<T>(
 					null,
-					(yielder)=> yielder.yieldReturn(element)
+					(yielder)=> yielder.yieldReturn(element),
+					true // Is endless!
 				)
 		);
 	}
 
-	// Note: this enumeration does not break.
+	// Note: this enumeration is endless but can be disposed/cancelled and finalized.
 	static repeatWithFinalize<T>(
 		initializer:() => T,
 		finalizer:(element:T) => void):Enumerable<T>
@@ -277,7 +256,10 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						finalizer(element);
-					}
+					},
+
+					true // Is endless!
+
 				);
 			}
 		);
@@ -294,15 +276,17 @@ extends DisposableBase implements IEnumerable<T>
 		count:number = Infinity,
 		step:number = 1):Enumerable<number>
 	{
-
 		if(!isFinite(start))
 			throw new Error("Must have a valid 'start' value.");
 
-		if(isNaN(count) || count<=0)
+		if(!(count>0))
 			return Enumerable.empty<number>();
 
 		if(!isFinite(step))
 			throw new Error("Must have a valid 'step' value.");
+
+		if(step===0)
+			return Enumerable.repeat(start,count);
 
 		return isFinite(count) && Integer.assert(count, "count")
 			? new Enumerable<number>(
@@ -349,7 +333,9 @@ extends DisposableBase implements IEnumerable<T>
 						var current:number = value;
 						value += step;
 						return yielder.yieldReturn(current);
-					}
+					},
+
+					true // Is endless!
 				);
 			}
 		);
@@ -519,7 +505,9 @@ extends DisposableBase implements IEnumerable<T>
 						index = 0;
 					},
 
-					(yielder)=> yielder.yieldReturn(factory(index++))
+					(yielder)=> yielder.yieldReturn(factory(index++)),
+
+					true // Is endless!
 				);
 			});
 	}
@@ -548,31 +536,9 @@ extends DisposableBase implements IEnumerable<T>
 						else
 							value = valueFactory(value, i);
 						return yielder.yieldReturn(value);
-					}
-				);
-			}
-		);
-	}
-
-	static defer<T>(enumerableFactory:() => IEnumerable<T>):Enumerable<T>
-	{
-
-		return new Enumerable<T>(
-			() =>
-			{
-				var enumerator:IEnumerator<T>;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						enumerator = enumerableFactory().getEnumerator();
 					},
 
-					(yielder)=> enumerator.moveNext() && yielder.yieldReturn(enumerator.current),
-					() =>
-					{
-						dispose(enumerator);
-					}
+					true // Is endless!
 				);
 			}
 		);
@@ -582,29 +548,18 @@ extends DisposableBase implements IEnumerable<T>
 		enumerable:IEnumerableOrArray<T>,
 		action:(element:T, index?:number) => any):void
 	{
-		if(enumerable)
-		{
-			using(enumeratorFrom(enumerable), e=>
-			{
-				enumeratorForEach(e, action);
-			});
-		}
+		// Will properly dispose created enumerable.
+		// Will throw if enumerable is endless.
+		forEach(enumerable, action);
 	}
 
 	static map<T,TResult>(
 		enumerable:IEnumerableOrArray<T>,
 		selector:Selector<T,TResult>):TResult[]
 	{
-
-		return enumerable && using(enumeratorFrom(enumerable), e=>
-			{
-				var result:TResult[] = [];
-				enumeratorForEach(e, (e, i)=>
-				{
-					result[i] = selector(e);
-				});
-				return result;
-			});
+		// Will properly dispose created enumerable.
+		// Will throw if enumerable is endless.
+		return map(enumerable,selector);
 
 	}
 
@@ -639,10 +594,12 @@ extends DisposableBase implements IEnumerable<T>
 		using(
 			_.getEnumerator(), e=>
 			{
+				throwIfEndless(e.isEndless);
+				
 				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
 				while(_.throwIfDisposed() && e.moveNext())
 				{
-					if(<any>action(e.current, index++)===false)
+					if(action(e.current, index++)===false)
 						break;
 				}
 			}
@@ -659,11 +616,13 @@ extends DisposableBase implements IEnumerable<T>
 
 	copyTo(target:T[], index:number = 0):T[]
 	{
+		this.throwIfDisposed();
 		if(!target) throw new ArgumentNullException("target");
 		Integer.assert(index);
 		if(index<0) throw new ArgumentOutOfRangeException("index", index, "Must be zero or greater");
 
-		this.forEach((x, i)=>
+		// If not exposing an action that could cause dispose, then use forEach utility instead.
+		forEach<T>(this,(x, i)=>
 		{
 			target[i + index] = x
 		});
@@ -675,6 +634,7 @@ extends DisposableBase implements IEnumerable<T>
 	asEnumerable():Enumerable<T>
 	{
 		var _ = this;
+		_.throwIfDisposed();
 		return new Enumerable<T>(() => _.getEnumerator());
 	}
 
@@ -756,6 +716,7 @@ extends DisposableBase implements IEnumerable<T>
 						if(initializer) initializer();
 						index = 0;
 						enumerator = _.getEnumerator();
+						// May need a way to propagate isEndless
 					},
 
 					(yielder)=>
@@ -855,8 +816,10 @@ extends DisposableBase implements IEnumerable<T>
 
 	takeWhile(predicate:Predicate<T>):Enumerable<T>
 	{
-
 		this.throwIfDisposed();
+
+		if(!predicate)
+			throw new ArgumentNullException('predicate');
 
 		return this.doAction(
 			(element:T, index?:number) =>
@@ -869,8 +832,10 @@ extends DisposableBase implements IEnumerable<T>
 	// Is like the inverse of take While with the ability to return the value identified by the predicate.
 	takeUntil(predicate:Predicate<T>, includeUntilValue?:boolean):Enumerable<T>
 	{
-
 		this.throwIfDisposed();
+
+		if(!predicate)
+			throw new ArgumentNullException('predicate');
 
 		if(!includeUntilValue)
 			return this.doAction(
@@ -901,7 +866,7 @@ extends DisposableBase implements IEnumerable<T>
 	{
 		var _ = this;
 
-		if(!count || isNaN(count) || count<=0) // Out of bounds? Empty.
+		if(!(count>0)) // Out of bounds?
 			return _;
 
 		if(!isFinite(count)) // +Infinity equals skip all so return empty.
@@ -954,8 +919,8 @@ extends DisposableBase implements IEnumerable<T>
 
 		var _ = this;
 
-		if(!isFinite(count)) // Infinity means return all in reverse.
-			return _.reverse();
+		if(!isFinite(count)) // Infinity means return all.
+			return _;
 
 		Integer.assert(count, "count");
 
