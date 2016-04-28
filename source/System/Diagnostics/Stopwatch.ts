@@ -50,15 +50,7 @@ class Stopwatch implements ITimer
 		closure();
 		return new TimeSpan(getTimestampMilliseconds() - start);
 	}
-
-	record(closure:() => void):TimeSpan
-	{
-		// Although a reasonably thread safe way to record, it may not correctly represent time in an async scenario.
-		var e = Stopwatch.measure(closure);
-		this._elapsed += e.milliseconds;
-		return e;
-	}
-
+	
 	start():void
 	{
 		var _ = this;

@@ -13,8 +13,8 @@ function escapeRegExp(source) {
 }
 exports.escapeRegExp = escapeRegExp;
 function trim(source, chars, ignoreCase) {
+    if (chars === exports.EMPTY) return source;
     if (chars) {
-        if (chars === exports.EMPTY) return source;
         var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
         return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), exports.EMPTY);
     }
@@ -44,7 +44,7 @@ function supplant(source, params) {
             case Types_1.default.BOOLEAN:
                 return r;
             default:
-                return a;
+                return r && Types_1.default.hasMemberOfType(r, "toString", Types_1.default.FUNCTION) ? r.toString() : a;
         }
     });
 }

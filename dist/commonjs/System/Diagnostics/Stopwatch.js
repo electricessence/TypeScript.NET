@@ -21,13 +21,6 @@ var Stopwatch = function () {
     }
 
     _createClass(Stopwatch, [{
-        key: "record",
-        value: function record(closure) {
-            var e = Stopwatch.measure(closure);
-            this._elapsed += e.milliseconds;
-            return e;
-        }
-    }, {
         key: "start",
         value: function start() {
             var _ = this;

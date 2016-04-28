@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from '../Types';
+import Type from "../Types";
 
 export const EMPTY:string = '';
 
@@ -21,8 +21,8 @@ export function escapeRegExp(source:string):string {
  */
 export function trim(source:string, chars?:string|string[],ignoreCase?:boolean):string
 {
+	if(chars===EMPTY) return source;
 	if(chars) {
-		if(chars===EMPTY) return source;
 		var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : <string>chars);
 		return source.replace(new RegExp('^['+escaped+']+|['+escaped+']+$','g'+(ignoreCase?'i':'')),EMPTY);
 	}
@@ -73,7 +73,9 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 				case Type.BOOLEAN:
 					return r;
 				default:
-					return a;
+					return (r && Type.hasMemberOfType(r,"toString",Type.FUNCTION))
+						? r.toString()
+						: a;
 			}
 		}
 	);
