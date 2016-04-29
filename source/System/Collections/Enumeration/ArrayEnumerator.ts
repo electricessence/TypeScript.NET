@@ -6,8 +6,8 @@
 ///<reference path="../Array/IArray.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import IndexEnumerator from './IndexEnumerator';
-import Type from '../../Types';
+import IndexEnumerator from "./IndexEnumerator";
+import Type from "../../Types";
 
 export default
 class ArrayEnumerator<T> extends IndexEnumerator<T>
@@ -20,7 +20,7 @@ class ArrayEnumerator<T> extends IndexEnumerator<T>
 			() =>
 			{
 				var array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-				return {source: array, pointer: start, length: (array ? array.length : 0), step: step};
+				return {source: array, pointer: start, length: array ? array.length : 0, step: step};
 			}
 		);
 	}

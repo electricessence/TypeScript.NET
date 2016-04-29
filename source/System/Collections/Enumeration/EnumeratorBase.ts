@@ -9,6 +9,7 @@
 ///<reference path="IIterator.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
+import Type from "../../Types";
 import DisposableBase from "../../Disposable/DisposableBase";
 import ObjectPool from "../../Disposable/ObjectPool";
 
@@ -83,17 +84,22 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		private _initializer:() => void,
 		private _tryGetNext:(yielder:IYield<T>) => boolean,
 		disposer?:ActionVoid|boolean,
-		isEndless:boolean = false)
+		isEndless?:boolean)
 	{
 		super();
 		this.reset();
-		this._isEndless = isEndless===true || disposer===true;
+		if(Type.isBoolean(isEndless))
+			this._isEndless = isEndless;
+		else if(Type.isBoolean(disposer))
+			this._isEndless = disposer;
 	}
 
-	private _isEndless:boolean;
+	protected _isEndless:boolean;
 	/*
 	 * Provides a mechanism to indicate if this enumerable never ends.
 	 * If set to true, some operations that expect a finite result may throw.
+	 * Explicit false means it has an end.
+	 * Implicit void means unknown.
 	 */
 	get isEndless():boolean {
 		return this._isEndless;

@@ -126,6 +126,7 @@
                 return true;
             }
             if (isEnumerable(e)) {
+                throwIfEndless(e.isEndless);
                 dispose_1.using(e.getEnumerator(), function (f) { return forEach(f, action); });
                 return true;
             }

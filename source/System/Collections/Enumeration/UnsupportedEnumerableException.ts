@@ -6,8 +6,7 @@
 
 'use strict'; // For compatibility with (let, const, function, class);
 
-import SystemException from "../Exceptions/SystemException";
-
+import SystemException from "../../Exceptions/SystemException";
 
 const NAME:string = 'UnsupportedEnumerableException';
 

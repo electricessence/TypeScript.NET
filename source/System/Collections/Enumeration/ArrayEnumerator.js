@@ -25,7 +25,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (step === void 0) { step = 1; }
             _super.call(this, function () {
                 var array = Types_1.default.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-                return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
+                return { source: array, pointer: start, length: array ? array.length : 0, step: step };
             });
         }
         return ArrayEnumerator;

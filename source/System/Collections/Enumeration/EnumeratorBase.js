@@ -12,10 +12,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool"], factory);
+        define(["require", "exports", "../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool"], factory);
     }
 })(function (require, exports) {
     'use strict';
+    var Types_1 = require("../../Types");
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var ObjectPool_1 = require("../../Disposable/ObjectPool");
     var VOID0 = void (0);
@@ -60,12 +61,14 @@ var __extends = (this && this.__extends) || function (d, b) {
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
         function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
-            if (isEndless === void 0) { isEndless = false; }
             _super.call(this);
             this._initializer = _initializer;
             this._tryGetNext = _tryGetNext;
             this.reset();
-            this._isEndless = isEndless === true || disposer === true;
+            if (Types_1.default.isBoolean(isEndless))
+                this._isEndless = isEndless;
+            else if (Types_1.default.isBoolean(disposer))
+                this._isEndless = disposer;
         }
         Object.defineProperty(EnumeratorBase.prototype, "current", {
             get: function () {

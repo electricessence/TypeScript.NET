@@ -12,6 +12,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Types_1 = require("../../Types");
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
 var VOID0 = void 0;
@@ -69,15 +70,15 @@ var EnumeratorState;
 var EnumeratorBase = function (_DisposableBase_1$def) {
     _inherits(EnumeratorBase, _DisposableBase_1$def);
 
-    function EnumeratorBase(initializer, tryGetNext, disposer) {
+    function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
         _classCallCheck(this, EnumeratorBase);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(EnumeratorBase).call(this));
 
-        _this.initializer = initializer;
-        _this.tryGetNext = tryGetNext;
-        _this.disposer = disposer;
+        _this._initializer = _initializer;
+        _this._tryGetNext = _tryGetNext;
         _this.reset();
+        if (Types_1.default.isBoolean(isEndless)) _this._isEndless = isEndless;else if (Types_1.default.isBoolean(disposer)) _this._isEndless = disposer;
         return _this;
     }
 
@@ -98,10 +99,10 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
                 switch (_._state) {
                     case EnumeratorState.Before:
                         _._state = EnumeratorState.Running;
-                        var initializer = _.initializer;
+                        var initializer = _._initializer;
                         if (initializer) initializer();
                     case EnumeratorState.Running:
-                        if (_.tryGetNext(_._yielder)) {
+                        if (_._tryGetNext(_._yielder)) {
                             return true;
                         } else {
                             this.dispose();
@@ -135,9 +136,9 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
         key: "_onDispose",
         value: function _onDispose() {
             var _ = this,
-                disposer = _.disposer;
-            _.initializer = null;
-            _.disposer = null;
+                disposer = _._disposer;
+            _._initializer = null;
+            _._disposer = null;
             var y = _._yielder;
             _._yielder = null;
             yielder(y);
@@ -151,6 +152,11 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
         key: "current",
         get: function get() {
             return this._yielder.current;
+        }
+    }, {
+        key: "isEndless",
+        get: function get() {
+            return this._isEndless;
         }
     }]);
 

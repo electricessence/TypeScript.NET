@@ -173,6 +173,8 @@ export function forEach<T>(
 
 		if(isEnumerable<T>(e))
 		{
+			throwIfEndless(e.isEndless);
+
 			// For enumerators that aren't EnumerableBase, ensure dispose is called.
 			using(
 				(<IEnumerable<T>>e).getEnumerator(),

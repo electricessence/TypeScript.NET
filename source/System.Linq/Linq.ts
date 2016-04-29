@@ -45,6 +45,7 @@ type Comparable = Primitive|IComparable<any>;
 
 // #region Local Constants.
 
+const INVALID_DEFAULT:any = {}; // create a private unique instance for referencing.
 const VOID0:any = void 0;
 
 // Leave internal to avoid accidental overwriting.
@@ -65,7 +66,8 @@ var Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 // For re-use as a factory.
-function getEmptyEnumerator():IEnumerator<any> {
+function getEmptyEnumerator():IEnumerator<any>
+{
 	return EmptyEnumerator;
 }
 
@@ -81,69 +83,24 @@ export const enum EnumerableAction
 	Skip   = 2
 }
 
-/**
- * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
- *
- * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
- * In this case, we use Enumerable<T> as the underlying class that is being chained.
- */
-export class Enumerable<T>
+
+// Provided for type guarding.
+export class InfiniteEnumerable<T>
 extends DisposableBase implements IEnumerable<T>
 {
-
 	constructor(
 		protected _enumeratorFactory:() => IEnumerator<T>,
 		finalizer?:() => void)
 	{
 		super(finalizer);
+		this._isEndless = true;
 	}
 
-	/**
-	 * Static shortcut for creating an ArrayEnumerable.
-	 */
-	static fromArray<T>(array:IArray<T>):Enumerable<T>
+	protected _isEndless:boolean;
+	get isEndless():boolean
 	{
-		return new ArrayEnumerable<T>(array);
+		return this._isEndless;
 	}
-
-	/**
-	 * Universal method for converting a primitive enumerables into a LINQ enabled ones.
-	 *
-	 * Is not limited to TypeScript usages.
-	 */
-	static from<T>(source:IEnumerableOrArray<T>):Enumerable<T>
-	{
-		if(Type.isObject(source) || Type.isString(source))
-		{
-			if(source instanceof Enumerable)
-				return source;
-
-			if(Array.isArray(source))
-				return new ArrayEnumerable<T>(source);
-
-			if(isEnumerable<T>(source))
-				return new Enumerable(()=>source.getEnumerator());
-
-			if(Type.isArrayLike<T>(source))
-				return new ArrayEnumerable<T>(source);
-		}
-
-		throw new UnsupportedEnumerableException();
-	}
-
-	/**
-	 * Static helper for converting enumerables to an array.
-	 * @param source
-	 * @returns {any}
-	 */
-	static toArray<T>(source:IEnumerableOrArray<T>):T[]
-	{
-		if(source instanceof Enumerable)
-			return source.toArray();
-
-		return toArray(source);
-	}
-
 
 	// #region IEnumerable<T> Implementation...
 	getEnumerator():IEnumerator<T>
@@ -165,541 +122,19 @@ extends DisposableBase implements IEnumerable<T>
 
 	// #endregion
 
-	//////////////////////////////////////////
-	// #region Static Methods...
-	static choice<T>(values:IArray<T>):Enumerable<T>
-	{
-		return new Enumerable<T>(
-			() => new EnumeratorBase<T>(
-				null,
-				(yielder)=>
-					yielder.yieldReturn(Integer.random.select(values)),
-				true // Is endless!
-			)
-		);
-	}
-
-	static cycle<T>(values:IArray<T>):Enumerable<T>
-	{
-		return new Enumerable<T>(
-			() =>
-			{
-				var index:number = 0;
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						index = 0;
-					}, // Reinitialize the value just in case the enumerator is restarted.
-					(yielder)=>
-					{
-						if(index>=values.length) index = 0;
-						return yielder.yieldReturn(values[index++]);
-					},
-					true // Is endless!
-				);
-			}
-		);
-	}
-
-	static empty<T>():Enumerable<T>
-	{
-		// Could be single static instance, but for safety, we'll make a new one.
-		return new Enumerable<T>(getEmptyEnumerator);
-	}
-
-	static repeat<T>(element:T, count:number = Infinity):Enumerable<T>
-	{
-		if(!(count>0))
-			return Enumerable.empty<T>();
-
-		return isFinite(count) && Integer.assert(count, "count")
-			? new Enumerable<T>(
-			() =>
-			{
-				var c:number = count;
-				var index:number = 0;
-
-				return new EnumeratorBase<T>(
-					() => { index = 0; },
-					(yielder)=> (index++<c) && yielder.yieldReturn(element)
-				);
-			}
-		)
-			: new Enumerable<T>(
-			() =>
-				new EnumeratorBase<T>(
-					null,
-					(yielder)=> yielder.yieldReturn(element),
-					true // Is endless!
-				)
-		);
-	}
-
-	// Note: this enumeration is endless but can be disposed/cancelled and finalized.
-	static repeatWithFinalize<T>(
-		initializer:() => T,
-		finalizer:(element:T) => void):Enumerable<T>
-	{
-
-		return new Enumerable<T>(
-			() =>
-			{
-				var element:T;
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						element = initializer();
-					},
-
-					(yielder)=> yielder.yieldReturn(element),
-
-					() =>
-					{
-						finalizer(element);
-					},
-
-					true // Is endless!
-
-				);
-			}
-		);
-	}
-
-	static make<T>(element:T):Enumerable<T>
-	{
-		return Enumerable.repeat<T>(element, 1);
-	}
-
-	// start and step can be other than integer.
-	static range(
-		start:number = 0,
-		count:number = Infinity,
-		step:number = 1):Enumerable<number>
-	{
-		if(!isFinite(start))
-			throw new Error("Must have a valid 'start' value.");
-
-		if(!(count>0))
-			return Enumerable.empty<number>();
-
-		if(!isFinite(step))
-			throw new Error("Must have a valid 'step' value.");
-
-		if(step===0)
-			return Enumerable.repeat(start,count);
-
-		return isFinite(count) && Integer.assert(count, "count")
-			? new Enumerable<number>(
-			() =>
-			{
-				var value:number;
-				var c:number = count; // Force integer evaluation.
-				var index:number = 0;
-
-				return new EnumeratorBase<number>(
-					() =>
-					{
-						index = 0;
-						value = start;
-					},
-
-					(yielder)=>
-					{
-						var result:boolean =
-							    index++<c
-							    && yielder.yieldReturn(value);
-
-						if(result && index<count)
-							value += step;
-
-						return result;
-					}
-				);
-			})
-
-			: new Enumerable<number>(
-			() =>
-			{
-				var value:number;
-
-				return new EnumeratorBase<number>(
-					() =>
-					{
-						value = start;
-					},
-
-					(yielder)=>
-					{
-						var current:number = value;
-						value += step;
-						return yielder.yieldReturn(current);
-					},
-
-					true // Is endless!
-				);
-			}
-		);
-	}
-
-	static rangeDown(
-		start:number = 0,
-		count:number = Infinity,
-		step:number = 1):Enumerable<number>
-	{
-		step = Math.abs(step)* -1;
-
-		return Enumerable.range(start, count, step);
-	}
-
-	// step = -1 behaves the same as toNegativeInfinity;
-	static toInfinity(
-		start:number = 0,
-		step:number = 1):Enumerable<number>
-	{
-		return Enumerable.range(start, Infinity, step);
-	}
-
-	static toNegativeInfinity(
-		start:number = 0,
-		step:number = 1):Enumerable<number>
-	{
-		return Enumerable.rangeDown(start, Infinity, step);
-	}
-
-	static rangeTo(
-		start:number = 0,
-		to:number = Infinity,
-		step:number = 1):Enumerable<number>
-	{
-		if(!isFinite(start))
-			throw new Error("Must have a valid 'start' value.");
-
-		if(isNaN(to))
-			throw new Error("Must have a valid 'to' value.");
-
-		if(!isFinite(step))
-			throw new Error("Must have a valid 'step' value.");
-
-		// This way we adjust for the delta from start and to so the user can say +/- step and it will work as expected.
-		step = Math.abs(step);
-
-		// Range to infinity has a more efficient mechanism.
-		if(!isFinite(to))
-			return Enumerable.range(start, Infinity, (start<to) ? (+step) : (-step));
-
-		return new Enumerable<number>(
-			() =>
-			{
-				var value:number;
-
-				return start<to
-
-					? new EnumeratorBase<number>(
-					() =>
-					{
-						value = start;
-					},
-
-					(yielder)=>
-					{
-						var result:boolean = value<=to && yielder.yieldReturn(value);
-
-						if(result)
-							value += step;
-
-						return result;
-					})
-
-					: new EnumeratorBase<number>(
-					() =>
-					{
-						value = start;
-					},
-
-					(yielder)=>
-					{
-						var result:boolean = value>=to && yielder.yieldReturn(value);
-
-						if(result)
-							value -= step;
-
-						return result;
-					}
-				);
-			}
-		);
-	}
-
-	static matches(input:string, pattern:any, flags:string = ""):Enumerable<RegExpExecArray>
-	{
-
-		var type = typeof input;
-		if(type!=Type.STRING)
-			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-
-		if(pattern instanceof RegExp)
-		{
-			flags += (pattern.ignoreCase) ? "i" : "";
-			flags += (pattern.multiline) ? "m" : "";
-			pattern = pattern.source;
-		}
-
-		if(flags.indexOf("g")=== -1) flags += "g";
-
-		return new Enumerable<RegExpExecArray>(
-			() =>
-			{
-				var regex:RegExp;
-				return new EnumeratorBase<RegExpExecArray>(
-					() =>
-					{
-						regex = new RegExp(pattern, flags);
-					},
-
-					(yielder)=>
-					{
-						// Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
-						var match = regex.exec(input);
-						return (match!==null) ? yielder.yieldReturn(match) : false;
-					}
-				);
-			}
-		);
-	}
-
-	static generate<T>(factory:(index?:number) => T, count:number = Infinity):Enumerable<T>
-	{
-
-		if(isNaN(count) || count<=0)
-			return Enumerable.empty<T>();
-
-		return isFinite(count) && Integer.assert(count, "count")
-
-			? new Enumerable<T>(
-			() =>
-			{
-				var c:number = count;
-				var index:number = 0;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						index = 0;
-					},
-
-					(yielder)=>
-					{
-						var current:number = index++;
-						return current<c && yielder.yieldReturn(factory(current));
-					}
-				);
-			})
-
-			: new Enumerable<T>(
-			() =>
-			{
-				var index:number = 0;
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						index = 0;
-					},
-
-					(yielder)=> yielder.yieldReturn(factory(index++)),
-
-					true // Is endless!
-				);
-			});
-	}
-
-	static unfold<T>(seed:T, valueFactory:Selector<T, T>, skipSeed:Boolean = false):Enumerable<T>
-	{
-		return new Enumerable<T>(
-			() =>
-			{
-				var index:number = 0;
-				var value:T;
-				var isFirst:boolean;
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						index = 0;
-						value = seed;
-						isFirst = !skipSeed;
-					},
-
-					(yielder)=>
-					{
-						var i = index++;
-						if(isFirst)
-							isFirst = false;
-						else
-							value = valueFactory(value, i);
-						return yielder.yieldReturn(value);
-					},
-
-					true // Is endless!
-				);
-			}
-		);
-	}
-
-	static forEach<T>(
-		enumerable:IEnumerableOrArray<T>,
-		action:(element:T, index?:number) => any):void
-	{
-		// Will properly dispose created enumerable.
-		// Will throw if enumerable is endless.
-		forEach(enumerable, action);
-	}
-
-	static map<T,TResult>(
-		enumerable:IEnumerableOrArray<T>,
-		selector:Selector<T,TResult>):TResult[]
-	{
-		// Will properly dispose created enumerable.
-		// Will throw if enumerable is endless.
-		return map(enumerable,selector);
-
-	}
-
-	// Slightly optimized versions for numbers.
-	static max(values:Enumerable<number>):number
-	{
-		return values
-			.takeUntil(v=> v== +Infinity, true)
-			.aggregate(Functions.Greater);
-	}
-
-	static min(values:Enumerable<number>):number
-	{
-		return values
-			.takeUntil(v=> v== -Infinity, true)
-			.aggregate(Functions.Lesser);
-	}
-
-	// #endregion
-
-	//////////////////////////////////////////
-	// #region Instance methods...
-
-	forEach(action:Predicate<T> | Action<T>):void
-	{
-
-		var _ = this;
-		_.throwIfDisposed();
-
-		var index:number = 0;
-		// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-		using(
-			_.getEnumerator(), e=>
-			{
-				throwIfEndless(e.isEndless);
-				
-				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
-				while(_.throwIfDisposed() && e.moveNext())
-				{
-					if(action(e.current, index++)===false)
-						break;
-				}
-			}
-		);
-	}
-
-	// #region Conversion Methods
-	toArray(predicate?:Predicate<T>):T[]
-	{
-		return predicate
-			? this.where(predicate).toArray()
-			: this.copyTo([]);
-	}
-
-	copyTo(target:T[], index:number = 0):T[]
-	{
-		this.throwIfDisposed();
-		if(!target) throw new ArgumentNullException("target");
-		Integer.assert(index);
-		if(index<0) throw new ArgumentOutOfRangeException("index", index, "Must be zero or greater");
-
-		// If not exposing an action that could cause dispose, then use forEach utility instead.
-		forEach<T>(this,(x, i)=>
-		{
-			target[i + index] = x
-		});
-
-		return target;
-	}
-
 	// Return a default (unfiltered) enumerable.
-	asEnumerable():Enumerable<T>
+	asEnumerable():InfiniteEnumerable<T>
 	{
 		var _ = this;
 		_.throwIfDisposed();
-		return new Enumerable<T>(() => _.getEnumerator());
+		return new InfiniteEnumerable<T>(() => _.getEnumerator());
 	}
 
-
-	toLookup<TKey, TValue, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TValue> = Functions.Identity,
-		compareSelector:Selector<TKey, TCompare> = Functions.Identity):ILookup<TKey, TValue>
+	protected _doAction(
+	action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
+	initializer?:()=>void,
+	isEndless:boolean = this.isEndless):Enumerable<T>
 	{
-		var dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
-		this.forEach(
-			x=>
-			{
-				var key = keySelector(x);
-				var element = elementSelector(x);
-
-				var array = dict.getValue(key);
-				if(array!==VOID0) array.push(element);
-				else dict.addByKeyValue(key, [element]);
-			}
-		);
-		return new Lookup<TKey, TValue>(dict);
-	}
-
-	toMap<TResult>(
-		keySelector:Selector<T, string>,
-		elementSelector:Selector<T, TResult>):IMap<TResult>
-	{
-		var obj:IMap<TResult> = {};
-		this.forEach(x=>
-		{
-			obj[keySelector(x)] = elementSelector(x);
-		});
-		return obj;
-	}
-
-	toDictionary<TKey, TValue, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TValue>,
-		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Dictionary<TKey, TValue>
-	{
-		var dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
-		this.forEach(x=> dict.addByKeyValue(keySelector(x), elementSelector(x)));
-		return dict;
-	}
-
-	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
-	{
-		return this.select(selector).toArray().join(separator);
-	}
-
-	// #endregion
-
-
-	/**
-	 * Similar to forEach, but executes an action for each time a value is enumerated.
-	 * If the action explicitly returns false or 0 (EnumerationAction.Break), the enumeration will complete.
-	 * If it returns a 2 (EnumerationAction.Skip) it will move on to the next item.
-	 * This also automatically handles disposing the enumerator.
-	 */
-	doAction(
-		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
-		initializer?:()=>void):Enumerable<T>
-	{
-
 		var _ = this, disposed = !_.throwIfDisposed();
 
 		return new Enumerable<T>(
@@ -741,7 +176,9 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					isEndless
 				);
 
 			},
@@ -750,9 +187,27 @@ extends DisposableBase implements IEnumerable<T>
 			() =>
 			{
 				disposed = true;
-			}
+			},
+
+			isEndless
 		);
 	}
+
+
+	/**
+	 * Similar to forEach, but executes an action for each time a value is enumerated.
+	 * If the action explicitly returns false or 0 (EnumerationAction.Break), the enumeration will complete.
+	 * If it returns a 2 (EnumerationAction.Skip) it will move on to the next item.
+	 * This also automatically handles disposing the enumerator.
+	 */
+	doAction(
+		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
+		initializer?:()=>void,
+		isEndless:boolean = this.isEndless):InfiniteEnumerable<T>
+	{
+		return this._doAction(action,initializer,isEndless);
+	}
+
 
 	force(defaultAction:EnumerableAction = EnumerableAction.Break):void
 	{
@@ -763,21 +218,17 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	// #region Indexing/Paging methods.
-	skip(count:number):Enumerable<T>
+	protected _skip(count:number):Enumerable<T>
 	{
 		var _ = this;
-
 		_.throwIfDisposed();
-
-		if(!(count>0)) // Out of bounds? Simply return this.
-			return _;
 
 		if(!isFinite(count)) // +Infinity equals skip all so return empty.
 			return Enumerable.empty<T>();
 
 		Integer.assert(count, "count");
 
-		return this.doAction(
+		return this._doAction(
 			(element:T, index?:number) =>
 				index<count
 					? EnumerableAction.Skip
@@ -785,11 +236,16 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
+
+	skip(count:number):InfiniteEnumerable<T>
+	{
+		return count>0 ? this._skip(count) : this;
+	}
+
 	skipWhile(predicate:Predicate<T>):Enumerable<T>
 	{
-
 		this.throwIfDisposed();
-		return this.doAction(
+		return this._doAction(
 			(element:T, index?:number) =>
 				predicate(element, index)
 					? EnumerableAction.Skip
@@ -797,7 +253,7 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	take(count:number):Enumerable<T>
+	take(count:number):FiniteEnumerable<T>
 	{
 		if(!(count>0)) // Out of bounds? Empty.
 			return Enumerable.empty<T>();
@@ -805,13 +261,13 @@ extends DisposableBase implements IEnumerable<T>
 		var _ = this;
 		_.throwIfDisposed();
 
-		if(!isFinite(count)) // +Infinity equals no limit.
-			return _;
+		if(!isFinite(count))
+			throw new ArgumentOutOfRangeException('count', count, 'Must be finite.');
 
 		Integer.assert(count, "count");
 
 		// Once action returns false, the enumeration will stop.
-		return _.doAction((element:T, index?:number) => index<count);
+		return _._doAction((element:T, index?:number) => index<count, null, false);
 	}
 
 	takeWhile(predicate:Predicate<T>):Enumerable<T>
@@ -821,11 +277,13 @@ extends DisposableBase implements IEnumerable<T>
 		if(!predicate)
 			throw new ArgumentNullException('predicate');
 
-		return this.doAction(
+		return this._doAction(
 			(element:T, index?:number) =>
 				predicate(element, index)
 					? EnumerableAction.Return
-					: EnumerableAction.Break
+					: EnumerableAction.Break,
+			null,
+			null // We don't know the state if it is endless or not.
 		);
 	}
 
@@ -838,15 +296,17 @@ extends DisposableBase implements IEnumerable<T>
 			throw new ArgumentNullException('predicate');
 
 		if(!includeUntilValue)
-			return this.doAction(
+			return this._doAction(
 				(element:T, index?:number) =>
 					predicate(element, index)
 						? EnumerableAction.Break
-						: EnumerableAction.Return
+						: EnumerableAction.Return,
+				null,
+				null // We don't know the state if it is endless or not.
 			);
 
 		var found:boolean = false;
-		return this.doAction(
+		return this._doAction(
 			(element:T, index?:number) =>
 			{
 				if(found)
@@ -858,79 +318,125 @@ extends DisposableBase implements IEnumerable<T>
 			()=>
 			{
 				found = false;
-			}
+			},
+			null // We don't know the state if it is endless or not.
 		);
 	}
 
-	takeExceptLast(count:number = 1):Enumerable<T>
+
+	// #region Single Value Return...
+
+	elementAt(index:number):T
+	{
+		var v = this.elementAtOrDefault(index,INVALID_DEFAULT);
+		if(v===INVALID_DEFAULT) throw new Error("index is greater than or equal to the number of elements in source.");
+		return v;
+	}
+
+	elementAtOrDefault(index:number, defaultValue:T = null):T
 	{
 		var _ = this;
+		_.throwIfDisposed();
 
-		if(!(count>0)) // Out of bounds?
-			return _;
+		if(isNaN(index) || index<0 || !isFinite(index))
+			throw new Error("'index' is invalid or out of bounds.");
 
-		if(!isFinite(count)) // +Infinity equals skip all so return empty.
-			return Enumerable.empty<T>();
+		Integer.assert(index, "index");
+		var n:number = index;
 
-		Integer.assert(count, "count");
-		var c = count;
-
-		return new Enumerable<T>(
-			() =>
+		return using(
+			this.getEnumerator(),
+			e=>
 			{
-				var enumerator:IEnumerator<T>;
-				var q:Queue<T>;
+				var i = 0;
+				while(e.moveNext())
+				{
+					if(i==n) return e.current;
+					i++;
+				}
 
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						enumerator = _.getEnumerator();
-						q = new Queue<T>();
-					},
+				return defaultValue;
+			});
+	}
 
-					(yielder)=>
-					{
-						while(enumerator.moveNext())
-						{
-							// Add the next one to the queue.
-							q.enqueue(enumerator.current);
+	/* Note: Unlike previous implementations, you could pass a predicate into these methods.
+	 * But since under the hood it ends up calling .where(predicate) anyway,
+	 * it may be better to remove this to allow for a cleaner signature/override.
+	 * JavaScript/TypeScript does not easily allow for a strict method interface like C#.
+	 * Having to write extra override logic is error prone and confusing to the consumer.
+	 * Removing the predicate here may also cause the consumer of this method to think more about how they structure their query.
+	 * The end all difference is that the user must declare .where(predicate) before .first(), .single(), or .last().
+	 * */
 
-							// Did we reach our quota?
-							if(q.count>c)
-							// Okay then, start returning results.
-								return yielder.yieldReturn(q.dequeue());
-						}
-						return false;
-					},
+	first():T
+	{
+		var v = this.firstOrDefault(INVALID_DEFAULT);
+		if(v===INVALID_DEFAULT) throw new Error("first:The sequence is empty.");
+		return v;
+	}
 
-					() =>
-					{
-						dispose(enumerator, q);
-					}
-				);
+	firstOrDefault(defaultValue:T = null):T
+	{
+		var _ = this;
+		_.throwIfDisposed();
+
+		return using(
+			this.getEnumerator(),
+			e=> e.moveNext() ? e.current : defaultValue
+		);
+	}
+
+
+	single():T
+	{
+		var _ = this;
+		_.throwIfDisposed();
+
+		return using(
+			this.getEnumerator(),
+			e=> {
+				if(e.moveNext())
+				{
+					var value = e.current;
+					if(!e.moveNext()) return value;
+					throw new Error("single:sequence contains more than one element.");
+				}
+				throw new Error("single:The sequence is empty.");
 			}
 		);
 	}
 
-	skipToLast(count:number):Enumerable<T>
+	singleOrDefault(defaultValue:T = null):T
 	{
-		if(!(count>0)) // Out of bounds? Empty.
-			return Enumerable.empty<T>();
 
 		var _ = this;
+		_.throwIfDisposed();
 
-		if(!isFinite(count)) // Infinity means return all.
-			return _;
+		return using(
+			this.getEnumerator(),
+			e=> {
+				if(e.moveNext())
+				{
+					var value = e.current;
+					if(!e.moveNext()) return value;
+				}
+				return defaultValue;
+			}
+		);
+	}
 
-		Integer.assert(count, "count");
+	any():boolean {
+		var _ = this;
+		_.throwIfDisposed();
 
-		// This sets up the query so nothing is done until move next is called.
-		return _.reverse()
-			.take(count)
-			.reverse();
+		return using(
+			this.getEnumerator(),
+			e=> e.moveNext()
+		);
 	}
 
 	// #endregion
+
 
 	// #region Projection and Filtering Methods
 
@@ -938,7 +444,8 @@ extends DisposableBase implements IEnumerable<T>
 		func:(element:any) => IEnumerable<any>,
 		resultSelector?:(element:any, nestLevel?:number) => any):Enumerable<any>
 	{
-		var _ = this;
+		var _ = this, isEndless = _._isEndless || null; // Is endless is not affirmative if false.
+
 
 		return new Enumerable<any>(
 			() =>
@@ -992,9 +499,14 @@ extends DisposableBase implements IEnumerable<T>
 					{
 						dispose(enumerator);
 						buffer.length = 0;
-					}
+					},
+
+					isEndless
 				);
-			}
+			},
+			null,
+
+			isEndless
 		);
 	}
 
@@ -1003,7 +515,7 @@ extends DisposableBase implements IEnumerable<T>
 		func:(element:any) => IEnumerable<any>,
 		resultSelector?:(element:any, nestLevel?:number) => any):Enumerable<any>
 	{
-		var _ = this;
+		var _ = this, isEndless = _._isEndless || null; // Is endless is not affirmative if false.
 
 		return new Enumerable<any>(
 			() =>
@@ -1050,16 +562,20 @@ extends DisposableBase implements IEnumerable<T>
 						{
 							dispose.these(enumeratorStack);
 						}
-					}
+					},
+
+					isEndless
 				);
-			}
+			},
+			null,
+			isEndless
 		);
 	}
 
 
 	flatten():Enumerable<any>
 	{
-		var _ = this;
+		var _ = this, isEndless = _._isEndless || null; // Is endless is not affirmative if false.;
 
 		return new Enumerable<any>(
 			() =>
@@ -1114,9 +630,13 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator, middleEnumerator);
-					}
+					},
+
+					isEndless
 				);
-			}
+			},
+			null,
+			isEndless
 		);
 	}
 
@@ -1147,9 +667,14 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
-			}
+			},
+			null,
+
+			_._isEndless
 		);
 	}
 
@@ -1193,18 +718,21 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
-			}
+			},
+			null,
+
+			_._isEndless
 		);
 	}
 
 	// #endregion
 
-
-	select<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
+	protected _select<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
 	{
-
 		var _ = this, disposed = !_.throwIfDisposed();
 
 		if(selector.length<2)
@@ -1237,26 +765,31 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
 			},
 
 			() =>
 			{
 				disposed = true;
-			}
+			},
+
+			_._isEndless
 		);
 	}
 
+	select<TResult>(selector:Selector<T, TResult>):InfiniteEnumerable<TResult>
+	{
+		return this._select(selector);
+	}
 
-	selectMany<TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):Enumerable<TResult>;
-
-	selectMany<TElement, TResult>(
+	protected _selectMany<TElement, TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
 		resultSelector?:(collection:T, element:TElement) => TResult):Enumerable<TResult>
 	{
-		var _ = this;
+		var _ = this, isEndless = _._isEndless || null; // Do second enumeration, it will be indeterminate if false.
 		if(!resultSelector)
 			resultSelector = (a:T, b:any) => <TResult>b;
 
@@ -1321,13 +854,28 @@ extends DisposableBase implements IEnumerable<T>
 						dispose(enumerator, middleEnumerator);
 						enumerator = null;
 						middleEnumerator = null;
-					}
+					},
+
+					isEndless
 				);
-			}
+			},
+			null,
+
+			isEndless
 		);
 	}
 
-	choose<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
+	selectMany<TResult>(
+		collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):InfiniteEnumerable<TResult>;
+
+	selectMany<TElement, TResult>(
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		resultSelector?:(collection:T, element:TElement) => TResult):InfiniteEnumerable<TResult>
+	{
+		return this._selectMany(collectionSelector,resultSelector);
+	}
+
+	protected _choose<TResult>(selector:Selector<T, TResult> = Functions.Identity):Enumerable<TResult>
 	{
 
 		var _ = this, disposed = !_.throwIfDisposed();
@@ -1364,18 +912,33 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
 			},
 
 			() =>
 			{
 				disposed = true;
-			}
+			},
+
+			_._isEndless
 		);
 	}
 
-	where(predicate:Predicate<T>):Enumerable<T>
+	choose<T>():Enumerable<T>
+	/**
+	 * Returns selected values that are not null or undefined.
+	 * @param selector
+	 * @returns {Enumerable<TResult>}
+	 */
+	choose<TResult>(selector:Selector<T, TResult> = Functions.Identity):InfiniteEnumerable<TResult>
+	{
+		return this._choose(selector)
+	}
+
+	protected _where(predicate:Predicate<T>):Enumerable<T>
 	{
 
 		var _ = this, disposed = !_.throwIfDisposed();
@@ -1413,16 +976,25 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
 			},
 
 			() =>
 			{
 				disposed = true;
-			}
+			},
+
+			_._isEndless
 		);
 
+	}
+
+	where(predicate:Predicate<T>):InfiniteEnumerable<T>
+	{
+		return this._where(predicate);
 	}
 
 	ofType<TType>(type:{ new (...params:any[]):TType }):Enumerable<TType>;
@@ -1470,7 +1042,7 @@ extends DisposableBase implements IEnumerable<T>
 						enumerator = _.getEnumerator();
 						keys = new Dictionary<T, boolean>(compareSelector);
 						if(second)
-							Enumerable.forEach(second, key => keys.addByKeyValue(key, true));
+							forEach(second, key => keys.addByKeyValue(key, true));
 					},
 
 					(yielder)=>
@@ -1492,14 +1064,18 @@ extends DisposableBase implements IEnumerable<T>
 					{
 						dispose(enumerator);
 						keys.clear();
-					}
+					},
+
+					_._isEndless
 				);
 			},
 
 			() =>
 			{
 				disposed = true;
-			}
+			},
+
+			_._isEndless
 		);
 	}
 
@@ -1553,242 +1129,27 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
 			},
 
 			() =>
 			{
 				disposed = true;
-			}
-		);
-	}
-
-	reverse():Enumerable<T>
-	{
-		var _ = this, disposed = !_.throwIfDisposed();
-
-		return new Enumerable<T>(
-			() =>
-			{
-				var buffer:T[];
-				var index:number = 0;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						throwIfDisposed(disposed);
-						buffer = _.toArray();
-						index = buffer.length;
-					},
-
-					(yielder)=> index && yielder.yieldReturn(buffer[--index]),
-
-					() =>
-					{
-						buffer.length = 0;
-					}
-				);
 			},
 
-			() =>
-			{
-				disposed = true;
-			}
+			_._isEndless
 		);
 	}
 
-	shuffle():Enumerable<T>
-	{
-		var _ = this, disposed = !_.throwIfDisposed();
 
-		return new Enumerable<T>(
-			() =>
-			{
-				var buffer:T[];
-				var capacity:number;
-				var len:number;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						throwIfDisposed(disposed);
-						buffer = _.toArray();
-						capacity = len = buffer.length;
-					},
-
-					(yielder)=>
-					{
-						// Avoid using major array operations like .slice();
-						if(!len)
-							return yielder.yieldBreak();
-
-						var selectedIndex = Integer.random(len);
-						var selectedValue = buffer[selectedIndex];
-
-						buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
-						buffer[len] = null; // clear possible reference.
-
-						if(len%32==0) // Shrink?
-							buffer.length = len;
-
-						return yielder.yieldReturn(selectedValue);
-					},
-
-					() =>
-					{
-						buffer.length = 0;
-					}
-				);
-			},
-
-			() =>
-			{
-				disposed = true;
-			}
-		);
-	}
-
-	count(predicate?:Predicate<T>):number
-	{
-
-		var _ = this;
-		_.throwIfDisposed();
-
-		var count:number = 0;
-		if(predicate)
-		{
-			_.forEach((x, i) =>
-			{
-				if(predicate(x, i))++count;
-			});
-		}
-		else
-		{
-			_.forEach(() =>
-			{
-				++count;
-			});
-		}
-
-		return count;
-	}
-
-	// Akin to '.every' on an array.
-	all(predicate:Predicate<T>):boolean
-	{
-		var result = true;
-		this.forEach(x =>
-		{
-			if(!predicate(x))
-			{
-				result = false;
-				return false; // break
-			}
-		});
-		return result;
-	}
-
-	// 'every' has been added here for parity/compatibility with an array.
-	every(predicate:Predicate<T>):boolean
-	{
-		return this.all(predicate);
-	}
-
-	// Akin to '.some' on an array.
-	any(predicate?:Predicate<T>):boolean
-	{
-		var result = false;
-
-		// Splitting the forEach up this way reduces iterative processing.
-		// forEach handles the generation and disposal of the enumerator.
-		if(predicate)
-		{
-			this.forEach(x =>
-			{
-				result = predicate(x); // false = not found and therefore it should continue.  true = found and break;
-				return !result;
-			});
-		}
-		else
-		{
-			this.forEach(() =>
-			{
-				result = true;
-				return false;
-			});
-		}
-		return result;
-
-	}
-
-	// 'some' has been added here for parity/compatibility with an array.
-	some(predicate:Predicate<T>):boolean
-	{
-		return this.any(predicate);
-	}
-
-	isEmpty():boolean
-	{
-		return !this.any();
-	}
-
-	contains<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):boolean
-	{
-		return compareSelector
-			? this.any(v=> compareSelector(v)===compareSelector(value))
-			: this.any(v=> v===value);
-	}
-
-	// Originally has an overload for a predicate,
-	// but that's a bad idea since this could be an enumeration of functions and therefore fail the intent.
-	// Better to chain a where statement first to be more explicit.
-	indexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
-	{
-		var found:number = -1;
-
-		if(compareSelector)
-			this.forEach((element:T, i?:number) =>
-			{
-				if(Values.areEqual(compareSelector(element), compareSelector(value), true))
-				{
-					found = i;
-					return false;
-				}
-			});
-		else
-			this.forEach((element:T, i?:number) =>
-			{
-				// Why?  Because NaN doesn't equal NaN. :P
-				if(Values.areEqual(element, value, true))
-				{
-					found = i;
-					return false;
-				}
-			});
-
-		return found;
-	}
-
-	lastIndexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
-	{
-		var result:number = -1;
-
-		if(compareSelector)
-			this.forEach((element:T, i?:number) =>
-			{
-				if(Values.areEqual(compareSelector(element), compareSelector(value), true)) result
-					= i;
-			});
-		else
-			this.forEach((element:T, i?:number) =>
-			{
-				if(Values.areEqual(element, value, true)) result = i;
-			});
-
-		return result;
-	}
-
+	/**
+	 * Returns a single default value if empty.
+	 * @param defaultValue
+	 * @returns {Enumerable}
+	 */
 	defaultIfEmpty(defaultValue:T = null):Enumerable<T>
 	{
 		var _ = this, disposed:boolean = !_.throwIfDisposed();
@@ -1827,9 +1188,14 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
-			}
+			},
+			null,
+
+			_._isEndless
 		);
 	}
 
@@ -1854,9 +1220,10 @@ extends DisposableBase implements IEnumerable<T>
 						secondEnumerator = enumeratorFrom<TSecond>(second);
 					},
 
-					(yielder)=>
-					firstEnumerator.moveNext() && secondEnumerator.moveNext()
+					(yielder)=> firstEnumerator.moveNext()
+					&& secondEnumerator.moveNext()
 					&& yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++)),
+
 					() =>
 					{
 						dispose(firstEnumerator, secondEnumerator);
@@ -1871,6 +1238,7 @@ extends DisposableBase implements IEnumerable<T>
 		resultSelector:(first:T, second:TSecond, index?:number) => TResult):Enumerable<TResult>
 	{
 		var _ = this;
+		_.throwIfDisposed();
 
 		if(!second.length)
 			return Enumerable.empty<TResult>();
@@ -1931,6 +1299,7 @@ extends DisposableBase implements IEnumerable<T>
 			}
 		);
 	}
+
 
 	// #region Join Methods
 
@@ -2035,9 +1404,9 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	concatWith(other:IEnumerableOrArray<T>):Enumerable<T>
+	protected _concatWith(other:IEnumerableOrArray<T>):Enumerable<T>
 	{
-		var _ = this;
+		var _ = this, isEndless = _._isEndless || null;
 
 		return new Enumerable<T>(
 			() =>
@@ -2067,21 +1436,25 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(firstEnumerator, secondEnumerator);
-					}
+					},
+
+					isEndless
 				);
-			}
+			},
+			null,
+
+			isEndless
 		);
 	}
 
-	merge(enumerables:IArray<IEnumerableOrArray<T>>):Enumerable<T>
+	concatWith(other:IEnumerableOrArray<T>):InfiniteEnumerable<T>
+	{
+		return other ? this._concatWith(other) : this;
+	}
+
+	protected _merge(enumerables:IArray<IEnumerableOrArray<T>>):Enumerable<T>
 	{
 		var _ = this;
-
-		if(!enumerables.length)
-			return _;
-
-		if(enumerables.length==1)
-			return _.concatWith(enumerables[0]);
 
 		return new Enumerable<T>(
 			() =>
@@ -2130,7 +1503,18 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	concat(...enumerables:Array<IEnumerableOrArray<T>>):Enumerable<T>
+	merge(enumerables:IArray<IEnumerableOrArray<T>>):InfiniteEnumerable<T>
+	{
+		if(!enumerables || !enumerables.length)
+			return this;
+
+		if(enumerables.length==1)
+			return this.concatWith(enumerables[0]);
+
+		return this._merge(enumerables);
+	}
+
+	concat(...enumerables:Array<IEnumerableOrArray<T>>):InfiniteEnumerable<T>
 	{
 		var _ = this;
 		if(enumerables.length==0)
@@ -2143,6 +1527,67 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 
+	union<TCompare>(
+		second:IEnumerableOrArray<T>,
+		compareSelector:Selector<T, TCompare> = Functions.Identity):Enumerable<T>
+	{
+		var _ = this, isEndless = _._isEndless || null;
+		return new Enumerable<T>(
+			() =>
+			{
+				var firstEnumerator:IEnumerator<T>;
+				var secondEnumerator:IEnumerator<T>;
+				var keys:Dictionary<T, any>;
+
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						firstEnumerator = _.getEnumerator();
+						keys = new Dictionary<T, any>(compareSelector); // Acting as a HashSet.
+					},
+
+					(yielder)=>
+					{
+						var current:T;
+						if(secondEnumerator===VOID0)
+						{
+							while(firstEnumerator.moveNext())
+							{
+								current = firstEnumerator.current;
+								if(!keys.containsKey(current))
+								{
+									keys.addByKeyValue(current, null);
+									return yielder.yieldReturn(current);
+								}
+							}
+							secondEnumerator = enumeratorFrom(second);
+						}
+						while(secondEnumerator.moveNext())
+						{
+							current = secondEnumerator.current;
+							if(!keys.containsKey(current))
+							{
+								keys.addByKeyValue(current, null);
+								return yielder.yieldReturn(current);
+							}
+						}
+						return false;
+					},
+
+					() =>
+					{
+						dispose(firstEnumerator, secondEnumerator);
+					},
+
+					isEndless
+				);
+			},
+			null,
+
+			isEndless
+		);
+	}
+
 	insertAt(index:number, other:IEnumerableOrArray<T>):Enumerable<T>
 	{
 		if(isNaN(index) || index<0 || !isFinite(index))
@@ -2151,7 +1596,7 @@ extends DisposableBase implements IEnumerable<T>
 		Integer.assert(index, "index");
 		var n:number = index;
 
-		var _ = this;
+		var _ = this, isEndless = _._isEndless || null;
 		_.throwIfDisposed();
 
 		return new Enumerable<T>(
@@ -2196,9 +1641,14 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(firstEnumerator, secondEnumerator);
-					}
+					},
+
+					isEndless
 				);
-			}
+			},
+			null,
+
+			isEndless
 		);
 	}
 
@@ -2269,9 +1719,14 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator, alternateEnumerator);
-					}
+					},
+
+					_._isEndless
 				);
-			}
+			},
+			null,
+
+			_._isEndless
 		);
 	}
 
@@ -2283,6 +1738,976 @@ extends DisposableBase implements IEnumerable<T>
 	alternate(...sequence:T[]):Enumerable<T>
 	{
 		return this.alternateMultiple(sequence);
+	}
+
+
+}
+
+
+/**
+ * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
+ *
+ * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
+ * In this case, we use Enumerable<T> as the underlying class that is being chained.
+ */
+export class Enumerable<T>
+extends InfiniteEnumerable<T>
+{
+
+	constructor(
+		enumeratorFactory:() => IEnumerator<T>,
+		finalizer?:() => void,
+		isEndless:boolean = null)
+	{
+		super(enumeratorFactory, finalizer);
+		this._isEndless = isEndless;
+	}
+
+
+	/**
+	 * Static shortcut for creating an ArrayEnumerable.
+	 */
+	static fromArray<T>(array:IArray<T>):FiniteEnumerable<T>
+	{
+		return new ArrayEnumerable<T>(array);
+	}
+
+	/**
+	 * Universal method for converting a primitive enumerables into a LINQ enabled ones.
+	 *
+	 * Is not limited to TypeScript usages.
+	 */
+	static from<T>(source:IEnumerableOrArray<T>):Enumerable<T>
+	{
+		if(Type.isObject(source) || Type.isString(source))
+		{
+			if(source instanceof Enumerable)
+				return source;
+
+			if(Array.isArray(source))
+				return new ArrayEnumerable<T>(source);
+
+			if(isEnumerable<T>(source))
+				return new Enumerable(()=>source.getEnumerator());
+
+			if(Type.isArrayLike<T>(source))
+				return new ArrayEnumerable<T>(source);
+		}
+
+		throw new UnsupportedEnumerableException();
+	}
+
+	/**
+	 * Static helper for converting enumerables to an array.
+	 * @param source
+	 * @returns {any}
+	 */
+	static toArray<T>(source:IEnumerableOrArray<T>):T[]
+	{
+		if(source instanceof FiniteEnumerable)
+			return source.toArray();
+
+		return toArray(source);
+	}
+
+
+	//////////////////////////////////////////
+	// #region Static Methods...
+	static choice<T>(values:IArray<T>):InfiniteEnumerable<T>
+	{
+		var len = values && values.length;
+		// We could return empty if no length, but that would break the typing and produce unexpected results.
+		// Enforcing that there must be at least 1 choice is key.
+		if(!len || !isFinite(len))
+			throw new ArgumentOutOfRangeException('length', length);
+
+		return new InfiniteEnumerable<T>(
+			() => new EnumeratorBase<T>(
+				null,
+				(yielder)=>
+					yielder.yieldReturn(Integer.random.select(values)),
+				true // Is endless!
+			)
+		);
+	}
+
+	static chooseFrom<T>(...args:T[]):InfiniteEnumerable<T>
+	{
+		return Enumerable.choice(args);
+	}
+
+	static cycle<T>(values:IArray<T>):InfiniteEnumerable<T>
+	{
+		var len = values && values.length;
+		// We could return empty if no length, but that would break the typing and produce unexpected results.
+		// Enforcing that there must be at least 1 choice is key.
+		if(!len || !isFinite(len))
+			throw new ArgumentOutOfRangeException('length', length);
+
+		return new InfiniteEnumerable<T>(
+			() =>
+			{
+				var index:number = 0;
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						index = 0;
+					}, // Reinitialize the value just in case the enumerator is restarted.
+					(yielder)=>
+					{
+						if(index>=values.length) index = 0;
+						return yielder.yieldReturn(values[index++]);
+					},
+					true // Is endless!
+				);
+			}
+		);
+	}
+
+	static cycleThrough<T>(...args:T[]):InfiniteEnumerable<T>
+	{
+		return Enumerable.cycle(args);
+	}
+
+	static empty<T>():FiniteEnumerable<T>
+	{
+		// Could be single static instance, but for safety, we'll make a new one.
+		return new FiniteEnumerable<T>(getEmptyEnumerator);
+	}
+
+	static repeat<T>(element:T):InfiniteEnumerable<T>;
+	static repeat<T>(element:T, count:number):FiniteEnumerable<T>;
+	static repeat<T>(element:T, count:number = Infinity):Enumerable<T>
+	{
+		if(!(count>0))
+			return Enumerable.empty<T>();
+
+		return isFinite(count) && Integer.assert(count, "count")
+			? new FiniteEnumerable<T>(
+			() =>
+			{
+				var c:number = count;
+				var index:number = 0;
+
+				return new EnumeratorBase<T>(
+					() => { index = 0; },
+					(yielder)=> (index++<c) && yielder.yieldReturn(element),
+					null,
+					false
+				);
+			}
+		)
+			: new Enumerable<T>(
+			() =>
+				new EnumeratorBase<T>(
+					null,
+					(yielder)=> yielder.yieldReturn(element),
+					true // Is endless!
+				)
+		);
+	}
+
+	// Note: this enumeration is endless but can be disposed/cancelled and finalized.
+	static repeatWithFinalize<T>(
+		initializer:() => T,
+		finalizer:(element:T) => void):InfiniteEnumerable<T>
+	{
+
+		return new InfiniteEnumerable<T>(
+			() =>
+			{
+				var element:T;
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						element = initializer();
+					},
+
+					(yielder)=> yielder.yieldReturn(element),
+
+					() =>
+					{
+						finalizer(element);
+					},
+
+					true // Is endless!
+
+				);
+			}
+		);
+	}
+
+	/**
+	 * Creates an enumerable of one element.
+	 * @param element
+	 * @returns {FiniteEnumerable<T>}
+	 */
+	static make<T>(element:T):FiniteEnumerable<T>
+	{
+		return Enumerable.repeat<T>(element, 1);
+	}
+
+	// start and step can be other than integer.
+
+	static range(
+		start:number,
+		count:number,
+		step:number = 1):FiniteEnumerable<number>
+	{
+		if(!isFinite(start))
+			throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
+
+		if(!(count>0))
+			return Enumerable.empty<number>();
+
+		if(!step)
+			throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
+
+		if(!isFinite(step))
+			throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+
+		Integer.assert(count, "count");
+
+		return new FiniteEnumerable<number>(
+			() =>
+			{
+				var value:number;
+				var c:number = count; // Force integer evaluation.
+				var index:number = 0;
+
+				return new EnumeratorBase<number>(
+					() =>
+					{
+						index = 0;
+						value = start;
+					},
+
+					(yielder)=>
+					{
+						var result:boolean =
+							    index++<c
+							    && yielder.yieldReturn(value);
+
+						if(result && index<count)
+							value += step;
+
+						return result;
+					},
+
+					false
+				);
+			});
+	}
+
+	static rangeDown(
+		start:number,
+		count:number,
+		step:number = 1):FiniteEnumerable<number>
+	{
+		step = Math.abs(step)* -1;
+
+		return Enumerable.range(start, count, step);
+	}
+
+	// step = -1 behaves the same as toNegativeInfinity;
+	static toInfinity(
+		start:number = 0,
+		step:number = 1):InfiniteEnumerable<number>
+	{
+		if(!isFinite(start))
+			throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
+
+		if(!step)
+			throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
+
+		if(!isFinite(step))
+			throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+
+		return new InfiniteEnumerable<number>(
+			() =>
+			{
+				var value:number;
+
+				return new EnumeratorBase<number>(
+					() =>
+					{
+						value = start;
+					},
+
+					(yielder)=>
+					{
+						var current:number = value;
+						value += step;
+						return yielder.yieldReturn(current);
+					},
+
+					true // Is endless!
+				);
+			}
+		);
+	}
+
+	static toNegativeInfinity(
+		start:number = 0,
+		step:number = 1):InfiniteEnumerable<number>
+	{
+		return Enumerable.toInfinity(start, -step);
+	}
+
+	static rangeTo(
+		start:number,
+		to:number,
+		step:number = 1):FiniteEnumerable<number>
+	{
+		if(isNaN(to) || !isFinite(to))
+			throw new ArgumentOutOfRangeException("to", to, "Must be a finite number.");
+
+		if(step && !isFinite(step))
+			throw new ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
+
+		// This way we adjust for the delta from start and to so the user can say +/- step and it will work as expected.
+		step = Math.abs(step);
+
+		return new FiniteEnumerable<number>(
+			() =>
+			{
+				var value:number;
+
+				return new EnumeratorBase<number>(() => { value = start; },
+					start<to
+						?
+						(yielder:IYield<number>)=>
+						{
+							var result:boolean = value<=to && yielder.yieldReturn(value);
+
+							if(result)
+								value += step;
+
+							return result;
+						}
+						:
+						(yielder:IYield<number>)=>
+						{
+							var result:boolean = value>=to && yielder.yieldReturn(value);
+
+							if(result)
+								value -= step;
+
+							return result;
+						}
+					, false);
+			}
+		);
+	}
+
+	static matches(input:string, pattern:any, flags:string = ""):FiniteEnumerable<RegExpExecArray>
+	{
+
+		var type = typeof input;
+		if(type!=Type.STRING)
+			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
+
+		if(pattern instanceof RegExp)
+		{
+			flags += (pattern.ignoreCase) ? "i" : "";
+			flags += (pattern.multiline) ? "m" : "";
+			pattern = pattern.source;
+		}
+
+		if(flags.indexOf("g")=== -1) flags += "g";
+
+		return new FiniteEnumerable<RegExpExecArray>(
+			() =>
+			{
+				var regex:RegExp;
+				return new EnumeratorBase<RegExpExecArray>(
+					() =>
+					{
+						regex = new RegExp(pattern, flags);
+					},
+
+					(yielder)=>
+					{
+						// Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
+						var match = regex.exec(input);
+						return (match!==null) ? yielder.yieldReturn(match) : false;
+					}
+				);
+			}
+		);
+	}
+
+	static generate<T>(factory:(index?:number) => T):InfiniteEnumerable<T>;
+	static generate<T>(factory:(index?:number) => T, count:number):FiniteEnumerable<T>;
+	static generate<T>(factory:(index?:number) => T, count:number = Infinity):InfiniteEnumerable<T>
+	{
+
+		if(isNaN(count) || count<=0)
+			return Enumerable.empty<T>();
+
+		return isFinite(count) && Integer.assert(count, "count")
+			?
+			new FiniteEnumerable<T>(
+				() =>
+				{
+					var c:number = count;
+					var index:number = 0;
+
+					return new EnumeratorBase<T>(
+						() =>
+						{
+							index = 0;
+						},
+
+						(yielder)=>
+						{
+							var current:number = index++;
+							return current<c && yielder.yieldReturn(factory(current));
+						},
+
+						false
+					);
+				})
+			:
+			new InfiniteEnumerable<T>(
+				() =>
+				{
+					var index:number = 0;
+					return new EnumeratorBase<T>(
+						() =>
+						{
+							index = 0;
+						},
+
+						(yielder)=> yielder.yieldReturn(factory(index++)),
+
+						true // Is endless!
+					);
+				});
+	}
+
+	static unfold<T>(
+		seed:T,
+		valueFactory:Selector<T, T>,
+		skipSeed:Boolean = false):InfiniteEnumerable<T>
+	{
+		return new InfiniteEnumerable<T>(
+			() =>
+			{
+				var index:number = 0;
+				var value:T;
+				var isFirst:boolean;
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						index = 0;
+						value = seed;
+						isFirst = !skipSeed;
+					},
+
+					(yielder)=>
+					{
+						var i = index++;
+						if(isFirst)
+							isFirst = false;
+						else
+							value = valueFactory(value, i);
+						return yielder.yieldReturn(value);
+					},
+
+					true // Is endless!
+				);
+			}
+		);
+	}
+
+	static forEach<T>(
+		enumerable:IEnumerableOrArray<T>,
+		action:(element:T, index?:number) => any):void
+	{
+		// Will properly dispose created enumerable.
+		// Will throw if enumerable is endless.
+		forEach(enumerable, action);
+	}
+
+	static map<T,TResult>(
+		enumerable:IEnumerableOrArray<T>,
+		selector:Selector<T,TResult>):TResult[]
+	{
+		// Will properly dispose created enumerable.
+		// Will throw if enumerable is endless.
+		return map(enumerable, selector);
+
+	}
+
+	// Slightly optimized versions for numbers.
+	static max(values:FiniteEnumerable<number>):number
+	{
+		return values
+			.takeUntil(v=> v== +Infinity, true)
+			.aggregate(Functions.Greater);
+	}
+
+	static min(values:FiniteEnumerable<number>):number
+	{
+		return values
+			.takeUntil(v=> v== -Infinity, true)
+			.aggregate(Functions.Lesser);
+	}
+
+	// #endregion
+
+	// #region Indexing/Paging methods.
+
+	// Added for type guarding.
+	skip(count:number):Enumerable<T>
+	{
+		return count>0 ? this._skip(count) : this;
+	}
+
+	forEach(action:Predicate<T> | Action<T>):void
+	{
+
+		var _ = this;
+		_.throwIfDisposed();
+		throwIfEndless(_.isEndless);
+
+		var index:number = 0;
+		// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+		using(
+			_.getEnumerator(), e=>
+			{
+				throwIfEndless(e.isEndless);
+
+				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
+				while(_.throwIfDisposed() && e.moveNext())
+				{
+					if(action(e.current, index++)===false)
+						break;
+				}
+			}
+		);
+	}
+
+	// #region Conversion Methods
+	toArray(predicate?:Predicate<T>):T[]
+	{
+		return predicate
+			? this.where(predicate).toArray()
+			: this.copyTo([]);
+	}
+
+	copyTo(target:T[], index:number = 0):T[]
+	{
+		this.throwIfDisposed();
+		if(!target) throw new ArgumentNullException("target");
+		Integer.assert(index);
+		if(index<0) throw new ArgumentOutOfRangeException("index", index, "Must be zero or greater");
+
+		// If not exposing an action that could cause dispose, then use forEach utility instead.
+		forEach<T>(this, (x, i)=>
+		{
+			target[i + index] = x
+		});
+
+		return target;
+	}
+
+	toLookup<TKey, TValue, TCompare>(
+		keySelector:Selector<T, TKey>,
+		elementSelector:Selector<T, TValue> = Functions.Identity,
+		compareSelector:Selector<TKey, TCompare> = Functions.Identity):ILookup<TKey, TValue>
+	{
+		var dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
+		this.forEach(
+			x=>
+			{
+				var key = keySelector(x);
+				var element = elementSelector(x);
+
+				var array = dict.getValue(key);
+				if(array!==VOID0) array.push(element);
+				else dict.addByKeyValue(key, [element]);
+			}
+		);
+		return new Lookup<TKey, TValue>(dict);
+	}
+
+	toMap<TResult>(
+		keySelector:Selector<T, string>,
+		elementSelector:Selector<T, TResult>):IMap<TResult>
+	{
+		var obj:IMap<TResult> = {};
+		this.forEach(x=>
+		{
+			obj[keySelector(x)] = elementSelector(x);
+		});
+		return obj;
+	}
+
+	toDictionary<TKey, TValue, TCompare>(
+		keySelector:Selector<T, TKey>,
+		elementSelector:Selector<T, TValue>,
+		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Dictionary<TKey, TValue>
+	{
+		var dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
+		this.forEach(x=> dict.addByKeyValue(keySelector(x), elementSelector(x)));
+		return dict;
+	}
+
+	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
+	{
+		return this.select(selector).toArray().join(separator);
+	}
+
+	// #endregion
+
+
+	takeExceptLast(count:number = 1):Enumerable<T>
+	{
+		var _ = this;
+
+		if(!(count>0)) // Out of bounds?
+			return _;
+
+		if(!isFinite(count)) // +Infinity equals skip all so return empty.
+			return Enumerable.empty<T>();
+
+		Integer.assert(count, "count");
+		var c = count;
+
+		return new Enumerable<T>(
+			() =>
+			{
+				var enumerator:IEnumerator<T>;
+				var q:Queue<T>;
+
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						enumerator = _.getEnumerator();
+						q = new Queue<T>();
+					},
+
+					(yielder)=>
+					{
+						while(enumerator.moveNext())
+						{
+							// Add the next one to the queue.
+							q.enqueue(enumerator.current);
+
+							// Did we reach our quota?
+							if(q.count>c)
+							// Okay then, start returning results.
+								return yielder.yieldReturn(q.dequeue());
+						}
+						return false;
+					},
+
+					() =>
+					{
+						dispose(enumerator, q);
+					}
+				);
+			}
+		);
+	}
+
+	skipToLast(count:number):Enumerable<T>
+	{
+		if(!(count>0)) // Out of bounds? Empty.
+			return Enumerable.empty<T>();
+
+		var _ = this;
+
+		if(!isFinite(count)) // Infinity means return all.
+			return _;
+
+		Integer.assert(count, "count");
+
+		// This sets up the query so nothing is done until move next is called.
+		return _.reverse()
+			.take(count)
+			.reverse();
+	}
+
+	// To help with type guarding.
+
+	where(predicate:Predicate<T>):Enumerable<T>
+	{
+		return this._where(predicate);
+	}
+
+	select<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
+	{
+		return this._select(selector);
+	}
+
+	selectMany<TResult>(
+		collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):Enumerable<TResult>;
+
+	selectMany<TElement, TResult>(
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		resultSelector?:(collection:T, element:TElement)=>TResult):Enumerable<TResult>
+	{
+		return this._selectMany(collectionSelector, resultSelector);
+	}
+
+
+	choose<TResult>(selector:Selector<T, TResult> = Functions.Identity):Enumerable<TResult>
+	{
+		return this._choose(selector);
+	}
+
+	reverse():Enumerable<T>
+	{
+		var _ = this, disposed = !_.throwIfDisposed();
+		throwIfEndless(_._isEndless); // Cannot reverse an endless collection...
+
+		return new Enumerable<T>(
+			() =>
+			{
+				var buffer:T[];
+				var index:number = 0;
+
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						throwIfDisposed(disposed);
+						buffer = _.toArray();
+						index = buffer.length;
+					},
+
+					(yielder)=> index && yielder.yieldReturn(buffer[--index]),
+
+					() =>
+					{
+						buffer.length = 0;
+					}
+				);
+			},
+
+			() =>
+			{
+				disposed = true;
+			}
+		);
+	}
+
+	shuffle():Enumerable<T>
+	{
+		var _ = this, disposed = !_.throwIfDisposed();
+		throwIfEndless(_._isEndless); // Cannot shuffle an endless collection...
+
+		return new Enumerable<T>(
+			() =>
+			{
+				var buffer:T[];
+				var capacity:number;
+				var len:number;
+
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						throwIfDisposed(disposed);
+						buffer = _.toArray();
+						capacity = len = buffer.length;
+					},
+
+					(yielder)=>
+					{
+						// Avoid using major array operations like .slice();
+						if(!len)
+							return yielder.yieldBreak();
+
+						var selectedIndex = Integer.random(len);
+						var selectedValue = buffer[selectedIndex];
+
+						buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
+						buffer[len] = null; // clear possible reference.
+
+						if(len%32==0) // Shrink?
+							buffer.length = len;
+
+						return yielder.yieldReturn(selectedValue);
+					},
+
+					() =>
+					{
+						buffer.length = 0;
+					}
+				);
+			},
+
+			() =>
+			{
+				disposed = true;
+			}
+		);
+	}
+
+	count(predicate?:Predicate<T>):number
+	{
+		var count:number = 0;
+		this.forEach(
+			predicate
+
+				?
+				(x, i) =>
+				{
+					if(predicate(x, i))++count;
+				}
+
+				:
+				() =>
+				{
+					++count;
+				}
+		);
+
+		return count;
+	}
+
+	// Akin to '.every' on an array.
+	all(predicate:Predicate<T>):boolean
+	{
+		if(!predicate)
+			throw new ArgumentNullException("predicate");
+
+		var result = true;
+		this.forEach(x =>
+		{
+			if(!predicate(x))
+			{
+				result = false;
+				return false; // break
+			}
+		});
+		return result;
+	}
+
+	// 'every' has been added here for parity/compatibility with an array.
+	every(predicate:Predicate<T>):boolean
+	{
+		return this.all(predicate);
+	}
+
+	// Akin to '.some' on an array.
+	any(predicate?:Predicate<T>):boolean
+	{
+		if(!predicate)
+			return super.any();
+
+		var result = false;
+		// Splitting the forEach up this way reduces iterative processing.
+		// forEach handles the generation and disposal of the enumerator.
+		this.forEach(
+			x =>
+				{
+					result = predicate(x); // false = not found and therefore it should continue.  true = found and break;
+					return !result;
+				});
+		return result;
+
+	}
+
+	// 'some' has been added here for parity/compatibility with an array.
+	some(predicate:Predicate<T>):boolean
+	{
+		return this.any(predicate);
+	}
+
+	isEmpty():boolean
+	{
+		return !this.any();
+	}
+
+	contains<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):boolean
+	{
+		return compareSelector
+			? this.any(v=> compareSelector(v)===compareSelector(value))
+			: this.any(v=> v===value);
+	}
+
+	// Originally has an overload for a predicate,
+	// but that's a bad idea since this could be an enumeration of functions and therefore fail the intent.
+	// Better to chain a where statement first to be more explicit.
+	indexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
+	{
+		var found:number = -1;
+		this.forEach(
+			compareSelector
+				?
+				(element:T, i?:number) =>
+				{
+					if(Values.areEqual(compareSelector(element), compareSelector(value), true))
+					{
+						found = i;
+						return false;
+					}
+				}
+				:
+				(element:T, i?:number) =>
+				{
+					// Why?  Because NaN doesn't equal NaN. :P
+					if(Values.areEqual(element, value, true))
+					{
+						found = i;
+						return false;
+					}
+				});
+
+
+		return found;
+	}
+
+	lastIndexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number
+	{
+		var result:number = -1;
+		this.forEach(
+			compareSelector
+				?
+				(element:T, i?:number) =>
+				{
+					if(Values.areEqual(compareSelector(element), compareSelector(value), true)) result
+						= i;
+				}
+
+				:
+				(element:T, i?:number) =>
+				{
+					if(Values.areEqual(element, value, true)) result = i;
+				});
+
+		return result;
+	}
+
+
+	concatWith(other:IEnumerableOrArray<T>):Enumerable<T>
+	{
+		return other ? this._concatWith(other) : this;
+	}
+
+	merge(enumerables:IArray<IEnumerableOrArray<T>>):Enumerable<T>
+	{
+		if(!enumerables || !enumerables.length)
+			return this;
+
+		if(enumerables.length==1)
+			return this.concatWith(enumerables[0]);
+
+		return this._merge(enumerables);
+	}
+
+	concat(...enumerables:Array<IEnumerableOrArray<T>>):Enumerable<T>
+	{
+		if(enumerables.length==0)
+			return this;
+
+		if(enumerables.length==1)
+			return this.concatWith(enumerables[0]);
+
+		return this.merge(enumerables);
 	}
 
 
@@ -2307,11 +2732,10 @@ extends DisposableBase implements IEnumerable<T>
 						keys = new Dictionary<T, boolean>(compareSelector);
 						outs = new Dictionary<T, boolean>(compareSelector);
 
-						Enumerable.from<T>(second)
-							.forEach(key=>
-							{
-								keys.addByKeyValue(key, true);
-							});
+						forEach(second, key=>
+						{
+							keys.addByKeyValue(key, true);
+						});
 					},
 
 					(yielder)=>
@@ -2330,10 +2754,13 @@ extends DisposableBase implements IEnumerable<T>
 
 					() =>
 					{
-						dispose(enumerator);
-					}
-				);  // Should Dictionary be IDisposable?
-			}
+						dispose(enumerator, keys, outs);
+					},
+					_._isEndless
+				);
+			},
+			null,
+			_._isEndless
 		);
 	}
 
@@ -2344,9 +2771,12 @@ extends DisposableBase implements IEnumerable<T>
 		return using(
 			this.getEnumerator(),
 			e1=> using(
-				Enumerable.from<T>(second).getEnumerator(),
+				enumeratorFrom(second),
 				e2=>
 				{
+					// if both are endless, this will never evaluate.
+					throwIfEndless(e1.isEndless && e2.isEndless);
+
 					while(e1.moveNext())
 					{
 						if(!e2.moveNext() || !equalityComparer(e1.current, e2.current))
@@ -2367,61 +2797,6 @@ extends DisposableBase implements IEnumerable<T>
 	//		.sequenceEqual(Enumerable.from(second).orderBy(keySelector))
 	//}
 
-	union<TCompare>(
-		second:IEnumerableOrArray<T>,
-		compareSelector:Selector<T, TCompare> = Functions.Identity):Enumerable<T>
-	{
-		var _ = this;
-		return new Enumerable<T>(
-			() =>
-			{
-				var firstEnumerator:IEnumerator<T>;
-				var secondEnumerator:IEnumerator<T>;
-				var keys:Dictionary<T, any>;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						firstEnumerator = _.getEnumerator();
-						keys = new Dictionary<T, any>(compareSelector);
-					},
-
-					(yielder)=>
-					{
-						var current:T;
-						if(secondEnumerator===VOID0)
-						{
-							while(firstEnumerator.moveNext())
-							{
-								current = firstEnumerator.current;
-								if(!keys.containsKey(current))
-								{
-									keys.addByKeyValue(current, null);
-									return yielder.yieldReturn(current);
-								}
-							}
-							secondEnumerator = Enumerable.from<T>(second).getEnumerator();
-						}
-						while(secondEnumerator.moveNext())
-						{
-							current = secondEnumerator.current;
-							if(!keys.containsKey(current))
-							{
-								keys.addByKeyValue(current, null);
-								return yielder.yieldReturn(current);
-							}
-						}
-						return false;
-					},
-
-					() =>
-					{
-						dispose(firstEnumerator, secondEnumerator);
-					}
-				);
-			}
-		);
-	}
 
 	// #endregion
 
@@ -2600,7 +2975,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	// #endregion
 
-	buffer(size:number):IEnumerable<T[]>
+	buffer(size:number):Enumerable<T[]>
 	{
 		if(size<1 || !isFinite(size))
 			throw new Error("Invalid buffer size.");
@@ -2623,7 +2998,7 @@ extends DisposableBase implements IEnumerable<T>
 					{
 						var array:T[] = ArrayUtility.initialize<T>(size);
 						len = 0;
-						while(len<size && enumerator.moveNext)
+						while(len<size && enumerator.moveNext())
 						{
 							array[len++] = enumerator.current;
 						}
@@ -2635,9 +3010,14 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator);
-					}
+					},
+
+					_._isEndless
 				);
-			}
+			},
+			null,
+
+			_._isEndless
 		);
 	}
 
@@ -2806,111 +3186,6 @@ extends DisposableBase implements IEnumerable<T>
 
 	// #region Single Value Return...
 
-	elementAt(index:number):T
-	{
-		if(isNaN(index) || index<0 || !isFinite(index))
-			throw new Error("'index' is invalid or out of bounds.");
-
-		Integer.assert(index, "index");
-		var n:number = index;
-
-		var _ = this;
-		_.throwIfDisposed();
-
-		var value:T = undefined;
-		var found = false;
-		_.forEach(
-			(x:T, i:number) =>
-			{
-				if(i==n)
-				{
-					value = x;
-					found = true;
-					return false;
-				}
-			}
-		);
-
-		if(!found) throw new Error("index is less than 0 or greater than or equal to the number of elements in source.");
-		return value;
-	}
-
-	elementAtOrDefault(index:number, defaultValue:T = null):T
-	{
-
-		if(isNaN(index) || index<0 || !isFinite(index))
-			throw new Error("'index' is invalid or out of bounds.");
-
-		Integer.assert(index, "index");
-		var n:number = index;
-
-		var _ = this;
-		_.throwIfDisposed();
-
-		var value:T = undefined;
-		var found = false;
-		_.forEach(
-			(x:T, i:number) =>
-			{
-				if(i==n)
-				{
-					value = x;
-					found = true;
-					return false;
-				}
-			}
-		);
-
-		return (!found) ? defaultValue : value;
-	}
-
-	/* Note: Unlike previous implementations, you could pass a predicate into these methods.
-	 * But since under the hood it ends up calling .where(predicate) anyway,
-	 * it may be better to remove this to allow for a cleaner signature/override.
-	 * JavaScript/TypeScript does not easily allow for a strict method interface like C#.
-	 * Having to write extra override logic is error prone and confusing to the consumer.
-	 * Removing the predicate here may also cause the consumer of this method to think more about how they structure their query.
-	 * The end all difference is that the user must declare .where(predicate) before .first(), .single(), or .last().
-	 * */
-
-	first():T
-	{
-		var _ = this;
-		_.throwIfDisposed();
-
-		var value:T = undefined;
-		var found:boolean = false;
-		_.forEach(
-			x =>
-			{
-				value = x;
-				found = true;
-				return false;
-			}
-		);
-
-		if(!found) throw new Error("first:No element satisfies the condition.");
-		return value;
-	}
-
-	firstOrDefault(defaultValue:T = null):T
-	{
-		var _ = this;
-		_.throwIfDisposed();
-
-		var value:T = undefined;
-		var found = false;
-		_.forEach(
-			x =>
-			{
-				value = x;
-				found = true;
-				return false;
-			}
-		);
-		return (!found) ? defaultValue : value;
-	}
-
 	last():T
 	{
 		var _ = this;
@@ -2944,52 +3219,6 @@ extends DisposableBase implements IEnumerable<T>
 				value = x;
 			}
 		);
-		return (!found) ? defaultValue : value;
-	}
-
-	single():T
-	{
-		var _ = this;
-		_.throwIfDisposed();
-
-		var value:T = undefined;
-		var found:boolean = false;
-		_.forEach(
-			x=>
-			{
-				if(!found)
-				{
-					found = true;
-					value = x;
-				}
-				else throw new Error("single:sequence contains more than one element.");
-			}
-		);
-
-		if(!found) throw new Error("single:No element satisfies the condition.");
-		return value;
-	}
-
-	singleOrDefault(defaultValue:T = null):T
-	{
-
-		var _ = this;
-		_.throwIfDisposed();
-
-		var value:T = undefined;
-		var found:boolean = false;
-		_.forEach(
-			x=>
-			{
-				if(!found)
-				{
-					found = true;
-					value = x;
-				}
-				else throw new Error("single:sequence contains more than one element.");
-			}
-		);
-
 		return (!found) ? defaultValue : value;
 	}
 
@@ -3172,8 +3401,21 @@ extends DisposableBase implements IEnumerable<T>
 }
 
 
-class ArrayEnumerable<T>
+// Provided for type guarding.
+export class FiniteEnumerable<T>
 extends Enumerable<T>
+{
+	constructor(
+		enumeratorFactory:() => IEnumerator<T>,
+		finalizer?:() => void)
+	{
+		super(enumeratorFactory, finalizer, false);
+	}
+
+}
+
+class ArrayEnumerable<T>
+extends FiniteEnumerable<T>
 {
 	private _source:IArray<T>;
 
@@ -3209,20 +3451,10 @@ extends Enumerable<T>
 
 	toArray():T[]
 	{
-		var s = this.source;
-		if(!s)
-			return [];
+		var _ = this;
+		_.throwIfDisposed();
 
-		if(Array.isArray(s))
-			return (<any>s).slice();
-
-		var len = s.length, result:T[] = ArrayUtility.initialize<T>(len);
-		for(let i = 0; i<len; i++)
-		{
-			result[i] = s[i];
-		}
-
-		return result;
+		return toArray(_._source);
 	}
 
 	asEnumerable():ArrayEnumerable<T>
@@ -3236,18 +3468,7 @@ extends Enumerable<T>
 		var _ = this;
 		_.throwIfDisposed();
 
-		var source = _._source;
-		if(source)
-		{
-
-			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			for(let i = 0; i<source.length; i++)
-			{
-				// _.assertIsNotDisposed(); // Assertion here is unnecessary since we already have a reference to the source array.
-				if(<any>action(source[i], i)===false)
-					break;
-			}
-		}
+		forEach(_._source,action);
 	}
 
 	// These methods should ALWAYS check for array length before attempting anything.
@@ -3289,28 +3510,6 @@ extends Enumerable<T>
 		var source = _._source;
 		return (index<source.length && index>=0)
 			? source[index]
-			: defaultValue;
-	}
-
-	first():T
-	{
-		var _ = this;
-		_.throwIfDisposed();
-
-		var source = _._source;
-		return (source && source.length)
-			? source[0]
-			: super.first();
-	}
-
-	firstOrDefault(defaultValue:T = null):T
-	{
-		var _ = this;
-		_.throwIfDisposed();
-
-		var source = _._source;
-		return (source && source.length)
-			? source[0]
 			: defaultValue;
 	}
 
@@ -3386,7 +3585,7 @@ extends Enumerable<T>
 
 	memoize():ArrayEnumerable<T>
 	{
-		return new ArrayEnumerable<T>(this._source);
+		return this;
 	}
 
 	sequenceEqual(
@@ -3506,7 +3705,7 @@ extends Enumerable<T>
 		private prevPredicate:Predicate<T>  // predicate.length always <= 1
 	)
 	{
-		super(null);
+		super(null, null, prevSource && prevSource.isEndless);
 	}
 
 	where(predicate:Predicate<T>):Enumerable<T>
@@ -3535,8 +3734,9 @@ extends Enumerable<T>
 
 	getEnumerator():IEnumerator<T>
 	{
-		var predicate = this.prevPredicate;
-		var source = this.prevSource;
+		var _ = this;
+		var predicate = _.prevPredicate;
+		var source = _.prevSource;
 		var enumerator:IEnumerator<T>;
 
 		return new EnumeratorBase<T>(
@@ -3559,7 +3759,9 @@ extends Enumerable<T>
 			() =>
 			{
 				dispose(enumerator);
-			}
+			},
+
+			_._isEndless
 		);
 	}
 
@@ -3580,7 +3782,7 @@ extends Enumerable<T>
 		private prevSelector:Selector<TSource, T> // selector.length always <= 1
 	)
 	{
-		super(null);
+		super(null, null, prevSource && prevSource.isEndless);
 	}
 
 	where(predicate:(value:T, index?:number) => boolean):Enumerable<T>
@@ -3634,7 +3836,9 @@ extends Enumerable<T>
 			() =>
 			{
 				dispose(enumerator);
-			}
+			},
+
+			_._isEndless
 		);
 	}
 
@@ -3649,7 +3853,7 @@ extends Enumerable<T>
 }
 
 export interface IOrderedEnumerable<T>
-extends Enumerable<T>
+extends FiniteEnumerable<T>
 {
 	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
 	thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>;
@@ -3658,7 +3862,7 @@ extends Enumerable<T>
 }
 
 class OrderedEnumerable<T,TOrderBy extends Comparable>
-extends Enumerable<T> implements IOrderedEnumerable<T>
+extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 {
 
 	constructor(
@@ -3669,6 +3873,7 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 		public comparer:Comparison<T> = Values.compare)
 	{
 		super(null);
+		throwIfEndless(source && source.isEndless);
 	}
 
 	private createOrderedEnumerable(
@@ -3728,7 +3933,9 @@ extends Enumerable<T> implements IOrderedEnumerable<T>
 				if(indexes)
 					indexes.length = 0;
 				indexes = null;
-			}
+			},
+
+			false
 		);
 	}
 
