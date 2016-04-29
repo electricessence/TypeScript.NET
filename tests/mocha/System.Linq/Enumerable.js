@@ -42,7 +42,7 @@
             c: "f"
         }
     ]);
-    var sourceArrayEnumerable = Linq_1.default.fromArray(source), sourceEnumerable = new Linq_1.default(function () { return sourceArrayEnumerable.getEnumerator(); });
+    var sourceArrayEnumerable = Linq_1.default.from(source), sourceEnumerable = new Linq_1.default(function () { return sourceArrayEnumerable.getEnumerator(); });
     describe(".memoize()", function () {
         it("should cache the values as it goes for reuse later", function () {
             var source = sourceArrayEnumerable;

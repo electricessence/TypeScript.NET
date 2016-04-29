@@ -46,7 +46,7 @@ const source:TestItem[] = Object.freeze([
 	}
 ]);
 
-var sourceArrayEnumerable = Enumerable.fromArray(source),
+var sourceArrayEnumerable = Enumerable.from(source),
 	sourceEnumerable =  new Enumerable(()=>sourceArrayEnumerable.getEnumerator());
 
 describe(".memoize()", ()=>

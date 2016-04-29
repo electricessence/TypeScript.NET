@@ -59,7 +59,7 @@ export class InfiniteEnumerable extends DisposableBase {
         _.throwIfDisposed();
         return new InfiniteEnumerable(() => _.getEnumerator());
     }
-    _doAction(action, initializer, isEndless = this.isEndless) {
+    doAction(action, initializer, isEndless = this.isEndless) {
         var _ = this, disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             var enumerator;
@@ -87,29 +87,17 @@ export class InfiniteEnumerable extends DisposableBase {
             disposed = true;
         }, isEndless);
     }
-    doAction(action, initializer, isEndless = this.isEndless) {
-        return this._doAction(action, initializer, isEndless);
-    }
     force(defaultAction = 0) {
         this.throwIfDisposed();
         this.doAction(element => defaultAction);
     }
-    _skip(count) {
+    skip(count) {
         var _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
             return Enumerable.empty();
         Integer.assert(count, "count");
-        return this._doAction((element, index) => index < count
-            ? 2
-            : 1);
-    }
-    skip(count) {
-        return count > 0 ? this._skip(count) : this;
-    }
-    skipWhile(predicate) {
-        this.throwIfDisposed();
-        return this._doAction((element, index) => predicate(element, index)
+        return this.doAction((element, index) => index < count
             ? 2
             : 1);
     }
@@ -121,33 +109,7 @@ export class InfiniteEnumerable extends DisposableBase {
         if (!isFinite(count))
             throw new ArgumentOutOfRangeException('count', count, 'Must be finite.');
         Integer.assert(count, "count");
-        return _._doAction((element, index) => index < count, null, false);
-    }
-    takeWhile(predicate) {
-        this.throwIfDisposed();
-        if (!predicate)
-            throw new ArgumentNullException('predicate');
-        return this._doAction((element, index) => predicate(element, index)
-            ? 1
-            : 0, null, null);
-    }
-    takeUntil(predicate, includeUntilValue) {
-        this.throwIfDisposed();
-        if (!predicate)
-            throw new ArgumentNullException('predicate');
-        if (!includeUntilValue)
-            return this._doAction((element, index) => predicate(element, index)
-                ? 0
-                : 1, null, null);
-        var found = false;
-        return this._doAction((element, index) => {
-            if (found)
-                return 0;
-            found = predicate(element, index);
-            return 1;
-        }, () => {
-            found = false;
-        }, null);
+        return _.doAction((element, index) => index < count, null, false);
     }
     elementAt(index) {
         var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
@@ -233,7 +195,7 @@ export class InfiniteEnumerable extends DisposableBase {
                     if (!len)
                         return yielder.yieldBreak();
                     var next = Enumerable
-                        .fromArray(buffer)
+                        .from(buffer)
                         .selectMany(func);
                     if (!next.any()) {
                         return yielder.yieldBreak();
@@ -306,10 +268,11 @@ export class InfiniteEnumerable extends DisposableBase {
                         var c = enumerator.current;
                         if (Array.isArray(c)) {
                             middleEnumerator.dispose();
-                            middleEnumerator = Enumerable.fromArray(c)
-                                .selectMany(Functions.Identity)
-                                .flatten()
-                                .getEnumerator();
+                            middleEnumerator
+                                = Enumerable.from(c)
+                                    .selectMany(Functions.Identity)
+                                    .flatten()
+                                    .getEnumerator();
                             continue;
                         }
                         else {
@@ -365,7 +328,7 @@ export class InfiniteEnumerable extends DisposableBase {
             }, _._isEndless);
         }, null, _._isEndless);
     }
-    _select(selector) {
+    select(selector) {
         var _ = this, disposed = !_.throwIfDisposed();
         if (selector.length < 2)
             return new WhereSelectEnumerable(_, null, selector);
@@ -387,9 +350,6 @@ export class InfiniteEnumerable extends DisposableBase {
         }, () => {
             disposed = true;
         }, _._isEndless);
-    }
-    select(selector) {
-        return this._select(selector);
     }
     _selectMany(collectionSelector, resultSelector) {
         var _ = this, isEndless = _._isEndless || null;
@@ -456,7 +416,7 @@ export class InfiniteEnumerable extends DisposableBase {
     choose(selector = Functions.Identity) {
         return this._choose(selector);
     }
-    _where(predicate) {
+    where(predicate) {
         var _ = this, disposed = !_.throwIfDisposed();
         if (predicate.length < 2)
             return new WhereEnumerable(_, predicate);
@@ -480,9 +440,6 @@ export class InfiniteEnumerable extends DisposableBase {
         }, () => {
             disposed = true;
         }, _._isEndless);
-    }
-    where(predicate) {
-        return this._where(predicate);
     }
     ofType(type) {
         var typeName;
@@ -697,7 +654,7 @@ export class InfiniteEnumerable extends DisposableBase {
             });
         });
     }
-    _concatWith(other) {
+    concatWith(other) {
         var _ = this, isEndless = _._isEndless || null;
         return new Enumerable(() => {
             var firstEnumerator;
@@ -720,10 +677,7 @@ export class InfiniteEnumerable extends DisposableBase {
             }, isEndless);
         }, null, isEndless);
     }
-    concatWith(other) {
-        return other ? this._concatWith(other) : this;
-    }
-    _merge(enumerables) {
+    merge(enumerables) {
         var _ = this;
         return new Enumerable(() => {
             var enumerator;
@@ -749,13 +703,6 @@ export class InfiniteEnumerable extends DisposableBase {
                 dispose(enumerator, queue);
             });
         });
-    }
-    merge(enumerables) {
-        if (!enumerables || !enumerables.length)
-            return this;
-        if (enumerables.length == 1)
-            return this.concatWith(enumerables[0]);
-        return this._merge(enumerables);
     }
     concat(...enumerables) {
         var _ = this;
@@ -883,24 +830,19 @@ export class Enumerable extends InfiniteEnumerable {
         super(enumeratorFactory, finalizer);
         this._isEndless = isEndless;
     }
-    static fromArray(array) {
-        return new ArrayEnumerable(array);
-    }
     static from(source) {
         if (Type.isObject(source) || Type.isString(source)) {
             if (source instanceof Enumerable)
                 return source;
-            if (Array.isArray(source))
-                return new ArrayEnumerable(source);
-            if (isEnumerable(source))
-                return new Enumerable(() => source.getEnumerator());
             if (Type.isArrayLike(source))
                 return new ArrayEnumerable(source);
+            if (isEnumerable(source))
+                return new Enumerable(() => source.getEnumerator(), null, source.isEndless);
         }
         throw new UnsupportedEnumerableException();
     }
     static toArray(source) {
-        if (source instanceof FiniteEnumerable)
+        if (source instanceof Enumerable)
             return source.toArray();
         return toArray(source);
     }
@@ -1113,8 +1055,43 @@ export class Enumerable extends InfiniteEnumerable {
             .takeUntil(v => v == -Infinity, true)
             .aggregate(Functions.Lesser);
     }
+    doAction(action, initializer, isEndless = this.isEndless) {
+        return super.doAction(action, initializer, isEndless);
+    }
     skip(count) {
-        return count > 0 ? this._skip(count) : this;
+        return super.skip(count);
+    }
+    skipWhile(predicate) {
+        this.throwIfDisposed();
+        return this.doAction((element, index) => predicate(element, index)
+            ? 2
+            : 1);
+    }
+    takeWhile(predicate) {
+        this.throwIfDisposed();
+        if (!predicate)
+            throw new ArgumentNullException('predicate');
+        return this.doAction((element, index) => predicate(element, index)
+            ? 1
+            : 0, null, null);
+    }
+    takeUntil(predicate, includeUntilValue) {
+        this.throwIfDisposed();
+        if (!predicate)
+            throw new ArgumentNullException('predicate');
+        if (!includeUntilValue)
+            return this.doAction((element, index) => predicate(element, index)
+                ? 0
+                : 1, null, null);
+        var found = false;
+        return this.doAction((element, index) => {
+            if (found)
+                return 0;
+            found = predicate(element, index);
+            return 1;
+        }, () => {
+            found = false;
+        }, null);
     }
     forEach(action) {
         var _ = this;
@@ -1212,10 +1189,10 @@ export class Enumerable extends InfiniteEnumerable {
             .reverse();
     }
     where(predicate) {
-        return this._where(predicate);
+        return super.where(predicate);
     }
     select(selector) {
-        return this._select(selector);
+        return super.select(selector);
     }
     selectMany(collectionSelector, resultSelector) {
         return this._selectMany(collectionSelector, resultSelector);
@@ -1354,14 +1331,10 @@ export class Enumerable extends InfiniteEnumerable {
         return result;
     }
     concatWith(other) {
-        return other ? this._concatWith(other) : this;
+        return super.concatWith(other);
     }
     merge(enumerables) {
-        if (!enumerables || !enumerables.length)
-            return this;
-        if (enumerables.length == 1)
-            return this.concatWith(enumerables[0]);
-        return this._merge(enumerables);
+        return super.merge(enumerables);
     }
     concat(...enumerables) {
         if (enumerables.length == 0)
@@ -1406,6 +1379,18 @@ export class Enumerable extends InfiniteEnumerable {
             }
             return !e2.moveNext();
         }));
+    }
+    ofType(type) {
+        return super.ofType(type);
+    }
+    except(second, compareSelector) {
+        return super.except(second, compareSelector);
+    }
+    distinct(compareSelector) {
+        return super.distinct(compareSelector);
+    }
+    distinctUntilChanged(compareSelector) {
+        return super.distinctUntilChanged(compareSelector);
     }
     orderBy(keySelector = Functions.Identity) {
         return new OrderedEnumerable(this, keySelector, 1);
