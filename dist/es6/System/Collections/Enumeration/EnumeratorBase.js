@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
+import Type from "../../Types";
 import DisposableBase from "../../Disposable/DisposableBase";
 import ObjectPool from "../../Disposable/ObjectPool";
 const VOID0 = void (0);
@@ -40,15 +41,21 @@ var EnumeratorState;
     EnumeratorState[EnumeratorState["After"] = 2] = "After";
 })(EnumeratorState || (EnumeratorState = {}));
 export default class EnumeratorBase extends DisposableBase {
-    constructor(initializer, tryGetNext, disposer) {
+    constructor(_initializer, _tryGetNext, disposer, isEndless) {
         super();
-        this.initializer = initializer;
-        this.tryGetNext = tryGetNext;
-        this.disposer = disposer;
+        this._initializer = _initializer;
+        this._tryGetNext = _tryGetNext;
         this.reset();
+        if (Type.isBoolean(isEndless))
+            this._isEndless = isEndless;
+        else if (Type.isBoolean(disposer))
+            this._isEndless = disposer;
     }
     get current() {
         return this._yielder.current;
+    }
+    get isEndless() {
+        return this._isEndless;
     }
     reset() {
         var _ = this;
@@ -66,11 +73,11 @@ export default class EnumeratorBase extends DisposableBase {
             switch (_._state) {
                 case EnumeratorState.Before:
                     _._state = EnumeratorState.Running;
-                    var initializer = _.initializer;
+                    var initializer = _._initializer;
                     if (initializer)
                         initializer();
                 case EnumeratorState.Running:
-                    if (_.tryGetNext(_._yielder)) {
+                    if (_._tryGetNext(_._yielder)) {
                         return true;
                     }
                     else {
@@ -102,9 +109,9 @@ export default class EnumeratorBase extends DisposableBase {
         };
     }
     _onDispose() {
-        var _ = this, disposer = _.disposer;
-        _.initializer = null;
-        _.disposer = null;
+        var _ = this, disposer = _._disposer;
+        _._initializer = null;
+        _._disposer = null;
         var y = _._yielder;
         _._yielder = null;
         yielder(y);

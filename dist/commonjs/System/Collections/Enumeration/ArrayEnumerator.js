@@ -10,8 +10,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var IndexEnumerator_1 = require('./IndexEnumerator');
-var Types_1 = require('../../Types');
+var IndexEnumerator_1 = require("./IndexEnumerator");
+var Types_1 = require("../../Types");
 
 var ArrayEnumerator = function (_IndexEnumerator_1$de) {
     _inherits(ArrayEnumerator, _IndexEnumerator_1$de);

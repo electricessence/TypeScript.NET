@@ -10,9 +10,12 @@ export default class IndexEnumerator extends EnumeratorBase {
         super(() => {
             source = sourceFactory();
             if (source && source.source) {
-                if (source.length < 0)
+                var len = source.length;
+                if (len < 0)
                     throw new Error("length must be zero or greater");
-                if (source.length && source.step === 0)
+                if (!isFinite(len))
+                    throw new Error("length must finite number");
+                if (len && source.step === 0)
                     throw new Error("Invalid IndexEnumerator step value (0).");
                 var pointer = source.pointer;
                 if (!pointer)
@@ -41,6 +44,7 @@ export default class IndexEnumerator extends EnumeratorBase {
                 source.source = null;
             }
         });
+        this._isEndless = false;
     }
 }
 //# sourceMappingURL=IndexEnumerator.js.map

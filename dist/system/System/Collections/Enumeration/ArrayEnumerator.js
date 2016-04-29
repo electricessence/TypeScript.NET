@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['./IndexEnumerator', '../../Types'], function(exports_1, context_1) {
+System.register(["./IndexEnumerator", "../../Types"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -28,7 +28,7 @@ System.register(['./IndexEnumerator', '../../Types'], function(exports_1, contex
                     if (step === void 0) { step = 1; }
                     _super.call(this, function () {
                         var array = Types_1.default.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-                        return { source: array, pointer: start, length: (array ? array.length : 0), step: step };
+                        return { source: array, pointer: start, length: array ? array.length : 0, step: step };
                     });
                 }
                 return ArrayEnumerator;

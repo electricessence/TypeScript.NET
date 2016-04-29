@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Disposable/DisposableBase", "../../Disposable/ObjectPool"], function(exports_1, context_1) {
+System.register(["../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,7 +10,7 @@ System.register(["../../Disposable/DisposableBase", "../../Disposable/ObjectPool
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var DisposableBase_1, ObjectPool_1;
+    var Types_1, DisposableBase_1, ObjectPool_1;
     var VOID0, yielderPool, Yielder, EnumeratorState, EnumeratorBase;
     function yielder(recycle) {
         if (!yielderPool)
@@ -23,6 +23,9 @@ System.register(["../../Disposable/DisposableBase", "../../Disposable/ObjectPool
     }
     return {
         setters:[
+            function (Types_1_1) {
+                Types_1 = Types_1_1;
+            },
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
@@ -60,16 +63,26 @@ System.register(["../../Disposable/DisposableBase", "../../Disposable/ObjectPool
             })(EnumeratorState || (EnumeratorState = {}));
             EnumeratorBase = (function (_super) {
                 __extends(EnumeratorBase, _super);
-                function EnumeratorBase(initializer, tryGetNext, disposer) {
+                function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
                     _super.call(this);
-                    this.initializer = initializer;
-                    this.tryGetNext = tryGetNext;
-                    this.disposer = disposer;
+                    this._initializer = _initializer;
+                    this._tryGetNext = _tryGetNext;
                     this.reset();
+                    if (Types_1.default.isBoolean(isEndless))
+                        this._isEndless = isEndless;
+                    else if (Types_1.default.isBoolean(disposer))
+                        this._isEndless = disposer;
                 }
                 Object.defineProperty(EnumeratorBase.prototype, "current", {
                     get: function () {
                         return this._yielder.current;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(EnumeratorBase.prototype, "isEndless", {
+                    get: function () {
+                        return this._isEndless;
                     },
                     enumerable: true,
                     configurable: true
@@ -90,11 +103,11 @@ System.register(["../../Disposable/DisposableBase", "../../Disposable/ObjectPool
                         switch (_._state) {
                             case EnumeratorState.Before:
                                 _._state = EnumeratorState.Running;
-                                var initializer = _.initializer;
+                                var initializer = _._initializer;
                                 if (initializer)
                                     initializer();
                             case EnumeratorState.Running:
-                                if (_.tryGetNext(_._yielder)) {
+                                if (_._tryGetNext(_._yielder)) {
                                     return true;
                                 }
                                 else {
@@ -126,9 +139,9 @@ System.register(["../../Disposable/DisposableBase", "../../Disposable/ObjectPool
                     };
                 };
                 EnumeratorBase.prototype._onDispose = function () {
-                    var _ = this, disposer = _.disposer;
-                    _.initializer = null;
-                    _.disposer = null;
+                    var _ = this, disposer = _._disposer;
+                    _._initializer = null;
+                    _._disposer = null;
                     var y = _._yielder;
                     _._yielder = null;
                     yielder(y);

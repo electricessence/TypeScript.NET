@@ -3,10 +3,30 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
+import { using } from "../../Disposable/dispose";
 import Type from "../../Types";
 import ArrayEnumerator from "./ArrayEnumerator";
 import IndexEnumerator from "./IndexEnumerator";
-const VOID0 = void (0);
+import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
+const VOID0 = void (0), STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
+    'Would result in an infinite loop that could hang the current process.';
+export function throwIfEndless(isEndless) {
+    if (isEndless)
+        throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
+}
+function initArrayFrom(source) {
+    if (Array.isArray(source) || Type.isString(source)) {
+        var len = source.length;
+        if (isFinite(len)) {
+            if (len > 65535)
+                return new Array(len);
+            var result = [];
+            result.length = len;
+            return result;
+        }
+    }
+    return [];
+}
 class EmptyEnumerator {
     get current() {
         return VOID0;
@@ -25,6 +45,9 @@ class EmptyEnumerator {
     }
     reset() { }
     dispose() { }
+    get isEndless() {
+        return false;
+    }
 }
 const Empty = new EmptyEnumerator();
 Object.freeze(Empty);
@@ -60,23 +83,46 @@ export function isEnumerator(instance) {
     return Type.hasMemberOfType(instance, "moveNext", Type.FUNCTION);
 }
 export function forEach(e, action) {
-    if (e) {
+    if (e !== VOID0 && e !== null) {
         if (Type.isArrayLike(e)) {
-            for (let i = 0; i < e.length; i++)
+            throwIfEndless(!isFinite(e.length));
+            for (let i = 0; i < e.length; i++) {
                 if (action(e[i], i) === false)
                     break;
-            return;
-        }
-        if (isEnumerable(e)) {
-            e = e.getEnumerator();
+            }
+            return true;
         }
         if (isEnumerator(e)) {
+            throwIfEndless(e.isEndless);
             var index = 0;
             while (e.moveNext()) {
                 if (action(e.current, index++) === false)
                     break;
             }
+            return true;
         }
+        if (isEnumerable(e)) {
+            throwIfEndless(e.isEndless);
+            using(e.getEnumerator(), f => forEach(f, action));
+            return true;
+        }
+        return false;
     }
+}
+export function toArray(source) {
+    if (source === STRING_EMPTY)
+        return [];
+    if (Array.isArray(source))
+        return source.slice();
+    var result = initArrayFrom(source);
+    if (!forEach(source, (e, i) => { result[i] = e; }))
+        throw new UnsupportedEnumerableException();
+    return result;
+}
+export function map(source, selector) {
+    var result = initArrayFrom(source);
+    if (!forEach(source, (e, i) => { result[i] = selector(e); }))
+        throw new UnsupportedEnumerableException();
+    return result;
 }
 //# sourceMappingURL=Enumerator.js.map

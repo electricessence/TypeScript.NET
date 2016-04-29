@@ -7,7 +7,7 @@
 import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
-import { from as enumeratorFrom, forEach as enumeratorForEach, isEnumerable } from "../System/Collections/Enumeration/Enumerator";
+import { empty as EmptyEnumerator, from as enumeratorFrom, forEach, toArray, map, isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
 import Type from "../System/Types";
 import Integer from "../System/Integer";
 import BaseFunctions from "../System/Functions";
@@ -17,11 +17,12 @@ import Dictionary from "../System/Collections/Dictionaries/Dictionary";
 import Queue from "../System/Collections/Queue";
 import { dispose, using } from "../System/Disposable/dispose";
 import DisposableBase from "../System/Disposable/DisposableBase";
-import Exception from "../System/Exception";
+import UnsupportedEnumerableException from "../System/Collections/Enumeration/UnsupportedEnumerableException";
 import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
 import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
+const INVALID_DEFAULT = {};
 const VOID0 = void 0;
 class LinqFunctions extends BaseFunctions {
     Greater(a, b) {
@@ -33,49 +34,17 @@ class LinqFunctions extends BaseFunctions {
 }
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
-class UnsupportedEnumerableException extends Exception {
-    constructor() {
-        super("Unsupported enumerable.");
-    }
+function getEmptyEnumerator() {
+    return EmptyEnumerator;
 }
-export class Enumerable extends DisposableBase {
+export class InfiniteEnumerable extends DisposableBase {
     constructor(_enumeratorFactory, finalizer) {
         super(finalizer);
         this._enumeratorFactory = _enumeratorFactory;
+        this._isEndless = true;
     }
-    static fromArray(array) {
-        return new ArrayEnumerable(array);
-    }
-    static from(source) {
-        if (Type.isObject(source)) {
-            if (source instanceof Enumerable)
-                return source;
-            if (Array.isArray(source))
-                return new ArrayEnumerable(source);
-            if (isEnumerable(source))
-                return new Enumerable(() => source.getEnumerator());
-            if (Type.isArrayLike(source))
-                return new ArrayEnumerable(source);
-        }
-        throw new UnsupportedEnumerableException();
-    }
-    static toArray(source) {
-        if (Type.isObject(source)) {
-            if (Array.isArray(source))
-                return source.slice();
-            if (Type.isArrayLike(source))
-                source = new ArrayEnumerable(source);
-            if (source instanceof Enumerable)
-                return source.toArray();
-            if (isEnumerable(source)) {
-                var result = [];
-                enumeratorForEach(source.getEnumerator(), (e, i) => {
-                    result[i] = e;
-                });
-                return result;
-            }
-        }
-        throw new UnsupportedEnumerableException();
+    get isEndless() {
+        return this._isEndless;
     }
     getEnumerator() {
         this.throwIfDisposed();
@@ -85,282 +54,12 @@ export class Enumerable extends DisposableBase {
         super._onDispose();
         this._enumeratorFactory = null;
     }
-    static choice(values) {
-        return new Enumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(Integer.random.select(values))));
-    }
-    static cycle(values) {
-        return new Enumerable(() => {
-            var index = 0;
-            return new EnumeratorBase(() => {
-                index = 0;
-            }, (yielder) => {
-                if (index >= values.length)
-                    index = 0;
-                return yielder.yieldReturn(values[index++]);
-            });
-        });
-    }
-    static empty() {
-        return new Enumerable(() => new EnumeratorBase(null, Functions.False));
-    }
-    static repeat(element, count = Infinity) {
-        if (isNaN(count) || count <= 0)
-            return Enumerable.empty();
-        return isFinite(count) && Integer.assert(count, "count")
-            ? new Enumerable(() => {
-                var c = count;
-                var index = 0;
-                return new EnumeratorBase(() => {
-                    index = 0;
-                }, (yielder) => (index++ < c) && yielder.yieldReturn(element));
-            })
-            : new Enumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(element)));
-    }
-    static repeatWithFinalize(initializer, finalizer) {
-        return new Enumerable(() => {
-            var element;
-            return new EnumeratorBase(() => {
-                element = initializer();
-            }, (yielder) => yielder.yieldReturn(element), () => {
-                finalizer(element);
-            });
-        });
-    }
-    static make(element) {
-        return Enumerable.repeat(element, 1);
-    }
-    static range(start = 0, count = Infinity, step = 1) {
-        if (!isFinite(start))
-            throw new Error("Must have a valid 'start' value.");
-        if (isNaN(count) || count <= 0)
-            return Enumerable.empty();
-        if (!isFinite(step))
-            throw new Error("Must have a valid 'step' value.");
-        return isFinite(count) && Integer.assert(count, "count")
-            ? new Enumerable(() => {
-                var value;
-                var c = count;
-                var index = 0;
-                return new EnumeratorBase(() => {
-                    index = 0;
-                    value = start;
-                }, (yielder) => {
-                    var result = index++ < c
-                        && yielder.yieldReturn(value);
-                    if (result && index < count)
-                        value += step;
-                    return result;
-                });
-            })
-            : new Enumerable(() => {
-                var value;
-                return new EnumeratorBase(() => {
-                    value = start;
-                }, (yielder) => {
-                    var current = value;
-                    value += step;
-                    return yielder.yieldReturn(current);
-                });
-            });
-    }
-    static rangeDown(start = 0, count = Infinity, step = 1) {
-        step = Math.abs(step) * -1;
-        return Enumerable.range(start, count, step);
-    }
-    static toInfinity(start = 0, step = 1) {
-        return Enumerable.range(start, Infinity, step);
-    }
-    static toNegativeInfinity(start = 0, step = 1) {
-        return Enumerable.rangeDown(start, Infinity, step);
-    }
-    static rangeTo(start = 0, to = Infinity, step = 1) {
-        if (!isFinite(start))
-            throw new Error("Must have a valid 'start' value.");
-        if (isNaN(to))
-            throw new Error("Must have a valid 'to' value.");
-        if (!isFinite(step))
-            throw new Error("Must have a valid 'step' value.");
-        step = Math.abs(step);
-        if (!isFinite(to))
-            return Enumerable.range(start, Infinity, (start < to) ? (+step) : (-step));
-        return new Enumerable(() => {
-            var value;
-            return start < to
-                ? new EnumeratorBase(() => {
-                    value = start;
-                }, (yielder) => {
-                    var result = value <= to && yielder.yieldReturn(value);
-                    if (result)
-                        value += step;
-                    return result;
-                })
-                : new EnumeratorBase(() => {
-                    value = start;
-                }, (yielder) => {
-                    var result = value >= to && yielder.yieldReturn(value);
-                    if (result)
-                        value -= step;
-                    return result;
-                });
-        });
-    }
-    static matches(input, pattern, flags = "") {
-        var type = typeof input;
-        if (type != Type.STRING)
-            throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-        if (pattern instanceof RegExp) {
-            flags += (pattern.ignoreCase) ? "i" : "";
-            flags += (pattern.multiline) ? "m" : "";
-            pattern = pattern.source;
-        }
-        if (flags.indexOf("g") === -1)
-            flags += "g";
-        return new Enumerable(() => {
-            var regex;
-            return new EnumeratorBase(() => {
-                regex = new RegExp(pattern, flags);
-            }, (yielder) => {
-                var match = regex.exec(input);
-                return (match !== null) ? yielder.yieldReturn(match) : false;
-            });
-        });
-    }
-    static generate(factory, count = Infinity) {
-        if (isNaN(count) || count <= 0)
-            return Enumerable.empty();
-        return isFinite(count) && Integer.assert(count, "count")
-            ? new Enumerable(() => {
-                var c = count;
-                var index = 0;
-                return new EnumeratorBase(() => {
-                    index = 0;
-                }, (yielder) => {
-                    var current = index++;
-                    return current < c && yielder.yieldReturn(factory(current));
-                });
-            })
-            : new Enumerable(() => {
-                var index = 0;
-                return new EnumeratorBase(() => {
-                    index = 0;
-                }, (yielder) => yielder.yieldReturn(factory(index++)));
-            });
-    }
-    static unfold(seed, valueFactory, skipSeed = false) {
-        return new Enumerable(() => {
-            var index = 0;
-            var value;
-            var isFirst;
-            return new EnumeratorBase(() => {
-                index = 0;
-                value = seed;
-                isFirst = !skipSeed;
-            }, (yielder) => {
-                var i = index++;
-                if (isFirst)
-                    isFirst = false;
-                else
-                    value = valueFactory(value, i);
-                return yielder.yieldReturn(value);
-            });
-        });
-    }
-    static defer(enumerableFactory) {
-        return new Enumerable(() => {
-            var enumerator;
-            return new EnumeratorBase(() => {
-                enumerator = enumerableFactory().getEnumerator();
-            }, (yielder) => enumerator.moveNext() && yielder.yieldReturn(enumerator.current), () => {
-                dispose(enumerator);
-            });
-        });
-    }
-    static forEach(enumerable, action) {
-        if (enumerable) {
-            using(enumeratorFrom(enumerable), e => {
-                enumeratorForEach(e, action);
-            });
-        }
-    }
-    static map(enumerable, selector) {
-        return enumerable && using(enumeratorFrom(enumerable), e => {
-            var result = [];
-            enumeratorForEach(e, (e, i) => {
-                result[i] = selector(e);
-            });
-            return result;
-        });
-    }
-    static max(values) {
-        return values
-            .takeUntil(v => v == +Infinity, true)
-            .aggregate(Functions.Greater);
-    }
-    static min(values) {
-        return values
-            .takeUntil(v => v == -Infinity, true)
-            .aggregate(Functions.Lesser);
-    }
-    forEach(action) {
-        var _ = this;
-        _.throwIfDisposed();
-        var index = 0;
-        using(_.getEnumerator(), e => {
-            while (_.throwIfDisposed() && e.moveNext()) {
-                if (action(e.current, index++) === false)
-                    break;
-            }
-        });
-    }
-    toArray(predicate) {
-        return predicate
-            ? this.where(predicate).toArray()
-            : this.copyTo([]);
-    }
-    copyTo(target, index = 0) {
-        if (!target)
-            throw new ArgumentNullException("target");
-        Integer.assert(index);
-        if (index < 0)
-            throw new ArgumentOutOfRangeException("index", index, "Must be zero or greater");
-        this.forEach((x, i) => {
-            target[i + index] = x;
-        });
-        return target;
-    }
     asEnumerable() {
         var _ = this;
-        return new Enumerable(() => _.getEnumerator());
+        _.throwIfDisposed();
+        return new InfiniteEnumerable(() => _.getEnumerator());
     }
-    toLookup(keySelector, elementSelector = Functions.Identity, compareSelector = Functions.Identity) {
-        var dict = new Dictionary(compareSelector);
-        this.forEach(x => {
-            var key = keySelector(x);
-            var element = elementSelector(x);
-            var array = dict.getValue(key);
-            if (array !== VOID0)
-                array.push(element);
-            else
-                dict.addByKeyValue(key, [element]);
-        });
-        return new Lookup(dict);
-    }
-    toMap(keySelector, elementSelector) {
-        var obj = {};
-        this.forEach(x => {
-            obj[keySelector(x)] = elementSelector(x);
-        });
-        return obj;
-    }
-    toDictionary(keySelector, elementSelector, compareSelector = Functions.Identity) {
-        var dict = new Dictionary(compareSelector);
-        this.forEach(x => dict.addByKeyValue(keySelector(x), elementSelector(x)));
-        return dict;
-    }
-    toJoinedString(separator = "", selector = Functions.Identity) {
-        return this.select(selector).toArray().join(separator);
-    }
-    doAction(action, initializer) {
+    _doAction(action, initializer, isEndless = this.isEndless) {
         var _ = this, disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             var enumerator;
@@ -383,30 +82,34 @@ export class Enumerable extends DisposableBase {
                 return false;
             }, () => {
                 dispose(enumerator);
-            });
+            }, isEndless);
         }, () => {
             disposed = true;
-        });
+        }, isEndless);
+    }
+    doAction(action, initializer, isEndless = this.isEndless) {
+        return this._doAction(action, initializer, isEndless);
     }
     force(defaultAction = 0) {
         this.throwIfDisposed();
         this.doAction(element => defaultAction);
     }
-    skip(count) {
+    _skip(count) {
         var _ = this;
         _.throwIfDisposed();
-        if (!(count > 0))
-            return _;
         if (!isFinite(count))
             return Enumerable.empty();
         Integer.assert(count, "count");
-        return this.doAction((element, index) => index < count
+        return this._doAction((element, index) => index < count
             ? 2
             : 1);
     }
+    skip(count) {
+        return count > 0 ? this._skip(count) : this;
+    }
     skipWhile(predicate) {
         this.throwIfDisposed();
-        return this.doAction((element, index) => predicate(element, index)
+        return this._doAction((element, index) => predicate(element, index)
             ? 2
             : 1);
     }
@@ -416,71 +119,102 @@ export class Enumerable extends DisposableBase {
         var _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
-            return _;
+            throw new ArgumentOutOfRangeException('count', count, 'Must be finite.');
         Integer.assert(count, "count");
-        return _.doAction((element, index) => index < count);
+        return _._doAction((element, index) => index < count, null, false);
     }
     takeWhile(predicate) {
         this.throwIfDisposed();
-        return this.doAction((element, index) => predicate(element, index)
+        if (!predicate)
+            throw new ArgumentNullException('predicate');
+        return this._doAction((element, index) => predicate(element, index)
             ? 1
-            : 0);
+            : 0, null, null);
     }
     takeUntil(predicate, includeUntilValue) {
         this.throwIfDisposed();
+        if (!predicate)
+            throw new ArgumentNullException('predicate');
         if (!includeUntilValue)
-            return this.doAction((element, index) => predicate(element, index)
+            return this._doAction((element, index) => predicate(element, index)
                 ? 0
-                : 1);
+                : 1, null, null);
         var found = false;
-        return this.doAction((element, index) => {
+        return this._doAction((element, index) => {
             if (found)
                 return 0;
             found = predicate(element, index);
             return 1;
         }, () => {
             found = false;
+        }, null);
+    }
+    elementAt(index) {
+        var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
+        if (v === INVALID_DEFAULT)
+            throw new Error("index is greater than or equal to the number of elements in source.");
+        return v;
+    }
+    elementAtOrDefault(index, defaultValue = null) {
+        var _ = this;
+        _.throwIfDisposed();
+        if (isNaN(index) || index < 0 || !isFinite(index))
+            throw new Error("'index' is invalid or out of bounds.");
+        Integer.assert(index, "index");
+        var n = index;
+        return using(this.getEnumerator(), e => {
+            var i = 0;
+            while (e.moveNext()) {
+                if (i == n)
+                    return e.current;
+                i++;
+            }
+            return defaultValue;
         });
     }
-    takeExceptLast(count = 1) {
+    first() {
+        var v = this.firstOrDefault(INVALID_DEFAULT);
+        if (v === INVALID_DEFAULT)
+            throw new Error("first:The sequence is empty.");
+        return v;
+    }
+    firstOrDefault(defaultValue = null) {
         var _ = this;
-        if (!count || isNaN(count) || count <= 0)
-            return _;
-        if (!isFinite(count))
-            return Enumerable.empty();
-        Integer.assert(count, "count");
-        var c = count;
-        return new Enumerable(() => {
-            var enumerator;
-            var q;
-            return new EnumeratorBase(() => {
-                enumerator = _.getEnumerator();
-                q = new Queue();
-            }, (yielder) => {
-                while (enumerator.moveNext()) {
-                    q.enqueue(enumerator.current);
-                    if (q.count > c)
-                        return yielder.yieldReturn(q.dequeue());
-                }
-                return false;
-            }, () => {
-                dispose(enumerator, q);
-            });
+        _.throwIfDisposed();
+        return using(this.getEnumerator(), e => e.moveNext() ? e.current : defaultValue);
+    }
+    single() {
+        var _ = this;
+        _.throwIfDisposed();
+        return using(this.getEnumerator(), e => {
+            if (e.moveNext()) {
+                var value = e.current;
+                if (!e.moveNext())
+                    return value;
+                throw new Error("single:sequence contains more than one element.");
+            }
+            throw new Error("single:The sequence is empty.");
         });
     }
-    skipToLast(count) {
-        if (!(count > 0))
-            return Enumerable.empty();
+    singleOrDefault(defaultValue = null) {
         var _ = this;
-        if (!isFinite(count))
-            return _.reverse();
-        Integer.assert(count, "count");
-        return _.reverse()
-            .take(count)
-            .reverse();
+        _.throwIfDisposed();
+        return using(this.getEnumerator(), e => {
+            if (e.moveNext()) {
+                var value = e.current;
+                if (!e.moveNext())
+                    return value;
+            }
+            return defaultValue;
+        });
+    }
+    any() {
+        var _ = this;
+        _.throwIfDisposed();
+        return using(this.getEnumerator(), e => e.moveNext());
     }
     traverseBreadthFirst(func, resultSelector) {
-        var _ = this;
+        var _ = this, isEndless = _._isEndless || null;
         return new Enumerable(() => {
             var enumerator;
             var nestLevel = 0;
@@ -515,11 +249,11 @@ export class Enumerable extends DisposableBase {
             }, () => {
                 dispose(enumerator);
                 buffer.length = 0;
-            });
-        });
+            }, isEndless);
+        }, null, isEndless);
     }
     traverseDepthFirst(func, resultSelector) {
-        var _ = this;
+        var _ = this, isEndless = _._isEndless || null;
         return new Enumerable(() => {
             var enumeratorStack = [];
             var enumerator;
@@ -548,11 +282,11 @@ export class Enumerable extends DisposableBase {
                 finally {
                     dispose.these(enumeratorStack);
                 }
-            });
-        });
+            }, isEndless);
+        }, null, isEndless);
     }
     flatten() {
-        var _ = this;
+        var _ = this, isEndless = _._isEndless || null;
         return new Enumerable(() => {
             var enumerator;
             var middleEnumerator = null;
@@ -586,8 +320,8 @@ export class Enumerable extends DisposableBase {
                 }
             }, () => {
                 dispose(enumerator, middleEnumerator);
-            });
-        });
+            }, isEndless);
+        }, null, isEndless);
     }
     pairwise(selector) {
         var _ = this;
@@ -602,8 +336,8 @@ export class Enumerable extends DisposableBase {
                     && yielder.yieldReturn(selector(prev, enumerator.current));
             }, () => {
                 dispose(enumerator);
-            });
-        });
+            }, _._isEndless);
+        }, null, _._isEndless);
     }
     scan(func, seed) {
         var isUseSeed = seed !== VOID0;
@@ -628,10 +362,10 @@ export class Enumerable extends DisposableBase {
                     : false;
             }, () => {
                 dispose(enumerator);
-            });
-        });
+            }, _._isEndless);
+        }, null, _._isEndless);
     }
-    select(selector) {
+    _select(selector) {
         var _ = this, disposed = !_.throwIfDisposed();
         if (selector.length < 2)
             return new WhereSelectEnumerable(_, null, selector);
@@ -649,13 +383,16 @@ export class Enumerable extends DisposableBase {
                     : false;
             }, () => {
                 dispose(enumerator);
-            });
+            }, _._isEndless);
         }, () => {
             disposed = true;
-        });
+        }, _._isEndless);
     }
-    selectMany(collectionSelector, resultSelector) {
-        var _ = this;
+    select(selector) {
+        return this._select(selector);
+    }
+    _selectMany(collectionSelector, resultSelector) {
+        var _ = this, isEndless = _._isEndless || null;
         if (!resultSelector)
             resultSelector = (a, b) => b;
         return new Enumerable(() => {
@@ -686,10 +423,13 @@ export class Enumerable extends DisposableBase {
                 dispose(enumerator, middleEnumerator);
                 enumerator = null;
                 middleEnumerator = null;
-            });
-        });
+            }, isEndless);
+        }, null, isEndless);
     }
-    choose(selector) {
+    selectMany(collectionSelector, resultSelector) {
+        return this._selectMany(collectionSelector, resultSelector);
+    }
+    _choose(selector = Functions.Identity) {
         var _ = this, disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             var enumerator;
@@ -708,12 +448,15 @@ export class Enumerable extends DisposableBase {
                 return false;
             }, () => {
                 dispose(enumerator);
-            });
+            }, _._isEndless);
         }, () => {
             disposed = true;
-        });
+        }, _._isEndless);
     }
-    where(predicate) {
+    choose(selector = Functions.Identity) {
+        return this._choose(selector);
+    }
+    _where(predicate) {
         var _ = this, disposed = !_.throwIfDisposed();
         if (predicate.length < 2)
             return new WhereEnumerable(_, predicate);
@@ -733,10 +476,13 @@ export class Enumerable extends DisposableBase {
                 return false;
             }, () => {
                 dispose(enumerator);
-            });
+            }, _._isEndless);
         }, () => {
             disposed = true;
-        });
+        }, _._isEndless);
+    }
+    where(predicate) {
+        return this._where(predicate);
     }
     ofType(type) {
         var typeName;
@@ -770,7 +516,7 @@ export class Enumerable extends DisposableBase {
                 enumerator = _.getEnumerator();
                 keys = new Dictionary(compareSelector);
                 if (second)
-                    Enumerable.forEach(second, key => keys.addByKeyValue(key, true));
+                    forEach(second, key => keys.addByKeyValue(key, true));
             }, (yielder) => {
                 throwIfDisposed(disposed);
                 while (enumerator.moveNext()) {
@@ -784,10 +530,10 @@ export class Enumerable extends DisposableBase {
             }, () => {
                 dispose(enumerator);
                 keys.clear();
-            });
+            }, _._isEndless);
         }, () => {
             disposed = true;
-        });
+        }, _._isEndless);
     }
     distinct(compareSelector) {
         return this.except(null, compareSelector);
@@ -817,143 +563,10 @@ export class Enumerable extends DisposableBase {
                 return false;
             }, () => {
                 dispose(enumerator);
-            });
+            }, _._isEndless);
         }, () => {
             disposed = true;
-        });
-    }
-    reverse() {
-        var _ = this, disposed = !_.throwIfDisposed();
-        return new Enumerable(() => {
-            var buffer;
-            var index = 0;
-            return new EnumeratorBase(() => {
-                throwIfDisposed(disposed);
-                buffer = _.toArray();
-                index = buffer.length;
-            }, (yielder) => index && yielder.yieldReturn(buffer[--index]), () => {
-                buffer.length = 0;
-            });
-        }, () => {
-            disposed = true;
-        });
-    }
-    shuffle() {
-        var _ = this, disposed = !_.throwIfDisposed();
-        return new Enumerable(() => {
-            var buffer;
-            var capacity;
-            var len;
-            return new EnumeratorBase(() => {
-                throwIfDisposed(disposed);
-                buffer = _.toArray();
-                capacity = len = buffer.length;
-            }, (yielder) => {
-                if (!len)
-                    return yielder.yieldBreak();
-                var selectedIndex = Integer.random(len);
-                var selectedValue = buffer[selectedIndex];
-                buffer[selectedIndex] = buffer[--len];
-                buffer[len] = null;
-                if (len % 32 == 0)
-                    buffer.length = len;
-                return yielder.yieldReturn(selectedValue);
-            }, () => {
-                buffer.length = 0;
-            });
-        }, () => {
-            disposed = true;
-        });
-    }
-    count(predicate) {
-        var _ = this;
-        _.throwIfDisposed();
-        var count = 0;
-        if (predicate) {
-            _.forEach((x, i) => {
-                if (predicate(x, i))
-                    ++count;
-            });
-        }
-        else {
-            _.forEach(() => {
-                ++count;
-            });
-        }
-        return count;
-    }
-    all(predicate) {
-        var result = true;
-        this.forEach(x => {
-            if (!predicate(x)) {
-                result = false;
-                return false;
-            }
-        });
-        return result;
-    }
-    every(predicate) {
-        return this.all(predicate);
-    }
-    any(predicate) {
-        var result = false;
-        if (predicate) {
-            this.forEach(x => {
-                result = predicate(x);
-                return !result;
-            });
-        }
-        else {
-            this.forEach(() => {
-                result = true;
-                return false;
-            });
-        }
-        return result;
-    }
-    some(predicate) {
-        return this.any(predicate);
-    }
-    isEmpty() {
-        return !this.any();
-    }
-    contains(value, compareSelector) {
-        return compareSelector
-            ? this.any(v => compareSelector(v) === compareSelector(value))
-            : this.any(v => v === value);
-    }
-    indexOf(value, compareSelector) {
-        var found = -1;
-        if (compareSelector)
-            this.forEach((element, i) => {
-                if (Values.areEqual(compareSelector(element), compareSelector(value), true)) {
-                    found = i;
-                    return false;
-                }
-            });
-        else
-            this.forEach((element, i) => {
-                if (Values.areEqual(element, value, true)) {
-                    found = i;
-                    return false;
-                }
-            });
-        return found;
-    }
-    lastIndexOf(value, compareSelector) {
-        var result = -1;
-        if (compareSelector)
-            this.forEach((element, i) => {
-                if (Values.areEqual(compareSelector(element), compareSelector(value), true))
-                    result
-                        = i;
-            });
-        else
-            this.forEach((element, i) => {
-                if (Values.areEqual(element, value, true))
-                    result = i;
-            });
-        return result;
+        }, _._isEndless);
     }
     defaultIfEmpty(defaultValue = null) {
         var _ = this, disposed = !_.throwIfDisposed();
@@ -977,8 +590,8 @@ export class Enumerable extends DisposableBase {
                 return false;
             }, () => {
                 dispose(enumerator);
-            });
-        });
+            }, _._isEndless);
+        }, null, _._isEndless);
     }
     zip(second, resultSelector) {
         var _ = this;
@@ -990,7 +603,8 @@ export class Enumerable extends DisposableBase {
                 index = 0;
                 firstEnumerator = _.getEnumerator();
                 secondEnumerator = enumeratorFrom(second);
-            }, (yielder) => firstEnumerator.moveNext() && secondEnumerator.moveNext()
+            }, (yielder) => firstEnumerator.moveNext()
+                && secondEnumerator.moveNext()
                 && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++)), () => {
                 dispose(firstEnumerator, secondEnumerator);
             });
@@ -998,6 +612,7 @@ export class Enumerable extends DisposableBase {
     }
     zipMultiple(second, resultSelector) {
         var _ = this;
+        _.throwIfDisposed();
         if (!second.length)
             return Enumerable.empty();
         return new Enumerable(() => {
@@ -1082,8 +697,8 @@ export class Enumerable extends DisposableBase {
             });
         });
     }
-    concatWith(other) {
-        var _ = this;
+    _concatWith(other) {
+        var _ = this, isEndless = _._isEndless || null;
         return new Enumerable(() => {
             var firstEnumerator;
             var secondEnumerator;
@@ -1102,15 +717,14 @@ export class Enumerable extends DisposableBase {
                 return false;
             }, () => {
                 dispose(firstEnumerator, secondEnumerator);
-            });
-        });
+            }, isEndless);
+        }, null, isEndless);
     }
-    merge(enumerables) {
+    concatWith(other) {
+        return other ? this._concatWith(other) : this;
+    }
+    _merge(enumerables) {
         var _ = this;
-        if (!enumerables.length)
-            return _;
-        if (enumerables.length == 1)
-            return _.concatWith(enumerables[0]);
         return new Enumerable(() => {
             var enumerator;
             var queue;
@@ -1136,6 +750,13 @@ export class Enumerable extends DisposableBase {
             });
         });
     }
+    merge(enumerables) {
+        if (!enumerables || !enumerables.length)
+            return this;
+        if (enumerables.length == 1)
+            return this.concatWith(enumerables[0]);
+        return this._merge(enumerables);
+    }
     concat(...enumerables) {
         var _ = this;
         if (enumerables.length == 0)
@@ -1144,12 +765,46 @@ export class Enumerable extends DisposableBase {
             return _.concatWith(enumerables[0]);
         return _.merge(enumerables);
     }
+    union(second, compareSelector = Functions.Identity) {
+        var _ = this, isEndless = _._isEndless || null;
+        return new Enumerable(() => {
+            var firstEnumerator;
+            var secondEnumerator;
+            var keys;
+            return new EnumeratorBase(() => {
+                firstEnumerator = _.getEnumerator();
+                keys = new Dictionary(compareSelector);
+            }, (yielder) => {
+                var current;
+                if (secondEnumerator === VOID0) {
+                    while (firstEnumerator.moveNext()) {
+                        current = firstEnumerator.current;
+                        if (!keys.containsKey(current)) {
+                            keys.addByKeyValue(current, null);
+                            return yielder.yieldReturn(current);
+                        }
+                    }
+                    secondEnumerator = enumeratorFrom(second);
+                }
+                while (secondEnumerator.moveNext()) {
+                    current = secondEnumerator.current;
+                    if (!keys.containsKey(current)) {
+                        keys.addByKeyValue(current, null);
+                        return yielder.yieldReturn(current);
+                    }
+                }
+                return false;
+            }, () => {
+                dispose(firstEnumerator, secondEnumerator);
+            }, isEndless);
+        }, null, isEndless);
+    }
     insertAt(index, other) {
         if (isNaN(index) || index < 0 || !isFinite(index))
             throw new Error("'index' is invalid or out of bounds.");
         Integer.assert(index, "index");
         var n = index;
-        var _ = this;
+        var _ = this, isEndless = _._isEndless || null;
         _.throwIfDisposed();
         return new Enumerable(() => {
             var firstEnumerator;
@@ -1176,8 +831,8 @@ export class Enumerable extends DisposableBase {
                     && yielder.yieldReturn(secondEnumerator.current);
             }, () => {
                 dispose(firstEnumerator, secondEnumerator);
-            });
-        });
+            }, isEndless);
+        }, null, isEndless);
     }
     alternateMultiple(sequence) {
         var _ = this;
@@ -1213,14 +868,507 @@ export class Enumerable extends DisposableBase {
                 return yielder.yieldReturn(latest);
             }, () => {
                 dispose(enumerator, alternateEnumerator);
-            });
-        });
+            }, _._isEndless);
+        }, null, _._isEndless);
     }
     alternateSingle(value) {
         return this.alternateMultiple(Enumerable.make(value));
     }
     alternate(...sequence) {
         return this.alternateMultiple(sequence);
+    }
+}
+export class Enumerable extends InfiniteEnumerable {
+    constructor(enumeratorFactory, finalizer, isEndless = null) {
+        super(enumeratorFactory, finalizer);
+        this._isEndless = isEndless;
+    }
+    static fromArray(array) {
+        return new ArrayEnumerable(array);
+    }
+    static from(source) {
+        if (Type.isObject(source) || Type.isString(source)) {
+            if (source instanceof Enumerable)
+                return source;
+            if (Array.isArray(source))
+                return new ArrayEnumerable(source);
+            if (isEnumerable(source))
+                return new Enumerable(() => source.getEnumerator());
+            if (Type.isArrayLike(source))
+                return new ArrayEnumerable(source);
+        }
+        throw new UnsupportedEnumerableException();
+    }
+    static toArray(source) {
+        if (source instanceof FiniteEnumerable)
+            return source.toArray();
+        return toArray(source);
+    }
+    static choice(values) {
+        var len = values && values.length;
+        if (!len || !isFinite(len))
+            throw new ArgumentOutOfRangeException('length', length);
+        return new InfiniteEnumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(Integer.random.select(values)), true));
+    }
+    static chooseFrom(...args) {
+        return Enumerable.choice(args);
+    }
+    static cycle(values) {
+        var len = values && values.length;
+        if (!len || !isFinite(len))
+            throw new ArgumentOutOfRangeException('length', length);
+        return new InfiniteEnumerable(() => {
+            var index = 0;
+            return new EnumeratorBase(() => {
+                index = 0;
+            }, (yielder) => {
+                if (index >= values.length)
+                    index = 0;
+                return yielder.yieldReturn(values[index++]);
+            }, true);
+        });
+    }
+    static cycleThrough(...args) {
+        return Enumerable.cycle(args);
+    }
+    static empty() {
+        return new FiniteEnumerable(getEmptyEnumerator);
+    }
+    static repeat(element, count = Infinity) {
+        if (!(count > 0))
+            return Enumerable.empty();
+        return isFinite(count) && Integer.assert(count, "count")
+            ? new FiniteEnumerable(() => {
+                var c = count;
+                var index = 0;
+                return new EnumeratorBase(() => { index = 0; }, (yielder) => (index++ < c) && yielder.yieldReturn(element), null, false);
+            })
+            : new Enumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(element), true));
+    }
+    static repeatWithFinalize(initializer, finalizer) {
+        return new InfiniteEnumerable(() => {
+            var element;
+            return new EnumeratorBase(() => {
+                element = initializer();
+            }, (yielder) => yielder.yieldReturn(element), () => {
+                finalizer(element);
+            }, true);
+        });
+    }
+    static make(element) {
+        return Enumerable.repeat(element, 1);
+    }
+    static range(start, count, step = 1) {
+        if (!isFinite(start))
+            throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
+        if (!(count > 0))
+            return Enumerable.empty();
+        if (!step)
+            throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
+        if (!isFinite(step))
+            throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+        Integer.assert(count, "count");
+        return new FiniteEnumerable(() => {
+            var value;
+            var c = count;
+            var index = 0;
+            return new EnumeratorBase(() => {
+                index = 0;
+                value = start;
+            }, (yielder) => {
+                var result = index++ < c
+                    && yielder.yieldReturn(value);
+                if (result && index < count)
+                    value += step;
+                return result;
+            }, false);
+        });
+    }
+    static rangeDown(start, count, step = 1) {
+        step = Math.abs(step) * -1;
+        return Enumerable.range(start, count, step);
+    }
+    static toInfinity(start = 0, step = 1) {
+        if (!isFinite(start))
+            throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
+        if (!step)
+            throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
+        if (!isFinite(step))
+            throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+        return new InfiniteEnumerable(() => {
+            var value;
+            return new EnumeratorBase(() => {
+                value = start;
+            }, (yielder) => {
+                var current = value;
+                value += step;
+                return yielder.yieldReturn(current);
+            }, true);
+        });
+    }
+    static toNegativeInfinity(start = 0, step = 1) {
+        return Enumerable.toInfinity(start, -step);
+    }
+    static rangeTo(start, to, step = 1) {
+        if (isNaN(to) || !isFinite(to))
+            throw new ArgumentOutOfRangeException("to", to, "Must be a finite number.");
+        if (step && !isFinite(step))
+            throw new ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
+        step = Math.abs(step);
+        return new FiniteEnumerable(() => {
+            var value;
+            return new EnumeratorBase(() => { value = start; }, start < to
+                ?
+                        (yielder) => {
+                        var result = value <= to && yielder.yieldReturn(value);
+                        if (result)
+                            value += step;
+                        return result;
+                    }
+                :
+                        (yielder) => {
+                        var result = value >= to && yielder.yieldReturn(value);
+                        if (result)
+                            value -= step;
+                        return result;
+                    }, false);
+        });
+    }
+    static matches(input, pattern, flags = "") {
+        var type = typeof input;
+        if (type != Type.STRING)
+            throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
+        if (pattern instanceof RegExp) {
+            flags += (pattern.ignoreCase) ? "i" : "";
+            flags += (pattern.multiline) ? "m" : "";
+            pattern = pattern.source;
+        }
+        if (flags.indexOf("g") === -1)
+            flags += "g";
+        return new FiniteEnumerable(() => {
+            var regex;
+            return new EnumeratorBase(() => {
+                regex = new RegExp(pattern, flags);
+            }, (yielder) => {
+                var match = regex.exec(input);
+                return (match !== null) ? yielder.yieldReturn(match) : false;
+            });
+        });
+    }
+    static generate(factory, count = Infinity) {
+        if (isNaN(count) || count <= 0)
+            return Enumerable.empty();
+        return isFinite(count) && Integer.assert(count, "count")
+            ?
+                new FiniteEnumerable(() => {
+                    var c = count;
+                    var index = 0;
+                    return new EnumeratorBase(() => {
+                        index = 0;
+                    }, (yielder) => {
+                        var current = index++;
+                        return current < c && yielder.yieldReturn(factory(current));
+                    }, false);
+                })
+            :
+                new InfiniteEnumerable(() => {
+                    var index = 0;
+                    return new EnumeratorBase(() => {
+                        index = 0;
+                    }, (yielder) => yielder.yieldReturn(factory(index++)), true);
+                });
+    }
+    static unfold(seed, valueFactory, skipSeed = false) {
+        return new InfiniteEnumerable(() => {
+            var index = 0;
+            var value;
+            var isFirst;
+            return new EnumeratorBase(() => {
+                index = 0;
+                value = seed;
+                isFirst = !skipSeed;
+            }, (yielder) => {
+                var i = index++;
+                if (isFirst)
+                    isFirst = false;
+                else
+                    value = valueFactory(value, i);
+                return yielder.yieldReturn(value);
+            }, true);
+        });
+    }
+    static forEach(enumerable, action) {
+        forEach(enumerable, action);
+    }
+    static map(enumerable, selector) {
+        return map(enumerable, selector);
+    }
+    static max(values) {
+        return values
+            .takeUntil(v => v == +Infinity, true)
+            .aggregate(Functions.Greater);
+    }
+    static min(values) {
+        return values
+            .takeUntil(v => v == -Infinity, true)
+            .aggregate(Functions.Lesser);
+    }
+    skip(count) {
+        return count > 0 ? this._skip(count) : this;
+    }
+    forEach(action) {
+        var _ = this;
+        _.throwIfDisposed();
+        throwIfEndless(_.isEndless);
+        var index = 0;
+        using(_.getEnumerator(), e => {
+            throwIfEndless(e.isEndless);
+            while (_.throwIfDisposed() && e.moveNext()) {
+                if (action(e.current, index++) === false)
+                    break;
+            }
+        });
+    }
+    toArray(predicate) {
+        return predicate
+            ? this.where(predicate).toArray()
+            : this.copyTo([]);
+    }
+    copyTo(target, index = 0) {
+        this.throwIfDisposed();
+        if (!target)
+            throw new ArgumentNullException("target");
+        Integer.assert(index);
+        if (index < 0)
+            throw new ArgumentOutOfRangeException("index", index, "Must be zero or greater");
+        forEach(this, (x, i) => {
+            target[i + index] = x;
+        });
+        return target;
+    }
+    toLookup(keySelector, elementSelector = Functions.Identity, compareSelector = Functions.Identity) {
+        var dict = new Dictionary(compareSelector);
+        this.forEach(x => {
+            var key = keySelector(x);
+            var element = elementSelector(x);
+            var array = dict.getValue(key);
+            if (array !== VOID0)
+                array.push(element);
+            else
+                dict.addByKeyValue(key, [element]);
+        });
+        return new Lookup(dict);
+    }
+    toMap(keySelector, elementSelector) {
+        var obj = {};
+        this.forEach(x => {
+            obj[keySelector(x)] = elementSelector(x);
+        });
+        return obj;
+    }
+    toDictionary(keySelector, elementSelector, compareSelector = Functions.Identity) {
+        var dict = new Dictionary(compareSelector);
+        this.forEach(x => dict.addByKeyValue(keySelector(x), elementSelector(x)));
+        return dict;
+    }
+    toJoinedString(separator = "", selector = Functions.Identity) {
+        return this.select(selector).toArray().join(separator);
+    }
+    takeExceptLast(count = 1) {
+        var _ = this;
+        if (!(count > 0))
+            return _;
+        if (!isFinite(count))
+            return Enumerable.empty();
+        Integer.assert(count, "count");
+        var c = count;
+        return new Enumerable(() => {
+            var enumerator;
+            var q;
+            return new EnumeratorBase(() => {
+                enumerator = _.getEnumerator();
+                q = new Queue();
+            }, (yielder) => {
+                while (enumerator.moveNext()) {
+                    q.enqueue(enumerator.current);
+                    if (q.count > c)
+                        return yielder.yieldReturn(q.dequeue());
+                }
+                return false;
+            }, () => {
+                dispose(enumerator, q);
+            });
+        });
+    }
+    skipToLast(count) {
+        if (!(count > 0))
+            return Enumerable.empty();
+        var _ = this;
+        if (!isFinite(count))
+            return _;
+        Integer.assert(count, "count");
+        return _.reverse()
+            .take(count)
+            .reverse();
+    }
+    where(predicate) {
+        return this._where(predicate);
+    }
+    select(selector) {
+        return this._select(selector);
+    }
+    selectMany(collectionSelector, resultSelector) {
+        return this._selectMany(collectionSelector, resultSelector);
+    }
+    choose(selector = Functions.Identity) {
+        return this._choose(selector);
+    }
+    reverse() {
+        var _ = this, disposed = !_.throwIfDisposed();
+        throwIfEndless(_._isEndless);
+        return new Enumerable(() => {
+            var buffer;
+            var index = 0;
+            return new EnumeratorBase(() => {
+                throwIfDisposed(disposed);
+                buffer = _.toArray();
+                index = buffer.length;
+            }, (yielder) => index && yielder.yieldReturn(buffer[--index]), () => {
+                buffer.length = 0;
+            });
+        }, () => {
+            disposed = true;
+        });
+    }
+    shuffle() {
+        var _ = this, disposed = !_.throwIfDisposed();
+        throwIfEndless(_._isEndless);
+        return new Enumerable(() => {
+            var buffer;
+            var capacity;
+            var len;
+            return new EnumeratorBase(() => {
+                throwIfDisposed(disposed);
+                buffer = _.toArray();
+                capacity = len = buffer.length;
+            }, (yielder) => {
+                if (!len)
+                    return yielder.yieldBreak();
+                var selectedIndex = Integer.random(len);
+                var selectedValue = buffer[selectedIndex];
+                buffer[selectedIndex] = buffer[--len];
+                buffer[len] = null;
+                if (len % 32 == 0)
+                    buffer.length = len;
+                return yielder.yieldReturn(selectedValue);
+            }, () => {
+                buffer.length = 0;
+            });
+        }, () => {
+            disposed = true;
+        });
+    }
+    count(predicate) {
+        var count = 0;
+        this.forEach(predicate
+            ?
+                    (x, i) => {
+                    if (predicate(x, i))
+                        ++count;
+                }
+            :
+                    () => {
+                    ++count;
+                });
+        return count;
+    }
+    all(predicate) {
+        if (!predicate)
+            throw new ArgumentNullException("predicate");
+        var result = true;
+        this.forEach(x => {
+            if (!predicate(x)) {
+                result = false;
+                return false;
+            }
+        });
+        return result;
+    }
+    every(predicate) {
+        return this.all(predicate);
+    }
+    any(predicate) {
+        if (!predicate)
+            return super.any();
+        var result = false;
+        this.forEach(x => {
+            result = predicate(x);
+            return !result;
+        });
+        return result;
+    }
+    some(predicate) {
+        return this.any(predicate);
+    }
+    isEmpty() {
+        return !this.any();
+    }
+    contains(value, compareSelector) {
+        return compareSelector
+            ? this.any(v => compareSelector(v) === compareSelector(value))
+            : this.any(v => v === value);
+    }
+    indexOf(value, compareSelector) {
+        var found = -1;
+        this.forEach(compareSelector
+            ?
+                    (element, i) => {
+                    if (Values.areEqual(compareSelector(element), compareSelector(value), true)) {
+                        found = i;
+                        return false;
+                    }
+                }
+            :
+                    (element, i) => {
+                    if (Values.areEqual(element, value, true)) {
+                        found = i;
+                        return false;
+                    }
+                });
+        return found;
+    }
+    lastIndexOf(value, compareSelector) {
+        var result = -1;
+        this.forEach(compareSelector
+            ?
+                    (element, i) => {
+                    if (Values.areEqual(compareSelector(element), compareSelector(value), true))
+                        result
+                            = i;
+                }
+            :
+                    (element, i) => {
+                    if (Values.areEqual(element, value, true))
+                        result = i;
+                });
+        return result;
+    }
+    concatWith(other) {
+        return other ? this._concatWith(other) : this;
+    }
+    merge(enumerables) {
+        if (!enumerables || !enumerables.length)
+            return this;
+        if (enumerables.length == 1)
+            return this.concatWith(enumerables[0]);
+        return this._merge(enumerables);
+    }
+    concat(...enumerables) {
+        if (enumerables.length == 0)
+            return this;
+        if (enumerables.length == 1)
+            return this.concatWith(enumerables[0]);
+        return this.merge(enumerables);
     }
     intersect(second, compareSelector) {
         var _ = this;
@@ -1232,8 +1380,7 @@ export class Enumerable extends DisposableBase {
                 enumerator = _.getEnumerator();
                 keys = new Dictionary(compareSelector);
                 outs = new Dictionary(compareSelector);
-                Enumerable.from(second)
-                    .forEach(key => {
+                forEach(second, key => {
                     keys.addByKeyValue(key, true);
                 });
             }, (yielder) => {
@@ -1246,52 +1393,19 @@ export class Enumerable extends DisposableBase {
                 }
                 return yielder.yieldBreak();
             }, () => {
-                dispose(enumerator);
-            });
-        });
+                dispose(enumerator, keys, outs);
+            }, _._isEndless);
+        }, null, _._isEndless);
     }
     sequenceEqual(second, equalityComparer = Values.areEqual) {
-        return using(this.getEnumerator(), e1 => using(Enumerable.from(second).getEnumerator(), e2 => {
+        return using(this.getEnumerator(), e1 => using(enumeratorFrom(second), e2 => {
+            throwIfEndless(e1.isEndless && e2.isEndless);
             while (e1.moveNext()) {
                 if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
                     return false;
             }
             return !e2.moveNext();
         }));
-    }
-    union(second, compareSelector = Functions.Identity) {
-        var _ = this;
-        return new Enumerable(() => {
-            var firstEnumerator;
-            var secondEnumerator;
-            var keys;
-            return new EnumeratorBase(() => {
-                firstEnumerator = _.getEnumerator();
-                keys = new Dictionary(compareSelector);
-            }, (yielder) => {
-                var current;
-                if (secondEnumerator === VOID0) {
-                    while (firstEnumerator.moveNext()) {
-                        current = firstEnumerator.current;
-                        if (!keys.containsKey(current)) {
-                            keys.addByKeyValue(current, null);
-                            return yielder.yieldReturn(current);
-                        }
-                    }
-                    secondEnumerator = Enumerable.from(second).getEnumerator();
-                }
-                while (secondEnumerator.moveNext()) {
-                    current = secondEnumerator.current;
-                    if (!keys.containsKey(current)) {
-                        keys.addByKeyValue(current, null);
-                        return yielder.yieldReturn(current);
-                    }
-                }
-                return false;
-            }, () => {
-                dispose(firstEnumerator, secondEnumerator);
-            });
-        });
     }
     orderBy(keySelector = Functions.Identity) {
         return new OrderedEnumerable(this, keySelector, 1);
@@ -1372,15 +1486,15 @@ export class Enumerable extends DisposableBase {
             }, (yielder) => {
                 var array = ArrayUtility.initialize(size);
                 len = 0;
-                while (len < size && enumerator.moveNext) {
+                while (len < size && enumerator.moveNext()) {
                     array[len++] = enumerator.current;
                 }
                 array.length = len;
                 return len && yielder.yieldReturn(array);
             }, () => {
                 dispose(enumerator);
-            });
-        });
+            }, _._isEndless);
+        }, null, _._isEndless);
     }
     aggregate(func, seed) {
         return this.scan(func, seed).lastOrDefault();
@@ -1473,70 +1587,6 @@ export class Enumerable extends DisposableBase {
             result = NaN;
         return result;
     }
-    elementAt(index) {
-        if (isNaN(index) || index < 0 || !isFinite(index))
-            throw new Error("'index' is invalid or out of bounds.");
-        Integer.assert(index, "index");
-        var n = index;
-        var _ = this;
-        _.throwIfDisposed();
-        var value = undefined;
-        var found = false;
-        _.forEach((x, i) => {
-            if (i == n) {
-                value = x;
-                found = true;
-                return false;
-            }
-        });
-        if (!found)
-            throw new Error("index is less than 0 or greater than or equal to the number of elements in source.");
-        return value;
-    }
-    elementAtOrDefault(index, defaultValue = null) {
-        if (isNaN(index) || index < 0 || !isFinite(index))
-            throw new Error("'index' is invalid or out of bounds.");
-        Integer.assert(index, "index");
-        var n = index;
-        var _ = this;
-        _.throwIfDisposed();
-        var value = undefined;
-        var found = false;
-        _.forEach((x, i) => {
-            if (i == n) {
-                value = x;
-                found = true;
-                return false;
-            }
-        });
-        return (!found) ? defaultValue : value;
-    }
-    first() {
-        var _ = this;
-        _.throwIfDisposed();
-        var value = undefined;
-        var found = false;
-        _.forEach(x => {
-            value = x;
-            found = true;
-            return false;
-        });
-        if (!found)
-            throw new Error("first:No element satisfies the condition.");
-        return value;
-    }
-    firstOrDefault(defaultValue = null) {
-        var _ = this;
-        _.throwIfDisposed();
-        var value = undefined;
-        var found = false;
-        _.forEach(x => {
-            value = x;
-            found = true;
-            return false;
-        });
-        return (!found) ? defaultValue : value;
-    }
     last() {
         var _ = this;
         _.throwIfDisposed();
@@ -1558,38 +1608,6 @@ export class Enumerable extends DisposableBase {
         _.forEach(x => {
             found = true;
             value = x;
-        });
-        return (!found) ? defaultValue : value;
-    }
-    single() {
-        var _ = this;
-        _.throwIfDisposed();
-        var value = undefined;
-        var found = false;
-        _.forEach(x => {
-            if (!found) {
-                found = true;
-                value = x;
-            }
-            else
-                throw new Error("single:sequence contains more than one element.");
-        });
-        if (!found)
-            throw new Error("single:No element satisfies the condition.");
-        return value;
-    }
-    singleOrDefault(defaultValue = null) {
-        var _ = this;
-        _.throwIfDisposed();
-        var value = undefined;
-        var found = false;
-        _.forEach(x => {
-            if (!found) {
-                found = true;
-                value = x;
-            }
-            else
-                throw new Error("single:sequence contains more than one element.");
         });
         return (!found) ? defaultValue : value;
     }
@@ -1688,7 +1706,12 @@ export class Enumerable extends DisposableBase {
         });
     }
 }
-class ArrayEnumerable extends Enumerable {
+export class FiniteEnumerable extends Enumerable {
+    constructor(enumeratorFactory, finalizer) {
+        super(enumeratorFactory, finalizer, false);
+    }
+}
+class ArrayEnumerable extends FiniteEnumerable {
     constructor(source) {
         super(() => {
             _.throwIfDisposed();
@@ -1709,16 +1732,9 @@ class ArrayEnumerable extends Enumerable {
         return this._source;
     }
     toArray() {
-        var s = this.source;
-        if (!s)
-            return [];
-        if (Array.isArray(s))
-            return s.slice();
-        var len = s.length, result = ArrayUtility.initialize(len);
-        for (let i = 0; i < len; i++) {
-            result[i] = s[i];
-        }
-        return result;
+        var _ = this;
+        _.throwIfDisposed();
+        return toArray(_._source);
     }
     asEnumerable() {
         return new ArrayEnumerable(this._source);
@@ -1726,13 +1742,7 @@ class ArrayEnumerable extends Enumerable {
     forEach(action) {
         var _ = this;
         _.throwIfDisposed();
-        var source = _._source;
-        if (source) {
-            for (let i = 0; i < source.length; i++) {
-                if (action(source[i], i) === false)
-                    break;
-            }
-        }
+        forEach(_._source, action);
     }
     any(predicate) {
         var _ = this;
@@ -1760,22 +1770,6 @@ class ArrayEnumerable extends Enumerable {
         var source = _._source;
         return (index < source.length && index >= 0)
             ? source[index]
-            : defaultValue;
-    }
-    first() {
-        var _ = this;
-        _.throwIfDisposed();
-        var source = _._source;
-        return (source && source.length)
-            ? source[0]
-            : super.first();
-    }
-    firstOrDefault(defaultValue = null) {
-        var _ = this;
-        _.throwIfDisposed();
-        var source = _._source;
-        return (source && source.length)
-            ? source[0]
             : defaultValue;
     }
     last() {
@@ -1822,7 +1816,7 @@ class ArrayEnumerable extends Enumerable {
             : 0, -1));
     }
     memoize() {
-        return new ArrayEnumerable(this._source);
+        return this;
     }
     sequenceEqual(second, equalityComparer = Values.areEqual) {
         if (Type.isArrayLike(second))
@@ -1877,7 +1871,7 @@ class Lookup {
 }
 class WhereEnumerable extends Enumerable {
     constructor(prevSource, prevPredicate) {
-        super(null);
+        super(null, null, prevSource && prevSource.isEndless);
         this.prevSource = prevSource;
         this.prevPredicate = prevPredicate;
     }
@@ -1894,8 +1888,9 @@ class WhereEnumerable extends Enumerable {
         return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
     }
     getEnumerator() {
-        var predicate = this.prevPredicate;
-        var source = this.prevSource;
+        var _ = this;
+        var predicate = _.prevPredicate;
+        var source = _.prevSource;
         var enumerator;
         return new EnumeratorBase(() => {
             enumerator = source.getEnumerator();
@@ -1907,7 +1902,7 @@ class WhereEnumerable extends Enumerable {
             return false;
         }, () => {
             dispose(enumerator);
-        });
+        }, _._isEndless);
     }
     _onDispose() {
         super._onDispose();
@@ -1917,7 +1912,7 @@ class WhereEnumerable extends Enumerable {
 }
 class WhereSelectEnumerable extends Enumerable {
     constructor(prevSource, prevPredicate, prevSelector) {
-        super(null);
+        super(null, null, prevSource && prevSource.isEndless);
         this.prevSource = prevSource;
         this.prevPredicate = prevPredicate;
         this.prevSelector = prevSelector;
@@ -1949,7 +1944,7 @@ class WhereSelectEnumerable extends Enumerable {
             return false;
         }, () => {
             dispose(enumerator);
-        });
+        }, _._isEndless);
     }
     _onDispose() {
         var _ = this;
@@ -1959,7 +1954,7 @@ class WhereSelectEnumerable extends Enumerable {
         _.prevSelector = null;
     }
 }
-class OrderedEnumerable extends Enumerable {
+class OrderedEnumerable extends FiniteEnumerable {
     constructor(source, keySelector, order, parent, comparer = Values.compare) {
         super(null);
         this.source = source;
@@ -1967,6 +1962,7 @@ class OrderedEnumerable extends Enumerable {
         this.order = order;
         this.parent = parent;
         this.comparer = comparer;
+        throwIfEndless(source && source.isEndless);
     }
     createOrderedEnumerable(keySelector, order) {
         return new OrderedEnumerable(this.source, keySelector, order, this);
@@ -2003,7 +1999,7 @@ class OrderedEnumerable extends Enumerable {
             if (indexes)
                 indexes.length = 0;
             indexes = null;
-        });
+        }, false);
     }
     _onDispose() {
         super._onDispose();
