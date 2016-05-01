@@ -419,3 +419,51 @@ describe(".any(predicate)", ()=>
 	});
 
 });
+
+describe(".empty()",()=>{
+
+	var source = Enumerable.empty();
+
+
+	describe(".singleOrDefault()",()=>{
+
+		it("should be defaulted",()=>{
+			assert.equal(source.singleOrDefault(),null);
+			assert.equal(source.singleOrDefault(-1),-1);
+		});
+		
+	});
+
+	describe(".single()",()=>{
+
+		it("should throw",()=>{
+			assert.throws(()=>{
+				source.single();				
+			});
+		});
+
+	});
+
+});
+
+describe(".from([1])",()=>{
+
+	let source = new Enumerable(()=>Enumerable.from([1]).getEnumerator());
+
+	describe(".singleOrDefault()",()=>{
+
+		it("should return single value",()=>{
+			assert.equal(source.single(),1);
+		});
+
+	});
+
+	describe(".singleOrDefault()",()=>{
+
+		it("should return single value",()=>{
+			assert.equal(source.singleOrDefault(),1);
+		});
+
+	});
+
+});

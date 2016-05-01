@@ -287,5 +287,34 @@
             test(sourceEnumerable);
         });
     });
+    describe(".empty()", function () {
+        var source = Linq_1.default.empty();
+        describe(".singleOrDefault()", function () {
+            it("should be defaulted", function () {
+                assert.equal(source.singleOrDefault(), null);
+                assert.equal(source.singleOrDefault(-1), -1);
+            });
+        });
+        describe(".single()", function () {
+            it("should throw", function () {
+                assert.throws(function () {
+                    source.single();
+                });
+            });
+        });
+    });
+    describe(".from([1])", function () {
+        var source = new Linq_1.default(function () { return Linq_1.default.from([1]).getEnumerator(); });
+        describe(".singleOrDefault()", function () {
+            it("should return single value", function () {
+                assert.equal(source.single(), 1);
+            });
+        });
+        describe(".singleOrDefault()", function () {
+            it("should return single value", function () {
+                assert.equal(source.singleOrDefault(), 1);
+            });
+        });
+    });
 });
 //# sourceMappingURL=Enumerable.js.map
