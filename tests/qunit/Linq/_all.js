@@ -41,7 +41,7 @@
                 c: "f"
             }
         ];
-        var sourceEnumerable = Linq_1.default.fromArray(source);
+        var sourceEnumerable = Linq_1.default.from(source);
         QUnit.test("Linq.memoize", function (assert) {
             var source = sourceEnumerable;
             var A = source.memoize();

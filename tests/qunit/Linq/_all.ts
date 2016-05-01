@@ -1,7 +1,7 @@
 ﻿///<reference path="../../../typings/qunit/qunit"/>
 ///<amd-dependency path="QUnit"/>
 
-import Enumerable from 'source/System.Linq/Linq';
+import Enumerable from "source/System.Linq/Linq";
 
 interface TestItem
 {
@@ -46,7 +46,7 @@ export default function run()
 		}
 	];
 
-	var sourceEnumerable = Enumerable.fromArray(source);
+	var sourceEnumerable = Enumerable.from(source);
 
 	QUnit.test("Linq.memoize", function (assert:QUnitAssert)
 	{
