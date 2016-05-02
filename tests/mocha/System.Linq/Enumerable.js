@@ -43,6 +43,9 @@
         }
     ]);
     var sourceArrayEnumerable = Linq_1.default.from(source), sourceEnumerable = new Linq_1.default(function () { return sourceArrayEnumerable.getEnumerator(); });
+    describe(".force()", function () {
+        assert.doesNotThrow(function () { sourceEnumerable.force(); });
+    });
     describe(".memoize()", function () {
         it("should cache the values as it goes for reuse later", function () {
             var source = sourceArrayEnumerable;
@@ -302,6 +305,18 @@
                 });
             });
         });
+        describe(".first()", function () {
+            it("should throw", function () {
+                assert.throws(function () {
+                    source.first();
+                });
+            });
+        });
+        describe(".firstOrDefault()", function () {
+            it("should be defaulted", function () {
+                assert.equal(source.firstOrDefault(), null);
+            });
+        });
     });
     describe(".from([1])", function () {
         var source = new Linq_1.default(function () { return Linq_1.default.from([1]).getEnumerator(); });
@@ -313,6 +328,22 @@
         describe(".singleOrDefault()", function () {
             it("should return single value", function () {
                 assert.equal(source.singleOrDefault(), 1);
+            });
+        });
+        describe(".elementAt(x)", function () {
+            it("should throw if no more", function () {
+                assert.throws(function () { return source.elementAt(2); });
+            });
+        });
+        describe(".elementAtOrDefault (x)", function () {
+            it("should be defaulted", function () {
+                assert.equal(source.elementAtOrDefault(2, -1), -1);
+                assert.equal(source.elementAtOrDefault(2), null);
+            });
+            it("should throw", function () {
+                assert.throws(function () { source.elementAtOrDefault(NaN); });
+                assert.throws(function () { source.elementAtOrDefault(-1); });
+                assert.throws(function () { source.elementAtOrDefault(Infinity); });
             });
         });
     });

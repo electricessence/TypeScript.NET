@@ -135,11 +135,9 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
     }, {
         key: "force",
         value: function force() {
-            var defaultAction = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-
             this.throwIfDisposed();
             this.doAction(function (element) {
-                return defaultAction;
+                return 0;
             });
         }
     }, {

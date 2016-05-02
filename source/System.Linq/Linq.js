@@ -37,6 +37,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ArgumentOutOfRangeException_1 = require("../System/Exceptions/ArgumentOutOfRangeException");
     var INVALID_DEFAULT = {};
     var VOID0 = void 0;
+    var BREAK = function (element) { return 0; };
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
         function LinqFunctions() {
@@ -111,10 +112,9 @@ var __extends = (this && this.__extends) || function (d, b) {
                 disposed = true;
             }, isEndless);
         };
-        InfiniteEnumerable.prototype.force = function (defaultAction) {
-            if (defaultAction === void 0) { defaultAction = 0; }
+        InfiniteEnumerable.prototype.force = function () {
             this.throwIfDisposed();
-            this.doAction(function (element) { return defaultAction; });
+            this.doAction(BREAK);
         };
         InfiniteEnumerable.prototype.skip = function (count) {
             var _ = this;

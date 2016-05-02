@@ -10,24 +10,46 @@
     var Linq_1 = require("../../../source/System.Linq/Linq");
     var assert = require('../../../node_modules/assert/assert');
     var source = Linq_1.default.toInfinity();
-    describe('.toInfinity()', function () {
-        describe(".elementAt(x)", function () {
-            it("the index should match the value", function () {
-                for (var i = 0; i < 10; i++)
-                    assert.equal(source.elementAt(i), i);
+    describe(".elementAt(x)", function () {
+        it("the index should match the value", function () {
+            for (var i = 0; i < 10; i++) {
+                assert.equal(source.elementAt(i), i);
+            }
+        });
+    });
+    describe(".singleOrDefault()", function () {
+        it("should be defaulted", function () {
+            assert.equal(source.singleOrDefault(), null);
+            assert.equal(source.singleOrDefault(-1), -1);
+        });
+    });
+    describe(".single()", function () {
+        it("should throw", function () {
+            assert.throws(function () {
+                source.single();
             });
         });
-        describe(".singleOrDefault()", function () {
-            it("should be defaulted", function () {
-                assert.equal(source.singleOrDefault(), null);
-                assert.equal(source.singleOrDefault(-1), -1);
-            });
+    });
+    describe(".skip(count)", function () {
+        it("should return empty if Infinity", function () {
+            assert.equal(source
+                .skip(Infinity)
+                .firstOrDefault(-1), -1);
         });
-        describe(".single()", function () {
-            it("should throw", function () {
-                assert.throws(function () {
-                    source.single();
-                });
+    });
+    describe(".take(count)", function () {
+        it("should return empty if zero less", function () {
+            assert.equal(source
+                .take(0)
+                .defaultIfEmpty(-1)
+                .first(), -1);
+            assert.equal(source
+                .take(-1)
+                .firstOrDefault(-1), -1);
+        });
+        it("should throw for Infinity", function () {
+            assert.throws(function () {
+                source.take(Infinity);
             });
         });
     });

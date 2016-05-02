@@ -47,6 +47,7 @@ type Comparable = Primitive|IComparable<any>;
 
 const INVALID_DEFAULT:any = {}; // create a private unique instance for referencing.
 const VOID0:any = void 0;
+const BREAK:(e:any)=>EnumerableAction = element => EnumerableAction.Break;
 
 // Leave internal to avoid accidental overwriting.
 class LinqFunctions extends BaseFunctions
@@ -209,12 +210,10 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 
-	force(defaultAction:EnumerableAction = EnumerableAction.Break):void
+	force():void
 	{
-
 		this.throwIfDisposed();
-
-		this.doAction(element => defaultAction);
+		this.doAction(BREAK);
 	}
 
 	// #region Indexing/Paging methods.

@@ -49,6 +49,10 @@ const source:TestItem[] = Object.freeze([
 var sourceArrayEnumerable = Enumerable.from(source),
 	sourceEnumerable =  new Enumerable(()=>sourceArrayEnumerable.getEnumerator());
 
+describe(".force()",()=>{
+	assert.doesNotThrow(()=>{ sourceEnumerable.force() });
+});
+
 describe(".memoize()", ()=>
 {
 	it("should cache the values as it goes for reuse later", ()=>
@@ -444,6 +448,24 @@ describe(".empty()",()=>{
 
 	});
 
+	describe(".first()",()=>{
+
+		it("should throw",()=>{
+			assert.throws(()=>{
+				source.first();
+			});
+		});
+
+	});
+
+	describe(".firstOrDefault()",()=>{
+
+		it("should be defaulted",()=>{
+			assert.equal(source.firstOrDefault(),null);
+		});
+
+	});
+
 });
 
 describe(".from([1])",()=>{
@@ -462,6 +484,34 @@ describe(".from([1])",()=>{
 
 		it("should return single value",()=>{
 			assert.equal(source.singleOrDefault(),1);
+		});
+
+	});
+
+	describe(".elementAt(x)", ()=>
+	{
+
+		it("should throw if no more", ()=>
+		{
+			assert.throws(()=>source.elementAt(2));
+		});
+
+	});
+
+	describe(".elementAtOrDefault (x)", ()=>
+	{
+
+		it("should be defaulted", ()=>
+		{
+			assert.equal(source.elementAtOrDefault(2,-1),-1);
+			assert.equal(source.elementAtOrDefault(2),null);
+		});
+
+		it("should throw", ()=>
+		{
+			assert.throws(()=>{source.elementAtOrDefault(NaN)});
+			assert.throws(()=>{source.elementAtOrDefault(-1)});
+			assert.throws(()=>{source.elementAtOrDefault(Infinity)});
 		});
 
 	});
