@@ -29,6 +29,10 @@ interface Func<TResult>
 	(): TResult;
 }
 
+interface Closure {
+	():void;
+}
+
 interface Selector<TSource, TResult>
 {
 	(source:TSource, index?:number): TResult;

@@ -22,7 +22,7 @@ class Defer extends DeferBase
 {
 
 
-	constructor(task:Function, delay?:number)
+	constructor(task:Closure, delay?:number)
 	{
 		super();
 		if(!(delay>=0)) delay = 0;
@@ -90,7 +90,7 @@ class DeferInterval extends DeferBase
 
 
 export default function defer(
-	task:Function,
+	task:Closure,
 	delay?:number):ICancellable
 {
 	return new Defer(task, delay);

@@ -11,7 +11,7 @@ import Queue from "../Collections/Queue";
 
 declare module process
 {
-	export function nextTick(callback:Function):void;
+	export function nextTick(callback:Closure):void;
 
 	export function toString():string;
 }
@@ -24,7 +24,7 @@ interface IDomain
 
 interface ITaskQueueEntry extends ILinkedNode<ITaskQueueEntry>
 {
-	task:Function;
+	task:Closure;
 	domain?:IDomain;
 }
 
@@ -51,7 +51,7 @@ function flush():void
 		runSingle(task, domain);
 	}
 
-	let task:Function;
+	let task:Closure;
 	while(task = laterQueue.dequeue())
 	{
 		runSingle(task);
@@ -65,9 +65,9 @@ function flush():void
 var immediateQueue = new LinkedNodeList<ITaskQueueEntry>();
 
 // queue for late tasks, used by unhandled rejection tracking
-var laterQueue:Queue<Function> = new Queue<Function>();
+var laterQueue:Queue<Closure> = new Queue<Closure>();
 
-function runSingle(task:Function, domain?:IDomain):void
+function runSingle(task:Closure, domain?:IDomain):void
 {
 	try
 	{
@@ -123,7 +123,7 @@ function requestFlush():void
 	}
 }
 
-export default function deferImmediate(task:Function):ICancellable
+export default function deferImmediate(task:Closure):ICancellable
 {
 	var entry:ITaskQueueEntry = {
 		task: task,
@@ -144,7 +144,7 @@ export default function deferImmediate(task:Function):ICancellable
 // runs a task after all other tasks have been run
 // this is useful for unhandled rejection tracking that needs to happen
 // after all `then`d tasks have been run.
-export function runAfterDeferred(task:Function):void
+export function runAfterDeferred(task:Closure):void
 {
 	laterQueue.enqueue(task);
 	requestFlush();
