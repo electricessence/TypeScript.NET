@@ -213,7 +213,10 @@ extends DisposableBase implements IEnumerable<T>
 	force():void
 	{
 		this.throwIfDisposed();
-		this.doAction(BREAK);
+		this.doAction(BREAK)
+			.getEnumerator()
+			.moveNext();
+
 	}
 
 	// #region Indexing/Paging methods.
@@ -668,9 +671,6 @@ extends DisposableBase implements IEnumerable<T>
 	{
 		var _ = this, disposed = !_.throwIfDisposed();
 
-		if(selector.length<2)
-			return new WhereSelectEnumerable(_, null, selector);
-
 		return new Enumerable<TResult>(
 			() =>
 			{
@@ -692,7 +692,7 @@ extends DisposableBase implements IEnumerable<T>
 
 						return enumerator.moveNext()
 							? yielder.yieldReturn(selector(enumerator.current, index++))
-							: false;
+							: yielder.yieldBreak();
 					},
 
 					() =>
@@ -803,7 +803,7 @@ extends DisposableBase implements IEnumerable<T>
 		return this._selectMany(collectionSelector, resultSelector);
 	}
 
-	protected _choose<TResult>(selector:Selector<T, TResult> = Functions.Identity):Enumerable<TResult>
+	protected _choose<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
 	{
 
 		var _ = this, disposed = !_.throwIfDisposed();
@@ -855,13 +855,12 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	choose<T>():Enumerable<T>
 	/**
 	 * Returns selected values that are not null or undefined.
-	 * @param selector
-	 * @returns {Enumerable<TResult>}
 	 */
-	choose<TResult>(selector:Selector<T, TResult> = Functions.Identity):InfiniteEnumerable<TResult>
+	choose():InfiniteEnumerable<T>;
+	choose<TResult>(selector?:Selector<T, TResult>):InfiniteEnumerable<TResult>
+	choose(selector:Selector<T, any> = Functions.Identity):InfiniteEnumerable<any>
 	{
 		return this._choose(selector)
 	}
@@ -870,9 +869,6 @@ extends DisposableBase implements IEnumerable<T>
 	{
 
 		var _ = this, disposed = !_.throwIfDisposed();
-
-		if(predicate.length<2)
-			return new WhereEnumerable(_, predicate);
 
 		return new Enumerable<T>(
 			() =>
@@ -1327,52 +1323,13 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
-	concatWith(other:IEnumerableOrArray<T>):InfiniteEnumerable<T>
-	{
-		var _ = this, isEndless = _._isEndless || null;
-
-		return new Enumerable<T>(
-			() =>
-			{
-				var firstEnumerator:IEnumerator<T>;
-				var secondEnumerator:IEnumerator<T>;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						firstEnumerator = _.getEnumerator();
-					},
-
-					(yielder) =>
-					{
-						if(firstEnumerator!=null)
-						{
-							if(firstEnumerator.moveNext()) return yielder.yieldReturn(firstEnumerator.current);
-							secondEnumerator = enumeratorFrom<T>(other);
-							firstEnumerator.dispose();
-							firstEnumerator = null;
-						}
-						if(secondEnumerator.moveNext()) return yielder.yieldReturn(secondEnumerator.current);
-						return false;
-					},
-
-					() =>
-					{
-						dispose(firstEnumerator, secondEnumerator);
-					},
-
-					isEndless
-				);
-			},
-			null,
-
-			isEndless
-		);
-	}
 
 	merge(enumerables:IArray<IEnumerableOrArray<T>>):InfiniteEnumerable<T>
 	{
-		var _ = this;
+		var _ = this, isEndless = _._isEndless || null;
+
+		if(!enumerables || enumerables.length==0)
+			return _;
 
 		return new Enumerable<T>(
 			() =>
@@ -1415,22 +1372,19 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						dispose(enumerator, queue); // Just in case this gets disposed early.
-					}
+					},
+
+					isEndless
 				);
-			}
+			},
+			null,
+			isEndless
 		);
 	}
 
 	concat(...enumerables:Array<IEnumerableOrArray<T>>):InfiniteEnumerable<T>
 	{
-		var _ = this;
-		if(enumerables.length==0)
-			return _;
-
-		if(enumerables.length==1)
-			return _.concatWith(enumerables[0]);
-
-		return _.merge(enumerables);
+		return this.merge(enumerables);
 	}
 
 
@@ -1648,6 +1602,92 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 
+	// #region Error Handling
+	catchError(handler:(e:any) => void):Enumerable<T>
+	{
+		var _ = this, disposed = !_.throwIfDisposed();
+		return new Enumerable<T>(
+			() =>
+			{
+				var enumerator:IEnumerator<T>;
+
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						try
+						{
+							throwIfDisposed(disposed);
+							enumerator = _.getEnumerator();
+						}
+						catch(e)
+						{
+							// Don't init...
+						}
+					},
+
+					(yielder)=>
+					{
+						try
+						{
+							throwIfDisposed(disposed);
+							if(enumerator.moveNext())
+								return yielder.yieldReturn(enumerator.current);
+						}
+						catch(e)
+						{
+							handler(e);
+						}
+						return false;
+					},
+
+					() =>
+					{
+						dispose(enumerator);
+					}
+				);
+			}
+		);
+	}
+
+	finallyAction(action:() => void):Enumerable<T>
+	{
+		var _ = this, disposed = !_.throwIfDisposed();
+
+		return new Enumerable<T>(
+			() =>
+			{
+				var enumerator:IEnumerator<T>;
+
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						throwIfDisposed(disposed);
+						enumerator = _.getEnumerator();
+					},
+
+					(yielder)=>
+					{
+						throwIfDisposed(disposed);
+						return (enumerator.moveNext())
+							? yielder.yieldReturn(enumerator.current)
+							: false;
+					},
+
+					() =>
+					{
+						try
+						{
+							dispose(enumerator);
+						}
+						finally
+						{
+							action();
+						}
+					}
+				);
+			}
+		);
+	}
 }
 
 
@@ -2310,9 +2350,9 @@ extends InfiniteEnumerable<T>
 		elementSelector:Selector<T, TResult>):IMap<TResult>
 	{
 		var obj:IMap<TResult> = {};
-		this.forEach(x=>
+		this.forEach((x,i)=>
 		{
-			obj[keySelector(x)] = elementSelector(x);
+			obj[keySelector(x,i)] = elementSelector(x,i);
 		});
 		return obj;
 	}
@@ -2323,7 +2363,7 @@ extends InfiniteEnumerable<T>
 		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Dictionary<TKey, TValue>
 	{
 		var dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
-		this.forEach(x=> dict.addByKeyValue(keySelector(x), elementSelector(x)));
+		this.forEach((x,i)=> dict.addByKeyValue(keySelector(x,i), elementSelector(x,i)));
 		return dict;
 	}
 
@@ -2425,8 +2465,9 @@ extends InfiniteEnumerable<T>
 		return this._selectMany(collectionSelector, resultSelector);
 	}
 
-	choose<T>():Enumerable<T>;
-	choose<TResult>(selector:Selector<T, TResult> = Functions.Identity):Enumerable<TResult>
+	choose():Enumerable<T>;
+	choose<TResult>(selector?:Selector<T, TResult>):Enumerable<TResult>
+	choose(selector:Selector<T, any> = Functions.Identity):Enumerable<any>
 	{
 		return this._choose(selector);
 	}
@@ -2547,9 +2588,9 @@ extends InfiniteEnumerable<T>
 			throw new ArgumentNullException("predicate");
 
 		var result = true;
-		this.forEach(x =>
+		this.forEach((x,i) =>
 		{
-			if(!predicate(x))
+			if(!predicate(x,i))
 			{
 				result = false;
 				return false; // break
@@ -2574,9 +2615,9 @@ extends InfiniteEnumerable<T>
 		// Splitting the forEach up this way reduces iterative processing.
 		// forEach handles the generation and disposal of the enumerator.
 		this.forEach(
-			x =>
+			(x,i) =>
 			{
-				result = predicate(x); // false = not found and therefore it should continue.  true = found and break;
+				result = predicate(x,i); // false = not found and therefore it should continue.  true = found and break;
 				return !result;
 			});
 		return result;
@@ -2612,7 +2653,7 @@ extends InfiniteEnumerable<T>
 				?
 				(element:T, i?:number) =>
 				{
-					if(Values.areEqual(compareSelector(element), compareSelector(value), true))
+					if(Values.areEqual(compareSelector(element,i), compareSelector(value,i), true))
 					{
 						found = i;
 						return false;
@@ -2641,7 +2682,7 @@ extends InfiniteEnumerable<T>
 				?
 				(element:T, i?:number) =>
 				{
-					if(Values.areEqual(compareSelector(element), compareSelector(value), true)) result
+					if(Values.areEqual(compareSelector(element,i), compareSelector(value,i), true)) result
 						= i;
 				}
 
@@ -2654,12 +2695,6 @@ extends InfiniteEnumerable<T>
 		return result;
 	}
 
-
-	concatWith(other:IEnumerableOrArray<T>):Enumerable<T>
-	{
-		return <Enumerable<T>>super.concatWith(other);
-	}
-
 	merge(enumerables:IArray<IEnumerableOrArray<T>>):Enumerable<T>
 	{
 		return <Enumerable<T>>super.merge(enumerables);
@@ -2667,12 +2702,6 @@ extends InfiniteEnumerable<T>
 
 	concat(...enumerables:Array<IEnumerableOrArray<T>>):Enumerable<T>
 	{
-		if(enumerables.length==0)
-			return this;
-
-		if(enumerables.length==1)
-			return this.concatWith(enumerables[0]);
-
 		return this.merge(enumerables);
 	}
 
@@ -3021,31 +3050,11 @@ extends InfiniteEnumerable<T>
 
 	average(selector:Selector<T, number> = Type.numberOrNaN):number
 	{
-		var sum = 0;
-		// This allows for infinity math that doesn't destroy the other values.
-		var sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
-
-		var count = 0; // No need to make integer if the result could be a float.
-
-		this.forEach(
-			function(x)
-			{
-				var value = selector(x);
-				if(isNaN(value))
-				{
-					sum = NaN;
-					return false;
-				}
-				if(isFinite(value))
-					sum += value;
-				else
-					sumInfinite += value>0 ? (+1) : (-1);
-				++count;
-			}
-		);
-
-		if(sumInfinite) // Not zero?
-			return sumInfinite*Infinity;
+		var count = 0;
+		var sum = this.sum((e,i)=>{
+			count++;
+			return selector(e,i);
+		});
 
 		return (isNaN(sum) || !count)
 			? NaN
@@ -3093,7 +3102,10 @@ extends InfiniteEnumerable<T>
 				if(isFinite(value))
 					sum += value;
 				else
-					sumInfinite += value>0 ? (+1) : (-1);
+					sumInfinite +=
+						value>0 ?
+							(+1) :
+							(-1);
 			}
 		);
 
@@ -3106,10 +3118,10 @@ extends InfiniteEnumerable<T>
 		var result = 1, exists:boolean = false;
 
 		this.forEach(
-			x=>
+			(x,i)=>
 			{
 				exists = true;
-				var value = selector(x);
+				var value = selector(x,i);
 				if(isNaN(value))
 				{
 					result = NaN;
@@ -3142,9 +3154,9 @@ extends InfiniteEnumerable<T>
 		var result:number = NaN;
 
 		this.forEach(
-			x=>
+			(x,i)=>
 			{
-				var value = selector(x);
+				var value = selector(x,i);
 				count++;
 
 				if(count===1)
@@ -3300,92 +3312,6 @@ extends InfiniteEnumerable<T>
 		);
 	}
 
-	// #region Error Handling
-	catchError(handler:(e:Error) => void):Enumerable<T>
-	{
-		var _ = this, disposed = !_.throwIfDisposed();
-		return new Enumerable<T>(
-			() =>
-			{
-				var enumerator:IEnumerator<T>;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						try
-						{
-							throwIfDisposed(disposed);
-							enumerator = _.getEnumerator();
-						}
-						catch(e)
-						{
-							// Don't init...
-						}
-					},
-
-					(yielder)=>
-					{
-						try
-						{
-							throwIfDisposed(disposed);
-							if(enumerator.moveNext())
-								return yielder.yieldReturn(enumerator.current);
-						}
-						catch(e)
-						{
-							handler(e);
-						}
-						return false;
-					},
-
-					() =>
-					{
-						dispose(enumerator);
-					}
-				);
-			}
-		);
-	}
-
-	finallyAction(action:() => void):Enumerable<T>
-	{
-		var _ = this, disposed = !_.throwIfDisposed();
-
-		return new Enumerable<T>(
-			() =>
-			{
-				var enumerator:IEnumerator<T>;
-
-				return new EnumeratorBase<T>(
-					() =>
-					{
-						throwIfDisposed(disposed);
-						enumerator = _.getEnumerator();
-					},
-
-					(yielder)=>
-					{
-						throwIfDisposed(disposed);
-						return (enumerator.moveNext())
-							? yielder.yieldReturn(enumerator.current)
-							: false;
-					},
-
-					() =>
-					{
-						try
-						{
-							dispose(enumerator);
-						}
-						finally
-						{
-							action();
-						}
-					}
-				);
-			}
-		);
-	}
 
 }
 
@@ -3574,7 +3500,7 @@ extends FiniteEnumerable<T>
 
 	memoize():ArrayEnumerable<T>
 	{
-		return this;
+		return this.asEnumerable();
 	}
 
 	sequenceEqual(
@@ -3685,161 +3611,6 @@ implements ILookup<TKey, TElement>
 
 }
 
-
-class WhereEnumerable<T>
-extends Enumerable<T>
-{
-	constructor(
-		private prevSource:IEnumerable<T>,
-		private prevPredicate:Predicate<T>  // predicate.length always <= 1
-	)
-	{
-		super(null, null, prevSource && prevSource.isEndless);
-	}
-
-	where(predicate:Predicate<T>):Enumerable<T>
-	{
-
-		if(predicate.length>1)
-			return super.where(predicate);
-
-		var prevPredicate = this.prevPredicate;
-		var composedPredicate = (x:T) => prevPredicate(x) && predicate(x);
-		return new WhereEnumerable<T>(this.prevSource, composedPredicate);
-	}
-
-	select<TSelect>(selector:Selector<T, TSelect>):Enumerable<TSelect>
-	{
-
-		if(selector.length>1)
-			return super.select(selector);
-
-		return new WhereSelectEnumerable<T, TSelect>(
-			this.prevSource,
-			this.prevPredicate,
-			selector
-		);
-	}
-
-	getEnumerator():IEnumerator<T>
-	{
-		var _ = this;
-		var predicate = _.prevPredicate;
-		var source = _.prevSource;
-		var enumerator:IEnumerator<T>;
-
-		return new EnumeratorBase<T>(
-			() =>
-			{
-				enumerator = source.getEnumerator();
-			},
-
-			(yielder)=>
-			{
-				while(enumerator.moveNext())
-				{
-					if(predicate(enumerator.current))
-						return yielder.yieldReturn(enumerator.current);
-				}
-
-				return false;
-			},
-
-			() =>
-			{
-				dispose(enumerator);
-			},
-
-			_._isEndless
-		);
-	}
-
-	protected _onDispose():void
-	{
-		super._onDispose();
-		this.prevPredicate = null;
-		this.prevSource = null;
-	}
-}
-
-class WhereSelectEnumerable<TSource, T>
-extends Enumerable<T>
-{
-	constructor(
-		private prevSource:IEnumerable<TSource>,
-		private prevPredicate:Predicate<TSource>,  // predicate.length always <= 1
-		private prevSelector:Selector<TSource, T> // selector.length always <= 1
-	)
-	{
-		super(null, null, prevSource && prevSource.isEndless);
-	}
-
-	where(predicate:(value:T, index?:number) => boolean):Enumerable<T>
-	{
-		if(predicate.length>1)
-			return super.where(predicate);
-
-		return new WhereEnumerable<T>(this, predicate);
-	}
-
-	select<TSelect>(selector:Selector<T, TSelect>):Enumerable<TSelect>
-	{
-
-		if(selector.length>1)
-		// if selector use index, can't compose
-			return super.select(selector);
-
-		var _ = this;
-		var prevSelector = _.prevSelector;
-		var composedSelector = (x:TSource) => selector(prevSelector(x));
-		return new WhereSelectEnumerable(_.prevSource, _.prevPredicate, composedSelector);
-	}
-
-	getEnumerator():IEnumerator<T>
-	{
-		var _                             = this,
-		    predicate                     = _.prevPredicate,
-		    source                        = _.prevSource,
-		    selector:Selector<TSource, T> = _.prevSelector, // Type definition needed for correct inference.
-		    enumerator:IEnumerator<TSource>;
-
-		return new EnumeratorBase<T>(
-			() =>
-			{
-				enumerator = source.getEnumerator();
-			},
-
-			(yielder)=>
-			{
-				while(enumerator.moveNext())
-				{
-					var c = enumerator.current;
-					if(predicate==null || predicate(c))
-					{
-						return yielder.yieldReturn(selector(c));
-					}
-				}
-				return false;
-			},
-
-			() =>
-			{
-				dispose(enumerator);
-			},
-
-			_._isEndless
-		);
-	}
-
-	protected _onDispose():void
-	{
-		var _ = this;
-		super._onDispose();
-		_.prevPredicate = null;
-		_.prevSource = null;
-		_.prevSelector = null;
-	}
-}
 
 export interface IOrderedEnumerable<T>
 extends FiniteEnumerable<T>
@@ -3965,9 +3736,9 @@ function createSortContext<T, TOrderBy extends Comparable>(
 // #region Helper Functions...
 // This allows for the use of a boolean instead of calling this.throwIfDisposed()
 // since there is a strong chance of introducing a circular reference.
-function throwIfDisposed(disposed:boolean, className:string = "Enumerable"):void
+function throwIfDisposed(disposed:boolean):void
 {
-	if(disposed) throw new ObjectDisposedException(className);
+	if(disposed) throw new ObjectDisposedException("Enumerable");
 }
 // #endregion
 

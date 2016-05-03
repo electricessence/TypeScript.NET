@@ -114,7 +114,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         InfiniteEnumerable.prototype.force = function () {
             this.throwIfDisposed();
-            this.doAction(BREAK);
+            this.doAction(BREAK)
+                .getEnumerator()
+                .moveNext();
         };
         InfiniteEnumerable.prototype.skip = function (count) {
             var _ = this;
@@ -360,8 +362,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         InfiniteEnumerable.prototype.select = function (selector) {
             var _ = this, disposed = !_.throwIfDisposed();
-            if (selector.length < 2)
-                return new WhereSelectEnumerable(_, null, selector);
             return new Enumerable(function () {
                 var enumerator;
                 var index = 0;
@@ -373,7 +373,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     throwIfDisposed(disposed);
                     return enumerator.moveNext()
                         ? yielder.yieldReturn(selector(enumerator.current, index++))
-                        : false;
+                        : yielder.yieldBreak();
                 }, function () {
                     dispose_1.dispose(enumerator);
                 }, _._isEndless);
@@ -420,7 +420,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this._selectMany(collectionSelector, resultSelector);
         };
         InfiniteEnumerable.prototype._choose = function (selector) {
-            if (selector === void 0) { selector = Functions.Identity; }
             var _ = this, disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
@@ -450,8 +449,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         InfiniteEnumerable.prototype.where = function (predicate) {
             var _ = this, disposed = !_.throwIfDisposed();
-            if (predicate.length < 2)
-                return new WhereEnumerable(_, predicate);
             return new Enumerable(function () {
                 var enumerator;
                 var index = 0;
@@ -691,31 +688,10 @@ var __extends = (this && this.__extends) || function (d, b) {
                 });
             });
         };
-        InfiniteEnumerable.prototype.concatWith = function (other) {
-            var _ = this, isEndless = _._isEndless || null;
-            return new Enumerable(function () {
-                var firstEnumerator;
-                var secondEnumerator;
-                return new EnumeratorBase_1.default(function () {
-                    firstEnumerator = _.getEnumerator();
-                }, function (yielder) {
-                    if (firstEnumerator != null) {
-                        if (firstEnumerator.moveNext())
-                            return yielder.yieldReturn(firstEnumerator.current);
-                        secondEnumerator = Enumerator_1.from(other);
-                        firstEnumerator.dispose();
-                        firstEnumerator = null;
-                    }
-                    if (secondEnumerator.moveNext())
-                        return yielder.yieldReturn(secondEnumerator.current);
-                    return false;
-                }, function () {
-                    dispose_1.dispose(firstEnumerator, secondEnumerator);
-                }, isEndless);
-            }, null, isEndless);
-        };
         InfiniteEnumerable.prototype.merge = function (enumerables) {
-            var _ = this;
+            var _ = this, isEndless = _._isEndless || null;
+            if (!enumerables || enumerables.length == 0)
+                return _;
             return new Enumerable(function () {
                 var enumerator;
                 var queue;
@@ -738,20 +714,15 @@ var __extends = (this && this.__extends) || function (d, b) {
                     }
                 }, function () {
                     dispose_1.dispose(enumerator, queue);
-                });
-            });
+                }, isEndless);
+            }, null, isEndless);
         };
         InfiniteEnumerable.prototype.concat = function () {
             var enumerables = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 enumerables[_i - 0] = arguments[_i];
             }
-            var _ = this;
-            if (enumerables.length == 0)
-                return _;
-            if (enumerables.length == 1)
-                return _.concatWith(enumerables[0]);
-            return _.merge(enumerables);
+            return this.merge(enumerables);
         };
         InfiniteEnumerable.prototype.union = function (second, compareSelector) {
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
@@ -869,6 +840,54 @@ var __extends = (this && this.__extends) || function (d, b) {
                 sequence[_i - 0] = arguments[_i];
             }
             return this.alternateMultiple(sequence);
+        };
+        InfiniteEnumerable.prototype.catchError = function (handler) {
+            var _ = this, disposed = !_.throwIfDisposed();
+            return new Enumerable(function () {
+                var enumerator;
+                return new EnumeratorBase_1.default(function () {
+                    try {
+                        throwIfDisposed(disposed);
+                        enumerator = _.getEnumerator();
+                    }
+                    catch (e) {
+                    }
+                }, function (yielder) {
+                    try {
+                        throwIfDisposed(disposed);
+                        if (enumerator.moveNext())
+                            return yielder.yieldReturn(enumerator.current);
+                    }
+                    catch (e) {
+                        handler(e);
+                    }
+                    return false;
+                }, function () {
+                    dispose_1.dispose(enumerator);
+                });
+            });
+        };
+        InfiniteEnumerable.prototype.finallyAction = function (action) {
+            var _ = this, disposed = !_.throwIfDisposed();
+            return new Enumerable(function () {
+                var enumerator;
+                return new EnumeratorBase_1.default(function () {
+                    throwIfDisposed(disposed);
+                    enumerator = _.getEnumerator();
+                }, function (yielder) {
+                    throwIfDisposed(disposed);
+                    return (enumerator.moveNext())
+                        ? yielder.yieldReturn(enumerator.current)
+                        : false;
+                }, function () {
+                    try {
+                        dispose_1.dispose(enumerator);
+                    }
+                    finally {
+                        action();
+                    }
+                });
+            });
         };
         return InfiniteEnumerable;
     }(DisposableBase_1.default));
@@ -1221,15 +1240,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.prototype.toMap = function (keySelector, elementSelector) {
             var obj = {};
-            this.forEach(function (x) {
-                obj[keySelector(x)] = elementSelector(x);
+            this.forEach(function (x, i) {
+                obj[keySelector(x, i)] = elementSelector(x, i);
             });
             return obj;
         };
         Enumerable.prototype.toDictionary = function (keySelector, elementSelector, compareSelector) {
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
             var dict = new Dictionary_1.default(compareSelector);
-            this.forEach(function (x) { return dict.addByKeyValue(keySelector(x), elementSelector(x)); });
+            this.forEach(function (x, i) { return dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)); });
             return dict;
         };
         Enumerable.prototype.toJoinedString = function (separator, selector) {
@@ -1351,8 +1370,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (!predicate)
                 throw new ArgumentNullException_1.default("predicate");
             var result = true;
-            this.forEach(function (x) {
-                if (!predicate(x)) {
+            this.forEach(function (x, i) {
+                if (!predicate(x, i)) {
                     result = false;
                     return false;
                 }
@@ -1366,8 +1385,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (!predicate)
                 return _super.prototype.any.call(this);
             var result = false;
-            this.forEach(function (x) {
-                result = predicate(x);
+            this.forEach(function (x, i) {
+                result = predicate(x, i);
                 return !result;
             });
             return result;
@@ -1388,7 +1407,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.forEach(compareSelector
                 ?
                     function (element, i) {
-                        if (Values.areEqual(compareSelector(element), compareSelector(value), true)) {
+                        if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
                             found = i;
                             return false;
                         }
@@ -1407,7 +1426,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.forEach(compareSelector
                 ?
                     function (element, i) {
-                        if (Values.areEqual(compareSelector(element), compareSelector(value), true))
+                        if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true))
                             result
                                 = i;
                     }
@@ -1418,9 +1437,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                     });
             return result;
         };
-        Enumerable.prototype.concatWith = function (other) {
-            return _super.prototype.concatWith.call(this, other);
-        };
         Enumerable.prototype.merge = function (enumerables) {
             return _super.prototype.merge.call(this, enumerables);
         };
@@ -1429,10 +1445,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             for (var _i = 0; _i < arguments.length; _i++) {
                 enumerables[_i - 0] = arguments[_i];
             }
-            if (enumerables.length == 0)
-                return this;
-            if (enumerables.length == 1)
-                return this.concatWith(enumerables[0]);
             return this.merge(enumerables);
         };
         Enumerable.prototype.intersect = function (second, compareSelector) {
@@ -1585,23 +1597,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.prototype.average = function (selector) {
             if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
-            var sum = 0;
-            var sumInfinite = 0;
             var count = 0;
-            this.forEach(function (x) {
-                var value = selector(x);
-                if (isNaN(value)) {
-                    sum = NaN;
-                    return false;
-                }
-                if (isFinite(value))
-                    sum += value;
-                else
-                    sumInfinite += value > 0 ? (+1) : (-1);
-                ++count;
+            var sum = this.sum(function (e, i) {
+                count++;
+                return selector(e, i);
             });
-            if (sumInfinite)
-                return sumInfinite * Infinity;
             return (isNaN(sum) || !count)
                 ? NaN
                 : (sum / count);
@@ -1633,16 +1633,19 @@ var __extends = (this && this.__extends) || function (d, b) {
                 if (isFinite(value))
                     sum += value;
                 else
-                    sumInfinite += value > 0 ? (+1) : (-1);
+                    sumInfinite +=
+                        value > 0 ?
+                            (+1) :
+                            (-1);
             });
             return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
         };
         Enumerable.prototype.product = function (selector) {
             if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
             var result = 1, exists = false;
-            this.forEach(function (x) {
+            this.forEach(function (x, i) {
                 exists = true;
-                var value = selector(x);
+                var value = selector(x, i);
                 if (isNaN(value)) {
                     result = NaN;
                     return false;
@@ -1659,8 +1662,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
             var count = 0;
             var result = NaN;
-            this.forEach(function (x) {
-                var value = selector(x);
+            this.forEach(function (x, i) {
+                var value = selector(x, i);
                 count++;
                 if (count === 1) {
                     result = value;
@@ -1748,54 +1751,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                 cache = null;
                 dispose_1.dispose(enumerator);
                 enumerator = null;
-            });
-        };
-        Enumerable.prototype.catchError = function (handler) {
-            var _ = this, disposed = !_.throwIfDisposed();
-            return new Enumerable(function () {
-                var enumerator;
-                return new EnumeratorBase_1.default(function () {
-                    try {
-                        throwIfDisposed(disposed);
-                        enumerator = _.getEnumerator();
-                    }
-                    catch (e) {
-                    }
-                }, function (yielder) {
-                    try {
-                        throwIfDisposed(disposed);
-                        if (enumerator.moveNext())
-                            return yielder.yieldReturn(enumerator.current);
-                    }
-                    catch (e) {
-                        handler(e);
-                    }
-                    return false;
-                }, function () {
-                    dispose_1.dispose(enumerator);
-                });
-            });
-        };
-        Enumerable.prototype.finallyAction = function (action) {
-            var _ = this, disposed = !_.throwIfDisposed();
-            return new Enumerable(function () {
-                var enumerator;
-                return new EnumeratorBase_1.default(function () {
-                    throwIfDisposed(disposed);
-                    enumerator = _.getEnumerator();
-                }, function (yielder) {
-                    throwIfDisposed(disposed);
-                    return (enumerator.moveNext())
-                        ? yielder.yieldReturn(enumerator.current)
-                        : false;
-                }, function () {
-                    try {
-                        dispose_1.dispose(enumerator);
-                    }
-                    finally {
-                        action();
-                    }
-                });
             });
         };
         return Enumerable;
@@ -1922,7 +1877,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 : 0, -1); });
         };
         ArrayEnumerable.prototype.memoize = function () {
-            return this;
+            return this.asEnumerable();
         };
         ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
@@ -1990,95 +1945,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return Lookup;
     }());
-    var WhereEnumerable = (function (_super) {
-        __extends(WhereEnumerable, _super);
-        function WhereEnumerable(prevSource, prevPredicate) {
-            _super.call(this, null, null, prevSource && prevSource.isEndless);
-            this.prevSource = prevSource;
-            this.prevPredicate = prevPredicate;
-        }
-        WhereEnumerable.prototype.where = function (predicate) {
-            if (predicate.length > 1)
-                return _super.prototype.where.call(this, predicate);
-            var prevPredicate = this.prevPredicate;
-            var composedPredicate = function (x) { return prevPredicate(x) && predicate(x); };
-            return new WhereEnumerable(this.prevSource, composedPredicate);
-        };
-        WhereEnumerable.prototype.select = function (selector) {
-            if (selector.length > 1)
-                return _super.prototype.select.call(this, selector);
-            return new WhereSelectEnumerable(this.prevSource, this.prevPredicate, selector);
-        };
-        WhereEnumerable.prototype.getEnumerator = function () {
-            var _ = this;
-            var predicate = _.prevPredicate;
-            var source = _.prevSource;
-            var enumerator;
-            return new EnumeratorBase_1.default(function () {
-                enumerator = source.getEnumerator();
-            }, function (yielder) {
-                while (enumerator.moveNext()) {
-                    if (predicate(enumerator.current))
-                        return yielder.yieldReturn(enumerator.current);
-                }
-                return false;
-            }, function () {
-                dispose_1.dispose(enumerator);
-            }, _._isEndless);
-        };
-        WhereEnumerable.prototype._onDispose = function () {
-            _super.prototype._onDispose.call(this);
-            this.prevPredicate = null;
-            this.prevSource = null;
-        };
-        return WhereEnumerable;
-    }(Enumerable));
-    var WhereSelectEnumerable = (function (_super) {
-        __extends(WhereSelectEnumerable, _super);
-        function WhereSelectEnumerable(prevSource, prevPredicate, prevSelector) {
-            _super.call(this, null, null, prevSource && prevSource.isEndless);
-            this.prevSource = prevSource;
-            this.prevPredicate = prevPredicate;
-            this.prevSelector = prevSelector;
-        }
-        WhereSelectEnumerable.prototype.where = function (predicate) {
-            if (predicate.length > 1)
-                return _super.prototype.where.call(this, predicate);
-            return new WhereEnumerable(this, predicate);
-        };
-        WhereSelectEnumerable.prototype.select = function (selector) {
-            if (selector.length > 1)
-                return _super.prototype.select.call(this, selector);
-            var _ = this;
-            var prevSelector = _.prevSelector;
-            var composedSelector = function (x) { return selector(prevSelector(x)); };
-            return new WhereSelectEnumerable(_.prevSource, _.prevPredicate, composedSelector);
-        };
-        WhereSelectEnumerable.prototype.getEnumerator = function () {
-            var _ = this, predicate = _.prevPredicate, source = _.prevSource, selector = _.prevSelector, enumerator;
-            return new EnumeratorBase_1.default(function () {
-                enumerator = source.getEnumerator();
-            }, function (yielder) {
-                while (enumerator.moveNext()) {
-                    var c = enumerator.current;
-                    if (predicate == null || predicate(c)) {
-                        return yielder.yieldReturn(selector(c));
-                    }
-                }
-                return false;
-            }, function () {
-                dispose_1.dispose(enumerator);
-            }, _._isEndless);
-        };
-        WhereSelectEnumerable.prototype._onDispose = function () {
-            var _ = this;
-            _super.prototype._onDispose.call(this);
-            _.prevPredicate = null;
-            _.prevSource = null;
-            _.prevSelector = null;
-        };
-        return WhereSelectEnumerable;
-    }(Enumerable));
     var OrderedEnumerable = (function (_super) {
         __extends(OrderedEnumerable, _super);
         function OrderedEnumerable(source, keySelector, order, parent, comparer) {
@@ -2144,10 +2010,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             return createSortContext(orderedEnumerable.parent, context);
         return context;
     }
-    function throwIfDisposed(disposed, className) {
-        if (className === void 0) { className = "Enumerable"; }
+    function throwIfDisposed(disposed) {
         if (disposed)
-            throw new ObjectDisposedException_1.default(className);
+            throw new ObjectDisposedException_1.default("Enumerable");
     }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Enumerable;

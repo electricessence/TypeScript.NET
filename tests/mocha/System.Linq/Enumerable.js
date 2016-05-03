@@ -48,12 +48,38 @@
     });
     describe(".memoize()", function () {
         it("should cache the values as it goes for reuse later", function () {
-            var source = sourceArrayEnumerable;
+            var source = sourceEnumerable;
             var A = source.memoize();
+            source.memoize().dispose();
             var sum = A.sum(function (o) { return o.a; });
             assert.equal(sum, source.sum(function (o) { return o.a; }), "Values must be equal after memoize pass 1.");
             sum = A.sum(function (o) { return o.b; });
             assert.equal(sum, source.sum(function (o) { return o.b; }), "Values must be equal after memoize pass 2.");
+            A.dispose();
+            assert.throws(function () {
+                A.force();
+            });
+        });
+    });
+    describe(".choose(predicate)", function () {
+        it("should filter out null and undefined values.", function () {
+            var other = [null, void (0)];
+            assert.equal(sourceArrayEnumerable
+                .concat(other)
+                .choose()
+                .select(function (s) { return s.a; })
+                .where(function (s) { return s === 1; })
+                .count(), 3);
+            assert.equal(sourceArrayEnumerable
+                .concat(other)
+                .choose(function (e, i) {
+                return (i % 2 ? e : null);
+            })
+                .count(), 3);
+            sourceArrayEnumerable
+                .concat(other)
+                .choose()
+                .dispose();
         });
     });
     describe(".where(predicate).memoize()", function () {
@@ -69,6 +95,7 @@
             assert.equal(sum, source.sum(function (o) { return o.a; }), "Values must be equal after memoize pass 1.");
             sum = A.sum(function (o) { return o.b; });
             assert.equal(sum, source.sum(function (o) { return o.b; }), "Values must be equal after memoize pass 2.");
+            source.dispose();
         });
     });
     describe(".orderBy(selector)", function () {
@@ -346,6 +373,22 @@
                 assert.throws(function () { source.elementAtOrDefault(Infinity); });
             });
         });
+    });
+    describe(".min()", function () {
+        assert.equal(sourceArrayEnumerable.select(function (e) { return e.b; }).min(), 1);
+        assert.equal(sourceArrayEnumerable.select(function (e) { return e.c; }).min(), "a");
+    });
+    describe(".max()", function () {
+        assert.equal(sourceArrayEnumerable.select(function (e) { return e.b; }).max(), 3);
+        assert.equal(sourceArrayEnumerable.select(function (e) { return e.c; }).max(), "f");
+    });
+    describe(".average()", function () {
+        assert.equal(sourceArrayEnumerable.select(function (e) { return e.b; }).average(), 2);
+    });
+    describe(".concat(...)", function () {
+        assert.equal(sourceArrayEnumerable.merge(null).count(), 6);
+        assert.equal(sourceArrayEnumerable.merge([]).count(), 6);
+        assert.equal(sourceArrayEnumerable.concat(sourceArrayEnumerable).count(), 12);
     });
 });
 //# sourceMappingURL=Enumerable.js.map

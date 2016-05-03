@@ -9,7 +9,21 @@
     "use strict";
     var Linq_1 = require("../../../source/System.Linq/Linq");
     var assert = require('../../../node_modules/assert/assert');
-    var source = Linq_1.default.toInfinity();
+    var source = Linq_1.default.toInfinity().asEnumerable();
+    describe(".doAction(...)", function () {
+        it("should throw when disposed", function () {
+            var a = source.doAction(function (e) { });
+            a.force();
+            var n = a.getEnumerator();
+            assert.ok(n.moveNext());
+            n.dispose();
+            assert.ok(!n.moveNext());
+            n = a.getEnumerator();
+            assert.ok(n.moveNext());
+            a.dispose();
+            assert.throws(function () { return n.moveNext(); });
+        });
+    });
     describe(".elementAt(x)", function () {
         it("the index should match the value", function () {
             for (var i = 0; i < 10; i++) {
@@ -46,11 +60,45 @@
             assert.equal(source
                 .take(-1)
                 .firstOrDefault(-1), -1);
+            assert.throws(function () {
+                var t = source.take(2);
+                var e = t.getEnumerator();
+                e.moveNext();
+                t.dispose();
+                e.moveNext();
+            });
+            assert.doesNotThrow(function () {
+                var e = false;
+                assert.ok(source
+                    .where(function (e) {
+                    if (!e)
+                        throw "Error";
+                    return true;
+                })
+                    .catchError(function (error) {
+                    e = error == "Error";
+                })
+                    .isEmpty());
+                assert.ok(e);
+            });
         });
         it("should throw for Infinity", function () {
             assert.throws(function () {
                 source.take(Infinity);
             });
+        });
+    });
+    describe(".choose()", function () {
+        it("should filter non-null", function () {
+            assert.equal(source.choose().first(), 0);
+            assert.equal(source.choose(function (s) { return s; }).first(), 0);
+        });
+    });
+    describe(".except()", function () {
+        it("should skip values that are excepted", function () {
+            assert.equal(source.except([0, 1]).first(), 2);
+            assert.equal(source.except([1, 2]).elementAt(2), 4);
+            source.except([1, 2]).dispose();
         });
     });
 });

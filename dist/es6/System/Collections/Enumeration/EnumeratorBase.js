@@ -50,6 +50,8 @@ export default class EnumeratorBase extends DisposableBase {
             this._isEndless = isEndless;
         else if (Type.isBoolean(disposer))
             this._isEndless = disposer;
+        if (Type.isFunction(disposer))
+            this._disposer = disposer;
     }
     get current() {
         return this._yielder.current;

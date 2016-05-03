@@ -79,6 +79,7 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
         _this._tryGetNext = _tryGetNext;
         _this.reset();
         if (Types_1.default.isBoolean(isEndless)) _this._isEndless = isEndless;else if (Types_1.default.isBoolean(disposer)) _this._isEndless = disposer;
+        if (Types_1.default.isFunction(disposer)) _this._disposer = disposer;
         return _this;
     }
 

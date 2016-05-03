@@ -92,6 +92,9 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			this._isEndless = isEndless;
 		else if(Type.isBoolean(disposer))
 			this._isEndless = disposer;
+
+		if(Type.isFunction(disposer))
+			this._disposer = disposer;
 	}
 
 	protected _isEndless:boolean;

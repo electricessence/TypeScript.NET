@@ -47,18 +47,21 @@ const source:TestItem[] = Object.freeze([
 ]);
 
 var sourceArrayEnumerable = Enumerable.from(source),
-	sourceEnumerable =  new Enumerable(()=>sourceArrayEnumerable.getEnumerator());
+    sourceEnumerable      = new Enumerable(()=>sourceArrayEnumerable.getEnumerator());
 
-describe(".force()",()=>{
-	assert.doesNotThrow(()=>{ sourceEnumerable.force() });
+describe(".force()", ()=>
+{
+	assert.doesNotThrow(()=> { sourceEnumerable.force() });
 });
 
 describe(".memoize()", ()=>
 {
 	it("should cache the values as it goes for reuse later", ()=>
 	{
-		var source = sourceArrayEnumerable;
+		var source = sourceEnumerable;
 		var A = source.memoize();
+
+		source.memoize().dispose(); // Covers else condition.
 
 		var sum = A.sum(o=>o.a);
 
@@ -66,6 +69,42 @@ describe(".memoize()", ()=>
 
 		sum = A.sum(o=>o.b);
 		assert.equal(sum, source.sum(o=>o.b), "Values must be equal after memoize pass 2.");
+		A.dispose(); // Disposing this memoized source should not affect other tests.
+
+		assert.throws(()=>
+		{
+			// Should throw after disposal.
+			A.force();
+		});
+
+	});
+});
+
+
+describe(".choose(predicate)", ()=>
+{
+	it("should filter out null and undefined values.", ()=>
+	{
+		var other = <TestItem[]>[null, void(0)];
+		assert.equal(sourceArrayEnumerable
+			.concat(other)
+			.choose()
+			.select(s=>s.a)
+			.where(s=>s===1)
+			.count(), 3);
+
+		assert.equal(sourceArrayEnumerable
+			.concat(other)
+			.choose((e:TestItem, i:number)=>
+			{
+				return <TestItem>(i%2 ? e : null);
+			})
+			.count(), 3);
+
+		sourceArrayEnumerable
+			.concat(other)
+			.choose()
+			.dispose();
 
 	});
 });
@@ -95,6 +134,8 @@ describe(".where(predicate).memoize()", ()=>
 
 		sum = A.sum(o=>o.b);
 		assert.equal(sum, source.sum(o=>o.b), "Values must be equal after memoize pass 2.");
+
+		source.dispose();
 	});
 });
 
@@ -103,7 +144,7 @@ describe(".orderBy(selector)", ()=>
 	it("should order ascending based upon the selector", ()=>
 	{
 		var source = sourceArrayEnumerable.reverse();
-		assert.equal(source.first().c,"f");
+		assert.equal(source.first().c, "f");
 	});
 });
 
@@ -287,9 +328,9 @@ describe(".takeUntil(predicate,includeUntil)", ()=>
 
 	it("should take until predicate returns true and include value matched", ()=>
 	{
-		var e = sourceArrayEnumerable.takeUntil(v=>v.a==2,true);
+		var e = sourceArrayEnumerable.takeUntil(v=>v.a==2, true);
 		assert.equal(e.count(), 4, "count should match number taken");
-		assert.equal(e.last().c,"d");
+		assert.equal(e.last().c, "d");
 	});
 });
 
@@ -298,11 +339,12 @@ describe(".takeExceptLast(count)", ()=>
 {
 	it("should take the first ones minus the last", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>{
+		var test = (s:Enumerable<TestItem>)=>
+		{
 			var e = s.takeExceptLast(2);
 			assert.equal(e.count(), 4);
 			assert.equal(e.count(), 4, "count should match number taken");
-			assert.equal(e.last().c,"d");
+			assert.equal(e.last().c, "d");
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -315,11 +357,12 @@ describe(".skipToLast(count)", ()=>
 {
 	it("should take the last items based on the count", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>{
+		var test = (s:Enumerable<TestItem>)=>
+		{
 			var e = s.skipToLast(2);
 			assert.equal(e.count(), 2, "count should match number taken");
-			assert.equal(e.first().c,"e");
-			assert.equal(e.last().c,"f");
+			assert.equal(e.first().c, "e");
+			assert.equal(e.last().c, "f");
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -332,11 +375,12 @@ describe(".skip(count)", ()=>
 {
 	it("count should match total less skipped", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>{
+		var test = (s:Enumerable<TestItem>)=>
+		{
 			var e = s.skip(2);
 			assert.equal(e.count(), 4);
-			assert.equal(e.first().c,"c");
-			assert.equal(e.last().c,"f");
+			assert.equal(e.first().c, "c");
+			assert.equal(e.last().c, "f");
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -350,23 +394,24 @@ describe(".skipWhile(predicate)", ()=>
 	{
 		var e = sourceArrayEnumerable.skipWhile(v=>v.a==1);
 		assert.equal(e.count(), 3, "count should match number taken");
-		assert.equal(e.first().c,"d");
-		assert.equal(e.last().c,"f");
+		assert.equal(e.first().c, "d");
+		assert.equal(e.last().c, "f");
 	});
 
 });
 
 
-
-describe(".select(selector)", ()=>{
+describe(".select(selector)", ()=>
+{
 
 	it("should use appropriate selection mechanism", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>{
+		var test = (s:Enumerable<TestItem>)=>
+		{
 			var e = s.select(e=>e.c);
 			assert.equal(e.count(), 6);
-			assert.equal(e.first(),"a");
-			assert.equal(e.last(),"f");
+			assert.equal(e.first(), "a");
+			assert.equal(e.last(), "f");
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -374,11 +419,12 @@ describe(".select(selector)", ()=>{
 
 	it("should use appropriate selection mechanism", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>{
-			var e = s.select((e,i)=>i);
+		var test = (s:Enumerable<TestItem>)=>
+		{
+			var e = s.select((e, i)=>i);
 			assert.equal(e.count(), 6);
-			assert.equal(e.first(),0);
-			assert.equal(e.last(),5);
+			assert.equal(e.first(), 0);
+			assert.equal(e.last(), 5);
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -399,7 +445,8 @@ describe(".every(predicate)", ()=>
 {
 	it("should determine if every element matches the criteria", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>{
+		var test = (s:Enumerable<TestItem>)=>
+		{
 			assert.ok(!s.every(v=>v.a==1));
 		};
 		test(sourceArrayEnumerable);
@@ -413,7 +460,8 @@ describe(".any(predicate)", ()=>
 {
 	it("should determine if every element matches the criteria", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>{
+		var test = (s:Enumerable<TestItem>)=>
+		{
 			assert.ok(s.some(v=>v.a==1));
 			assert.ok(!s.isEmpty());
 		};
@@ -424,66 +472,82 @@ describe(".any(predicate)", ()=>
 
 });
 
-describe(".empty()",()=>{
+describe(".empty()", ()=>
+{
 
 	var source = Enumerable.empty();
 
 
-	describe(".singleOrDefault()",()=>{
+	describe(".singleOrDefault()", ()=>
+	{
 
-		it("should be defaulted",()=>{
-			assert.equal(source.singleOrDefault(),null);
-			assert.equal(source.singleOrDefault(-1),-1);
+		it("should be defaulted", ()=>
+		{
+			assert.equal(source.singleOrDefault(), null);
+			assert.equal(source.singleOrDefault(-1), -1);
 		});
-		
+
 	});
 
-	describe(".single()",()=>{
+	describe(".single()", ()=>
+	{
 
-		it("should throw",()=>{
-			assert.throws(()=>{
-				source.single();				
+		it("should throw", ()=>
+		{
+			assert.throws(()=>
+			{
+				source.single();
 			});
 		});
 
 	});
 
-	describe(".first()",()=>{
+	describe(".first()", ()=>
+	{
 
-		it("should throw",()=>{
-			assert.throws(()=>{
+		it("should throw", ()=>
+		{
+			assert.throws(()=>
+			{
 				source.first();
 			});
 		});
 
 	});
 
-	describe(".firstOrDefault()",()=>{
+	describe(".firstOrDefault()", ()=>
+	{
 
-		it("should be defaulted",()=>{
-			assert.equal(source.firstOrDefault(),null);
+		it("should be defaulted", ()=>
+		{
+			assert.equal(source.firstOrDefault(), null);
 		});
 
 	});
 
 });
 
-describe(".from([1])",()=>{
+describe(".from([1])", ()=>
+{
 
 	let source = new Enumerable(()=>Enumerable.from([1]).getEnumerator());
 
-	describe(".singleOrDefault()",()=>{
+	describe(".singleOrDefault()", ()=>
+	{
 
-		it("should return single value",()=>{
-			assert.equal(source.single(),1);
+		it("should return single value", ()=>
+		{
+			assert.equal(source.single(), 1);
 		});
 
 	});
 
-	describe(".singleOrDefault()",()=>{
+	describe(".singleOrDefault()", ()=>
+	{
 
-		it("should return single value",()=>{
-			assert.equal(source.singleOrDefault(),1);
+		it("should return single value", ()=>
+		{
+			assert.equal(source.singleOrDefault(), 1);
 		});
 
 	});
@@ -503,17 +567,40 @@ describe(".from([1])",()=>{
 
 		it("should be defaulted", ()=>
 		{
-			assert.equal(source.elementAtOrDefault(2,-1),-1);
-			assert.equal(source.elementAtOrDefault(2),null);
+			assert.equal(source.elementAtOrDefault(2, -1), -1);
+			assert.equal(source.elementAtOrDefault(2), null);
 		});
 
 		it("should throw", ()=>
 		{
-			assert.throws(()=>{source.elementAtOrDefault(NaN)});
-			assert.throws(()=>{source.elementAtOrDefault(-1)});
-			assert.throws(()=>{source.elementAtOrDefault(Infinity)});
+			assert.throws(()=> {source.elementAtOrDefault(NaN)});
+			assert.throws(()=> {source.elementAtOrDefault(-1)});
+			assert.throws(()=> {source.elementAtOrDefault(Infinity)});
 		});
 
 	});
 
+});
+
+describe(".min()", ()=>
+{
+	assert.equal(sourceArrayEnumerable.select(e=>e.b).min(), 1);
+	assert.equal(sourceArrayEnumerable.select(e=>e.c).min(), "a");
+});
+
+describe(".max()", ()=>
+{
+	assert.equal(sourceArrayEnumerable.select(e=>e.b).max(), 3);
+	assert.equal(sourceArrayEnumerable.select(e=>e.c).max(), "f");
+});
+
+describe(".average()", ()=>
+{
+	assert.equal(sourceArrayEnumerable.select(e=>e.b).average(), 2);
+});
+
+describe(".concat(...)",()=>{
+	assert.equal(sourceArrayEnumerable.merge(null).count(),6);
+	assert.equal(sourceArrayEnumerable.merge([]).count(),6);
+	assert.equal(sourceArrayEnumerable.concat(sourceArrayEnumerable).count(),12);
 });

@@ -72,6 +72,8 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                         this._isEndless = isEndless;
                     else if (Types_1.default.isBoolean(disposer))
                         this._isEndless = disposer;
+                    if (Types_1.default.isFunction(disposer))
+                        this._disposer = disposer;
                 }
                 Object.defineProperty(EnumeratorBase.prototype, "current", {
                     get: function () {
