@@ -4,19 +4,20 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 'use strict';
-import Type from '../Types';
-import * as QueryParams from '../Uri/QueryParams';
-import { trim } from '../Text/Utility';
-import UriScheme from '../Uri/Scheme';
-import ArgumentException from '../Exceptions/ArgumentException';
-import ArgumentOutOfRangeException from '../Exceptions/ArgumentOutOfRangeException';
+import Type from "../Types";
+import * as QueryParams from "../Uri/QueryParams";
+import { trim } from "../Text/Utility";
+import UriScheme from "../Uri/Scheme";
+import ArgumentException from "../Exceptions/ArgumentException";
+import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+const VOID0 = void (0);
 export default class Uri {
     constructor(scheme, userInfo, host, port, path, query, fragment) {
         var _ = this;
         _.scheme = getScheme(scheme) || null;
         _.userInfo = userInfo || null;
         _.host = host || null;
-        _.port = port || null;
+        _.port = getPort(port);
         _.authority = _.getAuthority() || null;
         _.path = path || null;
         if (!Type.isString(query))
@@ -115,7 +116,7 @@ function getScheme(scheme) {
     var s = scheme;
     if (Type.isString(s)) {
         if (!s)
-            return undefined;
+            return VOID0;
         s = UriScheme[trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
         if (isNaN(s))
             throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
@@ -126,7 +127,23 @@ function getScheme(scheme) {
             throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
         return s;
     }
-    return undefined;
+    return VOID0;
+}
+function getPort(port) {
+    if (port === 0)
+        return port;
+    if (!port)
+        return null;
+    var p;
+    if (Type.isNumber(port, true)) {
+        p = port;
+        if (p >= 0 && isFinite(p))
+            return p;
+    }
+    else if (Type.isString(port) && (p = parseInt(port)) && !isNaN(p)) {
+        return getPort(p);
+    }
+    throw new ArgumentException("port", "invalid value");
 }
 function getAuthority(uri) {
     if (!uri.host) {
@@ -146,24 +163,30 @@ function getAuthority(uri) {
     return result;
 }
 function formatQuery(query) {
-    return query && ((query.indexOf(QM) == -1 ? QM : EMPTY) + query);
+    return query && ((query.indexOf(QM) !== 0 ? QM : EMPTY) + query);
 }
 function formatFragment(fragment) {
-    return fragment && ((fragment.indexOf(HASH) == -1 ? HASH : EMPTY) + fragment);
+    return fragment && ((fragment.indexOf(HASH) !== 0 ? HASH : EMPTY) + fragment);
 }
 function getPathAndQuery(uri) {
     var path = uri.path, query = uri.query;
     return EMPTY
-        + (path && ((path.indexOf(SLASH) == -1 ? SLASH : EMPTY) + path) || EMPTY)
+        + (path || EMPTY)
         + (formatQuery(query) || EMPTY);
 }
 function uriToString(uri) {
     var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
-    return EMPTY
+    var part1 = EMPTY
         + ((scheme && (scheme + ':')) || EMPTY)
-        + (authority || EMPTY)
+        + (authority || EMPTY);
+    var part2 = EMPTY
         + (pathAndQuery || EMPTY)
         + (fragment || EMPTY);
+    if (part1 && part2 && scheme && !authority)
+        throw new ArgumentException('authority', "Cannot format schemed Uri with missing authority.");
+    if (part1 && pathAndQuery && pathAndQuery.indexOf(SLASH) !== 0)
+        part2 = SLASH + part2;
+    return part1 + part2;
 }
 function tryParse(url, out) {
     if (!url)
@@ -171,12 +194,12 @@ function tryParse(url, out) {
     var i, result = {};
     i = url.indexOf(HASH);
     if (i != -1) {
-        result.fragment = url.substring(i);
+        result.fragment = url.substring(i + 1) || VOID0;
         url = url.substring(0, i);
     }
     i = url.indexOf(QM);
     if (i != -1) {
-        result.query = url.substring(i);
+        result.query = url.substring(i + 1) || VOID0;
         url = url.substring(0, i);
     }
     i = url.indexOf(SLASH2);
@@ -186,7 +209,7 @@ function tryParse(url, out) {
             return new ArgumentException('url', 'Scheme was improperly formatted');
         scheme = trim(scheme.replace(c, EMPTY));
         try {
-            result.scheme = getScheme(scheme) || undefined;
+            result.scheme = getScheme(scheme) || VOID0;
         }
         catch (ex) {
             return ex;
@@ -195,12 +218,12 @@ function tryParse(url, out) {
     }
     i = url.indexOf(SLASH);
     if (i != -1) {
-        result.path = url.substring(i) || undefined;
+        result.path = url.substring(i);
         url = url.substring(0, i);
     }
     i = url.indexOf(AT);
     if (i != -1) {
-        result.userInfo = url.substring(0, i) || undefined;
+        result.userInfo = url.substring(0, i) || VOID0;
         url = url.substring(i + 1);
     }
     i = url.indexOf(':');

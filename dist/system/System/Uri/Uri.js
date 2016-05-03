@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Scheme', '../Exceptions/ArgumentException', '../Exceptions/ArgumentOutOfRangeException'], function(exports_1, context_1) {
+System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Scheme", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
     'use strict';
     var __moduleName = context_1 && context_1.id;
     var Types_1, QueryParams, Utility_1, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1;
-    var Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
+    var VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     function copyUri(from, to) {
         var i = 0, field;
         if (!to)
@@ -23,7 +23,7 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
         var s = scheme;
         if (Types_1.default.isString(s)) {
             if (!s)
-                return undefined;
+                return VOID0;
             s = Scheme_1.default[Utility_1.trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
             if (isNaN(s))
                 throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
@@ -34,7 +34,23 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                 throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
             return s;
         }
-        return undefined;
+        return VOID0;
+    }
+    function getPort(port) {
+        if (port === 0)
+            return port;
+        if (!port)
+            return null;
+        var p;
+        if (Types_1.default.isNumber(port, true)) {
+            p = port;
+            if (p >= 0 && isFinite(p))
+                return p;
+        }
+        else if (Types_1.default.isString(port) && (p = parseInt(port)) && !isNaN(p)) {
+            return getPort(p);
+        }
+        throw new ArgumentException_1.default("port", "invalid value");
     }
     function getAuthority(uri) {
         if (!uri.host) {
@@ -54,24 +70,30 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
         return result;
     }
     function formatQuery(query) {
-        return query && ((query.indexOf(QM) == -1 ? QM : EMPTY) + query);
+        return query && ((query.indexOf(QM) !== 0 ? QM : EMPTY) + query);
     }
     function formatFragment(fragment) {
-        return fragment && ((fragment.indexOf(HASH) == -1 ? HASH : EMPTY) + fragment);
+        return fragment && ((fragment.indexOf(HASH) !== 0 ? HASH : EMPTY) + fragment);
     }
     function getPathAndQuery(uri) {
         var path = uri.path, query = uri.query;
         return EMPTY
-            + (path && ((path.indexOf(SLASH) == -1 ? SLASH : EMPTY) + path) || EMPTY)
+            + (path || EMPTY)
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
         var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
-        return EMPTY
+        var part1 = EMPTY
             + ((scheme && (scheme + ':')) || EMPTY)
-            + (authority || EMPTY)
+            + (authority || EMPTY);
+        var part2 = EMPTY
             + (pathAndQuery || EMPTY)
             + (fragment || EMPTY);
+        if (part1 && part2 && scheme && !authority)
+            throw new ArgumentException_1.default('authority', "Cannot format schemed Uri with missing authority.");
+        if (part1 && pathAndQuery && pathAndQuery.indexOf(SLASH) !== 0)
+            part2 = SLASH + part2;
+        return part1 + part2;
     }
     function tryParse(url, out) {
         if (!url)
@@ -79,12 +101,12 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
         var i, result = {};
         i = url.indexOf(HASH);
         if (i != -1) {
-            result.fragment = url.substring(i);
+            result.fragment = url.substring(i + 1) || VOID0;
             url = url.substring(0, i);
         }
         i = url.indexOf(QM);
         if (i != -1) {
-            result.query = url.substring(i);
+            result.query = url.substring(i + 1) || VOID0;
             url = url.substring(0, i);
         }
         i = url.indexOf(SLASH2);
@@ -94,7 +116,7 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                 return new ArgumentException_1.default('url', 'Scheme was improperly formatted');
             scheme = Utility_1.trim(scheme.replace(c, EMPTY));
             try {
-                result.scheme = getScheme(scheme) || undefined;
+                result.scheme = getScheme(scheme) || VOID0;
             }
             catch (ex) {
                 return ex;
@@ -103,12 +125,12 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
         }
         i = url.indexOf(SLASH);
         if (i != -1) {
-            result.path = url.substring(i) || undefined;
+            result.path = url.substring(i);
             url = url.substring(0, i);
         }
         i = url.indexOf(AT);
         if (i != -1) {
-            result.userInfo = url.substring(0, i) || undefined;
+            result.userInfo = url.substring(0, i) || VOID0;
             url = url.substring(i + 1);
         }
         i = url.indexOf(':');
@@ -146,13 +168,14 @@ System.register(['../Types', '../Uri/QueryParams', '../Text/Utility', '../Uri/Sc
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             }],
         execute: function() {
+            VOID0 = void (0);
             Uri = (function () {
                 function Uri(scheme, userInfo, host, port, path, query, fragment) {
                     var _ = this;
                     _.scheme = getScheme(scheme) || null;
                     _.userInfo = userInfo || null;
                     _.host = host || null;
-                    _.port = port || null;
+                    _.port = getPort(port);
                     _.authority = _.getAuthority() || null;
                     _.path = path || null;
                     if (!Types_1.default.isString(query))

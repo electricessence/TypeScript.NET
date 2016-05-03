@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Types_1 = require('../Types');
-var QueryParams = require('../Uri/QueryParams');
-var Utility_1 = require('../Text/Utility');
-var Scheme_1 = require('../Uri/Scheme');
-var ArgumentException_1 = require('../Exceptions/ArgumentException');
-var ArgumentOutOfRangeException_1 = require('../Exceptions/ArgumentOutOfRangeException');
+var Types_1 = require("../Types");
+var QueryParams = require("../Uri/QueryParams");
+var Utility_1 = require("../Text/Utility");
+var Scheme_1 = require("../Uri/Scheme");
+var ArgumentException_1 = require("../Exceptions/ArgumentException");
+var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
+var VOID0 = void 0;
 
 var Uri = function () {
     function Uri(scheme, userInfo, host, port, path, query, fragment) {
@@ -24,7 +25,7 @@ var Uri = function () {
         _.scheme = getScheme(scheme) || null;
         _.userInfo = userInfo || null;
         _.host = host || null;
-        _.port = port || null;
+        _.port = getPort(port);
         _.authority = _.getAuthority() || null;
         _.path = path || null;
         if (!Types_1.default.isString(query)) query = QueryParams.encode(query);
@@ -38,60 +39,60 @@ var Uri = function () {
     }
 
     _createClass(Uri, [{
-        key: 'equals',
+        key: "equals",
         value: function equals(other) {
             return this === other || this.absoluteUri == Uri.toString(other);
         }
     }, {
-        key: 'copyTo',
+        key: "copyTo",
         value: function copyTo(map) {
             return copyUri(this, map);
         }
     }, {
-        key: 'updateQuery',
+        key: "updateQuery",
         value: function updateQuery(query) {
             var map = this.toMap();
             map.query = query;
             return Uri.from(map);
         }
     }, {
-        key: 'getAbsoluteUri',
+        key: "getAbsoluteUri",
         value: function getAbsoluteUri() {
             return uriToString(this);
         }
     }, {
-        key: 'getAuthority',
+        key: "getAuthority",
         value: function getAuthority() {
             return _getAuthority(this);
         }
     }, {
-        key: 'getPathAndQuery',
+        key: "getPathAndQuery",
         value: function getPathAndQuery() {
             return _getPathAndQuery(this);
         }
     }, {
-        key: 'toMap',
+        key: "toMap",
         value: function toMap() {
             return this.copyTo({});
         }
     }, {
-        key: 'toString',
+        key: "toString",
         value: function toString() {
             return this.absoluteUri;
         }
     }, {
-        key: 'pathSegments',
+        key: "pathSegments",
         get: function get() {
             return this.path.match(/^[/]|[^/]*[/]|[^/]+$/g);
         }
     }], [{
-        key: 'from',
+        key: "from",
         value: function from(uri, defaults) {
             var u = !uri || Types_1.default.isString(uri) ? Uri.parse(uri) : uri;
             return new Uri(u.scheme || defaults && defaults.scheme, u.userInfo || defaults && defaults.userInfo, u.host || defaults && defaults.host, isNaN(u.port) ? defaults && defaults.port : u.port, u.path || defaults && defaults.path, u.query || defaults && defaults.query, u.fragment || defaults && defaults.fragment);
         }
     }, {
-        key: 'parse',
+        key: "parse",
         value: function parse(url) {
             var throwIfInvalid = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
@@ -103,22 +104,22 @@ var Uri = function () {
             return result;
         }
     }, {
-        key: 'tryParse',
+        key: "tryParse",
         value: function tryParse(url, out) {
             return !_tryParse(url, out);
         }
     }, {
-        key: 'copyOf',
+        key: "copyOf",
         value: function copyOf(map) {
             return copyUri(map);
         }
     }, {
-        key: 'toString',
+        key: "toString",
         value: function toString(uri) {
             return uri instanceof Uri ? uri.absoluteUri : uriToString(uri);
         }
     }, {
-        key: 'getAuthority',
+        key: "getAuthority",
         value: function getAuthority(uri) {
             return _getAuthority(uri);
         }
@@ -159,7 +160,7 @@ var SLASH = '/',
 function getScheme(scheme) {
     var s = scheme;
     if (Types_1.default.isString(s)) {
-        if (!s) return undefined;
+        if (!s) return VOID0;
         s = Scheme_1.default[Utility_1.trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
         if (isNaN(s)) throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
     }
@@ -168,7 +169,19 @@ function getScheme(scheme) {
         if (!s) throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
         return s;
     }
-    return undefined;
+    return VOID0;
+}
+function getPort(port) {
+    if (port === 0) return port;
+    if (!port) return null;
+    var p;
+    if (Types_1.default.isNumber(port, true)) {
+        p = port;
+        if (p >= 0 && isFinite(p)) return p;
+    } else if (Types_1.default.isString(port) && (p = parseInt(port)) && !isNaN(p)) {
+        return getPort(p);
+    }
+    throw new ArgumentException_1.default("port", "invalid value");
 }
 function _getAuthority(uri) {
     if (!uri.host) {
@@ -184,22 +197,26 @@ function _getAuthority(uri) {
     return result;
 }
 function formatQuery(query) {
-    return query && (query.indexOf(QM) == -1 ? QM : EMPTY) + query;
+    return query && (query.indexOf(QM) !== 0 ? QM : EMPTY) + query;
 }
 function formatFragment(fragment) {
-    return fragment && (fragment.indexOf(HASH) == -1 ? HASH : EMPTY) + fragment;
+    return fragment && (fragment.indexOf(HASH) !== 0 ? HASH : EMPTY) + fragment;
 }
 function _getPathAndQuery(uri) {
     var path = uri.path,
         query = uri.query;
-    return EMPTY + (path && (path.indexOf(SLASH) == -1 ? SLASH : EMPTY) + path || EMPTY) + (formatQuery(query) || EMPTY);
+    return EMPTY + (path || EMPTY) + (formatQuery(query) || EMPTY);
 }
 function uriToString(uri) {
     var scheme = getScheme(uri.scheme),
         authority = _getAuthority(uri),
         pathAndQuery = _getPathAndQuery(uri),
         fragment = formatFragment(uri.fragment);
-    return EMPTY + (scheme && scheme + ':' || EMPTY) + (authority || EMPTY) + (pathAndQuery || EMPTY) + (fragment || EMPTY);
+    var part1 = EMPTY + (scheme && scheme + ':' || EMPTY) + (authority || EMPTY);
+    var part2 = EMPTY + (pathAndQuery || EMPTY) + (fragment || EMPTY);
+    if (part1 && part2 && scheme && !authority) throw new ArgumentException_1.default('authority', "Cannot format schemed Uri with missing authority.");
+    if (part1 && pathAndQuery && pathAndQuery.indexOf(SLASH) !== 0) part2 = SLASH + part2;
+    return part1 + part2;
 }
 function _tryParse(url, out) {
     if (!url) return new ArgumentException_1.default('url', 'Nothing to parse.');
@@ -207,12 +224,12 @@ function _tryParse(url, out) {
         result = {};
     i = url.indexOf(HASH);
     if (i != -1) {
-        result.fragment = url.substring(i);
+        result.fragment = url.substring(i + 1) || VOID0;
         url = url.substring(0, i);
     }
     i = url.indexOf(QM);
     if (i != -1) {
-        result.query = url.substring(i);
+        result.query = url.substring(i + 1) || VOID0;
         url = url.substring(0, i);
     }
     i = url.indexOf(SLASH2);
@@ -222,7 +239,7 @@ function _tryParse(url, out) {
         if (!c.test(scheme)) return new ArgumentException_1.default('url', 'Scheme was improperly formatted');
         scheme = Utility_1.trim(scheme.replace(c, EMPTY));
         try {
-            result.scheme = getScheme(scheme) || undefined;
+            result.scheme = getScheme(scheme) || VOID0;
         } catch (ex) {
             return ex;
         }
@@ -230,12 +247,12 @@ function _tryParse(url, out) {
     }
     i = url.indexOf(SLASH);
     if (i != -1) {
-        result.path = url.substring(i) || undefined;
+        result.path = url.substring(i);
         url = url.substring(0, i);
     }
     i = url.indexOf(AT);
     if (i != -1) {
-        result.userInfo = url.substring(0, i) || undefined;
+        result.userInfo = url.substring(0, i) || VOID0;
         url = url.substring(i + 1);
     }
     i = url.indexOf(':');

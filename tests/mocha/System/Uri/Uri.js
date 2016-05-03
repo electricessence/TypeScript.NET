@@ -3,19 +3,176 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../../../source/System/Uri/Uri"], factory);
+        define(["require", "exports", "../../../../source/System/Uri/Uri", "../../../../source/System/Uri/Scheme", "../../../../source/System/Functions"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Uri_1 = require("../../../../source/System/Uri/Uri");
+    var Scheme_1 = require("../../../../source/System/Uri/Scheme");
+    var Functions_1 = require("../../../../source/System/Functions");
     var assert = require('../../../../node_modules/assert/assert');
-    var path = '/one/two/three.html';
+    var pathAfterRoot = 'one/two/three.html';
+    var path = '/' + pathAfterRoot;
     var params = [['four', 'five'], ['six', 'seven']];
     var query = '?' + params[0].join('=') + '&' + params[1].join('=');
     var u = Uri_1.default.from(path + query);
+    describe('.scheme', function () {
+        it('should equal', function () {
+            assert.equal((new Uri_1.default(null, '', '', null, '', null)).scheme, null);
+            assert.equal((new Uri_1.default("http", '', '', null, '', null)).scheme, "http");
+            assert.equal((new Uri_1.default(Scheme_1.default.http, '', '', null, '', null)).scheme, "http");
+        });
+        it('should throw', function () {
+            assert.throws(function () { new Uri_1.default(64, '', '', null, '', null); });
+        });
+    });
+    describe('.port', function () {
+        it('should equal', function () {
+            var d = 'x.com', port = 80;
+            assert.equal((new Uri_1.default(null, '', d, 0, '', null)).port, 0);
+            assert.equal((new Uri_1.default(null, '', d, null, '', null)).port, null);
+            assert.equal((new Uri_1.default(null, '', d, '', '', null)).port, null);
+            assert.equal((new Uri_1.default(null, '', d, NaN, '', null)).port, null);
+            assert.equal((new Uri_1.default(null, '', d, port, '', null)).port, port);
+            assert.equal((new Uri_1.default(null, '', d, (port + ''), '', null)).port, port);
+        });
+        it('should throw', function () {
+            assert.throws(function () { new Uri_1.default(null, '', '', 'foo', '', null); });
+            assert.throws(function () { new Uri_1.default(null, '', '', {}, '', null); });
+            assert.throws(function () { new Uri_1.default(null, '', '', -1, '', null); });
+            assert.throws(function () { new Uri_1.default(null, '', '', Infinity, '', null); });
+        });
+    });
     describe('.path', function () {
         it('should equal ' + path, function () {
             assert.equal(u.path, path);
+            assert.equal((new Uri_1.default(null, null, null, null, pathAfterRoot)).path, pathAfterRoot);
+            assert.equal(Uri_1.default.toString({
+                path: pathAfterRoot,
+                fragment: '#x'
+            }), pathAfterRoot + "#x");
+        });
+        it('should allow null', function () {
+            assert.equal((new Uri_1.default(null, '', '', null, '', null)).path, null);
+            assert.equal((new Uri_1.default(Scheme_1.default.http, '', '', null, '', null)).path, null);
+            assert.equal((new Uri_1.default('http', '', '', null, '', null)).path, null);
+        });
+    });
+    describe('.fragment', function () {
+        it('should equal', function () {
+            assert.equal(u.path, path);
+        });
+        it('should allow null', function () {
+            assert.equal((new Uri_1.default(null, '', '', null, '', null)).path, null);
+            assert.equal((new Uri_1.default(Scheme_1.default.http, '', '', null, '', null)).path, null);
+            assert.equal((new Uri_1.default('http', '', '', null, '', null)).path, null);
+        });
+    });
+    describe('.from(uri)', function () {
+        it('should be equal', function () {
+            var c1 = Uri_1.default.from(u);
+            assert.ok(u.equals(c1));
+            var c2 = Uri_1.default.from({}, u);
+            assert.ok(u.equals(c2));
+        });
+    });
+    describe('.updateQuery(query)', function () {
+        it('should be equal', function () {
+            var c = u.updateQuery("x=y");
+            assert.equal(c.queryParams["x"], "y");
+        });
+    });
+    describe('.pathSegments', function () {
+        it('should be equal', function () {
+            assert.equal(u.pathSegments.join(''), u.path);
+        });
+    });
+    describe('.getAuthority(uri)', function () {
+        it('should be equal', function () {
+            assert.equal(Uri_1.default.getAuthority({ host: 'a', port: 80, userInfo: 'b', path: 'xxx' }), "//b@a:80");
+            assert.equal(Uri_1.default.getAuthority({ host: 'a', port: 80, path: 'xxx' }), "//a:80");
+            assert.equal(Uri_1.default.getAuthority({ host: 'a', userInfo: 'b', path: 'xxx' }), "//b@a");
+            assert.equal(Uri_1.default.getAuthority({ host: 'a' }), "//a");
+        });
+        it('should throw', function () {
+            assert.throws(function () {
+                Uri_1.default.getAuthority({ userInfo: 'b' });
+            });
+            assert.throws(function () {
+                Uri_1.default.getAuthority({ port: 80 });
+            });
+        });
+    });
+    describe('.copyOf(), .copyTo() & .equals()', function () {
+        it('should equal the copy', function () {
+            assert.ok(u.equals(Uri_1.default.copyOf(u)));
+            assert.ok(u.equals(u.copyTo({})));
+        });
+    });
+    describe('.parse(url)', function () {
+        it('should throw', function () {
+            assert.throws(function () { return Uri_1.default.parse(null, true); });
+        });
+    });
+    describe('.toString(uri)', function () {
+        it('should throw', function () {
+            assert.throws(function () { return Uri_1.default.toString({
+                scheme: "http",
+                path: pathAfterRoot,
+                fragment: '#x'
+            }); });
+        });
+        it('should equal', function () {
+            assert.equal(Uri_1.default.toString({
+                scheme: "http",
+                host: "x.com",
+                path: pathAfterRoot,
+                fragment: '#x',
+            }), "http://x.com" + path + "#x");
+        });
+    });
+    describe('.tryParse(uri)', function () {
+        it('should return false if invalid', function () {
+            assert.ok(!Uri_1.default.tryParse(null, Functions_1.default.Blank));
+        });
+        it('should parse correctly', function () {
+            var fragment = "x##?y", full = "http://x.com/y/z#" + fragment;
+            assert.ok(Uri_1.default.tryParse(full, function (out) {
+                assert.equal(out.fragment, fragment);
+                assert.equal(Uri_1.default.toString(out), full);
+            }));
+            assert.ok(Uri_1.default.tryParse("http://x.com/y/z?#", function (out) {
+                assert.equal(out.query, undefined);
+                assert.equal(out.fragment, undefined);
+            }));
+            assert.ok(!Uri_1.default.tryParse("hello//x.com/y/z#" + fragment, Functions_1.default.Blank));
+            assert.ok(!Uri_1.default.tryParse("hello://x.com/y/z#" + fragment, Functions_1.default.Blank));
+            assert.ok(Uri_1.default.tryParse(" ://x.com/y/z#" + fragment, Functions_1.default.Blank));
+            assert.ok(Uri_1.default.tryParse("x.com", function (out) {
+                assert.equal(out.path, undefined);
+            }));
+            assert.ok(Uri_1.default.tryParse("x.com/", function (out) {
+                assert.equal(out.path, '/');
+            }));
+            assert.ok(Uri_1.default.tryParse("me@x.com/" + fragment, function (out) {
+                assert.equal(out.userInfo, 'me');
+            }));
+            assert.ok(Uri_1.default.tryParse("@x.com/" + fragment, function (out) {
+                assert.equal(out.userInfo, undefined);
+            }));
+            assert.ok(Uri_1.default.tryParse("@x.com:80" + fragment, function (out) {
+                assert.equal(out.port, 80);
+            }));
+            assert.ok(!Uri_1.default.tryParse("@x.com:" + fragment, Functions_1.default.Blank));
+            assert.ok(!Uri_1.default.tryParse("", function (out) {
+                assert.equal(out.scheme, undefined);
+                assert.equal(out.host, undefined);
+                assert.equal(out.userInfo, undefined);
+                assert.equal(out.port, undefined);
+                assert.equal(out.path, undefined);
+                assert.equal(out.query, undefined);
+                assert.equal(out.fragment, undefined);
+            }));
         });
     });
     describe('.baseUri', function () {
