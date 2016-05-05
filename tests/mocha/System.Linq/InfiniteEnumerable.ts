@@ -99,7 +99,7 @@ describe(".take(count)", ()=>
 
 		assert.doesNotThrow(()=>
 		{
-			var e = false;
+			var e = false, f = false;
 			assert.ok(
 				source
 					.where(e=>
@@ -111,8 +111,12 @@ describe(".take(count)", ()=>
 					{
 						e = error=="Error";
 					})
+					.finallyAction(()=>{
+						f = true;
+					})
 					.isEmpty());
 			assert.ok(e);
+			assert.ok(f);
 		});
 
 	});
@@ -149,6 +153,19 @@ describe(".except()", ()=>
 		assert.equal(source.except([0,1]).first(),2);
 		assert.equal(source.except([1,2]).elementAt(2),4);
 		source.except([1,2]).dispose();
+	});
+
+});
+
+describe(".pairwise(selector)", ()=>
+{
+
+	it("should produce pair selected values", ()=>
+	{
+		var s = Enumerable.toInfinity().pairwise((a,b)=>""+a+""+b);
+		assert.equal(s.elementAt(0),"01");
+		assert.equal(s.elementAt(5),"56");
+		s.dispose();
 	});
 
 });

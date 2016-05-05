@@ -54,7 +54,7 @@
                     break;
                 case _FUNCTION:
                     _.target = target;
-                    _.isString = true;
+                    _.isFunction = true;
                     break;
                 case _UNDEFINED:
                     _.isUndefined = true;

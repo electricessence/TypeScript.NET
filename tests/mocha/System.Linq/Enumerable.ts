@@ -1,7 +1,10 @@
 ﻿///<reference path="../import.d.ts"/>
 
-import {contains} from "../../../source/System/Collections/Array/Utility";
+import {contains, repeat} from "../../../source/System/Collections/Array/Utility";
+import * as Procedure from "../../../source/System/Collections/Array/Procedure";
 import Enumerable from "../../../source/System.Linq/Linq";
+import Functions from "../../../source/System/Functions";
+import {empty as EmptyEnumerator} from "../../../source/System/Collections/Enumeration/Enumerator";
 var assert = require('../../../node_modules/assert/assert');
 
 
@@ -10,6 +13,7 @@ interface TestItem
 	a:number;
 	b:number;
 	c:string;
+	children?:TestItem[];
 }
 
 
@@ -17,12 +21,47 @@ const source:TestItem[] = Object.freeze([
 	{
 		a: 1,
 		b: 2,
-		c: "a"
+		c: "a",
+		children: [
+			{
+				a: 1,
+				b: 2,
+				c: "a",
+				children: [
+					{
+						a: 1,
+						b: 2,
+						c: "a",
+						children: []
+					},
+					{
+						a: 1,
+						b: 1,
+						c: "b",
+					},
+					{
+						a: 1,
+						b: 3,
+						c: "c"
+					}
+				]
+			},
+			{
+				a: 1,
+				b: 1,
+				c: "b",
+			},
+			{
+				a: 1,
+				b: 3,
+				c: "c"
+			}
+		]
 	},
 	{
 		a: 1,
 		b: 1,
-		c: "b"
+		c: "b",
 	},
 	{
 		a: 1,
@@ -46,12 +85,42 @@ const source:TestItem[] = Object.freeze([
 	}
 ]);
 
+
+const sourceMany = Enumerable.from(Object.freeze([
+	"a,b,c,d,e",
+	null,
+	"f,g,h,i,j",
+	"k,l,m,n,o",
+	"p,q,r,s,t",
+	"u,v,w,x,y",
+]));
+const sourceManyFlat = "abcdefghijklmnopqrstuvwxy";
+
 var sourceArrayEnumerable = Enumerable.from(source),
     sourceEnumerable      = new Enumerable(()=>sourceArrayEnumerable.getEnumerator());
 
 describe(".force()", ()=>
 {
-	assert.doesNotThrow(()=> { sourceEnumerable.force() });
+	it("should not throw",()=>{
+		assert.doesNotThrow(()=> { sourceEnumerable.force() });
+	});
+});
+
+describe(".count()", ()=>
+{
+	it("should match count to length",()=>{
+		assert.equal(sourceArrayEnumerable.count(),source.length);
+		assert.equal(sourceEnumerable.count(),source.length);
+		assert.equal(Enumerable.from([]).count(),0);
+		assert.equal(Enumerable.empty().count(),0);
+		assert.equal(sourceArrayEnumerable.count(e=>e.a===1),3);
+	});
+});
+
+describe(".source",()=>{
+	it("should equal the original",()=>{
+		assert.equal(source,(<any>(sourceArrayEnumerable)).source);
+	});
 });
 
 describe(".memoize()", ()=>
@@ -71,6 +140,14 @@ describe(".memoize()", ()=>
 		assert.equal(sum, source.sum(o=>o.b), "Values must be equal after memoize pass 2.");
 		A.dispose(); // Disposing this memoized source should not affect other tests.
 
+		assert.throws(()=>
+		{
+			// Should throw after disposal.
+			A.force();
+		});
+
+		A = sourceArrayEnumerable.memoize();
+		A.dispose();
 		assert.throws(()=>
 		{
 			// Should throw after disposal.
@@ -253,6 +330,43 @@ describe(".orderBy(selector).thenBy(selector)", ()=>
 
 });
 
+describe(".select(b)",()=>{
+
+	var b = sourceArrayEnumerable.select(e=>e.b);
+	describe(".distinct()",()=>{
+		var d = b.distinct();
+		describe(".orderBy()",()=>{
+			it("should be 1,2,3",()=>{
+				var s = d.orderBy();
+				assert.equal(s.count(),3);
+				assert.equal(s.sum(),6);
+				assert.equal(s.elementAt(0),1);
+				assert.equal(s.elementAt(1),2);
+				assert.equal(s.elementAt(2),3);
+			});
+		});
+
+		describe(".orderByDescending()",()=>{
+			it("should be 1,2,3",()=>{
+				var s = d.orderByDescending();
+				assert.equal(s.count(),3);
+				assert.equal(s.sum(),6);
+				assert.equal(s.elementAt(0),3);
+				assert.equal(s.elementAt(1),2);
+				assert.equal(s.elementAt(2),1);
+			});
+		});
+	});
+
+	describe(".distinctUntilChanged()",()=>{
+		it("should be as expected",()=>{
+			assert.equal(b.distinctUntilChanged().toJoinedString(),"213213");
+			assert.equal(b.distinctUntilChanged(v=>Math.max(v,2)).toJoinedString(),"2323");
+			assert.equal(b.distinctUntilChanged(v=>Math.min(v,2)).toJoinedString(),"21313");
+			assert.equal(b.orderBy().distinctUntilChanged().toJoinedString(),"123");
+		});
+	});
+});
 
 describe(".groupBy(selector)", ()=>
 {
@@ -269,6 +383,17 @@ describe(".groupBy(selector)", ()=>
 
 		var B = sourceArrayEnumerable
 			.groupBy(o=>o.b);
+
+		var C = sourceArrayEnumerable
+			.groupBy(o=>o.b,null,Functions.Identity);
+
+		var D = sourceArrayEnumerable
+			.groupBy(o=>o.b,Functions.Identity,Functions.Identity);
+
+
+		assert.ok(B.first().sequenceEqual(C.first()));
+		assert.ok(C.first().sequenceEqual(D.first()));
+
 		var B_distinct = sourceArrayEnumerable
 			.select(o=>o.b).distinct();
 
@@ -345,6 +470,10 @@ describe(".takeExceptLast(count)", ()=>
 			assert.equal(e.count(), 4);
 			assert.equal(e.count(), 4, "count should match number taken");
 			assert.equal(e.last().c, "d");
+			var e = s.takeExceptLast();
+			assert.equal(e.count(), 5);
+			assert.equal(e.count(), 5, "count should match number taken");
+			assert.equal(e.last().c, "e");
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -363,6 +492,11 @@ describe(".skipToLast(count)", ()=>
 			assert.equal(e.count(), 2, "count should match number taken");
 			assert.equal(e.first().c, "e");
 			assert.equal(e.last().c, "f");
+
+			e = s.skipToLast(0);
+			assert.equal(e.count(), 0);
+			e = s.skipToLast(Infinity);
+			assert.equal(e.count(), 6);
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -384,7 +518,10 @@ describe(".skip(count)", ()=>
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
+
+		assert.equal(sourceArrayEnumerable.skip(0),sourceArrayEnumerable)
 	});
+
 });
 
 
@@ -437,6 +574,8 @@ describe(".shuffle()", ()=>
 	{
 		var e = sourceArrayEnumerable.shuffle();
 		assert.equal(e.count(v=>v.a==1), 3);
+		e.dispose();
+		assert.throws(()=>e.count());
 	});
 
 });
@@ -525,6 +664,96 @@ describe(".empty()", ()=>
 
 	});
 
+	describe(".last()", ()=>
+	{
+
+		it("should throw", ()=>
+		{
+			assert.throws(()=>
+			{
+				source.last();
+			});
+		});
+
+	});
+
+	describe(".lastOrDefault()", ()=>
+	{
+
+		it("should be defaulted", ()=>
+		{
+			assert.equal(source.lastOrDefault(), null);
+			var d = 1;
+			assert.equal(source.lastOrDefault(d), d);
+		});
+
+	});
+
+});
+
+
+describe(".last()", ()=>
+{
+
+	it("should match last", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.last().c,"f");
+	});
+
+	it("should throw", ()=>
+	{
+		assert.throws(()=>Enumerable.from([]).last());
+	});
+
+});
+
+describe(".lastOrDefault()", ()=>
+{
+
+	it("should match last", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.lastOrDefault().c,"f");
+	});
+
+	it("should be defaulted", ()=>
+	{
+		assert.equal(Enumerable.from([]).lastOrDefault("f"),"f");
+	});
+
+});
+
+describe(".from(x)", ()=>
+{
+	it("should throw if not enumerable", ()=>
+	{
+		assert.throws(()=>Enumerable.from(<any>1));
+	});
+});
+
+describe(".fromAny(x,default)", ()=>
+{
+	it("should return the default if not enumerable", ()=>
+	{
+		assert.equal(Enumerable.fromAny(<any>1, <any>"x"), "x");
+	});
+});
+
+describe(".fromAny(x,default)", ()=>
+{
+	it("should return an enumerable from an enumerable", ()=>
+	{
+		assert.ok(Enumerable.fromAny(sourceArrayEnumerable) instanceof Enumerable);
+	});
+	it("should return an enumerable from an array", ()=>
+	{
+		assert.ok(Enumerable.fromAny(source) instanceof Enumerable);
+	});
+	it("should return an enumerable from an IEnumerable", ()=>
+	{
+		var e = Enumerable.fromAny({getEnumerator: ()=> { return EmptyEnumerator; }});
+		e.getEnumerator();
+		assert.ok(e instanceof Enumerable);
+	});
 });
 
 describe(".from([1])", ()=>
@@ -582,25 +811,305 @@ describe(".from([1])", ()=>
 
 });
 
+
+describe(".elementAt(x)", ()=>
+{
+	it("should return the indexed element",()=>{
+		assert.equal( sourceEnumerable.elementAt(2), source[2]);
+		assert.equal( sourceArrayEnumerable.elementAt(2), source[2]);
+	});
+
+	it("should throw",()=>{
+		assert.throws(()=>sourceArrayEnumerable.elementAt(-1));
+	});
+
+});
+
+describe(".elementAtOrDefault (x)", ()=>
+{
+	it("should return the indexed element",()=>{
+		assert.equal( sourceEnumerable.elementAtOrDefault(2), source[2]);
+		assert.equal( sourceArrayEnumerable.elementAtOrDefault(2), source[2]);
+		var d = {};
+		assert.equal( sourceArrayEnumerable.elementAtOrDefault(10,<any>d), d);
+	});
+
+	it("should throw",()=>{
+		assert.throws(()=>sourceArrayEnumerable.elementAtOrDefault(-1));
+	});
+
+});
+
+
 describe(".min()", ()=>
 {
-	assert.equal(sourceArrayEnumerable.select(e=>e.b).min(), 1);
-	assert.equal(sourceArrayEnumerable.select(e=>e.c).min(), "a");
+	it("should return the minimum of the selected", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.select(e=>e.b).min(), 1);
+		assert.equal(sourceArrayEnumerable.select(e=>e.c).min(), "a");
+	});
 });
 
 describe(".max()", ()=>
 {
-	assert.equal(sourceArrayEnumerable.select(e=>e.b).max(), 3);
-	assert.equal(sourceArrayEnumerable.select(e=>e.c).max(), "f");
+	it("should return the maximum of the selected", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.select(e=>e.b).max(), 3);
+		assert.equal(sourceArrayEnumerable.select(e=>e.c).max(), "f");
+
+
+	});
+});
+
+describe(".minBy(selector)", ()=>
+{
+	it("should return the minimum of the selected", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.minBy(e=>e.b).b, 1);
+		assert.equal(sourceArrayEnumerable.minBy(e=>e.c).c, "a");
+
+		assert.equal(sourceArrayEnumerable.select(e=>e.b).minBy(), 1);
+		assert.equal(sourceArrayEnumerable.select(e=>e.c).minBy(), "a");
+	});
+});
+
+
+describe(".maxBy(selector)", ()=>
+{
+	it("should return the maximum of the selected", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.maxBy(e=>e.b).b, 3);
+		assert.equal(sourceArrayEnumerable.maxBy(e=>e.c).c, "f");
+
+		assert.equal(sourceArrayEnumerable.select(e=>e.b).maxBy(), 3);
+		assert.equal(sourceArrayEnumerable.select(e=>e.c).maxBy(), "f");
+
+	});
+});
+
+describe(".concat(...)", ()=>
+{
+	it("should remain the same", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.merge(null).count(), 6);
+		assert.equal(sourceArrayEnumerable.merge([]).count(), 6);
+	});
+	it("should combine two into one", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.concat(sourceArrayEnumerable).count(), 12);
+	});
+});
+
+describe(".selectMany(...)", ()=>
+{
+	it("should select the sub values", ()=>
+	{
+
+		function test(values:Enumerable<string>)
+		{
+			assert.equal(values.count(), 25);
+			assert.equal(values.toJoinedString(), sourceManyFlat);
+		}
+
+		var split = (s:string)=>s && s.split(",");
+
+		test(sourceMany.selectMany(split));
+		test(sourceMany.selectMany(split, (c, e)=>e));
+
+		assert.equal(Enumerable.from(<string[]>[]).selectMany(split).count(), 0);
+
+		var iSource = Enumerable.toInfinity().selectMany(s=>repeat("" + s, s));
+		assert.equal(iSource.take(10).toJoinedString(), "1223334444");
+
+		var s = sourceMany.select(s=>s.length);
+		s.dispose();
+		assert.throws(()=>s.toArray());
+	});
+});
+
+describe(".traverseBreadthFirst()", ()=>
+{
+	it("walk the tree in proper order", ()=>
+	{
+		var tree = sourceEnumerable
+			.traverseBreadthFirst(e=>e.children),
+		    c    = tree.select(e=>e.c);
+
+		assert.equal(c.elementAt(2), "c");
+		assert.equal(c.elementAt(6), "a");
+		assert.equal(c.count(), 12);
+
+		assert.equal(Enumerable.empty<TestItem>().traverseBreadthFirst(
+			e=>e.children, Functions.Identity).count(), 0);
+	});
+});
+
+describe(".traverseDepthFirst()", ()=>
+{
+	it("walk the tree in proper order", ()=>
+	{
+		var tree = sourceEnumerable
+			.traverseDepthFirst(e=>e.children),
+		    c    = tree.select(e=>e.c);
+
+		assert.equal(c.elementAt(2), "a");
+		assert.equal(c.elementAt(6), "c");
+		assert.equal(c.count(), 12);
+
+		assert.equal(Enumerable.empty<TestItem>().traverseDepthFirst(
+			e=>e.children, Functions.Identity).count(), 0);
+	});
+});
+
+describe(".flatten()", ()=>
+{
+	it("should convert deep enumerable to flat one", ()=>
+	{
+		assert.equal(
+			sourceMany
+				.choose()
+				.select(s=>s.split(','))
+				.concat([["z"]])
+				.flatten()
+				.toJoinedString(),
+			sourceManyFlat + "z");
+	});
+});
+
+describe(".ofType(type)", ()=>
+{
+
+	var source = Enumerable.from(<any[]>[
+		1,
+		"a",
+		true,
+		[],
+		[],
+		2,
+		"b",
+		[],
+		false,
+		function() {},
+		3,
+		"c",
+		[],
+		"d",
+		"e",
+		null,
+		undefined
+	]);
+
+	it("should select only the type requested", ()=>
+	{
+		assert.equal(source.ofType(Number).count(), 3);
+		assert.equal(source.ofType(String).count(), 5);
+		assert.equal(source.ofType(Boolean).count(), 2);
+		assert.equal(source.ofType(Function).count(), 1);
+		assert.equal(source.ofType(Array).count(), 4);
+	});
+});
+
+describe(".buffer(size)", ()=>
+{
+	it("should return arrays at the size provided", ()=>
+	{
+		var s2 = sourceEnumerable.buffer(2);
+		assert.equal(s2.first().length, 2);
+		assert.equal(s2.count(), 3);
+
+	});
+
+	it("should throw for invalid sizes", ()=>
+	{
+		assert.throws(()=>sourceEnumerable.buffer(-1));
+		assert.throws(()=>sourceEnumerable.buffer(Infinity));
+	});
+});
+
+describe(".share()", ()=>
+{
+
+	it("should share an enumerator", ()=>
+	{
+		var s = sourceEnumerable.select(e=>e.c).share();
+		var e1 = s.getEnumerator();
+		var e2 = s.getEnumerator();
+
+		e1.moveNext();
+		assert.equal(e1.current, "a");
+		assert.equal(e2.current, "a");
+		e2.moveNext();
+		assert.equal(e1.current, "b");
+		assert.equal(e2.current, "b");
+
+	});
+
+});
+
+var mathTree      = sourceEnumerable.traverseDepthFirst(e=>e.children),
+    mathTreeArray = mathTree.select(e=>e.b).toArray();
+
+describe(".sum()", ()=>
+{
+	it("should render the sum value", ()=>
+	{
+		var v = Procedure.sum(mathTreeArray);
+
+		assert.equal(Enumerable.empty().sum(), 0);
+		assert.equal(mathTree.select(e=>e.b).sum(), v);
+		assert.equal(mathTree.select(e=>e.b).concat([Infinity,-Infinity]).sum(), v);
+		assert.equal(mathTree.select(e=>e.b).concat([Infinity,Infinity,-Infinity]).sum(), Infinity);
+		assert.equal(mathTree.select(e=>e.b).concat([Infinity,-Infinity,-Infinity]).sum(), -Infinity);
+		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).sum()));
+		assert.equal(mathTree.sum(e=>e.b), v);
+
+	});
+
+});
+
+
+describe(".product()", ()=>
+{
+	it("should render the product value", ()=>
+	{
+		var v = Procedure.product(mathTreeArray);
+
+		assert.equal(mathTree.select(e=>e.b).product(), v);
+		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).product()));
+		assert.equal(mathTree.select(e=>e.b).concat([0]).product(), 0);
+		assert.equal(mathTree.product(e=>e.b), v);
+
+	});
+
+});
+
+describe(".quotient()", ()=>
+{
+	it("should render the quotient value", ()=>
+	{
+		var v = Procedure.quotient(mathTreeArray);
+
+		assert.equal(mathTree.select(e=>e.b).quotient(), v);
+		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).quotient()));
+		assert.ok(isNaN(mathTree.select(e=>e.b).take(1).quotient()));
+		assert.equal(mathTree.quotient(e=>e.b), v);
+
+	});
+
 });
 
 describe(".average()", ()=>
 {
-	assert.equal(sourceArrayEnumerable.select(e=>e.b).average(), 2);
-});
+	it("should render the average value", ()=>
+	{
+		var tree = sourceEnumerable
+			.traverseDepthFirst(e=>e.children);
+		var v = Procedure.average(mathTreeArray);
 
-describe(".concat(...)",()=>{
-	assert.equal(sourceArrayEnumerable.merge(null).count(),6);
-	assert.equal(sourceArrayEnumerable.merge([]).count(),6);
-	assert.equal(sourceArrayEnumerable.concat(sourceArrayEnumerable).count(),12);
+		assert.equal(mathTree.select(e=>e.b).average(), v);
+		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).average()));
+		assert.equal(mathTree.average(e=>e.b), v);
+
+	});
+
 });

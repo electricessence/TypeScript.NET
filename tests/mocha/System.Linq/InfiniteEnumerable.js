@@ -68,7 +68,7 @@
                 e.moveNext();
             });
             assert.doesNotThrow(function () {
-                var e = false;
+                var e = false, f = false;
                 assert.ok(source
                     .where(function (e) {
                     if (!e)
@@ -78,8 +78,12 @@
                     .catchError(function (error) {
                     e = error == "Error";
                 })
+                    .finallyAction(function () {
+                    f = true;
+                })
                     .isEmpty());
                 assert.ok(e);
+                assert.ok(f);
             });
         });
         it("should throw for Infinity", function () {
@@ -99,6 +103,14 @@
             assert.equal(source.except([0, 1]).first(), 2);
             assert.equal(source.except([1, 2]).elementAt(2), 4);
             source.except([1, 2]).dispose();
+        });
+    });
+    describe(".pairwise(selector)", function () {
+        it("should produce pair selected values", function () {
+            var s = Linq_1.default.toInfinity().pairwise(function (a, b) { return "" + a + "" + b; });
+            assert.equal(s.elementAt(0), "01");
+            assert.equal(s.elementAt(5), "56");
+            s.dispose();
         });
     });
 });

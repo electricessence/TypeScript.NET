@@ -168,7 +168,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
         key: "elementAt",
         value: function elementAt(index) {
             var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
-            if (v === INVALID_DEFAULT) throw new Error("index is greater than or equal to the number of elements in source.");
+            if (v === INVALID_DEFAULT) throw new ArgumentOutOfRangeException_1.default('index', index, "is greater than or equal to the number of elements in source");
             return v;
         }
     }, {
@@ -178,8 +178,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
 
             var _ = this;
             _.throwIfDisposed();
-            if (isNaN(index) || index < 0 || !isFinite(index)) throw new Error("'index' is invalid or out of bounds.");
-            Integer_1.default.assert(index, "index");
+            Integer_1.default.assertZeroOrGreater(index, 'index');
             var n = index;
             return dispose_1.using(this.getEnumerator(), function (e) {
                 var i = 0;
@@ -248,7 +247,9 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
         }
     }, {
         key: "traverseBreadthFirst",
-        value: function traverseBreadthFirst(func, resultSelector) {
+        value: function traverseBreadthFirst(childrenSelector) {
+            var resultSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
+
             var _ = this,
                 isEndless = _._isEndless || null;
             return new Enumerable(function () {
@@ -267,7 +268,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                             return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
                         }
                         if (!len) return yielder.yieldBreak();
-                        var next = Enumerable.from(buffer).selectMany(func);
+                        var next = Enumerable.from(buffer).selectMany(childrenSelector);
                         if (!next.any()) {
                             return yielder.yieldBreak();
                         } else {
@@ -286,7 +287,9 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
         }
     }, {
         key: "traverseDepthFirst",
-        value: function traverseDepthFirst(func, resultSelector) {
+        value: function traverseDepthFirst(childrenSelector) {
+            var resultSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
+
             var _ = this,
                 isEndless = _._isEndless || null;
             return new Enumerable(function () {
@@ -301,7 +304,8 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                         if (enumerator.moveNext()) {
                             var value = resultSelector(enumerator.current, len);
                             enumeratorStack[len++] = enumerator;
-                            enumerator = func(enumerator.current).getEnumerator();
+                            var e = Enumerable.fromAny(childrenSelector(enumerator.current));
+                            enumerator = e ? e.getEnumerator() : Enumerator_1.empty;
                             return yielder.yieldReturn(value);
                         }
                         if (len == 0) return false;
@@ -330,24 +334,25 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     while (true) {
-                        if (middleEnumerator != null) {
+                        if (middleEnumerator) {
                             if (middleEnumerator.moveNext()) {
                                 return yielder.yieldReturn(middleEnumerator.current);
                             } else {
+                                middleEnumerator.dispose();
                                 middleEnumerator = null;
                             }
                         }
                         if (enumerator.moveNext()) {
                             var c = enumerator.current;
-                            if (Array.isArray(c)) {
-                                middleEnumerator.dispose();
-                                middleEnumerator = Enumerable.from(c).selectMany(Functions.Identity).flatten().getEnumerator();
+                            var e = !Types_1.default.isString(c) && Enumerable.fromAny(c);
+                            if (e) {
+                                middleEnumerator = e.selectMany(Functions.Identity).flatten().getEnumerator();
                                 continue;
                             } else {
-                                return yielder.yieldReturn(enumerator.current);
+                                return yielder.yieldReturn(c);
                             }
                         }
-                        return false;
+                        return yielder.yieldBreak();
                     }
                 }, function () {
                     dispose_1.dispose(enumerator, middleEnumerator);
@@ -537,7 +542,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                         return x instanceof type;
                     });
             }
-            return this.where(function (x) {
+            return this.choose().where(function (x) {
                 return (typeof x === "undefined" ? "undefined" : _typeof(x)) === typeName;
             });
         }
@@ -581,7 +586,9 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
         }
     }, {
         key: "distinctUntilChanged",
-        value: function distinctUntilChanged(compareSelector) {
+        value: function distinctUntilChanged() {
+            var compareSelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
+
             var _ = this,
                 disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
@@ -597,7 +604,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                         var key = compareSelector(enumerator.current);
                         if (initial) {
                             initial = false;
-                        } else if (compareKey === key) {
+                        } else if (Values.areEqual(compareKey, key)) {
                             continue;
                         }
                         compareKey = key;
@@ -829,8 +836,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
     }, {
         key: "insertAt",
         value: function insertAt(index, other) {
-            if (isNaN(index) || index < 0 || !isFinite(index)) throw new Error("'index' is invalid or out of bounds.");
-            Integer_1.default.assert(index, "index");
+            Integer_1.default.assertZeroOrGreater(index, 'index');
             var n = index;
             var _ = this,
                 isEndless = _._isEndless || null;
@@ -954,6 +960,42 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
+        key: "buffer",
+        value: function buffer(size) {
+            if (size < 1 || !isFinite(size)) throw new Error("Invalid buffer size.");
+            Integer_1.default.assert(size, "size");
+            var _ = this,
+                len;
+            return new Enumerable(function () {
+                var enumerator;
+                return new EnumeratorBase_1.default(function () {
+                    enumerator = _.getEnumerator();
+                }, function (yielder) {
+                    var array = ArrayUtility.initialize(size);
+                    len = 0;
+                    while (len < size && enumerator.moveNext()) {
+                        array[len++] = enumerator.current;
+                    }
+                    array.length = len;
+                    return len && yielder.yieldReturn(array);
+                }, function () {
+                    dispose_1.dispose(enumerator);
+                }, _._isEndless);
+            }, null, _._isEndless);
+        }
+    }, {
+        key: "share",
+        value: function share() {
+            var _ = this;
+            _.throwIfDisposed();
+            var sharedEnumerator;
+            return new Enumerable(function () {
+                return sharedEnumerator || (sharedEnumerator = _.getEnumerator());
+            }, function () {
+                dispose_1.dispose(sharedEnumerator);
+            }, _._isEndless);
+        }
+    }, {
         key: "isEndless",
         get: function get() {
             return this._isEndless;
@@ -1051,8 +1093,7 @@ var Enumerable = function (_InfiniteEnumerable) {
 
             this.throwIfDisposed();
             if (!target) throw new ArgumentNullException_1.default("target");
-            Integer_1.default.assert(index);
-            if (index < 0) throw new ArgumentOutOfRangeException_1.default("index", index, "Must be zero or greater");
+            Integer_1.default.assertZeroOrGreater(index);
             Enumerator_1.forEach(this, function (x, i) {
                 target[i + index] = x;
             });
@@ -1372,7 +1413,9 @@ var Enumerable = function (_InfiniteEnumerable) {
         }
     }, {
         key: "distinctUntilChanged",
-        value: function distinctUntilChanged(compareSelector) {
+        value: function distinctUntilChanged() {
+            var compareSelector = arguments.length <= 0 || arguments[0] === undefined ? Functions.Identity : arguments[0];
+
             return _get(Object.getPrototypeOf(Enumerable.prototype), "distinctUntilChanged", this).call(this, compareSelector);
         }
     }, {
@@ -1400,12 +1443,14 @@ var Enumerable = function (_InfiniteEnumerable) {
             return new OrderedEnumerable(this, keySelector, -1);
         }
     }, {
+        key: "buffer",
+        value: function buffer(size) {
+            return _get(Object.getPrototypeOf(Enumerable.prototype), "buffer", this).call(this, size);
+        }
+    }, {
         key: "groupBy",
-        value: function groupBy(keySelector) {
+        value: function groupBy(keySelector, elementSelector, compareSelector) {
             var _this4 = this;
-
-            var elementSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
-            var compareSelector = arguments[2];
 
             if (!elementSelector) elementSelector = Functions.Identity;
             return new Enumerable(function () {
@@ -1459,30 +1504,6 @@ var Enumerable = function (_InfiniteEnumerable) {
                     group = null;
                 });
             });
-        }
-    }, {
-        key: "buffer",
-        value: function buffer(size) {
-            if (size < 1 || !isFinite(size)) throw new Error("Invalid buffer size.");
-            Integer_1.default.assert(size, "size");
-            var _ = this,
-                len;
-            return new Enumerable(function () {
-                var enumerator;
-                return new EnumeratorBase_1.default(function () {
-                    enumerator = _.getEnumerator();
-                }, function (yielder) {
-                    var array = ArrayUtility.initialize(size);
-                    len = 0;
-                    while (len < size && enumerator.moveNext()) {
-                        array[len++] = enumerator.current;
-                    }
-                    array.length = len;
-                    return len && yielder.yieldReturn(array);
-                }, function () {
-                    dispose_1.dispose(enumerator);
-                }, _._isEndless);
-            }, null, _._isEndless);
         }
     }, {
         key: "aggregate",
@@ -1623,18 +1644,17 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "share",
         value: function share() {
-            var _ = this;
-            _.throwIfDisposed();
-            var sharedEnumerator;
-            return new Enumerable(function () {
-                return new EnumeratorBase_1.default(function () {
-                    if (!sharedEnumerator) sharedEnumerator = _.getEnumerator();
-                }, function (yielder) {
-                    return sharedEnumerator.moveNext() && yielder.yieldReturn(sharedEnumerator.current);
-                });
-            }, function () {
-                dispose_1.dispose(sharedEnumerator);
-            });
+            return _get(Object.getPrototypeOf(Enumerable.prototype), "share", this).call(this);
+        }
+    }, {
+        key: "catchError",
+        value: function catchError(handler) {
+            return _get(Object.getPrototypeOf(Enumerable.prototype), "catchError", this).call(this, handler);
+        }
+    }, {
+        key: "finallyAction",
+        value: function finallyAction(action) {
+            return _get(Object.getPrototypeOf(Enumerable.prototype), "finallyAction", this).call(this, action);
         }
     }, {
         key: "memoize",
@@ -1669,6 +1689,15 @@ var Enumerable = function (_InfiniteEnumerable) {
     }], [{
         key: "from",
         value: function from(source) {
+            var e = Enumerable.fromAny(source);
+            if (!e) throw new UnsupportedEnumerableException_1.default();
+            return e;
+        }
+    }, {
+        key: "fromAny",
+        value: function fromAny(source) {
+            var defaultEnumerable = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
             if (Types_1.default.isObject(source) || Types_1.default.isString(source)) {
                 if (source instanceof Enumerable) return source;
                 if (Types_1.default.isArrayLike(source)) return new ArrayEnumerable(source);
@@ -1676,7 +1705,7 @@ var Enumerable = function (_InfiniteEnumerable) {
                     return source.getEnumerator();
                 }, null, source.isEndless);
             }
-            throw new UnsupportedEnumerableException_1.default();
+            return defaultEnumerable;
         }
     }, {
         key: "toArray",
@@ -2018,7 +2047,7 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
             var _ = this;
             _.throwIfDisposed();
             var source = _._source,
-                len = source ? source.length : 0;
+                len = source.length;
             return len && (!predicate || _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "any", this).call(this, predicate));
         }
     }, {
@@ -2027,16 +2056,8 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
             var _ = this;
             _.throwIfDisposed();
             var source = _._source,
-                len = source ? source.length : 0;
+                len = source.length;
             return len && (predicate ? _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "count", this).call(this, predicate) : len);
-        }
-    }, {
-        key: "elementAt",
-        value: function elementAt(index) {
-            var _ = this;
-            _.throwIfDisposed();
-            var source = _._source;
-            return index < source.length && index >= 0 ? source[index] : _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "elementAt", this).call(this, index);
         }
     }, {
         key: "elementAtOrDefault",
@@ -2045,8 +2066,9 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
 
             var _ = this;
             _.throwIfDisposed();
+            Integer_1.default.assertZeroOrGreater(index, 'index');
             var source = _._source;
-            return index < source.length && index >= 0 ? source[index] : defaultValue;
+            return index < source.length ? source[index] : defaultValue;
         }
     }, {
         key: "last",
@@ -2084,9 +2106,8 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
         value: function takeExceptLast() {
             var count = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
 
-            var _ = this,
-                len = _._source ? _._source.length : 0;
-            return _.take(len - count);
+            var _ = this;
+            return _.take(_._source.length - count);
         }
     }, {
         key: "skipToLast",

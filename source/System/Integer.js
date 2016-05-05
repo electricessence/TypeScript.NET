@@ -77,7 +77,7 @@
         function assertZeroOrGreater(n, argumentName) {
             var i = assert(n, argumentName) && n >= 0;
             if (!i)
-                throw new ArgumentOutOfRangeException_1.default(argumentName || 'n', n, "Cannot be less than zero.");
+                throw new ArgumentOutOfRangeException_1.default(argumentName || 'n', n, "Must be a valid integer greater than or equal to zero.");
             return i;
         }
         Integer.assertZeroOrGreater = assertZeroOrGreater;
