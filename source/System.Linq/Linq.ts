@@ -954,7 +954,7 @@ extends DisposableBase implements IEnumerable<T>
 	}
 
 	ofType<TType>(type:{ new (...params:any[]):TType }):InfiniteEnumerable<TType>;
-	ofType<TType>(type:any):Enumerable<TType>
+	ofType<TType>(type:any):InfiniteEnumerable<TType>
 	{
 		var typeName:string;
 		switch(<any>type)
@@ -2914,6 +2914,7 @@ extends InfiniteEnumerable<T>
 	// #endregion
 
 
+	ofType<TType>(type:{ new (...params:any[]):TType }):Enumerable<TType>;
 	ofType<TType>(type:any):Enumerable<TType>
 	{
 		return <Enumerable<TType>>super.ofType(type);
