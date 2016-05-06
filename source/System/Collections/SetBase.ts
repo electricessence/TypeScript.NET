@@ -224,6 +224,22 @@ implements ISet<T>, IDisposable
 		else this._set.forEach((node, i)=>action(node.value, i));
 	}
 
+	protected _removeNode(node:ILinkedNodeWithValue<T>):boolean
+	{
+		if(!node) return false;
+		return this.remove(node.value)!=0;
+	}
+
+	removeFirst():boolean {
+
+		return this._removeNode(this._set && this._set.first);
+	}
+
+	removeLast():boolean {
+		return this._removeNode(this._set && this._set.last);
+	}
+
+
 }
 
 function wipe(map:IMap<any>, depth:number = 1):void

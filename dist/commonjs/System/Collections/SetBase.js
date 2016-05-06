@@ -204,6 +204,22 @@ var SetBase = function (_CollectionBase_1$def) {
                 return action(node.value, i);
             });
         }
+    }, {
+        key: "_removeNode",
+        value: function _removeNode(node) {
+            if (!node) return false;
+            return this.remove(node.value) != 0;
+        }
+    }, {
+        key: "removeFirst",
+        value: function removeFirst() {
+            return this._removeNode(this._set && this._set.first);
+        }
+    }, {
+        key: "removeLast",
+        value: function removeLast() {
+            return this._removeNode(this._set && this._set.last);
+        }
     }]);
 
     return SetBase;

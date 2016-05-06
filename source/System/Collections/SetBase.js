@@ -175,6 +175,17 @@ var __extends = (this && this.__extends) || function (d, b) {
             else
                 this._set.forEach(function (node, i) { return action(node.value, i); });
         };
+        SetBase.prototype._removeNode = function (node) {
+            if (!node)
+                return false;
+            return this.remove(node.value) != 0;
+        };
+        SetBase.prototype.removeFirst = function () {
+            return this._removeNode(this._set && this._set.first);
+        };
+        SetBase.prototype.removeLast = function () {
+            return this._removeNode(this._set && this._set.last);
+        };
         return SetBase;
     }(CollectionBase_1.default));
     function wipe(map, depth) {
