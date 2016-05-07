@@ -213,12 +213,14 @@ var SetBase = function (_CollectionBase_1$def) {
     }, {
         key: "removeFirst",
         value: function removeFirst() {
-            return this._removeNode(this._set && this._set.first);
+            var s = this._set;
+            return this._removeNode(s && s.first);
         }
     }, {
         key: "removeLast",
         value: function removeLast() {
-            return this._removeNode(this._set && this._set.last);
+            var s = this._set;
+            return this._removeNode(s && s.last);
         }
     }]);
 

@@ -1161,6 +1161,9 @@ extends DisposableBase implements IEnumerable<T>
 		resultSelector:(first:T, second:TSecond, index?:number) => TResult):Enumerable<TResult>
 	{
 		var _ = this;
+		_.throwIfDisposed();
+
+
 
 		return new Enumerable<TResult>(
 			() =>
@@ -1189,6 +1192,7 @@ extends DisposableBase implements IEnumerable<T>
 			}
 		);
 	}
+
 
 	zipMultiple<TSecond, TResult>(
 		second:IArray<IEnumerableOrArray<TSecond>>,
@@ -2308,6 +2312,78 @@ extends InfiniteEnumerable<T>
 		return values
 			.takeUntil(v=> v== -Infinity, true)
 			.aggregate(Functions.Lesser);
+	}
+
+
+	/**
+	 * Takes any set of collections of the same type and weaves them together.
+	 * @param enumerables
+	 * @returns {Enumerable<T>}
+	 */
+	static weave<T>(
+		enumerables:IEnumerableOrArray<IEnumerableOrArray<T>>):Enumerable<T>
+	{
+		if(!enumerables)
+			throw new ArgumentNullException('enumerables');
+
+		return new Enumerable<T>(
+			() =>
+			{
+				var queue:Queue<IEnumerator<T>>;
+				var mainEnumerator:IEnumerator<IEnumerableOrArray<T>>;
+				var index:number;
+
+				return new EnumeratorBase<T>(
+					() =>
+					{
+						index = 0;
+						queue = new Queue<IEnumerator<T>>();
+						mainEnumerator = enumeratorFrom(enumerables);
+					},
+
+					(yielder)=>
+					{
+						let e:IEnumerator<T>;
+
+						// First pass...
+						if(mainEnumerator) {
+							while(!e && mainEnumerator.moveNext())
+							{
+								let c = mainEnumerator.current;
+								if(c && (e = enumeratorFrom(c)))
+									queue.enqueue(e);
+							}
+
+							if(!e)
+								mainEnumerator = null;
+						}
+
+						while(!e && queue.count) {
+							e = queue.dequeue();
+							if(e.moveNext()) {
+								queue.enqueue(e);
+							} else {
+								dispose(e);
+								e = null;
+							}
+						}
+
+						return e
+							? yielder.yieldReturn(e.current)
+							: yielder.yieldBreak();
+
+					},
+
+					() =>
+					{
+						dispose.these(queue.dump());
+						dispose(mainEnumerator,queue);
+						mainEnumerator = null;
+						queue = null;
+					}
+				);
+			}
+		);
 	}
 
 	// #endregion

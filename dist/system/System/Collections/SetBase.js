@@ -197,6 +197,19 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     else
                         this._set.forEach(function (node, i) { return action(node.value, i); });
                 };
+                SetBase.prototype._removeNode = function (node) {
+                    if (!node)
+                        return false;
+                    return this.remove(node.value) != 0;
+                };
+                SetBase.prototype.removeFirst = function () {
+                    var s = this._set;
+                    return this._removeNode(s && s.first);
+                };
+                SetBase.prototype.removeLast = function () {
+                    var s = this._set;
+                    return this._removeNode(s && s.last);
+                };
                 return SetBase;
             }(CollectionBase_1.default));
             exports_1("default",SetBase);

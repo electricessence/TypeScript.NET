@@ -154,6 +154,19 @@ class SetBase extends CollectionBase {
         else
             this._set.forEach((node, i) => action(node.value, i));
     }
+    _removeNode(node) {
+        if (!node)
+            return false;
+        return this.remove(node.value) != 0;
+    }
+    removeFirst() {
+        var s = this._set;
+        return this._removeNode(s && s.first);
+    }
+    removeLast() {
+        var s = this._set;
+        return this._removeNode(s && s.last);
+    }
 }
 function wipe(map, depth = 1) {
     if (map && depth) {

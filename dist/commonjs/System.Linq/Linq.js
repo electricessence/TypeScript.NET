@@ -651,6 +651,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
         key: "zip",
         value: function zip(second, resultSelector) {
             var _ = this;
+            _.throwIfDisposed();
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
@@ -1974,6 +1975,45 @@ var Enumerable = function (_InfiniteEnumerable) {
             return values.takeUntil(function (v) {
                 return v == -Infinity;
             }, true).aggregate(Functions.Lesser);
+        }
+    }, {
+        key: "weave",
+        value: function weave(enumerables) {
+            if (!enumerables) throw new ArgumentNullException_1.default('enumerables');
+            return new Enumerable(function () {
+                var queue;
+                var mainEnumerator;
+                var index;
+                return new EnumeratorBase_1.default(function () {
+                    index = 0;
+                    queue = new Queue_1.default();
+                    mainEnumerator = Enumerator_1.from(enumerables);
+                }, function (yielder) {
+                    var e = undefined;
+                    if (mainEnumerator) {
+                        while (!e && mainEnumerator.moveNext()) {
+                            var c = mainEnumerator.current;
+                            if (c && (e = Enumerator_1.from(c))) queue.enqueue(e);
+                        }
+                        if (!e) mainEnumerator = null;
+                    }
+                    while (!e && queue.count) {
+                        e = queue.dequeue();
+                        if (e.moveNext()) {
+                            queue.enqueue(e);
+                        } else {
+                            dispose_1.dispose(e);
+                            e = null;
+                        }
+                    }
+                    return e ? yielder.yieldReturn(e.current) : yielder.yieldBreak();
+                }, function () {
+                    dispose_1.dispose.these(queue.dump());
+                    dispose_1.dispose(mainEnumerator, queue);
+                    mainEnumerator = null;
+                    queue = null;
+                });
+            });
         }
     }]);
 

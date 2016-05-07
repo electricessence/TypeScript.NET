@@ -16,13 +16,12 @@ import CollectionBase from "./CollectionBase";
 const OTHER = 'other';
 
 abstract class SetBase<T>
-extends CollectionBase<T>
-implements ISet<T>, IDisposable
+extends CollectionBase<T> implements ISet<T>, IDisposable
 {
 
 	constructor(source?:IEnumerableOrArray<T>)
 	{
-		super(null,areEqual);
+		super(null, areEqual);
 		this._importEntries(source);
 	}
 
@@ -163,7 +162,8 @@ implements ISet<T>, IDisposable
 		{
 			forEach(other, v=>
 			{
-				if(_.contains(v)) {
+				if(_.contains(v))
+				{
 					if(_._removeInternal(v))
 						_._incrementModified();
 				}
@@ -186,7 +186,6 @@ implements ISet<T>, IDisposable
 	{
 		this.importEntries(other);
 	}
-
 
 
 	protected _clearInternal():number
@@ -230,13 +229,16 @@ implements ISet<T>, IDisposable
 		return this.remove(node.value)!=0;
 	}
 
-	removeFirst():boolean {
-
-		return this._removeNode(this._set && this._set.first);
+	removeFirst():boolean
+	{
+		var s = this._set;
+		return this._removeNode(s && s.first);
 	}
 
-	removeLast():boolean {
-		return this._removeNode(this._set && this._set.last);
+	removeLast():boolean
+	{
+		var s = this._set;
+		return this._removeNode(s && s.last);
 	}
 
 

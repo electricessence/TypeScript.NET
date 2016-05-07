@@ -181,10 +181,12 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.remove(node.value) != 0;
         };
         SetBase.prototype.removeFirst = function () {
-            return this._removeNode(this._set && this._set.first);
+            var s = this._set;
+            return this._removeNode(s && s.first);
         };
         SetBase.prototype.removeLast = function () {
-            return this._removeNode(this._set && this._set.last);
+            var s = this._set;
+            return this._removeNode(s && s.last);
         };
         return SetBase;
     }(CollectionBase_1.default));

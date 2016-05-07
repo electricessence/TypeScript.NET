@@ -101,25 +101,29 @@ var sourceArrayEnumerable = Enumerable.from(source),
 
 describe(".force()", ()=>
 {
-	it("should not throw",()=>{
+	it("should not throw", ()=>
+	{
 		assert.doesNotThrow(()=> { sourceEnumerable.force() });
 	});
 });
 
 describe(".count()", ()=>
 {
-	it("should match count to length",()=>{
-		assert.equal(sourceArrayEnumerable.count(),source.length);
-		assert.equal(sourceEnumerable.count(),source.length);
-		assert.equal(Enumerable.from([]).count(),0);
-		assert.equal(Enumerable.empty().count(),0);
-		assert.equal(sourceArrayEnumerable.count(e=>e.a===1),3);
+	it("should match count to length", ()=>
+	{
+		assert.equal(sourceArrayEnumerable.count(), source.length);
+		assert.equal(sourceEnumerable.count(), source.length);
+		assert.equal(Enumerable.from([]).count(), 0);
+		assert.equal(Enumerable.empty().count(), 0);
+		assert.equal(sourceArrayEnumerable.count(e=>e.a===1), 3);
 	});
 });
 
-describe(".source",()=>{
-	it("should equal the original",()=>{
-		assert.equal(source,(<any>(sourceArrayEnumerable)).source);
+describe(".source", ()=>
+{
+	it("should equal the original", ()=>
+	{
+		assert.equal(source, (<any>(sourceArrayEnumerable)).source);
 	});
 });
 
@@ -330,40 +334,48 @@ describe(".orderBy(selector).thenBy(selector)", ()=>
 
 });
 
-describe(".select(b)",()=>{
+describe(".select(b)", ()=>
+{
 
 	var b = sourceArrayEnumerable.select(e=>e.b);
-	describe(".distinct()",()=>{
+	describe(".distinct()", ()=>
+	{
 		var d = b.distinct();
-		describe(".orderBy()",()=>{
-			it("should be 1,2,3",()=>{
+		describe(".orderBy()", ()=>
+		{
+			it("should be 1,2,3", ()=>
+			{
 				var s = d.orderBy();
-				assert.equal(s.count(),3);
-				assert.equal(s.sum(),6);
-				assert.equal(s.elementAt(0),1);
-				assert.equal(s.elementAt(1),2);
-				assert.equal(s.elementAt(2),3);
+				assert.equal(s.count(), 3);
+				assert.equal(s.sum(), 6);
+				assert.equal(s.elementAt(0), 1);
+				assert.equal(s.elementAt(1), 2);
+				assert.equal(s.elementAt(2), 3);
 			});
 		});
 
-		describe(".orderByDescending()",()=>{
-			it("should be 1,2,3",()=>{
+		describe(".orderByDescending()", ()=>
+		{
+			it("should be 1,2,3", ()=>
+			{
 				var s = d.orderByDescending();
-				assert.equal(s.count(),3);
-				assert.equal(s.sum(),6);
-				assert.equal(s.elementAt(0),3);
-				assert.equal(s.elementAt(1),2);
-				assert.equal(s.elementAt(2),1);
+				assert.equal(s.count(), 3);
+				assert.equal(s.sum(), 6);
+				assert.equal(s.elementAt(0), 3);
+				assert.equal(s.elementAt(1), 2);
+				assert.equal(s.elementAt(2), 1);
 			});
 		});
 	});
 
-	describe(".distinctUntilChanged()",()=>{
-		it("should be as expected",()=>{
-			assert.equal(b.distinctUntilChanged().toJoinedString(),"213213");
-			assert.equal(b.distinctUntilChanged(v=>Math.max(v,2)).toJoinedString(),"2323");
-			assert.equal(b.distinctUntilChanged(v=>Math.min(v,2)).toJoinedString(),"21313");
-			assert.equal(b.orderBy().distinctUntilChanged().toJoinedString(),"123");
+	describe(".distinctUntilChanged()", ()=>
+	{
+		it("should be as expected", ()=>
+		{
+			assert.equal(b.distinctUntilChanged().toJoinedString(), "213213");
+			assert.equal(b.distinctUntilChanged(v=>Math.max(v, 2)).toJoinedString(), "2323");
+			assert.equal(b.distinctUntilChanged(v=>Math.min(v, 2)).toJoinedString(), "21313");
+			assert.equal(b.orderBy().distinctUntilChanged().toJoinedString(), "123");
 		});
 	});
 });
@@ -385,10 +397,10 @@ describe(".groupBy(selector)", ()=>
 			.groupBy(o=>o.b);
 
 		var C = sourceArrayEnumerable
-			.groupBy(o=>o.b,null,Functions.Identity);
+			.groupBy(o=>o.b, null, Functions.Identity);
 
 		var D = sourceArrayEnumerable
-			.groupBy(o=>o.b,Functions.Identity,Functions.Identity);
+			.groupBy(o=>o.b, Functions.Identity, Functions.Identity);
 
 
 		assert.ok(B.first().sequenceEqual(C.first()));
@@ -519,7 +531,7 @@ describe(".skip(count)", ()=>
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
 
-		assert.equal(sourceArrayEnumerable.skip(0),sourceArrayEnumerable)
+		assert.equal(sourceArrayEnumerable.skip(0), sourceArrayEnumerable)
 	});
 
 });
@@ -697,7 +709,7 @@ describe(".last()", ()=>
 
 	it("should match last", ()=>
 	{
-		assert.equal(sourceArrayEnumerable.last().c,"f");
+		assert.equal(sourceArrayEnumerable.last().c, "f");
 	});
 
 	it("should throw", ()=>
@@ -712,12 +724,12 @@ describe(".lastOrDefault()", ()=>
 
 	it("should match last", ()=>
 	{
-		assert.equal(sourceArrayEnumerable.lastOrDefault().c,"f");
+		assert.equal(sourceArrayEnumerable.lastOrDefault().c, "f");
 	});
 
 	it("should be defaulted", ()=>
 	{
-		assert.equal(Enumerable.from([]).lastOrDefault("f"),"f");
+		assert.equal(Enumerable.from([]).lastOrDefault("f"), "f");
 	});
 
 });
@@ -814,12 +826,14 @@ describe(".from([1])", ()=>
 
 describe(".elementAt(x)", ()=>
 {
-	it("should return the indexed element",()=>{
-		assert.equal( sourceEnumerable.elementAt(2), source[2]);
-		assert.equal( sourceArrayEnumerable.elementAt(2), source[2]);
+	it("should return the indexed element", ()=>
+	{
+		assert.equal(sourceEnumerable.elementAt(2), source[2]);
+		assert.equal(sourceArrayEnumerable.elementAt(2), source[2]);
 	});
 
-	it("should throw",()=>{
+	it("should throw", ()=>
+	{
 		assert.throws(()=>sourceArrayEnumerable.elementAt(-1));
 	});
 
@@ -827,14 +841,16 @@ describe(".elementAt(x)", ()=>
 
 describe(".elementAtOrDefault (x)", ()=>
 {
-	it("should return the indexed element",()=>{
-		assert.equal( sourceEnumerable.elementAtOrDefault(2), source[2]);
-		assert.equal( sourceArrayEnumerable.elementAtOrDefault(2), source[2]);
+	it("should return the indexed element", ()=>
+	{
+		assert.equal(sourceEnumerable.elementAtOrDefault(2), source[2]);
+		assert.equal(sourceArrayEnumerable.elementAtOrDefault(2), source[2]);
 		var d = {};
-		assert.equal( sourceArrayEnumerable.elementAtOrDefault(10,<any>d), d);
+		assert.equal(sourceArrayEnumerable.elementAtOrDefault(10, <any>d), d);
 	});
 
-	it("should throw",()=>{
+	it("should throw", ()=>
+	{
 		assert.throws(()=>sourceArrayEnumerable.elementAtOrDefault(-1));
 	});
 
@@ -1057,9 +1073,17 @@ describe(".sum()", ()=>
 
 		assert.equal(Enumerable.empty().sum(), 0);
 		assert.equal(mathTree.select(e=>e.b).sum(), v);
-		assert.equal(mathTree.select(e=>e.b).concat([Infinity,-Infinity]).sum(), v);
-		assert.equal(mathTree.select(e=>e.b).concat([Infinity,Infinity,-Infinity]).sum(), Infinity);
-		assert.equal(mathTree.select(e=>e.b).concat([Infinity,-Infinity,-Infinity]).sum(), -Infinity);
+		assert.equal(mathTree.select(e=>e.b).concat([Infinity, -Infinity]).sum(), v);
+		assert.equal(mathTree.select(e=>e.b).concat([
+			Infinity,
+			Infinity,
+			-Infinity
+		]).sum(), Infinity);
+		assert.equal(mathTree.select(e=>e.b).concat([
+			Infinity,
+			-Infinity,
+			-Infinity
+		]).sum(), -Infinity);
 		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).sum()));
 		assert.equal(mathTree.sum(e=>e.b), v);
 
@@ -1110,6 +1134,28 @@ describe(".average()", ()=>
 		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).average()));
 		assert.equal(mathTree.average(e=>e.b), v);
 
+	});
+
+});
+
+describe(".weave(enumerables)", ()=>
+{
+
+	it("should weave in order", ()=>
+	{
+
+		assert.equal(
+			Enumerable.weave([
+				["a", "d"],
+				["b", "e", "g", "i"],
+				["c", "f", "h"]
+			]).toJoinedString(),
+			"abcdefghi");
+
+	});
+
+	it("should throw",()=>{
+		assert.throws(()=>Enumerable.weave(null));
 	});
 
 });

@@ -709,8 +709,16 @@
             assert.equal(Linq_1.default.empty().sum(), 0);
             assert.equal(mathTree.select(function (e) { return e.b; }).sum(), v);
             assert.equal(mathTree.select(function (e) { return e.b; }).concat([Infinity, -Infinity]).sum(), v);
-            assert.equal(mathTree.select(function (e) { return e.b; }).concat([Infinity, Infinity, -Infinity]).sum(), Infinity);
-            assert.equal(mathTree.select(function (e) { return e.b; }).concat([Infinity, -Infinity, -Infinity]).sum(), -Infinity);
+            assert.equal(mathTree.select(function (e) { return e.b; }).concat([
+                Infinity,
+                Infinity,
+                -Infinity
+            ]).sum(), Infinity);
+            assert.equal(mathTree.select(function (e) { return e.b; }).concat([
+                Infinity,
+                -Infinity,
+                -Infinity
+            ]).sum(), -Infinity);
             assert.ok(isNaN(mathTree.select(function (e) { return e.b; }).concat([NaN]).sum()));
             assert.equal(mathTree.sum(function (e) { return e.b; }), v);
         });
@@ -743,6 +751,17 @@
             assert.equal(mathTree.average(function (e) { return e.b; }), v);
         });
     });
+    describe(".weave(enumerables)", function () {
+        it("should weave in order", function () {
+            assert.equal(Linq_1.default.weave([
+                ["a", "d"],
+                ["b", "e", "g", "i"],
+                ["c", "f", "h"]
+            ]).toJoinedString(), "abcdefghi");
+        });
+        it("should throw", function () {
+            assert.throws(function () { return Linq_1.default.weave(null); });
+        });
+    });
 });
-
 //# sourceMappingURL=Enumerable.js.map
