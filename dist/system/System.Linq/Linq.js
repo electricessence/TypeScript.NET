@@ -251,6 +251,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     _.throwIfDisposed();
                     return dispose_1.using(this.getEnumerator(), function (e) { return e.moveNext(); });
                 };
+                InfiniteEnumerable.prototype.isEmpty = function () {
+                    return !this.any();
+                };
                 InfiniteEnumerable.prototype.traverseBreadthFirst = function (childrenSelector, resultSelector) {
                     if (resultSelector === void 0) { resultSelector = Functions.Identity; }
                     var _ = this, isEndless = _._isEndless || null;
@@ -632,6 +635,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 InfiniteEnumerable.prototype.zip = function (second, resultSelector) {
                     var _ = this;
+                    _.throwIfDisposed();
                     return new Enumerable(function () {
                         var firstEnumerator;
                         var secondEnumerator;
@@ -1234,6 +1238,49 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         .takeUntil(function (v) { return v == -Infinity; }, true)
                         .aggregate(Functions.Lesser);
                 };
+                Enumerable.weave = function (enumerables) {
+                    if (!enumerables)
+                        throw new ArgumentNullException_1.default('enumerables');
+                    return new Enumerable(function () {
+                        var queue;
+                        var mainEnumerator;
+                        var index;
+                        return new EnumeratorBase_1.default(function () {
+                            index = 0;
+                            queue = new Queue_1.default();
+                            mainEnumerator = Enumerator_1.from(enumerables);
+                        }, function (yielder) {
+                            var e;
+                            if (mainEnumerator) {
+                                while (!e && mainEnumerator.moveNext()) {
+                                    var c = mainEnumerator.current;
+                                    if (c && (e = Enumerator_1.from(c)))
+                                        queue.enqueue(e);
+                                }
+                                if (!e)
+                                    mainEnumerator = null;
+                            }
+                            while (!e && queue.count) {
+                                e = queue.dequeue();
+                                if (e.moveNext()) {
+                                    queue.enqueue(e);
+                                }
+                                else {
+                                    dispose_1.dispose(e);
+                                    e = null;
+                                }
+                            }
+                            return e
+                                ? yielder.yieldReturn(e.current)
+                                : yielder.yieldBreak();
+                        }, function () {
+                            dispose_1.dispose.these(queue.dump());
+                            dispose_1.dispose(mainEnumerator, queue);
+                            mainEnumerator = null;
+                            queue = null;
+                        });
+                    });
+                };
                 Enumerable.prototype.doAction = function (action, initializer, isEndless) {
                     if (isEndless === void 0) { isEndless = this.isEndless; }
                     return _super.prototype.doAction.call(this, action, initializer, isEndless);
@@ -1478,9 +1525,6 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 Enumerable.prototype.some = function (predicate) {
                     return this.any(predicate);
-                };
-                Enumerable.prototype.isEmpty = function () {
-                    return !this.any();
                 };
                 Enumerable.prototype.contains = function (value, compareSelector) {
                     return compareSelector

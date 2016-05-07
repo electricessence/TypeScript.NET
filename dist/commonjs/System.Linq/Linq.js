@@ -246,6 +246,11 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             });
         }
     }, {
+        key: "isEmpty",
+        value: function isEmpty() {
+            return !this.any();
+        }
+    }, {
         key: "traverseBreadthFirst",
         value: function traverseBreadthFirst(childrenSelector) {
             var resultSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
@@ -1296,11 +1301,6 @@ var Enumerable = function (_InfiniteEnumerable) {
         key: "some",
         value: function some(predicate) {
             return this.any(predicate);
-        }
-    }, {
-        key: "isEmpty",
-        value: function isEmpty() {
-            return !this.any();
         }
     }, {
         key: "contains",

@@ -367,6 +367,11 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
+	isEmpty():boolean
+	{
+		return !this.any();
+	}
+
 	// #endregion
 
 
@@ -746,6 +751,13 @@ extends DisposableBase implements IEnumerable<T>
 		);
 	}
 
+	/*
+	public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(
+		this IEnumerable<TSource> source,
+		Func<TSource, IEnumerable<TCollection>> collectionSelector,
+		Func<TSource, TCollection, TResult> resultSelector)
+	 */
+
 	protected _selectMany<TElement, TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
 		resultSelector?:(collection:T, element:TElement) => TResult):Enumerable<TResult>
@@ -831,11 +843,11 @@ extends DisposableBase implements IEnumerable<T>
 
 	selectMany<TElement, TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
-		resultSelector?:(collection:T, element:TElement) => TResult):InfiniteEnumerable<TResult>;
+		resultSelector:(collection:T, element:TElement) => TResult):InfiniteEnumerable<TResult>;
 
 	selectMany<TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<any>>,
-		resultSelector?:(collection:T, element:any)=>TResult):InfiniteEnumerable<TResult>
+		resultSelector?:(collection:T, element:any) => TResult):InfiniteEnumerable<TResult>
 	{
 		return this._selectMany(collectionSelector, resultSelector);
 	}
@@ -1825,10 +1837,7 @@ extends InfiniteEnumerable<T>
 	 *
 	 * Is not limited to TypeScript usages.
 	 */
-	static from<T>(array:IArray<T>):FiniteEnumerable<T>;
-	static from<T>(source:IEnumerable<T>):Enumerable<T>;
-	static from<T>(source:IEnumerableOrArray<T>):Enumerable<T>;
-	static from<T>(source:any):Enumerable<T>
+	static from<T>(source:IEnumerableOrArray<T>):Enumerable<T>
 	{
 		var e = Enumerable.fromAny<T>(source);
 		if(!e) throw new UnsupportedEnumerableException();
@@ -2648,9 +2657,10 @@ extends InfiniteEnumerable<T>
 	selectMany<TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):Enumerable<TResult>;
 
+
 	selectMany<TElement, TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
-		resultSelector?:(collection:T, element:TElement)=>TResult):Enumerable<TResult>;
+		resultSelector:(collection:T, element:TElement)=>TResult):Enumerable<TResult>;
 
 	selectMany<TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<any>>,
@@ -2824,10 +2834,6 @@ extends InfiniteEnumerable<T>
 		return this.any(predicate);
 	}
 
-	isEmpty():boolean
-	{
-		return !this.any();
-	}
 
 	contains<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):boolean
 	{

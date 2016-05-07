@@ -610,8 +610,11 @@
                 assert.equal(values.toJoinedString(), sourceManyFlat);
             }
             var split = function (s) { return s && s.split(","); };
-            test(sourceMany.selectMany(split));
-            test(sourceMany.selectMany(split, function (c, e) { return e; }));
+            var sm = function (c, e) { return e; };
+            var a = sourceMany.selectMany(split);
+            test(a);
+            var b = sourceMany.selectMany(split, sm);
+            test(b);
             assert.equal(Linq_1.default.from([]).selectMany(split).count(), 0);
             var iSource = Linq_1.default.toInfinity().selectMany(function (s) { return Utility_1.repeat("" + s, s); });
             assert.equal(iSource.take(10).toJoinedString(), "1223334444");

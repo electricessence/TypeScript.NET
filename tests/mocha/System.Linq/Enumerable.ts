@@ -86,7 +86,7 @@ const source:TestItem[] = Object.freeze([
 ]);
 
 
-const sourceMany = Enumerable.from(Object.freeze([
+const sourceMany:Enumerable<string> = Enumerable.from(Object.freeze([
 	"a,b,c,d,e",
 	null,
 	"f,g,h,i,j",
@@ -920,17 +920,19 @@ describe(".selectMany(...)", ()=>
 {
 	it("should select the sub values", ()=>
 	{
-
 		function test(values:Enumerable<string>)
 		{
 			assert.equal(values.count(), 25);
 			assert.equal(values.toJoinedString(), sourceManyFlat);
 		}
 
-		var split = (s:string)=>s && s.split(",");
+		var split:(s:string)=>string[] = (s)=>s && s.split(",");
+		var sm:(s:string,e:string)=>string = (c, e)=>e;
 
-		test(sourceMany.selectMany(split));
-		test(sourceMany.selectMany(split, (c, e)=>e));
+		var a = sourceMany.selectMany(split);
+		test(a);
+		var b = sourceMany.selectMany(split, sm);
+		test(b);
 
 		assert.equal(Enumerable.from(<string[]>[]).selectMany(split).count(), 0);
 

@@ -205,6 +205,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             _.throwIfDisposed();
             return dispose_1.using(this.getEnumerator(), function (e) { return e.moveNext(); });
         };
+        InfiniteEnumerable.prototype.isEmpty = function () {
+            return !this.any();
+        };
         InfiniteEnumerable.prototype.traverseBreadthFirst = function (childrenSelector, resultSelector) {
             if (resultSelector === void 0) { resultSelector = Functions.Identity; }
             var _ = this, isEndless = _._isEndless || null;
@@ -1476,9 +1479,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Enumerable.prototype.some = function (predicate) {
             return this.any(predicate);
-        };
-        Enumerable.prototype.isEmpty = function () {
-            return !this.any();
         };
         Enumerable.prototype.contains = function (value, compareSelector) {
             return compareSelector
