@@ -1133,21 +1133,13 @@ export class Enumerable extends InfiniteEnumerable {
                 if (mainEnumerator) {
                     while (!e && mainEnumerator.moveNext()) {
                         let c = mainEnumerator.current;
-                        if (c && (e = enumeratorFrom(c)))
-                            queue.enqueue(e);
+                        e = nextEnumerator(queue, c && enumeratorFrom(c));
                     }
                     if (!e)
                         mainEnumerator = null;
                 }
                 while (!e && queue.count) {
-                    e = queue.dequeue();
-                    if (e.moveNext()) {
-                        queue.enqueue(e);
-                    }
-                    else {
-                        dispose(e);
-                        e = null;
-                    }
+                    e = nextEnumerator(queue, queue.dequeue());
                 }
                 return e
                     ? yielder.yieldReturn(e.current)
@@ -1913,6 +1905,18 @@ class OrderedEnumerable extends FiniteEnumerable {
         this.order = null;
         this.parent = null;
     }
+}
+function nextEnumerator(queue, e) {
+    if (e) {
+        if (e.moveNext()) {
+            queue.enqueue(e);
+        }
+        else {
+            dispose(e);
+            e = null;
+        }
+    }
+    return e;
 }
 function createSortContext(orderedEnumerable, currentContext = null) {
     var context = new KeySortedContext(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);

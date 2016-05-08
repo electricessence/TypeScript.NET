@@ -1208,21 +1208,13 @@ var __extends = (this && this.__extends) || function (d, b) {
                     if (mainEnumerator) {
                         while (!e && mainEnumerator.moveNext()) {
                             var c = mainEnumerator.current;
-                            if (c && (e = Enumerator_1.from(c)))
-                                queue.enqueue(e);
+                            e = nextEnumerator(queue, c && Enumerator_1.from(c));
                         }
                         if (!e)
                             mainEnumerator = null;
                     }
                     while (!e && queue.count) {
-                        e = queue.dequeue();
-                        if (e.moveNext()) {
-                            queue.enqueue(e);
-                        }
-                        else {
-                            dispose_1.dispose(e);
-                            e = null;
-                        }
+                        e = nextEnumerator(queue, queue.dequeue());
                     }
                     return e
                         ? yielder.yieldReturn(e.current)
@@ -2053,6 +2045,18 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return OrderedEnumerable;
     }(FiniteEnumerable));
+    function nextEnumerator(queue, e) {
+        if (e) {
+            if (e.moveNext()) {
+                queue.enqueue(e);
+            }
+            else {
+                dispose_1.dispose(e);
+                e = null;
+            }
+        }
+        return e;
+    }
     function createSortContext(orderedEnumerable, currentContext) {
         if (currentContext === void 0) { currentContext = null; }
         var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);

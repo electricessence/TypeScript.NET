@@ -1145,14 +1145,19 @@ describe(".weave(enumerables)", ()=>
 
 	it("should weave in order", ()=>
 	{
+		let w = Enumerable.weave([
+			["a", "d"],
+			["b", "e", "g", "i"],
+			["c", "f", "h"]
+		]);
+
+		assert.equal(w.count(),9);
+		assert.equal(w.toJoinedString(),"abcdefghi");
 
 		assert.equal(
 			Enumerable.weave([
-				["a", "d"],
-				["b", "e", "g", "i"],
-				["c", "f", "h"]
-			]).toJoinedString(),
-			"abcdefghi");
+				[1, 2, 3, 4, 5, 6, 7]
+			]).count(), 7);
 
 	});
 

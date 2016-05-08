@@ -756,16 +756,20 @@
     });
     describe(".weave(enumerables)", function () {
         it("should weave in order", function () {
-            assert.equal(Linq_1.default.weave([
+            var w = Linq_1.default.weave([
                 ["a", "d"],
                 ["b", "e", "g", "i"],
                 ["c", "f", "h"]
-            ]).toJoinedString(), "abcdefghi");
+            ]);
+            assert.equal(w.count(), 9);
+            assert.equal(w.toJoinedString(), "abcdefghi");
+            assert.equal(Linq_1.default.weave([
+                [1, 2, 3, 4, 5, 6, 7]
+            ]).count(), 7);
         });
         it("should throw", function () {
             assert.throws(function () { return Linq_1.default.weave(null); });
         });
     });
 });
-
 //# sourceMappingURL=Enumerable.js.map

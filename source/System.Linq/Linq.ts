@@ -2359,8 +2359,7 @@ extends InfiniteEnumerable<T>
 							while(!e && mainEnumerator.moveNext())
 							{
 								let c = mainEnumerator.current;
-								if(c && (e = enumeratorFrom(c)))
-									queue.enqueue(e);
+								e = nextEnumerator(queue, c && enumeratorFrom(c));
 							}
 
 							if(!e)
@@ -2368,13 +2367,7 @@ extends InfiniteEnumerable<T>
 						}
 
 						while(!e && queue.count) {
-							e = queue.dequeue();
-							if(e.moveNext()) {
-								queue.enqueue(e);
-							} else {
-								dispose(e);
-								e = null;
-							}
+							e = nextEnumerator(queue, queue.dequeue());
 						}
 
 						return e
@@ -3848,6 +3841,19 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 		this.parent = null;
 	}
 
+}
+
+// A private static helper for the weave function.
+function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnumerator<T> {
+	if(e) {
+		if(e.moveNext()) {
+			queue.enqueue(e);
+		} else {
+			dispose(e);
+			e = null;
+		}
+	}
+	return e;
 }
 
 /**

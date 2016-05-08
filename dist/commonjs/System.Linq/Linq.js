@@ -1993,18 +1993,12 @@ var Enumerable = function (_InfiniteEnumerable) {
                     if (mainEnumerator) {
                         while (!e && mainEnumerator.moveNext()) {
                             var c = mainEnumerator.current;
-                            if (c && (e = Enumerator_1.from(c))) queue.enqueue(e);
+                            e = nextEnumerator(queue, c && Enumerator_1.from(c));
                         }
                         if (!e) mainEnumerator = null;
                     }
                     while (!e && queue.count) {
-                        e = queue.dequeue();
-                        if (e.moveNext()) {
-                            queue.enqueue(e);
-                        } else {
-                            dispose_1.dispose(e);
-                            e = null;
-                        }
+                        e = nextEnumerator(queue, queue.dequeue());
                     }
                     return e ? yielder.yieldReturn(e.current) : yielder.yieldBreak();
                 }, function () {
@@ -2343,6 +2337,17 @@ var OrderedEnumerable = function (_FiniteEnumerable2) {
     return OrderedEnumerable;
 }(FiniteEnumerable);
 
+function nextEnumerator(queue, e) {
+    if (e) {
+        if (e.moveNext()) {
+            queue.enqueue(e);
+        } else {
+            dispose_1.dispose(e);
+            e = null;
+        }
+    }
+    return e;
+}
 function createSortContext(orderedEnumerable) {
     var currentContext = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 

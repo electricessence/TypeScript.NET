@@ -13,8 +13,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var SystemException_1 = require('./SystemException');
-var Utility_1 = require('../Text/Utility');
+var SystemException_1 = require("./SystemException");
+var Utility_1 = require("../Text/Utility");
 var NAME = 'ArgumentException';
 
 var ArgumentException = function (_SystemException_1$de) {
@@ -35,7 +35,7 @@ var ArgumentException = function (_SystemException_1$de) {
     }
 
     _createClass(ArgumentException, [{
-        key: 'getName',
+        key: "getName",
         value: function getName() {
             return NAME;
         }
