@@ -26,7 +26,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (message === void 0) { message = null; }
             if (innerException === void 0) { innerException = null; }
             var pn = paramName ? ('{' + paramName + '} ') : '';
-            _super.call(this, Utility_1.trim(pn + message), innerException, function (_) {
+            _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
                 _.paramName = paramName;
                 if (beforeSealing)
                     beforeSealing(_);
@@ -34,10 +34,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         }
         ArgumentException.prototype.getName = function () {
             return NAME;
-        };
-        ArgumentException.prototype.toString = function () {
-            var _ = this;
-            return '[' + _.name + ': ' + _.message + ']';
         };
         return ArgumentException;
     }(SystemException_1.default));

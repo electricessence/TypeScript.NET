@@ -29,7 +29,7 @@ System.register(['./SystemException', '../Text/Utility'], function(exports_1, co
                     if (message === void 0) { message = null; }
                     if (innerException === void 0) { innerException = null; }
                     var pn = paramName ? ('{' + paramName + '} ') : '';
-                    _super.call(this, Utility_1.trim(pn + message), innerException, function (_) {
+                    _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
                         _.paramName = paramName;
                         if (beforeSealing)
                             beforeSealing(_);
@@ -37,10 +37,6 @@ System.register(['./SystemException', '../Text/Utility'], function(exports_1, co
                 }
                 ArgumentException.prototype.getName = function () {
                     return NAME;
-                };
-                ArgumentException.prototype.toString = function () {
-                    var _ = this;
-                    return '[' + _.name + ': ' + _.message + ']';
                 };
                 return ArgumentException;
             }(SystemException_1.default));

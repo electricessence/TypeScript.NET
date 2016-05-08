@@ -34,6 +34,7 @@ class Exception implements Error, IDisposable
 		beforeSealing?:(ex:any)=>void)
 	{
 		var _ = this;
+
 		_.name = _.getName();
 		_.data = {};
 		if(innerException)
@@ -45,9 +46,18 @@ class Exception implements Error, IDisposable
 		 */
 
 		if(beforeSealing) beforeSealing(_);
+
+		// Node has a .stack, let's use it...
+		try {
+			var stack:string = (<any>new Error()).stack;
+			stack = stack && stack.replace(/^Error\n/,'').replace(/(.|\n)+\s+at new.+/,'') || '';
+			this.stack = _.toStringWithoutBrackets() + stack;
+		} catch(ex) {}
+
 		Object.freeze(_);
 	}
 
+	stack:string;
 
 	data:IMap<any>;
 
@@ -63,10 +73,12 @@ class Exception implements Error, IDisposable
 	 */
 	toString():string
 	{
-		var _ = this, m = _.message;
-		m = m ? (': ' + m) : '';
+		return `[${this.toStringWithoutBrackets()}]`;
+	}
 
-		return '[' + _.name + m + ']';
+	protected toStringWithoutBrackets():string {
+		var _ = this, m = _.message;
+		return _.name + (m ? (': ' + m) : '');
 	}
 
 	/**

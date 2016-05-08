@@ -25,6 +25,11 @@ var Exception = function () {
         _.data = {};
         if (innerException) _.data['innerException'] = innerException;
         if (beforeSealing) beforeSealing(_);
+        try {
+            var stack = new Error().stack;
+            stack = stack && stack.replace(/^Error\n/, '').replace(/(.|\n)+\s+at new.+/, '') || '';
+            this.stack = _.toStringWithoutBrackets() + stack;
+        } catch (ex) {}
         Object.freeze(_);
     }
 
@@ -36,10 +41,14 @@ var Exception = function () {
     }, {
         key: 'toString',
         value: function toString() {
+            return '[' + this.toStringWithoutBrackets() + ']';
+        }
+    }, {
+        key: 'toStringWithoutBrackets',
+        value: function toStringWithoutBrackets() {
             var _ = this,
                 m = _.message;
-            m = m ? ': ' + m : '';
-            return '[' + _.name + m + ']';
+            return _.name + (m ? ': ' + m : '');
         }
     }, {
         key: 'dispose',

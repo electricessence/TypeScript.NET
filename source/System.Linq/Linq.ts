@@ -1297,7 +1297,7 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						outerEnumerator = _.getEnumerator();
-						lookup = Enumerable.from<TInner>(inner)
+						lookup = Enumerable.from(inner)
 							.toLookup(innerKeySelector, Functions.Identity, compareSelector);
 					},
 
@@ -1355,7 +1355,7 @@ extends DisposableBase implements IEnumerable<T>
 					() =>
 					{
 						enumerator = _.getEnumerator();
-						lookup = Enumerable.from<TInner>(inner)
+						lookup = Enumerable.from(inner)
 							.toLookup(innerKeySelector, Functions.Identity, compareSelector);
 					},
 

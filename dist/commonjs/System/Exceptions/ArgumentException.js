@@ -28,7 +28,7 @@ var ArgumentException = function (_SystemException_1$de) {
         _classCallCheck(this, ArgumentException);
 
         var pn = paramName ? '{' + paramName + '} ' : '';
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArgumentException).call(this, Utility_1.trim(pn + message), innerException, function (_) {
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArgumentException).call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
             _.paramName = paramName;
             if (beforeSealing) beforeSealing(_);
         }));
@@ -38,12 +38,6 @@ var ArgumentException = function (_SystemException_1$de) {
         key: 'getName',
         value: function getName() {
             return NAME;
-        }
-    }, {
-        key: 'toString',
-        value: function toString() {
-            var _ = this;
-            return '[' + _.name + ': ' + _.message + ']';
         }
     }]);
 

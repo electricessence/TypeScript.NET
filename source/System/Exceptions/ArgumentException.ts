@@ -6,10 +6,8 @@
 
 'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from '../Types';
-import Exception from '../Exception';
-import SystemException from './SystemException';
-import {trim} from '../Text/Utility';
+import SystemException from "./SystemException";
+import {trim} from "../Text/Utility";
 
 
 const NAME:string = 'ArgumentException';
@@ -28,8 +26,7 @@ class ArgumentException extends SystemException
 		beforeSealing?:(ex:any)=>void)
 	{
 		var pn = paramName ? ('{' + paramName + '} ') : '';
-
-		super(trim(pn + message), innerException, (_)=>{
+		super(trim(pn + (message||'')), innerException, (_)=>{
 			_.paramName = paramName;
 			if(beforeSealing) beforeSealing(_);
 		});
@@ -39,12 +36,6 @@ class ArgumentException extends SystemException
 	protected getName():string
 	{
 		return NAME;
-	}
-
-	toString():string
-	{
-		var _ = this;
-		return '[' + _.name + ': ' + _.message + ']';
 	}
 
 }

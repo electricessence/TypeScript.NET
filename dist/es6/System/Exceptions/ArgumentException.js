@@ -10,7 +10,7 @@ const NAME = 'ArgumentException';
 export default class ArgumentException extends SystemException {
     constructor(paramName, message = null, innerException = null, beforeSealing) {
         var pn = paramName ? ('{' + paramName + '} ') : '';
-        super(trim(pn + message), innerException, (_) => {
+        super(trim(pn + (message || '')), innerException, (_) => {
             _.paramName = paramName;
             if (beforeSealing)
                 beforeSealing(_);
@@ -18,10 +18,6 @@ export default class ArgumentException extends SystemException {
     }
     getName() {
         return NAME;
-    }
-    toString() {
-        var _ = this;
-        return '[' + _.name + ': ' + _.message + ']';
     }
 }
 //# sourceMappingURL=ArgumentException.js.map

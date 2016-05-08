@@ -15,13 +15,21 @@ export default class Exception {
             _.data['innerException'] = innerException;
         if (beforeSealing)
             beforeSealing(_);
+        try {
+            var stack = (new Error()).stack;
+            stack = stack && stack.replace(/^Error\n/, '').replace(/(.|\n)+\s+at new.+/, '') || '';
+            this.stack = _.toStringWithoutBrackets() + stack;
+        }
+        catch (ex) { }
         Object.freeze(_);
     }
     getName() { return NAME; }
     toString() {
+        return `[${this.toStringWithoutBrackets()}]`;
+    }
+    toStringWithoutBrackets() {
         var _ = this, m = _.message;
-        m = m ? (': ' + m) : '';
-        return '[' + _.name + m + ']';
+        return _.name + (m ? (': ' + m) : '');
     }
     dispose() {
         var data = this.data;

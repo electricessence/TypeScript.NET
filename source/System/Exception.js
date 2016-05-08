@@ -25,13 +25,21 @@
                 _.data['innerException'] = innerException;
             if (beforeSealing)
                 beforeSealing(_);
+            try {
+                var stack = (new Error()).stack;
+                stack = stack && stack.replace(/^Error\n/, '').replace(/(.|\n)+\s+at new.+/, '') || '';
+                this.stack = _.toStringWithoutBrackets() + stack;
+            }
+            catch (ex) { }
             Object.freeze(_);
         }
         Exception.prototype.getName = function () { return NAME; };
         Exception.prototype.toString = function () {
+            return "[" + this.toStringWithoutBrackets() + "]";
+        };
+        Exception.prototype.toStringWithoutBrackets = function () {
             var _ = this, m = _.message;
-            m = m ? (': ' + m) : '';
-            return '[' + _.name + m + ']';
+            return _.name + (m ? (': ' + m) : '');
         };
         Exception.prototype.dispose = function () {
             var data = this.data;
