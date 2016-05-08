@@ -26,7 +26,7 @@ var ArgumentOutOfRangeException = function (_ArgumentException_1$) {
 
         _classCallCheck(this, ArgumentOutOfRangeException);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArgumentOutOfRangeException).call(this, paramName, message, innerException, function (_) {
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArgumentOutOfRangeException).call(this, paramName, message + (' (' + actualValue + ')'), innerException, function (_) {
             _.actualValue = actualValue;
         }));
     }

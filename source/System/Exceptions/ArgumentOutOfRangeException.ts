@@ -4,9 +4,8 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import Type from '../Types';
-import Exception from '../Exception';
-import ArgumentException from './ArgumentException';
+import Exception from "../Exception";
+import ArgumentException from "./ArgumentException";
 'use strict'; // For compatibility with (let, const, function, class);
 
 
@@ -23,7 +22,7 @@ class ArgumentOutOfRangeException extends ArgumentException
 		message:string = ' ',
 		innerException:Exception = null)
 	{
-		super(paramName, message, innerException, (_)=>{
+		super(paramName, message + ` (${actualValue})`, innerException, (_)=>{
 			_.actualValue = actualValue;
 		});
 	}

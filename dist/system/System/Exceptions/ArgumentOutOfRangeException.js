@@ -26,7 +26,7 @@ System.register(['./ArgumentException'], function(exports_1, context_1) {
                 function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
                     if (message === void 0) { message = ' '; }
                     if (innerException === void 0) { innerException = null; }
-                    _super.call(this, paramName, message, innerException, function (_) {
+                    _super.call(this, paramName, message + (" (" + actualValue + ")"), innerException, function (_) {
                         _.actualValue = actualValue;
                     });
                 }
