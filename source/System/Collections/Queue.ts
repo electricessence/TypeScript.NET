@@ -116,7 +116,7 @@ extends CollectionBase<T>
 	{
 		var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
 		if(head<tail)
-			AU.clear(array, head, size);
+			AU.clear(array, head, tail);
 		else
 		{
 			AU.clear(array, head, array.length - head);

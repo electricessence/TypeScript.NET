@@ -13,11 +13,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ArgumentException'], factory);
+        define(["require", "exports", "./ArgumentException"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ArgumentException_1 = require('./ArgumentException');
+    var ArgumentException_1 = require("./ArgumentException");
     'use strict';
     var NAME = 'ArgumentOutOfRangeException';
     var ArgumentOutOfRangeException = (function (_super) {
@@ -25,7 +25,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
             if (message === void 0) { message = ' '; }
             if (innerException === void 0) { innerException = null; }
-            _super.call(this, paramName, message + (" (" + actualValue + ")"), innerException, function (_) {
+            _super.call(this, paramName, +("(" + actualValue + ") ") + message, innerException, function (_) {
                 _.actualValue = actualValue;
             });
         }

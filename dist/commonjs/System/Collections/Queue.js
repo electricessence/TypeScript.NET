@@ -97,7 +97,7 @@ var Queue = function (_CollectionBase_1$def) {
                 head = _._head,
                 tail = _._tail,
                 size = _._size;
-            if (head < tail) AU.clear(array, head, size);else {
+            if (head < tail) AU.clear(array, head, tail);else {
                 AU.clear(array, head, array.length - head);
                 AU.clear(array, 0, tail);
             }

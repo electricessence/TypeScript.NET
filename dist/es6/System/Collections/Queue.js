@@ -71,7 +71,7 @@ export default class Queue extends CollectionBase {
     _clearInternal() {
         var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
         if (head < tail)
-            AU.clear(array, head, size);
+            AU.clear(array, head, tail);
         else {
             AU.clear(array, head, array.length - head);
             AU.clear(array, 0, tail);

@@ -22,7 +22,7 @@ class ArgumentOutOfRangeException extends ArgumentException
 		message:string = ' ',
 		innerException:Exception = null)
 	{
-		super(paramName, message + ` (${actualValue})`, innerException, (_)=>{
+		super(paramName, + `(${actualValue}) ` + message , innerException, (_)=>{
 			_.actualValue = actualValue;
 		});
 	}

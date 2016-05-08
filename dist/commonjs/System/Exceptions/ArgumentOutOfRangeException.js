@@ -13,7 +13,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ArgumentException_1 = require('./ArgumentException');
+var ArgumentException_1 = require("./ArgumentException");
 'use strict';
 var NAME = 'ArgumentOutOfRangeException';
 
@@ -26,13 +26,13 @@ var ArgumentOutOfRangeException = function (_ArgumentException_1$) {
 
         _classCallCheck(this, ArgumentOutOfRangeException);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArgumentOutOfRangeException).call(this, paramName, message + (' (' + actualValue + ')'), innerException, function (_) {
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(ArgumentOutOfRangeException).call(this, paramName, +("(" + actualValue + ") ") + message, innerException, function (_) {
             _.actualValue = actualValue;
         }));
     }
 
     _createClass(ArgumentOutOfRangeException, [{
-        key: 'getName',
+        key: "getName",
         value: function getName() {
             return NAME;
         }
