@@ -132,4 +132,5 @@
     }
     exports.InstanceCollection = InstanceCollection;
 });
+
 //# sourceMappingURL=ICollection.js.map
