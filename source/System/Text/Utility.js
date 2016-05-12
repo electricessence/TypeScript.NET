@@ -13,6 +13,43 @@
     "use strict";
     var Types_1 = require("../Types");
     exports.EMPTY = '';
+    function getHashCode(source) {
+        var hash = 0 | 0;
+        if (source.length == 0)
+            return hash;
+        for (var i = 0, l = source.length; i < l; i++) {
+            var ch = source.charCodeAt(i);
+            hash = ((hash << 5) - hash) + ch;
+            hash |= 0;
+        }
+        return hash;
+    }
+    exports.getHashCode = getHashCode;
+    function repeat(source, count) {
+        var result = exports.EMPTY;
+        if (!isNaN(count)) {
+            for (var i = 0; i < count; i++) {
+                result += source;
+            }
+        }
+        return result;
+    }
+    exports.repeat = repeat;
+    function fromChars(chOrChars, count) {
+        if (count === void 0) { count = 1; }
+        if (Array.isArray(chOrChars)) {
+            var result = exports.EMPTY;
+            for (var _i = 0, chOrChars_1 = chOrChars; _i < chOrChars_1.length; _i++) {
+                var char = chOrChars_1[_i];
+                result += String.fromCharCode(char);
+            }
+            return result;
+        }
+        else {
+            return repeat(String.fromCharCode(chOrChars), count);
+        }
+    }
+    exports.fromChars = fromChars;
     function escapeRegExp(source) {
         return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     }
@@ -22,7 +59,9 @@
             return source;
         if (chars) {
             var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
-            return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase ? 'i' : '')), exports.EMPTY);
+            return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase
+                ? 'i'
+                : '')), exports.EMPTY);
         }
         return source.replace(/^\s+|\s+$/g, exports.EMPTY);
     }

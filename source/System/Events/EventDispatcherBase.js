@@ -67,10 +67,11 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return false;
             var event;
             if (typeof e == "string") {
-                event = Object.create(Event);
+                event = Event && Object.create(Event) || {};
                 if (!params)
                     params = {};
-                event.cancelable = !!params.cancelable;
+                if (params['cancellable'])
+                    event.cancellable = true;
                 event.target = _;
                 event.type = e;
             }

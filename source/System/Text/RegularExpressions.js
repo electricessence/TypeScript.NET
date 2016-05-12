@@ -13,14 +13,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var EMPTY = "";
     var UNDEFINED = "undefined";
-    var PATTERN = "pattern";
     var RegexOptions;
     (function (RegexOptions) {
         RegexOptions.IGNORE_CASE = 'i';
@@ -32,7 +30,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Regex = (function () {
         function Regex(pattern, options) {
             if (!pattern)
-                throw new ArgumentNullException_1.default(PATTERN);
+                throw new Error("'pattern' cannot be null or empty.");
             var patternString, flags = options && options.join(EMPTY) || EMPTY;
             if (pattern instanceof RegExp) {
                 var p = pattern;
@@ -169,9 +167,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         }
         Match.prototype.freeze = function () {
             if (!this.groups)
-                throw new ArgumentNullException_1.default('groups');
+                throw new Error("'groups' cannot be null.");
             if (!this.namedGroups)
-                throw new ArgumentNullException_1.default('groupMap');
+                throw new Error("'groupMap' cannot be null.");
             Object.freeze(this.groups.slice());
             Object.freeze(this.namedGroups);
             _super.prototype.freeze.call(this);

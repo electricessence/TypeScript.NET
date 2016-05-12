@@ -13,7 +13,8 @@ import ArgumentException from "../Exceptions/ArgumentException";
 import {areEquivalent} from "../Compare";
 
 export default
-class EventDispatcherEntry<TParams> extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
+class EventDispatcherEntry<TParams>
+extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 {
 
 	constructor(

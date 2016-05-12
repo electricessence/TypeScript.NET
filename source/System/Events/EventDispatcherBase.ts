@@ -19,6 +19,15 @@ import dispose from "../Disposable/dispose";
 const DISPOSING:string = 'disposing',
       DISPOSED:string  = 'disposed';
 
+interface IEventBase<TTarget> {
+	type: string;
+	target: TTarget;
+}
+
+interface IEvent extends IEventBase<any> {
+
+}
+
 interface IEntryParams
 {
 	priority:number;
@@ -88,7 +97,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 	}
 
 	dispatchEvent(type:string, params?:any):boolean;
-	dispatchEvent(event:Event):boolean;
+	dispatchEvent(event:IEvent):boolean;
 	dispatchEvent(e:any, params?:any):boolean
 	{
 
@@ -96,19 +105,20 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		if(!l || !l.length)
 			return false;
 
-		var event:any;
+		var event:IEventBase<any>;
 
 		if(typeof e=="string")
 		{
-			event = Object.create(Event);
+			event = Event && Object.create(Event) || {};
 			if(!params)
 				params = {};
-			event.cancelable = !!params.cancelable;
+			if(params['cancellable'])
+				(<any>event).cancellable = true;
 			event.target = _;
 			event.type = e;
 		}
 		else
-			event = <Event>e;
+			event = e;
 
 		var type = event.type;
 

@@ -5,11 +5,11 @@
  */
 
 ///<reference path="../Collections/Dictionaries/IDictionary"/>
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
+
+// NOTE: Avoid dependencies so this class can be used cleanly.
 
 const EMPTY:string = "";
 const UNDEFINED:string = "undefined";
-const PATTERN:string = "pattern";
 
 
 /**
@@ -66,7 +66,7 @@ export class Regex
 		pattern:string|RegExp,
 		options?:RegexOptions.Literal[])
 	{
-		if(!pattern) throw new ArgumentNullException(PATTERN);
+		if(!pattern) throw new Error("'pattern' cannot be null or empty.");
 		var patternString:string, flags:string = options && options.join(EMPTY) || EMPTY;
 
 		if(pattern instanceof RegExp)
@@ -255,8 +255,8 @@ export class Match extends Group
 
 	freeze():void
 	{
-		if(!this.groups) throw new ArgumentNullException('groups');
-		if(!this.namedGroups) throw new ArgumentNullException('groupMap');
+		if(!this.groups) throw new Error("'groups' cannot be null.");
+		if(!this.namedGroups) throw new Error("'groupMap' cannot be null.");
 		Object.freeze(this.groups.slice());
 		Object.freeze(this.namedGroups);
 		super.freeze();

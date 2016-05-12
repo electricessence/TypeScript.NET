@@ -7,7 +7,63 @@ import Type from "../Types";
 
 export const EMPTY:string = '';
 
-export function escapeRegExp(source:string):string {
+/**
+ * Returns a numerical (integer) hash code of the string.  Can be used for identifying inequality of contents, but two different strings in rare cases will have the same hash code.
+ * @param source
+ * @returns {number}
+ */
+export function getHashCode(source:string):number
+{
+	var hash = 0 | 0;
+	if(source.length==0) return hash;
+	for(let i = 0, l = source.length; i<l; i++)
+	{
+		let ch = source.charCodeAt(i);
+		hash = ((hash<<5) - hash) + ch;
+		hash |= 0; // Convert to 32bit integer
+	}
+	return hash;
+}
+
+export function repeat(source:string, count:number):string
+{
+	var result = EMPTY;
+	if(!isNaN(count))
+	{
+		for(let i = 0; i<count; i++)
+		{
+			result += source;
+		}
+	}
+	return result;
+}
+
+export function fromChars(ch:number, count:number):string
+export function fromChars(chars:number[]):string
+export function fromChars(chOrChars:any, count:number = 1):string
+{
+	if(Array.isArray(chOrChars))
+	{
+		let result = EMPTY;
+		for(let char of chOrChars)
+		{
+			result += String.fromCharCode(char);
+		}
+		return result;
+	}
+	else
+	{
+		return repeat(String.fromCharCode(chOrChars), count);
+	}
+}
+
+/**
+ * Escapes a RegExp sequence.
+ * @param source
+ * @returns {string}
+ */
+export function escapeRegExp(source:string):string
+{
 	return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 
@@ -19,12 +75,15 @@ export function escapeRegExp(source:string):string {
  * @param ignoreCase
  * @returns {string}
  */
-export function trim(source:string, chars?:string|string[],ignoreCase?:boolean):string
+export function trim(source:string, chars?:string|string[], ignoreCase?:boolean):string
 {
 	if(chars===EMPTY) return source;
-	if(chars) {
+	if(chars)
+	{
 		var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : <string>chars);
-		return source.replace(new RegExp('^['+escaped+']+|['+escaped+']+$','g'+(ignoreCase?'i':'')),EMPTY);
+		return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase
+				? 'i'
+				: '')), EMPTY);
 	}
 
 	return source.replace(/^\s+|\s+$/g, EMPTY);
@@ -73,7 +132,7 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 				case Type.BOOLEAN:
 					return r;
 				default:
-					return (r && Type.hasMemberOfType(r,"toString",Type.FUNCTION))
+					return (r && Type.hasMemberOfType(r, "toString", Type.FUNCTION))
 						? r.toString()
 						: a;
 			}
