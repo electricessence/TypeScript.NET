@@ -3,7 +3,7 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Exceptions/ArgumentNullException"], function(exports_1, context_1) {
+System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,17 +11,12 @@ System.register(["../Exceptions/ArgumentNullException"], function(exports_1, con
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ArgumentNullException_1;
-    var EMPTY, UNDEFINED, PATTERN, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
+    var EMPTY, UNDEFINED, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
     return {
-        setters:[
-            function (ArgumentNullException_1_1) {
-                ArgumentNullException_1 = ArgumentNullException_1_1;
-            }],
+        setters:[],
         execute: function() {
             EMPTY = "";
             UNDEFINED = "undefined";
-            PATTERN = "pattern";
             (function (RegexOptions) {
                 RegexOptions.IGNORE_CASE = 'i';
                 RegexOptions.GLOBAL = 'g';
@@ -33,7 +28,7 @@ System.register(["../Exceptions/ArgumentNullException"], function(exports_1, con
             Regex = (function () {
                 function Regex(pattern, options) {
                     if (!pattern)
-                        throw new ArgumentNullException_1.default(PATTERN);
+                        throw new Error("'pattern' cannot be null or empty.");
                     var patternString, flags = options && options.join(EMPTY) || EMPTY;
                     if (pattern instanceof RegExp) {
                         var p = pattern;
@@ -170,9 +165,9 @@ System.register(["../Exceptions/ArgumentNullException"], function(exports_1, con
                 }
                 Match.prototype.freeze = function () {
                     if (!this.groups)
-                        throw new ArgumentNullException_1.default('groups');
+                        throw new Error("'groups' cannot be null.");
                     if (!this.namedGroups)
-                        throw new ArgumentNullException_1.default('groupMap');
+                        throw new Error("'groupMap' cannot be null.");
                     Object.freeze(this.groups.slice());
                     Object.freeze(this.namedGroups);
                     _super.prototype.freeze.call(this);

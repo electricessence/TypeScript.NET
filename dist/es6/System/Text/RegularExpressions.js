@@ -3,10 +3,8 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
 const EMPTY = "";
 const UNDEFINED = "undefined";
-const PATTERN = "pattern";
 export var RegexOptions;
 (function (RegexOptions) {
     RegexOptions.IGNORE_CASE = 'i';
@@ -18,7 +16,7 @@ export var RegexOptions;
 export class Regex {
     constructor(pattern, options) {
         if (!pattern)
-            throw new ArgumentNullException(PATTERN);
+            throw new Error("'pattern' cannot be null or empty.");
         var patternString, flags = options && options.join(EMPTY) || EMPTY;
         if (pattern instanceof RegExp) {
             let p = pattern;
@@ -127,9 +125,9 @@ export class Match extends Group {
     }
     freeze() {
         if (!this.groups)
-            throw new ArgumentNullException('groups');
+            throw new Error("'groups' cannot be null.");
         if (!this.namedGroups)
-            throw new ArgumentNullException('groupMap');
+            throw new Error("'groupMap' cannot be null.");
         Object.freeze(this.groups.slice());
         Object.freeze(this.namedGroups);
         super.freeze();

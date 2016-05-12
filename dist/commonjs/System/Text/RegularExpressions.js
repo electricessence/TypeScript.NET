@@ -17,10 +17,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var EMPTY = "";
 var UNDEFINED = "undefined";
-var PATTERN = "pattern";
 var RegexOptions;
 (function (RegexOptions) {
     RegexOptions.IGNORE_CASE = 'i';
@@ -34,7 +32,7 @@ var Regex = function () {
     function Regex(pattern, options) {
         _classCallCheck(this, Regex);
 
-        if (!pattern) throw new ArgumentNullException_1.default(PATTERN);
+        if (!pattern) throw new Error("'pattern' cannot be null or empty.");
         var patternString,
             flags = options && options.join(EMPTY) || EMPTY;
         if (pattern instanceof RegExp) {
@@ -204,8 +202,8 @@ var Match = function (_Group) {
     _createClass(Match, [{
         key: "freeze",
         value: function freeze() {
-            if (!this.groups) throw new ArgumentNullException_1.default('groups');
-            if (!this.namedGroups) throw new ArgumentNullException_1.default('groupMap');
+            if (!this.groups) throw new Error("'groups' cannot be null.");
+            if (!this.namedGroups) throw new Error("'groupMap' cannot be null.");
             Object.freeze(this.groups.slice());
             Object.freeze(this.namedGroups);
             _get(Object.getPrototypeOf(Match.prototype), "freeze", this).call(this);

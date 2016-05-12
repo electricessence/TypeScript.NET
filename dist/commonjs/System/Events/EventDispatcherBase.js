@@ -94,9 +94,9 @@ var EventDispatcherBase = function (_DisposableBase_1$def) {
             if (!l || !l.length) return false;
             var event;
             if (typeof e == "string") {
-                event = Object.create(Event);
+                event = Event && Object.create(Event) || {};
                 if (!params) params = {};
-                event.cancelable = !!params.cancelable;
+                if (params['cancellable']) event.cancellable = true;
                 event.target = _;
                 event.type = e;
             } else event = e;

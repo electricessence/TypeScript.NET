@@ -8,6 +8,63 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var Types_1 = require("../Types");
 exports.EMPTY = '';
+function getHashCode(source) {
+    var hash = 0 | 0;
+    if (source.length == 0) return hash;
+    for (var i = 0, l = source.length; i < l; i++) {
+        var ch = source.charCodeAt(i);
+        hash = (hash << 5) - hash + ch;
+        hash |= 0;
+    }
+    return hash;
+}
+exports.getHashCode = getHashCode;
+function repeat(source, count) {
+    var result = exports.EMPTY;
+    if (!isNaN(count)) {
+        for (var i = 0; i < count; i++) {
+            result += source;
+        }
+    }
+    return result;
+}
+exports.repeat = repeat;
+function fromChars(chOrChars) {
+    var count = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+
+    if (Array.isArray(chOrChars)) {
+        var result = exports.EMPTY;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = chOrChars[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var char = _step.value;
+
+                result += String.fromCharCode(char);
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        return result;
+    } else {
+        return repeat(String.fromCharCode(chOrChars), count);
+    }
+}
+exports.fromChars = fromChars;
 function escapeRegExp(source) {
     return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
