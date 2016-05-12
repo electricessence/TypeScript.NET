@@ -1170,6 +1170,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 Enumerable.matches = function (input, pattern, flags) {
                     if (flags === void 0) { flags = ""; }
+                    if (input === null || input === VOID0)
+                        throw new ArgumentNullException_1.default("input");
                     var type = typeof input;
                     if (type != Types_1.default.STRING)
                         throw new Error("Cannot exec RegExp matches of type '" + type + "'.");

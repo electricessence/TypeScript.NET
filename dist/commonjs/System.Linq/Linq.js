@@ -1890,6 +1890,7 @@ var Enumerable = function (_InfiniteEnumerable) {
         value: function matches(input, pattern) {
             var flags = arguments.length <= 2 || arguments[2] === undefined ? "" : arguments[2];
 
+            if (input === null || input === VOID0) throw new ArgumentNullException_1.default("input");
             var type = typeof input === "undefined" ? "undefined" : _typeof(input);
             if (type != Types_1.default.STRING) throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
             if (pattern instanceof RegExp) {

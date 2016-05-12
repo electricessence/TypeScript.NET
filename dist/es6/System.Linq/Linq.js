@@ -1039,6 +1039,8 @@ export class Enumerable extends InfiniteEnumerable {
         });
     }
     static matches(input, pattern, flags = "") {
+        if (input === null || input === VOID0)
+            throw new ArgumentNullException("input");
         var type = typeof input;
         if (type != Type.STRING)
             throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
