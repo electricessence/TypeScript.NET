@@ -1,6 +1,6 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
- * Based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
+ * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 var __extends = (this && this.__extends) || function (d, b) {
