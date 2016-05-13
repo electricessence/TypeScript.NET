@@ -221,6 +221,13 @@ function rangeUntil(first, until) {
     return range(first, (until - first) / step, step);
 }
 exports.rangeUntil = rangeUntil;
+function distinct(source) {
+    var seen = {};
+    return source.filter(function (e) {
+        return !(e in seen) && (seen[e] = true);
+    });
+}
+exports.distinct = distinct;
 function flatten(a) {
     var recurseDepth = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 

@@ -253,6 +253,11 @@
         return range(first, (until - first) / step, step);
     }
     exports.rangeUntil = rangeUntil;
+    function distinct(source) {
+        var seen = {};
+        return source.filter(function (e) { return !(e in seen) && (seen[e] = true); });
+    }
+    exports.distinct = distinct;
     function flatten(a, recurseDepth) {
         if (recurseDepth === void 0) { recurseDepth = 0; }
         var result = [];

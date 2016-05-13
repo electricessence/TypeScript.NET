@@ -8,12 +8,13 @@
 })(function (require, exports) {
     "use strict";
     var RegexMatchEnumerator_1 = require("../../../../source/System/Text/RegexMatchEnumerator");
-    var assert = require('../../../../node_modules/assert/assert');
     var RegularExpressions_1 = require("../../../../source/System/Text/RegularExpressions");
+    var assert = require('../../../../node_modules/assert/assert');
     var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     var regex = new RegularExpressions_1.default("(?<first>[A-E]+)", ["i"]);
     var regex2 = new RegularExpressions_1.default(/([A-E]+)/im);
     var regex3 = new RegularExpressions_1.default(/([A-E]+)/);
+    var regex4 = new RegularExpressions_1.default(/A	B C D  E/, "i", "w");
     var pattern = "([A-E]+)";
     describe("Regex", function () {
         describe("new", function () {
@@ -45,14 +46,15 @@
         });
         describe(".matches(input)", function () {
             it("should capture all instances", function () {
-                var m = regex.matches(str);
-                assert.equal(m.length, 2);
-                assert.equal(m[0].value, "ABCDE");
-                assert.equal(m[0].index, 0);
-                assert.equal(m[0].namedGroups["first"].value, "ABCDE");
-                assert.equal(m[1].value, "abcde");
-                assert.equal(m[1].index, 26);
-                assert.equal(m[1].namedGroups["first"].value, "abcde");
+                function check(m) {
+                    assert.equal(m.length, 2);
+                    assert.equal(m[0].value, "ABCDE");
+                    assert.equal(m[0].index, 0);
+                    assert.equal(m[1].value, "abcde");
+                    assert.equal(m[1].index, 26);
+                }
+                check(regex.matches(str));
+                check(regex4.matches(str));
             });
         });
         describe(".replace(input, x)", function () {
@@ -78,4 +80,5 @@
         });
     });
 });
+
 //# sourceMappingURL=RegularExpressions.js.map

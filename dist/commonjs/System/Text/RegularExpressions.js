@@ -7,8 +7,6 @@
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -19,13 +17,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var EMPTY = "";
 var UNDEFINED = "undefined";
+var _I = 'i',
+    _G = 'g',
+    _M = 'm',
+    _U = 'u',
+    _W = 'w',
+    _Y = 'y';
 var RegexOptions;
 (function (RegexOptions) {
-    RegexOptions.IGNORE_CASE = 'i';
-    RegexOptions.GLOBAL = 'g';
-    RegexOptions.MULTI_LINE = 'm';
-    RegexOptions.UNICODE = 'u';
-    RegexOptions.STICKY = 'y';
+    RegexOptions.IGNORE_CASE = _I;
+    RegexOptions.I = _I;
+    RegexOptions.GLOBAL = _G;
+    RegexOptions.G = _G;
+    RegexOptions.MULTI_LINE = _M;
+    RegexOptions.M = _M;
+    RegexOptions.UNICODE = _U;
+    RegexOptions.U = _U;
+    RegexOptions.STICKY = _Y;
+    RegexOptions.Y = _Y;
+    RegexOptions.IGNORE_PATTERN_WHITESPACE = _W;
+    RegexOptions.W = _W;
 })(RegexOptions = exports.RegexOptions || (exports.RegexOptions = {}));
 
 var Regex = function () {
@@ -33,17 +44,23 @@ var Regex = function () {
         _classCallCheck(this, Regex);
 
         if (!pattern) throw new Error("'pattern' cannot be null or empty.");
+
+        for (var _len = arguments.length, extra = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+            extra[_key - 2] = arguments[_key];
+        }
+
         var patternString,
-            flags = options && options.join(EMPTY) || EMPTY;
+            flags = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra).join(EMPTY).toLowerCase();
         if (pattern instanceof RegExp) {
             var p = pattern;
-            if (p.ignoreCase && flags.indexOf(RegexOptions.IGNORE_CASE) === -1) flags += RegexOptions.IGNORE_CASE;
-            if (p.multiline && flags.indexOf(RegexOptions.MULTI_LINE) === -1) flags += RegexOptions.MULTI_LINE;
+            if (p.ignoreCase && flags.indexOf(_I) === -1) flags += _I;
+            if (p.multiline && flags.indexOf(_M) === -1) flags += _M;
             patternString = p.source;
         } else {
             patternString = pattern;
         }
-        flags = flags.replace(RegexOptions.GLOBAL, EMPTY);
+        var ignoreWhiteSpace = flags.indexOf(_W) != -1;
+        flags = flags.replace(/[gw]/g, EMPTY);
         var keys = [];
         {
             var k = patternString.match(/(?!\(\?<)(\w+)(?=>)/g);
@@ -54,6 +71,7 @@ var Regex = function () {
                 patternString = patternString.replace(/\?<\w+>/g, EMPTY);
                 this._keys = keys;
             }
+            if (ignoreWhiteSpace) patternString = patternString.replace(/\s+/g, "\\s*");
             this._re = new RegExp(patternString, flags);
         }
         Object.freeze(this);
@@ -73,9 +91,12 @@ var Regex = function () {
                 groups = [],
                 groupMap = {};
             for (var i = 0, len = r.length; i < len; ++i) {
-                var text = _typeof(r[i]) !== UNDEFINED && r[i].constructor === String ? r[i] : EMPTY;
-                var g = new Group(text, loc);
-                g.freeze();
+                var text = r[i];
+                var g = EmptyGroup;
+                if (text !== null || text !== void 0) {
+                    g = new Group(text, loc);
+                    g.freeze();
+                }
                 if (i && _._keys && i < _._keys.length) groupMap[_._keys[i]] = g;
                 groups.push(g);
                 if (i !== 0) loc += text.length;
@@ -203,6 +224,7 @@ var Group = function (_Capture) {
 
 exports.Group = Group;
 var EmptyGroup = new Group();
+EmptyGroup.freeze();
 
 var Match = function (_Group) {
     _inherits(Match, _Group);
@@ -243,6 +265,7 @@ var Match = function (_Group) {
 
 exports.Match = Match;
 var EmptyMatch = new Match();
+EmptyMatch.freeze();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Regex;
 //# sourceMappingURL=RegularExpressions.js.map

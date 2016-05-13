@@ -1,7 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on code from: https://github.com/kriskowal/q
- */
-define(["require","exports","../Types","../Collections/LinkedNodeList","../Collections/Queue"],function(e,t,n,o,i){"use strict";function s(){for(var e;e=m.first;){var t=e.task,n=e.domain;m.removeNode(e),n&&n.enter(),r(t,n)}for(var o;o=p.dequeue();)r(o);l=!1}function r(e,t){try{e()}catch(n){if(d)throw t&&t.exit(),setTimeout(s,0),t&&t.enter(),n;setTimeout(function(){throw n},0)}t&&t.exit()}function u(){l||(l=!0,a())}function c(e){var t=this,n={task:e,domain:d&&process.domain};return m.addNode(n),u(),{cancel:function(){return!!m.removeNode(n)},dispose:function(){t.cancel()}}}function f(e){p.enqueue(e),u()}var a,d=!1,l=!1,m=new o["default"],p=new i["default"];if(Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=c,t.runAfterDeferred=f,n["default"].isObject(process)&&"[object process]"===process.toString()&&process.nextTick)d=!0,a=function(){process.nextTick(s)};else if("function"==typeof setImmediate)a="undefined"!=typeof window?setImmediate.bind(window,s):function(){setImmediate(s)};else if("undefined"!=typeof MessageChannel){var v=new MessageChannel;v.port1.onmessage=function(){a=w,v.port1.onmessage=s,s()};var w=function(){v.port2.postMessage(0)};a=function(){setTimeout(s,0),w()}}else a=function(){setTimeout(s,0)}});
-//# sourceMappingURL=deferImmediate.js.map

@@ -19,33 +19,45 @@ var __extends = (this && this.__extends) || function (d, b) {
     "use strict";
     var EMPTY = "";
     var UNDEFINED = "undefined";
+    var _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
     var RegexOptions;
     (function (RegexOptions) {
-        RegexOptions.IGNORE_CASE = 'i';
-        RegexOptions.GLOBAL = 'g';
-        RegexOptions.MULTI_LINE = 'm';
-        RegexOptions.UNICODE = 'u';
-        RegexOptions.STICKY = 'y';
+        RegexOptions.IGNORE_CASE = _I;
+        RegexOptions.I = _I;
+        RegexOptions.GLOBAL = _G;
+        RegexOptions.G = _G;
+        RegexOptions.MULTI_LINE = _M;
+        RegexOptions.M = _M;
+        RegexOptions.UNICODE = _U;
+        RegexOptions.U = _U;
+        RegexOptions.STICKY = _Y;
+        RegexOptions.Y = _Y;
+        RegexOptions.IGNORE_PATTERN_WHITESPACE = _W;
+        RegexOptions.W = _W;
     })(RegexOptions = exports.RegexOptions || (exports.RegexOptions = {}));
     var Regex = (function () {
         function Regex(pattern, options) {
+            var extra = [];
+            for (var _i = 2; _i < arguments.length; _i++) {
+                extra[_i - 2] = arguments[_i];
+            }
             if (!pattern)
                 throw new Error("'pattern' cannot be null or empty.");
-            var patternString, flags = options && options.join(EMPTY) || EMPTY;
+            var patternString, flags = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
+                .join(EMPTY).toLowerCase();
             if (pattern instanceof RegExp) {
                 var p = pattern;
-                if (p.ignoreCase && flags.indexOf(RegexOptions.IGNORE_CASE) === -1)
-                    flags
-                        += RegexOptions.IGNORE_CASE;
-                if (p.multiline && flags.indexOf(RegexOptions.MULTI_LINE) === -1)
-                    flags
-                        += RegexOptions.MULTI_LINE;
+                if (p.ignoreCase && flags.indexOf(_I) === -1)
+                    flags += _I;
+                if (p.multiline && flags.indexOf(_M) === -1)
+                    flags += _M;
                 patternString = p.source;
             }
             else {
                 patternString = pattern;
             }
-            flags = flags.replace(RegexOptions.GLOBAL, EMPTY);
+            var ignoreWhiteSpace = flags.indexOf(_W) != -1;
+            flags = flags.replace(/[gw]/g, EMPTY);
             var keys = [];
             {
                 var k = patternString.match(/(?!\(\?<)(\w+)(?=>)/g);
@@ -56,6 +68,8 @@ var __extends = (this && this.__extends) || function (d, b) {
                     patternString = patternString.replace(/\?<\w+>/g, EMPTY);
                     this._keys = keys;
                 }
+                if (ignoreWhiteSpace)
+                    patternString = patternString.replace(/\s+/g, "\\s*");
                 this._re = new RegExp(patternString, flags);
             }
             Object.freeze(this);
@@ -72,9 +86,12 @@ var __extends = (this && this.__extends) || function (d, b) {
                 startIndex = 0;
             var first = startIndex + r.index, loc = first, groups = [], groupMap = {};
             for (var i = 0, len = r.length; i < len; ++i) {
-                var text = typeof r[i] !== UNDEFINED && r[i].constructor === String ? r[i] : EMPTY;
-                var g = new Group(text, loc);
-                g.freeze();
+                var text = r[i];
+                var g = EmptyGroup;
+                if (text !== null || text !== void 0) {
+                    g = new Group(text, loc);
+                    g.freeze();
+                }
                 if (i && _._keys && i < _._keys.length)
                     groupMap[_._keys[i]] = g;
                 groups.push(g);
@@ -171,6 +188,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     }(Capture));
     exports.Group = Group;
     var EmptyGroup = new Group();
+    EmptyGroup.freeze();
     var Match = (function (_super) {
         __extends(Match, _super);
         function Match(value, index, groups, namedGroups) {
@@ -202,6 +220,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     }(Group));
     exports.Match = Match;
     var EmptyMatch = new Match();
+    EmptyMatch.freeze();
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Regex;
 });

@@ -11,6 +11,7 @@
 
 const EMPTY:string = "";
 const UNDEFINED:string = "undefined";
+const _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
 
 
 /**
@@ -21,35 +22,47 @@ export module RegexOptions
 	/**
 	 * Specifies case-insensitive matching. For more information, see the "Case-Insensitive Matching " section in the Regular Expression Options topic.
 	 */
-	export const IGNORE_CASE:string = 'i';
+	export const IGNORE_CASE:string = _I;
+	export const I:string = _I;
 
 	/**
 	 * Specifies global matching instead of single.
 	 */
-	export const GLOBAL:string = 'g';
+	export const GLOBAL:string = _G;
+	export const G:string = _G;
 
 	/**
 	 * treat beginning and end characters (^ and $) as working over multiple lines (i.e., match the beginning or end of each line (delimited by \n or \r), not only the very beginning or end of the whole input string)
 	 */
-	export const MULTI_LINE:string = 'm';
+	export const MULTI_LINE:string = _M;
+	export const M:string = _M;
 
 	/**
 	 * treat pattern as a sequence of unicode code points
 	 */
-	export const UNICODE:string = 'u';
+	export const UNICODE:string = _U;
+	export const U:string = _U;
 
 	/**
 	 * matches only from the index indicated by the lastIndex property of this regular expression in the target string (and does not attempt to match from any later indexes).
 	 */
-	export const STICKY:string = 'y';
+	export const STICKY:string = _Y;
+	export const Y:string = _Y;
+
+	/**
+	 * Modifies the pattern to ignore standard whitespace characters.
+	 */
+	export const IGNORE_PATTERN_WHITESPACE:string = _W;
+	export const W:string = _W;
 
 	export type Global = 'g';
 	export type IgnoreCase = 'i';
 	export type MultiLine = 'm';
 	export type Unicode = 'u';
 	export type Sticky = 'y';
+	export type IgnorePatternWhitespace = "w";
 
-	export type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky;
+	export type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky | IgnorePatternWhitespace;
 }
 
 export interface MatchEvaluator extends Selector<Match,Primitive>
@@ -63,27 +76,33 @@ export class Regex
 
 	constructor(
 		pattern:string|RegExp,
-		options?:RegexOptions.Literal[])
+		options?:RegexOptions.Literal|RegexOptions.Literal[],
+		...extra:RegexOptions.Literal[])
 	{
 		if(!pattern) throw new Error("'pattern' cannot be null or empty.");
-		var patternString:string, flags:string = options && options.join(EMPTY) || EMPTY;
+
+		var patternString:string,
+		    flags:string
+			    = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
+			    .join(EMPTY).toLowerCase();
 
 		if(pattern instanceof RegExp)
 		{
 			let p = <RegExp>pattern;
-			if(p.ignoreCase && flags.indexOf(RegexOptions.IGNORE_CASE)=== -1) flags
-				+= RegexOptions.IGNORE_CASE;
-			if(p.multiline && flags.indexOf(RegexOptions.MULTI_LINE)=== -1) flags
-				+= RegexOptions.MULTI_LINE;
+			if(p.ignoreCase && flags.indexOf(_I)=== -1)
+				flags += _I;
+			if(p.multiline && flags.indexOf(_M)=== -1)
+				flags += _M;
 			patternString = p.source;
 		}
 		else
 		{
 			patternString = pattern;
 		}
+		var ignoreWhiteSpace = flags.indexOf(_W)!= -1;
 
-		// For the majority of expected behavior, we need to eliminate global.
-		flags = flags.replace(RegexOptions.GLOBAL, EMPTY);
+		// For the majority of expected behavior, we need to eliminate global and whitespace ignore.
+		flags = flags.replace(/[gw]/g, EMPTY);
 
 		// find the keys inside the pattern, and place in mapping array {0:'key1', 1:'key2', ...}
 		var keys:string[] = [];
@@ -100,6 +119,9 @@ export class Regex
 				patternString = patternString.replace(/\?<\w+>/g, EMPTY);
 				this._keys = keys;
 			}
+
+			if(ignoreWhiteSpace)
+				patternString = patternString.replace(/\s+/g, "\\s*");
 
 			this._re = new RegExp(patternString, flags);
 
@@ -126,9 +148,13 @@ export class Regex
 
 		for(let i = 0, len = r.length; i<len; ++i)
 		{
-			let text = typeof r[i]!==UNDEFINED && r[i].constructor===String ? r[i] : EMPTY;
-			let g = new Group(text, loc);
-			g.freeze();
+			let text = r[i];
+			let g = EmptyGroup;
+			if(text!==null || text!==void 0) {
+				// Empty string might mean \b match or similar.
+				g = new Group(text, loc);
+				g.freeze();
+			}
 			if(i && _._keys && i<_._keys.length) groupMap[_._keys[i]] = g;
 			groups.push(g);
 			if(i!==0) loc += text.length;
@@ -142,7 +168,7 @@ export class Regex
 	matches(input:string):Match[]
 	{
 		var matches:Match[] = [], m:Match, p = 0, end = input && input.length || 0;
-		while(p<end && (m = this.match(input,p)) && m.success)
+		while(p<end && (m = this.match(input, p)) && m.success)
 		{
 			matches.push(m);
 			p = m.index + m.length;
@@ -170,7 +196,7 @@ export class Regex
 		var p = 0, end = input.length, isEvaluator = typeof r=="function";
 
 		var m:Match, i:number = 0;
-		while(i<count && p<end && (m = this.match(input,p)) && m.success)
+		while(i<count && p<end && (m = this.match(input, p)) && m.success)
 		{
 			let {index, length} = m;
 			if(p!==index) result.push(input.substring(p, index));
@@ -262,6 +288,7 @@ export class Group extends Capture
 
 }
 const EmptyGroup = new Group();
+EmptyGroup.freeze();
 
 export class Match extends Group
 {
@@ -290,6 +317,7 @@ export class Match extends Group
 	}
 }
 const EmptyMatch = new Match();
+EmptyMatch.freeze();
 
 
 export default Regex;

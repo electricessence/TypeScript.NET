@@ -8,6 +8,7 @@ const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const regex = new Regex("(?<first>[A-E]+)", ["i"]);
 const regex2 = new Regex(/([A-E]+)/im);
 const regex3 = new Regex(/([A-E]+)/);
+const regex4 = new Regex(/A	B C D  E/,"i","w");
 const pattern = "([A-E]+)";
 
 describe("Regex", ()=>
@@ -62,15 +63,15 @@ describe("Regex", ()=>
 
 		it("should capture all instances", ()=>
 		{
-
-			var m = regex.matches(str);
-			assert.equal(m.length, 2);
-			assert.equal(m[0].value, "ABCDE");
-			assert.equal(m[0].index, 0);
-			assert.equal(m[0].namedGroups["first"].value, "ABCDE");
-			assert.equal(m[1].value, "abcde");
-			assert.equal(m[1].index, 26);
-			assert.equal(m[1].namedGroups["first"].value, "abcde");
+			function check(m:Match[]):void {
+				assert.equal(m.length, 2);
+				assert.equal(m[0].value, "ABCDE");
+				assert.equal(m[0].index, 0);
+				assert.equal(m[1].value, "abcde");
+				assert.equal(m[1].index, 26);
+			}
+			check(regex.matches(str));
+			check(regex4.matches(str));
 		});
 
 	});

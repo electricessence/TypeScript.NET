@@ -453,6 +453,18 @@ export function rangeUntil(
 }
 
 /**
+ * Returns a unique reduced set of values.
+ * @param source
+ */
+export function distinct(source:string[]):string[];
+export function distinct(source:number[]):number[];
+export function distinct(source:any[]):any[]
+{
+	var seen:any = {};
+	return source.filter(e=> !(e in seen) && (seen[e] = true));
+}
+
+/**
  * Takes any arrays within an array and inserts the values contained within in place of that array.
  * For every count higher than 0 in recurseDepth it will attempt an additional pass.  Passing Infinity will flatten all arrays contained.
  * @param a
