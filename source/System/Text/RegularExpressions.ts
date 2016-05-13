@@ -5,6 +5,7 @@
  */
 
 ///<reference path="../Collections/Dictionaries/IDictionary"/>
+///<reference path="../FunctionTypes.d.ts"/>
 
 // NOTE: Avoid dependencies so this class can be used cleanly.
 
@@ -51,10 +52,8 @@ export module RegexOptions
 	export type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky;
 }
 
-export interface MatchEvaluator
+export interface MatchEvaluator extends Selector<Match,Primitive>
 {
-	//(match:Match):string;
-	(substring:string, ...args:any[]):string;
 }
 
 export class Regex
@@ -94,30 +93,34 @@ export class Regex
 			{
 				for(let i = 0, len = k.length; i<len; i++)
 				{
-					keys[i+1] = k[i];
+					keys[i + 1] = k[i];
 				}
 
-				this._keys = keys;
 				// remove keys from regexp leaving standard regexp
-				this._re = new RegExp(patternString.replace(/\?<\w+>/g, EMPTY), flags);
+				patternString = patternString.replace(/\?<\w+>/g, EMPTY);
+				this._keys = keys;
 			}
-			else
-			{
-				this._keys = null;
-				this._re = new RegExp(patternString, flags);
-			}
+
+			this._re = new RegExp(patternString, flags);
+
 		}
 
 		Object.freeze(this);
 	}
 
-	match(input:string):Match
+	match(input:string, startIndex:number = 0):Match
 	{
 		var _ = this;
-		var r = this._re.exec(input);
-		if(!r) return Match.Empty;
+		var r:RegExpExecArray;
+		if(!input
+			|| startIndex>=input.length
+			|| !(r = this._re.exec(input.substring(startIndex))))
+			return Match.Empty;
 
-		var loc                  = r.index,
+		if(!(startIndex>0)) startIndex = 0;
+
+		var first                = startIndex + r.index,
+		    loc                  = first,
 		    groups:Group[]       = [],
 		    groupMap:IMap<Group> = {};
 
@@ -131,34 +134,53 @@ export class Regex
 			if(i!==0) loc += text.length;
 		}
 
-		var m = new Match(r[0], r.index, groups, groupMap);
+		var m = new Match(r[0], first, groups, groupMap);
 		m.freeze();
 		return m;
 	}
 
 	matches(input:string):Match[]
 	{
-		var matches:Match[] = [], m:Match;
-		while((m = this.match(input)) && m.success) {
+		var matches:Match[] = [], m:Match, p = 0, end = input && input.length || 0;
+		while(p<end && (m = this.match(input,p)) && m.success)
+		{
 			matches.push(m);
-			input = input.substring(m.index+m.length);
+			p = m.index + m.length;
 		}
-
-		return matches;
+		return Object.freeze(matches);
 	}
 
 	replace(
 		input:string,
-		replacement:string):string;
+		replacement:Primitive,
+		count?:number):string;
 
 	replace(
 		input:string,
-		evaluator:MatchEvaluator):string;
+		evaluator:MatchEvaluator,
+		count?:number):string;
 
 	replace(
-		input:string, r:any):string
+		input:string,
+		r:any,
+		count:number = Infinity):string
 	{
-		return input.replace(this._re, r);
+		if(!input || r===null || r=== void 0 || !(count>0)) return input;
+		var result:string[] = [];
+		var p = 0, end = input.length, isEvaluator = typeof r=="function";
+
+		var m:Match, i:number = 0;
+		while(i<count && p<end && (m = this.match(input,p)) && m.success)
+		{
+			let {index, length} = m;
+			if(p!==index) result.push(input.substring(p, index));
+			result.push(isEvaluator ? r(m, i++) : r);
+			p = index + length;
+		}
+
+		if(p<end) result.push(input.substring(p));
+
+		return result.join(EMPTY);
 	}
 
 	isMatch(input:string):boolean
@@ -268,8 +290,6 @@ export class Match extends Group
 	}
 }
 const EmptyMatch = new Match();
-
-
 
 
 export default Regex;

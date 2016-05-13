@@ -51,22 +51,24 @@ System.register([], function(exports_1, context_1) {
                             for (var i = 0, len = k.length; i < len; i++) {
                                 keys[i + 1] = k[i];
                             }
+                            patternString = patternString.replace(/\?<\w+>/g, EMPTY);
                             this._keys = keys;
-                            this._re = new RegExp(patternString.replace(/\?<\w+>/g, EMPTY), flags);
                         }
-                        else {
-                            this._keys = null;
-                            this._re = new RegExp(patternString, flags);
-                        }
+                        this._re = new RegExp(patternString, flags);
                     }
                     Object.freeze(this);
                 }
-                Regex.prototype.match = function (input) {
+                Regex.prototype.match = function (input, startIndex) {
+                    if (startIndex === void 0) { startIndex = 0; }
                     var _ = this;
-                    var r = this._re.exec(input);
-                    if (!r)
+                    var r;
+                    if (!input
+                        || startIndex >= input.length
+                        || !(r = this._re.exec(input.substring(startIndex))))
                         return Match.Empty;
-                    var loc = r.index, groups = [], groupMap = {};
+                    if (!(startIndex > 0))
+                        startIndex = 0;
+                    var first = startIndex + r.index, loc = first, groups = [], groupMap = {};
                     for (var i = 0, len = r.length; i < len; ++i) {
                         var text = typeof r[i] !== UNDEFINED && r[i].constructor === String ? r[i] : EMPTY;
                         var g = new Group(text, loc);
@@ -77,20 +79,35 @@ System.register([], function(exports_1, context_1) {
                         if (i !== 0)
                             loc += text.length;
                     }
-                    var m = new Match(r[0], r.index, groups, groupMap);
+                    var m = new Match(r[0], first, groups, groupMap);
                     m.freeze();
                     return m;
                 };
                 Regex.prototype.matches = function (input) {
-                    var matches = [], m;
-                    while ((m = this.match(input)) && m.success) {
+                    var matches = [], m, p = 0, end = input && input.length || 0;
+                    while (p < end && (m = this.match(input, p)) && m.success) {
                         matches.push(m);
-                        input = input.substring(m.index + m.length);
+                        p = m.index + m.length;
                     }
-                    return matches;
+                    return Object.freeze(matches);
                 };
-                Regex.prototype.replace = function (input, r) {
-                    return input.replace(this._re, r);
+                Regex.prototype.replace = function (input, r, count) {
+                    if (count === void 0) { count = Infinity; }
+                    if (!input || r === null || r === void 0 || !(count > 0))
+                        return input;
+                    var result = [];
+                    var p = 0, end = input.length, isEvaluator = typeof r == "function";
+                    var m, i = 0;
+                    while (i < count && p < end && (m = this.match(input, p)) && m.success) {
+                        var index = m.index, length_1 = m.length;
+                        if (p !== index)
+                            result.push(input.substring(p, index));
+                        result.push(isEvaluator ? r(m, i++) : r);
+                        p = index + length_1;
+                    }
+                    if (p < end)
+                        result.push(input.substring(p));
+                    return result.join(EMPTY);
                 };
                 Regex.prototype.isMatch = function (input) {
                     return this._re.test(input);
