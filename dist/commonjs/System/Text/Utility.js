@@ -106,4 +106,19 @@ function supplant(source, params) {
     });
 }
 exports.supplant = supplant;
+function canMatch(source, match) {
+    if (!Types_1.default.isString(source) || !match) return false;
+    if (source === match) return true;
+    if (match.length < source.length) return null;
+}
+function startsWith(source, pattern) {
+    var m = canMatch(source, pattern);
+    return Types_1.default.isBoolean(m) ? m : source.indexOf(pattern) == 0;
+}
+exports.startsWith = startsWith;
+function endsWith(source, pattern) {
+    var m = canMatch(source, pattern);
+    return Types_1.default.isBoolean(m) ? m : source.lastIndexOf(pattern) == source.length - pattern.length;
+}
+exports.endsWith = endsWith;
 //# sourceMappingURL=Utility.js.map
