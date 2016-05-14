@@ -139,3 +139,34 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 		}
 	);
 }
+
+
+function canMatch(source:string, match:string):boolean {
+	if(!Type.isString(source) || !match) return false;
+	if(source===match) return true;
+	if(match.length<source.length) return null;
+}
+
+/**
+ * Returns true if the pattern matches the beginning of the source.
+ * @param source
+ * @param pattern
+ * @returns {boolean}
+ */
+export function startsWith(source:string, pattern:string):boolean
+{
+	var m = canMatch(source,pattern);
+	return Type.isBoolean(m) ? m : source.indexOf(pattern)==0;
+}
+
+/**
+ * Returns true if the pattern matches the end of the source.
+ * @param source
+ * @param pattern
+ * @returns {boolean}
+ */
+export function endsWith(source:string, pattern:string):boolean
+{
+	var m = canMatch(source,pattern);
+	return Type.isBoolean(m) ? m : source.lastIndexOf(pattern)==(source.length - pattern.length);
+}
