@@ -1871,6 +1871,11 @@ extends InfiniteEnumerable<T>
 		return defaultEnumerable;
 	}
 
+	static fromOrEmpty<T>(source:IEnumerableOrArray<T>):Enumerable<T>
+	{
+		return Enumerable.fromAny(source) || Enumerable.empty<T>();
+	}
+
 	/**
 	 * Static helper for converting enumerables to an array.
 	 * @param source

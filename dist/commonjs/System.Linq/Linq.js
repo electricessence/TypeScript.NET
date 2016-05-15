@@ -1709,6 +1709,11 @@ var Enumerable = function (_InfiniteEnumerable) {
             return defaultEnumerable;
         }
     }, {
+        key: "fromOrEmpty",
+        value: function fromOrEmpty(source) {
+            return Enumerable.fromAny(source) || Enumerable.empty();
+        }
+    }, {
         key: "toArray",
         value: function toArray(source) {
             if (source instanceof Enumerable) return source.toArray();

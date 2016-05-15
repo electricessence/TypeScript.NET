@@ -955,6 +955,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return defaultEnumerable;
         };
+        Enumerable.fromOrEmpty = function (source) {
+            return Enumerable.fromAny(source) || Enumerable.empty();
+        };
         Enumerable.toArray = function (source) {
             if (source instanceof Enumerable)
                 return source.toArray();
