@@ -746,7 +746,7 @@ describe(".fromAny(x,default)", ()=>
 {
 	it("should return the default if not enumerable", ()=>
 	{
-		assert.equal(Enumerable.fromAny(<any>1, <any>"x"), "x");
+		assert.equal(Enumerable.fromAny(1), null);
 	});
 });
 

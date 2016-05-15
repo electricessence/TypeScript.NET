@@ -501,7 +501,7 @@
     });
     describe(".fromAny(x,default)", function () {
         it("should return the default if not enumerable", function () {
-            assert.equal(Linq_1.default.fromAny(1, "x"), "x");
+            assert.equal(Linq_1.default.fromAny(1), null);
         });
     });
     describe(".fromAny(x,default)", function () {
@@ -772,5 +772,4 @@
         });
     });
 });
-
 //# sourceMappingURL=Enumerable.js.map

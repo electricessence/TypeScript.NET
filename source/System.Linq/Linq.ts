@@ -1839,10 +1839,16 @@ extends InfiniteEnumerable<T>
 	 */
 	static from<T>(source:IEnumerableOrArray<T>):Enumerable<T>
 	{
-		var e = Enumerable.fromAny<T>(source);
+		var e = Enumerable.fromAny(source);
 		if(!e) throw new UnsupportedEnumerableException();
 		return e;
 	}
+
+	static fromAny<T>(
+		source:IEnumerableOrArray<T>):Enumerable<T>
+
+	static fromAny(
+		source:any):Enumerable<any>
 
 	static fromAny<T>(
 		source:any,
