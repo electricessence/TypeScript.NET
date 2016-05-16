@@ -18,17 +18,23 @@ import ObjectPool from "../../Disposable/ObjectPool";
 
 const VOID0:any = void 0;
 
+
+export interface IHashEntry<TKey, TValue>
+extends  ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue> {
+
+}
 // LinkedList for Dictionary
 class HashEntry<TKey, TValue>
-implements ILinkedNode<HashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue>
+implements IHashEntry<TKey, TValue>
 {
 	constructor(
 		public key?:TKey,
 		public value?:TValue,
-		public previous?:HashEntry<TKey, TValue>,
-		public next?:HashEntry<TKey, TValue>)
+		public previous?:IHashEntry<TKey, TValue>,
+		public next?:IHashEntry<TKey, TValue>)
 	{ }
 }
+
 
 var linkedListPool:ObjectPool<LinkedNodeList<any>>;
 function linkedNodeList():LinkedNodeList<any>;
@@ -70,8 +76,8 @@ export default
 class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 {
 	// Retains the order...
-	private _entries:LinkedNodeList<HashEntry<TKey, TValue>>;
-	private _buckets:IMap<LinkedNodeList<HashEntry<TKey, HashEntry<TKey, TValue>>>>;
+	private _entries:LinkedNodeList<IHashEntry<TKey, TValue>>;
+	private _buckets:IMap<LinkedNodeList<IHashEntry<TKey, IHashEntry<TKey, TValue>>>>;
 
 	constructor(
 		private _keyComparer:Selector<TKey,any> = Functions.Identity)
@@ -89,7 +95,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	private _getBucket(
 		hash:string,
-		createIfMissing?:boolean):LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>
+		createIfMissing?:boolean):LinkedNodeList<IHashEntry<TKey,IHashEntry<TKey,TValue>>>
 	{
 		if(hash===null || hash===VOID0 || !createIfMissing && !this.getCount())
 			return null;
@@ -108,7 +114,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	private _getBucketEntry(
 		key:TKey,
 		hash?:string,
-		bucket?:LinkedNodeList<HashEntry<TKey,HashEntry<TKey,TValue>>>):HashEntry<TKey,HashEntry<TKey,TValue>>
+		bucket?:LinkedNodeList<IHashEntry<TKey,IHashEntry<TKey,TValue>>>):IHashEntry<TKey,IHashEntry<TKey,TValue>>
 	{
 		if(key===null || key===VOID0 || !this.getCount())
 			return null;
@@ -123,7 +129,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 				.find(e=>comparer(e.key)===compareKey);
 	}
 
-	protected _getEntry(key:TKey):HashEntry<TKey,TValue>
+	protected _getEntry(key:TKey):IHashEntry<TKey,TValue>
 	{
 		var e = this._getBucketEntry(key);
 		return e && e.value;
@@ -209,7 +215,7 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	 */
 	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
 	{
-		var _ = this, ver:number, currentEntry:HashEntry<TKey, TValue>;
+		var _ = this, ver:number, currentEntry:IHashEntry<TKey, TValue>;
 
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>

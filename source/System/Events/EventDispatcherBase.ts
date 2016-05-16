@@ -19,16 +19,18 @@ import dispose from "../Disposable/dispose";
 const DISPOSING:string = 'disposing',
       DISPOSED:string  = 'disposed';
 
-interface IEventBase<TTarget> {
+// The following interfaces are exported for sub class implementation.
+
+export interface IEventBase<TTarget> {
 	type: string;
 	target: TTarget;
 }
 
-interface IEvent extends IEventBase<any> {
+export interface IEvent extends IEventBase<any> {
 
 }
 
-interface IEntryParams
+export interface IEntryParams
 {
 	priority:number;
 	dispatcher:EventDispatcherBase;

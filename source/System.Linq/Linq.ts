@@ -41,7 +41,6 @@ import ObjectDisposedException from "../System/Disposable/ObjectDisposedExceptio
 import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
 import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
 import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
-type Comparable = Primitive|IComparable<any>;
 
 // #region Local Constants.
 

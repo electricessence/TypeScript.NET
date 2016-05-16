@@ -10,7 +10,7 @@ import {copy} from "./Utility";
 
 const VOID0:any = void(0);
 
-interface DispatchErrorHandler
+export interface DispatchErrorHandler
 {
 	(ex?:any, i?:number):void;
 }

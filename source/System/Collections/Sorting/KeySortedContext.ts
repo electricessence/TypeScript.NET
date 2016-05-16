@@ -8,13 +8,12 @@
 ///<reference path="../../Primitive.d.ts"/>
 ///<reference path="../Array/IArray.d.ts"/>
 ///<reference path="Order.d.ts"/>
+///<reference path="../../IComparable.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import * as Values from '../../Compare'
+import * as Values from "../../Compare";
 import SortContext from "./SortContext";
 import Functions from "../../Functions";
-
-type Comparable = Primitive|IComparable<any>
 
 export default
 class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>

@@ -126,12 +126,12 @@ const tsc = (function() {
 		return tsc.fromTo(PATH.SOURCE, folder, target, module, declaration);
 	}
 
-	function dist(folder, target, module) {
+	function dist(folder, target, module, declaration) {
 		//noinspection JSUnresolvedFunction
 		var deferred = Q.defer();
 		var d = './dist/' + folder;
 		del(d + '/**/*')['then'](function() {
-			sourceTo(d, target, module)
+			sourceTo(d, target, module, declaration)
 				.on(EVENT.END, deferred.resolve);
 		});
 		return deferred.promise;
@@ -196,7 +196,7 @@ gulp.task(
 	TASK.DIST_ES6, function()
 	{
 		const ES6 = TARGET.ES6;
-		return tsc.dist(ES6, ES6, null);
+		return tsc.dist(ES6, ES6, null, true);
 	}
 );
 
