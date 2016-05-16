@@ -16,7 +16,9 @@
     var VOID0 = void 0;
     function areEqual(a, b, strict) {
         if (strict === void 0) { strict = true; }
-        return a === b || !strict && a == b || isTrueNaN(a) && isTrueNaN(b);
+        return a === b
+            || !strict && a == b
+            || isTrueNaN(a) && isTrueNaN(b);
     }
     exports.areEqual = areEqual;
     var COMPARE_TO = "compareTo";

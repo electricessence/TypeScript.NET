@@ -1,0 +1,1 @@
+{"version":3,"file":"InvalidOperationException.js","sourceRoot":"","sources":["../../../../source/System/Exceptions/InvalidOperationException.ts"],"names":[],"mappings":"AAAA;;;;GAIG;AAEH,YAAY,CAAC;OAEN,eAAe,MAAM,mBAAmB;AAG/C,MAAM,IAAI,GAAU,2BAA2B,CAAC;AAEhD,uDACwC,eAAe;IAE5C,OAAO;QAEhB,MAAM,CAAC,IAAI,CAAC;IACb,CAAC;AAEF,CAAC;AAAA"}

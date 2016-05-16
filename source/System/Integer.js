@@ -17,6 +17,7 @@
     function Integer(n) {
         return n | 0;
     }
+    exports.Integer = Integer;
     var Integer;
     (function (Integer) {
         function r(maxExclusive) {
@@ -88,7 +89,7 @@
             return i;
         }
         Integer.assertPositive = assertPositive;
-    })(Integer || (Integer = {}));
+    })(Integer = exports.Integer || (exports.Integer = {}));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Integer;
 });

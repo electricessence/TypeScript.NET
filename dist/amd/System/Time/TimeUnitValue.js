@@ -1,0 +1,6 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+var __extends=this&&this.__extends||function(t,e){function n(){this.constructor=t}for(var i in e)e.hasOwnProperty(i)&&(t[i]=e[i]);t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)};define(["require","exports","./TimeUnit","./TimeQuantity"],function(t,e,n,i){"use strict";function o(t,e){return n["default"].fromMilliseconds(t.getTotalMilliseconds(),e)}var r=function(t){function e(e,i){t.call(this,"number"==typeof e?e:o(e,i)),this._units=i,n["default"].assertValid(i)}return __extends(e,t),Object.defineProperty(e.prototype,"value",{get:function(){return this._quantity},set:function(t){this._total=null,this._quantity=t},enumerable:!0,configurable:!0}),e.prototype.getTotalMilliseconds=function(){return n["default"].toMilliseconds(this._quantity,this._units)},Object.defineProperty(e.prototype,"units",{get:function(){return this._units},enumerable:!0,configurable:!0}),e.prototype.to=function(t){return void 0===t&&(t=this.units),e.from(this,t)},e.from=function(t,i){return void 0===i&&(i=n["default"].Milliseconds),new e(t,i)},e}(i["default"]);Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=r});
+//# sourceMappingURL=TimeUnitValue.js.map

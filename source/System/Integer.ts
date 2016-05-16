@@ -8,12 +8,12 @@ import Type from "./Types";
 import ArgumentException from "./Exceptions/ArgumentException";
 import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
 
-function Integer(n:number):number
+export function Integer(n:number):number
 {
 	return n | 0;
 }
 
-module Integer
+export module Integer
 {
 
 	function r(maxExclusive:number):number

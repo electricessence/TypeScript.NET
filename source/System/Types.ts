@@ -141,7 +141,7 @@ export class TypeInfo
 
 }
 
-module Type
+export module Type
 {
 	/**
 	 * typeof true
@@ -311,3 +311,4 @@ module Type
 Object.freeze(Type);
 
 export default Type;
+

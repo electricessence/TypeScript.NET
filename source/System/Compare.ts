@@ -20,7 +20,9 @@ const VOID0:any = void 0;
  */
 export function areEqual(a:any, b:any, strict:boolean = true):boolean
 {
-	return a===b || !strict && a==b || isTrueNaN(a) && isTrueNaN(b);
+	return a===b
+		|| !strict && a==b
+		|| isTrueNaN(a) && isTrueNaN(b);
 }
 
 const COMPARE_TO = "compareTo";

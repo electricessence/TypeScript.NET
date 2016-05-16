@@ -71,7 +71,7 @@ const tsc = (function() {
 	c.distPostProcess = distPostProcess;
 	c.distMini = distMini;
 
-	function getOptions(destination, target, module) {
+	function getOptions(destination, target, module, declaration) {
 		return {
 			tscPath: PATH.TSC,
 			outDir: destination,
@@ -79,17 +79,18 @@ const tsc = (function() {
 			module: module,
 			target: target,
 			removeComments: true,
-			sourceMap: true
+			sourceMap: true,
+			declaration: declaration
 		}
 	}
 
-	function fromTo(from, to, target, module) {
+	function fromTo(from, to, target, module, declaration) {
 
-		console.log('TypeScript Render:', target, module, from==to ? from : (from + ' >> ' + to));
+		console.log('TypeScript Render:', target, module, from == to ? from : (from + ' >> ' + to));
 		// In order to mirror WebStorm's compiler option (the tsc), gulp-tsc is used.
 		return gulp
 			.src([from + '/**/*.ts'])
-			.pipe(c(getOptions(to, target, module)))
+			.pipe(c(getOptions(to, target, module, declaration)))
 			.pipe(gulp.dest(to));
 	}
 
@@ -121,8 +122,8 @@ const tsc = (function() {
 			.pipe(gulp.dest(folder));
 	}
 
-	function sourceTo(folder, target, module) {
-		return tsc.fromTo(PATH.SOURCE, folder, target, module);
+	function sourceTo(folder, target, module, declaration) {
+		return tsc.fromTo(PATH.SOURCE, folder, target, module, declaration);
 	}
 
 	function dist(folder, target, module) {

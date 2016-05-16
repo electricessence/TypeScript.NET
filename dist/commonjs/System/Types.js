@@ -169,7 +169,7 @@ var Type;
         return instance instanceof Array || Type.isString(instance) || !Type.isFunction(instance) && hasMember(instance, LENGTH);
     }
     Type.isArrayLike = isArrayLike;
-})(Type || (Type = {}));
+})(Type = exports.Type || (exports.Type = {}));
 Object.freeze(Type);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Type;
