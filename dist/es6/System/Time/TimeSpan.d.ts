@@ -1,7 +1,7 @@
 /// <reference path="../../../../source/System/Time/ITimeMeasurement.d.ts" />
 /// <reference path="../../../../source/System/IEquatable.d.ts" />
 /// <reference path="../../../../source/System/IComparable.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116417-8120-1j4q64/System/Time/HowMany.d.ts" />
+/// <reference path="../../../../gulp-tsc-tmp-116417-1120-4c9rd0/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Originally based upon .NET source but with many additions and improvements.

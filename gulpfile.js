@@ -84,9 +84,14 @@ const tsc = (function() {
 		}
 	}
 
-	function fromTo(from, to, target, module, declaration) {
+	function fromTo(from, to, target, module, declaration, doNotEmit) {
 
-		console.log('TypeScript Render:', target, module, from == to ? from : (from + ' >> ' + to));
+		if(!doNotEmit) {
+			if(module)
+				console.log('TypeScript Render:', target, module, from == to ? from : (from + ' >> ' + to));
+			else
+				console.log('TypeScript Render:', target, from == to ? from : (from + ' >> ' + to));
+		}
 		// In order to mirror WebStorm's compiler option (the tsc), gulp-tsc is used.
 		return gulp
 			.src([from + '/**/*.ts'])
@@ -122,52 +127,69 @@ const tsc = (function() {
 			.pipe(gulp.dest(folder));
 	}
 
-	function sourceTo(folder, target, module, declaration) {
-		return tsc.fromTo(PATH.SOURCE, folder, target, module, declaration);
+	function sourceTo(folder, target, module, declaration, doNotEmit) {
+		return tsc.fromTo(PATH.SOURCE, folder, target, module, declaration, doNotEmit);
 	}
 
-	function dist(folder, target, module, declaration) {
+	function distES6(folder) {
 		//noinspection JSUnresolvedFunction
 		var deferred = Q.defer();
 		var d = './dist/' + folder;
+
 		del(d + '/**/*')['then'](function() {
-			sourceTo(d, target, module, declaration)
+			sourceTo(d, TARGET.ES6, TARGET.ES6, true, true)
+				.on(EVENT.END, deferred.resolve);
+		});
+
+		return deferred.promise;
+	}
+
+	function dist(folder, target, module) {
+		//noinspection JSUnresolvedFunction
+		var deferred = Q.defer();
+		var d = './dist/' + folder;
+		distES6(folder).then(function(){
+			sourceTo(d, target, module)
 				.on(EVENT.END, deferred.resolve);
 		});
 		return deferred.promise;
 	}
 
 	function distPostProcess(folder, target, module, postProcess) {
-		//noinspection JSUnresolvedFunction
+
 		var deferred = Q.defer();
 		var d = './dist/' + folder;
-		//noinspection JSUnresolvedFunction
-		del(d + '/**/*').then(function() {
 
-			console.log('TypeScript Render:', target, module, './source >> ' + d);
+		// Export declarations first, then over-write...
+		distES6(folder, TARGET.ES6, TARGET.ES6, true)
+			.then(function() {
 
-			var typescriptOptions = {
-				noImplicitAny: true,
-				module: module,
-				target: target,
-				removeComments: true
-			};
+				console.log('TypeScript Render:', target, module, './source >> ' + d);
 
-			var sourceMapOptions = {
-				sourceRoot: null
-			};
+				var typescriptOptions = {
+					noImplicitAny: true,
+					module: module,
+					target: target,
+					removeComments: true
+				};
+
+				var sourceMapOptions = {
+					sourceRoot: null
+				};
 
 
-			gulp
-				.src(['./source/**/*.ts'])
-				.pipe(sourcemaps.init())
-				.pipe(typescript(typescriptOptions))
-				.pipe(postProcess())
-				.pipe(sourcemaps.write('.', sourceMapOptions))
-				.pipe(gulp.dest(d))
-				.on(EVENT.END, deferred.resolve);
+				gulp
+					.src(['./source/**/*.ts'])
+					.pipe(sourcemaps.init())
+					.pipe(typescript(typescriptOptions))
+					.pipe(postProcess())
+					.pipe(sourcemaps.write('.', sourceMapOptions))
+					.pipe(gulp.dest(d))
+					.on(EVENT.END, deferred.resolve);
 
-		});
+			}
+		);
+
 		return deferred.promise;
 
 	}
@@ -196,10 +218,9 @@ gulp.task(
 	TASK.DIST_ES6, function()
 	{
 		const ES6 = TARGET.ES6;
-		return tsc.dist(ES6, ES6, null, true);
+		return tsc.dist(ES6, ES6);
 	}
 );
-
 
 gulp.task(
 	TASK.DIST_AMD, function()
@@ -216,10 +237,9 @@ gulp.task(
 			MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD);
 	});
 
-gulp.task(
+gulp.task( // Need to double process to get the declarations from es6 without modules
 	TASK.DIST_COMMONJS, function()
 	{
-
 		return tsc.distPostProcess(
 			MODULE.COMMONJS, TARGET.ES6, MODULE.COMMONJS, babel);
 
