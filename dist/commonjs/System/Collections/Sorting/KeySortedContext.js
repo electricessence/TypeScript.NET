@@ -14,7 +14,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Values = require('../../Compare');
+var Values = require("../../Compare");
 var SortContext_1 = require("./SortContext");
 var Functions_1 = require("../../Functions");
 
@@ -34,11 +34,11 @@ var KeySortedContext = function (_SortContext_1$defaul) {
     }
 
     _createClass(KeySortedContext, [{
-        key: 'compare',
+        key: "compare",
         value: function compare(a, b) {
             var _ = this,
                 ks = _._keySelector;
-            if (!ks || ks == Functions_1.default.Identity) return _get(Object.getPrototypeOf(KeySortedContext.prototype), 'compare', this).call(this, a, b);
+            if (!ks || ks == Functions_1.default.Identity) return _get(Object.getPrototypeOf(KeySortedContext.prototype), "compare", this).call(this, a, b);
             var d = Values.compare(ks(a), ks(b));
             if (d == 0 && _._next) return _._next.compare(a, b);
             return _._order * d;

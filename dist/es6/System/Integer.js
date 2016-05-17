@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from "./Types";
 import ArgumentException from "./Exceptions/ArgumentException";
 import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
 export function Integer(n) {
@@ -55,7 +54,7 @@ export var Integer;
         })(select = random.select || (random.select = {}));
     })(random = Integer.random || (Integer.random = {}));
     function is(n) {
-        return Type.isNumber(n, false) && isFinite(n) && n == (n | 0);
+        return n === (n | 0);
     }
     Integer.is = is;
     function assert(n, argumentName) {

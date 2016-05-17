@@ -1,7 +1,7 @@
 /// <reference path="../../../../source/System/Time/ITimeStamp.d.ts" />
 /// <reference path="../../../../source/System/Time/IDateTime.d.ts" />
 /// <reference path="../../../../source/System/Time/Calendars.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116416-1128-17xx8p/System/Time/HowMany.d.ts" />
+/// <reference path="../../../../gulp-tsc-tmp-116417-2844-1uwwrwu/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md

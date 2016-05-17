@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 'use strict';
-import * as Values from '../../Compare';
+import * as Values from "../../Compare";
 import SortContext from "./SortContext";
 import Functions from "../../Functions";
 export default class KeySortedContext extends SortContext {

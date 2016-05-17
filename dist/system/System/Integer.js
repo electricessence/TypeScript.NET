@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./Types", "./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
+System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, ArgumentException_1, ArgumentOutOfRangeException_1;
+    var ArgumentException_1, ArgumentOutOfRangeException_1;
     var Integer;
     function Integer(n) {
         return n | 0;
@@ -13,9 +13,6 @@ System.register(["./Types", "./Exceptions/ArgumentException", "./Exceptions/Argu
     exports_1("Integer", Integer);
     return {
         setters:[
-            function (Types_1_1) {
-                Types_1 = Types_1_1;
-            },
             function (ArgumentException_1_1) {
                 ArgumentException_1 = ArgumentException_1_1;
             },
@@ -69,7 +66,7 @@ System.register(["./Types", "./Exceptions/ArgumentException", "./Exceptions/Argu
                     })(select = random.select || (random.select = {}));
                 })(random = Integer.random || (Integer.random = {}));
                 function is(n) {
-                    return Types_1.default.isNumber(n, false) && isFinite(n) && n == (n | 0);
+                    return n === (n | 0);
                 }
                 Integer.is = is;
                 function assert(n, argumentName) {

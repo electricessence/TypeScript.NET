@@ -12,11 +12,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Compare', "./SortContext", "../../Functions"], factory);
+        define(["require", "exports", "../../Compare", "./SortContext", "../../Functions"], factory);
     }
 })(function (require, exports) {
     'use strict';
-    var Values = require('../../Compare');
+    var Values = require("../../Compare");
     var SortContext_1 = require("./SortContext");
     var Functions_1 = require("../../Functions");
     var KeySortedContext = (function (_super) {

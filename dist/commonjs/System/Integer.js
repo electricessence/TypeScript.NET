@@ -4,7 +4,6 @@
  */
 "use strict";
 
-var Types_1 = require("./Types");
 var ArgumentException_1 = require("./Exceptions/ArgumentException");
 var ArgumentOutOfRangeException_1 = require("./Exceptions/ArgumentOutOfRangeException");
 function Integer(n) {
@@ -52,7 +51,7 @@ var Integer;
         })(select = random.select || (random.select = {}));
     })(random = Integer.random || (Integer.random = {}));
     function is(n) {
-        return Types_1.default.isNumber(n, false) && isFinite(n) && n == (n | 0);
+        return n === (n | 0);
     }
     Integer.is = is;
     function assert(n, argumentName) {

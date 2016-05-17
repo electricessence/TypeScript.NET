@@ -1,6 +1,6 @@
 ///<reference path="../import.d.ts"/>
 
-import Integer from '../../../source/System/Integer';
+import Integer from "../../../source/System/Integer";
 var assert = require('../../../node_modules/assert/assert');
 
 
@@ -22,12 +22,40 @@ describe('.is(value)', ()=>
 	it('should detect a number that is not an integer', ()=>
 	{
 		assert.equal(
+			Integer.is(<any>"1"),
+			false);
+
+		assert.equal(
+			Integer.is(<any>"test"),
+			false);
+
+		assert.equal(
+			Integer.is(NaN),
+			false);
+
+		assert.equal(
+			Integer.is(Infinity),
+			false);
+
+		assert.equal(
+			Integer.is(-Infinity),
+			false);
+
+		assert.equal(
 			Integer.is(TEST_FLOAT),
+			false);
+
+		assert.equal(
+			Integer.is(-TEST_FLOAT),
 			false);
 	});
 
 	it('should detect a number that is an integer', ()=>
 	{
+		assert.equal(
+			Integer.is(-TEST_INT),
+			true);
+
 		assert.equal(
 			Integer.is(TEST_INT),
 			true);
@@ -52,4 +80,3 @@ describe('.assert(value)', ()=>
 			true);
 	});
 });
-

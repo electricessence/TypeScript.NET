@@ -17,9 +17,16 @@
     });
     describe('.is(value)', function () {
         it('should detect a number that is not an integer', function () {
+            assert.equal(Integer_1.default.is("1"), false);
+            assert.equal(Integer_1.default.is("test"), false);
+            assert.equal(Integer_1.default.is(NaN), false);
+            assert.equal(Integer_1.default.is(Infinity), false);
+            assert.equal(Integer_1.default.is(-Infinity), false);
             assert.equal(Integer_1.default.is(TEST_FLOAT), false);
+            assert.equal(Integer_1.default.is(-TEST_FLOAT), false);
         });
         it('should detect a number that is an integer', function () {
+            assert.equal(Integer_1.default.is(-TEST_INT), true);
             assert.equal(Integer_1.default.is(TEST_INT), true);
         });
     });

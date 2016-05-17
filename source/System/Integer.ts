@@ -4,7 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import Type from "./Types";
 import ArgumentException from "./Exceptions/ArgumentException";
 import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
 
@@ -78,7 +77,7 @@ export module Integer
 
 	export function is(n:number):boolean
 	{
-		return Type.isNumber(n, false) && isFinite(n) && n==(n | 0);
+		return n === (n | 0);
 	}
 
 	export function assert(n:number, argumentName?:string):boolean

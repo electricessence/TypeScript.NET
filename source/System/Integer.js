@@ -7,11 +7,10 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Types", "./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], factory);
+        define(["require", "exports", "./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require("./Types");
     var ArgumentException_1 = require("./Exceptions/ArgumentException");
     var ArgumentOutOfRangeException_1 = require("./Exceptions/ArgumentOutOfRangeException");
     function Integer(n) {
@@ -65,7 +64,7 @@
             })(select = random.select || (random.select = {}));
         })(random = Integer.random || (Integer.random = {}));
         function is(n) {
-            return Types_1.default.isNumber(n, false) && isFinite(n) && n == (n | 0);
+            return n === (n | 0);
         }
         Integer.is = is;
         function assert(n, argumentName) {
