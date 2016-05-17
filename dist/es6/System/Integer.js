@@ -5,10 +5,11 @@
 import ArgumentException from "./Exceptions/ArgumentException";
 import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
 export function Integer(n) {
-    return n | 0;
+    return Math.floor(n);
 }
 export var Integer;
 (function (Integer) {
+    Integer.MAX_32_BIT = 2147483647;
     function r(maxExclusive) {
         return (Math.random() * maxExclusive) | 0;
     }
@@ -53,10 +54,20 @@ export var Integer;
             select.one = one;
         })(select = random.select || (random.select = {}));
     })(random = Integer.random || (Integer.random = {}));
+    function as32Bit(n) {
+        var result = n | 0;
+        return (n === -1 || result !== -1) ? result : null;
+    }
+    Integer.as32Bit = as32Bit;
+    const NUMBER = "number";
     function is(n) {
-        return n === (n | 0);
+        return typeof n === NUMBER && isFinite(n) && n === Math.floor(n);
     }
     Integer.is = is;
+    function is32Bit(n) {
+        return n === (n | 0);
+    }
+    Integer.is32Bit = is32Bit;
     function assert(n, argumentName) {
         var i = is(n);
         if (!i)

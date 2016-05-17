@@ -9,11 +9,12 @@ import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeExceptio
 
 export function Integer(n:number):number
 {
-	return n | 0;
+	return Math.floor(n);
 }
 
 export module Integer
 {
+	export const MAX_32_BIT:number = 2147483647;
 
 	function r(maxExclusive:number):number
 	{
@@ -66,7 +67,8 @@ export module Integer
 				: void(0);
 		}
 
-		export module select {
+		export module select
+		{
 			export function one<T>(source:IArray<T>):T
 			{
 				return random.select(source);
@@ -75,10 +77,24 @@ export module Integer
 
 	}
 
+	export function as32Bit(n:number):number
+	{
+		var result = n | 0;
+		return (n===-1 || result!==-1) ? result : null;
+	}
+
+	const NUMBER:string = "number";
+
 	export function is(n:number):boolean
 	{
-		return n === (n | 0);
+		return typeof n===NUMBER && isFinite(n) && n===Math.floor(n);
 	}
+
+	export function is32Bit(n:number):boolean
+	{
+		return n===(n | 0);
+	}
+
 
 	export function assert(n:number, argumentName?:string):boolean
 	{

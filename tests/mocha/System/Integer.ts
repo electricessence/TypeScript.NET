@@ -4,9 +4,9 @@ import Integer from "../../../source/System/Integer";
 var assert = require('../../../node_modules/assert/assert');
 
 
-const TEST_FLOAT = 10.915, TEST_INT = 10;
+const TEST_FLOAT = 10.915, TEST_INT = 10, MAX = 9007199254740991;
 
-describe('.convert(value)', ()=>
+describe('(value)', ()=>
 {
 	it('should convert float number to integer without rounding', ()=>
 	{
@@ -16,49 +16,106 @@ describe('.convert(value)', ()=>
 	});
 });
 
+describe('.as32Bit(value)', ()=>
+{
+	it('should convert float number to integer without rounding', ()=>
+	{
+		assert.equal(
+			Integer.as32Bit(TEST_FLOAT),
+			TEST_INT);
+	});
+
+	it('should return null if not 32', ()=>
+	{
+		assert.equal(
+			Integer.as32Bit(MAX),
+			null);
+	});
+});
 
 describe('.is(value)', ()=>
 {
 	it('should detect a number that is not an integer', ()=>
 	{
-		assert.equal(
-			Integer.is(<any>"1"),
-			false);
+		function baseTests(fn:(n:number)=>boolean):void {
+
+			assert.equal(
+				fn(<any>"1"),
+				false);
+
+			assert.equal(
+				fn(<any>"test"),
+				false);
+
+			assert.equal(
+				fn(NaN),
+				false);
+
+			assert.equal(
+				fn(Infinity),
+				false);
+
+			assert.equal(
+				fn(-Infinity),
+				false);
+
+			assert.equal(
+				fn(TEST_FLOAT),
+				false);
+
+			assert.equal(
+				fn(-TEST_FLOAT),
+				false);
+		}
+
+		baseTests(Integer.is);
+		baseTests(Integer.is32Bit);
 
 		assert.equal(
-			Integer.is(<any>"test"),
-			false);
-
-		assert.equal(
-			Integer.is(NaN),
-			false);
-
-		assert.equal(
-			Integer.is(Infinity),
-			false);
-
-		assert.equal(
-			Integer.is(-Infinity),
-			false);
-
-		assert.equal(
-			Integer.is(TEST_FLOAT),
-			false);
-
-		assert.equal(
-			Integer.is(-TEST_FLOAT),
+			Integer.is32Bit(Integer.MAX_32_BIT+1),
 			false);
 	});
 
 	it('should detect a number that is an integer', ()=>
 	{
+		function baseTests(fn:(n:number)=>boolean):void {
+
+			assert.equal(
+				fn(-0),
+				true);
+
+			assert.equal(
+				fn(-TEST_INT),
+				true);
+
+			assert.equal(
+				fn(TEST_INT),
+				true);
+
+			assert.equal(
+				fn(Integer.MAX_32_BIT),
+				true);
+
+			assert.equal(
+				fn(-Integer.MAX_32_BIT),
+				true);
+		}
+
+		baseTests(Integer.is);
+		baseTests(Integer.is32Bit);
+
 		assert.equal(
-			Integer.is(-TEST_INT),
+			Integer.is(Integer.MAX_32_BIT+1),
 			true);
 
 		assert.equal(
-			Integer.is(TEST_INT),
+			Integer.is(-MAX),
 			true);
+
+		assert.equal(
+			Integer.is(MAX),
+			true);
+
 	});
 });
 

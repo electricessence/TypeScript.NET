@@ -5,6 +5,7 @@
  */
 export declare function Integer(n: number): number;
 export declare module Integer {
+    const MAX_32_BIT: number;
     function random(maxExclusive: number): number;
     module random {
         function next(boundary: number, inclusive?: boolean): number;
@@ -14,7 +15,9 @@ export declare module Integer {
             function one<T>(source: IArray<T>): T;
         }
     }
+    function as32Bit(n: number): number;
     function is(n: number): boolean;
+    function is32Bit(n: number): boolean;
     function assert(n: number, argumentName?: string): boolean;
     function assertZeroOrGreater(n: number, argumentName?: string): boolean;
     function assertPositive(n: number, argumentName?: string): boolean;
