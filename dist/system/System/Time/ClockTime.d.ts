@@ -5,7 +5,7 @@
 /// <reference path="../../../../source/System/IFormattable.d.ts" />
 /// <reference path="../../../../source/System/IFormatProvider.d.ts" />
 /// <reference path="../../../../source/System/Time/ITimeStamp.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116417-1120-1oukt1c/System/Time/HowMany.d.ts" />
+/// <reference path="../../../../gulp-tsc-tmp-116417-4216-vsjlmg/System/Time/HowMany.d.ts" />
 import TimeQuantity from './TimeQuantity';
 export default class ClockTime extends TimeQuantity implements IClockTime {
     days: number;
