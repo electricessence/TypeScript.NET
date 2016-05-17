@@ -3,11 +3,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../../source/System/Integer'], factory);
+        define(["require", "exports", "../../../source/System/Integer"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Integer_1 = require('../../../source/System/Integer');
+    var Integer_1 = require("../../../source/System/Integer");
     var assert = require('../../../node_modules/assert/assert');
     var TEST_FLOAT = 10.915, TEST_INT = 10;
     describe('.convert(value)', function () {
@@ -41,5 +41,4 @@
         });
     });
 });
-
 //# sourceMappingURL=Integer.js.map

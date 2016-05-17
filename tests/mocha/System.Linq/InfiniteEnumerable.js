@@ -114,5 +114,4 @@
         });
     });
 });
-
 //# sourceMappingURL=InfiniteEnumerable.js.map
