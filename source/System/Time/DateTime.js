@@ -8,13 +8,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ClockTime', './TimeSpan', './TimeStamp'], factory);
+        define(["require", "exports", "./TimeSpan", "./ClockTime", "./TimeStamp"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var ClockTime_1 = require('./ClockTime');
-    var TimeSpan_1 = require('./TimeSpan');
-    var TimeStamp_1 = require('./TimeStamp');
+    "use strict";
+    var TimeSpan_1 = require("./TimeSpan");
+    var ClockTime_1 = require("./ClockTime");
+    var TimeStamp_1 = require("./TimeStamp");
     var DateTime = (function () {
         function DateTime(value, kind) {
             if (value === void 0) { value = new Date(); }
@@ -126,7 +126,7 @@
                 var _ = this, t = _._time;
                 if (!t) {
                     var d = this._value;
-                    _._time = t = new ClockTime_1.default(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+                    _._time = t = new ClockTime_1.ClockTime(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
                 }
                 return t;
             },
@@ -134,7 +134,7 @@
             configurable: true
         });
         DateTime.prototype.toTimeStamp = function () {
-            return TimeStamp_1.default.from(this);
+            return TimeStamp_1.TimeStamp.from(this);
         };
         Object.defineProperty(DateTime, "now", {
             get: function () {
@@ -171,7 +171,7 @@
         });
         DateTime.between = function (first, last) {
             var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
-            return new TimeSpan_1.default(f.getTime() - l.getTime());
+            return new TimeSpan_1.TimeSpan(f.getTime() - l.getTime());
         };
         DateTime.isLeapYear = function (year) {
             return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
@@ -181,6 +181,7 @@
         };
         return DateTime;
     }());
+    exports.DateTime = DateTime;
     Object.freeze(DateTime);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DateTime;

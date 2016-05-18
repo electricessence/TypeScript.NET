@@ -4,10 +4,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Collections/Dictionaries/IDictionary"/>
-///<reference path="../FunctionTypes.d.ts"/>
-
-// NOTE: Avoid dependencies so this class can be used cleanly.
+// NOTE: Avoid real (types/interfaces only = ok) dependencies so this class can be used cleanly.
+import {IMap} from "../Collections/Dictionaries/IDictionary";
+import {Primitive} from "../Primitive";
+import {Selector} from "../FunctionTypes";
 
 const EMPTY:string = "";
 const UNDEFINED:string = "undefined";

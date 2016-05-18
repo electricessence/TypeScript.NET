@@ -8,11 +8,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types'], factory);
+        define(["require", "exports", "../Types"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var Types_1 = require('../Types');
+    "use strict";
+    var Types_1 = require("../Types");
     var VOID0 = void 0;
     var StringBuilder = (function () {
         function StringBuilder() {
@@ -30,8 +30,8 @@
                 var _ = this;
                 _._latest = null;
                 switch (typeof item) {
-                    case Types_1.default.OBJECT:
-                    case Types_1.default.FUNCTION:
+                    case Types_1.Type.OBJECT:
+                    case Types_1.Type.FUNCTION:
                         item = item.toString();
                         break;
                 }
@@ -94,6 +94,7 @@
         };
         return StringBuilder;
     }());
+    exports.StringBuilder = StringBuilder;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StringBuilder;
 });

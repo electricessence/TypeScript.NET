@@ -4,10 +4,12 @@
  */
 
 // Is interchangeable with Array, but also allows for other similar constructs.
-interface IArrayLike<T> // ArrayLike<T>
+export interface IArrayLike<T> // ArrayLike<T>
 {
 	length: number;
 	[index: number]: T;
 }
 
-type IArray<T> = T[] | IArrayLike<T>;
+export type IArray<T> = T[] | IArrayLike<T>;
+
+export default IArray;

@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var ArrayUtility = require("../Array/Utility");
     var StringKeyDictionary_1 = require("./StringKeyDictionary");
     var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
@@ -45,9 +45,9 @@ var __extends = (this && this.__extends) || function (d, b) {
         OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
             var _ = this, order = _._order;
             if (index < 0)
-                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
+                throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, 'Is less than zero.');
             if (index >= order.length)
-                throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than the count.');
+                throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, 'Is greater than the count.');
             return _.setValue(order[index], value);
         };
         OrderedStringKeyDictionary.prototype.importValues = function (values) {
@@ -76,7 +76,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return o.length && o.filter(function (key) { return _.containsKey(key); }) || [];
         };
         return OrderedStringKeyDictionary;
-    }(StringKeyDictionary_1.default));
+    }(StringKeyDictionary_1.StringKeyDictionary));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = OrderedStringKeyDictionary;
 });

@@ -11,7 +11,7 @@
         define(["require", "exports"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var NAME = 'Exception';
     var Exception = (function () {
         function Exception(message, innerException, beforeSealing) {
@@ -50,6 +50,7 @@
         };
         return Exception;
     }());
+    exports.Exception = Exception;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Exception;
 });

@@ -5,8 +5,10 @@
  * Source:  http://referencesource.microsoft.com/#mscorlib/system/IFormatProvider.cs
  */
 
-interface IFormatProvider
+export interface IFormatProvider
 {
 	getFormat(formatType:Object): Object;
 }
+
+export default IFormatProvider;
 

@@ -53,7 +53,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return len;
         };
         List.prototype._importEntries = function (entries) {
-            if (Types_1.default.isArrayLike(entries)) {
+            if (Types_1.Type.isArrayLike(entries)) {
                 var len = entries.length;
                 if (!len)
                     return 0;
@@ -107,14 +107,15 @@ var __extends = (this && this.__extends) || function (d, b) {
             return Utility_1.copyTo(this._source, target, 0, index);
         };
         List.prototype.getEnumerator = function () {
-            return new ArrayEnumerator_1.default(this._source);
+            return new ArrayEnumerator_1.ArrayEnumerator(this._source);
         };
         List.prototype.forEach = function (action, useCopy) {
             var s = this._source;
             Enumerator_1.forEach(useCopy ? s.slice() : s, action);
         };
         return List;
-    }(CollectionBase_1.default));
+    }(CollectionBase_1.CollectionBase));
+    exports.List = List;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = List;
 });

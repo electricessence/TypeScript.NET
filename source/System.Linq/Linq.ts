@@ -4,16 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../System/Primitive.d.ts"/>
-///<reference path="../System/FunctionTypes.d.ts"/>
-///<reference path="../System/Collections/Array/IArray.d.ts"/>
-///<reference path="../System/Collections/Enumeration/IEnumerator.d.ts"/>
-///<reference path="../System/Collections/Enumeration/IEnumerable.d.ts"/>
-///<reference path="../System/Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="../System/IComparer.d.ts"/>
-///<reference path="../System/Collections/Sorting/Order.d.ts"/>
-///<reference path="../System/Collections/IEnumerableOrArray.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
 import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
@@ -27,20 +17,29 @@ import {
 	isEnumerable,
 	throwIfEndless
 } from "../System/Collections/Enumeration/Enumerator";
-import Type from "../System/Types";
-import Integer from "../System/Integer";
-import BaseFunctions from "../System/Functions";
-import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
-import EnumeratorBase from "../System/Collections/Enumeration/EnumeratorBase";
-import Dictionary from "../System/Collections/Dictionaries/Dictionary";
-import Queue from "../System/Collections/Queue";
+import {Type} from "../System/Types";
+import {Integer} from "../System/Integer";
+import {Functions as BaseFunctions} from "../System/Functions";
+import {ArrayEnumerator} from "../System/Collections/Enumeration/ArrayEnumerator";
+import {EnumeratorBase} from "../System/Collections/Enumeration/EnumeratorBase";
+import {Dictionary} from "../System/Collections/Dictionaries/Dictionary";
+import {Queue} from "../System/Collections/Queue";
 import {dispose, using} from "../System/Disposable/dispose";
-import DisposableBase from "../System/Disposable/DisposableBase";
-import UnsupportedEnumerableException from "../System/Collections/Enumeration/UnsupportedEnumerableException";
-import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
-import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
-import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
-import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
+import {DisposableBase} from "../System/Disposable/DisposableBase";
+import {UnsupportedEnumerableException} from "../System/Collections/Enumeration/UnsupportedEnumerableException";
+import {ObjectDisposedException} from "../System/Disposable/ObjectDisposedException";
+import {KeySortedContext} from "../System/Collections/Sorting/KeySortedContext";
+import {ArgumentNullException} from "../System/Exceptions/ArgumentNullException";
+import {ArgumentOutOfRangeException} from "../System/Exceptions/ArgumentOutOfRangeException";
+import {IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
+import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
+import {Action, Predicate, Selector, EqualityComparison, Comparison} from "../System/FunctionTypes";
+import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";
+import {IArray} from "../System/Collections/Array/IArray";
+import {IMap} from "../System/Collections/Dictionaries/IDictionary";
+import {Comparable} from "../System/IComparable";
+import {IComparer} from "../System/IComparer";
+import {IKeyValuePair} from "../System/KeyValuePair";
 
 // #region Local Constants.
 
@@ -260,7 +259,7 @@ extends DisposableBase implements IEnumerable<T>
 	elementAt(index:number):T
 	{
 		var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
-		if(v===INVALID_DEFAULT) throw new ArgumentOutOfRangeException('index',index,"is greater than or equal to the number of elements in source");
+		if(v===INVALID_DEFAULT) throw new ArgumentOutOfRangeException('index', index, "is greater than or equal to the number of elements in source");
 		return v;
 	}
 
@@ -269,7 +268,7 @@ extends DisposableBase implements IEnumerable<T>
 		var _ = this;
 		_.throwIfDisposed();
 
-		Integer.assertZeroOrGreater(index,'index');
+		Integer.assertZeroOrGreater(index, 'index');
 		var n:number = index;
 
 		return using(
@@ -1083,7 +1082,7 @@ extends DisposableBase implements IEnumerable<T>
 							{
 								initial = false;
 							}
-							else if(Values.areEqual(compareKey,key))
+							else if(Values.areEqual(compareKey, key))
 							{
 								continue;
 							}
@@ -1173,7 +1172,6 @@ extends DisposableBase implements IEnumerable<T>
 	{
 		var _ = this;
 		_.throwIfDisposed();
-
 
 
 		return new Enumerable<TResult>(
@@ -1504,7 +1502,7 @@ extends DisposableBase implements IEnumerable<T>
 
 	insertAt(index:number, other:IEnumerableOrArray<T>):Enumerable<T>
 	{
-		Integer.assertZeroOrGreater(index,'index');
+		Integer.assertZeroOrGreater(index, 'index');
 		var n:number = index;
 
 		var _ = this, isEndless = _._isEndless || null;
@@ -2371,7 +2369,8 @@ extends InfiniteEnumerable<T>
 						let e:IEnumerator<T>;
 
 						// First pass...
-						if(mainEnumerator) {
+						if(mainEnumerator)
+						{
 							while(!e && mainEnumerator.moveNext())
 							{
 								let c = mainEnumerator.current;
@@ -2382,7 +2381,8 @@ extends InfiniteEnumerable<T>
 								mainEnumerator = null;
 						}
 
-						while(!e && queue.count) {
+						while(!e && queue.count)
+						{
 							e = nextEnumerator(queue, queue.dequeue());
 						}
 
@@ -2395,7 +2395,7 @@ extends InfiniteEnumerable<T>
 					() =>
 					{
 						dispose.these(queue.dump());
-						dispose(mainEnumerator,queue);
+						dispose(mainEnumerator, queue);
 						mainEnumerator = null;
 						queue = null;
 					}
@@ -3564,12 +3564,12 @@ extends FiniteEnumerable<T>
 		var source = _._source, len = source.length;
 		return len && (predicate ? super.count(predicate) : len);
 	}
-	
+
 	elementAtOrDefault(index:number, defaultValue:T = null):T
 	{
 		var _ = this;
 		_.throwIfDisposed();
-		Integer.assertZeroOrGreater(index,'index');
+		Integer.assertZeroOrGreater(index, 'index');
 
 		var source = _._source;
 		return index<source.length
@@ -3860,11 +3860,16 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 }
 
 // A private static helper for the weave function.
-function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnumerator<T> {
-	if(e) {
-		if(e.moveNext()) {
+function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnumerator<T>
+{
+	if(e)
+	{
+		if(e.moveNext())
+		{
 			queue.enqueue(e);
-		} else {
+		}
+		else
+		{
 			dispose(e);
 			e = null;
 		}

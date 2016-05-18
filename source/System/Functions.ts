@@ -3,12 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-'use strict'; // For compatibility with (let, const, function, class);
-
 /**
  * Can be used statically or extended for varying different reusable function signatures.
  */
-class Functions
+export class Functions
 {
 
 	/**
@@ -43,7 +41,7 @@ const rootFunctions:Functions = new Functions();
 
 // Expose static versions.
 
-module Functions
+export module Functions
 {
 	/**
 	 * A typed method for use with simple selection of the parameter.

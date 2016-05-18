@@ -1,6 +1,7 @@
 /// <reference path="../../../../source/System/Uri/IUri.d.ts" />
 /// <reference path="../../../../source/System/IEquatable.d.ts" />
 /// <reference path="../../../../source/System/Primitive.d.ts" />
+/// <reference path="../../../../source/System/Uri/IUriComponentFormattable.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md

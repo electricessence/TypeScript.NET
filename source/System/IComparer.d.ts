@@ -4,7 +4,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-interface IComparer<T>
+export interface IComparer<T>
 {
 	compare(a:T, b:T):number;
 }
+
+export default IComparer;

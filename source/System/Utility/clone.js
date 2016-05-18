@@ -7,16 +7,16 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types'], factory);
+        define(["require", "exports", "../Types"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('../Types');
+    var Types_1 = require("../Types");
     function clone(source, depth) {
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
             return source;
-        if (!Types_1.default.isObject(source))
+        if (!Types_1.Type.isObject(source))
             return source;
         var result;
         if (Array.isArray(source)) {

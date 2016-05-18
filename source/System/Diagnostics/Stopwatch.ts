@@ -7,7 +7,7 @@
 
 'use strict'; // For compatibility with (let, const, function, class);
 
-import TimeSpan from "../Time/TimeSpan";
+import {TimeSpan} from "../Time/TimeSpan";
 
 function getTimestampMilliseconds():number
 {

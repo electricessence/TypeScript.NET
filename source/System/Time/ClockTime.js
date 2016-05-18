@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -8,11 +13,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './TimeQuantity'], factory);
+        define(["require", "exports", "./TimeQuantity"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var TimeQuantity_1 = require('./TimeQuantity');
+    "use strict";
+    var TimeQuantity_1 = require("./TimeQuantity");
     var ClockTime = (function (_super) {
         __extends(ClockTime, _super);
         function ClockTime() {
@@ -70,13 +75,14 @@ var __extends = (this && this.__extends) || function (d, b) {
             return a.join(", ").replace(", and, ", " and ");
         };
         return ClockTime;
-    }(TimeQuantity_1.default));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = ClockTime;
+    }(TimeQuantity_1.TimeQuantity));
+    exports.ClockTime = ClockTime;
     function pluralize(value, label) {
         if (Math.abs(value) !== 1)
             label += "s";
         return label;
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = ClockTime;
 });
 //# sourceMappingURL=ClockTime.js.map

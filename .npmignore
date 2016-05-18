@@ -2,6 +2,7 @@
 .bowerrc
 .idea
 .nuget
+.gulp*
 gulpfile.js
 node_modules
 bower_components

@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "../../Compare", "./SortContext", "../../Functions"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Values = require("../../Compare");
     var SortContext_1 = require("./SortContext");
     var Functions_1 = require("../../Functions");
@@ -29,7 +29,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         }
         KeySortedContext.prototype.compare = function (a, b) {
             var _ = this, ks = _._keySelector;
-            if (!ks || ks == Functions_1.default.Identity)
+            if (!ks || ks == Functions_1.Functions.Identity)
                 return _super.prototype.compare.call(this, a, b);
             var d = Values.compare(ks(a), ks(b));
             if (d == 0 && _._next)
@@ -37,7 +37,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return _._order * d;
         };
         return KeySortedContext;
-    }(SortContext_1.default));
+    }(SortContext_1.SortContext));
+    exports.KeySortedContext = KeySortedContext;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = KeySortedContext;
 });

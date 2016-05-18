@@ -3,10 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import ReadOnlyCollection from "./ReadOnlyCollectionBase";
+import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import {ReadOnlyCollectionBase} from "./ReadOnlyCollectionBase";
+import {ICollection} from "./ICollection";
 
-export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollection<T>
+export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollectionBase<T>
 {
 	constructor(c:ICollection<T>)
 	{

@@ -3,16 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IReadOnlyCollection.d.ts"/>
-///<reference path="Enumeration/IEnumerator.d.ts"/>
+import {CollectionBase} from "./CollectionBase";
+import {IEnumerator} from "./Enumeration/IEnumerator";
 
-import CollectionBase from "./CollectionBase";
-
-abstract class ReadOnlyCollectionBase<T>
+export abstract class ReadOnlyCollectionBase<T>
 extends CollectionBase<T>
 {
 
 	protected _getCount:()=>number;
+
 	protected getCount():number
 	{
 		return this._getCount();
@@ -39,7 +38,9 @@ extends CollectionBase<T>
 	}
 
 	protected _getEnumerator:()=>IEnumerator<T>;
-	getEnumerator():IEnumerator<T> {
+
+	getEnumerator():IEnumerator<T>
+	{
 		return this._getEnumerator();
 	}
 

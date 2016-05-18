@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IEnumerator.d.ts"/>
+import {IEnumerator} from "./IEnumerator";
 
-interface IEnumerable<T>
+export interface IEnumerable<T>
 {
 	getEnumerator(): IEnumerator<T>;
 
@@ -14,3 +14,5 @@ interface IEnumerable<T>
 	 */
 	isEndless?:boolean;
 }
+
+export default IEnumerable;

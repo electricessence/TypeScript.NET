@@ -4,17 +4,14 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-///<reference path="Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="Disposable/IDisposable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
+import {IDisposable} from "./Disposable/IDisposable";
+import {IMap} from "./Collections/Dictionaries/IDictionary";
 const NAME:string = 'Exception';
 
 /**
  * Represents errors that occur during application execution.
  */
-export default
-class Exception implements Error, IDisposable
+export class Exception implements Error, IDisposable
 {
 	/**
 	 * A string representation of the error type.
@@ -94,3 +91,5 @@ class Exception implements Error, IDisposable
 		}
 	}
 }
+
+export default Exception;

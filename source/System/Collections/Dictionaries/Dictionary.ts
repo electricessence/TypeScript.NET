@@ -4,23 +4,25 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../FunctionTypes.d.ts"/>
-///<reference path="../ILinkedListNode.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 import {areEqual} from "../../Compare";
-import Type from "../../Types";
-import Functions from "../../Functions";
+import {Type} from "../../Types";
+import {Functions} from "../../Functions";
+import {EnumeratorBase} from "../Enumeration/EnumeratorBase";
+import {LinkedNodeList} from "../LinkedNodeList";
+import {ObjectPool} from "../../Disposable/ObjectPool";
+import {IMap} from "./IDictionary";
+import {IKeyValuePair} from "../../KeyValuePair";
+import {IEnumerator} from "../Enumeration/IEnumerator";
+import {ILinkedNode} from "../ILinkedListNode";
+import {Selector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
-import EnumeratorBase from "../Enumeration/EnumeratorBase";
-import LinkedNodeList from "../LinkedNodeList";
-import ObjectPool from "../../Disposable/ObjectPool";
 
 const VOID0:any = void 0;
 
 
 export interface IHashEntry<TKey, TValue>
-extends  ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue> {
+extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey,TValue>
+{
 
 }
 // LinkedList for Dictionary
@@ -39,10 +41,11 @@ implements IHashEntry<TKey, TValue>
 var linkedListPool:ObjectPool<LinkedNodeList<any>>;
 function linkedNodeList():LinkedNodeList<any>;
 function linkedNodeList(recycle?:LinkedNodeList<any>):void;
-function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any> {
+function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>
+{
 	if(!linkedListPool)
 		linkedListPool
-			= new ObjectPool<LinkedNodeList<any>>(20,()=>new LinkedNodeList<any>());
+			= new ObjectPool<LinkedNodeList<any>>(20, ()=>new LinkedNodeList<any>());
 	if(!recycle) return linkedListPool.take();
 	recycle.clear();
 	linkedListPool.add(recycle);
@@ -72,8 +75,7 @@ function getHashString(obj:any):string
 }
 
 
-export default
-class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
+export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 {
 	// Retains the order...
 	private _entries:LinkedNodeList<IHashEntry<TKey, TValue>>;
@@ -160,7 +162,8 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 				let x = bucket.removeNode(bucketEntry),
 				    y = entries.removeNode(bucketEntry.value);
 
-				if(x && !bucket.count) {
+				if(x && !bucket.count)
+				{
 					delete buckets[hash];
 					linkedNodeList(bucket);
 					bucket = null;
@@ -263,3 +266,5 @@ class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	}
 
 }
+
+export default Dictionary;

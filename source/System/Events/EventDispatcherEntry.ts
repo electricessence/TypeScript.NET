@@ -3,17 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../IEquatable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
-import Type from "../Types";
-import DisposableBase from "../Disposable/DisposableBase";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import ArgumentException from "../Exceptions/ArgumentException";
+import {Type} from "../Types";
+import {DisposableBase} from "../Disposable/DisposableBase";
+import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import {ArgumentException} from "../Exceptions/ArgumentException";
 import {areEquivalent} from "../Compare";
+import {IEventListener} from "./IEventListener";
 
-export default
-class EventDispatcherEntry<TParams>
+export class EventDispatcherEntry<TParams>
 extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 {
 
@@ -85,7 +82,9 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 	equals(other:EventDispatcherEntry<TParams>):boolean
 	{
 		var _ = this;
-		return _.matches(other.type,other.listener)
+		return _.matches(other.type, other.listener)
 			&& areEquivalent(_.params, other.params, false);
 	}
 }
+
+export default EventDispatcherEntry;

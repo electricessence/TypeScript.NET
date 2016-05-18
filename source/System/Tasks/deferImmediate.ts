@@ -5,9 +5,12 @@
  */
 
 ///<reference path="../Collections/ILinkedListNode.d.ts"/>
-import Type from "../Types";
-import LinkedNodeList from "../Collections/LinkedNodeList";
-import Queue from "../Collections/Queue";
+import {Type} from "../Types";
+import {LinkedNodeList} from "../Collections/LinkedNodeList";
+import {Queue} from "../Collections/Queue";
+import {Closure} from "../FunctionTypes";
+import {ILinkedNode} from "../Collections/ILinkedListNode";
+import {ICancellable} from "./ICancellable";
 
 declare module process
 {
@@ -135,8 +138,8 @@ export default function deferImmediate(task:Closure):ICancellable
 	requestFlush();
 
 	return {
-		cancel:()=>!!immediateQueue.removeNode(entry),
-		dispose:()=>{ this.cancel(); }
+		cancel: ()=>!!immediateQueue.removeNode(entry),
+		dispose: ()=> { this.cancel(); }
 	}
 }
 

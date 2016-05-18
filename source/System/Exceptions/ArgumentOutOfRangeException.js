@@ -33,7 +33,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return NAME;
         };
         return ArgumentOutOfRangeException;
-    }(ArgumentException_1.default));
+    }(ArgumentException_1.ArgumentException));
+    exports.ArgumentOutOfRangeException = ArgumentOutOfRangeException;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ArgumentOutOfRangeException;
 });

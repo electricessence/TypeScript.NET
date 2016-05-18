@@ -7,11 +7,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ObjectDisposedException'], factory);
+        define(["require", "exports", "./ObjectDisposedException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var ObjectDisposedException_1 = require('./ObjectDisposedException');
+    "use strict";
+    var ObjectDisposedException_1 = require("./ObjectDisposedException");
     var DisposableBase = (function () {
         function DisposableBase(_finalizer) {
             this._finalizer = _finalizer;
@@ -27,7 +27,7 @@
         DisposableBase.prototype.throwIfDisposed = function (message, objectName) {
             if (objectName === void 0) { objectName = this._disposableObjectName; }
             if (this._wasDisposed)
-                throw new ObjectDisposedException_1.default(objectName, message);
+                throw new ObjectDisposedException_1.ObjectDisposedException(objectName, message);
             return true;
         };
         DisposableBase.prototype.dispose = function () {
@@ -46,6 +46,7 @@
         DisposableBase.prototype._onDispose = function () { };
         return DisposableBase;
     }());
+    exports.DisposableBase = DisposableBase;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DisposableBase;
 });

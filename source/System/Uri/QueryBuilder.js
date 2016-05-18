@@ -12,14 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./QueryParams", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator"], factory);
+        define(["require", "exports", "../Types", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator", "./QueryParams"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Types_1 = require("../Types");
-    var QueryParams = require("./QueryParams");
     var OrderedStringKeyDictionary_1 = require("../Collections/Dictionaries/OrderedStringKeyDictionary");
     var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
+    var QueryParams = require("./QueryParams");
     var QueryBuilder = (function (_super) {
         __extends(QueryBuilder, _super);
         function QueryBuilder(query, decodeValues) {
@@ -33,7 +33,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         QueryBuilder.prototype.importQuery = function (query, decodeValues) {
             if (decodeValues === void 0) { decodeValues = true; }
-            if (Types_1.default.isString(query)) {
+            if (Types_1.Type.isString(query)) {
                 this.importFromString(query, decodeValues);
             }
             else if (Enumerator_1.isEnumerableOrArrayLike(query)) {
@@ -68,7 +68,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.encode();
         };
         return QueryBuilder;
-    }(OrderedStringKeyDictionary_1.default));
+    }(OrderedStringKeyDictionary_1.OrderedStringKeyDictionary));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = QueryBuilder;
 });

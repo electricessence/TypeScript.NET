@@ -12,14 +12,14 @@
         define(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
     var dispose_1 = require("../Disposable/dispose");
     var Subscription_1 = require("./Subscription");
     var SubscribableBase = (function () {
         function SubscribableBase() {
             this.__subscriptions
-                = new LinkedNodeList_1.default();
+                = new LinkedNodeList_1.LinkedNodeList();
         }
         SubscribableBase.prototype._getSubscribers = function () {
             return this
@@ -36,7 +36,7 @@
             var n = _._findEntryNode(subscriber);
             if (n)
                 return n.value;
-            var s = new Subscription_1.default(_, subscriber);
+            var s = new Subscription_1.Subscription(_, subscriber);
             _.__subscriptions.addNode({ value: s });
             return s;
         };
@@ -55,7 +55,7 @@
             var s = _s.map(function (n) { return n.value; });
             var u = returnSubscribers ? s.map(function (o) { return o.subscriber; }) : null;
             _s.clear();
-            dispose_1.default.these(s);
+            dispose_1.dispose.these(s);
             return u;
         };
         SubscribableBase.prototype.unsubscribeAll = function () {

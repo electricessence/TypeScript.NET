@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Compare_1 = require("../Compare");
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
@@ -30,7 +30,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         }
         InternalNode.prototype.assertDetached = function () {
             if (this.next || this.previous)
-                throw new InvalidOperationException_1.default("Adding a node that is already placed.");
+                throw new InvalidOperationException_1.InvalidOperationException("Adding a node that is already placed.");
         };
         return InternalNode;
     }());
@@ -38,7 +38,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         if (!node)
             return null;
         if (!list)
-            throw new ArgumentNullException_1.default("list");
+            throw new ArgumentNullException_1.ArgumentNullException("list");
         var external = node.external;
         if (!external)
             node.external = external = new LinkedListNode(list, node);
@@ -46,14 +46,14 @@ var __extends = (this && this.__extends) || function (d, b) {
     }
     function getInternal(node, list) {
         if (!node)
-            throw new ArgumentNullException_1.default("node");
+            throw new ArgumentNullException_1.ArgumentNullException("node");
         if (!list)
-            throw new ArgumentNullException_1.default("list");
+            throw new ArgumentNullException_1.ArgumentNullException("list");
         if (node.list != list)
-            throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
+            throw new InvalidOperationException_1.InvalidOperationException("Provided node does not belong to this list.");
         var n = node._nodeInternal;
         if (!n)
-            throw new InvalidOperationException_1.default("Provided node is not valid.");
+            throw new InvalidOperationException_1.InvalidOperationException("Provided node is not valid.");
         return n;
     }
     var LinkedList = (function (_super) {
@@ -62,7 +62,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
             _super.call(this, null, equalityComparer);
             var _ = this;
-            _._listInternal = new LinkedNodeList_1.default();
+            _._listInternal = new LinkedNodeList_1.LinkedNodeList();
             _._importEntries(source);
         }
         LinkedList.prototype.getCount = function () {
@@ -93,7 +93,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 this._listInternal.forEach(function (node, i) { return action(node.value, i); });
         };
         LinkedList.prototype.getEnumerator = function () {
-            return LinkedNodeList_1.default.valueEnumeratorFrom(this._listInternal);
+            return LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(this._listInternal);
         };
         LinkedList.prototype._findFirst = function (entry) {
             var _ = this, equals = _._equalityComparer, next = _._listInternal.first;
@@ -190,7 +190,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             _._signalModification(true);
         };
         return LinkedList;
-    }(CollectionBase_1.default));
+    }(CollectionBase_1.CollectionBase));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = LinkedList;
     var LinkedListNode = (function () {

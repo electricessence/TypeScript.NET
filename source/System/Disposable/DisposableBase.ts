@@ -3,12 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IDisposableAware.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
+import {ObjectDisposedException} from "./ObjectDisposedException";
+import {IDisposableAware} from "./IDisposableAware";
 
-import ObjectDisposedException from './ObjectDisposedException';
-
-abstract class DisposableBase implements IDisposableAware
+export abstract class DisposableBase implements IDisposableAware
 {
 
 	constructor(private _finalizer?:() => void)

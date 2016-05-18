@@ -3,20 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../FunctionTypes.d.ts"/>
-///<reference path="../../IComparer.d.ts"/>
-///<reference path="../../Primitive.d.ts"/>
-///<reference path="../Array/IArray.d.ts"/>
-///<reference path="Order.d.ts"/>
-///<reference path="../../IComparable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 import * as Values from "../../Compare";
-import SortContext from "./SortContext";
-import Functions from "../../Functions";
+import {SortContext} from "./SortContext";
+import {Functions} from "../../Functions";
+import {Comparison, Selector} from "../../FunctionTypes";
 
-export default
-class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
+export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 {
 	constructor(
 		next:IComparer<T>,
@@ -37,3 +29,5 @@ class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 		return _._order*d;
 	}
 }
+
+export default KeySortedContext;

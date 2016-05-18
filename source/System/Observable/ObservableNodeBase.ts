@@ -9,8 +9,6 @@
 ///<reference path="IObservable.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import ObservableBase from "./ObservableBase";
-
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 export default
 class ObservableNodeBase<T>

@@ -6,7 +6,7 @@
 /**
  * This interface guarantees there will be a value property for all time units.
  */
-interface ITimeMeasurement
+export interface ITimeMeasurement
 {
 	ticks: number;
 	milliseconds: number;
@@ -16,3 +16,4 @@ interface ITimeMeasurement
 	days: number;
 }
 
+export default ITimeMeasurement;

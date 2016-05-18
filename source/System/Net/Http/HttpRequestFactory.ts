@@ -3,15 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IHttpRequestAdapter.d.ts"/>
-///<reference path="HttpMethodValue.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
-import ArgumentNullException from "../../Exceptions/ArgumentNullException";
-import Uri from "../../Uri/Uri";
-import DisposableBase from "../../Disposable/DisposableBase";
-import QueryBuilder from "../../Uri/QueryBuilder";
+import * as QueryParam from "../../Uri/QueryParam";
+import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
+import {DisposableBase} from "../../Disposable/DisposableBase";
+import {HttpMethodValue} from "./HttpMethodValue";
 import {GET, PUT, POST, DELETE} from "./HttpMethod";
+import {Uri} from "../../Uri/Uri";
+import {IUri} from "../../Uri/IUri";
+import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
+import {IPromise} from "../../Promises/IPromise";
 
 /**
  * This class exposes a factory for making requests to prepared uri and params.
@@ -35,7 +36,8 @@ export default class HttpRequestFactory extends DisposableBase
 		this._uriDefaults = Uri.from(uriDefaults);
 	}
 
-	protected _onDispose() {
+	protected _onDispose()
+	{
 		// super._onDispose(); // Not required for first level inheritance.
 		this._http = null;
 		this._uriDefaults = null;
@@ -52,7 +54,7 @@ export default class HttpRequestFactory extends DisposableBase
 			: new HttpRequestFactory(_._http, u);
 	}
 
-	params(params:QueryParamsConvertible):HttpRequestFactory
+	params(params:QueryParam.Convertible):HttpRequestFactory
 	{
 		var _ = this;
 		_.throwIfDisposed();

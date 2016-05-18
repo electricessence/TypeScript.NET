@@ -6,7 +6,8 @@
 ///<reference path="IComparable.d.ts"/>
 ///<reference path="Primitive.d.ts"/>
 ///<reference path="CompareResult.d.ts"/>
-import Type from "./Types";
+import {Type} from "./Types";
+import {Primitive} from "./Primitive";
 import isTrueNaN = Type.isTrueNaN;
 
 const VOID0:any = void 0;

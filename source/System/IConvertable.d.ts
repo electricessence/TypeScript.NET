@@ -5,9 +5,10 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IConvertible.cs
  */
 
-///<reference path="IFormatProvider.d.ts"/>
+import {IFormatProvider} from "./IFormatProvider";
 
-interface IConvertible
+
+export interface IConvertible
 {
 
 //	getTypeCode(): TypeCode;

@@ -1,23 +1,18 @@
-///<reference path='ITimeQuantity.d.ts'/>
-///<reference path="ITimeStamp.d.ts"/>
-///<reference path="IDateTime.d.ts"/>
-///<reference path="Calendars.d.ts"/>
-///<reference path="HowMany.ts"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from '../Types';
-import ClockTime from './ClockTime';
-import TimeSpan from './TimeSpan';
-import TimeStamp from './TimeStamp';
+import {ICalendarDate, ITimeStamp} from "./ITimeStamp";
+import {TimeSpan} from "./TimeSpan";
+import {ClockTime} from "./ClockTime";
+import {Milliseconds} from "./HowMany";
+import {TimeStamp} from "./TimeStamp";
 
 
-class DateTime implements ICalendarDate, IDateTime
+export class DateTime implements ICalendarDate, IDateTime
 {
 	private _value:Date;
 
@@ -46,7 +41,7 @@ class DateTime implements ICalendarDate, IDateTime
 		else if(value instanceof Date)
 			_._setJsDate(value);
 		else
-			_._value = value===void(0)
+			_._value = value=== void(0)
 				? new Date()
 				: new Date(value);
 	}
@@ -95,32 +90,32 @@ class DateTime implements ICalendarDate, IDateTime
 	addSeconds(seconds:number):DateTime
 	{
 		seconds = seconds || 0;
-		return this.addMilliseconds(seconds*HowMany.Milliseconds.Per.Second);
+		return this.addMilliseconds(seconds*Milliseconds.Per.Second);
 	}
 
 	addMinutes(minutes:number):DateTime
 	{
 		minutes = minutes || 0;
-		return this.addMilliseconds(minutes*HowMany.Milliseconds.Per.Minute);
+		return this.addMilliseconds(minutes*Milliseconds.Per.Minute);
 	}
 
 	addHours(hours:number):DateTime
 	{
 		hours = hours || 0;
-		return this.addMilliseconds(hours*HowMany.Milliseconds.Per.Hour);
+		return this.addMilliseconds(hours*Milliseconds.Per.Hour);
 	}
 
 	addDays(days:number):DateTime
 	{
 		days = days || 0;
-		return this.addMilliseconds(days*HowMany.Milliseconds.Per.Day);
+		return this.addMilliseconds(days*Milliseconds.Per.Day);
 	}
 
 	addMonths(months:number):DateTime
 	{
 		months = months || 0;
 		var d = this.toJsDate();
-		d.setMonth(d.getMonth()+months);
+		d.setMonth(d.getMonth() + months);
 		return new DateTime(d, this._kind);
 	}
 
@@ -128,7 +123,7 @@ class DateTime implements ICalendarDate, IDateTime
 	{
 		years = years || 0;
 		var d = this.toJsDate();
-		d.setFullYear(d.getFullYear()+years);
+		d.setFullYear(d.getFullYear() + years);
 		return new DateTime(d, this._kind);
 	}
 
@@ -203,7 +198,8 @@ class DateTime implements ICalendarDate, IDateTime
 	/**
 	 * Returns a readonly object which contains all the date and time components.
 	 */
-	toTimeStamp():ITimeStamp {
+	toTimeStamp():ITimeStamp
+	{
 		return TimeStamp.from(this);
 	}
 
@@ -279,8 +275,9 @@ class DateTime implements ICalendarDate, IDateTime
 	 * @param year
 	 * @returns {boolean}
 	 */
-	static isLeapYear(year:number):boolean {
-		return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+	static isLeapYear(year:number):boolean
+	{
+		return ((year%4==0) && (year%100!=0)) || (year%400==0);
 	}
 
 	/**
@@ -289,16 +286,17 @@ class DateTime implements ICalendarDate, IDateTime
 	 * @param month
 	 * @returns {any}
 	 */
-	static daysInMonth(year:number, month:Gregorian.Month):number {
+	static daysInMonth(year:number, month:Gregorian.Month):number
+	{
 		// Basically, add 1 month, subtract a day... What's the date?
-		return (new Date(year,month+1,0)).getDate();
+		return (new Date(year, month + 1, 0)).getDate();
 	}
 
 
 }
 
 // Extend DateTime's usefulness.
-module DateTime
+export module DateTime
 {
 	export const enum Kind {
 		Unspecified,

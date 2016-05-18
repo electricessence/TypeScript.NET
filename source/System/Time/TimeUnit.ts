@@ -4,11 +4,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeQuantity.d.ts"/>
-///<reference path="HowMany.ts"/>
+import {Hours, Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
 
-
-enum TimeUnit
+export enum TimeUnit
 {
 	Ticks,
 	Milliseconds,
@@ -18,7 +16,7 @@ enum TimeUnit
 	Days
 } // Earth Days
 
-module TimeUnit
+export module TimeUnit
 {
 
 	export function toMilliseconds(
@@ -29,17 +27,17 @@ module TimeUnit
 		switch(units)
 		{
 			case TimeUnit.Days:
-				value *= HowMany.Hours.Per.Day;
+				value *= Hours.Per.Day;
 			case TimeUnit.Hours:
-				value *= HowMany.Minutes.Per.Hour;
+				value *= Minutes.Per.Hour;
 			case TimeUnit.Minutes:
-				value *= HowMany.Seconds.Per.Minute;
+				value *= Seconds.Per.Minute;
 			case TimeUnit.Seconds:
-				value *= HowMany.Milliseconds.Per.Second;
+				value *= Milliseconds.Per.Second;
 			case TimeUnit.Milliseconds:
 				return value;
 			case TimeUnit.Ticks:
-				return value/HowMany.Ticks.Per.Millisecond;
+				return value/Ticks.Per.Millisecond;
 			default:
 				throw new Error("Invalid TimeUnit.");
 		}
@@ -52,24 +50,25 @@ module TimeUnit
 		switch(units)
 		{
 			case TimeUnit.Days:
-				return ms/HowMany.Milliseconds.Per.Day;
+				return ms/Milliseconds.Per.Day;
 			case TimeUnit.Hours:
-				return ms/HowMany.Milliseconds.Per.Hour;
+				return ms/Milliseconds.Per.Hour;
 			case TimeUnit.Minutes:
-				return ms/HowMany.Milliseconds.Per.Minute;
+				return ms/Milliseconds.Per.Minute;
 			case TimeUnit.Seconds:
-				return ms/HowMany.Milliseconds.Per.Second;
+				return ms/Milliseconds.Per.Second;
 			case TimeUnit.Milliseconds:
 				return ms;
 			case TimeUnit.Ticks:
-				return ms*HowMany.Ticks.Per.Millisecond;
+				return ms*Ticks.Per.Millisecond;
 			default:
 				throw new Error("Invalid TimeUnit.");
 		}
 	}
 
-	export function from(quantity:ITimeQuantity, unit:TimeUnit):number {
-		return quantity && fromMilliseconds(quantity.getTotalMilliseconds(),unit);
+	export function from(quantity:ITimeQuantity, unit:TimeUnit):number
+	{
+		return quantity && fromMilliseconds(quantity.getTotalMilliseconds(), unit);
 	}
 
 

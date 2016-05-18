@@ -10,7 +10,7 @@
         define(["require", "exports", "../Types"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Types_1 = require("../Types");
     function dispose() {
         var disposables = [];
@@ -67,7 +67,7 @@
     }
     exports.using = using;
     function disposeSingle(disposable, trapExceptions) {
-        if (disposable && Types_1.default.of(disposable).member('dispose').isFunction) {
+        if (disposable && Types_1.Type.of(disposable).member('dispose').isFunction) {
             if (trapExceptions) {
                 try {
                     disposable.dispose();

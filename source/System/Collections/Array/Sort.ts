@@ -3,12 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../FunctionTypes.d.ts"/>
-///<reference path="../Sorting/Order.d.ts"/>
-///<reference path="../../CompareResult.d.ts"/>
-
-import Type from '../../Types';
-import {compare} from '../../Compare';
+import {Type} from "../../Types";
+import {compare} from "../../Compare";
+import {Primitive} from "../../Primitive";
+import {Selector, Comparison} from "../../FunctionTypes";
 
 function ensureArray<T>(value:T|T[]):T[]
 {
@@ -58,7 +56,7 @@ export function createComparer<TSource,TSelect extends Primitive>(
 		for(let i = 0; i<len; i++)
 		{
 			var vA = aValue[i], vB = bValue[i],
-			    o  = oArray
+			    o                  = oArray
 				    ? (i<oArray.length ? oArray[i] : Order.Ascending)
 				    : <Order>order;
 

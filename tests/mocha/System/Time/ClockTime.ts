@@ -1,5 +1,5 @@
 ///<reference path="../../import.d.ts"/>
-///<reference path="../../../../source/System/Time/HowMany.ts"/>
+///<reference path="../../../../source/System/Time/HowMany.d.ts"/>
 
 import ClockTime from "../../../../source/System/Time/ClockTime";
 import Integer from "../../../../source/System/Integer";

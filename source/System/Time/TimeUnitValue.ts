@@ -9,9 +9,8 @@
 ///<reference path="../IFormattable.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import {areEqual, compare} from '../Compare';
-import TimeUnit from './TimeUnit';
-import TimeQuantity from './TimeQuantity';
+import {TimeUnit} from "./TimeUnit";
+import {TimeQuantity} from "./TimeQuantity";
 
 /**
  * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.

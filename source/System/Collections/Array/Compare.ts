@@ -3,12 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IArray.d.ts"/>
-///<reference path="../../FunctionTypes.d.ts"/>
-///<reference path="../../Primitive.d.ts"/>
-///<reference path="../../IComparable.d.ts"/>
 import * as Values from "../../Compare";
-import Type from "../../Types";
+import {Type} from "../../Types";
+import {Primitive} from "../../Primitive";
+import {EqualityComparison, Comparison} from "../../FunctionTypes";
+import {IArray} from "./IArray";
+import {IComparable} from "../../IComparable";
 
 /*  validateSize: Utility for quick validation/invalidation of array equality.
 	Why this way?  Why not pass a closure for the last return?
@@ -78,12 +78,15 @@ function sort<T>(a:IArray<T>, comparer:Comparison<T>):IArray<T>
 	var len = a.length, b:T[];
 	if(len>65536)
 		b = new Array(len);
-	else {
+	else
+	{
 		b = [];
 		b.length = len;
 	}
 	for(let i = 0; i<len; i++)
+	{
 		b[i] = a[i];
+	}
 
 	b.sort(comparer);
 	return b;

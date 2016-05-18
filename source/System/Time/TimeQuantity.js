@@ -7,12 +7,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Compare', './TimeUnit'], factory);
+        define(["require", "exports", "../Compare", "./TimeUnit"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var Compare_1 = require('../Compare');
-    var TimeUnit_1 = require('./TimeUnit');
+    "use strict";
+    var Compare_1 = require("../Compare");
+    var TimeUnit_1 = require("./TimeUnit");
     var TimeQuantity = (function () {
         function TimeQuantity(_quantity) {
             if (_quantity === void 0) { _quantity = 0; }
@@ -54,10 +54,11 @@
             configurable: true
         });
         TimeQuantity.prototype.getTotal = function (units) {
-            return TimeUnit_1.default.fromMilliseconds(this.getTotalMilliseconds(), units);
+            return TimeUnit_1.TimeUnit.fromMilliseconds(this.getTotalMilliseconds(), units);
         };
         return TimeQuantity;
     }());
+    exports.TimeQuantity = TimeQuantity;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TimeQuantity;
 });

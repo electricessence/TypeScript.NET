@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-export default function shallowCopy(source:any, target:any = {}):any
+export function shallowCopy(source:any, target:any = {}):any
 {
 	if(target)
 	{
@@ -16,3 +16,5 @@ export default function shallowCopy(source:any, target:any = {}):any
 
 	return target;
 }
+
+export default shallowCopy;

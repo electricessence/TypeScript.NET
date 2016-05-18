@@ -10,7 +10,7 @@
         define(["require", "exports"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Functions = (function () {
         function Functions() {
         }
@@ -20,6 +20,7 @@
         Functions.prototype.Blank = function () { };
         return Functions;
     }());
+    exports.Functions = Functions;
     var rootFunctions = new Functions();
     var Functions;
     (function (Functions) {
@@ -27,7 +28,7 @@
         Functions.True = rootFunctions.True;
         Functions.False = rootFunctions.False;
         Functions.Blank = rootFunctions.Blank;
-    })(Functions || (Functions = {}));
+    })(Functions = exports.Functions || (exports.Functions = {}));
     Object.freeze(Functions);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Functions;

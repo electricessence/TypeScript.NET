@@ -3,15 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../Disposable/IDisposable.d.ts"/>
-///<reference path="IEnumerator.d.ts"/>
-///<reference path="IYield.d.ts"/>
-///<reference path="IIterator.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
-import Type from "../../Types";
-import DisposableBase from "../../Disposable/DisposableBase";
-import ObjectPool from "../../Disposable/ObjectPool";
+import {Type} from "../../Types";
+import {DisposableBase} from "../../Disposable/DisposableBase";
+import {ObjectPool} from "../../Disposable/ObjectPool";
+import {IDisposable} from "../../Disposable/IDisposable";
+import {IEnumerator} from "./IEnumerator";
+import {IIteratorResult} from "./IIterator";
 
 const VOID0:any = void(0);
 
@@ -58,8 +55,7 @@ enum EnumeratorState { Before, Running, After }
 
 // "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
-export default
-class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
+export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 {
 
 	private _yielder:Yielder<T>;
@@ -199,3 +195,5 @@ class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	}
 
 }
+
+export default EnumeratorBase;

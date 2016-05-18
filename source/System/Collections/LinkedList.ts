@@ -4,17 +4,17 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ILinkedListNode.d.ts"/>
-///<reference path="ILinkedList.d.ts"/>
-///<reference path="IEnumerableOrArray.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
 import {areEqual} from "../Compare";
-import LinkedNodeList from "./LinkedNodeList";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import CollectionBase from "./CollectionBase";
-
+import {LinkedNodeList} from "./LinkedNodeList";
+import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
+import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import {CollectionBase} from "./CollectionBase";
+import {ILinkedListNode, ILinkedNode, INodeWithValue} from "./ILinkedListNode";
+import {IEnumerator} from "./Enumeration/IEnumerator";
+import {Predicate, Action, EqualityComparison} from "../FunctionTypes";
+import {ILinkedList} from "./ILinkedList";
+import {IEnumerableOrArray} from "./IEnumerableOrArray";
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

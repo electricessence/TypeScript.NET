@@ -3,21 +3,23 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Primitive.d.ts"/>
-///<reference path="ISet.d.ts"/>
-///<reference path="IEnumerableOrArray.d.ts"/>
-import Type from "../Types";
-import ArgumentException from "../Exceptions/ArgumentException";
-import SetBase from "./SetBase";
+
+import {Type} from "../Types";
+import {ArgumentException} from "../Exceptions/ArgumentException";
+import {SetBase} from "./SetBase";
+import {IMap} from "./Dictionaries/IDictionary";
+import {ILinkedNodeWithValue} from "./ILinkedListNode";
+import {Primitive} from "../Primitive";
+import {IEnumerableOrArray} from "./IEnumerableOrArray";
 
 const OTHER = 'other';
 
-export default class Set<T extends Primitive>
+export class Set<T extends Primitive>
 extends SetBase<T>
 {
 	protected newUsing(source?:IEnumerableOrArray<T>):Set<T>
 	{
-		return new Set(source);
+		return new Set<T>(source);
 	}
 
 	private _registry:IMap<IMap<ILinkedNodeWithValue<T>>>;
@@ -82,7 +84,7 @@ extends SetBase<T>
 
 		return 0;
 	}
-	
+
 }
 
 function wipe(map:IMap<any>, depth:number = 1):void
@@ -97,3 +99,5 @@ function wipe(map:IMap<any>, depth:number = 1):void
 		}
 	}
 }
+
+export default Set;

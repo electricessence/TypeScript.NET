@@ -4,27 +4,26 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ILinkedList.d.ts"/>
+import {ILinkedList} from "./ILinkedList";
 
-
-interface ILinkedNode<TNode extends ILinkedNode<TNode>>
+export interface ILinkedNode<TNode extends ILinkedNode<TNode>>
 {
 	previous?:TNode;
 	next?:TNode;
 }
 
-interface INodeWithValue<TValue>
+export interface INodeWithValue<TValue>
 {
 	value:TValue;
 }
 
-interface ILinkedNodeWithValue<T>
+export interface ILinkedNodeWithValue<T>
 extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T> {
 
 }
 
 // Use an interface in order to prevent external construction of LinkedListNode
-interface ILinkedListNode<T>
+export interface ILinkedListNode<T>
 extends ILinkedNodeWithValue<T>
 {
 	previous:ILinkedListNode<T>;
@@ -41,3 +40,5 @@ extends ILinkedNodeWithValue<T>
 	addNodeAfter(after:ILinkedListNode<T>): void;
 
 }
+
+export default ILinkedListNode;

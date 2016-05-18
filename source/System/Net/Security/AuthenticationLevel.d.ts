@@ -5,7 +5,7 @@
  */
 
 
-declare const enum AuthenticationLevel
+export declare const enum AuthenticationLevel
 {
 	/**
 	 * No authentication is required for the client and server.
@@ -23,3 +23,5 @@ declare const enum AuthenticationLevel
 	MutualAuthRequired  = 2,
 
 }
+
+export default AuthenticationLevel;

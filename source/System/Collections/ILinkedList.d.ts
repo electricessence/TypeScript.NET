@@ -4,14 +4,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="Enumeration/IEnumerable.d.ts"/>
-///<reference path="Enumeration/IEnumerator.d.ts"/>
-///<reference path="Enumeration/IEnumerateEach.d.ts"/>
-///<reference path="ICollection.d.ts"/>
-///<reference path="ILinkedListNode.d.ts"/>
+import {ICollection} from "./ICollection";
+import {ILinkedListNode, ILinkedNode} from "./ILinkedListNode";
+import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 
-
-interface ILinkedNodeList<TNode extends ILinkedNode<TNode>>
+export interface ILinkedNodeList<TNode extends ILinkedNode<TNode>>
 {
 	first:TNode;
 	last:TNode;
@@ -23,7 +20,7 @@ interface ILinkedNodeList<TNode extends ILinkedNode<TNode>>
 
 }
 
-interface ILinkedList<T>
+export interface ILinkedList<T>
 extends ILinkedNodeList<ILinkedListNode<T>>,
 	ICollection<T>,
 	IEnumerateEach<T>
@@ -41,3 +38,5 @@ extends ILinkedNodeList<ILinkedListNode<T>>,
 	addAfter(node:ILinkedListNode<T>, entry:T):void;
 
 }
+
+export default ILinkedList;

@@ -4,22 +4,17 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ICollection.d.ts"/>
-///<reference path="IList.d.ts"/>
-///<reference path="Enumeration/IEnumerateEach.d.ts"/>
-///<reference path="../FunctionTypes.d.ts"/>
-///<reference path="IEnumerableOrArray.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 import {areEqual} from "../Compare";
 import * as AU from "./Array/Utility";
-import Type from "../Types";
-import Integer from "../Integer";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
-import NotImplementedException from "../Exceptions/NotImplementedException";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
-import CollectionBase from "./CollectionBase";
+import {Type} from "../Types";
+import {Integer} from "../Integer";
+import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
+import {NotImplementedException} from "../Exceptions/NotImplementedException";
+import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
+import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
+import {CollectionBase} from "./CollectionBase";
+import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
+import {IEnumerator} from "./Enumeration/IEnumerator";
 
 const MINIMUM_GROW:number = 4;
 const SHRINK_THRESHOLD:number = 32; // Unused?
@@ -28,8 +23,7 @@ const GROW_FACTOR_HALF:number = 100;
 const DEFAULT_CAPACITY:number = MINIMUM_GROW;
 var emptyArray:any[] = [];
 
-export default
-class Queue<T>
+export class Queue<T>
 extends CollectionBase<T>
 {
 
@@ -43,7 +37,7 @@ extends CollectionBase<T>
 		source?:IEnumerableOrArray<T> | number,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		super(null,equalityComparer);
+		super(null, equalityComparer);
 		var _ = this;
 		_._head = 0;
 		_._tail = 0;
@@ -178,7 +172,7 @@ extends CollectionBase<T>
 
 	forEach(action:Predicate<T> | Action<T>):void
 	{
-		super.forEach(action,true);
+		super.forEach(action, true);
 	}
 
 	setCapacity(capacity:number):void
@@ -220,7 +214,7 @@ extends CollectionBase<T>
 		_._capacity = capacity;
 		_._head = 0;
 		_._tail = (size==capacity) ? 0 : size;
-		
+
 		_._signalModification(true);
 	}
 
@@ -253,7 +247,8 @@ extends CollectionBase<T>
 		return removed;
 	}
 
-	dequeue(throwIfEmpty:boolean = false):T {
+	dequeue(throwIfEmpty:boolean = false):T
+	{
 		var _ = this;
 		_.assertModifiable();
 
@@ -338,3 +333,5 @@ function assertIntegerZeroOrGreater(value:number, property:string):void
 	Integer.assert(value, property);
 	assertZeroOrGreater(value, property);
 }
+
+export default Queue;

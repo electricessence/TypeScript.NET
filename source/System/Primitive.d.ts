@@ -3,4 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-declare type Primitive = string|number|boolean;
+export declare type Primitive = string|number|boolean;
+
+export default Primitive;

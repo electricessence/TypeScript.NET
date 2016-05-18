@@ -13,11 +13,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './ArgumentException'], factory);
+        define(["require", "exports", "./ArgumentException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var ArgumentException_1 = require('./ArgumentException');
+    "use strict";
+    var ArgumentException_1 = require("./ArgumentException");
     var NAME = 'ArgumentNullException';
     var ArgumentNullException = (function (_super) {
         __extends(ArgumentNullException, _super);
@@ -30,7 +30,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return NAME;
         };
         return ArgumentNullException;
-    }(ArgumentException_1.default));
+    }(ArgumentException_1.ArgumentException));
+    exports.ArgumentNullException = ArgumentNullException;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ArgumentNullException;
 });

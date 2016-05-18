@@ -3,9 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IDisposable.d.ts"/>
+import {IDisposable} from "./IDisposable";
 
-interface IDisposableAware extends IDisposable
+export interface IDisposableAware extends IDisposable
 {
 	wasDisposed: boolean;
 }
+
+export default IDisposableAware;

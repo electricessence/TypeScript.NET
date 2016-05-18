@@ -3,4 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-type IEventListener = EventListenerOrEventListenerObject | Func<void>;
+import {Func} from "../FunctionTypes";
+
+export type IEventListener = EventListenerOrEventListenerObject | Func<void>;
+
+export default IEventListener;

@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Compare_1 = require("../../Compare");
     var Enumerator_1 = require("../Enumeration/Enumerator");
     var CollectionBase_1 = require("../CollectionBase");
@@ -34,8 +34,8 @@ var __extends = (this && this.__extends) || function (d, b) {
         DictionaryBase.prototype._addInternal = function (item) {
             var _this = this;
             if (!item)
-                throw new ArgumentNullException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-            return KeyValueExtract_1.default(item, function (key, value) { return _this.addByKeyValue(key, value); });
+                throw new ArgumentNullException_1.ArgumentNullException('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+            return KeyValueExtract_1.extractKeyValue(item, function (key, value) { return _this.addByKeyValue(key, value); });
         };
         DictionaryBase.prototype._clearInternal = function () {
             var _ = this, count = 0;
@@ -50,7 +50,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _this = this;
             if (!item || !this.getCount())
                 return false;
-            return KeyValueExtract_1.default(item, function (key, value) {
+            return KeyValueExtract_1.extractKeyValue(item, function (key, value) {
                 var v = _this.getValue(key);
                 return Compare_1.areEqual(value, v);
             });
@@ -59,7 +59,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _this = this;
             if (!item)
                 return 0;
-            return KeyValueExtract_1.default(item, function (key, value) {
+            return KeyValueExtract_1.extractKeyValue(item, function (key, value) {
                 var v = _this.getValue(key);
                 return (Compare_1.areEqual(value, v) && _this.removeByKey(key))
                     ? 1 : 0;
@@ -77,10 +77,10 @@ var __extends = (this && this.__extends) || function (d, b) {
         });
         DictionaryBase.prototype.addByKeyValue = function (key, value) {
             if (value === VOID0)
-                throw new InvalidOperationException_1.default("Cannot add 'undefined' as a value.");
+                throw new InvalidOperationException_1.InvalidOperationException("Cannot add 'undefined' as a value.");
             var _ = this;
             if (_.containsKey(key)) {
-                var ex = new InvalidOperationException_1.default("Adding a key/value when the key already exists.");
+                var ex = new InvalidOperationException_1.InvalidOperationException("Adding a key/value when the key already exists.");
                 ex.data['key'] = key;
                 ex.data['value'] = value;
                 throw ex;
@@ -133,7 +133,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (!pairs)
                 return 0;
             var changed = 0;
-            Enumerator_1.forEach(pairs, function (pair) { return KeyValueExtract_1.default(pair, function (key, value) {
+            Enumerator_1.forEach(pairs, function (pair) { return KeyValueExtract_1.extractKeyValue(pair, function (key, value) {
                 if (_._setValueInternal(key, value))
                     changed++;
             }); });
@@ -142,7 +142,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         DictionaryBase.prototype.getEnumerator = function () {
             var _ = this;
             var ver, keys, len, i = 0;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 ver = _._version;
                 keys = _.getKeys();
                 len = keys.length;
@@ -157,7 +157,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         return DictionaryBase;
-    }(CollectionBase_1.default));
+    }(CollectionBase_1.CollectionBase));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DictionaryBase;
 });

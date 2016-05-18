@@ -3,10 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IArray.d.ts"/>
-///<reference path="../../FunctionTypes.d.ts"/>
-import Type from "../../Types";
+import {Type} from "../../Types";
 import {copy} from "./Utility";
+import {IArray} from "./IArray";
 
 const VOID0:any = void(0);
 

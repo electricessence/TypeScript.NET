@@ -12,11 +12,10 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./../Observable/ObservableBase"], factory);
+        define(["require", "exports"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ObservableBase_1 = require("./../Observable/ObservableBase");
     var Timer = (function (_super) {
         __extends(Timer, _super);
         function Timer(_interval, _maxCount, _initialDelay) {
@@ -106,7 +105,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
         };
         return Timer;
-    }(ObservableBase_1.default));
+    }(ObservableBase));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Timer;
 });

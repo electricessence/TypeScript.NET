@@ -4,11 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Disposable/IDisposable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
-import Type from '../Types';
-import LinkedList from '../Collections/LinkedList';
+import {Type} from "../Types";
+import {IDisposable} from "../Disposable/IDisposable";
 
 const VOID0:any = void 0;
 
@@ -23,8 +20,7 @@ const VOID0:any = void 0;
  *****************************/
 
 
-export default
-class StringBuilder implements IDisposable
+export class StringBuilder implements IDisposable
 	// Adding IDisposable allows for use with System.using();
 	// ... and since this may end up being a large array container, might be a good idea to allow for flexible cleanup.
 {
@@ -42,10 +38,12 @@ class StringBuilder implements IDisposable
 
 	private appendSingle(item:any):void
 	{
-		if(item!==null && item!==VOID0) {
+		if(item!==null && item!==VOID0)
+		{
 			var _ = this;
 			_._latest = null;
-			switch(typeof item) {
+			switch(typeof item)
+			{
 				case Type.OBJECT:
 				case Type.FUNCTION:
 					item = item.toString();
@@ -79,9 +77,10 @@ class StringBuilder implements IDisposable
 	{
 		var _ = this;
 		items.forEach(
-				i=>
+			i=>
 			{
-				if(i!==null && i!==VOID0) {
+				if(i!==null && i!==VOID0)
+				{
 					_.appendSingle(i);
 					_._partArray.push("\r\n");
 				}
@@ -133,3 +132,5 @@ class StringBuilder implements IDisposable
 	}
 
 }
+
+export default StringBuilder;

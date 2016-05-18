@@ -41,7 +41,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this._getEnumerator();
         };
         return ReadOnlyCollectionBase;
-    }(CollectionBase_1.default));
+    }(CollectionBase_1.CollectionBase));
+    exports.ReadOnlyCollectionBase = ReadOnlyCollectionBase;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ReadOnlyCollectionBase;
 });

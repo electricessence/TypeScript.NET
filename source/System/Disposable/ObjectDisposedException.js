@@ -13,11 +13,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Exceptions/InvalidOperationException'], factory);
+        define(["require", "exports", "../Exceptions/InvalidOperationException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
+    "use strict";
+    var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var NAME = 'ObjectDisposedException';
     var ObjectDisposedException = (function (_super) {
         __extends(ObjectDisposedException, _super);
@@ -41,7 +41,8 @@ var __extends = (this && this.__extends) || function (d, b) {
                 throw new ObjectDisposedException(objectName, message);
         };
         return ObjectDisposedException;
-    }(InvalidOperationException_1.default));
+    }(InvalidOperationException_1.InvalidOperationException));
+    exports.ObjectDisposedException = ObjectDisposedException;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ObjectDisposedException;
 });

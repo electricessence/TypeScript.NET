@@ -4,32 +4,34 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
  */
 
-declare type FileScheme = 'file';
-declare type GopherScheme = 'gopher';
-declare type FtpScheme = 'ftp';
-declare type HttpScheme = 'http';
-declare type HttpsScheme = 'https';
-declare type LdapScheme = 'ldap';
-declare type MailtoScheme = 'mailto';
-declare type PipeScheme = 'net.pipe';
-declare type TcpScheme = 'net.tcp';
-declare type NntpScheme = 'nntp';
-declare type TelnetScheme = 'telnet';
-declare type UuidScheme = 'uuid';
+export declare type File = 'file';
+export declare type Gopher = 'gopher';
+export declare type FTP = 'ftp';
+export declare type HTTP = 'http';
+export declare type HTTPS = 'https';
+export declare type LDAP = 'ldap';
+export declare type MailTo = 'mailto';
+export declare type Pipe = 'net.pipe';
+export declare type TCP = 'net.tcp';
+export declare type NNTP = 'nntp' | 'news';
+export declare type Telnet = 'telnet';
+export declare type UUID = 'uuid';
 
 /**
  * The allowed HTTP Method values.
  */
-declare type SchemeValue
-	= FileScheme
-	| GopherScheme
-	| FtpScheme
-	| HttpScheme
-	| HttpsScheme
-	| LdapScheme
-	| MailtoScheme
-	| PipeScheme
-	| TcpScheme
-	| NntpScheme
-	| TelnetScheme
-	| UuidScheme;
+export declare type SchemeValue
+	= File
+	| Gopher
+	| FTP
+	| HTTP
+	| HTTPS
+	| LDAP
+	| MailTo
+	| Pipe
+	| TCP
+	| NNTP
+	| Telnet
+	| UUID;
+
+export default SchemeValue;

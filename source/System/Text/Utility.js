@@ -85,12 +85,12 @@
             }
             var r = params[n];
             switch (typeof r) {
-                case Types_1.default.STRING:
-                case Types_1.default.NUMBER:
-                case Types_1.default.BOOLEAN:
+                case Types_1.Type.STRING:
+                case Types_1.Type.NUMBER:
+                case Types_1.Type.BOOLEAN:
                     return r;
                 default:
-                    return (r && Types_1.default.hasMemberOfType(r, "toString", Types_1.default.FUNCTION))
+                    return (r && Types_1.Type.hasMemberOfType(r, "toString", Types_1.Type.FUNCTION))
                         ? r.toString()
                         : a;
             }
@@ -98,7 +98,7 @@
     }
     exports.supplant = supplant;
     function canMatch(source, match) {
-        if (!Types_1.default.isString(source) || !match)
+        if (!Types_1.Type.isString(source) || !match)
             return false;
         if (source === match)
             return true;
@@ -107,12 +107,12 @@
     }
     function startsWith(source, pattern) {
         var m = canMatch(source, pattern);
-        return Types_1.default.isBoolean(m) ? m : source.indexOf(pattern) == 0;
+        return Types_1.Type.isBoolean(m) ? m : source.indexOf(pattern) == 0;
     }
     exports.startsWith = startsWith;
     function endsWith(source, pattern) {
         var m = canMatch(source, pattern);
-        return Types_1.default.isBoolean(m) ? m : source.lastIndexOf(pattern) == (source.length - pattern.length);
+        return Types_1.Type.isBoolean(m) ? m : source.lastIndexOf(pattern) == (source.length - pattern.length);
     }
     exports.endsWith = endsWith;
 });

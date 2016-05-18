@@ -20,6 +20,7 @@
         }
         return target;
     }
+    exports.shallowCopy = shallowCopy;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = shallowCopy;
 });

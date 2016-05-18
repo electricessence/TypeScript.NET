@@ -4,17 +4,14 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-///<reference path="IDisposableAware.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
-import Exception from '../Exception';
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
+import {Exception} from "../Exception";
+import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
+import {IDisposableAware} from "./IDisposableAware";
 
 
 const NAME:string = 'ObjectDisposedException';
 
-export default
-class ObjectDisposedException
+export class ObjectDisposedException
 extends InvalidOperationException
 {
 
@@ -55,3 +52,5 @@ extends InvalidOperationException
 	}
 
 }
+
+export default ObjectDisposedException;

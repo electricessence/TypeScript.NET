@@ -10,7 +10,7 @@
         define(["require", "exports", "../../Compare"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Values = require("../../Compare");
     var SortContext = (function () {
         function SortContext(_next, _comparer, _order) {
@@ -42,6 +42,7 @@
         };
         return SortContext;
     }());
+    exports.SortContext = SortContext;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = SortContext;
 });

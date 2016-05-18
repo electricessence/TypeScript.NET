@@ -3,10 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path='../../Disposable/IDisposable.d.ts'/>
+
+import {IDisposable} from "../../Disposable/IDisposable";
+import {IIterator} from "./IIterator";
 
 // IIterator is added for future compatibility.
-interface IEnumerator<T> extends IIterator<T>, IDisposable {
+export interface IEnumerator<T> extends IIterator<T>, IDisposable {
 
 	/**
 	 * The current value within the enumeration.
@@ -33,3 +35,5 @@ interface IEnumerator<T> extends IIterator<T>, IDisposable {
 	 */
 	isEndless?:boolean;
 }
+
+export default IEnumerator;

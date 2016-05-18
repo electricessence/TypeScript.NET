@@ -3,7 +3,6 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";

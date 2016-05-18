@@ -3,33 +3,32 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../Disposable/IDisposable.d.ts"/>
-///<reference path="IEnumerable.d.ts"/>
-///<reference path="IEnumerator.d.ts"/>
-///<reference path="IYield.d.ts"/>
-///<reference path="../IEnumerableOrArray.d.ts"/>
-///<reference path="IIterator.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 import {using} from "../../Disposable/dispose";
-import Type from "../../Types";
-import ArrayEnumerator from "./ArrayEnumerator";
-import IndexEnumerator from "./IndexEnumerator";
-import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
+import {Type} from "../../Types";
+import {ArrayEnumerator} from "./ArrayEnumerator";
+import {IndexEnumerator} from "./IndexEnumerator";
+import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
+import {IEnumerator} from "./IEnumerator";
+import {IEnumerable} from "./IEnumerable";
+import {IIteratorResult} from "./IIterator";
+import {IEnumerableOrArray} from "../IEnumerableOrArray";
 
 const
-	VOID0:any = void(0),
-	STRING_EMPTY:string = "",
+	VOID0:any                 = void(0),
+	STRING_EMPTY:string       = "",
 	ENDLESS_EXCEPTION_MESSAGE =
-		'Cannot call forEach on an endless enumerable. '+
+		'Cannot call forEach on an endless enumerable. ' +
 		'Would result in an infinite loop that could hang the current process.';
 
-export function throwIfEndless(isEndless:boolean):void {
+export function throwIfEndless(isEndless:boolean):void
+{
 	if(isEndless) throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
 }
 
-function initArrayFrom(source:IEnumerableOrArray<any>|IEnumerator<any>):any[] {
-	if(Array.isArray(source) || Type.isString(source)) {
+function initArrayFrom(source:IEnumerableOrArray<any>|IEnumerator<any>):any[]
+{
+	if(Array.isArray(source) || Type.isString(source))
+	{
 		var len = source.length;
 		if(isFinite(len))
 		{
@@ -71,7 +70,8 @@ class EmptyEnumerator implements IEnumerator<any>
 
 	dispose():void { }
 
-	get isEndless():boolean {
+	get isEndless():boolean
+	{
 		return false;
 	}
 }
@@ -201,7 +201,7 @@ export function toArray<T>(
 		return source.slice();
 
 	var result:T[] = initArrayFrom(source);
-	if(!forEach(source,(e, i) => { result[i] = e; }))
+	if(!forEach(source, (e, i) => { result[i] = e; }))
 		throw new UnsupportedEnumerableException();
 
 	return result;
@@ -218,7 +218,7 @@ export function map<T,TResult>(
 	selector:Selector<T,TResult>):TResult[]
 {
 	var result:TResult[] = initArrayFrom(source);
-	if(!forEach(source,(e, i) => { result[i] = selector(e); }))
+	if(!forEach(source, (e, i) => { result[i] = selector(e); }))
 		throw new UnsupportedEnumerableException();
 
 	return result;

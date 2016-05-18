@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "../../Exceptions/SystemException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var SystemException_1 = require("../../Exceptions/SystemException");
     var NAME = 'UnsupportedEnumerableException';
     var UnsupportedEnumerableException = (function (_super) {
@@ -28,7 +28,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return NAME;
         };
         return UnsupportedEnumerableException;
-    }(SystemException_1.default));
+    }(SystemException_1.SystemException));
+    exports.UnsupportedEnumerableException = UnsupportedEnumerableException;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = UnsupportedEnumerableException;
 });

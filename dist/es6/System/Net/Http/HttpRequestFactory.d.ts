@@ -1,5 +1,6 @@
 /// <reference path="../../../../../source/System/Net/Http/IHttpRequestAdapter.d.ts" />
 /// <reference path="../../../../../source/System/Net/Http/HttpMethodValue.d.ts" />
+/// <reference path="../../../../../source/System/Uri/IUriComponentFormattable.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md

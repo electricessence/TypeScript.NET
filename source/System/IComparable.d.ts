@@ -4,11 +4,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="Primitive.d.ts"/>
 
-interface IComparable<T>
+import {Primitive} from "./Primitive";
+
+export interface IComparable<T>
 {
-	compareTo(other:T): number;
+	compareTo(other:T):number;
 }
 
-declare type Comparable = Primitive|IComparable<any>;
+export declare type Comparable = Primitive|IComparable<any>;
+
+export default IComparable;

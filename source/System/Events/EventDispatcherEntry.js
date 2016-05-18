@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "../Types", "../Disposable/DisposableBase", "../Exceptions/ArgumentNullException", "../Exceptions/ArgumentException", "../Compare"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Types_1 = require("../Types");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -30,9 +30,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.listener = listener;
             this.params = params;
             if (!listener)
-                throw new ArgumentNullException_1.default('listener');
-            if (Types_1.default.isObject(listener) && !Types_1.default.hasMemberOfType(listener, "handleEvent", Types_1.default.FUNCTION))
-                throw new ArgumentException_1.default('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
+                throw new ArgumentNullException_1.ArgumentNullException('listener');
+            if (Types_1.Type.isObject(listener) && !Types_1.Type.hasMemberOfType(listener, "handleEvent", Types_1.Type.FUNCTION))
+                throw new ArgumentException_1.ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
             var _ = this;
             _.type = type;
             _.listener = listener;
@@ -49,7 +49,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return false;
             var l = _.listener, d = l && e.type == _.type;
             if (d) {
-                if (Types_1.default.isFunction(l))
+                if (Types_1.Type.isFunction(l))
                     _.listener(e);
                 else
                     l.handleEvent(e);
@@ -67,7 +67,8 @@ var __extends = (this && this.__extends) || function (d, b) {
                 && Compare_1.areEquivalent(_.params, other.params, false);
         };
         return EventDispatcherEntry;
-    }(DisposableBase_1.default));
+    }(DisposableBase_1.DisposableBase));
+    exports.EventDispatcherEntry = EventDispatcherEntry;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = EventDispatcherEntry;
 });

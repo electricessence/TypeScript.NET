@@ -4,11 +4,13 @@
  * Based on: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
  */
 
-///<reference path="HttpMethodValue.d.ts"/>
-///<reference path="../../Uri/IUri.d.ts"/>
 
+import * as HttpMethod from "./HttpMethodValue";
+import {HttpMethodValue} from "./HttpMethodValue";
+import {IUri} from "../../Uri/IUri";
 
-interface IHttpRequestParamsBase {
+interface IHttpRequestParamsBase
+{
 	/**
 	 * See HttpMethod.ts and HttpMethodValue.d.ts.  HttpMethodValue is a string literal type.
 	 */
@@ -17,14 +19,19 @@ interface IHttpRequestParamsBase {
 	data?:any;
 }
 
-interface IHttpRequestParams extends IHttpRequestParamsBase {
+export interface IHttpRequestParams extends IHttpRequestParamsBase
+{
 	method:HttpMethodValue;
 }
 
-interface IHttpMethodParams<TMethod extends HttpMethodValue> extends IHttpRequestParamsBase {
+export interface IHttpMethodParams<TMethod extends HttpMethodValue> extends IHttpRequestParamsBase
+{
 	method?:TMethod;
 }
 
-interface IHttpPostParams<TData> extends IHttpMethodParams<HttpPostMethod> {
+export interface IHttpPostParams<TData> extends IHttpMethodParams<HttpMethod.Post>
+{
 	data:TData;
 }
+
+export default IHttpRequestParams;

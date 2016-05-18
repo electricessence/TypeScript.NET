@@ -4,31 +4,25 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeMeasurement.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../IComparable.d.ts"/>
-///<reference path="HowMany.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
+import {Type} from "../Types";
+import {TimeUnit} from "./TimeUnit";
+import {ClockTime} from "./ClockTime";
+import {TimeQuantity} from "./TimeQuantity";
+import {Milliseconds, Ticks} from "./HowMany";
 
-import {areEqual,compare} from '../Compare';
-import Type from '../Types';
-import TimeUnit from './TimeUnit';
-import ClockTime from './ClockTime';
-import TimeQuantity from './TimeQuantity';
 
 /**
  * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
  */
-export default
-class TimeSpan extends TimeQuantity implements ITimeMeasurement
+export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 {
 
-	ticks: number;
-	milliseconds: number;
-	seconds: number;
-	minutes: number;
-	hours: number;
-	days: number;
+	ticks:number;
+	milliseconds:number;
+	seconds:number;
+	minutes:number;
+	hours:number;
+	days:number;
 
 	// In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
 	constructor(value:number, units:TimeUnit = TimeUnit.Milliseconds)
@@ -37,12 +31,12 @@ class TimeSpan extends TimeQuantity implements ITimeMeasurement
 		super(ms);
 
 		var _ = this;
-		_.ticks = ms*HowMany.Ticks.Per.Millisecond;
+		_.ticks = ms*Ticks.Per.Millisecond;
 		_.milliseconds = ms;
-		_.seconds = ms/HowMany.Milliseconds.Per.Second;
-		_.minutes = ms/HowMany.Milliseconds.Per.Minute;
-		_.hours = ms/HowMany.Milliseconds.Per.Hour;
-		_.days = ms/HowMany.Milliseconds.Per.Day;
+		_.seconds = ms/Milliseconds.Per.Second;
+		_.minutes = ms/Milliseconds.Per.Minute;
+		_.hours = ms/Milliseconds.Per.Hour;
+		_.days = ms/Milliseconds.Per.Day;
 	}
 
 	/**
@@ -124,3 +118,5 @@ class TimeSpan extends TimeQuantity implements ITimeMeasurement
 
 
 var timeSpanZero:TimeSpan;
+
+export default TimeSpan;

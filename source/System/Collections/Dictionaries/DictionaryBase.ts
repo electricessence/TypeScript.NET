@@ -3,16 +3,17 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IDictionary.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 import {areEqual} from "../../Compare";
 import {forEach} from "../Enumeration/Enumerator";
-import CollectionBase from "../CollectionBase";
-import EnumeratorBase from "../Enumeration/EnumeratorBase";
-import ArgumentNullException from "../../Exceptions/ArgumentNullException";
-import InvalidOperationException from "../../Exceptions/InvalidOperationException";
-import extractKeyValue from "../../KeyValueExtract";
+import {CollectionBase} from "../CollectionBase";
+import {EnumeratorBase} from "../Enumeration/EnumeratorBase";
+import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
+import {InvalidOperationException} from "../../Exceptions/InvalidOperationException";
+import {extractKeyValue} from "../../KeyValueExtract";
+import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
+import {IDictionary} from "./IDictionary";
+import {IEnumerator} from "../Enumeration/IEnumerator";
+import {IEnumerableOrArray} from "../IEnumerableOrArray";
 
 const VOID0:any = void(0);
 

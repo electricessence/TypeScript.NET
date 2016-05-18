@@ -3,14 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IArray.d.ts"/>
-///<reference path="../../FunctionTypes.d.ts"/>
-import Type from "../../Types";
-import Integer from "../../Integer";
+import {Type} from "../../Types";
+import {Integer} from "../../Integer";
 import {areEqual} from "../../Compare";
-import ArgumentException from "../../Exceptions/ArgumentException";
-import ArgumentNullException from "../../Exceptions/ArgumentNullException";
-import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
+import {ArgumentException} from "../../Exceptions/ArgumentException";
+import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
+import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
+import {EqualityComparison, Predicate, Action} from "../../FunctionTypes";
+import {IArray} from "./IArray";
 
 /**
  * Initializes an array depending on the requested capacity.
@@ -175,7 +175,7 @@ export function replace<T>(
 
 	var count = 0;
 
-	for(let i = 0,len=array.length;i<len;i++)
+	for(let i = 0, len = array.length; i<len; i++)
 	{
 		if(array[i]===old)
 		{
@@ -262,13 +262,16 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 		throw new ArgumentException('predicate', 'Must be a function.');
 
 	var len = array.length;
-	if(Array.isArray(array)) {
+	if(Array.isArray(array))
+	{
 		for(let i = 0; i<len; i++)
 		{
 			if(predicate(array[i]))
 				return i;
 		}
-	} else {
+	}
+	else
+	{
 		for(let i = 0; i<len; i++)
 		{
 			if((i) in (array) && predicate(array[i]))
@@ -296,7 +299,7 @@ export function forEach<T>(
 		// Don't cache the length since it is possible that the underlying array changed.
 		for(let i = 0; i<source.length; i++)
 		{
-			if(action(source[i],i)===false)
+			if(action(source[i], i)===false)
 				break;
 		}
 	}
@@ -357,7 +360,8 @@ export function remove<T>(
 	if(max<0) throw new ArgumentOutOfRangeException('max', max, CBL0);
 
 	var count = 0;
-	if(!max || !isFinite(max)) {
+	if(!max || !isFinite(max))
+	{
 		// Don't track the indexes and remove in reverse.
 		for(let i = (array.length - 1); i>=0; i--)
 		{
@@ -367,7 +371,9 @@ export function remove<T>(
 				++count;
 			}
 		}
-	} else {
+	}
+	else
+	{
 		// Since the user will expect it to happen in forward order...
 		var found:number[] = []; // indexes;
 		for(let i = 0, len = array.length; i<len; i++)
@@ -380,7 +386,8 @@ export function remove<T>(
 			}
 		}
 
-		for(let i = found.length-1;i>=0;i--) {
+		for(let i = found.length - 1; i>=0; i--)
+		{
 			array.splice(found[i], 1);
 		}
 	}

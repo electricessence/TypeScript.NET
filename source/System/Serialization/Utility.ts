@@ -3,11 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ISerializable.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
-
-import Type from '../Types';
-import InvalidOperationException from '../Exceptions/InvalidOperationException';
+import {Type} from "../Types";
+import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
+import {ISerializable} from "./ISerializable";
+import {Primitive} from "../Primitive";
 
 
 const EMPTY = '', TRUE = 'true', FALSE = 'false';

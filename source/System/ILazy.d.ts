@@ -3,11 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="Disposable/IDisposable.d.ts"/>
-///<reference path="IEquatable.d.ts"/>
 
-interface ILazy<T> extends IDisposable, IEquatable<ILazy<T>>
+import {IDisposable} from "./Disposable/IDisposable";
+
+export interface ILazy<T> extends IDisposable, IEquatable<ILazy<T>>
 {
 	value:T;
 	isValueCreated:boolean;
 }
+
+export default ILazy;

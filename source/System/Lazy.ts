@@ -3,14 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ILazy.d.ts"/>
-///<reference path="FunctionTypes.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
+import {DisposableBase} from "./Disposable/DisposableBase";
+import {ILazy} from "./ILazy";
+import {Func} from "./FunctionTypes";
 
-import DisposableBase from './Disposable/DisposableBase';
-
-export default
-class Lazy<T> extends DisposableBase implements ILazy<T>
+export class Lazy<T> extends DisposableBase implements ILazy<T>
 {
 
 	private _isValueCreated:boolean;
@@ -97,3 +94,4 @@ class Lazy<T> extends DisposableBase implements ILazy<T>
 	}
 }
 
+export default Lazy;

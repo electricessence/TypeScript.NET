@@ -56,7 +56,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return false;
         };
         return TaskHandlerBase;
-    }(DisposableBase_1.default));
+    }(DisposableBase_1.DisposableBase));
+    exports.TaskHandlerBase = TaskHandlerBase;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TaskHandlerBase;
 });

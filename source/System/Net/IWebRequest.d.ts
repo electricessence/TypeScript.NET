@@ -4,10 +4,11 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.net.webrequest%28v=vs.110%29.aspx
  */
 
-///<reference path="Security/AuthenticationLevel.d.ts"/>
-///<reference path="Cache/IRequestCachePolicy.d.ts"/>
 
-interface IWebRequest {
+import {IRequestCachePolicy} from "./Cache/IRequestCachePolicy";
+import {AuthenticationLevel} from "./Security/AuthenticationLevel";
+
+export interface IWebRequest {
 
 	authenticationLevel:AuthenticationLevel;
 	cachePolicy:IRequestCachePolicy;
@@ -16,3 +17,5 @@ interface IWebRequest {
 	contentLength:number;
 	contentType:string;
 }
+
+export default IWebRequest;

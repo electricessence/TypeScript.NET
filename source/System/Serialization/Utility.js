@@ -7,22 +7,22 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../Types', '../Exceptions/InvalidOperationException'], factory);
+        define(["require", "exports", "../Types", "../Exceptions/InvalidOperationException"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('../Types');
-    var InvalidOperationException_1 = require('../Exceptions/InvalidOperationException');
+    var Types_1 = require("../Types");
+    var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var EMPTY = '', TRUE = 'true', FALSE = 'false';
     function toString(value, defaultForUnknown) {
         var v = value;
         switch (typeof v) {
-            case Types_1.default.UNDEFINED:
-            case Types_1.default.STRING:
+            case Types_1.Type.UNDEFINED:
+            case Types_1.Type.STRING:
                 return v;
-            case Types_1.default.BOOLEAN:
+            case Types_1.Type.BOOLEAN:
                 return v ? TRUE : FALSE;
-            case Types_1.default.NUMBER:
+            case Types_1.Type.NUMBER:
                 return EMPTY + v;
             default:
                 if (v === null)
@@ -31,14 +31,14 @@
                     return v.serialize();
                 else if (arguments.length > 1)
                     return defaultForUnknown;
-                var ex = new InvalidOperationException_1.default('Attempting to serialize unidentifiable type.');
+                var ex = new InvalidOperationException_1.InvalidOperationException('Attempting to serialize unidentifiable type.');
                 ex.data['value'] = v;
                 throw ex;
         }
     }
     exports.toString = toString;
     function isSerializable(instance) {
-        return Types_1.default.hasMemberOfType(instance, 'serialize', Types_1.default.FUNCTION);
+        return Types_1.Type.hasMemberOfType(instance, 'serialize', Types_1.Type.FUNCTION);
     }
     exports.isSerializable = isSerializable;
     function toPrimitive(value, caseInsensitive, unknownHandler) {
@@ -48,7 +48,7 @@
             switch (value) {
                 case 'null':
                     return null;
-                case Types_1.default.UNDEFINED:
+                case Types_1.Type.UNDEFINED:
                     return undefined;
                 case TRUE:
                     return true;

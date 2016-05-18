@@ -3,10 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ICollection.d.ts"/>
+import {ICollection} from "./ICollection";
 
-
-interface IList<T> extends ICollection<T>
+export interface IList<T> extends ICollection<T>
 {
 
 	/* From ICollection<T>:
@@ -29,3 +28,5 @@ interface IList<T> extends ICollection<T>
 	removeAt(index:number): boolean;
 
 }
+
+export default IList;

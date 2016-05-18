@@ -10,7 +10,7 @@
         define(["require", "exports", "../../Disposable/dispose", "../../Types", "./ArrayEnumerator", "./IndexEnumerator", "./UnsupportedEnumerableException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var dispose_1 = require("../../Disposable/dispose");
     var Types_1 = require("../../Types");
     var ArrayEnumerator_1 = require("./ArrayEnumerator");
@@ -20,11 +20,11 @@
         'Would result in an infinite loop that could hang the current process.';
     function throwIfEndless(isEndless) {
         if (isEndless)
-            throw new UnsupportedEnumerableException_1.default(ENDLESS_EXCEPTION_MESSAGE);
+            throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
     }
     exports.throwIfEndless = throwIfEndless;
     function initArrayFrom(source) {
-        if (Array.isArray(source) || Types_1.default.isString(source)) {
+        if (Array.isArray(source) || Types_1.Type.isString(source)) {
             var len = source.length;
             if (isFinite(len)) {
                 if (len > 65535)
@@ -76,9 +76,9 @@
         if (!source)
             return Empty;
         if (Array.isArray(source))
-            return new ArrayEnumerator_1.default(source);
-        if (Types_1.default.isArrayLike(source)) {
-            return new IndexEnumerator_1.default(function () {
+            return new ArrayEnumerator_1.ArrayEnumerator(source);
+        if (Types_1.Type.isArrayLike(source)) {
+            return new IndexEnumerator_1.IndexEnumerator(function () {
                 return {
                     source: source,
                     length: source.length,
@@ -87,7 +87,7 @@
                 };
             });
         }
-        if (!Types_1.default.isPrimitive(source)) {
+        if (!Types_1.Type.isPrimitive(source)) {
             if (isEnumerable(source))
                 return source.getEnumerator();
         }
@@ -95,20 +95,20 @@
     }
     exports.from = from;
     function isEnumerable(instance) {
-        return Types_1.default.hasMemberOfType(instance, "getEnumerator", Types_1.default.FUNCTION);
+        return Types_1.Type.hasMemberOfType(instance, "getEnumerator", Types_1.Type.FUNCTION);
     }
     exports.isEnumerable = isEnumerable;
     function isEnumerableOrArrayLike(instance) {
-        return Types_1.default.isArrayLike(instance) || isEnumerable(instance);
+        return Types_1.Type.isArrayLike(instance) || isEnumerable(instance);
     }
     exports.isEnumerableOrArrayLike = isEnumerableOrArrayLike;
     function isEnumerator(instance) {
-        return Types_1.default.hasMemberOfType(instance, "moveNext", Types_1.default.FUNCTION);
+        return Types_1.Type.hasMemberOfType(instance, "moveNext", Types_1.Type.FUNCTION);
     }
     exports.isEnumerator = isEnumerator;
     function forEach(e, action) {
         if (e !== VOID0 && e !== null) {
-            if (Types_1.default.isArrayLike(e)) {
+            if (Types_1.Type.isArrayLike(e)) {
                 throwIfEndless(!isFinite(e.length));
                 for (var i = 0; i < e.length; i++) {
                     if (action(e[i], i) === false)
@@ -141,14 +141,14 @@
             return source.slice();
         var result = initArrayFrom(source);
         if (!forEach(source, function (e, i) { result[i] = e; }))
-            throw new UnsupportedEnumerableException_1.default();
+            throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
         return result;
     }
     exports.toArray = toArray;
     function map(source, selector) {
         var result = initArrayFrom(source);
         if (!forEach(source, function (e, i) { result[i] = selector(e); }))
-            throw new UnsupportedEnumerableException_1.default();
+            throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
         return result;
     }
     exports.map = map;

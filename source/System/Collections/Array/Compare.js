@@ -42,7 +42,7 @@
     function areEqual(a, b, strict, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
         var len = validateSize(a, b);
-        if (Types_1.default.isBoolean(len))
+        if (Types_1.Type.isBoolean(len))
             return len;
         for (var i = 0; i < len; i++) {
             if (!equalityComparer(a[i], b[i], strict))
@@ -61,15 +61,16 @@
             b = [];
             b.length = len;
         }
-        for (var i = 0; i < len; i++)
+        for (var i = 0; i < len; i++) {
             b[i] = a[i];
+        }
         b.sort(comparer);
         return b;
     }
     function areEquivalent(a, b, comparer) {
         if (comparer === void 0) { comparer = Values.compare; }
         var len = validateSize(a, b);
-        if (Types_1.default.isBoolean(len))
+        if (Types_1.Type.isBoolean(len))
             return len;
         a = sort(a, comparer);
         b = sort(b, comparer);

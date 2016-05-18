@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-declare module Gregorian
+export declare module Gregorian
 {
 	export const enum Month {
 		January,

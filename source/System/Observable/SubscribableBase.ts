@@ -5,13 +5,11 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-///<reference path="../Disposable/IDisposable.d.ts"/>
-///<reference path="../FunctionTypes.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
-import LinkedNodeList from "../Collections/LinkedNodeList";
-import dispose from "../Disposable/dispose";
-import Subscription from "./Subscription";
+import {LinkedNodeList} from "../Collections/LinkedNodeList";
+import {dispose} from "../Disposable/dispose";
+import {Subscription} from "./Subscription";
+import {ILinkedNodeWithValue} from "../Collections/ILinkedListNode";
+import {IDisposable} from "../Disposable/IDisposable";
 
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
 

@@ -3,14 +3,18 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ILinkedListNode.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 import * as TextUtility from "../Text/Utility";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import ArgumentException from "../Exceptions/ArgumentException";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
+import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
+import {ArgumentException} from "../Exceptions/ArgumentException";
+import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
+import {ILinkedNode, ILinkedNodeWithValue} from "./ILinkedListNode";
+import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
+import {IDisposable} from "../Disposable/IDisposable";
+import {ILinkedNodeList} from "./ILinkedList";
+import {IEnumerator} from "./Enumeration/IEnumerator";
+import {Predicate, Selector, Action} from "../FunctionTypes";
+import {IArray} from "./Array/IArray";
 
 
 /*****************************
@@ -31,8 +35,7 @@ import EnumeratorBase from "./Enumeration/EnumeratorBase";
  *
  * The count (or length) of this LinkedNodeList is not tracked since it could be corrupted at any time.
  */
-export default
-class LinkedNodeList<TNode extends ILinkedNode<TNode>>
+export class LinkedNodeList<TNode extends ILinkedNode<TNode>>
 implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 {
 
@@ -446,3 +449,5 @@ function assertValidDetached<TNode extends ILinkedNode<TNode>>(node:TNode, propN
 		throw new InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
 
 }
+
+export default LinkedNodeList;

@@ -4,95 +4,94 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
  */
 
-// TODO: Possibly use string literals instead.
-enum Scheme {
-	/**
-	 * The resource is a file on the local computer.
-	 */
-	file,
+import * as Scheme from "./SchemeValue";
+import {SchemeValue} from "./SchemeValue";
 
 
-	/**
-	 * The resource is accessed through FTP.
-	 */
-	ftp,
+/**
+ * The resource is a file on the local computer.
+ */
+export const File:Scheme.File = "file";
 
 
-	/**
-	 * The resource is accessed through the Gopher protocol.
-	 */
-	gopher,
+/**
+ * The resource is accessed through FTP.
+ */
+export const FTP:Scheme.FTP = "ftp";
 
 
-	/**
-	 * The resource is accessed through HTTP.
-	 */
-	http,
+/**
+ * The resource is accessed through the Gopher protocol.
+ */
+export const GOPHER:Scheme.Gopher = "gopher";
 
 
-	/**
-	 * The resource is accessed through SSL-encrypted HTTP.
-	 */
-	https,
+/**
+ * The resource is accessed through HTTP.
+ */
+export const HTTP:Scheme.HTTP = "http";
 
 
-	/**
-	 * The resource is accessed through the LDAP protocol.
-	 */
-	ldap,
+/**
+ * The resource is accessed through SSL-encrypted HTTP.
+ */
+export const HTTPS:Scheme.HTTPS = "https";
 
 
-	/**
-	 * The resource is an e-mail address and accessed through the SMTP protocol.
-	 */
-	mailto,
+/**
+ * The resource is accessed through the LDAP protocol.
+ */
+export const LDAP:Scheme.LDAP = "ldap";
 
 
-	/**
-	 * The resource is accessed through a named pipe.
-	 */
-	pipe,
+/**
+ * The resource is an e-mail address and accessed through the SMTP protocol.
+ */
+export const MAILTO:Scheme.MailTo = "mailto";
 
 
-	/**
-	 * The resource is accessed from TCP endpoint.
-	 */
-	tcp,
+/**
+ * The resource is accessed through a named pipe.
+ */
+export const PIPE:Scheme.Pipe = "net.pipe";
 
 
-	/**
-	 * The resource is accessed through the NNTP protocol.
-	 */
-	news,
+/**
+ * The resource is accessed from TCP endpoint.
+ */
+export const TCP:Scheme.TCP = "net.tcp";
 
 
-	/**
-	 * The resource is accessed through the NNTP protocol.
-	 */
-	nntp,
+/**
+ * The resource is accessed through the NNTP protocol.
+ */
+export const NEWS:Scheme.NNTP = "news";
 
 
-	/**
-	 * The resource is accessed through the TELNET protocol.
-	 */
-	telnet,
+/**
+ * The resource is accessed through the NNTP protocol.
+ */
+export const NNTP:Scheme.NNTP = "nntp";
 
-	/**
-	 * The resource is accessed through a unique UUID endpoint name for communicating with a service.
-	 */
-	uuid
+
+/**
+ * The resource is accessed through the TELNET protocol.
+ */
+export const TELNET:Scheme.Telnet = "telnet";
+
+/**
+ * The resource is accessed through a unique UUID endpoint name for communicating with a service.
+ */
+export const UUID:Scheme.UUID = "uuid";
+
+/**
+ * An index of possible values to validate against.
+ * @type {Array}
+ */
+export const All:SchemeValue[] = Object.freeze([
+	File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID
+]);
+
+export function isValid(scheme:string):scheme is SchemeValue {
+	return All.indexOf(<any>scheme)!=-1;
 }
-
-// Extend the usefulness of the enum.
-const PIPE = 'net.pipe';
-const TCP = 'net.tcp';
-
-Scheme[Scheme.pipe] = PIPE;
-Scheme[Scheme.tcp] = TCP;
-
-(<any>Scheme)[PIPE] = Scheme.pipe;
-(<any>Scheme)[TCP] = Scheme.tcp;
-
-Object.freeze(Scheme);
-
-export default Scheme;

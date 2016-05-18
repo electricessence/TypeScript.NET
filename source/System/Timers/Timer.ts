@@ -5,7 +5,6 @@
 
 ///<reference path="../Tasks/ICancellable.d.ts"/>
 ///<reference path="ITimer.d.ts"/>
-import ObservableBase from "./../Observable/ObservableBase";
 
 export default class Timer extends ObservableBase<number> implements ITimer, ICancellable
 {

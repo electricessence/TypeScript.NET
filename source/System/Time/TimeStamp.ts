@@ -3,19 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeStamp.d.ts"/>
-///<reference path="IDateTime.d.ts"/>
-///<reference path="Calendars.d.ts"/>
-///<reference path="HowMany.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
-import Type from '../Types';
+import {Type} from "../Types";
+import {ITimeStamp} from "./ITimeStamp";
+import {Ticks} from "./HowMany";
 
 /**
  * An alternative to Date or DateTime.  Is a model representing the exact date and time.
  */
-export default
-class TimeStamp implements ITimeStamp, IDateTime
+export class TimeStamp implements ITimeStamp, IDateTime
 {
 
 	constructor(
@@ -37,12 +32,12 @@ class TimeStamp implements ITimeStamp, IDateTime
 	toJsDate():Date
 	{
 		var _ = this;
-		return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick/HowMany.Ticks.Per.Millisecond);
+		return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick/Ticks.Per.Millisecond);
 	}
 
 	static from(d:Date|IDateTime):TimeStamp
 	{
-		if (!(d instanceof Date) && Type.hasMember(d,'toJsDate'))
+		if(!(d instanceof Date) && Type.hasMember(d, 'toJsDate'))
 			d = (<IDateTime>d).toJsDate();
 		if(d instanceof Date)
 		{
@@ -62,3 +57,5 @@ class TimeStamp implements ITimeStamp, IDateTime
 		}
 	}
 }
+
+export default TimeStamp;

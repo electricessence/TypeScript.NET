@@ -11,7 +11,7 @@
  */
 
 
-interface IPromiseConstructor<T>
+export interface IPromiseConstructor<T>
 {
 	new (
 		init:(
@@ -22,7 +22,7 @@ interface IPromiseConstructor<T>
 /**
  * Taken from lib core for availability and compatibility.
  */
-interface IPromise<T>
+export interface IPromise<T>
 {
 	/**
 	 * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -46,3 +46,5 @@ interface IPromise<T>
 	'catch'(onRejected?: (reason: any) => T | PromiseLike<T>): IPromise<T>;
 	'catch'(onRejected?: (reason: any) => void): IPromise<T>;
 }
+
+export default IPromise;

@@ -3,9 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeMeasurement.d.ts"/>
+import {ITimeMeasurement} from "./ITimeMeasurement";
 
-interface ITimeQuantity {
+export interface ITimeQuantity {
 	getTotalMilliseconds():number;
 	total:ITimeMeasurement;
 }
+
+export default ITimeQuantity;

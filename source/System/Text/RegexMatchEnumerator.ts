@@ -3,10 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Collections/Enumeration/IEnumerator.d.ts"/>
 import {Regex, Match} from "./RegularExpressions";
 import {empty} from "../Collections/Enumeration/Enumerator";
-import EnumeratorBase from "../Collections/Enumeration/EnumeratorBase";
+import {EnumeratorBase} from "../Collections/Enumeration/EnumeratorBase";
+import {IEnumerator} from "../Collections/Enumeration/IEnumerator";
+
 export class RegexMatchEnumerator
 {
 	private _pattern:Regex;

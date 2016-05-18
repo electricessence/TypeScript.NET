@@ -3,20 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeQuantity.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../IComparable.d.ts"/>
-///<reference path="HowMany.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
+import {areEqual, compare} from "../Compare";
+import {TimeUnit} from "./TimeUnit";
+import {Milliseconds, Ticks} from "./HowMany";
 
-import {areEqual,compare} from '../Compare';
-import TimeUnit from './TimeUnit';
 
 /**
  * This class provides a simple means for storing and calculating time quantities.
  */
-export default
-class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuantity>, ITimeQuantity
+export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuantity>, ITimeQuantity
 {
 
 	constructor(protected _quantity:number = 0)
@@ -74,12 +69,12 @@ class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuanti
 			var ms = this.getTotalMilliseconds();
 
 			this._total = t = <ITimeMeasurement>Object.freeze({
-				ticks: ms*HowMany.Ticks.Per.Millisecond,
+				ticks: ms*Ticks.Per.Millisecond,
 				milliseconds: ms,
-				seconds: ms/HowMany.Milliseconds.Per.Second,
-				minutes: ms/HowMany.Milliseconds.Per.Minute,
-				hours: ms/HowMany.Milliseconds.Per.Hour,
-				days: ms/HowMany.Milliseconds.Per.Day,
+				seconds: ms/Milliseconds.Per.Second,
+				minutes: ms/Milliseconds.Per.Minute,
+				hours: ms/Milliseconds.Per.Hour,
+				days: ms/Milliseconds.Per.Day,
 			});
 		}
 		return t;
@@ -95,3 +90,5 @@ class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuanti
 		return TimeUnit.fromMilliseconds(this.getTotalMilliseconds(), units);
 	}
 }
+
+export default TimeQuantity;

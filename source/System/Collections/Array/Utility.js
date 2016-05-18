@@ -18,7 +18,7 @@
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
     function initialize(length) {
-        Integer_1.default.assert(length, 'length');
+        Integer_1.Integer.assert(length, 'length');
         var array;
         if (length > 65536)
             array = new Array(length);
@@ -43,21 +43,21 @@
         if (destinationIndex === void 0) { destinationIndex = 0; }
         if (length === void 0) { length = Infinity; }
         if (!source)
-            throw new ArgumentNullException_1.default('source', CBN);
+            throw new ArgumentNullException_1.ArgumentNullException('source', CBN);
         if (!destination)
-            throw new ArgumentNullException_1.default('destination', CBN);
+            throw new ArgumentNullException_1.ArgumentNullException('destination', CBN);
         if (sourceIndex < 0)
-            throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, CBL0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
         var sourceLength = source.length;
         if (!sourceLength)
             return destination;
         if (sourceIndex >= sourceLength)
-            throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
         if (destination.length < 0)
-            throw new ArgumentOutOfRangeException_1.default('destinationIndex', destinationIndex, CBL0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('destinationIndex', destinationIndex, CBL0);
         var maxLength = source.length - sourceIndex;
         if (isFinite(length) && length > maxLength)
-            throw new ArgumentOutOfRangeException_1.default('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
         length = Math.min(length, maxLength);
         var newLength = destinationIndex + length;
         if (newLength > destination.length)
@@ -72,7 +72,7 @@
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         var len = array && array.length;
         if (len) {
-            if (Array.isArray(array) && !Types_1.default.isTrueNaN(item))
+            if (Array.isArray(array) && !Types_1.Type.isTrueNaN(item))
                 return array.indexOf(item);
             for (var i = 0; i < len; i++) {
                 if (equalityComparer(array[i], item))
@@ -91,7 +91,7 @@
         if (!array || !array.length || max === 0)
             return 0;
         if (max < 0)
-            throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('max', max, CBL0);
         if (!max)
             max = Infinity;
         var count = 0;
@@ -110,12 +110,12 @@
         if (start === void 0) { start = 0; }
         if (!array)
             return;
-        Integer_1.default.assertZeroOrGreater(start, 'start');
+        Integer_1.Integer.assertZeroOrGreater(start, 'start');
         if (!stop && stop !== 0)
             stop = array.length;
-        Integer_1.default.assert(stop, 'stop');
+        Integer_1.Integer.assert(stop, 'stop');
         if (stop < start)
-            throw new ArgumentOutOfRangeException_1.default("stop", stop, "is less than start");
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("stop", stop, "is less than start");
         for (var i = start; i < stop; i++) {
             array[i] = value;
         }
@@ -129,7 +129,7 @@
     function register(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (!array)
-            throw new ArgumentNullException_1.default('array', CBN);
+            throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
         var len = array.length;
         var ok = !len || !contains(array, item, equalityComparer);
         if (ok)
@@ -139,9 +139,9 @@
     exports.register = register;
     function findIndex(array, predicate) {
         if (!array)
-            throw new ArgumentNullException_1.default('array', CBN);
-        if (!Types_1.default.isFunction(predicate))
-            throw new ArgumentException_1.default('predicate', 'Must be a function.');
+            throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
+        if (!Types_1.Type.isFunction(predicate))
+            throw new ArgumentException_1.ArgumentException('predicate', 'Must be a function.');
         var len = array.length;
         if (Array.isArray(array)) {
             for (var i = 0; i < len; i++) {
@@ -177,10 +177,10 @@
     exports.applyTo = applyTo;
     function removeIndex(array, index) {
         if (!array)
-            throw new ArgumentNullException_1.default('array', CBN);
-        Integer_1.default.assert(index, 'index');
+            throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
+        Integer_1.Integer.assert(index, 'index');
         if (index < 0)
-            throw new ArgumentOutOfRangeException_1.default('index', index, CBL0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, CBL0);
         var exists = index < array.length;
         if (exists)
             array.splice(index, 1);
@@ -192,7 +192,7 @@
         if (!array || !array.length || max === 0)
             return 0;
         if (max < 0)
-            throw new ArgumentOutOfRangeException_1.default('max', max, CBL0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('max', max, CBL0);
         var count = 0;
         if (!max || !isFinite(max)) {
             for (var i = (array.length - 1); i >= 0; i--) {
@@ -220,9 +220,9 @@
     }
     exports.remove = remove;
     function repeat(element, count) {
-        Integer_1.default.assert(count, 'count');
+        Integer_1.Integer.assert(count, 'count');
         if (count < 0)
-            throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, CBL0);
         var result = initialize(count);
         for (var i = 0; i < count; i++) {
             result[i] = element;
@@ -233,11 +233,11 @@
     function range(first, count, step) {
         if (step === void 0) { step = 1; }
         if (isNaN(first) || !isFinite(first))
-            throw new ArgumentOutOfRangeException_1.default('first', first, VFN);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('first', first, VFN);
         if (isNaN(count) || !isFinite(count))
-            throw new ArgumentOutOfRangeException_1.default('count', count, VFN);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, VFN);
         if (count < 0)
-            throw new ArgumentOutOfRangeException_1.default('count', count, CBL0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, CBL0);
         var result = initialize(count);
         for (var i = 0; i < count; i++) {
             result[i] = first;
@@ -249,7 +249,7 @@
     function rangeUntil(first, until, step) {
         if (step === void 0) { step = 1; }
         if (step == 0)
-            throw new ArgumentOutOfRangeException_1.default('step', step, CB0);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('step', step, CB0);
         return range(first, (until - first) / step, step);
     }
     exports.rangeUntil = rangeUntil;

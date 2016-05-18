@@ -34,8 +34,8 @@
         }
         flushing = false;
     }
-    var immediateQueue = new LinkedNodeList_1.default();
-    var laterQueue = new Queue_1.default();
+    var immediateQueue = new LinkedNodeList_1.LinkedNodeList();
+    var laterQueue = new Queue_1.Queue();
     function runSingle(task, domain) {
         try {
             task();
@@ -87,7 +87,7 @@
         requestFlush();
     }
     exports.runAfterDeferred = runAfterDeferred;
-    if (Types_1.default.isObject(process)
+    if (Types_1.Type.isObject(process)
         && process.toString() === "[object process]"
         && process.nextTick) {
         isNodeJS = true;

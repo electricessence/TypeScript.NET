@@ -6,7 +6,7 @@
 
 'use strict'; // For compatibility with (let, const, function, class);
 
-import SystemException from './SystemException';
+import {SystemException} from "./SystemException";
 
 
 const NAME:string = 'NullReferenceException';

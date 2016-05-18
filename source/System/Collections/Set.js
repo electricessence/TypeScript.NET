@@ -32,8 +32,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             var _ = this;
             if (!_.contains(item)) {
                 var type = typeof item;
-                if (!Types_1.default.isPrimitive(type))
-                    throw new ArgumentException_1.default("item", "A Set can only index primitives.  Complex objects require a HashSet.");
+                if (!Types_1.Type.isPrimitive(type))
+                    throw new ArgumentException_1.ArgumentException("item", "A Set can only index primitives.  Complex objects require a HashSet.");
                 var r = _._registry;
                 var t = r && r[type];
                 if (!r)
@@ -74,9 +74,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return 0;
         };
         return Set;
-    }(SetBase_1.default));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Set;
+    }(SetBase_1.SetBase));
+    exports.Set = Set;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
         if (map && depth) {
@@ -88,5 +87,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
         }
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Set;
 });
 //# sourceMappingURL=Set.js.map

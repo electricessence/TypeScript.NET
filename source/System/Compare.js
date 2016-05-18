@@ -12,7 +12,7 @@
 })(function (require, exports) {
     "use strict";
     var Types_1 = require("./Types");
-    var isTrueNaN = Types_1.default.isTrueNaN;
+    var isTrueNaN = Types_1.Type.isTrueNaN;
     var VOID0 = void 0;
     function areEqual(a, b, strict) {
         if (strict === void 0) { strict = true; }
@@ -25,15 +25,15 @@
     function compare(a, b, strict) {
         if (strict === void 0) { strict = true; }
         if (areEqual(a, b, strict))
-            return 0;
-        if (a && Types_1.default.hasMember(a, COMPARE_TO))
+            return CompareResult.Equal;
+        if (a && Types_1.Type.hasMember(a, COMPARE_TO))
             return a.compareTo(b);
-        else if (b && Types_1.default.hasMember(b, COMPARE_TO))
+        else if (b && Types_1.Type.hasMember(b, COMPARE_TO))
             return -b.compareTo(a);
         if (a > b || strict && (a === 0 && b == 0 || a === null && b === VOID0))
-            return 1;
+            return CompareResult.Greater;
         if (b > a || strict && (b === 0 && a == 0 || b === null && a === VOID0))
-            return -1;
+            return CompareResult.Less;
         return NaN;
     }
     exports.compare = compare;
@@ -45,15 +45,15 @@
         if (a === null || a === VOID0 || b == null || b === VOID0) {
             if (!nullEquivalency)
                 return false;
-            if (Types_1.default.isObject(a)) {
+            if (Types_1.Type.isObject(a)) {
                 return !Object.keys(a).length;
             }
-            if (Types_1.default.isObject(b)) {
+            if (Types_1.Type.isObject(b)) {
                 return !Object.keys(b).length;
             }
             return (a === null || a === VOID0) && (b == null || b === VOID0);
         }
-        if (Types_1.default.isObject(a) && Types_1.default.isObject(b)) {
+        if (Types_1.Type.isObject(a) && Types_1.Type.isObject(b)) {
             var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
             if (len != bKeys.length)
                 return false;

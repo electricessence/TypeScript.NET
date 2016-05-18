@@ -3,30 +3,28 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Disposable/IDisposable.d.ts"/>
-///<reference path="IEventDispatcher.d.ts"/>
-///<reference path="IEventDispatcher.d.ts"/>
 
-'use strict'; // For compatibility with (let, const, function, class);
-
-
-import shallowCopy from "../Utility/shallowCopy";
-import DisposableBase from "../Disposable/DisposableBase";
 import * as AU from "../Collections/Array/Utility";
-import EventDispatcherEntry from "./EventDispatcherEntry";
-import dispose from "../Disposable/dispose";
+import {shallowCopy} from "../Utility/shallowCopy";
+import {DisposableBase} from "../Disposable/DisposableBase";
+import {dispose} from "../Disposable/dispose";
+import {IEventListener} from "./IEventListener";
+import {EventDispatcherEntry} from "./EventDispatcherEntry";
+import {IEventDispatcher} from "./IEventDispatcher";
 
 const DISPOSING:string = 'disposing',
       DISPOSED:string  = 'disposed';
 
 // The following interfaces are exported for sub class implementation.
 
-export interface IEventBase<TTarget> {
-	type: string;
-	target: TTarget;
+export interface IEventBase<TTarget>
+{
+	type:string;
+	target:TTarget;
 }
 
-export interface IEvent extends IEventBase<any> {
+export interface IEvent extends IEventBase<any>
+{
 
 }
 

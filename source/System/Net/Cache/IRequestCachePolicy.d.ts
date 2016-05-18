@@ -4,12 +4,15 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.net.cache.requestcachepolicy%28v=vs.110%29.aspx
  */
 
-///<reference path="RequestCacheLevel.d.ts"/>
 
-interface IRequestCachePolicy
+import {RequestCacheLevel} from "./RequestCacheLevel";
+
+export interface IRequestCachePolicy
 {
 	/**
 	 * Gets the RequestCacheLevel value specified when this instance was constructed.
 	 */
 	level:RequestCacheLevel;
 }
+
+export default IRequestCachePolicy;

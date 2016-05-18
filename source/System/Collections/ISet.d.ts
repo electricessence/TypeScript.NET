@@ -3,9 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IEnumerableOrArray.d.ts"/>
 
-interface ISet<T> extends ICollection<T>
+import {ICollection} from "./ICollection";
+import {IEnumerableOrArray} from "./IEnumerableOrArray";
+
+export interface ISet<T> extends ICollection<T>
 {
 
 	/**
@@ -74,3 +76,5 @@ interface ISet<T> extends ICollection<T>
 		other:IEnumerableOrArray<T>):void
 
 }
+
+export default ISet;

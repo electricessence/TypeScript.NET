@@ -3,16 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="../Serialization/ISerializable.d.ts"/>
-///<reference path="IUriComponentFormattable.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from "../Types";
-import * as QueryParams from "./QueryParams";
-import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
+import {Type} from "../Types";
+import {OrderedStringKeyDictionary} from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
+import * as UriComponent from "./UriComponent";
+import * as QueryParam from "./QueryParam";
+import * as QueryParams from "./QueryParams";
 
 
 /**
@@ -21,29 +18,30 @@ import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
  * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
  */
 export default
-class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriComponentValue[]>
+class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|UriComponent.Value[]>
 {
 
 	constructor(
-		query:QueryParamsConvertible,
+		query:QueryParam.Convertible,
 		decodeValues:boolean = true)
 	{
 		super();
 
-		this.importQuery(query,decodeValues);
+		this.importQuery(query, decodeValues);
 	}
 
 
 	static init(
-		query:QueryParamsConvertible,
+		query:QueryParam.Convertible,
 		decodeValues:boolean = true):QueryBuilder
 	{
 		return new QueryBuilder(query, decodeValues);
 	}
 
 	importQuery(
-		query:QueryParamsConvertible,
-		decodeValues:boolean = true):QueryBuilder {
+		query:QueryParam.Convertible,
+		decodeValues:boolean = true):QueryBuilder
+	{
 
 		if(Type.isString(query))
 		{
@@ -55,7 +53,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 		}
 		else
 		{
-			this.importMap(<IUriComponentMap>query);
+			this.importMap(<UriComponent.Map>query);
 		}
 
 		return this;
@@ -83,7 +81,7 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 					if(Array.isArray(prev))
 						prev.push(value);
 					else
-						_.setValue(key, [<UriComponentValue>prev, value]);
+						_.setValue(key, [<UriComponent.Value>prev, value]);
 				}
 				else
 					_.setValue(key, value);
@@ -93,7 +91,6 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponentValue|UriCompo
 
 		return this;
 	}
-
 
 
 	/**

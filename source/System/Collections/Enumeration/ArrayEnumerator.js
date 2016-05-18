@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "./IndexEnumerator", "../../Types"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var IndexEnumerator_1 = require("./IndexEnumerator");
     var Types_1 = require("../../Types");
     var ArrayEnumerator = (function (_super) {
@@ -24,12 +24,18 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (start === void 0) { start = 0; }
             if (step === void 0) { step = 1; }
             _super.call(this, function () {
-                var array = Types_1.default.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-                return { source: array, pointer: start, length: array ? array.length : 0, step: step };
+                var array = Types_1.Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+                return {
+                    source: array,
+                    pointer: start,
+                    length: array ? array.length : 0,
+                    step: step
+                };
             });
         }
         return ArrayEnumerator;
-    }(IndexEnumerator_1.default));
+    }(IndexEnumerator_1.IndexEnumerator));
+    exports.ArrayEnumerator = ArrayEnumerator;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ArrayEnumerator;
 });

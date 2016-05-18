@@ -1,24 +1,15 @@
-///<reference path="ITimeMeasurement.d.ts"/>
-///<reference path="ITimeQuantity.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../IComparable.d.ts"/>
-///<reference path="../IFormattable.d.ts"/>
-///<reference path="../IFormatProvider.d.ts"/>
-///<reference path="ITimeStamp.d.ts"/>
-///<reference path="HowMany.ts"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict'; // For compatibility with (let, const, function, class);
 
-import {areEqual,compare} from '../Compare';
-import TimeQuantity from './TimeQuantity';
+import {TimeQuantity} from "./TimeQuantity";
+import {IClockTime} from "./ITimeStamp";
+import {Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
 
 
-export default
-class ClockTime extends TimeQuantity implements IClockTime
+export class ClockTime extends TimeQuantity implements IClockTime
 {
 
 	days:number;
@@ -47,19 +38,19 @@ class ClockTime extends TimeQuantity implements IClockTime
 		var ms = Math.abs(_.getTotalMilliseconds());
 		var msi = Math.floor(ms);
 
-		_.tick = (ms - msi)*HowMany.Ticks.Per.Millisecond;
+		_.tick = (ms - msi)*Ticks.Per.Millisecond;
 
-		_.days = (msi/HowMany.Milliseconds.Per.Day) | 0;
-		msi -= _.days * HowMany.Milliseconds.Per.Day;
+		_.days = (msi/Milliseconds.Per.Day) | 0;
+		msi -= _.days*Milliseconds.Per.Day;
 
-		_.hour = (msi/HowMany.Milliseconds.Per.Hour) | 0;
-		msi -= _.hour * HowMany.Milliseconds.Per.Hour;
+		_.hour = (msi/Milliseconds.Per.Hour) | 0;
+		msi -= _.hour*Milliseconds.Per.Hour;
 
-		_.minute = (msi/HowMany.Milliseconds.Per.Minute) | 0;
-		msi -= _.minute * HowMany.Milliseconds.Per.Minute;
+		_.minute = (msi/Milliseconds.Per.Minute) | 0;
+		msi -= _.minute*Milliseconds.Per.Minute;
 
-		_.second = (msi/HowMany.Milliseconds.Per.Second) | 0;
-		msi -= _.second * HowMany.Milliseconds.Per.Second;
+		_.second = (msi/Milliseconds.Per.Second) | 0;
+		msi -= _.second*Milliseconds.Per.Second;
 
 		_.millisecond = msi;
 
@@ -80,11 +71,11 @@ class ClockTime extends TimeQuantity implements IClockTime
 		milliseconds:number = 0):number
 	{
 		var value = hours;
-		value *= HowMany.Minutes.Per.Hour;
+		value *= Minutes.Per.Hour;
 		value += minutes;
-		value *= HowMany.Seconds.Per.Minute;
+		value *= Seconds.Per.Minute;
 		value += seconds;
-		value *= HowMany.Milliseconds.Per.Second;
+		value *= Milliseconds.Per.Second;
 		value += milliseconds;
 		return value;
 	}
@@ -125,3 +116,5 @@ function pluralize(value:number, label:string):string
 
 	return label;
 }
+
+export default ClockTime;

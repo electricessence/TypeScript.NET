@@ -36,7 +36,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return NAME;
         };
         return ArgumentException;
-    }(SystemException_1.default));
+    }(SystemException_1.SystemException));
+    exports.ArgumentException = ArgumentException;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ArgumentException;
 });

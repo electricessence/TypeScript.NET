@@ -13,17 +13,17 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../../Types", "../../Functions", "./DictionaryBase", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool"], factory);
+        define(["require", "exports", "../../Compare", "../../Types", "../../Functions", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./DictionaryBase"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Compare_1 = require("../../Compare");
     var Types_1 = require("../../Types");
     var Functions_1 = require("../../Functions");
-    var DictionaryBase_1 = require("./DictionaryBase");
     var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
     var LinkedNodeList_1 = require("../LinkedNodeList");
     var ObjectPool_1 = require("../../Disposable/ObjectPool");
+    var DictionaryBase_1 = require("./DictionaryBase");
     var VOID0 = void 0;
     var HashEntry = (function () {
         function HashEntry(key, value, previous, next) {
@@ -38,7 +38,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
-                = new ObjectPool_1.default(20, function () { return new LinkedNodeList_1.default(); });
+                = new ObjectPool_1.ObjectPool(20, function () { return new LinkedNodeList_1.LinkedNodeList(); });
         if (!recycle)
             return linkedListPool.take();
         recycle.clear();
@@ -52,18 +52,18 @@ var __extends = (this && this.__extends) || function (d, b) {
         if (obj === null)
             return NULL;
         if (obj === VOID0)
-            return Types_1.default.UNDEFINED;
-        if (Types_1.default.hasMemberOfType(obj, GET_HASH_CODE, Types_1.default.FUNCTION)) {
+            return Types_1.Type.UNDEFINED;
+        if (Types_1.Type.hasMemberOfType(obj, GET_HASH_CODE, Types_1.Type.FUNCTION)) {
             return obj.getHashCode();
         }
-        return (typeof obj.toString == Types_1.default.FUNCTION)
+        return (typeof obj.toString == Types_1.Type.FUNCTION)
             ? obj.toString()
             : Object.prototype.toString.call(obj);
     }
     var Dictionary = (function (_super) {
         __extends(Dictionary, _super);
         function Dictionary(_keyComparer) {
-            if (_keyComparer === void 0) { _keyComparer = Functions_1.default.Identity; }
+            if (_keyComparer === void 0) { _keyComparer = Functions_1.Functions.Identity; }
             _super.call(this);
             this._keyComparer = _keyComparer;
             this._entries = linkedNodeList();
@@ -144,7 +144,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Dictionary.prototype.getEnumerator = function () {
             var _ = this, ver, currentEntry;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 ver = _._version;
                 currentEntry = _._entries.first;
             }, function (yielder) {
@@ -177,6 +177,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return Dictionary;
     }(DictionaryBase_1.default));
+    exports.Dictionary = Dictionary;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Dictionary;
 });

@@ -3,16 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../FunctionTypes.d.ts"/>
-///<reference path="../../IComparer.d.ts"/>
-///<reference path="../Array/IArray.d.ts"/>
-///<reference path="Order.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
 import * as Values from "../../Compare";
+import {Comparison} from "../../FunctionTypes";
 
-export default
-class SortContext<T> implements IComparer<T>
+export class SortContext<T> implements IComparer<T>
 {
 
 	/**
@@ -57,3 +52,5 @@ class SortContext<T> implements IComparer<T>
 		return _._order*d;
 	}
 }
+
+export default SortContext;

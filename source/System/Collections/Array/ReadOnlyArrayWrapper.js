@@ -24,14 +24,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         function ReadOnlyArrayWrapper(array) {
             _super.call(this);
             if (!array)
-                throw new ArgumentNullException_1.default('array');
+                throw new ArgumentNullException_1.ArgumentNullException('array');
             var _ = this;
             _._getCount = function () { return array.length; };
             _.getEnumerator = function () { return Enumerator_1.from(array); };
             _.getValueAt = function (i) { return array[i]; };
         }
         return ReadOnlyArrayWrapper;
-    }(ReadOnlyCollectionBase_1.default));
+    }(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ReadOnlyArrayWrapper;
 });

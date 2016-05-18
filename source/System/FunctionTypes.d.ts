@@ -3,37 +3,37 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-interface Action<T>
+export interface Action<T>
 {
 	(object:T, index?:number): void;
 }
 
-interface Predicate<T>
+export interface Predicate<T>
 {
 	(object:T, index?:number): boolean;
 }
 
-interface Comparison<T>
+export interface Comparison<T>
 {
 	(a:T, b:T, strict?:boolean): number;
 }
 
-interface EqualityComparison<T>
+export interface EqualityComparison<T>
 {
 	(a:T, b:T, strict?:boolean): boolean;
 }
 
 
-interface Func<TResult>
+export interface Func<TResult>
 {
 	(): TResult;
 }
 
-interface Closure {
+export interface Closure {
 	():void;
 }
 
-interface Selector<TSource, TResult>
+export interface Selector<TSource, TResult>
 {
 	(source:TSource, index?:number): TResult;
 }

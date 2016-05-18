@@ -34,7 +34,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             processAction(this._unsubscribeAll(true), function (s) { s.onCompleted && s.onCompleted(); });
         };
         return ObservableBase;
-    }(SubscribableBase_1.default));
+    }(SubscribableBase_1.SubscribableBase));
     var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
     function processAction(observers, handler) {
         var observersErrors = null;

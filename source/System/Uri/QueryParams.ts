@@ -3,15 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IUriComponentFormattable.d.ts"/>
-///<reference path="../Collections/Dictionaries/IDictionary.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
-import Type from "../Types";
 import * as Serialization from "../Serialization/Utility";
-import extractKeyValue from "../KeyValueExtract";
+import * as UriComponent from "./UriComponent";
+import * as QueryParam from "./QueryParam";
+import {Type} from "../Types";
+import {extractKeyValue} from "../KeyValueExtract";
 import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
+import {IMap} from "../Collections/Dictionaries/IDictionary";
+import {Primitive} from "../Primitive";
+import {IStringKeyValuePair} from "../KeyValuePair";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.
@@ -19,8 +19,11 @@ import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enume
  */
 
 const
+	EMPTY               = "",
+	QUERY_SEPARATOR     = "?",
 	ENTRY_SEPARATOR     = "&",
-	KEY_VALUE_SEPARATOR = "=";
+	KEY_VALUE_SEPARATOR = "=",
+	TO_URI_COMPONENT    = "toUriComponent";
 
 
 /**
@@ -30,10 +33,10 @@ const
  * @returns {string}
  */
 export function encode(
-	values:IUriComponentMap | QueryParamEnumerableOrArray,
+	values:UriComponent.Map | QueryParam.EnumerableOrArray,
 	prefixIfNotEmpty?:boolean):string
 {
-	if(!values) return '';
+	if(!values) return EMPTY;
 	var entries:string[] = [];
 
 	if(isEnumerableOrArrayLike(values))
@@ -50,14 +53,14 @@ export function encode(
 		);
 	}
 
-	return (entries.length && prefixIfNotEmpty ? '?' : '')
+	return (entries.length && prefixIfNotEmpty ? QUERY_SEPARATOR : EMPTY)
 		+ entries.join(ENTRY_SEPARATOR);
 }
 
 function appendKeyValueSingle(
 	entries:string[],
 	key:string,
-	value:UriComponentValue):void
+	value:UriComponent.Value):void
 {
 	entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
 }
@@ -66,7 +69,7 @@ function appendKeyValueSingle(
 function appendKeyValue(
 	entries:string[],
 	key:string,
-	value:UriComponentValue|IEnumerableOrArray<UriComponentValue>):void
+	value:UriComponent.Value|IEnumerableOrArray<UriComponent.Value>):void
 {
 	if(isEnumerableOrArrayLike(value))
 	{
@@ -83,13 +86,13 @@ function appendKeyValue(
  * @param value
  * @returns {string}
  */
-export function encodeValue(value:UriComponentValue):string
+export function encodeValue(value:UriComponent.Value):string
 {
 	var v:string = null;
 	if(isUriComponentFormattable(value))
 	{
 		v = value.toUriComponent();
-		if(v && v.indexOf('&')!=1)
+		if(v && v.indexOf(ENTRY_SEPARATOR)!=1)
 			throw '.toUriComponent() did not encode the value.';
 	}
 	else
@@ -100,13 +103,13 @@ export function encodeValue(value:UriComponentValue):string
 }
 
 /**
- * A shortcut for identifying an IUriComponentFormattable object.
+ * A shortcut for identifying an UriComponent.Formattable object.
  * @param instance
  * @returns {boolean}
  */
-export function isUriComponentFormattable(instance:any):instance is IUriComponentFormattable
+export function isUriComponentFormattable(instance:any):instance is UriComponent.Formattable
 {
-	return Type.hasMemberOfType<IUriComponentFormattable>(instance, "toUriComponent", Type.FUNCTION);
+	return Type.hasMemberOfType<UriComponent.Formattable>(instance, TO_URI_COMPONENT, Type.FUNCTION);
 }
 
 /**
@@ -199,6 +202,7 @@ export function parseToArray(
 
 export module Separator
 {
+	export const Query:string = QUERY_SEPARATOR;
 	export const Entry:string = ENTRY_SEPARATOR;
 	export const KeyValue:string = KEY_VALUE_SEPARATOR;
 }

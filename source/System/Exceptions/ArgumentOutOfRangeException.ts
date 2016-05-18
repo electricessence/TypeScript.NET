@@ -4,15 +4,14 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import Exception from "../Exception";
-import ArgumentException from "./ArgumentException";
+import {Exception} from "../Exception";
+import {ArgumentException} from "./ArgumentException";
 'use strict'; // For compatibility with (let, const, function, class);
 
 
 const NAME:string = 'ArgumentOutOfRangeException';
 
-export default
-class ArgumentOutOfRangeException extends ArgumentException
+export class ArgumentOutOfRangeException extends ArgumentException
 {
 	actualValue:string|number|boolean;
 
@@ -34,3 +33,5 @@ class ArgumentOutOfRangeException extends ArgumentException
 	}
 
 }
+
+export default ArgumentOutOfRangeException;

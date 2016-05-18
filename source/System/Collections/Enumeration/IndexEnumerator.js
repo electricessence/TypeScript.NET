@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "./EnumeratorBase"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var EnumeratorBase_1 = require("./EnumeratorBase");
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
@@ -61,7 +61,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._isEndless = false;
         }
         return IndexEnumerator;
-    }(EnumeratorBase_1.default));
+    }(EnumeratorBase_1.EnumeratorBase));
+    exports.IndexEnumerator = IndexEnumerator;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IndexEnumerator;
 });

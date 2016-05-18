@@ -12,15 +12,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Collections/Array/Utility", "./EventDispatcherEntry", "../Disposable/dispose"], factory);
+        define(["require", "exports", "../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
+    var AU = require("../Collections/Array/Utility");
     var shallowCopy_1 = require("../Utility/shallowCopy");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var AU = require("../Collections/Array/Utility");
-    var EventDispatcherEntry_1 = require("./EventDispatcherEntry");
     var dispose_1 = require("../Disposable/dispose");
+    var EventDispatcherEntry_1 = require("./EventDispatcherEntry");
     var DISPOSING = 'disposing', DISPOSED = 'disposed';
     function entryFinalizer() {
         var p = this.params;
@@ -38,7 +38,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             var e = this._entries;
             if (!e)
                 this._entries = e = [];
-            e.push(new EventDispatcherEntry_1.default(type, listener, {
+            e.push(new EventDispatcherEntry_1.EventDispatcherEntry(type, listener, {
                 priority: priority || 0,
                 dispatcher: this
             }, entryFinalizer));
@@ -58,7 +58,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
         EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-            dispose_1.default.these(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+            dispose_1.dispose.these(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
         };
         EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
             var _this = this;
@@ -84,7 +84,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             entries.sort(function (a, b) { return b.params.priority - a.params.priority; });
             entries.forEach(function (entry) {
                 var newEvent = Object.create(Event);
-                shallowCopy_1.default(event, newEvent);
+                shallowCopy_1.shallowCopy(event, newEvent);
                 newEvent.target = _this;
                 entry.dispatch(newEvent);
             });
@@ -122,7 +122,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
         };
         return EventDispatcherBase;
-    }(DisposableBase_1.default));
+    }(DisposableBase_1.DisposableBase));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = EventDispatcherBase;
 });

@@ -3,12 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../../FunctionTypes.d.ts"/>
+import {Action, Predicate} from "../../FunctionTypes";
 
-
-interface IEnumerateEach<T>
+export interface IEnumerateEach<T>
 {
-    // Enforcing an interface that allows operating on a copy can prevent changing underlying data while enumerating.
-    forEach(action:Predicate<T> | Action<T>, useCopy?:boolean): void;
+	// Enforcing an interface that allows operating on a copy can prevent changing underlying data while enumerating.
+	forEach(action:Predicate<T> | Action<T>, useCopy?:boolean):void;
 }
+
+export default IEnumerateEach;
 

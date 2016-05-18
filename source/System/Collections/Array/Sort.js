@@ -7,12 +7,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", '../../Types', '../../Compare'], factory);
+        define(["require", "exports", "../../Types", "../../Compare"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Types_1 = require('../../Types');
-    var Compare_1 = require('../../Compare');
+    var Types_1 = require("../../Types");
+    var Compare_1 = require("../../Compare");
     function ensureArray(value) {
         return Array.isArray(value)
             ? value
@@ -21,7 +21,7 @@
     function createComparer(selector, order, equivalentToNaN) {
         if (order === void 0) { order = 1; }
         if (equivalentToNaN === void 0) { equivalentToNaN = NaN; }
-        var nanHasEquivalent = !Types_1.default.isTrueNaN(equivalentToNaN);
+        var nanHasEquivalent = !Types_1.Type.isTrueNaN(equivalentToNaN);
         return function (a, b) {
             var aValue = ensureArray(selector(a));
             var bValue = ensureArray(selector(b));
@@ -32,9 +32,9 @@
                     ? (i < oArray.length ? oArray[i] : 1)
                     : order;
                 if (nanHasEquivalent) {
-                    if (Types_1.default.isTrueNaN(vA))
+                    if (Types_1.Type.isTrueNaN(vA))
                         vA = equivalentToNaN;
-                    if (Types_1.default.isTrueNaN(vB))
+                    if (Types_1.Type.isTrueNaN(vB))
                         vB = equivalentToNaN;
                 }
                 var r = Compare_1.compare(vA, vB);

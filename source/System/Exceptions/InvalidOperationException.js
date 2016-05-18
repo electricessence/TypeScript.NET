@@ -13,11 +13,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './SystemException'], factory);
+        define(["require", "exports", "./SystemException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var SystemException_1 = require('./SystemException');
+    "use strict";
+    var SystemException_1 = require("./SystemException");
     var NAME = 'InvalidOperationException';
     var InvalidOperationException = (function (_super) {
         __extends(InvalidOperationException, _super);
@@ -28,7 +28,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return NAME;
         };
         return InvalidOperationException;
-    }(SystemException_1.default));
+    }(SystemException_1.SystemException));
+    exports.InvalidOperationException = InvalidOperationException;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = InvalidOperationException;
 });

@@ -3,11 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="IDictionary.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 import {areEqual} from "../../Compare";
-import DictionaryBase from "./DictionaryBase";
+import {IStringKeyDictionary, IMap} from "./IDictionary";
+import {IKeyValuePair} from "../../KeyValuePair";
 
 const VOID0:any = void 0;
 

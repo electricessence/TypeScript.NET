@@ -3,20 +3,22 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ICollection.d.ts"/>
-///<reference path="Enumeration/IEnumerateEach.d.ts"/>
 import {forEach} from "./Enumeration/Enumerator";
 import {areEqual} from "../Compare";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import DisposableBase from "../Disposable/DisposableBase";
+import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
+import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
+import {DisposableBase} from "../Disposable/DisposableBase";
+import {ICollection} from "./ICollection";
+import {IEnumerator} from "./Enumeration/IEnumerator";
+import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
+import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
 
 //noinspection SpellCheckingInspection
 const NAME = "CollectionBase",
       CMDC = "Cannot modify a disposed collection.",
       CMRO = "Cannot modify a read-only collection.";
 
-abstract class CollectionBase<T>
+export abstract class CollectionBase<T>
 extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 {
 
@@ -82,9 +84,12 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		{
 			_._modifiedCount = 0;
 			_._version++;
-			try {
+			try
+			{
 				_._onModified();
-			} catch (ex) {
+			}
+			catch(ex)
+			{
 				// Avoid fatal errors which may have been caused by consumer.
 				console.error(ex);
 			}

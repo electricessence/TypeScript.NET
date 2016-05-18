@@ -9,7 +9,7 @@
 ///<reference path="IObservable.d.ts"/>
 'use strict'; // For compatibility with (let, const, function, class);
 
-import SubscribableBase from "./SubscribableBase";
+import {SubscribableBase} from "./SubscribableBase";
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 

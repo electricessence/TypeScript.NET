@@ -7,7 +7,9 @@
 
 ///<reference path="IFormatProvider.d.ts"/>
 
-interface IFormattable
+export interface IFormattable
 {
 	toString(format?:string, formatProvider?:IFormatProvider): string;
 }
+
+export default IFormattable;

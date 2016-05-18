@@ -4,7 +4,8 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.net.cache.requestcachelevel%28v=vs.110%29.aspx
  */
 
-declare const enum RequestCacheLevel {
+
+export declare const enum RequestCacheLevel {
 
 	/**
 	 * Satisfies a request for a resource either by using the cached copy of the resource or by sending a request for the resource to the server. The action taken is determined by the current cache policy and the age of the content in the cache. This is the cache level that should be used by most applications.
@@ -42,3 +43,5 @@ declare const enum RequestCacheLevel {
 	Revalidate
 
 }
+
+export default RequestCacheLevel;

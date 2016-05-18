@@ -12,30 +12,25 @@
     }
 })(function (require, exports) {
     "use strict";
-    var Scheme;
-    (function (Scheme) {
-        Scheme[Scheme["file"] = 0] = "file";
-        Scheme[Scheme["ftp"] = 1] = "ftp";
-        Scheme[Scheme["gopher"] = 2] = "gopher";
-        Scheme[Scheme["http"] = 3] = "http";
-        Scheme[Scheme["https"] = 4] = "https";
-        Scheme[Scheme["ldap"] = 5] = "ldap";
-        Scheme[Scheme["mailto"] = 6] = "mailto";
-        Scheme[Scheme["pipe"] = 7] = "pipe";
-        Scheme[Scheme["tcp"] = 8] = "tcp";
-        Scheme[Scheme["news"] = 9] = "news";
-        Scheme[Scheme["nntp"] = 10] = "nntp";
-        Scheme[Scheme["telnet"] = 11] = "telnet";
-        Scheme[Scheme["uuid"] = 12] = "uuid";
-    })(Scheme || (Scheme = {}));
-    var PIPE = 'net.pipe';
-    var TCP = 'net.tcp';
-    Scheme[Scheme.pipe] = PIPE;
-    Scheme[Scheme.tcp] = TCP;
-    Scheme[PIPE] = Scheme.pipe;
-    Scheme[TCP] = Scheme.tcp;
-    Object.freeze(Scheme);
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Scheme;
+    exports.File = "file";
+    exports.FTP = "ftp";
+    exports.GOPHER = "gopher";
+    exports.HTTP = "http";
+    exports.HTTPS = "https";
+    exports.LDAP = "ldap";
+    exports.MAILTO = "mailto";
+    exports.PIPE = "net.pipe";
+    exports.TCP = "net.tcp";
+    exports.NEWS = "news";
+    exports.NNTP = "nntp";
+    exports.TELNET = "telnet";
+    exports.UUID = "uuid";
+    exports.All = Object.freeze([
+        exports.File, exports.FTP, exports.GOPHER, exports.HTTP, exports.HTTPS, exports.LDAP, exports.MAILTO, exports.PIPE, exports.TCP, exports.NEWS, exports.NNTP, exports.TELNET, exports.UUID
+    ]);
+    function isValid(scheme) {
+        return exports.All.indexOf(scheme) != -1;
+    }
+    exports.isValid = isValid;
 });
 //# sourceMappingURL=Scheme.js.map

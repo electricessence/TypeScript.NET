@@ -12,11 +12,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './Disposable/DisposableBase'], factory);
+        define(["require", "exports", "./Disposable/DisposableBase"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var DisposableBase_1 = require('./Disposable/DisposableBase');
+    "use strict";
+    var DisposableBase_1 = require("./Disposable/DisposableBase");
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
         function Lazy(_closure) {
@@ -88,7 +88,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.equals(other) || this.value === other.value;
         };
         return Lazy;
-    }(DisposableBase_1.default));
+    }(DisposableBase_1.DisposableBase));
+    exports.Lazy = Lazy;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Lazy;
 });

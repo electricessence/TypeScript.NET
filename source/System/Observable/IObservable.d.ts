@@ -7,9 +7,11 @@
 *   https://msdn.microsoft.com/en-us/library/dd990377.aspx
 */
 
-///<reference path="IObserver.d.ts"/>
-///<reference path="ISubscribable.d.ts"/>
 
-interface IObservable<T> extends ISubscribable<IObserver<T>>
+import {ISubscribable} from "./ISubscribable";
+
+export interface IObservable<T> extends ISubscribable<IObserver<T>>
 {
 }
+
+export default IObservable;

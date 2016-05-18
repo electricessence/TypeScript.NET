@@ -24,7 +24,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             _super.call(this);
             this._action = _action;
             if (!_action)
-                throw new ArgumentNullException_1.default('action');
+                throw new ArgumentNullException_1.ArgumentNullException('action');
         }
         TaskHandler.prototype._onExecute = function () {
             this._action();
@@ -34,7 +34,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._action = null;
         };
         return TaskHandler;
-    }(TaskHandlerBase_1.default));
+    }(TaskHandlerBase_1.TaskHandlerBase));
+    exports.TaskHandler = TaskHandler;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TaskHandler;
 });

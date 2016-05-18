@@ -3,12 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-'use strict'; // For compatibility with (let, const, function, class);
+import {EnumeratorBase} from "./EnumeratorBase";
 
-import EnumeratorBase from "./EnumeratorBase";
-
-export default
-class IndexEnumerator<T> extends EnumeratorBase<T>
+export class IndexEnumerator<T> extends EnumeratorBase<T>
 {
 
 	constructor(
@@ -70,3 +67,5 @@ class IndexEnumerator<T> extends EnumeratorBase<T>
 		this._isEndless = false;
 	}
 }
+
+export default IndexEnumerator;

@@ -13,11 +13,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", './SystemException'], factory);
+        define(["require", "exports", "./SystemException"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var SystemException_1 = require('./SystemException');
+    "use strict";
+    var SystemException_1 = require("./SystemException");
     var NAME = 'NotImplementedException';
     var NotImplementedException = (function (_super) {
         __extends(NotImplementedException, _super);
@@ -28,7 +28,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return NAME;
         };
         return NotImplementedException;
-    }(SystemException_1.default));
+    }(SystemException_1.SystemException));
+    exports.NotImplementedException = NotImplementedException;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = NotImplementedException;
 });

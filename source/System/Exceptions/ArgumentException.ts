@@ -6,14 +6,13 @@
 
 'use strict'; // For compatibility with (let, const, function, class);
 
-import SystemException from "./SystemException";
+import {SystemException} from "./SystemException";
 import {trim} from "../Text/Utility";
 
 
 const NAME:string = 'ArgumentException';
 
-export default
-class ArgumentException extends SystemException
+export class ArgumentException extends SystemException
 {
 
 	paramName:string;
@@ -39,3 +38,5 @@ class ArgumentException extends SystemException
 	}
 
 }
+
+export default ArgumentException;

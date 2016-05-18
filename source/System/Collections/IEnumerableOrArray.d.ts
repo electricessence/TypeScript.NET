@@ -3,8 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="Enumeration/IEnumerable.d.ts"/>
-///<reference path="Array/IArray.d.ts"/>
+import {IArray} from "./Array/IArray";
+import {IEnumerable} from "./Enumeration/IEnumerable";
 
 // Place IArray<T> in front for efficiency.
-declare type IEnumerableOrArray<T> =  IArray<T> | IEnumerable<T>;
+
+export declare type IEnumerableOrArray<T> =  IArray<T> | IEnumerable<T>;
+
+export default IEnumerableOrArray;

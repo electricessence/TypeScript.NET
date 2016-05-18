@@ -12,14 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Uri/Uri", "../../Disposable/DisposableBase", "./HttpMethod"], factory);
+        define(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
-    var Uri_1 = require("../../Uri/Uri");
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var HttpMethod_1 = require("./HttpMethod");
+    var Uri_1 = require("../../Uri/Uri");
     var HttpRequestFactory = (function (_super) {
         __extends(HttpRequestFactory, _super);
         function HttpRequestFactory(_http, uriDefaults) {
@@ -27,8 +27,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._http = _http;
             this._disposableObjectName = 'HttpRequestFactory';
             if (!_http)
-                throw new ArgumentNullException_1.default('_http');
-            this._uriDefaults = Uri_1.default.from(uriDefaults);
+                throw new ArgumentNullException_1.ArgumentNullException('_http');
+            this._uriDefaults = Uri_1.Uri.from(uriDefaults);
         }
         HttpRequestFactory.prototype._onDispose = function () {
             this._http = null;
@@ -37,7 +37,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         HttpRequestFactory.prototype.uri = function (uri) {
             var _ = this;
             _.throwIfDisposed();
-            var u = Uri_1.default.from(uri, _._uriDefaults);
+            var u = Uri_1.Uri.from(uri, _._uriDefaults);
             return _._uriDefaults.equals(u)
                 ? _
                 : new HttpRequestFactory(_._http, u);
@@ -69,7 +69,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.request(HttpMethod_1.DELETE);
         };
         return HttpRequestFactory;
-    }(DisposableBase_1.default));
+    }(DisposableBase_1.DisposableBase));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = HttpRequestFactory;
 });

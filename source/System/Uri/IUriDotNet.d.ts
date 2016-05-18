@@ -4,12 +4,9 @@
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri%28v=vs.110%29.aspx
  */
 
-///<reference path="../Serialization/ISerializable.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="IUri.d.ts"/>
-
-
-import UriHostNameType from './HostNameType';
+import {UriHostNameType} from "./HostNameType";
+import {ISerializable} from "../Serialization/ISerializable";
+import {IUri} from "./IUri";
 
 
 /**
@@ -44,7 +41,7 @@ extends IUri, ISerializable, IEquatable<IUri> {
 
 
 	/**
-	 * The RFC 3490 compliant International Domain Name of the host, using Punycode as appropriate.
+	 * The RFC 3490 compliant International Domain Name of the host, using Puny-code as appropriate.
 	 */
 	idnHost:string;
 
@@ -107,3 +104,4 @@ extends IUri, ISerializable, IEquatable<IUri> {
 
 }
 
+export default IUriDotNet;

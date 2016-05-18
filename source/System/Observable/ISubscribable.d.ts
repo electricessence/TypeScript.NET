@@ -4,10 +4,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Disposable/IDisposable.d.ts"/>
+import {IDisposable} from "../Disposable/IDisposable";
 
-interface ISubscribable<TSubscriber> extends IDisposable
+export interface ISubscribable<TSubscriber> extends IDisposable
 {
-	subscribe(observer: TSubscriber): IDisposable;
-	unsubscribe(observer: TSubscriber): void;
+	subscribe(observer:TSubscriber):IDisposable;
+	unsubscribe(observer:TSubscriber):void;
 }
+
+export default ISubscribable;

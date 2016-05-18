@@ -4,18 +4,21 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 
-///<reference path="IUri.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../Primitive.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
-import Type from "../Types";
-import * as QueryParams from "../Uri/QueryParams";
+import {Type} from "../Types";
+import * as QueryParams from "./QueryParams";
+import * as QueryParam from "./QueryParam";
+import * as UriComponent from "./UriComponent";
+import * as Scheme from "./Scheme";
+import {SchemeValue} from "./SchemeValue";
 import {trim} from "../Text/Utility";
-import UriScheme from "../Uri/Scheme";
-import Exception from "../Exception";
-import ArgumentException from "../Exceptions/ArgumentException";
-import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import {Exception} from "../Exception";
+import {ArgumentException} from "../Exceptions/ArgumentException";
+import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
+import {IUri} from "./IUri";
+import {IMap} from "../Collections/Dictionaries/IDictionary";
+import {Primitive} from "../Primitive";
+import {StringKeyValuePair} from "../KeyValuePair";
 
 const VOID0:any = void(0);
 
@@ -25,7 +28,7 @@ const VOID0:any = void(0);
  * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
  * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
  */
-export default class Uri implements IUri, IEquatable<IUri>
+export class Uri implements IUri, IEquatable<IUri>
 {
 
 	scheme:SchemeValue;
@@ -48,12 +51,12 @@ export default class Uri implements IUri, IEquatable<IUri>
 	 * @param fragment The escaped URI fragment.
 	 */
 	constructor(
-		scheme:UriScheme|SchemeValue,
+		scheme:SchemeValue,
 		userInfo:string,
 		host:string,
 		port:number,
 		path:string,
-		query?:QueryParamsConvertible,
+		query?:QueryParam.Convertible,
 		fragment?:string)
 	{
 		var _ = this;
@@ -69,7 +72,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 
 
 		if(!Type.isString(query))
-			query = QueryParams.encode(<IUriComponentMap|StringKeyValuePair<Primitive>[]>query);
+			query = QueryParams.encode(<UriComponent.Map|StringKeyValuePair<Primitive>[]>query);
 
 		_.query = formatQuery(<string>query) || null;
 		Object.freeze(_.queryParams
@@ -158,7 +161,7 @@ export default class Uri implements IUri, IEquatable<IUri>
 		return copyUri(this, map);
 	}
 
-	updateQuery(query:QueryParamsConvertible):Uri
+	updateQuery(query:QueryParam.Convertible):Uri
 	{
 		var map = this.toMap();
 		map.query = <any>query;
@@ -289,25 +292,16 @@ function copyUri(from:IUri, to?:IUri)
 	return to;
 }
 
-const SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
+const SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 
-function getScheme(scheme:UriScheme|string):SchemeValue
+function getScheme(scheme:string):SchemeValue
 {
 	var s:any = scheme;
-	if(Type.isString(s))
+	if(s && Type.isString(s))
 	{
-		if(!s) return VOID0;
+		s = trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY);
 
-		s = UriScheme[<any>trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
-
-		if(isNaN(s))
-			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
-	}
-
-	if(Type.isNumber(s, false))
-	{
-		s = UriScheme[<number>s];
-		if(!s)
+		if(!Scheme.isValid(s))
 			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
 
 		return s;
@@ -502,3 +496,5 @@ function tryParse(url:string, out:(result:IUri)=>void):Exception
 	return null;
 
 }
+
+export default Uri;

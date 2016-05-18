@@ -4,8 +4,8 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 
-///<reference path="SchemeValue.d.ts"/>
 
+import {SchemeValue} from "./SchemeValue";
 /**
  * https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  *
@@ -15,7 +15,7 @@
  *   scheme             path
  * ```
  */
-interface IUrn {
+export interface IUrn {
 
 	/**
 	 * The scheme name for this URI.
@@ -43,7 +43,7 @@ interface IUrn {
  *  scheme  user information     host     port            query   fragment
  * ```
  */
-interface IUri extends IUrn {
+export interface IUri extends IUrn {
 
 
 	/**
@@ -73,3 +73,5 @@ interface IUri extends IUrn {
 
 
 }
+
+export default IUri;

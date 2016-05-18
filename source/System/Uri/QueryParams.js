@@ -7,28 +7,28 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Serialization/Utility", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], factory);
+        define(["require", "exports", "../Serialization/Utility", "../Types", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], factory);
     }
 })(function (require, exports) {
-    'use strict';
-    var Types_1 = require("../Types");
+    "use strict";
     var Serialization = require("../Serialization/Utility");
+    var Types_1 = require("../Types");
     var KeyValueExtract_1 = require("../KeyValueExtract");
     var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
-    var ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
+    var EMPTY = "", QUERY_SEPARATOR = "?", ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=", TO_URI_COMPONENT = "toUriComponent";
     function encode(values, prefixIfNotEmpty) {
         if (!values)
-            return '';
+            return EMPTY;
         var entries = [];
         if (Enumerator_1.isEnumerableOrArrayLike(values)) {
             Enumerator_1.forEach(values, function (entry) {
-                return KeyValueExtract_1.default(entry, function (key, value) { return appendKeyValue(entries, key, value); });
+                return KeyValueExtract_1.extractKeyValue(entry, function (key, value) { return appendKeyValue(entries, key, value); });
             });
         }
         else {
             Object.keys(values).forEach(function (key) { return appendKeyValue(entries, key, values[key]); });
         }
-        return (entries.length && prefixIfNotEmpty ? '?' : '')
+        return (entries.length && prefixIfNotEmpty ? QUERY_SEPARATOR : EMPTY)
             + entries.join(ENTRY_SEPARATOR);
     }
     exports.encode = encode;
@@ -47,7 +47,7 @@
         var v = null;
         if (isUriComponentFormattable(value)) {
             v = value.toUriComponent();
-            if (v && v.indexOf('&') != 1)
+            if (v && v.indexOf(ENTRY_SEPARATOR) != 1)
                 throw '.toUriComponent() did not encode the value.';
         }
         else {
@@ -57,7 +57,7 @@
     }
     exports.encodeValue = encodeValue;
     function isUriComponentFormattable(instance) {
-        return Types_1.default.hasMemberOfType(instance, "toUriComponent", Types_1.default.FUNCTION);
+        return Types_1.Type.hasMemberOfType(instance, TO_URI_COMPONENT, Types_1.Type.FUNCTION);
     }
     exports.isUriComponentFormattable = isUriComponentFormattable;
     function parse(query, entryHandler, deserialize, decodeValues) {
@@ -108,6 +108,7 @@
     exports.parseToArray = parseToArray;
     var Separator;
     (function (Separator) {
+        Separator.Query = QUERY_SEPARATOR;
         Separator.Entry = ENTRY_SEPARATOR;
         Separator.KeyValue = KEY_VALUE_SEPARATOR;
     })(Separator = exports.Separator || (exports.Separator = {}));

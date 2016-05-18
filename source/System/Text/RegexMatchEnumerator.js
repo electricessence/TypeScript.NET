@@ -26,7 +26,7 @@
         RegexMatchEnumerator.prototype.matches = function (input) {
             var _this = this;
             var p;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 p = 0;
             }, function (yielder) {
                 var match = _this._pattern.match(input, p);

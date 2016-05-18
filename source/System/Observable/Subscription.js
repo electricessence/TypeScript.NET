@@ -12,7 +12,7 @@
         define(["require", "exports"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var Subscription = (function () {
         function Subscription(_subscribable, _subscriber) {
             this._subscribable = _subscribable;
@@ -45,6 +45,7 @@
         };
         return Subscription;
     }());
+    exports.Subscription = Subscription;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Subscription;
 });

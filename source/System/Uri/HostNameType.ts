@@ -5,7 +5,7 @@
  */
 
 
-enum UriHostNameType {
+export enum UriHostNameType {
 	/**
 	 * The host is set, but the type cannot be determined.
 	 */

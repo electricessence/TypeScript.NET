@@ -3,18 +3,21 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ICollection.d.ts"/>
 
-// A means for interfacing an array with ICollection<T> and for use as a base class.
 import {areEqual} from "../Compare";
 import {remove, indexOf, contains, copyTo, removeIndex} from "./Array/Utility";
 import {forEach} from "./Enumeration/Enumerator";
-import Type from "../Types";
-import ArrayEnumerator from "./Enumeration/ArrayEnumerator";
-import CollectionBase from "./CollectionBase";
-export default class List<T>
-extends CollectionBase<T>
-implements IList<T>, IEnumerateEach<T>
+import {Type} from "../Types";
+import {ArrayEnumerator} from "./Enumeration/ArrayEnumerator";
+import {CollectionBase} from "./CollectionBase";
+import {Predicate, Action, EqualityComparison} from "../FunctionTypes";
+import {IEnumerator} from "./Enumeration/IEnumerator";
+import {IList} from "./IList";
+import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
+import {IEnumerableOrArray} from "./IEnumerableOrArray";
+
+export class List<T>
+extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 {
 
 	protected _source:T[];
@@ -23,7 +26,7 @@ implements IList<T>, IEnumerateEach<T>
 		source?:IEnumerableOrArray<T>,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		super(null,equalityComparer);
+		super(null, equalityComparer);
 		var _ = this;
 		if(Array.isArray(source))
 		{
@@ -58,7 +61,8 @@ implements IList<T>, IEnumerateEach<T>
 	{
 		var len = this._source.length;
 		this._source.length = 0;
-		return len;	}
+		return len;
+	}
 
 	protected _importEntries(entries:IEnumerableOrArray<T>):number
 	{
@@ -70,12 +74,14 @@ implements IList<T>, IEnumerateEach<T>
 
 			var first = s.length;
 			s.length += len;
-			for(let i = 0;i<len;i++) {
-				s[i+first] = entries[i];
+			for(let i = 0; i<len; i++)
+			{
+				s[i + first] = entries[i];
 			}
 
 			return len;
-		} else
+		}
+		else
 		{
 			return super._importEntries(entries);
 		}
@@ -127,7 +133,7 @@ implements IList<T>, IEnumerateEach<T>
 		}
 		return false;
 	}
-	
+
 	contains(item:T):boolean
 	{
 		return contains(
@@ -139,7 +145,7 @@ implements IList<T>, IEnumerateEach<T>
 	{
 		return copyTo(this._source, target, 0, index);
 	}
-	
+
 	getEnumerator():IEnumerator<T>
 	{
 		return new ArrayEnumerator(this._source);
@@ -152,3 +158,5 @@ implements IList<T>, IEnumerateEach<T>
 	}
 
 }
+
+export default List;
