@@ -1,7 +1,7 @@
 /// <reference path="../../../../source/System/Time/ITimeQuantity.d.ts" />
 /// <reference path="../../../../source/System/IEquatable.d.ts" />
 /// <reference path="../../../../source/System/IComparable.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116417-4216-cwoz0m/System/Time/HowMany.d.ts" />
+/// <reference path="../../../../gulp-tsc-tmp-116418-3848-1151dg6/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md

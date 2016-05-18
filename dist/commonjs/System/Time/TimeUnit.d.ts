@@ -1,5 +1,5 @@
 /// <reference path="../../../../source/System/Time/ITimeQuantity.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116417-4216-cwoz0m/System/Time/HowMany.d.ts" />
+/// <reference path="../../../../gulp-tsc-tmp-116418-3848-1151dg6/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Originally based upon .NET source but with many additions and improvements.

@@ -60,5 +60,4 @@
         });
     });
 });
-
 //# sourceMappingURL=Compare.js.map

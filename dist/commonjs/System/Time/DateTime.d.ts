@@ -2,7 +2,7 @@
 /// <reference path="../../../../source/System/Time/ITimeStamp.d.ts" />
 /// <reference path="../../../../source/System/Time/IDateTime.d.ts" />
 /// <reference path="../../../../source/System/Time/Calendars.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116417-4216-cwoz0m/System/Time/HowMany.d.ts" />
+/// <reference path="../../../../gulp-tsc-tmp-116418-3848-1151dg6/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based on .NET DateTime's interface.

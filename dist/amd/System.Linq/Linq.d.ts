@@ -84,8 +84,9 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IEn
 export declare class Enumerable<T> extends InfiniteEnumerable<T> {
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void, isEndless?: boolean);
     static from<T>(source: IEnumerableOrArray<T>): Enumerable<T>;
-    static fromAny<T>(source: IEnumerableOrArray<T>): Enumerable<T>;
     static fromAny(source: any): Enumerable<any>;
+    static fromAny<T>(source: IEnumerableOrArray<T>, defaultEnumerable?: Enumerable<T>): Enumerable<T>;
+    static fromAny<T>(source: any, defaultEnumerable?: Enumerable<T>): Enumerable<T>;
     static fromOrEmpty<T>(source: IEnumerableOrArray<T>): Enumerable<T>;
     static toArray<T>(source: IEnumerableOrArray<T>): T[];
     static choice<T>(values: IArray<T>): InfiniteEnumerable<T>;

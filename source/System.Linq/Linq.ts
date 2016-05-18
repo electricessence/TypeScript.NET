@@ -1843,11 +1843,16 @@ extends InfiniteEnumerable<T>
 		return e;
 	}
 
-	static fromAny<T>(
-		source:IEnumerableOrArray<T>):Enumerable<T>
-
 	static fromAny(
 		source:any):Enumerable<any>
+
+	static fromAny<T>(
+		source:IEnumerableOrArray<T>,
+		defaultEnumerable?:Enumerable<T>):Enumerable<T>
+
+	static fromAny<T>(
+		source:any,
+		defaultEnumerable?:Enumerable<T>):Enumerable<T>
 
 	static fromAny<T>(
 		source:any,
