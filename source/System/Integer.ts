@@ -1,4 +1,3 @@
-///<reference path="Collections/Array/IArray.d.ts"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -81,7 +80,7 @@ export module Integer
 	export function as32Bit(n:number):number
 	{
 		var result = n | 0;
-		return (n===-1 || result!==-1) ? result : null;
+		return (n=== -1 || result!== -1) ? result : null;
 	}
 
 	const NUMBER:string = "number";
