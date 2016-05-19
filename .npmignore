@@ -9,3 +9,11 @@ bower_components
 tests
 documentation
 typings
+coverage.bat
+.npmignore
+test.js
+tsc-flags.txt
+tsconfig.json
+tsd.json
+bower.json
+.babelrc
