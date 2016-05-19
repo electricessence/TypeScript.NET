@@ -64,5 +64,4 @@
         });
     });
 });
-
 //# sourceMappingURL=Integer.js.map

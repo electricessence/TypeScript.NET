@@ -9,7 +9,7 @@ import { IEnumerator } from "./Enumeration/IEnumerator";
 import { Predicate, Action, EqualityComparison } from "../FunctionTypes";
 import { ILinkedList } from "./ILinkedList";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
-export default class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {
+export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {
     private _listInternal;
     constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
     protected getCount(): number;
@@ -37,3 +37,4 @@ export default class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     addNodeBefore(node: ILinkedListNode<T>, before: ILinkedListNode<T>): void;
     addNodeAfter(node: ILinkedListNode<T>, after: ILinkedListNode<T>): void;
 }
+export default LinkedList;

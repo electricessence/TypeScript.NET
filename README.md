@@ -48,13 +48,17 @@ After some time and effort, I've decided that this library should be module base
 ```
 npm install typescript-dotnet
 ```
-Version 2.5 is the first NPM release.  The goal is to get this as user friendly as possible.
+
+Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.
 Currently it is possible/supported to use TypeScript.NET in a number of different ways:
-1. Using TypeScript and import the source directly by relative reference.
-2. Node users can use ```dist/commonjs``` which uses ES6>Babel rendering for ease of use.
+
+1. Example: ```import Enumerable from "typescript-dotnet/source/System.Linq/Linq"``` with NodeJS works perfectly well.  
+2. Pure JS/Node users can use ```dist/commonjs``` which uses ES6>Babel rendering for ease of use.
 3. Use ```dist/es6``` directly.
 4. requirejs can consume ```dist/amd``` or ```dist/umd.min``` for minified, web-friendly, source-mapped versions.
 5. Lastly, re-render your own version using the TypeScript compiler.
+
+If using WebStorm and you've properly set your module type to "commonjs" you'll find that it does an outstanding job of automatically (ALT-ENTER) importing your references.
 
 This all may be overkill, or possibly a use case was missed, so please don't hesitate to log issues in GitHub.
 
@@ -62,6 +66,7 @@ This all may be overkill, or possibly a use case was missed, so please don't hes
 ```
 bower install typescript-dotnet
 ```
+
 This should also include require.js in your bower components directory.
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
 

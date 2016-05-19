@@ -200,7 +200,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 };
                 return LinkedList;
             }(CollectionBase_1.CollectionBase));
-            exports_1("default", LinkedList);
+            exports_1("LinkedList", LinkedList);
             LinkedListNode = (function () {
                 function LinkedListNode(_list, _nodeInternal) {
                     this._list = _list;
@@ -254,6 +254,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 };
                 return LinkedListNode;
             }());
+            exports_1("default",LinkedList);
         }
     }
 });

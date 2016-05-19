@@ -41,7 +41,7 @@ function getInternal(node, list) {
         throw new InvalidOperationException("Provided node is not valid.");
     return n;
 }
-export default class LinkedList extends CollectionBase {
+export class LinkedList extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);
         var _ = this;
@@ -199,4 +199,5 @@ class LinkedListNode {
         this._list.removeNode(this);
     }
 }
+export default LinkedList;
 //# sourceMappingURL=LinkedList.js.map
