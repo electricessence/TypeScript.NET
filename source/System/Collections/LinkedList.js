@@ -191,8 +191,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return LinkedList;
     }(CollectionBase_1.CollectionBase));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = LinkedList;
+    exports.LinkedList = LinkedList;
     var LinkedListNode = (function () {
         function LinkedListNode(_list, _nodeInternal) {
             this._list = _list;
@@ -246,5 +245,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return LinkedListNode;
     }());
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = LinkedList;
 });
 //# sourceMappingURL=LinkedList.js.map

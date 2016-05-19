@@ -82,8 +82,7 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNod
 	return n;
 }
 
-export default
-class LinkedList<T>
+export class LinkedList<T>
 extends CollectionBase<T> implements ILinkedList<T>
 {
 	private _listInternal:LinkedNodeList<InternalNode<T>>;
@@ -368,3 +367,4 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 
 }
 
+export default LinkedList;

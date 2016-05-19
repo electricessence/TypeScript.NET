@@ -245,8 +245,7 @@ var LinkedList = function (_CollectionBase_1$Col) {
     return LinkedList;
 }(CollectionBase_1.CollectionBase);
 
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = LinkedList;
+exports.LinkedList = LinkedList;
 
 var LinkedListNode = function () {
     function LinkedListNode(_list, _nodeInternal) {
@@ -308,4 +307,7 @@ var LinkedListNode = function () {
 
     return LinkedListNode;
 }();
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = LinkedList;
 //# sourceMappingURL=LinkedList.js.map
