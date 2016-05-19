@@ -25,15 +25,15 @@
     function compare(a, b, strict) {
         if (strict === void 0) { strict = true; }
         if (areEqual(a, b, strict))
-            return CompareResult.Equal;
+            return 0;
         if (a && Types_1.Type.hasMember(a, COMPARE_TO))
             return a.compareTo(b);
         else if (b && Types_1.Type.hasMember(b, COMPARE_TO))
             return -b.compareTo(a);
         if (a > b || strict && (a === 0 && b == 0 || a === null && b === VOID0))
-            return CompareResult.Greater;
+            return 1;
         if (b > a || strict && (b === 0 && a == 0 || b === null && a === VOID0))
-            return CompareResult.Less;
+            return -1;
         return NaN;
     }
     exports.compare = compare;

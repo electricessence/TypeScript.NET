@@ -5,7 +5,7 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 System.register(["./ObservableBase"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -36,7 +36,8 @@ System.register(["./ObservableBase"], function(exports_1, context_1) {
                 };
                 return ObservableNodeBase;
             }(ObservableBase_1.default));
-            exports_1("default", ObservableNodeBase);
+            exports_1("ObservableNodeBase", ObservableNodeBase);
+            exports_1("default",ObservableNodeBase);
         }
     }
 });

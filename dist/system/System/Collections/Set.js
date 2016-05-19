@@ -48,8 +48,8 @@ System.register(["../Types", "../Exceptions/ArgumentException", "./SetBase"], fu
                     var _ = this;
                     if (!_.contains(item)) {
                         var type = typeof item;
-                        if (!Types_1.default.isPrimitive(type))
-                            throw new ArgumentException_1.default("item", "A Set can only index primitives.  Complex objects require a HashSet.");
+                        if (!Types_1.Type.isPrimitive(type))
+                            throw new ArgumentException_1.ArgumentException("item", "A Set can only index primitives.  Complex objects require a HashSet.");
                         var r = _._registry;
                         var t = r && r[type];
                         if (!r)
@@ -90,8 +90,9 @@ System.register(["../Types", "../Exceptions/ArgumentException", "./SetBase"], fu
                     return 0;
                 };
                 return Set;
-            }(SetBase_1.default));
-            exports_1("default", Set);
+            }(SetBase_1.SetBase));
+            exports_1("Set", Set);
+            exports_1("default",Set);
         }
     }
 });

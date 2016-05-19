@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['./Disposable/DisposableBase'], function(exports_1, context_1) {
-    'use strict';
+System.register(["./Disposable/DisposableBase"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -89,8 +89,9 @@ System.register(['./Disposable/DisposableBase'], function(exports_1, context_1) 
                     return this.equals(other) || this.value === other.value;
                 };
                 return Lazy;
-            }(DisposableBase_1.default));
-            exports_1("default", Lazy);
+            }(DisposableBase_1.DisposableBase));
+            exports_1("Lazy", Lazy);
+            exports_1("default",Lazy);
         }
     }
 });

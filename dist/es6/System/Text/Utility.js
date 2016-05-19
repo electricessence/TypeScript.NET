@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from "../Types";
+import { Type } from "../Types";
 export const EMPTY = '';
 export function getHashCode(source) {
     var hash = 0 | 0;

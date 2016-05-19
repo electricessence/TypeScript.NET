@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../Types"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1;
     var dispose;
@@ -25,7 +25,7 @@ System.register(["../Types"], function(exports_1, context_1) {
     }
     exports_1("using", using);
     function disposeSingle(disposable, trapExceptions) {
-        if (disposable && Types_1.default.of(disposable).member('dispose').isFunction) {
+        if (disposable && Types_1.Type.of(disposable).member('dispose').isFunction) {
             if (trapExceptions) {
                 try {
                     disposable.dispose();

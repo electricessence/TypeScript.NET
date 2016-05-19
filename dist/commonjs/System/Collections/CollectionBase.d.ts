@@ -1,11 +1,15 @@
-/// <reference path="../../../../source/System/Collections/ICollection.d.ts" />
-/// <reference path="../../../../source/System/Collections/Enumeration/IEnumerateEach.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import DisposableBase from "../Disposable/DisposableBase";
-declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
+import { DisposableBase } from "../Disposable/DisposableBase";
+import { ICollection } from "./ICollection";
+import { IEnumerator } from "./Enumeration/IEnumerator";
+import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
+import { EqualityComparison, Predicate, Action } from "../FunctionTypes";
+import { IEnumerableOrArray } from "./IEnumerableOrArray";
+import { IArray } from "./Array/IArray";
+export declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
     protected _equalityComparer: EqualityComparison<T>;
     constructor(source?: IEnumerableOrArray<T>, _equalityComparer?: EqualityComparison<T>);
     protected abstract getCount(): number;

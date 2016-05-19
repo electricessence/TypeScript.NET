@@ -1,14 +1,16 @@
-/// <reference path="../../../../../source/System/FunctionTypes.d.ts" />
-/// <reference path="../../../../../source/System/Collections/ILinkedListNode.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { IKeyValuePair } from "../../KeyValuePair";
+import { IEnumerator } from "../Enumeration/IEnumerator";
+import { ILinkedNode } from "../ILinkedListNode";
+import { Selector } from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
 export interface IHashEntry<TKey, TValue> extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey, TValue> {
 }
-export default class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue> {
+export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue> {
     private _keyComparer;
     private _entries;
     private _buckets;
@@ -24,3 +26,4 @@ export default class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
     protected getKeys(): TKey[];
     protected getValues(): TValue[];
 }
+export default Dictionary;

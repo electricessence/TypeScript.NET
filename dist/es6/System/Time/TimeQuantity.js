@@ -2,10 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import { areEqual, compare } from '../Compare';
-import TimeUnit from './TimeUnit';
-export default class TimeQuantity {
+import { areEqual, compare } from "../Compare";
+import { TimeUnit } from "./TimeUnit";
+export class TimeQuantity {
     constructor(_quantity = 0) {
         this._quantity = _quantity;
     }
@@ -40,4 +39,5 @@ export default class TimeQuantity {
         return TimeUnit.fromMilliseconds(this.getTotalMilliseconds(), units);
     }
 }
+export default TimeQuantity;
 //# sourceMappingURL=TimeQuantity.js.map

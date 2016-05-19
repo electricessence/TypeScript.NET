@@ -1,9 +1,9 @@
-/// <reference path="../../../../source/System/Disposable/IDisposableAware.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-declare abstract class DisposableBase implements IDisposableAware {
+import { IDisposableAware } from "./IDisposableAware";
+export declare abstract class DisposableBase implements IDisposableAware {
     private _finalizer;
     constructor(_finalizer?: () => void);
     private _wasDisposed;

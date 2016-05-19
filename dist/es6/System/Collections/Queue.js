@@ -3,22 +3,21 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import { areEqual } from "../Compare";
 import * as AU from "./Array/Utility";
-import Type from "../Types";
-import Integer from "../Integer";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
-import NotImplementedException from "../Exceptions/NotImplementedException";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
-import CollectionBase from "./CollectionBase";
+import { Type } from "../Types";
+import { Integer } from "../Integer";
+import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
+import { NotImplementedException } from "../Exceptions/NotImplementedException";
+import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
+import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
+import { CollectionBase } from "./CollectionBase";
 const MINIMUM_GROW = 4;
 const SHRINK_THRESHOLD = 32;
 const GROW_FACTOR_HALF = 100;
 const DEFAULT_CAPACITY = MINIMUM_GROW;
 var emptyArray = [];
-export default class Queue extends CollectionBase {
+export class Queue extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);
         var _ = this;
@@ -214,4 +213,5 @@ function assertIntegerZeroOrGreater(value, property) {
     Integer.assert(value, property);
     assertZeroOrGreater(value, property);
 }
+export default Queue;
 //# sourceMappingURL=Queue.js.map

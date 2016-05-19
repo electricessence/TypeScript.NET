@@ -3,11 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+
 import {using} from "../../Disposable/dispose";
 import {Type} from "../../Types";
 import {ArrayEnumerator} from "./ArrayEnumerator";
 import {IndexEnumerator} from "./IndexEnumerator";
 import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
+import {Selector} from "../../FunctionTypes";
 import {IEnumerator} from "./IEnumerator";
 import {IEnumerable} from "./IEnumerable";
 import {IIteratorResult} from "./IIterator";

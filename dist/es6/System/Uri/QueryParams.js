@@ -2,15 +2,14 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import Type from "../Types";
 import * as Serialization from "../Serialization/Utility";
-import extractKeyValue from "../KeyValueExtract";
+import { Type } from "../Types";
+import { extractKeyValue } from "../KeyValueExtract";
 import { forEach, isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
-const ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
+const EMPTY = "", QUERY_SEPARATOR = "?", ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=", TO_URI_COMPONENT = "toUriComponent";
 export function encode(values, prefixIfNotEmpty) {
     if (!values)
-        return '';
+        return EMPTY;
     var entries = [];
     if (isEnumerableOrArrayLike(values)) {
         forEach(values, entry => extractKeyValue(entry, (key, value) => appendKeyValue(entries, key, value)));
@@ -18,7 +17,7 @@ export function encode(values, prefixIfNotEmpty) {
     else {
         Object.keys(values).forEach(key => appendKeyValue(entries, key, values[key]));
     }
-    return (entries.length && prefixIfNotEmpty ? '?' : '')
+    return (entries.length && prefixIfNotEmpty ? QUERY_SEPARATOR : EMPTY)
         + entries.join(ENTRY_SEPARATOR);
 }
 function appendKeyValueSingle(entries, key, value) {
@@ -36,7 +35,7 @@ export function encodeValue(value) {
     var v = null;
     if (isUriComponentFormattable(value)) {
         v = value.toUriComponent();
-        if (v && v.indexOf('&') != 1)
+        if (v && v.indexOf(ENTRY_SEPARATOR) != 1)
             throw '.toUriComponent() did not encode the value.';
     }
     else {
@@ -45,7 +44,7 @@ export function encodeValue(value) {
     return v;
 }
 export function isUriComponentFormattable(instance) {
-    return Type.hasMemberOfType(instance, "toUriComponent", Type.FUNCTION);
+    return Type.hasMemberOfType(instance, TO_URI_COMPONENT, Type.FUNCTION);
 }
 export function parse(query, entryHandler, deserialize = true, decodeValues = true) {
     if (query && (query = query.replace(/^\s*\?+/, ''))) {
@@ -85,6 +84,7 @@ export function parseToArray(query, deserialize = true, decodeValues = true) {
 }
 export var Separator;
 (function (Separator) {
+    Separator.Query = QUERY_SEPARATOR;
     Separator.Entry = ENTRY_SEPARATOR;
     Separator.KeyValue = KEY_VALUE_SEPARATOR;
 })(Separator || (Separator = {}));

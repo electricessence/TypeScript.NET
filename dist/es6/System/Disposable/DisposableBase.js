@@ -2,9 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import ObjectDisposedException from './ObjectDisposedException';
-class DisposableBase {
+import { ObjectDisposedException } from "./ObjectDisposedException";
+export class DisposableBase {
     constructor(_finalizer) {
         this._finalizer = _finalizer;
         this._wasDisposed = false;

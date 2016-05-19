@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -14,11 +14,11 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var AU = require("../Collections/Array/Utility");
 var shallowCopy_1 = require("../Utility/shallowCopy");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
-var AU = require("../Collections/Array/Utility");
-var EventDispatcherEntry_1 = require("./EventDispatcherEntry");
 var dispose_1 = require("../Disposable/dispose");
+var EventDispatcherEntry_1 = require("./EventDispatcherEntry");
 var DISPOSING = 'disposing',
     DISPOSED = 'disposed';
 function entryFinalizer() {
@@ -27,8 +27,8 @@ function entryFinalizer() {
     p.dispatcher = null;
 }
 
-var EventDispatcherBase = function (_DisposableBase_1$def) {
-    _inherits(EventDispatcherBase, _DisposableBase_1$def);
+var EventDispatcherBase = function (_DisposableBase_1$Dis) {
+    _inherits(EventDispatcherBase, _DisposableBase_1$Dis);
 
     function EventDispatcherBase() {
         var _Object$getPrototypeO;
@@ -52,7 +52,7 @@ var EventDispatcherBase = function (_DisposableBase_1$def) {
 
             var e = this._entries;
             if (!e) this._entries = e = [];
-            e.push(new EventDispatcherEntry_1.default(type, listener, {
+            e.push(new EventDispatcherEntry_1.EventDispatcherEntry(type, listener, {
                 priority: priority || 0,
                 dispatcher: this
             }, entryFinalizer));
@@ -80,7 +80,7 @@ var EventDispatcherBase = function (_DisposableBase_1$def) {
     }, {
         key: "removeEventListener",
         value: function removeEventListener(type, listener) {
-            dispose_1.default.these(this._entries.filter(function (entry) {
+            dispose_1.dispose.these(this._entries.filter(function (entry) {
                 return entry.matches(type, listener);
             }));
         }
@@ -110,7 +110,7 @@ var EventDispatcherBase = function (_DisposableBase_1$def) {
             });
             entries.forEach(function (entry) {
                 var newEvent = Object.create(Event);
-                shallowCopy_1.default(event, newEvent);
+                shallowCopy_1.shallowCopy(event, newEvent);
                 newEvent.target = _this2;
                 entry.dispatch(newEvent);
             });
@@ -152,7 +152,7 @@ var EventDispatcherBase = function (_DisposableBase_1$def) {
     }]);
 
     return EventDispatcherBase;
-}(DisposableBase_1.default);
+}(DisposableBase_1.DisposableBase);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EventDispatcherBase;

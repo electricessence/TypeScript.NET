@@ -5,13 +5,11 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-///<reference path="IObserver.d.ts"/>
-///<reference path="IObservable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
-
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
-export default
-class ObservableNodeBase<T>
+import ObservableBase from "./ObservableBase";
+import {IObserver} from "./IObserver";
+
+export class ObservableNodeBase<T>
 extends ObservableBase<T>
 implements IObserver<T>
 {
@@ -31,3 +29,5 @@ implements IObserver<T>
 		this._onCompleted();
 	}
 }
+
+export default ObservableNodeBase;

@@ -3,7 +3,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -18,10 +18,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var Compare_1 = require("../../Compare");
 var Types_1 = require("../../Types");
 var Functions_1 = require("../../Functions");
-var DictionaryBase_1 = require("./DictionaryBase");
 var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
 var LinkedNodeList_1 = require("../LinkedNodeList");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
+var DictionaryBase_1 = require("./DictionaryBase");
 var VOID0 = void 0;
 
 var HashEntry = function HashEntry(key, value, previous, next) {
@@ -35,8 +35,8 @@ var HashEntry = function HashEntry(key, value, previous, next) {
 
 var linkedListPool;
 function linkedNodeList(recycle) {
-    if (!linkedListPool) linkedListPool = new ObjectPool_1.default(20, function () {
-        return new LinkedNodeList_1.default();
+    if (!linkedListPool) linkedListPool = new ObjectPool_1.ObjectPool(20, function () {
+        return new LinkedNodeList_1.LinkedNodeList();
     });
     if (!recycle) return linkedListPool.take();
     recycle.clear();
@@ -49,18 +49,18 @@ var NULL = "null",
     GET_HASH_CODE = "getHashCode";
 function getHashString(obj) {
     if (obj === null) return NULL;
-    if (obj === VOID0) return Types_1.default.UNDEFINED;
-    if (Types_1.default.hasMemberOfType(obj, GET_HASH_CODE, Types_1.default.FUNCTION)) {
+    if (obj === VOID0) return Types_1.Type.UNDEFINED;
+    if (Types_1.Type.hasMemberOfType(obj, GET_HASH_CODE, Types_1.Type.FUNCTION)) {
         return obj.getHashCode();
     }
-    return _typeof(obj.toString) == Types_1.default.FUNCTION ? obj.toString() : Object.prototype.toString.call(obj);
+    return _typeof(obj.toString) == Types_1.Type.FUNCTION ? obj.toString() : Object.prototype.toString.call(obj);
 }
 
 var Dictionary = function (_DictionaryBase_1$def) {
     _inherits(Dictionary, _DictionaryBase_1$def);
 
     function Dictionary() {
-        var _keyComparer = arguments.length <= 0 || arguments[0] === undefined ? Functions_1.default.Identity : arguments[0];
+        var _keyComparer = arguments.length <= 0 || arguments[0] === undefined ? Functions_1.Functions.Identity : arguments[0];
 
         _classCallCheck(this, Dictionary);
 
@@ -166,7 +166,7 @@ var Dictionary = function (_DictionaryBase_1$def) {
             var _ = this,
                 ver,
                 currentEntry;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 ver = _._version;
                 currentEntry = _._entries.first;
             }, function (yielder) {
@@ -208,6 +208,7 @@ var Dictionary = function (_DictionaryBase_1$def) {
     return Dictionary;
 }(DictionaryBase_1.default);
 
+exports.Dictionary = Dictionary;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Dictionary;
 //# sourceMappingURL=Dictionary.js.map

@@ -21,7 +21,7 @@ var ReadOnlyCollectionWrapper = function (_ReadOnlyCollectionBa) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReadOnlyCollectionWrapper).call(this));
 
-        if (!c) throw new ArgumentNullException_1.default('collection');
+        if (!c) throw new ArgumentNullException_1.ArgumentNullException('collection');
         var _ = _this;
         _._getCount = function () {
             return c.count;
@@ -33,7 +33,7 @@ var ReadOnlyCollectionWrapper = function (_ReadOnlyCollectionBa) {
     }
 
     return ReadOnlyCollectionWrapper;
-}(ReadOnlyCollectionBase_1.default);
+}(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ReadOnlyCollectionWrapper;

@@ -1,15 +1,13 @@
-/// <reference path="../../../../source/System/Collections/ICollection.d.ts" />
-/// <reference path="../../../../source/System/Collections/IList.d.ts" />
-/// <reference path="../../../../source/System/Collections/Enumeration/IEnumerateEach.d.ts" />
-/// <reference path="../../../../source/System/FunctionTypes.d.ts" />
-/// <reference path="../../../../source/System/Collections/IEnumerableOrArray.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import CollectionBase from "./CollectionBase";
-export default class Queue<T> extends CollectionBase<T> {
+import { CollectionBase } from "./CollectionBase";
+import { EqualityComparison, Predicate, Action } from "../FunctionTypes";
+import { IEnumerator } from "./Enumeration/IEnumerator";
+import { IEnumerableOrArray } from "./IEnumerableOrArray";
+export declare class Queue<T> extends CollectionBase<T> {
     private _array;
     private _head;
     private _tail;
@@ -33,3 +31,4 @@ export default class Queue<T> extends CollectionBase<T> {
     trimExcess(threshold?: number): void;
     getEnumerator(): IEnumerator<T>;
 }
+export default Queue;

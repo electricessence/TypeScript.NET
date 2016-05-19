@@ -9,6 +9,8 @@ import {TimeUnit} from "./TimeUnit";
 import {ClockTime} from "./ClockTime";
 import {TimeQuantity} from "./TimeQuantity";
 import {Milliseconds, Ticks} from "./HowMany";
+import {ITimeMeasurement} from "./ITimeMeasurement";
+import {ITimeQuantity} from "./ITimeQuantity";
 
 
 /**

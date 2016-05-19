@@ -2,9 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import DisposableBase from './Disposable/DisposableBase';
-export default class Lazy extends DisposableBase {
+import { DisposableBase } from "./Disposable/DisposableBase";
+export class Lazy extends DisposableBase {
     constructor(_closure) {
         super();
         this._closure = _closure;
@@ -62,4 +61,5 @@ export default class Lazy extends DisposableBase {
         return this.equals(other) || this.value === other.value;
     }
 }
+export default Lazy;
 //# sourceMappingURL=Lazy.js.map

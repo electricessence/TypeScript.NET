@@ -22,8 +22,8 @@ var Compare_1 = require("../Compare");
 var CollectionBase_1 = require("./CollectionBase");
 var OTHER = 'other';
 
-var SetBase = function (_CollectionBase_1$def) {
-    _inherits(SetBase, _CollectionBase_1$def);
+var SetBase = function (_CollectionBase_1$Col) {
+    _inherits(SetBase, _CollectionBase_1$Col);
 
     function SetBase(source) {
         _classCallCheck(this, SetBase);
@@ -38,7 +38,7 @@ var SetBase = function (_CollectionBase_1$def) {
         key: "_getSet",
         value: function _getSet() {
             var s = this._set;
-            if (!s) this._set = s = new LinkedNodeList_1.default();
+            if (!s) this._set = s = new LinkedNodeList_1.LinkedNodeList();
             return s;
         }
     }, {
@@ -50,7 +50,7 @@ var SetBase = function (_CollectionBase_1$def) {
         key: "exceptWith",
         value: function exceptWith(other) {
             var _ = this;
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             Enumerator_1.forEach(other, function (v) {
                 if (_._removeInternal(v)) _._incrementModified();
             });
@@ -59,7 +59,7 @@ var SetBase = function (_CollectionBase_1$def) {
     }, {
         key: "intersectWith",
         value: function intersectWith(other) {
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             var _ = this;
             if (other instanceof SetBase) {
                 var s = _._set;
@@ -78,7 +78,7 @@ var SetBase = function (_CollectionBase_1$def) {
         value: function isProperSubsetOf(other) {
             var _this2 = this;
 
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             return other instanceof SetBase ? other.isProperSupersetOf(this) : dispose_1.using(this.newUsing(other), function (o) {
                 return o.isProperSupersetOf(_this2);
             });
@@ -88,7 +88,7 @@ var SetBase = function (_CollectionBase_1$def) {
         value: function isProperSupersetOf(other) {
             var _this3 = this;
 
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             var result = true,
                 count;
             if (other instanceof SetBase) {
@@ -110,7 +110,7 @@ var SetBase = function (_CollectionBase_1$def) {
         value: function isSubsetOf(other) {
             var _this4 = this;
 
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             return other instanceof SetBase ? other.isSupersetOf(this) : dispose_1.using(this.newUsing(other), function (o) {
                 return o.isSupersetOf(_this4);
             });
@@ -120,7 +120,7 @@ var SetBase = function (_CollectionBase_1$def) {
         value: function isSupersetOf(other) {
             var _this5 = this;
 
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             var result = true;
             Enumerator_1.forEach(other, function (v) {
                 return result = _this5.contains(v);
@@ -132,7 +132,7 @@ var SetBase = function (_CollectionBase_1$def) {
         value: function overlaps(other) {
             var _this6 = this;
 
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             var result = false;
             Enumerator_1.forEach(other, function (v) {
                 return !(result = _this6.contains(v));
@@ -142,7 +142,7 @@ var SetBase = function (_CollectionBase_1$def) {
     }, {
         key: "setEquals",
         value: function setEquals(other) {
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             return this.getCount() == (other instanceof SetBase ? other.getCount() : dispose_1.using(this.newUsing(other), function (o) {
                 return o.getCount();
             })) && this.isSubsetOf(other);
@@ -150,7 +150,7 @@ var SetBase = function (_CollectionBase_1$def) {
     }, {
         key: "symmetricExceptWith",
         value: function symmetricExceptWith(other) {
-            if (!other) throw new ArgumentNullException_1.default(OTHER);
+            if (!other) throw new ArgumentNullException_1.ArgumentNullException(OTHER);
             var _ = this;
             if (other instanceof SetBase) {
                 Enumerator_1.forEach(other, function (v) {
@@ -193,7 +193,7 @@ var SetBase = function (_CollectionBase_1$def) {
         key: "getEnumerator",
         value: function getEnumerator() {
             var s = this._set;
-            return s && this.getCount() ? LinkedNodeList_1.default.valueEnumeratorFrom(s) : Enumerator_1.empty;
+            return s && this.getCount() ? LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(s) : Enumerator_1.empty;
         }
     }, {
         key: "forEach",
@@ -225,8 +225,9 @@ var SetBase = function (_CollectionBase_1$def) {
     }]);
 
     return SetBase;
-}(CollectionBase_1.default);
+}(CollectionBase_1.CollectionBase);
 
+exports.SetBase = SetBase;
 function wipe(map) {
     var depth = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
 

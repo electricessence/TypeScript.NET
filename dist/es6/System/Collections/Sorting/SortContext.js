@@ -2,9 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import * as Values from "../../Compare";
-export default class SortContext {
+export class SortContext {
     constructor(_next, _comparer = Values.compare, _order = 1) {
         this._next = _next;
         this._comparer = _comparer;
@@ -26,4 +25,5 @@ export default class SortContext {
         return _._order * d;
     }
 }
+export default SortContext;
 //# sourceMappingURL=SortContext.js.map

@@ -2,9 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import Type from '../Types';
-export default class TimeStamp {
+import { Type } from "../Types";
+export class TimeStamp {
     constructor(year, month, day = 1, hour = 0, minute = 0, second = 0, millisecond = 0, tick = 0) {
         this.year = year;
         this.month = month;
@@ -31,4 +30,5 @@ export default class TimeStamp {
         }
     }
 }
+export default TimeStamp;
 //# sourceMappingURL=TimeStamp.js.map

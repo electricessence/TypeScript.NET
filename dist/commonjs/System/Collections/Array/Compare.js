@@ -30,7 +30,7 @@ function areEqual(a, b, strict) {
     var equalityComparer = arguments.length <= 3 || arguments[3] === undefined ? Values.areEqual : arguments[3];
 
     var len = validateSize(a, b);
-    if (Types_1.default.isBoolean(len)) return len;
+    if (Types_1.Type.isBoolean(len)) return len;
     for (var i = 0; i < len; i++) {
         if (!equalityComparer(a[i], b[i], strict)) return false;
     }
@@ -47,14 +47,15 @@ function sort(a, comparer) {
     }
     for (var i = 0; i < len; i++) {
         b[i] = a[i];
-    }b.sort(comparer);
+    }
+    b.sort(comparer);
     return b;
 }
 function areEquivalent(a, b) {
     var comparer = arguments.length <= 2 || arguments[2] === undefined ? Values.compare : arguments[2];
 
     var len = validateSize(a, b);
-    if (Types_1.default.isBoolean(len)) return len;
+    if (Types_1.Type.isBoolean(len)) return len;
     a = sort(a, comparer);
     b = sort(b, comparer);
     for (var i = 0; i < len; i++) {

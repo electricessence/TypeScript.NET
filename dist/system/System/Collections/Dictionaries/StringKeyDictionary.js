@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../../Compare", "./DictionaryBase"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -115,8 +115,9 @@ System.register(["../../Compare", "./DictionaryBase"], function(exports_1, conte
                     return this._count;
                 };
                 return StringKeyDictionary;
-            }(DictionaryBase_1.default));
-            exports_1("default", StringKeyDictionary);
+            }(DictionaryBase_1.DictionaryBase));
+            exports_1("StringKeyDictionary", StringKeyDictionary);
+            exports_1("default",StringKeyDictionary);
         }
     }
 });

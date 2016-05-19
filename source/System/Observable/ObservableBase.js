@@ -17,7 +17,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "./SubscribableBase"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var SubscribableBase_1 = require("./SubscribableBase");
     var ObservableBase = (function (_super) {
         __extends(ObservableBase, _super);
@@ -35,6 +35,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return ObservableBase;
     }(SubscribableBase_1.SubscribableBase));
+    exports.ObservableBase = ObservableBase;
     var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
     function processAction(observers, handler) {
         var observersErrors = null;

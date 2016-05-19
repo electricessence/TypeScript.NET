@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types'], function(exports_1, context_1) {
+System.register(["../Types"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1;
@@ -10,7 +10,7 @@ System.register(['../Types'], function(exports_1, context_1) {
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
             return source;
-        if (!Types_1.default.isObject(source))
+        if (!Types_1.Type.isObject(source))
             return source;
         var result;
         if (Array.isArray(source)) {

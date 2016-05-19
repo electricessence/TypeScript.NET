@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import * as Values from "../../Compare";
-import Type from "../../Types";
+import { Type } from "../../Types";
 function validateSize(a, b) {
     if (a && b && a === b || !a && !b)
         return true;
@@ -48,8 +48,9 @@ function sort(a, comparer) {
         b = [];
         b.length = len;
     }
-    for (let i = 0; i < len; i++)
+    for (let i = 0; i < len; i++) {
         b[i] = a[i];
+    }
     b.sort(comparer);
     return b;
 }

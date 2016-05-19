@@ -11,8 +11,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
-var Enumerator_1 = require("../Enumeration/Enumerator");
 var ReadOnlyCollectionBase_1 = require("../ReadOnlyCollectionBase");
+var Enumerator_1 = require("../Enumeration/Enumerator");
 
 var ReadOnlyArrayWrapper = function (_ReadOnlyCollectionBa) {
     _inherits(ReadOnlyArrayWrapper, _ReadOnlyCollectionBa);
@@ -22,7 +22,7 @@ var ReadOnlyArrayWrapper = function (_ReadOnlyCollectionBa) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ReadOnlyArrayWrapper).call(this));
 
-        if (!array) throw new ArgumentNullException_1.default('array');
+        if (!array) throw new ArgumentNullException_1.ArgumentNullException('array');
         var _ = _this;
         _._getCount = function () {
             return array.length;
@@ -37,7 +37,7 @@ var ReadOnlyArrayWrapper = function (_ReadOnlyCollectionBa) {
     }
 
     return ReadOnlyArrayWrapper;
-}(ReadOnlyCollectionBase_1.default);
+}(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ReadOnlyArrayWrapper;

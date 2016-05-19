@@ -1,9 +1,9 @@
-/// <reference path="../../../../../source/System/Collections/Array/IArray.d.ts" />
-/// <reference path="../../../../../source/System/FunctionTypes.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { EqualityComparison, Predicate, Action } from "../../FunctionTypes";
+import { IArray } from "./IArray";
 export declare function initialize<T>(length: number): T[];
 export declare function copy<T>(source: IArray<T>, sourceIndex?: number, length?: number): T[];
 export declare function copyTo<T, TDestination extends IArray<any>>(source: IArray<T>, destination: TDestination, sourceIndex?: number, destinationIndex?: number, length?: number): TDestination;

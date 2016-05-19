@@ -1,14 +1,15 @@
-/// <reference path="../../../../source/System/Uri/IUri.d.ts" />
-/// <reference path="../../../../source/System/IEquatable.d.ts" />
-/// <reference path="../../../../source/System/Primitive.d.ts" />
-/// <reference path="../../../../source/System/Uri/IUriComponentFormattable.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-import UriScheme from "../Uri/Scheme";
-export default class Uri implements IUri, IEquatable<IUri> {
+import * as QueryParam from "./QueryParam";
+import { SchemeValue } from "./SchemeValue";
+import { IUri } from "./IUri";
+import { IMap } from "../Collections/Dictionaries/IDictionary";
+import { Primitive } from "../Primitive";
+import { IEquatable } from "../IEquatable";
+export declare class Uri implements IUri, IEquatable<IUri> {
     scheme: SchemeValue;
     userInfo: string;
     host: string;
@@ -17,14 +18,14 @@ export default class Uri implements IUri, IEquatable<IUri> {
     query: string;
     fragment: string;
     queryParams: IMap<Primitive | Primitive[]>;
-    constructor(scheme: UriScheme | SchemeValue, userInfo: string, host: string, port: number, path: string, query?: QueryParamsConvertible, fragment?: string);
+    constructor(scheme: SchemeValue, userInfo: string, host: string, port: number, path: string, query?: QueryParam.Convertible, fragment?: string);
     equals(other: IUri): boolean;
     static from(uri: string | IUri, defaults?: IUri): Uri;
     static parse(url: string, throwIfInvalid?: boolean): IUri;
     static tryParse(url: string, out: (result: IUri) => void): boolean;
     static copyOf(map: IUri): IUri;
     copyTo(map: IUri): IUri;
-    updateQuery(query: QueryParamsConvertible): Uri;
+    updateQuery(query: QueryParam.Convertible): Uri;
     protected getAbsoluteUri(): string;
     protected getAuthority(): string;
     protected getPathAndQuery(): string;
@@ -47,3 +48,4 @@ export declare enum Fields {
     query = 5,
     fragment = 6,
 }
+export default Uri;

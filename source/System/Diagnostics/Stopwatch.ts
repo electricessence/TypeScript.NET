@@ -3,11 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Timers/ITimer.d.ts"/>
-
-'use strict'; // For compatibility with (let, const, function, class);
 
 import {TimeSpan} from "../Time/TimeSpan";
+import {ITimer} from "../Timers/ITimer";
 
 function getTimestampMilliseconds():number
 {
@@ -50,11 +48,12 @@ class Stopwatch implements ITimer
 		closure();
 		return new TimeSpan(getTimestampMilliseconds() - start);
 	}
-	
+
 	start():void
 	{
 		var _ = this;
-		if(!_._isRunning) {
+		if(!_._isRunning)
+		{
 			_._startTimeStamp = getTimestampMilliseconds();
 			_._isRunning = true;
 		}
@@ -63,7 +62,8 @@ class Stopwatch implements ITimer
 	stop():void
 	{
 		var _ = this;
-		if(_._isRunning) {
+		if(_._isRunning)
+		{
 			_._elapsed += _.currentLapMilliseconds;
 			_._isRunning = false;
 		}
@@ -82,7 +82,8 @@ class Stopwatch implements ITimer
 	lap():TimeSpan
 	{
 		var _ = this;
-		if(_._isRunning) {
+		if(_._isRunning)
+		{
 			var t = getTimestampMilliseconds();
 			var s = _._startTimeStamp;
 			var e = t - s;

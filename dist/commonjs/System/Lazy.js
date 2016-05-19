@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -12,10 +12,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var DisposableBase_1 = require('./Disposable/DisposableBase');
+var DisposableBase_1 = require("./Disposable/DisposableBase");
 
-var Lazy = function (_DisposableBase_1$def) {
-    _inherits(Lazy, _DisposableBase_1$def);
+var Lazy = function (_DisposableBase_1$Dis) {
+    _inherits(Lazy, _DisposableBase_1$Dis);
 
     function Lazy(_closure) {
         _classCallCheck(this, Lazy);
@@ -28,7 +28,7 @@ var Lazy = function (_DisposableBase_1$def) {
     }
 
     _createClass(Lazy, [{
-        key: 'reset',
+        key: "reset",
         value: function reset(throwIfCannotReset) {
             var _ = this;
             if (throwIfCannotReset) _.throwIfDisposed();
@@ -42,7 +42,7 @@ var Lazy = function (_DisposableBase_1$def) {
             }
         }
     }, {
-        key: 'getValue',
+        key: "getValue",
         value: function getValue(clearClosureReference) {
             var _ = this;
             _.throwIfDisposed();
@@ -59,41 +59,42 @@ var Lazy = function (_DisposableBase_1$def) {
             return _._value;
         }
     }, {
-        key: '_onDispose',
+        key: "_onDispose",
         value: function _onDispose() {
             this._closure = null;
             this._value = null;
         }
     }, {
-        key: 'equals',
+        key: "equals",
         value: function equals(other) {
             return this == other;
         }
     }, {
-        key: 'valueEquals',
+        key: "valueEquals",
         value: function valueEquals(other) {
             return this.equals(other) || this.value === other.value;
         }
     }, {
-        key: 'isValueCreated',
+        key: "isValueCreated",
         get: function get() {
             return this._isValueCreated;
         }
     }, {
-        key: 'canReset',
+        key: "canReset",
         get: function get() {
             return !this.wasDisposed && !!this._closure;
         }
     }, {
-        key: 'value',
+        key: "value",
         get: function get() {
             return this.getValue();
         }
     }]);
 
     return Lazy;
-}(DisposableBase_1.default);
+}(DisposableBase_1.DisposableBase);
 
+exports.Lazy = Lazy;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Lazy;
 //# sourceMappingURL=Lazy.js.map

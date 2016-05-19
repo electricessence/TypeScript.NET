@@ -3,6 +3,7 @@
 
 import * as ICollectionTests from "./ICollection";
 import Set from "../../../../source/System/Collections/Set";
+import {Primitive} from "../../../../source/System/Primitive";
 var assert = require('../../../../node_modules/assert/assert');
 
 //noinspection SpellCheckingInspection

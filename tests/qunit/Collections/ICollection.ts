@@ -2,9 +2,10 @@
 ///<reference path="../../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
 
-import * as Text from 'source/System/Text/Utility';
-import * as AU from 'source/System/Collections/Array/Utility';
-import NotImplementedException from 'source/System/Exceptions/NotImplementedException';
+import * as Text from "source/System/Text/Utility";
+import * as AU from "source/System/Collections/Array/Utility";
+import NotImplementedException from "source/System/Exceptions/NotImplementedException";
+import {ICollection} from "../../../source/System/Collections/ICollection";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.

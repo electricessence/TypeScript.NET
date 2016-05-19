@@ -7,20 +7,20 @@ import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
 import { empty as EmptyEnumerator, from as enumeratorFrom, forEach, toArray, map, isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
-import Type from "../System/Types";
-import Integer from "../System/Integer";
-import BaseFunctions from "../System/Functions";
-import ArrayEnumerator from "../System/Collections/Enumeration/ArrayEnumerator";
-import EnumeratorBase from "../System/Collections/Enumeration/EnumeratorBase";
-import Dictionary from "../System/Collections/Dictionaries/Dictionary";
-import Queue from "../System/Collections/Queue";
+import { Type } from "../System/Types";
+import { Integer } from "../System/Integer";
+import { Functions as BaseFunctions } from "../System/Functions";
+import { ArrayEnumerator } from "../System/Collections/Enumeration/ArrayEnumerator";
+import { EnumeratorBase } from "../System/Collections/Enumeration/EnumeratorBase";
+import { Dictionary } from "../System/Collections/Dictionaries/Dictionary";
+import { Queue } from "../System/Collections/Queue";
 import { dispose, using } from "../System/Disposable/dispose";
-import DisposableBase from "../System/Disposable/DisposableBase";
-import UnsupportedEnumerableException from "../System/Collections/Enumeration/UnsupportedEnumerableException";
-import ObjectDisposedException from "../System/Disposable/ObjectDisposedException";
-import KeySortedContext from "../System/Collections/Sorting/KeySortedContext";
-import ArgumentNullException from "../System/Exceptions/ArgumentNullException";
-import ArgumentOutOfRangeException from "../System/Exceptions/ArgumentOutOfRangeException";
+import { DisposableBase } from "../System/Disposable/DisposableBase";
+import { UnsupportedEnumerableException } from "../System/Collections/Enumeration/UnsupportedEnumerableException";
+import { ObjectDisposedException } from "../System/Disposable/ObjectDisposedException";
+import { KeySortedContext } from "../System/Collections/Sorting/KeySortedContext";
+import { ArgumentNullException } from "../System/Exceptions/ArgumentNullException";
+import { ArgumentOutOfRangeException } from "../System/Exceptions/ArgumentOutOfRangeException";
 const INVALID_DEFAULT = {};
 const VOID0 = void 0;
 const BREAK = element => 0;
@@ -1025,14 +1025,14 @@ export class Enumerable extends InfiniteEnumerable {
             var value;
             return new EnumeratorBase(() => { value = start; }, start < to
                 ?
-                        (yielder) => {
+                    yielder => {
                         var result = value <= to && yielder.yieldReturn(value);
                         if (result)
                             value += step;
                         return result;
                     }
                 :
-                        (yielder) => {
+                    yielder => {
                         var result = value >= to && yielder.yieldReturn(value);
                         if (result)
                             value -= step;

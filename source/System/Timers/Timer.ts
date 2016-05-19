@@ -3,8 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../Tasks/ICancellable.d.ts"/>
-///<reference path="ITimer.d.ts"/>
+
+import {ICancellable} from "../Tasks/ICancellable";
+import {ObservableBase} from "../Observable/ObservableBase";
+import {ITimer} from "./ITimer";
 
 export default class Timer extends ObservableBase<number> implements ITimer, ICancellable
 {
@@ -90,7 +92,8 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		this._count = 0;
 	}
 
-	cancel():boolean {
+	cancel():boolean
+	{
 		if(this._cancel)
 		{
 			this._cancel();
@@ -100,7 +103,8 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		return false;
 	}
 
-	dispose():void {
+	dispose():void
+	{
 		this.cancel();
 		super.dispose();
 	}

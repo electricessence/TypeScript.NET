@@ -6,6 +6,8 @@
 import {Type} from "../Types";
 import {ITimeStamp} from "./ITimeStamp";
 import {Ticks} from "./HowMany";
+import {IDateTime} from "./IDateTime";
+import {Gregorian} from "./Calendars";
 
 /**
  * An alternative to Date or DateTime.  Is a model representing the exact date and time.

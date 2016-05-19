@@ -9,6 +9,7 @@ import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {ArgumentException} from "../Exceptions/ArgumentException";
 import {areEquivalent} from "../Compare";
 import {IEventListener} from "./IEventListener";
+import {IEquatable} from "../IEquatable";
 
 export class EventDispatcherEntry<TParams>
 extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>

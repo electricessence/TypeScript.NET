@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['./ObjectDisposedException'], function(exports_1, context_1) {
-    'use strict';
+System.register(["./ObjectDisposedException"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var ObjectDisposedException_1;
     var DisposableBase;
@@ -28,7 +28,7 @@ System.register(['./ObjectDisposedException'], function(exports_1, context_1) {
                 DisposableBase.prototype.throwIfDisposed = function (message, objectName) {
                     if (objectName === void 0) { objectName = this._disposableObjectName; }
                     if (this._wasDisposed)
-                        throw new ObjectDisposedException_1.default(objectName, message);
+                        throw new ObjectDisposedException_1.ObjectDisposedException(objectName, message);
                     return true;
                 };
                 DisposableBase.prototype.dispose = function () {
@@ -47,6 +47,7 @@ System.register(['./ObjectDisposedException'], function(exports_1, context_1) {
                 DisposableBase.prototype._onDispose = function () { };
                 return DisposableBase;
             }());
+            exports_1("DisposableBase", DisposableBase);
             exports_1("default",DisposableBase);
         }
     }

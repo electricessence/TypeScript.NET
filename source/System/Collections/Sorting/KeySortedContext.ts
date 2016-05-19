@@ -7,6 +7,9 @@ import * as Values from "../../Compare";
 import {SortContext} from "./SortContext";
 import {Functions} from "../../Functions";
 import {Comparison, Selector} from "../../FunctionTypes";
+import {Comparable} from "../../IComparable";
+import {IComparer} from "../../IComparer";
+import {Order} from "./Order";
 
 export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 {

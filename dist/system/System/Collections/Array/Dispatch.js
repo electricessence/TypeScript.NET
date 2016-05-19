@@ -19,7 +19,7 @@ System.register(["../../Types", "./Utility"], function(exports_1, context_1) {
                 catch (ex) {
                     if (!trap)
                         throw ex;
-                    else if (Types_1.default.isFunction(trap))
+                    else if (Types_1.Type.isFunction(trap))
                         trap(ex, i);
                 }
             }
@@ -42,7 +42,7 @@ System.register(["../../Types", "./Utility"], function(exports_1, context_1) {
                     result[i] = VOID0;
                     if (!trap)
                         throw ex;
-                    else if (Types_1.default.isFunction(trap))
+                    else if (Types_1.Type.isFunction(trap))
                         trap(ex, i);
                 }
             }

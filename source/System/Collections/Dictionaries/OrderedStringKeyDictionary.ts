@@ -10,8 +10,7 @@ import {IOrderedDictionary} from "./IDictionary";
 
 const VOID0:any = void 0;
 
-export default
-class OrderedStringKeyDictionary<TValue>
+export class OrderedStringKeyDictionary<TValue>
 extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue>
 {
 
@@ -95,3 +94,5 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	}
 
 }
+
+export default OrderedStringKeyDictionary;

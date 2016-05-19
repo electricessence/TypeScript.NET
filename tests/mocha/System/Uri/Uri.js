@@ -8,7 +8,7 @@
 })(function (require, exports) {
     "use strict";
     var Uri_1 = require("../../../../source/System/Uri/Uri");
-    var Scheme_1 = require("../../../../source/System/Uri/Scheme");
+    var Scheme = require("../../../../source/System/Uri/Scheme");
     var Functions_1 = require("../../../../source/System/Functions");
     var assert = require('../../../../node_modules/assert/assert');
     var pathAfterRoot = 'one/two/three.html';
@@ -20,7 +20,7 @@
         it('should equal', function () {
             assert.equal((new Uri_1.default(null, '', '', null, '', null)).scheme, null);
             assert.equal((new Uri_1.default("http", '', '', null, '', null)).scheme, "http");
-            assert.equal((new Uri_1.default(Scheme_1.default.http, '', '', null, '', null)).scheme, "http");
+            assert.equal((new Uri_1.default(Scheme.HTTP, '', '', null, '', null)).scheme, "http");
         });
         it('should throw', function () {
             assert.throws(function () { new Uri_1.default(64, '', '', null, '', null); });
@@ -54,7 +54,7 @@
         });
         it('should allow null', function () {
             assert.equal((new Uri_1.default(null, '', '', null, '', null)).path, null);
-            assert.equal((new Uri_1.default(Scheme_1.default.http, '', '', null, '', null)).path, null);
+            assert.equal((new Uri_1.default(Scheme.HTTP, '', '', null, '', null)).path, null);
             assert.equal((new Uri_1.default('http', '', '', null, '', null)).path, null);
         });
     });
@@ -64,7 +64,7 @@
         });
         it('should allow null', function () {
             assert.equal((new Uri_1.default(null, '', '', null, '', null)).path, null);
-            assert.equal((new Uri_1.default(Scheme_1.default.http, '', '', null, '', null)).path, null);
+            assert.equal((new Uri_1.default(Scheme.HTTP, '', '', null, '', null)).path, null);
             assert.equal((new Uri_1.default('http', '', '', null, '', null)).path, null);
         });
     });
@@ -199,4 +199,5 @@
         });
     });
 });
+
 //# sourceMappingURL=Uri.js.map

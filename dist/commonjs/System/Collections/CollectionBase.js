@@ -23,8 +23,8 @@ var NAME = "CollectionBase",
     CMDC = "Cannot modify a disposed collection.",
     CMRO = "Cannot modify a read-only collection.";
 
-var CollectionBase = function (_DisposableBase_1$def) {
-    _inherits(CollectionBase, _DisposableBase_1$def);
+var CollectionBase = function (_DisposableBase_1$Dis) {
+    _inherits(CollectionBase, _DisposableBase_1$Dis);
 
     function CollectionBase(source) {
         var _equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Compare_1.areEqual : arguments[1];
@@ -52,12 +52,12 @@ var CollectionBase = function (_DisposableBase_1$def) {
         key: "assertModifiable",
         value: function assertModifiable() {
             this.throwIfDisposed(CMDC);
-            if (this.getIsReadOnly()) throw new InvalidOperationException_1.default(CMRO);
+            if (this.getIsReadOnly()) throw new InvalidOperationException_1.InvalidOperationException(CMRO);
         }
     }, {
         key: "assertVersion",
         value: function assertVersion(version) {
-            if (version != this._version) throw new InvalidOperationException_1.default("Collection was modified.");
+            if (version != this._version) throw new InvalidOperationException_1.InvalidOperationException("Collection was modified.");
         }
     }, {
         key: "_onModified",
@@ -236,7 +236,7 @@ var CollectionBase = function (_DisposableBase_1$def) {
         value: function copyTo(target) {
             var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
-            if (!target) throw new ArgumentNullException_1.default('target');
+            if (!target) throw new ArgumentNullException_1.ArgumentNullException('target');
             var count = this.getCount(),
                 newLength = count + index;
             if (target.length < newLength) target.length = newLength;
@@ -270,8 +270,9 @@ var CollectionBase = function (_DisposableBase_1$def) {
     }]);
 
     return CollectionBase;
-}(DisposableBase_1.default);
+}(DisposableBase_1.DisposableBase);
 
+exports.CollectionBase = CollectionBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = CollectionBase;
 //# sourceMappingURL=CollectionBase.js.map

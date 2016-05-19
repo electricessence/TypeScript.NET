@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -18,8 +18,8 @@ var Values = require("../../Compare");
 var SortContext_1 = require("./SortContext");
 var Functions_1 = require("../../Functions");
 
-var KeySortedContext = function (_SortContext_1$defaul) {
-    _inherits(KeySortedContext, _SortContext_1$defaul);
+var KeySortedContext = function (_SortContext_1$SortCo) {
+    _inherits(KeySortedContext, _SortContext_1$SortCo);
 
     function KeySortedContext(next, _keySelector) {
         var order = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
@@ -38,7 +38,7 @@ var KeySortedContext = function (_SortContext_1$defaul) {
         value: function compare(a, b) {
             var _ = this,
                 ks = _._keySelector;
-            if (!ks || ks == Functions_1.default.Identity) return _get(Object.getPrototypeOf(KeySortedContext.prototype), "compare", this).call(this, a, b);
+            if (!ks || ks == Functions_1.Functions.Identity) return _get(Object.getPrototypeOf(KeySortedContext.prototype), "compare", this).call(this, a, b);
             var d = Values.compare(ks(a), ks(b));
             if (d == 0 && _._next) return _._next.compare(a, b);
             return _._order * d;
@@ -46,8 +46,9 @@ var KeySortedContext = function (_SortContext_1$defaul) {
     }]);
 
     return KeySortedContext;
-}(SortContext_1.default);
+}(SortContext_1.SortContext);
 
+exports.KeySortedContext = KeySortedContext;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = KeySortedContext;
 //# sourceMappingURL=KeySortedContext.js.map

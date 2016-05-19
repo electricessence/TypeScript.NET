@@ -24,19 +24,19 @@ function assertKey(key) {
     var name = arguments.length <= 1 || arguments[1] === undefined ? ITEM : arguments[1];
 
     assertNotUndefined(key, name + DOT + KEY);
-    if (key === null) throw new ArgumentNullException_1.default(name + DOT + KEY);
+    if (key === null) throw new ArgumentNullException_1.ArgumentNullException(name + DOT + KEY);
     return key;
 }
 exports.assertKey = assertKey;
 function assertTuple(tuple) {
     var name = arguments.length <= 1 || arguments[1] === undefined ? ITEM : arguments[1];
 
-    if (tuple.length != 2) throw new ArgumentException_1.default(name, 'KeyValuePair tuples must be of length 2.');
+    if (tuple.length != 2) throw new ArgumentException_1.ArgumentException(name, 'KeyValuePair tuples must be of length 2.');
     assertKey(tuple[0], name);
 }
 exports.assertTuple = assertTuple;
 function assertNotUndefined(value, name) {
-    if (value === VOID0) throw new ArgumentException_1.default(name, CANNOT_BE_UNDEFINED);
+    if (value === VOID0) throw new ArgumentException_1.ArgumentException(name, CANNOT_BE_UNDEFINED);
     return value;
 }
 exports.assertNotUndefined = assertNotUndefined;
@@ -52,10 +52,11 @@ function extractKeyValue(item, to) {
         key = assertKey(item.key);
         value = assertNotUndefined(item.value, ITEM_VALUE);
     } else {
-        throw new ArgumentException_1.default(ITEM, INVALID_KVP_MESSAGE);
+        throw new ArgumentException_1.ArgumentException(ITEM, INVALID_KVP_MESSAGE);
     }
     return to(key, value);
 }
+exports.extractKeyValue = extractKeyValue;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = extractKeyValue;
 //# sourceMappingURL=KeyValueExtract.js.map

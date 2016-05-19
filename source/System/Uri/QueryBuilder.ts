@@ -17,8 +17,7 @@ import * as QueryParams from "./QueryParams";
  *
  * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
  */
-export default
-class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|UriComponent.Value[]>
+export class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|UriComponent.Value[]>
 {
 
 	constructor(
@@ -106,3 +105,5 @@ class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|UriComp
 		return this.encode();
 	}
 }
+
+export default QueryBuilder;

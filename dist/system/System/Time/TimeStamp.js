@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types'], function(exports_1, context_1) {
-    'use strict';
+System.register(["../Types"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1;
     var TimeStamp;
@@ -36,7 +36,7 @@ System.register(['../Types'], function(exports_1, context_1) {
                     return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
                 };
                 TimeStamp.from = function (d) {
-                    if (!(d instanceof Date) && Types_1.default.hasMember(d, 'toJsDate'))
+                    if (!(d instanceof Date) && Types_1.Type.hasMember(d, 'toJsDate'))
                         d = d.toJsDate();
                     if (d instanceof Date) {
                         return new TimeStamp(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
@@ -47,7 +47,8 @@ System.register(['../Types'], function(exports_1, context_1) {
                 };
                 return TimeStamp;
             }());
-            exports_1("default", TimeStamp);
+            exports_1("TimeStamp", TimeStamp);
+            exports_1("default",TimeStamp);
         }
     }
 });

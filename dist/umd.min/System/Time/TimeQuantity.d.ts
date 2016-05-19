@@ -1,13 +1,13 @@
-/// <reference path="../../../../source/System/Time/ITimeQuantity.d.ts" />
-/// <reference path="../../../../source/System/IEquatable.d.ts" />
-/// <reference path="../../../../source/System/IComparable.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116418-4632-2js6q3/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import TimeUnit from './TimeUnit';
-export default class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuantity>, ITimeQuantity {
+import { TimeUnit } from "./TimeUnit";
+import { IEquatable } from "../IEquatable";
+import { IComparable } from "../IComparable";
+import { ITimeQuantity } from "./ITimeQuantity";
+import { ITimeMeasurement } from "./ITimeMeasurement";
+export declare class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITimeQuantity>, ITimeQuantity {
     protected _quantity: number;
     constructor(_quantity?: number);
     getTotalMilliseconds(): number;
@@ -18,3 +18,4 @@ export default class TimeQuantity implements IEquatable<ITimeQuantity>, ICompara
     total: ITimeMeasurement;
     getTotal(units: TimeUnit): number;
 }
+export default TimeQuantity;

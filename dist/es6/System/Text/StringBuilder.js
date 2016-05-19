@@ -3,10 +3,9 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import Type from '../Types';
+import { Type } from "../Types";
 const VOID0 = void 0;
-export default class StringBuilder {
+export class StringBuilder {
     constructor(...initial) {
         var _ = this;
         _._latest = null;
@@ -69,4 +68,5 @@ export default class StringBuilder {
         this.clear();
     }
 }
+export default StringBuilder;
 //# sourceMappingURL=StringBuilder.js.map

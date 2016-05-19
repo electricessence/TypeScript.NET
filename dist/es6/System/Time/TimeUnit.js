@@ -3,7 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var TimeUnit;
+export var TimeUnit;
 (function (TimeUnit) {
     TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
     TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
@@ -12,7 +12,7 @@ var TimeUnit;
     TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
     TimeUnit[TimeUnit["Days"] = 5] = "Days";
 })(TimeUnit || (TimeUnit = {}));
-var TimeUnit;
+export var TimeUnit;
 (function (TimeUnit) {
     function toMilliseconds(value, units = TimeUnit.Milliseconds) {
         switch (units) {

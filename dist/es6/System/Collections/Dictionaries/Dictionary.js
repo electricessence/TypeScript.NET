@@ -3,14 +3,13 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import { areEqual } from "../../Compare";
-import Type from "../../Types";
-import Functions from "../../Functions";
+import { Type } from "../../Types";
+import { Functions } from "../../Functions";
+import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
+import { LinkedNodeList } from "../LinkedNodeList";
+import { ObjectPool } from "../../Disposable/ObjectPool";
 import DictionaryBase from "./DictionaryBase";
-import EnumeratorBase from "../Enumeration/EnumeratorBase";
-import LinkedNodeList from "../LinkedNodeList";
-import ObjectPool from "../../Disposable/ObjectPool";
 const VOID0 = void 0;
 class HashEntry {
     constructor(key, value, previous, next) {
@@ -46,7 +45,7 @@ function getHashString(obj) {
         ? obj.toString()
         : Object.prototype.toString.call(obj);
 }
-export default class Dictionary extends DictionaryBase {
+export class Dictionary extends DictionaryBase {
     constructor(_keyComparer = Functions.Identity) {
         super();
         this._keyComparer = _keyComparer;
@@ -160,4 +159,5 @@ export default class Dictionary extends DictionaryBase {
         return result;
     }
 }
+export default Dictionary;
 //# sourceMappingURL=Dictionary.js.map

@@ -14,8 +14,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var DisposableBase_1 = require("../Disposable/DisposableBase");
 
-var TaskHandlerBase = function (_DisposableBase_1$def) {
-    _inherits(TaskHandlerBase, _DisposableBase_1$def);
+var TaskHandlerBase = function (_DisposableBase_1$Dis) {
+    _inherits(TaskHandlerBase, _DisposableBase_1$Dis);
 
     function TaskHandlerBase() {
         _classCallCheck(this, TaskHandlerBase);
@@ -66,8 +66,9 @@ var TaskHandlerBase = function (_DisposableBase_1$def) {
     }]);
 
     return TaskHandlerBase;
-}(DisposableBase_1.default);
+}(DisposableBase_1.DisposableBase);
 
+exports.TaskHandlerBase = TaskHandlerBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TaskHandlerBase;
 //# sourceMappingURL=TaskHandlerBase.js.map

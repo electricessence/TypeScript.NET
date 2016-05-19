@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import ObservableBase from "./../Observable/ObservableBase";
+import { ObservableBase } from "../Observable/ObservableBase";
 export default class Timer extends ObservableBase {
     constructor(_interval, _maxCount = Infinity, _initialDelay = _interval) {
         super();

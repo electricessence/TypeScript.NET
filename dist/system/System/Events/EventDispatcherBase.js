@@ -2,15 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Utility/shallowCopy", "../Disposable/DisposableBase", "../Collections/Array/Utility", "./EventDispatcherEntry", "../Disposable/dispose"], function(exports_1, context_1) {
-    'use strict';
+System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var shallowCopy_1, DisposableBase_1, AU, EventDispatcherEntry_1, dispose_1;
+    var AU, shallowCopy_1, DisposableBase_1, dispose_1, EventDispatcherEntry_1;
     var DISPOSING, DISPOSED, EventDispatcherBase;
     function entryFinalizer() {
         var p = this.params;
@@ -19,20 +19,20 @@ System.register(["../Utility/shallowCopy", "../Disposable/DisposableBase", "../C
     }
     return {
         setters:[
+            function (AU_1) {
+                AU = AU_1;
+            },
             function (shallowCopy_1_1) {
                 shallowCopy_1 = shallowCopy_1_1;
             },
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
-            function (AU_1) {
-                AU = AU_1;
+            function (dispose_1_1) {
+                dispose_1 = dispose_1_1;
             },
             function (EventDispatcherEntry_1_1) {
                 EventDispatcherEntry_1 = EventDispatcherEntry_1_1;
-            },
-            function (dispose_1_1) {
-                dispose_1 = dispose_1_1;
             }],
         execute: function() {
             DISPOSING = 'disposing', DISPOSED = 'disposed';
@@ -47,7 +47,7 @@ System.register(["../Utility/shallowCopy", "../Disposable/DisposableBase", "../C
                     var e = this._entries;
                     if (!e)
                         this._entries = e = [];
-                    e.push(new EventDispatcherEntry_1.default(type, listener, {
+                    e.push(new EventDispatcherEntry_1.EventDispatcherEntry(type, listener, {
                         priority: priority || 0,
                         dispatcher: this
                     }, entryFinalizer));
@@ -67,7 +67,7 @@ System.register(["../Utility/shallowCopy", "../Disposable/DisposableBase", "../C
                     });
                 };
                 EventDispatcherBase.prototype.removeEventListener = function (type, listener) {
-                    dispose_1.default.these(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
+                    dispose_1.dispose.these(this._entries.filter(function (entry) { return entry.matches(type, listener); }));
                 };
                 EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
                     var _this = this;
@@ -93,7 +93,7 @@ System.register(["../Utility/shallowCopy", "../Disposable/DisposableBase", "../C
                     entries.sort(function (a, b) { return b.params.priority - a.params.priority; });
                     entries.forEach(function (entry) {
                         var newEvent = Object.create(Event);
-                        shallowCopy_1.default(event, newEvent);
+                        shallowCopy_1.shallowCopy(event, newEvent);
                         newEvent.target = _this;
                         entry.dispatch(newEvent);
                     });
@@ -131,7 +131,7 @@ System.register(["../Utility/shallowCopy", "../Disposable/DisposableBase", "../C
                     }
                 };
                 return EventDispatcherBase;
-            }(DisposableBase_1.default));
+            }(DisposableBase_1.DisposableBase));
             exports_1("default", EventDispatcherBase);
         }
     }

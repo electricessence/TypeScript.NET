@@ -3,6 +3,7 @@
 import * as Arrays from "../../../../../source/System/Collections/Array/Compare";
 import * as ArrayUtility from "../../../../../source/System/Collections/Array/Utility";
 import Stopwatch from "../../../../../source/System/Diagnostics/Stopwatch";
+import {IArray} from "../../../../../source/System/Collections/Array/IArray";
 var assert = require('../../../../../node_modules/assert/assert');
 
 

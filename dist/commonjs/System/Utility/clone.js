@@ -4,12 +4,12 @@
  */
 "use strict";
 
-var Types_1 = require('../Types');
+var Types_1 = require("../Types");
 function clone(source) {
     var depth = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
     if (depth < 0) return source;
-    if (!Types_1.default.isObject(source)) return source;
+    if (!Types_1.Type.isObject(source)) return source;
     var result;
     if (Array.isArray(source)) {
         result = source.slice();

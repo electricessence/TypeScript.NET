@@ -2,12 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import Type from "../Types";
-import * as QueryParams from "./QueryParams";
-import OrderedStringKeyDictionary from "../Collections/Dictionaries/OrderedStringKeyDictionary";
+import { Type } from "../Types";
+import { OrderedStringKeyDictionary } from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import { isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
-export default class QueryBuilder extends OrderedStringKeyDictionary {
+import * as QueryParams from "./QueryParams";
+export class QueryBuilder extends OrderedStringKeyDictionary {
     constructor(query, decodeValues = true) {
         super();
         this.importQuery(query, decodeValues);
@@ -49,4 +48,5 @@ export default class QueryBuilder extends OrderedStringKeyDictionary {
         return this.encode();
     }
 }
+export default QueryBuilder;
 //# sourceMappingURL=QueryBuilder.js.map

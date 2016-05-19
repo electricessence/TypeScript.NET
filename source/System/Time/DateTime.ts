@@ -10,7 +10,9 @@ import {TimeSpan} from "./TimeSpan";
 import {ClockTime} from "./ClockTime";
 import {Milliseconds} from "./HowMany";
 import {TimeStamp} from "./TimeStamp";
-
+import {IDateTime} from "./IDateTime";
+import {Gregorian} from "./Calendars";
+import {ITimeQuantity} from "./ITimeQuantity";
 
 export class DateTime implements ICalendarDate, IDateTime
 {

@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -16,8 +16,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var SystemException_1 = require("../../Exceptions/SystemException");
 var NAME = 'UnsupportedEnumerableException';
 
-var UnsupportedEnumerableException = function (_SystemException_1$de) {
-    _inherits(UnsupportedEnumerableException, _SystemException_1$de);
+var UnsupportedEnumerableException = function (_SystemException_1$Sy) {
+    _inherits(UnsupportedEnumerableException, _SystemException_1$Sy);
 
     function UnsupportedEnumerableException(message) {
         _classCallCheck(this, UnsupportedEnumerableException);
@@ -26,15 +26,16 @@ var UnsupportedEnumerableException = function (_SystemException_1$de) {
     }
 
     _createClass(UnsupportedEnumerableException, [{
-        key: 'getName',
+        key: "getName",
         value: function getName() {
             return NAME;
         }
     }]);
 
     return UnsupportedEnumerableException;
-}(SystemException_1.default);
+}(SystemException_1.SystemException);
 
+exports.UnsupportedEnumerableException = UnsupportedEnumerableException;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = UnsupportedEnumerableException;
 //# sourceMappingURL=UnsupportedEnumerableException.js.map

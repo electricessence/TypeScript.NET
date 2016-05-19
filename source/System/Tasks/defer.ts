@@ -3,8 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ICancellable.d.ts"/>
 
+import {ICancellable} from "./ICancellable";
+import {Closure} from "../FunctionTypes";
 abstract class DeferBase implements ICancellable
 {
 	// It may be a Timer in node, should not be restricted to number.

@@ -14,10 +14,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var ObservableBase_1 = require("./../Observable/ObservableBase");
+var ObservableBase_1 = require("../Observable/ObservableBase");
 
-var Timer = function (_ObservableBase_1$def) {
-    _inherits(Timer, _ObservableBase_1$def);
+var Timer = function (_ObservableBase_1$Obs) {
+    _inherits(Timer, _ObservableBase_1$Obs);
 
     function Timer(_interval) {
         var _maxCount = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
@@ -129,7 +129,7 @@ var Timer = function (_ObservableBase_1$def) {
     }]);
 
     return Timer;
-}(ObservableBase_1.default);
+}(ObservableBase_1.ObservableBase);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Timer;

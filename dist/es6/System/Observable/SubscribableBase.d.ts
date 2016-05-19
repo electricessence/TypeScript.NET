@@ -1,12 +1,11 @@
-/// <reference path="../../../../source/System/Disposable/IDisposable.d.ts" />
-/// <reference path="../../../../source/System/FunctionTypes.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based upon .NET source.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-export default class SubscribableBase<TSubscriber> implements IDisposable {
+import { IDisposable } from "../Disposable/IDisposable";
+export declare class SubscribableBase<TSubscriber> implements IDisposable {
     private __subscriptions;
     protected _getSubscribers(): TSubscriber[];
     constructor();
@@ -17,3 +16,4 @@ export default class SubscribableBase<TSubscriber> implements IDisposable {
     unsubscribeAll(): void;
     dispose(): void;
 }
+export default SubscribableBase;

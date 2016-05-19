@@ -18,6 +18,7 @@ System.register([], function(exports_1, context_1) {
                 TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
                 TimeUnit[TimeUnit["Days"] = 5] = "Days";
             })(TimeUnit || (TimeUnit = {}));
+            exports_1("TimeUnit", TimeUnit);
             (function (TimeUnit) {
                 function toMilliseconds(value, units) {
                     if (units === void 0) { units = TimeUnit.Milliseconds; }
@@ -68,7 +69,8 @@ System.register([], function(exports_1, context_1) {
                     return true;
                 }
                 TimeUnit.assertValid = assertValid;
-            })(TimeUnit || (TimeUnit = {}));
+            })(TimeUnit = TimeUnit || (TimeUnit = {}));
+            exports_1("TimeUnit", TimeUnit);
             Object.freeze(TimeUnit);
             exports_1("default",TimeUnit);
         }

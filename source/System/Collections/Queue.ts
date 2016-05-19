@@ -15,6 +15,7 @@ import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeExcep
 import {CollectionBase} from "./CollectionBase";
 import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
+import {IEnumerableOrArray} from "./IEnumerableOrArray";
 
 const MINIMUM_GROW:number = 4;
 const SHRINK_THRESHOLD:number = 32; // Unused?

@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var TimeSpan_1;
     var Stopwatch;
@@ -38,7 +38,7 @@ System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
                 Stopwatch.measure = function (closure) {
                     var start = getTimestampMilliseconds();
                     closure();
-                    return new TimeSpan_1.default(getTimestampMilliseconds() - start);
+                    return new TimeSpan_1.TimeSpan(getTimestampMilliseconds() - start);
                 };
                 Stopwatch.prototype.start = function () {
                     var _ = this;
@@ -68,10 +68,10 @@ System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
                         var e = t - s;
                         _._startTimeStamp = t;
                         _._elapsed += e;
-                        return new TimeSpan_1.default(e);
+                        return new TimeSpan_1.TimeSpan(e);
                     }
                     else
-                        return TimeSpan_1.default.zero;
+                        return TimeSpan_1.TimeSpan.zero;
                 };
                 Object.defineProperty(Stopwatch.prototype, "currentLapMilliseconds", {
                     get: function () {
@@ -85,8 +85,8 @@ System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
                 Object.defineProperty(Stopwatch.prototype, "currentLap", {
                     get: function () {
                         return this._isRunning
-                            ? new TimeSpan_1.default(this.currentLapMilliseconds)
-                            : TimeSpan_1.default.zero;
+                            ? new TimeSpan_1.TimeSpan(this.currentLapMilliseconds)
+                            : TimeSpan_1.TimeSpan.zero;
                     },
                     enumerable: true,
                     configurable: true
@@ -104,7 +104,7 @@ System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
                 });
                 Object.defineProperty(Stopwatch.prototype, "elapsed", {
                     get: function () {
-                        return new TimeSpan_1.default(this.elapsedMilliseconds);
+                        return new TimeSpan_1.TimeSpan(this.elapsedMilliseconds);
                     },
                     enumerable: true,
                     configurable: true

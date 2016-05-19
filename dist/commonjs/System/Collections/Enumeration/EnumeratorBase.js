@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -18,7 +18,7 @@ var ObjectPool_1 = require("../../Disposable/ObjectPool");
 var VOID0 = void 0;
 var yielderPool;
 function yielder(recycle) {
-    if (!yielderPool) yielderPool = new ObjectPool_1.default(40, function () {
+    if (!yielderPool) yielderPool = new ObjectPool_1.ObjectPool(40, function () {
         return new Yielder();
     });
     if (!recycle) return yielderPool.take();
@@ -67,8 +67,8 @@ var EnumeratorState;
     EnumeratorState[EnumeratorState["After"] = 2] = "After";
 })(EnumeratorState || (EnumeratorState = {}));
 
-var EnumeratorBase = function (_DisposableBase_1$def) {
-    _inherits(EnumeratorBase, _DisposableBase_1$def);
+var EnumeratorBase = function (_DisposableBase_1$Dis) {
+    _inherits(EnumeratorBase, _DisposableBase_1$Dis);
 
     function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
         _classCallCheck(this, EnumeratorBase);
@@ -78,8 +78,8 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
         _this._initializer = _initializer;
         _this._tryGetNext = _tryGetNext;
         _this.reset();
-        if (Types_1.default.isBoolean(isEndless)) _this._isEndless = isEndless;else if (Types_1.default.isBoolean(disposer)) _this._isEndless = disposer;
-        if (Types_1.default.isFunction(disposer)) _this._disposer = disposer;
+        if (Types_1.Type.isBoolean(isEndless)) _this._isEndless = isEndless;else if (Types_1.Type.isBoolean(disposer)) _this._isEndless = disposer;
+        if (Types_1.Type.isFunction(disposer)) _this._disposer = disposer;
         return _this;
     }
 
@@ -162,8 +162,9 @@ var EnumeratorBase = function (_DisposableBase_1$def) {
     }]);
 
     return EnumeratorBase;
-}(DisposableBase_1.default);
+}(DisposableBase_1.DisposableBase);
 
+exports.EnumeratorBase = EnumeratorBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = EnumeratorBase;
 //# sourceMappingURL=EnumeratorBase.js.map

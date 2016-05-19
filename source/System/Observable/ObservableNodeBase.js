@@ -14,10 +14,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports"], factory);
+        define(["require", "exports", "./ObservableBase"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
+    var ObservableBase_1 = require("./ObservableBase");
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {
@@ -33,7 +34,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._onCompleted();
         };
         return ObservableNodeBase;
-    }(ObservableBase));
+    }(ObservableBase_1.default));
+    exports.ObservableNodeBase = ObservableNodeBase;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ObservableNodeBase;
 });

@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import CollectionBase from "./CollectionBase";
-class ReadOnlyCollectionBase extends CollectionBase {
+import { CollectionBase } from "./CollectionBase";
+export class ReadOnlyCollectionBase extends CollectionBase {
     getCount() {
         return this._getCount();
     }

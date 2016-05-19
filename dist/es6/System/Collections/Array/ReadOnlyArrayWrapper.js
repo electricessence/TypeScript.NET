@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import ArgumentNullException from "../../Exceptions/ArgumentNullException";
+import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
+import { ReadOnlyCollectionBase } from "../ReadOnlyCollectionBase";
 import { from as enumeratorFrom } from "../Enumeration/Enumerator";
-import ReadOnlyCollectionBase from "../ReadOnlyCollectionBase";
 export default class ReadOnlyArrayWrapper extends ReadOnlyCollectionBase {
     constructor(array) {
         super();

@@ -2,11 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from "../Types";
-import ArgumentException from "../Exceptions/ArgumentException";
-import SetBase from "./SetBase";
+import { Type } from "../Types";
+import { ArgumentException } from "../Exceptions/ArgumentException";
+import { SetBase } from "./SetBase";
 const OTHER = 'other';
-export default class Set extends SetBase {
+export class Set extends SetBase {
     newUsing(source) {
         return new Set(source);
     }
@@ -64,4 +64,5 @@ function wipe(map, depth = 1) {
         }
     }
 }
+export default Set;
 //# sourceMappingURL=Set.js.map

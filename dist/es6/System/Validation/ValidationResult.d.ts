@@ -1,9 +1,9 @@
-/// <reference path="../../../../source/System/Validation/IValidationResult.d.ts" />
-/// <reference path="../../../../source/System/IEquatable.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { IEquatable } from "../IEquatable";
+import { IValidationResult } from "./IValidationResult";
 export default class ValidationResult implements IValidationResult, IEquatable<IValidationResult> {
     isValid: boolean;
     message: string;

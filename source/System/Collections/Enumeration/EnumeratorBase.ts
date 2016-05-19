@@ -9,6 +9,7 @@ import {ObjectPool} from "../../Disposable/ObjectPool";
 import {IDisposable} from "../../Disposable/IDisposable";
 import {IEnumerator} from "./IEnumerator";
 import {IIteratorResult} from "./IIterator";
+import {IYield} from "./IYield";
 
 const VOID0:any = void(0);
 

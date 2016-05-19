@@ -8,7 +8,6 @@
 var Types_1 = require("../Types");
 var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
 var Queue_1 = require("../Collections/Queue");
-"use strict";
 var requestTick;
 var isNodeJS = false;
 var flushing = false;
@@ -29,8 +28,8 @@ function flush() {
     }
     flushing = false;
 }
-var immediateQueue = new LinkedNodeList_1.default();
-var laterQueue = new Queue_1.default();
+var immediateQueue = new LinkedNodeList_1.LinkedNodeList();
+var laterQueue = new Queue_1.Queue();
 function runSingle(task, domain) {
     try {
         task();
@@ -85,7 +84,7 @@ function runAfterDeferred(task) {
     requestFlush();
 }
 exports.runAfterDeferred = runAfterDeferred;
-if (Types_1.default.isObject(process) && process.toString() === "[object process]" && process.nextTick) {
+if (Types_1.Type.isObject(process) && process.toString() === "[object process]" && process.nextTick) {
     isNodeJS = true;
     requestTick = function requestTick() {
         process.nextTick(flush);

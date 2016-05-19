@@ -3,9 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-/// <reference path="IValidationResult.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
+import {IEquatable} from "../IEquatable";
+import {IValidationResult} from "./IValidationResult"; // For compatibility with (let, const, function, class);
 
 const valid = new ValidationResult(true);
 

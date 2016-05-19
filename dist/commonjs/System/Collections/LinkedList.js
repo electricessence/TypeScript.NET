@@ -3,7 +3,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
@@ -33,7 +33,7 @@ var InternalNode = function () {
     _createClass(InternalNode, [{
         key: "assertDetached",
         value: function assertDetached() {
-            if (this.next || this.previous) throw new InvalidOperationException_1.default("Adding a node that is already placed.");
+            if (this.next || this.previous) throw new InvalidOperationException_1.InvalidOperationException("Adding a node that is already placed.");
         }
     }]);
 
@@ -42,22 +42,22 @@ var InternalNode = function () {
 
 function ensureExternal(node, list) {
     if (!node) return null;
-    if (!list) throw new ArgumentNullException_1.default("list");
+    if (!list) throw new ArgumentNullException_1.ArgumentNullException("list");
     var external = node.external;
     if (!external) node.external = external = new LinkedListNode(list, node);
     return external;
 }
 function getInternal(node, list) {
-    if (!node) throw new ArgumentNullException_1.default("node");
-    if (!list) throw new ArgumentNullException_1.default("list");
-    if (node.list != list) throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
+    if (!node) throw new ArgumentNullException_1.ArgumentNullException("node");
+    if (!list) throw new ArgumentNullException_1.ArgumentNullException("list");
+    if (node.list != list) throw new InvalidOperationException_1.InvalidOperationException("Provided node does not belong to this list.");
     var n = node._nodeInternal;
-    if (!n) throw new InvalidOperationException_1.default("Provided node is not valid.");
+    if (!n) throw new InvalidOperationException_1.InvalidOperationException("Provided node is not valid.");
     return n;
 }
 
-var LinkedList = function (_CollectionBase_1$def) {
-    _inherits(LinkedList, _CollectionBase_1$def);
+var LinkedList = function (_CollectionBase_1$Col) {
+    _inherits(LinkedList, _CollectionBase_1$Col);
 
     function LinkedList(source) {
         var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Compare_1.areEqual : arguments[1];
@@ -67,7 +67,7 @@ var LinkedList = function (_CollectionBase_1$def) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(LinkedList).call(this, null, equalityComparer));
 
         var _ = _this;
-        _._listInternal = new LinkedNodeList_1.default();
+        _._listInternal = new LinkedNodeList_1.LinkedNodeList();
         _._importEntries(source);
         return _this;
     }
@@ -115,7 +115,7 @@ var LinkedList = function (_CollectionBase_1$def) {
     }, {
         key: "getEnumerator",
         value: function getEnumerator() {
-            return LinkedNodeList_1.default.valueEnumeratorFrom(this._listInternal);
+            return LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(this._listInternal);
         }
     }, {
         key: "_findFirst",
@@ -243,7 +243,7 @@ var LinkedList = function (_CollectionBase_1$def) {
     }]);
 
     return LinkedList;
-}(CollectionBase_1.default);
+}(CollectionBase_1.CollectionBase);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = LinkedList;

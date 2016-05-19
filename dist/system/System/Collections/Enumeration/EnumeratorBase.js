@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -15,7 +15,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
     function yielder(recycle) {
         if (!yielderPool)
             yielderPool
-                = new ObjectPool_1.default(40, function () { return new Yielder(); });
+                = new ObjectPool_1.ObjectPool(40, function () { return new Yielder(); });
         if (!recycle)
             return yielderPool.take();
         recycle.yieldBreak();
@@ -68,11 +68,11 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     this._initializer = _initializer;
                     this._tryGetNext = _tryGetNext;
                     this.reset();
-                    if (Types_1.default.isBoolean(isEndless))
+                    if (Types_1.Type.isBoolean(isEndless))
                         this._isEndless = isEndless;
-                    else if (Types_1.default.isBoolean(disposer))
+                    else if (Types_1.Type.isBoolean(disposer))
                         this._isEndless = disposer;
-                    if (Types_1.default.isFunction(disposer))
+                    if (Types_1.Type.isFunction(disposer))
                         this._disposer = disposer;
                 }
                 Object.defineProperty(EnumeratorBase.prototype, "current", {
@@ -156,8 +156,9 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     }
                 };
                 return EnumeratorBase;
-            }(DisposableBase_1.default));
-            exports_1("default", EnumeratorBase);
+            }(DisposableBase_1.DisposableBase));
+            exports_1("EnumeratorBase", EnumeratorBase);
+            exports_1("default",EnumeratorBase);
         }
     }
 });

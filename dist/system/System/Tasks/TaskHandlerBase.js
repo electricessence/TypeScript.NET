@@ -57,7 +57,8 @@ System.register(["../Disposable/DisposableBase"], function(exports_1, context_1)
                     return false;
                 };
                 return TaskHandlerBase;
-            }(DisposableBase_1.default));
+            }(DisposableBase_1.DisposableBase));
+            exports_1("TaskHandlerBase", TaskHandlerBase);
             exports_1("default",TaskHandlerBase);
         }
     }

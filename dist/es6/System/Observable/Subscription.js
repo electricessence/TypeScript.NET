@@ -4,8 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict';
-export default class Subscription {
+export class Subscription {
     constructor(_subscribable, _subscriber) {
         this._subscribable = _subscribable;
         this._subscriber = _subscriber;
@@ -28,4 +27,5 @@ export default class Subscription {
         }
     }
 }
+export default Subscription;
 //# sourceMappingURL=Subscription.js.map

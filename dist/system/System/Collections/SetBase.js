@@ -54,7 +54,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype._getSet = function () {
                     var s = this._set;
                     if (!s)
-                        this._set = s = new LinkedNodeList_1.default();
+                        this._set = s = new LinkedNodeList_1.LinkedNodeList();
                     return s;
                 };
                 SetBase.prototype.getCount = function () {
@@ -63,7 +63,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.exceptWith = function (other) {
                     var _ = this;
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     Enumerator_1.forEach(other, function (v) {
                         if (_._removeInternal(v))
                             _._incrementModified();
@@ -72,7 +72,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 };
                 SetBase.prototype.intersectWith = function (other) {
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var _ = this;
                     if (other instanceof SetBase) {
                         var s = _._set;
@@ -90,7 +90,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.isProperSubsetOf = function (other) {
                     var _this = this;
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     return other instanceof SetBase
                         ? other.isProperSupersetOf(this)
                         : dispose_1.using(this.newUsing(other), function (o) { return o.isProperSupersetOf(_this); });
@@ -98,7 +98,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.isProperSupersetOf = function (other) {
                     var _this = this;
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var result = true, count;
                     if (other instanceof SetBase) {
                         result = this.isSupersetOf(other);
@@ -118,7 +118,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.isSubsetOf = function (other) {
                     var _this = this;
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     return other instanceof SetBase
                         ? other.isSupersetOf(this)
                         : dispose_1.using(this.newUsing(other), function (o) { return o.isSupersetOf(_this); });
@@ -126,7 +126,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.isSupersetOf = function (other) {
                     var _this = this;
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var result = true;
                     Enumerator_1.forEach(other, function (v) {
                         return result = _this.contains(v);
@@ -136,14 +136,14 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.overlaps = function (other) {
                     var _this = this;
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var result = false;
                     Enumerator_1.forEach(other, function (v) { return !(result = _this.contains(v)); });
                     return result;
                 };
                 SetBase.prototype.setEquals = function (other) {
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     return this.getCount() == (other instanceof SetBase
                         ? other.getCount()
                         : dispose_1.using(this.newUsing(other), function (o) { return o.getCount(); }))
@@ -151,7 +151,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 };
                 SetBase.prototype.symmetricExceptWith = function (other) {
                     if (!other)
-                        throw new ArgumentNullException_1.default(OTHER);
+                        throw new ArgumentNullException_1.ArgumentNullException(OTHER);
                     var _ = this;
                     if (other instanceof SetBase) {
                         Enumerator_1.forEach(other, function (v) {
@@ -187,7 +187,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 SetBase.prototype.getEnumerator = function () {
                     var s = this._set;
                     return s && this.getCount()
-                        ? LinkedNodeList_1.default.valueEnumeratorFrom(s)
+                        ? LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(s)
                         : Enumerator_1.empty;
                 };
                 SetBase.prototype.forEach = function (action, useCopy) {
@@ -211,7 +211,8 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     return this._removeNode(s && s.last);
                 };
                 return SetBase;
-            }(CollectionBase_1.default));
+            }(CollectionBase_1.CollectionBase));
+            exports_1("SetBase", SetBase);
             exports_1("default",SetBase);
         }
     }

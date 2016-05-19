@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -30,8 +30,8 @@ var GROW_FACTOR_HALF = 100;
 var DEFAULT_CAPACITY = MINIMUM_GROW;
 var emptyArray = [];
 
-var Queue = function (_CollectionBase_1$def) {
-    _inherits(Queue, _CollectionBase_1$def);
+var Queue = function (_CollectionBase_1$Col) {
+    _inherits(Queue, _CollectionBase_1$Col);
 
     function Queue(source) {
         var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Compare_1.areEqual : arguments[1];
@@ -45,13 +45,13 @@ var Queue = function (_CollectionBase_1$def) {
         _._tail = 0;
         _._size = 0;
         if (!source) _._array = emptyArray;else {
-            if (Types_1.default.isNumber(source)) {
+            if (Types_1.Type.isNumber(source)) {
                 var capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
                 _._array = capacity ? AU.initialize(capacity) : emptyArray;
             } else {
                 var se = source;
-                _._array = AU.initialize(Types_1.default.isArrayLike(se) ? se.length : DEFAULT_CAPACITY);
+                _._array = AU.initialize(Types_1.Type.isArrayLike(se) ? se.length : DEFAULT_CAPACITY);
                 _._importEntries(se);
             }
         }
@@ -87,7 +87,7 @@ var Queue = function (_CollectionBase_1$def) {
     }, {
         key: "_removeInternal",
         value: function _removeInternal(item, max) {
-            throw new NotImplementedException_1.default("ICollection\<T\>.remove is not implemented in Queue\<T\>" + " since it would require destroying the underlying array to remove the item.");
+            throw new NotImplementedException_1.NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" + " since it would require destroying the underlying array to remove the item.");
         }
     }, {
         key: "_clearInternal",
@@ -125,7 +125,7 @@ var Queue = function (_CollectionBase_1$def) {
             var _ = this,
                 result = [];
             if (isFinite(max)) {
-                Integer_1.default.assertZeroOrGreater(max);
+                Integer_1.Integer.assertZeroOrGreater(max);
                 if (max !== 0) {
                     while (max-- && _._size) {
                         result.push(_._dequeueInternal());
@@ -188,7 +188,7 @@ var Queue = function (_CollectionBase_1$def) {
 
             var _ = this;
             if (_._size == 0) {
-                if (throwIfEmpty) throw new InvalidOperationException_1.default("Cannot dequeue an empty queue.");
+                if (throwIfEmpty) throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
                 return void 0;
             }
             var array = _._array,
@@ -231,7 +231,7 @@ var Queue = function (_CollectionBase_1$def) {
     }, {
         key: "peek",
         value: function peek() {
-            if (this._size == 0) throw new InvalidOperationException_1.default("Cannot call peek on an empty queue.");
+            if (this._size == 0) throw new InvalidOperationException_1.InvalidOperationException("Cannot call peek on an empty queue.");
             return this._array[this._head];
         }
     }, {
@@ -247,7 +247,7 @@ var Queue = function (_CollectionBase_1$def) {
             var _ = this;
             var index;
             var version;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 version = _._version;
                 index = 0;
             }, function (yielder) {
@@ -259,15 +259,16 @@ var Queue = function (_CollectionBase_1$def) {
     }]);
 
     return Queue;
-}(CollectionBase_1.default);
+}(CollectionBase_1.CollectionBase);
 
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Queue;
+exports.Queue = Queue;
 function assertZeroOrGreater(value, property) {
-    if (value < 0) throw new ArgumentOutOfRangeException_1.default(property, value, "Must be greater than zero");
+    if (value < 0) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(property, value, "Must be greater than zero");
 }
 function assertIntegerZeroOrGreater(value, property) {
-    Integer_1.default.assert(value, property);
+    Integer_1.Integer.assert(value, property);
     assertZeroOrGreater(value, property);
 }
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Queue;
 //# sourceMappingURL=Queue.js.map

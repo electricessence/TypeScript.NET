@@ -2,8 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-class Functions {
+export class Functions {
     Identity(x) { return x; }
     True() { return true; }
     False() { return false; }

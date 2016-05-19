@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['./TimeUnit', './TimeQuantity'], function(exports_1, context_1) {
-    'use strict';
+System.register(["./TimeUnit", "./TimeQuantity"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -13,7 +13,7 @@ System.register(['./TimeUnit', './TimeQuantity'], function(exports_1, context_1)
     var TimeUnit_1, TimeQuantity_1;
     var TimeUnitValue;
     function getUnitQuantityFrom(q, units) {
-        return TimeUnit_1.default.fromMilliseconds(q.getTotalMilliseconds(), units);
+        return TimeUnit_1.TimeUnit.fromMilliseconds(q.getTotalMilliseconds(), units);
     }
     return {
         setters:[
@@ -31,7 +31,7 @@ System.register(['./TimeUnit', './TimeQuantity'], function(exports_1, context_1)
                         ? value
                         : getUnitQuantityFrom(value, _units));
                     this._units = _units;
-                    TimeUnit_1.default.assertValid(_units);
+                    TimeUnit_1.TimeUnit.assertValid(_units);
                 }
                 Object.defineProperty(TimeUnitValue.prototype, "value", {
                     get: function () {
@@ -45,7 +45,7 @@ System.register(['./TimeUnit', './TimeQuantity'], function(exports_1, context_1)
                     configurable: true
                 });
                 TimeUnitValue.prototype.getTotalMilliseconds = function () {
-                    return TimeUnit_1.default.toMilliseconds(this._quantity, this._units);
+                    return TimeUnit_1.TimeUnit.toMilliseconds(this._quantity, this._units);
                 };
                 Object.defineProperty(TimeUnitValue.prototype, "units", {
                     get: function () {
@@ -59,11 +59,11 @@ System.register(['./TimeUnit', './TimeQuantity'], function(exports_1, context_1)
                     return TimeUnitValue.from(this, units);
                 };
                 TimeUnitValue.from = function (value, units) {
-                    if (units === void 0) { units = TimeUnit_1.default.Milliseconds; }
+                    if (units === void 0) { units = TimeUnit_1.TimeUnit.Milliseconds; }
                     return new TimeUnitValue(value, units);
                 };
                 return TimeUnitValue;
-            }(TimeQuantity_1.default));
+            }(TimeQuantity_1.TimeQuantity));
             exports_1("default", TimeUnitValue);
         }
     }

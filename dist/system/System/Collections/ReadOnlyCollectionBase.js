@@ -42,7 +42,8 @@ System.register(["./CollectionBase"], function(exports_1, context_1) {
                     return this._getEnumerator();
                 };
                 return ReadOnlyCollectionBase;
-            }(CollectionBase_1.default));
+            }(CollectionBase_1.CollectionBase));
+            exports_1("ReadOnlyCollectionBase", ReadOnlyCollectionBase);
             exports_1("default",ReadOnlyCollectionBase);
         }
     }

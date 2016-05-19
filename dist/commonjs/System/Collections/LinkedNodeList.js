@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -37,7 +37,7 @@ var LinkedNodeList = function () {
     }, {
         key: "map",
         value: function map(selector) {
-            if (!selector) throw new ArgumentNullException_1.default('selector');
+            if (!selector) throw new ArgumentNullException_1.ArgumentNullException('selector');
             var result = [];
             this.forEach(function (node) {
                 result.push(selector(node));
@@ -132,7 +132,7 @@ var LinkedNodeList = function () {
     }, {
         key: "removeNode",
         value: function removeNode(node) {
-            if (node == null) throw new ArgumentNullException_1.default('node');
+            if (node == null) throw new ArgumentNullException_1.ArgumentNullException('node');
             var _ = this;
             var prev = node.previous,
                 next = node.next,
@@ -141,7 +141,7 @@ var LinkedNodeList = function () {
             if (prev) prev.next = next;else if (_._first == node) _._first = next;else a = true;
             if (next) next.previous = prev;else if (_._last == node) _._last = prev;else b = true;
             if (a !== b) {
-                throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                throw new ArgumentException_1.ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
             }
             var removed = !a && !b;
             if (removed) _.unsafeCount--;
@@ -195,7 +195,7 @@ var LinkedNodeList = function () {
     }, {
         key: "replace",
         value: function replace(node, replacement) {
-            if (node == null) throw new ArgumentNullException_1.default('node');
+            if (node == null) throw new ArgumentNullException_1.ArgumentNullException('node');
             assertValidDetached(replacement, 'replacement');
             var _ = this;
             replacement.previous = node.previous;
@@ -229,11 +229,11 @@ var LinkedNodeList = function () {
     }], [{
         key: "valueEnumeratorFrom",
         value: function valueEnumeratorFrom(list) {
-            if (!list) throw new ArgumentNullException_1.default('list');
+            if (!list) throw new ArgumentNullException_1.ArgumentNullException('list');
             var _ = this,
                 current,
                 next;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 current = null;
                 next = list.first;
             }, function (yielder) {
@@ -251,7 +251,7 @@ var LinkedNodeList = function () {
             var index = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
 
             if (list && list.first) {
-                if (!array) throw new ArgumentNullException_1.default('array');
+                if (!array) throw new ArgumentNullException_1.ArgumentNullException('array');
                 list.forEach(function (node, i) {
                     array[index + i] = node.value;
                 });
@@ -263,12 +263,13 @@ var LinkedNodeList = function () {
     return LinkedNodeList;
 }();
 
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = LinkedNodeList;
+exports.LinkedNodeList = LinkedNodeList;
 function assertValidDetached(node) {
     var propName = arguments.length <= 1 || arguments[1] === undefined ? 'node' : arguments[1];
 
-    if (node == null) throw new ArgumentNullException_1.default(propName);
-    if (node.next || node.previous) throw new InvalidOperationException_1.default("Cannot add a node to a LinkedNodeList that is already linked.");
+    if (node == null) throw new ArgumentNullException_1.ArgumentNullException(propName);
+    if (node.next || node.previous) throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
 }
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = LinkedNodeList;
 //# sourceMappingURL=LinkedNodeList.js.map

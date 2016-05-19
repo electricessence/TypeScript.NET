@@ -15,7 +15,7 @@ function unsafe(listeners, payload, trap) {
             try {
                 fn(payload);
             } catch (ex) {
-                if (!trap) throw ex;else if (Types_1.default.isFunction(trap)) trap(ex, i);
+                if (!trap) throw ex;else if (Types_1.Type.isFunction(trap)) trap(ex, i);
             }
         }
     }
@@ -31,7 +31,7 @@ function mapped(listeners, payload, trap) {
                 result[i] = fn ? fn(payload) : VOID0;
             } catch (ex) {
                 result[i] = VOID0;
-                if (!trap) throw ex;else if (Types_1.default.isFunction(trap)) trap(ex, i);
+                if (!trap) throw ex;else if (Types_1.Type.isFunction(trap)) trap(ex, i);
             }
         }
     }

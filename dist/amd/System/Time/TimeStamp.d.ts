@@ -1,12 +1,11 @@
-/// <reference path="../../../../source/System/Time/ITimeStamp.d.ts" />
-/// <reference path="../../../../source/System/Time/IDateTime.d.ts" />
-/// <reference path="../../../../source/System/Time/Calendars.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116418-4632-1odianc/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-export default class TimeStamp implements ITimeStamp, IDateTime {
+import { ITimeStamp } from "./ITimeStamp";
+import { IDateTime } from "./IDateTime";
+import { Gregorian } from "./Calendars";
+export declare class TimeStamp implements ITimeStamp, IDateTime {
     year: number;
     month: Gregorian.Month;
     day: number;
@@ -19,3 +18,4 @@ export default class TimeStamp implements ITimeStamp, IDateTime {
     toJsDate(): Date;
     static from(d: Date | IDateTime): TimeStamp;
 }
+export default TimeStamp;

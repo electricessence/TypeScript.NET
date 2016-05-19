@@ -1,13 +1,11 @@
-/// <reference path="../../../../../source/System/Disposable/IDisposable.d.ts" />
-/// <reference path="../../../../../source/System/Collections/Enumeration/IEnumerable.d.ts" />
-/// <reference path="../../../../../source/System/Collections/Enumeration/IEnumerator.d.ts" />
-/// <reference path="../../../../../source/System/Collections/Enumeration/IYield.d.ts" />
-/// <reference path="../../../../../source/System/Collections/IEnumerableOrArray.d.ts" />
-/// <reference path="../../../../../source/System/Collections/Enumeration/IIterator.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { Selector } from "../../FunctionTypes";
+import { IEnumerator } from "./IEnumerator";
+import { IEnumerable } from "./IEnumerable";
+import { IEnumerableOrArray } from "../IEnumerableOrArray";
 export declare function throwIfEndless(isEndless: boolean): void;
 export declare const empty: IEnumerator<any>;
 export declare function from<T>(source: IEnumerableOrArray<T>): IEnumerator<T>;

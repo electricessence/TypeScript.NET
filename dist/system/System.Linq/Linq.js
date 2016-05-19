@@ -30,14 +30,14 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
     }
     function createSortContext(orderedEnumerable, currentContext) {
         if (currentContext === void 0) { currentContext = null; }
-        var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
+        var context = new KeySortedContext_1.KeySortedContext(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
         if (orderedEnumerable.parent)
             return createSortContext(orderedEnumerable.parent, context);
         return context;
     }
     function throwIfDisposed(disposed) {
         if (disposed)
-            throw new ObjectDisposedException_1.default("Enumerable");
+            throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
     }
     return {
         setters:[
@@ -111,7 +111,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return a < b ? a : b;
                 };
                 return LinqFunctions;
-            }(Functions_1.default));
+            }(Functions_1.Functions));
             Functions = new LinqFunctions();
             Object.freeze(Functions);
             InfiniteEnumerable = (function (_super) {
@@ -147,7 +147,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             if (initializer)
                                 initializer();
@@ -181,7 +181,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     _.throwIfDisposed();
                     if (!isFinite(count))
                         return Enumerable.empty();
-                    Integer_1.default.assert(count, "count");
+                    Integer_1.Integer.assert(count, "count");
                     return this.doAction(function (element, index) {
                         return index < count
                             ? 2
@@ -194,21 +194,21 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this;
                     _.throwIfDisposed();
                     if (!isFinite(count))
-                        throw new ArgumentOutOfRangeException_1.default('count', count, 'Must be finite.');
-                    Integer_1.default.assert(count, "count");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, 'Must be finite.');
+                    Integer_1.Integer.assert(count, "count");
                     return _.doAction(function (element, index) { return index < count; }, null, false);
                 };
                 InfiniteEnumerable.prototype.elementAt = function (index) {
                     var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
                     if (v === INVALID_DEFAULT)
-                        throw new ArgumentOutOfRangeException_1.default('index', index, "is greater than or equal to the number of elements in source");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, "is greater than or equal to the number of elements in source");
                     return v;
                 };
                 InfiniteEnumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
                     if (defaultValue === void 0) { defaultValue = null; }
                     var _ = this;
                     _.throwIfDisposed();
-                    Integer_1.default.assertZeroOrGreater(index, 'index');
+                    Integer_1.Integer.assertZeroOrGreater(index, 'index');
                     var n = index;
                     return dispose_1.using(this.getEnumerator(), function (e) {
                         var i = 0;
@@ -273,7 +273,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var enumerator;
                         var nestLevel = 0;
                         var buffer, len;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             nestLevel = 0;
                             buffer = [];
                             len = 0;
@@ -313,7 +313,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var enumeratorStack = [];
                         var enumerator;
                         var len;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                             len = 0;
                         }, function (yielder) {
@@ -346,7 +346,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var middleEnumerator = null;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                         }, function (yielder) {
                             while (true) {
@@ -361,7 +361,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                                 }
                                 if (enumerator.moveNext()) {
                                     var c = enumerator.current;
-                                    var e = !Types_1.default.isString(c) && Enumerable.fromAny(c);
+                                    var e = !Types_1.Type.isString(c) && Enumerable.fromAny(c);
                                     if (e) {
                                         middleEnumerator
                                             = e
@@ -385,7 +385,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this;
                     return new Enumerable(function () {
                         var enumerator;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                             enumerator.moveNext();
                         }, function (yielder) {
@@ -404,7 +404,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var enumerator;
                         var value;
                         var isFirst;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                             isFirst = true;
                         }, function (yielder) {
@@ -428,7 +428,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             index = 0;
                             enumerator = _.getEnumerator();
@@ -452,7 +452,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var enumerator;
                         var middleEnumerator;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                             middleEnumerator = undefined;
                             index = 0;
@@ -487,7 +487,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             index = 0;
                             enumerator = _.getEnumerator();
@@ -515,7 +515,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             index = 0;
                             enumerator = _.getEnumerator();
@@ -537,16 +537,16 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var typeName;
                     switch (type) {
                         case Number:
-                            typeName = Types_1.default.NUMBER;
+                            typeName = Types_1.Type.NUMBER;
                             break;
                         case String:
-                            typeName = Types_1.default.STRING;
+                            typeName = Types_1.Type.STRING;
                             break;
                         case Boolean:
-                            typeName = Types_1.default.BOOLEAN;
+                            typeName = Types_1.Type.BOOLEAN;
                             break;
                         case Function:
-                            typeName = Types_1.default.FUNCTION;
+                            typeName = Types_1.Type.FUNCTION;
                             break;
                         default:
                             return this
@@ -561,10 +561,10 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var keys;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             enumerator = _.getEnumerator();
-                            keys = new Dictionary_1.default(compareSelector);
+                            keys = new Dictionary_1.Dictionary(compareSelector);
                             if (second)
                                 Enumerator_1.forEach(second, function (key) { return keys.addByKeyValue(key, true); });
                         }, function (yielder) {
@@ -595,7 +595,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var enumerator;
                         var compareKey;
                         var initial = true;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             enumerator = _.getEnumerator();
                         }, function (yielder) {
@@ -625,7 +625,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var isFirst;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             isFirst = true;
                             throwIfDisposed(disposed);
                             enumerator = _.getEnumerator();
@@ -652,7 +652,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var firstEnumerator;
                         var secondEnumerator;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             index = 0;
                             firstEnumerator = _.getEnumerator();
                             secondEnumerator = Enumerator_1.from(second);
@@ -673,8 +673,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var firstEnumerator;
                         var secondEnumerator;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
-                            secondTemp = new Queue_1.default(second);
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
+                            secondTemp = new Queue_1.Queue(second);
                             index = 0;
                             firstEnumerator = _.getEnumerator();
                             secondEnumerator = null;
@@ -710,7 +710,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var lookup;
                         var innerElements = null;
                         var innerCount = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             outerEnumerator = _.getEnumerator();
                             lookup = Enumerable.from(inner)
                                 .toLookup(innerKeySelector, Functions.Identity, compareSelector);
@@ -742,7 +742,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var lookup = null;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                             lookup = Enumerable.from(inner)
                                 .toLookup(innerKeySelector, Functions.Identity, compareSelector);
@@ -761,9 +761,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var enumerator;
                         var queue;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
-                            queue = new Queue_1.default(enumerables);
+                            queue = new Queue_1.Queue(enumerables);
                         }, function (yielder) {
                             while (true) {
                                 while (!enumerator && queue.count) {
@@ -797,9 +797,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var firstEnumerator;
                         var secondEnumerator;
                         var keys;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             firstEnumerator = _.getEnumerator();
-                            keys = new Dictionary_1.default(compareSelector);
+                            keys = new Dictionary_1.Dictionary(compareSelector);
                         }, function (yielder) {
                             var current;
                             if (secondEnumerator === VOID0) {
@@ -826,7 +826,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     }, null, isEndless);
                 };
                 InfiniteEnumerable.prototype.insertAt = function (index, other) {
-                    Integer_1.default.assertZeroOrGreater(index, 'index');
+                    Integer_1.Integer.assertZeroOrGreater(index, 'index');
                     var n = index;
                     var _ = this, isEndless = _._isEndless || null;
                     _.throwIfDisposed();
@@ -835,7 +835,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var secondEnumerator;
                         var count = 0;
                         var isEnumerated = false;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             count = 0;
                             firstEnumerator = _.getEnumerator();
                             secondEnumerator = Enumerator_1.from(other);
@@ -862,8 +862,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this;
                     return new Enumerable(function () {
                         var buffer, mode, enumerator, alternateEnumerator;
-                        return new EnumeratorBase_1.default(function () {
-                            alternateEnumerator = new ArrayEnumerator_1.default(Enumerable.toArray(sequence));
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
+                            alternateEnumerator = new ArrayEnumerator_1.ArrayEnumerator(Enumerable.toArray(sequence));
                             enumerator = _.getEnumerator();
                             var hasAtLeastOne = enumerator.moveNext();
                             mode = hasAtLeastOne
@@ -909,7 +909,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this, disposed = !_.throwIfDisposed();
                     return new Enumerable(function () {
                         var enumerator;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             try {
                                 throwIfDisposed(disposed);
                                 enumerator = _.getEnumerator();
@@ -935,7 +935,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this, disposed = !_.throwIfDisposed();
                     return new Enumerable(function () {
                         var enumerator;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             enumerator = _.getEnumerator();
                         }, function (yielder) {
@@ -956,11 +956,11 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 InfiniteEnumerable.prototype.buffer = function (size) {
                     if (size < 1 || !isFinite(size))
                         throw new Error("Invalid buffer size.");
-                    Integer_1.default.assert(size, "size");
+                    Integer_1.Integer.assert(size, "size");
                     var _ = this, len;
                     return new Enumerable(function () {
                         var enumerator;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                         }, function (yielder) {
                             var array = ArrayUtility.initialize(size);
@@ -986,7 +986,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     }, _._isEndless);
                 };
                 return InfiniteEnumerable;
-            }(DisposableBase_1.default));
+            }(DisposableBase_1.DisposableBase));
             exports_1("InfiniteEnumerable", InfiniteEnumerable);
             Enumerable = (function (_super) {
                 __extends(Enumerable, _super);
@@ -998,15 +998,15 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.from = function (source) {
                     var e = Enumerable.fromAny(source);
                     if (!e)
-                        throw new UnsupportedEnumerableException_1.default();
+                        throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
                     return e;
                 };
                 Enumerable.fromAny = function (source, defaultEnumerable) {
                     if (defaultEnumerable === void 0) { defaultEnumerable = null; }
-                    if (Types_1.default.isObject(source) || Types_1.default.isString(source)) {
+                    if (Types_1.Type.isObject(source) || Types_1.Type.isString(source)) {
                         if (source instanceof Enumerable)
                             return source;
-                        if (Types_1.default.isArrayLike(source))
+                        if (Types_1.Type.isArrayLike(source))
                             return new ArrayEnumerable(source);
                         if (Enumerator_1.isEnumerable(source))
                             return new Enumerable(function () { return source.getEnumerator(); }, null, source.isEndless);
@@ -1024,9 +1024,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.choice = function (values) {
                     var len = values && values.length;
                     if (!len || !isFinite(len))
-                        throw new ArgumentOutOfRangeException_1.default('length', length);
-                    return new InfiniteEnumerable(function () { return new EnumeratorBase_1.default(null, function (yielder) {
-                        return yielder.yieldReturn(Integer_1.default.random.select(values));
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
+                    return new InfiniteEnumerable(function () { return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) {
+                        return yielder.yieldReturn(Integer_1.Integer.random.select(values));
                     }, true); });
                 };
                 Enumerable.chooseFrom = function () {
@@ -1039,10 +1039,10 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.cycle = function (values) {
                     var len = values && values.length;
                     if (!len || !isFinite(len))
-                        throw new ArgumentOutOfRangeException_1.default('length', length);
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
                     return new InfiniteEnumerable(function () {
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             index = 0;
                         }, function (yielder) {
                             if (index >= values.length)
@@ -1065,20 +1065,20 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (count === void 0) { count = Infinity; }
                     if (!(count > 0))
                         return Enumerable.empty();
-                    return isFinite(count) && Integer_1.default.assert(count, "count")
+                    return isFinite(count) && Integer_1.Integer.assert(count, "count")
                         ? new FiniteEnumerable(function () {
                             var c = count;
                             var index = 0;
-                            return new EnumeratorBase_1.default(function () { index = 0; }, function (yielder) { return (index++ < c) && yielder.yieldReturn(element); }, null, false);
+                            return new EnumeratorBase_1.EnumeratorBase(function () { index = 0; }, function (yielder) { return (index++ < c) && yielder.yieldReturn(element); }, null, false);
                         })
                         : new Enumerable(function () {
-                            return new EnumeratorBase_1.default(null, function (yielder) { return yielder.yieldReturn(element); }, true);
+                            return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) { return yielder.yieldReturn(element); }, true);
                         });
                 };
                 Enumerable.repeatWithFinalize = function (initializer, finalizer) {
                     return new InfiniteEnumerable(function () {
                         var element;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             element = initializer();
                         }, function (yielder) { return yielder.yieldReturn(element); }, function () {
                             finalizer(element);
@@ -1091,19 +1091,19 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.range = function (start, count, step) {
                     if (step === void 0) { step = 1; }
                     if (!isFinite(start))
-                        throw new ArgumentOutOfRangeException_1.default("start", start, "Must be a finite number.");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("start", start, "Must be a finite number.");
                     if (!(count > 0))
                         return Enumerable.empty();
                     if (!step)
-                        throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a valid value");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a valid value");
                     if (!isFinite(step))
-                        throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a finite number.");
-                    Integer_1.default.assert(count, "count");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+                    Integer_1.Integer.assert(count, "count");
                     return new FiniteEnumerable(function () {
                         var value;
                         var c = count;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             index = 0;
                             value = start;
                         }, function (yielder) {
@@ -1124,14 +1124,14 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (start === void 0) { start = 0; }
                     if (step === void 0) { step = 1; }
                     if (!isFinite(start))
-                        throw new ArgumentOutOfRangeException_1.default("start", start, "Must be a finite number.");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("start", start, "Must be a finite number.");
                     if (!step)
-                        throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a valid value");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a valid value");
                     if (!isFinite(step))
-                        throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a finite number.");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite number.");
                     return new InfiniteEnumerable(function () {
                         var value;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             value = start;
                         }, function (yielder) {
                             var current = value;
@@ -1148,13 +1148,13 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.rangeTo = function (start, to, step) {
                     if (step === void 0) { step = 1; }
                     if (isNaN(to) || !isFinite(to))
-                        throw new ArgumentOutOfRangeException_1.default("to", to, "Must be a finite number.");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("to", to, "Must be a finite number.");
                     if (step && !isFinite(step))
-                        throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a finite non-zero number.");
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
                     step = Math.abs(step);
                     return new FiniteEnumerable(function () {
                         var value;
-                        return new EnumeratorBase_1.default(function () { value = start; }, start < to
+                        return new EnumeratorBase_1.EnumeratorBase(function () { value = start; }, start < to
                             ?
                                 function (yielder) {
                                     var result = value <= to && yielder.yieldReturn(value);
@@ -1174,9 +1174,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.matches = function (input, pattern, flags) {
                     if (flags === void 0) { flags = ""; }
                     if (input === null || input === VOID0)
-                        throw new ArgumentNullException_1.default("input");
+                        throw new ArgumentNullException_1.ArgumentNullException("input");
                     var type = typeof input;
-                    if (type != Types_1.default.STRING)
+                    if (type != Types_1.Type.STRING)
                         throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
                     if (pattern instanceof RegExp) {
                         flags += (pattern.ignoreCase) ? "i" : "";
@@ -1187,7 +1187,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         flags += "g";
                     return new FiniteEnumerable(function () {
                         var regex;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             regex = new RegExp(pattern, flags);
                         }, function (yielder) {
                             var match = regex.exec(input);
@@ -1199,12 +1199,12 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (count === void 0) { count = Infinity; }
                     if (isNaN(count) || count <= 0)
                         return Enumerable.empty();
-                    return isFinite(count) && Integer_1.default.assert(count, "count")
+                    return isFinite(count) && Integer_1.Integer.assert(count, "count")
                         ?
                             new FiniteEnumerable(function () {
                                 var c = count;
                                 var index = 0;
-                                return new EnumeratorBase_1.default(function () {
+                                return new EnumeratorBase_1.EnumeratorBase(function () {
                                     index = 0;
                                 }, function (yielder) {
                                     var current = index++;
@@ -1214,7 +1214,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         :
                             new InfiniteEnumerable(function () {
                                 var index = 0;
-                                return new EnumeratorBase_1.default(function () {
+                                return new EnumeratorBase_1.EnumeratorBase(function () {
                                     index = 0;
                                 }, function (yielder) { return yielder.yieldReturn(factory(index++)); }, true);
                             });
@@ -1225,7 +1225,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var index = 0;
                         var value;
                         var isFirst;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             index = 0;
                             value = seed;
                             isFirst = !skipSeed;
@@ -1257,14 +1257,14 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 Enumerable.weave = function (enumerables) {
                     if (!enumerables)
-                        throw new ArgumentNullException_1.default('enumerables');
+                        throw new ArgumentNullException_1.ArgumentNullException('enumerables');
                     return new Enumerable(function () {
                         var queue;
                         var mainEnumerator;
                         var index;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             index = 0;
-                            queue = new Queue_1.default();
+                            queue = new Queue_1.Queue();
                             mainEnumerator = Enumerator_1.from(enumerables);
                         }, function (yielder) {
                             var e;
@@ -1308,7 +1308,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.prototype.takeWhile = function (predicate) {
                     this.throwIfDisposed();
                     if (!predicate)
-                        throw new ArgumentNullException_1.default('predicate');
+                        throw new ArgumentNullException_1.ArgumentNullException('predicate');
                     return this.doAction(function (element, index) {
                         return predicate(element, index)
                             ? 1
@@ -1318,7 +1318,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.prototype.takeUntil = function (predicate, includeUntilValue) {
                     this.throwIfDisposed();
                     if (!predicate)
-                        throw new ArgumentNullException_1.default('predicate');
+                        throw new ArgumentNullException_1.ArgumentNullException('predicate');
                     if (!includeUntilValue)
                         return this.doAction(function (element, index) {
                             return predicate(element, index)
@@ -1357,8 +1357,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (index === void 0) { index = 0; }
                     this.throwIfDisposed();
                     if (!target)
-                        throw new ArgumentNullException_1.default("target");
-                    Integer_1.default.assertZeroOrGreater(index);
+                        throw new ArgumentNullException_1.ArgumentNullException("target");
+                    Integer_1.Integer.assertZeroOrGreater(index);
                     Enumerator_1.forEach(this, function (x, i) {
                         target[i + index] = x;
                     });
@@ -1367,7 +1367,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
                     if (elementSelector === void 0) { elementSelector = Functions.Identity; }
                     if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-                    var dict = new Dictionary_1.default(compareSelector);
+                    var dict = new Dictionary_1.Dictionary(compareSelector);
                     this.forEach(function (x) {
                         var key = keySelector(x);
                         var element = elementSelector(x);
@@ -1388,7 +1388,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 Enumerable.prototype.toDictionary = function (keySelector, elementSelector, compareSelector) {
                     if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-                    var dict = new Dictionary_1.default(compareSelector);
+                    var dict = new Dictionary_1.Dictionary(compareSelector);
                     this.forEach(function (x, i) { return dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)); });
                     return dict;
                 };
@@ -1404,14 +1404,14 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         return _;
                     if (!isFinite(count))
                         return Enumerable.empty();
-                    Integer_1.default.assert(count, "count");
+                    Integer_1.Integer.assert(count, "count");
                     var c = count;
                     return new Enumerable(function () {
                         var enumerator;
                         var q;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
-                            q = new Queue_1.default();
+                            q = new Queue_1.Queue();
                         }, function (yielder) {
                             while (enumerator.moveNext()) {
                                 q.enqueue(enumerator.current);
@@ -1430,7 +1430,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this;
                     if (!isFinite(count))
                         return _;
-                    Integer_1.default.assert(count, "count");
+                    Integer_1.Integer.assert(count, "count");
                     return _.reverse()
                         .take(count)
                         .reverse();
@@ -1454,7 +1454,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return new Enumerable(function () {
                         var buffer;
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             buffer = _.toArray();
                             index = buffer.length;
@@ -1472,14 +1472,14 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var buffer;
                         var capacity;
                         var len;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             buffer = _.toArray();
                             capacity = len = buffer.length;
                         }, function (yielder) {
                             if (!len)
                                 return yielder.yieldBreak();
-                            var selectedIndex = Integer_1.default.random(len);
+                            var selectedIndex = Integer_1.Integer.random(len);
                             var selectedValue = buffer[selectedIndex];
                             buffer[selectedIndex] = buffer[--len];
                             buffer[len] = null;
@@ -1509,7 +1509,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 Enumerable.prototype.all = function (predicate) {
                     if (!predicate)
-                        throw new ArgumentNullException_1.default("predicate");
+                        throw new ArgumentNullException_1.ArgumentNullException("predicate");
                     var result = true;
                     this.forEach(function (x, i) {
                         if (!predicate(x, i)) {
@@ -1591,10 +1591,10 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var enumerator;
                         var keys;
                         var outs;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
-                            keys = new Dictionary_1.default(compareSelector);
-                            outs = new Dictionary_1.default(compareSelector);
+                            keys = new Dictionary_1.Dictionary(compareSelector);
+                            outs = new Dictionary_1.Dictionary(compareSelector);
                             Enumerator_1.forEach(second, function (key) {
                                 keys.addByKeyValue(key, true);
                             });
@@ -1672,7 +1672,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         var compareKey;
                         var group;
                         var len;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             enumerator = _.getEnumerator();
                             if (enumerator.moveNext()) {
                                 key = keySelector(enumerator.current);
@@ -1715,7 +1715,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return this.scan(func, seed).lastOrDefault();
                 };
                 Enumerable.prototype.average = function (selector) {
-                    if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
+                    if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
                     var count = 0;
                     var sum = this.sum(function (e, i) {
                         count++;
@@ -1740,7 +1740,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return this.aggregate(function (a, b) { return (keySelector(a) < keySelector(b)) ? a : b; });
                 };
                 Enumerable.prototype.sum = function (selector) {
-                    if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
+                    if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
                     var sum = 0;
                     var sumInfinite = 0;
                     this.forEach(function (x) {
@@ -1760,7 +1760,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
                 };
                 Enumerable.prototype.product = function (selector) {
-                    if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
+                    if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
                     var result = 1, exists = false;
                     this.forEach(function (x, i) {
                         exists = true;
@@ -1778,7 +1778,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return (exists && isNaN(result)) ? NaN : result;
                 };
                 Enumerable.prototype.quotient = function (selector) {
-                    if (selector === void 0) { selector = Types_1.default.numberOrNaN; }
+                    if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
                     var count = 0;
                     var result = NaN;
                     this.forEach(function (x, i) {
@@ -1839,7 +1839,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var enumerator;
                     return new Enumerable(function () {
                         var index = 0;
-                        return new EnumeratorBase_1.default(function () {
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
                             throwIfDisposed(disposed);
                             if (!enumerator)
                                 enumerator = _.getEnumerator();
@@ -1881,7 +1881,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 function ArrayEnumerable(source) {
                     _super.call(this, function () {
                         _.throwIfDisposed();
-                        return new ArrayEnumerator_1.default(function () {
+                        return new ArrayEnumerator_1.ArrayEnumerator(function () {
                             _.throwIfDisposed("The underlying ArrayEnumerable was disposed.", "ArrayEnumerator");
                             return _._source;
                         });
@@ -1930,7 +1930,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (defaultValue === void 0) { defaultValue = null; }
                     var _ = this;
                     _.throwIfDisposed();
-                    Integer_1.default.assertZeroOrGreater(index, 'index');
+                    Integer_1.Integer.assertZeroOrGreater(index, 'index');
                     var source = _._source;
                     return index < source.length
                         ? source[index]
@@ -1957,7 +1957,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var _ = this;
                     if (!(count > 0))
                         return _;
-                    return new Enumerable(function () { return new ArrayEnumerator_1.default(function () { return _._source; }, count); });
+                    return new Enumerable(function () { return new ArrayEnumerator_1.ArrayEnumerator(function () { return _._source; }, count); });
                 };
                 ArrayEnumerable.prototype.takeExceptLast = function (count) {
                     if (count === void 0) { count = 1; }
@@ -1977,7 +1977,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 ArrayEnumerable.prototype.reverse = function () {
                     var _ = this;
-                    return new Enumerable(function () { return new ArrayEnumerator_1.default(function () { return _._source; }, _._source
+                    return new Enumerable(function () { return new ArrayEnumerator_1.ArrayEnumerator(function () { return _._source; }, _._source
                         ? (_._source.length - 1)
                         : 0, -1); });
                 };
@@ -1986,7 +1986,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
-                    if (Types_1.default.isArrayLike(second))
+                    if (Types_1.Type.isArrayLike(second))
                         return Arrays.areEqual(this.source, second, true, equalityComparer);
                     if (second instanceof ArrayEnumerable)
                         return second.sequenceEqual(this.source, equalityComparer);
@@ -2037,7 +2037,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Lookup.prototype.getEnumerator = function () {
                     var _ = this;
                     var enumerator;
-                    return new EnumeratorBase_1.default(function () {
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
                         enumerator = _._dictionary.getEnumerator();
                     }, function (yielder) {
                         if (!enumerator.moveNext())
@@ -2082,7 +2082,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     var buffer;
                     var indexes;
                     var index = 0;
-                    return new EnumeratorBase_1.default(function () {
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
                         index = 0;
                         buffer = Enumerable.toArray(_.source);
                         indexes = createSortContext(_).generateSortedIndexes(buffer);

@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import TaskHandlerBase from "./TaskHandlerBase";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-export default class TaskHandler extends TaskHandlerBase {
+import { TaskHandlerBase } from "./TaskHandlerBase";
+import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+export class TaskHandler extends TaskHandlerBase {
     constructor(_action) {
         super();
         this._action = _action;
@@ -19,4 +19,5 @@ export default class TaskHandler extends TaskHandlerBase {
         this._action = null;
     }
 }
+export default TaskHandler;
 //# sourceMappingURL=TaskHandler.js.map

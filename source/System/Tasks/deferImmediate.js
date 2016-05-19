@@ -15,7 +15,6 @@
     var Types_1 = require("../Types");
     var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
     var Queue_1 = require("../Collections/Queue");
-    "use strict";
     var requestTick;
     var isNodeJS = false;
     var flushing = false;

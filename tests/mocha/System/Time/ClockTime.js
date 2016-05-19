@@ -12,10 +12,10 @@
     var assert = require('../../../../node_modules/assert/assert');
     var days = Integer_1.default.random(365), hour = Integer_1.default.random(24), minute = Integer_1.default.random(60), second = Integer_1.default.random(60), millisecond = Integer_1.default.random(1000);
     var c1 = new ClockTime_1.default(hour, minute, second, millisecond);
-    var c2 = new ClockTime_1.default(days * HowMany.Milliseconds.Per.Day
-        + hour * HowMany.Milliseconds.Per.Hour
-        + minute * HowMany.Milliseconds.Per.Minute
-        + second * HowMany.Milliseconds.Per.Second
+    var c2 = new ClockTime_1.default(days * 86400000
+        + hour * 3600000
+        + minute * 60000
+        + second * 1000
         + millisecond);
     it('should match constructor values', function () {
         assert.equal(c1.hour, hour);
@@ -31,4 +31,5 @@
         assert.equal(c2.millisecond, millisecond);
     });
 });
+
 //# sourceMappingURL=ClockTime.js.map

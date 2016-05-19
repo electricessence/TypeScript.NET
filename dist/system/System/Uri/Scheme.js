@@ -6,33 +6,30 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Scheme, PIPE, TCP;
+    var File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID, All;
+    function isValid(scheme) {
+        return All.indexOf(scheme) != -1;
+    }
+    exports_1("isValid", isValid);
     return {
         setters:[],
         execute: function() {
-            (function (Scheme) {
-                Scheme[Scheme["file"] = 0] = "file";
-                Scheme[Scheme["ftp"] = 1] = "ftp";
-                Scheme[Scheme["gopher"] = 2] = "gopher";
-                Scheme[Scheme["http"] = 3] = "http";
-                Scheme[Scheme["https"] = 4] = "https";
-                Scheme[Scheme["ldap"] = 5] = "ldap";
-                Scheme[Scheme["mailto"] = 6] = "mailto";
-                Scheme[Scheme["pipe"] = 7] = "pipe";
-                Scheme[Scheme["tcp"] = 8] = "tcp";
-                Scheme[Scheme["news"] = 9] = "news";
-                Scheme[Scheme["nntp"] = 10] = "nntp";
-                Scheme[Scheme["telnet"] = 11] = "telnet";
-                Scheme[Scheme["uuid"] = 12] = "uuid";
-            })(Scheme || (Scheme = {}));
-            PIPE = 'net.pipe';
-            TCP = 'net.tcp';
-            Scheme[Scheme.pipe] = PIPE;
-            Scheme[Scheme.tcp] = TCP;
-            Scheme[PIPE] = Scheme.pipe;
-            Scheme[TCP] = Scheme.tcp;
-            Object.freeze(Scheme);
-            exports_1("default",Scheme);
+            exports_1("File", File = "file");
+            exports_1("FTP", FTP = "ftp");
+            exports_1("GOPHER", GOPHER = "gopher");
+            exports_1("HTTP", HTTP = "http");
+            exports_1("HTTPS", HTTPS = "https");
+            exports_1("LDAP", LDAP = "ldap");
+            exports_1("MAILTO", MAILTO = "mailto");
+            exports_1("PIPE", PIPE = "net.pipe");
+            exports_1("TCP", TCP = "net.tcp");
+            exports_1("NEWS", NEWS = "news");
+            exports_1("NNTP", NNTP = "nntp");
+            exports_1("TELNET", TELNET = "telnet");
+            exports_1("UUID", UUID = "uuid");
+            exports_1("All", All = Object.freeze([
+                File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID
+            ]));
         }
     }
 });

@@ -3,10 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-import ArgumentException from "./ArgumentException";
-'use strict';
+import { ArgumentException } from "./ArgumentException";
 const NAME = 'ArgumentOutOfRangeException';
-export default class ArgumentOutOfRangeException extends ArgumentException {
+export class ArgumentOutOfRangeException extends ArgumentException {
     constructor(paramName, actualValue, message = ' ', innerException = null) {
         super(paramName, +`(${actualValue}) ` + message, innerException, (_) => {
             _.actualValue = actualValue;
@@ -16,4 +15,5 @@ export default class ArgumentOutOfRangeException extends ArgumentException {
         return NAME;
     }
 }
+export default ArgumentOutOfRangeException;
 //# sourceMappingURL=ArgumentOutOfRangeException.js.map

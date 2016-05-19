@@ -1,4 +1,4 @@
-require.config({
+requirejs.config({
     baseUrl: './',
     urlArgs: 't=' + (new Date()).getTime(),
     paths: {

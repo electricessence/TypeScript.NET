@@ -1,11 +1,11 @@
-/// <reference path="../../../../source/System/Disposable/IDisposable.d.ts" />
-/// <reference path="../../../../source/System/Events/IEventDispatcher.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import DisposableBase from "../Disposable/DisposableBase";
-import EventDispatcherEntry from "./EventDispatcherEntry";
+import { DisposableBase } from "../Disposable/DisposableBase";
+import { IEventListener } from "./IEventListener";
+import { EventDispatcherEntry } from "./EventDispatcherEntry";
+import { IEventDispatcher } from "./IEventDispatcher";
 export interface IEventBase<TTarget> {
     type: string;
     target: TTarget;

@@ -1,5 +1,10 @@
-System.register(['./TimeQuantity'], function(exports_1, context_1) {
-    'use strict';
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+System.register(["./TimeQuantity"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -76,8 +81,9 @@ System.register(['./TimeQuantity'], function(exports_1, context_1) {
                     return a.join(", ").replace(", and, ", " and ");
                 };
                 return ClockTime;
-            }(TimeQuantity_1.default));
-            exports_1("default", ClockTime);
+            }(TimeQuantity_1.TimeQuantity));
+            exports_1("ClockTime", ClockTime);
+            exports_1("default",ClockTime);
         }
     }
 });

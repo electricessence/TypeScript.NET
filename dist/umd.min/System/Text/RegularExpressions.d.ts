@@ -1,9 +1,11 @@
-/// <reference path="../../../../source/System/FunctionTypes.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { IMap } from "../Collections/Dictionaries/IDictionary";
+import { Primitive } from "../Primitive";
+import { Selector } from "../FunctionTypes";
 export declare module RegexOptions {
     const IGNORE_CASE: string;
     const I: string;

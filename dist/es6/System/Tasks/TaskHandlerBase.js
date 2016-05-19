@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import DisposableBase from "../Disposable/DisposableBase";
-class TaskHandlerBase extends DisposableBase {
+import { DisposableBase } from "../Disposable/DisposableBase";
+export class TaskHandlerBase extends DisposableBase {
     constructor() {
         super();
         this._id = null;

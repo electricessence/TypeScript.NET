@@ -3,6 +3,7 @@
 
 import * as AU from "../../../../source/System/Collections/Array/Utility";
 import NotImplementedException from "../../../../source/System/Exceptions/NotImplementedException";
+import {ICollection} from "../../../../source/System/Collections/ICollection";
 var assert = require('../../../../node_modules/assert/assert');
 
 /*

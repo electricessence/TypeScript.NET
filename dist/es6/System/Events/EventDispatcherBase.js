@@ -2,12 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import shallowCopy from "../Utility/shallowCopy";
-import DisposableBase from "../Disposable/DisposableBase";
 import * as AU from "../Collections/Array/Utility";
-import EventDispatcherEntry from "./EventDispatcherEntry";
-import dispose from "../Disposable/dispose";
+import { shallowCopy } from "../Utility/shallowCopy";
+import { DisposableBase } from "../Disposable/DisposableBase";
+import { dispose } from "../Disposable/dispose";
+import { EventDispatcherEntry } from "./EventDispatcherEntry";
 const DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
     var p = this.params;

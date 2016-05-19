@@ -26,8 +26,8 @@ var OBJECT_POOL = "ObjectPool",
     MUST_BE_GT1 = "Must be at valid number least 1.",
     MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
 
-var ObjectPool = function (_DisposableBase_1$def) {
-    _inherits(ObjectPool, _DisposableBase_1$def);
+var ObjectPool = function (_DisposableBase_1$Dis) {
+    _inherits(ObjectPool, _DisposableBase_1$Dis);
 
     function ObjectPool(_maxSize, _generator) {
         _classCallCheck(this, ObjectPool);
@@ -37,20 +37,20 @@ var ObjectPool = function (_DisposableBase_1$def) {
         _this._maxSize = _maxSize;
         _this._generator = _generator;
         _this.autoClearTimeout = 5000;
-        if (isNaN(_maxSize) || _maxSize < 1) throw new ArgumentOutOfRangeException_1.default(_MAX_SIZE, _maxSize, MUST_BE_GT1);
-        if (_maxSize > ABSOLUTE_MAX_SIZE) throw new ArgumentOutOfRangeException_1.default(_MAX_SIZE, _maxSize, MUST_BE_LTM);
+        if (isNaN(_maxSize) || _maxSize < 1) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
+        if (_maxSize > ABSOLUTE_MAX_SIZE) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_LTM);
         _this._localAbsMaxSize = Math.min(_maxSize * 2, ABSOLUTE_MAX_SIZE);
         var _ = _this;
         _._disposableObjectName = OBJECT_POOL;
         _._pool = [];
-        _._trimmer = new TaskHandler_1.default(function () {
+        _._trimmer = new TaskHandler_1.TaskHandler(function () {
             return _._trim();
         });
         var clear = function clear() {
             return _._clear();
         };
-        _._flusher = new TaskHandler_1.default(clear);
-        _._autoFlusher = new TaskHandler_1.default(clear);
+        _._flusher = new TaskHandler_1.TaskHandler(clear);
+        _._autoFlusher = new TaskHandler_1.TaskHandler(clear);
         return _this;
     }
 
@@ -59,7 +59,7 @@ var ObjectPool = function (_DisposableBase_1$def) {
         value: function _trim() {
             var pool = this._pool;
             while (pool.length > this._maxSize) {
-                dispose_1.default.withoutException(pool.pop());
+                dispose_1.dispose.withoutException(pool.pop());
             }
         }
     }, {
@@ -76,7 +76,7 @@ var ObjectPool = function (_DisposableBase_1$def) {
             _._trimmer.cancel();
             _._flusher.cancel();
             _._autoFlusher.cancel();
-            dispose_1.default.these(p, true);
+            dispose_1.dispose.these(p, true);
             p.length = 0;
         }
     }, {
@@ -107,7 +107,7 @@ var ObjectPool = function (_DisposableBase_1$def) {
             _get(Object.getPrototypeOf(ObjectPool.prototype), "_onDispose", this).call(this);
             var _ = this;
             _._generator = null;
-            dispose_1.default(_._trimmer, _._flusher, _._autoFlusher);
+            dispose_1.dispose(_._trimmer, _._flusher, _._autoFlusher);
             _._trimmer = null;
             _._flusher = null;
             _._autoFlusher = null;
@@ -128,7 +128,7 @@ var ObjectPool = function (_DisposableBase_1$def) {
             var _ = this;
             _.throwIfDisposed();
             if (_._pool.length >= _._localAbsMaxSize) {
-                dispose_1.default(o);
+                dispose_1.dispose(o);
             } else {
                 _._pool.push(o);
                 var m = _._maxSize;
@@ -161,8 +161,9 @@ var ObjectPool = function (_DisposableBase_1$def) {
     }]);
 
     return ObjectPool;
-}(DisposableBase_1.default);
+}(DisposableBase_1.DisposableBase);
 
+exports.ObjectPool = ObjectPool;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ObjectPool;
 //# sourceMappingURL=ObjectPool.js.map

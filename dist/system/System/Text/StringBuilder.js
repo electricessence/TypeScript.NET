@@ -3,8 +3,8 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../Types'], function(exports_1, context_1) {
-    'use strict';
+System.register(["../Types"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1;
     var VOID0, StringBuilder;
@@ -31,8 +31,8 @@ System.register(['../Types'], function(exports_1, context_1) {
                         var _ = this;
                         _._latest = null;
                         switch (typeof item) {
-                            case Types_1.default.OBJECT:
-                            case Types_1.default.FUNCTION:
+                            case Types_1.Type.OBJECT:
+                            case Types_1.Type.FUNCTION:
                                 item = item.toString();
                                 break;
                         }
@@ -95,7 +95,8 @@ System.register(['../Types'], function(exports_1, context_1) {
                 };
                 return StringBuilder;
             }());
-            exports_1("default", StringBuilder);
+            exports_1("StringBuilder", StringBuilder);
+            exports_1("default",StringBuilder);
         }
     }
 });

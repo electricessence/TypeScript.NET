@@ -4,8 +4,8 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
-import DisposableBase from "./DisposableBase";
-export default class ObjectPool<T> extends DisposableBase {
+import { DisposableBase } from "./DisposableBase";
+export declare class ObjectPool<T> extends DisposableBase {
     private _maxSize;
     private _generator;
     private _pool;
@@ -28,3 +28,4 @@ export default class ObjectPool<T> extends DisposableBase {
     add(o: T): void;
     take(): T;
 }
+export default ObjectPool;

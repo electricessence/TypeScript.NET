@@ -1,7 +1,7 @@
 ///<reference path="../../import.d.ts"/>
 
 import Uri from "../../../../source/System/Uri/Uri";
-import Scheme from "../../../../source/System/Uri/Scheme";
+import * as Scheme from "../../../../source/System/Uri/Scheme";
 import Functions from "../../../../source/System/Functions";
 var assert = require('../../../../node_modules/assert/assert');
 
@@ -19,7 +19,7 @@ describe('.scheme', ()=>
 	{
 		assert.equal((new Uri(null,'','',null,'',null)).scheme,null);
 		assert.equal((new Uri("http",'','',null,'',null)).scheme,"http");
-		assert.equal((new Uri(Scheme.http,'','',null,'',null)).scheme,"http");
+		assert.equal((new Uri(Scheme.HTTP,'','',null,'',null)).scheme,"http");
 	});
 
 	it('should throw',()=>
@@ -65,7 +65,7 @@ describe('.path', ()=>
 	it('should allow null',()=>
 	{
 		assert.equal((new Uri(null,'','',null,'',null)).path,null);
-		assert.equal((new Uri(Scheme.http,'','',null,'',null)).path,null);
+		assert.equal((new Uri(Scheme.HTTP,'','',null,'',null)).path,null);
 		assert.equal((new Uri('http','','',null,'',null)).path,null);
 	});
 });
@@ -80,7 +80,7 @@ describe('.fragment', ()=>
 	it('should allow null',()=>
 	{
 		assert.equal((new Uri(null,'','',null,'',null)).path,null);
-		assert.equal((new Uri(Scheme.http,'','',null,'',null)).path,null);
+		assert.equal((new Uri(Scheme.HTTP,'','',null,'',null)).path,null);
 		assert.equal((new Uri('http','','',null,'',null)).path,null);
 	});
 });

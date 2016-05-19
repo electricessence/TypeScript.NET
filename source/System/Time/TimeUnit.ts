@@ -5,6 +5,7 @@
  */
 
 import {Hours, Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
+import {ITimeQuantity} from "./ITimeQuantity";
 
 export enum TimeUnit
 {

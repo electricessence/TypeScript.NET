@@ -1,11 +1,10 @@
-/// <reference path="../../../../source/System/Collections/IReadOnlyCollection.d.ts" />
-/// <reference path="../../../../source/System/Collections/Enumeration/IEnumerator.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import CollectionBase from "./CollectionBase";
-declare abstract class ReadOnlyCollectionBase<T> extends CollectionBase<T> {
+import { CollectionBase } from "./CollectionBase";
+import { IEnumerator } from "./Enumeration/IEnumerator";
+export declare abstract class ReadOnlyCollectionBase<T> extends CollectionBase<T> {
     protected _getCount: () => number;
     protected getCount(): number;
     protected getIsReadOnly(): boolean;

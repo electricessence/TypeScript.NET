@@ -1,9 +1,9 @@
-/// <reference path="../../../source/System/Primitive.d.ts" />
-/// <reference path="../../../source/System/Collections/Array/IArray.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { Primitive } from "./Primitive";
+import { IArray } from "./Collections/Array/IArray";
 export declare class TypeInfo {
     private target;
     type: string;

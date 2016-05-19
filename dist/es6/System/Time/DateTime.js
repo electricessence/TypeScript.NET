@@ -3,11 +3,10 @@
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import ClockTime from './ClockTime';
-import TimeSpan from './TimeSpan';
-import TimeStamp from './TimeStamp';
-class DateTime {
+import { TimeSpan } from "./TimeSpan";
+import { ClockTime } from "./ClockTime";
+import { TimeStamp } from "./TimeStamp";
+export class DateTime {
     constructor(value = new Date(), kind = 1) {
         var _ = this;
         _._kind = kind;

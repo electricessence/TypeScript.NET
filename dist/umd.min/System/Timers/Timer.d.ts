@@ -1,10 +1,10 @@
-/// <reference path="../../../../source/System/Tasks/ICancellable.d.ts" />
-/// <reference path="../../../../source/System/Timers/ITimer.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import ObservableBase from "./../Observable/ObservableBase";
+import { ICancellable } from "../Tasks/ICancellable";
+import { ObservableBase } from "../Observable/ObservableBase";
+import { ITimer } from "./ITimer";
 export default class Timer extends ObservableBase<number> implements ITimer, ICancellable {
     private _interval;
     private _maxCount;

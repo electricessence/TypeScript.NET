@@ -1,16 +1,15 @@
-/// <reference path="../../../../source/System/Time/ITimeQuantity.d.ts" />
-/// <reference path="../../../../source/System/Time/ITimeStamp.d.ts" />
-/// <reference path="../../../../source/System/Time/IDateTime.d.ts" />
-/// <reference path="../../../../source/System/Time/Calendars.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116418-7912-9pqhsj/System/Time/HowMany.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import ClockTime from './ClockTime';
-import TimeSpan from './TimeSpan';
-declare class DateTime implements ICalendarDate, IDateTime {
+import { ICalendarDate, ITimeStamp } from "./ITimeStamp";
+import { TimeSpan } from "./TimeSpan";
+import { ClockTime } from "./ClockTime";
+import { IDateTime } from "./IDateTime";
+import { Gregorian } from "./Calendars";
+import { ITimeQuantity } from "./ITimeQuantity";
+export declare class DateTime implements ICalendarDate, IDateTime {
     private _value;
     toJsDate(): Date;
     private _setJsDate(value);
@@ -47,7 +46,7 @@ declare class DateTime implements ICalendarDate, IDateTime {
     static isLeapYear(year: number): boolean;
     static daysInMonth(year: number, month: Gregorian.Month): number;
 }
-declare module DateTime {
+export declare module DateTime {
     const enum Kind {
         Unspecified = 0,
         Local = 1,

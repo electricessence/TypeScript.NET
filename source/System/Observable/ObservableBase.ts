@@ -5,17 +5,15 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
-///<reference path="IObserver.d.ts"/>
-///<reference path="IObservable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
 import {SubscribableBase} from "./SubscribableBase";
+import {IObservable} from "./IObservable";
+import {IObserver} from "./IObserver";
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 
-abstract class ObservableBase<T>
-extends SubscribableBase<IObserver<T>>
-implements IObservable<T>
+export abstract class ObservableBase<T>
+extends SubscribableBase<IObserver<T>> implements IObservable<T>
 {
 
 	protected _onNext(value:T):void

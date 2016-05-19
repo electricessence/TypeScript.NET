@@ -1,10 +1,11 @@
-/// <reference path="../../../../source/System/IEquatable.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import DisposableBase from "../Disposable/DisposableBase";
-export default class EventDispatcherEntry<TParams> extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>> {
+import { DisposableBase } from "../Disposable/DisposableBase";
+import { IEventListener } from "./IEventListener";
+import { IEquatable } from "../IEquatable";
+export declare class EventDispatcherEntry<TParams> extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>> {
     type: string;
     listener: IEventListener;
     params: TParams;
@@ -14,3 +15,4 @@ export default class EventDispatcherEntry<TParams> extends DisposableBase implem
     matches(type: string, listener: IEventListener): boolean;
     equals(other: EventDispatcherEntry<TParams>): boolean;
 }
+export default EventDispatcherEntry;

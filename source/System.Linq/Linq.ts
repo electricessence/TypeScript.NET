@@ -40,6 +40,7 @@ import {IMap} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
 import {IComparer} from "../System/IComparer";
 import {IKeyValuePair} from "../System/KeyValuePair";
+import {Order} from "../System/Collections/Sorting/Order";
 
 // #region Local Constants.
 
@@ -2157,7 +2158,7 @@ extends InfiniteEnumerable<T>
 				return new EnumeratorBase<number>(() => { value = start; },
 					start<to
 						?
-						(yielder:IYield<number>)=>
+						yielder=>
 						{
 							var result:boolean = value<=to && yielder.yieldReturn(value);
 
@@ -2167,7 +2168,7 @@ extends InfiniteEnumerable<T>
 							return result;
 						}
 						:
-						(yielder:IYield<number>)=>
+						yielder=>
 						{
 							var result:boolean = value>=to && yielder.yieldReturn(value);
 

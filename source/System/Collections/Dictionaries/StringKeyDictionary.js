@@ -12,11 +12,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare"], factory);
+        define(["require", "exports", "../../Compare", "./DictionaryBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Compare_1 = require("../../Compare");
+    var DictionaryBase_1 = require("./DictionaryBase");
     var VOID0 = void 0;
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
@@ -111,7 +112,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this._count;
         };
         return StringKeyDictionary;
-    }(DictionaryBase));
+    }(DictionaryBase_1.DictionaryBase));
+    exports.StringKeyDictionary = StringKeyDictionary;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = StringKeyDictionary;
 });

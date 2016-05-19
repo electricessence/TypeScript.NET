@@ -17,6 +17,7 @@ System.register([], function(exports_1, context_1) {
                 UriHostNameType[UriHostNameType["IPv6"] = 3] = "IPv6";
                 UriHostNameType[UriHostNameType["Unknown"] = 4] = "Unknown";
             })(UriHostNameType || (UriHostNameType = {}));
+            exports_1("UriHostNameType", UriHostNameType);
             Object.freeze(UriHostNameType);
             exports_1("default",UriHostNameType);
         }

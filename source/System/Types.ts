@@ -3,20 +3,19 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="Primitive.d.ts"/>
-///<reference path="Collections/Array/IArray.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
+import {Primitive} from "./Primitive";
+import {IArray} from "./Collections/Array/IArray"; // For compatibility with (let, const, function, class);
 
 const
-	VOID0:any = void(0),
-	_BOOLEAN:string = typeof true,
-	_NUMBER:string  = typeof 0,
-	_STRING:string  = typeof "",
-	_OBJECT:string  = typeof {},
+	VOID0:any         = void(0),
+	_BOOLEAN:string   = typeof true,
+	_NUMBER:string    = typeof 0,
+	_STRING:string    = typeof "",
+	_OBJECT:string    = typeof {},
 	_UNDEFINED:string = typeof VOID0,
-	_FUNCTION:string = typeof function() {},
-	LENGTH:string = "length";
+	_FUNCTION:string  = typeof function() {},
+	LENGTH:string     = "length";
 
 // Only used for primitives.
 var typeInfoRegistry:{[key:string]:TypeInfo} = {};
@@ -114,7 +113,7 @@ export class TypeInfo
 	{
 		var t = this.target;
 		return TypeInfo.getFor(
-			t && (name)in(t)
+			t && (name) in (t)
 				? t[name]
 				: undefined);
 	}
@@ -262,7 +261,7 @@ export module Type
 	 */
 	export function isObject(value:any, allowNull:boolean = false):boolean
 	{
-		return typeof value===_OBJECT && (allowNull || value!==null) ;
+		return typeof value===_OBJECT && (allowNull || value!==null);
 	}
 
 	/**
@@ -282,7 +281,7 @@ export module Type
 
 	export function hasMember(value:any, property:string):boolean
 	{
-		return value && !isPrimitive(value) && (property)in(value);
+		return value && !isPrimitive(value) && (property) in (value);
 	}
 
 	export function hasMemberOfType<T>(instance:any, property:string, type:string):instance is T

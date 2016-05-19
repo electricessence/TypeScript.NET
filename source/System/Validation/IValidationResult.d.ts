@@ -3,8 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-interface IValidationResult {
+export interface IValidationResult {
 	isValid:boolean;
 	message:string;
 	data:any;
 }
+
+export default IValidationResult;

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -17,11 +17,11 @@ var VOID0 = void 0,
     STRING_EMPTY = "",
     ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' + 'Would result in an infinite loop that could hang the current process.';
 function throwIfEndless(isEndless) {
-    if (isEndless) throw new UnsupportedEnumerableException_1.default(ENDLESS_EXCEPTION_MESSAGE);
+    if (isEndless) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
 }
 exports.throwIfEndless = throwIfEndless;
 function initArrayFrom(source) {
-    if (Array.isArray(source) || Types_1.default.isString(source)) {
+    if (Array.isArray(source) || Types_1.Type.isString(source)) {
         var len = source.length;
         if (isFinite(len)) {
             if (len > 65535) return new Array(len);
@@ -82,9 +82,9 @@ Object.freeze(Empty);
 exports.empty = Empty;
 function from(source) {
     if (!source) return Empty;
-    if (Array.isArray(source)) return new ArrayEnumerator_1.default(source);
-    if (Types_1.default.isArrayLike(source)) {
-        return new IndexEnumerator_1.default(function () {
+    if (Array.isArray(source)) return new ArrayEnumerator_1.ArrayEnumerator(source);
+    if (Types_1.Type.isArrayLike(source)) {
+        return new IndexEnumerator_1.IndexEnumerator(function () {
             return {
                 source: source,
                 length: source.length,
@@ -93,27 +93,27 @@ function from(source) {
             };
         });
     }
-    if (!Types_1.default.isPrimitive(source)) {
+    if (!Types_1.Type.isPrimitive(source)) {
         if (isEnumerable(source)) return source.getEnumerator();
     }
     throw new Error("Unknown enumerable.");
 }
 exports.from = from;
 function isEnumerable(instance) {
-    return Types_1.default.hasMemberOfType(instance, "getEnumerator", Types_1.default.FUNCTION);
+    return Types_1.Type.hasMemberOfType(instance, "getEnumerator", Types_1.Type.FUNCTION);
 }
 exports.isEnumerable = isEnumerable;
 function isEnumerableOrArrayLike(instance) {
-    return Types_1.default.isArrayLike(instance) || isEnumerable(instance);
+    return Types_1.Type.isArrayLike(instance) || isEnumerable(instance);
 }
 exports.isEnumerableOrArrayLike = isEnumerableOrArrayLike;
 function isEnumerator(instance) {
-    return Types_1.default.hasMemberOfType(instance, "moveNext", Types_1.default.FUNCTION);
+    return Types_1.Type.hasMemberOfType(instance, "moveNext", Types_1.Type.FUNCTION);
 }
 exports.isEnumerator = isEnumerator;
 function forEach(e, action) {
     if (e !== VOID0 && e !== null) {
-        if (Types_1.default.isArrayLike(e)) {
+        if (Types_1.Type.isArrayLike(e)) {
             throwIfEndless(!isFinite(e.length));
             for (var i = 0; i < e.length; i++) {
                 if (action(e[i], i) === false) break;
@@ -145,7 +145,7 @@ function toArray(source) {
     var result = initArrayFrom(source);
     if (!forEach(source, function (e, i) {
         result[i] = e;
-    })) throw new UnsupportedEnumerableException_1.default();
+    })) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
     return result;
 }
 exports.toArray = toArray;
@@ -153,7 +153,7 @@ function map(source, selector) {
     var result = initArrayFrom(source);
     if (!forEach(source, function (e, i) {
         result[i] = selector(e);
-    })) throw new UnsupportedEnumerableException_1.default();
+    })) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
     return result;
 }
 exports.map = map;

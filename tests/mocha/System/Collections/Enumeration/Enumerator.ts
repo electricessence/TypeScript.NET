@@ -3,6 +3,7 @@
 import {TypeInfo} from "../../../../../source/System/Types";
 import Queue from "../../../../../source/System/Collections/Queue";
 import * as Enumerator from "../../../../../source/System/Collections/Enumeration/Enumerator";
+import {IArray} from "../../../../../source/System/Collections/Array/IArray";
 var assert = require('../../../../../node_modules/assert/assert');
 
 const VOID0:any = void(0);

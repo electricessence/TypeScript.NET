@@ -1,10 +1,13 @@
-/// <reference path="../../../../../source/System/Collections/Dictionaries/IDictionary.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import CollectionBase from "../CollectionBase";
-declare abstract class DictionaryBase<TKey, TValue> extends CollectionBase<IKeyValuePair<TKey, TValue>> implements IDictionary<TKey, TValue> {
+import { CollectionBase } from "../CollectionBase";
+import { IKeyValuePair, KeyValuePair } from "../../KeyValuePair";
+import { IDictionary } from "./IDictionary";
+import { IEnumerator } from "../Enumeration/IEnumerator";
+import { IEnumerableOrArray } from "../IEnumerableOrArray";
+export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBase<IKeyValuePair<TKey, TValue>> implements IDictionary<TKey, TValue> {
     constructor(source?: IEnumerableOrArray<IKeyValuePair<TKey, TValue>>);
     protected _onValueModified(key: TKey, value: TValue, old: TValue): void;
     protected _addInternal(item: KeyValuePair<TKey, TValue>): boolean;

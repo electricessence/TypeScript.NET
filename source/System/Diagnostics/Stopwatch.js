@@ -10,7 +10,7 @@
         define(["require", "exports", "../Time/TimeSpan"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var TimeSpan_1 = require("../Time/TimeSpan");
     function getTimestampMilliseconds() {
         return (new Date()).getTime();

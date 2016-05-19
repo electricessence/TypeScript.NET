@@ -14,10 +14,11 @@ System.register([], function(exports_1, context_1) {
         }
         return target;
     }
-    exports_1("default", shallowCopy);
+    exports_1("shallowCopy", shallowCopy);
     return {
         setters:[],
         execute: function() {
+            exports_1("default",shallowCopy);
         }
     }
 });

@@ -21,8 +21,8 @@ var Types_1 = require("../Types");
 var ArrayEnumerator_1 = require("./Enumeration/ArrayEnumerator");
 var CollectionBase_1 = require("./CollectionBase");
 
-var List = function (_CollectionBase_1$def) {
-    _inherits(List, _CollectionBase_1$def);
+var List = function (_CollectionBase_1$Col) {
+    _inherits(List, _CollectionBase_1$Col);
 
     function List(source) {
         var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Compare_1.areEqual : arguments[1];
@@ -69,7 +69,7 @@ var List = function (_CollectionBase_1$def) {
     }, {
         key: "_importEntries",
         value: function _importEntries(entries) {
-            if (Types_1.default.isArrayLike(entries)) {
+            if (Types_1.Type.isArrayLike(entries)) {
                 var len = entries.length;
                 if (!len) return 0;
                 var s = this._source;
@@ -135,7 +135,7 @@ var List = function (_CollectionBase_1$def) {
     }, {
         key: "getEnumerator",
         value: function getEnumerator() {
-            return new ArrayEnumerator_1.default(this._source);
+            return new ArrayEnumerator_1.ArrayEnumerator(this._source);
         }
     }, {
         key: "forEach",
@@ -146,8 +146,9 @@ var List = function (_CollectionBase_1$def) {
     }]);
 
     return List;
-}(CollectionBase_1.default);
+}(CollectionBase_1.CollectionBase);
 
+exports.List = List;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = List;
 //# sourceMappingURL=List.js.map

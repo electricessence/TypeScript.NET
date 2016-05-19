@@ -2,24 +2,24 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Types", "../Serialization/Utility", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], function(exports_1, context_1) {
-    'use strict';
+System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, Serialization, KeyValueExtract_1, Enumerator_1;
-    var ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, Separator;
+    var Serialization, Types_1, KeyValueExtract_1, Enumerator_1;
+    var EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
     function encode(values, prefixIfNotEmpty) {
         if (!values)
-            return '';
+            return EMPTY;
         var entries = [];
         if (Enumerator_1.isEnumerableOrArrayLike(values)) {
             Enumerator_1.forEach(values, function (entry) {
-                return KeyValueExtract_1.default(entry, function (key, value) { return appendKeyValue(entries, key, value); });
+                return KeyValueExtract_1.extractKeyValue(entry, function (key, value) { return appendKeyValue(entries, key, value); });
             });
         }
         else {
             Object.keys(values).forEach(function (key) { return appendKeyValue(entries, key, values[key]); });
         }
-        return (entries.length && prefixIfNotEmpty ? '?' : '')
+        return (entries.length && prefixIfNotEmpty ? QUERY_SEPARATOR : EMPTY)
             + entries.join(ENTRY_SEPARATOR);
     }
     exports_1("encode", encode);
@@ -38,7 +38,7 @@ System.register(["../Types", "../Serialization/Utility", "../KeyValueExtract", "
         var v = null;
         if (isUriComponentFormattable(value)) {
             v = value.toUriComponent();
-            if (v && v.indexOf('&') != 1)
+            if (v && v.indexOf(ENTRY_SEPARATOR) != 1)
                 throw '.toUriComponent() did not encode the value.';
         }
         else {
@@ -48,7 +48,7 @@ System.register(["../Types", "../Serialization/Utility", "../KeyValueExtract", "
     }
     exports_1("encodeValue", encodeValue);
     function isUriComponentFormattable(instance) {
-        return Types_1.default.hasMemberOfType(instance, "toUriComponent", Types_1.default.FUNCTION);
+        return Types_1.Type.hasMemberOfType(instance, TO_URI_COMPONENT, Types_1.Type.FUNCTION);
     }
     exports_1("isUriComponentFormattable", isUriComponentFormattable);
     function parse(query, entryHandler, deserialize, decodeValues) {
@@ -99,11 +99,11 @@ System.register(["../Types", "../Serialization/Utility", "../KeyValueExtract", "
     exports_1("parseToArray", parseToArray);
     return {
         setters:[
-            function (Types_1_1) {
-                Types_1 = Types_1_1;
-            },
             function (Serialization_1) {
                 Serialization = Serialization_1;
+            },
+            function (Types_1_1) {
+                Types_1 = Types_1_1;
             },
             function (KeyValueExtract_1_1) {
                 KeyValueExtract_1 = KeyValueExtract_1_1;
@@ -112,8 +112,9 @@ System.register(["../Types", "../Serialization/Utility", "../KeyValueExtract", "
                 Enumerator_1 = Enumerator_1_1;
             }],
         execute: function() {
-            ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=";
+            EMPTY = "", QUERY_SEPARATOR = "?", ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=", TO_URI_COMPONENT = "toUriComponent";
             (function (Separator) {
+                Separator.Query = QUERY_SEPARATOR;
                 Separator.Entry = ENTRY_SEPARATOR;
                 Separator.KeyValue = KEY_VALUE_SEPARATOR;
             })(Separator = Separator || (Separator = {}));

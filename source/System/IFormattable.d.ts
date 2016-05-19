@@ -5,8 +5,8 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IFormattable.cs
  */
 
-///<reference path="IFormatProvider.d.ts"/>
 
+import {IFormatProvider} from "./IFormatProvider";
 export interface IFormattable
 {
 	toString(format?:string, formatProvider?:IFormatProvider): string;

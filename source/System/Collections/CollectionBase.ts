@@ -12,6 +12,8 @@ import {ICollection} from "./ICollection";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
+import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import {IArray} from "./Array/IArray";
 
 //noinspection SpellCheckingInspection
 const NAME = "CollectionBase",

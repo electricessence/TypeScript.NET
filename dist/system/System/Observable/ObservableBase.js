@@ -5,7 +5,7 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 System.register(["./SubscribableBase"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -58,7 +58,8 @@ System.register(["./SubscribableBase"], function(exports_1, context_1) {
                     processAction(this._unsubscribeAll(true), function (s) { s.onCompleted && s.onCompleted(); });
                 };
                 return ObservableBase;
-            }(SubscribableBase_1.default));
+            }(SubscribableBase_1.SubscribableBase));
+            exports_1("ObservableBase", ObservableBase);
             OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
             exports_1("default",ObservableBase);
         }

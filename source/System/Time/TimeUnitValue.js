@@ -15,7 +15,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "./TimeUnit", "./TimeQuantity"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var TimeUnit_1 = require("./TimeUnit");
     var TimeQuantity_1 = require("./TimeQuantity");
     var TimeUnitValue = (function (_super) {

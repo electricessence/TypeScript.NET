@@ -2,11 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import { areEqual } from "../../Compare";
-import DictionaryBase from "./DictionaryBase";
+import { DictionaryBase } from "./DictionaryBase";
 const VOID0 = void 0;
-export default class StringKeyDictionary extends DictionaryBase {
+export class StringKeyDictionary extends DictionaryBase {
     constructor(...args) {
         super(...args);
         this._count = 0;
@@ -98,4 +97,5 @@ export default class StringKeyDictionary extends DictionaryBase {
         return this._count;
     }
 }
+export default StringKeyDictionary;
 //# sourceMappingURL=StringKeyDictionary.js.map

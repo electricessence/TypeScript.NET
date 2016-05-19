@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./../Observable/ObservableBase"], function(exports_1, context_1) {
+System.register(["../Observable/ObservableBase"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -107,7 +107,7 @@ System.register(["./../Observable/ObservableBase"], function(exports_1, context_
                     }
                 };
                 return Timer;
-            }(ObservableBase_1.default));
+            }(ObservableBase_1.ObservableBase));
             exports_1("default", Timer);
         }
     }

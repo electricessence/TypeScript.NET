@@ -1,9 +1,8 @@
-/// <reference path="../../../../../source/System/Collections/Array/IArray.d.ts" />
-/// <reference path="../../../../../source/System/FunctionTypes.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { IArray } from "./IArray";
 export interface DispatchErrorHandler {
     (ex?: any, i?: number): void;
 }

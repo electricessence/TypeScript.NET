@@ -4,7 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 System.register(["./SystemException", "../Text/Utility"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -39,8 +39,9 @@ System.register(["./SystemException", "../Text/Utility"], function(exports_1, co
                     return NAME;
                 };
                 return ArgumentException;
-            }(SystemException_1.default));
-            exports_1("default", ArgumentException);
+            }(SystemException_1.SystemException));
+            exports_1("ArgumentException", ArgumentException);
+            exports_1("default",ArgumentException);
         }
     }
 });

@@ -4,8 +4,10 @@
  */
 
 
-interface IYield<T> {
+export interface IYield<T> {
 	current: T;
 	yieldReturn(value:T): boolean;
 	yieldBreak(): boolean;
 }
+
+export default IYield;

@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from '../../Types';
-import { compare } from '../../Compare';
+import { Type } from "../../Types";
+import { compare } from "../../Compare";
 function ensureArray(value) {
     return Array.isArray(value)
         ? value

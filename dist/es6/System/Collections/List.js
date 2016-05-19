@@ -5,10 +5,10 @@
 import { areEqual } from "../Compare";
 import { remove, indexOf, contains, copyTo, removeIndex } from "./Array/Utility";
 import { forEach } from "./Enumeration/Enumerator";
-import Type from "../Types";
-import ArrayEnumerator from "./Enumeration/ArrayEnumerator";
-import CollectionBase from "./CollectionBase";
-export default class List extends CollectionBase {
+import { Type } from "../Types";
+import { ArrayEnumerator } from "./Enumeration/ArrayEnumerator";
+import { CollectionBase } from "./CollectionBase";
+export class List extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);
         var _ = this;
@@ -97,4 +97,5 @@ export default class List extends CollectionBase {
         forEach(useCopy ? s.slice() : s, action);
     }
 }
+export default List;
 //# sourceMappingURL=List.js.map

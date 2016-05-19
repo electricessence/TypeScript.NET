@@ -64,7 +64,7 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                     return len;
                 };
                 List.prototype._importEntries = function (entries) {
-                    if (Types_1.default.isArrayLike(entries)) {
+                    if (Types_1.Type.isArrayLike(entries)) {
                         var len = entries.length;
                         if (!len)
                             return 0;
@@ -118,15 +118,16 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                     return Utility_1.copyTo(this._source, target, 0, index);
                 };
                 List.prototype.getEnumerator = function () {
-                    return new ArrayEnumerator_1.default(this._source);
+                    return new ArrayEnumerator_1.ArrayEnumerator(this._source);
                 };
                 List.prototype.forEach = function (action, useCopy) {
                     var s = this._source;
                     Enumerator_1.forEach(useCopy ? s.slice() : s, action);
                 };
                 return List;
-            }(CollectionBase_1.default));
-            exports_1("default", List);
+            }(CollectionBase_1.CollectionBase));
+            exports_1("List", List);
+            exports_1("default",List);
         }
     }
 });

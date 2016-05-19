@@ -77,6 +77,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return OrderedStringKeyDictionary;
     }(StringKeyDictionary_1.StringKeyDictionary));
+    exports.OrderedStringKeyDictionary = OrderedStringKeyDictionary;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = OrderedStringKeyDictionary;
 });

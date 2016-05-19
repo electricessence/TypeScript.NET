@@ -41,8 +41,8 @@ var BREAK = function BREAK(element) {
     return 0;
 };
 
-var LinqFunctions = function (_Functions_1$default) {
-    _inherits(LinqFunctions, _Functions_1$default);
+var LinqFunctions = function (_Functions_1$Function) {
+    _inherits(LinqFunctions, _Functions_1$Function);
 
     function LinqFunctions() {
         _classCallCheck(this, LinqFunctions);
@@ -63,7 +63,7 @@ var LinqFunctions = function (_Functions_1$default) {
     }]);
 
     return LinqFunctions;
-}(Functions_1.default);
+}(Functions_1.Functions);
 
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
@@ -71,8 +71,8 @@ function getEmptyEnumerator() {
     return Enumerator_1.empty;
 }
 
-var InfiniteEnumerable = function (_DisposableBase_1$def) {
-    _inherits(InfiniteEnumerable, _DisposableBase_1$def);
+var InfiniteEnumerable = function (_DisposableBase_1$Dis) {
+    _inherits(InfiniteEnumerable, _DisposableBase_1$Dis);
 
     function InfiniteEnumerable(_enumeratorFactory, finalizer) {
         _classCallCheck(this, InfiniteEnumerable);
@@ -115,7 +115,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     if (initializer) initializer();
                     index = 0;
@@ -147,7 +147,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             var _ = this;
             _.throwIfDisposed();
             if (!isFinite(count)) return Enumerable.empty();
-            Integer_1.default.assert(count, "count");
+            Integer_1.Integer.assert(count, "count");
             return this.doAction(function (element, index) {
                 return index < count ? 2 : 1;
             });
@@ -158,8 +158,8 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             if (!(count > 0)) return Enumerable.empty();
             var _ = this;
             _.throwIfDisposed();
-            if (!isFinite(count)) throw new ArgumentOutOfRangeException_1.default('count', count, 'Must be finite.');
-            Integer_1.default.assert(count, "count");
+            if (!isFinite(count)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, 'Must be finite.');
+            Integer_1.Integer.assert(count, "count");
             return _.doAction(function (element, index) {
                 return index < count;
             }, null, false);
@@ -168,7 +168,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
         key: "elementAt",
         value: function elementAt(index) {
             var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
-            if (v === INVALID_DEFAULT) throw new ArgumentOutOfRangeException_1.default('index', index, "is greater than or equal to the number of elements in source");
+            if (v === INVALID_DEFAULT) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, "is greater than or equal to the number of elements in source");
             return v;
         }
     }, {
@@ -178,7 +178,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
 
             var _ = this;
             _.throwIfDisposed();
-            Integer_1.default.assertZeroOrGreater(index, 'index');
+            Integer_1.Integer.assertZeroOrGreater(index, 'index');
             var n = index;
             return dispose_1.using(this.getEnumerator(), function (e) {
                 var i = 0;
@@ -261,7 +261,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var enumerator;
                 var nestLevel = 0;
                 var buffer, len;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     nestLevel = 0;
                     buffer = [];
                     len = 0;
@@ -301,7 +301,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var enumeratorStack = [];
                 var enumerator;
                 var len;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     len = 0;
                 }, function (yielder) {
@@ -335,7 +335,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var middleEnumerator = null;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     while (true) {
@@ -349,7 +349,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                         }
                         if (enumerator.moveNext()) {
                             var c = enumerator.current;
-                            var e = !Types_1.default.isString(c) && Enumerable.fromAny(c);
+                            var e = !Types_1.Type.isString(c) && Enumerable.fromAny(c);
                             if (e) {
                                 middleEnumerator = e.selectMany(Functions.Identity).flatten().getEnumerator();
                                 continue;
@@ -370,7 +370,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             var _ = this;
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     enumerator.moveNext();
                 }, function (yielder) {
@@ -390,7 +390,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var enumerator;
                 var value;
                 var isFirst;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     isFirst = true;
                 }, function (yielder) {
@@ -412,7 +412,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     index = 0;
                     enumerator = _.getEnumerator();
@@ -438,7 +438,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var enumerator;
                 var middleEnumerator;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     middleEnumerator = undefined;
                     index = 0;
@@ -475,7 +475,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     index = 0;
                     enumerator = _.getEnumerator();
@@ -508,7 +508,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     index = 0;
                     enumerator = _.getEnumerator();
@@ -531,16 +531,16 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             var typeName;
             switch (type) {
                 case Number:
-                    typeName = Types_1.default.NUMBER;
+                    typeName = Types_1.Type.NUMBER;
                     break;
                 case String:
-                    typeName = Types_1.default.STRING;
+                    typeName = Types_1.Type.STRING;
                     break;
                 case Boolean:
-                    typeName = Types_1.default.BOOLEAN;
+                    typeName = Types_1.Type.BOOLEAN;
                     break;
                 case Function:
-                    typeName = Types_1.default.FUNCTION;
+                    typeName = Types_1.Type.FUNCTION;
                     break;
                 default:
                     return this.where(function (x) {
@@ -559,10 +559,10 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var keys;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
-                    keys = new Dictionary_1.default(compareSelector);
+                    keys = new Dictionary_1.Dictionary(compareSelector);
                     if (second) Enumerator_1.forEach(second, function (key) {
                         return keys.addByKeyValue(key, true);
                     });
@@ -600,7 +600,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var enumerator;
                 var compareKey;
                 var initial = true;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
@@ -633,7 +633,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var isFirst;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     isFirst = true;
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
@@ -661,7 +661,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var firstEnumerator;
                 var secondEnumerator;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = Enumerator_1.from(second);
@@ -683,8 +683,8 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var firstEnumerator;
                 var secondEnumerator;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
-                    secondTemp = new Queue_1.default(second);
+                return new EnumeratorBase_1.EnumeratorBase(function () {
+                    secondTemp = new Queue_1.Queue(second);
                     index = 0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = null;
@@ -719,7 +719,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var lookup;
                 var innerElements = null;
                 var innerCount = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     outerEnumerator = _.getEnumerator();
                     lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
                 }, function (yielder) {
@@ -751,7 +751,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var lookup = null;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
                 }, function (yielder) {
@@ -770,9 +770,9 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             return new Enumerable(function () {
                 var enumerator;
                 var queue;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
-                    queue = new Queue_1.default(enumerables);
+                    queue = new Queue_1.Queue(enumerables);
                 }, function (yielder) {
                     while (true) {
                         while (!enumerator && queue.count) {
@@ -811,9 +811,9 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var firstEnumerator;
                 var secondEnumerator;
                 var keys;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     firstEnumerator = _.getEnumerator();
-                    keys = new Dictionary_1.default(compareSelector);
+                    keys = new Dictionary_1.Dictionary(compareSelector);
                 }, function (yielder) {
                     var current;
                     if (secondEnumerator === VOID0) {
@@ -842,7 +842,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
     }, {
         key: "insertAt",
         value: function insertAt(index, other) {
-            Integer_1.default.assertZeroOrGreater(index, 'index');
+            Integer_1.Integer.assertZeroOrGreater(index, 'index');
             var n = index;
             var _ = this,
                 isEndless = _._isEndless || null;
@@ -852,7 +852,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 var secondEnumerator;
                 var count = 0;
                 var isEnumerated = false;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     count = 0;
                     firstEnumerator = _.getEnumerator();
                     secondEnumerator = Enumerator_1.from(other);
@@ -878,8 +878,8 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
             var _ = this;
             return new Enumerable(function () {
                 var buffer, mode, enumerator, alternateEnumerator;
-                return new EnumeratorBase_1.default(function () {
-                    alternateEnumerator = new ArrayEnumerator_1.default(Enumerable.toArray(sequence));
+                return new EnumeratorBase_1.EnumeratorBase(function () {
+                    alternateEnumerator = new ArrayEnumerator_1.ArrayEnumerator(Enumerable.toArray(sequence));
                     enumerator = _.getEnumerator();
                     var hasAtLeastOne = enumerator.moveNext();
                     mode = hasAtLeastOne ? 1 : 0;
@@ -925,7 +925,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     try {
                         throwIfDisposed(disposed);
                         enumerator = _.getEnumerator();
@@ -950,7 +950,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
                 disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
@@ -969,12 +969,12 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
         key: "buffer",
         value: function buffer(size) {
             if (size < 1 || !isFinite(size)) throw new Error("Invalid buffer size.");
-            Integer_1.default.assert(size, "size");
+            Integer_1.Integer.assert(size, "size");
             var _ = this,
                 len;
             return new Enumerable(function () {
                 var enumerator;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                 }, function (yielder) {
                     var array = ArrayUtility.initialize(size);
@@ -1009,7 +1009,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$def) {
     }]);
 
     return InfiniteEnumerable;
-}(DisposableBase_1.default);
+}(DisposableBase_1.DisposableBase);
 
 exports.InfiniteEnumerable = InfiniteEnumerable;
 
@@ -1051,7 +1051,7 @@ var Enumerable = function (_InfiniteEnumerable) {
         key: "takeWhile",
         value: function takeWhile(predicate) {
             this.throwIfDisposed();
-            if (!predicate) throw new ArgumentNullException_1.default('predicate');
+            if (!predicate) throw new ArgumentNullException_1.ArgumentNullException('predicate');
             return this.doAction(function (element, index) {
                 return predicate(element, index) ? 1 : 0;
             }, null, null);
@@ -1060,7 +1060,7 @@ var Enumerable = function (_InfiniteEnumerable) {
         key: "takeUntil",
         value: function takeUntil(predicate, includeUntilValue) {
             this.throwIfDisposed();
-            if (!predicate) throw new ArgumentNullException_1.default('predicate');
+            if (!predicate) throw new ArgumentNullException_1.ArgumentNullException('predicate');
             if (!includeUntilValue) return this.doAction(function (element, index) {
                 return predicate(element, index) ? 0 : 1;
             }, null, null);
@@ -1098,8 +1098,8 @@ var Enumerable = function (_InfiniteEnumerable) {
             var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
             this.throwIfDisposed();
-            if (!target) throw new ArgumentNullException_1.default("target");
-            Integer_1.default.assertZeroOrGreater(index);
+            if (!target) throw new ArgumentNullException_1.ArgumentNullException("target");
+            Integer_1.Integer.assertZeroOrGreater(index);
             Enumerator_1.forEach(this, function (x, i) {
                 target[i + index] = x;
             });
@@ -1111,7 +1111,7 @@ var Enumerable = function (_InfiniteEnumerable) {
             var elementSelector = arguments.length <= 1 || arguments[1] === undefined ? Functions.Identity : arguments[1];
             var compareSelector = arguments.length <= 2 || arguments[2] === undefined ? Functions.Identity : arguments[2];
 
-            var dict = new Dictionary_1.default(compareSelector);
+            var dict = new Dictionary_1.Dictionary(compareSelector);
             this.forEach(function (x) {
                 var key = keySelector(x);
                 var element = elementSelector(x);
@@ -1134,7 +1134,7 @@ var Enumerable = function (_InfiniteEnumerable) {
         value: function toDictionary(keySelector, elementSelector) {
             var compareSelector = arguments.length <= 2 || arguments[2] === undefined ? Functions.Identity : arguments[2];
 
-            var dict = new Dictionary_1.default(compareSelector);
+            var dict = new Dictionary_1.Dictionary(compareSelector);
             this.forEach(function (x, i) {
                 return dict.addByKeyValue(keySelector(x, i), elementSelector(x, i));
             });
@@ -1156,14 +1156,14 @@ var Enumerable = function (_InfiniteEnumerable) {
             var _ = this;
             if (!(count > 0)) return _;
             if (!isFinite(count)) return Enumerable.empty();
-            Integer_1.default.assert(count, "count");
+            Integer_1.Integer.assert(count, "count");
             var c = count;
             return new Enumerable(function () {
                 var enumerator;
                 var q;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
-                    q = new Queue_1.default();
+                    q = new Queue_1.Queue();
                 }, function (yielder) {
                     while (enumerator.moveNext()) {
                         q.enqueue(enumerator.current);
@@ -1181,7 +1181,7 @@ var Enumerable = function (_InfiniteEnumerable) {
             if (!(count > 0)) return Enumerable.empty();
             var _ = this;
             if (!isFinite(count)) return _;
-            Integer_1.default.assert(count, "count");
+            Integer_1.Integer.assert(count, "count");
             return _.reverse().take(count).reverse();
         }
     }, {
@@ -1215,7 +1215,7 @@ var Enumerable = function (_InfiniteEnumerable) {
             return new Enumerable(function () {
                 var buffer;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     buffer = _.toArray();
                     index = buffer.length;
@@ -1238,13 +1238,13 @@ var Enumerable = function (_InfiniteEnumerable) {
                 var buffer;
                 var capacity;
                 var len;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     buffer = _.toArray();
                     capacity = len = buffer.length;
                 }, function (yielder) {
                     if (!len) return yielder.yieldBreak();
-                    var selectedIndex = Integer_1.default.random(len);
+                    var selectedIndex = Integer_1.Integer.random(len);
                     var selectedValue = buffer[selectedIndex];
                     buffer[selectedIndex] = buffer[--len];
                     buffer[len] = null;
@@ -1271,7 +1271,7 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "all",
         value: function all(predicate) {
-            if (!predicate) throw new ArgumentNullException_1.default("predicate");
+            if (!predicate) throw new ArgumentNullException_1.ArgumentNullException("predicate");
             var result = true;
             this.forEach(function (x, i) {
                 if (!predicate(x, i)) {
@@ -1361,10 +1361,10 @@ var Enumerable = function (_InfiniteEnumerable) {
                 var enumerator;
                 var keys;
                 var outs;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
-                    keys = new Dictionary_1.default(compareSelector);
-                    outs = new Dictionary_1.default(compareSelector);
+                    keys = new Dictionary_1.Dictionary(compareSelector);
+                    outs = new Dictionary_1.Dictionary(compareSelector);
                     Enumerator_1.forEach(second, function (key) {
                         keys.addByKeyValue(key, true);
                     });
@@ -1474,7 +1474,7 @@ var Enumerable = function (_InfiniteEnumerable) {
                 var compareKey;
                 var group;
                 var len;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     if (enumerator.moveNext()) {
                         key = keySelector(enumerator.current);
@@ -1514,7 +1514,7 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "average",
         value: function average() {
-            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.default.numberOrNaN : arguments[0];
+            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.Type.numberOrNaN : arguments[0];
 
             var count = 0;
             var sum = this.sum(function (e, i) {
@@ -1554,7 +1554,7 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "sum",
         value: function sum() {
-            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.default.numberOrNaN : arguments[0];
+            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.Type.numberOrNaN : arguments[0];
 
             var sum = 0;
             var sumInfinite = 0;
@@ -1571,7 +1571,7 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "product",
         value: function product() {
-            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.default.numberOrNaN : arguments[0];
+            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.Type.numberOrNaN : arguments[0];
 
             var result = 1,
                 exists = false;
@@ -1593,7 +1593,7 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "quotient",
         value: function quotient() {
-            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.default.numberOrNaN : arguments[0];
+            var selector = arguments.length <= 0 || arguments[0] === undefined ? Types_1.Type.numberOrNaN : arguments[0];
 
             var count = 0;
             var result = NaN;
@@ -1666,7 +1666,7 @@ var Enumerable = function (_InfiniteEnumerable) {
             var enumerator;
             return new Enumerable(function () {
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     throwIfDisposed(disposed);
                     if (!enumerator) enumerator = _.getEnumerator();
                     if (!cache) cache = [];
@@ -1691,7 +1691,7 @@ var Enumerable = function (_InfiniteEnumerable) {
         key: "from",
         value: function from(source) {
             var e = Enumerable.fromAny(source);
-            if (!e) throw new UnsupportedEnumerableException_1.default();
+            if (!e) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
             return e;
         }
     }, {
@@ -1699,9 +1699,9 @@ var Enumerable = function (_InfiniteEnumerable) {
         value: function fromAny(source) {
             var defaultEnumerable = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-            if (Types_1.default.isObject(source) || Types_1.default.isString(source)) {
+            if (Types_1.Type.isObject(source) || Types_1.Type.isString(source)) {
                 if (source instanceof Enumerable) return source;
-                if (Types_1.default.isArrayLike(source)) return new ArrayEnumerable(source);
+                if (Types_1.Type.isArrayLike(source)) return new ArrayEnumerable(source);
                 if (Enumerator_1.isEnumerable(source)) return new Enumerable(function () {
                     return source.getEnumerator();
                 }, null, source.isEndless);
@@ -1723,10 +1723,10 @@ var Enumerable = function (_InfiniteEnumerable) {
         key: "choice",
         value: function choice(values) {
             var len = values && values.length;
-            if (!len || !isFinite(len)) throw new ArgumentOutOfRangeException_1.default('length', length);
+            if (!len || !isFinite(len)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
             return new InfiniteEnumerable(function () {
-                return new EnumeratorBase_1.default(null, function (yielder) {
-                    return yielder.yieldReturn(Integer_1.default.random.select(values));
+                return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) {
+                    return yielder.yieldReturn(Integer_1.Integer.random.select(values));
                 }, true);
             });
         }
@@ -1743,10 +1743,10 @@ var Enumerable = function (_InfiniteEnumerable) {
         key: "cycle",
         value: function cycle(values) {
             var len = values && values.length;
-            if (!len || !isFinite(len)) throw new ArgumentOutOfRangeException_1.default('length', length);
+            if (!len || !isFinite(len)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
             return new InfiniteEnumerable(function () {
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
                 }, function (yielder) {
                     if (index >= values.length) index = 0;
@@ -1774,16 +1774,16 @@ var Enumerable = function (_InfiniteEnumerable) {
             var count = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
 
             if (!(count > 0)) return Enumerable.empty();
-            return isFinite(count) && Integer_1.default.assert(count, "count") ? new FiniteEnumerable(function () {
+            return isFinite(count) && Integer_1.Integer.assert(count, "count") ? new FiniteEnumerable(function () {
                 var c = count;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
                 }, function (yielder) {
                     return index++ < c && yielder.yieldReturn(element);
                 }, null, false);
             }) : new Enumerable(function () {
-                return new EnumeratorBase_1.default(null, function (yielder) {
+                return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) {
                     return yielder.yieldReturn(element);
                 }, true);
             });
@@ -1793,7 +1793,7 @@ var Enumerable = function (_InfiniteEnumerable) {
         value: function repeatWithFinalize(initializer, finalizer) {
             return new InfiniteEnumerable(function () {
                 var element;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     element = initializer();
                 }, function (yielder) {
                     return yielder.yieldReturn(element);
@@ -1812,16 +1812,16 @@ var Enumerable = function (_InfiniteEnumerable) {
         value: function range(start, count) {
             var step = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
 
-            if (!isFinite(start)) throw new ArgumentOutOfRangeException_1.default("start", start, "Must be a finite number.");
+            if (!isFinite(start)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("start", start, "Must be a finite number.");
             if (!(count > 0)) return Enumerable.empty();
-            if (!step) throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a valid value");
-            if (!isFinite(step)) throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a finite number.");
-            Integer_1.default.assert(count, "count");
+            if (!step) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a valid value");
+            if (!isFinite(step)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+            Integer_1.Integer.assert(count, "count");
             return new FiniteEnumerable(function () {
                 var value;
                 var c = count;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
                     value = start;
                 }, function (yielder) {
@@ -1845,12 +1845,12 @@ var Enumerable = function (_InfiniteEnumerable) {
             var start = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
             var step = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
 
-            if (!isFinite(start)) throw new ArgumentOutOfRangeException_1.default("start", start, "Must be a finite number.");
-            if (!step) throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a valid value");
-            if (!isFinite(step)) throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a finite number.");
+            if (!isFinite(start)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("start", start, "Must be a finite number.");
+            if (!step) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a valid value");
+            if (!isFinite(step)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite number.");
             return new InfiniteEnumerable(function () {
                 var value;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     value = start;
                 }, function (yielder) {
                     var current = value;
@@ -1872,12 +1872,12 @@ var Enumerable = function (_InfiniteEnumerable) {
         value: function rangeTo(start, to) {
             var step = arguments.length <= 2 || arguments[2] === undefined ? 1 : arguments[2];
 
-            if (isNaN(to) || !isFinite(to)) throw new ArgumentOutOfRangeException_1.default("to", to, "Must be a finite number.");
-            if (step && !isFinite(step)) throw new ArgumentOutOfRangeException_1.default("step", step, "Must be a finite non-zero number.");
+            if (isNaN(to) || !isFinite(to)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("to", to, "Must be a finite number.");
+            if (step && !isFinite(step)) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
             step = Math.abs(step);
             return new FiniteEnumerable(function () {
                 var value;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     value = start;
                 }, start < to ? function (yielder) {
                     var result = value <= to && yielder.yieldReturn(value);
@@ -1895,9 +1895,9 @@ var Enumerable = function (_InfiniteEnumerable) {
         value: function matches(input, pattern) {
             var flags = arguments.length <= 2 || arguments[2] === undefined ? "" : arguments[2];
 
-            if (input === null || input === VOID0) throw new ArgumentNullException_1.default("input");
+            if (input === null || input === VOID0) throw new ArgumentNullException_1.ArgumentNullException("input");
             var type = typeof input === "undefined" ? "undefined" : _typeof(input);
-            if (type != Types_1.default.STRING) throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
+            if (type != Types_1.Type.STRING) throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
             if (pattern instanceof RegExp) {
                 flags += pattern.ignoreCase ? "i" : "";
                 flags += pattern.multiline ? "m" : "";
@@ -1906,7 +1906,7 @@ var Enumerable = function (_InfiniteEnumerable) {
             if (flags.indexOf("g") === -1) flags += "g";
             return new FiniteEnumerable(function () {
                 var regex;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     regex = new RegExp(pattern, flags);
                 }, function (yielder) {
                     var match = regex.exec(input);
@@ -1920,10 +1920,10 @@ var Enumerable = function (_InfiniteEnumerable) {
             var count = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
 
             if (isNaN(count) || count <= 0) return Enumerable.empty();
-            return isFinite(count) && Integer_1.default.assert(count, "count") ? new FiniteEnumerable(function () {
+            return isFinite(count) && Integer_1.Integer.assert(count, "count") ? new FiniteEnumerable(function () {
                 var c = count;
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
                 }, function (yielder) {
                     var current = index++;
@@ -1931,7 +1931,7 @@ var Enumerable = function (_InfiniteEnumerable) {
                 }, false);
             }) : new InfiniteEnumerable(function () {
                 var index = 0;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
                 }, function (yielder) {
                     return yielder.yieldReturn(factory(index++));
@@ -1947,7 +1947,7 @@ var Enumerable = function (_InfiniteEnumerable) {
                 var index = 0;
                 var value;
                 var isFirst;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
                     value = seed;
                     isFirst = !skipSeed;
@@ -1985,14 +1985,14 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "weave",
         value: function weave(enumerables) {
-            if (!enumerables) throw new ArgumentNullException_1.default('enumerables');
+            if (!enumerables) throw new ArgumentNullException_1.ArgumentNullException('enumerables');
             return new Enumerable(function () {
                 var queue;
                 var mainEnumerator;
                 var index;
-                return new EnumeratorBase_1.default(function () {
+                return new EnumeratorBase_1.EnumeratorBase(function () {
                     index = 0;
-                    queue = new Queue_1.default();
+                    queue = new Queue_1.Queue();
                     mainEnumerator = Enumerator_1.from(enumerables);
                 }, function (yielder) {
                     var e = undefined;
@@ -2044,7 +2044,7 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
 
         var _this6 = _possibleConstructorReturn(this, Object.getPrototypeOf(ArrayEnumerable).call(this, function () {
             _.throwIfDisposed();
-            return new ArrayEnumerator_1.default(function () {
+            return new ArrayEnumerator_1.ArrayEnumerator(function () {
                 _.throwIfDisposed("The underlying ArrayEnumerable was disposed.", "ArrayEnumerator");
                 return _._source;
             });
@@ -2106,7 +2106,7 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
 
             var _ = this;
             _.throwIfDisposed();
-            Integer_1.default.assertZeroOrGreater(index, 'index');
+            Integer_1.Integer.assertZeroOrGreater(index, 'index');
             var source = _._source;
             return index < source.length ? source[index] : defaultValue;
         }
@@ -2136,7 +2136,7 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
             var _ = this;
             if (!(count > 0)) return _;
             return new Enumerable(function () {
-                return new ArrayEnumerator_1.default(function () {
+                return new ArrayEnumerator_1.ArrayEnumerator(function () {
                     return _._source;
                 }, count);
             });
@@ -2163,7 +2163,7 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
         value: function reverse() {
             var _ = this;
             return new Enumerable(function () {
-                return new ArrayEnumerator_1.default(function () {
+                return new ArrayEnumerator_1.ArrayEnumerator(function () {
                     return _._source;
                 }, _._source ? _._source.length - 1 : 0, -1);
             });
@@ -2178,7 +2178,7 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
         value: function sequenceEqual(second) {
             var equalityComparer = arguments.length <= 1 || arguments[1] === undefined ? Values.areEqual : arguments[1];
 
-            if (Types_1.default.isArrayLike(second)) return Arrays.areEqual(this.source, second, true, equalityComparer);
+            if (Types_1.Type.isArrayLike(second)) return Arrays.areEqual(this.source, second, true, equalityComparer);
             if (second instanceof ArrayEnumerable) return second.sequenceEqual(this.source, equalityComparer);
             return _get(Object.getPrototypeOf(ArrayEnumerable.prototype), "sequenceEqual", this).call(this, second, equalityComparer);
         }
@@ -2245,7 +2245,7 @@ var Lookup = function () {
         value: function getEnumerator() {
             var _ = this;
             var enumerator;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 enumerator = _._dictionary.getEnumerator();
             }, function (yielder) {
                 if (!enumerator.moveNext()) return false;
@@ -2316,7 +2316,7 @@ var OrderedEnumerable = function (_FiniteEnumerable2) {
             var buffer;
             var indexes;
             var index = 0;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 index = 0;
                 buffer = Enumerable.toArray(_.source);
                 indexes = createSortContext(_).generateSortedIndexes(buffer);
@@ -2357,12 +2357,12 @@ function nextEnumerator(queue, e) {
 function createSortContext(orderedEnumerable) {
     var currentContext = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-    var context = new KeySortedContext_1.default(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
+    var context = new KeySortedContext_1.KeySortedContext(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
     if (orderedEnumerable.parent) return createSortContext(orderedEnumerable.parent, context);
     return context;
 }
 function throwIfDisposed(disposed) {
-    if (disposed) throw new ObjectDisposedException_1.default("Enumerable");
+    if (disposed) throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Enumerable;

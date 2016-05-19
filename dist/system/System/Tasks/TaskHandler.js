@@ -27,7 +27,7 @@ System.register(["./TaskHandlerBase", "../Exceptions/ArgumentNullException"], fu
                     _super.call(this);
                     this._action = _action;
                     if (!_action)
-                        throw new ArgumentNullException_1.default('action');
+                        throw new ArgumentNullException_1.ArgumentNullException('action');
                 }
                 TaskHandler.prototype._onExecute = function () {
                     this._action();
@@ -37,8 +37,9 @@ System.register(["./TaskHandlerBase", "../Exceptions/ArgumentNullException"], fu
                     this._action = null;
                 };
                 return TaskHandler;
-            }(TaskHandlerBase_1.default));
-            exports_1("default", TaskHandler);
+            }(TaskHandlerBase_1.TaskHandlerBase));
+            exports_1("TaskHandler", TaskHandler);
+            exports_1("default",TaskHandler);
         }
     }
 });

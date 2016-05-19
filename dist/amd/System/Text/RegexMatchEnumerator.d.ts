@@ -1,9 +1,9 @@
-/// <reference path="../../../../source/System/Collections/Enumeration/IEnumerator.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { Regex, Match } from "./RegularExpressions";
+import { IEnumerator } from "../Collections/Enumeration/IEnumerator";
 export declare class RegexMatchEnumerator {
     private _pattern;
     constructor(pattern: string | RegExp | Regex);

@@ -10,7 +10,7 @@
         define(["require", "exports"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var valid = new ValidationResult(true);
     var ValidationResult = (function () {
         function ValidationResult(isValid, message, data) {

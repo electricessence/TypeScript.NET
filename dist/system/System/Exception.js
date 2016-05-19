@@ -4,7 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 System.register([], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var NAME, Exception;
     return {
@@ -48,7 +48,8 @@ System.register([], function(exports_1, context_1) {
                 };
                 return Exception;
             }());
-            exports_1("default", Exception);
+            exports_1("Exception", Exception);
+            exports_1("default",Exception);
         }
     }
 });

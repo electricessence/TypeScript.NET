@@ -4,7 +4,7 @@
  */
 import { Regex } from "./RegularExpressions";
 import { empty } from "../Collections/Enumeration/Enumerator";
-import EnumeratorBase from "../Collections/Enumeration/EnumeratorBase";
+import { EnumeratorBase } from "../Collections/Enumeration/EnumeratorBase";
 export class RegexMatchEnumerator {
     constructor(pattern) {
         if (pattern instanceof Regex) {

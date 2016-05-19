@@ -3,10 +3,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+
 import {Type} from "../../Types";
 import {compare} from "../../Compare";
 import {Primitive} from "../../Primitive";
 import {Selector, Comparison} from "../../FunctionTypes";
+import {CompareResult} from "../../CompareResult";
+import {Order} from "../Sorting/Order";
 
 function ensureArray<T>(value:T|T[]):T[]
 {

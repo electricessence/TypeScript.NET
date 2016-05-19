@@ -21,8 +21,8 @@ var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var SetBase_1 = require("./SetBase");
 var OTHER = 'other';
 
-var Set = function (_SetBase_1$default) {
-    _inherits(Set, _SetBase_1$default);
+var Set = function (_SetBase_1$SetBase) {
+    _inherits(Set, _SetBase_1$SetBase);
 
     function Set() {
         _classCallCheck(this, Set);
@@ -41,7 +41,7 @@ var Set = function (_SetBase_1$default) {
             var _ = this;
             if (!_.contains(item)) {
                 var type = typeof item === "undefined" ? "undefined" : _typeof(item);
-                if (!Types_1.default.isPrimitive(type)) throw new ArgumentException_1.default("item", "A Set can only index primitives.  Complex objects require a HashSet.");
+                if (!Types_1.Type.isPrimitive(type)) throw new ArgumentException_1.ArgumentException("item", "A Set can only index primitives.  Complex objects require a HashSet.");
                 var r = _._registry;
                 var t = r && r[type];
                 if (!r) _._registry = r = {};
@@ -93,10 +93,9 @@ var Set = function (_SetBase_1$default) {
     }]);
 
     return Set;
-}(SetBase_1.default);
+}(SetBase_1.SetBase);
 
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Set;
+exports.Set = Set;
 function wipe(map) {
     var depth = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
 
@@ -129,4 +128,6 @@ function wipe(map) {
         }
     }
 }
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Set;
 //# sourceMappingURL=Set.js.map

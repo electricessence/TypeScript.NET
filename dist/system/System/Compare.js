@@ -18,9 +18,9 @@ System.register(["./Types"], function(exports_1, context_1) {
         if (strict === void 0) { strict = true; }
         if (areEqual(a, b, strict))
             return 0;
-        if (a && Types_1.default.hasMember(a, COMPARE_TO))
+        if (a && Types_1.Type.hasMember(a, COMPARE_TO))
             return a.compareTo(b);
-        else if (b && Types_1.default.hasMember(b, COMPARE_TO))
+        else if (b && Types_1.Type.hasMember(b, COMPARE_TO))
             return -b.compareTo(a);
         if (a > b || strict && (a === 0 && b == 0 || a === null && b === VOID0))
             return 1;
@@ -37,15 +37,15 @@ System.register(["./Types"], function(exports_1, context_1) {
         if (a === null || a === VOID0 || b == null || b === VOID0) {
             if (!nullEquivalency)
                 return false;
-            if (Types_1.default.isObject(a)) {
+            if (Types_1.Type.isObject(a)) {
                 return !Object.keys(a).length;
             }
-            if (Types_1.default.isObject(b)) {
+            if (Types_1.Type.isObject(b)) {
                 return !Object.keys(b).length;
             }
             return (a === null || a === VOID0) && (b == null || b === VOID0);
         }
-        if (Types_1.default.isObject(a) && Types_1.default.isObject(b)) {
+        if (Types_1.Type.isObject(a) && Types_1.Type.isObject(b)) {
             var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
             if (len != bKeys.length)
                 return false;
@@ -74,7 +74,7 @@ System.register(["./Types"], function(exports_1, context_1) {
                 Types_1 = Types_1_1;
             }],
         execute: function() {
-            isTrueNaN = Types_1.default.isTrueNaN;
+            isTrueNaN = Types_1.Type.isTrueNaN;
             VOID0 = void 0;
             COMPARE_TO = "compareTo";
         }

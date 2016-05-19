@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -17,7 +17,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
         if (!node)
             return null;
         if (!list)
-            throw new ArgumentNullException_1.default("list");
+            throw new ArgumentNullException_1.ArgumentNullException("list");
         var external = node.external;
         if (!external)
             node.external = external = new LinkedListNode(list, node);
@@ -25,14 +25,14 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
     }
     function getInternal(node, list) {
         if (!node)
-            throw new ArgumentNullException_1.default("node");
+            throw new ArgumentNullException_1.ArgumentNullException("node");
         if (!list)
-            throw new ArgumentNullException_1.default("list");
+            throw new ArgumentNullException_1.ArgumentNullException("list");
         if (node.list != list)
-            throw new InvalidOperationException_1.default("Provided node does not belong to this list.");
+            throw new InvalidOperationException_1.InvalidOperationException("Provided node does not belong to this list.");
         var n = node._nodeInternal;
         if (!n)
-            throw new InvalidOperationException_1.default("Provided node is not valid.");
+            throw new InvalidOperationException_1.InvalidOperationException("Provided node is not valid.");
         return n;
     }
     return {
@@ -61,7 +61,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 }
                 InternalNode.prototype.assertDetached = function () {
                     if (this.next || this.previous)
-                        throw new InvalidOperationException_1.default("Adding a node that is already placed.");
+                        throw new InvalidOperationException_1.InvalidOperationException("Adding a node that is already placed.");
                 };
                 return InternalNode;
             }());
@@ -71,7 +71,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
                     _super.call(this, null, equalityComparer);
                     var _ = this;
-                    _._listInternal = new LinkedNodeList_1.default();
+                    _._listInternal = new LinkedNodeList_1.LinkedNodeList();
                     _._importEntries(source);
                 }
                 LinkedList.prototype.getCount = function () {
@@ -102,7 +102,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                         this._listInternal.forEach(function (node, i) { return action(node.value, i); });
                 };
                 LinkedList.prototype.getEnumerator = function () {
-                    return LinkedNodeList_1.default.valueEnumeratorFrom(this._listInternal);
+                    return LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(this._listInternal);
                 };
                 LinkedList.prototype._findFirst = function (entry) {
                     var _ = this, equals = _._equalityComparer, next = _._listInternal.first;
@@ -199,7 +199,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     _._signalModification(true);
                 };
                 return LinkedList;
-            }(CollectionBase_1.default));
+            }(CollectionBase_1.CollectionBase));
             exports_1("default", LinkedList);
             LinkedListNode = (function () {
                 function LinkedListNode(_list, _nodeInternal) {

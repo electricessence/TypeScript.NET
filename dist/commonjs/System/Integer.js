@@ -69,19 +69,19 @@ var Integer;
     Integer.is32Bit = is32Bit;
     function assert(n, argumentName) {
         var i = is(n);
-        if (!i) throw new ArgumentException_1.default(argumentName || 'n', "Must be a integer.");
+        if (!i) throw new ArgumentException_1.ArgumentException(argumentName || 'n', "Must be a integer.");
         return i;
     }
     Integer.assert = assert;
     function assertZeroOrGreater(n, argumentName) {
         var i = assert(n, argumentName) && n >= 0;
-        if (!i) throw new ArgumentOutOfRangeException_1.default(argumentName || 'n', n, "Must be a valid integer greater than or equal to zero.");
+        if (!i) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(argumentName || 'n', n, "Must be a valid integer greater than or equal to zero.");
         return i;
     }
     Integer.assertZeroOrGreater = assertZeroOrGreater;
     function assertPositive(n, argumentName) {
         var i = assert(n, argumentName) && n > 0;
-        if (!i) throw new ArgumentOutOfRangeException_1.default(argumentName || 'n', n, "Must be greater than zero.");
+        if (!i) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(argumentName || 'n', n, "Must be greater than zero.");
         return i;
     }
     Integer.assertPositive = assertPositive;

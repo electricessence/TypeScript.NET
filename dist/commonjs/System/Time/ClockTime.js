@@ -1,4 +1,9 @@
-'use strict';
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8,10 +13,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var TimeQuantity_1 = require('./TimeQuantity');
+var TimeQuantity_1 = require("./TimeQuantity");
 
-var ClockTime = function (_TimeQuantity_1$defau) {
-    _inherits(ClockTime, _TimeQuantity_1$defau);
+var ClockTime = function (_TimeQuantity_1$TimeQ) {
+    _inherits(ClockTime, _TimeQuantity_1$TimeQ);
 
     function ClockTime() {
         _classCallCheck(this, ClockTime);
@@ -36,7 +41,7 @@ var ClockTime = function (_TimeQuantity_1$defau) {
     }
 
     _createClass(ClockTime, [{
-        key: 'toString',
+        key: "toString",
         value: function toString() {
             var _ = this,
                 a = [];
@@ -48,7 +53,7 @@ var ClockTime = function (_TimeQuantity_1$defau) {
             return a.join(", ").replace(", and, ", " and ");
         }
     }], [{
-        key: 'from',
+        key: "from",
         value: function from(hours, minutes) {
             var seconds = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
             var milliseconds = arguments.length <= 3 || arguments[3] === undefined ? 0 : arguments[3];
@@ -56,7 +61,7 @@ var ClockTime = function (_TimeQuantity_1$defau) {
             return new ClockTime(hours, minutes, seconds, milliseconds);
         }
     }, {
-        key: 'millisecondsFromTime',
+        key: "millisecondsFromTime",
         value: function millisecondsFromTime(hours, minutes) {
             var seconds = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
             var milliseconds = arguments.length <= 3 || arguments[3] === undefined ? 0 : arguments[3];
@@ -73,12 +78,13 @@ var ClockTime = function (_TimeQuantity_1$defau) {
     }]);
 
     return ClockTime;
-}(TimeQuantity_1.default);
+}(TimeQuantity_1.TimeQuantity);
 
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = ClockTime;
+exports.ClockTime = ClockTime;
 function pluralize(value, label) {
     if (Math.abs(value) !== 1) label += "s";
     return label;
 }
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ClockTime;
 //# sourceMappingURL=ClockTime.js.map

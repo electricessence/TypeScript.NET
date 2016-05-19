@@ -2,14 +2,14 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Compare_1 = require('../Compare');
-var TimeUnit_1 = require('./TimeUnit');
+var Compare_1 = require("../Compare");
+var TimeUnit_1 = require("./TimeUnit");
 
 var TimeQuantity = function () {
     function TimeQuantity() {
@@ -21,32 +21,32 @@ var TimeQuantity = function () {
     }
 
     _createClass(TimeQuantity, [{
-        key: 'getTotalMilliseconds',
+        key: "getTotalMilliseconds",
         value: function getTotalMilliseconds() {
             return this._quantity;
         }
     }, {
-        key: 'equals',
+        key: "equals",
         value: function equals(other) {
             return Compare_1.areEqual(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
         }
     }, {
-        key: 'compareTo',
+        key: "compareTo",
         value: function compareTo(other) {
             return Compare_1.compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
         }
     }, {
-        key: 'getTotal',
+        key: "getTotal",
         value: function getTotal(units) {
-            return TimeUnit_1.default.fromMilliseconds(this.getTotalMilliseconds(), units);
+            return TimeUnit_1.TimeUnit.fromMilliseconds(this.getTotalMilliseconds(), units);
         }
     }, {
-        key: 'direction',
+        key: "direction",
         get: function get() {
             return Compare_1.compare(this.getTotalMilliseconds(), 0);
         }
     }, {
-        key: 'total',
+        key: "total",
         get: function get() {
             var t = this._total;
             if (!t) {
@@ -67,6 +67,7 @@ var TimeQuantity = function () {
     return TimeQuantity;
 }();
 
+exports.TimeQuantity = TimeQuantity;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TimeQuantity;
 //# sourceMappingURL=TimeQuantity.js.map

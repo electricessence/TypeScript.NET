@@ -4,8 +4,8 @@
  */
 "use strict";
 
-var Types_1 = require('../../Types');
-var Compare_1 = require('../../Compare');
+var Types_1 = require("../../Types");
+var Compare_1 = require("../../Compare");
 function ensureArray(value) {
     return Array.isArray(value) ? value : [value];
 }
@@ -13,7 +13,7 @@ function createComparer(selector) {
     var order = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
     var equivalentToNaN = arguments.length <= 2 || arguments[2] === undefined ? NaN : arguments[2];
 
-    var nanHasEquivalent = !Types_1.default.isTrueNaN(equivalentToNaN);
+    var nanHasEquivalent = !Types_1.Type.isTrueNaN(equivalentToNaN);
     return function (a, b) {
         var aValue = ensureArray(selector(a));
         var bValue = ensureArray(selector(b));
@@ -24,8 +24,8 @@ function createComparer(selector) {
                 vB = bValue[i],
                 o = oArray ? i < oArray.length ? oArray[i] : 1 : order;
             if (nanHasEquivalent) {
-                if (Types_1.default.isTrueNaN(vA)) vA = equivalentToNaN;
-                if (Types_1.default.isTrueNaN(vB)) vB = equivalentToNaN;
+                if (Types_1.Type.isTrueNaN(vA)) vA = equivalentToNaN;
+                if (Types_1.Type.isTrueNaN(vB)) vB = equivalentToNaN;
             }
             var r = Compare_1.compare(vA, vB);
             if (r !== 0) return o * r;

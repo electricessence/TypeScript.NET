@@ -1,10 +1,11 @@
-/// <reference path="../../../../../source/System/Collections/Dictionaries/IDictionary.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import DictionaryBase from "./DictionaryBase";
-export default class StringKeyDictionary<TValue> extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue> {
+import { IStringKeyDictionary, IMap } from "./IDictionary";
+import { IKeyValuePair } from "../../KeyValuePair";
+import { DictionaryBase } from "./DictionaryBase";
+export declare class StringKeyDictionary<TValue> extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue> {
     private _count;
     private _map;
     protected _getEntry(key: string): IKeyValuePair<string, TValue>;
@@ -18,3 +19,4 @@ export default class StringKeyDictionary<TValue> extends DictionaryBase<string, 
     protected getValues(): TValue[];
     protected getCount(): number;
 }
+export default StringKeyDictionary;

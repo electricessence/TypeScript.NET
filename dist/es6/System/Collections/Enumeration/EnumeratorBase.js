@@ -2,10 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import Type from "../../Types";
-import DisposableBase from "../../Disposable/DisposableBase";
-import ObjectPool from "../../Disposable/ObjectPool";
+import { Type } from "../../Types";
+import { DisposableBase } from "../../Disposable/DisposableBase";
+import { ObjectPool } from "../../Disposable/ObjectPool";
 const VOID0 = void (0);
 var yielderPool;
 function yielder(recycle) {
@@ -40,7 +39,7 @@ var EnumeratorState;
     EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
     EnumeratorState[EnumeratorState["After"] = 2] = "After";
 })(EnumeratorState || (EnumeratorState = {}));
-export default class EnumeratorBase extends DisposableBase {
+export class EnumeratorBase extends DisposableBase {
     constructor(_initializer, _tryGetNext, disposer, isEndless) {
         super();
         this._initializer = _initializer;
@@ -126,4 +125,5 @@ export default class EnumeratorBase extends DisposableBase {
         }
     }
 }
+export default EnumeratorBase;
 //# sourceMappingURL=EnumeratorBase.js.map

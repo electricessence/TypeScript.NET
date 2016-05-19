@@ -2,12 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import * as ArrayUtility from "../Array/Utility";
-import StringKeyDictionary from "./StringKeyDictionary";
-import ArgumentOutOfRangeException from "../../Exceptions/ArgumentOutOfRangeException";
+import { StringKeyDictionary } from "./StringKeyDictionary";
+import { ArgumentOutOfRangeException } from "../../Exceptions/ArgumentOutOfRangeException";
 const VOID0 = void 0;
-export default class OrderedStringKeyDictionary extends StringKeyDictionary {
+export class OrderedStringKeyDictionary extends StringKeyDictionary {
     constructor() {
         super();
         this._order = [];
@@ -58,4 +57,5 @@ export default class OrderedStringKeyDictionary extends StringKeyDictionary {
         return o.length && o.filter(key => _.containsKey(key)) || [];
     }
 }
+export default OrderedStringKeyDictionary;
 //# sourceMappingURL=OrderedStringKeyDictionary.js.map

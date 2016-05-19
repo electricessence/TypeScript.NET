@@ -4,9 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict';
 import ObservableBase from "./ObservableBase";
-export default class ObservableNodeBase extends ObservableBase {
+export class ObservableNodeBase extends ObservableBase {
     onNext(value) {
         this._onNext(value);
     }
@@ -17,4 +16,5 @@ export default class ObservableNodeBase extends ObservableBase {
         this._onCompleted();
     }
 }
+export default ObservableNodeBase;
 //# sourceMappingURL=ObservableNodeBase.js.map

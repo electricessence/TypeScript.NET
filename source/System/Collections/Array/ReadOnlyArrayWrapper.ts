@@ -4,8 +4,9 @@
  */
 
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
-import {from as enumeratorFrom} from "../Enumeration/Enumerator";
 import {ReadOnlyCollectionBase} from "../ReadOnlyCollectionBase";
+import {IArray} from "./IArray";
+import {from as enumeratorFrom} from "../Enumeration/Enumerator";
 
 export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionBase<T>
 {

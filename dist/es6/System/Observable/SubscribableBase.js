@@ -4,11 +4,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict';
-import LinkedNodeList from "../Collections/LinkedNodeList";
-import dispose from "../Disposable/dispose";
-import Subscription from "./Subscription";
-export default class SubscribableBase {
+import { LinkedNodeList } from "../Collections/LinkedNodeList";
+import { dispose } from "../Disposable/dispose";
+import { Subscription } from "./Subscription";
+export class SubscribableBase {
     constructor() {
         this.__subscriptions
             = new LinkedNodeList();
@@ -56,4 +55,5 @@ export default class SubscribableBase {
         this._unsubscribeAll();
     }
 }
+export default SubscribableBase;
 //# sourceMappingURL=SubscribableBase.js.map

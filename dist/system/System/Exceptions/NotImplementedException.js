@@ -3,8 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-System.register(['./SystemException'], function(exports_1, context_1) {
-    'use strict';
+System.register(["./SystemException"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -29,8 +29,9 @@ System.register(['./SystemException'], function(exports_1, context_1) {
                     return NAME;
                 };
                 return NotImplementedException;
-            }(SystemException_1.default));
-            exports_1("default", NotImplementedException);
+            }(SystemException_1.SystemException));
+            exports_1("NotImplementedException", NotImplementedException);
+            exports_1("default",NotImplementedException);
         }
     }
 });

@@ -17,8 +17,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var TaskHandlerBase_1 = require("./TaskHandlerBase");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 
-var TaskHandler = function (_TaskHandlerBase_1$de) {
-    _inherits(TaskHandler, _TaskHandlerBase_1$de);
+var TaskHandler = function (_TaskHandlerBase_1$Ta) {
+    _inherits(TaskHandler, _TaskHandlerBase_1$Ta);
 
     function TaskHandler(_action) {
         _classCallCheck(this, TaskHandler);
@@ -26,7 +26,7 @@ var TaskHandler = function (_TaskHandlerBase_1$de) {
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskHandler).call(this));
 
         _this._action = _action;
-        if (!_action) throw new ArgumentNullException_1.default('action');
+        if (!_action) throw new ArgumentNullException_1.ArgumentNullException('action');
         return _this;
     }
 
@@ -44,8 +44,9 @@ var TaskHandler = function (_TaskHandlerBase_1$de) {
     }]);
 
     return TaskHandler;
-}(TaskHandlerBase_1.default);
+}(TaskHandlerBase_1.TaskHandlerBase);
 
+exports.TaskHandler = TaskHandler;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TaskHandler;
 //# sourceMappingURL=TaskHandler.js.map

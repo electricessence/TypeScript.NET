@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -13,8 +13,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var IndexEnumerator_1 = require("./IndexEnumerator");
 var Types_1 = require("../../Types");
 
-var ArrayEnumerator = function (_IndexEnumerator_1$de) {
-    _inherits(ArrayEnumerator, _IndexEnumerator_1$de);
+var ArrayEnumerator = function (_IndexEnumerator_1$In) {
+    _inherits(ArrayEnumerator, _IndexEnumerator_1$In);
 
     function ArrayEnumerator(arrayOrFactory) {
         var start = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
@@ -23,14 +23,20 @@ var ArrayEnumerator = function (_IndexEnumerator_1$de) {
         _classCallCheck(this, ArrayEnumerator);
 
         return _possibleConstructorReturn(this, Object.getPrototypeOf(ArrayEnumerator).call(this, function () {
-            var array = Types_1.default.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
-            return { source: array, pointer: start, length: array ? array.length : 0, step: step };
+            var array = Types_1.Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+            return {
+                source: array,
+                pointer: start,
+                length: array ? array.length : 0,
+                step: step
+            };
         }));
     }
 
     return ArrayEnumerator;
-}(IndexEnumerator_1.default);
+}(IndexEnumerator_1.IndexEnumerator);
 
+exports.ArrayEnumerator = ArrayEnumerator;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ArrayEnumerator;
 //# sourceMappingURL=ArrayEnumerator.js.map

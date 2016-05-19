@@ -16,7 +16,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         define(["require", "exports", "./SystemException", "../Text/Utility"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var SystemException_1 = require("./SystemException");
     var Utility_1 = require("../Text/Utility");
     var NAME = 'ArgumentException';

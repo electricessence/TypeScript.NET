@@ -3,10 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Scheme", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
-    'use strict';
+System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, QueryParams, Utility_1, Scheme_1, ArgumentException_1, ArgumentOutOfRangeException_1;
+    var Types_1, QueryParams, Scheme, Utility_1, ArgumentException_1, ArgumentOutOfRangeException_1;
     var VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     function copyUri(from, to) {
         var i = 0, field;
@@ -21,20 +21,20 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
     }
     function getScheme(scheme) {
         var s = scheme;
-        if (Types_1.default.isString(s)) {
+        if (Types_1.Type.isString(s)) {
             if (!s)
-                return VOID0;
-            s = Scheme_1.default[Utility_1.trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
-            if (isNaN(s))
-                throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
-        }
-        if (Types_1.default.isNumber(s, false)) {
-            s = Scheme_1.default[s];
+                return null;
+            s = Utility_1.trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY);
             if (!s)
-                throw new ArgumentOutOfRangeException_1.default('scheme', scheme, 'Invalid scheme.');
-            return s;
+                return null;
+            if (Scheme.isValid(s))
+                return s;
         }
-        return VOID0;
+        else {
+            if (s === null || s === undefined)
+                return s;
+        }
+        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
     }
     function getPort(port) {
         if (port === 0)
@@ -42,22 +42,22 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
         if (!port)
             return null;
         var p;
-        if (Types_1.default.isNumber(port, true)) {
+        if (Types_1.Type.isNumber(port, true)) {
             p = port;
             if (p >= 0 && isFinite(p))
                 return p;
         }
-        else if (Types_1.default.isString(port) && (p = parseInt(port)) && !isNaN(p)) {
+        else if (Types_1.Type.isString(port) && (p = parseInt(port)) && !isNaN(p)) {
             return getPort(p);
         }
-        throw new ArgumentException_1.default("port", "invalid value");
+        throw new ArgumentException_1.ArgumentException("port", "invalid value");
     }
     function getAuthority(uri) {
         if (!uri.host) {
             if (uri.userInfo)
-                throw new ArgumentException_1.default('host', 'Cannot include user info when there is no host.');
-            if (Types_1.default.isNumber(uri.port, false))
-                throw new ArgumentException_1.default('host', 'Cannot include a port when there is no host.');
+                throw new ArgumentException_1.ArgumentException('host', 'Cannot include user info when there is no host.');
+            if (Types_1.Type.isNumber(uri.port, false))
+                throw new ArgumentException_1.ArgumentException('host', 'Cannot include a port when there is no host.');
         }
         var result = uri.host || EMPTY;
         if (result) {
@@ -90,14 +90,14 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
             + (pathAndQuery || EMPTY)
             + (fragment || EMPTY);
         if (part1 && part2 && scheme && !authority)
-            throw new ArgumentException_1.default('authority', "Cannot format schemed Uri with missing authority.");
+            throw new ArgumentException_1.ArgumentException('authority', "Cannot format schemed Uri with missing authority.");
         if (part1 && pathAndQuery && pathAndQuery.indexOf(SLASH) !== 0)
             part2 = SLASH + part2;
         return part1 + part2;
     }
     function tryParse(url, out) {
         if (!url)
-            return new ArgumentException_1.default('url', 'Nothing to parse.');
+            return new ArgumentException_1.ArgumentException('url', 'Nothing to parse.');
         var i, result = {};
         i = url.indexOf(HASH);
         if (i != -1) {
@@ -113,7 +113,7 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
         if (i != -1) {
             var scheme = Utility_1.trim(url.substring(0, i)), c = /:$/;
             if (!c.test(scheme))
-                return new ArgumentException_1.default('url', 'Scheme was improperly formatted');
+                return new ArgumentException_1.ArgumentException('url', 'Scheme was improperly formatted');
             scheme = Utility_1.trim(scheme.replace(c, EMPTY));
             try {
                 result.scheme = getScheme(scheme) || VOID0;
@@ -137,7 +137,7 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
         if (i != -1) {
             var port = parseInt(Utility_1.trim(url.substring(i + 1)));
             if (isNaN(port))
-                return new ArgumentException_1.default('url', 'Port was invalid.');
+                return new ArgumentException_1.ArgumentException('url', 'Port was invalid.');
             result.port = port;
             url = url.substring(0, i);
         }
@@ -155,11 +155,11 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
             function (QueryParams_1) {
                 QueryParams = QueryParams_1;
             },
+            function (Scheme_1) {
+                Scheme = Scheme_1;
+            },
             function (Utility_1_1) {
                 Utility_1 = Utility_1_1;
-            },
-            function (Scheme_1_1) {
-                Scheme_1 = Scheme_1_1;
             },
             function (ArgumentException_1_1) {
                 ArgumentException_1 = ArgumentException_1_1;
@@ -178,7 +178,7 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
                     _.port = getPort(port);
                     _.authority = _.getAuthority() || null;
                     _.path = path || null;
-                    if (!Types_1.default.isString(query))
+                    if (!Types_1.Type.isString(query))
                         query = QueryParams.encode(query);
                     _.query = formatQuery(query) || null;
                     Object.freeze(_.queryParams
@@ -195,7 +195,7 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
                     return this === other || this.absoluteUri == Uri.toString(other);
                 };
                 Uri.from = function (uri, defaults) {
-                    var u = (!uri || Types_1.default.isString(uri))
+                    var u = (!uri || Types_1.Type.isString(uri))
                         ? Uri.parse(uri) : uri;
                     return new Uri(u.scheme || defaults && defaults.scheme, u.userInfo || defaults && defaults.userInfo, u.host || defaults && defaults.host, isNaN(u.port) ? defaults && defaults.port : u.port, u.path || defaults && defaults.path, u.query || defaults && defaults.query, u.fragment || defaults && defaults.fragment);
                 };
@@ -253,7 +253,7 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
                 };
                 return Uri;
             }());
-            exports_1("default", Uri);
+            exports_1("Uri", Uri);
             (function (Fields) {
                 Fields[Fields["scheme"] = 0] = "scheme";
                 Fields[Fields["userInfo"] = 1] = "userInfo";
@@ -265,7 +265,8 @@ System.register(["../Types", "../Uri/QueryParams", "../Text/Utility", "../Uri/Sc
             })(Fields || (Fields = {}));
             exports_1("Fields", Fields);
             Object.freeze(Fields);
-            SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
+            SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
+            exports_1("default",Uri);
         }
     }
 });

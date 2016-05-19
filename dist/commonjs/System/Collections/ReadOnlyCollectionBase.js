@@ -14,8 +14,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var CollectionBase_1 = require("./CollectionBase");
 
-var ReadOnlyCollectionBase = function (_CollectionBase_1$def) {
-    _inherits(ReadOnlyCollectionBase, _CollectionBase_1$def);
+var ReadOnlyCollectionBase = function (_CollectionBase_1$Col) {
+    _inherits(ReadOnlyCollectionBase, _CollectionBase_1$Col);
 
     function ReadOnlyCollectionBase() {
         _classCallCheck(this, ReadOnlyCollectionBase);
@@ -56,8 +56,9 @@ var ReadOnlyCollectionBase = function (_CollectionBase_1$def) {
     }]);
 
     return ReadOnlyCollectionBase;
-}(CollectionBase_1.default);
+}(CollectionBase_1.CollectionBase);
 
+exports.ReadOnlyCollectionBase = ReadOnlyCollectionBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ReadOnlyCollectionBase;
 //# sourceMappingURL=ReadOnlyCollectionBase.js.map

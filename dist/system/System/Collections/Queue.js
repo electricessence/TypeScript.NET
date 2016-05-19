@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -15,10 +15,10 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
     var MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     function assertZeroOrGreater(value, property) {
         if (value < 0)
-            throw new ArgumentOutOfRangeException_1.default(property, value, "Must be greater than zero");
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(property, value, "Must be greater than zero");
     }
     function assertIntegerZeroOrGreater(value, property) {
-        Integer_1.default.assert(value, property);
+        Integer_1.Integer.assert(value, property);
         assertZeroOrGreater(value, property);
     }
     return {
@@ -68,7 +68,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     if (!source)
                         _._array = emptyArray;
                     else {
-                        if (Types_1.default.isNumber(source)) {
+                        if (Types_1.Type.isNumber(source)) {
                             var capacity = source;
                             assertIntegerZeroOrGreater(capacity, "capacity");
                             _._array = capacity
@@ -77,7 +77,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                         }
                         else {
                             var se = source;
-                            _._array = AU.initialize(Types_1.default.isArrayLike(se)
+                            _._array = AU.initialize(Types_1.Type.isArrayLike(se)
                                 ? se.length
                                 : DEFAULT_CAPACITY);
                             _._importEntries(se);
@@ -105,7 +105,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     return true;
                 };
                 Queue.prototype._removeInternal = function (item, max) {
-                    throw new NotImplementedException_1.default("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
+                    throw new NotImplementedException_1.NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                         " since it would require destroying the underlying array to remove the item.");
                 };
                 Queue.prototype._clearInternal = function () {
@@ -134,7 +134,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     if (max === void 0) { max = Infinity; }
                     var _ = this, result = [];
                     if (isFinite(max)) {
-                        Integer_1.default.assertZeroOrGreater(max);
+                        Integer_1.Integer.assertZeroOrGreater(max);
                         if (max !== 0) {
                             while (max-- && _._size) {
                                 result.push(_._dequeueInternal());
@@ -188,7 +188,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     var _ = this;
                     if (_._size == 0) {
                         if (throwIfEmpty)
-                            throw new InvalidOperationException_1.default("Cannot dequeue an empty queue.");
+                            throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
                         return void 0;
                     }
                     var array = _._array, head = _._head;
@@ -225,7 +225,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 };
                 Queue.prototype.peek = function () {
                     if (this._size == 0)
-                        throw new InvalidOperationException_1.default("Cannot call peek on an empty queue.");
+                        throw new InvalidOperationException_1.InvalidOperationException("Cannot call peek on an empty queue.");
                     return this._array[this._head];
                 };
                 Queue.prototype.trimExcess = function (threshold) {
@@ -238,7 +238,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     var _ = this;
                     var index;
                     var version;
-                    return new EnumeratorBase_1.default(function () {
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
                         version = _._version;
                         index = 0;
                     }, function (yielder) {
@@ -249,8 +249,9 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     });
                 };
                 return Queue;
-            }(CollectionBase_1.default));
-            exports_1("default", Queue);
+            }(CollectionBase_1.CollectionBase));
+            exports_1("Queue", Queue);
+            exports_1("default",Queue);
         }
     }
 });

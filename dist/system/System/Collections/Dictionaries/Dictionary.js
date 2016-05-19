@@ -3,20 +3,20 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Compare", "../../Types", "../../Functions", "./DictionaryBase", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool"], function(exports_1, context_1) {
-    'use strict';
+System.register(["../../Compare", "../../Types", "../../Functions", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./DictionaryBase"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, Types_1, Functions_1, DictionaryBase_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1;
+    var Compare_1, Types_1, Functions_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, DictionaryBase_1;
     var VOID0, HashEntry, linkedListPool, NULL, GET_HASH_CODE, Dictionary;
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
-                = new ObjectPool_1.default(20, function () { return new LinkedNodeList_1.default(); });
+                = new ObjectPool_1.ObjectPool(20, function () { return new LinkedNodeList_1.LinkedNodeList(); });
         if (!recycle)
             return linkedListPool.take();
         recycle.clear();
@@ -29,11 +29,11 @@ System.register(["../../Compare", "../../Types", "../../Functions", "./Dictionar
         if (obj === null)
             return NULL;
         if (obj === VOID0)
-            return Types_1.default.UNDEFINED;
-        if (Types_1.default.hasMemberOfType(obj, GET_HASH_CODE, Types_1.default.FUNCTION)) {
+            return Types_1.Type.UNDEFINED;
+        if (Types_1.Type.hasMemberOfType(obj, GET_HASH_CODE, Types_1.Type.FUNCTION)) {
             return obj.getHashCode();
         }
-        return (typeof obj.toString == Types_1.default.FUNCTION)
+        return (typeof obj.toString == Types_1.Type.FUNCTION)
             ? obj.toString()
             : Object.prototype.toString.call(obj);
     }
@@ -48,9 +48,6 @@ System.register(["../../Compare", "../../Types", "../../Functions", "./Dictionar
             function (Functions_1_1) {
                 Functions_1 = Functions_1_1;
             },
-            function (DictionaryBase_1_1) {
-                DictionaryBase_1 = DictionaryBase_1_1;
-            },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
             },
@@ -59,6 +56,9 @@ System.register(["../../Compare", "../../Types", "../../Functions", "./Dictionar
             },
             function (ObjectPool_1_1) {
                 ObjectPool_1 = ObjectPool_1_1;
+            },
+            function (DictionaryBase_1_1) {
+                DictionaryBase_1 = DictionaryBase_1_1;
             }],
         execute: function() {
             VOID0 = void 0;
@@ -75,7 +75,7 @@ System.register(["../../Compare", "../../Types", "../../Functions", "./Dictionar
             Dictionary = (function (_super) {
                 __extends(Dictionary, _super);
                 function Dictionary(_keyComparer) {
-                    if (_keyComparer === void 0) { _keyComparer = Functions_1.default.Identity; }
+                    if (_keyComparer === void 0) { _keyComparer = Functions_1.Functions.Identity; }
                     _super.call(this);
                     this._keyComparer = _keyComparer;
                     this._entries = linkedNodeList();
@@ -156,7 +156,7 @@ System.register(["../../Compare", "../../Types", "../../Functions", "./Dictionar
                 };
                 Dictionary.prototype.getEnumerator = function () {
                     var _ = this, ver, currentEntry;
-                    return new EnumeratorBase_1.default(function () {
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
                         ver = _._version;
                         currentEntry = _._entries.first;
                     }, function (yielder) {
@@ -189,7 +189,8 @@ System.register(["../../Compare", "../../Types", "../../Functions", "./Dictionar
                 };
                 return Dictionary;
             }(DictionaryBase_1.default));
-            exports_1("default", Dictionary);
+            exports_1("Dictionary", Dictionary);
+            exports_1("default",Dictionary);
         }
     }
 });

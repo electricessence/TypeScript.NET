@@ -129,13 +129,20 @@
     var SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
     function getScheme(scheme) {
         var s = scheme;
-        if (s && Types_1.Type.isString(s)) {
+        if (Types_1.Type.isString(s)) {
+            if (!s)
+                return null;
             s = Utility_1.trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY);
-            if (!Scheme.isValid(s))
-                throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
-            return s;
+            if (!s)
+                return null;
+            if (Scheme.isValid(s))
+                return s;
         }
-        return VOID0;
+        else {
+            if (s === null || s === undefined)
+                return s;
+        }
+        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
     }
     function getPort(port) {
         if (port === 0)

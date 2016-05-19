@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -18,7 +18,7 @@ var SubscribableBase = function () {
     function SubscribableBase() {
         _classCallCheck(this, SubscribableBase);
 
-        this.__subscriptions = new LinkedNodeList_1.default();
+        this.__subscriptions = new LinkedNodeList_1.LinkedNodeList();
     }
 
     _createClass(SubscribableBase, [{
@@ -41,7 +41,7 @@ var SubscribableBase = function () {
             var _ = this;
             var n = _._findEntryNode(subscriber);
             if (n) return n.value;
-            var s = new Subscription_1.default(_, subscriber);
+            var s = new Subscription_1.Subscription(_, subscriber);
             _.__subscriptions.addNode({ value: s });
             return s;
         }
@@ -70,7 +70,7 @@ var SubscribableBase = function () {
                 return o.subscriber;
             }) : null;
             _s.clear();
-            dispose_1.default.these(s);
+            dispose_1.dispose.these(s);
             return u;
         }
     }, {
@@ -88,6 +88,7 @@ var SubscribableBase = function () {
     return SubscribableBase;
 }();
 
+exports.SubscribableBase = SubscribableBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SubscribableBase;
 //# sourceMappingURL=SubscribableBase.js.map

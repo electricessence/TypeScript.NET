@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+
 import * as Serialization from "../Serialization/Utility";
 import * as UriComponent from "./UriComponent";
 import * as QueryParam from "./QueryParam";
@@ -12,6 +13,7 @@ import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enume
 import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
 import {IStringKeyValuePair} from "../KeyValuePair";
+import {IEnumerableOrArray} from "../Collections/IEnumerableOrArray";
 
 /*
  * This module is provided as a lighter weight utility for acquiring query params.

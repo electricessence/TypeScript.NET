@@ -3,14 +3,10 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="ITimeMeasurement.d.ts"/>
-///<reference path="../IEquatable.d.ts"/>
-///<reference path="../IComparable.d.ts"/>
-///<reference path="../IFormattable.d.ts"/>
-'use strict'; // For compatibility with (let, const, function, class);
 
 import {TimeUnit} from "./TimeUnit";
 import {TimeQuantity} from "./TimeQuantity";
+import {ITimeQuantity} from "./ITimeQuantity";
 
 /**
  * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.

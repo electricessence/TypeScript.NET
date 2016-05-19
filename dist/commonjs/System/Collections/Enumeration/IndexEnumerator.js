@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -12,8 +12,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var EnumeratorBase_1 = require("./EnumeratorBase");
 
-var IndexEnumerator = function (_EnumeratorBase_1$def) {
-    _inherits(IndexEnumerator, _EnumeratorBase_1$def);
+var IndexEnumerator = function (_EnumeratorBase_1$Enu) {
+    _inherits(IndexEnumerator, _EnumeratorBase_1$Enu);
 
     function IndexEnumerator(sourceFactory) {
         _classCallCheck(this, IndexEnumerator);
@@ -51,8 +51,9 @@ var IndexEnumerator = function (_EnumeratorBase_1$def) {
     }
 
     return IndexEnumerator;
-}(EnumeratorBase_1.default);
+}(EnumeratorBase_1.EnumeratorBase);
 
+exports.IndexEnumerator = IndexEnumerator;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = IndexEnumerator;
 //# sourceMappingURL=IndexEnumerator.js.map

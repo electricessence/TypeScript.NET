@@ -3,12 +3,11 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import { areEqual } from "../Compare";
-import LinkedNodeList from "./LinkedNodeList";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import CollectionBase from "./CollectionBase";
+import { LinkedNodeList } from "./LinkedNodeList";
+import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
+import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import { CollectionBase } from "./CollectionBase";
 class InternalNode {
     constructor(value, previous, next) {
         this.value = value;

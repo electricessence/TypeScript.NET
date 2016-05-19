@@ -158,6 +158,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return DictionaryBase;
     }(CollectionBase_1.CollectionBase));
+    exports.DictionaryBase = DictionaryBase;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = DictionaryBase;
 });

@@ -1,19 +1,17 @@
-/// <reference path="../../../source/System/Primitive.d.ts" />
-/// <reference path="../../../source/System/FunctionTypes.d.ts" />
-/// <reference path="../../../source/System/Collections/Array/IArray.d.ts" />
-/// <reference path="../../../source/System/Collections/Enumeration/IEnumerator.d.ts" />
-/// <reference path="../../../source/System/Collections/Enumeration/IEnumerable.d.ts" />
-/// <reference path="../../../source/System/Collections/Dictionaries/IDictionary.d.ts" />
-/// <reference path="../../../source/System/IComparer.d.ts" />
-/// <reference path="../../../source/System/Collections/Sorting/Order.d.ts" />
-/// <reference path="../../../source/System/Collections/IEnumerableOrArray.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Dictionary from "../System/Collections/Dictionaries/Dictionary";
-import DisposableBase from "../System/Disposable/DisposableBase";
+import { Dictionary } from "../System/Collections/Dictionaries/Dictionary";
+import { DisposableBase } from "../System/Disposable/DisposableBase";
+import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
+import { IEnumerable } from "../System/Collections/Enumeration/IEnumerable";
+import { Action, Predicate, Selector, EqualityComparison, Comparison } from "../System/FunctionTypes";
+import { IEnumerableOrArray } from "../System/Collections/IEnumerableOrArray";
+import { IArray } from "../System/Collections/Array/IArray";
+import { IMap } from "../System/Collections/Dictionaries/IDictionary";
+import { Comparable } from "../System/IComparable";
 export declare const enum EnumerableAction {
     Break = 0,
     Return = 1,

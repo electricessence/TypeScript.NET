@@ -4,11 +4,11 @@
  */
 import { forEach } from "./Enumeration/Enumerator";
 import { areEqual } from "../Compare";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import DisposableBase from "../Disposable/DisposableBase";
+import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
+import { DisposableBase } from "../Disposable/DisposableBase";
 const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
-class CollectionBase extends DisposableBase {
+export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {
         super();
         this._equalityComparer = _equalityComparer;

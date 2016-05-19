@@ -66,6 +66,7 @@
         };
         return SubscribableBase;
     }());
+    exports.SubscribableBase = SubscribableBase;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = SubscribableBase;
 });

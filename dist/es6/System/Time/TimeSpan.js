@@ -3,12 +3,11 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import Type from '../Types';
-import TimeUnit from './TimeUnit';
-import ClockTime from './ClockTime';
-import TimeQuantity from './TimeQuantity';
-export default class TimeSpan extends TimeQuantity {
+import { Type } from "../Types";
+import { TimeUnit } from "./TimeUnit";
+import { ClockTime } from "./ClockTime";
+import { TimeQuantity } from "./TimeQuantity";
+export class TimeSpan extends TimeQuantity {
     constructor(value, units = TimeUnit.Milliseconds) {
         var ms = TimeUnit.toMilliseconds(value, units);
         super(ms);
@@ -64,4 +63,5 @@ export default class TimeSpan extends TimeQuantity {
     }
 }
 var timeSpanZero;
+export default TimeSpan;
 //# sourceMappingURL=TimeSpan.js.map

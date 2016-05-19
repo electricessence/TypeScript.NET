@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -16,8 +16,8 @@ var Compare_1 = require("../../Compare");
 var DictionaryBase_1 = require("./DictionaryBase");
 var VOID0 = void 0;
 
-var StringKeyDictionary = function (_DictionaryBase_1$def) {
-    _inherits(StringKeyDictionary, _DictionaryBase_1$def);
+var StringKeyDictionary = function (_DictionaryBase_1$Dic) {
+    _inherits(StringKeyDictionary, _DictionaryBase_1$Dic);
 
     function StringKeyDictionary() {
         var _Object$getPrototypeO;
@@ -135,8 +135,9 @@ var StringKeyDictionary = function (_DictionaryBase_1$def) {
     }]);
 
     return StringKeyDictionary;
-}(DictionaryBase_1.default);
+}(DictionaryBase_1.DictionaryBase);
 
+exports.StringKeyDictionary = StringKeyDictionary;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = StringKeyDictionary;
 //# sourceMappingURL=StringKeyDictionary.js.map

@@ -4,12 +4,12 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
-import dispose from "./dispose";
-import DisposableBase from "./DisposableBase";
-import TaskHandler from "../Tasks/TaskHandler";
-import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import { dispose } from "./dispose";
+import { DisposableBase } from "./DisposableBase";
+import { TaskHandler } from "../Tasks/TaskHandler";
+import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
 const OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
-export default class ObjectPool extends DisposableBase {
+export class ObjectPool extends DisposableBase {
     constructor(_maxSize, _generator) {
         super();
         this._maxSize = _maxSize;
@@ -112,4 +112,5 @@ export default class ObjectPool extends DisposableBase {
         return e;
     }
 }
+export default ObjectPool;
 //# sourceMappingURL=ObjectPool.js.map

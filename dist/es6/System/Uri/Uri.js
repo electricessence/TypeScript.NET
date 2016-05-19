@@ -3,15 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-'use strict';
-import Type from "../Types";
-import * as QueryParams from "../Uri/QueryParams";
+import { Type } from "../Types";
+import * as QueryParams from "./QueryParams";
+import * as Scheme from "./Scheme";
 import { trim } from "../Text/Utility";
-import UriScheme from "../Uri/Scheme";
-import ArgumentException from "../Exceptions/ArgumentException";
-import ArgumentOutOfRangeException from "../Exceptions/ArgumentOutOfRangeException";
+import { ArgumentException } from "../Exceptions/ArgumentException";
+import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
 const VOID0 = void (0);
-export default class Uri {
+export class Uri {
     constructor(scheme, userInfo, host, port, path, query, fragment) {
         var _ = this;
         _.scheme = getScheme(scheme) || null;
@@ -111,23 +110,23 @@ function copyUri(from, to) {
     }
     return to;
 }
-const SLASH = '/', SLASH2 = '//', QM = '?', HASH = '#', EMPTY = '', AT = '@';
+const SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 function getScheme(scheme) {
     var s = scheme;
     if (Type.isString(s)) {
         if (!s)
-            return VOID0;
-        s = UriScheme[trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY)];
-        if (isNaN(s))
-            throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
-    }
-    if (Type.isNumber(s, false)) {
-        s = UriScheme[s];
+            return null;
+        s = trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY);
         if (!s)
-            throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
-        return s;
+            return null;
+        if (Scheme.isValid(s))
+            return s;
     }
-    return VOID0;
+    else {
+        if (s === null || s === undefined)
+            return s;
+    }
+    throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
 }
 function getPort(port) {
     if (port === 0)
@@ -240,4 +239,5 @@ function tryParse(url, out) {
     out(copyUri(result));
     return null;
 }
+export default Uri;
 //# sourceMappingURL=Uri.js.map

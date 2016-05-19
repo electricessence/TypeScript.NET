@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../../Compare", "./SortContext", "../../Functions"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -34,7 +34,7 @@ System.register(["../../Compare", "./SortContext", "../../Functions"], function(
                 }
                 KeySortedContext.prototype.compare = function (a, b) {
                     var _ = this, ks = _._keySelector;
-                    if (!ks || ks == Functions_1.default.Identity)
+                    if (!ks || ks == Functions_1.Functions.Identity)
                         return _super.prototype.compare.call(this, a, b);
                     var d = Values.compare(ks(a), ks(b));
                     if (d == 0 && _._next)
@@ -42,8 +42,9 @@ System.register(["../../Compare", "./SortContext", "../../Functions"], function(
                     return _._order * d;
                 };
                 return KeySortedContext;
-            }(SortContext_1.default));
-            exports_1("default", KeySortedContext);
+            }(SortContext_1.SortContext));
+            exports_1("KeySortedContext", KeySortedContext);
+            exports_1("default",KeySortedContext);
         }
     }
 });

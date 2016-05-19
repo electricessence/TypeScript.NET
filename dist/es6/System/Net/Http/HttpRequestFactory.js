@@ -2,11 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import ArgumentNullException from "../../Exceptions/ArgumentNullException";
-import Uri from "../../Uri/Uri";
-import DisposableBase from "../../Disposable/DisposableBase";
+import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
+import { DisposableBase } from "../../Disposable/DisposableBase";
 import { GET, PUT, POST, DELETE } from "./HttpMethod";
+import { Uri } from "../../Uri/Uri";
 export default class HttpRequestFactory extends DisposableBase {
     constructor(_http, uriDefaults) {
         super();

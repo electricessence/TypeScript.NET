@@ -3,18 +3,18 @@
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1, context_1) {
-    'use strict';
+System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ClockTime_1, TimeSpan_1, TimeStamp_1;
+    var TimeSpan_1, ClockTime_1, TimeStamp_1;
     var DateTime;
     return {
         setters:[
-            function (ClockTime_1_1) {
-                ClockTime_1 = ClockTime_1_1;
-            },
             function (TimeSpan_1_1) {
                 TimeSpan_1 = TimeSpan_1_1;
+            },
+            function (ClockTime_1_1) {
+                ClockTime_1 = ClockTime_1_1;
             },
             function (TimeStamp_1_1) {
                 TimeStamp_1 = TimeStamp_1_1;
@@ -131,7 +131,7 @@ System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1
                         var _ = this, t = _._time;
                         if (!t) {
                             var d = this._value;
-                            _._time = t = new ClockTime_1.default(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
+                            _._time = t = new ClockTime_1.ClockTime(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
                         }
                         return t;
                     },
@@ -139,7 +139,7 @@ System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1
                     configurable: true
                 });
                 DateTime.prototype.toTimeStamp = function () {
-                    return TimeStamp_1.default.from(this);
+                    return TimeStamp_1.TimeStamp.from(this);
                 };
                 Object.defineProperty(DateTime, "now", {
                     get: function () {
@@ -176,7 +176,7 @@ System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1
                 });
                 DateTime.between = function (first, last) {
                     var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
-                    return new TimeSpan_1.default(f.getTime() - l.getTime());
+                    return new TimeSpan_1.TimeSpan(f.getTime() - l.getTime());
                 };
                 DateTime.isLeapYear = function (year) {
                     return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
@@ -186,6 +186,7 @@ System.register(['./ClockTime', './TimeSpan', './TimeStamp'], function(exports_1
                 };
                 return DateTime;
             }());
+            exports_1("DateTime", DateTime);
             Object.freeze(DateTime);
             exports_1("default",DateTime);
         }

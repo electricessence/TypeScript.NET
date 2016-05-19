@@ -2,13 +2,12 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import Type from "../Types";
-import DisposableBase from "../Disposable/DisposableBase";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import ArgumentException from "../Exceptions/ArgumentException";
+import { Type } from "../Types";
+import { DisposableBase } from "../Disposable/DisposableBase";
+import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import { ArgumentException } from "../Exceptions/ArgumentException";
 import { areEquivalent } from "../Compare";
-export default class EventDispatcherEntry extends DisposableBase {
+export class EventDispatcherEntry extends DisposableBase {
     constructor(type, listener, params = null, finalizer) {
         super(finalizer);
         this.type = type;
@@ -52,4 +51,5 @@ export default class EventDispatcherEntry extends DisposableBase {
             && areEquivalent(_.params, other.params, false);
     }
 }
+export default EventDispatcherEntry;
 //# sourceMappingURL=EventDispatcherEntry.js.map

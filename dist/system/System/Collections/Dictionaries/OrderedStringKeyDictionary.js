@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -50,9 +50,9 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
                 OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
                     var _ = this, order = _._order;
                     if (index < 0)
-                        throw new ArgumentOutOfRangeException_1.default('index', index, 'Is less than zero.');
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, 'Is less than zero.');
                     if (index >= order.length)
-                        throw new ArgumentOutOfRangeException_1.default('index', index, 'Is greater than the count.');
+                        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, 'Is greater than the count.');
                     return _.setValue(order[index], value);
                 };
                 OrderedStringKeyDictionary.prototype.importValues = function (values) {
@@ -81,8 +81,9 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
                     return o.length && o.filter(function (key) { return _.containsKey(key); }) || [];
                 };
                 return OrderedStringKeyDictionary;
-            }(StringKeyDictionary_1.default));
-            exports_1("default", OrderedStringKeyDictionary);
+            }(StringKeyDictionary_1.StringKeyDictionary));
+            exports_1("OrderedStringKeyDictionary", OrderedStringKeyDictionary);
+            exports_1("default",OrderedStringKeyDictionary);
         }
     }
 });

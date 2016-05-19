@@ -19,7 +19,6 @@ System.register(["./ArgumentException"], function(exports_1, context_1) {
                 ArgumentException_1 = ArgumentException_1_1;
             }],
         execute: function() {
-            'use strict';
             NAME = 'ArgumentOutOfRangeException';
             ArgumentOutOfRangeException = (function (_super) {
                 __extends(ArgumentOutOfRangeException, _super);
@@ -34,8 +33,9 @@ System.register(["./ArgumentException"], function(exports_1, context_1) {
                     return NAME;
                 };
                 return ArgumentOutOfRangeException;
-            }(ArgumentException_1.default));
-            exports_1("default", ArgumentOutOfRangeException);
+            }(ArgumentException_1.ArgumentException));
+            exports_1("ArgumentOutOfRangeException", ArgumentOutOfRangeException);
+            exports_1("default",ArgumentOutOfRangeException);
         }
     }
 });

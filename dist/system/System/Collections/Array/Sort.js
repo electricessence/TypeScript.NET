@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(['../../Types', '../../Compare'], function(exports_1, context_1) {
+System.register(["../../Types", "../../Compare"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, Compare_1;
@@ -14,7 +14,7 @@ System.register(['../../Types', '../../Compare'], function(exports_1, context_1)
     function createComparer(selector, order, equivalentToNaN) {
         if (order === void 0) { order = 1; }
         if (equivalentToNaN === void 0) { equivalentToNaN = NaN; }
-        var nanHasEquivalent = !Types_1.default.isTrueNaN(equivalentToNaN);
+        var nanHasEquivalent = !Types_1.Type.isTrueNaN(equivalentToNaN);
         return function (a, b) {
             var aValue = ensureArray(selector(a));
             var bValue = ensureArray(selector(b));
@@ -25,9 +25,9 @@ System.register(['../../Types', '../../Compare'], function(exports_1, context_1)
                     ? (i < oArray.length ? oArray[i] : 1)
                     : order;
                 if (nanHasEquivalent) {
-                    if (Types_1.default.isTrueNaN(vA))
+                    if (Types_1.Type.isTrueNaN(vA))
                         vA = equivalentToNaN;
-                    if (Types_1.default.isTrueNaN(vB))
+                    if (Types_1.Type.isTrueNaN(vB))
                         vB = equivalentToNaN;
                 }
                 var r = Compare_1.compare(vA, vB);

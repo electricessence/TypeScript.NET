@@ -2,13 +2,12 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import * as TextUtility from "../Text/Utility";
-import InvalidOperationException from "../Exceptions/InvalidOperationException";
-import ArgumentException from "../Exceptions/ArgumentException";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
-import EnumeratorBase from "./Enumeration/EnumeratorBase";
-export default class LinkedNodeList {
+import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
+import { ArgumentException } from "../Exceptions/ArgumentException";
+import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
+export class LinkedNodeList {
     constructor() {
         this._first = null;
         this._last = null;
@@ -231,4 +230,5 @@ function assertValidDetached(node, propName = 'node') {
     if (node.next || node.previous)
         throw new InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
 }
+export default LinkedNodeList;
 //# sourceMappingURL=LinkedNodeList.js.map

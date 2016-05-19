@@ -2,14 +2,14 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import LinkedNodeList from "./LinkedNodeList";
-import ArgumentNullException from "../Exceptions/ArgumentNullException";
+import { LinkedNodeList } from "./LinkedNodeList";
+import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { forEach, empty as emptyEnumerator } from "./Enumeration/Enumerator";
 import { using } from "../Disposable/dispose";
 import { areEqual } from "../Compare";
-import CollectionBase from "./CollectionBase";
+import { CollectionBase } from "./CollectionBase";
 const OTHER = 'other';
-class SetBase extends CollectionBase {
+export class SetBase extends CollectionBase {
     constructor(source) {
         super(null, areEqual);
         this._importEntries(source);

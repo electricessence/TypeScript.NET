@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/ArgumentNullException", "../Exceptions/ArgumentException", "../Compare"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -39,9 +39,9 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
                     this.listener = listener;
                     this.params = params;
                     if (!listener)
-                        throw new ArgumentNullException_1.default('listener');
-                    if (Types_1.default.isObject(listener) && !Types_1.default.hasMemberOfType(listener, "handleEvent", Types_1.default.FUNCTION))
-                        throw new ArgumentException_1.default('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
+                        throw new ArgumentNullException_1.ArgumentNullException('listener');
+                    if (Types_1.Type.isObject(listener) && !Types_1.Type.hasMemberOfType(listener, "handleEvent", Types_1.Type.FUNCTION))
+                        throw new ArgumentException_1.ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
                     var _ = this;
                     _.type = type;
                     _.listener = listener;
@@ -58,7 +58,7 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
                         return false;
                     var l = _.listener, d = l && e.type == _.type;
                     if (d) {
-                        if (Types_1.default.isFunction(l))
+                        if (Types_1.Type.isFunction(l))
                             _.listener(e);
                         else
                             l.handleEvent(e);
@@ -76,8 +76,9 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
                         && Compare_1.areEquivalent(_.params, other.params, false);
                 };
                 return EventDispatcherEntry;
-            }(DisposableBase_1.default));
-            exports_1("default", EventDispatcherEntry);
+            }(DisposableBase_1.DisposableBase));
+            exports_1("EventDispatcherEntry", EventDispatcherEntry);
+            exports_1("default",EventDispatcherEntry);
         }
     }
 });

@@ -15,6 +15,7 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IList} from "./IList";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import {IArray} from "./Array/IArray";
 
 export class List<T>
 extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>

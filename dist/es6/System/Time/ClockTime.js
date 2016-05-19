@@ -1,6 +1,10 @@
-'use strict';
-import TimeQuantity from './TimeQuantity';
-export default class ClockTime extends TimeQuantity {
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+import { TimeQuantity } from "./TimeQuantity";
+export class ClockTime extends TimeQuantity {
     constructor(...args) {
         super(args.length > 1
             ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
@@ -53,4 +57,5 @@ function pluralize(value, label) {
         label += "s";
     return label;
 }
+export default ClockTime;
 //# sourceMappingURL=ClockTime.js.map

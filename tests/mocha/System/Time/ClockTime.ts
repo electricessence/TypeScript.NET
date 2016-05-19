@@ -2,6 +2,7 @@
 ///<reference path="../../../../source/System/Time/HowMany.d.ts"/>
 
 import ClockTime from "../../../../source/System/Time/ClockTime";
+import {Milliseconds} from "../../../../source/System/Time/HowMany";
 import Integer from "../../../../source/System/Integer";
 var assert = require('../../../../node_modules/assert/assert');
 
@@ -14,10 +15,10 @@ millisecond = Integer.random(1000);
 
 var c1 = new ClockTime(hour, minute, second, millisecond);
 var c2 = new ClockTime(
-	days*HowMany.Milliseconds.Per.Day
-	+ hour*HowMany.Milliseconds.Per.Hour
-	+ minute*HowMany.Milliseconds.Per.Minute
-	+ second*HowMany.Milliseconds.Per.Second
+	days*Milliseconds.Per.Day
+	+ hour*Milliseconds.Per.Hour
+	+ minute*Milliseconds.Per.Minute
+	+ second*Milliseconds.Per.Second
 	+ millisecond);
 
 it('should match constructor values', ()=>

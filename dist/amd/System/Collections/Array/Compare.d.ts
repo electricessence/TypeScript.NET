@@ -1,11 +1,11 @@
-/// <reference path="../../../../../source/System/Collections/Array/IArray.d.ts" />
-/// <reference path="../../../../../source/System/FunctionTypes.d.ts" />
-/// <reference path="../../../../../source/System/Primitive.d.ts" />
-/// <reference path="../../../../../source/System/IComparable.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { Primitive } from "../../Primitive";
+import { EqualityComparison, Comparison } from "../../FunctionTypes";
+import { IArray } from "./IArray";
+import { IComparable } from "../../IComparable";
 export declare function areAllEqual(arrays: any[][], strict?: boolean, equalityComparer?: EqualityComparison<any>): boolean;
 export declare function areEqual<T>(a: IArray<T>, b: IArray<T>, strict?: boolean, equalityComparer?: EqualityComparison<T>): boolean;
 export declare function areEquivalent<T extends Primitive>(a: IArray<T>, b: IArray<T>): boolean;

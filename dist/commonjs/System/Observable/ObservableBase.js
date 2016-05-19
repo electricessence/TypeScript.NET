@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -16,8 +16,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var SubscribableBase_1 = require("./SubscribableBase");
 
-var ObservableBase = function (_SubscribableBase_1$d) {
-    _inherits(ObservableBase, _SubscribableBase_1$d);
+var ObservableBase = function (_SubscribableBase_1$S) {
+    _inherits(ObservableBase, _SubscribableBase_1$S);
 
     function ObservableBase() {
         _classCallCheck(this, ObservableBase);
@@ -26,21 +26,21 @@ var ObservableBase = function (_SubscribableBase_1$d) {
     }
 
     _createClass(ObservableBase, [{
-        key: '_onNext',
+        key: "_onNext",
         value: function _onNext(value) {
             processAction(this._getSubscribers(), function (s) {
                 s.onNext && s.onNext(value);
             });
         }
     }, {
-        key: '_onError',
+        key: "_onError",
         value: function _onError(error) {
             processAction(this._getSubscribers(), function (s) {
                 s.onError && s.onError(error);
             });
         }
     }, {
-        key: '_onCompleted',
+        key: "_onCompleted",
         value: function _onCompleted() {
             processAction(this._unsubscribeAll(true), function (s) {
                 s.onCompleted && s.onCompleted();
@@ -49,8 +49,9 @@ var ObservableBase = function (_SubscribableBase_1$d) {
     }]);
 
     return ObservableBase;
-}(SubscribableBase_1.default);
+}(SubscribableBase_1.SubscribableBase);
 
+exports.ObservableBase = ObservableBase;
 var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
 function processAction(observers, handler) {
     var observersErrors = null;

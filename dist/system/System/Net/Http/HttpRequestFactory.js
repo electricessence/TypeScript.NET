@@ -2,29 +2,29 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Exceptions/ArgumentNullException", "../../Uri/Uri", "../../Disposable/DisposableBase", "./HttpMethod"], function(exports_1, context_1) {
-    'use strict';
+System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri"], function(exports_1, context_1) {
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
         for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ArgumentNullException_1, Uri_1, DisposableBase_1, HttpMethod_1;
+    var ArgumentNullException_1, DisposableBase_1, HttpMethod_1, Uri_1;
     var HttpRequestFactory;
     return {
         setters:[
             function (ArgumentNullException_1_1) {
                 ArgumentNullException_1 = ArgumentNullException_1_1;
             },
-            function (Uri_1_1) {
-                Uri_1 = Uri_1_1;
-            },
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
             function (HttpMethod_1_1) {
                 HttpMethod_1 = HttpMethod_1_1;
+            },
+            function (Uri_1_1) {
+                Uri_1 = Uri_1_1;
             }],
         execute: function() {
             HttpRequestFactory = (function (_super) {
@@ -34,8 +34,8 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Uri/Uri", "../
                     this._http = _http;
                     this._disposableObjectName = 'HttpRequestFactory';
                     if (!_http)
-                        throw new ArgumentNullException_1.default('_http');
-                    this._uriDefaults = Uri_1.default.from(uriDefaults);
+                        throw new ArgumentNullException_1.ArgumentNullException('_http');
+                    this._uriDefaults = Uri_1.Uri.from(uriDefaults);
                 }
                 HttpRequestFactory.prototype._onDispose = function () {
                     this._http = null;
@@ -44,7 +44,7 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Uri/Uri", "../
                 HttpRequestFactory.prototype.uri = function (uri) {
                     var _ = this;
                     _.throwIfDisposed();
-                    var u = Uri_1.default.from(uri, _._uriDefaults);
+                    var u = Uri_1.Uri.from(uri, _._uriDefaults);
                     return _._uriDefaults.equals(u)
                         ? _
                         : new HttpRequestFactory(_._http, u);
@@ -76,7 +76,7 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Uri/Uri", "../
                     return this.request(HttpMethod_1.DELETE);
                 };
                 return HttpRequestFactory;
-            }(DisposableBase_1.default));
+            }(DisposableBase_1.DisposableBase));
             exports_1("default", HttpRequestFactory);
         }
     }

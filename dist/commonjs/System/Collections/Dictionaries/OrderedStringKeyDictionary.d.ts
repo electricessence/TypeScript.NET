@@ -2,8 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import StringKeyDictionary from "./StringKeyDictionary";
-export default class OrderedStringKeyDictionary<TValue> extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue> {
+import { StringKeyDictionary } from "./StringKeyDictionary";
+import { IOrderedDictionary } from "./IDictionary";
+export declare class OrderedStringKeyDictionary<TValue> extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue> {
     private _order;
     constructor();
     indexOfKey(key: string): number;
@@ -15,3 +16,4 @@ export default class OrderedStringKeyDictionary<TValue> extends StringKeyDiction
     removeByIndex(index: number): boolean;
     protected getKeys(): string[];
 }
+export default OrderedStringKeyDictionary;

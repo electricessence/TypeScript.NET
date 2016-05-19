@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import Type from '../Types';
+import { Type } from "../Types";
 export default function clone(source, depth = 0) {
     if (depth < 0)
         return source;

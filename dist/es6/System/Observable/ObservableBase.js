@@ -4,9 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-'use strict';
-import SubscribableBase from "./SubscribableBase";
-class ObservableBase extends SubscribableBase {
+import { SubscribableBase } from "./SubscribableBase";
+export class ObservableBase extends SubscribableBase {
     _onNext(value) {
         processAction(this._getSubscribers(), s => { s.onNext && s.onNext(value); });
     }

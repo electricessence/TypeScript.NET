@@ -2,16 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import { areEqual } from "../../Compare";
 import { forEach } from "../Enumeration/Enumerator";
-import CollectionBase from "../CollectionBase";
-import EnumeratorBase from "../Enumeration/EnumeratorBase";
-import ArgumentNullException from "../../Exceptions/ArgumentNullException";
-import InvalidOperationException from "../../Exceptions/InvalidOperationException";
-import extractKeyValue from "../../KeyValueExtract";
+import { CollectionBase } from "../CollectionBase";
+import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
+import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
+import { InvalidOperationException } from "../../Exceptions/InvalidOperationException";
+import { extractKeyValue } from "../../KeyValueExtract";
 const VOID0 = void (0);
-class DictionaryBase extends CollectionBase {
+export class DictionaryBase extends CollectionBase {
     constructor(source) {
         super(source);
     }

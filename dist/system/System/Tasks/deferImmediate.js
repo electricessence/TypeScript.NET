@@ -85,12 +85,11 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 Queue_1 = Queue_1_1;
             }],
         execute: function() {
-            "use strict";
             isNodeJS = false;
             flushing = false;
-            immediateQueue = new LinkedNodeList_1.default();
-            laterQueue = new Queue_1.default();
-            if (Types_1.default.isObject(process)
+            immediateQueue = new LinkedNodeList_1.LinkedNodeList();
+            laterQueue = new Queue_1.Queue();
+            if (Types_1.Type.isObject(process)
                 && process.toString() === "[object process]"
                 && process.nextTick) {
                 isNodeJS = true;

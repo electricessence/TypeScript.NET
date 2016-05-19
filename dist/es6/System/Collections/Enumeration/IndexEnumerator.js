@@ -2,9 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import EnumeratorBase from "./EnumeratorBase";
-export default class IndexEnumerator extends EnumeratorBase {
+import { EnumeratorBase } from "./EnumeratorBase";
+export class IndexEnumerator extends EnumeratorBase {
     constructor(sourceFactory) {
         var source;
         super(() => {
@@ -47,4 +46,5 @@ export default class IndexEnumerator extends EnumeratorBase {
         this._isEndless = false;
     }
 }
+export default IndexEnumerator;
 //# sourceMappingURL=IndexEnumerator.js.map

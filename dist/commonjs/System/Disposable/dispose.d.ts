@@ -1,9 +1,8 @@
-/// <reference path="../../../../source/System/Disposable/IDisposable.d.ts" />
-/// <reference path="../../../../source/System/Collections/Array/IArray.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import { IDisposable } from "./IDisposable";
 export declare function dispose(...disposables: IDisposable[]): void;
 export declare module dispose {
     function deferred(...disposables: IDisposable[]): void;

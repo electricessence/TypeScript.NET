@@ -2,12 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import { using } from "../../Disposable/dispose";
-import Type from "../../Types";
-import ArrayEnumerator from "./ArrayEnumerator";
-import IndexEnumerator from "./IndexEnumerator";
-import UnsupportedEnumerableException from "./UnsupportedEnumerableException";
+import { Type } from "../../Types";
+import { ArrayEnumerator } from "./ArrayEnumerator";
+import { IndexEnumerator } from "./IndexEnumerator";
+import { UnsupportedEnumerableException } from "./UnsupportedEnumerableException";
 const VOID0 = void (0), STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
     'Would result in an infinite loop that could hang the current process.';
 export function throwIfEndless(isEndless) {

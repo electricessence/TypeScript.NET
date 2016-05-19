@@ -10,7 +10,7 @@
         define(["require", "exports"], factory);
     }
 })(function (require, exports) {
-    'use strict';
+    "use strict";
     var VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
     var typeInfoRegistry = {};
     var TypeInfo = (function () {

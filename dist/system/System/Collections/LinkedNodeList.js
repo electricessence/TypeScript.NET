@@ -3,16 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1;
     var LinkedNodeList;
     function assertValidDetached(node, propName) {
         if (propName === void 0) { propName = 'node'; }
         if (node == null)
-            throw new ArgumentNullException_1.default(propName);
+            throw new ArgumentNullException_1.ArgumentNullException(propName);
         if (node.next || node.previous)
-            throw new InvalidOperationException_1.default("Cannot add a node to a LinkedNodeList that is already linked.");
+            throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
     }
     return {
         setters:[
@@ -74,7 +74,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                 };
                 LinkedNodeList.prototype.map = function (selector) {
                     if (!selector)
-                        throw new ArgumentNullException_1.default('selector');
+                        throw new ArgumentNullException_1.ArgumentNullException('selector');
                     var result = [];
                     this.forEach(function (node) {
                         result.push(selector(node));
@@ -150,7 +150,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                 };
                 LinkedNodeList.prototype.removeNode = function (node) {
                     if (node == null)
-                        throw new ArgumentNullException_1.default('node');
+                        throw new ArgumentNullException_1.ArgumentNullException('node');
                     var _ = this;
                     var prev = node.previous, next = node.next, a = false, b = false;
                     if (prev)
@@ -166,7 +166,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     else
                         b = true;
                     if (a !== b) {
-                        throw new ArgumentException_1.default('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                        throw new ArgumentException_1.ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
                     }
                     var removed = !a && !b;
                     if (removed)
@@ -220,7 +220,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                 };
                 LinkedNodeList.prototype.replace = function (node, replacement) {
                     if (node == null)
-                        throw new ArgumentNullException_1.default('node');
+                        throw new ArgumentNullException_1.ArgumentNullException('node');
                     assertValidDetached(replacement, 'replacement');
                     var _ = this;
                     replacement.previous = node.previous;
@@ -236,9 +236,9 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                 };
                 LinkedNodeList.valueEnumeratorFrom = function (list) {
                     if (!list)
-                        throw new ArgumentNullException_1.default('list');
+                        throw new ArgumentNullException_1.ArgumentNullException('list');
                     var _ = this, current, next;
-                    return new EnumeratorBase_1.default(function () {
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
                         current = null;
                         next = list.first;
                     }, function (yielder) {
@@ -254,7 +254,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     if (index === void 0) { index = 0; }
                     if (list && list.first) {
                         if (!array)
-                            throw new ArgumentNullException_1.default('array');
+                            throw new ArgumentNullException_1.ArgumentNullException('array');
                         list.forEach(function (node, i) {
                             array[index + i] = node.value;
                         });
@@ -263,7 +263,8 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                 };
                 return LinkedNodeList;
             }());
-            exports_1("default", LinkedNodeList);
+            exports_1("LinkedNodeList", LinkedNodeList);
+            exports_1("default",LinkedNodeList);
         }
     }
 });

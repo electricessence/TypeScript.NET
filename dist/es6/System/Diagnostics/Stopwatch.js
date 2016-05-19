@@ -2,8 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
-import TimeSpan from "../Time/TimeSpan";
+import { TimeSpan } from "../Time/TimeSpan";
 function getTimestampMilliseconds() {
     return (new Date()).getTime();
 }

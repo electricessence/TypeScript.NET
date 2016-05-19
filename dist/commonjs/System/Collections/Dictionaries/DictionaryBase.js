@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -23,8 +23,8 @@ var InvalidOperationException_1 = require("../../Exceptions/InvalidOperationExce
 var KeyValueExtract_1 = require("../../KeyValueExtract");
 var VOID0 = void 0;
 
-var DictionaryBase = function (_CollectionBase_1$def) {
-    _inherits(DictionaryBase, _CollectionBase_1$def);
+var DictionaryBase = function (_CollectionBase_1$Col) {
+    _inherits(DictionaryBase, _CollectionBase_1$Col);
 
     function DictionaryBase(source) {
         _classCallCheck(this, DictionaryBase);
@@ -40,8 +40,8 @@ var DictionaryBase = function (_CollectionBase_1$def) {
         value: function _addInternal(item) {
             var _this2 = this;
 
-            if (!item) throw new ArgumentNullException_1.default('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
-            return KeyValueExtract_1.default(item, function (key, value) {
+            if (!item) throw new ArgumentNullException_1.ArgumentNullException('item', 'Dictionaries must use a valid key/value pair. \'' + item + '\' is not allowed.');
+            return KeyValueExtract_1.extractKeyValue(item, function (key, value) {
                 return _this2.addByKeyValue(key, value);
             });
         }
@@ -83,7 +83,7 @@ var DictionaryBase = function (_CollectionBase_1$def) {
             var _this3 = this;
 
             if (!item || !this.getCount()) return false;
-            return KeyValueExtract_1.default(item, function (key, value) {
+            return KeyValueExtract_1.extractKeyValue(item, function (key, value) {
                 var v = _this3.getValue(key);
                 return Compare_1.areEqual(value, v);
             });
@@ -94,7 +94,7 @@ var DictionaryBase = function (_CollectionBase_1$def) {
             var _this4 = this;
 
             if (!item) return 0;
-            return KeyValueExtract_1.default(item, function (key, value) {
+            return KeyValueExtract_1.extractKeyValue(item, function (key, value) {
                 var v = _this4.getValue(key);
                 return Compare_1.areEqual(value, v) && _this4.removeByKey(key) ? 1 : 0;
             });
@@ -102,10 +102,10 @@ var DictionaryBase = function (_CollectionBase_1$def) {
     }, {
         key: "addByKeyValue",
         value: function addByKeyValue(key, value) {
-            if (value === VOID0) throw new InvalidOperationException_1.default("Cannot add 'undefined' as a value.");
+            if (value === VOID0) throw new InvalidOperationException_1.InvalidOperationException("Cannot add 'undefined' as a value.");
             var _ = this;
             if (_.containsKey(key)) {
-                var ex = new InvalidOperationException_1.default("Adding a key/value when the key already exists.");
+                var ex = new InvalidOperationException_1.InvalidOperationException("Adding a key/value when the key already exists.");
                 ex.data['key'] = key;
                 ex.data['value'] = value;
                 throw ex;
@@ -197,7 +197,7 @@ var DictionaryBase = function (_CollectionBase_1$def) {
             if (!pairs) return 0;
             var changed = 0;
             Enumerator_1.forEach(pairs, function (pair) {
-                return KeyValueExtract_1.default(pair, function (key, value) {
+                return KeyValueExtract_1.extractKeyValue(pair, function (key, value) {
                     if (_._setValueInternal(key, value)) changed++;
                 });
             });
@@ -211,7 +211,7 @@ var DictionaryBase = function (_CollectionBase_1$def) {
                 keys,
                 len,
                 i = 0;
-            return new EnumeratorBase_1.default(function () {
+            return new EnumeratorBase_1.EnumeratorBase(function () {
                 ver = _._version;
                 keys = _.getKeys();
                 len = keys.length;
@@ -238,8 +238,9 @@ var DictionaryBase = function (_CollectionBase_1$def) {
     }]);
 
     return DictionaryBase;
-}(CollectionBase_1.default);
+}(CollectionBase_1.CollectionBase);
 
+exports.DictionaryBase = DictionaryBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = DictionaryBase;
 //# sourceMappingURL=DictionaryBase.js.map

@@ -1,9 +1,15 @@
-/// <reference path="../../../../source/System/Collections/ILinkedListNode.d.ts" />
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-export default class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable {
+import { ILinkedNode, ILinkedNodeWithValue } from "./ILinkedListNode";
+import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
+import { IDisposable } from "../Disposable/IDisposable";
+import { ILinkedNodeList } from "./ILinkedList";
+import { IEnumerator } from "./Enumeration/IEnumerator";
+import { Predicate, Selector, Action } from "../FunctionTypes";
+import { IArray } from "./Array/IArray";
+export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable {
     private _first;
     private _last;
     unsafeCount: number;
@@ -29,3 +35,4 @@ export default class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements
     static valueEnumeratorFrom<T>(list: LinkedNodeList<ILinkedNodeWithValue<T>>): IEnumerator<T>;
     static copyValues<T, TDestination extends IArray<any>>(list: LinkedNodeList<ILinkedNodeWithValue<T>>, array: TDestination, index?: number): TDestination;
 }
+export default LinkedNodeList;

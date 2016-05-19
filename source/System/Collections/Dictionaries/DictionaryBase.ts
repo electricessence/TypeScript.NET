@@ -3,6 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
+
 import {areEqual} from "../../Compare";
 import {forEach} from "../Enumeration/Enumerator";
 import {CollectionBase} from "../CollectionBase";
@@ -18,7 +19,7 @@ import {IEnumerableOrArray} from "../IEnumerableOrArray";
 const VOID0:any = void(0);
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?
-abstract class DictionaryBase<TKey, TValue>
+export abstract class DictionaryBase<TKey, TValue>
 extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, TValue>
 {
 	constructor(source?:IEnumerableOrArray<IKeyValuePair<TKey,TValue>>)

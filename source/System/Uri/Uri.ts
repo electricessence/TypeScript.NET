@@ -19,6 +19,7 @@ import {IUri} from "./IUri";
 import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
 import {StringKeyValuePair} from "../KeyValuePair";
+import {IEquatable} from "../IEquatable";
 
 const VOID0:any = void(0);
 
@@ -297,17 +298,16 @@ const SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', 
 function getScheme(scheme:string):SchemeValue
 {
 	var s:any = scheme;
-	if(s && Type.isString(s))
+	if(Type.isString(s))
 	{
+		if(!s) return null;
 		s = trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY);
-
-		if(!Scheme.isValid(s))
-			throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
-
-		return s;
+		if(!s) return null;
+		if(Scheme.isValid(s)) return s;
+	} else {
+		if(s===null || s===undefined) return s;
 	}
-
-	return VOID0;
+	throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
 }
 
 function getPort(port:number|string):number

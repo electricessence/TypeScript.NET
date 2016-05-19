@@ -4,7 +4,7 @@
  * Based on code from: https://github.com/kriskowal/q
  */
 
-///<reference path="../Collections/ILinkedListNode.d.ts"/>
+
 import {Type} from "../Types";
 import {LinkedNodeList} from "../Collections/LinkedNodeList";
 import {Queue} from "../Collections/Queue";
@@ -31,8 +31,6 @@ interface ITaskQueueEntry extends ILinkedNode<ITaskQueueEntry>
 	domain?:IDomain;
 }
 
-
-"use strict";
 
 var requestTick:()=>void;
 var isNodeJS:boolean = false;

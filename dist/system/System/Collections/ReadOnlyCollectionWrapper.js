@@ -26,13 +26,13 @@ System.register(["../Exceptions/ArgumentNullException", "./ReadOnlyCollectionBas
                 function ReadOnlyCollectionWrapper(c) {
                     _super.call(this);
                     if (!c)
-                        throw new ArgumentNullException_1.default('collection');
+                        throw new ArgumentNullException_1.ArgumentNullException('collection');
                     var _ = this;
                     _._getCount = function () { return c.count; };
                     _.getEnumerator = function () { return c.getEnumerator(); };
                 }
                 return ReadOnlyCollectionWrapper;
-            }(ReadOnlyCollectionBase_1.default));
+            }(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase));
             exports_1("default", ReadOnlyCollectionWrapper);
         }
     }

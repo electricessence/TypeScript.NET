@@ -2,11 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
 import * as Values from "../../Compare";
-import SortContext from "./SortContext";
-import Functions from "../../Functions";
-export default class KeySortedContext extends SortContext {
+import { SortContext } from "./SortContext";
+import { Functions } from "../../Functions";
+export class KeySortedContext extends SortContext {
     constructor(next, _keySelector, order = 1, comparer = Values.compare) {
         super(next, comparer, order);
         this._keySelector = _keySelector;
@@ -21,4 +20,5 @@ export default class KeySortedContext extends SortContext {
         return _._order * d;
     }
 }
+export default KeySortedContext;
 //# sourceMappingURL=KeySortedContext.js.map

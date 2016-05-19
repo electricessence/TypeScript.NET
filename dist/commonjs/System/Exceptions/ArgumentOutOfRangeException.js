@@ -14,7 +14,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ArgumentException_1 = require("./ArgumentException");
-'use strict';
 var NAME = 'ArgumentOutOfRangeException';
 
 var ArgumentOutOfRangeException = function (_ArgumentException_1$) {
@@ -39,8 +38,9 @@ var ArgumentOutOfRangeException = function (_ArgumentException_1$) {
     }]);
 
     return ArgumentOutOfRangeException;
-}(ArgumentException_1.default);
+}(ArgumentException_1.ArgumentException);
 
+exports.ArgumentOutOfRangeException = ArgumentOutOfRangeException;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ArgumentOutOfRangeException;
 //# sourceMappingURL=ArgumentOutOfRangeException.js.map

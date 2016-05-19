@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var Types_1 = require("../Types");
 function dispose() {
@@ -57,7 +57,7 @@ function using(disposable, closure) {
 }
 exports.using = using;
 function disposeSingle(disposable, trapExceptions) {
-    if (disposable && Types_1.default.of(disposable).member('dispose').isFunction) {
+    if (disposable && Types_1.Type.of(disposable).member('dispose').isFunction) {
         if (trapExceptions) {
             try {
                 disposable.dispose();

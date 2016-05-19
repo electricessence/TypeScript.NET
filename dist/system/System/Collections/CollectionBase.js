@@ -64,11 +64,11 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 CollectionBase.prototype.assertModifiable = function () {
                     this.throwIfDisposed(CMDC);
                     if (this.getIsReadOnly())
-                        throw new InvalidOperationException_1.default(CMRO);
+                        throw new InvalidOperationException_1.InvalidOperationException(CMRO);
                 };
                 CollectionBase.prototype.assertVersion = function (version) {
                     if (version != this._version)
-                        throw new InvalidOperationException_1.default("Collection was modified.");
+                        throw new InvalidOperationException_1.InvalidOperationException("Collection was modified.");
                 };
                 CollectionBase.prototype._onModified = function () { };
                 CollectionBase.prototype._signalModification = function (increment) {
@@ -217,7 +217,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 CollectionBase.prototype.copyTo = function (target, index) {
                     if (index === void 0) { index = 0; }
                     if (!target)
-                        throw new ArgumentNullException_1.default('target');
+                        throw new ArgumentNullException_1.ArgumentNullException('target');
                     var count = this.getCount(), newLength = count + index;
                     if (target.length < newLength)
                         target.length = newLength;
@@ -232,7 +232,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     return this.copyTo(count > 65536 ? new Array(count) : []);
                 };
                 return CollectionBase;
-            }(DisposableBase_1.default));
+            }(DisposableBase_1.DisposableBase));
+            exports_1("CollectionBase", CollectionBase);
             exports_1("default",CollectionBase);
         }
     }

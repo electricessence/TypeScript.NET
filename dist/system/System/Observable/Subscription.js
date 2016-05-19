@@ -5,7 +5,7 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 System.register([], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var Subscription;
     return {
@@ -43,7 +43,8 @@ System.register([], function(exports_1, context_1) {
                 };
                 return Subscription;
             }());
-            exports_1("default", Subscription);
+            exports_1("Subscription", Subscription);
+            exports_1("default",Subscription);
         }
     }
 });

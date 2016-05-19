@@ -3,7 +3,7 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-'use strict';
+"use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Types_1 = require('../Types');
+var Types_1 = require("../Types");
 var VOID0 = void 0;
 
 var StringBuilder = function () {
@@ -30,14 +30,14 @@ var StringBuilder = function () {
     }
 
     _createClass(StringBuilder, [{
-        key: 'appendSingle',
+        key: "appendSingle",
         value: function appendSingle(item) {
             if (item !== null && item !== VOID0) {
                 var _ = this;
                 _._latest = null;
-                switch (typeof item === 'undefined' ? 'undefined' : _typeof(item)) {
-                    case Types_1.default.OBJECT:
-                    case Types_1.default.FUNCTION:
+                switch (typeof item === "undefined" ? "undefined" : _typeof(item)) {
+                    case Types_1.Type.OBJECT:
+                    case Types_1.Type.FUNCTION:
                         item = item.toString();
                         break;
                 }
@@ -45,7 +45,7 @@ var StringBuilder = function () {
             }
         }
     }, {
-        key: 'appendThese',
+        key: "appendThese",
         value: function appendThese(items) {
             var _ = this;
             items.forEach(function (s) {
@@ -54,7 +54,7 @@ var StringBuilder = function () {
             return _;
         }
     }, {
-        key: 'append',
+        key: "append",
         value: function append() {
             for (var _len2 = arguments.length, items = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
                 items[_key2] = arguments[_key2];
@@ -64,7 +64,7 @@ var StringBuilder = function () {
             return this;
         }
     }, {
-        key: 'appendLine',
+        key: "appendLine",
         value: function appendLine() {
             for (var _len3 = arguments.length, items = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
                 items[_key3] = arguments[_key3];
@@ -74,7 +74,7 @@ var StringBuilder = function () {
             return this;
         }
     }, {
-        key: 'appendLines',
+        key: "appendLines",
         value: function appendLines(items) {
             var _ = this;
             items.forEach(function (i) {
@@ -86,30 +86,30 @@ var StringBuilder = function () {
             return _;
         }
     }, {
-        key: 'toString',
+        key: "toString",
         value: function toString() {
             var latest = this._latest;
             if (!latest === null) this._latest = latest = this._partArray.join();
             return latest;
         }
     }, {
-        key: 'join',
+        key: "join",
         value: function join(delimiter) {
             return this._partArray.join(delimiter);
         }
     }, {
-        key: 'clear',
+        key: "clear",
         value: function clear() {
             this._partArray.length = 0;
             this._latest = null;
         }
     }, {
-        key: 'dispose',
+        key: "dispose",
         value: function dispose() {
             this.clear();
         }
     }, {
-        key: 'isEmpty',
+        key: "isEmpty",
         get: function get() {
             return this._partArray.length === 0;
         }
@@ -118,6 +118,7 @@ var StringBuilder = function () {
     return StringBuilder;
 }();
 
+exports.StringBuilder = StringBuilder;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = StringBuilder;
 //# sourceMappingURL=StringBuilder.js.map

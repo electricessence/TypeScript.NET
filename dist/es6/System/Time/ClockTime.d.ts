@@ -1,13 +1,11 @@
-/// <reference path="../../../../source/System/Time/ITimeMeasurement.d.ts" />
-/// <reference path="../../../../source/System/Time/ITimeQuantity.d.ts" />
-/// <reference path="../../../../source/System/IEquatable.d.ts" />
-/// <reference path="../../../../source/System/IComparable.d.ts" />
-/// <reference path="../../../../source/System/IFormattable.d.ts" />
-/// <reference path="../../../../source/System/IFormatProvider.d.ts" />
-/// <reference path="../../../../source/System/Time/ITimeStamp.d.ts" />
-/// <reference path="../../../../gulp-tsc-tmp-116418-4632-qexxx7/System/Time/HowMany.d.ts" />
-import TimeQuantity from './TimeQuantity';
-export default class ClockTime extends TimeQuantity implements IClockTime {
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Originally based upon .NET source but with many additions and improvements.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+import { TimeQuantity } from "./TimeQuantity";
+import { IClockTime } from "./ITimeStamp";
+export declare class ClockTime extends TimeQuantity implements IClockTime {
     days: number;
     hour: number;
     minute: number;
@@ -20,3 +18,4 @@ export default class ClockTime extends TimeQuantity implements IClockTime {
     static millisecondsFromTime(hours: number, minutes: number, seconds?: number, milliseconds?: number): number;
     toString(): string;
 }
+export default ClockTime;

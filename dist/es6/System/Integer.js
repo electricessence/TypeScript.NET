@@ -2,8 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import ArgumentException from "./Exceptions/ArgumentException";
-import ArgumentOutOfRangeException from "./Exceptions/ArgumentOutOfRangeException";
+import { ArgumentException } from "./Exceptions/ArgumentException";
+import { ArgumentOutOfRangeException } from "./Exceptions/ArgumentOutOfRangeException";
 export function Integer(n) {
     return Math.floor(n);
 }

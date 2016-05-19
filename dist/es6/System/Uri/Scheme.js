@@ -3,28 +3,23 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
  */
-var Scheme;
-(function (Scheme) {
-    Scheme[Scheme["file"] = 0] = "file";
-    Scheme[Scheme["ftp"] = 1] = "ftp";
-    Scheme[Scheme["gopher"] = 2] = "gopher";
-    Scheme[Scheme["http"] = 3] = "http";
-    Scheme[Scheme["https"] = 4] = "https";
-    Scheme[Scheme["ldap"] = 5] = "ldap";
-    Scheme[Scheme["mailto"] = 6] = "mailto";
-    Scheme[Scheme["pipe"] = 7] = "pipe";
-    Scheme[Scheme["tcp"] = 8] = "tcp";
-    Scheme[Scheme["news"] = 9] = "news";
-    Scheme[Scheme["nntp"] = 10] = "nntp";
-    Scheme[Scheme["telnet"] = 11] = "telnet";
-    Scheme[Scheme["uuid"] = 12] = "uuid";
-})(Scheme || (Scheme = {}));
-const PIPE = 'net.pipe';
-const TCP = 'net.tcp';
-Scheme[Scheme.pipe] = PIPE;
-Scheme[Scheme.tcp] = TCP;
-Scheme[PIPE] = Scheme.pipe;
-Scheme[TCP] = Scheme.tcp;
-Object.freeze(Scheme);
-export default Scheme;
+export const File = "file";
+export const FTP = "ftp";
+export const GOPHER = "gopher";
+export const HTTP = "http";
+export const HTTPS = "https";
+export const LDAP = "ldap";
+export const MAILTO = "mailto";
+export const PIPE = "net.pipe";
+export const TCP = "net.tcp";
+export const NEWS = "news";
+export const NNTP = "nntp";
+export const TELNET = "telnet";
+export const UUID = "uuid";
+export const All = Object.freeze([
+    File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID
+]);
+export function isValid(scheme) {
+    return All.indexOf(scheme) != -1;
+}
 //# sourceMappingURL=Scheme.js.map

@@ -14,6 +14,7 @@ function shallowCopy(source) {
     }
     return target;
 }
+exports.shallowCopy = shallowCopy;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = shallowCopy;
 //# sourceMappingURL=shallowCopy.js.map

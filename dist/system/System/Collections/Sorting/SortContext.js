@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 System.register(["../../Compare"], function(exports_1, context_1) {
-    'use strict';
+    "use strict";
     var __moduleName = context_1 && context_1.id;
     var Values;
     var SortContext;
@@ -43,7 +43,8 @@ System.register(["../../Compare"], function(exports_1, context_1) {
                 };
                 return SortContext;
             }());
-            exports_1("default", SortContext);
+            exports_1("SortContext", SortContext);
+            exports_1("default",SortContext);
         }
     }
 });
