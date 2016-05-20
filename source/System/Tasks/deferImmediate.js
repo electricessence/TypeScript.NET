@@ -79,8 +79,7 @@
             dispose: function () { _this.cancel(); }
         };
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = deferImmediate;
+    exports.deferImmediate = deferImmediate;
     function runAfterDeferred(task) {
         laterQueue.enqueue(task);
         requestFlush();
@@ -124,5 +123,7 @@
             setTimeout(flush, 0);
         };
     }
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = deferImmediate;
 });
 //# sourceMappingURL=deferImmediate.js.map

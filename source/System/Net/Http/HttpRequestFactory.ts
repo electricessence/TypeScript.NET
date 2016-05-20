@@ -12,7 +12,6 @@ import {GET, PUT, POST, DELETE} from "./HttpMethod";
 import {Uri} from "../../Uri/Uri";
 import {IUri} from "../../Uri/IUri";
 import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
-import {IPromise} from "../../Promises/IPromise";
 
 /**
  * This class exposes a factory for making requests to prepared uri and params.
@@ -61,7 +60,7 @@ export default class HttpRequestFactory extends DisposableBase
 		return _.uri(_._uriDefaults.updateQuery(params));
 	}
 
-	request<TResult>(method:HttpMethodValue, data?:any):IPromise<TResult>
+	request<TResult>(method:HttpMethodValue, data?:any):PromiseLike<TResult>
 	{
 		var _ = this;
 		_.throwIfDisposed();
@@ -73,22 +72,22 @@ export default class HttpRequestFactory extends DisposableBase
 	}
 
 
-	get<TResult>():IPromise<TResult>
+	get<TResult>():PromiseLike<TResult>
 	{
 		return this.request<TResult>(GET);
 	}
 
-	put<TResult>():IPromise<TResult>
+	put<TResult>():PromiseLike<TResult>
 	{
 		return this.request<TResult>(PUT);
 	}
 
-	post<TResult>(data:any):IPromise<TResult>
+	post<TResult>(data:any):PromiseLike<TResult>
 	{
 		return this.request<TResult>(POST, data);
 	}
 
-	'delete'<TResult>():IPromise<TResult>
+	'delete'<TResult>():PromiseLike<TResult>
 	{
 		return this.request<TResult>(DELETE);
 	}

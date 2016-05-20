@@ -77,8 +77,7 @@ function deferImmediate(task) {
         }
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = deferImmediate;
+exports.deferImmediate = deferImmediate;
 function runAfterDeferred(task) {
     laterQueue.enqueue(task);
     requestFlush();
@@ -116,4 +115,6 @@ if (Types_1.Type.isObject(process) && process.toString() === "[object process]" 
         setTimeout(flush, 0);
     };
 }
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = deferImmediate;
 //# sourceMappingURL=deferImmediate.js.map

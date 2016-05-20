@@ -124,7 +124,7 @@ function requestFlush():void
 	}
 }
 
-export default function deferImmediate(task:Closure):ICancellable
+export function deferImmediate(task:Closure):ICancellable
 {
 	var entry:ITaskQueueEntry = {
 		task: task,
@@ -224,3 +224,5 @@ else
 		setTimeout(flush, 0);
 	};
 }
+
+export default deferImmediate;
