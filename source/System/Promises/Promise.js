@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Disposable/ObjectPool", "../Exceptions/ArgumentNullException", "../Disposable/DisposableBase", "../Exceptions/NotImplementedException", "../Tasks/deferImmediate", "../Functions", "../Lazy"], factory);
+        define(["require", "exports", "../Types", "../Disposable/ObjectPool", "../Exceptions/ArgumentNullException", "../Disposable/DisposableBase", "../Tasks/deferImmediate", "../Functions", "../Lazy", "./Callbacks"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -21,10 +21,10 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ObjectPool_1 = require("../Disposable/ObjectPool");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var NotImplementedException_1 = require("../Exceptions/NotImplementedException");
     var deferImmediate_1 = require("../Tasks/deferImmediate");
     var Functions_1 = require("../Functions");
     var Lazy_1 = require("../Lazy");
+    var PromiseCallbacks = require("./Callbacks");
     var VOID0 = void 0;
     var deferPool;
     function deferFactory(recycle) {
@@ -52,22 +52,6 @@ var __extends = (this && this.__extends) || function (d, b) {
     function reject(err) {
         return new RejectedPromise(err);
     }
-    var PromiseCallbacks = (function () {
-        function PromiseCallbacks(resolve, reject) {
-            this.resolve = resolve;
-            this.reject = reject;
-        }
-        PromiseCallbacks.prototype.dispose = function () {
-            this.resolve = null;
-            this.reject = null;
-        };
-        PromiseCallbacks.prototype.release = function (to) {
-            var _a = this, resolve = _a.resolve, reject = _a.reject;
-            deferImmediate_1.deferImmediate(function () { return to.then(resolve, reject); });
-            this.dispose();
-        };
-        return PromiseCallbacks;
-    }());
     var Defer = (function () {
         function Defer() {
         }
@@ -88,7 +72,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     pe._state = Promise.State.Fulfilled;
                 for (var _i = 0, p_1 = p; _i < p_1.length; _i++) {
                     var c = p_1[_i];
-                    c.release(r);
+                    PromiseCallbacks.release(r, c);
                 }
                 p.length = 0;
                 p = null;
@@ -106,7 +90,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     pe._state = Promise.State.Rejected;
                 for (var _i = 0, p_2 = p; _i < p_2.length; _i++) {
                     var c = p_2[_i];
-                    c.release(r);
+                    PromiseCallbacks.release(r, c);
                 }
                 p.length = 0;
                 p = null;
@@ -140,7 +124,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 if (pe === VOID0)
                     pe = d._pending = [];
                 if (pe)
-                    pe.push(new PromiseCallbacks(f, e));
+                    pe.push(PromiseCallbacks.init(f, e));
                 else {
                     var r_1 = d._final;
                     deferImmediate_1.deferImmediate(function () { return r_1.then(f, e); });
@@ -331,7 +315,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         Promise.prototype._onFinally = function () {
         };
         Promise.prototype.then = function (onFulfilled, onRejected) {
-            throw new NotImplementedException_1.NotImplementedException();
+            return null;
         };
         return Promise;
     }(PromiseBase));

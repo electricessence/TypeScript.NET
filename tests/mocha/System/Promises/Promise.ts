@@ -1,7 +1,9 @@
 ///<reference path="../../import.d.ts"/>
 
 import {Promise} from "../../../../source/System/Promises/Promise";
+import * as SimplePromise from "../../../../source/System/Promises/Simple";
 import * as AU from "../../../../source/System/Collections/Array/Utility";
+import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
 var assert = require('../../../../node_modules/assert/assert');
 
 
@@ -18,43 +20,86 @@ afterEach(function()
 describe("computing sum of integers using promises", ()=>
 {
 	// Use triangular numbers...
-	var count = 1000;
+	var count = 10000;
 	var array = AU.range(1, count);
-	var pZero = Promise.fulfilled(0);
+	var swA = Stopwatch.startNew();
+	var answer = array.reduce((currentVal,nextVal)=>currentVal + nextVal,0);
+	swA.stop();
 
 	it("should compute correct result without blowing stack (lambda only)", ()=>
+	{
+		let sw = Stopwatch.startNew();
+		return array
+			.reduce((promise:PromiseLike<number>, nextVal:number) =>
+				promise.then(currentVal=>currentVal + nextVal), SimplePromise.fulfilled(0))
+			.then(value=>
+			{
+				sw.stop();
+				console.log("");
+				console.log("Synchronous Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+				assert.equal(value, answer);
+			});
+	});
+
+	it("should compute correct result without blowing stack (lambda only)", ()=>
+	{
+		let sw = Stopwatch.startNew();
+		return array
+			.reduce((promise:PromiseLike<number>, nextVal:number) =>
+				promise.then(currentVal=>currentVal + nextVal), Promise.fulfilled(0))
+			.then(value=>
+			{
+				sw.stop();
+				console.log("");
+				console.log("Async Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+				console.log("Non-Promise Benchmark Milliseconds: ", swA.elapsedMilliseconds);
+				assert.equal(value, answer);
+			});
+	});
+
+	it("should be deferring fulfillment", ()=>
 		array
 			.reduce((promise:PromiseLike<number>, nextVal:number) =>
-				promise.then(currentVal=>currentVal + nextVal), pZero)
-			.then(value=>
-				assert.equal(value, count*(count + 1)/2))
+			{
+				let wasRun = false;
+				var r = promise.then(currentVal=>
+				{
+					wasRun = true;
+					return currentVal + nextVal;
+				});
+				assert.ok(!wasRun, "The promise should have deferred until after closure completed.");
+				return r;
+			}, Promise.fulfilled(0))
 	);
 
 	it("should compute correct result without blowing stack", ()=>
 		array
 			.reduce((promise:PromiseLike<number>, nextVal:number) =>
-				promise.then(currentVal=>Promise.fulfilled(currentVal + nextVal)), pZero)
+				promise.then(currentVal=>Promise.fulfilled(currentVal + nextVal)), Promise.fulfilled(0))
 			.then(value=>
-				assert.equal(value, count*(count + 1)/2))
+				assert.equal(value, answer))
 	);
 });
 
 
-describe("Q function", function () {
-	it("should result in a fulfilled promise when given a value", function () {
+describe("Q function", function()
+{
+	it("should result in a fulfilled promise when given a value", function()
+	{
 		var f = Promise.fulfilled(5);
-		assert.equal(f.result,5);
-		assert.equal(f.isResolved,true);
-		assert.equal(f.isFulfilled,true);
-		assert.equal(f.isRejected,false);
+		assert.equal(f.result, 5);
+		assert.equal(f.isResolved, true);
+		assert.equal(f.isFulfilled, true);
+		assert.equal(f.isRejected, false);
 	});
 
-	it("should result in a rejected promise when requesting rejected", function () {
+	it("should result in a rejected promise when requesting rejected", function()
+	{
 		var f = Promise.rejected("err");
-		assert.equal(f.error,"err");
-		assert.equal(f.isResolved,true);
-		assert.equal(f.isFulfilled,false);
-		assert.equal(f.isRejected,true);
+		assert.equal(f.error, "err");
+		assert.equal(f.isResolved, true);
+		assert.equal(f.isFulfilled, false);
+		assert.equal(f.isRejected, true);
 	});
 
 	// it("should be the identity when given promise", function () {

@@ -14,11 +14,14 @@ import Type from "../Types";
 import {ObjectPool} from "../Disposable/ObjectPool";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {DisposableBase} from "../Disposable/DisposableBase";
-import {NotImplementedException} from "../Exceptions/NotImplementedException";
 import {IDisposable} from "../Disposable/IDisposable";
 import {deferImmediate} from "../Tasks/deferImmediate";
 import {Functions} from "../Functions";
 import {Lazy} from "../Lazy";
+import * as PromiseCallbacks from "./Callbacks";
+import {IPromiseCallbacks} from "./Callbacks";
+import * as PromiseMethods from "./Methods";
+
 
 const VOID0:any = void 0;
 
@@ -46,7 +49,7 @@ export function isPromise<T>(value:any):value is PromiseLike<T>
 }
 
 
-function resolve<T>(value:Promise.Resolution<T>):PromiseLike<T>
+function resolve<T>(value:PromiseMethods.Resolution<T>):PromiseLike<T>
 {
 	if(isPromise(value)) return value;
 	return new FulfilledPromise(value);
@@ -57,31 +60,10 @@ function reject<T>(err:any):PromiseLike<T>
 	return new RejectedPromise(err);
 }
 
-class PromiseCallbacks<T> implements IDisposable
-{
-	constructor(
-		public resolve:(value:T | PromiseLike<T>) => void,
-		public reject:(reason:any) => void)
-	{}
-
-
-	dispose():void
-	{
-		this.resolve = null;
-		this.reject = null;
-	}
-
-	release(to:PromiseLike<T>):void
-	{
-		let {resolve, reject} = this;
-		deferImmediate(()=>to.then(resolve, reject));
-		this.dispose();
-	}
-}
 
 export class Defer<T> implements IDisposable
 {
-	private _pending:PromiseCallbacks<T>[]; // undefined == not initialized.  null == done.
+	private _pending:IPromiseCallbacks<T>[]; // undefined == not initialized.  null == done.
 	private _final:PromiseLike<T>;
 
 	dispose():void
@@ -105,7 +87,7 @@ export class Defer<T> implements IDisposable
 			if(pe instanceof PendingPromise)
 				pe._state = Promise.State.Fulfilled;
 
-			for(let c of p) c.release(r);
+			for(let c of p) PromiseCallbacks.release(r,c);
 			p.length = 0;
 			p = null;
 		}
@@ -125,7 +107,7 @@ export class Defer<T> implements IDisposable
 			if(pe instanceof PendingPromise)
 				pe._state = Promise.State.Rejected;
 
-			for(let c of p) c.release(r);
+			for(let c of p) PromiseCallbacks.release(r,c);
 			p.length = 0;
 			p = null;
 		}
@@ -150,34 +132,35 @@ export class Defer<T> implements IDisposable
 	private static _getPromise<T>(d:Defer<T>):PromiseLike<T>
 	{
 		return d._final || new PendingPromise((
-			onFulfilled:(value:T)=>any,
-			onRejected:(err:any)=>any)=>
-		{
-			onFulfilled = onFulfilled || Functions.Identity;
-			onRejected = onRejected || reject;
-
-			var result = deferFactory();
-			var f = (v:T)=> { result.resolve(onFulfilled(v)) },
-			    e = (v:any)=> { result.resolve(onRejected(v)) };
-
-			let pe = d._pending;
-			if(pe===VOID0) pe = d._pending = [];
-
-			if(pe)
-				pe.push(new PromiseCallbacks(f, e));
-			else
+				onFulfilled:(value:T)=>any,
+				onRejected:(err:any)=>any)=>
 			{
-				let r = d._final;
-				deferImmediate(()=>r.then(f, e));
-			}
+				onFulfilled = onFulfilled || Functions.Identity;
+				onRejected = onRejected || reject;
 
-			return result.promise;
-		})
+				var result = deferFactory();
+				var f = (v:T)=> { result.resolve(onFulfilled(v)) },
+				    e = (v:any)=> { result.resolve(onRejected(v)) };
+
+				let pe = d._pending;
+				if(pe===VOID0) pe = d._pending = [];
+
+				if(pe)
+					pe.push(PromiseCallbacks.init(f, e));
+				else
+				{
+					let r = d._final;
+					deferImmediate(()=>r.then(f, e));
+				}
+
+				return result.promise;
+			})
 	}
 }
 
 
-export interface IPromise<T> extends PromiseLike<T> {
+export interface IPromise<T> extends PromiseLike<T>
+{
 	state:Promise.State;
 	isResolved:boolean;
 	isFulfilled:boolean;
@@ -251,10 +234,9 @@ extends DisposableBase implements IPromise<T>
 	}
 
 	abstract then<TResult>(
-		onFulfilled:Promise.Resolve<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseLike<TResult>;
+		onFulfilled:PromiseMethods.Fulfill<T,TResult>,
+		onRejected?:PromiseMethods.Reject<TResult>):PromiseLike<TResult>;
 }
-
 
 
 export class FulfilledPromise<T> extends PromiseBase<T>
@@ -265,7 +247,7 @@ export class FulfilledPromise<T> extends PromiseBase<T>
 	}
 
 	then<TResult>(
-		onFulfilled:Promise.Resolve<T,TResult>):PromiseLike<TResult>
+		onFulfilled:PromiseMethods.Fulfill<T,TResult>):PromiseLike<TResult>
 	{
 		var _ = this;
 		_.throwIfDisposed();
@@ -286,8 +268,8 @@ export class RejectedPromise<T> extends PromiseBase<T>
 	}
 
 	then<TResult>(
-		onFulfilled:Promise.Resolve<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseLike<TResult>
+		onFulfilled:PromiseMethods.Fulfill<T,TResult>,
+		onRejected?:PromiseMethods.Reject<TResult>):PromiseLike<TResult>
 	{
 		var _ = this;
 		_.throwIfDisposed();
@@ -316,8 +298,8 @@ class PendingPromise<T> extends PromiseBase<T>
 	}
 
 	then<TResult>(
-		onFulfilled:Promise.Resolve<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseLike<TResult>
+		onFulfilled:PromiseMethods.Fulfill<T,TResult>,
+		onRejected?:PromiseMethods.Reject<TResult>):PromiseLike<TResult>
 	{
 		return this._execute(onFulfilled, onRejected);
 	}
@@ -364,7 +346,8 @@ export class Promise<T> extends PromiseBase<T>
 		super._onDispose();
 	}
 
-	dispatch():void {
+	dispatch():void
+	{
 
 	}
 
@@ -416,37 +399,106 @@ export class Promise<T> extends PromiseBase<T>
 
 	then<TResult>(
 		onFulfilled?:(value:T)=>(PromiseLike<TResult>|TResult),
-		onRejected?:(reason:any)=>(PromiseLike<TResult>|TResult)):PromiseLike<TResult>
-
-	then<TResult>(
-		onFulfilled?:(value:T)=>(PromiseLike<TResult>|TResult),
-		onRejected?:(reason:any)=>void):PromiseLike<TResult>
-
-	then<TResult>(
-		onFulfilled?:(value:T)=>(PromiseLike<TResult>|TResult),
 		onRejected?:(reason:any)=>(void|PromiseLike<TResult>|TResult)):PromiseLike<TResult>
 
 	{
-		throw new NotImplementedException();
-		// function _fulfilled(value) {
-		// 	try {
-		// 		return typeof fulfilled === "function" ? fulfilled(value) : value;
-		// 	} catch (exception) {
+		return null;
+		//
+		// var self = this;
+		// var deferred = deferFactory();
+		// var done = false;   // ensure the untrusted promise makes at most a
+		//                    // single call to one of the callbacks
+		//
+		// function _fulfilled(value)
+		// {
+		// 	try
+		// 	{
+		// 		return typeof fulfilled==="function" ? fulfilled(value) : value;
+		// 	}
+		// 	catch(exception)
+		// 	{
 		// 		return reject(exception);
 		// 	}
 		// }
 		//
-		// function _rejected(exception) {
-		// 	if (typeof rejected === "function") {
+		// function _rejected(exception)
+		// {
+		// 	if(typeof rejected==="function")
+		// 	{
 		// 		makeStackTraceLong(exception, self);
-		// 		try {
+		// 		try
+		// 		{
 		// 			return rejected(exception);
-		// 		} catch (newException) {
+		// 		}
+		// 		catch(newException)
+		// 		{
 		// 			return reject(newException);
 		// 		}
 		// 	}
 		// 	return reject(exception);
 		// }
+		//
+		// function _progressed(value)
+		// {
+		// 	return typeof progressed==="function" ? progressed(value) : value;
+		// }
+		//
+		// Q.nextTick(function()
+		// {
+		// 	self.promiseDispatch(function(value)
+		// 	{
+		// 		if(done)
+		// 		{
+		// 			return;
+		// 		}
+		// 		done = true;
+		//
+		// 		deferred.resolve(_fulfilled(value));
+		// 	}, "when", [
+		// 		function(exception)
+		// 		{
+		// 			if(done)
+		// 			{
+		// 				return;
+		// 			}
+		// 			done = true;
+		//
+		// 			deferred.resolve(_rejected(exception));
+		// 		}
+		// 	]);
+		// });
+		//
+		// // Progress propagator need to be attached in the current tick.
+		// self.promiseDispatch(void 0, "when", [
+		// 	void 0, function(value)
+		// 	{
+		// 		var newValue;
+		// 		var threw = false;
+		// 		try
+		// 		{
+		// 			newValue = _progressed(value);
+		// 		}
+		// 		catch(e)
+		// 		{
+		// 			threw = true;
+		// 			if(Q.onerror)
+		// 			{
+		// 				Q.onerror(e);
+		// 			}
+		// 			else
+		// 			{
+		// 				throw e;
+		// 			}
+		// 		}
+		//
+		// 		if(!threw)
+		// 		{
+		// 			deferred.notify(newValue);
+		// 		}
+		// 	}
+		// ]);
+		//
+		// return deferred.promise;
 	}
 
 }
@@ -454,23 +506,6 @@ export class Promise<T> extends PromiseBase<T>
 
 export module Promise
 {
-
-	export type Resolution<TResult> = PromiseLike<TResult>|TResult;
-
-
-	export interface Resolve<T, TResult>
-	{
-		(value:T | PromiseLike<T>):Resolution<TResult>
-	}
-	export interface Reject<TResult>
-	{
-		(err?:any):(Resolution<TResult>|void)
-	}
-	export interface Then<T, TResult>
-	{
-		(resolve:Resolve<T, TResult>, reject?:Reject<TResult>):PromiseLike<TResult>
-	}
-
 
 	export function fulfilled<T>(value:T):IPromise<T>
 	{
