@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../Disposable/dispose", "../Compare", "./CollectionBase"], function(exports_1, context_1) {
+System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,7 +10,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var LinkedNodeList_1, ArgumentNullException_1, Enumerator_1, dispose_1, Compare_1, CollectionBase_1;
+    var LinkedNodeList_1, ArgumentNullException_1, Enumerator_1, EmptyEnumerator_1, dispose_1, Compare_1, CollectionBase_1;
     var OTHER, SetBase;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
@@ -33,6 +33,9 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
             },
             function (Enumerator_1_1) {
                 Enumerator_1 = Enumerator_1_1;
+            },
+            function (EmptyEnumerator_1_1) {
+                EmptyEnumerator_1 = EmptyEnumerator_1_1;
             },
             function (dispose_1_1) {
                 dispose_1 = dispose_1_1;
@@ -105,12 +108,12 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                         count = other.getCount();
                     }
                     else {
-                        dispose_1.using(this.newUsing(), function (o) {
+                        count = dispose_1.using(this.newUsing(), function (o) {
                             Enumerator_1.forEach(other, function (v) {
                                 o.add(v);
                                 return result = _this.contains(v);
                             });
-                            count = o.getCount();
+                            return o.getCount();
                         });
                     }
                     return result && this.getCount() > count;
@@ -188,14 +191,13 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     var s = this._set;
                     return s && this.getCount()
                         ? LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(s)
-                        : Enumerator_1.empty;
+                        : EmptyEnumerator_1.EmptyEnumerator;
                 };
                 SetBase.prototype.forEach = function (action, useCopy) {
                     if (useCopy === void 0) { useCopy = false; }
-                    if (useCopy)
-                        _super.prototype.forEach.call(this, action, useCopy);
-                    else
-                        this._set.forEach(function (node, i) { return action(node.value, i); });
+                    return useCopy
+                        ? _super.prototype.forEach.call(this, action, useCopy)
+                        : this._set.forEach(function (node, i) { return action(node.value, i); });
                 };
                 SetBase.prototype._removeNode = function (node) {
                     if (!node)

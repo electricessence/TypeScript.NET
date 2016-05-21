@@ -13,6 +13,7 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
     private _state;
     private _disposer;
     current: T;
+    index: number;
     constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, isEndless?: boolean);
     constructor(initializer: () => void, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: () => void, isEndless?: boolean);
     protected _isEndless: boolean;
@@ -21,6 +22,8 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
     moveNext(): boolean;
     nextValue(): T;
     next(): IIteratorResult<T>;
+    'return'(): IIteratorResult<void>;
+    'return'<TReturn>(value: TReturn): IIteratorResult<TReturn>;
     protected _onDispose(): void;
 }
 export default EnumeratorBase;

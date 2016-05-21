@@ -67,7 +67,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             dispose: function () { _this.cancel(); }
         };
     }
-    exports_1("default", deferImmediate);
+    exports_1("deferImmediate", deferImmediate);
     function runAfterDeferred(task) {
         laterQueue.enqueue(task);
         requestFlush();
@@ -127,6 +127,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                     setTimeout(flush, 0);
                 };
             }
+            exports_1("default",deferImmediate);
         }
     }
 });

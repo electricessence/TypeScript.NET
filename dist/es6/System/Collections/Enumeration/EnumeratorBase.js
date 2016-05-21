@@ -5,6 +5,7 @@
 import { Type } from "../../Types";
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import { ObjectPool } from "../../Disposable/ObjectPool";
+import { IteratorResult } from "./IteratorResult";
 const VOID0 = void (0);
 var yielderPool;
 function yielder(recycle) {
@@ -21,12 +22,18 @@ class Yielder {
         this._current = VOID0;
     }
     get current() { return this._current; }
+    get index() { return this._index; }
     yieldReturn(value) {
         this._current = value;
+        if (this._index === VOID0)
+            this._index = 0;
+        else
+            this._index++;
         return true;
     }
     yieldBreak() {
         this._current = VOID0;
+        this._index = VOID0;
         return false;
     }
     dispose() {
@@ -53,7 +60,12 @@ export class EnumeratorBase extends DisposableBase {
             this._disposer = disposer;
     }
     get current() {
-        return this._yielder.current;
+        var y = this._yielder;
+        return y && y.current;
+    }
+    get index() {
+        var y = this._yielder;
+        return y && y.index;
     }
     get isEndless() {
         return this._isEndless;
@@ -62,17 +74,17 @@ export class EnumeratorBase extends DisposableBase {
         var _ = this;
         _.throwIfDisposed();
         var y = _._yielder;
-        if (y)
-            y.yieldBreak();
-        else
-            _._yielder = yielder();
+        _._yielder = null;
         _._state = EnumeratorState.Before;
+        if (y)
+            yielder(y);
     }
     moveNext() {
         var _ = this;
         try {
             switch (_._state) {
                 case EnumeratorState.Before:
+                    _._yielder = _._yielder || yielder();
                     _._state = EnumeratorState.Running;
                     var initializer = _._initializer;
                     if (initializer)
@@ -96,18 +108,23 @@ export class EnumeratorBase extends DisposableBase {
     }
     nextValue() {
         return this.moveNext()
-            ? this._yielder.current
+            ? this.current
             : VOID0;
     }
     next() {
-        return this.moveNext() ?
-            {
-                value: this._yielder.current,
-                done: false
-            } : {
-            value: VOID0,
-            done: true
-        };
+        return this.moveNext()
+            ? new IteratorResult(this.current, this.index)
+            : IteratorResult.Done;
+    }
+    'return'(value) {
+        try {
+            return value === VOID0 || this._state === EnumeratorState.After
+                ? IteratorResult.Done
+                : new IteratorResult(value, VOID0, true);
+        }
+        finally {
+            this.dispose();
+        }
     }
     _onDispose() {
         var _ = this, disposer = _._disposer;
@@ -115,14 +132,11 @@ export class EnumeratorBase extends DisposableBase {
         _._disposer = null;
         var y = _._yielder;
         _._yielder = null;
-        yielder(y);
-        try {
-            if (disposer)
-                disposer();
-        }
-        finally {
-            this._state = EnumeratorState.After;
-        }
+        this._state = EnumeratorState.After;
+        if (y)
+            yielder(y);
+        if (disposer)
+            disposer();
     }
 }
 export default EnumeratorBase;

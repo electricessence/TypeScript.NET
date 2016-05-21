@@ -37,7 +37,7 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
     importEntries(entries: IEnumerableOrArray<T>): number;
     abstract getEnumerator(): IEnumerator<T>;
     contains(entry: T): boolean;
-    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): void;
+    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
     copyTo<TTarget extends IArray<T>>(target: TTarget, index?: number): TTarget;
     toArray(): T[];
 }

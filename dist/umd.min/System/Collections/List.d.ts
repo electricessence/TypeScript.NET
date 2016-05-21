@@ -25,6 +25,6 @@ export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnu
     contains(item: T): boolean;
     copyTo<TTarget extends IArray<any>>(target: TTarget, index?: number): TTarget;
     getEnumerator(): IEnumerator<T>;
-    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): void;
+    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
 }
 export default List;

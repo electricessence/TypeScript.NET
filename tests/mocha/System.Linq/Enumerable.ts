@@ -4,7 +4,7 @@ import {contains, repeat} from "../../../source/System/Collections/Array/Utility
 import * as Procedure from "../../../source/System/Collections/Array/Procedure";
 import Enumerable from "../../../source/System.Linq/Linq";
 import Functions from "../../../source/System/Functions";
-import {empty as EmptyEnumerator} from "../../../source/System/Collections/Enumeration/Enumerator";
+import {EmptyEnumerator} from "../../../source/System/Collections/Enumeration/EmptyEnumerator";
 var assert = require('../../../node_modules/assert/assert');
 
 

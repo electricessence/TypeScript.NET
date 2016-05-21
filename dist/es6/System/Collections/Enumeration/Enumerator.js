@@ -7,15 +7,18 @@ import { Type } from "../../Types";
 import { ArrayEnumerator } from "./ArrayEnumerator";
 import { IndexEnumerator } from "./IndexEnumerator";
 import { UnsupportedEnumerableException } from "./UnsupportedEnumerableException";
+import { InfiniteEnumerator } from "./InfiniteEnumerator";
+import { EmptyEnumerator as Empty } from "./EmptyEnumerator";
+import { IteratorEnumerator } from "./IteratorEnumerator";
 const VOID0 = void (0), STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
     'Would result in an infinite loop that could hang the current process.';
 export function throwIfEndless(isEndless) {
     if (isEndless)
         throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
 }
-function initArrayFrom(source) {
+function initArrayFrom(source, max = Infinity) {
     if (Array.isArray(source) || Type.isString(source)) {
-        var len = source.length;
+        var len = Math.min(source.length, max);
         if (isFinite(len)) {
             if (len > 65535)
                 return new Array(len);
@@ -26,31 +29,6 @@ function initArrayFrom(source) {
     }
     return [];
 }
-class EmptyEnumerator {
-    get current() {
-        return VOID0;
-    }
-    moveNext() {
-        return false;
-    }
-    nextValue() {
-        return VOID0;
-    }
-    next() {
-        return {
-            value: VOID0,
-            done: true
-        };
-    }
-    reset() { }
-    dispose() { }
-    get isEndless() {
-        return false;
-    }
-}
-const Empty = new EmptyEnumerator();
-Object.freeze(Empty);
-export const empty = Empty;
 export function from(source) {
     if (!source)
         return Empty;
@@ -69,8 +47,12 @@ export function from(source) {
     if (!Type.isPrimitive(source)) {
         if (isEnumerable(source))
             return source.getEnumerator();
+        if (Type.isFunction(source))
+            return new InfiniteEnumerator(source);
+        if (isIterator(source))
+            return new IteratorEnumerator(source);
     }
-    throw new Error("Unknown enumerable.");
+    throw new UnsupportedEnumerableException();
 }
 export function isEnumerable(instance) {
     return Type.hasMemberOfType(instance, "getEnumerator", Type.FUNCTION);
@@ -81,46 +63,64 @@ export function isEnumerableOrArrayLike(instance) {
 export function isEnumerator(instance) {
     return Type.hasMemberOfType(instance, "moveNext", Type.FUNCTION);
 }
-export function forEach(e, action) {
-    if (e !== VOID0 && e !== null) {
+export function isIterator(instance) {
+    return Type.hasMemberOfType(instance, "next", Type.FUNCTION);
+}
+export function forEach(e, action, max = Infinity) {
+    if (e === STRING_EMPTY)
+        return 0;
+    if (e && max > 0) {
         if (Type.isArrayLike(e)) {
-            throwIfEndless(!isFinite(e.length));
-            for (let i = 0; i < e.length; i++) {
+            throwIfEndless(!isFinite(max) && !isFinite(e.length));
+            let i = 0;
+            for (; i < Math.min(e.length, max); i++) {
                 if (action(e[i], i) === false)
                     break;
             }
-            return true;
+            return i;
         }
         if (isEnumerator(e)) {
-            throwIfEndless(e.isEndless);
-            var index = 0;
-            while (e.moveNext()) {
-                if (action(e.current, index++) === false)
+            throwIfEndless(!isFinite(max) && e.isEndless);
+            let i = 0;
+            while (max > i && e.moveNext()) {
+                if (action(e.current, i++) === false)
                     break;
             }
-            return true;
+            return i;
         }
         if (isEnumerable(e)) {
-            throwIfEndless(e.isEndless);
-            using(e.getEnumerator(), f => forEach(f, action));
-            return true;
+            throwIfEndless(!isFinite(max) && e.isEndless);
+            return using(e.getEnumerator(), f => forEach(f, action, max));
         }
-        return false;
+        if (isIterator(e)) {
+            throwIfEndless(!isFinite(max));
+            let i = 0, r;
+            while (max > i && !(r = e.next()).done) {
+                if (action(r.value, i++) === false)
+                    break;
+            }
+            return i;
+        }
     }
+    return -1;
 }
-export function toArray(source) {
+export function toArray(source, max = Infinity) {
     if (source === STRING_EMPTY)
         return [];
-    if (Array.isArray(source))
+    if (!isFinite(max) && Array.isArray(source))
         return source.slice();
-    var result = initArrayFrom(source);
-    if (!forEach(source, (e, i) => { result[i] = e; }))
+    var result = initArrayFrom(source, max);
+    if (-1 === forEach(source, (e, i) => { result[i] = e; }, max))
         throw new UnsupportedEnumerableException();
     return result;
 }
-export function map(source, selector) {
-    var result = initArrayFrom(source);
-    if (!forEach(source, (e, i) => { result[i] = selector(e); }))
+export function map(source, selector, max = Infinity) {
+    if (source === STRING_EMPTY)
+        return [];
+    if (!isFinite(max) && Array.isArray(source))
+        return source.map(selector);
+    var result = initArrayFrom(source, max);
+    if (-1 === forEach(source, (e, i) => { result[i] = selector(e); }, max))
         throw new UnsupportedEnumerableException();
     return result;
 }

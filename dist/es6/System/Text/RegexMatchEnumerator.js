@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { Regex } from "./RegularExpressions";
-import { empty } from "../Collections/Enumeration/Enumerator";
+import { EmptyEnumerator } from "../Collections/Enumeration/EmptyEnumerator";
 import { EnumeratorBase } from "../Collections/Enumeration/EnumeratorBase";
 export class RegexMatchEnumerator {
     constructor(pattern) {
@@ -30,7 +30,7 @@ export class RegexMatchEnumerator {
     static matches(input, pattern) {
         return input && pattern
             ? (new RegexMatchEnumerator(pattern)).matches(input)
-            : empty;
+            : EmptyEnumerator;
     }
 }
 export default RegexMatchEnumerator.matches;

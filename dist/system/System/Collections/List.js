@@ -122,7 +122,7 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                 };
                 List.prototype.forEach = function (action, useCopy) {
                     var s = this._source;
-                    Enumerator_1.forEach(useCopy ? s.slice() : s, action);
+                    return Enumerator_1.forEach(useCopy ? s.slice() : s, action);
                 };
                 return List;
             }(CollectionBase_1.CollectionBase));

@@ -57,7 +57,7 @@ function requestFlush() {
         requestTick();
     }
 }
-export default function deferImmediate(task) {
+export function deferImmediate(task) {
     var entry = {
         task: task,
         domain: isNodeJS && process['domain']
@@ -111,4 +111,5 @@ else {
         setTimeout(flush, 0);
     };
 }
+export default deferImmediate;
 //# sourceMappingURL=deferImmediate.js.map

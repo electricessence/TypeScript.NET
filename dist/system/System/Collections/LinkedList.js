@@ -96,10 +96,9 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 };
                 LinkedList.prototype.forEach = function (action, useCopy) {
                     if (useCopy === void 0) { useCopy = false; }
-                    if (useCopy)
-                        _super.prototype.forEach.call(this, action, useCopy);
-                    else
-                        this._listInternal.forEach(function (node, i) { return action(node.value, i); });
+                    return useCopy
+                        ? _super.prototype.forEach.call(this, action, useCopy)
+                        : this._listInternal.forEach(function (node, i) { return action(node.value, i); });
                 };
                 LinkedList.prototype.getEnumerator = function () {
                     return LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(this._listInternal);

@@ -2,18 +2,18 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./RegularExpressions", "../Collections/Enumeration/Enumerator", "../Collections/Enumeration/EnumeratorBase"], function(exports_1, context_1) {
+System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumerator", "../Collections/Enumeration/EnumeratorBase"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var RegularExpressions_1, Enumerator_1, EnumeratorBase_1;
+    var RegularExpressions_1, EmptyEnumerator_1, EnumeratorBase_1;
     var RegexMatchEnumerator;
     return {
         setters:[
             function (RegularExpressions_1_1) {
                 RegularExpressions_1 = RegularExpressions_1_1;
             },
-            function (Enumerator_1_1) {
-                Enumerator_1 = Enumerator_1_1;
+            function (EmptyEnumerator_1_1) {
+                EmptyEnumerator_1 = EmptyEnumerator_1_1;
             },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
@@ -45,7 +45,7 @@ System.register(["./RegularExpressions", "../Collections/Enumeration/Enumerator"
                 RegexMatchEnumerator.matches = function (input, pattern) {
                     return input && pattern
                         ? (new RegexMatchEnumerator(pattern)).matches(input)
-                        : Enumerator_1.empty;
+                        : EmptyEnumerator_1.EmptyEnumerator;
                 };
                 return RegexMatchEnumerator;
             }());

@@ -105,7 +105,7 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> {
     static generate<T>(factory: (index?: number) => T): InfiniteEnumerable<T>;
     static generate<T>(factory: (index?: number) => T, count: number): FiniteEnumerable<T>;
     static unfold<T>(seed: T, valueFactory: Selector<T, T>, skipSeed?: Boolean): InfiniteEnumerable<T>;
-    static forEach<T>(enumerable: IEnumerableOrArray<T>, action: (element: T, index?: number) => any): void;
+    static forEach<T>(enumerable: IEnumerableOrArray<T>, action: (element: T, index?: number) => any, max?: number): number;
     static map<T, TResult>(enumerable: IEnumerableOrArray<T>, selector: Selector<T, TResult>): TResult[];
     static max(values: FiniteEnumerable<number>): number;
     static min(values: FiniteEnumerable<number>): number;
@@ -117,7 +117,7 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> {
     takeUntil(predicate: Predicate<T>, includeUntilValue?: boolean): Enumerable<T>;
     forEach(action: Predicate<T> | Action<T>): void;
     toArray(predicate?: Predicate<T>): T[];
-    copyTo(target: T[], index?: number): T[];
+    copyTo(target: T[], index?: number, count?: number): T[];
     toLookup<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): ILookup<TKey, TValue>;
     toMap<TResult>(keySelector: Selector<T, string>, elementSelector: Selector<T, TResult>): IMap<TResult>;
     toDictionary<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): Dictionary<TKey, TValue>;

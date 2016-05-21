@@ -109,7 +109,7 @@ export class Queue extends CollectionBase {
         return result;
     }
     forEach(action) {
-        super.forEach(action, true);
+        return super.forEach(action, true);
     }
     setCapacity(capacity) {
         assertIntegerZeroOrGreater(capacity, "capacity");

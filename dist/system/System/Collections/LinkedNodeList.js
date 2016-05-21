@@ -71,6 +71,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                         next = current && current.next;
                     } while (current
                         && action(current, index++) !== false);
+                    return index;
                 };
                 LinkedNodeList.prototype.map = function (selector) {
                     if (!selector)

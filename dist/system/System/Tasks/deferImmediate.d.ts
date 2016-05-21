@@ -5,5 +5,6 @@
  */
 import { Closure } from "../FunctionTypes";
 import { ICancellable } from "./ICancellable";
-export default function deferImmediate(task: Closure): ICancellable;
+export declare function deferImmediate(task: Closure): ICancellable;
 export declare function runAfterDeferred(task: Closure): void;
+export default deferImmediate;

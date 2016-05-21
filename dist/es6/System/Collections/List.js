@@ -94,7 +94,7 @@ export class List extends CollectionBase {
     }
     forEach(action, useCopy) {
         var s = this._source;
-        forEach(useCopy ? s.slice() : s, action);
+        return forEach(useCopy ? s.slice() : s, action);
     }
 }
 export default List;

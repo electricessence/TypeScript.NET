@@ -3,7 +3,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
+System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,10 +11,10 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Values, Arrays, ArrayUtility, Enumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
+    var Values, Arrays, ArrayUtility, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1;
     var INVALID_DEFAULT, VOID0, BREAK, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
     function getEmptyEnumerator() {
-        return Enumerator_1.empty;
+        return EmptyEnumerator_1.EmptyEnumerator;
     }
     function nextEnumerator(queue, e) {
         if (e) {
@@ -52,6 +52,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             },
             function (Enumerator_1_1) {
                 Enumerator_1 = Enumerator_1_1;
+            },
+            function (EmptyEnumerator_1_1) {
+                EmptyEnumerator_1 = EmptyEnumerator_1_1;
             },
             function (Types_1_1) {
                 Types_1 = Types_1_1;
@@ -322,7 +325,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                                     var value = resultSelector(enumerator.current, len);
                                     enumeratorStack[len++] = enumerator;
                                     var e = Enumerable.fromAny(childrenSelector(enumerator.current));
-                                    enumerator = e ? e.getEnumerator() : Enumerator_1.empty;
+                                    enumerator = e ? e.getEnumerator() : EmptyEnumerator_1.EmptyEnumerator;
                                     return yielder.yieldReturn(value);
                                 }
                                 if (len == 0)
@@ -566,7 +569,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                             enumerator = _.getEnumerator();
                             keys = new Dictionary_1.Dictionary(compareSelector);
                             if (second)
-                                Enumerator_1.forEach(second, function (key) { return keys.addByKeyValue(key, true); });
+                                Enumerator_1.forEach(second, function (key) { keys.addByKeyValue(key, true); });
                         }, function (yielder) {
                             throwIfDisposed(disposed);
                             while (enumerator.moveNext()) {
@@ -1239,8 +1242,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         }, true);
                     });
                 };
-                Enumerable.forEach = function (enumerable, action) {
-                    Enumerator_1.forEach(enumerable, action);
+                Enumerable.forEach = function (enumerable, action, max) {
+                    if (max === void 0) { max = Infinity; }
+                    return Enumerator_1.forEach(enumerable, action, max);
                 };
                 Enumerable.map = function (enumerable, selector) {
                     return Enumerator_1.map(enumerable, selector);
@@ -1353,15 +1357,16 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         ? this.where(predicate).toArray()
                         : this.copyTo([]);
                 };
-                Enumerable.prototype.copyTo = function (target, index) {
+                Enumerable.prototype.copyTo = function (target, index, count) {
                     if (index === void 0) { index = 0; }
+                    if (count === void 0) { count = Infinity; }
                     this.throwIfDisposed();
                     if (!target)
                         throw new ArgumentNullException_1.ArgumentNullException("target");
                     Integer_1.Integer.assertZeroOrGreater(index);
                     Enumerator_1.forEach(this, function (x, i) {
                         target[i + index] = x;
-                    });
+                    }, count);
                     return target;
                 };
                 Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
@@ -1909,10 +1914,11 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 ArrayEnumerable.prototype.asEnumerable = function () {
                     return new ArrayEnumerable(this._source);
                 };
-                ArrayEnumerable.prototype.forEach = function (action) {
+                ArrayEnumerable.prototype.forEach = function (action, max) {
+                    if (max === void 0) { max = Infinity; }
                     var _ = this;
                     _.throwIfDisposed();
-                    Enumerator_1.forEach(_._source, action);
+                    return Enumerator_1.forEach(_._source, action, max);
                 };
                 ArrayEnumerable.prototype.any = function (predicate) {
                     var _ = this;

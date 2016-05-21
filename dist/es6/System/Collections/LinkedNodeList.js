@@ -34,6 +34,7 @@ export class LinkedNodeList {
             next = current && current.next;
         } while (current
             && action(current, index++) !== false);
+        return index;
     }
     map(selector) {
         if (!selector)

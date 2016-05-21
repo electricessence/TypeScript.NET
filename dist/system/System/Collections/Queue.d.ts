@@ -20,7 +20,7 @@ export declare class Queue<T> extends CollectionBase<T> {
     protected _clearInternal(): number;
     protected _onDispose(): void;
     dump(max?: number): T[];
-    forEach(action: Predicate<T> | Action<T>): void;
+    forEach(action: Predicate<T> | Action<T>): number;
     setCapacity(capacity: number): void;
     enqueue(item: T): void;
     protected _dequeueInternal(throwIfEmpty?: boolean): T;

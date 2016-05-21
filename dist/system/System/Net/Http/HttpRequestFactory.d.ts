@@ -8,7 +8,6 @@ import { HttpMethodValue } from "./HttpMethodValue";
 import { Uri } from "../../Uri/Uri";
 import { IUri } from "../../Uri/IUri";
 import { IHttpRequestAdapter } from "./IHttpRequestAdapter";
-import { IPromise } from "../../Promises/IPromise";
 export default class HttpRequestFactory extends DisposableBase {
     private _http;
     protected _uriDefaults: Uri;
@@ -16,9 +15,9 @@ export default class HttpRequestFactory extends DisposableBase {
     protected _onDispose(): void;
     uri(uri: string | IUri): HttpRequestFactory;
     params(params: QueryParam.Convertible): HttpRequestFactory;
-    request<TResult>(method: HttpMethodValue, data?: any): IPromise<TResult>;
-    get<TResult>(): IPromise<TResult>;
-    put<TResult>(): IPromise<TResult>;
-    post<TResult>(data: any): IPromise<TResult>;
-    'delete'<TResult>(): IPromise<TResult>;
+    request<TResult>(method: HttpMethodValue, data?: any): PromiseLike<TResult>;
+    get<TResult>(): PromiseLike<TResult>;
+    put<TResult>(): PromiseLike<TResult>;
+    post<TResult>(data: any): PromiseLike<TResult>;
+    'delete'<TResult>(): PromiseLike<TResult>;
 }

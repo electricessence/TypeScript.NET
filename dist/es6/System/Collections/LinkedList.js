@@ -68,10 +68,9 @@ export class LinkedList extends CollectionBase {
         return this._listInternal.clear();
     }
     forEach(action, useCopy = false) {
-        if (useCopy)
-            super.forEach(action, useCopy);
-        else
-            this._listInternal.forEach((node, i) => action(node.value, i));
+        return useCopy
+            ? super.forEach(action, useCopy)
+            : this._listInternal.forEach((node, i) => action(node.value, i));
     }
     getEnumerator() {
         return LinkedNodeList.valueEnumeratorFrom(this._listInternal);

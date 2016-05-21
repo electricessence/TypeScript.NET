@@ -16,7 +16,7 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     protected _addInternal(entry: T): boolean;
     protected _removeInternal(entry: T, max?: number): number;
     protected _clearInternal(): number;
-    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): void;
+    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
     getEnumerator(): IEnumerator<T>;
     private _findFirst(entry);
     private _findLast(entry);

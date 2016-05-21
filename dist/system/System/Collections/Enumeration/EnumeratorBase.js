@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool"], function(exports_1, context_1) {
+System.register(["../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,7 +10,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, DisposableBase_1, ObjectPool_1;
+    var Types_1, DisposableBase_1, ObjectPool_1, IteratorResult_1;
     var VOID0, yielderPool, Yielder, EnumeratorState, EnumeratorBase;
     function yielder(recycle) {
         if (!yielderPool)
@@ -31,6 +31,9 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
             },
             function (ObjectPool_1_1) {
                 ObjectPool_1 = ObjectPool_1_1;
+            },
+            function (IteratorResult_1_1) {
+                IteratorResult_1 = IteratorResult_1_1;
             }],
         execute: function() {
             VOID0 = void (0);
@@ -43,12 +46,22 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     enumerable: true,
                     configurable: true
                 });
+                Object.defineProperty(Yielder.prototype, "index", {
+                    get: function () { return this._index; },
+                    enumerable: true,
+                    configurable: true
+                });
                 Yielder.prototype.yieldReturn = function (value) {
                     this._current = value;
+                    if (this._index === VOID0)
+                        this._index = 0;
+                    else
+                        this._index++;
                     return true;
                 };
                 Yielder.prototype.yieldBreak = function () {
                     this._current = VOID0;
+                    this._index = VOID0;
                     return false;
                 };
                 Yielder.prototype.dispose = function () {
@@ -77,7 +90,16 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                 }
                 Object.defineProperty(EnumeratorBase.prototype, "current", {
                     get: function () {
-                        return this._yielder.current;
+                        var y = this._yielder;
+                        return y && y.current;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(EnumeratorBase.prototype, "index", {
+                    get: function () {
+                        var y = this._yielder;
+                        return y && y.index;
                     },
                     enumerable: true,
                     configurable: true
@@ -93,17 +115,17 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     var _ = this;
                     _.throwIfDisposed();
                     var y = _._yielder;
-                    if (y)
-                        y.yieldBreak();
-                    else
-                        _._yielder = yielder();
+                    _._yielder = null;
                     _._state = EnumeratorState.Before;
+                    if (y)
+                        yielder(y);
                 };
                 EnumeratorBase.prototype.moveNext = function () {
                     var _ = this;
                     try {
                         switch (_._state) {
                             case EnumeratorState.Before:
+                                _._yielder = _._yielder || yielder();
                                 _._state = EnumeratorState.Running;
                                 var initializer = _._initializer;
                                 if (initializer)
@@ -127,18 +149,23 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                 };
                 EnumeratorBase.prototype.nextValue = function () {
                     return this.moveNext()
-                        ? this._yielder.current
+                        ? this.current
                         : VOID0;
                 };
                 EnumeratorBase.prototype.next = function () {
-                    return this.moveNext() ?
-                        {
-                            value: this._yielder.current,
-                            done: false
-                        } : {
-                        value: VOID0,
-                        done: true
-                    };
+                    return this.moveNext()
+                        ? new IteratorResult_1.IteratorResult(this.current, this.index)
+                        : IteratorResult_1.IteratorResult.Done;
+                };
+                EnumeratorBase.prototype['return'] = function (value) {
+                    try {
+                        return value === VOID0 || this._state === EnumeratorState.After
+                            ? IteratorResult_1.IteratorResult.Done
+                            : new IteratorResult_1.IteratorResult(value, VOID0, true);
+                    }
+                    finally {
+                        this.dispose();
+                    }
                 };
                 EnumeratorBase.prototype._onDispose = function () {
                     var _ = this, disposer = _._disposer;
@@ -146,14 +173,11 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                     _._disposer = null;
                     var y = _._yielder;
                     _._yielder = null;
-                    yielder(y);
-                    try {
-                        if (disposer)
-                            disposer();
-                    }
-                    finally {
-                        this._state = EnumeratorState.After;
-                    }
+                    this._state = EnumeratorState.After;
+                    if (y)
+                        yielder(y);
+                    if (disposer)
+                        disposer();
                 };
                 return EnumeratorBase;
             }(DisposableBase_1.DisposableBase));

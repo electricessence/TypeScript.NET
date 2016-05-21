@@ -151,7 +151,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     return result;
                 };
                 Queue.prototype.forEach = function (action) {
-                    _super.prototype.forEach.call(this, action, true);
+                    return _super.prototype.forEach.call(this, action, true);
                 };
                 Queue.prototype.setCapacity = function (capacity) {
                     assertIntegerZeroOrGreater(capacity, "capacity");

@@ -167,11 +167,15 @@ export class CollectionBase extends DisposableBase {
     forEach(action, useCopy) {
         if (useCopy) {
             var a = this.toArray();
-            forEach(a, action);
-            a.length = 0;
+            try {
+                return forEach(a, action);
+            }
+            finally {
+                a.length = 0;
+            }
         }
         else {
-            forEach(this.getEnumerator(), action);
+            return forEach(this.getEnumerator(), action);
         }
     }
     copyTo(target, index = 0) {

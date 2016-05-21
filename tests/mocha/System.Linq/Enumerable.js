@@ -3,7 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../../source/System/Collections/Array/Utility", "../../../source/System/Collections/Array/Procedure", "../../../source/System.Linq/Linq", "../../../source/System/Functions", "../../../source/System/Collections/Enumeration/Enumerator"], factory);
+        define(["require", "exports", "../../../source/System/Collections/Array/Utility", "../../../source/System/Collections/Array/Procedure", "../../../source/System.Linq/Linq", "../../../source/System/Functions", "../../../source/System/Collections/Enumeration/EmptyEnumerator"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -11,7 +11,7 @@
     var Procedure = require("../../../source/System/Collections/Array/Procedure");
     var Linq_1 = require("../../../source/System.Linq/Linq");
     var Functions_1 = require("../../../source/System/Functions");
-    var Enumerator_1 = require("../../../source/System/Collections/Enumeration/Enumerator");
+    var EmptyEnumerator_1 = require("../../../source/System/Collections/Enumeration/EmptyEnumerator");
     var assert = require('../../../node_modules/assert/assert');
     var source = Object.freeze([
         {
@@ -512,7 +512,7 @@
             assert.ok(Linq_1.default.fromAny(source) instanceof Linq_1.default);
         });
         it("should return an enumerable from an IEnumerable", function () {
-            var e = Linq_1.default.fromAny({ getEnumerator: function () { return Enumerator_1.empty; } });
+            var e = Linq_1.default.fromAny({ getEnumerator: function () { return EmptyEnumerator_1.EmptyEnumerator; } });
             e.getEnumerator();
             assert.ok(e instanceof Linq_1.default);
         });

@@ -6,7 +6,8 @@
 import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
-import { empty as EmptyEnumerator, from as enumeratorFrom, forEach, toArray, map, isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
+import { from as enumeratorFrom, forEach, toArray, map, isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
+import { EmptyEnumerator } from "../System/Collections/Enumeration/EmptyEnumerator";
 import { Type } from "../System/Types";
 import { Integer } from "../System/Integer";
 import { Functions as BaseFunctions } from "../System/Functions";
@@ -475,7 +476,7 @@ export class InfiniteEnumerable extends DisposableBase {
                 enumerator = _.getEnumerator();
                 keys = new Dictionary(compareSelector);
                 if (second)
-                    forEach(second, key => keys.addByKeyValue(key, true));
+                    forEach(second, key => { keys.addByKeyValue(key, true); });
             }, (yielder) => {
                 throwIfDisposed(disposed);
                 while (enumerator.moveNext()) {
@@ -1105,8 +1106,8 @@ export class Enumerable extends InfiniteEnumerable {
             }, true);
         });
     }
-    static forEach(enumerable, action) {
-        forEach(enumerable, action);
+    static forEach(enumerable, action, max = Infinity) {
+        return forEach(enumerable, action, max);
     }
     static map(enumerable, selector) {
         return map(enumerable, selector);
@@ -1212,14 +1213,14 @@ export class Enumerable extends InfiniteEnumerable {
             ? this.where(predicate).toArray()
             : this.copyTo([]);
     }
-    copyTo(target, index = 0) {
+    copyTo(target, index = 0, count = Infinity) {
         this.throwIfDisposed();
         if (!target)
             throw new ArgumentNullException("target");
         Integer.assertZeroOrGreater(index);
         forEach(this, (x, i) => {
             target[i + index] = x;
-        });
+        }, count);
         return target;
     }
     toLookup(keySelector, elementSelector = Functions.Identity, compareSelector = Functions.Identity) {
@@ -1732,10 +1733,10 @@ class ArrayEnumerable extends FiniteEnumerable {
     asEnumerable() {
         return new ArrayEnumerable(this._source);
     }
-    forEach(action) {
+    forEach(action, max = Infinity) {
         var _ = this;
         _.throwIfDisposed();
-        forEach(_._source, action);
+        return forEach(_._source, action, max);
     }
     any(predicate) {
         var _ = this;

@@ -17,7 +17,7 @@ export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements
     first: TNode;
     last: TNode;
     count: number;
-    forEach(action: Predicate<TNode> | Action<TNode>): void;
+    forEach(action: Predicate<TNode> | Action<TNode>): number;
     map<T>(selector: Selector<TNode, T>): T[];
     clear(): number;
     dispose(): void;
