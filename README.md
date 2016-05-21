@@ -32,6 +32,7 @@ To name a few.
 * **DateTime** & **TimeSpan**: The **System/Time** namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
 * **Uri**, **QueryParams**, & **QueryBuilder**:  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.
 * **Regex**: Includes named group captures.  Very handy for accessing groups in regular expression results.
+* ***Currently no external dependencies.***
 
 ## Usage
 After some time and effort, I've decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:
@@ -41,8 +42,8 @@ After some time and effort, I've decided that this library should be module base
 * If you care about bundling and minification, **'r.js optimizer'** is probably the right way to go.
 * The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.
 * It is easy to change the module types. :)
-* You can easily recompile the entire library into another **dist** folder fully minified using gulp.
-* An already minified with source-map version is provided in the **min** folder
+* You can easily recompile the entire library into another folder fully minified using gulp.
+* Already minified with source-map versions are provided in the **dist** folder
 
 #### [NPM]([http://www.npmjs.com/package/typescript-dotnet]):
 ```
