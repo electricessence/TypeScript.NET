@@ -89,6 +89,8 @@ View Documentation: [electricessence.github.io/TypeScript.NET/documentation](htt
 ## Discussion
 
 #### Reddit
+[TypeScript.NET Library](https://www.reddit.com/r/tsdotnetlibrary/)
+
 [.NET](https://redd.it/3ojzbt)
 [TypeScript](https://redd.it/3ok0bm)
 
