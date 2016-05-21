@@ -17,6 +17,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LinkedNodeList_1 = require("./LinkedNodeList");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var Enumerator_1 = require("./Enumeration/Enumerator");
+var EmptyEnumerator_1 = require("./Enumeration/EmptyEnumerator");
 var dispose_1 = require("../Disposable/dispose");
 var Compare_1 = require("../Compare");
 var CollectionBase_1 = require("./CollectionBase");
@@ -95,12 +96,12 @@ var SetBase = function (_CollectionBase_1$Col) {
                 result = this.isSupersetOf(other);
                 count = other.getCount();
             } else {
-                dispose_1.using(this.newUsing(), function (o) {
+                count = dispose_1.using(this.newUsing(), function (o) {
                     Enumerator_1.forEach(other, function (v) {
                         o.add(v);
                         return result = _this3.contains(v);
                     });
-                    count = o.getCount();
+                    return o.getCount();
                 });
             }
             return result && this.getCount() > count;
@@ -193,14 +194,14 @@ var SetBase = function (_CollectionBase_1$Col) {
         key: "getEnumerator",
         value: function getEnumerator() {
             var s = this._set;
-            return s && this.getCount() ? LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(s) : Enumerator_1.empty;
+            return s && this.getCount() ? LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(s) : EmptyEnumerator_1.EmptyEnumerator;
         }
     }, {
         key: "forEach",
         value: function forEach(action) {
             var useCopy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-            if (useCopy) _get(Object.getPrototypeOf(SetBase.prototype), "forEach", this).call(this, action, useCopy);else this._set.forEach(function (node, i) {
+            return useCopy ? _get(Object.getPrototypeOf(SetBase.prototype), "forEach", this).call(this, action, useCopy) : this._set.forEach(function (node, i) {
                 return action(node.value, i);
             });
         }

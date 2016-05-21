@@ -4,15 +4,14 @@
  */
 "use strict";
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 var dispose_1 = require("../../Disposable/dispose");
 var Types_1 = require("../../Types");
 var ArrayEnumerator_1 = require("./ArrayEnumerator");
 var IndexEnumerator_1 = require("./IndexEnumerator");
 var UnsupportedEnumerableException_1 = require("./UnsupportedEnumerableException");
+var InfiniteEnumerator_1 = require("./InfiniteEnumerator");
+var EmptyEnumerator_1 = require("./EmptyEnumerator");
+var IteratorEnumerator_1 = require("./IteratorEnumerator");
 var VOID0 = void 0,
     STRING_EMPTY = "",
     ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' + 'Would result in an infinite loop that could hang the current process.';
@@ -21,8 +20,10 @@ function throwIfEndless(isEndless) {
 }
 exports.throwIfEndless = throwIfEndless;
 function initArrayFrom(source) {
+    var max = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
+
     if (Array.isArray(source) || Types_1.Type.isString(source)) {
-        var len = source.length;
+        var len = Math.min(source.length, max);
         if (isFinite(len)) {
             if (len > 65535) return new Array(len);
             var result = [];
@@ -32,56 +33,8 @@ function initArrayFrom(source) {
     }
     return [];
 }
-
-var EmptyEnumerator = function () {
-    function EmptyEnumerator() {
-        _classCallCheck(this, EmptyEnumerator);
-    }
-
-    _createClass(EmptyEnumerator, [{
-        key: "moveNext",
-        value: function moveNext() {
-            return false;
-        }
-    }, {
-        key: "nextValue",
-        value: function nextValue() {
-            return VOID0;
-        }
-    }, {
-        key: "next",
-        value: function next() {
-            return {
-                value: VOID0,
-                done: true
-            };
-        }
-    }, {
-        key: "reset",
-        value: function reset() {}
-    }, {
-        key: "dispose",
-        value: function dispose() {}
-    }, {
-        key: "current",
-        get: function get() {
-            return VOID0;
-        }
-    }, {
-        key: "isEndless",
-        get: function get() {
-            return false;
-        }
-    }]);
-
-    return EmptyEnumerator;
-}();
-
-var Empty = new EmptyEnumerator();
-Object.freeze(Empty);
-exports.empty = Empty;
 function from(source) {
-    if (!source) return Empty;
+    if (!source) return EmptyEnumerator_1.EmptyEnumerator;
     if (Array.isArray(source)) return new ArrayEnumerator_1.ArrayEnumerator(source);
     if (Types_1.Type.isArrayLike(source)) {
         return new IndexEnumerator_1.IndexEnumerator(function () {
@@ -95,8 +48,10 @@ function from(source) {
     }
     if (!Types_1.Type.isPrimitive(source)) {
         if (isEnumerable(source)) return source.getEnumerator();
+        if (Types_1.Type.isFunction(source)) return new InfiniteEnumerator_1.InfiniteEnumerator(source);
+        if (isIterator(source)) return new IteratorEnumerator_1.IteratorEnumerator(source);
     }
-    throw new Error("Unknown enumerable.");
+    throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
 }
 exports.from = from;
 function isEnumerable(instance) {
@@ -111,49 +66,71 @@ function isEnumerator(instance) {
     return Types_1.Type.hasMemberOfType(instance, "moveNext", Types_1.Type.FUNCTION);
 }
 exports.isEnumerator = isEnumerator;
+function isIterator(instance) {
+    return Types_1.Type.hasMemberOfType(instance, "next", Types_1.Type.FUNCTION);
+}
+exports.isIterator = isIterator;
 function forEach(e, action) {
-    if (e !== VOID0 && e !== null) {
+    var max = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
+
+    if (e === STRING_EMPTY) return 0;
+    if (e && max > 0) {
         if (Types_1.Type.isArrayLike(e)) {
-            throwIfEndless(!isFinite(e.length));
-            for (var i = 0; i < e.length; i++) {
+            throwIfEndless(!isFinite(max) && !isFinite(e.length));
+            var i = 0;
+            for (; i < Math.min(e.length, max); i++) {
                 if (action(e[i], i) === false) break;
             }
-            return true;
+            return i;
         }
         if (isEnumerator(e)) {
-            throwIfEndless(e.isEndless);
-            var index = 0;
-            while (e.moveNext()) {
-                if (action(e.current, index++) === false) break;
+            throwIfEndless(!isFinite(max) && e.isEndless);
+            var _i = 0;
+            while (max > _i && e.moveNext()) {
+                if (action(e.current, _i++) === false) break;
             }
-            return true;
+            return _i;
         }
         if (isEnumerable(e)) {
-            throwIfEndless(e.isEndless);
-            dispose_1.using(e.getEnumerator(), function (f) {
-                return forEach(f, action);
+            throwIfEndless(!isFinite(max) && e.isEndless);
+            return dispose_1.using(e.getEnumerator(), function (f) {
+                return forEach(f, action, max);
             });
-            return true;
         }
-        return false;
+        if (isIterator(e)) {
+            throwIfEndless(!isFinite(max));
+            var _i2 = 0,
+                r = undefined;
+            while (max > _i2 && !(r = e.next()).done) {
+                if (action(r.value, _i2++) === false) break;
+            }
+            return _i2;
+        }
     }
+    return -1;
 }
 exports.forEach = forEach;
 function toArray(source) {
+    var max = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
+
     if (source === STRING_EMPTY) return [];
-    if (Array.isArray(source)) return source.slice();
-    var result = initArrayFrom(source);
-    if (!forEach(source, function (e, i) {
+    if (!isFinite(max) && Array.isArray(source)) return source.slice();
+    var result = initArrayFrom(source, max);
+    if (-1 === forEach(source, function (e, i) {
         result[i] = e;
-    })) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
+    }, max)) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
     return result;
 }
 exports.toArray = toArray;
 function map(source, selector) {
-    var result = initArrayFrom(source);
-    if (!forEach(source, function (e, i) {
+    var max = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
+
+    if (source === STRING_EMPTY) return [];
+    if (!isFinite(max) && Array.isArray(source)) return source.map(selector);
+    var result = initArrayFrom(source, max);
+    if (-1 === forEach(source, function (e, i) {
         result[i] = selector(e);
-    })) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
+    }, max)) throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
     return result;
 }
 exports.map = map;

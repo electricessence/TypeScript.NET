@@ -134,10 +134,11 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	forEach(
 		action:Predicate<T> | Action<T>,
-		useCopy:boolean = false):void
+		useCopy:boolean = false):number
 	{
-		if(useCopy) super.forEach(action, useCopy);
-		else this._listInternal.forEach((node, i)=>action(node.value, i));
+		return useCopy
+			? super.forEach(action, useCopy)
+			: this._listInternal.forEach((node, i)=>action(node.value, i));
 	}
 
 	// #endregion

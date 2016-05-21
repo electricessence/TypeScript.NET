@@ -9,9 +9,9 @@ export declare class Functions {
     Blank(): void;
 }
 export declare module Functions {
-    var Identity: <T>(x: T) => T;
-    var True: () => boolean;
-    var False: () => boolean;
-    var Blank: () => void;
+    const Identity: <T>(x: T) => T;
+    const True: () => boolean;
+    const False: () => boolean;
+    const Blank: () => void;
 }
 export default Functions;

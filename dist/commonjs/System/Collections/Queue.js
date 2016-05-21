@@ -143,7 +143,7 @@ var Queue = function (_CollectionBase_1$Col) {
     }, {
         key: "forEach",
         value: function forEach(action) {
-            _get(Object.getPrototypeOf(Queue.prototype), "forEach", this).call(this, action, true);
+            return _get(Object.getPrototypeOf(Queue.prototype), "forEach", this).call(this, action, true);
         }
     }, {
         key: "setCapacity",

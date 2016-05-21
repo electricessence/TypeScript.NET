@@ -141,7 +141,7 @@ var List = function (_CollectionBase_1$Col) {
         key: "forEach",
         value: function forEach(action, useCopy) {
             var s = this._source;
-            Enumerator_1.forEach(useCopy ? s.slice() : s, action);
+            return Enumerator_1.forEach(useCopy ? s.slice() : s, action);
         }
     }]);
 

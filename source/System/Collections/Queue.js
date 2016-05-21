@@ -126,7 +126,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             return result;
         };
         Queue.prototype.forEach = function (action) {
-            _super.prototype.forEach.call(this, action, true);
+            return _super.prototype.forEach.call(this, action, true);
         };
         Queue.prototype.setCapacity = function (capacity) {
             assertIntegerZeroOrGreater(capacity, "capacity");

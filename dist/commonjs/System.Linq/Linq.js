@@ -21,6 +21,7 @@ var Values = require("../System/Compare");
 var Arrays = require("../System/Collections/Array/Compare");
 var ArrayUtility = require("../System/Collections/Array/Utility");
 var Enumerator_1 = require("../System/Collections/Enumeration/Enumerator");
+var EmptyEnumerator_1 = require("../System/Collections/Enumeration/EmptyEnumerator");
 var Types_1 = require("../System/Types");
 var Integer_1 = require("../System/Integer");
 var Functions_1 = require("../System/Functions");
@@ -68,7 +69,7 @@ var LinqFunctions = function (_Functions_1$Function) {
 var Functions = new LinqFunctions();
 Object.freeze(Functions);
 function getEmptyEnumerator() {
-    return Enumerator_1.empty;
+    return EmptyEnumerator_1.EmptyEnumerator;
 }
 
 var InfiniteEnumerable = function (_DisposableBase_1$Dis) {
@@ -310,7 +311,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$Dis) {
                             var value = resultSelector(enumerator.current, len);
                             enumeratorStack[len++] = enumerator;
                             var e = Enumerable.fromAny(childrenSelector(enumerator.current));
-                            enumerator = e ? e.getEnumerator() : Enumerator_1.empty;
+                            enumerator = e ? e.getEnumerator() : EmptyEnumerator_1.EmptyEnumerator;
                             return yielder.yieldReturn(value);
                         }
                         if (len == 0) return false;
@@ -564,7 +565,7 @@ var InfiniteEnumerable = function (_DisposableBase_1$Dis) {
                     enumerator = _.getEnumerator();
                     keys = new Dictionary_1.Dictionary(compareSelector);
                     if (second) Enumerator_1.forEach(second, function (key) {
-                        return keys.addByKeyValue(key, true);
+                        keys.addByKeyValue(key, true);
                     });
                 }, function (yielder) {
                     throwIfDisposed(disposed);
@@ -1096,13 +1097,14 @@ var Enumerable = function (_InfiniteEnumerable) {
         key: "copyTo",
         value: function copyTo(target) {
             var index = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+            var count = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
 
             this.throwIfDisposed();
             if (!target) throw new ArgumentNullException_1.ArgumentNullException("target");
             Integer_1.Integer.assertZeroOrGreater(index);
             Enumerator_1.forEach(this, function (x, i) {
                 target[i + index] = x;
-            });
+            }, count);
             return target;
         }
     }, {
@@ -1961,7 +1963,9 @@ var Enumerable = function (_InfiniteEnumerable) {
     }, {
         key: "forEach",
         value: function forEach(enumerable, action) {
-            Enumerator_1.forEach(enumerable, action);
+            var max = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
+
+            return Enumerator_1.forEach(enumerable, action, max);
         }
     }, {
         key: "map",
@@ -2077,9 +2081,11 @@ var ArrayEnumerable = function (_FiniteEnumerable) {
     }, {
         key: "forEach",
         value: function forEach(action) {
+            var max = arguments.length <= 1 || arguments[1] === undefined ? Infinity : arguments[1];
+
             var _ = this;
             _.throwIfDisposed();
-            Enumerator_1.forEach(_._source, action);
+            return Enumerator_1.forEach(_._source, action, max);
         }
     }, {
         key: "any",

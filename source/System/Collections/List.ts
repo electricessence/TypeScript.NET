@@ -152,10 +152,10 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		return new ArrayEnumerator(this._source);
 	}
 
-	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):void
+	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):number
 	{
 		var s = this._source;
-		forEach(useCopy ? s.slice() : s, action);
+		return forEach(useCopy ? s.slice() : s, action);
 	}
 
 }

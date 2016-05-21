@@ -47,27 +47,27 @@ export module Functions
 	 * A typed method for use with simple selection of the parameter.
 	 * @returns {boolean}
 	 */
-	export var Identity:<T>(x:T) => T
+	export const Identity:<T>(x:T) => T
 		= rootFunctions.Identity;
 
 	/**
 	 * Returns false.
 	 * @returns {boolean}
 	 */
-	export var True:() => boolean
+	export const True:() => boolean
 		= rootFunctions.True;
 
 	/**
 	 * Returns false.
 	 * @returns {boolean}
 	 */
-	export var False:() => boolean
+	export const False:() => boolean
 		= rootFunctions.False;
 
 	/**
 	 * Does nothing.
 	 */
-	export var Blank:() => void
+	export const Blank:() => void
 		= rootFunctions.Blank;
 }
 

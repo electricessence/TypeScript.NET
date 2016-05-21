@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var RegularExpressions_1 = require("./RegularExpressions");
-var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
+var EmptyEnumerator_1 = require("../Collections/Enumeration/EmptyEnumerator");
 var EnumeratorBase_1 = require("../Collections/Enumeration/EnumeratorBase");
 
 var RegexMatchEnumerator = function () {
@@ -43,7 +43,7 @@ var RegexMatchEnumerator = function () {
     }], [{
         key: "matches",
         value: function matches(input, pattern) {
-            return input && pattern ? new RegexMatchEnumerator(pattern).matches(input) : Enumerator_1.empty;
+            return input && pattern ? new RegexMatchEnumerator(pattern).matches(input) : EmptyEnumerator_1.EmptyEnumerator;
         }
     }]);
 

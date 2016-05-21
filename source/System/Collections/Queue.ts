@@ -171,9 +171,9 @@ extends CollectionBase<T>
 		return result;
 	}
 
-	forEach(action:Predicate<T> | Action<T>):void
+	forEach(action:Predicate<T> | Action<T>):number
 	{
-		super.forEach(action, true);
+		return super.forEach(action, true);
 	}
 
 	setCapacity(capacity:number):void

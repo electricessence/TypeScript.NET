@@ -12,13 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "../Disposable/dispose", "../Compare", "./CollectionBase"], factory);
+        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var Enumerator_1 = require("./Enumeration/Enumerator");
+    var EmptyEnumerator_1 = require("./Enumeration/EmptyEnumerator");
     var dispose_1 = require("../Disposable/dispose");
     var Compare_1 = require("../Compare");
     var CollectionBase_1 = require("./CollectionBase");
@@ -83,12 +84,12 @@ var __extends = (this && this.__extends) || function (d, b) {
                 count = other.getCount();
             }
             else {
-                dispose_1.using(this.newUsing(), function (o) {
+                count = dispose_1.using(this.newUsing(), function (o) {
                     Enumerator_1.forEach(other, function (v) {
                         o.add(v);
                         return result = _this.contains(v);
                     });
-                    count = o.getCount();
+                    return o.getCount();
                 });
             }
             return result && this.getCount() > count;
@@ -166,14 +167,13 @@ var __extends = (this && this.__extends) || function (d, b) {
             var s = this._set;
             return s && this.getCount()
                 ? LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(s)
-                : Enumerator_1.empty;
+                : EmptyEnumerator_1.EmptyEnumerator;
         };
         SetBase.prototype.forEach = function (action, useCopy) {
             if (useCopy === void 0) { useCopy = false; }
-            if (useCopy)
-                _super.prototype.forEach.call(this, action, useCopy);
-            else
-                this._set.forEach(function (node, i) { return action(node.value, i); });
+            return useCopy
+                ? _super.prototype.forEach.call(this, action, useCopy)
+                : this._set.forEach(function (node, i) { return action(node.value, i); });
         };
         SetBase.prototype._removeNode = function (node) {
             if (!node)

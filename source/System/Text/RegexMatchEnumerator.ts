@@ -4,7 +4,7 @@
  */
 
 import {Regex, Match} from "./RegularExpressions";
-import {empty} from "../Collections/Enumeration/Enumerator";
+import {EmptyEnumerator} from "../Collections/Enumeration/EmptyEnumerator";
 import {EnumeratorBase} from "../Collections/Enumeration/EnumeratorBase";
 import {IEnumerator} from "../Collections/Enumeration/IEnumerator";
 
@@ -49,7 +49,7 @@ export class RegexMatchEnumerator
 	{
 		return input && pattern
 			? (new RegexMatchEnumerator(pattern)).matches(input)
-			: empty;
+			: EmptyEnumerator;
 	}
 
 }

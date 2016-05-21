@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException"], factory);
+        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -21,6 +21,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Arrays = require("../System/Collections/Array/Compare");
     var ArrayUtility = require("../System/Collections/Array/Utility");
     var Enumerator_1 = require("../System/Collections/Enumeration/Enumerator");
+    var EmptyEnumerator_1 = require("../System/Collections/Enumeration/EmptyEnumerator");
     var Types_1 = require("../System/Types");
     var Integer_1 = require("../System/Integer");
     var Functions_1 = require("../System/Functions");
@@ -54,7 +55,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var Functions = new LinqFunctions();
     Object.freeze(Functions);
     function getEmptyEnumerator() {
-        return Enumerator_1.empty;
+        return EmptyEnumerator_1.EmptyEnumerator;
     }
     var InfiniteEnumerable = (function (_super) {
         __extends(InfiniteEnumerable, _super);
@@ -264,7 +265,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                             var value = resultSelector(enumerator.current, len);
                             enumeratorStack[len++] = enumerator;
                             var e = Enumerable.fromAny(childrenSelector(enumerator.current));
-                            enumerator = e ? e.getEnumerator() : Enumerator_1.empty;
+                            enumerator = e ? e.getEnumerator() : EmptyEnumerator_1.EmptyEnumerator;
                             return yielder.yieldReturn(value);
                         }
                         if (len == 0)
@@ -508,7 +509,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                     enumerator = _.getEnumerator();
                     keys = new Dictionary_1.Dictionary(compareSelector);
                     if (second)
-                        Enumerator_1.forEach(second, function (key) { return keys.addByKeyValue(key, true); });
+                        Enumerator_1.forEach(second, function (key) { keys.addByKeyValue(key, true); });
                 }, function (yielder) {
                     throwIfDisposed(disposed);
                     while (enumerator.moveNext()) {
@@ -1181,8 +1182,9 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }, true);
             });
         };
-        Enumerable.forEach = function (enumerable, action) {
-            Enumerator_1.forEach(enumerable, action);
+        Enumerable.forEach = function (enumerable, action, max) {
+            if (max === void 0) { max = Infinity; }
+            return Enumerator_1.forEach(enumerable, action, max);
         };
         Enumerable.map = function (enumerable, selector) {
             return Enumerator_1.map(enumerable, selector);
@@ -1295,15 +1297,16 @@ var __extends = (this && this.__extends) || function (d, b) {
                 ? this.where(predicate).toArray()
                 : this.copyTo([]);
         };
-        Enumerable.prototype.copyTo = function (target, index) {
+        Enumerable.prototype.copyTo = function (target, index, count) {
             if (index === void 0) { index = 0; }
+            if (count === void 0) { count = Infinity; }
             this.throwIfDisposed();
             if (!target)
                 throw new ArgumentNullException_1.ArgumentNullException("target");
             Integer_1.Integer.assertZeroOrGreater(index);
             Enumerator_1.forEach(this, function (x, i) {
                 target[i + index] = x;
-            });
+            }, count);
             return target;
         };
         Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
@@ -1851,10 +1854,11 @@ var __extends = (this && this.__extends) || function (d, b) {
         ArrayEnumerable.prototype.asEnumerable = function () {
             return new ArrayEnumerable(this._source);
         };
-        ArrayEnumerable.prototype.forEach = function (action) {
+        ArrayEnumerable.prototype.forEach = function (action, max) {
+            if (max === void 0) { max = Infinity; }
             var _ = this;
             _.throwIfDisposed();
-            Enumerator_1.forEach(_._source, action);
+            return Enumerator_1.forEach(_._source, action, max);
         };
         ArrayEnumerable.prototype.any = function (predicate) {
             var _ = this;

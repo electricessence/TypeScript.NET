@@ -8,7 +8,8 @@ import {IDisposable} from "../../Disposable/IDisposable";
 import {IIterator} from "./IIterator";
 
 // IIterator is added for future compatibility.
-export interface IEnumerator<T> extends IIterator<T>, IDisposable {
+export interface IEnumerator<T> extends IIterator<T>, IDisposable
+{
 
 	/**
 	 * The current value within the enumeration.
@@ -18,7 +19,7 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable {
 	/**
 	 * Safely moves to the next entry and returns true if there is one.
 	 */
-	moveNext(): boolean;
+	moveNext(value?:any): boolean;
 
 	/**
 	 * Restarts the enumeration.
@@ -28,12 +29,15 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable {
 	/**
 	 * Calls .moveNext() and returns .current
 	 */
-	nextValue():T;
+	nextValue(value?:any):T;
 
 	/**
 	 * Provides a way of flagging endless enumerations that may cause issues.
 	 */
 	isEndless?:boolean;
 }
+
+
+
 
 export default IEnumerator;

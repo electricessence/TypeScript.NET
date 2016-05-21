@@ -251,17 +251,21 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return found;
 	}
 
-	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):void
+	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):number
 	{
 		if(useCopy)
 		{
 			var a = this.toArray();
-			forEach(a, action);
-			a.length = 0;
+			try {
+				return forEach(a, action);
+			}
+			finally{
+				a.length = 0;
+			}
 		}
 		else
 		{
-			forEach(this.getEnumerator(), action);
+			return forEach(this.getEnumerator(), action);
 		}
 	}
 

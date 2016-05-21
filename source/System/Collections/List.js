@@ -111,7 +111,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         List.prototype.forEach = function (action, useCopy) {
             var s = this._source;
-            Enumerator_1.forEach(useCopy ? s.slice() : s, action);
+            return Enumerator_1.forEach(useCopy ? s.slice() : s, action);
         };
         return List;
     }(CollectionBase_1.CollectionBase));

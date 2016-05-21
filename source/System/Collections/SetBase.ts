@@ -5,7 +5,8 @@
 
 import {LinkedNodeList} from "./LinkedNodeList";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {forEach, empty as emptyEnumerator} from "./Enumeration/Enumerator";
+import {forEach} from "./Enumeration/Enumerator";
+import {EmptyEnumerator} from "./Enumeration/EmptyEnumerator";
 import {using} from "../Disposable/dispose";
 import {areEqual} from "../Compare";
 import {CollectionBase} from "./CollectionBase";
@@ -102,14 +103,15 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		}
 		else
 		{
-			using(this.newUsing(), o=>
+			count = using(this.newUsing(), o=>
 			{
 				forEach(other, v=>
 				{
 					o.add(v); // We have to add to another set in order to filter out duplicates.
+					// contains == false will cause this to exit.
 					return result = this.contains(v);
 				});
-				count = o.getCount();
+				return o.getCount();
 			});
 		}
 
@@ -216,15 +218,16 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		var s = this._set;
 		return s && this.getCount()
 			? LinkedNodeList.valueEnumeratorFrom<T>(s)
-			: emptyEnumerator;
+			: EmptyEnumerator;
 	}
 
 	forEach(
 		action:Predicate<T> | Action<T>,
-		useCopy:boolean = false):void
+		useCopy:boolean = false):number
 	{
-		if(useCopy) super.forEach(action, useCopy);
-		else this._set.forEach((node, i)=>action(node.value, i));
+		return useCopy
+			? super.forEach(action, useCopy)
+			: this._set.forEach((node, i)=>action(node.value, i));
 	}
 
 	protected _removeNode(node:ILinkedNodeWithValue<T>):boolean

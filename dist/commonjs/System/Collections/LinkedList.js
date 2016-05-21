@@ -108,7 +108,7 @@ var LinkedList = function (_CollectionBase_1$Col) {
         value: function forEach(action) {
             var useCopy = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
-            if (useCopy) _get(Object.getPrototypeOf(LinkedList.prototype), "forEach", this).call(this, action, useCopy);else this._listInternal.forEach(function (node, i) {
+            return useCopy ? _get(Object.getPrototypeOf(LinkedList.prototype), "forEach", this).call(this, action, useCopy) : this._listInternal.forEach(function (node, i) {
                 return action(node.value, i);
             });
         }

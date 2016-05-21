@@ -31,7 +31,7 @@ export declare abstract class SetBase<T> extends CollectionBase<T> implements IS
     protected abstract _getNode(item: T): ILinkedNodeWithValue<T>;
     contains(item: T): boolean;
     getEnumerator(): IEnumerator<T>;
-    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): void;
+    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
     protected _removeNode(node: ILinkedNodeWithValue<T>): boolean;
     removeFirst(): boolean;
     removeLast(): boolean;

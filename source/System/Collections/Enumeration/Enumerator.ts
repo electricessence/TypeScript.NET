@@ -12,8 +12,11 @@ import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
 import {Selector} from "../../FunctionTypes";
 import {IEnumerator} from "./IEnumerator";
 import {IEnumerable} from "./IEnumerable";
-import {IIteratorResult} from "./IIterator";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
+import {InfiniteValueFactory, InfiniteEnumerator} from "./InfiniteEnumerator";
+import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
+import {IIterator, IIteratorResult} from "./IIterator";
+import {IteratorEnumerator} from "./IteratorEnumerator";
 
 const
 	VOID0:any                 = void(0),
@@ -27,11 +30,13 @@ export function throwIfEndless(isEndless:boolean):void
 	if(isEndless) throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
 }
 
-function initArrayFrom(source:IEnumerableOrArray<any>|IEnumerator<any>):any[]
+function initArrayFrom(
+	source:IEnumerableOrArray<any>|IEnumerator<any>,
+	max:number = Infinity):any[]
 {
 	if(Array.isArray(source) || Type.isString(source))
 	{
-		var len = source.length;
+		var len = Math.min(source.length, max);
 		if(isFinite(len))
 		{
 			if(len>65535) return new Array(len);
@@ -43,48 +48,9 @@ function initArrayFrom(source:IEnumerableOrArray<any>|IEnumerator<any>):any[]
 	return [];
 }
 
-class EmptyEnumerator implements IEnumerator<any>
-{
-	get current():any
-	{
-		return VOID0;
-	}
-
-	moveNext():boolean
-	{
-		return false;
-	}
-
-	nextValue():any
-	{
-		return VOID0;
-	}
-
-	next():IIteratorResult<any>
-	{
-		return {
-			value: VOID0,
-			done: true
-		}
-	}
-
-	reset():void { }
-
-	dispose():void { }
-
-	get isEndless():boolean
-	{
-		return false;
-	}
-}
-
-const Empty = new EmptyEnumerator();
-Object.freeze(Empty);
-
-export const empty:IEnumerator<any> = Empty;
 
 // Could be array, or IEnumerable...
-export function from<T>(source:IEnumerableOrArray<T>):IEnumerator<T>
+export function from<T>(source:IEnumerableOrArray<T>|InfiniteValueFactory<T>|IIterator<T>):IEnumerator<T>
 {
 	// To simplify and prevent null reference exceptions:
 	if(!source)
@@ -113,9 +79,15 @@ export function from<T>(source:IEnumerableOrArray<T>):IEnumerator<T>
 		if(isEnumerable<T>(source))
 			return source.getEnumerator();
 
+		if(Type.isFunction(source))
+			return new InfiniteEnumerator(source);
+
+		if(isIterator(source))
+			return new IteratorEnumerator(source);
+
 	}
 
-	throw new Error("Unknown enumerable.");
+	throw new UnsupportedEnumerableException();
 }
 
 export function isEnumerable<T>(instance:any):instance is IEnumerable<T>
@@ -128,82 +100,107 @@ export function isEnumerableOrArrayLike<T>(instance:any):instance is IEnumerable
 	return Type.isArrayLike(instance) || isEnumerable(instance);
 }
 
-
 export function isEnumerator<T>(instance:any):instance is IEnumerator<T>
 {
 	return Type.hasMemberOfType<IEnumerator<T>>(instance, "moveNext", Type.FUNCTION);
 }
 
+export function isIterator<T>(instance:any):instance is IIterator<T>
+{
+	return Type.hasMemberOfType<IIterator<T>>(instance, "next", Type.FUNCTION);
+}
+
 /**
  * Flexible method for iterating any enumerable, enumerable, array, or array-like object.
- * @param e
- * @param action
- * @returns true if enumerated, false if null or unrecognized enumerable, void if nothing done
+ * @param e The enumeration to loop on.
+ * @param action The action to take on each.
+ * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
+ * @returns the total times iterated.  If the enumerable is unrecognized then -1.
  */
 export function forEach<T>(
-	e:IEnumerableOrArray<T>|IEnumerator<T>,
-	action:(element:T, index?:number) => any):boolean|void
+	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	action:(element:T, index?:number) => any,
+	max:number = Infinity):number
 {
-	if(e!==VOID0 && e!==null) // Allow for empty string.
+	if(<any>e===STRING_EMPTY) return 0;
+
+	if(e && max>0)
 	{
 		if(Type.isArrayLike<T>(e))
 		{
 			// Assume e.length is constant or at least doesn't deviate to infinite or NaN.
-			throwIfEndless(!isFinite(e.length));
-
-			for(let i = 0; i<e.length; i++)
+			throwIfEndless(!isFinite(max) && !isFinite(e.length));
+			let i = 0;
+			for(; i<Math.min(e.length, max); i++)
 			{
 				if(action(e[i], i)===false)
 					break;
 			}
-			return true;
+			return i;
 		}
+
 
 		if(isEnumerator<T>(e))
 		{
-			throwIfEndless(e.isEndless);
+			throwIfEndless(!isFinite(max) && e.isEndless);
 
-			var index = 0;
+			let i = 0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
-			while(e.moveNext())
+			while(max>i && e.moveNext())
 			{
-				if(action(e.current, index++)===false)
+				if(action(e.current, i++)===false)
 					break;
 			}
-			return true;
+			return i;
 		}
 
 		if(isEnumerable<T>(e))
 		{
-			throwIfEndless(e.isEndless);
+			throwIfEndless(!isFinite(max) && e.isEndless);
 
 			// For enumerators that aren't EnumerableBase, ensure dispose is called.
-			using(
+			return using(
 				(<IEnumerable<T>>e).getEnumerator(),
-				f=>forEach(f, action)
+				f=>forEach(f, action, max)
 			);
-			return true;
 		}
 
-		return false;
+		if(isIterator<T>(e)) {
+			// For our purpose iterators are endless and a max must be specified before iterating.
+			throwIfEndless(!isFinite(max));
+
+			let i = 0, r:IIteratorResult<T>;
+			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
+			while(max>i && !(r = e.next()).done)
+			{
+				if(action(r.value, i++)===false)
+					break;
+			}
+			return i;
+		}
 	}
+
+	return -1;
+
 }
 
 /**
  * Converts any enumerable to an array.
  * @param source
+ * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
  * @returns {any}
  */
 export function toArray<T>(
-	source:IEnumerableOrArray<T>|IEnumerator<T>):T[]
+	source:IEnumerableOrArray<T>|IEnumerator<T>,
+	max:number = Infinity):T[]
 {
 	if(<any>source===STRING_EMPTY) return [];
 
-	if(Array.isArray(source))
+	if(!isFinite(max) && Array.isArray(source))
 		return source.slice();
 
-	var result:T[] = initArrayFrom(source);
-	if(!forEach(source, (e, i) => { result[i] = e; }))
+	var result:T[] = initArrayFrom(source, max);
+	if(-1===forEach(source, (e, i) => { result[i] = e; }, max))
 		throw new UnsupportedEnumerableException();
 
 	return result;
@@ -213,14 +210,21 @@ export function toArray<T>(
  * Converts any enumerable to an array of selected values.
  * @param source
  * @param selector
+ * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
  * @returns {TResult[]}
  */
 export function map<T,TResult>(
 	source:IEnumerableOrArray<T>|IEnumerator<T>,
-	selector:Selector<T,TResult>):TResult[]
+	selector:Selector<T,TResult>,
+	max:number = Infinity):TResult[]
 {
-	var result:TResult[] = initArrayFrom(source);
-	if(!forEach(source, (e, i) => { result[i] = selector(e); }))
+	if(<any>source===STRING_EMPTY) return [];
+
+	if(!isFinite(max) && Array.isArray(source))
+		return source.map(selector);
+
+	var result:TResult[] = initArrayFrom(source, max);
+	if(-1===forEach(source, (e, i) => { result[i] = selector(e); }, max))
 		throw new UnsupportedEnumerableException();
 
 	return result;

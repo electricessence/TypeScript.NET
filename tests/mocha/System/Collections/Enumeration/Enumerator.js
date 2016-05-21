@@ -30,7 +30,23 @@
         });
         it("non enumerable objects should throw", function () {
             assert.throws(function () { return Enumerator.from({}); });
-            assert.throws(function () { return Enumerator.from((function () { return true; })); });
+        });
+        it("functions should be treated as generators", function () {
+            var e = Enumerator.from(function (prev, i) { return (prev || 1) + i; });
+            function pass(e) {
+                assert.equal(e.nextValue(), 1);
+                assert.equal(e.nextValue(), 2);
+                assert.equal(e.nextValue(), 4);
+                assert.equal(e.nextValue(), 7);
+                assert.equal(e.nextValue(), 11);
+                assert.equal(e.nextValue(), 16);
+            }
+            pass(e);
+            e.reset();
+            pass(e);
+            e.dispose();
+            assert.ok(!e.moveNext());
+            assert.equal(e.nextValue(), void 0);
         });
         it("IEnumerable should enumerate", function () {
             var a = [0, 1, 2, 3, 4];
@@ -81,11 +97,17 @@
     describe(".forEach(source)", function () {
         var blankAction = function (n, i) { };
         it("null values ignored", function () {
-            assert.doesNotThrow(function () { return Enumerator.forEach(null, blankAction); });
+            assert.doesNotThrow(function () {
+                assert.equal(Enumerator.forEach(null, blankAction), -1);
+            });
         });
         it("non-enumerable values ignored", function () {
-            assert.doesNotThrow(function () { return Enumerator.forEach({}, blankAction); });
-            assert.doesNotThrow(function () { return Enumerator.forEach(1, blankAction); });
+            assert.doesNotThrow(function () {
+                assert.equal(Enumerator.forEach({}, blankAction), -1);
+            });
+            assert.doesNotThrow(function () {
+                assert.equal(Enumerator.forEach(1, blankAction), -1);
+            });
         });
     });
 });

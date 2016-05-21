@@ -33,6 +33,7 @@ var LinkedNodeList = function () {
                 current = next;
                 next = current && current.next;
             } while (current && action(current, index++) !== false);
+            return index;
         }
     }, {
         key: "map",

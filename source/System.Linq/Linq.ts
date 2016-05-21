@@ -9,7 +9,6 @@ import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
 import {
-	empty as EmptyEnumerator,
 	from as enumeratorFrom,
 	forEach,
 	toArray,
@@ -17,6 +16,7 @@ import {
 	isEnumerable,
 	throwIfEndless
 } from "../System/Collections/Enumeration/Enumerator";
+import {EmptyEnumerator} from "../System/Collections/Enumeration/EmptyEnumerator";
 import {Type} from "../System/Types";
 import {Integer} from "../System/Integer";
 import {Functions as BaseFunctions} from "../System/Functions";
@@ -1010,7 +1010,7 @@ extends DisposableBase implements IEnumerable<T>
 						enumerator = _.getEnumerator();
 						keys = new Dictionary<T, boolean>(compareSelector);
 						if(second)
-							forEach(second, key => keys.addByKeyValue(key, true));
+							forEach(second, key => { keys.addByKeyValue(key, true) });
 					},
 
 					(yielder)=>
@@ -2306,11 +2306,12 @@ extends InfiniteEnumerable<T>
 
 	static forEach<T>(
 		enumerable:IEnumerableOrArray<T>,
-		action:(element:T, index?:number) => any):void
+		action:(element:T, index?:number) => any,
+		max:number = Infinity):number
 	{
 		// Will properly dispose created enumerable.
 		// Will throw if enumerable is endless.
-		forEach(enumerable, action);
+		return forEach(enumerable, action, max);
 	}
 
 	static map<T,TResult>(
@@ -2519,7 +2520,7 @@ extends InfiniteEnumerable<T>
 			: this.copyTo([]);
 	}
 
-	copyTo(target:T[], index:number = 0):T[]
+	copyTo(target:T[], index:number = 0, count:number = Infinity):T[]
 	{
 		this.throwIfDisposed();
 		if(!target) throw new ArgumentNullException("target");
@@ -2529,7 +2530,7 @@ extends InfiniteEnumerable<T>
 		forEach<T>(this, (x, i)=>
 		{
 			target[i + index] = x
-		});
+		}, count);
 
 		return target;
 	}
@@ -3538,12 +3539,12 @@ extends FiniteEnumerable<T>
 	}
 
 	// Optimize forEach so that subsequent usage is optimized.
-	forEach(action:Predicate<T> | Action<T>):void
+	forEach(action:Predicate<T> | Action<T>, max:number = Infinity):number
 	{
 		var _ = this;
 		_.throwIfDisposed();
 
-		forEach(_._source, action);
+		return forEach(_._source, action, max);
 	}
 
 	// These methods should ALWAYS check for array length before attempting anything.

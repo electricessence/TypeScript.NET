@@ -88,7 +88,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	// Note, no need for 'useCopy' since this avoids any modification conflict.
 	// If iterating over a copy is necessary, a copy should be made manually.
 	forEach(
-		action:Predicate<TNode> | Action<TNode>):void
+		action:Predicate<TNode> | Action<TNode>):number
 	{
 		var current:TNode = null,
 		    next:TNode    = this.first, // Be sure to track the next node so if current node is removed.
@@ -100,6 +100,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		}
 		while(current
 		&& <any>action(current, index++)!==false);
+
+		return index;
 	}
 
 	map<T>(selector:Selector<TNode,T>):T[]

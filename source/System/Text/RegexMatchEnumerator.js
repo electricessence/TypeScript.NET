@@ -7,12 +7,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./RegularExpressions", "../Collections/Enumeration/Enumerator", "../Collections/Enumeration/EnumeratorBase"], factory);
+        define(["require", "exports", "./RegularExpressions", "../Collections/Enumeration/EmptyEnumerator", "../Collections/Enumeration/EnumeratorBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var RegularExpressions_1 = require("./RegularExpressions");
-    var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
+    var EmptyEnumerator_1 = require("../Collections/Enumeration/EmptyEnumerator");
     var EnumeratorBase_1 = require("../Collections/Enumeration/EnumeratorBase");
     var RegexMatchEnumerator = (function () {
         function RegexMatchEnumerator(pattern) {
@@ -40,7 +40,7 @@
         RegexMatchEnumerator.matches = function (input, pattern) {
             return input && pattern
                 ? (new RegexMatchEnumerator(pattern)).matches(input)
-                : Enumerator_1.empty;
+                : EmptyEnumerator_1.EmptyEnumerator;
         };
         return RegexMatchEnumerator;
     }());

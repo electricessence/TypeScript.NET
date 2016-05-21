@@ -198,11 +198,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         CollectionBase.prototype.forEach = function (action, useCopy) {
             if (useCopy) {
                 var a = this.toArray();
-                Enumerator_1.forEach(a, action);
-                a.length = 0;
+                try {
+                    return Enumerator_1.forEach(a, action);
+                }
+                finally {
+                    a.length = 0;
+                }
             }
             else {
-                Enumerator_1.forEach(this.getEnumerator(), action);
+                return Enumerator_1.forEach(this.getEnumerator(), action);
             }
         };
         CollectionBase.prototype.copyTo = function (target, index) {
