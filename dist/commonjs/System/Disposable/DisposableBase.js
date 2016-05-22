@@ -11,11 +11,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var ObjectDisposedException_1 = require("./ObjectDisposedException");
 
 var DisposableBase = function () {
-    function DisposableBase(_finalizer) {
+    function DisposableBase(__finalizer) {
         _classCallCheck(this, DisposableBase);
 
-        this._finalizer = _finalizer;
-        this._wasDisposed = false;
+        this.__finalizer = __finalizer;
+        this.__wasDisposed = false;
     }
 
     _createClass(DisposableBase, [{
@@ -23,19 +23,22 @@ var DisposableBase = function () {
         value: function throwIfDisposed(message) {
             var objectName = arguments.length <= 1 || arguments[1] === undefined ? this._disposableObjectName : arguments[1];
 
-            if (this._wasDisposed) throw new ObjectDisposedException_1.ObjectDisposedException(objectName, message);
+            if (this.__wasDisposed) throw new ObjectDisposedException_1.ObjectDisposedException(objectName, message);
             return true;
         }
     }, {
         key: "dispose",
         value: function dispose() {
             var _ = this;
-            if (!_._wasDisposed) {
-                _._wasDisposed = true;
+            if (!_.__wasDisposed) {
+                _.__wasDisposed = true;
                 try {
                     _._onDispose();
                 } finally {
-                    if (_._finalizer) _._finalizer();
+                    if (_.__finalizer) {
+                        _.__finalizer();
+                        _.__finalizer = void 0;
+                    }
                 }
             }
         }
@@ -45,7 +48,7 @@ var DisposableBase = function () {
     }, {
         key: "wasDisposed",
         get: function get() {
-            return this._wasDisposed;
+            return this.__wasDisposed;
         }
     }]);
 

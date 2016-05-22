@@ -1,202 +1,99 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
- * The following code is heavily influenced by Q (https://github.com/kriskowal/q) and uses Q's spec.
+ * Although most of the he following code is written from scratch, it is
+ * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
 
 /*
- * Note about Promise class and pattern:
- * A promise is effectively an Observable/Lazy object that clears it's observers after reporting.
- * It simplifies the class architecture by not allow for 'unsubscribe'.
+ * Note: The Promise herein does NOT defer by default.
+ * If you require a promise to defer its result then use the .defer() or .delay(ms) methods.
  */
 
 import Type from "../Types";
-import {ObjectPool} from "../Disposable/ObjectPool";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {IDisposable} from "../Disposable/IDisposable";
-import {deferImmediate} from "../Tasks/deferImmediate";
-import {Functions} from "../Functions";
-import {Lazy} from "../Lazy";
 import * as PromiseCallbacks from "./Callbacks";
 import {IPromiseCallbacks} from "./Callbacks";
-import * as PromiseMethods from "./Methods";
+import {deferImmediate} from "../Tasks/deferImmediate";
+import {defer} from "../Tasks/defer";
+import {DisposableBase} from "../Disposable/DisposableBase";
+import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 
 
-const VOID0:any = void 0;
+const VOID0:any = void 0, PROMISE = "Promise",  THEN = "then";
 
-var deferPool:ObjectPool<Defer<any>>;
-function deferFactory():Defer<any>;
-function deferFactory(recycle?:Defer<any>):void;
-function deferFactory(recycle?:Defer<any>):Defer<any>
+function isPromise<T>(value:any):value is PromiseLike<T>
 {
-	if(!deferPool)
-		deferPool
-			= new ObjectPool<Defer<any>>(40, ()=>new Defer<any>());
-	if(!recycle) return deferPool.take();
-	recycle.dispose();
-	deferPool.add(recycle);
+	return Type.hasMemberOfType(value, THEN, Type.FUNCTION);
 }
 
-export function defer<T>():Defer<T>
+function resolve<T>(
+	value:Promise.Resolution<T>, resolver:(v:Promise.Resolution<T>)=>any,
+	promiseFactory:(v:any)=>Promise<any>):Promise<any>
 {
-	return deferFactory();
+	let nextValue = resolver
+		? resolver(value)
+		: value;
+
+	return nextValue && isPromise(nextValue)
+		? (nextValue instanceof Promise ? nextValue : new PromiseWrapper(nextValue))
+		: promiseFactory(nextValue);
 }
 
-export function isPromise<T>(value:any):value is PromiseLike<T>
+function handleFulfill(
+	p:Pending<any>,
+	value:Promise.Resolution<any>,
+	resolver:(v:Promise.Resolution<any>)=>any):void
 {
-	return Type.hasMemberOfType(value, "then", Type.FUNCTION);
-}
-
-
-function resolve<T>(value:PromiseMethods.Resolution<T>):PromiseLike<T>
-{
-	if(isPromise(value)) return value;
-	return new FulfilledPromise(value);
-}
-
-function reject<T>(err:any):PromiseLike<T>
-{
-	return new RejectedPromise(err);
-}
-
-
-export class Defer<T> implements IDisposable
-{
-	private _pending:IPromiseCallbacks<T>[]; // undefined == not initialized.  null == done.
-	private _final:PromiseLike<T>;
-
-	dispose():void
+	try
 	{
-		this._pending = VOID0;
-		this._final = VOID0;
-		this._promiseLazy = VOID0;
+		p.resolve(
+			resolver
+				? resolver(value)
+				: value);
 	}
-
-	resolve(value:T):void
+	catch(ex)
 	{
-		let _ = this, p = _._pending;
-		if(p===VOID0) _._pending = p = [];
-
-		if(p)
-		{
-			let r = _._final = resolve<T>(value);
-			_._pending = null;
-
-			let pl = _._promiseLazy, pe:any = pl && pl.isValueCreated && pl.value;
-			if(pe instanceof PendingPromise)
-				pe._state = Promise.State.Fulfilled;
-
-			for(let c of p) PromiseCallbacks.release(r,c);
-			p.length = 0;
-			p = null;
-		}
-	}
-
-	reject(err:any):void
-	{
-		let _ = this, p = _._pending;
-		if(p===VOID0) _._pending = p = [];
-
-		if(p)
-		{
-			let r = _._final = reject(err);
-			_._pending = null;
-
-			let pl = _._promiseLazy, pe:any = pl && pl.isValueCreated && pl.value;
-			if(pe instanceof PendingPromise)
-				pe._state = Promise.State.Rejected;
-
-			for(let c of p) PromiseCallbacks.release(r,c);
-			p.length = 0;
-			p = null;
-		}
-	}
-
-	get promise():PromiseLike<T>
-	{
-		return this.promiseLazy.value;
-	}
-
-	// Why?  Because this way it's possible to do a reverse lazy through the promise chain.
-	// The promise is not triggered unless/until called for.
-	private _promiseLazy:Lazy<PromiseLike<T>>;
-	get promiseLazy():Lazy<PromiseLike<T>>
-	{
-		var _ = this;
-		var pr = _._promiseLazy;
-		if(!pr) _._promiseLazy = pr = new Lazy(()=>Defer._getPromise(_));
-		return pr;
-	}
-
-	private static _getPromise<T>(d:Defer<T>):PromiseLike<T>
-	{
-		return d._final || new PendingPromise((
-				onFulfilled:(value:T)=>any,
-				onRejected:(err:any)=>any)=>
-			{
-				onFulfilled = onFulfilled || Functions.Identity;
-				onRejected = onRejected || reject;
-
-				var result = deferFactory();
-				var f = (v:T)=> { result.resolve(onFulfilled(v)) },
-				    e = (v:any)=> { result.resolve(onRejected(v)) };
-
-				let pe = d._pending;
-				if(pe===VOID0) pe = d._pending = [];
-
-				if(pe)
-					pe.push(PromiseCallbacks.init(f, e));
-				else
-				{
-					let r = d._final;
-					deferImmediate(()=>r.then(f, e));
-				}
-
-				return result.promise;
-			})
+		p.reject(ex);
 	}
 }
 
-
-export interface IPromise<T> extends PromiseLike<T>
+function handleReject(
+	p:Pending<any>,
+	error:any,
+	resolver:(v:any)=>any):void
 {
-	state:Promise.State;
-	isResolved:boolean;
-	isFulfilled:boolean;
-	isRejected:boolean;
-	result:T;
-	error:any;
+	try
+	{
+		p.reject(
+			resolver
+				? resolver(error)
+				: error);
+	}
+	catch(ex)
+	{
+		p.reject(ex);
+	}
 }
 
-export abstract class PromiseBase<T>
-extends DisposableBase implements IPromise<T>
+export abstract class Promise<T> extends DisposableBase implements PromiseLike<T>
 {
-
-	constructor(
-		protected _result?:T,
-		protected _error?:any,
-		state?:Promise.State)
+	constructor()
 	{
 		super();
-		if(state===VOID0)
-		{
-			if(_error)
-				this._state = Promise.State.Rejected;
-
-			if(_result!==VOID0)
-				this._state = Promise.State.Fulfilled;
-		}
-		else
-		{
-			this._state = state;
-		}
+		this._state = Promise.State.Pending;
+		this._disposableObjectName = PROMISE;
 	}
 
+	protected _result:T;
+	protected _error:any;
+
+	abstract then<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<TResult>;
 
 	protected _onDispose():void
 	{
-		this._state = Promise.State.Disposed;
+		this._state = VOID0;
 		this._result = VOID0;
 		this._error = VOID0;
 	}
@@ -207,10 +104,14 @@ extends DisposableBase implements IPromise<T>
 		return this._state;
 	}
 
+	get isPending():boolean
+	{
+		return this._state===Promise.State.Pending;
+	}
+
 	get isResolved():boolean
 	{
-		var s = this._state;
-		return isFinite(s) && s>Promise.State.Pending;
+		return this._state!=Promise.State.Pending; // Will also include undefined==0 aka disposed!=resolved.
 	}
 
 	get isFulfilled():boolean
@@ -225,306 +126,400 @@ extends DisposableBase implements IPromise<T>
 
 	get result():T
 	{
+		this.throwIfDisposed();
 		return this._result;
 	}
 
 	get error():any
 	{
+		this.throwIfDisposed();
 		return this._error;
 	}
 
-	abstract then<TResult>(
-		onFulfilled:PromiseMethods.Fulfill<T,TResult>,
-		onRejected?:PromiseMethods.Reject<TResult>):PromiseLike<TResult>;
-}
 
-
-export class FulfilledPromise<T> extends PromiseBase<T>
-{
-	constructor(value:T)
-	{
-		super(value, VOID0, Promise.State.Fulfilled);
-	}
-
-	then<TResult>(
-		onFulfilled:PromiseMethods.Fulfill<T,TResult>):PromiseLike<TResult>
-	{
-		var _ = this;
-		_.throwIfDisposed();
-
-		if(!onFulfilled) onFulfilled = Functions.Identity;
-
-		let result = deferFactory();
-		let r = this._result;
-		deferImmediate(()=> result.resolve(onFulfilled(r)));
-		return result.promise;
-	}
-}
-export class RejectedPromise<T> extends PromiseBase<T>
-{
-	constructor(err:any)
-	{
-		super(VOID0, err, Promise.State.Rejected);
-	}
-
-	then<TResult>(
-		onFulfilled:PromiseMethods.Fulfill<T,TResult>,
-		onRejected?:PromiseMethods.Reject<TResult>):PromiseLike<TResult>
-	{
-		var _ = this;
-		_.throwIfDisposed();
-
-		if(!onRejected) onRejected = reject;
-
-		let result = deferFactory();
-		let e = this._error;
-		deferImmediate(()=> result.resolve(onRejected(e)));
-		return result.promise;
-	}
-
-}
-
-class PendingPromise<T> extends PromiseBase<T>
-{
-
-	constructor(
-		private _execute:(
-			resolve:(value:T | PromiseLike<T>) => void,
-			reject?:(reason:any) => void) => PromiseLike<any>)
-	{
-		super();
-		if(!_execute) throw new ArgumentNullException('_execute');
-		this._state = Promise.State.Pending;
-	}
-
-	then<TResult>(
-		onFulfilled:PromiseMethods.Fulfill<T,TResult>,
-		onRejected?:PromiseMethods.Reject<TResult>):PromiseLike<TResult>
-	{
-		return this._execute(onFulfilled, onRejected);
-	}
-}
-
-
-export class Promise<T> extends PromiseBase<T>
-{
-
-	constructor(
-		private _execute:(
-			resolve:(value:T | PromiseLike<T>) => void,
-			reject?:(reason:any) => void) => void)
-	{
-		super();
-		if(!_execute) throw new ArgumentNullException('_execute');
-		this._state = Promise.State.Ready;
-	}
-
-
-	reset():void
+	defer():Promise<T>
 	{
 		this.throwIfDisposed();
-		this._state = Promise.State.Ready;
+
+		var p = new Pending<T>();
+		this.then(
+			v=>
+			{
+				deferImmediate(()=>p.resolve(v));
+				return p;
+			},
+			e=>
+			{
+				deferImmediate(()=>p.reject(e));
+				return p;
+			});
+		return p;
 	}
 
-	private _listeners:Promise<any>[];
-
-	protected _getListeners():Promise<any>[]
+	delay(milliseconds?:number):Promise<T>
 	{
 		this.throwIfDisposed();
-		var l = this._listeners;
-		if(!l) this._listeners = [];
-		return l;
+
+		var p = new Pending<T>();
+		this.then(
+			v=>
+			{
+				defer(()=>p.resolve(v), milliseconds);
+				return p;
+			},
+			e=>
+			{
+				defer(()=>p.reject(e), milliseconds);
+				return p;
+			});
+		return p;
+	}
+
+	'catch'<TResult>(onRejected:Promise.Reject<TResult>):Promise<TResult>
+	{
+		this.throwIfDisposed();
+
+		return this.then(VOID0, onRejected)
+	}
+
+	'finally'<TResult>(fin:()=>Promise.Resolution<TResult>):Promise<TResult>
+	{
+		this.throwIfDisposed();
+
+		return this.then(fin, fin);
+	}
+
+}
+
+/**
+ * Provided as a means for extending the interface of other PromiseLike<T> objects.
+ */
+class PromiseWrapper<T> extends Promise<T>
+{
+	constructor(private _target:PromiseLike<T>)
+	{
+		super();
+		_target.then(
+			v=>
+			{
+				this._state = Promise.State.Fulfilled;
+				this._result = v;
+				this._error = VOID0;
+			},
+			e=>
+			{
+				this._state = Promise.State.Rejected;
+				this._error = e;
+			})
+	}
+
+	then<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<TResult>
+	{
+		this.throwIfDisposed();
+
+		var p = new Pending<TResult>();
+		this._target.then(
+			result=>handleFulfill(p, result, onFulfilled),
+			e=>handleReject(p, e, onRejected)
+		);
+		return p;
 	}
 
 	protected _onDispose():void
 	{
-		if(this._listeners)
-		{
-			this._listeners.length = 0;
-			this._listeners = null;
-		}
 		super._onDispose();
+		this._target = null;
 	}
 
-	dispatch():void
-	{
+}
 
-	}
 
-	ensure():Promise<T>
+/**
+ * The simplest usable version of a promise which returns synchronously the resolved state provided.
+ */
+export abstract class Resolved<T> extends Promise<T>
+{
+	constructor(state:Promise.State, result?:T, error?:any)
 	{
-		this.throwIfDisposed();
-		// Just in case subsequent code calls ensure we only want to actually call execute if in a ready state.
-		if(this._state===Promise.State.Ready)
-		{
-			this._state = Promise.State.Pending;
-			this._execute(
-				(value:T | PromiseLike<T>)=>this._onResolve(value),
-				(reason:any) => this._onReject(reason));
-		}
-		return this;
-	}
-
-	protected _onResolve(value:T | PromiseLike<T>):void
-	{
-		var l = this._listeners;
-		this._listeners = null;
-		this.state = Promise.State.Fulfilled;
-		if(l) for(let e of l)
-		{
-			// Deferring ensure that any subsequent exceptions don't affect the other listeners and we don't have to trap them.
-			//deferImmediate(()=>e(value));
-		}
-		l.length = 0;
-		this._onFinally();
-	}
-
-	protected _onReject(reason:any):void
-	{
-		var l = this._listeners;
-		this._listeners = null;
-		this.state = Promise.State.Rejected;
-		if(l) for(let e of l)
-		{
-			// Deferring ensure that any subsequent exceptions don't affect the other listeners and we don't have to trap them.
-			//deferImmediate(()=>e(reason));
-		}
-		l.length = 0;
-		this._onFinally();
-	}
-
-	protected _onFinally():void
-	{
+		super();
+		this._result = result;
+		this._error = error;
+		this._state = state;
 	}
 
 	then<TResult>(
-		onFulfilled?:(value:T)=>(PromiseLike<TResult>|TResult),
-		onRejected?:(reason:any)=>(void|PromiseLike<TResult>|TResult)):PromiseLike<TResult>
-
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<TResult>
 	{
-		return null;
-		//
-		// var self = this;
-		// var deferred = deferFactory();
-		// var done = false;   // ensure the untrusted promise makes at most a
-		//                    // single call to one of the callbacks
-		//
-		// function _fulfilled(value)
-		// {
-		// 	try
-		// 	{
-		// 		return typeof fulfilled==="function" ? fulfilled(value) : value;
-		// 	}
-		// 	catch(exception)
-		// 	{
-		// 		return reject(exception);
-		// 	}
-		// }
-		//
-		// function _rejected(exception)
-		// {
-		// 	if(typeof rejected==="function")
-		// 	{
-		// 		makeStackTraceLong(exception, self);
-		// 		try
-		// 		{
-		// 			return rejected(exception);
-		// 		}
-		// 		catch(newException)
-		// 		{
-		// 			return reject(newException);
-		// 		}
-		// 	}
-		// 	return reject(exception);
-		// }
-		//
-		// function _progressed(value)
-		// {
-		// 	return typeof progressed==="function" ? progressed(value) : value;
-		// }
-		//
-		// Q.nextTick(function()
-		// {
-		// 	self.promiseDispatch(function(value)
-		// 	{
-		// 		if(done)
-		// 		{
-		// 			return;
-		// 		}
-		// 		done = true;
-		//
-		// 		deferred.resolve(_fulfilled(value));
-		// 	}, "when", [
-		// 		function(exception)
-		// 		{
-		// 			if(done)
-		// 			{
-		// 				return;
-		// 			}
-		// 			done = true;
-		//
-		// 			deferred.resolve(_rejected(exception));
-		// 		}
-		// 	]);
-		// });
-		//
-		// // Progress propagator need to be attached in the current tick.
-		// self.promiseDispatch(void 0, "when", [
-		// 	void 0, function(value)
-		// 	{
-		// 		var newValue;
-		// 		var threw = false;
-		// 		try
-		// 		{
-		// 			newValue = _progressed(value);
-		// 		}
-		// 		catch(e)
-		// 		{
-		// 			threw = true;
-		// 			if(Q.onerror)
-		// 			{
-		// 				Q.onerror(e);
-		// 			}
-		// 			else
-		// 			{
-		// 				throw e;
-		// 			}
-		// 		}
-		//
-		// 		if(!threw)
-		// 		{
-		// 			deferred.notify(newValue);
-		// 		}
-		// 	}
-		// ]);
-		//
-		// return deferred.promise;
+		this.throwIfDisposed();
+
+		try
+		{
+			return this._error===VOID0
+				? resolve(this._result, onFulfilled, Promise.resolve)
+				: resolve(this._error, onRejected, Promise.reject);
+		}
+		catch(ex)
+		{
+			return new Rejected(ex);
+		}
 	}
 
+
+}
+
+/**
+ * A fulfilled Resolved<T>.  Provided for readability.
+ */
+class Fulfilled<T> extends Resolved<T>
+{
+	constructor(value?:T)
+	{
+		super(Promise.State.Fulfilled, value);
+	}
+
+	then<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<TResult>
+	{
+		this.throwIfDisposed();
+
+		try
+		{
+			return resolve(this._result, onFulfilled, Promise.resolve);
+		}
+		catch(ex)
+		{
+			return new Rejected(ex);
+		}
+	}
+}
+
+/**
+ * A rejected Resolved<T>.  Provided for readability.
+ */
+class Rejected extends Resolved<any>
+{
+	constructor(error:any)
+	{
+		super(Promise.State.Rejected, VOID0, error);
+	}
+
+	then<TResult>(
+		onFulfilled:Promise.Fulfill<any,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<TResult>
+	{
+		this.throwIfDisposed();
+
+		try
+		{
+			return resolve(this._error, onRejected, Promise.reject);
+		}
+		catch(ex)
+		{
+			return new Rejected(ex);
+		}
+	}
+}
+
+/**
+ * This promise class that facilitates pending resolution.
+ */
+export class Pending<T> extends Resolved<T>
+{
+
+	protected _observers:IPromiseCallbacks<any>[];
+
+	constructor()
+	{
+		super(Promise.State.Pending);
+	}
+
+	then<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<TResult>
+	{
+		this.throwIfDisposed();
+
+		var o = this._observers;
+		if(o===VOID0) this._observers = o = [];
+
+		// Already fulfilled?
+		if(!o) return super.then(onFulfilled, onRejected);
+
+		// Still pending?
+		var p = new Pending<TResult>();
+		this._observers.push(PromiseCallbacks.init(onFulfilled, onRejected, p));
+		return p;
+	}
+
+	resolve(result?:T):void
+	{
+		this.throwIfDisposed();
+
+		if(this._state)
+		{
+			// Same value? Ignore...
+			if(this._state==Promise.State.Fulfilled && this._result===result) return;
+			throw new InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
+		}
+
+		this._state = Promise.State.Fulfilled;
+
+		this._result = result;
+		this._error = VOID0;
+		var o = this._observers;
+		if(o)
+		{
+			this._observers = null; // null = finished. undefined = hasn't started.
+			for(let c of o)
+			{
+				let {onFulfilled, promise} = c, p = (<Pending<T>>promise);
+				PromiseCallbacks.recycle(c);
+				handleFulfill(p, result, onFulfilled);
+			}
+			o.length = 0;
+		}
+	}
+
+	reject(error:any):void
+	{
+		this.throwIfDisposed();
+
+		if(this._state)
+		{
+			// Same value? Ignore...
+			if(this._state==Promise.State.Rejected && this._error===error) return;
+			throw new InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
+		}
+
+		this._state = Promise.State.Rejected;
+
+		this._error = error;
+		var o = this._observers;
+		if(o)
+		{
+			this._observers = null; // null = finished. undefined = hasn't started.
+			for(let c of o)
+			{
+				let {onRejected, promise} = c, p = (<Pending<T>>promise);
+				PromiseCallbacks.recycle(c);
+				handleReject(p, error, onRejected);
+			}
+			o.length = 0;
+		}
+	}
 }
 
 
 export module Promise
 {
 
-	export function fulfilled<T>(value:T):IPromise<T>
-	{
-		return new FulfilledPromise(value);
-	}
-
-	export function rejected<T>(err:any):IPromise<T>
-	{
-		return new RejectedPromise<T>(err);
-	}
-
+	/**
+	 * The state of a promise.
+	 * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
+	 */
 	export enum State {
-		Ready     = -1,
 		Pending   = 0,
 		Fulfilled = 1,
-		Rejected  = 2,
-		Disposed  = Infinity
+		Rejected  = 2
 	}
 	Object.freeze(State);
-}
 
-export default Promise;
+	export type Resolution<TResult> = PromiseLike<TResult>|TResult|void;
+
+
+	export interface Fulfill<T, TResult>
+	{
+		(value:T):Resolution<TResult>
+	}
+	export interface Reject<TResult>
+	{
+		(err?:any):Resolution<TResult>
+	}
+
+	export interface Then<T,TResult>
+	{
+		(
+			onFulfilled:Fulfill<T,TResult>,
+			onRejected?:Reject<TResult>
+		):Promise<TResult>
+	}
+
+	export interface Executor<T> {
+		(
+			resolve: (value?: T | PromiseLike<T>) => void,
+			reject: (reason?: any) => void
+		) : void;
+	}
+
+	// /**
+	//  * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
+	//  * or rejected.
+	//  * @param values An array of Promises.
+	//  * @returns A new Promise.
+	//  */
+	// // race<T>(values: Iterable<T | PromiseLike<T>>): Promise<T>;
+	// //resolve<T>(value: T | PromiseLike<T>): Promise<T>;
+
+
+	/**
+	 * Creates a new resolved promise .
+	 * @returns A resolved promise.
+	 */
+	export function resolve():Promise<void>
+
+	/**
+	 * Creates a new resolved promise for the provided value.
+	 * @param value A promise.
+	 * @returns A promise whose internal state matches the provided promise.
+	 */
+	export function resolve<T>(value:T):Promise<T>
+	export function resolve(value?:any):Promise<any>
+	{
+		return new Fulfilled(value);
+	}
+
+	/**
+	 * Creates a new rejected promise for the provided reason.
+	 * @param reason The reason the promise was rejected.
+	 * @returns A new rejected Promise.
+	 */
+	export function reject(reason: any): Promise<void>;
+	export function reject<T>(reason:any):Promise<T>
+	{
+		return new Rejected(reason);
+	}
+
+	/**
+	 * Takes any Promise-Like object and returns an extended version of it from this module.
+	 * @param target
+	 * @returns A new target that simply extends the target.
+	 */
+	export function wrap<T>(target:PromiseLike<T>):Promise<T>
+	{
+		return new PromiseWrapper(target);
+	}
+
+	/**
+	 * A function that acts like a then method can be extended by providing a function that takes an onFulfill and onReject.
+	 * @param then
+	 * @returns {PromiseWrapper<T>}
+	 */
+	export function createFrom<T,TResult>(then:Then<T,TResult>):Promise<T>
+	{
+		return new PromiseWrapper({ then:then });
+	}
+
+	/**
+	 * Provides a promise that can be resolved later.
+	 * @returns {Pending<T>}
+	 */
+	export function pending<T>():Pending<T>
+	{
+		return new Pending<T>();
+	}
+
+}

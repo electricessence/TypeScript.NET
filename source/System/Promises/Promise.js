@@ -1,7 +1,8 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
- * The following code is heavily influenced by Q (https://github.com/kriskowal/q) and uses Q's spec.
+ * Although most of the he following code is written from scratch, it is
+ * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -13,334 +14,318 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Disposable/ObjectPool", "../Exceptions/ArgumentNullException", "../Disposable/DisposableBase", "../Tasks/deferImmediate", "../Functions", "../Lazy", "./Callbacks"], factory);
+        define(["require", "exports", "../Types", "./Callbacks", "../Tasks/deferImmediate", "../Tasks/defer", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
-    var ObjectPool_1 = require("../Disposable/ObjectPool");
-    var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
-    var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var deferImmediate_1 = require("../Tasks/deferImmediate");
-    var Functions_1 = require("../Functions");
-    var Lazy_1 = require("../Lazy");
     var PromiseCallbacks = require("./Callbacks");
-    var VOID0 = void 0;
-    var deferPool;
-    function deferFactory(recycle) {
-        if (!deferPool)
-            deferPool
-                = new ObjectPool_1.ObjectPool(40, function () { return new Defer(); });
-        if (!recycle)
-            return deferPool.take();
-        recycle.dispose();
-        deferPool.add(recycle);
-    }
-    function defer() {
-        return deferFactory();
-    }
-    exports.defer = defer;
+    var deferImmediate_1 = require("../Tasks/deferImmediate");
+    var defer_1 = require("../Tasks/defer");
+    var DisposableBase_1 = require("../Disposable/DisposableBase");
+    var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+    var VOID0 = void 0, PROMISE = "Promise", THEN = "then";
     function isPromise(value) {
-        return Types_1.default.hasMemberOfType(value, "then", Types_1.default.FUNCTION);
+        return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
     }
-    exports.isPromise = isPromise;
-    function resolve(value) {
-        if (isPromise(value))
-            return value;
-        return new FulfilledPromise(value);
+    function resolve(value, resolver, promiseFactory) {
+        var nextValue = resolver
+            ? resolver(value)
+            : value;
+        return nextValue && isPromise(nextValue)
+            ? (nextValue instanceof Promise ? nextValue : new PromiseWrapper(nextValue))
+            : promiseFactory(nextValue);
     }
-    function reject(err) {
-        return new RejectedPromise(err);
-    }
-    var Defer = (function () {
-        function Defer() {
+    function handleFulfill(p, value, resolver) {
+        try {
+            p.resolve(resolver
+                ? resolver(value)
+                : value);
         }
-        Defer.prototype.dispose = function () {
-            this._pending = VOID0;
-            this._final = VOID0;
-            this._promiseLazy = VOID0;
-        };
-        Defer.prototype.resolve = function (value) {
-            var _ = this, p = _._pending;
-            if (p === VOID0)
-                _._pending = p = [];
-            if (p) {
-                var r = _._final = resolve(value);
-                _._pending = null;
-                var pl = _._promiseLazy, pe = pl && pl.isValueCreated && pl.value;
-                if (pe instanceof PendingPromise)
-                    pe._state = Promise.State.Fulfilled;
-                for (var _i = 0, p_1 = p; _i < p_1.length; _i++) {
-                    var c = p_1[_i];
-                    PromiseCallbacks.release(r, c);
-                }
-                p.length = 0;
-                p = null;
-            }
-        };
-        Defer.prototype.reject = function (err) {
-            var _ = this, p = _._pending;
-            if (p === VOID0)
-                _._pending = p = [];
-            if (p) {
-                var r = _._final = reject(err);
-                _._pending = null;
-                var pl = _._promiseLazy, pe = pl && pl.isValueCreated && pl.value;
-                if (pe instanceof PendingPromise)
-                    pe._state = Promise.State.Rejected;
-                for (var _i = 0, p_2 = p; _i < p_2.length; _i++) {
-                    var c = p_2[_i];
-                    PromiseCallbacks.release(r, c);
-                }
-                p.length = 0;
-                p = null;
-            }
-        };
-        Object.defineProperty(Defer.prototype, "promise", {
-            get: function () {
-                return this.promiseLazy.value;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Defer.prototype, "promiseLazy", {
-            get: function () {
-                var _ = this;
-                var pr = _._promiseLazy;
-                if (!pr)
-                    _._promiseLazy = pr = new Lazy_1.Lazy(function () { return Defer._getPromise(_); });
-                return pr;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Defer._getPromise = function (d) {
-            return d._final || new PendingPromise(function (onFulfilled, onRejected) {
-                onFulfilled = onFulfilled || Functions_1.Functions.Identity;
-                onRejected = onRejected || reject;
-                var result = deferFactory();
-                var f = function (v) { result.resolve(onFulfilled(v)); }, e = function (v) { result.resolve(onRejected(v)); };
-                var pe = d._pending;
-                if (pe === VOID0)
-                    pe = d._pending = [];
-                if (pe)
-                    pe.push(PromiseCallbacks.init(f, e));
-                else {
-                    var r_1 = d._final;
-                    deferImmediate_1.deferImmediate(function () { return r_1.then(f, e); });
-                }
-                return result.promise;
-            });
-        };
-        return Defer;
-    }());
-    exports.Defer = Defer;
-    var PromiseBase = (function (_super) {
-        __extends(PromiseBase, _super);
-        function PromiseBase(_result, _error, state) {
+        catch (ex) {
+            p.reject(ex);
+        }
+    }
+    function handleReject(p, error, resolver) {
+        try {
+            p.reject(resolver
+                ? resolver(error)
+                : error);
+        }
+        catch (ex) {
+            p.reject(ex);
+        }
+    }
+    var Promise = (function (_super) {
+        __extends(Promise, _super);
+        function Promise() {
             _super.call(this);
-            this._result = _result;
-            this._error = _error;
-            if (state === VOID0) {
-                if (_error)
-                    this._state = Promise.State.Rejected;
-                if (_result !== VOID0)
-                    this._state = Promise.State.Fulfilled;
-            }
-            else {
-                this._state = state;
-            }
+            this._state = Promise.State.Pending;
+            this._disposableObjectName = PROMISE;
         }
-        PromiseBase.prototype._onDispose = function () {
-            this._state = Promise.State.Disposed;
+        Promise.prototype._onDispose = function () {
+            this._state = VOID0;
             this._result = VOID0;
             this._error = VOID0;
         };
-        Object.defineProperty(PromiseBase.prototype, "state", {
+        Object.defineProperty(Promise.prototype, "state", {
             get: function () {
                 return this._state;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PromiseBase.prototype, "isResolved", {
+        Object.defineProperty(Promise.prototype, "isPending", {
             get: function () {
-                var s = this._state;
-                return isFinite(s) && s > Promise.State.Pending;
+                return this._state === Promise.State.Pending;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PromiseBase.prototype, "isFulfilled", {
+        Object.defineProperty(Promise.prototype, "isResolved", {
+            get: function () {
+                return this._state != Promise.State.Pending;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Promise.prototype, "isFulfilled", {
             get: function () {
                 return this._state === Promise.State.Fulfilled;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PromiseBase.prototype, "isRejected", {
+        Object.defineProperty(Promise.prototype, "isRejected", {
             get: function () {
                 return this._state === Promise.State.Rejected;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PromiseBase.prototype, "result", {
+        Object.defineProperty(Promise.prototype, "result", {
             get: function () {
+                this.throwIfDisposed();
                 return this._result;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(PromiseBase.prototype, "error", {
+        Object.defineProperty(Promise.prototype, "error", {
             get: function () {
+                this.throwIfDisposed();
                 return this._error;
             },
             enumerable: true,
             configurable: true
         });
-        return PromiseBase;
-    }(DisposableBase_1.DisposableBase));
-    exports.PromiseBase = PromiseBase;
-    var FulfilledPromise = (function (_super) {
-        __extends(FulfilledPromise, _super);
-        function FulfilledPromise(value) {
-            _super.call(this, value, VOID0, Promise.State.Fulfilled);
-        }
-        FulfilledPromise.prototype.then = function (onFulfilled) {
-            var _ = this;
-            _.throwIfDisposed();
-            if (!onFulfilled)
-                onFulfilled = Functions_1.Functions.Identity;
-            var result = deferFactory();
-            var r = this._result;
-            deferImmediate_1.deferImmediate(function () { return result.resolve(onFulfilled(r)); });
-            return result.promise;
-        };
-        return FulfilledPromise;
-    }(PromiseBase));
-    exports.FulfilledPromise = FulfilledPromise;
-    var RejectedPromise = (function (_super) {
-        __extends(RejectedPromise, _super);
-        function RejectedPromise(err) {
-            _super.call(this, VOID0, err, Promise.State.Rejected);
-        }
-        RejectedPromise.prototype.then = function (onFulfilled, onRejected) {
-            var _ = this;
-            _.throwIfDisposed();
-            if (!onRejected)
-                onRejected = reject;
-            var result = deferFactory();
-            var e = this._error;
-            deferImmediate_1.deferImmediate(function () { return result.resolve(onRejected(e)); });
-            return result.promise;
-        };
-        return RejectedPromise;
-    }(PromiseBase));
-    exports.RejectedPromise = RejectedPromise;
-    var PendingPromise = (function (_super) {
-        __extends(PendingPromise, _super);
-        function PendingPromise(_execute) {
-            _super.call(this);
-            this._execute = _execute;
-            if (!_execute)
-                throw new ArgumentNullException_1.ArgumentNullException('_execute');
-            this._state = Promise.State.Pending;
-        }
-        PendingPromise.prototype.then = function (onFulfilled, onRejected) {
-            return this._execute(onFulfilled, onRejected);
-        };
-        return PendingPromise;
-    }(PromiseBase));
-    var Promise = (function (_super) {
-        __extends(Promise, _super);
-        function Promise(_execute) {
-            _super.call(this);
-            this._execute = _execute;
-            if (!_execute)
-                throw new ArgumentNullException_1.ArgumentNullException('_execute');
-            this._state = Promise.State.Ready;
-        }
-        Promise.prototype.reset = function () {
+        Promise.prototype.defer = function () {
             this.throwIfDisposed();
-            this._state = Promise.State.Ready;
+            var p = new Pending();
+            this.then(function (v) {
+                deferImmediate_1.deferImmediate(function () { return p.resolve(v); });
+                return p;
+            }, function (e) {
+                deferImmediate_1.deferImmediate(function () { return p.reject(e); });
+                return p;
+            });
+            return p;
         };
-        Promise.prototype._getListeners = function () {
+        Promise.prototype.delay = function (milliseconds) {
             this.throwIfDisposed();
-            var l = this._listeners;
-            if (!l)
-                this._listeners = [];
-            return l;
+            var p = new Pending();
+            this.then(function (v) {
+                defer_1.defer(function () { return p.resolve(v); }, milliseconds);
+                return p;
+            }, function (e) {
+                defer_1.defer(function () { return p.reject(e); }, milliseconds);
+                return p;
+            });
+            return p;
         };
-        Promise.prototype._onDispose = function () {
-            if (this._listeners) {
-                this._listeners.length = 0;
-                this._listeners = null;
-            }
-            _super.prototype._onDispose.call(this);
-        };
-        Promise.prototype.dispatch = function () {
-        };
-        Promise.prototype.ensure = function () {
-            var _this = this;
+        Promise.prototype['catch'] = function (onRejected) {
             this.throwIfDisposed();
-            if (this._state === Promise.State.Ready) {
-                this._state = Promise.State.Pending;
-                this._execute(function (value) { return _this._onResolve(value); }, function (reason) { return _this._onReject(reason); });
-            }
-            return this;
+            return this.then(VOID0, onRejected);
         };
-        Promise.prototype._onResolve = function (value) {
-            var l = this._listeners;
-            this._listeners = null;
-            this.state = Promise.State.Fulfilled;
-            if (l)
-                for (var _i = 0, l_1 = l; _i < l_1.length; _i++) {
-                    var e = l_1[_i];
-                }
-            l.length = 0;
-            this._onFinally();
-        };
-        Promise.prototype._onReject = function (reason) {
-            var l = this._listeners;
-            this._listeners = null;
-            this.state = Promise.State.Rejected;
-            if (l)
-                for (var _i = 0, l_2 = l; _i < l_2.length; _i++) {
-                    var e = l_2[_i];
-                }
-            l.length = 0;
-            this._onFinally();
-        };
-        Promise.prototype._onFinally = function () {
-        };
-        Promise.prototype.then = function (onFulfilled, onRejected) {
-            return null;
+        Promise.prototype['finally'] = function (fin) {
+            this.throwIfDisposed();
+            return this.then(fin, fin);
         };
         return Promise;
-    }(PromiseBase));
+    }(DisposableBase_1.DisposableBase));
     exports.Promise = Promise;
+    var PromiseWrapper = (function (_super) {
+        __extends(PromiseWrapper, _super);
+        function PromiseWrapper(_target) {
+            var _this = this;
+            _super.call(this);
+            this._target = _target;
+            _target.then(function (v) {
+                _this._state = Promise.State.Fulfilled;
+                _this._result = v;
+                _this._error = VOID0;
+            }, function (e) {
+                _this._state = Promise.State.Rejected;
+                _this._error = e;
+            });
+        }
+        PromiseWrapper.prototype.then = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            var p = new Pending();
+            this._target.then(function (result) { return handleFulfill(p, result, onFulfilled); }, function (e) { return handleReject(p, e, onRejected); });
+            return p;
+        };
+        PromiseWrapper.prototype._onDispose = function () {
+            _super.prototype._onDispose.call(this);
+            this._target = null;
+        };
+        return PromiseWrapper;
+    }(Promise));
+    var Resolved = (function (_super) {
+        __extends(Resolved, _super);
+        function Resolved(state, result, error) {
+            _super.call(this);
+            this._result = result;
+            this._error = error;
+            this._state = state;
+        }
+        Resolved.prototype.then = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            try {
+                return this._error === VOID0
+                    ? resolve(this._result, onFulfilled, Promise.resolve)
+                    : resolve(this._error, onRejected, Promise.reject);
+            }
+            catch (ex) {
+                return new Rejected(ex);
+            }
+        };
+        return Resolved;
+    }(Promise));
+    exports.Resolved = Resolved;
+    var Fulfilled = (function (_super) {
+        __extends(Fulfilled, _super);
+        function Fulfilled(value) {
+            _super.call(this, Promise.State.Fulfilled, value);
+        }
+        Fulfilled.prototype.then = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            try {
+                return resolve(this._result, onFulfilled, Promise.resolve);
+            }
+            catch (ex) {
+                return new Rejected(ex);
+            }
+        };
+        return Fulfilled;
+    }(Resolved));
+    var Rejected = (function (_super) {
+        __extends(Rejected, _super);
+        function Rejected(error) {
+            _super.call(this, Promise.State.Rejected, VOID0, error);
+        }
+        Rejected.prototype.then = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            try {
+                return resolve(this._error, onRejected, Promise.reject);
+            }
+            catch (ex) {
+                return new Rejected(ex);
+            }
+        };
+        return Rejected;
+    }(Resolved));
+    var Pending = (function (_super) {
+        __extends(Pending, _super);
+        function Pending() {
+            _super.call(this, Promise.State.Pending);
+        }
+        Pending.prototype.then = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            var o = this._observers;
+            if (o === VOID0)
+                this._observers = o = [];
+            if (!o)
+                return _super.prototype.then.call(this, onFulfilled, onRejected);
+            var p = new Pending();
+            this._observers.push(PromiseCallbacks.init(onFulfilled, onRejected, p));
+            return p;
+        };
+        Pending.prototype.resolve = function (result) {
+            this.throwIfDisposed();
+            if (this._state) {
+                if (this._state == Promise.State.Fulfilled && this._result === result)
+                    return;
+                throw new InvalidOperationException_1.InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
+            }
+            this._state = Promise.State.Fulfilled;
+            this._result = result;
+            this._error = VOID0;
+            var o = this._observers;
+            if (o) {
+                this._observers = null;
+                for (var _i = 0, o_1 = o; _i < o_1.length; _i++) {
+                    var c = o_1[_i];
+                    var onFulfilled = c.onFulfilled, promise = c.promise, p = promise;
+                    PromiseCallbacks.recycle(c);
+                    handleFulfill(p, result, onFulfilled);
+                }
+                o.length = 0;
+            }
+        };
+        Pending.prototype.reject = function (error) {
+            this.throwIfDisposed();
+            if (this._state) {
+                if (this._state == Promise.State.Rejected && this._error === error)
+                    return;
+                throw new InvalidOperationException_1.InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
+            }
+            this._state = Promise.State.Rejected;
+            this._error = error;
+            var o = this._observers;
+            if (o) {
+                this._observers = null;
+                for (var _i = 0, o_2 = o; _i < o_2.length; _i++) {
+                    var c = o_2[_i];
+                    var onRejected = c.onRejected, promise = c.promise, p = promise;
+                    PromiseCallbacks.recycle(c);
+                    handleReject(p, error, onRejected);
+                }
+                o.length = 0;
+            }
+        };
+        return Pending;
+    }(Resolved));
+    exports.Pending = Pending;
     var Promise;
     (function (Promise) {
-        function fulfilled(value) {
-            return new FulfilledPromise(value);
-        }
-        Promise.fulfilled = fulfilled;
-        function rejected(err) {
-            return new RejectedPromise(err);
-        }
-        Promise.rejected = rejected;
         (function (State) {
-            State[State["Ready"] = -1] = "Ready";
             State[State["Pending"] = 0] = "Pending";
             State[State["Fulfilled"] = 1] = "Fulfilled";
             State[State["Rejected"] = 2] = "Rejected";
-            State[State["Disposed"] = Infinity] = "Disposed";
         })(Promise.State || (Promise.State = {}));
         var State = Promise.State;
         Object.freeze(State);
+        function resolve(value) {
+            return new Fulfilled(value);
+        }
+        Promise.resolve = resolve;
+        function reject(reason) {
+            return new Rejected(reason);
+        }
+        Promise.reject = reject;
+        function wrap(target) {
+            return new PromiseWrapper(target);
+        }
+        Promise.wrap = wrap;
+        function createFrom(then) {
+            return new PromiseWrapper({ then: then });
+        }
+        Promise.createFrom = createFrom;
+        function pending() {
+            return new Pending();
+        }
+        Promise.pending = pending;
     })(Promise = exports.Promise || (exports.Promise = {}));
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = Promise;
 });
 //# sourceMappingURL=Promise.js.map

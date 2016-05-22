@@ -104,12 +104,13 @@ var DeferInterval = function (_DeferBase2) {
 function defer(task, delay) {
     return new Defer(task, delay);
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = defer;
+exports.defer = defer;
 function interval(task, interval) {
     var count = arguments.length <= 2 || arguments[2] === undefined ? Infinity : arguments[2];
 
     return new DeferInterval(task, interval, count);
 }
 exports.interval = interval;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = defer;
 //# sourceMappingURL=defer.js.map

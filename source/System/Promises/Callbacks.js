@@ -12,7 +12,8 @@
     function factory() {
         return {
             onFulfilled: null,
-            onRejected: null
+            onRejected: null,
+            promise: null
         };
     }
     function init(onFulfilled, onRejected, promise) {

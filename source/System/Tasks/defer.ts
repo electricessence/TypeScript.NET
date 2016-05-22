@@ -90,7 +90,7 @@ class DeferInterval extends DeferBase
 }
 
 
-export default function defer(
+export function defer(
 	task:Closure,
 	delay?:number):ICancellable
 {
@@ -104,3 +104,5 @@ export function interval(
 {
 	return new DeferInterval(task, interval, count);
 }
+
+export default defer;

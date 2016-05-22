@@ -4,9 +4,9 @@
  */
 import { IDisposableAware } from "./IDisposableAware";
 export declare abstract class DisposableBase implements IDisposableAware {
-    private _finalizer;
-    constructor(_finalizer?: () => void);
-    private _wasDisposed;
+    private __finalizer;
+    constructor(__finalizer?: () => void);
+    private __wasDisposed;
     wasDisposed: boolean;
     protected _disposableObjectName: string;
     protected throwIfDisposed(message?: string, objectName?: string): boolean;

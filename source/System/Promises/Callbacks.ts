@@ -1,4 +1,4 @@
-import * as Methods from "./Methods";
+import {Promise as Methods} from "./Promise";
 import {ObjectPool} from "../Disposable/ObjectPool";
 
 
@@ -14,7 +14,8 @@ var pool:ObjectPool<IPromiseCallbacks<any>>;
 function factory():IPromiseCallbacks<any>{
 	return {
 		onFulfilled:null,
-		onRejected:null
+		onRejected:null,
+		promise:null
 	}
 }
 

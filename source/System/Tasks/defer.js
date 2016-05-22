@@ -78,12 +78,13 @@ var __extends = (this && this.__extends) || function (d, b) {
     function defer(task, delay) {
         return new Defer(task, delay);
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = defer;
+    exports.defer = defer;
     function interval(task, interval, count) {
         if (count === void 0) { count = Infinity; }
         return new DeferInterval(task, interval, count);
     }
     exports.interval = interval;
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = defer;
 });
 //# sourceMappingURL=defer.js.map
