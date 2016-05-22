@@ -14,5 +14,4 @@
     ICollectionTests.NumberCollection(CLASS_NAME, new List_1.default());
     ICollectionTests.InstanceCollection(CLASS_NAME, new List_1.default());
 });
-
 //# sourceMappingURL=List.js.map

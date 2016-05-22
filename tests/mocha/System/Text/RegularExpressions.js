@@ -80,5 +80,4 @@
         });
     });
 });
-
 //# sourceMappingURL=RegularExpressions.js.map

@@ -21,5 +21,4 @@
         });
     });
 });
-
 //# sourceMappingURL=TaskHandler.js.map

@@ -38,5 +38,4 @@
         assert.ok(!sw.isRunning);
     });
 });
-
 //# sourceMappingURL=Stopwatch.js.map
