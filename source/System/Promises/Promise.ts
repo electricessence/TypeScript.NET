@@ -1,13 +1,14 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
- * Although most of the he following code is written from scratch, it is
+ * Although most of the following code is written from scratch, it is
  * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
 
 /*
  * Note: The Promise herein does NOT defer by default.
  * If you require a promise to defer its result then use the .defer() or .delay(ms) methods.
+ * The API attempts to follow ES6 style promises.
  */
 
 import Type from "../Types";
