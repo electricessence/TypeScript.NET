@@ -53,10 +53,11 @@ class DeferInterval extends DeferBase {
         task();
     }
 }
-export default function defer(task, delay) {
+export function defer(task, delay) {
     return new Defer(task, delay);
 }
 export function interval(task, interval, count = Infinity) {
     return new DeferInterval(task, interval, count);
 }
+export default defer;
 //# sourceMappingURL=defer.js.map

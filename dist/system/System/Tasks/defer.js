@@ -14,7 +14,7 @@ System.register([], function(exports_1, context_1) {
     function defer(task, delay) {
         return new Defer(task, delay);
     }
-    exports_1("default", defer);
+    exports_1("defer", defer);
     function interval(task, interval, count) {
         if (count === void 0) { count = Infinity; }
         return new DeferInterval(task, interval, count);
@@ -82,6 +82,7 @@ System.register([], function(exports_1, context_1) {
                 };
                 return DeferInterval;
             }(DeferBase));
+            exports_1("default",defer);
         }
     }
 });

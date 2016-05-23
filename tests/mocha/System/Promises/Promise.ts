@@ -49,8 +49,23 @@ describe("computing sum of integers using promises", ()=>
 			.then(value=>
 			{
 				sw.stop();
-				// console.log("");
-				// console.log("Deferred Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+				//console.log("");
+				//console.log("Deferred Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+				assert.equal(value, answer);
+			});
+	});
+
+	it("should compute correct result without blowing stack (All Deferred) (lambda only)", ()=>
+	{
+		let sw = Stopwatch.startNew();
+		return array
+			.reduce((promise:Promise<number>, nextVal:number) =>
+				promise.then(currentVal=>currentVal + nextVal).deferAll(), Promise.resolve(0).deferAll())
+			.then(value=>
+			{
+				sw.stop();
+				//console.log("");
+				//console.log("All Deferred Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
 				assert.equal(value, answer);
 			});
 	});
@@ -97,7 +112,7 @@ describe("Resolution and Rejection", ()=>
 	{
 		var nextTurn = false;
 
-		var resolution = "Taram pam param!";
+		var resolution = "Ta-ram pam param!";
 		var pending = Promise.pending<any>();
 		var deferred = pending.defer();
 		var count = 10;
@@ -119,7 +134,7 @@ describe("Resolution and Rejection", ()=>
 			deferred.then(resolve);
 		}
 
-		pending.resolve(resolution);
+		pending.fulfill(resolution);
 		i = 0;
 		nextTurn = true;
 	});
@@ -139,7 +154,7 @@ describe("Resolution and Rejection", ()=>
 			()=>assert.equal("not", "here")
 		);
 
-		pending.resolve(10);
+		pending.fulfill(10);
 		return pending;
 	});
 
@@ -159,7 +174,7 @@ describe("Resolution and Rejection", ()=>
 			()=>assert.equal("not", "here")
 		);
 
-		pending.resolve(10);
+		pending.fulfill(10);
 		return deferred;
 	});
 

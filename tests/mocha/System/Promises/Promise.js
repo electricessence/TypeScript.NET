@@ -43,6 +43,17 @@
                 assert.equal(value, answer);
             });
         });
+        it("should compute correct result without blowing stack (All Deferred) (lambda only)", function () {
+            var sw = Stopwatch_1.default.startNew();
+            return array
+                .reduce(function (promise, nextVal) {
+                return promise.then(function (currentVal) { return currentVal + nextVal; }).deferAll();
+            }, Promise_1.Promise.resolve(0).deferAll())
+                .then(function (value) {
+                sw.stop();
+                assert.equal(value, answer);
+            });
+        });
         it("should be deferring fulfillment", function () {
             return array
                 .reduce(function (promise, nextVal) {
@@ -73,7 +84,7 @@
         });
         it("resolves multiple observers", function (done) {
             var nextTurn = false;
-            var resolution = "Taram pam param!";
+            var resolution = "Ta-ram pam param!";
             var pending = Promise_1.Promise.pending();
             var deferred = pending.defer();
             var count = 10;
@@ -89,7 +100,7 @@
             while (++i <= count) {
                 deferred.then(resolve);
             }
-            pending.resolve(resolution);
+            pending.fulfill(resolution);
             i = 0;
             nextTurn = true;
         });
@@ -101,7 +112,7 @@
                 throw new Error(REASON);
             });
             pending.then(function (value) { return assert.equal(value, 10); }, function () { return assert.equal("not", "here"); });
-            pending.resolve(10);
+            pending.fulfill(10);
             return pending;
         });
         it("observers called even after throw (asynchronous)", function () {
@@ -113,7 +124,7 @@
                 throw new Error(REASON);
             });
             deferred.then(function (value) { return assert.equal(value, 10); }, function () { return assert.equal("not", "here"); });
-            pending.resolve(10);
+            pending.fulfill(10);
             return deferred;
         });
         it("follows expected promise behavior flow", function () {
@@ -170,4 +181,5 @@
         });
     });
 });
+
 //# sourceMappingURL=Promise.js.map

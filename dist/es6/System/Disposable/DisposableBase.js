@@ -4,28 +4,30 @@
  */
 import { ObjectDisposedException } from "./ObjectDisposedException";
 export class DisposableBase {
-    constructor(_finalizer) {
-        this._finalizer = _finalizer;
-        this._wasDisposed = false;
+    constructor(__finalizer) {
+        this.__finalizer = __finalizer;
+        this.__wasDisposed = false;
     }
     get wasDisposed() {
-        return this._wasDisposed;
+        return this.__wasDisposed;
     }
     throwIfDisposed(message, objectName = this._disposableObjectName) {
-        if (this._wasDisposed)
+        if (this.__wasDisposed)
             throw new ObjectDisposedException(objectName, message);
         return true;
     }
     dispose() {
         var _ = this;
-        if (!_._wasDisposed) {
-            _._wasDisposed = true;
+        if (!_.__wasDisposed) {
+            _.__wasDisposed = true;
             try {
                 _._onDispose();
             }
             finally {
-                if (_._finalizer)
-                    _._finalizer();
+                if (_.__finalizer) {
+                    _.__finalizer();
+                    _.__finalizer = void 0;
+                }
             }
         }
     }
