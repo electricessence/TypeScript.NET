@@ -35,7 +35,7 @@ var Defer = function (_DeferBase) {
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Defer).call(this));
 
-        if (!(delay >= 0)) delay = 0;
+        if (!(delay > 0)) delay = 0;
         _this._id = setTimeout(Defer.handler, delay, task, _this);
         return _this;
     }

@@ -26,7 +26,7 @@ class Defer extends DeferBase
 	constructor(task:Closure, delay?:number)
 	{
 		super();
-		if(!(delay>=0)) delay = 0;
+		if(!(delay>0)) delay = 0; // covers undefined and null.
 		this._id = setTimeout(Defer.handler, delay, task, this);
 	}
 

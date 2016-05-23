@@ -35,7 +35,7 @@ System.register([], function(exports_1, context_1) {
                 __extends(Defer, _super);
                 function Defer(task, delay) {
                     _super.call(this);
-                    if (!(delay >= 0))
+                    if (!(delay > 0))
                         delay = 0;
                     this._id = setTimeout(Defer.handler, delay, task, this);
                 }

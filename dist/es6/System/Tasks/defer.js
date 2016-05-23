@@ -10,7 +10,7 @@ class DeferBase {
 class Defer extends DeferBase {
     constructor(task, delay) {
         super();
-        if (!(delay >= 0))
+        if (!(delay > 0))
             delay = 0;
         this._id = setTimeout(Defer.handler, delay, task, this);
     }

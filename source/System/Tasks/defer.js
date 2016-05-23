@@ -28,7 +28,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         __extends(Defer, _super);
         function Defer(task, delay) {
             _super.call(this);
-            if (!(delay >= 0))
+            if (!(delay > 0))
                 delay = 0;
             this._id = setTimeout(Defer.handler, delay, task, this);
         }

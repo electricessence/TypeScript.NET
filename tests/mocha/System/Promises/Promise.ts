@@ -3,6 +3,7 @@
 import {Promise} from "../../../../source/System/Promises/Promise";
 import * as AU from "../../../../source/System/Collections/Array/Utility";
 import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
+import {defer} from "../../../../source/System/Tasks/defer";
 var assert = require('../../../../node_modules/assert/assert');
 
 
@@ -19,7 +20,7 @@ afterEach(function()
 describe("computing sum of integers using promises", ()=>
 {
 	// Use triangular numbers...
-	var count = 10000;
+	var count = 1000;
 	var array = AU.range(1, count);
 	var swA = Stopwatch.startNew();
 	var answer = array.reduce((currentVal, nextVal)=>currentVal + nextVal, 0);
@@ -60,7 +61,8 @@ describe("computing sum of integers using promises", ()=>
 		let sw = Stopwatch.startNew();
 		return array
 			.reduce((promise:Promise<number>, nextVal:number) =>
-				promise.then(currentVal=>currentVal + nextVal).deferAll(), Promise.resolve(0).deferAll())
+				promise.then(
+					currentVal=>currentVal + nextVal).deferAll(), Promise.resolve(0).deferAll())
 			.then(value=>
 			{
 				sw.stop();
@@ -94,7 +96,7 @@ describe("Resolution and Rejection", ()=>
 	{
 		var f = Promise.resolve(5);
 		assert.equal(f.result, 5);
-		assert.equal(f.isResolved, true);
+		assert.equal(f.isSettled, true);
 		assert.equal(f.isFulfilled, true);
 		assert.equal(f.isRejected, false);
 	});
@@ -103,7 +105,7 @@ describe("Resolution and Rejection", ()=>
 	{
 		var f = Promise.reject("err");
 		assert.equal(f.error, "err");
-		assert.equal(f.isResolved, true);
+		assert.equal(f.isSettled, true);
 		assert.equal(f.isFulfilled, false);
 		assert.equal(f.isRejected, true);
 	});
@@ -134,7 +136,7 @@ describe("Resolution and Rejection", ()=>
 			deferred.then(resolve);
 		}
 
-		pending.fulfill(resolution);
+		pending.resolve(resolution);
 		i = 0;
 		nextTurn = true;
 	});
@@ -154,7 +156,7 @@ describe("Resolution and Rejection", ()=>
 			()=>assert.equal("not", "here")
 		);
 
-		pending.fulfill(10);
+		pending.resolve(10);
 		return pending;
 	});
 
@@ -174,76 +176,184 @@ describe("Resolution and Rejection", ()=>
 			()=>assert.equal("not", "here")
 		);
 
-		pending.fulfill(10);
+		pending.resolve(10);
 		return deferred;
 	});
 
-	it("follows expected promise behavior flow", ()=>
+
+	const BREAK = "break", NO = "NO!";
+
+	function testPromiseFlow(p:Promise<boolean>):Promise<void>
 	{
-
-		const BREAK = "break";
-
-		Promise
-			.resolve(true)
+		return p
+			.then(null) // ensure pass through
 			.then(v=>
 			{
 				assert.ok(v);
-				return v;
-			}, e=>
+				return v; // *
+			}, ()=>
 			{
 				assert.ok(false);
-				return e;
+				return true;
 			})
 			.then(v=>
 			{
 				assert.ok(v);
-				return v;
+				return v; // *
 			})
 			.then(v=>
 			{
 				assert.ok(v);
-				return false;
+				return false; // *
 			})
 			.then(v=>
 			{
 				assert.ok(!v);
-				return true;
+				return true; // *
+			})
+			.then<string>(v=>
+			{
+				assert.ok(v);
+				throw BREAK; // *
+			}, e=>
+			{
+				assert.ok(false);
+				return NO;
+			})
+			.then(null,null) // ensure pass through
+			.defer()
+			.then(v=>
+			{
+				// The previous promise threw/rejected so should never go here.
+				assert.ok(false);
+				return NO;
+			}, e=>
+			{
+				assert.equal(e, BREAK);
+				return BREAK; // *
+			})
+			.then(v=>
+			{
+				assert.equal(v, BREAK);
+				return true; // *
+			}, (e:any)=>
+			{
+				assert.ok(false);
+				return false;
 			})
 			.then<boolean>(v=>
 			{
 				assert.ok(v);
-				throw BREAK;
+				throw BREAK; // *
 			})
-			.then((v:any)=>
-			{
-				assert.ok(false);
-				return v;
-			}, e=>
+			.catch(e=>
 			{
 				assert.equal(e, BREAK);
-				return BREAK;
+				return true; // *
 			})
-			.then((v:any)=>
+			.then(v=>
 			{
-				assert.equal(v, BREAK);
-				return BREAK;
-			}, (e:any)=>
-			{
-				assert.equal(e, BREAK);
-				return BREAK;
-			})
-			.then(()=>{
-				assert.ok(true);
-				throw BREAK;
-			})
-			.catch(e=>{
-				return true;
-			})
-			.then(v=>{
 				assert.ok(v);
+				return 10;
+			})
+			.delay()
+			.then(v=>
+			{
+				assert.equal(v, 10);
 			});
+	}
+
+	it("should follow expected promise behavior flow for a resolved promise", ()=>
+	{
+		return testPromiseFlow(Promise.resolve(true));
+	});
 
 
+	it("should follow expected promise behavior flow for a rejected promise", ()=>
+	{
+		return testPromiseFlow(
+			Promise
+				.reject(BREAK)
+				.catch(v=>
+				{
+					assert.equal(v, BREAK);
+					return true;
+				}));
+	});
+
+
+	it("should follow expected promise behavior flow for a pending then resolved promise", ()=>
+	{
+		var p = Promise.pending<boolean>();
+		assert.ok(p.isPending);
+		p.resolve(true);
+		return testPromiseFlow(p);
+	});
+
+	it("should be able to use a lazy resolved", ()=>
+	{
+		var p = Promise.lazy.resolve(()=>true);
+		assert.ok(p.isFulfilled);
+		return testPromiseFlow(p);
+	});
+
+	it("should be able to use a then-able", ()=>
+	{
+		var p:any = Promise.createFrom((r:Promise.Fulfill<boolean,boolean>)=>{
+			r(true);
+			return Promise.resolve(true);
+		});
+		return testPromiseFlow(p);
+	});
+
+
+	it("should be able to use a synchronous resolver", ()=>
+	{
+		var p = Promise.pending<boolean>(resolve=>{
+			resolve(true);
+		});
+		assert.ok(p.isFulfilled);
+		return testPromiseFlow(p);
+	});
+
+	it("should be able to use a synchronous rejection", ()=>
+	{
+		var p = Promise.pending<boolean>((resolve,reject)=>{
+			reject(true);
+		});
+		assert.ok(p.isRejected);
+		return testPromiseFlow(p.catch(()=>true));
+	});
+
+
+	it("should be able to use an async resolver", ()=>
+	{
+		var p = Promise.pending<boolean>(resolve=>{
+			defer(()=> resolve(true));
+		});
+		assert.ok(p.isPending);
+		return testPromiseFlow(p);
+	});
+
+	it("should be able to use lazy pending", ()=>
+	{
+		var p = Promise.lazy.pending<boolean>(resolve=>{
+			defer(()=> resolve(true));
+		});
+		assert.ok(p.isPending);
+		return testPromiseFlow(p);
+	});
+
+	it("should be able to use promise as a resolution", ()=>
+	{
+		var s = Promise.pending<boolean>();
+		var p = Promise.pending<boolean>(resolve=>{
+			defer(()=> resolve(s));
+		});
+		assert.ok(s.isPending);
+		assert.ok(p.isPending);
+		s.resolve(true);
+		return testPromiseFlow(p);
 	});
 
 });

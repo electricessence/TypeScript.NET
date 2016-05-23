@@ -49,7 +49,7 @@ function pass<T>(source:Promise<T>, dest:Pending<T>):Closure
 		source.then(
 			v=>
 			{
-				dest.fulfill(v);
+				dest.resolve(v);
 				return dest;
 			},
 			e=>
@@ -60,26 +60,29 @@ function pass<T>(source:Promise<T>, dest:Pending<T>):Closure
 	}
 }
 
-function handleFulfill(
+function handleResolution(
 	p:Pending<any>,
 	value:Promise.Resolution<any>,
-	resolver:(v:Promise.Resolution<any>)=>any):void
+	resolver?:(v:Promise.Resolution<any>)=>any):void
 {
 	try
-	{ p.fulfill(resolver ? resolver(value) : value); }
+	{
+		let v = resolver ? resolver(value) : value;
+		if(p) p.resolve(v);
+	}
 	catch(ex)
 	{ p.reject(ex); }
 }
 
-function handleReject(
-	p:Pending<any>,
-	error:any,
-	resolver:(v:any)=>any):void
+function handleDispatch<T,TResult>(
+	p:PromiseLike<T>,
+	onFulfilled:Promise.Fulfill<T,TResult>,
+	onRejected?:Promise.Reject<TResult>):void
 {
-	try
-	{ p.reject(resolver ? resolver(error) : error); }
-	catch(ex)
-	{ p.reject(ex); }
+	if(p instanceof Promise)
+		p.thenThis(onFulfilled, onRejected);
+	else
+		p.then(<any>onFulfilled, onRejected);
 }
 
 export abstract class Promise<T> extends DisposableBase implements PromiseLike<T>
@@ -94,9 +97,26 @@ export abstract class Promise<T> extends DisposableBase implements PromiseLike<T
 	protected _result:T;
 	protected _error:any;
 
+	/**
+	 * Calls the respective handlers once the promise is resolved.
+	 * For simplicity and performance this can happen synchronously unless you call .defer() before calling .then().
+	 * @param onFulfilled
+	 * @param onRejected
+	 */
 	abstract then<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):Promise<TResult>;
+
+	/**
+	 * Same as then but does not return the result.  Returns the current promise instead.
+	 * You may not need an additional promise result, and this will not create a new one.
+	 * Errors are not trapped.
+	 * @param onFulfilled
+	 * @param onRejected
+	 */
+	abstract thenThis<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<T>;
 
 	protected _onDispose():void
 	{
@@ -122,7 +142,7 @@ export abstract class Promise<T> extends DisposableBase implements PromiseLike<T
 		return this.getState()===Promise.State.Pending;
 	}
 
-	get isResolved():boolean
+	get isSettled():boolean
 	{
 		return this.getState()!=Promise.State.Pending; // Will also include undefined==0 aka disposed!=resolved.
 	}
@@ -182,7 +202,7 @@ export abstract class Promise<T> extends DisposableBase implements PromiseLike<T
 	{
 		this.throwIfDisposed();
 
-		var p = new Pending<T>();
+		var p = Promise.pending<T>();
 		deferImmediate(pass(this, p));
 		return p;
 	}
@@ -191,7 +211,7 @@ export abstract class Promise<T> extends DisposableBase implements PromiseLike<T
 	{
 		this.throwIfDisposed();
 
-		var p = new Pending<T>();
+		var p = Promise.pending<T>();
 		defer(pass(this, p), milliseconds);
 		return p;
 	}
@@ -210,55 +230,10 @@ export abstract class Promise<T> extends DisposableBase implements PromiseLike<T
 		return this.then(fin, fin);
 	}
 
-}
-
-/**
- * Provided as a means for extending the interface of other PromiseLike<T> objects.
- */
-class PromiseWrapper<T> extends Promise<T>
-{
-	constructor(private _target:PromiseLike<T>)
+	finallyThis(fin:()=>void):Promise<T>
 	{
-		super();
-
-		if(!_target)
-			throw new ArgumentNullException(TARGET);
-
-		if(!isPromise(_target))
-			throw new ArgumentException(TARGET, "Must be a promise-like object.");
-
-		_target.then(
-			v=>
-			{
-				this._state = Promise.State.Fulfilled;
-				this._result = v;
-				this._error = VOID0;
-			},
-			e=>
-			{
-				this._state = Promise.State.Rejected;
-				this._error = e;
-			})
-	}
-
-	then<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):Promise<TResult>
-	{
-		this.throwIfDisposed();
-
-		var p = new Pending<TResult>();
-		this._target.then(
-			result=>handleFulfill(p, result, onFulfilled),
-			e=>handleReject(p, e, onRejected)
-		);
-		return p;
-	}
-
-	protected _onDispose():void
-	{
-		super._onDispose();
-		this._target = null;
+		this.thenThis(fin, fin);
+		return this;
 	}
 
 }
@@ -277,6 +252,7 @@ export abstract class Resolved<T> extends Promise<T>
 		this._state = state;
 	}
 
+
 	then<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):Promise<TResult>
@@ -285,14 +261,43 @@ export abstract class Resolved<T> extends Promise<T>
 
 		try
 		{
-			return this._error===VOID0
-				? resolve(this._result, onFulfilled, Promise.resolve)
-				: resolve(this._error, onRejected, Promise.reject);
+			switch(this.state)
+			{
+				case Promise.State.Fulfilled:
+					return onFulfilled
+						? resolve(this._result, onFulfilled, Promise.resolve)
+						: <any>this; // Provided for catch cases.
+				case Promise.State.Rejected:
+					return onRejected
+						? resolve(this._error, onRejected, Promise.resolve)
+						: <any>this;
+			}
 		}
 		catch(ex)
 		{
-			return new Rejected(ex);
+			return new Rejected<any>(ex);
 		}
+
+		throw new Error("Invalid state for a resolved promise.");
+	}
+
+	thenThis<TResult>(
+		onFulfilled:Promise.Fulfill<T, TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<T>
+	{
+		this.throwIfDisposed();
+
+		switch(this.state)
+		{
+			case Promise.State.Fulfilled:
+				if(onFulfilled) onFulfilled(this._result);
+				break;
+			case Promise.State.Rejected:
+				if(onRejected) onRejected(this._error);
+				break;
+		}
+
+		return this;
 	}
 }
 
@@ -305,6 +310,50 @@ class Fulfilled<T> extends Resolved<T>
 	{
 		super(Promise.State.Fulfilled, value);
 	}
+}
+
+/**
+ * A rejected Resolved<T>.  Provided for readability.
+ */
+class Rejected<T> extends Resolved<T>
+{
+	constructor(error:any)
+	{
+		super(Promise.State.Rejected, VOID0, error);
+	}
+}
+
+
+/**
+ * Provided as a means for extending the interface of other PromiseLike<T> objects.
+ */
+class PromiseWrapper<T> extends Resolved<T>
+{
+	constructor(private _target:PromiseLike<T>)
+	{
+		super(Promise.State.Pending);
+
+		if(!_target)
+			throw new ArgumentNullException(TARGET);
+
+		if(!isPromise(_target))
+			throw new ArgumentException(TARGET, "Must be a promise-like object.");
+
+		_target.then(
+			v=>
+			{
+				this._state = Promise.State.Fulfilled;
+				this._result = v;
+				this._error = VOID0;
+				this._target = VOID0;
+			},
+			e=>
+			{
+				this._state = Promise.State.Rejected;
+				this._error = e;
+				this._target = VOID0;
+			})
+	}
 
 	then<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
@@ -312,43 +361,37 @@ class Fulfilled<T> extends Resolved<T>
 	{
 		this.throwIfDisposed();
 
-		try
-		{
-			return resolve(this._result, onFulfilled, Promise.resolve);
-		}
-		catch(ex)
-		{
-			return new Rejected(ex);
-		}
-	}
-}
+		var t = this._target;
+		if(!t) return super.then(onFulfilled, onRejected);
 
-/**
- * A rejected Resolved<T>.  Provided for readability.
- */
-class Rejected extends Resolved<any>
-{
-	constructor(error:any)
-	{
-		super(Promise.State.Rejected, VOID0, error);
+		var p = Promise.pending<TResult>();
+		handleDispatch(t,
+			result=>handleResolution(p, result, onFulfilled),
+			error=>onRejected ? handleResolution(p, error, onRejected) : p.reject(error));
+		return p;
 	}
 
-	then<TResult>(
-		onFulfilled:Promise.Fulfill<any,TResult>,
-		onRejected?:Promise.Reject<TResult>):Promise<TResult>
+
+	thenThis<TResult>(
+		onFulfilled:Promise.Fulfill<T, TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<T>
 	{
 		this.throwIfDisposed();
 
-		try
-		{
-			return resolve(this._error, onRejected, Promise.reject);
-		}
-		catch(ex)
-		{
-			return new Rejected(ex);
-		}
+		var t = this._target;
+		if(!t) return super.thenThis(onFulfilled, onRejected);
+		handleDispatch(t, onFulfilled, onRejected);
+		return this;
 	}
+
+	protected _onDispose():void
+	{
+		super._onDispose();
+		this._target = VOID0;
+	}
+
 }
+
 
 /**
  * This promise class that facilitates pending resolution.
@@ -362,7 +405,7 @@ export class Pending<T> extends Resolved<T>
 	{
 		super(Promise.State.Pending);
 
-		if(resolver) this.resolve(resolver);
+		if(resolver) this.resolveUsing(resolver);
 	}
 
 
@@ -377,48 +420,75 @@ export class Pending<T> extends Resolved<T>
 
 		var p = new Pending<TResult>();
 		(this._waiting || (this._waiting = []))
-			.push(PromiseCallbacks.init(onFulfilled, onRejected, p));
+			.push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
 		return p;
 	}
+
+	thenThis<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<T>
+	{
+		this.throwIfDisposed();
+
+		// Already fulfilled?
+		if(this._state) return super.thenThis(onFulfilled, onRejected);
+
+		(this._waiting || (this._waiting = []))
+			.push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
+
+		return this;
+	}
+
 
 	protected _onDispose()
 	{
 		super._onDispose();
-		this._resolveCalled = VOID0;
+		this._resolvedCalled = VOID0;
 	}
 
-	private _resolveCalled:boolean;
+	// Protects against double calling.
+	protected _resolvedCalled:boolean;
 
-	resolve(resolver:Promise.Executor<T>)
+	resolveUsing(resolver:Promise.Executor<T>, throwIfSettled:boolean = false)
 	{
 		if(!resolver)
 			throw new ArgumentNullException("resolver");
-		if(this._resolveCalled)
+		if(this._resolvedCalled)
 			throw new InvalidOperationException(".resolve() already called.");
 		if(this.state)
 			throw new InvalidOperationException("Already resolved: " + Promise.State[this.state]);
 
-		this._resolveCalled = true;
+		this._resolvedCalled = true;
+
+		var rejectHandler = (reason:any)=>
+		{
+			this._resolvedCalled = false;
+			this.reject(reason);
+		};
+
+		var fulfillHandler = (v:any)=>
+		{
+			this._resolvedCalled = false;
+			this.resolve(v);
+		};
+
 		resolver(
 			v=>
 			{
 				if(v==this) throw new InvalidOperationException("Cannot resolve a promise as itself.");
 				if(isPromise(v))
 				{
-					v.then(
-						f=>this.fulfill(f),
-						r=>this.reject(r))
+					handleDispatch(v,fulfillHandler,rejectHandler);
 				}
 				else
-					this.fulfill(v);
+				{
+					fulfillHandler(v);
+				}
 			},
-			reason=>
-			{
-				this.reject(reason);
-			});
+			rejectHandler);
 	}
 
-	fulfill(result?:T):void
+	resolve(result?:T, throwIfSettled:boolean = false):void
 	{
 		this.throwIfDisposed();
 		if(<any>result==this)
@@ -427,12 +497,16 @@ export class Pending<T> extends Resolved<T>
 		if(this._state)
 		{
 			// Same value? Ignore...
-			if(this._state==Promise.State.Fulfilled && this._result===result) return;
+			if(!throwIfSettled || this._state==Promise.State.Fulfilled && this._result===result) return;
 			throw new InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
 		}
 
-		if(this._resolveCalled)
-			throw new InvalidOperationException(".resolve() already called.");
+		if(this._resolvedCalled)
+		{
+			if(throwIfSettled)
+				throw new InvalidOperationException(".resolve() already called.");
+			return;
+		}
 
 		this._state = Promise.State.Fulfilled;
 
@@ -445,26 +519,29 @@ export class Pending<T> extends Resolved<T>
 			for(let c of o)
 			{
 				let {onFulfilled, promise} = c, p = (<Pending<T>>promise);
-				PromiseCallbacks.recycle(c);
-				handleFulfill(p, result, onFulfilled);
+				pools.PromiseCallbacks.recycle(c);
+				handleResolution(p, result, onFulfilled);
 			}
 			o.length = 0;
 		}
 	}
 
-	reject(error:any):void
+	reject(error:any, throwIfSettled:boolean = false):void
 	{
 		this.throwIfDisposed();
 		if(this._state)
 		{
 			// Same value? Ignore...
-			if(this._state==Promise.State.Rejected && this._error===error) return;
+			if(!throwIfSettled || this._state==Promise.State.Rejected && this._error===error) return;
 			throw new InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
 		}
 
-		if(this._resolveCalled)
-			throw new InvalidOperationException(".resolve() already called.");
-
+		if(this._resolvedCalled)
+		{
+			if(throwIfSettled)
+				throw new InvalidOperationException(".resolve() already called.");
+			return;
+		}
 		this._state = Promise.State.Rejected;
 
 		this._error = error;
@@ -475,20 +552,26 @@ export class Pending<T> extends Resolved<T>
 			for(let c of o)
 			{
 				let {onRejected, promise} = c, p = (<Pending<T>>promise);
-				PromiseCallbacks.recycle(c);
-				handleReject(p, error, onRejected);
+				pools.PromiseCallbacks.recycle(c);
+				if(onRejected) handleResolution(p, error, onRejected);
+				else p.reject(error);
 			}
 			o.length = 0;
 		}
 	}
 }
 
+
+/**
+ * This promise class ensures that all subsequent then calls resolve in a deferred/async manner.
+ * This is not intended as a promise generator.  Use Pending for deferring results.
+ */
 class Deferred<T> extends Resolved<T>
 {
 	constructor(private _source:Promise<T>)
 	{
 		super(VOID0);
-		if(!(_source instanceof Promise))
+		if(!_source || !(_source instanceof Promise))
 			throw new ArgumentException(TARGET, "Must be of type Promise.");
 	}
 
@@ -522,8 +605,22 @@ class Deferred<T> extends Resolved<T>
 		var d = this._source.defer();
 		var p = d.then(onFulfilled, onRejected);
 		// Since there is only 1 'then' for the deferred promise, cleanup immediately after.
-		d.finally(()=>Pools.recycle(d));
+		d.finally(()=>pools.recycle(d));
 		return p;
+	}
+
+
+	thenThis<TResult>(
+		onFulfilled:Promise.Fulfill<T, TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<T>
+	{
+		this.throwIfDisposed();
+
+		var d = this._source.defer();
+		d.thenThis(onFulfilled, onRejected);
+		// Since there is only 1 'then' for the deferred promise, cleanup immediately after.
+		d.finally(()=>pools.recycle(d));
+		return this;
 	}
 
 	defer():Promise<T>
@@ -544,11 +641,12 @@ class Deferred<T> extends Resolved<T>
 /**
  * This promise class only resolves the provided factory if values are requested or state is queried.
  */
-class Lazy<T> extends Resolved<T>
+export class LazyResolved<T> extends Resolved<T>
 {
 	constructor(private _factory:Func<T>)
 	{
 		super(Promise.State.Pending);
+		if(!_factory) throw new ArgumentNullException("factory");
 	}
 
 	protected _onDispose()
@@ -560,7 +658,7 @@ class Lazy<T> extends Resolved<T>
 	protected getState():Promise.State
 	{
 		this.getResult();
-		return this._error;
+		return this._state;
 	}
 
 	protected getResult():T
@@ -598,14 +696,70 @@ class Lazy<T> extends Resolved<T>
 		return super.then(onFulfilled, onRejected);
 	}
 
+	add<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<T>
+	{
+		this.throwIfDisposed();
+
+		this.getResult();
+		return super.thenThis(onFulfilled, onRejected);
+	}
 
 }
 
-
-module Pools
+/**
+ * A promise that waits for the first then to trigger the resolver.
+ */
+export class LazyPromise<T> extends Pending<T>
 {
 
-	export module PendingPool
+	constructor(private _resolver:Promise.Executor<T>)
+	{
+		super();
+		if(!_resolver) throw new ArgumentNullException("resolver");
+		this._resolvedCalled = true;
+	}
+
+	protected _onDispose():void
+	{
+		super._onDispose();
+		this._resolver = VOID0;
+	}
+
+	private _onThen():void
+	{
+		var r = this._resolver;
+		if(r)
+		{
+			this._resolver = VOID0;
+			this._resolvedCalled = false;
+			this.resolveUsing(r);
+		}
+	}
+
+	then<TResult>(
+		onFulfilled:Promise.Fulfill<T, TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<TResult>
+	{
+		this._onThen();
+		return super.then(onFulfilled, onRejected);
+	}
+
+
+	thenThis<TResult>(
+		onFulfilled:Promise.Fulfill<T, TResult>,
+		onRejected?:Promise.Reject<TResult>):Promise<T>
+	{
+		this._onThen();
+		return super.thenThis(onFulfilled, onRejected);
+	}
+}
+
+module pools
+{
+
+	export module pending
 	{
 
 
@@ -631,6 +785,7 @@ module Pools
 
 		export function recycle<T>(c:Pending<T>):void
 		{
+			if(!c) return;
 			c.dispose();
 			getPool().add(c);
 		}
@@ -639,9 +794,53 @@ module Pools
 
 	export function recycle<T>(c:Promise<T>):void
 	{
-		if(c instanceof Pending) PendingPool.recycle(c);
+		if(!c) return;
+		if(c instanceof Pending) pending.recycle(c);
 		else c.dispose();
 	}
+
+
+	export module PromiseCallbacks
+	{
+
+		var pool:ObjectPool<IPromiseCallbacks<any>>;
+
+		function getPool()
+		{
+			return pool || (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory));
+		}
+
+		function factory():IPromiseCallbacks<any>
+		{
+			return {
+				onFulfilled: null,
+				onRejected: null,
+				promise: null
+			}
+		}
+
+		export function init<T>(
+			onFulfilled:Promise.Fulfill<T,any>,
+			onRejected?:Promise.Reject<any>,
+			promise?:PromiseLike<any>):IPromiseCallbacks<T>
+		{
+
+			var c = getPool().take();
+			c.onFulfilled = onFulfilled;
+			c.onRejected = onRejected;
+			c.promise = promise;
+			return c;
+		}
+
+		export function recycle<T>(c:IPromiseCallbacks<T>):void
+		{
+			c.onFulfilled = null;
+			c.onRejected = null;
+			c.promise = null;
+			getPool().add(c);
+		}
+	}
+
 
 }
 
@@ -651,6 +850,7 @@ export module Promise
 
 	/**
 	 * The state of a promise.
+	 * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
 	 * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
 	 */
 	export enum State {
@@ -719,16 +919,33 @@ export module Promise
 	 * @param reason The reason the promise was rejected.
 	 * @returns A new rejected Promise.
 	 */
-	export function reject(reason:any):Promise<void>;
-	export function reject<T>(reason:any):Promise<T>
+	export function reject<T>(reason:T):Promise<T>
 	{
-		return new Rejected(reason);
+		return new Rejected<T>(reason);
 	}
 
-	export function lazy(factory:Closure):Promise<void>;
-	export function lazy<T>(factory:Func<T>):Promise<T>
+
+	export module lazy
 	{
-		return new Lazy<T>(factory);
+		/**
+		 * Provides a promise that will be resolved immediately at the first 'then' request.
+		 * @param factory
+		 */
+		export function resolve<T>(factory:Func<T>):Promise<T>
+		{
+			return new LazyResolved<T>(factory);
+		}
+
+
+		/**
+		 * Provides a promise that will trigger the resolver at the first 'then' request.
+		 * @param resolver
+		 * @returns {Pending<T>}
+		 */
+		export function pending<T>(resolver:Promise.Executor<T>):Pending<T>
+		{
+			return new LazyPromise(resolver);
+		}
 	}
 
 	/**
@@ -738,16 +955,18 @@ export module Promise
 	 */
 	export function wrap<T>(target:PromiseLike<T>):Promise<T>
 	{
+		if(!target) throw new ArgumentNullException(TARGET);
 		return target instanceof Promise ? this : new PromiseWrapper(target);
 	}
 
 	/**
-	 * A function that acts like a then method can be extended by providing a function that takes an onFulfill and onReject.
+	 * A function that acts like a 'then' method (aka then-able) can be extended by providing a function that takes an onFulfill and onReject.
 	 * @param then
 	 * @returns {PromiseWrapper<T>}
 	 */
 	export function createFrom<T,TResult>(then:Then<T,TResult>):Promise<T>
 	{
+		if(!then) throw new ArgumentNullException(THEN);
 		return new PromiseWrapper({then: then});
 	}
 
@@ -757,10 +976,11 @@ export module Promise
 	 */
 	export function pending<T>(resolver?:Promise.Executor<T>):Pending<T>
 	{
-		var p = Pools.PendingPool.get();
-		if(resolver) p.resolve(resolver);
+		var p = pools.pending.get();
+		if(resolver) p.resolveUsing(resolver);
 		return p;
 	}
+
 
 }
 
@@ -770,52 +990,4 @@ interface IPromiseCallbacks<T>
 	onFulfilled:Promise.Fulfill<T,any>;
 	onRejected:Promise.Reject<any>;
 	promise?:PromiseLike<any>;
-}
-
-module PromiseCallbacks
-{
-
-	var pool:ObjectPool<IPromiseCallbacks<any>>;
-
-	function getPool()
-	{
-		return pool || (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory));
-	}
-
-	function factory():IPromiseCallbacks<any>
-	{
-		return {
-			onFulfilled: null,
-			onRejected: null,
-			promise: null
-		}
-	}
-
-	export function init<T>(
-		onFulfilled:Promise.Fulfill<T,any>,
-		onRejected?:Promise.Reject<any>,
-		promise?:PromiseLike<any>):IPromiseCallbacks<T>
-	{
-
-		var c = getPool().take();
-		c.onFulfilled = onFulfilled;
-		c.onRejected = onRejected;
-		c.promise = promise;
-		return c;
-	}
-
-	export function release<T>(to:PromiseLike<T>, c:IPromiseCallbacks<T>):void
-	{
-		let {onFulfilled, onRejected} = c;
-		recycle(c);
-		to.then(onFulfilled, onRejected);
-	}
-
-	export function recycle<T>(c:IPromiseCallbacks<T>):void
-	{
-		c.onFulfilled = null;
-		c.onRejected = null;
-		c.promise = null;
-		getPool().add(c);
-	}
 }

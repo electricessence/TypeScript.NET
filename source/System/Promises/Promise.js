@@ -41,7 +41,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function pass(source, dest) {
         return function () {
             source.then(function (v) {
-                dest.fulfill(v);
+                dest.resolve(v);
                 return dest;
             }, function (e) {
                 dest.reject(e);
@@ -49,21 +49,21 @@ var __extends = (this && this.__extends) || function (d, b) {
             });
         };
     }
-    function handleFulfill(p, value, resolver) {
+    function handleResolution(p, value, resolver) {
         try {
-            p.fulfill(resolver ? resolver(value) : value);
+            var v = resolver ? resolver(value) : value;
+            if (p)
+                p.resolve(v);
         }
         catch (ex) {
             p.reject(ex);
         }
     }
-    function handleReject(p, error, resolver) {
-        try {
-            p.reject(resolver ? resolver(error) : error);
-        }
-        catch (ex) {
-            p.reject(ex);
-        }
+    function handleDispatch(p, onFulfilled, onRejected) {
+        if (p instanceof Promise)
+            p.thenThis(onFulfilled, onRejected);
+        else
+            p.then(onFulfilled, onRejected);
     }
     var Promise = (function (_super) {
         __extends(Promise, _super);
@@ -94,7 +94,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Promise.prototype, "isResolved", {
+        Object.defineProperty(Promise.prototype, "isSettled", {
             get: function () {
                 return this.getState() != Promise.State.Pending;
             },
@@ -143,13 +143,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         Promise.prototype.defer = function () {
             this.throwIfDisposed();
-            var p = new Pending();
+            var p = Promise.pending();
             deferImmediate_1.deferImmediate(pass(this, p));
             return p;
         };
         Promise.prototype.delay = function (milliseconds) {
             this.throwIfDisposed();
-            var p = new Pending();
+            var p = Promise.pending();
             defer_1.defer(pass(this, p), milliseconds);
             return p;
         };
@@ -161,40 +161,13 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.throwIfDisposed();
             return this.then(fin, fin);
         };
+        Promise.prototype.finallyThis = function (fin) {
+            this.thenThis(fin, fin);
+            return this;
+        };
         return Promise;
     }(DisposableBase_1.DisposableBase));
     exports.Promise = Promise;
-    var PromiseWrapper = (function (_super) {
-        __extends(PromiseWrapper, _super);
-        function PromiseWrapper(_target) {
-            var _this = this;
-            _super.call(this);
-            this._target = _target;
-            if (!_target)
-                throw new ArgumentNullException_1.ArgumentNullException(TARGET);
-            if (!isPromise(_target))
-                throw new ArgumentException_1.ArgumentException(TARGET, "Must be a promise-like object.");
-            _target.then(function (v) {
-                _this._state = Promise.State.Fulfilled;
-                _this._result = v;
-                _this._error = VOID0;
-            }, function (e) {
-                _this._state = Promise.State.Rejected;
-                _this._error = e;
-            });
-        }
-        PromiseWrapper.prototype.then = function (onFulfilled, onRejected) {
-            this.throwIfDisposed();
-            var p = new Pending();
-            this._target.then(function (result) { return handleFulfill(p, result, onFulfilled); }, function (e) { return handleReject(p, e, onRejected); });
-            return p;
-        };
-        PromiseWrapper.prototype._onDispose = function () {
-            _super.prototype._onDispose.call(this);
-            this._target = null;
-        };
-        return PromiseWrapper;
-    }(Promise));
     var Resolved = (function (_super) {
         __extends(Resolved, _super);
         function Resolved(state, result, error) {
@@ -206,13 +179,35 @@ var __extends = (this && this.__extends) || function (d, b) {
         Resolved.prototype.then = function (onFulfilled, onRejected) {
             this.throwIfDisposed();
             try {
-                return this._error === VOID0
-                    ? resolve(this._result, onFulfilled, Promise.resolve)
-                    : resolve(this._error, onRejected, Promise.reject);
+                switch (this.state) {
+                    case Promise.State.Fulfilled:
+                        return onFulfilled
+                            ? resolve(this._result, onFulfilled, Promise.resolve)
+                            : this;
+                    case Promise.State.Rejected:
+                        return onRejected
+                            ? resolve(this._error, onRejected, Promise.resolve)
+                            : this;
+                }
             }
             catch (ex) {
                 return new Rejected(ex);
             }
+            throw new Error("Invalid state for a resolved promise.");
+        };
+        Resolved.prototype.thenThis = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            switch (this.state) {
+                case Promise.State.Fulfilled:
+                    if (onFulfilled)
+                        onFulfilled(this._result);
+                    break;
+                case Promise.State.Rejected:
+                    if (onRejected)
+                        onRejected(this._error);
+                    break;
+            }
+            return this;
         };
         return Resolved;
     }(Promise));
@@ -222,15 +217,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         function Fulfilled(value) {
             _super.call(this, Promise.State.Fulfilled, value);
         }
-        Fulfilled.prototype.then = function (onFulfilled, onRejected) {
-            this.throwIfDisposed();
-            try {
-                return resolve(this._result, onFulfilled, Promise.resolve);
-            }
-            catch (ex) {
-                return new Rejected(ex);
-            }
-        };
         return Fulfilled;
     }(Resolved));
     var Rejected = (function (_super) {
@@ -238,23 +224,58 @@ var __extends = (this && this.__extends) || function (d, b) {
         function Rejected(error) {
             _super.call(this, Promise.State.Rejected, VOID0, error);
         }
-        Rejected.prototype.then = function (onFulfilled, onRejected) {
-            this.throwIfDisposed();
-            try {
-                return resolve(this._error, onRejected, Promise.reject);
-            }
-            catch (ex) {
-                return new Rejected(ex);
-            }
-        };
         return Rejected;
+    }(Resolved));
+    var PromiseWrapper = (function (_super) {
+        __extends(PromiseWrapper, _super);
+        function PromiseWrapper(_target) {
+            var _this = this;
+            _super.call(this, Promise.State.Pending);
+            this._target = _target;
+            if (!_target)
+                throw new ArgumentNullException_1.ArgumentNullException(TARGET);
+            if (!isPromise(_target))
+                throw new ArgumentException_1.ArgumentException(TARGET, "Must be a promise-like object.");
+            _target.then(function (v) {
+                _this._state = Promise.State.Fulfilled;
+                _this._result = v;
+                _this._error = VOID0;
+                _this._target = VOID0;
+            }, function (e) {
+                _this._state = Promise.State.Rejected;
+                _this._error = e;
+                _this._target = VOID0;
+            });
+        }
+        PromiseWrapper.prototype.then = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            var t = this._target;
+            if (!t)
+                return _super.prototype.then.call(this, onFulfilled, onRejected);
+            var p = Promise.pending();
+            handleDispatch(t, function (result) { return handleResolution(p, result, onFulfilled); }, function (error) { return onRejected ? handleResolution(p, error, onRejected) : p.reject(error); });
+            return p;
+        };
+        PromiseWrapper.prototype.thenThis = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            var t = this._target;
+            if (!t)
+                return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+            handleDispatch(t, onFulfilled, onRejected);
+            return this;
+        };
+        PromiseWrapper.prototype._onDispose = function () {
+            _super.prototype._onDispose.call(this);
+            this._target = VOID0;
+        };
+        return PromiseWrapper;
     }(Resolved));
     var Pending = (function (_super) {
         __extends(Pending, _super);
         function Pending(resolver) {
             _super.call(this, Promise.State.Pending);
             if (resolver)
-                this.resolve(resolver);
+                this.resolveUsing(resolver);
         }
         Pending.prototype.then = function (onFulfilled, onRejected) {
             this.throwIfDisposed();
@@ -262,45 +283,65 @@ var __extends = (this && this.__extends) || function (d, b) {
                 return _super.prototype.then.call(this, onFulfilled, onRejected);
             var p = new Pending();
             (this._waiting || (this._waiting = []))
-                .push(PromiseCallbacks.init(onFulfilled, onRejected, p));
+                .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
             return p;
+        };
+        Pending.prototype.thenThis = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            if (this._state)
+                return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+            (this._waiting || (this._waiting = []))
+                .push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
+            return this;
         };
         Pending.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
-            this._resolveCalled = VOID0;
+            this._resolvedCalled = VOID0;
         };
-        Pending.prototype.resolve = function (resolver) {
+        Pending.prototype.resolveUsing = function (resolver, throwIfSettled) {
             var _this = this;
+            if (throwIfSettled === void 0) { throwIfSettled = false; }
             if (!resolver)
                 throw new ArgumentNullException_1.ArgumentNullException("resolver");
-            if (this._resolveCalled)
+            if (this._resolvedCalled)
                 throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
             if (this.state)
                 throw new InvalidOperationException_1.InvalidOperationException("Already resolved: " + Promise.State[this.state]);
-            this._resolveCalled = true;
+            this._resolvedCalled = true;
+            var rejectHandler = function (reason) {
+                _this._resolvedCalled = false;
+                _this.reject(reason);
+            };
+            var fulfillHandler = function (v) {
+                _this._resolvedCalled = false;
+                _this.resolve(v);
+            };
             resolver(function (v) {
                 if (v == _this)
                     throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
                 if (isPromise(v)) {
-                    v.then(function (f) { return _this.fulfill(f); }, function (r) { return _this.reject(r); });
+                    handleDispatch(v, fulfillHandler, rejectHandler);
                 }
-                else
-                    _this.fulfill(v);
-            }, function (reason) {
-                _this.reject(reason);
-            });
+                else {
+                    fulfillHandler(v);
+                }
+            }, rejectHandler);
         };
-        Pending.prototype.fulfill = function (result) {
+        Pending.prototype.resolve = function (result, throwIfSettled) {
+            if (throwIfSettled === void 0) { throwIfSettled = false; }
             this.throwIfDisposed();
             if (result == this)
                 throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
             if (this._state) {
-                if (this._state == Promise.State.Fulfilled && this._result === result)
+                if (!throwIfSettled || this._state == Promise.State.Fulfilled && this._result === result)
                     return;
                 throw new InvalidOperationException_1.InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
             }
-            if (this._resolveCalled)
-                throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
+            if (this._resolvedCalled) {
+                if (throwIfSettled)
+                    throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
+                return;
+            }
             this._state = Promise.State.Fulfilled;
             this._result = result;
             this._error = VOID0;
@@ -310,21 +351,25 @@ var __extends = (this && this.__extends) || function (d, b) {
                 for (var _i = 0, o_1 = o; _i < o_1.length; _i++) {
                     var c = o_1[_i];
                     var onFulfilled = c.onFulfilled, promise = c.promise, p = promise;
-                    PromiseCallbacks.recycle(c);
-                    handleFulfill(p, result, onFulfilled);
+                    pools.PromiseCallbacks.recycle(c);
+                    handleResolution(p, result, onFulfilled);
                 }
                 o.length = 0;
             }
         };
-        Pending.prototype.reject = function (error) {
+        Pending.prototype.reject = function (error, throwIfSettled) {
+            if (throwIfSettled === void 0) { throwIfSettled = false; }
             this.throwIfDisposed();
             if (this._state) {
-                if (this._state == Promise.State.Rejected && this._error === error)
+                if (!throwIfSettled || this._state == Promise.State.Rejected && this._error === error)
                     return;
                 throw new InvalidOperationException_1.InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
             }
-            if (this._resolveCalled)
-                throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
+            if (this._resolvedCalled) {
+                if (throwIfSettled)
+                    throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
+                return;
+            }
             this._state = Promise.State.Rejected;
             this._error = error;
             var o = this._waiting;
@@ -333,8 +378,11 @@ var __extends = (this && this.__extends) || function (d, b) {
                 for (var _i = 0, o_2 = o; _i < o_2.length; _i++) {
                     var c = o_2[_i];
                     var onRejected = c.onRejected, promise = c.promise, p = promise;
-                    PromiseCallbacks.recycle(c);
-                    handleReject(p, error, onRejected);
+                    pools.PromiseCallbacks.recycle(c);
+                    if (onRejected)
+                        handleResolution(p, error, onRejected);
+                    else
+                        p.reject(error);
                 }
                 o.length = 0;
             }
@@ -347,7 +395,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         function Deferred(_source) {
             _super.call(this, VOID0);
             this._source = _source;
-            if (!(_source instanceof Promise))
+            if (!_source || !(_source instanceof Promise))
                 throw new ArgumentException_1.ArgumentException(TARGET, "Must be of type Promise.");
         }
         Deferred.prototype._onDisposed = function () {
@@ -367,8 +415,15 @@ var __extends = (this && this.__extends) || function (d, b) {
             this.throwIfDisposed();
             var d = this._source.defer();
             var p = d.then(onFulfilled, onRejected);
-            d.finally(function () { return Pools.recycle(d); });
+            d.finally(function () { return pools.recycle(d); });
             return p;
+        };
+        Deferred.prototype.thenThis = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            var d = this._source.defer();
+            d.thenThis(onFulfilled, onRejected);
+            d.finally(function () { return pools.recycle(d); });
+            return this;
         };
         Deferred.prototype.defer = function () {
             this.throwIfDisposed();
@@ -380,21 +435,23 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return Deferred;
     }(Resolved));
-    var Lazy = (function (_super) {
-        __extends(Lazy, _super);
-        function Lazy(_factory) {
+    var LazyResolved = (function (_super) {
+        __extends(LazyResolved, _super);
+        function LazyResolved(_factory) {
             _super.call(this, Promise.State.Pending);
             this._factory = _factory;
+            if (!_factory)
+                throw new ArgumentNullException_1.ArgumentNullException("factory");
         }
-        Lazy.prototype._onDispose = function () {
+        LazyResolved.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
             this._factory = VOID0;
         };
-        Lazy.prototype.getState = function () {
+        LazyResolved.prototype.getState = function () {
             this.getResult();
-            return this._error;
+            return this._state;
         };
-        Lazy.prototype.getResult = function () {
+        LazyResolved.prototype.getResult = function () {
             if (!this._state) {
                 try {
                     this._result = this._factory();
@@ -408,21 +465,59 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return this._result;
         };
-        Lazy.prototype.getError = function () {
+        LazyResolved.prototype.getError = function () {
             this.getResult();
             return this._error;
         };
-        Lazy.prototype.then = function (onFulfilled, onRejected) {
+        LazyResolved.prototype.then = function (onFulfilled, onRejected) {
             this.throwIfDisposed();
             this.getResult();
             return _super.prototype.then.call(this, onFulfilled, onRejected);
         };
-        return Lazy;
+        LazyResolved.prototype.add = function (onFulfilled, onRejected) {
+            this.throwIfDisposed();
+            this.getResult();
+            return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+        };
+        return LazyResolved;
     }(Resolved));
-    var Pools;
-    (function (Pools) {
-        var PendingPool;
-        (function (PendingPool) {
+    exports.LazyResolved = LazyResolved;
+    var LazyPromise = (function (_super) {
+        __extends(LazyPromise, _super);
+        function LazyPromise(_resolver) {
+            _super.call(this);
+            this._resolver = _resolver;
+            if (!_resolver)
+                throw new ArgumentNullException_1.ArgumentNullException("resolver");
+            this._resolvedCalled = true;
+        }
+        LazyPromise.prototype._onDispose = function () {
+            _super.prototype._onDispose.call(this);
+            this._resolver = VOID0;
+        };
+        LazyPromise.prototype._onThen = function () {
+            var r = this._resolver;
+            if (r) {
+                this._resolver = VOID0;
+                this._resolvedCalled = false;
+                this.resolveUsing(r);
+            }
+        };
+        LazyPromise.prototype.then = function (onFulfilled, onRejected) {
+            this._onThen();
+            return _super.prototype.then.call(this, onFulfilled, onRejected);
+        };
+        LazyPromise.prototype.thenThis = function (onFulfilled, onRejected) {
+            this._onThen();
+            return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
+        };
+        return LazyPromise;
+    }(Pending));
+    exports.LazyPromise = LazyPromise;
+    var pools;
+    (function (pools) {
+        var pending;
+        (function (pending) {
             var pool;
             function getPool() {
                 return pool || (pool = new ObjectPool_1.ObjectPool(40, factory));
@@ -436,21 +531,54 @@ var __extends = (this && this.__extends) || function (d, b) {
                 p._state = Promise.State.Pending;
                 return p;
             }
-            PendingPool.get = get;
+            pending.get = get;
             function recycle(c) {
+                if (!c)
+                    return;
                 c.dispose();
                 getPool().add(c);
             }
-            PendingPool.recycle = recycle;
-        })(PendingPool = Pools.PendingPool || (Pools.PendingPool = {}));
+            pending.recycle = recycle;
+        })(pending = pools.pending || (pools.pending = {}));
         function recycle(c) {
+            if (!c)
+                return;
             if (c instanceof Pending)
-                PendingPool.recycle(c);
+                pending.recycle(c);
             else
                 c.dispose();
         }
-        Pools.recycle = recycle;
-    })(Pools || (Pools = {}));
+        pools.recycle = recycle;
+        var PromiseCallbacks;
+        (function (PromiseCallbacks) {
+            var pool;
+            function getPool() {
+                return pool || (pool = new ObjectPool_1.ObjectPool(40, factory));
+            }
+            function factory() {
+                return {
+                    onFulfilled: null,
+                    onRejected: null,
+                    promise: null
+                };
+            }
+            function init(onFulfilled, onRejected, promise) {
+                var c = getPool().take();
+                c.onFulfilled = onFulfilled;
+                c.onRejected = onRejected;
+                c.promise = promise;
+                return c;
+            }
+            PromiseCallbacks.init = init;
+            function recycle(c) {
+                c.onFulfilled = null;
+                c.onRejected = null;
+                c.promise = null;
+                getPool().add(c);
+            }
+            PromiseCallbacks.recycle = recycle;
+        })(PromiseCallbacks = pools.PromiseCallbacks || (pools.PromiseCallbacks = {}));
+    })(pools || (pools = {}));
     var Promise;
     (function (Promise) {
         (function (State) {
@@ -468,60 +596,36 @@ var __extends = (this && this.__extends) || function (d, b) {
             return new Rejected(reason);
         }
         Promise.reject = reject;
-        function lazy(factory) {
-            return new Lazy(factory);
-        }
-        Promise.lazy = lazy;
+        var lazy;
+        (function (lazy) {
+            function resolve(factory) {
+                return new LazyResolved(factory);
+            }
+            lazy.resolve = resolve;
+            function pending(resolver) {
+                return new LazyPromise(resolver);
+            }
+            lazy.pending = pending;
+        })(lazy = Promise.lazy || (Promise.lazy = {}));
         function wrap(target) {
+            if (!target)
+                throw new ArgumentNullException_1.ArgumentNullException(TARGET);
             return target instanceof Promise ? this : new PromiseWrapper(target);
         }
         Promise.wrap = wrap;
         function createFrom(then) {
+            if (!then)
+                throw new ArgumentNullException_1.ArgumentNullException(THEN);
             return new PromiseWrapper({ then: then });
         }
         Promise.createFrom = createFrom;
         function pending(resolver) {
-            var p = Pools.PendingPool.get();
+            var p = pools.pending.get();
             if (resolver)
-                p.resolve(resolver);
+                p.resolveUsing(resolver);
             return p;
         }
         Promise.pending = pending;
     })(Promise = exports.Promise || (exports.Promise = {}));
-    var PromiseCallbacks;
-    (function (PromiseCallbacks) {
-        var pool;
-        function getPool() {
-            return pool || (pool = new ObjectPool_1.ObjectPool(40, factory));
-        }
-        function factory() {
-            return {
-                onFulfilled: null,
-                onRejected: null,
-                promise: null
-            };
-        }
-        function init(onFulfilled, onRejected, promise) {
-            var c = getPool().take();
-            c.onFulfilled = onFulfilled;
-            c.onRejected = onRejected;
-            c.promise = promise;
-            return c;
-        }
-        PromiseCallbacks.init = init;
-        function release(to, c) {
-            var onFulfilled = c.onFulfilled, onRejected = c.onRejected;
-            recycle(c);
-            to.then(onFulfilled, onRejected);
-        }
-        PromiseCallbacks.release = release;
-        function recycle(c) {
-            c.onFulfilled = null;
-            c.onRejected = null;
-            c.promise = null;
-            getPool().add(c);
-        }
-        PromiseCallbacks.recycle = recycle;
-    })(PromiseCallbacks || (PromiseCallbacks = {}));
 });
 //# sourceMappingURL=Promise.js.map
