@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase"], factory);
+        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -21,7 +21,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+    var Types_1 = require("../Types");
+    var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
     var CollectionBase = (function (_super) {
         __extends(CollectionBase, _super);
         function CollectionBase(source, _equalityComparer) {
@@ -152,6 +153,10 @@ var __extends = (this && this.__extends) || function (d, b) {
             this._version = 0;
             this._updateRecursion = 0;
             this._modifiedCount = 0;
+            var l = this._linq;
+            this._linq = null;
+            if (l)
+                l.dispose();
         };
         CollectionBase.prototype._importEntries = function (entries) {
             var _this = this;
@@ -226,6 +231,21 @@ var __extends = (this && this.__extends) || function (d, b) {
             var count = this.getCount();
             return this.copyTo(count > 65536 ? new Array(count) : []);
         };
+        Object.defineProperty(CollectionBase.prototype, "linq", {
+            get: function () {
+                if (Types_1.Type.hasMember(require, RESOLVE) && require.length == 1) {
+                    var e = this._linq;
+                    if (!e)
+                        this._linq = e = require(LINQ_PATH).default.from(this);
+                    return e;
+                }
+                else {
+                    throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
+                }
+            },
+            enumerable: true,
+            configurable: true
+        });
         return CollectionBase;
     }(DisposableBase_1.DisposableBase));
     exports.CollectionBase = CollectionBase;

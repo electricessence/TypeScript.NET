@@ -19,9 +19,12 @@ var Compare_1 = require("../Compare");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
+var Types_1 = require("../Types");
 var NAME = "CollectionBase",
     CMDC = "Cannot modify a disposed collection.",
-    CMRO = "Cannot modify a read-only collection.";
+    CMRO = "Cannot modify a read-only collection.",
+    RESOLVE = "resolve",
+    LINQ_PATH = "../../System.Linq/Linq";
 
 var CollectionBase = function (_DisposableBase_1$Dis) {
     _inherits(CollectionBase, _DisposableBase_1$Dis);
@@ -153,6 +156,9 @@ var CollectionBase = function (_DisposableBase_1$Dis) {
             this._version = 0;
             this._updateRecursion = 0;
             this._modifiedCount = 0;
+            var l = this._linq;
+            this._linq = null;
+            if (l) l.dispose();
         }
     }, {
         key: "_importEntries",
@@ -269,6 +275,17 @@ var CollectionBase = function (_DisposableBase_1$Dis) {
         key: "isUpdating",
         get: function get() {
             return this._updateRecursion != 0;
+        }
+    }, {
+        key: "linq",
+        get: function get() {
+            if (Types_1.Type.hasMember(require, RESOLVE) && require.length == 1) {
+                var e = this._linq;
+                if (!e) this._linq = e = require(LINQ_PATH).default.from(this);
+                return e;
+            } else {
+                throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
+            }
         }
     }]);
 

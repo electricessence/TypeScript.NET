@@ -37,7 +37,8 @@ describe('.is(value)', ()=>
 {
 	it('should detect a number that is not an integer', ()=>
 	{
-		function baseTests(fn:(n:number)=>boolean):void {
+		function baseTests(fn:(n:number)=>boolean):void
+		{
 
 			assert.equal(
 				fn(<any>"1"),
@@ -72,13 +73,14 @@ describe('.is(value)', ()=>
 		baseTests(Integer.is32Bit);
 
 		assert.equal(
-			Integer.is32Bit(Integer.MAX_32_BIT+1),
+			Integer.is32Bit(Integer.MAX_32_BIT + 1),
 			false);
 	});
 
 	it('should detect a number that is an integer', ()=>
 	{
-		function baseTests(fn:(n:number)=>boolean):void {
+		function baseTests(fn:(n:number)=>boolean):void
+		{
 
 			assert.equal(
 				fn(-0),
@@ -105,7 +107,7 @@ describe('.is(value)', ()=>
 		baseTests(Integer.is32Bit);
 
 		assert.equal(
-			Integer.is(Integer.MAX_32_BIT+1),
+			Integer.is(Integer.MAX_32_BIT + 1),
 			true);
 
 		assert.equal(

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase"], function(exports_1, context_1) {
+System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1;
-    var NAME, CMDC, CMRO, CollectionBase;
+    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Types_1;
+    var NAME, CMDC, CMRO, RESOLVE, LINQ_PATH, CollectionBase;
     return {
         setters:[
             function (Enumerator_1_1) {
@@ -28,9 +28,12 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             },
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
+            },
+            function (Types_1_1) {
+                Types_1 = Types_1_1;
             }],
         execute: function() {
-            NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+            NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
             CollectionBase = (function (_super) {
                 __extends(CollectionBase, _super);
                 function CollectionBase(source, _equalityComparer) {
@@ -161,6 +164,10 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     this._version = 0;
                     this._updateRecursion = 0;
                     this._modifiedCount = 0;
+                    var l = this._linq;
+                    this._linq = null;
+                    if (l)
+                        l.dispose();
                 };
                 CollectionBase.prototype._importEntries = function (entries) {
                     var _this = this;
@@ -235,6 +242,21 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     var count = this.getCount();
                     return this.copyTo(count > 65536 ? new Array(count) : []);
                 };
+                Object.defineProperty(CollectionBase.prototype, "linq", {
+                    get: function () {
+                        if (Types_1.Type.hasMember(require, RESOLVE) && require.length == 1) {
+                            var e = this._linq;
+                            if (!e)
+                                this._linq = e = require(LINQ_PATH).default.from(this);
+                            return e;
+                        }
+                        else {
+                            throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
+                        }
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 return CollectionBase;
             }(DisposableBase_1.DisposableBase));
             exports_1("CollectionBase", CollectionBase);

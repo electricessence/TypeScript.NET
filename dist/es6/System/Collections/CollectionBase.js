@@ -7,7 +7,8 @@ import { areEqual } from "../Compare";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { DisposableBase } from "../Disposable/DisposableBase";
-const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+import { Type } from "../Types";
+const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
 export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {
         super();
@@ -123,6 +124,10 @@ export class CollectionBase extends DisposableBase {
         this._version = 0;
         this._updateRecursion = 0;
         this._modifiedCount = 0;
+        var l = this._linq;
+        this._linq = null;
+        if (l)
+            l.dispose();
     }
     _importEntries(entries) {
         var added = 0;
@@ -193,6 +198,17 @@ export class CollectionBase extends DisposableBase {
     toArray() {
         var count = this.getCount();
         return this.copyTo(count > 65536 ? new Array(count) : []);
+    }
+    get linq() {
+        if (Type.hasMember(require, RESOLVE) && require.length == 1) {
+            var e = this._linq;
+            if (!e)
+                this._linq = e = require(LINQ_PATH).default.from(this);
+            return e;
+        }
+        else {
+            throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
+        }
     }
 }
 export default CollectionBase;
