@@ -36,7 +36,7 @@ import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
 import {Action, Predicate, Selector, EqualityComparison, Comparison} from "../System/FunctionTypes";
 import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";
 import {IArray} from "../System/Collections/Array/IArray";
-import {IMap} from "../System/Collections/Dictionaries/IDictionary";
+import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
 import {IComparer} from "../System/IComparer";
 import {IKeyValuePair} from "../System/KeyValuePair";
@@ -2570,7 +2570,7 @@ extends InfiniteEnumerable<T>
 	toDictionary<TKey, TValue, TCompare>(
 		keySelector:Selector<T, TKey>,
 		elementSelector:Selector<T, TValue>,
-		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Dictionary<TKey, TValue>
+		compareSelector:Selector<TKey, TCompare> = Functions.Identity):IDictionary<TKey, TValue>
 	{
 		var dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
 		this.forEach((x, i)=> dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
@@ -3713,7 +3713,7 @@ class Lookup<TKey, TElement>
 implements ILookup<TKey, TElement>
 {
 
-	constructor(private _dictionary:Dictionary<TKey, TElement[]>)
+	constructor(private _dictionary:IDictionary<TKey, TElement[]>)
 	{
 	}
 

@@ -3,14 +3,13 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { Dictionary } from "../System/Collections/Dictionaries/Dictionary";
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
 import { IEnumerable } from "../System/Collections/Enumeration/IEnumerable";
 import { Action, Predicate, Selector, EqualityComparison, Comparison } from "../System/FunctionTypes";
 import { IEnumerableOrArray } from "../System/Collections/IEnumerableOrArray";
 import { IArray } from "../System/Collections/Array/IArray";
-import { IMap } from "../System/Collections/Dictionaries/IDictionary";
+import { IMap, IDictionary } from "../System/Collections/Dictionaries/IDictionary";
 import { Comparable } from "../System/IComparable";
 export declare const enum EnumerableAction {
     Break = 0,
@@ -120,7 +119,7 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> {
     copyTo(target: T[], index?: number, count?: number): T[];
     toLookup<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): ILookup<TKey, TValue>;
     toMap<TResult>(keySelector: Selector<T, string>, elementSelector: Selector<T, TResult>): IMap<TResult>;
-    toDictionary<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): Dictionary<TKey, TValue>;
+    toDictionary<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): IDictionary<TKey, TValue>;
     toJoinedString(separator?: string, selector?: Selector<T, string>): string;
     takeExceptLast(count?: number): Enumerable<T>;
     skipToLast(count: number): Enumerable<T>;
