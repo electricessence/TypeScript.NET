@@ -20,6 +20,7 @@ import {InvalidOperationException} from "../Exceptions/InvalidOperationException
 import {ArgumentException} from "../Exceptions/ArgumentException";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {ObjectPool} from "../Disposable/ObjectPool";
+import {Set} from "../Collections/Set";
 
 
 const VOID0:any = void 0, PROMISE = "Promise", THEN = "then", TARGET = "target";
@@ -85,7 +86,9 @@ function handleDispatch<T,TResult>(
 		p.then(<any>onFulfilled, onRejected);
 }
 
-export abstract class Promise<T> extends DisposableBase implements PromiseLike<T>
+
+export abstract class Promise<T>
+extends DisposableBase implements PromiseLike<T>
 {
 	constructor()
 	{
@@ -237,7 +240,6 @@ export abstract class Promise<T> extends DisposableBase implements PromiseLike<T
 	}
 
 }
-
 
 /**
  * The simplest usable version of a promise which returns synchronously the resolved state provided.
@@ -478,7 +480,7 @@ export class Pending<T> extends Resolved<T>
 				if(v==this) throw new InvalidOperationException("Cannot resolve a promise as itself.");
 				if(isPromise(v))
 				{
-					handleDispatch(v,fulfillHandler,rejectHandler);
+					handleDispatch(v, fulfillHandler, rejectHandler);
 				}
 				else
 				{
@@ -893,8 +895,120 @@ export module Promise
 	//  * @returns A new Promise.
 	//  */
 	// // race<T>(values: Iterable<T | PromiseLike<T>>): Promise<T>;
-	// //resolve<T>(value: T | PromiseLike<T>): Promise<T>;
 
+
+	/**
+	 * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
+	 */
+	export function all<T>(promises:PromiseLike<T>[]):Promise<T[]>
+	export function all<T>(promise:PromiseLike<T>,...rest:PromiseLike<T>[]):Promise<T[]>
+	export function all(first:PromiseLike<any>|PromiseLike<any>[],...rest:PromiseLike<any>[]):Promise<any[]>
+	{
+		if(!first && !rest.length) throw new ArgumentNullException("promises");
+		var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+		if(!promises.length || promises.every(v=>!v)) return new Fulfilled<any[]>(promises); // it's a new empty, reuse it. :|
+
+		if(promises.length==1) return wrap(promises[0]);
+
+		return new Pending<any[]>((resolve, reject)=>
+		{
+			let result:any[] = [];
+			let len = result.length = promises.length;
+			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
+			let remaining = new Set(promises.map((v,i)=>i)); // get all the indexes...
+
+			let cleanup = ()=>
+			{
+				reject = null;
+				resolve = null;
+				promises.length = 0;
+				promises = null;
+				remaining.dispose();
+				remaining = null;
+			};
+
+			let checkIfShouldResolve = ()=>
+			{
+				let r = resolve;
+				if(r && !remaining.count)
+				{
+					cleanup();
+					r(result);
+				}
+			};
+
+			let onFulfill = (v:any, i:number)=>
+			{
+				if(resolve)
+				{
+					result[i] = v;
+					remaining.remove(i);
+					checkIfShouldResolve();
+				}
+			};
+
+			let onReject = (e?:any)=>
+			{
+				let r = reject;
+				if(r)
+				{
+					cleanup();
+					r(e);
+				}
+			};
+
+			for(let i = 0; remaining && i<len; i++)
+			{
+				let p = promises[i];
+				if(p) p.then(v=>onFulfill(v, i), onReject);
+				else remaining.remove(i);
+				checkIfShouldResolve();
+			}
+		});
+	}
+
+	/**
+	 * Returns a promise for the first of an array of promises to become settled.
+	 */
+	export function race<T>(promises:PromiseLike<T>[]):Promise<T>
+	export function race<T>(promise:PromiseLike<T>,...rest:PromiseLike<T>[]):Promise<T>
+	export function race(first:PromiseLike<any>|PromiseLike<any>[],...rest:PromiseLike<any>[]):Promise<any>
+	{
+		var promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
+		if(!promises || !promises.length || !(promises = promises.filter(v=>v!=null)).length)
+			throw new ArgumentException("Nothing to wait for.");
+
+		if(promises.length==1) return wrap(promises[0]);
+
+		return new Pending((resolve, reject)=>
+		{
+			let cleanup = ()=>
+			{
+				reject = null;
+				resolve = null;
+				promises.length = 0;
+				promises = null;
+			};
+
+			let onResolve = (r:(x:any)=>void, v:any)=>
+			{
+				if(r)
+				{
+					cleanup();
+					r(v);
+				}
+			};
+
+			let onFulfill = (v:any)=> onResolve(resolve, v);
+			let onReject = (e?:any)=> onResolve(reject, e);
+
+			for(let p of promises)
+			{
+				if(!resolve) break;
+				p.then(onFulfill, onReject);
+			}
+		});
+	}
 
 	/**
 	 * Creates a new resolved promise .
@@ -904,14 +1018,14 @@ export module Promise
 
 	/**
 	 * Creates a new resolved promise for the provided value.
-	 * @param value A promise.
+	 * @param value A value or promise.
 	 * @returns A promise whose internal state matches the provided promise.
 	 */
-	export function resolve<T>(value:T):Promise<T>
+	export function resolve<T>(value:T | PromiseLike<T>):Promise<T>;
 	export function resolve(value?:any):Promise<any>
 	{
 
-		return new Fulfilled(value);
+		return isPromise(value) ? wrap(value) : new Fulfilled(value);
 	}
 
 	/**
@@ -981,6 +1095,7 @@ export module Promise
 		return p;
 	}
 
+	//export function all()
 
 }
 

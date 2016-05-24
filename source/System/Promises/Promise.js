@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Tasks/deferImmediate", "../Tasks/defer", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool"], factory);
+        define(["require", "exports", "../Types", "../Tasks/deferImmediate", "../Tasks/defer", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -26,6 +26,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var ObjectPool_1 = require("../Disposable/ObjectPool");
+    var Set_1 = require("../Collections/Set");
     var VOID0 = void 0, PROMISE = "Promise", THEN = "then", TARGET = "target";
     function isPromise(value) {
         return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
@@ -588,8 +589,101 @@ var __extends = (this && this.__extends) || function (d, b) {
         })(Promise.State || (Promise.State = {}));
         var State = Promise.State;
         Object.freeze(State);
+        function all(first) {
+            var rest = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                rest[_i - 1] = arguments[_i];
+            }
+            if (!first && !rest.length)
+                throw new ArgumentNullException_1.ArgumentNullException("promises");
+            var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+            if (!promises.length || promises.every(function (v) { return !v; }))
+                return new Fulfilled(promises);
+            if (promises.length == 1)
+                return wrap(promises[0]);
+            return new Pending(function (resolve, reject) {
+                var result = [];
+                var len = result.length = promises.length;
+                var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
+                var cleanup = function () {
+                    reject = null;
+                    resolve = null;
+                    promises.length = 0;
+                    promises = null;
+                    remaining.dispose();
+                    remaining = null;
+                };
+                var checkIfShouldResolve = function () {
+                    var r = resolve;
+                    if (r && !remaining.count) {
+                        cleanup();
+                        r(result);
+                    }
+                };
+                var onFulfill = function (v, i) {
+                    if (resolve) {
+                        result[i] = v;
+                        remaining.remove(i);
+                        checkIfShouldResolve();
+                    }
+                };
+                var onReject = function (e) {
+                    var r = reject;
+                    if (r) {
+                        cleanup();
+                        r(e);
+                    }
+                };
+                var _loop_1 = function(i) {
+                    var p = promises[i];
+                    if (p)
+                        p.then(function (v) { return onFulfill(v, i); }, onReject);
+                    else
+                        remaining.remove(i);
+                    checkIfShouldResolve();
+                };
+                for (var i = 0; remaining && i < len; i++) {
+                    _loop_1(i);
+                }
+            });
+        }
+        Promise.all = all;
+        function race(first) {
+            var rest = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                rest[_i - 1] = arguments[_i];
+            }
+            var promises = first && (Array.isArray(first) ? first : [first]).concat(rest);
+            if (!promises || !promises.length || !(promises = promises.filter(function (v) { return v != null; })).length)
+                throw new ArgumentException_1.ArgumentException("Nothing to wait for.");
+            if (promises.length == 1)
+                return wrap(promises[0]);
+            return new Pending(function (resolve, reject) {
+                var cleanup = function () {
+                    reject = null;
+                    resolve = null;
+                    promises.length = 0;
+                    promises = null;
+                };
+                var onResolve = function (r, v) {
+                    if (r) {
+                        cleanup();
+                        r(v);
+                    }
+                };
+                var onFulfill = function (v) { return onResolve(resolve, v); };
+                var onReject = function (e) { return onResolve(reject, e); };
+                for (var _i = 0, promises_1 = promises; _i < promises_1.length; _i++) {
+                    var p = promises_1[_i];
+                    if (!resolve)
+                        break;
+                    p.then(onFulfill, onReject);
+                }
+            });
+        }
+        Promise.race = race;
         function resolve(value) {
-            return new Fulfilled(value);
+            return isPromise(value) ? wrap(value) : new Fulfilled(value);
         }
         Promise.resolve = resolve;
         function reject(reason) {

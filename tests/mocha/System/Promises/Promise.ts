@@ -179,19 +179,18 @@ describe("Resolution and Rejection", ()=>
 		pending.resolve(10);
 		return deferred;
 	});
-
-
+	
 	const BREAK = "break", NO = "NO!";
 
 	function testPromiseFlow(p:Promise<boolean>):Promise<void>
 	{
 		return p
 			.then(null) // ensure pass through
-			.then(v=>
+			.then(v=> // onFulfilled
 			{
-				assert.ok(v);
+				assert.ok(v); // v === true
 				return v; // *
-			}, ()=>
+			}, ()=> // onRejected
 			{
 				assert.ok(false);
 				return true;
@@ -221,7 +220,7 @@ describe("Resolution and Rejection", ()=>
 				return NO;
 			})
 			.then(null,null) // ensure pass through
-			.defer()
+			.defer() // rejected!!! 
 			.then(v=>
 			{
 				// The previous promise threw/rejected so should never go here.
@@ -355,6 +354,59 @@ describe("Resolution and Rejection", ()=>
 		s.resolve(true);
 		return testPromiseFlow(p);
 	});
+
+	it("should be able to resolve all", ()=>
+	{
+		return Promise.all(
+			Promise.resolve(3).defer(),
+			Promise.resolve(2).defer(),
+			Promise.resolve(1).defer()
+		).then(r=>{
+			assert.equal(r[0],3);
+			assert.equal(r[1],2);
+			assert.equal(r[2],1);
+		});
+	});
+
+	it("should resolve as rejected", ()=>
+	{
+		return Promise.all(
+			Promise.resolve(3).defer(),
+			Promise.resolve(2).defer(),
+			Promise.resolve(1).defer(),
+			Promise.reject(-1).defer()
+		).then(()=>{
+			assert.ok(false);
+		},e=>{
+			assert.equal(e,-1);
+		});
+	});
+
+	it("should be resolve the first to win the race", ()=>
+	{
+		return Promise.race(
+			Promise.reject(4).delay(),
+			Promise.resolve(3).delay(),
+			Promise.resolve(2).defer(),
+			Promise.resolve(1)
+		).then(r=>{
+			assert.equal(r,1);
+		});
+	});
+
+	it("should be resolve the rejection", ()=>
+	{
+		return Promise.race(
+			Promise.resolve(3).delay(),
+			Promise.resolve(2).defer(),
+			Promise.reject(1)
+		).then(()=>{
+			assert.ok(false);
+		},e=>{
+			assert.equal(e,1);
+		});
+	});
+
 
 });
 

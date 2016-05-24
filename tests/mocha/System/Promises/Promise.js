@@ -258,6 +258,32 @@
             s.resolve(true);
             return testPromiseFlow(p);
         });
+        it("should be able to resolve all", function () {
+            return Promise_1.Promise.all(Promise_1.Promise.resolve(3).defer(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.resolve(1).defer()).then(function (r) {
+                assert.equal(r[0], 3);
+                assert.equal(r[1], 2);
+                assert.equal(r[2], 1);
+            });
+        });
+        it("should resolve as rejected", function () {
+            return Promise_1.Promise.all(Promise_1.Promise.resolve(3).defer(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.resolve(1).defer(), Promise_1.Promise.reject(-1).defer()).then(function () {
+                assert.ok(false);
+            }, function (e) {
+                assert.equal(e, -1);
+            });
+        });
+        it("should be resolve the first to win the race", function () {
+            return Promise_1.Promise.race(Promise_1.Promise.reject(4).delay(), Promise_1.Promise.resolve(3).delay(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.resolve(1)).then(function (r) {
+                assert.equal(r, 1);
+            });
+        });
+        it("should be resolve the rejection", function () {
+            return Promise_1.Promise.race(Promise_1.Promise.resolve(3).delay(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.reject(1)).then(function () {
+                assert.ok(false);
+            }, function (e) {
+                assert.equal(e, 1);
+            });
+        });
     });
 });
 
