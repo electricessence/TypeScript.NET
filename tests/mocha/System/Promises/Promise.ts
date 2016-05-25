@@ -1,6 +1,6 @@
 ///<reference path="../../import.d.ts"/>
 
-import {Promise} from "../../../../source/System/Promises/Promise";
+import {Promise, PromiseBase} from "../../../../source/System/Promises/Promise";
 import * as AU from "../../../../source/System/Collections/Array/Utility";
 import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
 import {defer} from "../../../../source/System/Tasks/defer";
@@ -30,7 +30,7 @@ describe("computing sum of integers using promises", ()=>
 	{
 		let sw = Stopwatch.startNew();
 		return array
-			.reduce((promise:Promise<number>, nextVal:number) =>
+			.reduce((promise:PromiseBase<number>, nextVal:number) =>
 				promise.then(currentVal=>currentVal + nextVal), Promise.resolve(0))
 			.then(value=>
 			{
@@ -45,7 +45,7 @@ describe("computing sum of integers using promises", ()=>
 	{
 		let sw = Stopwatch.startNew();
 		return array
-			.reduce((promise:Promise<number>, nextVal:number) =>
+			.reduce((promise:PromiseBase<number>, nextVal:number) =>
 				promise.then(currentVal=>currentVal + nextVal).defer(), Promise.resolve(0).defer())
 			.then(value=>
 			{
@@ -60,7 +60,7 @@ describe("computing sum of integers using promises", ()=>
 	{
 		let sw = Stopwatch.startNew();
 		return array
-			.reduce((promise:Promise<number>, nextVal:number) =>
+			.reduce((promise:PromiseBase<number>, nextVal:number) =>
 				promise.then(
 					currentVal=>currentVal + nextVal).deferAll(), Promise.resolve(0).deferAll())
 			.then(value=>
@@ -74,7 +74,7 @@ describe("computing sum of integers using promises", ()=>
 
 	it("should be deferring fulfillment", ()=>
 		array
-			.reduce((promise:Promise<number>, nextVal:number) =>
+			.reduce((promise:PromiseBase<number>, nextVal:number) =>
 			{
 				let wasRun = false;
 				var r = promise.defer().then(currentVal=>
@@ -182,7 +182,7 @@ describe("Resolution and Rejection", ()=>
 	
 	const BREAK = "break", NO = "NO!";
 
-	function testPromiseFlow(p:Promise<boolean>):Promise<void>
+	function testPromiseFlow(p:PromiseBase<boolean>):PromiseBase<void>
 	{
 		return p
 			.then(null) // ensure pass through
