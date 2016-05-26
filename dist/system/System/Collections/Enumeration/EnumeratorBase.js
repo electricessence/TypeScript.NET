@@ -15,10 +15,9 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
     function yielder(recycle) {
         if (!yielderPool)
             yielderPool
-                = new ObjectPool_1.ObjectPool(40, function () { return new Yielder(); });
+                = new ObjectPool_1.ObjectPool(40, function () { return new Yielder(); }, function (y) { return y.yieldBreak(); });
         if (!recycle)
             return yielderPool.take();
-        recycle.yieldBreak();
         yielderPool.add(recycle);
     }
     return {

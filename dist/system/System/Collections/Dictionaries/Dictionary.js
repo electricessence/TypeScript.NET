@@ -16,10 +16,9 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
-                = new ObjectPool_1.ObjectPool(20, function () { return new LinkedNodeList_1.LinkedNodeList(); });
+                = new ObjectPool_1.ObjectPool(20, function () { return new LinkedNodeList_1.LinkedNodeList(); }, function (r) { return r.clear(); });
         if (!recycle)
             return linkedListPool.take();
-        recycle.clear();
         linkedListPool.add(recycle);
     }
     function callHasOwnProperty(target, key) {

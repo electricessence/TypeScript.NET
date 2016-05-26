@@ -31,8 +31,8 @@ describe("computing sum of integers using promises", ()=>
 		let sw = Stopwatch.startNew();
 		return array
 			.reduce((promise:PromiseBase<number>, nextVal:number) =>
-				promise.then(currentVal=>currentVal + nextVal), Promise.resolve(0))
-			.then(value=>
+				promise.thenSynchronous(currentVal=>currentVal + nextVal), Promise.resolve(0))
+			.thenSynchronous(value=>
 			{
 				sw.stop();
 				//console.log("");
@@ -41,12 +41,12 @@ describe("computing sum of integers using promises", ()=>
 			});
 	});
 
-	it("should compute correct result without blowing stack (Deferred) (lambda only)", ()=>
+	it("should compute correct result without blowing stack (lambda only)", ()=>
 	{
 		let sw = Stopwatch.startNew();
 		return array
 			.reduce((promise:PromiseBase<number>, nextVal:number) =>
-				promise.then(currentVal=>currentVal + nextVal).defer(), Promise.resolve(0).defer())
+				promise.then(currentVal=>currentVal + nextVal), Promise.resolve(0))
 			.then(value=>
 			{
 				sw.stop();
@@ -56,36 +56,32 @@ describe("computing sum of integers using promises", ()=>
 			});
 	});
 
-	it("should compute correct result without blowing stack (All Deferred) (lambda only)", ()=>
-	{
-		let sw = Stopwatch.startNew();
-		return array
-			.reduce((promise:PromiseBase<number>, nextVal:number) =>
-				promise.then(
-					currentVal=>currentVal + nextVal).deferAll(), Promise.resolve(0).deferAll())
-			.then(value=>
-			{
-				sw.stop();
-				//console.log("");
-				//console.log("All Deferred Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
-				assert.equal(value, answer);
-			});
-	});
+	// it("should compute correct result without blowing stack (All Deferred) (lambda only)", ()=>
+	// {
+	// 	let sw = Stopwatch.startNew();
+	// 	return array
+	// 		.reduce((promise:PromiseBase<number>, nextVal:number) =>
+	// 			promise.then(
+	// 				currentVal=>currentVal + nextVal).deferAll(), Promise.resolve(0).deferAll())
+	// 		.then(value=>
+	// 		{
+	// 			sw.stop();
+	// 			//console.log("");
+	// 			//console.log("All Deferred Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+	// 			assert.equal(value, answer);
+	// 		});
+	// });
 
-	it("should be deferring fulfillment", ()=>
-		array
-			.reduce((promise:PromiseBase<number>, nextVal:number) =>
-			{
-				let wasRun = false;
-				var r = promise.defer().then(currentVal=>
-				{
-					wasRun = true;
-					return currentVal + nextVal;
-				});
-				assert.ok(!wasRun, "The promise should have deferred until after closure completed.");
-				return r;
-			}, Promise.resolve(0))
-	);
+	it("should be deferring fulfillment", ()=>{
+
+		let wasRun = false;
+		var r = Promise.resolve(true).then(()=>
+		{
+			wasRun = true;
+		});
+		assert.ok(!wasRun, "The promise should have deferred until after closure completed.");
+		return r;
+	});
 
 });
 
@@ -116,7 +112,6 @@ describe("Resolution and Rejection", ()=>
 
 		var resolution = "Ta-ram pam param!";
 		var pending = Promise.pending<any>();
-		var deferred = pending.defer();
 		var count = 10;
 		var i = 0;
 
@@ -124,7 +119,8 @@ describe("Resolution and Rejection", ()=>
 		{
 			i++;
 			assert.equal(value, resolution);
-			assert.equal(nextTurn, true);
+			assert.ok(nextTurn);
+			if(!nextTurn) i = count;
 			if(i===count)
 			{
 				done();
@@ -133,7 +129,7 @@ describe("Resolution and Rejection", ()=>
 
 		while(++i<=count)
 		{
-			deferred.then(resolve);
+			pending.then(resolve);
 		}
 
 		pending.resolve(resolution);
@@ -145,13 +141,13 @@ describe("Resolution and Rejection", ()=>
 	{
 		var threw = false;
 		var pending = Promise.pending();
-		pending.then(()=>
+		pending.thenSynchronous(()=>
 		{
 			threw = true;
 			throw new Error(REASON);
 		});
 
-		pending.then(
+		pending.thenSynchronous(
 			value=>assert.equal(value, 10),
 			()=>assert.equal("not", "here")
 		);
@@ -164,20 +160,19 @@ describe("Resolution and Rejection", ()=>
 	{
 		var threw = false;
 		var pending = Promise.pending();
-		var deferred = pending.defer();
-		deferred.then(()=>
+		pending.thenSynchronous(()=>
 		{
 			threw = true;
 			throw new Error(REASON);
 		});
 
-		deferred.then(
+		pending.thenSynchronous(
 			value=>assert.equal(value, 10),
 			()=>assert.equal("not", "here")
 		);
 
 		pending.resolve(10);
-		return deferred;
+		return pending;
 	});
 	
 	const BREAK = "break", NO = "NO!";
@@ -220,7 +215,6 @@ describe("Resolution and Rejection", ()=>
 				return NO;
 			})
 			.then(null,null) // ensure pass through
-			.defer() // rejected!!! 
 			.then(v=>
 			{
 				// The previous promise threw/rejected so should never go here.
@@ -255,7 +249,6 @@ describe("Resolution and Rejection", ()=>
 				assert.ok(v);
 				return 10;
 			})
-			.delay()
 			.then(v=>
 			{
 				assert.equal(v, 10);
@@ -289,12 +282,6 @@ describe("Resolution and Rejection", ()=>
 		return testPromiseFlow(p);
 	});
 
-	it("should be able to use a lazy resolved", ()=>
-	{
-		var p = Promise.lazy.resolve(()=>true);
-		assert.ok(p.isFulfilled);
-		return testPromiseFlow(p);
-	});
 
 	it("should be able to use a then-able", ()=>
 	{
@@ -306,37 +293,9 @@ describe("Resolution and Rejection", ()=>
 	});
 
 
-	it("should be able to use a synchronous resolver", ()=>
-	{
-		var p = Promise.pending<boolean>(resolve=>{
-			resolve(true);
-		});
-		assert.ok(p.isFulfilled);
-		return testPromiseFlow(p);
-	});
-
-	it("should be able to use a synchronous rejection", ()=>
-	{
-		var p = Promise.pending<boolean>((resolve,reject)=>{
-			reject(true);
-		});
-		assert.ok(p.isRejected);
-		return testPromiseFlow(p.catch(()=>true));
-	});
-
-
-	it("should be able to use an async resolver", ()=>
-	{
-		var p = Promise.pending<boolean>(resolve=>{
-			defer(()=> resolve(true));
-		});
-		assert.ok(p.isPending);
-		return testPromiseFlow(p);
-	});
-
 	it("should be able to use lazy pending", ()=>
 	{
-		var p = Promise.lazy.pending<boolean>(resolve=>{
+		var p = Promise.lazy<boolean>(resolve=>{
 			defer(()=> resolve(true));
 		});
 		assert.ok(p.isPending);
@@ -357,25 +316,34 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be able to resolve all", ()=>
 	{
+		var other = Promise.lazy<number>(resolve=>{
+			resolve(4);
+		});
 		return Promise.all(
-			Promise.resolve(3).defer(),
-			Promise.resolve(2).defer(),
-			Promise.resolve(1).defer()
-		).then(r=>{
-			assert.equal(r[0],3);
-			assert.equal(r[1],2);
-			assert.equal(r[2],1);
+			other,
+			Promise.resolve(3),
+			Promise.resolve(2),
+			Promise.resolve(1)
+		).thenSynchronous(r=>{
+			assert.equal(r[0],4);
+			assert.equal(r[1],3);
+			assert.equal(r[2],2);
+			assert.equal(r[3],1);
 		});
 	});
 
 	it("should resolve as rejected", ()=>
 	{
+		var other = Promise.lazy<number>(resolve=>{
+			resolve(4);
+		});
 		return Promise.all(
-			Promise.resolve(3).defer(),
-			Promise.resolve(2).defer(),
-			Promise.resolve(1).defer(),
-			Promise.reject(-1).defer()
-		).then(()=>{
+			other,
+			Promise.resolve(3),
+			Promise.resolve(2),
+			Promise.resolve(1),
+			Promise.reject(-1)
+		).thenSynchronous(()=>{
 			assert.ok(false);
 		},e=>{
 			assert.equal(e,-1);
@@ -384,23 +352,26 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be resolve the first to win the race", ()=>
 	{
+		var other = Promise.lazy<number>((resolve,reject)=>{
+			reject(4);
+		});
 		return Promise.race(
-			Promise.reject(4).delay(),
-			Promise.resolve(3).delay(),
-			Promise.resolve(2).defer(),
+			other,
+			Promise.resolve(3),
+			Promise.resolve(2),
 			Promise.resolve(1)
-		).then(r=>{
-			assert.equal(r,1);
+		).thenSynchronous(r=>{
+			assert.equal(r,3);
 		});
 	});
 
 	it("should be resolve the rejection", ()=>
 	{
 		return Promise.race(
-			Promise.resolve(3).delay(),
-			Promise.resolve(2).defer(),
+			Promise.resolve(3).delayFromNow(20),
+			Promise.resolve(2).delayAfterResolve(10),
 			Promise.reject(1)
-		).then(()=>{
+		).thenSynchronous(()=>{
 			assert.ok(false);
 		},e=>{
 			assert.equal(e,1);

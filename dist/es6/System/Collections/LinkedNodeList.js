@@ -133,8 +133,11 @@ export class LinkedNodeList {
             throw new ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
         }
         var removed = !a && !b;
-        if (removed)
+        if (removed) {
             _.unsafeCount--;
+            node.previous = null;
+            node.next = null;
+        }
         return removed;
     }
     addNode(node) {

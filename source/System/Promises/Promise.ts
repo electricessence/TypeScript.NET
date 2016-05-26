@@ -12,15 +12,15 @@
  */
 
 import Type from "../Types";
-import {Closure, Func} from "../FunctionTypes";
+import {Closure} from "../FunctionTypes";
 import {deferImmediate} from "../Threading/deferImmediate";
-import {defer} from "../Threading/defer";
 import {DisposableBase} from "../Disposable/DisposableBase";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {ArgumentException} from "../Exceptions/ArgumentException";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {ObjectPool} from "../Disposable/ObjectPool";
 import {Set} from "../Collections/Set";
+import {defer} from "../Threading/defer";
 
 
 const VOID0:any = void 0, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
@@ -47,17 +47,25 @@ function pass<T>(source:PromiseBase<T>, dest:Promise<T>):Closure
 {
 	return ()=>
 	{
-		source.then(
+		source.thenThis(
 			v=>
 			{
 				dest.resolve(v);
-				return dest;
 			},
 			e=>
 			{
 				dest.reject(e);
-				return dest;
 			});
+	}
+}
+
+function passDelayed<T>(source:PromiseBase<T>, dest:Promise<T>, ms:number):Closure
+{
+	return ()=>
+	{
+		source.thenThis(
+			v=>defer(()=>dest.resolve(v), ms),
+			e=>defer(()=>dest.reject(e), ms));
 	}
 }
 
@@ -75,12 +83,27 @@ function handleResolution(
 	{ p.reject(ex); }
 }
 
+function handleResolutionMethods(
+	targetFulfill:Promise.Fulfill<any,any>,
+	targetReject:Promise.Reject<any>,
+	value:Promise.Resolution<any>,
+	resolver?:(v:Promise.Resolution<any>)=>any):void
+{
+	try
+	{
+		let v = resolver ? resolver(value) : value;
+		if(targetFulfill) targetFulfill(v);
+	}
+	catch(ex)
+	{ if(targetReject) targetReject(ex); }
+}
+
 function handleDispatch<T,TResult>(
 	p:PromiseLike<T>,
 	onFulfilled:Promise.Fulfill<T,TResult>,
 	onRejected?:Promise.Reject<TResult>):void
 {
-	if(p instanceof Promise)
+	if(p instanceof PromiseBase)
 		p.thenThis(onFulfilled, onRejected);
 	else
 		p.then(<any>onFulfilled, onRejected);
@@ -174,84 +197,86 @@ extends PromiseState<T> implements PromiseLike<T>
 
 	/**
 	 * Calls the respective handlers once the promise is resolved.
-	 * For simplicity and performance this can happen synchronously unless you call .defer() before calling .then().
 	 * @param onFulfilled
 	 * @param onRejected
 	 */
-	abstract then<TResult>(
+	abstract thenSynchronous<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>;
 
-
 	/**
-	 * Same as then but does not return the result.  Returns the current promise instead.
+	 * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
 	 * You may not need an additional promise result, and this will not create a new one.
 	 * Errors are not trapped.
 	 * @param onFulfilled
 	 * @param onRejected
 	 */
-	abstract thenThis<TResult>(
-		onFulfilled:Promise.Fulfill<T, TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<T>;
+	abstract thenThis(
+		onFulfilled:(v?:T)=>any,
+		onRejected?:(v?:any)=>any):PromiseBase<T>;
 
-	/**
-	 * Ensures all subsequent then requests are resolved asynchronously.
-	 * @returns A promise that defers all subsequent then requests..
-	 */
-	deferAll():PromiseBase<T>
+	then<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
-		this.throwIfDisposed();
-
-		return new SubsequentDeferred(this);
+		return Promise.pending<TResult>((resolve, reject)=>
+		{
+			this.thenThis(
+				result=>handleResolutionMethods(resolve, reject, result, onFulfilled),
+				error=>onRejected
+					? handleResolutionMethods(resolve, null, error, onRejected)
+					: reject(error)
+			);
+		});
 	}
 
 	/**
-	 * Ensures any immediately following then requests will occur on next cycle or later.
-	 * Is somewhat analogous to calling Thread.Yield() .NET.
-	 * Calling .defer() uses process.nextTick() otherwise uses setTimeout.
-	 * @returns A promise that yields to the current execution and executes after.
+	 * Will yield for a number of milliseconds from the time called before continuing.
+	 * @param milliseconds
+	 * @returns A promise that yields to the current execution and executes after a delay.
 	 */
-	defer():PromiseBase<T>
+	delayFromNow(milliseconds:number = 0):PromiseBase<T>
 	{
 		this.throwIfDisposed();
 
+		// TODO: need to figure out a way to not force a then call.
 		var p = Promise.pending<T>();
-		deferImmediate(pass(this, p));
+		defer(pass(this, p), milliseconds);
 		return p;
 	}
 
 	/**
-	 * Same as defer but will yield for a number of milliseconds.
-	 * Calling .delay() is the same as calling .delay(0) and uses setTimeout to delay the execution.
+	 * Will yield for a number of milliseconds from after this promise resolves.
+	 * If the promise is already resolved the delay will start from now.
 	 * @param milliseconds
 	 * @returns A promise that yields to the current execution and executes after a delay.
 	 */
-	delay(milliseconds:number = 0):PromiseBase<T>
+	delayAfterResolve(milliseconds:number = 0):PromiseBase<T>
 	{
 		this.throwIfDisposed();
 
 		var p = Promise.pending<T>();
-		defer(pass(this, p), milliseconds);
+		passDelayed(this, p, milliseconds);
 		return p;
 	}
 
 	'catch'<TResult>(onRejected:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
-
 		return this.then(VOID0, onRejected)
 	}
 
 	'finally'<TResult>(fin:()=>Promise.Resolution<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
-
 		return this.then(fin, fin);
 	}
 
 	finallyThis(fin:()=>void):PromiseBase<T>
 	{
-		this.thenThis(fin, fin);
+		this.throwIfDisposed();
+		var f = ()=>deferImmediate(fin);
+		this.thenThis(f, f);
 		return this;
 	}
 
@@ -260,7 +285,7 @@ extends PromiseState<T> implements PromiseLike<T>
 export abstract class Resolvable<T> extends PromiseBase<T>
 {
 
-	then<TResult>(
+	thenSynchronous<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
@@ -288,9 +313,9 @@ export abstract class Resolvable<T> extends PromiseBase<T>
 		throw new Error("Invalid state for a resolved promise.");
 	}
 
-	thenThis<TResult>(
-		onFulfilled:Promise.Fulfill<T, TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<T>
+	thenThis(
+		onFulfilled:(v?:T)=>any,
+		onRejected?:(v?:any)=>any):PromiseBase<T>
 	{
 		this.throwIfDisposed();
 
@@ -379,14 +404,14 @@ class PromiseWrapper<T> extends Resolvable<T>
 			})
 	}
 
-	then<TResult>(
+	thenSynchronous<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
 
 		var t = this._target;
-		if(!t) return super.then(onFulfilled, onRejected);
+		if(!t) return super.thenSynchronous(onFulfilled, onRejected);
 
 		var p = Promise.pending<TResult>();
 		handleDispatch(t,
@@ -396,9 +421,9 @@ class PromiseWrapper<T> extends Resolvable<T>
 	}
 
 
-	thenThis<TResult>(
-		onFulfilled:Promise.Fulfill<T, TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<T>
+	thenThis(
+		onFulfilled:(v?:T)=>any,
+		onRejected?:(v?:any)=>any):PromiseBase<T>
 	{
 		this.throwIfDisposed();
 
@@ -436,23 +461,22 @@ export class Promise<T> extends Resolvable<T>
 	 */
 
 	constructor(
-		resolver?:Promise.Executor<T>,
-		resolveImmediate:boolean = false)
+		resolver?:Promise.Executor<T>)
 	{
 		super();
 
-		if(resolver) this.resolveUsing(resolver, !resolveImmediate);
+		if(resolver) this.resolveUsing(resolver);
 	}
 
 
-	then<TResult>(
+	thenSynchronous<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this.throwIfDisposed();
 
 		// Already fulfilled?
-		if(this._state) return super.then(onFulfilled, onRejected);
+		if(this._state) return super.thenSynchronous(onFulfilled, onRejected);
 
 		var p = new Promise<TResult>();
 		(this._waiting || (this._waiting = []))
@@ -460,9 +484,9 @@ export class Promise<T> extends Resolvable<T>
 		return p;
 	}
 
-	thenThis<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<T>
+	thenThis(
+		onFulfilled:(v?:T)=>any,
+		onRejected?:(v?:any)=>any):PromiseBase<T>
 	{
 		this.throwIfDisposed();
 
@@ -487,7 +511,6 @@ export class Promise<T> extends Resolvable<T>
 
 	resolveUsing(
 		resolver:Promise.Executor<T>,
-		deferResolution:boolean = false,
 		throwIfSettled:boolean = false)
 	{
 		if(!resolver)
@@ -511,19 +534,26 @@ export class Promise<T> extends Resolvable<T>
 			this.resolve(v);
 		};
 
-		var r = ()=>resolver(
-			v=>
-			{
-				if(v==this) throw new InvalidOperationException("Cannot resolve a promise as itself.");
-				if(isPromise(v))
-					handleDispatch(v, fulfillHandler, rejectHandler);
-				else
-					fulfillHandler(v);
-			},
-			rejectHandler);
+		// In order to prevent blocking.
+		// As much as we'd like to go synchronous here, it's just not how it's done.
+		deferImmediate(()=>
+		{
+			resolver(
+				v=>
+				{
+					if(v==this) throw new InvalidOperationException("Cannot resolve a promise as itself.");
+					if(isPromise(v)) // If the result is a promise, then it will defer downstream.
+						handleDispatch(v, fulfillHandler, rejectHandler);
+					else
+					{
+						fulfillHandler(v);
+					}
 
-		if(deferResolution) deferImmediate(r);
-		else r();
+				},
+				rejectHandler);
+		});
+
+
 	}
 
 	resolve(result?:T, throwIfSettled:boolean = false):void
@@ -601,172 +631,6 @@ export class Promise<T> extends Resolvable<T>
 
 
 /**
- * This promise class ensures that all subsequent then calls resolve in a deferred/async manner.
- * This is not intended as a promise generator.  Use Pending for deferring results.
- */
-class SubsequentDeferred<T> extends PromiseBase<T>
-{
-	constructor(private _parent:PromiseBase<T>)
-	{
-		super();
-		if(!_parent || !(_parent instanceof PromiseBase))
-			throw new ArgumentException(TARGET, "Must be of type Promise.");
-	}
-
-	protected _onDisposed():void
-	{
-		super._onDispose();
-		this._parent = VOID0;
-	}
-
-	protected getState():Promise.State
-	{
-		return this._parent.state;
-	}
-
-	protected getResult():T
-	{
-		return this._parent.result;
-	}
-
-	protected getError():any
-	{
-		return this._parent.error;
-	}
-
-	then<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
-	{
-		this.throwIfDisposed();
-
-		var d = this._parent.defer();
-		var p = d.then(onFulfilled, onRejected);
-		// Since there is only 1 'then' for the deferred promise, cleanup immediately after.
-		d.finally(()=>pools.recycle(d));
-		return p;
-	}
-
-
-	thenThis<TResult>(
-		onFulfilled:Promise.Fulfill<T, TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<T>
-	{
-		this.throwIfDisposed();
-
-		var d = this._parent.defer();
-		d.thenThis(onFulfilled, onRejected);
-		// Since there is only 1 'then' for the deferred promise, cleanup immediately after.
-		d.finally(()=>pools.recycle(d));
-		return this;
-	}
-
-	defer():PromiseBase<T>
-	{
-		this.throwIfDisposed();
-
-		return this;
-	}
-
-	deferAll():PromiseBase<T>
-	{
-		this.throwIfDisposed();
-
-		return this;
-	}
-
-	get parent():PromiseBase<T>
-	{
-		return this._parent;
-	}
-}
-
-/**
- * This promise class only resolves the provided factory if values are requested or state is queried.
- * It is considered resolved since the resolution will be generated synchronously.
- */
-export class Task<T> extends Resolved<T>
-{
-	constructor(private _factory:Func<T>)
-	{
-		super(Promise.State.Pending, VOID0);
-		if(!_factory) throw new ArgumentNullException("factory");
-	}
-
-	protected _onDispose()
-	{
-		super._onDispose();
-		this._factory = VOID0;
-	}
-
-	protected getState():Promise.State
-	{
-		this.getResult();
-		return this._state;
-	}
-
-	protected getResult():T
-	{
-		if(!this._state)
-		{
-			try
-			{
-				this._result = this._factory();
-				this._state = Promise.State.Fulfilled;
-			}
-			catch(ex)
-			{
-				this._error = ex;
-				this._state = Promise.State.Rejected;
-			}
-			this._factory = VOID0;
-		}
-		return this._result;
-	}
-
-	protected getError():any
-	{
-		this.getResult();
-		return this._error;
-	}
-
-	then<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
-	{
-		this.throwIfDisposed();
-
-		this.getResult();
-		return super.then(onFulfilled, onRejected);
-	}
-
-	thenThis<TResult>(
-		onFulfilled:Promise.Fulfill<T,TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<T>
-	{
-		this.throwIfDisposed();
-
-		this.getResult();
-		return super.thenThis(onFulfilled, onRejected);
-	}
-
-	/**
-	 * This allows for synchronously triggering the factory ahead of time since calling .defer() shouldn't trigger it.
-	 * @returns {Task}
-	 */
-	resolve():Task<T>
-	{
-		this.getResult();
-		return this;
-	}
-
-	get isCompleted():boolean
-	{
-		return !this._factory;
-	}
-}
-
-/**
  * A promise that waits for the first then to trigger the resolver.
  */
 export class LazyPromise<T> extends Promise<T>
@@ -792,22 +656,22 @@ export class LazyPromise<T> extends Promise<T>
 		{
 			this._resolver = VOID0;
 			this._resolvedCalled = false;
-			this.resolveUsing(r, true);
+			this.resolveUsing(r);
 		}
 	}
 
-	then<TResult>(
+	thenSynchronous<TResult>(
 		onFulfilled:Promise.Fulfill<T, TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
 		this._onThen();
-		return super.then(onFulfilled, onRejected);
+		return super.thenSynchronous(onFulfilled, onRejected);
 	}
 
 
-	thenThis<TResult>(
-		onFulfilled:Promise.Fulfill<T, TResult>,
-		onRejected?:Promise.Reject<TResult>):PromiseBase<T>
+	thenThis(
+		onFulfilled:(v?:T)=>any,
+		onRejected?:(v?:any)=>any):PromiseBase<T>
 	{
 		this._onThen();
 		return super.thenThis(onFulfilled, onRejected);
@@ -817,43 +681,43 @@ export class LazyPromise<T> extends Promise<T>
 module pools
 {
 
-	export module pending
-	{
-
-
-		var pool:ObjectPool<Promise<any>>;
-
-		function getPool()
-		{
-			return pool || (pool = new ObjectPool<Promise<any>>(40, factory, c=>c.dispose()));
-		}
-
-		function factory():Promise<any>
-		{
-			return new Promise();
-		}
-
-		export function get():Promise<any>
-		{
-			var p:any = getPool().take();
-			p.__wasDisposed = false;
-			p._state = Promise.State.Pending;
-			return p;
-		}
-
-		export function recycle<T>(c:Promise<T>):void
-		{
-			if(c) getPool().add(c);
-		}
-
-	}
-
-	export function recycle<T>(c:PromiseBase<T>):void
-	{
-		if(!c) return;
-		if(c instanceof Promise && c.constructor==Promise) pending.recycle(c);
-		else c.dispose();
-	}
+	// export module pending
+	// {
+	//
+	//
+	// 	var pool:ObjectPool<Promise<any>>;
+	//
+	// 	function getPool()
+	// 	{
+	// 		return pool || (pool = new ObjectPool<Promise<any>>(40, factory, c=>c.dispose()));
+	// 	}
+	//
+	// 	function factory():Promise<any>
+	// 	{
+	// 		return new Promise();
+	// 	}
+	//
+	// 	export function get():Promise<any>
+	// 	{
+	// 		var p:any = getPool().take();
+	// 		p.__wasDisposed = false;
+	// 		p._state = Promise.State.Pending;
+	// 		return p;
+	// 	}
+	//
+	// 	export function recycle<T>(c:Promise<T>):void
+	// 	{
+	// 		if(c) getPool().add(c);
+	// 	}
+	//
+	// }
+	//
+	// export function recycle<T>(c:PromiseBase<T>):void
+	// {
+	// 	if(!c) return;
+	// 	if(c instanceof Promise && c.constructor==Promise) pending.recycle(c);
+	// 	else c.dispose();
+	// }
 
 
 	export module PromiseCallbacks
@@ -968,17 +832,11 @@ export module Promise
 		if(!promises.length || promises.every(v=>!v)) return new Fulfilled<any[]>(promises); // it's a new empty, reuse it. :|
 
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
-		var len = promises.length;
-		for(let i = 0; i<len; i++)
-		{
-			var p = promises[i];
-			if(p instanceof SubsequentDeferred) promises[i] = p.parent;
-		}
-
 		return pending<any[]>((resolve, reject)=>
 		{
 			let checkedAll = false;
 			let result:any[] = [];
+			let len = promises.length;
 			result.length = len;
 			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
 			let remaining = new Set(promises.map((v, i)=>i)); // get all the indexes...
@@ -1049,22 +907,13 @@ export module Promise
 		var len = promises.length;
 
 		// Only one?  Nothing to race.
-		if(len==1) return wrap(promises[0]).defer();
+		if(len==1) return wrap(promises[0]);
 
 		// Look for already resolved promises and the first one wins.
 		for(let i = 0; i<len; i++)
 		{
 			var p:any = promises[i];
-			//if(p instanceof SubsequentDeferred) p = p.parent;
-			if(p instanceof Task)
-			{
-				// If a a Task has resolved, then it wins otherwise let it defer and not (potentially) block.
-				if(p.isCompleted) return p.defer();
-			}
-			else if(p instanceof Resolved || p instanceof PromiseBase && p.isSettled)
-			{
-				return p.defer();
-			}
+			if(p instanceof PromiseBase && p.isSettled) return p;
 		}
 
 		return pending((resolve, reject)=>
@@ -1126,27 +975,14 @@ export module Promise
 	}
 
 
-	export module lazy
+	/**
+	 * Provides a promise that will trigger the resolver at the first 'then' request.
+	 * @param resolver
+	 * @returns {Promise<T>}
+	 */
+	export function lazy<T>(resolver:Promise.Executor<T>):LazyPromise<T>
 	{
-		/**
-		 * Provides a promise that will be resolved immediately at the first 'then' request.
-		 * @param factory
-		 */
-		export function resolve<T>(factory:Func<T>):Task<T>
-		{
-			return new Task<T>(factory);
-		}
-
-
-		/**
-		 * Provides a promise that will trigger the resolver at the first 'then' request.
-		 * @param resolver
-		 * @returns {Promise<T>}
-		 */
-		export function pending<T>(resolver:Promise.Executor<T>):LazyPromise<T>
-		{
-			return new LazyPromise(resolver);
-		}
+		return new LazyPromise(resolver);
 	}
 
 	/**
@@ -1177,9 +1013,10 @@ export module Promise
 	 */
 	export function pending<T>(resolver?:Promise.Executor<T>):Promise<T>
 	{
-		var p = pools.pending.get();
-		if(resolver) p.resolveUsing(resolver);
-		return p;
+		return new Promise(resolver);
+		// var p = pools.pending.get();
+		// if(resolver) p.resolveUsing(resolver);
+		// return p;
 	}
 
 

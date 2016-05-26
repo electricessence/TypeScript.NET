@@ -6,14 +6,15 @@
  */
 import { dispose } from "./dispose";
 import { DisposableBase } from "./DisposableBase";
-import { TaskHandler } from "../Tasks/TaskHandler";
+import { TaskHandler } from "../Threading/Tasks/TaskHandler";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
 const OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
 export class ObjectPool extends DisposableBase {
-    constructor(_maxSize, _generator) {
+    constructor(_maxSize, _generator, _recycler) {
         super();
         this._maxSize = _maxSize;
         this._generator = _generator;
+        this._recycler = _recycler;
         this.autoClearTimeout = 5000;
         if (isNaN(_maxSize) || _maxSize < 1)
             throw new ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
@@ -43,7 +44,7 @@ export class ObjectPool extends DisposableBase {
     }
     trim(defer) {
         this.throwIfDisposed();
-        this._trimmer.execute(defer);
+        this._trimmer.start(defer);
     }
     _clear() {
         var _ = this, p = _._pool;
@@ -55,7 +56,7 @@ export class ObjectPool extends DisposableBase {
     }
     clear(defer) {
         this.throwIfDisposed();
-        this._flusher.execute(defer);
+        this._flusher.start(defer);
     }
     toArrayAndClear() {
         var _ = this;
@@ -73,6 +74,7 @@ export class ObjectPool extends DisposableBase {
         super._onDispose();
         var _ = this;
         _._generator = null;
+        _._recycler = null;
         dispose(_._trimmer, _._flusher, _._autoFlusher);
         _._trimmer = null;
         _._flusher = null;
@@ -85,7 +87,7 @@ export class ObjectPool extends DisposableBase {
         _.throwIfDisposed();
         var t = _.autoClearTimeout;
         if (isFinite(t) && !_._autoFlusher.isScheduled)
-            _._autoFlusher.execute(t);
+            _._autoFlusher.start(t);
     }
     add(o) {
         var _ = this;
@@ -94,10 +96,12 @@ export class ObjectPool extends DisposableBase {
             dispose(o);
         }
         else {
+            if (_._recycler)
+                _._recycler(o);
             _._pool.push(o);
             var m = _._maxSize;
             if (m < ABSOLUTE_MAX_SIZE && _._pool.length > m)
-                _._trimmer.execute(500);
+                _._trimmer.start(500);
         }
         _.extendAutoClear();
     }

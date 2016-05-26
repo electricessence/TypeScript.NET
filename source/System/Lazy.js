@@ -12,24 +12,23 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Disposable/DisposableBase", "./Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports", "./ResolverBase"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var DisposableBase_1 = require("./Disposable/DisposableBase");
-    var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
+    var ResolverBase_1 = require("./ResolverBase");
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
-        function Lazy(_closure) {
-            _super.call(this);
-            this._closure = _closure;
-            if (!_closure)
-                throw new ArgumentNullException_1.ArgumentNullException("_closure");
+        function Lazy(valueFactory, trapExceptions, allowReset) {
+            if (trapExceptions === void 0) { trapExceptions = false; }
+            if (allowReset === void 0) { allowReset = false; }
+            _super.call(this, valueFactory, trapExceptions, allowReset);
             this._disposableObjectName = 'Lazy';
+            this._isValueCreated = false;
         }
         Object.defineProperty(Lazy.prototype, "isValueCreated", {
             get: function () {
-                return this._isValueCreated;
+                return !!this._isValueCreated;
             },
             enumerable: true,
             configurable: true
@@ -41,41 +40,6 @@ var __extends = (this && this.__extends) || function (d, b) {
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Lazy.prototype, "error", {
-            get: function () {
-                return this._error;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Lazy.prototype.getValue = function () {
-            var _ = this;
-            _.throwIfDisposed();
-            try {
-                if (!_._isValueCreated && _._closure) {
-                    var v = _._closure();
-                    _._value = v;
-                    _._error = void 0;
-                    return v;
-                }
-            }
-            catch (ex) {
-                _._error = ex;
-                throw ex;
-            }
-            finally {
-                _._onValueRequested();
-                _._isValueCreated = true;
-            }
-            return _._value;
-        };
-        Lazy.prototype._onValueRequested = function () {
-            this._closure = null;
-        };
-        Lazy.prototype._onDispose = function () {
-            this._closure = null;
-            this._value = null;
-        };
         Lazy.prototype.equals = function (other) {
             return this == other;
         };
@@ -83,47 +47,8 @@ var __extends = (this && this.__extends) || function (d, b) {
             return this.equals(other) || this.value === other.value;
         };
         return Lazy;
-    }(DisposableBase_1.DisposableBase));
+    }(ResolverBase_1.ResolverBase));
     exports.Lazy = Lazy;
-    var ResettableLazy = (function (_super) {
-        __extends(ResettableLazy, _super);
-        function ResettableLazy() {
-            _super.apply(this, arguments);
-        }
-        ResettableLazy.prototype.getValue = function (clearClosureReference) {
-            var v = _super.prototype.getValue.call(this);
-            if (clearClosureReference)
-                _super.prototype._onValueRequested.call(this);
-            return v;
-        };
-        ResettableLazy.prototype._onValueRequested = function () {
-        };
-        Object.defineProperty(ResettableLazy.prototype, "canReset", {
-            get: function () {
-                return !this.wasDisposed && !!(this._closure);
-            },
-            enumerable: true,
-            configurable: true
-        });
-        ResettableLazy.prototype.reset = function (throwIfCannotReset) {
-            var _ = this;
-            if (throwIfCannotReset)
-                _.throwIfDisposed();
-            if (!_._closure) {
-                if (throwIfCannotReset)
-                    throw new Error("Cannot reset.  This Lazy has already de-referenced its closure.");
-                return false;
-            }
-            else {
-                _._isValueCreated = false;
-                _._value = null;
-                _._error = void 0;
-                return true;
-            }
-        };
-        return ResettableLazy;
-    }(Lazy));
-    exports.ResettableLazy = ResettableLazy;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Lazy;
 });

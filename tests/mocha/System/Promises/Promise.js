@@ -26,6 +26,17 @@
             var sw = Stopwatch_1.default.startNew();
             return array
                 .reduce(function (promise, nextVal) {
+                return promise.thenSynchronous(function (currentVal) { return currentVal + nextVal; });
+            }, Promise_1.Promise.resolve(0))
+                .thenSynchronous(function (value) {
+                sw.stop();
+                assert.equal(value, answer);
+            });
+        });
+        it("should compute correct result without blowing stack (lambda only)", function () {
+            var sw = Stopwatch_1.default.startNew();
+            return array
+                .reduce(function (promise, nextVal) {
                 return promise.then(function (currentVal) { return currentVal + nextVal; });
             }, Promise_1.Promise.resolve(0))
                 .then(function (value) {
@@ -33,39 +44,13 @@
                 assert.equal(value, answer);
             });
         });
-        it("should compute correct result without blowing stack (Deferred) (lambda only)", function () {
-            var sw = Stopwatch_1.default.startNew();
-            return array
-                .reduce(function (promise, nextVal) {
-                return promise.then(function (currentVal) { return currentVal + nextVal; }).defer();
-            }, Promise_1.Promise.resolve(0).defer())
-                .then(function (value) {
-                sw.stop();
-                assert.equal(value, answer);
-            });
-        });
-        it("should compute correct result without blowing stack (All Deferred) (lambda only)", function () {
-            var sw = Stopwatch_1.default.startNew();
-            return array
-                .reduce(function (promise, nextVal) {
-                return promise.then(function (currentVal) { return currentVal + nextVal; }).deferAll();
-            }, Promise_1.Promise.resolve(0).deferAll())
-                .then(function (value) {
-                sw.stop();
-                assert.equal(value, answer);
-            });
-        });
         it("should be deferring fulfillment", function () {
-            return array
-                .reduce(function (promise, nextVal) {
-                var wasRun = false;
-                var r = promise.defer().then(function (currentVal) {
-                    wasRun = true;
-                    return currentVal + nextVal;
-                });
-                assert.ok(!wasRun, "The promise should have deferred until after closure completed.");
-                return r;
-            }, Promise_1.Promise.resolve(0));
+            var wasRun = false;
+            var r = Promise_1.Promise.resolve(true).then(function () {
+                wasRun = true;
+            });
+            assert.ok(!wasRun, "The promise should have deferred until after closure completed.");
+            return r;
         });
     });
     describe("Resolution and Rejection", function () {
@@ -87,19 +72,20 @@
             var nextTurn = false;
             var resolution = "Ta-ram pam param!";
             var pending = Promise_1.Promise.pending();
-            var deferred = pending.defer();
             var count = 10;
             var i = 0;
             function resolve(value) {
                 i++;
                 assert.equal(value, resolution);
-                assert.equal(nextTurn, true);
+                assert.ok(nextTurn);
+                if (!nextTurn)
+                    i = count;
                 if (i === count) {
                     done();
                 }
             }
             while (++i <= count) {
-                deferred.then(resolve);
+                pending.then(resolve);
             }
             pending.resolve(resolution);
             i = 0;
@@ -108,25 +94,24 @@
         it("observers called even after throw (synchronous)", function () {
             var threw = false;
             var pending = Promise_1.Promise.pending();
-            pending.then(function () {
+            pending.thenSynchronous(function () {
                 threw = true;
                 throw new Error(REASON);
             });
-            pending.then(function (value) { return assert.equal(value, 10); }, function () { return assert.equal("not", "here"); });
+            pending.thenSynchronous(function (value) { return assert.equal(value, 10); }, function () { return assert.equal("not", "here"); });
             pending.resolve(10);
             return pending;
         });
         it("observers called even after throw (asynchronous)", function () {
             var threw = false;
             var pending = Promise_1.Promise.pending();
-            var deferred = pending.defer();
-            deferred.then(function () {
+            pending.thenSynchronous(function () {
                 threw = true;
                 throw new Error(REASON);
             });
-            deferred.then(function (value) { return assert.equal(value, 10); }, function () { return assert.equal("not", "here"); });
+            pending.thenSynchronous(function (value) { return assert.equal(value, 10); }, function () { return assert.equal("not", "here"); });
             pending.resolve(10);
-            return deferred;
+            return pending;
         });
         var BREAK = "break", NO = "NO!";
         function testPromiseFlow(p) {
@@ -159,7 +144,6 @@
                 return NO;
             })
                 .then(null, null)
-                .defer()
                 .then(function (v) {
                 assert.ok(false);
                 return NO;
@@ -186,7 +170,6 @@
                 assert.ok(v);
                 return 10;
             })
-                .delay()
                 .then(function (v) {
                 assert.equal(v, 10);
             });
@@ -208,11 +191,6 @@
             p.resolve(true);
             return testPromiseFlow(p);
         });
-        it("should be able to use a lazy resolved", function () {
-            var p = Promise_1.Promise.lazy.resolve(function () { return true; });
-            assert.ok(p.isFulfilled);
-            return testPromiseFlow(p);
-        });
         it("should be able to use a then-able", function () {
             var p = Promise_1.Promise.createFrom(function (r) {
                 r(true);
@@ -220,29 +198,8 @@
             });
             return testPromiseFlow(p);
         });
-        it("should be able to use a synchronous resolver", function () {
-            var p = Promise_1.Promise.pending(function (resolve) {
-                resolve(true);
-            });
-            assert.ok(p.isFulfilled);
-            return testPromiseFlow(p);
-        });
-        it("should be able to use a synchronous rejection", function () {
-            var p = Promise_1.Promise.pending(function (resolve, reject) {
-                reject(true);
-            });
-            assert.ok(p.isRejected);
-            return testPromiseFlow(p.catch(function () { return true; }));
-        });
-        it("should be able to use an async resolver", function () {
-            var p = Promise_1.Promise.pending(function (resolve) {
-                defer_1.defer(function () { return resolve(true); });
-            });
-            assert.ok(p.isPending);
-            return testPromiseFlow(p);
-        });
         it("should be able to use lazy pending", function () {
-            var p = Promise_1.Promise.lazy.pending(function (resolve) {
+            var p = Promise_1.Promise.lazy(function (resolve) {
                 defer_1.defer(function () { return resolve(true); });
             });
             assert.ok(p.isPending);
@@ -259,26 +216,36 @@
             return testPromiseFlow(p);
         });
         it("should be able to resolve all", function () {
-            return Promise_1.Promise.all(Promise_1.Promise.resolve(3).defer(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.resolve(1).defer()).then(function (r) {
-                assert.equal(r[0], 3);
-                assert.equal(r[1], 2);
-                assert.equal(r[2], 1);
+            var other = Promise_1.Promise.lazy(function (resolve) {
+                resolve(4);
+            });
+            return Promise_1.Promise.all(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
+                assert.equal(r[0], 4);
+                assert.equal(r[1], 3);
+                assert.equal(r[2], 2);
+                assert.equal(r[3], 1);
             });
         });
         it("should resolve as rejected", function () {
-            return Promise_1.Promise.all(Promise_1.Promise.resolve(3).defer(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.resolve(1).defer(), Promise_1.Promise.reject(-1).defer()).then(function () {
+            var other = Promise_1.Promise.lazy(function (resolve) {
+                resolve(4);
+            });
+            return Promise_1.Promise.all(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1), Promise_1.Promise.reject(-1)).thenSynchronous(function () {
                 assert.ok(false);
             }, function (e) {
                 assert.equal(e, -1);
             });
         });
         it("should be resolve the first to win the race", function () {
-            return Promise_1.Promise.race(Promise_1.Promise.reject(4).delay(), Promise_1.Promise.resolve(3).delay(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.resolve(1)).then(function (r) {
-                assert.equal(r, 1);
+            var other = Promise_1.Promise.lazy(function (resolve, reject) {
+                reject(4);
+            });
+            return Promise_1.Promise.race(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
+                assert.equal(r, 3);
             });
         });
         it("should be resolve the rejection", function () {
-            return Promise_1.Promise.race(Promise_1.Promise.resolve(3).delay(), Promise_1.Promise.resolve(2).defer(), Promise_1.Promise.reject(1)).then(function () {
+            return Promise_1.Promise.race(Promise_1.Promise.resolve(3).delayFromNow(20), Promise_1.Promise.resolve(2).delayAfterResolve(10), Promise_1.Promise.reject(1)).thenSynchronous(function () {
                 assert.ok(false);
             }, function (e) {
                 assert.equal(e, 1);

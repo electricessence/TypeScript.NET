@@ -4,7 +4,7 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
-System.register(["./dispose", "./DisposableBase", "../Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
+System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -32,10 +32,11 @@ System.register(["./dispose", "./DisposableBase", "../Tasks/TaskHandler", "../Ex
             OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
             ObjectPool = (function (_super) {
                 __extends(ObjectPool, _super);
-                function ObjectPool(_maxSize, _generator) {
+                function ObjectPool(_maxSize, _generator, _recycler) {
                     _super.call(this);
                     this._maxSize = _maxSize;
                     this._generator = _generator;
+                    this._recycler = _recycler;
                     this.autoClearTimeout = 5000;
                     if (isNaN(_maxSize) || _maxSize < 1)
                         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
@@ -73,7 +74,7 @@ System.register(["./dispose", "./DisposableBase", "../Tasks/TaskHandler", "../Ex
                 };
                 ObjectPool.prototype.trim = function (defer) {
                     this.throwIfDisposed();
-                    this._trimmer.execute(defer);
+                    this._trimmer.start(defer);
                 };
                 ObjectPool.prototype._clear = function () {
                     var _ = this, p = _._pool;
@@ -85,7 +86,7 @@ System.register(["./dispose", "./DisposableBase", "../Tasks/TaskHandler", "../Ex
                 };
                 ObjectPool.prototype.clear = function (defer) {
                     this.throwIfDisposed();
-                    this._flusher.execute(defer);
+                    this._flusher.start(defer);
                 };
                 ObjectPool.prototype.toArrayAndClear = function () {
                     var _ = this;
@@ -103,6 +104,7 @@ System.register(["./dispose", "./DisposableBase", "../Tasks/TaskHandler", "../Ex
                     _super.prototype._onDispose.call(this);
                     var _ = this;
                     _._generator = null;
+                    _._recycler = null;
                     dispose_1.dispose(_._trimmer, _._flusher, _._autoFlusher);
                     _._trimmer = null;
                     _._flusher = null;
@@ -115,7 +117,7 @@ System.register(["./dispose", "./DisposableBase", "../Tasks/TaskHandler", "../Ex
                     _.throwIfDisposed();
                     var t = _.autoClearTimeout;
                     if (isFinite(t) && !_._autoFlusher.isScheduled)
-                        _._autoFlusher.execute(t);
+                        _._autoFlusher.start(t);
                 };
                 ObjectPool.prototype.add = function (o) {
                     var _ = this;
@@ -124,10 +126,12 @@ System.register(["./dispose", "./DisposableBase", "../Tasks/TaskHandler", "../Ex
                         dispose_1.dispose(o);
                     }
                     else {
+                        if (_._recycler)
+                            _._recycler(o);
                         _._pool.push(o);
                         var m = _._maxSize;
                         if (m < ABSOLUTE_MAX_SIZE && _._pool.length > m)
-                            _._trimmer.execute(500);
+                            _._trimmer.start(500);
                     }
                     _.extendAutoClear();
                 };

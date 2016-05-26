@@ -1,7 +1,0 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on code from: https://github.com/kriskowal/q
- */
-define(["require","exports","../Types","../Collections/LinkedNodeList","../Collections/Queue"],function(e,t,n,o,i){"use strict";function s(){for(var e;e=p.first;){var t=e.task,n=e.domain;p.removeNode(e),n&&n.enter(),r(t,n)}for(var o;o=l.dequeue();)r(o);m=!1}function r(e,t){try{e()}catch(n){if(a)throw t&&t.exit(),setTimeout(s,0),t&&t.enter(),n;setTimeout(function(){throw n},0)}t&&t.exit()}function u(){m||(m=!0,d())}function c(e){var t=this,n={task:e,domain:a&&process.domain};return p.addNode(n),u(),{cancel:function(){return!!p.removeNode(n)},dispose:function(){t.cancel()}}}function f(e){l.enqueue(e),u()}var d,a=!1,m=!1,p=new o.LinkedNodeList,l=new i.Queue;if(t.deferImmediate=c,t.runAfterDeferred=f,n.Type.isObject(process)&&"[object process]"===process.toString()&&process.nextTick)a=!0,d=function(){process.nextTick(s)};else if("function"==typeof setImmediate)d="undefined"!=typeof window?setImmediate.bind(window,s):function(){setImmediate(s)};else if("undefined"!=typeof MessageChannel){var v=new MessageChannel;v.port1.onmessage=function(){d=w,v.port1.onmessage=s,s()};var w=function(){v.port2.postMessage(0)};d=function(){setTimeout(s,0),w()}}else d=function(){setTimeout(s,0)};Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=c});
-//# sourceMappingURL=deferImmediate.js.map

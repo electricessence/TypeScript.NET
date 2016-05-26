@@ -8,13 +8,14 @@ import { DisposableBase } from "./DisposableBase";
 export declare class ObjectPool<T> extends DisposableBase {
     private _maxSize;
     private _generator;
+    private _recycler;
     private _pool;
     private _trimmer;
     private _flusher;
     private _autoFlusher;
     private _localAbsMaxSize;
     autoClearTimeout: number;
-    constructor(_maxSize: number, _generator: () => T);
+    constructor(_maxSize: number, _generator: (...args: any[]) => T, _recycler?: (o: T) => void);
     maxSize: number;
     count: number;
     protected _trim(): void;

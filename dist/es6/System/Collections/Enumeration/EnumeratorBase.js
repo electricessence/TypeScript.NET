@@ -11,10 +11,9 @@ var yielderPool;
 function yielder(recycle) {
     if (!yielderPool)
         yielderPool
-            = new ObjectPool(40, () => new Yielder());
+            = new ObjectPool(40, () => new Yielder(), y => y.yieldBreak());
     if (!recycle)
         return yielderPool.take();
-    recycle.yieldBreak();
     yielderPool.add(recycle);
 }
 class Yielder {

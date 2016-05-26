@@ -18,13 +18,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var Types_1 = require("../Types");
 var deferImmediate_1 = require("../Threading/deferImmediate");
-var defer_1 = require("../Threading/defer");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var ObjectPool_1 = require("../Disposable/ObjectPool");
 var Set_1 = require("../Collections/Set");
+var defer_1 = require("../Threading/defer");
 var VOID0 = void 0,
     PROMISE = "Promise",
     PROMISE_STATE = PROMISE + "State",
@@ -39,12 +39,23 @@ function resolve(value, resolver, promiseFactory) {
 }
 function pass(source, dest) {
     return function () {
-        source.then(function (v) {
+        source.thenThis(function (v) {
             dest.resolve(v);
-            return dest;
         }, function (e) {
             dest.reject(e);
-            return dest;
+        });
+    };
+}
+function passDelayed(source, dest, ms) {
+    return function () {
+        source.thenThis(function (v) {
+            return defer_1.defer(function () {
+                return dest.resolve(v);
+            }, ms);
+        }, function (e) {
+            return defer_1.defer(function () {
+                return dest.reject(e);
+            }, ms);
         });
     };
 }
@@ -56,8 +67,16 @@ function handleResolution(p, value, resolver) {
         p.reject(ex);
     }
 }
+function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
+    try {
+        var v = resolver ? resolver(value) : value;
+        if (targetFulfill) targetFulfill(v);
+    } catch (ex) {
+        if (targetReject) targetReject(ex);
+    }
+}
 function handleDispatch(p, onFulfilled, onRejected) {
-    if (p instanceof Promise) p.thenThis(onFulfilled, onRejected);else p.then(onFulfilled, onRejected);
+    if (p instanceof PromiseBase) p.thenThis(onFulfilled, onRejected);else p.then(onFulfilled, onRejected);
 }
 
 var PromiseState = function (_DisposableBase_1$Dis) {
@@ -154,27 +173,36 @@ var PromiseBase = function (_PromiseState) {
     }
 
     _createClass(PromiseBase, [{
-        key: "deferAll",
-        value: function deferAll() {
-            this.throwIfDisposed();
-            return new SubsequentDeferred(this);
+        key: "then",
+        value: function then(onFulfilled, onRejected) {
+            var _this3 = this;
+
+            return Promise.pending(function (resolve, reject) {
+                _this3.thenThis(function (result) {
+                    return handleResolutionMethods(resolve, reject, result, onFulfilled);
+                }, function (error) {
+                    return onRejected ? handleResolutionMethods(resolve, null, error, onRejected) : reject(error);
+                });
+            });
         }
     }, {
-        key: "defer",
-        value: function defer() {
-            this.throwIfDisposed();
-            var p = Promise.pending();
-            deferImmediate_1.deferImmediate(pass(this, p));
-            return p;
-        }
-    }, {
-        key: "delay",
-        value: function delay() {
+        key: "delayFromNow",
+        value: function delayFromNow() {
             var milliseconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
             this.throwIfDisposed();
             var p = Promise.pending();
             defer_1.defer(pass(this, p), milliseconds);
+            return p;
+        }
+    }, {
+        key: "delayAfterResolve",
+        value: function delayAfterResolve() {
+            var milliseconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
+            this.throwIfDisposed();
+            var p = Promise.pending();
+            passDelayed(this, p, milliseconds);
             return p;
         }
     }, {
@@ -192,7 +220,11 @@ var PromiseBase = function (_PromiseState) {
     }, {
         key: "finallyThis",
         value: function finallyThis(fin) {
-            this.thenThis(fin, fin);
+            this.throwIfDisposed();
+            var f = function f() {
+                return deferImmediate_1.deferImmediate(fin);
+            };
+            this.thenThis(f, f);
             return this;
         }
     }]);
@@ -212,8 +244,8 @@ var Resolvable = function (_PromiseBase) {
     }
 
     _createClass(Resolvable, [{
-        key: "then",
-        value: function then(onFulfilled, onRejected) {
+        key: "thenSynchronous",
+        value: function thenSynchronous(onFulfilled, onRejected) {
             this.throwIfDisposed();
             try {
                 switch (this.state) {
@@ -254,12 +286,12 @@ var Resolved = function (_Resolvable) {
     function Resolved(state, result, error) {
         _classCallCheck(this, Resolved);
 
-        var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(Resolved).call(this));
+        var _this5 = _possibleConstructorReturn(this, Object.getPrototypeOf(Resolved).call(this));
 
-        _this4._result = result;
-        _this4._error = error;
-        _this4._state = state;
-        return _this4;
+        _this5._result = result;
+        _this5._error = error;
+        _this5._state = state;
+        return _this5;
     }
 
     return Resolved;
@@ -297,30 +329,30 @@ var PromiseWrapper = function (_Resolvable2) {
     function PromiseWrapper(_target) {
         _classCallCheck(this, PromiseWrapper);
 
-        var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(PromiseWrapper).call(this));
+        var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(PromiseWrapper).call(this));
 
-        _this7._target = _target;
+        _this8._target = _target;
         if (!_target) throw new ArgumentNullException_1.ArgumentNullException(TARGET);
         if (!isPromise(_target)) throw new ArgumentException_1.ArgumentException(TARGET, "Must be a promise-like object.");
         _target.then(function (v) {
-            _this7._state = Promise.State.Fulfilled;
-            _this7._result = v;
-            _this7._error = VOID0;
-            _this7._target = VOID0;
+            _this8._state = Promise.State.Fulfilled;
+            _this8._result = v;
+            _this8._error = VOID0;
+            _this8._target = VOID0;
         }, function (e) {
-            _this7._state = Promise.State.Rejected;
-            _this7._error = e;
-            _this7._target = VOID0;
+            _this8._state = Promise.State.Rejected;
+            _this8._error = e;
+            _this8._target = VOID0;
         });
-        return _this7;
+        return _this8;
     }
 
     _createClass(PromiseWrapper, [{
-        key: "then",
-        value: function then(onFulfilled, onRejected) {
+        key: "thenSynchronous",
+        value: function thenSynchronous(onFulfilled, onRejected) {
             this.throwIfDisposed();
             var t = this._target;
-            if (!t) return _get(Object.getPrototypeOf(PromiseWrapper.prototype), "then", this).call(this, onFulfilled, onRejected);
+            if (!t) return _get(Object.getPrototypeOf(PromiseWrapper.prototype), "thenSynchronous", this).call(this, onFulfilled, onRejected);
             var p = Promise.pending();
             handleDispatch(t, function (result) {
                 return handleResolution(p, result, onFulfilled);
@@ -353,21 +385,19 @@ var Promise = function (_Resolvable3) {
     _inherits(Promise, _Resolvable3);
 
     function Promise(resolver) {
-        var resolveImmediate = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-
         _classCallCheck(this, Promise);
 
-        var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Promise).call(this));
+        var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(Promise).call(this));
 
-        if (resolver) _this8.resolveUsing(resolver, !resolveImmediate);
-        return _this8;
+        if (resolver) _this9.resolveUsing(resolver);
+        return _this9;
     }
 
     _createClass(Promise, [{
-        key: "then",
-        value: function then(onFulfilled, onRejected) {
+        key: "thenSynchronous",
+        value: function thenSynchronous(onFulfilled, onRejected) {
             this.throwIfDisposed();
-            if (this._state) return _get(Object.getPrototypeOf(Promise.prototype), "then", this).call(this, onFulfilled, onRejected);
+            if (this._state) return _get(Object.getPrototypeOf(Promise.prototype), "thenSynchronous", this).call(this, onFulfilled, onRejected);
             var p = new Promise();
             (this._waiting || (this._waiting = [])).push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
             return p;
@@ -389,30 +419,30 @@ var Promise = function (_Resolvable3) {
     }, {
         key: "resolveUsing",
         value: function resolveUsing(resolver) {
-            var _this9 = this;
+            var _this10 = this;
 
-            var deferResolution = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-            var throwIfSettled = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+            var throwIfSettled = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
             if (!resolver) throw new ArgumentNullException_1.ArgumentNullException("resolver");
             if (this._resolvedCalled) throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
             if (this.state) throw new InvalidOperationException_1.InvalidOperationException("Already resolved: " + Promise.State[this.state]);
             this._resolvedCalled = true;
             var rejectHandler = function rejectHandler(reason) {
-                _this9._resolvedCalled = false;
-                _this9.reject(reason);
+                _this10._resolvedCalled = false;
+                _this10.reject(reason);
             };
             var fulfillHandler = function fulfillHandler(v) {
-                _this9._resolvedCalled = false;
-                _this9.resolve(v);
+                _this10._resolvedCalled = false;
+                _this10.resolve(v);
             };
-            var r = function r() {
-                return resolver(function (v) {
-                    if (v == _this9) throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
-                    if (isPromise(v)) handleDispatch(v, fulfillHandler, rejectHandler);else fulfillHandler(v);
+            deferImmediate_1.deferImmediate(function () {
+                resolver(function (v) {
+                    if (v == _this10) throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
+                    if (isPromise(v)) handleDispatch(v, fulfillHandler, rejectHandler);else {
+                        fulfillHandler(v);
+                    }
                 }, rejectHandler);
-            };
-            if (deferResolution) deferImmediate_1.deferImmediate(r);else r();
+            });
         }
     }, {
         key: "resolve",
@@ -521,174 +551,18 @@ var Promise = function (_Resolvable3) {
 
 exports.Promise = Promise;
 
-var SubsequentDeferred = function (_PromiseBase2) {
-    _inherits(SubsequentDeferred, _PromiseBase2);
-
-    function SubsequentDeferred(_parent) {
-        _classCallCheck(this, SubsequentDeferred);
-
-        var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(SubsequentDeferred).call(this));
-
-        _this10._parent = _parent;
-        if (!_parent || !(_parent instanceof PromiseBase)) throw new ArgumentException_1.ArgumentException(TARGET, "Must be of type Promise.");
-        return _this10;
-    }
-
-    _createClass(SubsequentDeferred, [{
-        key: "_onDisposed",
-        value: function _onDisposed() {
-            _get(Object.getPrototypeOf(SubsequentDeferred.prototype), "_onDispose", this).call(this);
-            this._parent = VOID0;
-        }
-    }, {
-        key: "getState",
-        value: function getState() {
-            return this._parent.state;
-        }
-    }, {
-        key: "getResult",
-        value: function getResult() {
-            return this._parent.result;
-        }
-    }, {
-        key: "getError",
-        value: function getError() {
-            return this._parent.error;
-        }
-    }, {
-        key: "then",
-        value: function then(onFulfilled, onRejected) {
-            this.throwIfDisposed();
-            var d = this._parent.defer();
-            var p = d.then(onFulfilled, onRejected);
-            d.finally(function () {
-                return pools.recycle(d);
-            });
-            return p;
-        }
-    }, {
-        key: "thenThis",
-        value: function thenThis(onFulfilled, onRejected) {
-            this.throwIfDisposed();
-            var d = this._parent.defer();
-            d.thenThis(onFulfilled, onRejected);
-            d.finally(function () {
-                return pools.recycle(d);
-            });
-            return this;
-        }
-    }, {
-        key: "defer",
-        value: function defer() {
-            this.throwIfDisposed();
-            return this;
-        }
-    }, {
-        key: "deferAll",
-        value: function deferAll() {
-            this.throwIfDisposed();
-            return this;
-        }
-    }, {
-        key: "parent",
-        get: function get() {
-            return this._parent;
-        }
-    }]);
-
-    return SubsequentDeferred;
-}(PromiseBase);
-
-var Task = function (_Resolved3) {
-    _inherits(Task, _Resolved3);
-
-    function Task(_factory) {
-        _classCallCheck(this, Task);
-
-        var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(Task).call(this, Promise.State.Pending, VOID0));
-
-        _this11._factory = _factory;
-        if (!_factory) throw new ArgumentNullException_1.ArgumentNullException("factory");
-        return _this11;
-    }
-
-    _createClass(Task, [{
-        key: "_onDispose",
-        value: function _onDispose() {
-            _get(Object.getPrototypeOf(Task.prototype), "_onDispose", this).call(this);
-            this._factory = VOID0;
-        }
-    }, {
-        key: "getState",
-        value: function getState() {
-            this.getResult();
-            return this._state;
-        }
-    }, {
-        key: "getResult",
-        value: function getResult() {
-            if (!this._state) {
-                try {
-                    this._result = this._factory();
-                    this._state = Promise.State.Fulfilled;
-                } catch (ex) {
-                    this._error = ex;
-                    this._state = Promise.State.Rejected;
-                }
-                this._factory = VOID0;
-            }
-            return this._result;
-        }
-    }, {
-        key: "getError",
-        value: function getError() {
-            this.getResult();
-            return this._error;
-        }
-    }, {
-        key: "then",
-        value: function then(onFulfilled, onRejected) {
-            this.throwIfDisposed();
-            this.getResult();
-            return _get(Object.getPrototypeOf(Task.prototype), "then", this).call(this, onFulfilled, onRejected);
-        }
-    }, {
-        key: "thenThis",
-        value: function thenThis(onFulfilled, onRejected) {
-            this.throwIfDisposed();
-            this.getResult();
-            return _get(Object.getPrototypeOf(Task.prototype), "thenThis", this).call(this, onFulfilled, onRejected);
-        }
-    }, {
-        key: "resolve",
-        value: function resolve() {
-            this.getResult();
-            return this;
-        }
-    }, {
-        key: "isCompleted",
-        get: function get() {
-            return !this._factory;
-        }
-    }]);
-
-    return Task;
-}(Resolved);
-
-exports.Task = Task;
-
 var LazyPromise = function (_Promise) {
     _inherits(LazyPromise, _Promise);
 
     function LazyPromise(_resolver) {
         _classCallCheck(this, LazyPromise);
 
-        var _this12 = _possibleConstructorReturn(this, Object.getPrototypeOf(LazyPromise).call(this));
+        var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(LazyPromise).call(this));
 
-        _this12._resolver = _resolver;
+        _this11._resolver = _resolver;
         if (!_resolver) throw new ArgumentNullException_1.ArgumentNullException("resolver");
-        _this12._resolvedCalled = true;
-        return _this12;
+        _this11._resolvedCalled = true;
+        return _this11;
     }
 
     _createClass(LazyPromise, [{
@@ -704,14 +578,14 @@ var LazyPromise = function (_Promise) {
             if (r) {
                 this._resolver = VOID0;
                 this._resolvedCalled = false;
-                this.resolveUsing(r, true);
+                this.resolveUsing(r);
             }
         }
     }, {
-        key: "then",
-        value: function then(onFulfilled, onRejected) {
+        key: "thenSynchronous",
+        value: function thenSynchronous(onFulfilled, onRejected) {
             this._onThen();
-            return _get(Object.getPrototypeOf(LazyPromise.prototype), "then", this).call(this, onFulfilled, onRejected);
+            return _get(Object.getPrototypeOf(LazyPromise.prototype), "thenSynchronous", this).call(this, onFulfilled, onRejected);
         }
     }, {
         key: "thenThis",
@@ -727,34 +601,6 @@ var LazyPromise = function (_Promise) {
 exports.LazyPromise = LazyPromise;
 var pools;
 (function (pools) {
-    var pending;
-    (function (pending) {
-        var pool;
-        function getPool() {
-            return pool || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
-                return c.dispose();
-            }));
-        }
-        function factory() {
-            return new Promise();
-        }
-        function get() {
-            var p = getPool().take();
-            p.__wasDisposed = false;
-            p._state = Promise.State.Pending;
-            return p;
-        }
-        pending.get = get;
-        function recycle(c) {
-            if (c) getPool().add(c);
-        }
-        pending.recycle = recycle;
-    })(pending = pools.pending || (pools.pending = {}));
-    function recycle(c) {
-        if (!c) return;
-        if (c instanceof Promise && c.constructor == Promise) pending.recycle(c);else c.dispose();
-    }
-    pools.recycle = recycle;
     var PromiseCallbacks;
     (function (PromiseCallbacks) {
         var pool;
@@ -804,14 +650,10 @@ var pools;
         if (!promises.length || promises.every(function (v) {
             return !v;
         })) return new Fulfilled(promises);
-        var len = promises.length;
-        for (var i = 0; i < len; i++) {
-            var p = promises[i];
-            if (p instanceof SubsequentDeferred) promises[i] = p.parent;
-        }
         return pending(function (resolve, reject) {
             var checkedAll = false;
             var result = [];
+            var len = promises.length;
             result.length = len;
             var remaining = new Set_1.Set(promises.map(function (v, i) {
                 return i;
@@ -846,16 +688,16 @@ var pools;
                 }
             };
 
-            var _loop = function _loop(_i) {
-                var p = promises[_i];
+            var _loop = function _loop(i) {
+                var p = promises[i];
                 if (p) p.then(function (v) {
-                    return onFulfill(v, _i);
-                }, onReject);else remaining.remove(_i);
+                    return onFulfill(v, i);
+                }, onReject);else remaining.remove(i);
                 checkIfShouldResolve();
             };
 
-            for (var _i = 0; remaining && _i < len; _i++) {
-                _loop(_i);
+            for (var i = 0; remaining && i < len; i++) {
+                _loop(i);
             }
         });
     }
@@ -870,14 +712,10 @@ var pools;
             return v != null;
         })).length) throw new ArgumentException_1.ArgumentException("Nothing to wait for.");
         var len = promises.length;
-        if (len == 1) return wrap(promises[0]).defer();
+        if (len == 1) return wrap(promises[0]);
         for (var i = 0; i < len; i++) {
             var p = promises[i];
-            if (p instanceof Task) {
-                if (p.isCompleted) return p.defer();
-            } else if (p instanceof Resolved || p instanceof PromiseBase && p.isSettled) {
-                return p.defer();
-            }
+            if (p instanceof PromiseBase && p.isSettled) return p;
         }
         return pending(function (resolve, reject) {
             var cleanup = function cleanup() {
@@ -934,17 +772,10 @@ var pools;
         return new Rejected(reason);
     }
     Promise.reject = reject;
-    var lazy;
-    (function (lazy) {
-        function resolve(factory) {
-            return new Task(factory);
-        }
-        lazy.resolve = resolve;
-        function pending(resolver) {
-            return new LazyPromise(resolver);
-        }
-        lazy.pending = pending;
-    })(lazy = Promise.lazy || (Promise.lazy = {}));
+    function lazy(resolver) {
+        return new LazyPromise(resolver);
+    }
+    Promise.lazy = lazy;
     function wrap(target) {
         if (!target) throw new ArgumentNullException_1.ArgumentNullException(TARGET);
         return target instanceof Promise ? this : new PromiseWrapper(target);
@@ -956,9 +787,7 @@ var pools;
     }
     Promise.createFrom = createFrom;
     function pending(resolver) {
-        var p = pools.pending.get();
-        if (resolver) p.resolveUsing(resolver);
-        return p;
+        return new Promise(resolver);
     }
     Promise.pending = pending;
 })(Promise = exports.Promise || (exports.Promise = {}));

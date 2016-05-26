@@ -5,16 +5,20 @@
 
 import {DisposableBase} from "../../Disposable/DisposableBase";
 import {ICancellable} from "../ICancellable";
+import {TaskStatus} from "./TaskStatus";
 
 /**
  * A simple class for handling potentially repeated executions either deferred or immediate.
  */
 export abstract class TaskHandlerBase extends DisposableBase implements ICancellable
 {
+	private _status:TaskStatus;
+
 	constructor()
 	{
 		super();
 		this._timeoutId = null;
+		this._status = TaskStatus.Created
 	}
 
 	private _timeoutId:any;
@@ -30,7 +34,10 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 	 */
 	start(defer?:number):void
 	{
+		this.throwIfDisposed();
+
 		this.cancel();
+		this._status = TaskStatus.WaitingToRun;
 		if(!(defer>0)) defer = 0;
 		if(isFinite(defer))
 			this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
@@ -38,15 +45,34 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 
 	runSynchronously():void
 	{
-		this.cancel();
-		this._onExecute();
+		this.throwIfDisposed();
+		TaskHandlerBase._handler(this);
+	}
+
+	protected getStatus():TaskStatus
+	{
+		return this._status;
+	}
+
+	get status():TaskStatus
+	{
+		return this.getStatus();
 	}
 
 	// Use a static function here to avoid recreating a new function every time.
 	private static _handler(d:TaskHandlerBase):void
 	{
 		d.cancel();
-		d._onExecute();
+		d._status = TaskStatus.Running;
+		try
+		{
+			d._onExecute();
+			d._status = TaskStatus.RanToCompletion;
+		}
+		catch(ex)
+		{
+			d._status = TaskStatus.Faulted;
+		}
 	}
 
 	protected abstract _onExecute():void;
@@ -54,6 +80,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 	protected _onDispose():void
 	{
 		this.cancel();
+		this._status = null;
 	}
 
 	cancel():boolean
@@ -63,6 +90,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 		{
 			clearTimeout(id);
 			this._timeoutId = null;
+			this._status = TaskStatus.Cancelled;
 			return true;
 		}
 		return false;

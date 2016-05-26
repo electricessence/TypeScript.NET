@@ -23,10 +23,9 @@ var linkedListPool;
 function linkedNodeList(recycle) {
     if (!linkedListPool)
         linkedListPool
-            = new ObjectPool(20, () => new LinkedNodeList());
+            = new ObjectPool(20, () => new LinkedNodeList(), r => r.clear());
     if (!recycle)
         return linkedListPool.take();
-    recycle.clear();
     linkedListPool.add(recycle);
 }
 function callHasOwnProperty(target, key) {
