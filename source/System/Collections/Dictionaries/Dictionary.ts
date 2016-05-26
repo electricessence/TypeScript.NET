@@ -45,9 +45,8 @@ function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>
 {
 	if(!linkedListPool)
 		linkedListPool
-			= new ObjectPool<LinkedNodeList<any>>(20, ()=>new LinkedNodeList<any>());
+			= new ObjectPool<LinkedNodeList<any>>(20, ()=>new LinkedNodeList<any>(), r=>r.clear());
 	if(!recycle) return linkedListPool.take();
-	recycle.clear();
 	linkedListPool.add(recycle);
 }
 

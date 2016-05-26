@@ -5,7 +5,7 @@
 
 
 import {ICancellable} from "./ICancellable";
-import {Closure} from "../FunctionTypes";
+import {Closure, Func} from "../FunctionTypes";
 abstract class DeferBase implements ICancellable
 {
 	// It may be a Timer in node, should not be restricted to number.
@@ -23,11 +23,11 @@ class Defer extends DeferBase
 {
 
 
-	constructor(task:Closure, delay?:number)
+	constructor(task:Function, delay?:number, payload?:any)
 	{
 		super();
 		if(!(delay>0)) delay = 0; // covers undefined and null.
-		this._id = setTimeout(Defer.handler, delay, task, this);
+		this._id = setTimeout(Defer.handler, delay, task, this, payload);
 	}
 
 	cancel():boolean
@@ -43,10 +43,10 @@ class Defer extends DeferBase
 	}
 
 	// Use a static function here to avoid recreating a new function every time.
-	private static handler(task:Function, d:Defer):void
+	private static handler(task:Function, d:Defer, payload?:any):void
 	{
 		d.cancel();
-		task();
+		task(payload);
 	}
 
 }
@@ -92,9 +92,19 @@ class DeferInterval extends DeferBase
 
 export function defer(
 	task:Closure,
-	delay?:number):ICancellable
+	delay?:number):ICancellable;
+
+export function defer<T>(
+	task:Func<T>,
+	delay?:number,
+	payload?:T):ICancellable
+
+export function defer<T>(
+	task:Function,
+	delay?:number,
+	payload?:any):ICancellable
 {
-	return new Defer(task, delay);
+	return new Defer(task, delay, payload);
 }
 
 export function interval(

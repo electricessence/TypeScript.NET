@@ -21,9 +21,8 @@ function yielder(recycle?:Yielder<any>):Yielder<any>
 {
 	if(!yielderPool)
 		yielderPool
-			= new ObjectPool<Yielder<any>>(40, ()=>new Yielder<any>());
+			= new ObjectPool<Yielder<any>>(40, ()=>new Yielder<any>(),y=>y.yieldBreak());
 	if(!recycle) return yielderPool.take();
-	recycle.yieldBreak();
 	yielderPool.add(recycle);
 }
 

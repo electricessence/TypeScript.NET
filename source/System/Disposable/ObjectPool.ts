@@ -7,7 +7,7 @@
 
 import {dispose} from "./dispose";
 import {DisposableBase} from "./DisposableBase";
-import {TaskHandler} from "../Tasks/TaskHandler";
+import {TaskHandler} from "../Threading/Tasks/TaskHandler";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
 
 const
@@ -38,7 +38,8 @@ export class ObjectPool<T> extends DisposableBase
 
 	constructor(
 		private _maxSize:number,
-		private _generator:()=>T)
+		private _generator:(...args:any[])=>T,
+		private _recycler?:(o:T)=>void)
 	{
 		super();
 		if(isNaN(_maxSize) || _maxSize<1)
@@ -92,7 +93,7 @@ export class ObjectPool<T> extends DisposableBase
 	trim(defer?:number):void
 	{
 		this.throwIfDisposed();
-		this._trimmer.execute(defer);
+		this._trimmer.start(defer);
 	}
 
 	protected _clear():void
@@ -113,7 +114,7 @@ export class ObjectPool<T> extends DisposableBase
 	clear(defer?:number):void
 	{
 		this.throwIfDisposed();
-		this._flusher.execute(defer);
+		this._flusher.start(defer);
 	}
 
 	toArrayAndClear():T[]
@@ -141,6 +142,7 @@ export class ObjectPool<T> extends DisposableBase
 		super._onDispose();
 		var _ = this;
 		_._generator = null;
+		_._recycler = null;
 		dispose(
 			_._trimmer,
 			_._flusher,
@@ -160,7 +162,7 @@ export class ObjectPool<T> extends DisposableBase
 		_.throwIfDisposed();
 		var t = _.autoClearTimeout;
 		if(isFinite(t) && !_._autoFlusher.isScheduled)
-			_._autoFlusher.execute(t);
+			_._autoFlusher.start(t);
 	}
 
 	add(o:T):void
@@ -174,10 +176,11 @@ export class ObjectPool<T> extends DisposableBase
 		}
 		else
 		{
+			if(_._recycler) _._recycler(o);
 			_._pool.push(o);
 			var m = _._maxSize;
 			if(m<ABSOLUTE_MAX_SIZE && _._pool.length>m)
-				_._trimmer.execute(500);
+				_._trimmer.start(500);
 		}
 		_.extendAutoClear();
 

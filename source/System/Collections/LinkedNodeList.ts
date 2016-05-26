@@ -279,7 +279,11 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		}
 
 		var removed = !a && !b;
-		if(removed) _.unsafeCount--;
+		if(removed) {
+			_.unsafeCount--;
+			node.previous = null;
+			node.next = null;
+		}
 		return removed;
 
 	}

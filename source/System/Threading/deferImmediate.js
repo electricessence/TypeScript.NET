@@ -8,24 +8,25 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Collections/LinkedNodeList", "../Collections/Queue"], factory);
+        define(["require", "exports", "../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
     var Queue_1 = require("../Collections/Queue");
+    var ObjectPool_1 = require("../Disposable/ObjectPool");
     var requestTick;
     var isNodeJS = false;
     var flushing = false;
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
-            var task_1 = entry.task, domain = entry.domain;
-            immediateQueue.removeNode(entry);
+            var task_1 = entry.task, domain = entry.domain, context = entry.context, args = entry.args;
+            entry.canceller();
             if (domain)
                 domain.enter();
-            runSingle(task_1, domain);
+            runSingle(task_1, domain, context, args);
         }
         var task;
         while (task = laterQueue.dequeue()) {
@@ -35,9 +36,18 @@
     }
     var immediateQueue = new LinkedNodeList_1.LinkedNodeList();
     var laterQueue = new Queue_1.Queue();
-    function runSingle(task, domain) {
+    var entryPool = new ObjectPool_1.ObjectPool(40, function () { return {}; }, function (o) {
+        o.task = null;
+        o.domain = null;
+        o.context = null;
+        if (o.args)
+            o.args.length = 0;
+        o.args = null;
+        o.canceller = null;
+    });
+    function runSingle(task, domain, context, params) {
         try {
-            task();
+            task.apply(context, params);
         }
         catch (e) {
             if (isNodeJS) {
@@ -66,17 +76,25 @@
             requestTick();
         }
     }
-    function deferImmediate(task) {
-        var _this = this;
-        var entry = {
-            task: task,
-            domain: isNodeJS && process['domain']
+    function deferImmediate(task, context, args) {
+        var entry = entryPool.take();
+        entry.task = task;
+        entry.domain = isNodeJS && process['domain'];
+        entry.context = context;
+        entry.args = args && args.slice();
+        entry.canceller = function () {
+            if (!entry)
+                return false;
+            var r = !!immediateQueue.removeNode(entry);
+            entryPool.add(entry);
+            entry = null;
+            return r;
         };
         immediateQueue.addNode(entry);
         requestFlush();
         return {
-            cancel: function () { return !!immediateQueue.removeNode(entry); },
-            dispose: function () { _this.cancel(); }
+            cancel: entry.canceller,
+            dispose: function () { entry && entry.canceller(); }
         };
     }
     exports.deferImmediate = deferImmediate;

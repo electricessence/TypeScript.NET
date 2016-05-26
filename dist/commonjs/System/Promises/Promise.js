@@ -17,8 +17,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Types_1 = require("../Types");
-var deferImmediate_1 = require("../Tasks/deferImmediate");
-var defer_1 = require("../Tasks/defer");
+var deferImmediate_1 = require("../Threading/deferImmediate");
+var defer_1 = require("../Threading/defer");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
@@ -169,7 +169,9 @@ var PromiseBase = function (_PromiseState) {
         }
     }, {
         key: "delay",
-        value: function delay(milliseconds) {
+        value: function delay() {
+            var milliseconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
             this.throwIfDisposed();
             var p = Promise.pending();
             defer_1.defer(pass(this, p), milliseconds);
@@ -597,23 +599,23 @@ var SubsequentDeferred = function (_PromiseBase2) {
     return SubsequentDeferred;
 }(PromiseBase);
 
-var LazyResolved = function (_Resolved3) {
-    _inherits(LazyResolved, _Resolved3);
+var Task = function (_Resolved3) {
+    _inherits(Task, _Resolved3);
 
-    function LazyResolved(_factory) {
-        _classCallCheck(this, LazyResolved);
+    function Task(_factory) {
+        _classCallCheck(this, Task);
 
-        var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(LazyResolved).call(this, Promise.State.Pending, VOID0));
+        var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(Task).call(this, Promise.State.Pending, VOID0));
 
         _this11._factory = _factory;
         if (!_factory) throw new ArgumentNullException_1.ArgumentNullException("factory");
         return _this11;
     }
 
-    _createClass(LazyResolved, [{
+    _createClass(Task, [{
         key: "_onDispose",
         value: function _onDispose() {
-            _get(Object.getPrototypeOf(LazyResolved.prototype), "_onDispose", this).call(this);
+            _get(Object.getPrototypeOf(Task.prototype), "_onDispose", this).call(this);
             this._factory = VOID0;
         }
     }, {
@@ -648,14 +650,14 @@ var LazyResolved = function (_Resolved3) {
         value: function then(onFulfilled, onRejected) {
             this.throwIfDisposed();
             this.getResult();
-            return _get(Object.getPrototypeOf(LazyResolved.prototype), "then", this).call(this, onFulfilled, onRejected);
+            return _get(Object.getPrototypeOf(Task.prototype), "then", this).call(this, onFulfilled, onRejected);
         }
     }, {
         key: "thenThis",
         value: function thenThis(onFulfilled, onRejected) {
             this.throwIfDisposed();
             this.getResult();
-            return _get(Object.getPrototypeOf(LazyResolved.prototype), "thenThis", this).call(this, onFulfilled, onRejected);
+            return _get(Object.getPrototypeOf(Task.prototype), "thenThis", this).call(this, onFulfilled, onRejected);
         }
     }, {
         key: "resolve",
@@ -664,16 +666,16 @@ var LazyResolved = function (_Resolved3) {
             return this;
         }
     }, {
-        key: "isResolved",
+        key: "isCompleted",
         get: function get() {
             return !this._factory;
         }
     }]);
 
-    return LazyResolved;
+    return Task;
 }(Resolved);
 
-exports.LazyResolved = LazyResolved;
+exports.Task = Task;
 
 var LazyPromise = function (_Promise) {
     _inherits(LazyPromise, _Promise);
@@ -729,7 +731,9 @@ var pools;
     (function (pending) {
         var pool;
         function getPool() {
-            return pool || (pool = new ObjectPool_1.ObjectPool(40, factory));
+            return pool || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
+                return c.dispose();
+            }));
         }
         function factory() {
             return new Promise();
@@ -742,22 +746,24 @@ var pools;
         }
         pending.get = get;
         function recycle(c) {
-            if (!c) return;
-            c.dispose();
-            getPool().add(c);
+            if (c) getPool().add(c);
         }
         pending.recycle = recycle;
     })(pending = pools.pending || (pools.pending = {}));
     function recycle(c) {
         if (!c) return;
-        if (c instanceof Promise) pending.recycle(c);else c.dispose();
+        if (c instanceof Promise && c.constructor == Promise) pending.recycle(c);else c.dispose();
     }
     pools.recycle = recycle;
     var PromiseCallbacks;
     (function (PromiseCallbacks) {
         var pool;
         function getPool() {
-            return pool || (pool = new ObjectPool_1.ObjectPool(40, factory));
+            return pool || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
+                c.onFulfilled = null;
+                c.onRejected = null;
+                c.promise = null;
+            }));
         }
         function factory() {
             return {
@@ -775,9 +781,6 @@ var pools;
         }
         PromiseCallbacks.init = init;
         function recycle(c) {
-            c.onFulfilled = null;
-            c.onRejected = null;
-            c.promise = null;
             getPool().add(c);
         }
         PromiseCallbacks.recycle = recycle;
@@ -870,9 +873,8 @@ var pools;
         if (len == 1) return wrap(promises[0]).defer();
         for (var i = 0; i < len; i++) {
             var p = promises[i];
-            if (p instanceof SubsequentDeferred) p = p.parent;
-            if (p instanceof LazyResolved) {
-                if (p.isResolved) return p.defer();
+            if (p instanceof Task) {
+                if (p.isCompleted) return p.defer();
             } else if (p instanceof Resolved || p instanceof PromiseBase && p.isSettled) {
                 return p.defer();
             }
@@ -935,7 +937,7 @@ var pools;
     var lazy;
     (function (lazy) {
         function resolve(factory) {
-            return new LazyResolved(factory);
+            return new Task(factory);
         }
         lazy.resolve = resolve;
         function pending(resolver) {

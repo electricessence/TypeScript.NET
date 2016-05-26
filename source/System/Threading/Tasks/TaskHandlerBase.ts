@@ -3,43 +3,43 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-import {DisposableBase} from "../Disposable/DisposableBase";
-import {ICancellable} from "./ICancellable";
+import {DisposableBase} from "../../Disposable/DisposableBase";
+import {ICancellable} from "../ICancellable";
 
 /**
  * A simple class for handling potentially repeated executions either deferred or immediate.
  */
-export abstract class TaskHandlerBase
-extends DisposableBase implements ICancellable
+export abstract class TaskHandlerBase extends DisposableBase implements ICancellable
 {
 	constructor()
 	{
 		super();
-		this._id = null;
+		this._timeoutId = null;
 	}
 
-	protected _id:any;
+	private _timeoutId:any;
 
-	get isScheduled():boolean {
-		return !!this._id;
+	get isScheduled():boolean
+	{
+		return !!this._timeoutId;
 	}
 
 	/**
 	 * Schedules/Reschedules triggering the task.
-	 * If defer is omitted it is called synchronously.
 	 * @param defer Optional time to wait until triggering.
 	 */
-	execute(defer?:number):void
+	start(defer?:number):void
 	{
 		this.cancel();
-		if(isNaN(defer) || defer<0)
-		{
-			this._onExecute();
-		}
-		else if(isFinite(defer))
-		{
-			this._id = setTimeout(TaskHandlerBase._handler, defer, this);
-		}
+		if(!(defer>0)) defer = 0;
+		if(isFinite(defer))
+			this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
+	}
+
+	runSynchronously():void
+	{
+		this.cancel();
+		this._onExecute();
 	}
 
 	// Use a static function here to avoid recreating a new function every time.
@@ -58,11 +58,11 @@ extends DisposableBase implements ICancellable
 
 	cancel():boolean
 	{
-		var id = this._id;
+		var id = this._timeoutId;
 		if(id)
 		{
 			clearTimeout(id);
-			this._id = null;
+			this._timeoutId = null;
 			return true;
 		}
 		return false;

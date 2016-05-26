@@ -52,7 +52,7 @@ export declare class Promise<T> extends Resolvable<T> {
     resolve(result?: T, throwIfSettled?: boolean): void;
     reject(error: any, throwIfSettled?: boolean): void;
 }
-export declare class LazyResolved<T> extends Resolved<T> {
+export declare class Task<T> extends Resolved<T> {
     private _factory;
     constructor(_factory: Func<T>);
     protected _onDispose(): void;
@@ -61,8 +61,8 @@ export declare class LazyResolved<T> extends Resolved<T> {
     protected getError(): any;
     then<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     thenThis<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<T>;
-    resolve(): PromiseBase<T>;
-    isResolved: boolean;
+    resolve(): Task<T>;
+    isCompleted: boolean;
 }
 export declare class LazyPromise<T> extends Promise<T> {
     private _resolver;
@@ -99,7 +99,7 @@ export declare module Promise {
     function resolve<T>(value: T | PromiseLike<T>): PromiseBase<T>;
     function reject<T>(reason: T): PromiseBase<T>;
     module lazy {
-        function resolve<T>(factory: Func<T>): LazyResolved<T>;
+        function resolve<T>(factory: Func<T>): Task<T>;
         function pending<T>(resolver: Promise.Executor<T>): LazyPromise<T>;
     }
     function wrap<T>(target: PromiseLike<T>): PromiseBase<T>;

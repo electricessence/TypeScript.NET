@@ -25,10 +25,9 @@ var __extends = (this && this.__extends) || function (d, b) {
     function yielder(recycle) {
         if (!yielderPool)
             yielderPool
-                = new ObjectPool_1.ObjectPool(40, function () { return new Yielder(); });
+                = new ObjectPool_1.ObjectPool(40, function () { return new Yielder(); }, function (y) { return y.yieldBreak(); });
         if (!recycle)
             return yielderPool.take();
-        recycle.yieldBreak();
         yielderPool.add(recycle);
     }
     var Yielder = (function () {

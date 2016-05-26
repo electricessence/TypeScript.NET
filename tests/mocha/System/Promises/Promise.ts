@@ -3,7 +3,7 @@
 import {Promise, PromiseBase} from "../../../../source/System/Promises/Promise";
 import * as AU from "../../../../source/System/Collections/Array/Utility";
 import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
-import {defer} from "../../../../source/System/Tasks/defer";
+import {defer} from "../../../../source/System/Threading/defer";
 var assert = require('../../../../node_modules/assert/assert');
 
 

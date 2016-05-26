@@ -4,8 +4,8 @@
  */
 
 import {TaskHandlerBase} from "./TaskHandlerBase";
-import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
-import {Closure} from "../FunctionTypes";
+import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
+import {Closure} from "../../FunctionTypes";
 
 export class TaskHandler extends TaskHandlerBase {
 	

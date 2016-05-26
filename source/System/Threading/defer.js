@@ -26,11 +26,11 @@ var __extends = (this && this.__extends) || function (d, b) {
     }());
     var Defer = (function (_super) {
         __extends(Defer, _super);
-        function Defer(task, delay) {
+        function Defer(task, delay, payload) {
             _super.call(this);
             if (!(delay > 0))
                 delay = 0;
-            this._id = setTimeout(Defer.handler, delay, task, this);
+            this._id = setTimeout(Defer.handler, delay, task, this, payload);
         }
         Defer.prototype.cancel = function () {
             var id = this._id;
@@ -41,9 +41,9 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return false;
         };
-        Defer.handler = function (task, d) {
+        Defer.handler = function (task, d, payload) {
             d.cancel();
-            task();
+            task(payload);
         };
         return Defer;
     }(DeferBase));
@@ -75,8 +75,8 @@ var __extends = (this && this.__extends) || function (d, b) {
         };
         return DeferInterval;
     }(DeferBase));
-    function defer(task, delay) {
-        return new Defer(task, delay);
+    function defer(task, delay, payload) {
+        return new Defer(task, delay, payload);
     }
     exports.defer = defer;
     function interval(task, interval, count) {

@@ -18,7 +18,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var dispose_1 = require("./dispose");
 var DisposableBase_1 = require("./DisposableBase");
-var TaskHandler_1 = require("../Tasks/TaskHandler");
+var TaskHandler_1 = require("../Threading/Tasks/TaskHandler");
 var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
 var OBJECT_POOL = "ObjectPool",
     _MAX_SIZE = "_maxSize",
@@ -29,13 +29,14 @@ var OBJECT_POOL = "ObjectPool",
 var ObjectPool = function (_DisposableBase_1$Dis) {
     _inherits(ObjectPool, _DisposableBase_1$Dis);
 
-    function ObjectPool(_maxSize, _generator) {
+    function ObjectPool(_maxSize, _generator, _recycler) {
         _classCallCheck(this, ObjectPool);
 
         var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ObjectPool).call(this));
 
         _this._maxSize = _maxSize;
         _this._generator = _generator;
+        _this._recycler = _recycler;
         _this.autoClearTimeout = 5000;
         if (isNaN(_maxSize) || _maxSize < 1) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
         if (_maxSize > ABSOLUTE_MAX_SIZE) throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_LTM);
@@ -66,7 +67,7 @@ var ObjectPool = function (_DisposableBase_1$Dis) {
         key: "trim",
         value: function trim(defer) {
             this.throwIfDisposed();
-            this._trimmer.execute(defer);
+            this._trimmer.start(defer);
         }
     }, {
         key: "_clear",
@@ -83,7 +84,7 @@ var ObjectPool = function (_DisposableBase_1$Dis) {
         key: "clear",
         value: function clear(defer) {
             this.throwIfDisposed();
-            this._flusher.execute(defer);
+            this._flusher.start(defer);
         }
     }, {
         key: "toArrayAndClear",
@@ -107,6 +108,7 @@ var ObjectPool = function (_DisposableBase_1$Dis) {
             _get(Object.getPrototypeOf(ObjectPool.prototype), "_onDispose", this).call(this);
             var _ = this;
             _._generator = null;
+            _._recycler = null;
             dispose_1.dispose(_._trimmer, _._flusher, _._autoFlusher);
             _._trimmer = null;
             _._flusher = null;
@@ -120,7 +122,7 @@ var ObjectPool = function (_DisposableBase_1$Dis) {
             var _ = this;
             _.throwIfDisposed();
             var t = _.autoClearTimeout;
-            if (isFinite(t) && !_._autoFlusher.isScheduled) _._autoFlusher.execute(t);
+            if (isFinite(t) && !_._autoFlusher.isScheduled) _._autoFlusher.start(t);
         }
     }, {
         key: "add",
@@ -130,9 +132,10 @@ var ObjectPool = function (_DisposableBase_1$Dis) {
             if (_._pool.length >= _._localAbsMaxSize) {
                 dispose_1.dispose(o);
             } else {
+                if (_._recycler) _._recycler(o);
                 _._pool.push(o);
                 var m = _._maxSize;
-                if (m < ABSOLUTE_MAX_SIZE && _._pool.length > m) _._trimmer.execute(500);
+                if (m < ABSOLUTE_MAX_SIZE && _._pool.length > m) _._trimmer.start(500);
             }
             _.extendAutoClear();
         }

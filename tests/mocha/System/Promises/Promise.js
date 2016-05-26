@@ -3,14 +3,14 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../../../source/System/Promises/Promise", "../../../../source/System/Collections/Array/Utility", "../../../../source/System/Diagnostics/Stopwatch", "../../../../source/System/Tasks/defer"], factory);
+        define(["require", "exports", "../../../../source/System/Promises/Promise", "../../../../source/System/Collections/Array/Utility", "../../../../source/System/Diagnostics/Stopwatch", "../../../../source/System/Threading/defer"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Promise_1 = require("../../../../source/System/Promises/Promise");
     var AU = require("../../../../source/System/Collections/Array/Utility");
     var Stopwatch_1 = require("../../../../source/System/Diagnostics/Stopwatch");
-    var defer_1 = require("../../../../source/System/Tasks/defer");
+    var defer_1 = require("../../../../source/System/Threading/defer");
     var assert = require('../../../../node_modules/assert/assert');
     var REASON = "this is not an error, but it might show up in the console";
     var calledAsFunctionThis = (function () { return this; }());
@@ -286,4 +286,5 @@
         });
     });
 });
+
 //# sourceMappingURL=Promise.js.map

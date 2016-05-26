@@ -13,8 +13,8 @@
 
 import Type from "../Types";
 import {Closure, Func} from "../FunctionTypes";
-import {deferImmediate} from "../Tasks/deferImmediate";
-import {defer} from "../Tasks/defer";
+import {deferImmediate} from "../Threading/deferImmediate";
+import {defer} from "../Threading/defer";
 import {DisposableBase} from "../Disposable/DisposableBase";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {ArgumentException} from "../Exceptions/ArgumentException";
@@ -207,6 +207,8 @@ extends PromiseState<T> implements PromiseLike<T>
 
 	/**
 	 * Ensures any immediately following then requests will occur on next cycle or later.
+	 * Is somewhat analogous to calling Thread.Yield() .NET.
+	 * Calling .defer() uses process.nextTick() otherwise uses setTimeout.
 	 * @returns A promise that yields to the current execution and executes after.
 	 */
 	defer():PromiseBase<T>
@@ -218,7 +220,13 @@ extends PromiseState<T> implements PromiseLike<T>
 		return p;
 	}
 
-	delay(milliseconds?:number):PromiseBase<T>
+	/**
+	 * Same as defer but will yield for a number of milliseconds.
+	 * Calling .delay() is the same as calling .delay(0) and uses setTimeout to delay the execution.
+	 * @param milliseconds
+	 * @returns A promise that yields to the current execution and executes after a delay.
+	 */
+	delay(milliseconds:number = 0):PromiseBase<T>
 	{
 		this.throwIfDisposed();
 
@@ -677,7 +685,7 @@ class SubsequentDeferred<T> extends PromiseBase<T>
  * This promise class only resolves the provided factory if values are requested or state is queried.
  * It is considered resolved since the resolution will be generated synchronously.
  */
-export class LazyResolved<T> extends Resolved<T>
+export class Task<T> extends Resolved<T>
 {
 	constructor(private _factory:Func<T>)
 	{
@@ -744,15 +752,15 @@ export class LazyResolved<T> extends Resolved<T>
 
 	/**
 	 * This allows for synchronously triggering the factory ahead of time since calling .defer() shouldn't trigger it.
-	 * @returns {LazyResolved}
+	 * @returns {Task}
 	 */
-	resolve():PromiseBase<T>
+	resolve():Task<T>
 	{
 		this.getResult();
 		return this;
 	}
 
-	get isResolved():boolean
+	get isCompleted():boolean
 	{
 		return !this._factory;
 	}
@@ -817,7 +825,7 @@ module pools
 
 		function getPool()
 		{
-			return pool || (pool = new ObjectPool<Promise<any>>(40, factory));
+			return pool || (pool = new ObjectPool<Promise<any>>(40, factory, c=>c.dispose()));
 		}
 
 		function factory():Promise<any>
@@ -835,9 +843,7 @@ module pools
 
 		export function recycle<T>(c:Promise<T>):void
 		{
-			if(!c) return;
-			c.dispose();
-			getPool().add(c);
+			if(c) getPool().add(c);
 		}
 
 	}
@@ -845,7 +851,7 @@ module pools
 	export function recycle<T>(c:PromiseBase<T>):void
 	{
 		if(!c) return;
-		if(c instanceof Promise) pending.recycle(c);
+		if(c instanceof Promise && c.constructor==Promise) pending.recycle(c);
 		else c.dispose();
 	}
 
@@ -857,7 +863,13 @@ module pools
 
 		function getPool()
 		{
-			return pool || (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory));
+			return pool
+				|| (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory, c=>
+				{
+					c.onFulfilled = null;
+					c.onRejected = null;
+					c.promise = null;
+				}));
 		}
 
 		function factory():IPromiseCallbacks<any>
@@ -884,9 +896,6 @@ module pools
 
 		export function recycle<T>(c:IPromiseCallbacks<T>):void
 		{
-			c.onFulfilled = null;
-			c.onRejected = null;
-			c.promise = null;
 			getPool().add(c);
 		}
 	}
@@ -1046,11 +1055,11 @@ export module Promise
 		for(let i = 0; i<len; i++)
 		{
 			var p:any = promises[i];
-			if(p instanceof SubsequentDeferred) p = p.parent;
-			if(p instanceof LazyResolved)
+			//if(p instanceof SubsequentDeferred) p = p.parent;
+			if(p instanceof Task)
 			{
-				// If a a LazyResolved has resolved, then it wins otherwise let it defer and not (potentially) block.
-				if(p.isResolved) return p.defer();
+				// If a a Task has resolved, then it wins otherwise let it defer and not (potentially) block.
+				if(p.isCompleted) return p.defer();
 			}
 			else if(p instanceof Resolved || p instanceof PromiseBase && p.isSettled)
 			{
@@ -1123,9 +1132,9 @@ export module Promise
 		 * Provides a promise that will be resolved immediately at the first 'then' request.
 		 * @param factory
 		 */
-		export function resolve<T>(factory:Func<T>):LazyResolved<T>
+		export function resolve<T>(factory:Func<T>):Task<T>
 		{
-			return new LazyResolved<T>(factory);
+			return new Task<T>(factory);
 		}
 
 
@@ -1173,7 +1182,6 @@ export module Promise
 		return p;
 	}
 
-	//export function all()
 
 }
 

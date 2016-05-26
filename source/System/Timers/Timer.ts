@@ -4,7 +4,7 @@
  */
 
 
-import {ICancellable} from "../Tasks/ICancellable";
+import {ICancellable} from "../Threading/ICancellable";
 import {ObservableBase} from "../Observable/ObservableBase";
 import {ITimer} from "./ITimer";
 

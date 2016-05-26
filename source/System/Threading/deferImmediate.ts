@@ -11,6 +11,7 @@ import {Queue} from "../Collections/Queue";
 import {Closure} from "../FunctionTypes";
 import {ILinkedNode} from "../Collections/ILinkedListNode";
 import {ICancellable} from "./ICancellable";
+import {ObjectPool} from "../Disposable/ObjectPool";
 
 declare module process
 {
@@ -27,8 +28,11 @@ interface IDomain
 
 interface ITaskQueueEntry extends ILinkedNode<ITaskQueueEntry>
 {
-	task:Closure;
+	task:Function;
 	domain?:IDomain;
+	context?:any;
+	args?:any[];
+	canceller:()=>boolean;
 }
 
 
@@ -46,10 +50,10 @@ function flush():void
 	var entry:ITaskQueueEntry;
 	while(entry = immediateQueue.first)
 	{
-		let {task, domain} = entry;
-		immediateQueue.removeNode(entry);
+		let {task, domain, context, args} = entry;
+		entry.canceller();
 		if(domain) domain.enter();
-		runSingle(task, domain);
+		runSingle(task, domain, context, args);
 	}
 
 	let task:Closure;
@@ -66,14 +70,25 @@ function flush():void
 var immediateQueue = new LinkedNodeList<ITaskQueueEntry>();
 
 // queue for late tasks, used by unhandled rejection tracking
-var laterQueue:Queue<Closure> = new Queue<Closure>();
+var laterQueue = new Queue<Closure>();
 
-function runSingle(task:Closure, domain?:IDomain):void
+var entryPool = new ObjectPool<ITaskQueueEntry>(40,
+	()=><any>{},
+	o=>
+	{
+		o.task = null;
+		o.domain = null;
+		o.context = null;
+		if(o.args) o.args.length = 0;
+		o.args = null;
+		o.canceller = null;
+	});
+
+function runSingle(task:Function, domain?:IDomain, context?:any, params?:any[]):void
 {
 	try
 	{
-		task();
-
+		task.apply(context, params);
 	}
 	catch(e)
 	{
@@ -124,11 +139,28 @@ function requestFlush():void
 	}
 }
 
-export function deferImmediate(task:Closure):ICancellable
+export function deferImmediate(task:Closure, context?:any):ICancellable
+/**
+ * @param task The function to call.
+ * @param context The context (aka this) to call on. Null or undefined = global.
+ * @param args The parameters to pass to the function.
+ * @returns {{cancel: (function(): boolean), dispose: (function(): undefined)}}
+ */
+export function deferImmediate(task:Function, context?:any, args?:any[]):ICancellable
+export function deferImmediate(task:Closure|Function, context?:any, args?:any[]):ICancellable
 {
-	var entry:ITaskQueueEntry = {
-		task: task,
-		domain: isNodeJS && (<any>process)['domain']
+	var entry:ITaskQueueEntry = entryPool.take();
+	entry.task = task;
+	entry.domain = isNodeJS && (<any>process)['domain'];
+	entry.context = context;
+	entry.args = args && args.slice();
+	entry.canceller = ()=>
+	{
+		if(!entry) return false;
+		let r = !!immediateQueue.removeNode(entry);
+		entryPool.add(entry);
+		entry = null;
+		return r;
 	};
 
 	immediateQueue.addNode(entry);
@@ -136,8 +168,8 @@ export function deferImmediate(task:Closure):ICancellable
 	requestFlush();
 
 	return {
-		cancel: ()=>!!immediateQueue.removeNode(entry),
-		dispose: ()=> { this.cancel(); }
+		cancel: entry.canceller,
+		dispose: ()=> { entry && entry.canceller(); }
 	}
 }
 
