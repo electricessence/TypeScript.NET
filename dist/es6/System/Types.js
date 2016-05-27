@@ -5,7 +5,7 @@
 const VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
 var typeInfoRegistry = {};
 export class TypeInfo {
-    constructor(target) {
+    constructor(target, onBeforeFreeze) {
         var _ = this;
         _.isBoolean = false;
         _.isNumber = false;
@@ -40,6 +40,7 @@ export class TypeInfo {
                     _.isPrimitive = true;
                 }
                 else {
+                    _.isArray = Array.isArray(target);
                     _.isObject = true;
                 }
                 break;
@@ -55,6 +56,8 @@ export class TypeInfo {
             default:
                 throw "Fatal type failure.  Unknown type: " + _.type;
         }
+        if (onBeforeFreeze)
+            onBeforeFreeze();
         Object.freeze(_);
     }
     member(name) {

@@ -12,7 +12,7 @@ System.register([], function(exports_1, context_1) {
             VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
             typeInfoRegistry = {};
             TypeInfo = (function () {
-                function TypeInfo(target) {
+                function TypeInfo(target, onBeforeFreeze) {
                     var _ = this;
                     _.isBoolean = false;
                     _.isNumber = false;
@@ -47,6 +47,7 @@ System.register([], function(exports_1, context_1) {
                                 _.isPrimitive = true;
                             }
                             else {
+                                _.isArray = Array.isArray(target);
                                 _.isObject = true;
                             }
                             break;
@@ -62,6 +63,8 @@ System.register([], function(exports_1, context_1) {
                         default:
                             throw "Fatal type failure.  Unknown type: " + _.type;
                     }
+                    if (onBeforeFreeze)
+                        onBeforeFreeze();
                     Object.freeze(_);
                 }
                 TypeInfo.prototype.member = function (name) {

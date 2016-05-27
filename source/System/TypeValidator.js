@@ -12,12 +12,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Types", "./Collections/Array/Compare"], factory);
+        define(["require", "exports", "./Types", "./Compare"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Types_1 = require("./Types");
-    var Compare_1 = require("./Collections/Array/Compare");
+    var Compare_1 = require("./Compare");
     var TypeValidator = (function (_super) {
         __extends(TypeValidator, _super);
         function TypeValidator(value) {
@@ -42,9 +42,14 @@ var __extends = (this && this.__extends) || function (d, b) {
                 case Boolean:
                     return this.isBoolean;
             }
-            if (this.type != typeof descriptor)
+            if (this.type != typeof descriptor || this.isPrimitive && !Compare_1.areEqual(value, descriptor))
                 return false;
             if (this.isArray && Array.isArray(descriptor)) {
+                var max = Math.min(descriptor.length, value.length);
+                for (var i = 0; i < max; i++) {
+                    if (areInvalid(value[i], descriptor[i]))
+                        return false;
+                }
                 return true;
             }
             if (this.isObject) {
@@ -59,11 +64,7 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }
                 for (var _a = 0, dKeys_2 = dKeys; _a < dKeys_2.length; _a++) {
                     var key = dKeys_2[_a];
-                    var v = value[key], d = descriptor[key];
-                    if (Compare_1.areEqual(v, d))
-                        continue;
-                    var memberType = new TypeValidator(value[key]);
-                    if (!memberType.contains(descriptor[key]))
+                    if (areInvalid(value[key], descriptor[key]))
                         return false;
                 }
             }
@@ -72,6 +73,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         return TypeValidator;
     }(Types_1.TypeInfo));
     exports.TypeValidator = TypeValidator;
+    function areInvalid(v, d) {
+        if (!Compare_1.areEqual(v, d)) {
+            var memberType = new TypeValidator(v);
+            if (!memberType.contains(d))
+                return true;
+        }
+        return false;
+    }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TypeValidator;
 });

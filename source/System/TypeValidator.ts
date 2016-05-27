@@ -19,23 +19,28 @@
  */
 
 import {TypeInfo} from "./Types";
-import {areEqual} from "./Collections/Array/Compare";
-export class TypeValidator extends TypeInfo {
+import {areEqual} from "./Compare";
+export class TypeValidator extends TypeInfo
+{
 
 	private _value:any;
-	constructor(value:any) {
-		super(value,()=>this._value = value);
+
+	constructor(value:any)
+	{
+		super(value, ()=>this._value = value);
 
 	}
 
-	contains<TDescriptor>(descriptor:any):this is TDescriptor {
+	contains<TDescriptor>(descriptor:any):this is TDescriptor
+	{
 
 		let value = this._value;
 
 		if(value===descriptor)
 			return true;
-		
-		switch (descriptor) {
+
+		switch(descriptor)
+		{
 			case Function:
 				return this.isFunction;
 			case Object:
@@ -49,16 +54,26 @@ export class TypeValidator extends TypeInfo {
 			case Boolean:
 				return this.isBoolean;
 		}
-		
-		if(this.type != typeof descriptor)
+
+		if(this.type != typeof descriptor || this.isPrimitive && !areEqual(value,descriptor))
 			return false;
 
-		// TODO: Fix later, ignore arrays for now...
-		if(this.isArray && Array.isArray(descriptor)) {
+		// Check array contents and confirm intersections.
+		if(this.isArray && Array.isArray(descriptor))
+		{
+			let max = Math.min(descriptor.length, value.length);
+
+			for(let i = 0; i<max; i++)
+			{
+				if(areInvalid(value[i], descriptor[i]))
+					return false;
+			}
+
 			return true;
 		}
 
-		if(this.isObject) {
+		if(this.isObject)
+		{
 			let targetKeys = Object.keys(value);
 			let dKeys = Object.keys(descriptor);
 
@@ -67,25 +82,34 @@ export class TypeValidator extends TypeInfo {
 				return false;
 
 			// Quick check #2...
-			for(let key of dKeys) {
-				if(targetKeys.indexOf(key)==-1)
+			for(let key of dKeys)
+			{
+				if(targetKeys.indexOf(key)== -1)
 					return false;
 			}
 
 			// Final pass with recursive...
-			// Quick check #2...
-			for(let key of dKeys) {
-				let v = value[key], d = descriptor[key];
-				if(areEqual(v,d)) continue;
-				let memberType = new TypeValidator(value[key]);
-				if(!memberType.contains(descriptor[key]))
+			for(let key of dKeys)
+			{
+				if(areInvalid(value[key], descriptor[key]))
 					return false;
 			}
 		}
 
 		return true;
 	}
-	
+
+}
+
+function areInvalid(v:any, d:any)
+{
+	if(!areEqual(v, d))
+	{
+		let memberType = new TypeValidator(v);
+		if(!memberType.contains(d))
+			return true;
+	}
+	return false;
 }
 
 export default TypeValidator;
