@@ -42,22 +42,14 @@ export declare abstract class Resolved<T> extends Resolvable<T> {
 }
 export declare class Promise<T> extends Resolvable<T> {
     private _waiting;
-    constructor(resolver?: Promise.Executor<T>);
+    constructor(resolver?: Promise.Executor<T>, forceSynchronous?: boolean);
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): PromiseBase<T>;
     protected _onDispose(): void;
     protected _resolvedCalled: boolean;
-    resolveUsing(resolver: Promise.Executor<T>, throwIfSettled?: boolean): void;
+    resolveUsing(resolver: Promise.Executor<T>, forceSynchronous?: boolean, throwIfSettled?: boolean): void;
     resolve(result?: T, throwIfSettled?: boolean): void;
     reject(error: any, throwIfSettled?: boolean): void;
-}
-export declare class LazyPromise<T> extends Promise<T> {
-    private _resolver;
-    constructor(_resolver: Promise.Executor<T>);
-    protected _onDispose(): void;
-    private _onThen();
-    thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
-    thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): PromiseBase<T>;
 }
 export declare module Promise {
     enum State {
@@ -85,8 +77,6 @@ export declare module Promise {
     function resolve(): PromiseBase<void>;
     function resolve<T>(value: T | PromiseLike<T>): PromiseBase<T>;
     function reject<T>(reason: T): PromiseBase<T>;
-    function lazy<T>(resolver: Promise.Executor<T>): LazyPromise<T>;
     function wrap<T>(target: PromiseLike<T>): PromiseBase<T>;
     function createFrom<T, TResult>(then: Then<T, TResult>): PromiseBase<T>;
-    function pending<T>(resolver?: Promise.Executor<T>): Promise<T>;
 }

@@ -13,7 +13,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1;
-    var VOID0, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, LazyPromise, pools;
+    var VOID0, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, pools;
     function isPromise(value) {
         return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
     }
@@ -24,20 +24,6 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
         return nextValue && isPromise(nextValue)
             ? Promise.wrap(nextValue)
             : promiseFactory(nextValue);
-    }
-    function pass(source, dest) {
-        return function () {
-            source.thenThis(function (v) {
-                dest.resolve(v);
-            }, function (e) {
-                dest.reject(e);
-            });
-        };
-    }
-    function passDelayed(source, dest, ms) {
-        return function () {
-            source.thenThis(function (v) { return defer_1.defer(function () { return dest.resolve(v); }, ms); }, function (e) { return defer_1.defer(function () { return dest.reject(e); }, ms); });
-        };
     }
     function handleResolution(p, value, resolver) {
         try {
@@ -182,25 +168,31 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 }
                 PromiseBase.prototype.then = function (onFulfilled, onRejected) {
                     var _this = this;
-                    return Promise.pending(function (resolve, reject) {
+                    return new Promise(function (resolve, reject) {
                         _this.thenThis(function (result) { return handleResolutionMethods(resolve, reject, result, onFulfilled); }, function (error) { return onRejected
                             ? handleResolutionMethods(resolve, null, error, onRejected)
                             : reject(error); });
                     });
                 };
                 PromiseBase.prototype.delayFromNow = function (milliseconds) {
+                    var _this = this;
                     if (milliseconds === void 0) { milliseconds = 0; }
                     this.throwIfDisposed();
-                    var p = Promise.pending();
-                    defer_1.defer(pass(this, p), milliseconds);
-                    return p;
+                    return new Promise(function (resolve, reject) {
+                        defer_1.defer(function () {
+                            _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
+                        }, milliseconds);
+                    }, true);
                 };
                 PromiseBase.prototype.delayAfterResolve = function (milliseconds) {
+                    var _this = this;
                     if (milliseconds === void 0) { milliseconds = 0; }
                     this.throwIfDisposed();
-                    var p = Promise.pending();
-                    passDelayed(this, p, milliseconds);
-                    return p;
+                    if (this.isSettled)
+                        return this.delayFromNow(milliseconds);
+                    return new Promise(function (resolve, reject) {
+                        _this.thenThis(function (v) { return defer_1.defer(function () { return resolve(v); }, milliseconds); }, function (e) { return defer_1.defer(function () { return reject(e); }, milliseconds); });
+                    }, true);
                 };
                 PromiseBase.prototype['catch'] = function (onRejected) {
                     this.throwIfDisposed();
@@ -311,9 +303,11 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     var t = this._target;
                     if (!t)
                         return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
-                    var p = Promise.pending();
-                    handleDispatch(t, function (result) { return handleResolution(p, result, onFulfilled); }, function (error) { return onRejected ? handleResolution(p, error, onRejected) : p.reject(error); });
-                    return p;
+                    return new Promise(function (resolve, reject) {
+                        handleDispatch(t, function (result) { return handleResolutionMethods(resolve, reject, result, onFulfilled); }, function (error) { return onRejected
+                            ? handleResolutionMethods(resolve, null, error, onRejected)
+                            : reject(error); });
+                    }, true);
                 };
                 PromiseWrapper.prototype.thenThis = function (onFulfilled, onRejected) {
                     this.throwIfDisposed();
@@ -331,10 +325,11 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             }(Resolvable));
             Promise = (function (_super) {
                 __extends(Promise, _super);
-                function Promise(resolver) {
+                function Promise(resolver, forceSynchronous) {
+                    if (forceSynchronous === void 0) { forceSynchronous = false; }
                     _super.call(this);
                     if (resolver)
-                        this.resolveUsing(resolver);
+                        this.resolveUsing(resolver, forceSynchronous);
                 }
                 Promise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
                     this.throwIfDisposed();
@@ -357,8 +352,9 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     _super.prototype._onDispose.call(this);
                     this._resolvedCalled = VOID0;
                 };
-                Promise.prototype.resolveUsing = function (resolver, throwIfSettled) {
+                Promise.prototype.resolveUsing = function (resolver, forceSynchronous, throwIfSettled) {
                     var _this = this;
+                    if (forceSynchronous === void 0) { forceSynchronous = false; }
                     if (throwIfSettled === void 0) { throwIfSettled = false; }
                     if (!resolver)
                         throw new ArgumentNullException_1.ArgumentNullException("resolver");
@@ -367,25 +363,40 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     if (this.state)
                         throw new InvalidOperationException_1.InvalidOperationException("Already resolved: " + Promise.State[this.state]);
                     this._resolvedCalled = true;
+                    var state = 0;
                     var rejectHandler = function (reason) {
-                        _this._resolvedCalled = false;
-                        _this.reject(reason);
+                        if (state) {
+                            console.warn(state == -1 ? "Rejection called multiple times" : "Rejection called after fulfilled.");
+                        }
+                        else {
+                            state = -1;
+                            _this._resolvedCalled = false;
+                            _this.reject(reason);
+                        }
                     };
                     var fulfillHandler = function (v) {
-                        _this._resolvedCalled = false;
-                        _this.resolve(v);
+                        if (state) {
+                            console.warn(state == 1 ? "Fulfill called multiple times" : "Fulfill called after rejection.");
+                        }
+                        else {
+                            state = 1;
+                            _this._resolvedCalled = false;
+                            _this.resolve(v);
+                        }
                     };
-                    deferImmediate_1.deferImmediate(function () {
-                        resolver(function (v) {
-                            if (v == _this)
-                                throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
-                            if (isPromise(v))
-                                handleDispatch(v, fulfillHandler, rejectHandler);
-                            else {
-                                fulfillHandler(v);
-                            }
-                        }, rejectHandler);
-                    });
+                    var r = function () { return resolver(function (v) {
+                        if (v == _this)
+                            throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
+                        if (isPromise(v))
+                            handleDispatch(v, fulfillHandler, rejectHandler);
+                        else {
+                            fulfillHandler(v);
+                        }
+                    }, rejectHandler); };
+                    if (forceSynchronous)
+                        r();
+                    else
+                        deferImmediate_1.deferImmediate(r);
                 };
                 Promise.prototype.resolve = function (result, throwIfSettled) {
                     if (throwIfSettled === void 0) { throwIfSettled = false; }
@@ -450,38 +461,6 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 return Promise;
             }(Resolvable));
             exports_1("Promise", Promise);
-            LazyPromise = (function (_super) {
-                __extends(LazyPromise, _super);
-                function LazyPromise(_resolver) {
-                    _super.call(this);
-                    this._resolver = _resolver;
-                    if (!_resolver)
-                        throw new ArgumentNullException_1.ArgumentNullException("resolver");
-                    this._resolvedCalled = true;
-                }
-                LazyPromise.prototype._onDispose = function () {
-                    _super.prototype._onDispose.call(this);
-                    this._resolver = VOID0;
-                };
-                LazyPromise.prototype._onThen = function () {
-                    var r = this._resolver;
-                    if (r) {
-                        this._resolver = VOID0;
-                        this._resolvedCalled = false;
-                        this.resolveUsing(r);
-                    }
-                };
-                LazyPromise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
-                    this._onThen();
-                    return _super.prototype.thenSynchronous.call(this, onFulfilled, onRejected);
-                };
-                LazyPromise.prototype.thenThis = function (onFulfilled, onRejected) {
-                    this._onThen();
-                    return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
-                };
-                return LazyPromise;
-            }(Promise));
-            exports_1("LazyPromise", LazyPromise);
             (function (pools) {
                 var PromiseCallbacks;
                 (function (PromiseCallbacks) {
@@ -533,7 +512,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     var promises = (Array.isArray(first) ? first : [first]).concat(rest);
                     if (!promises.length || promises.every(function (v) { return !v; }))
                         return new Fulfilled(promises);
-                    return pending(function (resolve, reject) {
+                    return new Promise(function (resolve, reject) {
                         var checkedAll = false;
                         var result = [];
                         var len = promises.length;
@@ -598,7 +577,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         if (p instanceof PromiseBase && p.isSettled)
                             return p;
                     }
-                    return pending(function (resolve, reject) {
+                    return new Promise(function (resolve, reject) {
                         var cleanup = function () {
                             reject = null;
                             resolve = null;
@@ -630,10 +609,6 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     return new Rejected(reason);
                 }
                 Promise.reject = reject;
-                function lazy(resolver) {
-                    return new LazyPromise(resolver);
-                }
-                Promise.lazy = lazy;
                 function wrap(target) {
                     if (!target)
                         throw new ArgumentNullException_1.ArgumentNullException(TARGET);
@@ -646,10 +621,6 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     return new PromiseWrapper({ then: then });
                 }
                 Promise.createFrom = createFrom;
-                function pending(resolver) {
-                    return new Promise(resolver);
-                }
-                Promise.pending = pending;
             })(Promise = Promise || (Promise = {}));
             exports_1("Promise", Promise);
         }

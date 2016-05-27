@@ -25,20 +25,6 @@ function resolve(value, resolver, promiseFactory) {
         ? Promise.wrap(nextValue)
         : promiseFactory(nextValue);
 }
-function pass(source, dest) {
-    return () => {
-        source.thenThis(v => {
-            dest.resolve(v);
-        }, e => {
-            dest.reject(e);
-        });
-    };
-}
-function passDelayed(source, dest, ms) {
-    return () => {
-        source.thenThis(v => defer(() => dest.resolve(v), ms), e => defer(() => dest.reject(e), ms));
-    };
-}
 function handleResolution(p, value, resolver) {
     try {
         let v = resolver ? resolver(value) : value;
@@ -118,7 +104,7 @@ export class PromiseBase extends PromiseState {
         this._disposableObjectName = PROMISE;
     }
     then(onFulfilled, onRejected) {
-        return Promise.pending((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.thenThis(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
                 ? handleResolutionMethods(resolve, null, error, onRejected)
                 : reject(error));
@@ -126,15 +112,19 @@ export class PromiseBase extends PromiseState {
     }
     delayFromNow(milliseconds = 0) {
         this.throwIfDisposed();
-        var p = Promise.pending();
-        defer(pass(this, p), milliseconds);
-        return p;
+        return new Promise((resolve, reject) => {
+            defer(() => {
+                this.thenThis(v => resolve(v), e => reject(e));
+            }, milliseconds);
+        }, true);
     }
     delayAfterResolve(milliseconds = 0) {
         this.throwIfDisposed();
-        var p = Promise.pending();
-        passDelayed(this, p, milliseconds);
-        return p;
+        if (this.isSettled)
+            return this.delayFromNow(milliseconds);
+        return new Promise((resolve, reject) => {
+            this.thenThis(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
+        }, true);
     }
     'catch'(onRejected) {
         this.throwIfDisposed();
@@ -228,9 +218,11 @@ class PromiseWrapper extends Resolvable {
         var t = this._target;
         if (!t)
             return super.thenSynchronous(onFulfilled, onRejected);
-        var p = Promise.pending();
-        handleDispatch(t, result => handleResolution(p, result, onFulfilled), error => onRejected ? handleResolution(p, error, onRejected) : p.reject(error));
-        return p;
+        return new Promise((resolve, reject) => {
+            handleDispatch(t, result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
+                ? handleResolutionMethods(resolve, null, error, onRejected)
+                : reject(error));
+        }, true);
     }
     thenThis(onFulfilled, onRejected) {
         this.throwIfDisposed();
@@ -246,10 +238,10 @@ class PromiseWrapper extends Resolvable {
     }
 }
 export class Promise extends Resolvable {
-    constructor(resolver) {
+    constructor(resolver, forceSynchronous = false) {
         super();
         if (resolver)
-            this.resolveUsing(resolver);
+            this.resolveUsing(resolver, forceSynchronous);
     }
     thenSynchronous(onFulfilled, onRejected) {
         this.throwIfDisposed();
@@ -272,7 +264,7 @@ export class Promise extends Resolvable {
         super._onDispose();
         this._resolvedCalled = VOID0;
     }
-    resolveUsing(resolver, throwIfSettled = false) {
+    resolveUsing(resolver, forceSynchronous = false, throwIfSettled = false) {
         if (!resolver)
             throw new ArgumentNullException("resolver");
         if (this._resolvedCalled)
@@ -280,25 +272,40 @@ export class Promise extends Resolvable {
         if (this.state)
             throw new InvalidOperationException("Already resolved: " + Promise.State[this.state]);
         this._resolvedCalled = true;
+        var state = 0;
         var rejectHandler = (reason) => {
-            this._resolvedCalled = false;
-            this.reject(reason);
+            if (state) {
+                console.warn(state == -1 ? "Rejection called multiple times" : "Rejection called after fulfilled.");
+            }
+            else {
+                state = -1;
+                this._resolvedCalled = false;
+                this.reject(reason);
+            }
         };
         var fulfillHandler = (v) => {
-            this._resolvedCalled = false;
-            this.resolve(v);
+            if (state) {
+                console.warn(state == 1 ? "Fulfill called multiple times" : "Fulfill called after rejection.");
+            }
+            else {
+                state = 1;
+                this._resolvedCalled = false;
+                this.resolve(v);
+            }
         };
-        deferImmediate(() => {
-            resolver(v => {
-                if (v == this)
-                    throw new InvalidOperationException("Cannot resolve a promise as itself.");
-                if (isPromise(v))
-                    handleDispatch(v, fulfillHandler, rejectHandler);
-                else {
-                    fulfillHandler(v);
-                }
-            }, rejectHandler);
-        });
+        var r = () => resolver(v => {
+            if (v == this)
+                throw new InvalidOperationException("Cannot resolve a promise as itself.");
+            if (isPromise(v))
+                handleDispatch(v, fulfillHandler, rejectHandler);
+            else {
+                fulfillHandler(v);
+            }
+        }, rejectHandler);
+        if (forceSynchronous)
+            r();
+        else
+            deferImmediate(r);
     }
     resolve(result, throwIfSettled = false) {
         this.throwIfDisposed();
@@ -357,35 +364,6 @@ export class Promise extends Resolvable {
         }
     }
 }
-export class LazyPromise extends Promise {
-    constructor(_resolver) {
-        super();
-        this._resolver = _resolver;
-        if (!_resolver)
-            throw new ArgumentNullException("resolver");
-        this._resolvedCalled = true;
-    }
-    _onDispose() {
-        super._onDispose();
-        this._resolver = VOID0;
-    }
-    _onThen() {
-        var r = this._resolver;
-        if (r) {
-            this._resolver = VOID0;
-            this._resolvedCalled = false;
-            this.resolveUsing(r);
-        }
-    }
-    thenSynchronous(onFulfilled, onRejected) {
-        this._onThen();
-        return super.thenSynchronous(onFulfilled, onRejected);
-    }
-    thenThis(onFulfilled, onRejected) {
-        this._onThen();
-        return super.thenThis(onFulfilled, onRejected);
-    }
-}
 var pools;
 (function (pools) {
     var PromiseCallbacks;
@@ -434,7 +412,7 @@ var pools;
         var promises = (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises.length || promises.every(v => !v))
             return new Fulfilled(promises);
-        return pending((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             let checkedAll = false;
             let result = [];
             let len = promises.length;
@@ -492,7 +470,7 @@ var pools;
             if (p instanceof PromiseBase && p.isSettled)
                 return p;
         }
-        return pending((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             let cleanup = () => {
                 reject = null;
                 resolve = null;
@@ -523,10 +501,6 @@ var pools;
         return new Rejected(reason);
     }
     Promise.reject = reject;
-    function lazy(resolver) {
-        return new LazyPromise(resolver);
-    }
-    Promise.lazy = lazy;
     function wrap(target) {
         if (!target)
             throw new ArgumentNullException(TARGET);
@@ -539,9 +513,5 @@ var pools;
         return new PromiseWrapper({ then: then });
     }
     Promise.createFrom = createFrom;
-    function pending(resolver) {
-        return new Promise(resolver);
-    }
-    Promise.pending = pending;
 })(Promise || (Promise = {}));
 //# sourceMappingURL=Promise.js.map

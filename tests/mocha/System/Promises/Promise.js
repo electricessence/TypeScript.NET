@@ -3,7 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../../../source/System/Promises/Promise", "../../../../source/System/Collections/Array/Utility", "../../../../source/System/Diagnostics/Stopwatch", "../../../../source/System/Threading/defer"], factory);
+        define(["require", "exports", "../../../../source/System/Promises/Promise", "../../../../source/System/Collections/Array/Utility", "../../../../source/System/Diagnostics/Stopwatch", "../../../../source/System/Threading/defer", "../../../../source/System/Promises/LazyPromise"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -11,6 +11,7 @@
     var AU = require("../../../../source/System/Collections/Array/Utility");
     var Stopwatch_1 = require("../../../../source/System/Diagnostics/Stopwatch");
     var defer_1 = require("../../../../source/System/Threading/defer");
+    var LazyPromise_1 = require("../../../../source/System/Promises/LazyPromise");
     var assert = require('../../../../node_modules/assert/assert');
     var REASON = "this is not an error, but it might show up in the console";
     var calledAsFunctionThis = (function () { return this; }());
@@ -71,7 +72,7 @@
         it("resolves multiple observers", function (done) {
             var nextTurn = false;
             var resolution = "Ta-ram pam param!";
-            var pending = Promise_1.Promise.pending();
+            var pending = new Promise_1.Promise();
             var count = 10;
             var i = 0;
             function resolve(value) {
@@ -93,7 +94,7 @@
         });
         it("observers called even after throw (synchronous)", function () {
             var threw = false;
-            var pending = Promise_1.Promise.pending();
+            var pending = new Promise_1.Promise();
             pending.thenSynchronous(function () {
                 threw = true;
                 throw new Error(REASON);
@@ -104,7 +105,7 @@
         });
         it("observers called even after throw (asynchronous)", function () {
             var threw = false;
-            var pending = Promise_1.Promise.pending();
+            var pending = new Promise_1.Promise();
             pending.thenSynchronous(function () {
                 threw = true;
                 throw new Error(REASON);
@@ -186,7 +187,7 @@
             }));
         });
         it("should follow expected promise behavior flow for a pending then resolved promise", function () {
-            var p = Promise_1.Promise.pending();
+            var p = new Promise_1.Promise();
             assert.ok(p.isPending);
             p.resolve(true);
             return testPromiseFlow(p);
@@ -198,16 +199,35 @@
             });
             return testPromiseFlow(p);
         });
-        it("should be able to use lazy pending", function () {
-            var p = Promise_1.Promise.lazy(function (resolve) {
-                defer_1.defer(function () { return resolve(true); });
+        it("should be able to use a lazy", function () {
+            it(".deferFromNow", function () {
+                new LazyPromise_1.LazyPromise(function (resolve) {
+                    assert.ok(false, "Should not have triggered the resolution.");
+                }).delayFromNow(1000);
+                var elapsed = Stopwatch_1.default.startNew();
+                return testPromiseFlow(new LazyPromise_1.LazyPromise(function (resolve) { return defer_1.defer(function () { return resolve(true); }, 1000); })
+                    .delayFromNow(1000)
+                    .thenThis(function (r) {
+                    var ms = elapsed.elapsedMilliseconds;
+                    assert.ok(ms > 1000 && ms < 2000);
+                }));
             });
-            assert.ok(p.isPending);
-            return testPromiseFlow(p);
+            it(".deferFromNow", function () {
+                new LazyPromise_1.LazyPromise(function (resolve) {
+                    assert.ok(false, "Should not have triggered the resolution.");
+                }).delayAfterResolve(1000);
+                var elapsed = Stopwatch_1.default.startNew();
+                return testPromiseFlow(new LazyPromise_1.LazyPromise(function (resolve) { return defer_1.defer(function () { return resolve(true); }, 1000); })
+                    .delayAfterResolve(1000)
+                    .thenThis(function (r) {
+                    var ms = elapsed.elapsedMilliseconds;
+                    assert.ok(ms > 2000 && ms < 3000);
+                }));
+            });
         });
         it("should be able to use promise as a resolution", function () {
-            var s = Promise_1.Promise.pending();
-            var p = Promise_1.Promise.pending(function (resolve) {
+            var s = new Promise_1.Promise();
+            var p = new Promise_1.Promise(function (resolve) {
                 defer_1.defer(function () { return resolve(s); });
             });
             assert.ok(s.isPending);
@@ -216,7 +236,7 @@
             return testPromiseFlow(p);
         });
         it("should be able to resolve all", function () {
-            var other = Promise_1.Promise.lazy(function (resolve) {
+            var other = new LazyPromise_1.LazyPromise(function (resolve) {
                 resolve(4);
             });
             return Promise_1.Promise.all(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
@@ -227,7 +247,7 @@
             });
         });
         it("should resolve as rejected", function () {
-            var other = Promise_1.Promise.lazy(function (resolve) {
+            var other = new LazyPromise_1.LazyPromise(function (resolve) {
                 resolve(4);
             });
             return Promise_1.Promise.all(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1), Promise_1.Promise.reject(-1)).thenSynchronous(function () {
@@ -237,7 +257,7 @@
             });
         });
         it("should be resolve the first to win the race", function () {
-            var other = Promise_1.Promise.lazy(function (resolve, reject) {
+            var other = new LazyPromise_1.LazyPromise(function (resolve, reject) {
                 reject(4);
             });
             return Promise_1.Promise.race(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
