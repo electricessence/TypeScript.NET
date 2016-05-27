@@ -139,7 +139,7 @@ var TypeValidator = function () {
         key: "isSubsetOf",
         value: function isSubsetOf(o) {
             var t = new TypeInfoHelper(o);
-            return t.contains(o);
+            return t.contains(this._typeDescriptor);
         }
     }]);
 

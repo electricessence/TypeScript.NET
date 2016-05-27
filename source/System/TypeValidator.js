@@ -88,7 +88,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         }
         TypeValidator.prototype.isSubsetOf = function (o) {
             var t = new TypeInfoHelper(o);
-            return t.contains(o);
+            return t.contains(this._typeDescriptor);
         };
         return TypeValidator;
     }());
