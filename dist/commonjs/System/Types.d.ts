@@ -5,7 +5,7 @@
 import { Primitive } from "./Primitive";
 import { IArray } from "./Collections/Array/IArray";
 export declare class TypeInfo {
-    private target;
+    protected target: any;
     type: string;
     isBoolean: boolean;
     isNumber: boolean;
@@ -14,12 +14,13 @@ export declare class TypeInfo {
     isString: boolean;
     isTrueNaN: boolean;
     isObject: boolean;
+    isArray: boolean;
     isFunction: boolean;
     isUndefined: boolean;
     isNull: boolean;
     isNullOrUndefined: boolean;
     isPrimitive: boolean;
-    constructor(target: any);
+    constructor(target: any, onBeforeFreeze?: () => void);
     member(name: string): TypeInfo;
     static getFor(target: any): TypeInfo;
 }

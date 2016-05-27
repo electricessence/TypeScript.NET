@@ -21,7 +21,7 @@ var VOID0 = void 0,
 var typeInfoRegistry = {};
 
 var TypeInfo = function () {
-    function TypeInfo(target) {
+    function TypeInfo(target, onBeforeFreeze) {
         _classCallCheck(this, TypeInfo);
 
         var _ = this;
@@ -57,6 +57,7 @@ var TypeInfo = function () {
                     _.isNullOrUndefined = true;
                     _.isPrimitive = true;
                 } else {
+                    _.isArray = Array.isArray(target);
                     _.isObject = true;
                 }
                 break;
@@ -72,6 +73,7 @@ var TypeInfo = function () {
             default:
                 throw "Fatal type failure.  Unknown type: " + _.type;
         }
+        if (onBeforeFreeze) onBeforeFreeze();
         Object.freeze(_);
     }
 

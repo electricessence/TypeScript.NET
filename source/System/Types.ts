@@ -26,7 +26,7 @@ var typeInfoRegistry:{[key:string]:TypeInfo} = {};
 export class TypeInfo
 {
 	// Not retained for primitives. Since they have no members.
-	private target:any;
+	protected target:any;
 
 	type:string;
 
@@ -37,13 +37,14 @@ export class TypeInfo
 	isString:boolean;
 	isTrueNaN:boolean;
 	isObject:boolean;
+	isArray:boolean;
 	isFunction:boolean;
 	isUndefined:boolean;
 	isNull:boolean;
 	isNullOrUndefined:boolean;
 	isPrimitive:boolean;
 
-	constructor(target:any)
+	constructor(target:any,onBeforeFreeze?:()=>void)
 	{
 		var _ = this;
 		_.isBoolean = false;
@@ -83,6 +84,7 @@ export class TypeInfo
 				}
 				else
 				{
+					_.isArray = Array.isArray(target);
 					_.isObject = true;
 				}
 				break;
@@ -99,6 +101,7 @@ export class TypeInfo
 				throw "Fatal type failure.  Unknown type: " + _.type;
 		}
 
+		if(onBeforeFreeze) onBeforeFreeze();
 		Object.freeze(_);
 
 	}
@@ -137,6 +140,8 @@ export class TypeInfo
 		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
 		return info;
 	}
+	
+	
 
 }
 
