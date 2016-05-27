@@ -35,6 +35,17 @@
                 e: {
                     f: String,
                     g: Boolean,
+                    h: Array
+                }
+            }));
+            assert.ok(example.contains({
+                a: Object,
+                b: String,
+                c: Number,
+                d: Boolean,
+                e: {
+                    f: String,
+                    g: Boolean,
                     h: [
                         Number,
                         Number,
