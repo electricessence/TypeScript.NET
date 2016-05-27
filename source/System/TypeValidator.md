@@ -71,5 +71,7 @@ if(MyTypeValidator.isSubsetOf(myItem))
 {
 	console.log(myItem.e.h.length); // 3
 	console.log(myItem.b); // "hello"
+} else {
+	throw new Error("Invalid type!");
 }
 ```
