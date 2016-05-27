@@ -18,13 +18,13 @@ var __extends = (this && this.__extends) || function (d, b) {
     "use strict";
     var Types_1 = require("./Types");
     var Compare_1 = require("./Compare");
-    var TypeValidator = (function (_super) {
-        __extends(TypeValidator, _super);
-        function TypeValidator(value) {
+    var TypeInfoHelper = (function (_super) {
+        __extends(TypeInfoHelper, _super);
+        function TypeInfoHelper(value) {
             var _this = this;
             _super.call(this, value, function () { return _this._value = value; });
         }
-        TypeValidator.prototype.contains = function (descriptor) {
+        TypeInfoHelper.prototype.contains = function (descriptor) {
             var value = this._value;
             if (value === descriptor)
                 return true;
@@ -70,17 +70,29 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return true;
         };
-        return TypeValidator;
+        return TypeInfoHelper;
     }(Types_1.TypeInfo));
-    exports.TypeValidator = TypeValidator;
+    exports.TypeInfoHelper = TypeInfoHelper;
     function areInvalid(v, d) {
         if (!Compare_1.areEqual(v, d)) {
-            var memberType = new TypeValidator(v);
+            var memberType = new TypeInfoHelper(v);
             if (!memberType.contains(d))
                 return true;
         }
         return false;
     }
+    var TypeValidator = (function () {
+        function TypeValidator(_typeDescriptor) {
+            this._typeDescriptor = _typeDescriptor;
+            Object.freeze(this);
+        }
+        TypeValidator.prototype.isSubsetOf = function (o) {
+            var t = new TypeInfoHelper(o);
+            return t.contains(o);
+        };
+        return TypeValidator;
+    }());
+    exports.TypeValidator = TypeValidator;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = TypeValidator;
 });

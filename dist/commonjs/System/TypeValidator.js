@@ -17,20 +17,20 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Types_1 = require("./Types");
 var Compare_1 = require("./Compare");
 
-var TypeValidator = function (_Types_1$TypeInfo) {
-    _inherits(TypeValidator, _Types_1$TypeInfo);
+var TypeInfoHelper = function (_Types_1$TypeInfo) {
+    _inherits(TypeInfoHelper, _Types_1$TypeInfo);
 
-    function TypeValidator(value) {
+    function TypeInfoHelper(value) {
         var _this;
 
-        _classCallCheck(this, TypeValidator);
+        _classCallCheck(this, TypeInfoHelper);
 
-        return _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TypeValidator).call(this, value, function () {
+        return _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TypeInfoHelper).call(this, value, function () {
             return _this._value = value;
         }));
     }
 
-    _createClass(TypeValidator, [{
+    _createClass(TypeInfoHelper, [{
         key: "contains",
         value: function contains(descriptor) {
             var value = this._value;
@@ -115,17 +115,38 @@ var TypeValidator = function (_Types_1$TypeInfo) {
         }
     }]);
 
-    return TypeValidator;
+    return TypeInfoHelper;
 }(Types_1.TypeInfo);
 
-exports.TypeValidator = TypeValidator;
+exports.TypeInfoHelper = TypeInfoHelper;
 function areInvalid(v, d) {
     if (!Compare_1.areEqual(v, d)) {
-        var memberType = new TypeValidator(v);
+        var memberType = new TypeInfoHelper(v);
         if (!memberType.contains(d)) return true;
     }
     return false;
 }
+
+var TypeValidator = function () {
+    function TypeValidator(_typeDescriptor) {
+        _classCallCheck(this, TypeValidator);
+
+        this._typeDescriptor = _typeDescriptor;
+        Object.freeze(this);
+    }
+
+    _createClass(TypeValidator, [{
+        key: "isSubsetOf",
+        value: function isSubsetOf(o) {
+            var t = new TypeInfoHelper(o);
+            return t.contains(o);
+        }
+    }]);
+
+    return TypeValidator;
+}();
+
+exports.TypeValidator = TypeValidator;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TypeValidator;
 //# sourceMappingURL=TypeValidator.js.map

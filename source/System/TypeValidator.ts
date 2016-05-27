@@ -20,7 +20,7 @@
 
 import {TypeInfo} from "./Types";
 import {areEqual} from "./Compare";
-export class TypeValidator extends TypeInfo
+export class TypeInfoHelper extends TypeInfo
 {
 
 	private _value:any;
@@ -105,11 +105,23 @@ function areInvalid(v:any, d:any)
 {
 	if(!areEqual(v, d))
 	{
-		let memberType = new TypeValidator(v);
+		let memberType = new TypeInfoHelper(v);
 		if(!memberType.contains(d))
 			return true;
 	}
 	return false;
 }
 
+export class TypeValidator<T> {
+	constructor(private _typeDescriptor:any) {
+		Object.freeze(this);
+	}
+
+	isSubsetOf(o:any):o is T {
+		var t = new TypeInfoHelper(o);
+		return t.contains(o);
+	}
+}
+
 export default TypeValidator;
+

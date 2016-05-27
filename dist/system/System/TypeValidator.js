@@ -11,10 +11,10 @@ System.register(["./Types", "./Compare"], function(exports_1, context_1) {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Types_1, Compare_1;
-    var TypeValidator;
+    var TypeInfoHelper, TypeValidator;
     function areInvalid(v, d) {
         if (!Compare_1.areEqual(v, d)) {
-            var memberType = new TypeValidator(v);
+            var memberType = new TypeInfoHelper(v);
             if (!memberType.contains(d))
                 return true;
         }
@@ -29,13 +29,13 @@ System.register(["./Types", "./Compare"], function(exports_1, context_1) {
                 Compare_1 = Compare_1_1;
             }],
         execute: function() {
-            TypeValidator = (function (_super) {
-                __extends(TypeValidator, _super);
-                function TypeValidator(value) {
+            TypeInfoHelper = (function (_super) {
+                __extends(TypeInfoHelper, _super);
+                function TypeInfoHelper(value) {
                     var _this = this;
                     _super.call(this, value, function () { return _this._value = value; });
                 }
-                TypeValidator.prototype.contains = function (descriptor) {
+                TypeInfoHelper.prototype.contains = function (descriptor) {
                     var value = this._value;
                     if (value === descriptor)
                         return true;
@@ -81,8 +81,20 @@ System.register(["./Types", "./Compare"], function(exports_1, context_1) {
                     }
                     return true;
                 };
-                return TypeValidator;
+                return TypeInfoHelper;
             }(Types_1.TypeInfo));
+            exports_1("TypeInfoHelper", TypeInfoHelper);
+            TypeValidator = (function () {
+                function TypeValidator(_typeDescriptor) {
+                    this._typeDescriptor = _typeDescriptor;
+                    Object.freeze(this);
+                }
+                TypeValidator.prototype.isSubsetOf = function (o) {
+                    var t = new TypeInfoHelper(o);
+                    return t.contains(o);
+                };
+                return TypeValidator;
+            }());
             exports_1("TypeValidator", TypeValidator);
             exports_1("default",TypeValidator);
         }

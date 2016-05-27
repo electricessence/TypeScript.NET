@@ -4,7 +4,7 @@
  */
 import { TypeInfo } from "./Types";
 import { areEqual } from "./Compare";
-export class TypeValidator extends TypeInfo {
+export class TypeInfoHelper extends TypeInfo {
     constructor(value) {
         super(value, () => this._value = value);
     }
@@ -55,11 +55,21 @@ export class TypeValidator extends TypeInfo {
 }
 function areInvalid(v, d) {
     if (!areEqual(v, d)) {
-        let memberType = new TypeValidator(v);
+        let memberType = new TypeInfoHelper(v);
         if (!memberType.contains(d))
             return true;
     }
     return false;
+}
+export class TypeValidator {
+    constructor(_typeDescriptor) {
+        this._typeDescriptor = _typeDescriptor;
+        Object.freeze(this);
+    }
+    isSubsetOf(o) {
+        var t = new TypeInfoHelper(o);
+        return t.contains(o);
+    }
 }
 export default TypeValidator;
 //# sourceMappingURL=TypeValidator.js.map

@@ -9,7 +9,7 @@
     "use strict";
     var TypeValidator_1 = require("../../../source/System/TypeValidator");
     var assert = require('../../../node_modules/assert/assert');
-    var example = new TypeValidator_1.TypeValidator({
+    var example = new TypeValidator_1.TypeInfoHelper({
         a: {},
         b: "hello",
         c: 1,
