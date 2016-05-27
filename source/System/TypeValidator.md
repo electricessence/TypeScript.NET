@@ -2,8 +2,8 @@
 
 ## Benefits
 - Allows for run-time validation and checking of dynamic types as well as integrated type-guarding.
-
 - Super easy to use, basically only requires a copy paste.
+- Works with literals!
 
 ## Usage
 
