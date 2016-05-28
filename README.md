@@ -1,8 +1,6 @@
 TypeScript.NET
 ==============
 
-[![Join the chat at https://gitter.im/electricessence/TypeScript.NET](https://badges.gitter.im/electricessence/TypeScript.NET.svg)](https://gitter.im/electricessence/TypeScript.NET?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ### A JavaScript-Friendly .NET Based TypeScript Library
 
 The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
@@ -33,7 +31,9 @@ To name a few.
 * **IDisposable**: Additional interfaces, utilities, and classes like **DisposableBase** that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator&lt;T&gt;, use IDisposable to ensure releasing of references.
 * **DateTime** & **TimeSpan**: The **System/Time** namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.
 * **Uri**, **QueryParams**, & **QueryBuilder**:  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.
-* **Regex**: Includes named group captures.  Very handy for accessing groups in regular expression results.
+* [**Regex**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Text/RegularExpressions.ts): Includes named group captures.  Very handy for accessing groups in regular expression results.
+* [**Promise\<T\>**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/Promise.ts) and [**LazyPromise\<T\>**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/LazyPromise.ts): An efficient set of promises that fills that follows the standard ES6 usage while allowing for some useful methods that can improve performance of your application.  Read more [here](https://www.reddit.com/r/typescript/comments/4l9orj/lazypromiset/).
+* [**TypeValidator\<T\>**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.ts): An easy to use runtime type checker for complext types or JSON.  Read more [here](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.md). 
 * ***Currently no external dependencies.***
 
 ## Usage
@@ -47,7 +47,7 @@ After some time and effort, I've decided that this library should be module base
 * You can easily recompile the entire library into another folder fully minified using gulp.
 * Already minified with source-map versions are provided in the **dist** folder
 
-#### [NPM]([http://www.npmjs.com/package/typescript-dotnet]):
+#### [NPM](http://www.npmjs.com/package/typescript-dotnet):
 ```
 npm install typescript-dotnet
 ```
@@ -56,7 +56,7 @@ Version 2.5 was the first NPM release.  The goal is to get this as user friendly
 Currently it is possible/supported to use TypeScript.NET in a number of different ways:
 
 1. Example: ```import Enumerable from "typescript-dotnet/source/System.Linq/Linq"``` with NodeJS works perfectly well.  
-2. Pure JS/Node users can use ```dist/commonjs``` which uses ES6>Babel rendering for ease of use.
+2. Pure JS/Node users can use ```dist/commonjs``` (```import Enumerable from "typescript-dotnet/dist/commonjs/System.Linq/Linq"```) which uses ES6>Babel rendering for ease of use.
 3. Use ```dist/es6``` directly.
 4. requirejs can consume ```dist/amd``` or ```dist/umd.min``` for minified, web-friendly, source-mapped versions.
 5. Lastly, re-render your own version using the TypeScript compiler.
@@ -91,11 +91,19 @@ View Documentation: [electricessence.github.io/TypeScript.NET/documentation](htt
 
 ## Discussion
 
+[![Join the chat at https://gitter.im/electricessence/TypeScript.NET](https://badges.gitter.im/electricessence/TypeScript.NET.svg)](https://gitter.im/electricessence/TypeScript.NET?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 #### Reddit
 [TypeScript.NET Library](https://www.reddit.com/r/tsdotnetlibrary/)
 
-[.NET](https://redd.it/3ojzbt)
+[.NET](https://redd.it/3ojzbt),
 [TypeScript](https://redd.it/3ok0bm)
 
 ## Learn, Connect & Evolve
+#### Code Evolution
 [www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ](https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ)
+
+#### [Intro to TypeScript.NET Library (Part 1)](https://www.youtube.com/watch?v=dLwl2dGHSZo)
+Click the image below to watch.
+
+[![Intro to TypeScript.NET Library (Part 1)](https://img.youtube.com/vi/dLwl2dGHSZo/0.jpg)](https://www.youtube.com/watch?v=dLwl2dGHSZo)
