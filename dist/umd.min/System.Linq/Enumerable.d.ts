@@ -85,11 +85,17 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	zip<TSecond, TResult>(
 		second:IEnumerableOrArray<TSecond>,
-		resultSelector:(first:T, second:TSecond, index?:number) => TResult):ILinqEnumerable<TResult>;
+		resultSelector:(
+			first:T,
+			second:TSecond,
+			index?:number) => TResult):ILinqEnumerable<TResult>;
 
 	zipMultiple<TSecond, TResult>(
 		second:IArray<IEnumerableOrArray<TSecond>>,
-		resultSelector:(first:T, second:TSecond, index?:number) => TResult):ILinqEnumerable<TResult>;
+		resultSelector:(
+			first:T,
+			second:TSecond,
+			index?:number) => TResult):ILinqEnumerable<TResult>;
 
 	join<TInner, TKey, TResult, TCompare>(
 		inner:IEnumerableOrArray<TInner>,
