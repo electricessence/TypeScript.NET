@@ -249,7 +249,5 @@ var __extends = (this && this.__extends) || function (d, b) {
         return CollectionBase;
     }(DisposableBase_1.DisposableBase));
     exports.CollectionBase = CollectionBase;
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = CollectionBase;
 });
 //# sourceMappingURL=CollectionBase.js.map
