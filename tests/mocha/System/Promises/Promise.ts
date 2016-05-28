@@ -353,6 +353,29 @@ describe("Resolution and Rejection", ()=>
 		return testPromiseFlow(p);
 	});
 
+	it("should be able to wait for all", ()=>
+	{
+		var other = new LazyPromise<number>(resolve=>
+		{
+			resolve(4);
+		});
+		return Promise.waitAll<any>(
+			other,
+			Promise.resolve(3),
+			Promise.resolve(2),
+			Promise.reject(BREAK),
+			Promise.resolve(1)
+		).thenSynchronous((r:any[])=>
+		{
+			assert.equal(r[0].result, 4);
+			assert.equal(r[1].result, 3);
+			assert.equal(r[2].result, 2);
+			assert.equal(r[3].result, void 0);
+			assert.equal(r[3].error, BREAK);
+			assert.equal(r[4].result, 1);
+		});
+	});
+
 	it("should be able to resolve all", ()=>
 	{
 		var other = new LazyPromise<number>(resolve=>

@@ -843,6 +843,69 @@ export module Promise
 	}
 
 	/**
+	 * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
+	 * Unlike .all this method waits for all rejections as well as fulfillment.
+	 */
+	export function waitAll<T>(promises:PromiseLike<T>[]):PromiseBase<PromiseLike<T>[]>
+	export function waitAll<T>(
+		promise:PromiseLike<T>,
+		...rest:PromiseLike<T>[]):PromiseBase<PromiseLike<T>[]>
+	export function waitAll(
+		first:PromiseLike<any>|PromiseLike<any>[],
+		...rest:PromiseLike<any>[]):PromiseBase<PromiseLike<any>[]>
+	{
+		if(!first && !rest.length) throw new ArgumentNullException("promises");
+		var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+		if(!promises.length || promises.every(v=>!v)) return new Fulfilled<any[]>(promises); // it's a new empty, reuse it. :|
+
+
+		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
+		return new Promise<any[]>((resolve, reject)=>
+		{
+			let checkedAll = false;
+			let len = promises.length;
+
+			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
+			let remaining = new Set(promises.map((v, i)=>i)); // get all the indexes...
+
+			let cleanup = ()=>
+			{
+				reject = null;
+				resolve = null;
+				remaining.dispose();
+				remaining = null;
+			};
+
+			let checkIfShouldResolve = ()=>
+			{
+				let r = resolve;
+				if(r && !remaining.count)
+				{
+					cleanup();
+					r(promises);
+				}
+			};
+
+			let onResolved = (i:number)=>
+			{
+				if(remaining)
+				{
+					remaining.remove(i);
+					checkIfShouldResolve();
+				}
+			};
+
+			for(let i = 0; remaining && i<len; i++)
+			{
+				let p = promises[i];
+				if(p) p.then(v=>onResolved(i), e=>onResolved(i));
+				else onResolved(i);
+			}
+		});
+
+	}
+
+	/**
 	 * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
 	 * or rejected.
 	 * @param promises An array of Promises.

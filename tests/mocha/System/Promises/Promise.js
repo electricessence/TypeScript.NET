@@ -235,6 +235,19 @@
             s.resolve(true);
             return testPromiseFlow(p);
         });
+        it("should be able to wait for all", function() {
+            var other = new LazyPromise_1.LazyPromise(function(resolve) {
+                resolve(4);
+            });
+            return Promise_1.Promise.waitAll(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.reject(BREAK), Promise_1.Promise.resolve(1)).thenSynchronous(function(r) {
+                assert.equal(r[0].result, 4);
+                assert.equal(r[1].result, 3);
+                assert.equal(r[2].result, 2);
+                assert.equal(r[3].result, void 0);
+                assert.equal(r[3].error, BREAK);
+                assert.equal(r[4].result, 1);
+            });
+        });
         it("should be able to resolve all", function () {
             var other = new LazyPromise_1.LazyPromise(function (resolve) {
                 resolve(4);

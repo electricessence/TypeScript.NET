@@ -1,12 +1,10 @@
 {
   "version": 3,
+  "file": "_all.js",
+  "sourceRoot": "",
   "sources": [
-    "Collections/_all.ts"
+    "_all.ts"
   ],
   "names": [],
-  "mappings": ";;;;;;;;;IAGA,2BAAuB,cAAc,CAAC,CAAA;IACtC,sBAAkB,SAAS,CAAC,CAAA;IAC5B,2CAAuC,8BAA8B,CAAC,CAAA;IAEtE;QAEC,oBAAU,EAAE,CAAC;QACb,eAAK,EAAE,CAAC;QACR,oCAA0B,EAAE,CAAC;IAC9B,CAAC;IALD;yBAKC,CAAA",
-  "file": "Collections/_all.js",
-  "sourcesContent": [
-    "/// <reference path=\"../../../typings/qunit/qunit.d.ts\"/>\r\n/// <amd-dependency path=\"QUnit\"/>\r\n\r\nimport LinkedList from './LinkedList';\r\nimport Queue from './Queue';\r\nimport OrderedStringKeyDictionary from './OrderedStringKeyDictionary';\r\n\r\nexport default function run()\r\n{\r\n\tLinkedList();\r\n\tQueue();\r\n\tOrderedStringKeyDictionary();\r\n}\r\n"
-  ]
+  "mappings": ";;;;;;;;;IAGA,2BAAuB,cAAc,CAAC,CAAA;IACtC,sBAAkB,SAAS,CAAC,CAAA;IAC5B,2CAAuC,8BAA8B,CAAC,CAAA;IAEtE;QAEC,oBAAU,EAAE,CAAC;QACb,eAAK,EAAE,CAAC;QACR,oCAA0B,EAAE,CAAC;IAC9B,CAAC;IALD;yBAKC,CAAA"
 }

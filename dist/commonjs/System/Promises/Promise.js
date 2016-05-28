@@ -665,9 +665,60 @@ var pools;
         });
     }
     Promise.all = all;
-    function race(first) {
+    function waitAll(first) {
         for (var _len2 = arguments.length, rest = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
             rest[_key2 - 1] = arguments[_key2];
+        }
+
+        if (!first && !rest.length) throw new ArgumentNullException_1.ArgumentNullException("promises");
+        var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+        if (!promises.length || promises.every(function (v) {
+            return !v;
+        })) return new Fulfilled(promises);
+        return new Promise(function (resolve, reject) {
+            var checkedAll = false;
+            var len = promises.length;
+            var remaining = new Set_1.Set(promises.map(function (v, i) {
+                return i;
+            }));
+            var cleanup = function cleanup() {
+                reject = null;
+                resolve = null;
+                remaining.dispose();
+                remaining = null;
+            };
+            var checkIfShouldResolve = function checkIfShouldResolve() {
+                var r = resolve;
+                if (r && !remaining.count) {
+                    cleanup();
+                    r(promises);
+                }
+            };
+            var onResolved = function onResolved(i) {
+                if (remaining) {
+                    remaining.remove(i);
+                    checkIfShouldResolve();
+                }
+            };
+
+            var _loop2 = function _loop2(i) {
+                var p = promises[i];
+                if (p) p.then(function (v) {
+                    return onResolved(i);
+                }, function (e) {
+                    return onResolved(i);
+                });else onResolved(i);
+            };
+
+            for (var i = 0; remaining && i < len; i++) {
+                _loop2(i);
+            }
+        });
+    }
+    Promise.waitAll = waitAll;
+    function race(first) {
+        for (var _len3 = arguments.length, rest = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+            rest[_key3 - 1] = arguments[_key3];
         }
 
         var promises = first && (Array.isArray(first) ? first : [first]).concat(rest);
