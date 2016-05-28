@@ -48,6 +48,9 @@ After some time and effort, I've decided that this library should be module base
 * You can easily recompile the entire library into another folder fully minified using gulp.
 * Already minified with source-map versions are provided in the **dist** folder
 
+##### Why not take this a step further and break it up into sepearate NPM style modules/packages?
+There is a point where fragmentation and over-granularity just make life harder.  If one module depends on another and you want to implement improvements it's just easier if they live in the same place.
+
 #### [NPM](http://www.npmjs.com/package/typescript-dotnet):
 ```
 npm install typescript-dotnet
