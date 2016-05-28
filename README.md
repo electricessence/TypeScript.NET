@@ -1,6 +1,8 @@
 TypeScript.NET
 ==============
 
+[![Join the chat at https://gitter.im/electricessence/TypeScript.NET](https://badges.gitter.im/electricessence/TypeScript.NET.svg)](https://gitter.im/electricessence/TypeScript.NET?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ### A JavaScript-Friendly .NET Based TypeScript Library
 
 The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
