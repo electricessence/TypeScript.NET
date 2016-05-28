@@ -16,7 +16,7 @@ Source values that work:
 
 #### TypeScript or ES6
 ```typescript
-import Enumerable from '[path or alias to source folder]/System.Linq/Linq';
+import Enumerable from 'typescript-dotnet/dist/es6/System.Linq/Linq';
  
 var sourceData = ['a','b','c','c','d'];
  
@@ -30,7 +30,7 @@ console.log(
 
 #### JavaScript (requirejs, ES5)
 ```javascript
-require('[path or alias to source folder]/System.Linq/Linq',function(Enumerable){
+require('[path or alias to package root]/dist/umd.min/System.Linq/Linq',function(Enumerable){
 	 
 	var sourceData = ['a','b','c','c','d'];
 	 
@@ -45,7 +45,7 @@ require('[path or alias to source folder]/System.Linq/Linq',function(Enumerable)
 
 #### JavaScript (NodeJS, ES5)
 ```javascript
-var Enumerable = require('[path or alias to source folder]/System.Linq/Linq');
+var Enumerable = require('typescript-dotnet/dist/commonjs/System.Linq/Linq');
 	 
 var sourceData = ['a','b','c','c','d'];
  
