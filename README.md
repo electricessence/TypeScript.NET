@@ -57,6 +57,7 @@ npm install typescript-dotnet
 ```
 
 Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.
+
 Currently it is possible/supported to use TypeScript.NET in a number of different ways:
 
 ##### Import Examples:
