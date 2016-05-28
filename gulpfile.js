@@ -93,10 +93,21 @@ const tsc = (function() {
 				console.log('TypeScript Render:', target, from == to ? from : (from + ' >> ' + to));
 		}
 		// In order to mirror WebStorm's compiler option (the tsc), gulp-tsc is used.
-		return gulp
-			.src([from + '/**/*.ts'])
-			.pipe(c(getOptions(to, target, module, declaration)))
-			.pipe(gulp.dest(to));
+
+		var deferred = Q.defer();
+
+		gulp
+			.src([from + '/**/*.d.ts'])
+			.pipe(gulp.dest(to))
+			.on(EVENT.END, function() {
+				gulp
+					.src([from + '/**/*.ts'])
+					.pipe(c(getOptions(to, target, module, declaration)))
+					.pipe(gulp.dest(to))
+					.on(EVENT.END, deferred.resolve);
+			});
+
+		return deferred.promise;
 	}
 
 	function at(folder, target, module) {
@@ -138,7 +149,7 @@ const tsc = (function() {
 
 		del(d + '/**/*')['then'](function() {
 			sourceTo(d, TARGET.ES6, TARGET.ES6, true, true)
-				.on(EVENT.END, deferred.resolve);
+				.then(deferred.resolve);
 		});
 
 		return deferred.promise;
@@ -150,7 +161,7 @@ const tsc = (function() {
 		var d = './dist/' + folder;
 		distES6(folder).then(function(){
 			sourceTo(d, target, module)
-				.on(EVENT.END, deferred.resolve);
+				.then(deferred.resolve);
 		});
 		return deferred.promise;
 	}

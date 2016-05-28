@@ -3,6 +3,7 @@
 .idea
 .nuget
 .gulp*
+gulp-tsc-tmp*
 gulpfile.js
 node_modules
 bower_components

@@ -91,7 +91,7 @@ System.register(["./Types", "./Compare"], function(exports_1, context_1) {
                 }
                 TypeValidator.prototype.isSubsetOf = function (o) {
                     var t = new TypeInfoHelper(o);
-                    return t.contains(o);
+                    return t.contains(this._typeDescriptor);
                 };
                 return TypeValidator;
             }());
