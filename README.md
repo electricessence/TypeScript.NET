@@ -18,7 +18,7 @@ If you have a .NET Library class that you want to see represented in TypeScript,
 4. Most major IDEs and text editors now support TypeScript either built in, or via a plug-in:
   * Visual Studio
   * VS Code
-  * WebStorm (strongly recommended!)
+  * WebStorm (Strongly recommended! Makes NodeJS development a dream.) 
   * Sublime Text
   * Atom
 
@@ -55,15 +55,26 @@ npm install typescript-dotnet
 Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.
 Currently it is possible/supported to use TypeScript.NET in a number of different ways:
 
-1. Example: ```import Enumerable from "typescript-dotnet/source/System.Linq/Linq"``` with NodeJS works perfectly well.  
-2. Pure JS/Node users can use ```dist/commonjs``` (```import Enumerable from "typescript-dotnet/dist/commonjs/System.Linq/Linq"```) which uses ES6>Babel rendering for ease of use.
-3. Use ```dist/es6``` directly.
-4. requirejs can consume ```dist/amd``` or ```dist/umd.min``` for minified, web-friendly, source-mapped versions.
-5. Lastly, re-render your own version using the TypeScript compiler.
-
-If using WebStorm and you've properly set your module type to "commonjs" you'll find that it does an outstanding job of automatically (ALT-ENTER) importing your references.
-
-This all may be overkill, or possibly a use case was missed, so please don't hesitate to log issues in GitHub.
+##### Import Examples:
+```typescript
+// The following works well if you are launching from an index.ts or main.ts in your root.
+import Enumerable from "typescript-dotnet/source/System.Linq/Linq"
+```
+```typescript
+// Using a dist folder is recommened to eliminate any cross compiliation from your project.
+import Enumerable from "typescript-dotnet/dist/commonjs/System.Linq/Linq"
+```
+```typescript
+import Enumerable from "typescript-dotnet/dist/es6/System.Linq/Linq"
+```
+```typescript
+// Recommended for users who are deploying to web/browsers.
+import Enumerable from "typescript-dotnet/dist/umd.min/System.Linq/Linq"
+```
+```typescript
+// Recommended for users who want pure minified AMD (RequireJS) with source-maps.
+import Enumerable from "typescript-dotnet/dist/amd/System.Linq/Linq"
+```
 
 #### [Bower](http://bower.io/search/?q=typescript-dotnet):
 ```
@@ -88,6 +99,11 @@ Currently the unit test cover many example usages.
 ## Documentation
 Currently improving over time using JSDoc style comments and [TypeDoc](http://typedoc.io/).
 View Documentation: [electricessence.github.io/TypeScript.NET/documentation](http://electricessence.github.io/TypeScript.NET/documentation/)
+
+Documentation has a tendendecy to lag behind and TypeDoc is also lagging on updates.
+
+## Contribution
+This library has immense potential and quite often a class, or function that is missing will simply be added.  If you log any issues here on GitHub they will likely be addressed swiftly.  If you have a class or module you'd like to see integrated, just log an issue and start the discussion or feel free to make a pull request from your own design. :)
 
 ## Discussion
 
