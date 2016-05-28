@@ -34,7 +34,7 @@ To name a few.
 * [**Uri**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/Uri.ts), [**QueryParams**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/QueryParams.ts), & [**QueryBuilder**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/QueryBuilder.ts):  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.
 * [**Regex**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Text/RegularExpressions.ts): Includes named group captures.  Very handy for accessing groups in regular expression results.
 * [**Promise\<T\>**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/Promise.ts) and [**LazyPromise\<T\>**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/LazyPromise.ts): An efficient set of promises that fills that follows the standard ES6 usage while allowing for some useful methods that can improve performance of your application.  Read more [here](https://www.reddit.com/r/typescript/comments/4l9orj/lazypromiset/).
-* [**TypeValidator\<T\>**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.ts): An easy to use runtime type checker for complext types or JSON.  Read more [here](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.md). 
+* [**TypeValidator\<T\>**](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.ts): An easy to use runtime type checker for complex types or JSON.  Read more [here](https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.md). 
 * ***Currently no external dependencies.***
 
 ## Usage
@@ -48,7 +48,7 @@ After some time and effort, I've decided that this library should be module base
 * You can easily recompile the entire library into another folder fully minified using gulp.
 * Already minified with source-map versions are provided in the **dist** folder
 
-##### Why not take this a step further and break it up into sepearate NPM style modules/packages?
+##### Why not take this a step further and break it up into separate NPM style modules/packages?
 There is a point where fragmentation and over-granularity just make life harder.  If one module depends on another and you want to implement improvements it's just easier if they live in the same place.
 
 #### [NPM](http://www.npmjs.com/package/typescript-dotnet):
@@ -66,7 +66,7 @@ Currently it is possible/supported to use TypeScript.NET in a number of differen
 import Enumerable from "typescript-dotnet/source/System.Linq/Linq"
 ```
 ```typescript
-// Using a dist folder is recommened to eliminate any cross compiliation from your project.
+// Using a dist folder is recommended to eliminate any cross compilation from your project.
 import Enumerable from "typescript-dotnet/dist/commonjs/System.Linq/Linq"
 ```
 ```typescript
@@ -105,7 +105,7 @@ Currently the unit test cover many example usages.
 Currently improving over time using JSDoc style comments and [TypeDoc](http://typedoc.io/).
 View Documentation: [electricessence.github.io/TypeScript.NET/documentation](http://electricessence.github.io/TypeScript.NET/documentation/)
 
-Documentation has a tendendecy to lag behind and TypeDoc is also lagging on updates.
+Documentation has a tendency to lag behind and TypeDoc is also lagging on updates.
 
 ## Contribution
 This library has immense potential and quite often a class, or function that is missing will simply be added.  If you log any issues here on GitHub they will likely be addressed swiftly.  If you have a class or module you'd like to see integrated, just log an issue and start the discussion or feel free to make a pull request from your own design. :)
