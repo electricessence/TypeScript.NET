@@ -260,7 +260,6 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 return CollectionBase;
             }(DisposableBase_1.DisposableBase));
             exports_1("CollectionBase", CollectionBase);
-            exports_1("default",CollectionBase);
         }
     }
 });

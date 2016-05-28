@@ -5,18 +5,18 @@
  */
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
-import { IEnumerable } from "../System/Collections/Enumeration/IEnumerable";
 import { Action, Predicate, Selector, EqualityComparison, Comparison } from "../System/FunctionTypes";
 import { IEnumerableOrArray } from "../System/Collections/IEnumerableOrArray";
 import { IArray } from "../System/Collections/Array/IArray";
 import { IMap, IDictionary } from "../System/Collections/Dictionaries/IDictionary";
 import { Comparable } from "../System/IComparable";
+import { IInfiniteEnumerable, ILinqEnumerable, IFiniteEnumerable, ILookup, IOrderedEnumerable, IGrouping } from "./Enumerable";
 export declare const enum EnumerableAction {
     Break = 0,
     Return = 1,
     Skip = 2,
 }
-export declare class InfiniteEnumerable<T> extends DisposableBase implements IEnumerable<T> {
+export declare class InfiniteEnumerable<T> extends DisposableBase implements IInfiniteEnumerable<T> {
     protected _enumeratorFactory: () => IEnumerator<T>;
     constructor(_enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void);
     protected _isEndless: boolean;
@@ -78,7 +78,7 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IEn
     buffer(size: number): InfiniteEnumerable<T[]>;
     share(): InfiniteEnumerable<T>;
 }
-export declare class Enumerable<T> extends InfiniteEnumerable<T> {
+export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILinqEnumerable<T> {
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void, isEndless?: boolean);
     static from<T>(source: IEnumerableOrArray<T>): Enumerable<T>;
     static fromAny(source: any): Enumerable<any>;
@@ -174,21 +174,7 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> {
     finallyAction(action: () => void): Enumerable<T>;
     memoize(): Enumerable<T>;
 }
-export declare class FiniteEnumerable<T> extends Enumerable<T> {
+export declare class FiniteEnumerable<T> extends Enumerable<T> implements IFiniteEnumerable<T> {
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void);
-}
-export interface IGrouping<TKey, TElement> extends Enumerable<TElement> {
-    key: TKey;
-}
-export interface ILookup<TKey, TElement> extends IEnumerable<IGrouping<TKey, TElement>> {
-    count: number;
-    get(key: TKey): TElement[];
-    contains(key: TKey): boolean;
-}
-export interface IOrderedEnumerable<T> extends FiniteEnumerable<T> {
-    thenBy(keySelector: (value: T) => any): IOrderedEnumerable<T>;
-    thenByDescending(keySelector: (value: T) => any): IOrderedEnumerable<T>;
-    thenUsing(comparison: Comparison<T>): IOrderedEnumerable<T>;
-    thenUsingReversed(comparison: Comparison<T>): IOrderedEnumerable<T>;
 }
 export default Enumerable;

@@ -8,6 +8,7 @@ gulpfile.js
 node_modules
 bower_components
 tests
+coverage
 documentation
 typings
 coverage.bat

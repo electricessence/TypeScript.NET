@@ -211,5 +211,4 @@ export class CollectionBase extends DisposableBase {
         }
     }
 }
-export default CollectionBase;
 //# sourceMappingURL=CollectionBase.js.map

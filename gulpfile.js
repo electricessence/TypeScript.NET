@@ -94,20 +94,27 @@ const tsc = (function() {
 		}
 		// In order to mirror WebStorm's compiler option (the tsc), gulp-tsc is used.
 
-		var deferred = Q.defer();
+		var render = function() {
+			return gulp
+				.src([from + '/**/*.ts'])
+				.pipe(c(getOptions(to, target, module, declaration)))
+				.pipe(gulp.dest(to));
+		};
 
-		gulp
-			.src([from + '/**/*.d.ts'])
-			.pipe(gulp.dest(to))
-			.on(EVENT.END, function() {
-				gulp
-					.src([from + '/**/*.ts'])
-					.pipe(c(getOptions(to, target, module, declaration)))
-					.pipe(gulp.dest(to))
-					.on(EVENT.END, deferred.resolve);
-			});
-
-		return deferred.promise;
+		if(declaration) {
+			var deferred = Q.defer();
+			gulp
+				.src([from + '/**/*.d.ts'])
+				.pipe(gulp.dest(to))
+				.on(EVENT.END, function() {
+					render().on(EVENT.END, deferred.resolve);
+				});
+			return deferred.promise;
+		}
+		else {
+			return render();
+		}
+		
 	}
 
 	function at(folder, target, module) {

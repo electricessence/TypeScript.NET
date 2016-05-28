@@ -41,6 +41,14 @@ import {Comparable} from "../System/IComparable";
 import {IComparer} from "../System/IComparer";
 import {IKeyValuePair} from "../System/KeyValuePair";
 import {Order} from "../System/Collections/Sorting/Order";
+import {
+	IInfiniteEnumerable,
+	ILinqEnumerable,
+	IFiniteEnumerable,
+	ILookup,
+	IOrderedEnumerable,
+	IGrouping
+} from "./Enumerable";
 
 // #region Local Constants.
 
@@ -93,7 +101,7 @@ export const enum EnumerableAction
  */
 
 export class InfiniteEnumerable<T>
-extends DisposableBase implements IEnumerable<T>
+extends DisposableBase implements IInfiniteEnumerable<T>
 {
 	constructor(
 		protected _enumeratorFactory:() => IEnumerator<T>,
@@ -1818,7 +1826,7 @@ extends DisposableBase implements IEnumerable<T>
  * In this case, we use Enumerable<T> as the underlying class that is being chained.
  */
 export class Enumerable<T>
-extends InfiniteEnumerable<T>
+extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 {
 
 	constructor(
@@ -3479,7 +3487,7 @@ extends InfiniteEnumerable<T>
 
 // Provided for type guarding.
 export class FiniteEnumerable<T>
-extends Enumerable<T>
+extends Enumerable<T> implements IFiniteEnumerable<T>
 {
 	constructor(
 		enumeratorFactory:() => IEnumerator<T>,
@@ -3678,13 +3686,6 @@ extends FiniteEnumerable<T>
 
 }
 
-
-export interface IGrouping<TKey, TElement>
-extends Enumerable<TElement>
-{
-	key:TKey;
-}
-
 class Grouping<TKey, TElement>
 extends ArrayEnumerable<TElement> implements IGrouping<TKey, TElement>
 {
@@ -3698,15 +3699,6 @@ extends ArrayEnumerable<TElement> implements IGrouping<TKey, TElement>
 	{
 		return this._groupKey;
 	}
-}
-
-
-export interface ILookup<TKey, TElement>
-extends IEnumerable<IGrouping<TKey, TElement>>
-{
-	count:number;
-	get(key:TKey):TElement[];
-	contains(key:TKey):boolean;
 }
 
 class Lookup<TKey, TElement>
@@ -3762,15 +3754,6 @@ implements ILookup<TKey, TElement>
 
 }
 
-
-export interface IOrderedEnumerable<T>
-extends FiniteEnumerable<T>
-{
-	thenBy(keySelector:(value:T) => any):IOrderedEnumerable<T>;
-	thenByDescending(keySelector:(value:T) => any):IOrderedEnumerable<T>;
-	thenUsing(comparison:Comparison<T>):IOrderedEnumerable<T>;
-	thenUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T>
-}
 
 class OrderedEnumerable<T,TOrderBy extends Comparable>
 extends FiniteEnumerable<T> implements IOrderedEnumerable<T>

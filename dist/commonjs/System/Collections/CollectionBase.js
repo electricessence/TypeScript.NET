@@ -293,6 +293,4 @@ var CollectionBase = function (_DisposableBase_1$Dis) {
 }(DisposableBase_1.DisposableBase);
 
 exports.CollectionBase = CollectionBase;
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = CollectionBase;
 //# sourceMappingURL=CollectionBase.js.map

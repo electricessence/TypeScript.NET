@@ -6,12 +6,10 @@ import { DisposableBase } from "../Disposable/DisposableBase";
 import { ICollection } from "./ICollection";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
-import { EqualityComparison, Predicate, Action, Comparison, Selector } from "../FunctionTypes";
+import { EqualityComparison, Predicate, Action } from "../FunctionTypes";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { IArray } from "./Array/IArray";
-import { IEnumerable } from "./Enumeration/IEnumerable";
-import { Comparable } from "../IComparable";
-import { IDictionary, IMap } from "./Dictionaries/IDictionary";
+import { ILinqEnumerable } from "../../System.Linq/Enumerable";
 export declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
     protected _equalityComparer: EqualityComparison<T>;
     constructor(source?: IEnumerableOrArray<T>, _equalityComparer?: EqualityComparison<T>);
@@ -44,149 +42,5 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
     copyTo<TTarget extends IArray<T>>(target: TTarget, index?: number): TTarget;
     toArray(): T[];
     private _linq;
-    linq: Enumerable<T>;
-}
-export default CollectionBase;
-export declare const enum EnumerableAction {
-    Break = 0,
-    Return = 1,
-    Skip = 2,
-}
-export declare class InfiniteEnumerable<T> extends DisposableBase implements IEnumerable<T> {
-    isEndless: boolean;
-    getEnumerator(): IEnumerator<T>;
-    asEnumerable(): InfiniteEnumerable<T>;
-    doAction(action: Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>, initializer?: () => void, isEndless?: boolean): InfiniteEnumerable<T>;
-    force(): void;
-    skip(count: number): InfiniteEnumerable<T>;
-    take(count: number): FiniteEnumerable<T>;
-    elementAt(index: number): T;
-    elementAtOrDefault(index: number, defaultValue?: T): T;
-    first(): T;
-    firstOrDefault(defaultValue?: T): T;
-    single(): T;
-    singleOrDefault(defaultValue?: T): T;
-    any(): boolean;
-    isEmpty(): boolean;
-    traverseBreadthFirst(childrenSelector: (element: T) => IEnumerableOrArray<T>): Enumerable<T>;
-    traverseBreadthFirst<TNode>(childrenSelector: (element: T | TNode) => IEnumerableOrArray<TNode>): Enumerable<TNode>;
-    traverseBreadthFirst<TResult>(childrenSelector: (element: T) => IEnumerableOrArray<T>, resultSelector?: (element: T, nestLevel?: number) => TResult): Enumerable<TResult>;
-    traverseBreadthFirst<TNode, TResult>(childrenSelector: (element: T | TNode) => IEnumerableOrArray<TNode>, resultSelector?: (element: TNode, nestLevel?: number) => TResult): Enumerable<TResult>;
-    traverseDepthFirst(childrenSelector: (element: T) => IEnumerableOrArray<T>): Enumerable<T>;
-    traverseDepthFirst<TNode>(childrenSelector: (element: T | TNode) => IEnumerableOrArray<TNode>): Enumerable<TNode>;
-    traverseDepthFirst<TResult>(childrenSelector: (element: T) => IEnumerableOrArray<T>, resultSelector?: (element: T, nestLevel?: number) => TResult): Enumerable<TResult>;
-    traverseDepthFirst<TNode, TResult>(childrenSelector: (element: T | TNode) => IEnumerableOrArray<TNode>, resultSelector?: (element: TNode, nestLevel?: number) => TResult): Enumerable<TResult>;
-    flatten(): Enumerable<any>;
-    pairwise<TSelect>(selector: (prev: T, current: T) => TSelect): Enumerable<TSelect>;
-    scan(func: (a: T, b: T) => T, seed?: T): Enumerable<T>;
-    select<TResult>(selector: Selector<T, TResult>): InfiniteEnumerable<TResult>;
-    selectMany<TResult>(collectionSelector: Selector<T, IEnumerableOrArray<TResult>>): InfiniteEnumerable<TResult>;
-    selectMany<TElement, TResult>(collectionSelector: Selector<T, IEnumerableOrArray<TElement>>, resultSelector: (collection: T, element: TElement) => TResult): InfiniteEnumerable<TResult>;
-    choose(): InfiniteEnumerable<T>;
-    choose<TResult>(selector?: Selector<T, TResult>): InfiniteEnumerable<TResult>;
-    where(predicate: Predicate<T>): InfiniteEnumerable<T>;
-    ofType<TType>(type: {
-        new (...params: any[]): TType;
-    }): InfiniteEnumerable<TType>;
-    except<TCompare>(second: IEnumerableOrArray<T>, compareSelector?: Selector<T, TCompare>): InfiniteEnumerable<T>;
-    distinct(compareSelector?: (value: T) => T): InfiniteEnumerable<T>;
-    distinctUntilChanged<TCompare>(compareSelector?: Selector<T, TCompare>): InfiniteEnumerable<T>;
-    defaultIfEmpty(defaultValue?: T): Enumerable<T>;
-    zip<TSecond, TResult>(second: IEnumerableOrArray<TSecond>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
-    zipMultiple<TSecond, TResult>(second: IArray<IEnumerableOrArray<TSecond>>, resultSelector: (first: T, second: TSecond, index?: number) => TResult): Enumerable<TResult>;
-    join<TInner, TKey, TResult, TCompare>(inner: IEnumerableOrArray<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner) => TResult, compareSelector?: Selector<TKey, TCompare>): Enumerable<TResult>;
-    groupJoin<TInner, TKey, TResult, TCompare>(inner: IEnumerableOrArray<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner[]) => TResult, compareSelector?: Selector<TKey, TCompare>): Enumerable<TResult>;
-    merge(enumerables: IArray<IEnumerableOrArray<T>>): InfiniteEnumerable<T>;
-    concat(...enumerables: Array<IEnumerableOrArray<T>>): InfiniteEnumerable<T>;
-    union<TCompare>(second: IEnumerableOrArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
-    insertAt(index: number, other: IEnumerableOrArray<T>): Enumerable<T>;
-    alternateMultiple(sequence: IEnumerableOrArray<T>): Enumerable<T>;
-    alternateSingle(value: T): Enumerable<T>;
-    alternate(...sequence: T[]): Enumerable<T>;
-    catchError(handler: (e: any) => void): InfiniteEnumerable<T>;
-    finallyAction(action: () => void): InfiniteEnumerable<T>;
-    buffer(size: number): InfiniteEnumerable<T[]>;
-    share(): InfiniteEnumerable<T>;
-}
-export declare class Enumerable<T> extends InfiniteEnumerable<T> {
-    doAction(action: Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>, initializer?: () => void, isEndless?: boolean): Enumerable<T>;
-    skip(count: number): Enumerable<T>;
-    skipWhile(predicate: Predicate<T>): Enumerable<T>;
-    takeWhile(predicate: Predicate<T>): Enumerable<T>;
-    takeUntil(predicate: Predicate<T>, includeUntilValue?: boolean): Enumerable<T>;
-    forEach(action: Predicate<T> | Action<T>): void;
-    toArray(predicate?: Predicate<T>): T[];
-    copyTo(target: T[], index?: number, count?: number): T[];
-    toLookup<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): ILookup<TKey, TValue>;
-    toMap<TResult>(keySelector: Selector<T, string>, elementSelector: Selector<T, TResult>): IMap<TResult>;
-    toDictionary<TKey, TValue, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TValue>, compareSelector?: Selector<TKey, TCompare>): IDictionary<TKey, TValue>;
-    toJoinedString(separator?: string, selector?: Selector<T, string>): string;
-    takeExceptLast(count?: number): Enumerable<T>;
-    skipToLast(count: number): Enumerable<T>;
-    where(predicate: Predicate<T>): Enumerable<T>;
-    select<TResult>(selector: Selector<T, TResult>): Enumerable<TResult>;
-    selectMany<TResult>(collectionSelector: Selector<T, IEnumerableOrArray<TResult>>): Enumerable<TResult>;
-    selectMany<TElement, TResult>(collectionSelector: Selector<T, IEnumerableOrArray<TElement>>, resultSelector: (collection: T, element: TElement) => TResult): Enumerable<TResult>;
-    choose(): Enumerable<T>;
-    choose<TResult>(selector?: Selector<T, TResult>): Enumerable<TResult>;
-    reverse(): Enumerable<T>;
-    shuffle(): Enumerable<T>;
-    count(predicate?: Predicate<T>): number;
-    all(predicate: Predicate<T>): boolean;
-    every(predicate: Predicate<T>): boolean;
-    any(predicate?: Predicate<T>): boolean;
-    some(predicate: Predicate<T>): boolean;
-    contains<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): boolean;
-    indexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
-    lastIndexOf<TCompare>(value: T, compareSelector?: Selector<T, TCompare>): number;
-    merge(enumerables: IArray<IEnumerableOrArray<T>>): Enumerable<T>;
-    concat(...enumerables: Array<IEnumerableOrArray<T>>): Enumerable<T>;
-    intersect<TCompare>(second: IEnumerableOrArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
-    sequenceEqual(second: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>): boolean;
-    ofType<TType>(type: {
-        new (...params: any[]): TType;
-    }): Enumerable<TType>;
-    except<TCompare>(second: IEnumerableOrArray<T>, compareSelector?: Selector<T, TCompare>): Enumerable<T>;
-    distinct(compareSelector?: (value: T) => T): Enumerable<T>;
-    distinctUntilChanged<TCompare>(compareSelector?: Selector<T, TCompare>): Enumerable<T>;
-    orderBy<TKey extends Comparable>(keySelector?: Selector<T, TKey>): IOrderedEnumerable<T>;
-    orderUsing(comparison: Comparison<T>): IOrderedEnumerable<T>;
-    orderUsingReversed(comparison: Comparison<T>): IOrderedEnumerable<T>;
-    orderByDescending<TKey extends Comparable>(keySelector?: Selector<T, TKey>): IOrderedEnumerable<T>;
-    buffer(size: number): Enumerable<T[]>;
-    groupBy<TKey>(keySelector: Selector<T, TKey>): Enumerable<IGrouping<TKey, T>>;
-    groupBy<TKey, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, T>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, T>>;
-    partitionBy<TKey>(keySelector: Selector<T, TKey>): Enumerable<IGrouping<TKey, T>>;
-    partitionBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TElement>, resultSelector?: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
-    aggregate(func: (a: T, b: T) => T, seed?: T): T;
-    average(selector?: Selector<T, number>): number;
-    max(): T;
-    min(): T;
-    maxBy<TCompare>(keySelector?: Selector<T, TCompare>): T;
-    minBy<TCompare>(keySelector?: Selector<T, TCompare>): T;
-    sum(selector?: Selector<T, number>): number;
-    product(selector?: Selector<T, number>): number;
-    quotient(selector?: Selector<T, number>): number;
-    last(): T;
-    lastOrDefault(defaultValue?: T): T;
-    share(): Enumerable<T>;
-    catchError(handler: (e: any) => void): Enumerable<T>;
-    finallyAction(action: () => void): Enumerable<T>;
-    memoize(): Enumerable<T>;
-}
-export declare class FiniteEnumerable<T> extends Enumerable<T> {
-}
-export interface IGrouping<TKey, TElement> extends Enumerable<TElement> {
-    key: TKey;
-}
-export interface ILookup<TKey, TElement> extends IEnumerable<IGrouping<TKey, TElement>> {
-    count: number;
-    get(key: TKey): TElement[];
-    contains(key: TKey): boolean;
-}
-export interface IOrderedEnumerable<T> extends FiniteEnumerable<T> {
-    thenBy(keySelector: (value: T) => any): IOrderedEnumerable<T>;
-    thenByDescending(keySelector: (value: T) => any): IOrderedEnumerable<T>;
-    thenUsing(comparison: Comparison<T>): IOrderedEnumerable<T>;
-    thenUsingReversed(comparison: Comparison<T>): IOrderedEnumerable<T>;
+    linq: ILinqEnumerable<T>;
 }
