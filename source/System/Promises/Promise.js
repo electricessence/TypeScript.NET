@@ -80,7 +80,6 @@ var __extends = (this && this.__extends) || function (d, b) {
         else
             p.then(onFulfilled, onRejected);
     }
-
     function newODE() {
         return new ObjectDisposedException_1.ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
     }

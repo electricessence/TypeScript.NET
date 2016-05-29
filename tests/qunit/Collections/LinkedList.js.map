@@ -1,12 +1,10 @@
 {
   "version": 3,
+  "file": "LinkedList.js",
+  "sourceRoot": "",
   "sources": [
-    "Collections/LinkedList.ts"
+    "LinkedList.ts"
   ],
   "names": [],
-  "mappings": ";;;;;;;;;IAAA,IAAY,gBAAgB,WAAM,eAAe,CAAC,CAAA;IAClD,2BAAuB,sCAAsC,CAAC,CAAA;IAE9D;QACC,gBAAgB,CAAC,gBAAgB,CAAC,YAAY,EAAC,IAAI,oBAAU,EAAU,CAAC,CAAC;QACzE,gBAAgB,CAAC,gBAAgB,CAAC,YAAY,EAAC,IAAI,oBAAU,EAAU,CAAC,CAAC;QACzE,gBAAgB,CAAC,kBAAkB,CAAC,YAAY,EAAC,IAAI,oBAAU,EAAU,CAAC,CAAC;IAC5E,CAAC;IAJD;yBAIC,CAAA",
-  "file": "Collections/LinkedList.js",
-  "sourcesContent": [
-    "import * as ICollectionTests from './ICollection';\r\nimport LinkedList from 'source/System/Collections/LinkedList';\r\n\r\nexport default function run() {\r\n\tICollectionTests.StringCollection('LinkedList',new LinkedList<string>());\r\n\tICollectionTests.NumberCollection('LinkedList',new LinkedList<number>());\r\n\tICollectionTests.InstanceCollection('LinkedList',new LinkedList<Object>());\r\n}\r\n"
-  ]
+  "mappings": ";;;;;;;;;IAAA,IAAY,gBAAgB,WAAM,eAAe,CAAC,CAAA;IAClD,2BAAuB,sCAAsC,CAAC,CAAA;IAE9D;QACC,gBAAgB,CAAC,gBAAgB,CAAC,YAAY,EAAC,IAAI,oBAAU,EAAU,CAAC,CAAC;QACzE,gBAAgB,CAAC,gBAAgB,CAAC,YAAY,EAAC,IAAI,oBAAU,EAAU,CAAC,CAAC;QACzE,gBAAgB,CAAC,kBAAkB,CAAC,YAAY,EAAC,IAAI,oBAAU,EAAU,CAAC,CAAC;IAC5E,CAAC;IAJD;yBAIC,CAAA"
 }
