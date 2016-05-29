@@ -6,6 +6,8 @@
 import {Type} from "../Types";
 
 export const EMPTY:string = '';
+const SPACE = ' ';
+const ZERO = '0';
 
 /**
  * Returns a numerical (integer) hash code of the string.  Can be used for identifying inequality of contents, but two different strings in rare cases will have the same hash code.
@@ -141,7 +143,8 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 }
 
 
-function canMatch(source:string, match:string):boolean {
+function canMatch(source:string, match:string):boolean
+{
 	if(!Type.isString(source) || !match) return false;
 	if(source===match) return true;
 	if(match.length<source.length) return null;
@@ -155,7 +158,7 @@ function canMatch(source:string, match:string):boolean {
  */
 export function startsWith(source:string, pattern:string):boolean
 {
-	var m = canMatch(source,pattern);
+	var m = canMatch(source, pattern);
 	return Type.isBoolean(m) ? m : source.indexOf(pattern)==0;
 }
 
@@ -167,39 +170,7 @@ export function startsWith(source:string, pattern:string):boolean
  */
 export function endsWith(source:string, pattern:string):boolean
 {
-	var m = canMatch(source,pattern);
+	var m = canMatch(source, pattern);
 	return Type.isBoolean(m) ? m : source.lastIndexOf(pattern)==(source.length - pattern.length);
 }
 
-export function padLeft(str:string, num:number, ch:any) {
-  str = str.toString();
-
-  if (typeof num === 'undefined') {
-    return str;
-  }
-
-  if (ch === 0) {
-    ch = '0';
-  } else if (ch) {
-    ch = ch.toString();
-  } else {
-    ch = ' ';
-  }
-
-  return repeat(ch, num - str.length) + str;
-};
-
-export function padRight(str:string, num:number, char:any) {
-  var padding = '';
-  var diff = num - str.length;
-
-  if (diff <= 5 && !char) {
-    padding = '00000';
-  } else if (diff <= 25 && !char) {
-    padding = '000000000000000000000000000';
-  } else {
-    return str + repeat(char || '0', diff);
-  }
-
-  return str + padding.slice(0, diff);
-};

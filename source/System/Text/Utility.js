@@ -13,6 +13,8 @@
     "use strict";
     var Types_1 = require("../Types");
     exports.EMPTY = '';
+    var SPACE = ' ';
+    var ZERO = '0';
     function getHashCode(source) {
         var hash = 0 | 0;
         if (source.length == 0)

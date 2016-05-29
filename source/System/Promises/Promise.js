@@ -591,7 +591,6 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }
             });
         }
-
         Promise.waitAll = waitAll;
         function race(first) {
             var rest = [];
