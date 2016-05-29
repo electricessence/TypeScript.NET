@@ -24,7 +24,7 @@ export function padNumberRight(source, minLength, pad = ZERO) {
         throw new Error("Cannot pad non-number.");
     if (!source)
         source = 0;
-    return padStringLeft(source + EMPTY, minLength, pad);
+    return padStringRight(source + EMPTY, minLength, pad);
 }
 export function padLeft(source, minLength, pad) {
     if (Type.isString(source))

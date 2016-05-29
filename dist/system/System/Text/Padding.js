@@ -32,7 +32,7 @@ System.register(["../Types", "./Utility"], function(exports_1, context_1) {
             throw new Error("Cannot pad non-number.");
         if (!source)
             source = 0;
-        return padStringLeft(source + Utility_1.EMPTY, minLength, pad);
+        return padStringRight(source + Utility_1.EMPTY, minLength, pad);
     }
     exports_1("padNumberRight", padNumberRight);
     function padLeft(source, minLength, pad) {

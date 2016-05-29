@@ -36,7 +36,7 @@ export function padNumberRight(source:number, minLength:number, pad:string = ZER
 
 	if(!source) source = 0;
 
-	return padStringLeft(source + EMPTY, minLength, pad);
+	return padStringRight(source + EMPTY, minLength, pad);
 }
 
 export function padLeft(source:string|number, minLength:number, pad?:string):string
