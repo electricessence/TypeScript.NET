@@ -27,6 +27,7 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
     abstract thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     abstract thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): PromiseBase<T>;
     then<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    done(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
     delayFromNow(milliseconds?: number): PromiseBase<T>;
     delayAfterResolve(milliseconds?: number): PromiseBase<T>;
     'catch'<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
@@ -48,7 +49,10 @@ export declare class Promise<T> extends Resolvable<T> {
     protected _onDispose(): void;
     protected _resolvedCalled: boolean;
     resolveUsing(resolver: Promise.Executor<T>, forceSynchronous?: boolean, throwIfSettled?: boolean): void;
-    resolve(result?: T, throwIfSettled?: boolean): void;
+    private _emitDisposalRejection(p);
+    private _resolveInternal(result?);
+    private _rejectInternal(error);
+    resolve(result?: T | PromiseLike<T>, throwIfSettled?: boolean): void;
     reject(error: any, throwIfSettled?: boolean): void;
 }
 export declare module Promise {

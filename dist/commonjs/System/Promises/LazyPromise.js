@@ -121,11 +121,11 @@ var LazyPromise = function (_Promise_1$Promise) {
                     _this3.thenThis(function (v) {
                         return defer_1.defer(function () {
                             return resolve(v);
-                        });
+                        }, milliseconds);
                     }, function (e) {
                         return defer_1.defer(function () {
                             return reject(e);
-                        });
+                        }, milliseconds);
                     });
                     _finalize();
                 } else {

@@ -25,6 +25,7 @@ var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var ObjectPool_1 = require("../Disposable/ObjectPool");
 var Set_1 = require("../Collections/Set");
 var defer_1 = require("../Threading/defer");
+var ObjectDisposedException_1 = require("../Disposable/ObjectDisposedException");
 var VOID0 = void 0,
     PROMISE = "Promise",
     PROMISE_STATE = PROMISE + "State",
@@ -55,6 +56,9 @@ function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
 }
 function handleDispatch(p, onFulfilled, onRejected) {
     if (p instanceof PromiseBase) p.thenThis(onFulfilled, onRejected);else p.then(onFulfilled, onRejected);
+}
+function newODE() {
+    return new ObjectDisposedException_1.ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
 }
 
 var PromiseState = function (_DisposableBase_1$Dis) {
@@ -164,16 +168,25 @@ var PromiseBase = function (_PromiseState) {
             });
         }
     }, {
+        key: "done",
+        value: function done(onFulfilled, onRejected) {
+            var _this4 = this;
+
+            defer_1.defer(function () {
+                return _this4.thenThis(onFulfilled, onRejected);
+            });
+        }
+    }, {
         key: "delayFromNow",
         value: function delayFromNow() {
-            var _this4 = this;
+            var _this5 = this;
 
             var milliseconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
             this.throwIfDisposed();
             return new Promise(function (resolve, reject) {
                 defer_1.defer(function () {
-                    _this4.thenThis(function (v) {
+                    _this5.thenThis(function (v) {
                         return resolve(v);
                     }, function (e) {
                         return reject(e);
@@ -184,14 +197,14 @@ var PromiseBase = function (_PromiseState) {
     }, {
         key: "delayAfterResolve",
         value: function delayAfterResolve() {
-            var _this5 = this;
+            var _this6 = this;
 
             var milliseconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
             this.throwIfDisposed();
             if (this.isSettled) return this.delayFromNow(milliseconds);
             return new Promise(function (resolve, reject) {
-                _this5.thenThis(function (v) {
+                _this6.thenThis(function (v) {
                     return defer_1.defer(function () {
                         return resolve(v);
                     }, milliseconds);
@@ -283,12 +296,12 @@ var Resolved = function (_Resolvable) {
     function Resolved(state, result, error) {
         _classCallCheck(this, Resolved);
 
-        var _this7 = _possibleConstructorReturn(this, Object.getPrototypeOf(Resolved).call(this));
+        var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Resolved).call(this));
 
-        _this7._result = result;
-        _this7._error = error;
-        _this7._state = state;
-        return _this7;
+        _this8._result = result;
+        _this8._error = error;
+        _this8._state = state;
+        return _this8;
     }
 
     return Resolved;
@@ -326,22 +339,22 @@ var PromiseWrapper = function (_Resolvable2) {
     function PromiseWrapper(_target) {
         _classCallCheck(this, PromiseWrapper);
 
-        var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(PromiseWrapper).call(this));
+        var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(PromiseWrapper).call(this));
 
-        _this10._target = _target;
+        _this11._target = _target;
         if (!_target) throw new ArgumentNullException_1.ArgumentNullException(TARGET);
         if (!isPromise(_target)) throw new ArgumentException_1.ArgumentException(TARGET, "Must be a promise-like object.");
         _target.then(function (v) {
-            _this10._state = Promise.State.Fulfilled;
-            _this10._result = v;
-            _this10._error = VOID0;
-            _this10._target = VOID0;
+            _this11._state = Promise.State.Fulfilled;
+            _this11._result = v;
+            _this11._error = VOID0;
+            _this11._target = VOID0;
         }, function (e) {
-            _this10._state = Promise.State.Rejected;
-            _this10._error = e;
-            _this10._target = VOID0;
+            _this11._state = Promise.State.Rejected;
+            _this11._error = e;
+            _this11._target = VOID0;
         });
-        return _this10;
+        return _this11;
     }
 
     _createClass(PromiseWrapper, [{
@@ -386,10 +399,10 @@ var Promise = function (_Resolvable3) {
 
         _classCallCheck(this, Promise);
 
-        var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(Promise).call(this));
+        var _this12 = _possibleConstructorReturn(this, Object.getPrototypeOf(Promise).call(this));
 
-        if (resolver) _this11.resolveUsing(resolver, forceSynchronous);
-        return _this11;
+        if (resolver) _this12.resolveUsing(resolver, forceSynchronous);
+        return _this12;
     }
 
     _createClass(Promise, [{
@@ -418,7 +431,7 @@ var Promise = function (_Resolvable3) {
     }, {
         key: "resolveUsing",
         value: function resolveUsing(resolver) {
-            var _this12 = this;
+            var _this13 = this;
 
             var forceSynchronous = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
             var throwIfSettled = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
@@ -433,8 +446,8 @@ var Promise = function (_Resolvable3) {
                     console.warn(state == -1 ? "Rejection called multiple times" : "Rejection called after fulfilled.");
                 } else {
                     state = -1;
-                    _this12._resolvedCalled = false;
-                    _this12.reject(reason);
+                    _this13._resolvedCalled = false;
+                    _this13.reject(reason);
                 }
             };
             var fulfillHandler = function fulfillHandler(v) {
@@ -442,85 +455,94 @@ var Promise = function (_Resolvable3) {
                     console.warn(state == 1 ? "Fulfill called multiple times" : "Fulfill called after rejection.");
                 } else {
                     state = 1;
-                    _this12._resolvedCalled = false;
-                    _this12.resolve(v);
+                    _this13._resolvedCalled = false;
+                    _this13.resolve(v);
                 }
             };
-            var r = function r() {
-                return resolver(function (v) {
-                    if (v == _this12) throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
-                    if (isPromise(v)) handleDispatch(v, fulfillHandler, rejectHandler);else {
-                        fulfillHandler(v);
-                    }
-                }, rejectHandler);
-            };
-            if (forceSynchronous) r();else deferImmediate_1.deferImmediate(r);
+            if (forceSynchronous) resolver(fulfillHandler, rejectHandler);else deferImmediate_1.deferImmediate(function () {
+                return resolver(fulfillHandler, rejectHandler);
+            });
         }
     }, {
-        key: "resolve",
-        value: function resolve(result) {
-            var throwIfSettled = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+        key: "_emitDisposalRejection",
+        value: function _emitDisposalRejection(p) {
+            var d = p.wasDisposed;
+            if (d) this._rejectInternal(newODE());
+            return d;
+        }
+    }, {
+        key: "_resolveInternal",
+        value: function _resolveInternal(result) {
+            var _this14 = this;
 
-            this.throwIfDisposed();
-            if (result == this) throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
-            if (this._state) {
-                if (!throwIfSettled || this._state == Promise.State.Fulfilled && this._result === result) return;
-                throw new InvalidOperationException_1.InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
+            if (this.wasDisposed) return;
+            while (result instanceof PromiseBase) {
+                var r = result;
+                if (this._emitDisposalRejection(r)) return;
+                switch (r.state) {
+                    case Promise.State.Pending:
+                        r.thenSynchronous(function (v) {
+                            return _this14._resolveInternal(v);
+                        }, function (e) {
+                            return _this14._rejectInternal(e);
+                        });
+                        return;
+                    case Promise.State.Rejected:
+                        this._rejectInternal(r.error);
+                        return;
+                    case Promise.State.Fulfilled:
+                        result = r.result;
+                        break;
+                }
             }
-            if (this._resolvedCalled) {
-                if (throwIfSettled) throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
-                return;
-            }
-            this._state = Promise.State.Fulfilled;
-            this._result = result;
-            this._error = VOID0;
-            var o = this._waiting;
-            if (o) {
-                this._waiting = VOID0;
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
+            if (isPromise(result)) {
+                result.then(function (v) {
+                    return _this14._resolveInternal(v);
+                }, function (e) {
+                    return _this14._rejectInternal(e);
+                });
+            } else {
+                this._state = Promise.State.Fulfilled;
+                this._result = result;
+                this._error = VOID0;
+                var o = this._waiting;
+                if (o) {
+                    this._waiting = VOID0;
+                    var _iteratorNormalCompletion = true;
+                    var _didIteratorError = false;
+                    var _iteratorError = undefined;
 
-                try {
-                    for (var _iterator = o[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var c = _step.value;
-                        var onFulfilled = c.onFulfilled;
-                        var promise = c.promise;var p = promise;
-                        pools.PromiseCallbacks.recycle(c);
-                        handleResolution(p, result, onFulfilled);
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
                     try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
+                        for (var _iterator = o[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                            var c = _step.value;
+                            var onFulfilled = c.onFulfilled;
+                            var promise = c.promise;var p = promise;
+                            pools.PromiseCallbacks.recycle(c);
+                            handleResolution(p, result, onFulfilled);
                         }
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
                     } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
+                        try {
+                            if (!_iteratorNormalCompletion && _iterator.return) {
+                                _iterator.return();
+                            }
+                        } finally {
+                            if (_didIteratorError) {
+                                throw _iteratorError;
+                            }
                         }
                     }
-                }
 
-                o.length = 0;
+                    o.length = 0;
+                }
             }
         }
     }, {
-        key: "reject",
-        value: function reject(error) {
-            var throwIfSettled = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-
-            this.throwIfDisposed();
-            if (this._state) {
-                if (!throwIfSettled || this._state == Promise.State.Rejected && this._error === error) return;
-                throw new InvalidOperationException_1.InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
-            }
-            if (this._resolvedCalled) {
-                if (throwIfSettled) throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
-                return;
-            }
+        key: "_rejectInternal",
+        value: function _rejectInternal(error) {
+            if (this.wasDisposed) return;
             this._state = Promise.State.Rejected;
             this._error = error;
             var o = this._waiting;
@@ -555,6 +577,39 @@ var Promise = function (_Resolvable3) {
 
                 o.length = 0;
             }
+        }
+    }, {
+        key: "resolve",
+        value: function resolve(result) {
+            var throwIfSettled = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+            this.throwIfDisposed();
+            if (result == this) throw new InvalidOperationException_1.InvalidOperationException("Cannot resolve a promise as itself.");
+            if (this._state) {
+                if (!throwIfSettled || this._state == Promise.State.Fulfilled && this._result === result) return;
+                throw new InvalidOperationException_1.InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
+            }
+            if (this._resolvedCalled) {
+                if (throwIfSettled) throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
+                return;
+            }
+            this._resolveInternal(result);
+        }
+    }, {
+        key: "reject",
+        value: function reject(error) {
+            var throwIfSettled = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+            this.throwIfDisposed();
+            if (this._state) {
+                if (!throwIfSettled || this._state == Promise.State.Rejected && this._error === error) return;
+                throw new InvalidOperationException_1.InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
+            }
+            if (this._resolvedCalled) {
+                if (throwIfSettled) throw new InvalidOperationException_1.InvalidOperationException(".resolve() already called.");
+                return;
+            }
+            this._rejectInternal(error);
         }
     }]);
 
@@ -788,7 +843,7 @@ var pools;
     Promise.reject = reject;
     function wrap(target) {
         if (!target) throw new ArgumentNullException_1.ArgumentNullException(TARGET);
-        return target instanceof Promise ? this : new PromiseWrapper(target);
+        return target instanceof PromiseBase ? target : new PromiseWrapper(target);
     }
     Promise.wrap = wrap;
     function createFrom(then) {

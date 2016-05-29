@@ -100,7 +100,7 @@ var __extends = (this && this.__extends) || function (d, b) {
             }
             return new LazyPromise(function (resolve, reject) {
                 if (_this.isPending) {
-                    _this.thenThis(function (v) { return defer_1.defer(function () { return resolve(v); }); }, function (e) { return defer_1.defer(function () { return reject(e); }); });
+                    _this.thenThis(function(v) { return defer_1.defer(function() { return resolve(v); }, milliseconds); }, function(e) { return defer_1.defer(function() { return reject(e); }, milliseconds); });
                     finalize();
                 }
                 else {

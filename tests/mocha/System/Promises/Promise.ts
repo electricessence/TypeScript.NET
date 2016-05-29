@@ -5,6 +5,7 @@ import * as AU from "../../../../source/System/Collections/Array/Utility";
 import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
 import {defer} from "../../../../source/System/Threading/defer";
 import {LazyPromise} from "../../../../source/System/Promises/LazyPromise";
+import {ObjectDisposedException} from "../../../../source/System/Disposable/ObjectDisposedException";
 var assert = require('../../../../node_modules/assert/assert');
 
 
@@ -373,7 +374,7 @@ describe("Resolution and Rejection", ()=>
 			assert.equal(r[3].result, void 0);
 			assert.equal(r[3].error, BREAK);
 			assert.equal(r[4].result, 1);
-		});
+		}, ()=>assert.ok(false));
 	});
 
 	it("should be able to resolve all", ()=>
@@ -383,7 +384,7 @@ describe("Resolution and Rejection", ()=>
 			resolve(4);
 		});
 		return Promise.all(
-			other,
+			other.delayFromNow(10).delayAfterResolve(10),
 			Promise.resolve(3),
 			Promise.resolve(2),
 			Promise.resolve(1)
@@ -424,13 +425,16 @@ describe("Resolution and Rejection", ()=>
 			reject(4);
 		});
 		return Promise.race(
-			other,
-			Promise.resolve(3),
-			Promise.resolve(2),
-			Promise.resolve(1)
+			other.delayAfterResolve(40),
+			Promise.resolve(3).delayFromNow(10),
+			Promise.resolve(2).delayFromNow(20),
+			Promise.resolve(1).delayFromNow(30)
 		).thenSynchronous(r=>
 		{
 			assert.equal(r, 3);
+		}, ()=>
+		{
+			assert.ok(false);
 		});
 	});
 
@@ -449,6 +453,30 @@ describe("Resolution and Rejection", ()=>
 		});
 	});
 
+	it("should resolve the chain fulfilled promise result.", ()=>
+		new Promise((resolve=>resolve(new Promise((resolve=>resolve(Promise.resolve(1)))))))
+			.thenSynchronous(
+				v=>assert.equal(v, 1),
+				()=>assert.ok(false))
+	);
+
+	it("should resolve the rejected promise result.", ()=>
+		new Promise((resolve=>resolve(Promise.reject(BREAK))))
+			.thenSynchronous(
+				()=>assert.ok(false),
+				e=>assert.equal(e, BREAK))
+	);
+
+	it("should rejected a disposed promise-result..", ()=>
+		new Promise((resolve=>
+		{
+			var r = Promise.resolve(1);
+			r.dispose();
+			resolve(r)
+		}))
+			.thenSynchronous(
+				()=>assert.ok(false),
+				e=>assert.ok(e instanceof ObjectDisposedException))
+	);
 
 });
-

@@ -173,8 +173,8 @@ export class LazyPromise<T> extends Promise<T>
 				if(this.isPending)
 				{
 					this.thenThis(
-						v=> defer(()=>resolve(v)),
-						e=> defer(()=>reject(e))
+						v=> defer(()=>resolve(v), milliseconds),
+						e=> defer(()=>reject(e), milliseconds)
 					);
 					finalize();
 				}

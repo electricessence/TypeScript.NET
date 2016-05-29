@@ -6,9 +6,9 @@
  */
 
 /*
- * Note: The Promise herein does NOT defer by default.
- * If you require a promise to defer its result then use the .defer() or .delay(ms) methods.
- * The API attempts to follow ES6 style promises.
+ * Resources:
+ * https://promisesaplus.com/
+ * https://github.com/kriskowal/q
  */
 
 import Type from "../Types";
@@ -20,6 +20,7 @@ import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {ObjectPool} from "../Disposable/ObjectPool";
 import {Set} from "../Collections/Set";
 import {defer} from "../Threading/defer";
+import {ObjectDisposedException} from "../Disposable/ObjectDisposedException";
 
 
 const VOID0:any = void 0, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
@@ -80,6 +81,11 @@ function handleDispatch<T,TResult>(
 		p.thenThis(onFulfilled, onRejected);
 	else
 		p.then(<any>onFulfilled, onRejected);
+}
+
+function newODE()
+{
+	return new ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
 }
 
 export class PromiseState<T>
@@ -168,6 +174,7 @@ extends PromiseState<T> implements PromiseLike<T>
 		this._disposableObjectName = PROMISE;
 	}
 
+
 	/**
 	 * Calls the respective handlers once the promise is resolved.
 	 * @param onFulfilled
@@ -189,6 +196,12 @@ extends PromiseState<T> implements PromiseLike<T>
 		onRejected?:(v?:any)=>any):PromiseBase<T>;
 
 
+	/**
+	 * Standard .then method that defers execution until resolved.
+	 * @param onFulfilled
+	 * @param onRejected
+	 * @returns {Promise}
+	 */
 	then<TResult>(
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
@@ -202,6 +215,19 @@ extends PromiseState<T> implements PromiseLike<T>
 					: reject(error)
 			);
 		});
+	}
+
+	/**
+	 * .done is provided as a non-standard means that maps to similar functionality in other promise libraries.
+	 * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
+	 * @param onFulfilled
+	 * @param onRejected
+	 */
+	done(
+		onFulfilled:Promise.Fulfill<T,any>,
+		onRejected?:Promise.Reject<any>):void
+	{
+		defer(()=>this.thenThis(onFulfilled, onRejected));
 	}
 
 	/**
@@ -520,9 +546,15 @@ export class Promise<T> extends Resolvable<T>
 		var state = 0;
 		var rejectHandler = (reason:any)=>
 		{
-			if(state) {
-				console.warn(state==-1?"Rejection called multiple times":"Rejection called after fulfilled.");
-			} else {
+			if(state)
+			{
+				// Someone else's promise handling down stream could double call this. :\
+				console.warn(state== -1
+					? "Rejection called multiple times"
+					: "Rejection called after fulfilled.");
+			}
+			else
+			{
 				state = -1;
 				this._resolvedCalled = false;
 				this.reject(reason);
@@ -531,39 +563,117 @@ export class Promise<T> extends Resolvable<T>
 
 		var fulfillHandler = (v:any)=>
 		{
-			if(state) {
-				console.warn(state==1?"Fulfill called multiple times":"Fulfill called after rejection.");
-			} else {
+			if(state)
+			{
+				// Someone else's promise handling down stream could double call this. :\
+				console.warn(state==1
+					? "Fulfill called multiple times"
+					: "Fulfill called after rejection.");
+			}
+			else
+			{
 				state = 1;
 				this._resolvedCalled = false;
 				this.resolve(v);
 			}
 		};
 
-		var r = ()=> resolver(
-			v=>
-			{
-				if(v==this) throw new InvalidOperationException("Cannot resolve a promise as itself.");
-				if(isPromise(v)) // If the result is a promise, then it will defer downstream.
-					handleDispatch(v, fulfillHandler, rejectHandler);
-				else
-				{
-					fulfillHandler(v);
-				}
-
-			},
-			rejectHandler);
-
 		// There are some performance edge cases where there caller is not blocking upstream and does not need to defer.
 		if(forceSynchronous)
-			r();
+			resolver(fulfillHandler, rejectHandler);
 		else
-			deferImmediate(r);
-
+			deferImmediate(()=>resolver(fulfillHandler, rejectHandler));
 
 	}
 
-	resolve(result?:T, throwIfSettled:boolean = false):void
+
+	private _emitDisposalRejection(p:PromiseBase<any>):boolean
+	{
+		var d = p.wasDisposed;
+		if(d) this._rejectInternal(newODE());
+		return d;
+	}
+
+	private _resolveInternal(result?:T|PromiseLike<T>):void
+	{
+		if(this.wasDisposed) return;
+
+		// Note: Avoid recursion if possible.
+
+		// Check ahead of time for resolution and resolve appropriately
+		while(result instanceof PromiseBase)
+		{
+			let r:PromiseBase<T> = <any>result;
+			if(this._emitDisposalRejection(r)) return;
+			switch(r.state)
+			{
+				case Promise.State.Pending:
+					r.thenSynchronous(
+						v=>this._resolveInternal(v),
+						e=>this._rejectInternal(e)
+					);
+					return;
+				case Promise.State.Rejected:
+					this._rejectInternal(r.error);
+					return;
+				case Promise.State.Fulfilled:
+					result = r.result;
+					break;
+			}
+		}
+
+		if(isPromise(result))
+		{
+			result.then(
+				v=>this._resolveInternal(v),
+				e=>this._rejectInternal(e)
+			);
+		}
+		else
+		{
+			this._state = Promise.State.Fulfilled;
+
+			this._result = result;
+			this._error = VOID0;
+			var o = this._waiting;
+			if(o)
+			{
+				this._waiting = VOID0;
+				for(let c of o)
+				{
+					let {onFulfilled, promise} = c, p = (<Promise<T>>promise);
+					pools.PromiseCallbacks.recycle(c);
+					handleResolution(p, result, onFulfilled);
+				}
+				o.length = 0;
+			}
+		}
+	}
+
+	private _rejectInternal(error:any):void
+	{
+
+		if(this.wasDisposed) return;
+
+		this._state = Promise.State.Rejected;
+
+		this._error = error;
+		var o = this._waiting;
+		if(o)
+		{
+			this._waiting = null; // null = finished. undefined = hasn't started.
+			for(let c of o)
+			{
+				let {onRejected, promise} = c, p = (<Promise<T>>promise);
+				pools.PromiseCallbacks.recycle(c);
+				if(onRejected) handleResolution(p, error, onRejected);
+				else p.reject(error);
+			}
+			o.length = 0;
+		}
+	}
+
+	resolve(result?:T | PromiseLike<T>, throwIfSettled:boolean = false):void
 	{
 		this.throwIfDisposed();
 		if(<any>result==this)
@@ -583,23 +693,9 @@ export class Promise<T> extends Resolvable<T>
 			return;
 		}
 
-		this._state = Promise.State.Fulfilled;
-
-		this._result = result;
-		this._error = VOID0;
-		var o = this._waiting;
-		if(o)
-		{
-			this._waiting = VOID0;
-			for(let c of o)
-			{
-				let {onFulfilled, promise} = c, p = (<Promise<T>>promise);
-				pools.PromiseCallbacks.recycle(c);
-				handleResolution(p, result, onFulfilled);
-			}
-			o.length = 0;
-		}
+		this._resolveInternal(result);
 	}
+
 
 	reject(error:any, throwIfSettled:boolean = false):void
 	{
@@ -617,22 +713,8 @@ export class Promise<T> extends Resolvable<T>
 				throw new InvalidOperationException(".resolve() already called.");
 			return;
 		}
-		this._state = Promise.State.Rejected;
 
-		this._error = error;
-		var o = this._waiting;
-		if(o)
-		{
-			this._waiting = null; // null = finished. undefined = hasn't started.
-			for(let c of o)
-			{
-				let {onRejected, promise} = c, p = (<Promise<T>>promise);
-				pools.PromiseCallbacks.recycle(c);
-				if(onRejected) handleResolution(p, error, onRejected);
-				else p.reject(error);
-			}
-			o.length = 0;
-		}
+		this._rejectInternal(error);
 	}
 }
 
@@ -1001,7 +1083,7 @@ export module Promise
 	export function wrap<T>(target:PromiseLike<T>):PromiseBase<T>
 	{
 		if(!target) throw new ArgumentNullException(TARGET);
-		return target instanceof Promise ? this : new PromiseWrapper(target);
+		return target instanceof PromiseBase ? target : new PromiseWrapper(target);
 	}
 
 	/**

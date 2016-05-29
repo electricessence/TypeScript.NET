@@ -13,6 +13,7 @@ import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { ObjectPool } from "../Disposable/ObjectPool";
 import { Set } from "../Collections/Set";
 import { defer } from "../Threading/defer";
+import { ObjectDisposedException } from "../Disposable/ObjectDisposedException";
 const VOID0 = void 0, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
 function isPromise(value) {
     return Type.hasMemberOfType(value, THEN, Type.FUNCTION);
@@ -51,6 +52,9 @@ function handleDispatch(p, onFulfilled, onRejected) {
         p.thenThis(onFulfilled, onRejected);
     else
         p.then(onFulfilled, onRejected);
+}
+function newODE() {
+    return new ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
 }
 export class PromiseState extends DisposableBase {
     constructor(_state, _result, _error) {
@@ -109,6 +113,9 @@ export class PromiseBase extends PromiseState {
                 ? handleResolutionMethods(resolve, null, error, onRejected)
                 : reject(error));
         });
+    }
+    done(onFulfilled, onRejected) {
+        defer(() => this.thenThis(onFulfilled, onRejected));
     }
     delayFromNow(milliseconds = 0) {
         this.throwIfDisposed();
@@ -275,7 +282,9 @@ export class Promise extends Resolvable {
         var state = 0;
         var rejectHandler = (reason) => {
             if (state) {
-                console.warn(state == -1 ? "Rejection called multiple times" : "Rejection called after fulfilled.");
+                console.warn(state == -1
+                    ? "Rejection called multiple times"
+                    : "Rejection called after fulfilled.");
             }
             else {
                 state = -1;
@@ -285,7 +294,9 @@ export class Promise extends Resolvable {
         };
         var fulfillHandler = (v) => {
             if (state) {
-                console.warn(state == 1 ? "Fulfill called multiple times" : "Fulfill called after rejection.");
+                console.warn(state == 1
+                    ? "Fulfill called multiple times"
+                    : "Fulfill called after rejection.");
             }
             else {
                 state = 1;
@@ -293,60 +304,58 @@ export class Promise extends Resolvable {
                 this.resolve(v);
             }
         };
-        var r = () => resolver(v => {
-            if (v == this)
-                throw new InvalidOperationException("Cannot resolve a promise as itself.");
-            if (isPromise(v))
-                handleDispatch(v, fulfillHandler, rejectHandler);
-            else {
-                fulfillHandler(v);
-            }
-        }, rejectHandler);
         if (forceSynchronous)
-            r();
+            resolver(fulfillHandler, rejectHandler);
         else
-            deferImmediate(r);
+            deferImmediate(() => resolver(fulfillHandler, rejectHandler));
     }
-    resolve(result, throwIfSettled = false) {
-        this.throwIfDisposed();
-        if (result == this)
-            throw new InvalidOperationException("Cannot resolve a promise as itself.");
-        if (this._state) {
-            if (!throwIfSettled || this._state == Promise.State.Fulfilled && this._result === result)
-                return;
-            throw new InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
-        }
-        if (this._resolvedCalled) {
-            if (throwIfSettled)
-                throw new InvalidOperationException(".resolve() already called.");
+    _emitDisposalRejection(p) {
+        var d = p.wasDisposed;
+        if (d)
+            this._rejectInternal(newODE());
+        return d;
+    }
+    _resolveInternal(result) {
+        if (this.wasDisposed)
             return;
-        }
-        this._state = Promise.State.Fulfilled;
-        this._result = result;
-        this._error = VOID0;
-        var o = this._waiting;
-        if (o) {
-            this._waiting = VOID0;
-            for (let c of o) {
-                let { onFulfilled, promise } = c, p = promise;
-                pools.PromiseCallbacks.recycle(c);
-                handleResolution(p, result, onFulfilled);
+        while (result instanceof PromiseBase) {
+            let r = result;
+            if (this._emitDisposalRejection(r))
+                return;
+            switch (r.state) {
+                case Promise.State.Pending:
+                    r.thenSynchronous(v => this._resolveInternal(v), e => this._rejectInternal(e));
+                    return;
+                case Promise.State.Rejected:
+                    this._rejectInternal(r.error);
+                    return;
+                case Promise.State.Fulfilled:
+                    result = r.result;
+                    break;
             }
-            o.length = 0;
+        }
+        if (isPromise(result)) {
+            result.then(v => this._resolveInternal(v), e => this._rejectInternal(e));
+        }
+        else {
+            this._state = Promise.State.Fulfilled;
+            this._result = result;
+            this._error = VOID0;
+            var o = this._waiting;
+            if (o) {
+                this._waiting = VOID0;
+                for (let c of o) {
+                    let { onFulfilled, promise } = c, p = promise;
+                    pools.PromiseCallbacks.recycle(c);
+                    handleResolution(p, result, onFulfilled);
+                }
+                o.length = 0;
+            }
         }
     }
-    reject(error, throwIfSettled = false) {
-        this.throwIfDisposed();
-        if (this._state) {
-            if (!throwIfSettled || this._state == Promise.State.Rejected && this._error === error)
-                return;
-            throw new InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
-        }
-        if (this._resolvedCalled) {
-            if (throwIfSettled)
-                throw new InvalidOperationException(".resolve() already called.");
+    _rejectInternal(error) {
+        if (this.wasDisposed)
             return;
-        }
         this._state = Promise.State.Rejected;
         this._error = error;
         var o = this._waiting;
@@ -362,6 +371,36 @@ export class Promise extends Resolvable {
             }
             o.length = 0;
         }
+    }
+    resolve(result, throwIfSettled = false) {
+        this.throwIfDisposed();
+        if (result == this)
+            throw new InvalidOperationException("Cannot resolve a promise as itself.");
+        if (this._state) {
+            if (!throwIfSettled || this._state == Promise.State.Fulfilled && this._result === result)
+                return;
+            throw new InvalidOperationException("Changing the fulfilled state/value of a promise is not supported.");
+        }
+        if (this._resolvedCalled) {
+            if (throwIfSettled)
+                throw new InvalidOperationException(".resolve() already called.");
+            return;
+        }
+        this._resolveInternal(result);
+    }
+    reject(error, throwIfSettled = false) {
+        this.throwIfDisposed();
+        if (this._state) {
+            if (!throwIfSettled || this._state == Promise.State.Rejected && this._error === error)
+                return;
+            throw new InvalidOperationException("Changing the rejected state/value of a promise is not supported.");
+        }
+        if (this._resolvedCalled) {
+            if (throwIfSettled)
+                throw new InvalidOperationException(".resolve() already called.");
+            return;
+        }
+        this._rejectInternal(error);
     }
 }
 var pools;
@@ -543,7 +582,7 @@ var pools;
     function wrap(target) {
         if (!target)
             throw new ArgumentNullException(TARGET);
-        return target instanceof Promise ? this : new PromiseWrapper(target);
+        return target instanceof PromiseBase ? target : new PromiseWrapper(target);
     }
     Promise.wrap = wrap;
     function createFrom(then) {

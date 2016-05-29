@@ -367,7 +367,7 @@ gulp.task(TASK.VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 
 gulp.task(TASK.NUGET_PACK,
 	[
-		TASK.BUILD
+		//TASK.BUILD
 	],
 	function(callback) {
 
@@ -384,7 +384,7 @@ gulp.task(TASK.NUGET_PACK,
 				language: "en-us",
 				projectUrl: "https://github.com/electricessence/TypeScript.NET",
 				licenseUrl: "https://raw.githubusercontent.com/electricessence/TypeScript.NET/master/LICENSE.md",
-				tags: "typescript tsc .NET TypeScript.NET LINQ",
+				tags: pkg.keywords.join(" "),
 				excludes: [],
 				outputDir: ".nuget"
 			},

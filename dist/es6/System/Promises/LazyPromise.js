@@ -81,7 +81,7 @@ export class LazyPromise extends Promise {
         }
         return new LazyPromise((resolve, reject) => {
             if (this.isPending) {
-                this.thenThis(v => defer(() => resolve(v)), e => defer(() => reject(e)));
+                this.thenThis(v => defer(() => resolve(v), milliseconds), e => defer(() => reject(e), milliseconds));
                 finalize();
             }
             else {
