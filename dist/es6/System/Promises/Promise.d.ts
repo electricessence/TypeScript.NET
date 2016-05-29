@@ -72,6 +72,8 @@ export declare module Promise {
     }
     function all<T>(promises: PromiseLike<T>[]): PromiseBase<T[]>;
     function all<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<T[]>;
+    function waitAll<T>(promises: PromiseLike<T>[]): PromiseBase<PromiseLike<T>[]>;
+    function waitAll<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<PromiseLike<T>[]>;
     function race<T>(promises: PromiseLike<T>[]): PromiseBase<T>;
     function race<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<T>;
     function resolve(): PromiseBase<void>;

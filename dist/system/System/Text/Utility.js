@@ -6,7 +6,7 @@ System.register(["../Types"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1;
-    var EMPTY;
+    var EMPTY, SPACE, ZERO;
     function getHashCode(source) {
         var hash = 0 | 0;
         if (source.length == 0)
@@ -116,6 +116,8 @@ System.register(["../Types"], function(exports_1, context_1) {
             }],
         execute: function() {
             exports_1("EMPTY", EMPTY = '');
+            SPACE = ' ';
+            ZERO = '0';
         }
     }
 });

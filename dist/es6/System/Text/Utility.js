@@ -4,6 +4,8 @@
  */
 import { Type } from "../Types";
 export const EMPTY = '';
+const SPACE = ' ';
+const ZERO = '0';
 export function getHashCode(source) {
     var hash = 0 | 0;
     if (source.length == 0)

@@ -458,6 +458,45 @@ var pools;
         });
     }
     Promise.all = all;
+    function waitAll(first, ...rest) {
+        if (!first && !rest.length)
+            throw new ArgumentNullException("promises");
+        var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+        if (!promises.length || promises.every(v => !v))
+            return new Fulfilled(promises);
+        return new Promise((resolve, reject) => {
+            let checkedAll = false;
+            let len = promises.length;
+            let remaining = new Set(promises.map((v, i) => i));
+            let cleanup = () => {
+                reject = null;
+                resolve = null;
+                remaining.dispose();
+                remaining = null;
+            };
+            let checkIfShouldResolve = () => {
+                let r = resolve;
+                if (r && !remaining.count) {
+                    cleanup();
+                    r(promises);
+                }
+            };
+            let onResolved = (i) => {
+                if (remaining) {
+                    remaining.remove(i);
+                    checkIfShouldResolve();
+                }
+            };
+            for (let i = 0; remaining && i < len; i++) {
+                let p = promises[i];
+                if (p)
+                    p.then(v => onResolved(i), e => onResolved(i));
+                else
+                    onResolved(i);
+            }
+        });
+    }
+    Promise.waitAll = waitAll;
     function race(first, ...rest) {
         var promises = first && (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises || !promises.length || !(promises = promises.filter(v => v != null)).length)

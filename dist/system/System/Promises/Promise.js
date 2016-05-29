@@ -561,6 +561,52 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     });
                 }
                 Promise.all = all;
+                function waitAll(first) {
+                    var rest = [];
+                    for (var _i = 1; _i < arguments.length; _i++) {
+                        rest[_i - 1] = arguments[_i];
+                    }
+                    if (!first && !rest.length)
+                        throw new ArgumentNullException_1.ArgumentNullException("promises");
+                    var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+                    if (!promises.length || promises.every(function (v) { return !v; }))
+                        return new Fulfilled(promises);
+                    return new Promise(function (resolve, reject) {
+                        var checkedAll = false;
+                        var len = promises.length;
+                        var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
+                        var cleanup = function () {
+                            reject = null;
+                            resolve = null;
+                            remaining.dispose();
+                            remaining = null;
+                        };
+                        var checkIfShouldResolve = function () {
+                            var r = resolve;
+                            if (r && !remaining.count) {
+                                cleanup();
+                                r(promises);
+                            }
+                        };
+                        var onResolved = function (i) {
+                            if (remaining) {
+                                remaining.remove(i);
+                                checkIfShouldResolve();
+                            }
+                        };
+                        var _loop_2 = function(i) {
+                            var p = promises[i];
+                            if (p)
+                                p.then(function (v) { return onResolved(i); }, function (e) { return onResolved(i); });
+                            else
+                                onResolved(i);
+                        };
+                        for (var i = 0; remaining && i < len; i++) {
+                            _loop_2(i);
+                        }
+                    });
+                }
+                Promise.waitAll = waitAll;
                 function race(first) {
                     var rest = [];
                     for (var _i = 1; _i < arguments.length; _i++) {
