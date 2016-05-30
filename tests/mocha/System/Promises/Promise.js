@@ -3,16 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define([
-            "require",
-            "exports",
-            "../../../../source/System/Promises/Promise",
-            "../../../../source/System/Collections/Array/Utility",
-            "../../../../source/System/Diagnostics/Stopwatch",
-            "../../../../source/System/Threading/defer",
-            "../../../../source/System/Promises/LazyPromise",
-            "../../../../source/System/Disposable/ObjectDisposedException"
-        ], factory);
+        define(["require", "exports", "../../../../source/System/Promises/Promise", "../../../../source/System/Collections/Array/Utility", "../../../../source/System/Diagnostics/Stopwatch", "../../../../source/System/Threading/defer", "../../../../source/System/Promises/LazyPromise", "../../../../source/System/Disposable/ObjectDisposedException"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -245,24 +236,24 @@
             s.resolve(true);
             return testPromiseFlow(p);
         });
-        it("should be able to wait for all", function() {
-            var other = new LazyPromise_1.LazyPromise(function(resolve) {
+        it("should be able to wait for all", function () {
+            var other = new LazyPromise_1.LazyPromise(function (resolve) {
                 resolve(4);
             });
-            return Promise_1.Promise.waitAll(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.reject(BREAK), Promise_1.Promise.resolve(1)).thenSynchronous(function(r) {
+            return Promise_1.Promise.waitAll(other, Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.reject(BREAK), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
                 assert.equal(r[0].result, 4);
                 assert.equal(r[1].result, 3);
                 assert.equal(r[2].result, 2);
                 assert.equal(r[3].result, void 0);
                 assert.equal(r[3].error, BREAK);
                 assert.equal(r[4].result, 1);
-            }, function() { return assert.ok(false); });
+            }, function () { return assert.ok(false); });
         });
         it("should be able to resolve all", function () {
             var other = new LazyPromise_1.LazyPromise(function (resolve) {
                 resolve(4);
             });
-            return Promise_1.Promise.all(other.delayFromNow(10).delayAfterResolve(10), Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1)).thenSynchronous(function(r) {
+            return Promise_1.Promise.all(other.delayFromNow(10).delayAfterResolve(10), Promise_1.Promise.resolve(3), Promise_1.Promise.resolve(2), Promise_1.Promise.resolve(1)).thenSynchronous(function (r) {
                 assert.equal(r[0], 4);
                 assert.equal(r[1], 3);
                 assert.equal(r[2], 2);
@@ -283,9 +274,9 @@
             var other = new LazyPromise_1.LazyPromise(function (resolve, reject) {
                 reject(4);
             });
-            return Promise_1.Promise.race(other.delayAfterResolve(40), Promise_1.Promise.resolve(3).delayFromNow(10), Promise_1.Promise.resolve(2).delayFromNow(20), Promise_1.Promise.resolve(1).delayFromNow(30)).thenSynchronous(function(r) {
+            return Promise_1.Promise.race(other.delayAfterResolve(40), Promise_1.Promise.resolve(3).delayFromNow(10), Promise_1.Promise.resolve(2).delayFromNow(20), Promise_1.Promise.resolve(1).delayFromNow(30)).thenSynchronous(function (r) {
                 assert.equal(r, 3);
-            }, function() {
+            }, function () {
                 assert.ok(false);
             });
         });
@@ -296,22 +287,23 @@
                 assert.equal(e, 1);
             });
         });
-        it("should resolve the chain fulfilled promise result.", function() {
-            return new Promise_1.Promise((function(resolve) { return resolve(new Promise_1.Promise((function(resolve) { return resolve(Promise_1.Promise.resolve(1)); }))); }))
-                .thenSynchronous(function(v) { return assert.equal(v, 1); }, function() { return assert.ok(false); });
+        it("should resolve the chain fulfilled promise result.", function () {
+            return new Promise_1.Promise((function (resolve) { return resolve(new Promise_1.Promise((function (resolve) { return resolve(Promise_1.Promise.resolve(1)); }))); }))
+                .thenSynchronous(function (v) { return assert.equal(v, 1); }, function () { return assert.ok(false); });
         });
-        it("should resolve the rejected promise result.", function() {
-            return new Promise_1.Promise((function(resolve) { return resolve(Promise_1.Promise.reject(BREAK)); }))
-                .thenSynchronous(function() { return assert.ok(false); }, function(e) { return assert.equal(e, BREAK); });
+        it("should resolve the rejected promise result.", function () {
+            return new Promise_1.Promise((function (resolve) { return resolve(Promise_1.Promise.reject(BREAK)); }))
+                .thenSynchronous(function () { return assert.ok(false); }, function (e) { return assert.equal(e, BREAK); });
         });
-        it("should rejected a disposed promise-result..", function() {
-            return new Promise_1.Promise((function(resolve) {
+        it("should rejected a disposed promise-result..", function () {
+            return new Promise_1.Promise((function (resolve) {
                 var r = Promise_1.Promise.resolve(1);
                 r.dispose();
                 resolve(r);
             }))
-                .thenSynchronous(function() { return assert.ok(false); }, function(e) { return assert.ok(e instanceof ObjectDisposedException_1.ObjectDisposedException); });
+                .thenSynchronous(function () { return assert.ok(false); }, function (e) { return assert.ok(e instanceof ObjectDisposedException_1.ObjectDisposedException); });
         });
     });
 });
+
 //# sourceMappingURL=Promise.js.map

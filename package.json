@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet",
-  "version": "2.18.6",
+  "version": "2.18.7",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",
@@ -52,5 +52,13 @@
     "tsd": "^0.6.4",
     "typedoc": "^0.3.12",
     "typescript": "^1.8.0"
+  },
+  "dependencies": {
+    "assert": "^1.4.0",
+    "babel-preset-es2015": "^6.9.0",
+    "bower": "^1.7.9",
+    "gulp-typescript": "^2.13.5",
+    "mocha": "^2.5.3",
+    "typescript": "^1.8.10"
   }
 }

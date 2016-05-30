@@ -14,20 +14,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define([
-            "require",
-            "exports",
-            "../Types",
-            "../Threading/deferImmediate",
-            "../Disposable/DisposableBase",
-            "../Exceptions/InvalidOperationException",
-            "../Exceptions/ArgumentException",
-            "../Exceptions/ArgumentNullException",
-            "../Disposable/ObjectPool",
-            "../Collections/Set",
-            "../Threading/defer",
-            "../Disposable/ObjectDisposedException"
-        ], factory);
+        define(["require", "exports", "../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -174,9 +161,9 @@ var __extends = (this && this.__extends) || function (d, b) {
                     : reject(error); });
             });
         };
-        PromiseBase.prototype.done = function(onFulfilled, onRejected) {
+        PromiseBase.prototype.done = function (onFulfilled, onRejected) {
             var _this = this;
-            defer_1.defer(function() { return _this.thenThis(onFulfilled, onRejected); });
+            defer_1.defer(function () { return _this.thenThis(onFulfilled, onRejected); });
         };
         PromiseBase.prototype.delayFromNow = function (milliseconds) {
             var _this = this;
@@ -395,25 +382,25 @@ var __extends = (this && this.__extends) || function (d, b) {
             if (forceSynchronous)
                 resolver(fulfillHandler, rejectHandler);
             else
-                deferImmediate_1.deferImmediate(function() { return resolver(fulfillHandler, rejectHandler); });
+                deferImmediate_1.deferImmediate(function () { return resolver(fulfillHandler, rejectHandler); });
         };
-        Promise.prototype._emitDisposalRejection = function(p) {
+        Promise.prototype._emitDisposalRejection = function (p) {
             var d = p.wasDisposed;
-            if(d)
+            if (d)
                 this._rejectInternal(newODE());
             return d;
         };
-        Promise.prototype._resolveInternal = function(result) {
+        Promise.prototype._resolveInternal = function (result) {
             var _this = this;
-            if(this.wasDisposed)
+            if (this.wasDisposed)
                 return;
-            while(result instanceof PromiseBase) {
+            while (result instanceof PromiseBase) {
                 var r = result;
-                if(this._emitDisposalRejection(r))
+                if (this._emitDisposalRejection(r))
                     return;
-                switch(r.state) {
+                switch (r.state) {
                     case Promise.State.Pending:
-                        r.thenSynchronous(function(v) { return _this._resolveInternal(v); }, function(e) { return _this._rejectInternal(e); });
+                        r.thenSynchronous(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
                         return;
                     case Promise.State.Rejected:
                         this._rejectInternal(r.error);
@@ -423,17 +410,17 @@ var __extends = (this && this.__extends) || function (d, b) {
                         break;
                 }
             }
-            if(isPromise(result)) {
-                result.then(function(v) { return _this._resolveInternal(v); }, function(e) { return _this._rejectInternal(e); });
+            if (isPromise(result)) {
+                result.then(function (v) { return _this._resolveInternal(v); }, function (e) { return _this._rejectInternal(e); });
             }
             else {
                 this._state = Promise.State.Fulfilled;
                 this._result = result;
                 this._error = VOID0;
                 var o = this._waiting;
-                if(o) {
+                if (o) {
                     this._waiting = VOID0;
-                    for(var _i = 0, o_1 = o; _i<o_1.length; _i++) {
+                    for (var _i = 0, o_1 = o; _i < o_1.length; _i++) {
                         var c = o_1[_i];
                         var onFulfilled = c.onFulfilled, promise = c.promise, p = promise;
                         pools.PromiseCallbacks.recycle(c);
@@ -443,19 +430,19 @@ var __extends = (this && this.__extends) || function (d, b) {
                 }
             }
         };
-        Promise.prototype._rejectInternal = function(error) {
-            if(this.wasDisposed)
+        Promise.prototype._rejectInternal = function (error) {
+            if (this.wasDisposed)
                 return;
             this._state = Promise.State.Rejected;
             this._error = error;
             var o = this._waiting;
-            if(o) {
+            if (o) {
                 this._waiting = null;
-                for(var _i = 0, o_2 = o; _i<o_2.length; _i++) {
+                for (var _i = 0, o_2 = o; _i < o_2.length; _i++) {
                     var c = o_2[_i];
                     var onRejected = c.onRejected, promise = c.promise, p = promise;
                     pools.PromiseCallbacks.recycle(c);
-                    if(onRejected)
+                    if (onRejected)
                         handleResolution(p, error, onRejected);
                     else
                         p.reject(error);
@@ -602,45 +589,45 @@ var __extends = (this && this.__extends) || function (d, b) {
         Promise.all = all;
         function waitAll(first) {
             var rest = [];
-            for(var _i = 1; _i<arguments.length; _i++) {
+            for (var _i = 1; _i < arguments.length; _i++) {
                 rest[_i - 1] = arguments[_i];
             }
-            if(!first && !rest.length)
+            if (!first && !rest.length)
                 throw new ArgumentNullException_1.ArgumentNullException("promises");
             var promises = (Array.isArray(first) ? first : [first]).concat(rest);
-            if(!promises.length || promises.every(function(v) { return !v; }))
+            if (!promises.length || promises.every(function (v) { return !v; }))
                 return new Fulfilled(promises);
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 var checkedAll = false;
                 var len = promises.length;
-                var remaining = new Set_1.Set(promises.map(function(v, i) { return i; }));
-                var cleanup = function() {
+                var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
+                var cleanup = function () {
                     reject = null;
                     resolve = null;
                     remaining.dispose();
                     remaining = null;
                 };
-                var checkIfShouldResolve = function() {
+                var checkIfShouldResolve = function () {
                     var r = resolve;
-                    if(r && !remaining.count) {
+                    if (r && !remaining.count) {
                         cleanup();
                         r(promises);
                     }
                 };
-                var onResolved = function(i) {
-                    if(remaining) {
+                var onResolved = function (i) {
+                    if (remaining) {
                         remaining.remove(i);
                         checkIfShouldResolve();
                     }
                 };
                 var _loop_2 = function(i) {
                     var p = promises[i];
-                    if(p)
-                        p.then(function(v) { return onResolved(i); }, function(e) { return onResolved(i); });
+                    if (p)
+                        p.then(function (v) { return onResolved(i); }, function (e) { return onResolved(i); });
                     else
                         onResolved(i);
                 };
-                for(var i = 0; remaining && i<len; i++) {
+                for (var i = 0; remaining && i < len; i++) {
                     _loop_2(i);
                 }
             });

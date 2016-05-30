@@ -1,10 +1,1 @@
-{
-  "version": 3,
-  "file": "Compare.js",
-  "sourceRoot": "",
-  "sources": [
-    "Compare.ts"
-  ],
-  "names": [],
-  "mappings": ";;;;;;;;;IAKA;IAEA,CAAC;IAFD;yBAEC,CAAA"
-}
+{"version":3,"file":"Compare.js","sourceRoot":"","sources":["Compare.ts"],"names":[],"mappings":";;;;;;;;;IAKA;IAEA,CAAC;IAFD;yBAEC,CAAA"}
