@@ -47,7 +47,8 @@ import {
 	IFiniteEnumerable,
 	ILookup,
 	IOrderedEnumerable,
-	IGrouping
+	IGrouping,
+	EnumerableAction
 } from "./Enumerable";
 
 // #region Local Constants.
@@ -81,15 +82,7 @@ function getEmptyEnumerator():IEnumerator<any>
 
 // #endregion
 
-/**
- * Defined values for doAction.
- */
-export const enum EnumerableAction
-{
-	Break  = 0,
-	Return = 1,
-	Skip   = 2
-}
+
 
 /*
  * NOTE: About InfiniteEnumerable<T> and Enumerable<T>.

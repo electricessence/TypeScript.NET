@@ -10,12 +10,7 @@ import { IEnumerableOrArray } from "../System/Collections/IEnumerableOrArray";
 import { IArray } from "../System/Collections/Array/IArray";
 import { IMap, IDictionary } from "../System/Collections/Dictionaries/IDictionary";
 import { Comparable } from "../System/IComparable";
-import { IInfiniteEnumerable, ILinqEnumerable, IFiniteEnumerable, ILookup, IOrderedEnumerable, IGrouping } from "./Enumerable";
-export declare const enum EnumerableAction {
-    Break = 0,
-    Return = 1,
-    Skip = 2,
-}
+import { IInfiniteEnumerable, ILinqEnumerable, IFiniteEnumerable, ILookup, IOrderedEnumerable, IGrouping, EnumerableAction } from "./Enumerable";
 export declare class InfiniteEnumerable<T> extends DisposableBase implements IInfiniteEnumerable<T> {
     protected _enumeratorFactory: () => IEnumerator<T>;
     constructor(_enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void);

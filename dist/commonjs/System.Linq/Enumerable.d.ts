@@ -6,8 +6,23 @@ import {Comparable} from "../System/IComparable";
 import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
 import {IDisposable} from "../System/Disposable/IDisposable";
 
+/**
+ * Defined values for doAction.
+ */
+export const enum EnumerableAction
+{
+	Break  = 0,
+	Return = 1,
+	Skip   = 2
+}
+
 export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 {
+	doAction(
+		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
+		initializer?:()=>void,
+		isEndless?:boolean):IInfiniteEnumerable<T>;
+
 	force():void;
 
 	skip(count:number):IInfiniteEnumerable<T>;
@@ -135,6 +150,11 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 }
 export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 {
+	doAction(
+		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
+		initializer?:()=>void,
+		isEndless?:boolean):ILinqEnumerable<T>;
+
 	skip(count:number):ILinqEnumerable<T>;
 
 	skipWhile(predicate:Predicate<T>):ILinqEnumerable<T>;
