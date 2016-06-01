@@ -1,5 +1,3 @@
-///<reference path="../System/IComparable.d.ts"/>
-
 import {Action, Predicate, Selector, EqualityComparison, Comparison} from "../System/FunctionTypes";
 import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";
 import {IArray} from "../System/Collections/Array/IArray";
