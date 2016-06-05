@@ -43,5 +43,4 @@ it("should trap errors", function () {
         Dispatch_1.mapped(b, 10, function (err) { return assert.equal(err, 'error'); });
     });
 });
-
 //# sourceMappingURL=Dispatch.js.map

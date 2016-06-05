@@ -27,5 +27,4 @@ describe(".supplant(source,..args)", function () {
         assert.equal(TextUtility.supplant("Hello, my name is {name} and I like {like}. {x} {y}", { name: "George", like: "cheese", x: {} }), "Hello, my name is George and I like cheese. [object Object] {y}");
     });
 });
-
 //# sourceMappingURL=Utility.js.map

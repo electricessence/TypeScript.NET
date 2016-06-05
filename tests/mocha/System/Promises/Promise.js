@@ -296,5 +296,4 @@ describe("Resolution and Rejection", function () {
             .thenSynchronous(function () { return assert.ok(false); }, function (e) { return assert.ok(e instanceof ObjectDisposedException_1.ObjectDisposedException); });
     });
 });
-
 //# sourceMappingURL=Promise.js.map

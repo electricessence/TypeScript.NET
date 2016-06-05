@@ -29,5 +29,4 @@ it("should start, stop, and reset with isRunning correctly reflected", function 
     sw.reset();
     assert.ok(!sw.isRunning);
 });
-
 //# sourceMappingURL=Stopwatch.js.map

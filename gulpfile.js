@@ -38,7 +38,6 @@ const
 	rename     = require('gulp-rename'),
 	sourcemaps = require('gulp-sourcemaps'),
 	uglify     = require('gulp-uglify'),
-	babel      = require('gulp-babel'),
 	typescript = require('gulp-typescript'),
 	typedoc    = require('gulp-typedoc'),
 	replace    = require('gulp-replace'),
@@ -144,6 +143,7 @@ const tsc = (function() {
 			.pipe(sourcemaps.init())
 			.pipe(typescript(typescriptOptions))
 			.pipe(sourcemaps.write('.', sourceMapOptions))
+			.pipe(replace(/(\n\s*$)+/gm,"")) // Since gulp-typescript is 'different'
 			.pipe(gulp.dest(folder));
 	}
 
@@ -261,9 +261,6 @@ gulp.task(
 gulp.task( // Need to double process to get the declarations from es6 without modules
 	TASK.DIST_COMMONJS, function()
 	{
-		// return tsc.distPostProcess(
-		// 	MODULE.COMMONJS, TARGET.ES6, MODULE.COMMONJS, babel);
-
 		return tsc.dist(
 			MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS);
 	}

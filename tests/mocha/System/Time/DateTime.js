@@ -1,5 +1,5 @@
 "use strict";
-var DateTime_1 = require('../../../../dist/commonjs/System/Time/DateTime');
+var DateTime_1 = require("../../../../dist/commonjs/System/Time/DateTime");
 var assert = require('../../../../node_modules/assert/assert');
 describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {
     var startYear = 2000;
@@ -30,5 +30,4 @@ describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {
         }
     });
 });
-
 //# sourceMappingURL=DateTime.js.map

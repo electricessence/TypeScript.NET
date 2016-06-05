@@ -12,5 +12,4 @@ describe('new', function () {
         });
     });
 });
-
 //# sourceMappingURL=TaskHandler.js.map

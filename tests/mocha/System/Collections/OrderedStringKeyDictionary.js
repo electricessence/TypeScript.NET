@@ -9,5 +9,4 @@ ICollectionTests.Collection('OrderedStringKeyDictionary<number>', new OrderedStr
     { key: 'E', value: 5 },
     { key: 'F', value: 6 }
 ]);
-
 //# sourceMappingURL=OrderedStringKeyDictionary.js.map

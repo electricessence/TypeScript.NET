@@ -78,5 +78,4 @@ describe("Validate external node detachment", function () {
         assert.throws(function () { return first.value; });
     });
 });
-
 //# sourceMappingURL=LinkedList.js.map

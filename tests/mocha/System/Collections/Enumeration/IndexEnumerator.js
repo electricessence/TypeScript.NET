@@ -93,5 +93,4 @@ it("should enumerate by 1 with no step", function () {
     assert.equal(last, 4);
     test.dispose();
 });
-
 //# sourceMappingURL=IndexEnumerator.js.map

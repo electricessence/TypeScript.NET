@@ -19,5 +19,4 @@ describe('.padRight()', function () {
         assert.equal(Padding_1.padRight(1, 3, 2), "122");
     });
 });
-
 //# sourceMappingURL=Padding.js.map

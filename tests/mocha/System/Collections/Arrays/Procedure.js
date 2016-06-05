@@ -63,5 +63,4 @@ describe(".max(source)", function () {
         assert.ok(isNaN(ArrayProcedure.max([NaN], true)));
     });
 });
-
 //# sourceMappingURL=Procedure.js.map

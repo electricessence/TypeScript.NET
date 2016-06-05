@@ -769,5 +769,4 @@ describe(".weave(enumerables)", function () {
         assert.throws(function () { return Linq_1.default.weave(null); });
     });
 });
-
 //# sourceMappingURL=Enumerable.js.map

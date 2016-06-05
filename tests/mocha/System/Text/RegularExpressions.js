@@ -71,5 +71,4 @@ describe("RegexMatchEnumerator", function () {
         assert.ok(!m.moveNext());
     });
 });
-
 //# sourceMappingURL=RegularExpressions.js.map

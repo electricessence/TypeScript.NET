@@ -244,5 +244,4 @@ describe("Complex test", function () {
         }));
     });
 });
-
 //# sourceMappingURL=TypeValidator.js.map

@@ -55,5 +55,4 @@ describe('.assert(value)', function () {
         assert.equal(Integer_1.default.assert(TEST_INT), true);
     });
 });
-
 //# sourceMappingURL=Integer.js.map

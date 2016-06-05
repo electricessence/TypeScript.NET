@@ -105,5 +105,4 @@ describe(".pairwise(selector)", function () {
         s.dispose();
     });
 });
-
 //# sourceMappingURL=InfiniteEnumerable.js.map

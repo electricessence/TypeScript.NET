@@ -22,5 +22,4 @@ it('should match summed values', function () {
     assert.equal(c2.second, second);
     assert.equal(c2.millisecond, millisecond);
 });
-
 //# sourceMappingURL=ClockTime.js.map

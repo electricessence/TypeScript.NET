@@ -51,5 +51,4 @@ describe(".areEquivalent()", function () {
         assert.ok(!ArrayCompare.areEquivalent(d, e));
     });
 });
-
 //# sourceMappingURL=Compare.js.map

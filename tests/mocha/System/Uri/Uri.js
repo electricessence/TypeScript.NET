@@ -190,5 +190,4 @@ describe('KVP versus Tuple', function () {
         assert.equal(uTuples.toString(), uKvp.toString());
     });
 });
-
 //# sourceMappingURL=Uri.js.map

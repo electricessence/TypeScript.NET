@@ -131,5 +131,4 @@ function InstanceCollection(name, collection) {
     ]);
 }
 exports.InstanceCollection = InstanceCollection;
-
 //# sourceMappingURL=ICollection.js.map

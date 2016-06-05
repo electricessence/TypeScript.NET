@@ -11,5 +11,4 @@ it("should allow empty arrays", function () {
         i.moveNext();
     });
 });
-
 //# sourceMappingURL=ArrayEnumerator.js.map

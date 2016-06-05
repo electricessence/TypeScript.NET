@@ -8,5 +8,4 @@ ICollectionTests.NumberCollection(CLASS_NAME, new List_1.default());
 ICollectionTests.InstanceCollection(CLASS_NAME, new List_1.default());
 var list = new List_1.default([1, 2, 3, 4]);
 assert.equal(list.linq.where(function (i) { return i > 2; }).count(), 2);
-
 //# sourceMappingURL=List.js.map
