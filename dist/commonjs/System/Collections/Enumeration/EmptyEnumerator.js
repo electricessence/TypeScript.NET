@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-
 var IteratorResult_1 = require("./IteratorResult");
 var Functions_1 = require("../../Functions");
 var VOID0 = void 0;

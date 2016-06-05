@@ -1,7 +1,7 @@
-/// <reference path="../../../../source/System/Collections/Dictionaries/IDictionary.d.ts"/>
+/// <reference path="../../../../dist/commonjs/System/Collections/Dictionaries/IDictionary.d.ts"/>
 import * as ICollectionTests from "./ICollection";
-import OrderedStringKeyDictionary from "../../../../source/System/Collections/Dictionaries/OrderedStringKeyDictionary";
-import {IKeyValuePair} from "../../../../source/System/KeyValuePair";
+import OrderedStringKeyDictionary from "../../../../dist/commonjs/System/Collections/Dictionaries/OrderedStringKeyDictionary";
+import {IKeyValuePair} from "../../../../dist/commonjs/System/KeyValuePair";
 
 ICollectionTests.Collection<IKeyValuePair<string,number>>(
 	'OrderedStringKeyDictionary<number>',

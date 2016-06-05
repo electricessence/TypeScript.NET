@@ -1,8 +1,8 @@
 ///<reference path="../../import.d.ts"/>
 
-import Uri from "../../../../source/System/Uri/Uri";
-import * as Scheme from "../../../../source/System/Uri/Scheme";
-import Functions from "../../../../source/System/Functions";
+import Uri from "../../../../dist/commonjs/System/Uri/Uri";
+import * as Scheme from "../../../../dist/commonjs/System/Uri/Scheme";
+import Functions from "../../../../dist/commonjs/System/Functions";
 var assert = require('../../../../node_modules/assert/assert');
 
 const pathAfterRoot= 'one/two/three.html';

@@ -1,6 +1,6 @@
 ///<reference path="../import.d.ts"/>
 
-import Enumerable from "../../../source/System.Linq/Linq";
+import Enumerable from "../../../dist/commonjs/System.Linq/Linq";
 var assert = require('../../../node_modules/assert/assert');
 
 

@@ -1,9 +1,9 @@
 ///<reference path="../../import.d.ts"/>
-///<reference path="../../../../source/System/Primitive.d.ts"/>
+///<reference path="../../../../dist/commonjs/System/Primitive.d.ts"/>
 
 import * as ICollectionTests from "./ICollection";
-import Set from "../../../../source/System/Collections/Set";
-import {Primitive} from "../../../../source/System/Primitive";
+import Set from "../../../../dist/commonjs/System/Collections/Set";
+import {Primitive} from "../../../../dist/commonjs/System/Primitive";
 var assert = require('../../../../node_modules/assert/assert');
 
 //noinspection SpellCheckingInspection

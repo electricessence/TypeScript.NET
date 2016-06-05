@@ -4,87 +4,76 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var TimeQuantity_1 = require("./TimeQuantity");
 var extends_1 = require("../../extends");
 var __extends = extends_1.default;
-
-var ClockTime = function (_TimeQuantity_1$TimeQ) {
-    _inherits(ClockTime, _TimeQuantity_1$TimeQ);
-
+var ClockTime = (function (_super) {
+    __extends(ClockTime, _super);
     function ClockTime() {
-        _classCallCheck(this, ClockTime);
-
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ClockTime).call(this, arguments.length > 1 ? ClockTime.millisecondsFromTime((arguments.length <= 0 ? undefined : arguments[0]) || 0, (arguments.length <= 1 ? undefined : arguments[1]) || 0, arguments.length > 2 && (arguments.length <= 2 ? undefined : arguments[2]) || 0, arguments.length > 3 && (arguments.length <= 3 ? undefined : arguments[3]) || 0) : arguments.length > 0 && (arguments.length <= 0 ? undefined : arguments[0]) || 0));
-
-        var _ = _this;
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        _super.call(this, args.length > 1
+            ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
+            : (args.length > 0 && args[0] || 0));
+        var _ = this;
         var ms = Math.abs(_.getTotalMilliseconds());
         var msi = Math.floor(ms);
         _.tick = (ms - msi) * 10000;
-        _.days = msi / 86400000 | 0;
+        _.days = (msi / 86400000) | 0;
         msi -= _.days * 86400000;
-        _.hour = msi / 3600000 | 0;
+        _.hour = (msi / 3600000) | 0;
         msi -= _.hour * 3600000;
-        _.minute = msi / 60000 | 0;
+        _.minute = (msi / 60000) | 0;
         msi -= _.minute * 60000;
-        _.second = msi / 1000 | 0;
+        _.second = (msi / 1000) | 0;
         msi -= _.second * 1000;
         _.millisecond = msi;
         Object.freeze(_);
-        return _this;
     }
-
-    _createClass(ClockTime, [{
-        key: "toString",
-        value: function toString() {
-            var _ = this,
-                a = [];
-            if (_.days) a.push(pluralize(_.days, "day"));
-            if (_.hour) a.push(pluralize(_.hour, "hour"));
-            if (_.minute) a.push(pluralize(_.minute, "minute"));
-            if (_.second) a.push(pluralize(_.second, "second"));
-            if (a.length > 1) a.splice(a.length - 1, 0, "and");
-            return a.join(", ").replace(", and, ", " and ");
-        }
-    }], [{
-        key: "from",
-        value: function from(hours, minutes) {
-            var seconds = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-            var milliseconds = arguments.length <= 3 || arguments[3] === undefined ? 0 : arguments[3];
-
-            return new ClockTime(hours, minutes, seconds, milliseconds);
-        }
-    }, {
-        key: "millisecondsFromTime",
-        value: function millisecondsFromTime(hours, minutes) {
-            var seconds = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
-            var milliseconds = arguments.length <= 3 || arguments[3] === undefined ? 0 : arguments[3];
-
-            var value = hours;
-            value *= 60;
-            value += minutes;
-            value *= 60;
-            value += seconds;
-            value *= 1000;
-            value += milliseconds;
-            return value;
-        }
-    }]);
-
+    ClockTime.from = function (hours, minutes, seconds, milliseconds) {
+        if (seconds === void 0) { seconds = 0; }
+        if (milliseconds === void 0) { milliseconds = 0; }
+        return new ClockTime(hours, minutes, seconds, milliseconds);
+    };
+    ClockTime.millisecondsFromTime = function (hours, minutes, seconds, milliseconds) {
+        if (seconds === void 0) { seconds = 0; }
+        if (milliseconds === void 0) { milliseconds = 0; }
+        var value = hours;
+        value *= 60;
+        value += minutes;
+        value *= 60;
+        value += seconds;
+        value *= 1000;
+        value += milliseconds;
+        return value;
+    };
+    ClockTime.prototype.toString = function () {
+        var _ = this, a = [];
+        if (_.days)
+            a.push(pluralize(_.days, "day"));
+        if (_.hour)
+            a.push(pluralize(_.hour, "hour"));
+        if (_.minute)
+            a.push(pluralize(_.minute, "minute"));
+        if (_.second)
+            a.push(pluralize(_.second, "second"));
+        if (a.length > 1)
+            a.splice(a.length - 1, 0, "and");
+        return a.join(", ").replace(", and, ", " and ");
+    };
     return ClockTime;
-}(TimeQuantity_1.TimeQuantity);
-
+}(TimeQuantity_1.TimeQuantity));
 exports.ClockTime = ClockTime;
 function pluralize(value, label) {
-    if (Math.abs(value) !== 1) label += "s";
+    if (Math.abs(value) !== 1)
+        label += "s";
     return label;
 }
 Object.defineProperty(exports, "__esModule", { value: true });

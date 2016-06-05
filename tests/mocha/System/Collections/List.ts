@@ -1,7 +1,7 @@
 ///<reference path="../../import.d.ts"/>
 
 import * as ICollectionTests from "./ICollection";
-import List from "../../../../source/System/Collections/List";
+import List from "../../../../dist/commonjs/System/Collections/List";
 var assert = require('../../../../node_modules/assert/assert');
 
 const CLASS_NAME = 'List';

@@ -1,6 +1,6 @@
 ///<reference path="../import.d.ts"/>
 
-import Integer from "../../../source/System/Integer";
+import Integer from "../../../dist/commonjs/System/Integer";
 var assert = require('../../../node_modules/assert/assert');
 
 

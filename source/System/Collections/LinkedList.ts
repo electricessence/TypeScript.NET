@@ -15,8 +15,11 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {Predicate, Action, EqualityComparison} from "../FunctionTypes";
 import {ILinkedList} from "./ILinkedList";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import {IDisposable} from "../Disposable/IDisposable";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
+
+const VOID0:any = void 0;
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -84,6 +87,20 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNod
 	return n;
 }
 
+function detachExternal(node:InternalNode<any>):void
+{
+	if(node)
+	{
+		var e:any = node.external;
+		if(e)
+		{
+			e._list = VOID0;
+			e._nodeInternal = VOID0;
+		}
+		node.external = VOID0;
+	}
+}
+
 export class LinkedList<T>
 extends CollectionBase<T> implements ILinkedList<T>
 {
@@ -99,9 +116,18 @@ extends CollectionBase<T> implements ILinkedList<T>
 		_._importEntries(source);
 	}
 
+	protected _onDispose():void
+	{
+		super._onDispose();
+		var l = this._listInternal;
+		this._listInternal = null;
+		l.dispose();
+	}
+
 	protected getCount():number
 	{
-		return this._listInternal.unsafeCount;
+		var li = this._listInternal;
+		return li ? li.unsafeCount : 0;
 	}
 
 	protected _addInternal(entry:T):boolean
@@ -119,7 +145,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 		list.forEach(node=>
 		{
-			if(equals(entry, node.value) && list.removeNode(node))
+			if(equals(entry, node.value) && _._removeNodeInternal(node))
 				removedCount++;
 
 			return removedCount<max;
@@ -130,7 +156,9 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	protected _clearInternal():number
 	{
-		return this._listInternal.clear();
+		var list = this._listInternal;
+		list.forEach(node=>detachExternal(node));
+		return list.clear();
 	}
 
 
@@ -138,6 +166,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		action:Predicate<T> | Action<T>,
 		useCopy:boolean = false):number
 	{
+		this.throwIfDisposed();
 		return useCopy
 			? super.forEach(action, useCopy)
 			: this._listInternal.forEach((node, i)=>action(node.value, i));
@@ -148,6 +177,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 	// #region IEnumerable<T>
 	getEnumerator():IEnumerator<T>
 	{
+		this.throwIfDisposed();
 		return LinkedNodeList.valueEnumeratorFrom<T>(<any>this._listInternal);
 	}
 
@@ -158,7 +188,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		//noinspection UnnecessaryLocalVariableJS
 		var _      = this,
 		    equals = _._equalityComparer,
-		    next   = _._listInternal.first;
+		    next   = _._listInternal && _._listInternal.first;
 		while(next)
 		{
 			if(equals(entry, next.value))
@@ -173,7 +203,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		//noinspection UnnecessaryLocalVariableJS
 		var _      = this,
 		    equals = _._equalityComparer,
-		    prev   = _._listInternal.last;
+		    prev   = _._listInternal && _._listInternal.last;
 		while(prev)
 		{
 			if(equals(entry, prev.value))
@@ -190,12 +220,26 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	get first():ILinkedListNode<T>
 	{
-		return ensureExternal(this._listInternal.first, this);
+		var li = this._listInternal;
+		return li && ensureExternal(li.first, this);
+	}
+
+	get firstValue():T
+	{
+		var li = this._listInternal, node = li && li.first;
+		return node ? node.value : VOID0;
 	}
 
 	get last():ILinkedListNode<T>
 	{
-		return ensureExternal(this._listInternal.last, this);
+		var li = this._listInternal;
+		return ensureExternal(li.last, this);
+	}
+
+	get lastValue():T
+	{
+		var li = this._listInternal, node = li && li.last;
+		return node ? node.value : VOID0;
 	}
 
 	// get methods are available for convenience but is an n*index operation.
@@ -203,28 +247,31 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	getValueAt(index:number):T
 	{
-		var node = this._listInternal.getNodeAt(index);
-		if(!node)
-			return node && node.value || void(0);
+		var li = this._listInternal, node = li && li.getNodeAt(index);
+		return node ? node.value : VOID0;
 	}
 
 	getNodeAt(index:number):ILinkedListNode<T>
 	{
-		return ensureExternal(this._listInternal.getNodeAt(index), this);
+		var li = this._listInternal;
+		return li && ensureExternal(li.getNodeAt(index), this);
 	}
 
 	find(entry:T):ILinkedListNode<T>
 	{
-		return ensureExternal(this._findFirst(entry), this);
+		var li = this._listInternal;
+		return li && ensureExternal(this._findFirst(entry), this);
 	}
 
 	findLast(entry:T):ILinkedListNode<T>
 	{
-		return ensureExternal(this._findLast(entry), this);
+		var li = this._listInternal;
+		return li && ensureExternal(this._findLast(entry), this);
 	}
 
 	addFirst(entry:T):void
 	{
+		this.assertModifiable();
 		this._listInternal.addNodeBefore(new InternalNode(entry));
 		this._signalModification(true);
 	}
@@ -234,37 +281,51 @@ extends CollectionBase<T> implements ILinkedList<T>
 		this.add(entry);
 	}
 
-	removeFirst():void
+	private _removeNodeInternal(node:InternalNode<T>):boolean
 	{
-		var _ = this, first = _._listInternal.first;
-		if(first && _._listInternal.removeNode(first))
+		var _ = this;
+		if(node && _._listInternal.removeNode(node))
+		{
+			detachExternal(node);
 			_._signalModification(true);
+			return true;
+		}
+		return false;
 	}
 
-	removeLast():void
+	removeFirst():boolean
 	{
-		var _ = this, last = _._listInternal.last;
-		if(last && _._listInternal.removeNode(last))
-			_._signalModification(true);
+		var _ = this;
+		_.assertModifiable();
+		return _._removeNodeInternal(_._listInternal.first);
+	}
+
+	removeLast():boolean
+	{
+		var _ = this;
+		_.assertModifiable();
+		return _._removeNodeInternal(_._listInternal.last);
+	}
+
+	removeAt(index:number):boolean
+	{
+		var _ = this;
+		_.assertModifiable();
+		return _._removeNodeInternal(_._listInternal.getNodeAt(index));
 	}
 
 	// Returns true if successful and false if not found (already removed).
 	removeNode(node:ILinkedListNode<T>):boolean
 	{
 		var _ = this;
-
-		if(_._listInternal.removeNode(getInternal(node, _)))
-		{
-			_._signalModification(true);
-			return true;
-		}
-
-		return false;
+		_.assertModifiable();
+		return _._removeNodeInternal(getInternal(node, _));
 	}
 
 	addBefore(before:ILinkedListNode<T>, entry:T):void
 	{
 		var _ = this;
+		_.assertModifiable();
 		_._listInternal.addNodeBefore(
 			new InternalNode(entry),
 			getInternal(before, _)
@@ -276,6 +337,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 	addAfter(after:ILinkedListNode<T>, entry:T):void
 	{
 		var _ = this;
+		_.assertModifiable();
 		_._listInternal.addNodeAfter(
 			new InternalNode(entry),
 			getInternal(after, _)
@@ -284,38 +346,21 @@ extends CollectionBase<T> implements ILinkedList<T>
 		_._signalModification(true);
 	}
 
-	addNodeBefore(node:ILinkedListNode<T>, before:ILinkedListNode<T>):void
-	{
-		var _ = this;
-		_._listInternal.addNodeBefore(
-			getInternal(before, _),
-			getInternal(node, _)
-		);
-
-		_._signalModification(true);
-	}
-
-	addNodeAfter(node:ILinkedListNode<T>, after:ILinkedListNode<T>):void
-	{
-		var _ = this;
-		this._listInternal.addNodeAfter(
-			getInternal(after, _),
-			getInternal(node, _)
-		);
-
-		_._signalModification(true);
-	}
-
-
 }
 
 // Use an internal node class to prevent mucking up the LinkedList.
-class LinkedListNode<T> implements ILinkedListNode<T>
+class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 {
 	constructor(
 		private _list:LinkedList<T>,
 		private _nodeInternal:InternalNode<T>)
 	{
+	}
+
+	private throwIfDetached():void
+	{
+		if(!this._list)
+			throw new Error("This node has been detached from its list and is no longer valid.");
 	}
 
 	get list():LinkedList<T>
@@ -325,47 +370,52 @@ class LinkedListNode<T> implements ILinkedListNode<T>
 
 	get previous():ILinkedListNode<T>
 	{
+		this.throwIfDetached();
 		return ensureExternal(this._nodeInternal.previous, this._list);
 	}
 
 	get next():ILinkedListNode<T>
 	{
+		this.throwIfDetached();
 		return ensureExternal(this._nodeInternal.next, this._list);
 	}
 
 	get value():T
 	{
+		this.throwIfDetached();
 		return this._nodeInternal.value;
 	}
 
 	set value(v:T)
 	{
+		this.throwIfDetached();
 		this._nodeInternal.value = v;
 	}
 
 	addBefore(entry:T):void
 	{
+		this.throwIfDetached();
 		this._list.addBefore(this, entry);
 	}
 
 	addAfter(entry:T):void
 	{
+		this.throwIfDetached();
 		this._list.addAfter(this, entry);
 	}
 
-	addNodeBefore(before:ILinkedListNode<T>):void
-	{
-		this._list.addNodeBefore(this, before);
-	}
-
-	addNodeAfter(after:ILinkedListNode<T>):void
-	{
-		this._list.addNodeAfter(this, after);
-	}
 
 	remove():void
 	{
-		this._list.removeNode(this);
+		var list = this._list;
+		if(list) list.removeNode(this);
+		this._list = VOID0;
+		this._nodeInternal = VOID0;
+	}
+
+	dispose():void
+	{
+		this.remove();
 	}
 
 }

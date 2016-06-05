@@ -1,7 +1,7 @@
 
 ///<reference path="../../import.d.ts"/>
 
-import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
+import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 var assert = require('../../../../node_modules/assert/assert');
 
 

@@ -3,9 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-
 function applyMixins(derivedConstructor, baseConstructors) {
-    baseConstructors.forEach(function (bc) {
+    baseConstructors
+        .forEach(function (bc) {
         Object.getOwnPropertyNames(bc.prototype).forEach(function (name) {
             derivedConstructor.prototype[name] = bc.prototype[name];
         });

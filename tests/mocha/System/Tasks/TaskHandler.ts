@@ -1,7 +1,7 @@
 ///<reference path="../../import.d.ts"/>
 
-import TaskHandler from "../../../../source/System/Threading/Tasks/TaskHandler";
-import Functions from "../../../../source/System/Functions";
+import TaskHandler from "../../../../dist/commonjs/System/Threading/Tasks/TaskHandler";
+import Functions from "../../../../dist/commonjs/System/Functions";
 var assert = require('../../../../node_modules/assert/assert');
 
 describe('new',()=>{

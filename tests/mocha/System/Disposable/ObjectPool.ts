@@ -1,6 +1,6 @@
 ///<reference path="../../import.d.ts"/>
 
-import ObjectPool from "../../../../source/System/Disposable/ObjectPool";
+import ObjectPool from "../../../../dist/commonjs/System/Disposable/ObjectPool";
 var assert = require('../../../../node_modules/assert/assert');
 
 const pool = new ObjectPool(40, ()=>new Array<any>(100));
@@ -8,7 +8,7 @@ const pool = new ObjectPool(40, ()=>new Array<any>(100));
 
 
 /*
-import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
+import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 function fake(o:any) {}
 const TRIES:number = 1000;
 describe("should be performant", ()=>

@@ -10,6 +10,7 @@ import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { CollectionBase } from "./CollectionBase";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
+const VOID0 = void 0;
 class InternalNode {
     constructor(value, previous, next) {
         this.value = value;
@@ -43,6 +44,16 @@ function getInternal(node, list) {
         throw new InvalidOperationException("Provided node is not valid.");
     return n;
 }
+function detachExternal(node) {
+    if (node) {
+        var e = node.external;
+        if (e) {
+            e._list = VOID0;
+            e._nodeInternal = VOID0;
+        }
+        node.external = VOID0;
+    }
+}
 export class LinkedList extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);
@@ -50,8 +61,15 @@ export class LinkedList extends CollectionBase {
         _._listInternal = new LinkedNodeList();
         _._importEntries(source);
     }
+    _onDispose() {
+        super._onDispose();
+        var l = this._listInternal;
+        this._listInternal = null;
+        l.dispose();
+    }
     getCount() {
-        return this._listInternal.unsafeCount;
+        var li = this._listInternal;
+        return li ? li.unsafeCount : 0;
     }
     _addInternal(entry) {
         this._listInternal.addNode(new InternalNode(entry));
@@ -60,25 +78,29 @@ export class LinkedList extends CollectionBase {
     _removeInternal(entry, max = Infinity) {
         var _ = this, equals = _._equalityComparer, list = _._listInternal, removedCount = 0;
         list.forEach(node => {
-            if (equals(entry, node.value) && list.removeNode(node))
+            if (equals(entry, node.value) && _._removeNodeInternal(node))
                 removedCount++;
             return removedCount < max;
         });
         return removedCount;
     }
     _clearInternal() {
-        return this._listInternal.clear();
+        var list = this._listInternal;
+        list.forEach(node => detachExternal(node));
+        return list.clear();
     }
     forEach(action, useCopy = false) {
+        this.throwIfDisposed();
         return useCopy
             ? super.forEach(action, useCopy)
             : this._listInternal.forEach((node, i) => action(node.value, i));
     }
     getEnumerator() {
+        this.throwIfDisposed();
         return LinkedNodeList.valueEnumeratorFrom(this._listInternal);
     }
     _findFirst(entry) {
-        var _ = this, equals = _._equalityComparer, next = _._listInternal.first;
+        var _ = this, equals = _._equalityComparer, next = _._listInternal && _._listInternal.first;
         while (next) {
             if (equals(entry, next.value))
                 return next;
@@ -87,7 +109,7 @@ export class LinkedList extends CollectionBase {
         return null;
     }
     _findLast(entry) {
-        var _ = this, equals = _._equalityComparer, prev = _._listInternal.last;
+        var _ = this, equals = _._equalityComparer, prev = _._listInternal && _._listInternal.last;
         while (prev) {
             if (equals(entry, prev.value))
                 return prev;
@@ -99,68 +121,84 @@ export class LinkedList extends CollectionBase {
         return this.remove(entry, 1) !== 0;
     }
     get first() {
-        return ensureExternal(this._listInternal.first, this);
+        var li = this._listInternal;
+        return li && ensureExternal(li.first, this);
+    }
+    get firstValue() {
+        var li = this._listInternal, node = li && li.first;
+        return node ? node.value : VOID0;
     }
     get last() {
-        return ensureExternal(this._listInternal.last, this);
+        var li = this._listInternal;
+        return ensureExternal(li.last, this);
+    }
+    get lastValue() {
+        var li = this._listInternal, node = li && li.last;
+        return node ? node.value : VOID0;
     }
     getValueAt(index) {
-        var node = this._listInternal.getNodeAt(index);
-        if (!node)
-            return node && node.value || void (0);
+        var li = this._listInternal, node = li && li.getNodeAt(index);
+        return node ? node.value : VOID0;
     }
     getNodeAt(index) {
-        return ensureExternal(this._listInternal.getNodeAt(index), this);
+        var li = this._listInternal;
+        return li && ensureExternal(li.getNodeAt(index), this);
     }
     find(entry) {
-        return ensureExternal(this._findFirst(entry), this);
+        var li = this._listInternal;
+        return li && ensureExternal(this._findFirst(entry), this);
     }
     findLast(entry) {
-        return ensureExternal(this._findLast(entry), this);
+        var li = this._listInternal;
+        return li && ensureExternal(this._findLast(entry), this);
     }
     addFirst(entry) {
+        this.assertModifiable();
         this._listInternal.addNodeBefore(new InternalNode(entry));
         this._signalModification(true);
     }
     addLast(entry) {
         this.add(entry);
     }
-    removeFirst() {
-        var _ = this, first = _._listInternal.first;
-        if (first && _._listInternal.removeNode(first))
-            _._signalModification(true);
-    }
-    removeLast() {
-        var _ = this, last = _._listInternal.last;
-        if (last && _._listInternal.removeNode(last))
-            _._signalModification(true);
-    }
-    removeNode(node) {
+    _removeNodeInternal(node) {
         var _ = this;
-        if (_._listInternal.removeNode(getInternal(node, _))) {
+        if (node && _._listInternal.removeNode(node)) {
+            detachExternal(node);
             _._signalModification(true);
             return true;
         }
         return false;
     }
+    removeFirst() {
+        var _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(_._listInternal.first);
+    }
+    removeLast() {
+        var _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(_._listInternal.last);
+    }
+    removeAt(index) {
+        var _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(_._listInternal.getNodeAt(index));
+    }
+    removeNode(node) {
+        var _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(getInternal(node, _));
+    }
     addBefore(before, entry) {
         var _ = this;
+        _.assertModifiable();
         _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
         _._signalModification(true);
     }
     addAfter(after, entry) {
         var _ = this;
+        _.assertModifiable();
         _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
-        _._signalModification(true);
-    }
-    addNodeBefore(node, before) {
-        var _ = this;
-        _._listInternal.addNodeBefore(getInternal(before, _), getInternal(node, _));
-        _._signalModification(true);
-    }
-    addNodeAfter(node, after) {
-        var _ = this;
-        this._listInternal.addNodeAfter(getInternal(after, _), getInternal(node, _));
         _._signalModification(true);
     }
 }
@@ -169,35 +207,46 @@ class LinkedListNode {
         this._list = _list;
         this._nodeInternal = _nodeInternal;
     }
+    throwIfDetached() {
+        if (!this._list)
+            throw new Error("This node has been detached from its list and is no longer valid.");
+    }
     get list() {
         return this._list;
     }
     get previous() {
+        this.throwIfDetached();
         return ensureExternal(this._nodeInternal.previous, this._list);
     }
     get next() {
+        this.throwIfDetached();
         return ensureExternal(this._nodeInternal.next, this._list);
     }
     get value() {
+        this.throwIfDetached();
         return this._nodeInternal.value;
     }
     set value(v) {
+        this.throwIfDetached();
         this._nodeInternal.value = v;
     }
     addBefore(entry) {
+        this.throwIfDetached();
         this._list.addBefore(this, entry);
     }
     addAfter(entry) {
+        this.throwIfDetached();
         this._list.addAfter(this, entry);
     }
-    addNodeBefore(before) {
-        this._list.addNodeBefore(this, before);
-    }
-    addNodeAfter(after) {
-        this._list.addNodeAfter(this, after);
-    }
     remove() {
-        this._list.removeNode(this);
+        var list = this._list;
+        if (list)
+            list.removeNode(this);
+        this._list = VOID0;
+        this._nodeInternal = VOID0;
+    }
+    dispose() {
+        this.remove();
     }
 }
 export default LinkedList;

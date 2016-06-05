@@ -1,6 +1,6 @@
 ///<reference path="../../../import"/>
 
-import * as ArrayProcedure from "../../../../../source/System/Collections/Array/Procedure";
+import * as ArrayProcedure from "../../../../../dist/commonjs/System/Collections/Array/Procedure";
 var assert = require('../../../../../node_modules/assert/assert');
 
 

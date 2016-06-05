@@ -1,6 +1,6 @@
 ///<reference path="../../import.d.ts"/>
 
-import DateTime from '../../../../source/System/Time/DateTime';
+import DateTime from "../../../../dist/commonjs/System/Time/DateTime";
 var assert = require('../../../../node_modules/assert/assert');
 
 

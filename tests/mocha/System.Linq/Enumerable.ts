@@ -1,12 +1,12 @@
 ﻿///<reference path="../import.d.ts"/>
 
-import {contains, repeat} from "../../../source/System/Collections/Array/Utility";
-import * as Procedure from "../../../source/System/Collections/Array/Procedure";
-import Enumerable from "../../../source/System.Linq/Linq";
-import Functions from "../../../source/System/Functions";
-import {EmptyEnumerator} from "../../../source/System/Collections/Enumeration/EmptyEnumerator";
-import {List} from "../../../source/System/Collections/List";
-import {ILinqEnumerable} from "../../../source/System.Linq/Enumerable";
+import {contains, repeat} from "../../../dist/commonjs/System/Collections/Array/Utility";
+import * as Procedure from "../../../dist/commonjs/System/Collections/Array/Procedure";
+import Enumerable from "../../../dist/commonjs/System.Linq/Linq";
+import Functions from "../../../dist/commonjs/System/Functions";
+import {EmptyEnumerator} from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
+import {List} from "../../../dist/commonjs/System/Collections/List";
+import {ILinqEnumerable} from "../../../dist/commonjs/System.Linq/Enumerable";
 var assert = require('../../../node_modules/assert/assert');
 
 

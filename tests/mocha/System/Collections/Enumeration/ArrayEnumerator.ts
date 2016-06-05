@@ -1,6 +1,6 @@
 ///<reference path="../../../import.d.ts"/>
 
-import ArrayEnumerator from "../../../../../source/System/Collections/Enumeration/ArrayEnumerator";
+import ArrayEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/ArrayEnumerator";
 var assert = require('../../../../../node_modules/assert/assert');
 
 

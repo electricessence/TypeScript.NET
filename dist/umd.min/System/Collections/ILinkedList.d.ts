@@ -15,9 +15,6 @@ export interface ILinkedNodeList<TNode extends ILinkedNode<TNode>>
 
 	getNodeAt(index:number):TNode;
 	removeNode(node:TNode):boolean;
-	addNodeBefore(node:TNode, before:TNode):void;
-	addNodeAfter(node:TNode, after:TNode):void;
-
 }
 
 export interface ILinkedList<T>

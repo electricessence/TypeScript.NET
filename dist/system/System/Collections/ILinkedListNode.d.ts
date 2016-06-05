@@ -35,10 +35,6 @@ extends ILinkedNodeWithValue<T>
 	addAfter(entry:T): void;
 
 	remove(): void;
-
-	addNodeBefore(before:ILinkedListNode<T>): void;
-	addNodeAfter(after:ILinkedListNode<T>): void;
-
 }
 
 export default ILinkedListNode;

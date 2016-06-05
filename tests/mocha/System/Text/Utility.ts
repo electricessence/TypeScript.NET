@@ -2,7 +2,7 @@
 
 var assert = require('../../../../node_modules/assert/assert');
 
-import * as TextUtility from "../../../../source/System/Text/Utility";
+import * as TextUtility from "../../../../dist/commonjs/System/Text/Utility";
 
 var s1 = "	 HI  ";
 var s2 = ".-.-xHIX//\\";

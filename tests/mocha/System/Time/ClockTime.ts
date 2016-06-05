@@ -1,9 +1,9 @@
 ///<reference path="../../import.d.ts"/>
-///<reference path="../../../../source/System/Time/HowMany.d.ts"/>
+///<reference path="../../../../dist/commonjs/System/Time/HowMany.d.ts"/>
 
-import ClockTime from "../../../../source/System/Time/ClockTime";
-import {Milliseconds} from "../../../../source/System/Time/HowMany";
-import Integer from "../../../../source/System/Integer";
+import ClockTime from "../../../../dist/commonjs/System/Time/ClockTime";
+import {Milliseconds} from "../../../../dist/commonjs/System/Time/HowMany";
+import Integer from "../../../../dist/commonjs/System/Integer";
 var assert = require('../../../../node_modules/assert/assert');
 
 const

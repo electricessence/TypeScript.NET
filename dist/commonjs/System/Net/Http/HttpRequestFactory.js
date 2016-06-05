@@ -3,94 +3,67 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var HttpMethod_1 = require("./HttpMethod");
 var Uri_1 = require("../../Uri/Uri");
 var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
-
-var HttpRequestFactory = function (_DisposableBase_1$Dis) {
-    _inherits(HttpRequestFactory, _DisposableBase_1$Dis);
-
+var HttpRequestFactory = (function (_super) {
+    __extends(HttpRequestFactory, _super);
     function HttpRequestFactory(_http, uriDefaults) {
-        _classCallCheck(this, HttpRequestFactory);
-
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(HttpRequestFactory).call(this));
-
-        _this._http = _http;
-        _this._disposableObjectName = 'HttpRequestFactory';
-        if (!_http) throw new ArgumentNullException_1.ArgumentNullException('_http');
-        _this._uriDefaults = Uri_1.Uri.from(uriDefaults);
-        return _this;
+        _super.call(this);
+        this._http = _http;
+        this._disposableObjectName = 'HttpRequestFactory';
+        if (!_http)
+            throw new ArgumentNullException_1.ArgumentNullException('_http');
+        this._uriDefaults = Uri_1.Uri.from(uriDefaults);
     }
-
-    _createClass(HttpRequestFactory, [{
-        key: "_onDispose",
-        value: function _onDispose() {
-            this._http = null;
-            this._uriDefaults = null;
-        }
-    }, {
-        key: "uri",
-        value: function uri(_uri) {
-            var _ = this;
-            _.throwIfDisposed();
-            var u = Uri_1.Uri.from(_uri, _._uriDefaults);
-            return _._uriDefaults.equals(u) ? _ : new HttpRequestFactory(_._http, u);
-        }
-    }, {
-        key: "params",
-        value: function params(_params) {
-            var _ = this;
-            _.throwIfDisposed();
-            return _.uri(_._uriDefaults.updateQuery(_params));
-        }
-    }, {
-        key: "request",
-        value: function request(method, data) {
-            var _ = this;
-            _.throwIfDisposed();
-            return _._http.request({
-                method: method,
-                uri: _._uriDefaults,
-                data: data
-            });
-        }
-    }, {
-        key: "get",
-        value: function get() {
-            return this.request(HttpMethod_1.GET);
-        }
-    }, {
-        key: "put",
-        value: function put() {
-            return this.request(HttpMethod_1.PUT);
-        }
-    }, {
-        key: "post",
-        value: function post(data) {
-            return this.request(HttpMethod_1.POST, data);
-        }
-    }, {
-        key: 'delete',
-        value: function _delete() {
-            return this.request(HttpMethod_1.DELETE);
-        }
-    }]);
-
+    HttpRequestFactory.prototype._onDispose = function () {
+        this._http = null;
+        this._uriDefaults = null;
+    };
+    HttpRequestFactory.prototype.uri = function (uri) {
+        var _ = this;
+        _.throwIfDisposed();
+        var u = Uri_1.Uri.from(uri, _._uriDefaults);
+        return _._uriDefaults.equals(u)
+            ? _
+            : new HttpRequestFactory(_._http, u);
+    };
+    HttpRequestFactory.prototype.params = function (params) {
+        var _ = this;
+        _.throwIfDisposed();
+        return _.uri(_._uriDefaults.updateQuery(params));
+    };
+    HttpRequestFactory.prototype.request = function (method, data) {
+        var _ = this;
+        _.throwIfDisposed();
+        return _._http.request({
+            method: method,
+            uri: _._uriDefaults,
+            data: data
+        });
+    };
+    HttpRequestFactory.prototype.get = function () {
+        return this.request(HttpMethod_1.GET);
+    };
+    HttpRequestFactory.prototype.put = function () {
+        return this.request(HttpMethod_1.PUT);
+    };
+    HttpRequestFactory.prototype.post = function (data) {
+        return this.request(HttpMethod_1.POST, data);
+    };
+    HttpRequestFactory.prototype['delete'] = function () {
+        return this.request(HttpMethod_1.DELETE);
+    };
     return HttpRequestFactory;
-}(DisposableBase_1.DisposableBase);
-
+}(DisposableBase_1.DisposableBase));
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = HttpRequestFactory;
 //# sourceMappingURL=HttpRequestFactory.js.map

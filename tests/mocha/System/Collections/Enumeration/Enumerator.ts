@@ -1,10 +1,10 @@
 ///<reference path="../../../import.d.ts"/>
 
-import {TypeInfo} from "../../../../../source/System/Types";
-import Queue from "../../../../../source/System/Collections/Queue";
-import * as Enumerator from "../../../../../source/System/Collections/Enumeration/Enumerator";
-import {IArray} from "../../../../../source/System/Collections/Array/IArray";
-import {IEnumerator} from "../../../../../source/System/Collections/Enumeration/IEnumerator";
+import {TypeInfo} from "../../../../../dist/commonjs/System/Types";
+import Queue from "../../../../../dist/commonjs/System/Collections/Queue";
+import * as Enumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator";
+import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArray";
+import {IEnumerator} from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
 var assert = require('../../../../../node_modules/assert/assert');
 
 const VOID0:any = void(0);

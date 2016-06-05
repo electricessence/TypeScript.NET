@@ -1,6 +1,10 @@
 ///<reference path="../../../import"/>
 
-import {dispatch, mapped, unsafe} from "../../../../../source/System/Collections/Array/Dispatch";
+import {
+	dispatch,
+	mapped,
+	unsafe
+} from "../../../../../dist/commonjs/System/Collections/Array/Dispatch";
 var assert = require('../../../../../node_modules/assert/assert');
 
 it("should apply closures in order", ()=>

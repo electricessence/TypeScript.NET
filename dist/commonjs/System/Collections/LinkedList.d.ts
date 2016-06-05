@@ -12,6 +12,7 @@ import { IEnumerableOrArray } from "./IEnumerableOrArray";
 export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {
     private _listInternal;
     constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
+    protected _onDispose(): void;
     protected getCount(): number;
     protected _addInternal(entry: T): boolean;
     protected _removeInternal(entry: T, max?: number): number;
@@ -22,19 +23,21 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     private _findLast(entry);
     removeOnce(entry: T): boolean;
     first: ILinkedListNode<T>;
+    firstValue: T;
     last: ILinkedListNode<T>;
+    lastValue: T;
     getValueAt(index: number): T;
     getNodeAt(index: number): ILinkedListNode<T>;
     find(entry: T): ILinkedListNode<T>;
     findLast(entry: T): ILinkedListNode<T>;
     addFirst(entry: T): void;
     addLast(entry: T): void;
-    removeFirst(): void;
-    removeLast(): void;
+    private _removeNodeInternal(node);
+    removeFirst(): boolean;
+    removeLast(): boolean;
+    removeAt(index: number): boolean;
     removeNode(node: ILinkedListNode<T>): boolean;
     addBefore(before: ILinkedListNode<T>, entry: T): void;
     addAfter(after: ILinkedListNode<T>, entry: T): void;
-    addNodeBefore(node: ILinkedListNode<T>, before: ILinkedListNode<T>): void;
-    addNodeAfter(node: ILinkedListNode<T>, after: ILinkedListNode<T>): void;
 }
 export default LinkedList;

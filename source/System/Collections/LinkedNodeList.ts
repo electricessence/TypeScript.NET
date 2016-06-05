@@ -186,7 +186,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			return null;
 
 		var next = this._first, i:number = 0;
-		while(next && index<i++)
+		while(next && i++<index)
 		{
 			next = next.next;
 		}
@@ -325,7 +325,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 			before.previous = node;
 			if(prev) prev.next = node;
-			if(before==_._first) _._last = node;
+			if(before==_._first) _._first = node;
 		}
 		else
 		{

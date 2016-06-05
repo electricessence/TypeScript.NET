@@ -81,7 +81,7 @@ const tsc = (function() {
 			target: target,
 			removeComments: true,
 			sourceMap: true,
-			declaration: declaration,
+			declaration: !!declaration,
 			noEmitHelpers: true
 		}
 	}
@@ -122,13 +122,14 @@ const tsc = (function() {
 		return tsc.fromTo(folder, folder, target, module);
 	}
 
-	function atV2(folder, target, module) {
+	function atV2(folder, target, module, noEmitHelpers) {
 
 		var typescriptOptions = {
 			noImplicitAny: true,
 			module: module,
 			target: target,
-			removeComments: true
+			removeComments: true,
+			noEmitHelpers: !!noEmitHelpers
 		};
 
 		var sourceMapOptions = {
@@ -230,7 +231,7 @@ gulp.task(
 	// This renders the same output as WebStorm's configuration.
 	TASK.SOURCE, function()
 	{
-		return tsc.at('./source', TARGET.ES5, MODULE.UMD);
+		return tsc.atV2('./source', TARGET.ES5, MODULE.UMD, true);
 	}
 );
 
@@ -260,11 +261,11 @@ gulp.task(
 gulp.task( // Need to double process to get the declarations from es6 without modules
 	TASK.DIST_COMMONJS, function()
 	{
-		return tsc.distPostProcess(
-			MODULE.COMMONJS, TARGET.ES6, MODULE.COMMONJS, babel);
+		// return tsc.distPostProcess(
+		// 	MODULE.COMMONJS, TARGET.ES6, MODULE.COMMONJS, babel);
 
-		//return tsc.dist(
-		//	MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS);
+		return tsc.dist(
+			MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS);
 	}
 );
 
@@ -294,11 +295,10 @@ gulp.task(
 
 gulp.task(
 	TASK.TYPESCRIPT_MOCHA, [
-		TASK.SOURCE,
-		TASK.DIST_COMMONJS // Common JS is compiled due to babel smoke test in mocha tests.
+		TASK.DIST_COMMONJS
 	], function()
 	{
-		return tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.UMD);
+		return tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.COMMONJS);
 	}
 );
 

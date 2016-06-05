@@ -1,7 +1,7 @@
 ///<reference path="../../import.d.ts"/>
 
-import RegexMatchEnumerator from "../../../../source/System/Text/RegexMatchEnumerator";
-import Regex, {Match} from "../../../../source/System/Text/RegularExpressions";
+import RegexMatchEnumerator from "../../../../dist/commonjs/System/Text/RegexMatchEnumerator";
+import Regex, {Match} from "../../../../dist/commonjs/System/Text/RegularExpressions";
 const assert = require('../../../../node_modules/assert/assert');
 
 const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';

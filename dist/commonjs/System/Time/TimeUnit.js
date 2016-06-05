@@ -4,7 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-
 (function (TimeUnit) {
     TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
     TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
@@ -16,9 +15,8 @@
 var TimeUnit = exports.TimeUnit;
 var TimeUnit;
 (function (TimeUnit) {
-    function toMilliseconds(value) {
-        var units = arguments.length <= 1 || arguments[1] === undefined ? TimeUnit.Milliseconds : arguments[1];
-
+    function toMilliseconds(value, units) {
+        if (units === void 0) { units = TimeUnit.Milliseconds; }
         switch (units) {
             case TimeUnit.Days:
                 value *= 24;
@@ -61,7 +59,8 @@ var TimeUnit;
     }
     TimeUnit.from = from;
     function assertValid(unit) {
-        if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit) throw new Error("Invalid TimeUnit.");
+        if (isNaN(unit) || unit > TimeUnit.Days || unit < TimeUnit.Ticks || Math.floor(unit) !== unit)
+            throw new Error("Invalid TimeUnit.");
         return true;
     }
     TimeUnit.assertValid = assertValid;

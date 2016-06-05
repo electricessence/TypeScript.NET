@@ -5,48 +5,30 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 "use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var ObservableBase_1 = require("./ObservableBase");
 var extends_1 = require("../../extends");
 var __extends = extends_1.default;
-
-var ObservableNodeBase = function (_ObservableBase_1$def) {
-    _inherits(ObservableNodeBase, _ObservableBase_1$def);
-
+var ObservableNodeBase = (function (_super) {
+    __extends(ObservableNodeBase, _super);
     function ObservableNodeBase() {
-        _classCallCheck(this, ObservableNodeBase);
-
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(ObservableNodeBase).apply(this, arguments));
+        _super.apply(this, arguments);
     }
-
-    _createClass(ObservableNodeBase, [{
-        key: "onNext",
-        value: function onNext(value) {
-            this._onNext(value);
-        }
-    }, {
-        key: "onError",
-        value: function onError(error) {
-            this._onError(error);
-        }
-    }, {
-        key: "onCompleted",
-        value: function onCompleted() {
-            this._onCompleted();
-        }
-    }]);
-
+    ObservableNodeBase.prototype.onNext = function (value) {
+        this._onNext(value);
+    };
+    ObservableNodeBase.prototype.onError = function (error) {
+        this._onError(error);
+    };
+    ObservableNodeBase.prototype.onCompleted = function () {
+        this._onCompleted();
+    };
     return ObservableNodeBase;
-}(ObservableBase_1.default);
-
+}(ObservableBase_1.default));
 exports.ObservableNodeBase = ObservableNodeBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ObservableNodeBase;

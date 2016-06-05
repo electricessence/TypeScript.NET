@@ -3,97 +3,78 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
-
-var TaskHandlerBase = function (_DisposableBase_1$Dis) {
-    _inherits(TaskHandlerBase, _DisposableBase_1$Dis);
-
+var TaskHandlerBase = (function (_super) {
+    __extends(TaskHandlerBase, _super);
     function TaskHandlerBase() {
-        _classCallCheck(this, TaskHandlerBase);
-
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(TaskHandlerBase).call(this));
-
-        _this._timeoutId = null;
-        _this._status = 0;
-        return _this;
+        _super.call(this);
+        this._timeoutId = null;
+        this._status = 0;
     }
-
-    _createClass(TaskHandlerBase, [{
-        key: "start",
-        value: function start(defer) {
-            this.throwIfDisposed();
-            this.cancel();
-            this._status = 1;
-            if (!(defer > 0)) defer = 0;
-            if (isFinite(defer)) this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
-        }
-    }, {
-        key: "runSynchronously",
-        value: function runSynchronously() {
-            this.throwIfDisposed();
-            TaskHandlerBase._handler(this);
-        }
-    }, {
-        key: "getStatus",
-        value: function getStatus() {
-            return this._status;
-        }
-    }, {
-        key: "_onDispose",
-        value: function _onDispose() {
-            this.cancel();
-            this._status = null;
-        }
-    }, {
-        key: "cancel",
-        value: function cancel() {
-            var id = this._timeoutId;
-            if (id) {
-                clearTimeout(id);
-                this._timeoutId = null;
-                this._status = 4;
-                return true;
-            }
-            return false;
-        }
-    }, {
-        key: "isScheduled",
-        get: function get() {
+    Object.defineProperty(TaskHandlerBase.prototype, "isScheduled", {
+        get: function () {
             return !!this._timeoutId;
-        }
-    }, {
-        key: "status",
-        get: function get() {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TaskHandlerBase.prototype.start = function (defer) {
+        this.throwIfDisposed();
+        this.cancel();
+        this._status = 1;
+        if (!(defer > 0))
+            defer = 0;
+        if (isFinite(defer))
+            this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
+    };
+    TaskHandlerBase.prototype.runSynchronously = function () {
+        this.throwIfDisposed();
+        TaskHandlerBase._handler(this);
+    };
+    TaskHandlerBase.prototype.getStatus = function () {
+        return this._status;
+    };
+    Object.defineProperty(TaskHandlerBase.prototype, "status", {
+        get: function () {
             return this.getStatus();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TaskHandlerBase._handler = function (d) {
+        d.cancel();
+        d._status = 2;
+        try {
+            d._onExecute();
+            d._status = 3;
         }
-    }], [{
-        key: "_handler",
-        value: function _handler(d) {
-            d.cancel();
-            d._status = 2;
-            try {
-                d._onExecute();
-                d._status = 3;
-            } catch (ex) {
-                d._status = 5;
-            }
+        catch (ex) {
+            d._status = 5;
         }
-    }]);
-
+    };
+    TaskHandlerBase.prototype._onDispose = function () {
+        this.cancel();
+        this._status = null;
+    };
+    TaskHandlerBase.prototype.cancel = function () {
+        var id = this._timeoutId;
+        if (id) {
+            clearTimeout(id);
+            this._timeoutId = null;
+            this._status = 4;
+            return true;
+        }
+        return false;
+    };
     return TaskHandlerBase;
-}(DisposableBase_1.DisposableBase);
-
+}(DisposableBase_1.DisposableBase));
 exports.TaskHandlerBase = TaskHandlerBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TaskHandlerBase;

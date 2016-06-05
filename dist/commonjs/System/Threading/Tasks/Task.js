@@ -3,103 +3,82 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var TaskHandlerBase_1 = require("./TaskHandlerBase");
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var Lazy_1 = require("../../Lazy");
 var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
-
-var Task = function (_TaskHandlerBase_1$Ta) {
-    _inherits(Task, _TaskHandlerBase_1$Ta);
-
+var Task = (function (_super) {
+    __extends(Task, _super);
     function Task(valueFactory) {
-        _classCallCheck(this, Task);
-
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Task).call(this));
-
-        if (!valueFactory) throw new ArgumentNullException_1.ArgumentNullException('valueFactory');
-        _this._result = new Lazy_1.Lazy(valueFactory, false);
-        return _this;
+        _super.call(this);
+        if (!valueFactory)
+            throw new ArgumentNullException_1.ArgumentNullException('valueFactory');
+        this._result = new Lazy_1.Lazy(valueFactory, false);
     }
-
-    _createClass(Task, [{
-        key: "_onExecute",
-        value: function _onExecute() {
-            this._result.getValue();
+    Task.prototype._onExecute = function () {
+        this._result.getValue();
+    };
+    Task.prototype.getResult = function () {
+        return this._result.value;
+    };
+    Task.prototype.getState = function () {
+        var r = this._result;
+        return r && {
+            status: this.getStatus(),
+            result: r.isValueCreated ? r.value : void 0,
+            error: r.error
+        };
+    };
+    Task.prototype.start = function (defer) {
+        if (this.getStatus() == 0) {
+            _super.prototype.start.call(this, defer);
         }
-    }, {
-        key: "getResult",
-        value: function getResult() {
-            return this._result.value;
+    };
+    Task.prototype.runSynchronously = function () {
+        if (this.getStatus() == 0) {
+            _super.prototype.runSynchronously.call(this);
         }
-    }, {
-        key: "getState",
-        value: function getState() {
-            var r = this._result;
-            return r && {
-                status: this.getStatus(),
-                result: r.isValueCreated ? r.value : void 0,
-                error: r.error
-            };
-        }
-    }, {
-        key: "start",
-        value: function start(defer) {
-            if (this.getStatus() == 0) {
-                _get(Object.getPrototypeOf(Task.prototype), "start", this).call(this, defer);
-            }
-        }
-    }, {
-        key: "runSynchronously",
-        value: function runSynchronously() {
-            if (this.getStatus() == 0) {
-                _get(Object.getPrototypeOf(Task.prototype), "runSynchronously", this).call(this);
-            }
-        }
-    }, {
-        key: "_onDispose",
-        value: function _onDispose() {
-            _get(Object.getPrototypeOf(Task.prototype), "_onDispose", this).call(this);
-            var r = this._result;
-            if (r) {
-                this._result = null;
-                r.dispose();
-            }
-        }
-    }, {
-        key: "state",
-        get: function get() {
+    };
+    Object.defineProperty(Task.prototype, "state", {
+        get: function () {
             return this.getState();
-        }
-    }, {
-        key: "result",
-        get: function get() {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Task.prototype, "result", {
+        get: function () {
             this.throwIfDisposed();
             this.runSynchronously();
             return this.getResult();
-        }
-    }, {
-        key: "error",
-        get: function get() {
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Task.prototype, "error", {
+        get: function () {
             this.throwIfDisposed();
             return this._result.error;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Task.prototype._onDispose = function () {
+        _super.prototype._onDispose.call(this);
+        var r = this._result;
+        if (r) {
+            this._result = null;
+            r.dispose();
         }
-    }]);
-
+    };
     return Task;
-}(TaskHandlerBase_1.TaskHandlerBase);
-
+}(TaskHandlerBase_1.TaskHandlerBase));
 exports.Task = Task;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Task;

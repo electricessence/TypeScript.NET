@@ -80,7 +80,7 @@ export class LinkedNodeList {
         if (index < 0)
             return null;
         var next = this._first, i = 0;
-        while (next && index < i++) {
+        while (next && i++ < index) {
             next = next.next;
         }
         return next;
@@ -159,7 +159,7 @@ export class LinkedNodeList {
             if (prev)
                 prev.next = node;
             if (before == _._first)
-                _._last = node;
+                _._first = node;
         }
         else {
             _._first = _._last = node;

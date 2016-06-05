@@ -1,11 +1,11 @@
 ///<reference path="../../import.d.ts"/>
 
-import {Promise, PromiseBase} from "../../../../source/System/Promises/Promise";
-import * as AU from "../../../../source/System/Collections/Array/Utility";
-import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
-import {defer} from "../../../../source/System/Threading/defer";
-import {LazyPromise} from "../../../../source/System/Promises/LazyPromise";
-import {ObjectDisposedException} from "../../../../source/System/Disposable/ObjectDisposedException";
+import {Promise, PromiseBase} from "../../../../dist/commonjs/System/Promises/Promise";
+import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
+import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
+import {defer} from "../../../../dist/commonjs/System/Threading/defer";
+import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise";
+import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
 var assert = require('../../../../node_modules/assert/assert');
 
 
