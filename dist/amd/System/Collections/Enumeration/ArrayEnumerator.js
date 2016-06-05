@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var __extends=this&&this.__extends||function(e,t){function n(){this.constructor=e}for(var r in t)t.hasOwnProperty(r)&&(e[r]=t[r]);e.prototype=null===t?Object.create(t):(n.prototype=t.prototype,new n)};define(["require","exports","./IndexEnumerator","../../Types"],function(e,t,n,r){"use strict";var o=function(e){function t(t,n,o){void 0===n&&(n=0),void 0===o&&(o=1),e.call(this,function(){var e=r.Type.isFunction(t)?t():t;return{source:e,pointer:n,length:e?e.length:0,step:o}})}return __extends(t,e),t}(n.IndexEnumerator);t.ArrayEnumerator=o,Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=o});
+define(["require","exports","./IndexEnumerator","../../Types","../../../extends"],function(e,n,t,r,u){"use strict";var o=u["default"],i=function(e){function n(n,t,u){void 0===t&&(t=0),void 0===u&&(u=1),e.call(this,function(){var e=r.Type.isFunction(n)?n():n;return{source:e,pointer:t,length:e?e.length:0,step:u}})}return o(n,e),n}(t.IndexEnumerator);n.ArrayEnumerator=i,Object.defineProperty(n,"__esModule",{value:!0}),n["default"]=i});
 //# sourceMappingURL=ArrayEnumerator.js.map

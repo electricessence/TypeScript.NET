@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry"], function(exports_1, context_1) {
+System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var AU, shallowCopy_1, DisposableBase_1, dispose_1, EventDispatcherEntry_1;
-    var DISPOSING, DISPOSED, EventDispatcherBase;
+    var AU, shallowCopy_1, DisposableBase_1, dispose_1, EventDispatcherEntry_1, extends_1;
+    var __extends, DISPOSING, DISPOSED, EventDispatcherBase;
     function entryFinalizer() {
         var p = this.params;
         p.dispatcher.removeEntry(this);
@@ -33,8 +33,12 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
             },
             function (EventDispatcherEntry_1_1) {
                 EventDispatcherEntry_1 = EventDispatcherEntry_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             DISPOSING = 'disposing', DISPOSED = 'disposed';
             EventDispatcherBase = (function (_super) {
                 __extends(EventDispatcherBase, _super);

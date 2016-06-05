@@ -7,6 +7,8 @@
 
 import {Exception} from "../Exception";
 import {ArgumentException} from "./ArgumentException";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 const NAME:string = 'ArgumentOutOfRangeException';
 

@@ -16,6 +16,8 @@ import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
 import {Type} from "../Types";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 //noinspection SpellCheckingInspection
 const NAME      = "CollectionBase",

@@ -8,6 +8,8 @@
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 import ObservableBase from "./ObservableBase";
 import {IObserver} from "./IObserver";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 export class ObservableNodeBase<T>
 extends ObservableBase<T>

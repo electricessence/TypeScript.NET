@@ -7,6 +7,8 @@ import { DisposableBase } from "../Disposable/DisposableBase";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { areEquivalent } from "../Compare";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class EventDispatcherEntry extends DisposableBase {
     constructor(type, listener, params = null, finalizer) {
         super(finalizer);

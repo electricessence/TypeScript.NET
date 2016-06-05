@@ -3,6 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { CollectionBase } from "./CollectionBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class ReadOnlyCollectionBase extends CollectionBase {
     getCount() {
         return this._getCount();

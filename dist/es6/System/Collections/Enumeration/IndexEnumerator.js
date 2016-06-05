@@ -3,6 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { EnumeratorBase } from "./EnumeratorBase";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 export class IndexEnumerator extends EnumeratorBase {
     constructor(sourceFactory) {
         var source;

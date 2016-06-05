@@ -15,6 +15,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 var EMPTY = "";
 var UNDEFINED = "undefined";
 var _I = 'i',

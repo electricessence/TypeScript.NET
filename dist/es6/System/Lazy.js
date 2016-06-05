@@ -3,6 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { ResolverBase } from "./ResolverBase";
+import __extendsImport from "../extends";
+const __extends = __extendsImport;
 export class Lazy extends ResolverBase {
     constructor(valueFactory, trapExceptions = false, allowReset = false) {
         super(valueFactory, trapExceptions, allowReset);
@@ -20,6 +22,11 @@ export class Lazy extends ResolverBase {
     }
     valueEquals(other) {
         return this.equals(other) || this.value === other.value;
+    }
+}
+export class ResettableLazy extends Lazy {
+    constructor(valueFactory, trapExceptions = false) {
+        super(valueFactory, trapExceptions, true);
     }
 }
 export default Lazy;

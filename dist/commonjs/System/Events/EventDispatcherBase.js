@@ -19,6 +19,8 @@ var shallowCopy_1 = require("../Utility/shallowCopy");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
 var dispose_1 = require("../Disposable/dispose");
 var EventDispatcherEntry_1 = require("./EventDispatcherEntry");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 var DISPOSING = 'disposing',
     DISPOSED = 'disposed';
 function entryFinalizer() {

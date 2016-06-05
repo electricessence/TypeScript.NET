@@ -20,6 +20,8 @@ var LinkedNodeList_1 = require("./LinkedNodeList");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var CollectionBase_1 = require("./CollectionBase");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var InternalNode = function () {
     function InternalNode(value, previous, next) {

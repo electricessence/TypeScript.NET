@@ -14,6 +14,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var TimeUnit_1 = require("./TimeUnit");
 var TimeQuantity_1 = require("./TimeQuantity");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var TimeUnitValue = function (_TimeQuantity_1$TimeQ) {
     _inherits(TimeUnitValue, _TimeQuantity_1$TimeQ);

@@ -11,6 +11,8 @@ import {IMap} from "./Dictionaries/IDictionary";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {Primitive} from "../Primitive";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 const OTHER = 'other';
 

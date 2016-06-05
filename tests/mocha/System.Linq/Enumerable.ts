@@ -5,6 +5,8 @@ import * as Procedure from "../../../source/System/Collections/Array/Procedure";
 import Enumerable from "../../../source/System.Linq/Linq";
 import Functions from "../../../source/System/Functions";
 import {EmptyEnumerator} from "../../../source/System/Collections/Enumeration/EmptyEnumerator";
+import {List} from "../../../source/System/Collections/List";
+import {ILinqEnumerable} from "../../../source/System.Linq/Enumerable";
 var assert = require('../../../node_modules/assert/assert');
 
 
@@ -84,6 +86,14 @@ const source:TestItem[] = Object.freeze([
 		c: "f"
 	}
 ]);
+
+// Compile test:
+function compileTest():ILinqEnumerable<TestItem>
+{
+	var list = new List(source);
+	return list.linq.orderBy(v=>v.a)
+		.takeWhile((g, i)=>i<5);
+}
 
 
 const sourceMany:Enumerable<string> = Enumerable.from(Object.freeze([

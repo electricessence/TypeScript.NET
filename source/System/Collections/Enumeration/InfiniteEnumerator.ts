@@ -5,6 +5,8 @@
 
 
 import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 const VOID0:any = void 0;
 

@@ -3,6 +3,8 @@
  * Based on Netjs mscorlib.ts
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export default class EventSimple {
     constructor() {
         this._listeners = [];

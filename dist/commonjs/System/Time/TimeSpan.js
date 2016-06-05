@@ -17,6 +17,8 @@ var Types_1 = require("../Types");
 var TimeUnit_1 = require("./TimeUnit");
 var ClockTime_1 = require("./ClockTime");
 var TimeQuantity_1 = require("./TimeQuantity");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var TimeSpan = function (_TimeQuantity_1$TimeQ) {
     _inherits(TimeSpan, _TimeQuantity_1$TimeQ);

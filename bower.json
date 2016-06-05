@@ -1,6 +1,6 @@
 {
 	"name": "typescript-dotnet",
-	"version": "2.18.10",
+	"version": "2.19.0",
 	"ignore": [
 		".bowercc",
 		".gitignore",

@@ -13,6 +13,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ResolverBase_1 = require("./ResolverBase");
+var extends_1 = require("../extends");
+var __extends = extends_1.default;
 
 var Lazy = function (_ResolverBase_1$Resol) {
     _inherits(Lazy, _ResolverBase_1$Resol);
@@ -56,6 +58,22 @@ var Lazy = function (_ResolverBase_1$Resol) {
 }(ResolverBase_1.ResolverBase);
 
 exports.Lazy = Lazy;
+
+var ResettableLazy = function (_Lazy) {
+    _inherits(ResettableLazy, _Lazy);
+
+    function ResettableLazy(valueFactory) {
+        var trapExceptions = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+        _classCallCheck(this, ResettableLazy);
+
+        return _possibleConstructorReturn(this, Object.getPrototypeOf(ResettableLazy).call(this, valueFactory, trapExceptions, true));
+    }
+
+    return ResettableLazy;
+}(Lazy);
+
+exports.ResettableLazy = ResettableLazy;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Lazy;
 //# sourceMappingURL=Lazy.js.map

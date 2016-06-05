@@ -12,4 +12,7 @@ export declare class Lazy<T> extends ResolverBase<T> implements ILazy<T> {
     equals(other: Lazy<T>): boolean;
     valueEquals(other: Lazy<T>): boolean;
 }
+export declare class ResettableLazy<T> extends Lazy<T> {
+    constructor(valueFactory: Func<T>, trapExceptions?: boolean);
+}
 export default Lazy;

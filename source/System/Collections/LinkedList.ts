@@ -15,6 +15,8 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {Predicate, Action, EqualityComparison} from "../FunctionTypes";
 import {ILinkedList} from "./ILinkedList";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

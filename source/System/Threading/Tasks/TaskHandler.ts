@@ -6,6 +6,8 @@
 import {TaskHandlerBase} from "./TaskHandlerBase";
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {Closure} from "../../FunctionTypes";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 export class TaskHandler extends TaskHandlerBase
 {

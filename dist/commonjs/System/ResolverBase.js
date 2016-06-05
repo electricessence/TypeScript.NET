@@ -14,6 +14,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var DisposableBase_1 = require("./Disposable/DisposableBase");
 var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
+var extends_1 = require("../extends");
+var __extends = extends_1.default;
 
 var ResolverBase = function (_DisposableBase_1$Dis) {
     _inherits(ResolverBase, _DisposableBase_1$Dis);

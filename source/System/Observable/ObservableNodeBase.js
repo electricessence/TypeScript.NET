@@ -14,11 +14,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./ObservableBase"], factory);
+        define(["require", "exports", "./ObservableBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var ObservableBase_1 = require("./ObservableBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {

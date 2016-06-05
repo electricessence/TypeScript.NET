@@ -10,6 +10,8 @@ import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
 import { LinkedNodeList } from "../LinkedNodeList";
 import { ObjectPool } from "../../Disposable/ObjectPool";
 import DictionaryBase from "./DictionaryBase";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 const VOID0 = void 0;
 class HashEntry {
     constructor(key, value, previous, next) {

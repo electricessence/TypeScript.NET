@@ -5,6 +5,8 @@
  */
 
 import {SystemException} from "./SystemException";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 const NAME:string = 'NotImplementedException';
 

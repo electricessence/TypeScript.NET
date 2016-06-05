@@ -7,6 +7,8 @@ import {areEqual} from "../../Compare";
 import {IStringKeyDictionary, IMap} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
 import {DictionaryBase} from "./DictionaryBase";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 const VOID0:any = void 0;
 

@@ -21,6 +21,8 @@ var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var InvalidOperationException_1 = require("../../Exceptions/InvalidOperationException");
 var KeyValueExtract_1 = require("../../KeyValueExtract");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 var VOID0 = void 0;
 
 var DictionaryBase = function (_CollectionBase_1$Col) {

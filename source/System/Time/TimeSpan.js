@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity"], factory);
+        define(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -21,6 +21,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var TimeUnit_1 = require("./TimeUnit");
     var ClockTime_1 = require("./ClockTime");
     var TimeQuantity_1 = require("./TimeQuantity");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var TimeSpan = (function (_super) {
         __extends(TimeSpan, _super);
         function TimeSpan(value, units) {

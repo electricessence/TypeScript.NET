@@ -9,6 +9,8 @@ import { EmptyEnumerator } from "./Enumeration/EmptyEnumerator";
 import { using } from "../Disposable/dispose";
 import { areEqual } from "../Compare";
 import { CollectionBase } from "./CollectionBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const OTHER = 'other';
 export class SetBase extends CollectionBase {
     constructor(source) {

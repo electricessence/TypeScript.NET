@@ -17,6 +17,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Promise_1 = require("./Promise");
 var defer_1 = require("../Threading/defer");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 var VOID0 = void 0;
 
 var LazyPromise = function (_Promise_1$Promise) {

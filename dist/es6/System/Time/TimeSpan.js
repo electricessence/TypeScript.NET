@@ -7,6 +7,8 @@ import { Type } from "../Types";
 import { TimeUnit } from "./TimeUnit";
 import { ClockTime } from "./ClockTime";
 import { TimeQuantity } from "./TimeQuantity";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class TimeSpan extends TimeQuantity {
     constructor(value, units = TimeUnit.Milliseconds) {
         var ms = TimeUnit.toMilliseconds(value, units);

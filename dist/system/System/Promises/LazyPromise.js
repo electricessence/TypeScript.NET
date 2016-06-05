@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException"], function(exports_1, context_1) {
+System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Promise_1, defer_1, ArgumentNullException_1;
-    var VOID0, LazyPromise;
+    var Promise_1, defer_1, ArgumentNullException_1, extends_1;
+    var __extends, VOID0, LazyPromise;
     return {
         setters:[
             function (Promise_1_1) {
@@ -22,8 +22,12 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
             },
             function (ArgumentNullException_1_1) {
                 ArgumentNullException_1 = ArgumentNullException_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             VOID0 = void 0;
             LazyPromise = (function (_super) {
                 __extends(LazyPromise, _super);

@@ -17,6 +17,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Values = require("../../Compare");
 var SortContext_1 = require("./SortContext");
 var Functions_1 = require("../../Functions");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 
 var KeySortedContext = function (_SortContext_1$SortCo) {
     _inherits(KeySortedContext, _SortContext_1$SortCo);

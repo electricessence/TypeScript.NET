@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult"], factory);
+        define(["require", "exports", "../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -20,6 +20,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var ObjectPool_1 = require("../../Disposable/ObjectPool");
     var IteratorResult_1 = require("./IteratorResult");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var VOID0 = void (0);
     var yielderPool;
     function yielder(recycle) {

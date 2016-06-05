@@ -13,11 +13,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./TimeQuantity"], factory);
+        define(["require", "exports", "./TimeQuantity", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var TimeQuantity_1 = require("./TimeQuantity");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var ClockTime = (function (_super) {
         __extends(ClockTime, _super);
         function ClockTime() {

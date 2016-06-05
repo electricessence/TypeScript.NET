@@ -12,12 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Types", "./Compare"], factory);
+        define(["require", "exports", "./Types", "./Compare", "../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Types_1 = require("./Types");
     var Compare_1 = require("./Compare");
+    var extends_1 = require("../extends");
+    var __extends = extends_1.default;
     var TypeInfoHelper = (function (_super) {
         __extends(TypeInfoHelper, _super);
         function TypeInfoHelper(value) {

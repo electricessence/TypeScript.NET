@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator", "./QueryParams"], function(exports_1, context_1) {
+System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator", "./QueryParams", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, OrderedStringKeyDictionary_1, Enumerator_1, QueryParams;
-    var QueryBuilder;
+    var Types_1, OrderedStringKeyDictionary_1, Enumerator_1, QueryParams, extends_1;
+    var __extends, QueryBuilder;
     return {
         setters:[
             function (Types_1_1) {
@@ -25,8 +25,12 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
             },
             function (QueryParams_1) {
                 QueryParams = QueryParams_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             QueryBuilder = (function (_super) {
                 __extends(QueryBuilder, _super);
                 function QueryBuilder(query, decodeValues) {

@@ -50,6 +50,9 @@ import {
 	IGrouping,
 	EnumerableAction
 } from "./Enumerable";
+import __extendsImport from "../extends";
+const __extends = __extendsImport;
+
 
 // #region Local Constants.
 

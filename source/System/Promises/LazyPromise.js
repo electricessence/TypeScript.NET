@@ -12,13 +12,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports", "./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Promise_1 = require("./Promise");
     var defer_1 = require("../Threading/defer");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var VOID0 = void 0;
     var LazyPromise = (function (_super) {
         __extends(LazyPromise, _super);

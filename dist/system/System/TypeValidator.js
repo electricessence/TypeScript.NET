@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-System.register(["./Types", "./Compare"], function(exports_1, context_1) {
+System.register(["./Types", "./Compare", "../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["./Types", "./Compare"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, Compare_1;
-    var TypeInfoHelper, TypeValidator;
+    var Types_1, Compare_1, extends_1;
+    var __extends, TypeInfoHelper, TypeValidator;
     function areInvalid(v, d) {
         if (!Compare_1.areEqual(v, d)) {
             var memberType = new TypeInfoHelper(v);
@@ -27,8 +27,12 @@ System.register(["./Types", "./Compare"], function(exports_1, context_1) {
             },
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             TypeInfoHelper = (function (_super) {
                 __extends(TypeInfoHelper, _super);
                 function TypeInfoHelper(value) {

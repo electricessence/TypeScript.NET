@@ -5,6 +5,8 @@
 import { Type } from "../Types";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { SetBase } from "./SetBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const OTHER = 'other';
 export class Set extends SetBase {
     newUsing(source) {

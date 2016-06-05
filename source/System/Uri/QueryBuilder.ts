@@ -10,6 +10,8 @@ import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
 import * as UriComponent from "./UriComponent";
 import * as QueryParam from "./QueryParam";
 import * as QueryParams from "./QueryParams";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 
 /**

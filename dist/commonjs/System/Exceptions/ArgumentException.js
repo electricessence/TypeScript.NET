@@ -15,6 +15,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var SystemException_1 = require("./SystemException");
 var Utility_1 = require("../Text/Utility");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 var NAME = 'ArgumentException';
 
 var ArgumentException = function (_SystemException_1$Sy) {

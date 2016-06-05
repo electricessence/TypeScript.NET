@@ -4,6 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { TimeQuantity } from "./TimeQuantity";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class ClockTime extends TimeQuantity {
     constructor(...args) {
         super(args.length > 1

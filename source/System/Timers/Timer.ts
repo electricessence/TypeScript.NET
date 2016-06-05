@@ -7,6 +7,8 @@
 import {ICancellable} from "../Threading/ICancellable";
 import {ObservableBase} from "../Observable/ObservableBase";
 import {ITimer} from "./ITimer";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 export default class Timer extends ObservableBase<number> implements ITimer, ICancellable
 {

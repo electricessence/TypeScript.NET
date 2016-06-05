@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./Enumeration/ArrayEnumerator", "./CollectionBase"], function(exports_1, context_1) {
+System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./Enumeration/ArrayEnumerator", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, Utility_1, Enumerator_1, Types_1, ArrayEnumerator_1, CollectionBase_1;
-    var List;
+    var Compare_1, Utility_1, Enumerator_1, Types_1, ArrayEnumerator_1, CollectionBase_1, extends_1;
+    var __extends, List;
     return {
         setters:[
             function (Compare_1_1) {
@@ -31,8 +31,12 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
             },
             function (CollectionBase_1_1) {
                 CollectionBase_1 = CollectionBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             List = (function (_super) {
                 __extends(List, _super);
                 function List(source, equalityComparer) {

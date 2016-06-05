@@ -5,6 +5,8 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 import { SubscribableBase } from "./SubscribableBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class ObservableBase extends SubscribableBase {
     _onNext(value) {
         processAction(this._getSubscribers(), s => { s.onNext && s.onNext(value); });

@@ -3,7 +3,7 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase"], function(exports_1, context_1) {
+System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,8 +11,8 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1, CollectionBase_1;
-    var InternalNode, LinkedList, LinkedListNode;
+    var Compare_1, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1, CollectionBase_1, extends_1;
+    var __extends, InternalNode, LinkedList, LinkedListNode;
     function ensureExternal(node, list) {
         if (!node)
             return null;
@@ -51,8 +51,12 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
             },
             function (CollectionBase_1_1) {
                 CollectionBase_1 = CollectionBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             InternalNode = (function () {
                 function InternalNode(value, previous, next) {
                     this.value = value;

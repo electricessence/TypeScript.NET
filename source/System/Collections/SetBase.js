@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase"], factory);
+        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -23,6 +23,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var dispose_1 = require("../Disposable/dispose");
     var Compare_1 = require("../Compare");
     var CollectionBase_1 = require("./CollectionBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var OTHER = 'other';
     var SetBase = (function (_super) {
         __extends(SetBase, _super);

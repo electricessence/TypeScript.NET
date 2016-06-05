@@ -12,12 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./IndexEnumerator", "../../Types"], factory);
+        define(["require", "exports", "./IndexEnumerator", "../../Types", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var IndexEnumerator_1 = require("./IndexEnumerator");
     var Types_1 = require("../../Types");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var ArrayEnumerator = (function (_super) {
         __extends(ArrayEnumerator, _super);
         function ArrayEnumerator(arrayOrFactory, start, step) {

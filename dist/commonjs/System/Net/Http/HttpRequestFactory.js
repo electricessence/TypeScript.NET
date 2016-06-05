@@ -16,6 +16,8 @@ var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var HttpMethod_1 = require("./HttpMethod");
 var Uri_1 = require("../../Uri/Uri");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 
 var HttpRequestFactory = function (_DisposableBase_1$Dis) {
     _inherits(HttpRequestFactory, _DisposableBase_1$Dis);

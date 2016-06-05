@@ -14,6 +14,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var Compare_1 = require("../../Compare");
 var DictionaryBase_1 = require("./DictionaryBase");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 var VOID0 = void 0;
 
 var StringKeyDictionary = function (_DictionaryBase_1$Dic) {

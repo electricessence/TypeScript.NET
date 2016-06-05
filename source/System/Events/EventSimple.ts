@@ -6,6 +6,8 @@
 
 
 import {IDisposable} from "../Disposable/IDisposable";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 /**
  * A simple event dispatcher provided as an alternative to built-in event.

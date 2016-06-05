@@ -11,6 +11,8 @@ import {IEnumerator} from "./IEnumerator";
 import {IIteratorResult} from "./IIterator";
 import {IYield} from "./IYield";
 import {IteratorResult} from "./IteratorResult";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 const VOID0:any = void(0);
 

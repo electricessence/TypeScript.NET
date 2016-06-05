@@ -12,13 +12,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException"], factory);
+        define(["require", "exports", "../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var ArrayUtility = require("../Array/Utility");
     var StringKeyDictionary_1 = require("./StringKeyDictionary");
     var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var VOID0 = void 0;
     var OrderedStringKeyDictionary = (function (_super) {
         __extends(OrderedStringKeyDictionary, _super);

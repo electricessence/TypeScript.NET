@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
+System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1;
-    var VOID0, OrderedStringKeyDictionary;
+    var ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1, extends_1;
+    var __extends, VOID0, OrderedStringKeyDictionary;
     return {
         setters:[
             function (ArrayUtility_1) {
@@ -22,8 +22,12 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
             },
             function (ArgumentOutOfRangeException_1_1) {
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             VOID0 = void 0;
             OrderedStringKeyDictionary = (function (_super) {
                 __extends(OrderedStringKeyDictionary, _super);

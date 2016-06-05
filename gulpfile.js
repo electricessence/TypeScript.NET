@@ -68,6 +68,7 @@ const tsc = (function() {
 	c.atV2 = atV2;
 	c.sourceTo = sourceTo;
 	c.dist = dist;
+	c.distES6 = distES6;
 	c.distPostProcess = distPostProcess;
 	c.distMini = distMini;
 
@@ -80,7 +81,8 @@ const tsc = (function() {
 			target: target,
 			removeComments: true,
 			sourceMap: true,
-			declaration: declaration
+			declaration: declaration,
+			noEmitHelpers: true
 		}
 	}
 
@@ -101,20 +103,19 @@ const tsc = (function() {
 				.pipe(gulp.dest(to));
 		};
 
+		var deferred = Q.defer();
 		if(declaration) {
-			var deferred = Q.defer();
 			gulp
 				.src([from + '/**/*.d.ts'])
 				.pipe(gulp.dest(to))
 				.on(EVENT.END, function() {
 					render().on(EVENT.END, deferred.resolve);
 				});
-			return deferred.promise;
 		}
 		else {
-			return render();
+			render().on(EVENT.END, deferred.resolve);
 		}
-		
+		return deferred.promise;
 	}
 
 	function at(folder, target, module) {
@@ -149,13 +150,13 @@ const tsc = (function() {
 		return tsc.fromTo(PATH.SOURCE, folder, target, module, declaration, doNotEmit);
 	}
 
-	function distES6(folder) {
+	function distES6(folder, emit) {
 		//noinspection JSUnresolvedFunction
 		var deferred = Q.defer();
 		var d = './dist/' + folder;
 
 		del(d + '/**/*')['then'](function() {
-			sourceTo(d, TARGET.ES6, TARGET.ES6, true, true)
+			sourceTo(d, TARGET.ES6, TARGET.ES6, true, !emit)
 				.then(deferred.resolve);
 		});
 
@@ -166,7 +167,7 @@ const tsc = (function() {
 		//noinspection JSUnresolvedFunction
 		var deferred = Q.defer();
 		var d = './dist/' + folder;
-		distES6(folder).then(function(){
+		distES6(folder).then(function() {
 			sourceTo(d, target, module)
 				.then(deferred.resolve);
 		});
@@ -179,34 +180,35 @@ const tsc = (function() {
 		var d = './dist/' + folder;
 
 		// Export declarations first, then over-write...
-		distES6(folder, TARGET.ES6, TARGET.ES6, true)
+		distES6(folder)
 			.then(function() {
 
-				console.log('TypeScript Render:', target, module, './source >> ' + d);
+					console.log('TypeScript Render:', target, module, './source >> ' + d);
 
-				var typescriptOptions = {
-					noImplicitAny: true,
-					module: module,
-					target: target,
-					removeComments: true
-				};
+					var typescriptOptions = {
+						noImplicitAny: true,
+						module: module,
+						target: target,
+						removeComments: true,
+						noEmitHelpers: true
+					};
 
-				var sourceMapOptions = {
-					sourceRoot: null
-				};
+					var sourceMapOptions = {
+						sourceRoot: null
+					};
 
 
-				gulp
-					.src(['./source/**/*.ts'])
-					.pipe(sourcemaps.init())
-					.pipe(typescript(typescriptOptions))
-					.pipe(postProcess())
-					.pipe(sourcemaps.write('.', sourceMapOptions))
-					.pipe(gulp.dest(d))
-					.on(EVENT.END, deferred.resolve);
+					gulp
+						.src(['./source/**/*.ts'])
+						.pipe(sourcemaps.init())
+						.pipe(typescript(typescriptOptions))
+						.pipe(postProcess())
+						.pipe(sourcemaps.write('.', sourceMapOptions))
+						.pipe(gulp.dest(d))
+						.on(EVENT.END, deferred.resolve);
 
-			}
-		);
+				}
+			);
 
 		return deferred.promise;
 
@@ -236,7 +238,7 @@ gulp.task(
 	TASK.DIST_ES6, function()
 	{
 		const ES6 = TARGET.ES6;
-		return tsc.dist(ES6, ES6);
+		return tsc.distES6(ES6,true);
 	}
 );
 
@@ -367,7 +369,7 @@ gulp.task(TASK.VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
 
 gulp.task(TASK.NUGET_PACK,
 	[
-		//TASK.BUILD
+		TASK.BUILD
 	],
 	function(callback) {
 

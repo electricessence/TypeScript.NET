@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/ArgumentNullException", "../Exceptions/ArgumentException", "../Compare"], function(exports_1, context_1) {
+System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/ArgumentNullException", "../Exceptions/ArgumentException", "../Compare", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, DisposableBase_1, ArgumentNullException_1, ArgumentException_1, Compare_1;
-    var EventDispatcherEntry;
+    var Types_1, DisposableBase_1, ArgumentNullException_1, ArgumentException_1, Compare_1, extends_1;
+    var __extends, EventDispatcherEntry;
     return {
         setters:[
             function (Types_1_1) {
@@ -28,8 +28,12 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
             },
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             EventDispatcherEntry = (function (_super) {
                 __extends(EventDispatcherEntry, _super);
                 function EventDispatcherEntry(type, listener, params, finalizer) {

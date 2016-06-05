@@ -5,6 +5,8 @@
  */
 
 import {SystemException} from "../../Exceptions/SystemException";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 const NAME:string = 'UnsupportedEnumerableException';
 

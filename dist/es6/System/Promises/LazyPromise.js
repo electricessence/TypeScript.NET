@@ -5,6 +5,8 @@
 import { Promise } from "./Promise";
 import { defer } from "../Threading/defer";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const VOID0 = void 0;
 export class LazyPromise extends Promise {
     constructor(_resolver) {

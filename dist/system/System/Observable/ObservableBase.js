@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-System.register(["./SubscribableBase"], function(exports_1, context_1) {
+System.register(["./SubscribableBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -12,8 +12,8 @@ System.register(["./SubscribableBase"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var SubscribableBase_1;
-    var ObservableBase, OBSERVER_ERROR_MESSAGE;
+    var SubscribableBase_1, extends_1;
+    var __extends, ObservableBase, OBSERVER_ERROR_MESSAGE;
     function processAction(observers, handler) {
         var observersErrors = null;
         for (var _i = 0, observers_1 = observers; _i < observers_1.length; _i++) {
@@ -41,8 +41,12 @@ System.register(["./SubscribableBase"], function(exports_1, context_1) {
         setters:[
             function (SubscribableBase_1_1) {
                 SubscribableBase_1 = SubscribableBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             ObservableBase = (function (_super) {
                 __extends(ObservableBase, _super);
                 function ObservableBase() {

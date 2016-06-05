@@ -21,6 +21,8 @@ var EmptyEnumerator_1 = require("./Enumeration/EmptyEnumerator");
 var dispose_1 = require("../Disposable/dispose");
 var Compare_1 = require("../Compare");
 var CollectionBase_1 = require("./CollectionBase");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 var OTHER = 'other';
 
 var SetBase = function (_CollectionBase_1$Col) {

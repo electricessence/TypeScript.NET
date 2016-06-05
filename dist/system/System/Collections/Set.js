@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Types", "../Exceptions/ArgumentException", "./SetBase"], function(exports_1, context_1) {
+System.register(["../Types", "../Exceptions/ArgumentException", "./SetBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../Types", "../Exceptions/ArgumentException", "./SetBase"], fu
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, ArgumentException_1, SetBase_1;
-    var OTHER, Set;
+    var Types_1, ArgumentException_1, SetBase_1, extends_1;
+    var __extends, OTHER, Set;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
         if (map && depth) {
@@ -33,8 +33,12 @@ System.register(["../Types", "../Exceptions/ArgumentException", "./SetBase"], fu
             },
             function (SetBase_1_1) {
                 SetBase_1 = SetBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             OTHER = 'other';
             Set = (function (_super) {
                 __extends(Set, _super);

@@ -16,6 +16,8 @@ var Types_1 = require("../../Types");
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
 var IteratorResult_1 = require("./IteratorResult");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 var VOID0 = void 0;
 var yielderPool;
 function yielder(recycle) {

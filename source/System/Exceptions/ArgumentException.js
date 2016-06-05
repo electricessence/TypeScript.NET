@@ -13,12 +13,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./SystemException", "../Text/Utility"], factory);
+        define(["require", "exports", "./SystemException", "../Text/Utility", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var SystemException_1 = require("./SystemException");
     var Utility_1 = require("../Text/Utility");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var NAME = 'ArgumentException';
     var ArgumentException = (function (_super) {
         __extends(ArgumentException, _super);

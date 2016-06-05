@@ -19,6 +19,8 @@ var DisposableBase_1 = require("../Disposable/DisposableBase");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var Compare_1 = require("../Compare");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var EventDispatcherEntry = function (_DisposableBase_1$Dis) {
     _inherits(EventDispatcherEntry, _DisposableBase_1$Dis);

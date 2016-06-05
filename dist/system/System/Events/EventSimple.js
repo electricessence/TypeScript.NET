@@ -3,13 +3,18 @@
  * Based on Netjs mscorlib.ts
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register([], function(exports_1, context_1) {
+System.register(["../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var EventSimple;
+    var extends_1;
+    var __extends, EventSimple;
     return {
-        setters:[],
+        setters:[
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
+            }],
         execute: function() {
+            __extends = extends_1.default;
             EventSimple = (function () {
                 function EventSimple() {
                     this._listeners = [];

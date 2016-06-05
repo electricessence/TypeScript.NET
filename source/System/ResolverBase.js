@@ -12,12 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Disposable/DisposableBase", "./Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports", "./Disposable/DisposableBase", "./Exceptions/ArgumentNullException", "../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var DisposableBase_1 = require("./Disposable/DisposableBase");
     var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
+    var extends_1 = require("../extends");
+    var __extends = extends_1.default;
     var ResolverBase = (function (_super) {
         __extends(ResolverBase, _super);
         function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {

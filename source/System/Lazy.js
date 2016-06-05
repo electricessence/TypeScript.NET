@@ -12,11 +12,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./ResolverBase"], factory);
+        define(["require", "exports", "./ResolverBase", "../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var ResolverBase_1 = require("./ResolverBase");
+    var extends_1 = require("../extends");
+    var __extends = extends_1.default;
     var Lazy = (function (_super) {
         __extends(Lazy, _super);
         function Lazy(valueFactory, trapExceptions, allowReset) {
@@ -49,6 +51,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         return Lazy;
     }(ResolverBase_1.ResolverBase));
     exports.Lazy = Lazy;
+    var ResettableLazy = (function (_super) {
+        __extends(ResettableLazy, _super);
+        function ResettableLazy(valueFactory, trapExceptions) {
+            if (trapExceptions === void 0) { trapExceptions = false; }
+            _super.call(this, valueFactory, trapExceptions, true);
+        }
+        return ResettableLazy;
+    }(Lazy));
+    exports.ResettableLazy = ResettableLazy;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Lazy;
 });

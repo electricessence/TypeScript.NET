@@ -7,6 +7,8 @@
 import {Exception} from "../Exception";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {IDisposableAware} from "./IDisposableAware";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 
 const NAME:string = 'ObjectDisposedException';

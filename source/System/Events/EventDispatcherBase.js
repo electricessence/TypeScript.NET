@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry"], factory);
+        define(["require", "exports", "../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -21,6 +21,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var DisposableBase_1 = require("../Disposable/DisposableBase");
     var dispose_1 = require("../Disposable/dispose");
     var EventDispatcherEntry_1 = require("./EventDispatcherEntry");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var DISPOSING = 'disposing', DISPOSED = 'disposed';
     function entryFinalizer() {
         var p = this.params;

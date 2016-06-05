@@ -19,6 +19,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Types_1 = require("../Types");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var SetBase_1 = require("./SetBase");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 var OTHER = 'other';
 
 var Set = function (_SetBase_1$SetBase) {

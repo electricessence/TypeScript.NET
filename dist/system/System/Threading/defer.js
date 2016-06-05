@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register([], function(exports_1, context_1) {
+System.register(["../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,7 +10,8 @@ System.register([], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var DeferBase, Defer, DeferInterval;
+    var extends_1;
+    var __extends, DeferBase, Defer, DeferInterval;
     function defer(task, delay, payload) {
         return new Defer(task, delay, payload);
     }
@@ -21,8 +22,12 @@ System.register([], function(exports_1, context_1) {
     }
     exports_1("interval", interval);
     return {
-        setters:[],
+        setters:[
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
+            }],
         execute: function() {
+            __extends = extends_1.default;
             DeferBase = (function () {
                 function DeferBase() {
                 }

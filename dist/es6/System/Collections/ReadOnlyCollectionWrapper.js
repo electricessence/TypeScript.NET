@@ -4,6 +4,8 @@
  */
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { ReadOnlyCollectionBase } from "./ReadOnlyCollectionBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export default class ReadOnlyCollectionWrapper extends ReadOnlyCollectionBase {
     constructor(c) {
         super();

@@ -5,6 +5,8 @@
 import * as Values from "../../Compare";
 import { SortContext } from "./SortContext";
 import { Functions } from "../../Functions";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 export class KeySortedContext extends SortContext {
     constructor(next, _keySelector, order = 1, comparer = Values.compare) {
         super(next, comparer, order);

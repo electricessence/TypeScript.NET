@@ -3,7 +3,7 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register([], function(exports_1, context_1) {
+System.register(["../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,10 +11,15 @@ System.register([], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var EMPTY, UNDEFINED, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
+    var extends_1;
+    var __extends, EMPTY, UNDEFINED, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
     return {
-        setters:[],
+        setters:[
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
+            }],
         execute: function() {
+            __extends = extends_1.default;
             EMPTY = "";
             UNDEFINED = "undefined";
             _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';

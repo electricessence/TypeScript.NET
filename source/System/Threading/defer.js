@@ -12,10 +12,12 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports"], factory);
+        define(["require", "exports", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var DeferBase = (function () {
         function DeferBase() {
         }

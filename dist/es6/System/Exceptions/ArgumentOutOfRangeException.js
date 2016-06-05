@@ -4,6 +4,8 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 import { ArgumentException } from "./ArgumentException";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const NAME = 'ArgumentOutOfRangeException';
 export class ArgumentOutOfRangeException extends ArgumentException {
     constructor(paramName, actualValue, message = ' ', innerException = null) {

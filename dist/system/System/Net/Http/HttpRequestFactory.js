@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri"], function(exports_1, context_1) {
+System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ArgumentNullException_1, DisposableBase_1, HttpMethod_1, Uri_1;
-    var HttpRequestFactory;
+    var ArgumentNullException_1, DisposableBase_1, HttpMethod_1, Uri_1, extends_1;
+    var __extends, HttpRequestFactory;
     return {
         setters:[
             function (ArgumentNullException_1_1) {
@@ -25,8 +25,12 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
             },
             function (Uri_1_1) {
                 Uri_1 = Uri_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             HttpRequestFactory = (function (_super) {
                 __extends(HttpRequestFactory, _super);
                 function HttpRequestFactory(_http, uriDefaults) {

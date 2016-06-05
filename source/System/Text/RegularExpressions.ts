@@ -8,6 +8,8 @@
 import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
 import {Selector} from "../FunctionTypes";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 const EMPTY:string = "";
 const UNDEFINED:string = "undefined";

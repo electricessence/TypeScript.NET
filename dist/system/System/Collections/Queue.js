@@ -3,7 +3,7 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase"], function(exports_1, context_1) {
+System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,8 +11,8 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, AU, Types_1, Integer_1, EnumeratorBase_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1, CollectionBase_1;
-    var MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
+    var Compare_1, AU, Types_1, Integer_1, EnumeratorBase_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1, CollectionBase_1, extends_1;
+    var __extends, MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     function assertZeroOrGreater(value, property) {
         if (value < 0)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(property, value, "Must be greater than zero");
@@ -49,8 +49,12 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
             },
             function (CollectionBase_1_1) {
                 CollectionBase_1 = CollectionBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             MINIMUM_GROW = 4;
             SHRINK_THRESHOLD = 32;
             GROW_FACTOR_HALF = 100;

@@ -16,6 +16,8 @@ import {IEnumerator} from "../Enumeration/IEnumerator";
 import {ILinkedNode} from "../ILinkedListNode";
 import {Selector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 const VOID0:any = void 0;
 

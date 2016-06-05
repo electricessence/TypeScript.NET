@@ -9,6 +9,8 @@
 import {SubscribableBase} from "./SubscribableBase";
 import {IObservable} from "./IObservable";
 import {IObserver} from "./IObserver";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 

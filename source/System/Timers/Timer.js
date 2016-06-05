@@ -12,11 +12,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Observable/ObservableBase"], factory);
+        define(["require", "exports", "../Observable/ObservableBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var ObservableBase_1 = require("../Observable/ObservableBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var Timer = (function (_super) {
         __extends(Timer, _super);
         function Timer(_interval, _maxCount, _initialDelay) {

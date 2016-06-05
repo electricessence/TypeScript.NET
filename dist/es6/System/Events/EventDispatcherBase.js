@@ -7,6 +7,8 @@ import { shallowCopy } from "../Utility/shallowCopy";
 import { DisposableBase } from "../Disposable/DisposableBase";
 import { dispose } from "../Disposable/dispose";
 import { EventDispatcherEntry } from "./EventDispatcherEntry";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
     var p = this.params;

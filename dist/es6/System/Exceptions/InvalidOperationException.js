@@ -4,6 +4,8 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 import { SystemException } from "./SystemException";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const NAME = 'InvalidOperationException';
 export class InvalidOperationException extends SystemException {
     getName() {

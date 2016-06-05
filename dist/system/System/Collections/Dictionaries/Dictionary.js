@@ -3,7 +3,7 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Compare", "../../Types", "../../Functions", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./DictionaryBase"], function(exports_1, context_1) {
+System.register(["../../Compare", "../../Types", "../../Functions", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./DictionaryBase", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,8 +11,8 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, Types_1, Functions_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, DictionaryBase_1;
-    var VOID0, HashEntry, linkedListPool, NULL, GET_HASH_CODE, Dictionary;
+    var Compare_1, Types_1, Functions_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, DictionaryBase_1, extends_1;
+    var __extends, VOID0, HashEntry, linkedListPool, NULL, GET_HASH_CODE, Dictionary;
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
@@ -58,8 +58,12 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
             },
             function (DictionaryBase_1_1) {
                 DictionaryBase_1 = DictionaryBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             VOID0 = void 0;
             HashEntry = (function () {
                 function HashEntry(key, value, previous, next) {

@@ -15,6 +15,8 @@ import {ILinkedNodeList} from "./ILinkedList";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {Predicate, Selector, Action} from "../FunctionTypes";
 import {IArray} from "./Array/IArray";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 
 /*****************************

@@ -16,6 +16,8 @@ import {IList} from "./IList";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 export class List<T>
 extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>

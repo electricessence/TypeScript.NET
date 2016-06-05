@@ -3,6 +3,8 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const EMPTY = "";
 const UNDEFINED = "undefined";
 const _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';

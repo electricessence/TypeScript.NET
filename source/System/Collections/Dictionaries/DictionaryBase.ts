@@ -15,6 +15,8 @@ import {IKeyValuePair, KeyValuePair} from "../../KeyValuePair";
 import {IDictionary} from "./IDictionary";
 import {IEnumerator} from "../Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 const VOID0:any = void(0);
 

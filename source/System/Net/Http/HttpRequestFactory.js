@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri"], factory);
+        define(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -20,6 +20,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var HttpMethod_1 = require("./HttpMethod");
     var Uri_1 = require("../../Uri/Uri");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var HttpRequestFactory = (function (_super) {
         __extends(HttpRequestFactory, _super);
         function HttpRequestFactory(_http, uriDefaults) {

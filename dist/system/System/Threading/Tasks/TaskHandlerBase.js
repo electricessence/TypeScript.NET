@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Disposable/DisposableBase"], function(exports_1, context_1) {
+System.register(["../../Disposable/DisposableBase", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,14 +10,18 @@ System.register(["../../Disposable/DisposableBase"], function(exports_1, context
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var DisposableBase_1;
-    var TaskHandlerBase;
+    var DisposableBase_1, extends_1;
+    var __extends, TaskHandlerBase;
     return {
         setters:[
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             TaskHandlerBase = (function (_super) {
                 __extends(TaskHandlerBase, _super);
                 function TaskHandlerBase() {

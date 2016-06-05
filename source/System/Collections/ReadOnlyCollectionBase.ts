@@ -5,6 +5,8 @@
 
 import {CollectionBase} from "./CollectionBase";
 import {IEnumerator} from "./Enumeration/IEnumerator";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 export abstract class ReadOnlyCollectionBase<T>
 extends CollectionBase<T>

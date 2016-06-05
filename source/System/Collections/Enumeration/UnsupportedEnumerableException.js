@@ -13,11 +13,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Exceptions/SystemException"], factory);
+        define(["require", "exports", "../../Exceptions/SystemException", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var SystemException_1 = require("../../Exceptions/SystemException");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var NAME = 'UnsupportedEnumerableException';
     var UnsupportedEnumerableException = (function (_super) {
         __extends(UnsupportedEnumerableException, _super);

@@ -12,6 +12,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var IndexEnumerator_1 = require("./IndexEnumerator");
 var Types_1 = require("../../Types");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 
 var ArrayEnumerator = function (_IndexEnumerator_1$In) {
     _inherits(ArrayEnumerator, _IndexEnumerator_1$In);

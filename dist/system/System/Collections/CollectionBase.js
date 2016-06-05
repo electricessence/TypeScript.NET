@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types"], function(exports_1, context_1) {
+System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Types_1;
-    var NAME, CMDC, CMRO, RESOLVE, LINQ_PATH, CollectionBase;
+    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Types_1, extends_1;
+    var __extends, NAME, CMDC, CMRO, RESOLVE, LINQ_PATH, CollectionBase;
     return {
         setters:[
             function (Enumerator_1_1) {
@@ -31,8 +31,12 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             },
             function (Types_1_1) {
                 Types_1 = Types_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
             CollectionBase = (function (_super) {
                 __extends(CollectionBase, _super);

@@ -12,13 +12,15 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Exceptions/ArgumentException", "./SetBase"], factory);
+        define(["require", "exports", "../Types", "../Exceptions/ArgumentException", "./SetBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var SetBase_1 = require("./SetBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var OTHER = 'other';
     var Set = (function (_super) {
         __extends(Set, _super);

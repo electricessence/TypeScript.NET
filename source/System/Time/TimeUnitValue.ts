@@ -7,6 +7,8 @@
 import {TimeUnit} from "./TimeUnit";
 import {TimeQuantity} from "./TimeQuantity";
 import {ITimeQuantity} from "./ITimeQuantity";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 /**
  * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.

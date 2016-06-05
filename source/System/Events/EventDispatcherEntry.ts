@@ -10,6 +10,8 @@ import {ArgumentException} from "../Exceptions/ArgumentException";
 import {areEquivalent} from "../Compare";
 import {IEventListener} from "./IEventListener";
 import {IEquatable} from "../IEquatable";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 export class EventDispatcherEntry<TParams>
 extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>

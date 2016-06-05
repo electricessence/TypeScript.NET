@@ -13,6 +13,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var DisposableBase_1 = require("../../Disposable/DisposableBase");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 
 var TaskHandlerBase = function (_DisposableBase_1$Dis) {
     _inherits(TaskHandlerBase, _DisposableBase_1$Dis);

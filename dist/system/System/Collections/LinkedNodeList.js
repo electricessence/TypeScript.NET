@@ -2,11 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase"], function(exports_1, context_1) {
+System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1;
-    var LinkedNodeList;
+    var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1, extends_1;
+    var __extends, LinkedNodeList;
     function assertValidDetached(node, propName) {
         if (propName === void 0) { propName = 'node'; }
         if (node == null)
@@ -30,8 +30,12 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
             },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             LinkedNodeList = (function () {
                 function LinkedNodeList() {
                     this._first = null;

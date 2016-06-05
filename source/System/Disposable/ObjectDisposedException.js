@@ -13,11 +13,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Exceptions/InvalidOperationException"], factory);
+        define(["require", "exports", "../Exceptions/InvalidOperationException", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var NAME = 'ObjectDisposedException';
     var ObjectDisposedException = (function (_super) {
         __extends(ObjectDisposedException, _super);

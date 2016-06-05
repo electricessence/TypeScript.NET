@@ -4,6 +4,8 @@
  */
 
 import {EnumeratorBase} from "./EnumeratorBase";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 export class IndexEnumerator<T> extends EnumeratorBase<T>
 {

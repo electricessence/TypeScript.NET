@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
  */
-System.register(["../Exception"], function(exports_1, context_1) {
+System.register(["../Exception", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,14 +11,18 @@ System.register(["../Exception"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Exception_1;
-    var NAME, SystemException;
+    var Exception_1, extends_1;
+    var __extends, NAME, SystemException;
     return {
         setters:[
             function (Exception_1_1) {
                 Exception_1 = Exception_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             NAME = 'SystemException';
             SystemException = (function (_super) {
                 __extends(SystemException, _super);

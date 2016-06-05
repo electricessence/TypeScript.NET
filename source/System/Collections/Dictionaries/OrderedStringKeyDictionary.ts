@@ -7,6 +7,8 @@ import * as ArrayUtility from "../Array/Utility";
 import {StringKeyDictionary} from "./StringKeyDictionary";
 import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
 import {IOrderedDictionary} from "./IDictionary";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 const VOID0:any = void 0;
 

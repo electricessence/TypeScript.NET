@@ -6,6 +6,8 @@ import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import { GET, PUT, POST, DELETE } from "./HttpMethod";
 import { Uri } from "../../Uri/Uri";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 export default class HttpRequestFactory extends DisposableBase {
     constructor(_http, uriDefaults) {
         super();

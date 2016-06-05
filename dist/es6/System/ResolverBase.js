@@ -4,6 +4,8 @@
  */
 import { DisposableBase } from "./Disposable/DisposableBase";
 import { ArgumentNullException } from "./Exceptions/ArgumentNullException";
+import __extendsImport from "../extends";
+const __extends = __extendsImport;
 export class ResolverBase extends DisposableBase {
     constructor(_valueFactory, _trapExceptions, _allowReset) {
         super();

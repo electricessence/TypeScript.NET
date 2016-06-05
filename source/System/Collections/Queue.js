@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase"], factory);
+        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -26,6 +26,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
     var CollectionBase_1 = require("./CollectionBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var MINIMUM_GROW = 4;
     var SHRINK_THRESHOLD = 32;
     var GROW_FACTOR_HALF = 100;

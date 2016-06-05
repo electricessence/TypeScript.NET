@@ -12,6 +12,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var ReadOnlyCollectionBase_1 = require("./ReadOnlyCollectionBase");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var ReadOnlyCollectionWrapper = function (_ReadOnlyCollectionBa) {
     _inherits(ReadOnlyCollectionWrapper, _ReadOnlyCollectionBa);

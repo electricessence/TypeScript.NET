@@ -12,6 +12,8 @@ import {GET, PUT, POST, DELETE} from "./HttpMethod";
 import {Uri} from "../../Uri/Uri";
 import {IUri} from "../../Uri/IUri";
 import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 /**
  * This class exposes a factory for making requests to prepared uri and params.

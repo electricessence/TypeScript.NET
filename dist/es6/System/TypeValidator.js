@@ -4,6 +4,8 @@
  */
 import { TypeInfo } from "./Types";
 import { areEqual } from "./Compare";
+import __extendsImport from "../extends";
+const __extends = __extendsImport;
 export class TypeInfoHelper extends TypeInfo {
     constructor(value) {
         super(value, () => this._value = value);

@@ -6,6 +6,8 @@
 import {DisposableBase} from "./Disposable/DisposableBase";
 import {Func} from "./FunctionTypes";
 import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
+import __extendsImport from "../extends";
+const __extends = __extendsImport;
 
 /**
  * The ResolverBase class handles resolving a factory method and detects recursion.

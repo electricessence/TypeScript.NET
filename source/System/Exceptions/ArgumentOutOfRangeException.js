@@ -13,11 +13,13 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./ArgumentException"], factory);
+        define(["require", "exports", "./ArgumentException", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var ArgumentException_1 = require("./ArgumentException");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var NAME = 'ArgumentOutOfRangeException';
     var ArgumentOutOfRangeException = (function (_super) {
         __extends(ArgumentOutOfRangeException, _super);

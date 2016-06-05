@@ -9,6 +9,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
+
 var EventSimple = function () {
     function EventSimple() {
         _classCallCheck(this, EventSimple);

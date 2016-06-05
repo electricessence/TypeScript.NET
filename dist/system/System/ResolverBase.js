@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullException"], function(exports_1, context_1) {
+System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullException", "../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var DisposableBase_1, ArgumentNullException_1;
-    var ResolverBase;
+    var DisposableBase_1, ArgumentNullException_1, extends_1;
+    var __extends, ResolverBase;
     return {
         setters:[
             function (DisposableBase_1_1) {
@@ -19,8 +19,12 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
             },
             function (ArgumentNullException_1_1) {
                 ArgumentNullException_1 = ArgumentNullException_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             ResolverBase = (function (_super) {
                 __extends(ResolverBase, _super);
                 function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {

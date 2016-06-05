@@ -17,6 +17,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var TaskHandlerBase_1 = require("./TaskHandlerBase");
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var Lazy_1 = require("../../Lazy");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 
 var Task = function (_TaskHandlerBase_1$Ta) {
     _inherits(Task, _TaskHandlerBase_1$Ta);

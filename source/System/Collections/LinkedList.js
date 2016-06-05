@@ -13,7 +13,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase"], factory);
+        define(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -22,6 +22,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var CollectionBase_1 = require("./CollectionBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var InternalNode = (function () {
         function InternalNode(value, previous, next) {
             this.value = value;

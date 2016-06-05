@@ -3,7 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity"], function(exports_1, context_1) {
+System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,8 +11,8 @@ System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity"], fun
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Types_1, TimeUnit_1, ClockTime_1, TimeQuantity_1;
-    var TimeSpan, timeSpanZero;
+    var Types_1, TimeUnit_1, ClockTime_1, TimeQuantity_1, extends_1;
+    var __extends, TimeSpan, timeSpanZero;
     return {
         setters:[
             function (Types_1_1) {
@@ -26,8 +26,12 @@ System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity"], fun
             },
             function (TimeQuantity_1_1) {
                 TimeQuantity_1 = TimeQuantity_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             TimeSpan = (function (_super) {
                 __extends(TimeSpan, _super);
                 function TimeSpan(value, units) {

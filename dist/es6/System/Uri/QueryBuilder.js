@@ -6,6 +6,8 @@ import { Type } from "../Types";
 import { OrderedStringKeyDictionary } from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import { isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
 import * as QueryParams from "./QueryParams";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class QueryBuilder extends OrderedStringKeyDictionary {
     constructor(query, decodeValues = true) {
         super();

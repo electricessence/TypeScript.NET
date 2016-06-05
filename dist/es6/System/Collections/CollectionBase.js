@@ -8,6 +8,8 @@ import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { DisposableBase } from "../Disposable/DisposableBase";
 import { Type } from "../Types";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
 export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {

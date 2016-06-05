@@ -13,6 +13,8 @@ var InvalidOperationException_1 = require("../Exceptions/InvalidOperationExcepti
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var LinkedNodeList = function () {
     function LinkedNodeList() {

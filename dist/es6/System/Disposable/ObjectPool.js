@@ -8,6 +8,8 @@ import { dispose } from "./dispose";
 import { DisposableBase } from "./DisposableBase";
 import { TaskHandler } from "../Threading/Tasks/TaskHandler";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 const OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
 export class ObjectPool extends DisposableBase {
     constructor(_maxSize, _generator, _recycler) {

@@ -16,6 +16,8 @@ import {CollectionBase} from "./CollectionBase";
 import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 const MINIMUM_GROW:number = 4;
 const SHRINK_THRESHOLD:number = 32; // Unused?

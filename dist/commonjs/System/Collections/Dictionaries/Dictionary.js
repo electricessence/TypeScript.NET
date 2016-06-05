@@ -22,6 +22,8 @@ var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
 var LinkedNodeList_1 = require("../LinkedNodeList");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
 var DictionaryBase_1 = require("./DictionaryBase");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 var VOID0 = void 0;
 
 var HashEntry = function HashEntry(key, value, previous, next) {

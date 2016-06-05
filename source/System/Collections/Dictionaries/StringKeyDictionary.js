@@ -12,12 +12,14 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "./DictionaryBase"], factory);
+        define(["require", "exports", "../../Compare", "./DictionaryBase", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var Compare_1 = require("../../Compare");
     var DictionaryBase_1 = require("./DictionaryBase");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var VOID0 = void 0;
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);

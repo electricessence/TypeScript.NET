@@ -20,6 +20,8 @@ var Enumerator_1 = require("./Enumeration/Enumerator");
 var Types_1 = require("../Types");
 var ArrayEnumerator_1 = require("./Enumeration/ArrayEnumerator");
 var CollectionBase_1 = require("./CollectionBase");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var List = function (_CollectionBase_1$Col) {
     _inherits(List, _CollectionBase_1$Col);

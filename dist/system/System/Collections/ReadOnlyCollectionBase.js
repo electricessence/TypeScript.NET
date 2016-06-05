@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./CollectionBase"], function(exports_1, context_1) {
+System.register(["./CollectionBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,14 +10,18 @@ System.register(["./CollectionBase"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var CollectionBase_1;
-    var ReadOnlyCollectionBase;
+    var CollectionBase_1, extends_1;
+    var __extends, ReadOnlyCollectionBase;
     return {
         setters:[
             function (CollectionBase_1_1) {
                 CollectionBase_1 = CollectionBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             ReadOnlyCollectionBase = (function (_super) {
                 __extends(ReadOnlyCollectionBase, _super);
                 function ReadOnlyCollectionBase() {

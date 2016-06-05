@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase"], factory);
+        define(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -16,6 +16,8 @@
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var LinkedNodeList = (function () {
         function LinkedNodeList() {
             this._first = null;

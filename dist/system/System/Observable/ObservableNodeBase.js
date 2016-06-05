@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-System.register(["./ObservableBase"], function(exports_1, context_1) {
+System.register(["./ObservableBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -12,14 +12,18 @@ System.register(["./ObservableBase"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ObservableBase_1;
-    var ObservableNodeBase;
+    var ObservableBase_1, extends_1;
+    var __extends, ObservableNodeBase;
     return {
         setters:[
             function (ObservableBase_1_1) {
                 ObservableBase_1 = ObservableBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             ObservableNodeBase = (function (_super) {
                 __extends(ObservableNodeBase, _super);
                 function ObservableNodeBase() {

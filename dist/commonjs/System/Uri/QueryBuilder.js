@@ -16,6 +16,8 @@ var Types_1 = require("../Types");
 var OrderedStringKeyDictionary_1 = require("../Collections/Dictionaries/OrderedStringKeyDictionary");
 var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
 var QueryParams = require("./QueryParams");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 
 var QueryBuilder = function (_OrderedStringKeyDict) {
     _inherits(QueryBuilder, _OrderedStringKeyDict);

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract"], function(exports_1, context_1) {
+System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, Enumerator_1, CollectionBase_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1;
-    var VOID0, DictionaryBase;
+    var Compare_1, Enumerator_1, CollectionBase_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1, extends_1;
+    var __extends, VOID0, DictionaryBase;
     return {
         setters:[
             function (Compare_1_1) {
@@ -34,8 +34,12 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
             },
             function (KeyValueExtract_1_1) {
                 KeyValueExtract_1 = KeyValueExtract_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             VOID0 = void (0);
             DictionaryBase = (function (_super) {
                 __extends(DictionaryBase, _super);

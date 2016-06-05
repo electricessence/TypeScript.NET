@@ -7,6 +7,8 @@
 import {TimeQuantity} from "./TimeQuantity";
 import {IClockTime} from "./ITimeStamp";
 import {Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 
 export class ClockTime extends TimeQuantity implements IClockTime

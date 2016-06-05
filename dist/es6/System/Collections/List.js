@@ -8,6 +8,8 @@ import { forEach } from "./Enumeration/Enumerator";
 import { Type } from "../Types";
 import { ArrayEnumerator } from "./Enumeration/ArrayEnumerator";
 import { CollectionBase } from "./CollectionBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class List extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);

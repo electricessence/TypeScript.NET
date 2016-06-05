@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-var __extends=this&&this.__extends||function(t,e){function n(){this.constructor=t}for(var o in e)e.hasOwnProperty(o)&&(t[o]=e[o]);t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)};define(["require","exports","../Exceptions/ArgumentNullException","./ReadOnlyCollectionBase"],function(t,e,n,o){"use strict";var r=function(t){function e(e){if(t.call(this),!e)throw new n.ArgumentNullException("collection");var o=this;o._getCount=function(){return e.count},o.getEnumerator=function(){return e.getEnumerator()}}return __extends(e,t),e}(o.ReadOnlyCollectionBase);Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=r});
+define(["require","exports","../Exceptions/ArgumentNullException","./ReadOnlyCollectionBase","../../extends"],function(e,t,n,o,u){"use strict";var r=u["default"],i=function(e){function t(t){if(e.call(this),!t)throw new n.ArgumentNullException("collection");var o=this;o._getCount=function(){return t.count},o.getEnumerator=function(){return t.getEnumerator()}}return r(t,e),t}(o.ReadOnlyCollectionBase);Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=i});
 //# sourceMappingURL=ReadOnlyCollectionWrapper.js.map

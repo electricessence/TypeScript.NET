@@ -9,6 +9,8 @@ import {dispose} from "./dispose";
 import {DisposableBase} from "./DisposableBase";
 import {TaskHandler} from "../Threading/Tasks/TaskHandler";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 const
 	OBJECT_POOL       = "ObjectPool",

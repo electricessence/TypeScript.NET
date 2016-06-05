@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy"], function(exports_1, context_1) {
+System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var TaskHandlerBase_1, ArgumentNullException_1, Lazy_1;
-    var Task;
+    var TaskHandlerBase_1, ArgumentNullException_1, Lazy_1, extends_1;
+    var __extends, Task;
     return {
         setters:[
             function (TaskHandlerBase_1_1) {
@@ -22,8 +22,12 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
             },
             function (Lazy_1_1) {
                 Lazy_1 = Lazy_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             Task = (function (_super) {
                 __extends(Task, _super);
                 function Task(valueFactory) {

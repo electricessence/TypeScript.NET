@@ -6,6 +6,8 @@
 import {DisposableBase} from "../../Disposable/DisposableBase";
 import {ICancellable} from "../ICancellable";
 import {TaskStatus} from "./TaskStatus";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 /**
  * A simple class for handling potentially repeated executions either deferred or immediate.

@@ -16,6 +16,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var Types_1 = require("./Types");
 var Compare_1 = require("./Compare");
+var extends_1 = require("../extends");
+var __extends = extends_1.default;
 
 var TypeInfoHelper = function (_Types_1$TypeInfo) {
     _inherits(TypeInfoHelper, _Types_1$TypeInfo);

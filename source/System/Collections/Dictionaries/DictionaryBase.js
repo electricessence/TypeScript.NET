@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract"], factory);
+        define(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -23,6 +23,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var InvalidOperationException_1 = require("../../Exceptions/InvalidOperationException");
     var KeyValueExtract_1 = require("../../KeyValueExtract");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var VOID0 = void (0);
     var DictionaryBase = (function (_super) {
         __extends(DictionaryBase, _super);

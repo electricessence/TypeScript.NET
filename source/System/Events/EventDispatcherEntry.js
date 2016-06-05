@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Disposable/DisposableBase", "../Exceptions/ArgumentNullException", "../Exceptions/ArgumentException", "../Compare"], factory);
+        define(["require", "exports", "../Types", "../Disposable/DisposableBase", "../Exceptions/ArgumentNullException", "../Exceptions/ArgumentException", "../Compare", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -21,6 +21,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var Compare_1 = require("../Compare");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var EventDispatcherEntry = (function (_super) {
         __extends(EventDispatcherEntry, _super);
         function EventDispatcherEntry(type, listener, params, finalizer) {

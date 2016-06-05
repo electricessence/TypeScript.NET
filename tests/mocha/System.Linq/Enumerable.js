@@ -3,7 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../../source/System/Collections/Array/Utility", "../../../source/System/Collections/Array/Procedure", "../../../source/System.Linq/Linq", "../../../source/System/Functions", "../../../source/System/Collections/Enumeration/EmptyEnumerator"], factory);
+        define(["require", "exports", "../../../source/System/Collections/Array/Utility", "../../../source/System/Collections/Array/Procedure", "../../../source/System.Linq/Linq", "../../../source/System/Functions", "../../../source/System/Collections/Enumeration/EmptyEnumerator", "../../../source/System/Collections/List"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -12,6 +12,7 @@
     var Linq_1 = require("../../../source/System.Linq/Linq");
     var Functions_1 = require("../../../source/System/Functions");
     var EmptyEnumerator_1 = require("../../../source/System/Collections/Enumeration/EmptyEnumerator");
+    var List_1 = require("../../../source/System/Collections/List");
     var assert = require('../../../node_modules/assert/assert');
     var source = Object.freeze([
         {
@@ -80,6 +81,11 @@
             c: "f"
         }
     ]);
+    function compileTest() {
+        var list = new List_1.List(source);
+        return list.linq.orderBy(function (v) { return v.a; })
+            .takeWhile(function (g, i) { return i < 5; });
+    }
     var sourceMany = Linq_1.default.from(Object.freeze([
         "a,b,c,d,e",
         null,

@@ -11,6 +11,8 @@ import {TimeQuantity} from "./TimeQuantity";
 import {Milliseconds, Ticks} from "./HowMany";
 import {ITimeMeasurement} from "./ITimeMeasurement";
 import {ITimeQuantity} from "./ITimeQuantity";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 
 /**

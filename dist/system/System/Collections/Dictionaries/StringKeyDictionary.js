@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Compare", "./DictionaryBase"], function(exports_1, context_1) {
+System.register(["../../Compare", "./DictionaryBase", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["../../Compare", "./DictionaryBase"], function(exports_1, conte
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var Compare_1, DictionaryBase_1;
-    var VOID0, StringKeyDictionary;
+    var Compare_1, DictionaryBase_1, extends_1;
+    var __extends, VOID0, StringKeyDictionary;
     return {
         setters:[
             function (Compare_1_1) {
@@ -19,8 +19,12 @@ System.register(["../../Compare", "./DictionaryBase"], function(exports_1, conte
             },
             function (DictionaryBase_1_1) {
                 DictionaryBase_1 = DictionaryBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             VOID0 = void 0;
             StringKeyDictionary = (function (_super) {
                 __extends(StringKeyDictionary, _super);

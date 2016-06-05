@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./ResolverBase"], function(exports_1, context_1) {
+System.register(["./ResolverBase", "../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,14 +10,18 @@ System.register(["./ResolverBase"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var ResolverBase_1;
-    var Lazy;
+    var ResolverBase_1, extends_1;
+    var __extends, Lazy, ResettableLazy;
     return {
         setters:[
             function (ResolverBase_1_1) {
                 ResolverBase_1 = ResolverBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             Lazy = (function (_super) {
                 __extends(Lazy, _super);
                 function Lazy(valueFactory, trapExceptions, allowReset) {
@@ -50,6 +54,15 @@ System.register(["./ResolverBase"], function(exports_1, context_1) {
                 return Lazy;
             }(ResolverBase_1.ResolverBase));
             exports_1("Lazy", Lazy);
+            ResettableLazy = (function (_super) {
+                __extends(ResettableLazy, _super);
+                function ResettableLazy(valueFactory, trapExceptions) {
+                    if (trapExceptions === void 0) { trapExceptions = false; }
+                    _super.call(this, valueFactory, trapExceptions, true);
+                }
+                return ResettableLazy;
+            }(Lazy));
+            exports_1("ResettableLazy", ResettableLazy);
             exports_1("default",Lazy);
         }
     }

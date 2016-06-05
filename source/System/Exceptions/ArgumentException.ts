@@ -7,7 +7,8 @@
 
 import {SystemException} from "./SystemException";
 import {trim} from "../Text/Utility";
-
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 const NAME:string = 'ArgumentException';
 

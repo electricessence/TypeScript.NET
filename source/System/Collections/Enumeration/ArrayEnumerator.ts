@@ -7,6 +7,8 @@
 import {IndexEnumerator} from "./IndexEnumerator";
 import {Type} from "../../Types";
 import {IArray} from "../Array/IArray";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 export class ArrayEnumerator<T> extends IndexEnumerator<T>
 {

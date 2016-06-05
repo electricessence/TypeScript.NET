@@ -6,6 +6,9 @@
 import {ILazy} from "./ILazy";
 import {Func} from "./FunctionTypes";
 import {ResolverBase} from "./ResolverBase";
+import __extendsImport from "../extends";
+const __extends = __extendsImport;
+
 
 // We need a non-resettable lazy to ensure it can be passed safely around.
 export class Lazy<T> extends ResolverBase<T> implements ILazy<T>
@@ -38,6 +41,14 @@ export class Lazy<T> extends ResolverBase<T> implements ILazy<T>
 		return this.equals(other) || this.value===other.value;
 	}
 
+}
+
+export class ResettableLazy<T> extends Lazy<T>
+{
+	constructor(valueFactory:Func<T>, trapExceptions:boolean = false)
+	{
+		super(valueFactory, trapExceptions, true);
+	}
 }
 
 export default Lazy;

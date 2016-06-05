@@ -22,6 +22,8 @@ import { ObjectDisposedException } from "../System/Disposable/ObjectDisposedExce
 import { KeySortedContext } from "../System/Collections/Sorting/KeySortedContext";
 import { ArgumentNullException } from "../System/Exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../System/Exceptions/ArgumentOutOfRangeException";
+import __extendsImport from "../extends";
+const __extends = __extendsImport;
 const INVALID_DEFAULT = {};
 const VOID0 = void 0;
 const BREAK = element => 0;

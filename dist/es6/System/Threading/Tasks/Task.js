@@ -5,6 +5,8 @@
 import { TaskHandlerBase } from "./TaskHandlerBase";
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { Lazy } from "../../Lazy";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 export class Task extends TaskHandlerBase {
     constructor(valueFactory) {
         super();

@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./TimeUnit", "./TimeQuantity"], function(exports_1, context_1) {
+System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -10,8 +10,8 @@ System.register(["./TimeUnit", "./TimeQuantity"], function(exports_1, context_1)
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var TimeUnit_1, TimeQuantity_1;
-    var TimeUnitValue;
+    var TimeUnit_1, TimeQuantity_1, extends_1;
+    var __extends, TimeUnitValue;
     function getUnitQuantityFrom(q, units) {
         return TimeUnit_1.TimeUnit.fromMilliseconds(q.getTotalMilliseconds(), units);
     }
@@ -22,8 +22,12 @@ System.register(["./TimeUnit", "./TimeQuantity"], function(exports_1, context_1)
             },
             function (TimeQuantity_1_1) {
                 TimeQuantity_1 = TimeQuantity_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             TimeUnitValue = (function (_super) {
                 __extends(TimeUnitValue, _super);
                 function TimeUnitValue(value, _units) {

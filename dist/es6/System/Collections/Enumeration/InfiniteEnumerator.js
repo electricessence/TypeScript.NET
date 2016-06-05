@@ -3,6 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 const VOID0 = void 0;
 export class InfiniteEnumerator extends SimpleEnumerableBase {
     constructor(_factory) {

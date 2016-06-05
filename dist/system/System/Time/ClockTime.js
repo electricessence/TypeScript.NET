@@ -3,7 +3,7 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./TimeQuantity"], function(exports_1, context_1) {
+System.register(["./TimeQuantity", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -11,8 +11,8 @@ System.register(["./TimeQuantity"], function(exports_1, context_1) {
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var TimeQuantity_1;
-    var ClockTime;
+    var TimeQuantity_1, extends_1;
+    var __extends, ClockTime;
     function pluralize(value, label) {
         if (Math.abs(value) !== 1)
             label += "s";
@@ -22,8 +22,12 @@ System.register(["./TimeQuantity"], function(exports_1, context_1) {
         setters:[
             function (TimeQuantity_1_1) {
                 TimeQuantity_1 = TimeQuantity_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             ClockTime = (function (_super) {
                 __extends(ClockTime, _super);
                 function ClockTime() {

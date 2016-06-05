@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || function (d, b) {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types"], factory);
+        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -22,6 +22,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
     var Types_1 = require("../Types");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
     var CollectionBase = (function (_super) {
         __extends(CollectionBase, _super);
