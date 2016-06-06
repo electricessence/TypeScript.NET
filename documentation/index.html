@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TypeScript.NET</title>
+	<title>typescript-dotnet</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">TypeScript.NET</a>
+					<a href="index.html" class="title">typescript-dotnet</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -57,7 +57,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> TypeScript.NET</h1>
+			<h1> typescript-dotnet</h1>
 		</div>
 	</div>
 </header>
@@ -67,6 +67,7 @@
 			<div class="tsd-panel tsd-typography">
 				<h1 id="typescript-net">TypeScript.NET</h1>
 				<h3 id="a-javascript-friendly-net-based-typescript-library">A JavaScript-Friendly .NET Based TypeScript Library</h3>
+				<p><span class="badge-patreon"><a href="http://patreon.com/codeevolution" title="Donate to this project using Patreon"><img src="https://img.shields.io/badge/patreon-donate-yellow.svg" alt="Patreon donate button" /></a></span></p>
 				<p>The intention of this project to to allow for the evolution of a .NET based TypeScript (and resultant JavaScript) library.
 				Contributions are welcomed as the .NET Library (meaning it&#39;s class structure and classes, not necessarily its content) has a substantial amount of usefulness.  With the open sourcing of .NET, TypeScript seems the most logical means to take advantage of it.  Typing, generics, classes, modules, inheritance, all are required to make a resultant JavaScript library that takes advantage of this elegance.</p>
 				<p>Much inspiration comes from TypeScript itself and from libraries like linq.js.
@@ -74,68 +75,94 @@
 				<p>If you have a .NET Library class that you want to see represented in TypeScript, submit it (as an issue), or contribute it yourself! :)</p>
 				<h2 id="why-should-i-use-this-let-alone-typescript-">Why should I use this, let alone TypeScript?</h2>
 				<ol>
-					<li><strong>It&#39;s 100% compatible with JavaScript.</strong>  Currently TypeScript.NET&#39;s target is ES5, so legacy JavaScript won&#39;t work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don&#39;t have to change your source code to target newer versions. :)</li>
+					<li><strong>It&#39;s 100% compatible with JavaScript.</strong>  Currently TypeScript .NET&#39;s target is ES5, so legacy ES3 won&#39;t work. Mainly because of accessors.  But going forward, TypeScript is nearly the same as ES6 and you don&#39;t have to change your source code to target newer versions. :)</li>
 					<li>TypeScript is lead by Anders Hejlsberg, the founder of C#.  You will feel quite at home in TypeScript if you are a fan of typed languages (like C#), but at the same time you&#39;ll get all the flexibility and compatibility of JavaScript.  See <a href="http://www.typescriptlang.org/">www.typescriptlang.org</a> for more information about the TypeScript language.  Also some more good info on <a href="http://en.wikipedia.org/wiki/TypeScript">Wikipedia</a>.</li>
 					<li>The benefits of intellisense and using an IDE for programming should be obvious especially if you are coding for a larger project.  Typed compilation is less forgiving in a good way.  You simply make much less mistakes in the long run.  TypeScript might be the best answer to JavaScript yet.  It&#39;s still JavaScript, but with many bonuses including a growing community. :)</li>
-					<li>Most major IDEs and text editors now support TypeScript either built in, or via a plug-in:</li>
-					<li>Visual Studio</li>
-					<li>VS Code</li>
-					<li>WebStorm (strongly recommended!)</li>
-					<li>Sublime Text</li>
-					<li>Atom</li>
+					<li>Most major IDEs and text editors now support TypeScript either built in, or via a plug-in:<ul>
+							<li>Visual Studio</li>
+							<li>VS Code</li>
+							<li>WebStorm (Strongly recommended! Makes NodeJS development a dream.) </li>
+							<li>Sublime Text</li>
+							<li>Atom</li>
+						</ul>
+					</li>
 				</ol>
 				<p>To name a few.</p>
 				<h2 id="highlights">Highlights</h2>
 				<ul>
-					<li><strong>Linq</strong>: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable&lt;T&gt; with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.</li>
-					<li><strong>Exceptions</strong>: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using <em>instanceof</em> as if you used multiple <em>catch</em> statements in C#.</li>
-					<li><strong>Collections</strong>: Multiple collections types with standard ICollection&lt;T&gt; and IEnumerable&lt;T&gt; interfaces.  LinkedList&lt;T&gt;, Queue&lt;T&gt;, Dictionary&lt;T&gt;, and more, all unit tested using a common interface test of ICollection&lt;T&gt;.</li>
-					<li><strong>IDisposable</strong>: Additional interfaces, utilities, and classes like <strong>DisposableBase</strong> that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator&lt;T&gt;, use IDisposable to ensure releasing of references.</li>
-					<li><strong>DateTime</strong> &amp; <strong>TimeSpan</strong>: The <strong>System/Time</strong> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
-					<li><strong>Uri</strong>, <strong>QueryParams</strong>, &amp; <strong>QueryBuilder</strong>:  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/tree/master/source/System.Linq"><strong>Linq</strong></a>: Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable&lt;T&gt; with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.    <strong>**All collections now support a <code>.linq</code> lazy helper property when using NodeJS/CommonJS.</strong></li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/tree/master/source/System/Exceptions"><strong>Exceptions</strong></a>: There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using <em>instanceof</em> as if you used multiple <em>catch</em> statements in C#.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/tree/master/source/System/Collections"><strong>Collections</strong></a>: Multiple collections types with standard ICollection&lt;T&gt; and IEnumerable&lt;T&gt; interfaces.  LinkedList&lt;T&gt;, Queue&lt;T&gt;, Dictionary&lt;T&gt;, and more, all unit tested using a common interface test of ICollection&lt;T&gt;. **</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Disposable/IDisposable.d.ts"><strong>IDisposable</strong></a>: Additional interfaces, utilities, and classes like <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Disposable/DisposableBase.ts"><strong>DisposableBase</strong></a> that help in providing a cleanup pattern for larger applications that may easily encounter memory leaks.  Many of the classes within, including IEnumerator&lt;T&gt;, use IDisposable to ensure releasing of references.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Disposable/ObjectPool.ts"><strong>ObjectPool</strong></a>: There are some cases where internal objects are used quite often and instead of relying on the garbage collector to do cleanup, a performance/efficiency gain can be attained by using an ObjectPool.  See actual use <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Collections/Enumeration/EnumeratorBase.ts#L17-L27">here</a>.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Time/DateTime.ts"><strong>DateTime</strong></a> &amp; <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Time/TimeSpan.ts"><strong>TimeSpan</strong></a>: The <a href="https://github.com/electricessence/TypeScript.NET/tree/master/source/System/Time"><strong>System/Time</strong></a> namespace takes these .NET classes and goes even further to provide useful classes for calculating and expressing dates and time.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/Uri.ts"><strong>Uri</strong></a>, <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/QueryParams.ts"><strong>QueryParams</strong></a>, &amp; <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/QueryBuilder.ts"><strong>QueryBuilder</strong></a>:  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Text/RegularExpressions.ts"><strong>Regex</strong></a>: Includes named group captures.  Very handy for accessing groups in regular expression results.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/Promise.ts"><strong>Promise\<T\></strong></a> and <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/LazyPromise.ts"><strong>LazyPromise\<T\></strong></a>: An efficient set of promises that fills that follows the standard ES6 usage while allowing for some useful methods that can improve performance of your application.  Read more <a href="https://www.reddit.com/r/typescript/comments/4l9orj/lazypromiset/">here</a>.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.ts"><strong>TypeValidator\<T\></strong></a>: An easy to use runtime type checker for complex types or JSON.  Read more <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.md">here</a>. </li>
+					<li><strong><em>Currently no external dependencies.</em></strong></li>
 				</ul>
 				<h2 id="usage">Usage</h2>
 				<p>After some time and effort, I&#39;ve decided that this library should be module based since there are too many files and dependencies that may or may not get used.  This is simply the right decision and results in:</p>
 				<ul>
-					<li>Only loading what you need, when you need it.  You can import the entire TypeScript.NET library in your project and not worry about extra bytes you don&#39;t want.</li>
+					<li>Only loading what you need, when you need it.  You can import the entire TypeScript .NET library in your project and not worry about extra bytes you don&#39;t want.</li>
 					<li>Compiling modules into a monolithic library is easier than the reverse.</li>
 					<li>If you care about bundling and minification, <strong>&#39;r.js optimizer&#39;</strong> is probably the right way to go.</li>
 					<li>The modular structure is not limited to requirejs since it should work perfectly well with JSPM/SystemJS.</li>
 					<li>It is easy to change the module types. :)</li>
-					<li>You can easily recompile the entire library into another <strong>dist</strong> folder fully minified using gulp.</li>
-					<li>An already minified with source-map version is provided in the <strong>min</strong> folder</li>
+					<li>You can easily recompile the entire library into another folder fully minified using gulp.</li>
+					<li>Already minified with source-map versions are provided in the <strong>dist</strong> folder</li>
 				</ul>
-				<h4 id="-npm-http-www-npmjs-com-package-typescript-dotnet-"><a href="[http://www.npmjs.com/package/typescript-dotnet]">NPM</a>:</h4>
-				<pre><code>npm <span class="hljs-operator"><span class="hljs-keyword">install</span> typescript-<span class="hljs-keyword">dotnet</span></span>
-</code></pre><p>Version 2.5 is the first NPM release.  The goal is to get this as user friendly as possible.
-				Currently it is possible/supported to use TypeScript.NET in a number of different ways:</p>
-				<ol>
-					<li>Using TypeScript and import the source directly by relative reference.</li>
-					<li>Node users can use <code>dist/commonjs</code> which uses ES6&gt;Babel rendering for ease of use.</li>
-					<li>Use <code>dist/es6</code> directly.</li>
-					<li>requirejs can consume <code>dist/amd</code> or <code>dist/umd.min</code> for minified, web-friendly, source-mapped versions.</li>
-					<li>Lastly, re-render your own version using the TypeScript compiler.</li>
-				</ol>
-				<p>This all may be overkill, or possibly a use case was missed, so please don&#39;t hesitate to log issues in GitHub.</p>
+				<h5 id="why-not-take-this-a-step-further-and-break-it-up-into-separate-npm-style-modules-packages-">Why not take this a step further and break it up into separate NPM style modules/packages?</h5>
+				<p>There is a point where fragmentation and over-granularity just make life harder.  If one module depends on another and you want to implement improvements it&#39;s just easier if they live in the same place.</p>
+				<h4 id="-npm-http-www-npmjs-com-package-typescript-dotnet-"><a href="http://www.npmjs.com/package/typescript-dotnet">NPM</a>:</h4>
+				<pre><code>npm <span class="hljs-keyword">install</span> typescript-<span class="hljs-keyword">dotnet</span>
+</code></pre><p>Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.</p>
+				<p>Currently it is possible/supported to use TypeScript .NET in a number of different ways:</p>
+				<h5 id="import-examples-">Import Examples:</h5>
+				<pre><code class="lang-typescript"><span class="hljs-comment">// The following works well if you are launching from an index.ts or main.ts in your root.</span>
+<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/source/System.Linq/Linq"</span>
+</code></pre>
+				<pre><code class="lang-typescript"><span class="hljs-comment">// Using a dist folder is recommended to eliminate any cross compilation from your project.</span>
+<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/commonjs/System.Linq/Linq"</span>
+</code></pre>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/es6/System.Linq/Linq"</span>
+</code></pre>
+				<pre><code class="lang-typescript"><span class="hljs-comment">// Recommended for users who are deploying to web/browsers.</span>
+<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/umd.min/System.Linq/Linq"</span>
+</code></pre>
+				<pre><code class="lang-typescript"><span class="hljs-comment">// Recommended for users who want pure minified AMD (RequireJS) with source-maps.</span>
+<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/amd/System.Linq/Linq"</span>
+</code></pre>
 				<h4 id="-bower-http-bower-io-search-q-typescript-dotnet-"><a href="http://bower.io/search/?q=typescript-dotnet">Bower</a>:</h4>
-				<pre><code>bower <span class="hljs-operator"><span class="hljs-keyword">install</span> typescript-<span class="hljs-keyword">dotnet</span></span>
+				<pre><code><span class="hljs-keyword">bower </span><span class="hljs-keyword">install </span>typescript-dotnet
 </code></pre><p>This should also include require.js in your bower components directory.
 				If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.</p>
 				<h4 id="-nuget-https-www-nuget-org-packages-typescript-net-library-"><a href="https://www.nuget.org/packages/TypeScript.NET.Library/">Nuget</a>:</h4>
-				<pre><code>PM&gt; Install-Package TypeScript<span class="hljs-class">.NET</span><span class="hljs-class">.Library</span>
+				<pre><code>PM&gt; Install-Package TypeScript<span class="hljs-selector-class">.NET</span><span class="hljs-selector-class">.Library</span>
 </code></pre><h2 id="unit-tests">Unit Tests</h2>
-				<p>Mocha tests are in place for core functionality and expanding all the time.</p>
+				<p>Mocha tests are in place for core functionality and expanding all the time.
+				Istanbul is used for code coverage.  Current coverage is good if not reasonable.</p>
 				<h2 id="examples">Examples</h2>
 				<p>Currently the unit test cover many example usages.</p>
 				<h2 id="documentation">Documentation</h2>
 				<p>Currently improving over time using JSDoc style comments and <a href="http://typedoc.io/">TypeDoc</a>.
 				View Documentation: <a href="http://electricessence.github.io/TypeScript.NET/documentation/">electricessence.github.io/TypeScript.NET/documentation</a></p>
+				<p>Documentation has a tendency to lag behind and TypeDoc is also lagging on updates.</p>
+				<h2 id="contribution">Contribution</h2>
+				<p>This library has immense potential and quite often a class, or function that is missing will simply be added.  If you log any issues here on GitHub they will likely be addressed swiftly.  If you have a class or module you&#39;d like to see integrated, just log an issue and start the discussion or feel free to make a pull request from your own design. :)</p>
 				<h2 id="discussion">Discussion</h2>
+				<p><a href="https://gitter.im/electricessence/TypeScript.NET?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/electricessence/TypeScript.NET.svg" alt="Join the chat at https://gitter.im/electricessence/TypeScript.NET"></a></p>
 				<h4 id="reddit">Reddit</h4>
-				<p><a href="https://redd.it/3ojzbt">.NET</a>
+				<p><a href="https://www.reddit.com/r/tsdotnetlibrary/">TypeScript.NET Library</a></p>
+				<p><a href="https://redd.it/3ojzbt">.NET</a>,
 				<a href="https://redd.it/3ok0bm">TypeScript</a></p>
 				<h2 id="learn-connect-evolve">Learn, Connect &amp; Evolve</h2>
+				<h4 id="code-evolution">Code Evolution</h4>
 				<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
+				<h4 id="-intro-to-typescript-net-library-part-1-https-www-youtube-com-watch-v-dlwl2dghszo-"><a href="https://www.youtube.com/watch?v=dLwl2dGHSZo">Intro to TypeScript.NET Library (Part 1)</a></h4>
+				<p>Click the image below to watch.</p>
+				<p><a href="https://www.youtube.com/watch?v=dLwl2dGHSZo"><img src="https://img.youtube.com/vi/dLwl2dGHSZo/0.jpg" alt="Intro to TypeScript.NET Library (Part 1)"></a></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -148,13 +175,19 @@
 						<a href="modules/_system_linq_linq_.html">"<wbr>System.<wbr>Linq/<wbr>Linq"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_char_.html">"<wbr>System/<wbr>Char"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_array_compare_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Compare"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_array_iarray_d_.html">"<wbr>System/<wbr>Collections/<wbr>Array/IArray.d"</a>
+						<a href="modules/_system_collections_array_dispatch_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Dispatch"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_array_procedure_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Procedure"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_array_readonlyarraywrapper_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Read<wbr>Only<wbr>Array<wbr>Wrapper"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_array_sort_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Sort"</a>
@@ -163,13 +196,13 @@
 						<a href="modules/_system_collections_array_utility_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Utility"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_collectionbase_.html">"<wbr>System/<wbr>Collections/<wbr>Collection<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_dictionaries_dictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_dictionaries_dictionaryabstractbase_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary<wbr>Abstract<wbr>Base"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_dictionaries_idictionary_d_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/IDictionary.d"</a>
+						<a href="modules/_system_collections_dictionaries_dictionarybase_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_dictionaries_orderedstringkeydictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Ordered<wbr>String<wbr>Key<wbr>Dictionary"</a>
@@ -181,46 +214,61 @@
 						<a href="modules/_system_collections_enumeration_arrayenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Array<wbr>Enumerator"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_enumeration_emptyenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Empty<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_enumeration_enumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_enumeration_enumeratorbase_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_ienumerable_d_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_ienumerateeach_d_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerate<wbr>Each.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_ienumerator_d_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerator.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_iyield_d_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/IYield.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_enumeration_indexenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Index<wbr>Enumerator"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_foreach_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/for<wbr>Each"</a>
+						<a href="modules/_system_collections_enumeration_infiniteenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Infinite<wbr>Enumerator"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_icollection_d_.html">"<wbr>System/<wbr>Collections/ICollection.d"</a>
+						<a href="modules/_system_collections_enumeration_iteratorenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Iterator<wbr>Enumerator"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_ilinkedlist_d_.html">"<wbr>System/<wbr>Collections/ILinked<wbr>List.d"</a>
+						<a href="modules/_system_collections_enumeration_iteratorresult_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Iterator<wbr>Result"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_ilinkedlistnode_d_.html">"<wbr>System/<wbr>Collections/ILinked<wbr>List<wbr>Node.d"</a>
+						<a href="modules/_system_collections_enumeration_simpleenumerablebase_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Simple<wbr>Enumerable<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_ilist_d_.html">"<wbr>System/<wbr>Collections/IList.d"</a>
+						<a href="modules/_system_collections_enumeration_unsupportedenumerableexception_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Unsupported<wbr>Enumerable<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_linkedlist_.html">"<wbr>System/<wbr>Collections/<wbr>Linked<wbr>List"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_linkednodelist_.html">"<wbr>System/<wbr>Collections/<wbr>Linked<wbr>Node<wbr>List"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_list_.html">"<wbr>System/<wbr>Collections/<wbr>List"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_collections_queue_.html">"<wbr>System/<wbr>Collections/<wbr>Queue"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_readonlycollectionbase_.html">"<wbr>System/<wbr>Collections/<wbr>Read<wbr>Only<wbr>Collection<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_readonlycollectionwrapper_.html">"<wbr>System/<wbr>Collections/<wbr>Read<wbr>Only<wbr>Collection<wbr>Wrapper"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_set_.html">"<wbr>System/<wbr>Collections/<wbr>Set"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_setbase_.html">"<wbr>System/<wbr>Collections/<wbr>Set<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_sorting_keysortedcontext_.html">"<wbr>System/<wbr>Collections/<wbr>Sorting/<wbr>Key<wbr>Sorted<wbr>Context"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_collections_sorting_sortcontext_.html">"<wbr>System/<wbr>Collections/<wbr>Sorting/<wbr>Sort<wbr>Context"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_compare_.html">"<wbr>System/<wbr>Compare"</a>
@@ -232,22 +280,25 @@
 						<a href="modules/_system_disposable_disposablebase_.html">"<wbr>System/<wbr>Disposable/<wbr>Disposable<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_disposable_idisposable_d_.html">"<wbr>System/<wbr>Disposable/IDisposable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_disposable_idisposableaware_d_.html">"<wbr>System/<wbr>Disposable/IDisposable<wbr>Aware.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_disposable_objectdisposedexception_.html">"<wbr>System/<wbr>Disposable/<wbr>Object<wbr>Disposed<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_disposable_utility_.html">"<wbr>System/<wbr>Disposable/<wbr>Utility"</a>
+						<a href="modules/_system_disposable_objectpool_.html">"<wbr>System/<wbr>Disposable/<wbr>Object<wbr>Pool"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_events_eventdispatcher_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher"</a>
+						<a href="modules/_system_disposable_dispose_.html">"<wbr>System/<wbr>Disposable/dispose"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_events_ieventdispatcher_d_.html">"<wbr>System/<wbr>Events/IEvent<wbr>Dispatcher.d"</a>
+						<a href="modules/_system_environment_.html">"<wbr>System/<wbr>Environment"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_events_eventdispatcherbase_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_events_eventdispatcherentry_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher<wbr>Entry"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_events_eventsimple_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Simple"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_exception_.html">"<wbr>System/<wbr>Exception"</a>
@@ -277,46 +328,25 @@
 						<a href="modules/_system_exceptions_systemexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>System<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_functiontypes_d_.html">"<wbr>System/<wbr>Function<wbr>Types.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_functions_.html">"<wbr>System/<wbr>Functions"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_icloneable_d_.html">"<wbr>System/ICloneable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_icomparable_d_.html">"<wbr>System/IComparable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_iconvertable_d_.html">"<wbr>System/IConvertable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_iequatable_d_.html">"<wbr>System/IEquatable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_iformatprovider_d_.html">"<wbr>System/IFormat<wbr>Provider.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_iformattable_d_.html">"<wbr>System/IFormattable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_ilazy_d_.html">"<wbr>System/ILazy.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_integer_.html">"<wbr>System/<wbr>Integer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_keyvalueextract_.html">"<wbr>System/<wbr>Key<wbr>Value<wbr>Extract"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_lazy_.html">"<wbr>System/<wbr>Lazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_iobservable_d_.html">"<wbr>System/<wbr>Observable/IObservable.d"</a>
+						<a href="modules/_system_net_http_httpmethod_.html">"<wbr>System/<wbr>Net/<wbr>Http/<wbr>Http<wbr>Method"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_iobserver_d_.html">"<wbr>System/<wbr>Observable/IObserver.d"</a>
+						<a href="modules/_system_net_http_httprequestfactory_.html">"<wbr>System/<wbr>Net/<wbr>Http/<wbr>Http<wbr>Request<wbr>Factory"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_isubscribable_d_.html">"<wbr>System/<wbr>Observable/ISubscribable.d"</a>
+						<a href="modules/_system_observable_observablebase_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_observable_observablenodebase_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Node<wbr>Base"</a>
@@ -328,16 +358,25 @@
 						<a href="modules/_system_observable_subscription_.html">"<wbr>System/<wbr>Observable/<wbr>Subscription"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_primitive_d_.html">"<wbr>System/<wbr>Primitive.d"</a>
+						<a href="modules/_system_promises_lazypromise_.html">"<wbr>System/<wbr>Promises/<wbr>Lazy<wbr>Promise"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_promises_ipromise_d_.html">"<wbr>System/<wbr>Promises/IPromise.d"</a>
+						<a href="modules/_system_promises_promise_.html">"<wbr>System/<wbr>Promises/<wbr>Promise"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_serialization_iserializable_d_.html">"<wbr>System/<wbr>Serialization/ISerializable.d"</a>
+						<a href="modules/_system_resolverbase_.html">"<wbr>System/<wbr>Resolver<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_serialization_utility_.html">"<wbr>System/<wbr>Serialization/<wbr>Utility"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_text_padding_.html">"<wbr>System/<wbr>Text/<wbr>Padding"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_text_regexmatchenumerator_.html">"<wbr>System/<wbr>Text/<wbr>Regex<wbr>Match<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_text_regularexpressions_.html">"<wbr>System/<wbr>Text/<wbr>Regular<wbr>Expressions"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_text_stringbuilder_.html">"<wbr>System/<wbr>Text/<wbr>String<wbr>Builder"</a>
@@ -346,28 +385,25 @@
 						<a href="modules/_system_text_utility_.html">"<wbr>System/<wbr>Text/<wbr>Utility"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_calendars_.html">"<wbr>System/<wbr>Time/<wbr>Calendars"</a>
+						<a href="modules/_system_threading_tasks_task_.html">"<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_threading_tasks_taskhandler_.html">"<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task<wbr>Handler"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_threading_tasks_taskhandlerbase_.html">"<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task<wbr>Handler<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_threading_defer_.html">"<wbr>System/<wbr>Threading/defer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_threading_deferimmediate_.html">"<wbr>System/<wbr>Threading/defer<wbr>Immediate"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_time_clocktime_.html">"<wbr>System/<wbr>Time/<wbr>Clock<wbr>Time"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_time_datetime_.html">"<wbr>System/<wbr>Time/<wbr>Date<wbr>Time"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_howmany_.html">"<wbr>System/<wbr>Time/<wbr>How<wbr>Many"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_idatetime_d_.html">"<wbr>System/<wbr>Time/IDate<wbr>Time.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_itimemeasurement_d_.html">"<wbr>System/<wbr>Time/ITime<wbr>Measurement.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_itimequantity_d_.html">"<wbr>System/<wbr>Time/ITime<wbr>Quantity.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_itimestamp_d_.html">"<wbr>System/<wbr>Time/ITime<wbr>Stamp.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_time_timequantity_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Quantity"</a>
@@ -385,19 +421,16 @@
 						<a href="modules/_system_time_timeunitvalue_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Unit<wbr>Value"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_timers_timer_.html">"<wbr>System/<wbr>Timers/<wbr>Timer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_system_typevalidator_.html">"<wbr>System/<wbr>Type<wbr>Validator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_types_.html">"<wbr>System/<wbr>Types"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_uri_hostnametype_.html">"<wbr>System/<wbr>Uri/<wbr>Host<wbr>Name<wbr>Type"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_iuri_d_.html">"<wbr>System/<wbr>Uri/IUri.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_iuricomponentformattable_d_.html">"<wbr>System/<wbr>Uri/IUri<wbr>Component<wbr>Formattable.d"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_iuridotnet_d_.html">"<wbr>System/<wbr>Uri/IUri<wbr>Dot<wbr>Net.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
 						<a href="modules/_system_uri_querybuilder_.html">"<wbr>System/<wbr>Uri/<wbr>Query<wbr>Builder"</a>
@@ -421,10 +454,10 @@
 						<a href="modules/_system_utility_shallowcopy_.html">"<wbr>System/<wbr>Utility/shallow<wbr>Copy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_validation_ivalidationresult_d_.html">"<wbr>System/<wbr>Validation/IValidation<wbr>Result.d"</a>
+						<a href="modules/_system_validation_validationresult_.html">"<wbr>System/<wbr>Validation/<wbr>Validation<wbr>Result"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_validation_validationresult_.html">"<wbr>System/<wbr>Validation/<wbr>Validation<wbr>Result"</a>
+						<a href="modules/_extends_.html">"extends"</a>
 					</li>
 				</ul>
 			</nav>
