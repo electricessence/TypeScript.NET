@@ -284,6 +284,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 }
                 return Fulfilled;
             }(Resolved));
+            exports_1("Fulfilled", Fulfilled);
             Rejected = (function (_super) {
                 __extends(Rejected, _super);
                 function Rejected(error) {
@@ -291,6 +292,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 }
                 return Rejected;
             }(Resolved));
+            exports_1("Rejected", Rejected);
             PromiseWrapper = (function (_super) {
                 __extends(PromiseWrapper, _super);
                 function PromiseWrapper(_target) {

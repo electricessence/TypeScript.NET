@@ -11,10 +11,11 @@ import {dispose} from "../Disposable/dispose";
 import {Subscription} from "./Subscription";
 import {ILinkedNodeWithValue} from "../Collections/ILinkedListNode";
 import {IDisposable} from "../Disposable/IDisposable";
+import {DisposableBase} from "../Disposable/DisposableBase";
 
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
 export class SubscribableBase<TSubscriber>
-implements IDisposable
+extends DisposableBase
 {
 
 	// Use a linked list since it's much easier to remove a subscriber from anywhere in the list.
@@ -22,35 +23,37 @@ implements IDisposable
 
 	protected _getSubscribers():TSubscriber[]
 	{
-		return this
-			.__subscriptions
-			.map(node=>node.value && node.value.subscriber);
+		var s = this.__subscriptions;
+		return s && s.map(node=>node.value && node.value.subscriber);
 	}
 
 	constructor()
 	{
-		this.__subscriptions
-			= new LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>();
+		super();
 	}
 
 	private _findEntryNode(
 		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>
 	{
-		return this
-			.__subscriptions
-			.find(n=>n.value.subscriber===subscriber);
+		var s = this.__subscriptions;
+		return s && s.find(n=>n.value.subscriber===subscriber);
 	}
 
 	// It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
 	subscribe(subscriber:TSubscriber):IDisposable
 	{
 		var _ = this;
+		_.throwIfDisposed();
+
 		var n = _._findEntryNode(subscriber);
 		if(n) // Ensure only one instance of the existing subscription exists.
 			return n.value;
 
+		var _s = _.__subscriptions;
+		if(!_s) _.__subscriptions = _s = new LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>();
+
 		var s = new Subscription(_, subscriber);
-		_.__subscriptions.addNode({value: s});
+		_s.addNode({value: s});
 
 		return s;
 	}
@@ -58,6 +61,7 @@ implements IDisposable
 	unsubscribe(subscriber:TSubscriber):void
 	{
 		var _ = this;
+		// _.throwIfDisposed(); If it was disposed, then it's still safe to try and unsubscribe.
 		var n = _._findEntryNode(subscriber);
 		if(n)
 		{
@@ -70,6 +74,7 @@ implements IDisposable
 	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[]
 	{
 		var _ = this, _s = _.__subscriptions;
+		if(!_s) return null;
 		var s = _s.map(n=>n.value);
 		var u = returnSubscribers ? s.map(o=>o.subscriber) : null;
 		_s.clear(); // Reset...
@@ -84,9 +89,13 @@ implements IDisposable
 		this._unsubscribeAll();
 	}
 
-	dispose()
+	protected _onDispose()
 	{
+		super._onDispose();
 		this._unsubscribeAll();
+		var s = this.__subscriptions;
+		this.__subscriptions = null;
+		dispose(s);
 	}
 
 }

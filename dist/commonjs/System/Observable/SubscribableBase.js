@@ -5,31 +5,39 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
 var dispose_1 = require("../Disposable/dispose");
 var Subscription_1 = require("./Subscription");
-var SubscribableBase = (function () {
+var DisposableBase_1 = require("../Disposable/DisposableBase");
+var SubscribableBase = (function (_super) {
+    __extends(SubscribableBase, _super);
     function SubscribableBase() {
-        this.__subscriptions
-            = new LinkedNodeList_1.LinkedNodeList();
+        _super.call(this);
     }
     SubscribableBase.prototype._getSubscribers = function () {
-        return this
-            .__subscriptions
-            .map(function (node) { return node.value && node.value.subscriber; });
+        var s = this.__subscriptions;
+        return s && s.map(function (node) { return node.value && node.value.subscriber; });
     };
     SubscribableBase.prototype._findEntryNode = function (subscriber) {
-        return this
-            .__subscriptions
-            .find(function (n) { return n.value.subscriber === subscriber; });
+        var s = this.__subscriptions;
+        return s && s.find(function (n) { return n.value.subscriber === subscriber; });
     };
     SubscribableBase.prototype.subscribe = function (subscriber) {
         var _ = this;
+        _.throwIfDisposed();
         var n = _._findEntryNode(subscriber);
         if (n)
             return n.value;
+        var _s = _.__subscriptions;
+        if (!_s)
+            _.__subscriptions = _s = new LinkedNodeList_1.LinkedNodeList();
         var s = new Subscription_1.Subscription(_, subscriber);
-        _.__subscriptions.addNode({ value: s });
+        _s.addNode({ value: s });
         return s;
     };
     SubscribableBase.prototype.unsubscribe = function (subscriber) {
@@ -44,6 +52,8 @@ var SubscribableBase = (function () {
     SubscribableBase.prototype._unsubscribeAll = function (returnSubscribers) {
         if (returnSubscribers === void 0) { returnSubscribers = false; }
         var _ = this, _s = _.__subscriptions;
+        if (!_s)
+            return null;
         var s = _s.map(function (n) { return n.value; });
         var u = returnSubscribers ? s.map(function (o) { return o.subscriber; }) : null;
         _s.clear();
@@ -53,11 +63,15 @@ var SubscribableBase = (function () {
     SubscribableBase.prototype.unsubscribeAll = function () {
         this._unsubscribeAll();
     };
-    SubscribableBase.prototype.dispose = function () {
+    SubscribableBase.prototype._onDispose = function () {
+        _super.prototype._onDispose.call(this);
         this._unsubscribeAll();
+        var s = this.__subscriptions;
+        this.__subscriptions = null;
+        dispose_1.dispose(s);
     };
     return SubscribableBase;
-}());
+}(DisposableBase_1.DisposableBase));
 exports.SubscribableBase = SubscribableBase;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SubscribableBase;

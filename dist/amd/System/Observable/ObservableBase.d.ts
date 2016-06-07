@@ -9,7 +9,7 @@ import { IObservable } from "./IObservable";
 import { IObserver } from "./IObserver";
 export declare abstract class ObservableBase<T> extends SubscribableBase<IObserver<T>> implements IObservable<T> {
     protected _onNext(value: T): void;
-    protected _onError(error: Error): void;
+    protected _onError(error: any): void;
     protected _onCompleted(): void;
 }
 export default ObservableBase;

@@ -5,7 +5,8 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 import { IDisposable } from "../Disposable/IDisposable";
-export declare class SubscribableBase<TSubscriber> implements IDisposable {
+import { DisposableBase } from "../Disposable/DisposableBase";
+export declare class SubscribableBase<TSubscriber> extends DisposableBase {
     private __subscriptions;
     protected _getSubscribers(): TSubscriber[];
     constructor();
@@ -14,6 +15,6 @@ export declare class SubscribableBase<TSubscriber> implements IDisposable {
     unsubscribe(subscriber: TSubscriber): void;
     protected _unsubscribeAll(returnSubscribers?: boolean): TSubscriber[];
     unsubscribeAll(): void;
-    dispose(): void;
+    protected _onDispose(): void;
 }
 export default SubscribableBase;

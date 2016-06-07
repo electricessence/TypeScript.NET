@@ -193,12 +193,12 @@ export class Resolved extends Resolvable {
         this._state = state;
     }
 }
-class Fulfilled extends Resolved {
+export class Fulfilled extends Resolved {
     constructor(value) {
         super(Promise.State.Fulfilled, value);
     }
 }
-class Rejected extends Resolved {
+export class Rejected extends Resolved {
     constructor(error) {
         super(Promise.State.Rejected, VOID0, error);
     }

@@ -15,6 +15,8 @@ System.register(["./SubscribableBase", "../../extends"], function(exports_1, con
     var SubscribableBase_1, extends_1;
     var __extends, ObservableBase, OBSERVER_ERROR_MESSAGE;
     function processAction(observers, handler) {
+        if (!observers)
+            return;
         var observersErrors = null;
         for (var _i = 0, observers_1 = observers; _i < observers_1.length; _i++) {
             var s = observers_1[_i];

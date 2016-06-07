@@ -255,6 +255,7 @@ var Fulfilled = (function (_super) {
     }
     return Fulfilled;
 }(Resolved));
+exports.Fulfilled = Fulfilled;
 var Rejected = (function (_super) {
     __extends(Rejected, _super);
     function Rejected(error) {
@@ -262,6 +263,7 @@ var Rejected = (function (_super) {
     }
     return Rejected;
 }(Resolved));
+exports.Rejected = Rejected;
 var PromiseWrapper = (function (_super) {
     __extends(PromiseWrapper, _super);
     function PromiseWrapper(_target) {

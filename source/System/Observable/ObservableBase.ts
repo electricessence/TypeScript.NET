@@ -26,7 +26,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		);
 	}
 
-	protected _onError(error:Error):void
+	protected _onError(error:any):void
 	{
 		processAction(
 			this._getSubscribers(),
@@ -49,6 +49,7 @@ function processAction<T>(
 	observers:IObserver<T>[],
 	handler:(s:IObserver<T>)=>void)
 {
+	if(!observers) return;
 	var observersErrors:{observer:IObserver<T>,ex:any}[] = null;
 
 	for(let s of observers)

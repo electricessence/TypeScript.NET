@@ -41,6 +41,12 @@ export declare abstract class Resolvable<T> extends PromiseBase<T> {
 export declare abstract class Resolved<T> extends Resolvable<T> {
     constructor(state: Promise.State, result: T, error?: any);
 }
+export declare class Fulfilled<T> extends Resolved<T> {
+    constructor(value?: T);
+}
+export declare class Rejected<T> extends Resolved<T> {
+    constructor(error: any);
+}
 export declare class Promise<T> extends Resolvable<T> {
     private _waiting;
     constructor(resolver?: Promise.Executor<T>, forceSynchronous?: boolean);

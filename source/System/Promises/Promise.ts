@@ -370,7 +370,7 @@ export abstract class Resolved<T> extends Resolvable<T>
 /**
  * A fulfilled Resolved<T>.  Provided for readability.
  */
-class Fulfilled<T> extends Resolved<T>
+export class Fulfilled<T> extends Resolved<T>
 {
 	constructor(value?:T)
 	{
@@ -381,7 +381,7 @@ class Fulfilled<T> extends Resolved<T>
 /**
  * A rejected Resolved<T>.  Provided for readability.
  */
-class Rejected<T> extends Resolved<T>
+export class Rejected<T> extends Resolved<T>
 {
 	constructor(error:any)
 	{

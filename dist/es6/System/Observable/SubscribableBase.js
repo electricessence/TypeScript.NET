@@ -7,28 +7,30 @@
 import { LinkedNodeList } from "../Collections/LinkedNodeList";
 import { dispose } from "../Disposable/dispose";
 import { Subscription } from "./Subscription";
-export class SubscribableBase {
+import { DisposableBase } from "../Disposable/DisposableBase";
+export class SubscribableBase extends DisposableBase {
     constructor() {
-        this.__subscriptions
-            = new LinkedNodeList();
+        super();
     }
     _getSubscribers() {
-        return this
-            .__subscriptions
-            .map(node => node.value && node.value.subscriber);
+        var s = this.__subscriptions;
+        return s && s.map(node => node.value && node.value.subscriber);
     }
     _findEntryNode(subscriber) {
-        return this
-            .__subscriptions
-            .find(n => n.value.subscriber === subscriber);
+        var s = this.__subscriptions;
+        return s && s.find(n => n.value.subscriber === subscriber);
     }
     subscribe(subscriber) {
         var _ = this;
+        _.throwIfDisposed();
         var n = _._findEntryNode(subscriber);
         if (n)
             return n.value;
+        var _s = _.__subscriptions;
+        if (!_s)
+            _.__subscriptions = _s = new LinkedNodeList();
         var s = new Subscription(_, subscriber);
-        _.__subscriptions.addNode({ value: s });
+        _s.addNode({ value: s });
         return s;
     }
     unsubscribe(subscriber) {
@@ -42,6 +44,8 @@ export class SubscribableBase {
     }
     _unsubscribeAll(returnSubscribers = false) {
         var _ = this, _s = _.__subscriptions;
+        if (!_s)
+            return null;
         var s = _s.map(n => n.value);
         var u = returnSubscribers ? s.map(o => o.subscriber) : null;
         _s.clear();
@@ -51,8 +55,12 @@ export class SubscribableBase {
     unsubscribeAll() {
         this._unsubscribeAll();
     }
-    dispose() {
+    _onDispose() {
+        super._onDispose();
         this._unsubscribeAll();
+        var s = this.__subscriptions;
+        this.__subscriptions = null;
+        dispose(s);
     }
 }
 export default SubscribableBase;

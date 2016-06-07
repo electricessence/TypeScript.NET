@@ -9,7 +9,7 @@ export interface IObserver<T>
 {
 	// onNext is optional because an observer may only care about onCompleted.
 	onNext?:(value:T)=>void;
-	onError?:(error:Error)=>void;
+	onError?:(error:any)=>void;
 	onCompleted?:()=>void;
 }
 
