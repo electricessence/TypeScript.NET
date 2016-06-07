@@ -86,3 +86,4 @@ export declare module Promise {
     function wrap<T>(target: PromiseLike<T>): PromiseBase<T>;
     function createFrom<T, TResult>(then: Then<T, TResult>): PromiseBase<T>;
 }
+export default Promise;

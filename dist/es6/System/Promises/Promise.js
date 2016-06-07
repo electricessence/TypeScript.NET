@@ -594,4 +594,5 @@ var pools;
     }
     Promise.createFrom = createFrom;
 })(Promise || (Promise = {}));
+export default Promise;
 //# sourceMappingURL=Promise.js.map

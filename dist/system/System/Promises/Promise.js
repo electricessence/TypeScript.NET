@@ -716,6 +716,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 Promise.createFrom = createFrom;
             })(Promise = Promise || (Promise = {}));
             exports_1("Promise", Promise);
+            exports_1("default",Promise);
         }
     }
 });
