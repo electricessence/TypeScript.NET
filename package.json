@@ -47,10 +47,11 @@
     "q": "^1.4.1",
     "semver": "^5.0.3",
     "tsd": "^0.6.4",
-    "typedoc": "^0.3.12",
+    "typedoc": "^0.4.1",
     "typescript": "^1.8.10"
   },
   "optionalDependencies": {
     "typescript": "^1.8.10"
-  }
+  },
+  "dependencies": {}
 }

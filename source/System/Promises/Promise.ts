@@ -1107,3 +1107,5 @@ interface IPromiseCallbacks<T>
 	onRejected:Promise.Reject<any>;
 	promise?:PromiseLike<any>;
 }
+
+export default Promise;

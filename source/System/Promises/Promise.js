@@ -691,5 +691,7 @@
         }
         Promise.createFrom = createFrom;
     })(Promise = exports.Promise || (exports.Promise = {}));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Promise;
 });
 //# sourceMappingURL=Promise.js.map
