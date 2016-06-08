@@ -730,6 +730,43 @@ export class Promise<T> extends Resolvable<T>
 	}
 }
 
+
+/**
+ * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
+ */
+export class ArrayPromise<T> extends Promise<T[]>
+{
+
+	/**
+	 * Simplifies the use of a map function on an array of results when the source is assured to be an array.
+	 * @param transform
+	 * @returns {PromiseBase<Array<any>>}
+	 */
+	map<U>(transform:(value:T)=>U):ArrayPromise<U>
+	{
+		this.throwIfDisposed();
+		return new ArrayPromise<U>(resolve=>
+		{
+			this.thenThis((result:T[])=>resolve(result.map(transform)));
+		}, true);
+	}
+
+	/**
+	 * Simplifies the use of a reduce function on an array of results when the source is assured to be an array.
+	 * @param reduction
+	 * @param initialValue
+	 * @returns {PromiseBase<any>}
+	 */
+	reduce<U>(
+		reduction:(previousValue:U, currentValue:T, i?:number, array?:T[]) => U,
+		initialValue?:U):PromiseBase<U>
+	{
+
+		return this
+			.thenSynchronous((result:T[])=>result.reduce(reduction, initialValue));
+	}
+}
+
 export class PromiseCollection<T> extends DisposableBase
 {
 	private _source:PromiseLike<T>[];
@@ -747,6 +784,10 @@ export class PromiseCollection<T> extends DisposableBase
 		this._source = null;
 	}
 
+	/**
+	 * Returns a copy of the source promises.
+	 * @returns {PromiseLike<PromiseLike<any>>[]}
+	 */
 	get promises():PromiseLike<T>[]
 	{
 		this.throwIfDisposed();
@@ -757,7 +798,7 @@ export class PromiseCollection<T> extends DisposableBase
 	 * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
 	 * @returns {PromiseBase<any>}
 	 */
-	all():PromiseBase<T[]>
+	all():ArrayPromise<T>
 	{
 		this.throwIfDisposed();
 		return Promise.all(this._source);
@@ -779,7 +820,7 @@ export class PromiseCollection<T> extends DisposableBase
 	 * Unlike .all this method waits for all rejections as well as fulfillment.
 	 * @returns {PromiseBase<PromiseLike<any>[]>}
 	 */
-	waitAll():PromiseBase<PromiseLike<T>[]>
+	waitAll():ArrayPromise<PromiseLike<T>>
 	{
 		this.throwIfDisposed();
 		return Promise.waitAll(this._source);
@@ -790,10 +831,14 @@ export class PromiseCollection<T> extends DisposableBase
 	 * @param transform
 	 * @returns {PromiseBase<Array<any>>}
 	 */
-	map<U>(transform:(value:T)=>U):PromiseBase<U[]>
+	map<U>(transform:(value:T)=>U):ArrayPromise<U>
 	{
-		return this.all()
-			.thenSynchronous((result:T[])=>result.map(transform));
+		this.throwIfDisposed();
+		return new ArrayPromise<U>(resolve=>
+		{
+			this.all()
+				.thenThis((result:T[])=>resolve(result.map(transform)));
+		}, true);
 	}
 
 	/**
@@ -806,17 +851,24 @@ export class PromiseCollection<T> extends DisposableBase
 	pipe<U>(transform:(value:T)=>U|PromiseLike<U>):PromiseCollection<U>
 	{
 		this.throwIfDisposed();
-		return new PromiseCollection<U>(this._source.map(p=>handleSyncIfPossible(p,transform)));
+		return new PromiseCollection<U>(this._source.map(p=>handleSyncIfPossible(p, transform)));
 	}
 
+	/**
+	 * Behaves like array reduce.
+	 * Creates the promise chain necessary to produce the desired result.
+	 * @param reduction
+	 * @param initialValue
+	 * @returns {PromiseBase<PromiseLike<any>>}
+	 */
 	reduce<U>(
 		reduction:(previousValue:U, currentValue:T, i?:number, array?:PromiseLike<T>[]) => U,
-		initialValue?:U|PromiseLike<U>):PromiseLike<U>
+		initialValue?:U|PromiseLike<U>):PromiseBase<U>
 	{
 		this.throwIfDisposed();
 		// Since the majority of this code is self contained, it is possible to do some improved cleanup here.
 		// Holding off on optimizing for now.
-		return this._source
+		return Promise.wrap(this._source
 			.reduce(
 				(
 					previous:PromiseLike<U>,
@@ -828,7 +880,7 @@ export class PromiseCollection<T> extends DisposableBase
 
 				isPromise(initialValue)
 					? initialValue
-					: new Fulfilled(initialValue));
+					: new Fulfilled(initialValue)));
 	}
 }
 
@@ -979,18 +1031,19 @@ export module Promise
 	/**
 	 * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
 	 */
-	export function all<T>(promises:PromiseLike<T>[]):PromiseBase<T[]>
-	export function all<T>(promise:PromiseLike<T>, ...rest:PromiseLike<T>[]):PromiseBase<T[]>
+	export function all<T>(promises:PromiseLike<T>[]):ArrayPromise<T>
+	export function all<T>(promise:PromiseLike<T>, ...rest:PromiseLike<T>[]):ArrayPromise<T>
 	export function all(
 		first:PromiseLike<any>|PromiseLike<any>[],
-		...rest:PromiseLike<any>[]):PromiseBase<any[]>
+		...rest:PromiseLike<any>[]):ArrayPromise<any>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
 		var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
-		if(!promises.length || promises.every(v=>!v)) return new Fulfilled<any[]>(promises); // it's a new empty, reuse it. :|
+		if(!promises.length || promises.every(v=>!v)) return new ArrayPromise<any>(
+			r=>r(promises), true); // it's a new empty, reuse it. :|
 
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
-		return new Promise<any[]>((resolve, reject)=>
+		return new ArrayPromise<any>((resolve, reject)=>
 		{
 			let checkedAll = false;
 			let result:any[] = [];
@@ -1053,21 +1106,22 @@ export module Promise
 	 * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
 	 * Unlike .all this method waits for all rejections as well as fulfillment.
 	 */
-	export function waitAll<T>(promises:PromiseLike<T>[]):PromiseBase<PromiseLike<T>[]>
+	export function waitAll<T>(promises:PromiseLike<T>[]):ArrayPromise<PromiseLike<T>>
 	export function waitAll<T>(
 		promise:PromiseLike<T>,
-		...rest:PromiseLike<T>[]):PromiseBase<PromiseLike<T>[]>
+		...rest:PromiseLike<T>[]):ArrayPromise<PromiseLike<T>>
 	export function waitAll(
 		first:PromiseLike<any>|PromiseLike<any>[],
-		...rest:PromiseLike<any>[]):PromiseBase<PromiseLike<any>[]>
+		...rest:PromiseLike<any>[]):ArrayPromise<PromiseLike<any>>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
 		var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
-		if(!promises.length || promises.every(v=>!v)) return new Fulfilled<any[]>(promises); // it's a new empty, reuse it. :|
+		if(!promises.length || promises.every(v=>!v)) return new ArrayPromise<any>(
+			r=>r(promises), true); // it's a new empty, reuse it. :|
 
 
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
-		return new Promise<any[]>((resolve, reject)=>
+		return new ArrayPromise<any>((resolve, reject)=>
 		{
 			let checkedAll = false;
 			let len = promises.length;

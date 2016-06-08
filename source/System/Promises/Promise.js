@@ -490,6 +490,25 @@
         return Promise;
     }(Resolvable));
     exports.Promise = Promise;
+    var ArrayPromise = (function (_super) {
+        __extends(ArrayPromise, _super);
+        function ArrayPromise() {
+            _super.apply(this, arguments);
+        }
+        ArrayPromise.prototype.map = function (transform) {
+            var _this = this;
+            this.throwIfDisposed();
+            return new ArrayPromise(function (resolve) {
+                _this.thenThis(function (result) { return resolve(result.map(transform)); });
+            }, true);
+        };
+        ArrayPromise.prototype.reduce = function (reduction, initialValue) {
+            return this
+                .thenSynchronous(function (result) { return result.reduce(reduction, initialValue); });
+        };
+        return ArrayPromise;
+    }(Promise));
+    exports.ArrayPromise = ArrayPromise;
     var PromiseCollection = (function (_super) {
         __extends(PromiseCollection, _super);
         function PromiseCollection(source) {
@@ -522,8 +541,12 @@
             return Promise.waitAll(this._source);
         };
         PromiseCollection.prototype.map = function (transform) {
-            return this.all()
-                .thenSynchronous(function (result) { return result.map(transform); });
+            var _this = this;
+            this.throwIfDisposed();
+            return new ArrayPromise(function (resolve) {
+                _this.all()
+                    .thenThis(function (result) { return resolve(result.map(transform)); });
+            }, true);
         };
         PromiseCollection.prototype.pipe = function (transform) {
             this.throwIfDisposed();
@@ -531,12 +554,12 @@
         };
         PromiseCollection.prototype.reduce = function (reduction, initialValue) {
             this.throwIfDisposed();
-            return this._source
+            return Promise.wrap(this._source
                 .reduce(function (previous, current, i, array) {
                 return handleSyncIfPossible(previous, function (p) { return handleSyncIfPossible(current, function (c) { return reduction(p, c, i, array); }); });
             }, isPromise(initialValue)
                 ? initialValue
-                : new Fulfilled(initialValue));
+                : new Fulfilled(initialValue)));
         };
         return PromiseCollection;
     }(DisposableBase_1.DisposableBase));
@@ -603,8 +626,8 @@
                 throw new ArgumentNullException_1.ArgumentNullException("promises");
             var promises = (Array.isArray(first) ? first : [first]).concat(rest);
             if (!promises.length || promises.every(function (v) { return !v; }))
-                return new Fulfilled(promises);
-            return new Promise(function (resolve, reject) {
+                return new ArrayPromise(function (r) { return r(promises); }, true);
+            return new ArrayPromise(function (resolve, reject) {
                 var checkedAll = false;
                 var result = [];
                 var len = promises.length;
@@ -662,8 +685,8 @@
                 throw new ArgumentNullException_1.ArgumentNullException("promises");
             var promises = (Array.isArray(first) ? first : [first]).concat(rest);
             if (!promises.length || promises.every(function (v) { return !v; }))
-                return new Fulfilled(promises);
-            return new Promise(function (resolve, reject) {
+                return new ArrayPromise(function (r) { return r(promises); }, true);
+            return new ArrayPromise(function (resolve, reject) {
                 var checkedAll = false;
                 var len = promises.length;
                 var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
