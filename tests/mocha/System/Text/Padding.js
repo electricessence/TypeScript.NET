@@ -1,6 +1,6 @@
 "use strict";
 var Padding_1 = require("../../../../dist/commonjs/System/Text/Padding");
-var assert = require('../../../../node_modules/assert/assert');
+var assert = require('assert');
 describe('.padLeft()', function () {
     it("should pad to the left", function () {
         assert.equal(Padding_1.padLeft("X", 3, "Y"), "YYX");

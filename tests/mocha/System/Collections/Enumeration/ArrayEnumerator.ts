@@ -1,7 +1,7 @@
 ///<reference path="../../../import.d.ts"/>
 
 import ArrayEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/ArrayEnumerator";
-var assert = require('../../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 
 it("should allow empty arrays", ()=>

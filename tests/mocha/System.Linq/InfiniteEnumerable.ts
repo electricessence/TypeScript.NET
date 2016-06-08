@@ -1,7 +1,7 @@
 ///<reference path="../import.d.ts"/>
 
 import Enumerable from "../../../dist/commonjs/System.Linq/Linq";
-var assert = require('../../../node_modules/assert/assert');
+import assert = require('assert');
 
 
 var source = Enumerable.toInfinity().asEnumerable();

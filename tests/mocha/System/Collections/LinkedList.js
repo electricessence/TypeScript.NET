@@ -2,7 +2,7 @@
 var ICollectionTests = require("./ICollection");
 var LinkedList_1 = require("../../../../dist/commonjs/System/Collections/LinkedList");
 var Compare_1 = require("../../../../dist/commonjs/System/Collections/Array/Compare");
-var assert = require('../../../../node_modules/assert/assert');
+var assert = require('assert');
 var CLASS_NAME = 'LinkedList';
 ICollectionTests.StringCollection(CLASS_NAME, new LinkedList_1.default());
 ICollectionTests.NumberCollection(CLASS_NAME, new LinkedList_1.default());

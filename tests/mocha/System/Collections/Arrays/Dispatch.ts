@@ -5,7 +5,7 @@ import {
 	mapped,
 	unsafe
 } from "../../../../../dist/commonjs/System/Collections/Array/Dispatch";
-var assert = require('../../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 it("should apply closures in order", ()=>
 {

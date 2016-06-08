@@ -1,7 +1,7 @@
 "use strict";
 var ICollectionTests = require("./ICollection");
 var List_1 = require("../../../../dist/commonjs/System/Collections/List");
-var assert = require('../../../../node_modules/assert/assert');
+var assert = require('assert');
 var CLASS_NAME = 'List';
 ICollectionTests.StringCollection(CLASS_NAME, new List_1.default());
 ICollectionTests.NumberCollection(CLASS_NAME, new List_1.default());

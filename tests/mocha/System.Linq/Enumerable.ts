@@ -7,7 +7,7 @@ import Functions from "../../../dist/commonjs/System/Functions";
 import {EmptyEnumerator} from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
 import {List} from "../../../dist/commonjs/System/Collections/List";
 import {ILinqEnumerable} from "../../../dist/commonjs/System.Linq/Enumerable";
-var assert = require('../../../node_modules/assert/assert');
+import assert = require('assert');
 
 
 interface TestItem

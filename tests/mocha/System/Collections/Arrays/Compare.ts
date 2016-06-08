@@ -1,7 +1,7 @@
 ///<reference path="../../../import.d.ts"/>
 
 import * as ArrayCompare from "../../../../../dist/commonjs/System/Collections/Array/Compare";
-var assert = require('../../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 const a1 = [1,2,3];
 const a2 = [1,2,3];

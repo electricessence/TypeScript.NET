@@ -4,7 +4,7 @@
 import * as ICollectionTests from "./ICollection";
 import Set from "../../../../dist/commonjs/System/Collections/Set";
 import {Primitive} from "../../../../dist/commonjs/System/Primitive";
-var assert = require('../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 //noinspection SpellCheckingInspection
 ICollectionTests.Collection('Set<' + 'string>', new Set<string>(), [

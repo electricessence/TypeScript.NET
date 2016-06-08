@@ -3,13 +3,13 @@
 import Uri from "../../../../dist/commonjs/System/Uri/Uri";
 import * as Scheme from "../../../../dist/commonjs/System/Uri/Scheme";
 import Functions from "../../../../dist/commonjs/System/Functions";
-var assert = require('../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 const pathAfterRoot= 'one/two/three.html';
 const path = '/'+pathAfterRoot;
 const params = [['four','five'],['six','seven']];
 const query = '?'+params[0].join('=')+'&' + params[1].join('=');
-
+ 
 
 var u = Uri.from(path + query);
 

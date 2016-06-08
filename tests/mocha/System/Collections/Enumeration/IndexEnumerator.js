@@ -1,6 +1,6 @@
 "use strict";
 var IndexEnumerator_1 = require("../../../../../dist/commonjs/System/Collections/Enumeration/IndexEnumerator");
-var assert = require('../../../../../node_modules/assert/assert');
+var assert = require('assert');
 var VOID0 = void (0);
 var a = { 0: 0, 1: 1, 2: 2, 3: 3, 4: 4 };
 it("should ignore null sources", function () {

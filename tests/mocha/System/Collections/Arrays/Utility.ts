@@ -4,7 +4,7 @@ import * as Arrays from "../../../../../dist/commonjs/System/Collections/Array/C
 import * as ArrayUtility from "../../../../../dist/commonjs/System/Collections/Array/Utility";
 import Stopwatch from "../../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArray";
-var assert = require('../../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 
 // Min/Max tests...

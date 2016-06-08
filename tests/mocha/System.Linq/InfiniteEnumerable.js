@@ -1,6 +1,6 @@
 "use strict";
 var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
-var assert = require('../../../node_modules/assert/assert');
+var assert = require('assert');
 var source = Linq_1.default.toInfinity().asEnumerable();
 describe(".doAction(...)", function () {
     it("should throw when disposed", function () {

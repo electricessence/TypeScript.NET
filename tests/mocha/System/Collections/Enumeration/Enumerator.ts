@@ -5,7 +5,7 @@ import Queue from "../../../../../dist/commonjs/System/Collections/Queue";
 import * as Enumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator";
 import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArray";
 import {IEnumerator} from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
-var assert = require('../../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 const VOID0:any = void(0);
 

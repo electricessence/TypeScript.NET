@@ -115,7 +115,7 @@
         Parallel.prototype._spawnWorker = function (task, env) {
             var worker;
             var src = this.getWorkerSource(task, env);
-            if (Worker_1.Worker === VOID0)
+            if (Worker_1.default === VOID0)
                 return VOID0;
             var scripts = this._requiredScripts, evalPath = this.options.evalPath;
             if (!evalPath) {
@@ -127,13 +127,13 @@
                     throw new Error("Can't create a blob URL in this browser!");
             }
             if (Environment_1.isNodeJS || scripts.length || !URL) {
-                worker = new Worker_1.Worker(evalPath);
+                worker = new Worker_1.default(evalPath);
                 worker.postMessage(src);
             }
             else if (URL) {
                 var blob = new Blob([src], { type: 'text/javascript' });
                 var url = URL.createObjectURL(blob);
-                worker = new Worker_1.Worker(url);
+                worker = new Worker_1.default(url);
             }
             return worker;
         };

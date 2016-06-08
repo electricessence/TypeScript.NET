@@ -7,7 +7,7 @@ import {defer} from "../../../../dist/commonjs/System/Threading/defer";
 import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise";
 import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
 import {Fulfilled, PromiseCollection} from "../../../../source/System/Promises/Promise";
-var assert = require('../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 
 var REASON = "this is not an error, but it might show up in the console";

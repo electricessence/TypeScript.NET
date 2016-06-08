@@ -6,7 +6,7 @@ var defer_1 = require("../../../../dist/commonjs/System/Threading/defer");
 var LazyPromise_1 = require("../../../../dist/commonjs/System/Promises/LazyPromise");
 var ObjectDisposedException_1 = require("../../../../dist/commonjs/System/Disposable/ObjectDisposedException");
 var Promise_2 = require("../../../../source/System/Promises/Promise");
-var assert = require('../../../../node_modules/assert/assert');
+var assert = require('assert');
 var REASON = "this is not an error, but it might show up in the console";
 var calledAsFunctionThis = (function () { return this; }());
 afterEach(function () {

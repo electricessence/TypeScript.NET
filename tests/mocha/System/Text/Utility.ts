@@ -1,6 +1,6 @@
 ///<reference path="../../import.d.ts"/>
 
-var assert = require('../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 import * as TextUtility from "../../../../dist/commonjs/System/Text/Utility";
 

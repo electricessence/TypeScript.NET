@@ -1,7 +1,7 @@
 "use strict";
 var TaskHandler_1 = require("../../../../dist/commonjs/System/Threading/Tasks/TaskHandler");
 var Functions_1 = require("../../../../dist/commonjs/System/Functions");
-var assert = require('../../../../node_modules/assert/assert');
+var assert = require('assert');
 describe('new', function () {
     it("should throw", function () {
         assert.throws(function () {

@@ -6,7 +6,7 @@
 
 import {Promise, PromiseBase, Fulfilled} from "../../Promises/Promise";
 import {Type} from "../../Types";
-import {Worker} from "../Worker";
+import Worker from "../Worker";
 import {WorkerLike} from "../WorkerType";
 import {deferImmediate} from "../deferImmediate";
 import {isNodeJS} from "../../Environment";

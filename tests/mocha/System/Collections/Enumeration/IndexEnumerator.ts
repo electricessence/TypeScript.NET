@@ -1,7 +1,7 @@
 ///<reference path="../../../import.d.ts"/>
 
 import IndexEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/IndexEnumerator";
-var assert = require('../../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 const VOID0:any = void(0);
 

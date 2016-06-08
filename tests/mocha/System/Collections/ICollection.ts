@@ -4,7 +4,7 @@
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
 import NotImplementedException from "../../../../dist/commonjs/System/Exceptions/NotImplementedException";
 import {ICollection} from "../../../../dist/commonjs/System/Collections/ICollection";
-var assert = require('../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.

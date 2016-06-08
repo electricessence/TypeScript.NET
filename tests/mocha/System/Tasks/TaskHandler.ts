@@ -2,7 +2,7 @@
 
 import TaskHandler from "../../../../dist/commonjs/System/Threading/Tasks/TaskHandler";
 import Functions from "../../../../dist/commonjs/System/Functions";
-var assert = require('../../../../node_modules/assert/assert');
+import assert = require('assert');
 
 describe('new',()=>{
 	it("should throw",()=>{

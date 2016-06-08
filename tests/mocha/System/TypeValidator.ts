@@ -1,7 +1,7 @@
 ///<reference path="../import.d.ts"/>
 
 import {TypeInfoHelper, TypeValidator} from "../../../dist/commonjs/System/TypeValidator";
-var assert = require('../../../node_modules/assert/assert');
+import assert = require('assert');
 
 const example = new TypeInfoHelper({
 	a: {},
