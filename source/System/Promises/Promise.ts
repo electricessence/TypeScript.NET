@@ -84,6 +84,17 @@ function handleDispatch<T,TResult>(
 		p.then(<any>onFulfilled, onRejected);
 }
 
+function handleSyncIfPossible<T,TResult>(
+	p:PromiseLike<T>,
+	onFulfilled:Promise.Fulfill<T,TResult>,
+	onRejected?:Promise.Reject<TResult>):PromiseLike<TResult>
+{
+	if(p instanceof PromiseBase)
+		return p.thenSynchronous(onFulfilled, onRejected);
+	else
+		return p.then(<any>onFulfilled, onRejected);
+}
+
 function newODE()
 {
 	return new ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
@@ -719,6 +730,107 @@ export class Promise<T> extends Resolvable<T>
 	}
 }
 
+export class PromiseCollection<T> extends DisposableBase
+{
+	private _source:PromiseLike<T>[];
+
+	constructor(source:PromiseLike<T>[])
+	{
+		super();
+		this._source = source && source.slice() || [];
+	}
+
+	protected _onDispose()
+	{
+		super._onDispose();
+		this._source.length = 0;
+		this._source = null;
+	}
+
+	get promises():PromiseLike<T>[]
+	{
+		this.throwIfDisposed();
+		return this._source.slice();
+	}
+
+	/**
+	 * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
+	 * @returns {PromiseBase<any>}
+	 */
+	all():PromiseBase<T[]>
+	{
+		this.throwIfDisposed();
+		return Promise.all(this._source);
+	}
+
+	/**
+	 * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
+	 * or rejected.
+	 * @returns {PromiseBase<any>} A new Promise.
+	 */
+	race():PromiseBase<T>
+	{
+		this.throwIfDisposed();
+		return Promise.race(this._source);
+	}
+
+	/**
+	 * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
+	 * Unlike .all this method waits for all rejections as well as fulfillment.
+	 * @returns {PromiseBase<PromiseLike<any>[]>}
+	 */
+	waitAll():PromiseBase<PromiseLike<T>[]>
+	{
+		this.throwIfDisposed();
+		return Promise.waitAll(this._source);
+	}
+
+	/**
+	 * Waits for all the values to resolve and then applies a transform.
+	 * @param transform
+	 * @returns {PromiseBase<Array<any>>}
+	 */
+	map<U>(transform:(value:T)=>U):PromiseBase<U[]>
+	{
+		return this.all()
+			.thenSynchronous((result:T[])=>result.map(transform));
+	}
+
+	/**
+	 * Applies a transform to each promise and defers the result.
+	 * Unlike map, this doesn't wait for all promises to resolve, ultimately improving the async nature of the request.
+	 * @param transform
+	 * @returns {PromiseCollection<U>}
+	 */
+
+	pipe<U>(transform:(value:T)=>U|PromiseLike<U>):PromiseCollection<U>
+	{
+		this.throwIfDisposed();
+		return new PromiseCollection<U>(this._source.map(p=>handleSyncIfPossible(p,transform)));
+	}
+
+	reduce<U>(
+		reduction:(previousValue:U, currentValue:T, i?:number, array?:PromiseLike<T>[]) => U,
+		initialValue?:U|PromiseLike<U>):PromiseLike<U>
+	{
+		this.throwIfDisposed();
+		// Since the majority of this code is self contained, it is possible to do some improved cleanup here.
+		// Holding off on optimizing for now.
+		return this._source
+			.reduce(
+				(
+					previous:PromiseLike<U>,
+					current:PromiseLike<T>,
+					i:number,
+					array:PromiseLike<T>[]) =>
+					handleSyncIfPossible(previous,
+						p=>handleSyncIfPossible(current, c=>reduction(p, c, i, array))),
+
+				isPromise(initialValue)
+					? initialValue
+					: new Fulfilled(initialValue));
+	}
+}
 
 module pools
 {
@@ -851,6 +963,18 @@ export module Promise
 			reject:(reason?:any) => void):void;
 	}
 
+	export function group<T>(promises:PromiseLike<T>[]):PromiseCollection<T>
+	export function group<T>(
+		promise:PromiseLike<T>,
+		...rest:PromiseLike<T>[]):PromiseCollection<T>
+	export function group(
+		first:PromiseLike<any>|PromiseLike<any>[],
+		...rest:PromiseLike<any>[]):PromiseCollection<any>
+	{
+
+		if(!first && !rest.length) throw new ArgumentNullException("promises");
+		return new PromiseCollection((Array.isArray(first) ? first : [first]).concat(rest));
+	}
 
 	/**
 	 * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
@@ -1081,10 +1205,12 @@ export module Promise
 	 * @param target The Promise-Like object
 	 * @returns A new target that simply extends the target.
 	 */
-	export function wrap<T>(target:PromiseLike<T>):PromiseBase<T>
+	export function wrap<T>(target:T|PromiseLike<T>):PromiseBase<T>
 	{
 		if(!target) throw new ArgumentNullException(TARGET);
-		return target instanceof PromiseBase ? target : new PromiseWrapper(target);
+		return isPromise(target)
+			? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
+			: new Fulfilled<T>(target);
 	}
 
 	/**

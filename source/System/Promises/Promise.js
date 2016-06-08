@@ -64,6 +64,12 @@
         else
             p.then(onFulfilled, onRejected);
     }
+    function handleSyncIfPossible(p, onFulfilled, onRejected) {
+        if (p instanceof PromiseBase)
+            return p.thenSynchronous(onFulfilled, onRejected);
+        else
+            return p.then(onFulfilled, onRejected);
+    }
     function newODE() {
         return new ObjectDisposedException_1.ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
     }
@@ -484,6 +490,57 @@
         return Promise;
     }(Resolvable));
     exports.Promise = Promise;
+    var PromiseCollection = (function (_super) {
+        __extends(PromiseCollection, _super);
+        function PromiseCollection(source) {
+            _super.call(this);
+            this._source = source && source.slice() || [];
+        }
+        PromiseCollection.prototype._onDispose = function () {
+            _super.prototype._onDispose.call(this);
+            this._source.length = 0;
+            this._source = null;
+        };
+        Object.defineProperty(PromiseCollection.prototype, "promises", {
+            get: function () {
+                this.throwIfDisposed();
+                return this._source.slice();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        PromiseCollection.prototype.all = function () {
+            this.throwIfDisposed();
+            return Promise.all(this._source);
+        };
+        PromiseCollection.prototype.race = function () {
+            this.throwIfDisposed();
+            return Promise.race(this._source);
+        };
+        PromiseCollection.prototype.waitAll = function () {
+            this.throwIfDisposed();
+            return Promise.waitAll(this._source);
+        };
+        PromiseCollection.prototype.map = function (transform) {
+            return this.all()
+                .thenSynchronous(function (result) { return result.map(transform); });
+        };
+        PromiseCollection.prototype.pipe = function (transform) {
+            this.throwIfDisposed();
+            return new PromiseCollection(this._source.map(function (p) { return handleSyncIfPossible(p, transform); }));
+        };
+        PromiseCollection.prototype.reduce = function (reduction, initialValue) {
+            this.throwIfDisposed();
+            return this._source
+                .reduce(function (previous, current, i, array) {
+                return handleSyncIfPossible(previous, function (p) { return handleSyncIfPossible(current, function (c) { return reduction(p, c, i, array); }); });
+            }, isPromise(initialValue)
+                ? initialValue
+                : new Fulfilled(initialValue));
+        };
+        return PromiseCollection;
+    }(DisposableBase_1.DisposableBase));
+    exports.PromiseCollection = PromiseCollection;
     var pools;
     (function (pools) {
         var PromiseCallbacks;
@@ -527,6 +584,16 @@
         })(Promise.State || (Promise.State = {}));
         var State = Promise.State;
         Object.freeze(State);
+        function group(first) {
+            var rest = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                rest[_i - 1] = arguments[_i];
+            }
+            if (!first && !rest.length)
+                throw new ArgumentNullException_1.ArgumentNullException("promises");
+            return new PromiseCollection((Array.isArray(first) ? first : [first]).concat(rest));
+        }
+        Promise.group = group;
         function all(first) {
             var rest = [];
             for (var _i = 1; _i < arguments.length; _i++) {
@@ -683,7 +750,9 @@
         function wrap(target) {
             if (!target)
                 throw new ArgumentNullException_1.ArgumentNullException(TARGET);
-            return target instanceof PromiseBase ? target : new PromiseWrapper(target);
+            return isPromise(target)
+                ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
+                : new Fulfilled(target);
         }
         Promise.wrap = wrap;
         function createFrom(then) {
