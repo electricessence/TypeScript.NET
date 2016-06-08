@@ -767,6 +767,9 @@ export class ArrayPromise<T> extends Promise<T[]>
 	}
 }
 
+/**
+ * A Promise collection exposes useful methods for handling a collection of promises and their results.
+ */
 export class PromiseCollection<T> extends DisposableBase
 {
 	private _source:PromiseLike<T>[];
