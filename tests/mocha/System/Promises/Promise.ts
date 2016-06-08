@@ -6,6 +6,7 @@ import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 import {defer} from "../../../../dist/commonjs/System/Threading/defer";
 import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise";
 import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
+import {Fulfilled, PromiseCollection} from "../../../../source/System/Promises/Promise";
 var assert = require('../../../../node_modules/assert/assert');
 
 
@@ -37,8 +38,23 @@ describe("computing sum of integers using promises", ()=>
 			.thenSynchronous(value=>
 			{
 				sw.stop();
-				//console.log("");
-				//console.log("Synchronous Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+				console.log("");
+				console.log("Synchronous Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+				assert.equal(value, answer);
+			});
+	});
+
+	it("should compute correct result without blowing stack (Synchronous) (lambda only)", ()=>
+	{
+		var source = new PromiseCollection(array.map(v=>new Fulfilled(v)));
+		let sw = Stopwatch.startNew();
+		return source
+			.reduce((previousValue:number, currentValue:number) =>previousValue+currentValue,0)
+			.then(value=>
+			{
+				sw.stop();
+				console.log("");
+				console.log("PromiseCollection Compute Milliseconds: ", sw.elapsedMilliseconds);
 				assert.equal(value, answer);
 			});
 	});

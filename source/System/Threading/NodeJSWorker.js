@@ -12,8 +12,8 @@
     }
 })(function (require, exports) {
     "use strict";
-    var ps = require("child_process");
     var ObservableBase_1 = require("../Observable/ObservableBase");
+    var ps = require("child_process");
     var NodeJSWorker = (function (_super) {
         __extends(NodeJSWorker, _super);
         function NodeJSWorker(url) {
@@ -43,7 +43,6 @@
             this.throwIfDisposed();
             this._process.send(JSON.stringify({ data: obj }));
         };
-        ;
         NodeJSWorker.prototype.terminate = function () {
             this.dispose();
         };
