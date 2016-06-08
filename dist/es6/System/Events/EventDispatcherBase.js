@@ -78,7 +78,7 @@ export default class EventDispatcherBase extends DisposableBase {
         return this._isDisposing;
     }
     dispose() {
-        var _ = this;
+        const _ = this;
         if (!_.wasDisposed && !_._isDisposing) {
             _._isDisposing = true;
             _.dispatchEvent(DISPOSING);

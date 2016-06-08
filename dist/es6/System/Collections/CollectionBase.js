@@ -15,7 +15,7 @@ export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {
         super();
         this._equalityComparer = _equalityComparer;
-        var _ = this;
+        const _ = this;
         _._disposableObjectName = NAME;
         _._importEntries(source);
         _._updateRecursion = 0;
@@ -42,7 +42,7 @@ export class CollectionBase extends DisposableBase {
     }
     _onModified() { }
     _signalModification(increment) {
-        var _ = this;
+        const _ = this;
         if (increment)
             _._modifiedCount++;
         if (_._modifiedCount && !this._updateRecursion) {
@@ -63,7 +63,7 @@ export class CollectionBase extends DisposableBase {
     handleUpdate(closure) {
         if (!closure)
             return false;
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
         var updated = false;
@@ -78,7 +78,7 @@ export class CollectionBase extends DisposableBase {
         return updated;
     }
     add(entry) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
         try {
@@ -91,7 +91,7 @@ export class CollectionBase extends DisposableBase {
         _._signalModification();
     }
     remove(entry, max = Infinity) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
         var n;
@@ -106,7 +106,7 @@ export class CollectionBase extends DisposableBase {
         return n;
     }
     clear() {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
         var n;
@@ -150,7 +150,7 @@ export class CollectionBase extends DisposableBase {
         return added;
     }
     importEntries(entries) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
         var n;

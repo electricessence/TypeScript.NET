@@ -19,7 +19,7 @@ export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionBase<T>
 		if(!array)
 			throw new ArgumentNullException('array');
 
-		var _ = this;
+		const _ = this;
 		_._getCount = () => array.length;
 		_.getEnumerator = () => enumeratorFrom(array);
 		_.getValueAt = i => array[i];

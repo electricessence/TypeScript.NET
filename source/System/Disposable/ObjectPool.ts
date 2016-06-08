@@ -51,7 +51,7 @@ export class ObjectPool<T> extends DisposableBase
 
 		this._localAbsMaxSize = Math.min(_maxSize*2, ABSOLUTE_MAX_SIZE);
 
-		var _ = this;
+		const _ = this;
 		_._disposableObjectName = OBJECT_POOL;
 		_._pool = [];
 		_._trimmer = new TaskHandler(()=>_._trim());
@@ -121,7 +121,7 @@ export class ObjectPool<T> extends DisposableBase
 
 	toArrayAndClear():T[]
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		_._trimmer.cancel();
 		_._flusher.cancel();
@@ -142,7 +142,7 @@ export class ObjectPool<T> extends DisposableBase
 	protected _onDispose():void
 	{
 		super._onDispose();
-		var _ = this;
+		const _ = this;
 		_._generator = null;
 		_._recycler = null;
 		dispose(
@@ -160,7 +160,7 @@ export class ObjectPool<T> extends DisposableBase
 
 	extendAutoClear():void
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		var t = _.autoClearTimeout;
 		if(isFinite(t) && !_._autoFlusher.isScheduled)
@@ -169,7 +169,7 @@ export class ObjectPool<T> extends DisposableBase
 
 	add(o:T):void
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		if(_._pool.length>=_._localAbsMaxSize)
 		{
@@ -190,7 +190,7 @@ export class ObjectPool<T> extends DisposableBase
 
 	take():T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var e   = _._pool.pop() || _._generator(),

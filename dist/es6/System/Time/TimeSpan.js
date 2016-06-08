@@ -13,7 +13,7 @@ export class TimeSpan extends TimeQuantity {
     constructor(value, units = TimeUnit.Milliseconds) {
         var ms = TimeUnit.toMilliseconds(value, units);
         super(ms);
-        var _ = this;
+        const _ = this;
         _.ticks = ms * 10000;
         _.milliseconds = ms;
         _.seconds = ms / 1000;

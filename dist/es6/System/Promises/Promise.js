@@ -55,6 +55,12 @@ function handleDispatch(p, onFulfilled, onRejected) {
     else
         p.then(onFulfilled, onRejected);
 }
+function handleSyncIfPossible(p, onFulfilled, onRejected) {
+    if (p instanceof PromiseBase)
+        return p.thenSynchronous(onFulfilled, onRejected);
+    else
+        return p.then(onFulfilled, onRejected);
+}
 function newODE() {
     return new ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
 }
@@ -143,9 +149,9 @@ export class PromiseBase extends PromiseState {
         this.throwIfDisposed();
         return this.then(fin, fin);
     }
-    finallyThis(fin) {
+    finallyThis(fin, synchronous) {
         this.throwIfDisposed();
-        var f = () => deferImmediate(fin);
+        var f = synchronous ? f : () => deferImmediate(fin);
         this.thenThis(f, f);
         return this;
     }
@@ -405,6 +411,63 @@ export class Promise extends Resolvable {
         this._rejectInternal(error);
     }
 }
+export class ArrayPromise extends Promise {
+    map(transform) {
+        this.throwIfDisposed();
+        return new ArrayPromise(resolve => {
+            this.thenThis((result) => resolve(result.map(transform)));
+        }, true);
+    }
+    reduce(reduction, initialValue) {
+        return this
+            .thenSynchronous((result) => result.reduce(reduction, initialValue));
+    }
+}
+export class PromiseCollection extends DisposableBase {
+    constructor(source) {
+        super();
+        this._source = source && source.slice() || [];
+    }
+    _onDispose() {
+        super._onDispose();
+        this._source.length = 0;
+        this._source = null;
+    }
+    get promises() {
+        this.throwIfDisposed();
+        return this._source.slice();
+    }
+    all() {
+        this.throwIfDisposed();
+        return Promise.all(this._source);
+    }
+    race() {
+        this.throwIfDisposed();
+        return Promise.race(this._source);
+    }
+    waitAll() {
+        this.throwIfDisposed();
+        return Promise.waitAll(this._source);
+    }
+    map(transform) {
+        this.throwIfDisposed();
+        return new ArrayPromise(resolve => {
+            this.all()
+                .thenThis((result) => resolve(result.map(transform)));
+        }, true);
+    }
+    pipe(transform) {
+        this.throwIfDisposed();
+        return new PromiseCollection(this._source.map(p => handleSyncIfPossible(p, transform)));
+    }
+    reduce(reduction, initialValue) {
+        this.throwIfDisposed();
+        return Promise.wrap(this._source
+            .reduce((previous, current, i, array) => handleSyncIfPossible(previous, p => handleSyncIfPossible(current, c => reduction(p, c, i, array))), isPromise(initialValue)
+            ? initialValue
+            : new Fulfilled(initialValue)));
+    }
+}
 var pools;
 (function (pools) {
     var PromiseCallbacks;
@@ -447,13 +510,19 @@ var pools;
     })(Promise.State || (Promise.State = {}));
     var State = Promise.State;
     Object.freeze(State);
+    function group(first, ...rest) {
+        if (!first && !rest.length)
+            throw new ArgumentNullException("promises");
+        return new PromiseCollection((Array.isArray(first) ? first : [first]).concat(rest));
+    }
+    Promise.group = group;
     function all(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
         var promises = (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises.length || promises.every(v => !v))
-            return new Fulfilled(promises);
-        return new Promise((resolve, reject) => {
+            return new ArrayPromise(r => r(promises), true);
+        return new ArrayPromise((resolve, reject) => {
             let checkedAll = false;
             let result = [];
             let len = promises.length;
@@ -504,8 +573,8 @@ var pools;
             throw new ArgumentNullException("promises");
         var promises = (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises.length || promises.every(v => !v))
-            return new Fulfilled(promises);
-        return new Promise((resolve, reject) => {
+            return new ArrayPromise(r => r(promises), true);
+        return new ArrayPromise((resolve, reject) => {
             let checkedAll = false;
             let len = promises.length;
             let remaining = new Set(promises.map((v, i) => i));
@@ -584,7 +653,9 @@ var pools;
     function wrap(target) {
         if (!target)
             throw new ArgumentNullException(TARGET);
-        return target instanceof PromiseBase ? target : new PromiseWrapper(target);
+        return isPromise(target)
+            ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
+            : new Fulfilled(target);
     }
     Promise.wrap = wrap;
     function createFrom(then) {

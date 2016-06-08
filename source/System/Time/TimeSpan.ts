@@ -34,7 +34,7 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 		var ms = TimeUnit.toMilliseconds(value, units);
 		super(ms);
 
-		var _ = this;
+		const _ = this;
 		_.ticks = ms*Ticks.Per.Millisecond;
 		_.milliseconds = ms;
 		_.seconds = ms/Milliseconds.Per.Second;

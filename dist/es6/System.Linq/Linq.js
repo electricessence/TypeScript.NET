@@ -58,12 +58,13 @@ export class InfiniteEnumerable extends DisposableBase {
         this._enumeratorFactory = null;
     }
     asEnumerable() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return new InfiniteEnumerable(() => _.getEnumerator());
     }
     doAction(action, initializer, isEndless = this.isEndless) {
-        var _ = this, disposed = !_.throwIfDisposed();
+        const _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             var enumerator;
             var index = 0;
@@ -97,7 +98,7 @@ export class InfiniteEnumerable extends DisposableBase {
             .moveNext();
     }
     skip(count) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
             return Enumerable.empty();
@@ -109,7 +110,7 @@ export class InfiniteEnumerable extends DisposableBase {
     take(count) {
         if (!(count > 0))
             return Enumerable.empty();
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
             throw new ArgumentOutOfRangeException('count', count, 'Must be finite.');
@@ -123,7 +124,7 @@ export class InfiniteEnumerable extends DisposableBase {
         return v;
     }
     elementAtOrDefault(index, defaultValue = null) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         Integer.assertZeroOrGreater(index, 'index');
         var n = index;
@@ -144,12 +145,12 @@ export class InfiniteEnumerable extends DisposableBase {
         return v;
     }
     firstOrDefault(defaultValue = null) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return using(this.getEnumerator(), e => e.moveNext() ? e.current : defaultValue);
     }
     single() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return using(this.getEnumerator(), e => {
             if (e.moveNext()) {
@@ -162,7 +163,7 @@ export class InfiniteEnumerable extends DisposableBase {
         });
     }
     singleOrDefault(defaultValue = null) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return using(this.getEnumerator(), e => {
             if (e.moveNext()) {
@@ -174,7 +175,7 @@ export class InfiniteEnumerable extends DisposableBase {
         });
     }
     any() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return using(this.getEnumerator(), e => e.moveNext());
     }
@@ -295,7 +296,7 @@ export class InfiniteEnumerable extends DisposableBase {
         }, null, isEndless);
     }
     pairwise(selector) {
-        var _ = this;
+        const _ = this;
         return new Enumerable(() => {
             var enumerator;
             return new EnumeratorBase(() => {
@@ -312,7 +313,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     scan(func, seed) {
         var isUseSeed = seed !== VOID0;
-        var _ = this;
+        const _ = this;
         return new Enumerable(() => {
             var enumerator;
             var value;
@@ -556,7 +557,7 @@ export class InfiniteEnumerable extends DisposableBase {
         }, null, _._isEndless);
     }
     zip(second, resultSelector) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return new Enumerable(() => {
             var firstEnumerator;
@@ -574,7 +575,7 @@ export class InfiniteEnumerable extends DisposableBase {
         });
     }
     zipMultiple(second, resultSelector) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         if (!second.length)
             return Enumerable.empty();
@@ -613,7 +614,7 @@ export class InfiniteEnumerable extends DisposableBase {
         });
     }
     join(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector = Functions.Identity) {
-        var _ = this;
+        const _ = this;
         return new Enumerable(() => {
             var outerEnumerator;
             var lookup;
@@ -646,7 +647,7 @@ export class InfiniteEnumerable extends DisposableBase {
         });
     }
     groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector = Functions.Identity) {
-        var _ = this;
+        const _ = this;
         return new Enumerable(() => {
             var enumerator;
             var lookup = null;
@@ -760,7 +761,7 @@ export class InfiniteEnumerable extends DisposableBase {
         }, null, isEndless);
     }
     alternateMultiple(sequence) {
-        var _ = this;
+        const _ = this;
         return new Enumerable(() => {
             var buffer, mode, enumerator, alternateEnumerator;
             return new EnumeratorBase(() => {
@@ -873,7 +874,7 @@ export class InfiniteEnumerable extends DisposableBase {
         }, null, _._isEndless);
     }
     share() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var sharedEnumerator;
         return new Enumerable(() => {
@@ -1198,7 +1199,7 @@ export class Enumerable extends InfiniteEnumerable {
         }, null);
     }
     forEach(action) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         throwIfEndless(_.isEndless);
         var index = 0;
@@ -1254,7 +1255,7 @@ export class Enumerable extends InfiniteEnumerable {
         return this.select(selector).toArray().join(separator);
     }
     takeExceptLast(count = 1) {
-        var _ = this;
+        const _ = this;
         if (!(count > 0))
             return _;
         if (!isFinite(count))
@@ -1282,7 +1283,7 @@ export class Enumerable extends InfiniteEnumerable {
     skipToLast(count) {
         if (!(count > 0))
             return Enumerable.empty();
-        var _ = this;
+        const _ = this;
         if (!isFinite(count))
             return _;
         Integer.assert(count, "count");
@@ -1436,7 +1437,7 @@ export class Enumerable extends InfiniteEnumerable {
         return this.merge(enumerables);
     }
     intersect(second, compareSelector) {
-        var _ = this;
+        const _ = this;
         return new Enumerable(() => {
             var enumerator;
             var keys;
@@ -1506,7 +1507,7 @@ export class Enumerable extends InfiniteEnumerable {
             .getEnumerator());
     }
     partitionBy(keySelector, elementSelector, resultSelector = (key, elements) => new Grouping(key, elements), compareSelector = Functions.Identity) {
-        var _ = this;
+        const _ = this;
         if (!elementSelector)
             elementSelector = Functions.Identity;
         return new Enumerable(() => {
@@ -1637,7 +1638,7 @@ export class Enumerable extends InfiniteEnumerable {
         return result;
     }
     last() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var value = undefined;
         var found = false;
@@ -1650,7 +1651,7 @@ export class Enumerable extends InfiniteEnumerable {
         return value;
     }
     lastOrDefault(defaultValue = null) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var value = undefined;
         var found = false;
@@ -1716,7 +1717,7 @@ class ArrayEnumerable extends FiniteEnumerable {
                 return _._source;
             });
         });
-        var _ = this;
+        const _ = this;
         _._disposableObjectName = "ArrayEnumerable";
         _._source = source;
     }
@@ -1728,7 +1729,7 @@ class ArrayEnumerable extends FiniteEnumerable {
         return this._source;
     }
     toArray() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return toArray(_._source);
     }
@@ -1736,24 +1737,24 @@ class ArrayEnumerable extends FiniteEnumerable {
         return new ArrayEnumerable(this._source);
     }
     forEach(action, max = Infinity) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         return forEach(_._source, action, max);
     }
     any(predicate) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var source = _._source, len = source.length;
         return len && (!predicate || super.any(predicate));
     }
     count(predicate) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var source = _._source, len = source.length;
         return len && (predicate ? super.count(predicate) : len);
     }
     elementAtOrDefault(index, defaultValue = null) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         Integer.assertZeroOrGreater(index, 'index');
         var source = _._source;
@@ -1762,7 +1763,7 @@ class ArrayEnumerable extends FiniteEnumerable {
             : defaultValue;
     }
     last() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var source = _._source, len = source.length;
         return (len)
@@ -1770,7 +1771,7 @@ class ArrayEnumerable extends FiniteEnumerable {
             : super.last();
     }
     lastOrDefault(defaultValue = null) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var source = _._source, len = source.length;
         return len
@@ -1778,19 +1779,19 @@ class ArrayEnumerable extends FiniteEnumerable {
             : defaultValue;
     }
     skip(count) {
-        var _ = this;
+        const _ = this;
         if (!(count > 0))
             return _;
         return new Enumerable(() => new ArrayEnumerator(() => _._source, count));
     }
     takeExceptLast(count = 1) {
-        var _ = this;
+        const _ = this;
         return _.take(_._source.length - count);
     }
     skipToLast(count) {
         if (!(count > 0))
             return Enumerable.empty();
-        var _ = this;
+        const _ = this;
         if (!isFinite(count))
             return _;
         var len = _._source
@@ -1799,7 +1800,7 @@ class ArrayEnumerable extends FiniteEnumerable {
         return _.skip(len - count);
     }
     reverse() {
-        var _ = this;
+        const _ = this;
         return new Enumerable(() => new ArrayEnumerator(() => _._source, _._source
             ? (_._source.length - 1)
             : 0, -1));
@@ -1844,7 +1845,7 @@ class Lookup {
         return this._dictionary.containsKey(key);
     }
     getEnumerator() {
-        var _ = this;
+        const _ = this;
         var enumerator;
         return new EnumeratorBase(() => {
             enumerator = _._dictionary.getEnumerator();
@@ -1884,7 +1885,7 @@ class OrderedEnumerable extends FiniteEnumerable {
         return new OrderedEnumerable(this.source, null, -1, this, comparison);
     }
     getEnumerator() {
-        var _ = this;
+        const _ = this;
         var buffer;
         var indexes;
         var index = 0;

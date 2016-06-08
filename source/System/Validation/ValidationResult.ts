@@ -33,7 +33,7 @@ implements IValidationResult, IEquatable<IValidationResult>
 	 */
 	equals(other:IValidationResult):boolean
 	{
-		var _ = this;
+		const _ = this;
 		return _.isValid===other.isValid
 			&& _.message==_.message
 			&& _.data==_.data;

@@ -259,7 +259,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(node==null)
 			throw new ArgumentNullException('node');
 
-		var _ = this;
+		const _ = this;
 		var prev = node.previous, next = node.next, a:boolean = false, b:boolean = false;
 
 		if(prev) prev.next = next;
@@ -310,7 +310,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	{
 		assertValidDetached(node);
 
-		var _ = this;
+		const _ = this;
 
 		if(!before)
 		{
@@ -345,7 +345,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	{
 		assertValidDetached(node);
 
-		var _ = this;
+		const _ = this;
 
 		if(!after)
 		{
@@ -384,7 +384,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 		assertValidDetached(replacement, 'replacement');
 
-		var _ = this;
+		const _ = this;
 		replacement.previous = node.previous;
 		replacement.next = node.next;
 

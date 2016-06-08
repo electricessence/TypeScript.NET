@@ -111,7 +111,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(null, equalityComparer);
-		var _ = this;
+		const _ = this;
 		_._listInternal = new LinkedNodeList<InternalNode<T>>();
 		_._importEntries(source);
 	}
@@ -283,7 +283,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	private _removeNodeInternal(node:InternalNode<T>):boolean
 	{
-		var _ = this;
+		const _ = this;
 		if(node && _._listInternal.removeNode(node))
 		{
 			detachExternal(node);
@@ -295,21 +295,21 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	removeFirst():boolean
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		return _._removeNodeInternal(_._listInternal.first);
 	}
 
 	removeLast():boolean
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		return _._removeNodeInternal(_._listInternal.last);
 	}
 
 	removeAt(index:number):boolean
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		return _._removeNodeInternal(_._listInternal.getNodeAt(index));
 	}
@@ -317,14 +317,14 @@ extends CollectionBase<T> implements ILinkedList<T>
 	// Returns true if successful and false if not found (already removed).
 	removeNode(node:ILinkedListNode<T>):boolean
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		return _._removeNodeInternal(getInternal(node, _));
 	}
 
 	addBefore(before:ILinkedListNode<T>, entry:T):void
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		_._listInternal.addNodeBefore(
 			new InternalNode(entry),
@@ -336,7 +336,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	addAfter(after:ILinkedListNode<T>, entry:T):void
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		_._listInternal.addNodeAfter(
 			new InternalNode(entry),

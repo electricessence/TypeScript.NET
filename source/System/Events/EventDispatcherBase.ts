@@ -162,7 +162,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 	{
 
 		// Having a disposing event can allow for child objects to automatically release themselves when their parent is disposed.
-		var _ = this;
+		const _ = this;
 		if(!_.wasDisposed && !_._isDisposing)
 		{
 			_._isDisposing = true;

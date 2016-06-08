@@ -50,7 +50,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	exceptWith(other:IEnumerableOrArray<T>):void
 	{
-		var _ = this;
+		const _ = this;
 		if(!other) throw new ArgumentNullException(OTHER);
 
 		forEach(other, v=>
@@ -66,7 +66,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
-		var _ = this;
+		const _ = this;
 		if(other instanceof SetBase)
 		{
 			let s = _._set;
@@ -165,7 +165,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
-		var _ = this;
+		const _ = this;
 		if(other instanceof SetBase)
 		{
 			forEach(other, v=>

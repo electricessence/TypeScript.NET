@@ -13,7 +13,7 @@ export class Set extends SetBase {
         return new Set(source);
     }
     _addInternal(item) {
-        var _ = this;
+        const _ = this;
         if (!_.contains(item)) {
             var type = typeof item;
             if (!Type.isPrimitive(type))

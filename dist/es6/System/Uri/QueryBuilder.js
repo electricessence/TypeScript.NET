@@ -29,7 +29,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary {
         return this;
     }
     importFromString(values, deserialize = true, decodeValues = true) {
-        var _ = this;
+        const _ = this;
         QueryParams.parse(values, (key, value) => {
             if (_.containsKey(key)) {
                 var prev = _.getValue(key);

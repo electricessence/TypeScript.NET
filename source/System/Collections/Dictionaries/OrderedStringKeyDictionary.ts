@@ -62,7 +62,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	// importValues([x,y,z]);
 	importValues(values:TValue[]):boolean
 	{
-		var _ = this;
+		const _ = this;
 		return _.handleUpdate(
 			() =>
 			{

@@ -7,14 +7,14 @@ import { Type } from "../Types";
 const VOID0 = void 0;
 export class StringBuilder {
     constructor(...initial) {
-        var _ = this;
+        const _ = this;
         _._latest = null;
         _._partArray = [];
         _.appendThese(initial);
     }
     appendSingle(item) {
         if (item !== null && item !== VOID0) {
-            var _ = this;
+            const _ = this;
             _._latest = null;
             switch (typeof item) {
                 case Type.OBJECT:
@@ -26,7 +26,7 @@ export class StringBuilder {
         }
     }
     appendThese(items) {
-        var _ = this;
+        const _ = this;
         items.forEach(s => _.appendSingle(s));
         return _;
     }
@@ -39,7 +39,7 @@ export class StringBuilder {
         return this;
     }
     appendLines(items) {
-        var _ = this;
+        const _ = this;
         items.forEach(i => {
             if (i !== null && i !== VOID0) {
                 _.appendSingle(i);

@@ -59,7 +59,7 @@ export class StringKeyDictionary extends DictionaryBase {
         return false;
     }
     importMap(values) {
-        var _ = this;
+        const _ = this;
         return _.handleUpdate(() => {
             var changed = false;
             for (let key in values) {

@@ -17,7 +17,7 @@ export class DisposableBase {
         return true;
     }
     dispose() {
-        var _ = this;
+        const _ = this;
         if (!_.__wasDisposed) {
             _.__wasDisposed = true;
             try {

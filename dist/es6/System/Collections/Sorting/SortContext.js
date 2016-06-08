@@ -18,7 +18,7 @@ export class SortContext {
         return result;
     }
     compare(a, b) {
-        var _ = this;
+        const _ = this;
         var d = _._comparer(a, b);
         if (d == 0 && _._next)
             return _._next.compare(a, b);

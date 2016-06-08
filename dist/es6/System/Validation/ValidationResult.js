@@ -11,7 +11,7 @@ export default class ValidationResult {
         Object.freeze(this);
     }
     equals(other) {
-        var _ = this;
+        const _ = this;
         return _.isValid === other.isValid
             && _.message == _.message
             && _.data == _.data;

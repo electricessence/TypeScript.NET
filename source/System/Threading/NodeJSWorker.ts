@@ -4,14 +4,17 @@
  * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
  */
 
-import {IWorker} from "./IWorker";
+import {WorkerLike} from "./WorkerType";
 import {ObservableBase} from "../Observable/ObservableBase";
 
 declare const require:any;
 const ps = require("child_process");
 //import {ChildProcess} from "child_process";
 
-export class NodeJSWorker extends ObservableBase<any> implements IWorker
+/**
+ * This class takes the place of a WebWorker
+ */
+export class NodeJSWorker extends ObservableBase<any> implements WorkerLike
 {
 	private _process:any;
 	onmessage:(message:{data:any})=>void;

@@ -104,7 +104,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		if(value===VOID0)
 			throw new InvalidOperationException("Cannot add 'undefined' as a value.");
 
-		var _ = this;
+		const _ = this;
 		if(_.containsKey(key))
 		{
 			var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
@@ -125,7 +125,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	setValue(key:TKey, value:TValue):boolean
 	{
 		// setValue shouldn't need to worry about recursion...
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 
 		var changed = false, old = _.getValue(key); // get the old value here and pass to internal.
@@ -186,7 +186,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	protected _importEntries(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>):number
 	{
-		var _ = this;
+		const _ = this;
 		if(!pairs) return 0;
 		let changed:number = 0;
 		forEach(pairs,
@@ -201,7 +201,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
 	{
-		var _ = this;
+		const _ = this;
 		var ver:number, keys:TKey[], len:number, i = 0;
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>

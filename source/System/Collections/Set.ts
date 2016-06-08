@@ -28,7 +28,7 @@ extends SetBase<T>
 
 	protected _addInternal(item:T):boolean
 	{
-		var _ = this;
+		const _ = this;
 		if(!_.contains(item))
 		{
 			var type = typeof item;

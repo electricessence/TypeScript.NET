@@ -136,7 +136,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	// Return a default (unfiltered) enumerable.
 	asEnumerable():InfiniteEnumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		return new InfiniteEnumerable<T>(() => _.getEnumerator());
 	}
@@ -154,7 +154,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		isEndless:boolean = this.isEndless):InfiniteEnumerable<T>
 	{
 
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 
 		return new Enumerable<T>(
 			() =>
@@ -225,7 +226,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	// #region Indexing/Paging methods.
 	skip(count:number):InfiniteEnumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		if(!isFinite(count)) // +Infinity equals skip all so return empty.
@@ -247,7 +248,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		if(!(count>0)) // Out of bounds? Empty.
 			return Enumerable.empty<T>();
 
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		if(!isFinite(count))
@@ -270,7 +271,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	elementAtOrDefault(index:number, defaultValue:T = null):T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		Integer.assertZeroOrGreater(index, 'index');
@@ -309,7 +310,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	firstOrDefault(defaultValue:T = null):T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		return using(
@@ -321,7 +322,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	single():T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		return using(
@@ -342,7 +343,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	singleOrDefault(defaultValue:T = null):T
 	{
 
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		return using(
@@ -361,7 +362,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	any():boolean
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		return using(
@@ -620,7 +621,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):Enumerable<TSelect>
 	{
-		var _ = this;
+		const _ = this;
 
 		return new Enumerable<TSelect>(
 			() =>
@@ -659,7 +660,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	{
 
 		var isUseSeed = seed!==VOID0; // For now...
-		var _ = this;
+		const _ = this;
 
 		return new Enumerable<T>(
 			() =>
@@ -1175,7 +1176,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		second:IEnumerableOrArray<TSecond>,
 		resultSelector:(first:T, second:TSecond, index?:number) => TResult):Enumerable<TResult>
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 
@@ -1212,7 +1213,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		second:IArray<IEnumerableOrArray<TSecond>>,
 		resultSelector:(first:T, second:TSecond, index?:number) => TResult):Enumerable<TResult>
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		if(!second.length)
@@ -1286,7 +1287,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Enumerable<TResult>
 	{
 
-		var _ = this;
+		const _ = this;
 		return new Enumerable<TResult>(
 			() =>
 			{
@@ -1345,7 +1346,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		resultSelector:(outer:T, inner:TInner[]) => TResult,
 		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Enumerable<TResult>
 	{
-		var _ = this;
+		const _ = this;
 
 		return new Enumerable<TResult>(
 			() =>
@@ -1569,7 +1570,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	alternateMultiple(sequence:IEnumerableOrArray<T>):Enumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 
 		return new Enumerable<T>(
 			() =>
@@ -1792,7 +1793,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	share():InfiniteEnumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var sharedEnumerator:IEnumerator<T>;
@@ -2495,7 +2496,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	forEach(action:Predicate<T> | Action<T>):void
 	{
 
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		throwIfEndless(_.isEndless);
 
@@ -2591,7 +2592,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	takeExceptLast(count:number = 1):Enumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 
 		if(!(count>0)) // Out of bounds?
 			return _;
@@ -2644,7 +2645,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		if(!(count>0)) // Out of bounds? Empty.
 			return Enumerable.empty<T>();
 
-		var _ = this;
+		const _ = this;
 
 		if(!isFinite(count)) // Infinity means return all.
 			return _;
@@ -2925,7 +2926,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		second:IEnumerableOrArray<T>,
 		compareSelector?:Selector<T, TCompare>):Enumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 
 		return new Enumerable<T>(
 			() =>
@@ -3146,7 +3147,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			= Functions.Identity):Enumerable<IGrouping<TKey, T>>|Enumerable<IGrouping<TKey, TElement>>
 	{
 
-		var _ = this;
+		const _ = this;
 		if(!elementSelector) elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
 		return new Enumerable<IGrouping<TKey, TElement>>(
 			() =>
@@ -3369,7 +3370,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	last():T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var value:T = undefined;
@@ -3388,7 +3389,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	lastOrDefault(defaultValue:T = null):T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var value:T = undefined;
@@ -3512,7 +3513,7 @@ extends FiniteEnumerable<T>
 			});
 		});
 
-		var _ = this;
+		const _ = this;
 		_._disposableObjectName = "ArrayEnumerable";
 		_._source = source;
 
@@ -3531,7 +3532,7 @@ extends FiniteEnumerable<T>
 
 	toArray():T[]
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		return toArray(_._source);
@@ -3545,7 +3546,7 @@ extends FiniteEnumerable<T>
 	// Optimize forEach so that subsequent usage is optimized.
 	forEach(action:Predicate<T> | Action<T>, max:number = Infinity):number
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		return forEach(_._source, action, max);
@@ -3555,7 +3556,7 @@ extends FiniteEnumerable<T>
 
 	any(predicate?:Predicate<T>):boolean
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var source = _._source, len = source.length;
@@ -3564,7 +3565,7 @@ extends FiniteEnumerable<T>
 
 	count(predicate?:Predicate<T>):number
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var source = _._source, len = source.length;
@@ -3573,7 +3574,7 @@ extends FiniteEnumerable<T>
 
 	elementAtOrDefault(index:number, defaultValue:T = null):T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		Integer.assertZeroOrGreater(index, 'index');
 
@@ -3585,7 +3586,7 @@ extends FiniteEnumerable<T>
 
 	last():T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var source = _._source, len = source.length;
@@ -3596,7 +3597,7 @@ extends FiniteEnumerable<T>
 
 	lastOrDefault(defaultValue:T = null):T
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var source = _._source, len = source.length;
@@ -3608,7 +3609,7 @@ extends FiniteEnumerable<T>
 	skip(count:number):Enumerable<T>
 	{
 
-		var _ = this;
+		const _ = this;
 
 		if(!(count>0))
 			return _;
@@ -3620,7 +3621,7 @@ extends FiniteEnumerable<T>
 
 	takeExceptLast(count:number = 1):Enumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 		return _.take(_._source.length - count);
 	}
 
@@ -3629,7 +3630,7 @@ extends FiniteEnumerable<T>
 		if(!(count>0))
 			return Enumerable.empty<T>();
 
-		var _ = this;
+		const _ = this;
 		if(!isFinite(count))
 			return _;
 
@@ -3642,7 +3643,7 @@ extends FiniteEnumerable<T>
 
 	reverse():Enumerable<T>
 	{
-		var _ = this;
+		const _ = this;
 
 		return new Enumerable<T>(
 			() => new ArrayEnumerator<T>(
@@ -3723,7 +3724,7 @@ implements ILookup<TKey, TElement>
 	getEnumerator():IEnumerator<Grouping<TKey, TElement>>
 	{
 
-		var _ = this;
+		const _ = this;
 		var enumerator:IEnumerator<IKeyValuePair<TKey, TElement[]>>;
 
 		return new EnumeratorBase<Grouping<TKey, TElement>>(
@@ -3795,7 +3796,7 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 
 	getEnumerator():EnumeratorBase<T>
 	{
-		var _ = this;
+		const _ = this;
 		var buffer:T[];
 		var indexes:number[];
 		var index:number = 0;

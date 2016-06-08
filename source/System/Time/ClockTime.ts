@@ -36,7 +36,7 @@ export class ClockTime extends TimeQuantity implements IClockTime
 				: (args.length>0 && args[0] || 0)
 		);
 
-		var _ = this;
+		const _ = this;
 		var ms = Math.abs(_.getTotalMilliseconds());
 		var msi = Math.floor(ms);
 

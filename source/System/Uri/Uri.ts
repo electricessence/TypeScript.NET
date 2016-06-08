@@ -60,7 +60,7 @@ export class Uri implements IUri, IEquatable<IUri>
 		query?:QueryParam.Convertible,
 		fragment?:string)
 	{
-		var _ = this;
+		const _ = this;
 		_.scheme = getScheme(scheme) || null;
 		_.userInfo = userInfo || null;
 		_.host = host || null;

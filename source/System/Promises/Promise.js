@@ -196,9 +196,9 @@
             this.throwIfDisposed();
             return this.then(fin, fin);
         };
-        PromiseBase.prototype.finallyThis = function (fin) {
+        PromiseBase.prototype.finallyThis = function (fin, synchronous) {
             this.throwIfDisposed();
-            var f = function () { return deferImmediate_1.deferImmediate(fin); };
+            var f = synchronous ? f : function () { return deferImmediate_1.deferImmediate(fin); };
             this.thenThis(f, f);
             return this;
         };

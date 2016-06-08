@@ -51,7 +51,7 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 
 	start():void
 	{
-		var _ = this;
+		const _ = this;
 		if(!_._cancel && _._count<_._maxCount)
 		{
 			// For now, if it's isn't the start...

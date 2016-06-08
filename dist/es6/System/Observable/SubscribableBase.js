@@ -21,7 +21,7 @@ export class SubscribableBase extends DisposableBase {
         return s && s.find(n => n.value.subscriber === subscriber);
     }
     subscribe(subscriber) {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var n = _._findEntryNode(subscriber);
         if (n)
@@ -34,7 +34,7 @@ export class SubscribableBase extends DisposableBase {
         return s;
     }
     unsubscribe(subscriber) {
-        var _ = this;
+        const _ = this;
         var n = _._findEntryNode(subscriber);
         if (n) {
             var s = n.value;

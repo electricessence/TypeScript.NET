@@ -117,7 +117,7 @@ export class LinkedNodeList {
     removeNode(node) {
         if (node == null)
             throw new ArgumentNullException('node');
-        var _ = this;
+        const _ = this;
         var prev = node.previous, next = node.next, a = false, b = false;
         if (prev)
             prev.next = next;
@@ -147,7 +147,7 @@ export class LinkedNodeList {
     }
     addNodeBefore(node, before) {
         assertValidDetached(node);
-        var _ = this;
+        const _ = this;
         if (!before) {
             before = _._first;
         }
@@ -168,7 +168,7 @@ export class LinkedNodeList {
     }
     addNodeAfter(node, after) {
         assertValidDetached(node);
-        var _ = this;
+        const _ = this;
         if (!after) {
             after = _._last;
         }
@@ -191,7 +191,7 @@ export class LinkedNodeList {
         if (node == null)
             throw new ArgumentNullException('node');
         assertValidDetached(replacement, 'replacement');
-        var _ = this;
+        const _ = this;
         replacement.previous = node.previous;
         replacement.next = node.next;
         if (node.previous)

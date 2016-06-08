@@ -42,7 +42,7 @@ extends DisposableBase
 	// It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
 	subscribe(subscriber:TSubscriber):IDisposable
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 
 		var n = _._findEntryNode(subscriber);
@@ -60,7 +60,7 @@ extends DisposableBase
 
 	unsubscribe(subscriber:TSubscriber):void
 	{
-		var _ = this;
+		const _ = this;
 		// _.throwIfDisposed(); If it was disposed, then it's still safe to try and unsubscribe.
 		var n = _._findEntryNode(subscriber);
 		if(n)

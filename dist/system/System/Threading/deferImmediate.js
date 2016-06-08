@@ -3,11 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
-System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool"], function(exports_1, context_1) {
+System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1;
-    var requestTick, isNodeJS, flushing, immediateQueue, laterQueue, entryPool, channel, requestPortTick;
+    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1;
+    var requestTick, flushing, immediateQueue, laterQueue, entryPool, channel, requestPortTick;
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
@@ -28,7 +28,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             task.apply(context, params);
         }
         catch (e) {
-            if (isNodeJS) {
+            if (Environment_1.isNodeJS) {
                 if (domain) {
                     domain.exit();
                 }
@@ -57,7 +57,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
     function deferImmediate(task, context, args) {
         var entry = entryPool.take();
         entry.task = task;
-        entry.domain = isNodeJS && process['domain'];
+        entry.domain = Environment_1.isNodeJS && process['domain'];
         entry.context = context;
         entry.args = args && args.slice();
         entry.canceller = function () {
@@ -94,9 +94,11 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             },
             function (ObjectPool_1_1) {
                 ObjectPool_1 = ObjectPool_1_1;
+            },
+            function (Environment_1_1) {
+                Environment_1 = Environment_1_1;
             }],
         execute: function() {
-            isNodeJS = false;
             flushing = false;
             immediateQueue = new LinkedNodeList_1.LinkedNodeList();
             laterQueue = new Queue_1.Queue();
@@ -109,16 +111,13 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 o.args = null;
                 o.canceller = null;
             });
-            if (Types_1.Type.isObject(process)
-                && process.toString() === "[object process]"
-                && process.nextTick) {
-                isNodeJS = true;
+            if (Environment_1.isNodeJS) {
                 requestTick = function () {
                     process.nextTick(flush);
                 };
             }
-            else if (typeof setImmediate === "function") {
-                if (typeof window !== "undefined") {
+            else if (typeof setImmediate === Types_1.Type.FUNCTION) {
+                if (typeof window !== Types_1.Type.UNDEFINED) {
                     requestTick = setImmediate.bind(window, flush);
                 }
                 else {
@@ -127,7 +126,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                     };
                 }
             }
-            else if (typeof MessageChannel !== "undefined") {
+            else if (typeof MessageChannel !== Types_1.Type.UNDEFINED) {
                 channel = new MessageChannel();
                 channel.port1.onmessage = function () {
                     requestTick = requestPortTick;

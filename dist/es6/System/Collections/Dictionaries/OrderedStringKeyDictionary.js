@@ -38,7 +38,7 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
         return _.setValue(order[index], value);
     }
     importValues(values) {
-        var _ = this;
+        const _ = this;
         return _.handleUpdate(() => {
             var changed = false;
             for (let i = 0; i < values.length; i++) {

@@ -29,7 +29,7 @@ export default class Timer extends ObservableBase {
         return this._count;
     }
     start() {
-        var _ = this;
+        const _ = this;
         if (!_._cancel && _._count < _._maxCount) {
             if (_._count || _._initialDelay == _._interval) {
                 let i = setInterval(Timer._onTick, _._interval, _);

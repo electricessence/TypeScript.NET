@@ -18,7 +18,7 @@ export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollectionBase
 		if(!c)
 			throw new ArgumentNullException('collection');
 
-		var _ = this;
+		const _ = this;
 		_._getCount = ()=>c.count;
 		_.getEnumerator = ()=> c.getEnumerator();
 	}

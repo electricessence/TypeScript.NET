@@ -13,7 +13,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
     var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1;
-    var __extends, VOID0, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, pools;
+    var __extends, VOID0, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PromiseCollection, pools;
     function isPromise(value) {
         return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
     }
@@ -51,6 +51,12 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             p.thenThis(onFulfilled, onRejected);
         else
             p.then(onFulfilled, onRejected);
+    }
+    function handleSyncIfPossible(p, onFulfilled, onRejected) {
+        if (p instanceof PromiseBase)
+            return p.thenSynchronous(onFulfilled, onRejected);
+        else
+            return p.then(onFulfilled, onRejected);
     }
     function newODE() {
         return new ObjectDisposedException_1.ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
@@ -216,9 +222,9 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     this.throwIfDisposed();
                     return this.then(fin, fin);
                 };
-                PromiseBase.prototype.finallyThis = function (fin) {
+                PromiseBase.prototype.finallyThis = function (fin, synchronous) {
                     this.throwIfDisposed();
-                    var f = function () { return deferImmediate_1.deferImmediate(fin); };
+                    var f = synchronous ? f : function () { return deferImmediate_1.deferImmediate(fin); };
                     this.thenThis(f, f);
                     return this;
                 };
@@ -510,6 +516,80 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 return Promise;
             }(Resolvable));
             exports_1("Promise", Promise);
+            ArrayPromise = (function (_super) {
+                __extends(ArrayPromise, _super);
+                function ArrayPromise() {
+                    _super.apply(this, arguments);
+                }
+                ArrayPromise.prototype.map = function (transform) {
+                    var _this = this;
+                    this.throwIfDisposed();
+                    return new ArrayPromise(function (resolve) {
+                        _this.thenThis(function (result) { return resolve(result.map(transform)); });
+                    }, true);
+                };
+                ArrayPromise.prototype.reduce = function (reduction, initialValue) {
+                    return this
+                        .thenSynchronous(function (result) { return result.reduce(reduction, initialValue); });
+                };
+                return ArrayPromise;
+            }(Promise));
+            exports_1("ArrayPromise", ArrayPromise);
+            PromiseCollection = (function (_super) {
+                __extends(PromiseCollection, _super);
+                function PromiseCollection(source) {
+                    _super.call(this);
+                    this._source = source && source.slice() || [];
+                }
+                PromiseCollection.prototype._onDispose = function () {
+                    _super.prototype._onDispose.call(this);
+                    this._source.length = 0;
+                    this._source = null;
+                };
+                Object.defineProperty(PromiseCollection.prototype, "promises", {
+                    get: function () {
+                        this.throwIfDisposed();
+                        return this._source.slice();
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                PromiseCollection.prototype.all = function () {
+                    this.throwIfDisposed();
+                    return Promise.all(this._source);
+                };
+                PromiseCollection.prototype.race = function () {
+                    this.throwIfDisposed();
+                    return Promise.race(this._source);
+                };
+                PromiseCollection.prototype.waitAll = function () {
+                    this.throwIfDisposed();
+                    return Promise.waitAll(this._source);
+                };
+                PromiseCollection.prototype.map = function (transform) {
+                    var _this = this;
+                    this.throwIfDisposed();
+                    return new ArrayPromise(function (resolve) {
+                        _this.all()
+                            .thenThis(function (result) { return resolve(result.map(transform)); });
+                    }, true);
+                };
+                PromiseCollection.prototype.pipe = function (transform) {
+                    this.throwIfDisposed();
+                    return new PromiseCollection(this._source.map(function (p) { return handleSyncIfPossible(p, transform); }));
+                };
+                PromiseCollection.prototype.reduce = function (reduction, initialValue) {
+                    this.throwIfDisposed();
+                    return Promise.wrap(this._source
+                        .reduce(function (previous, current, i, array) {
+                        return handleSyncIfPossible(previous, function (p) { return handleSyncIfPossible(current, function (c) { return reduction(p, c, i, array); }); });
+                    }, isPromise(initialValue)
+                        ? initialValue
+                        : new Fulfilled(initialValue)));
+                };
+                return PromiseCollection;
+            }(DisposableBase_1.DisposableBase));
+            exports_1("PromiseCollection", PromiseCollection);
             (function (pools) {
                 var PromiseCallbacks;
                 (function (PromiseCallbacks) {
@@ -551,6 +631,16 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 })(Promise.State || (Promise.State = {}));
                 var State = Promise.State;
                 Object.freeze(State);
+                function group(first) {
+                    var rest = [];
+                    for (var _i = 1; _i < arguments.length; _i++) {
+                        rest[_i - 1] = arguments[_i];
+                    }
+                    if (!first && !rest.length)
+                        throw new ArgumentNullException_1.ArgumentNullException("promises");
+                    return new PromiseCollection((Array.isArray(first) ? first : [first]).concat(rest));
+                }
+                Promise.group = group;
                 function all(first) {
                     var rest = [];
                     for (var _i = 1; _i < arguments.length; _i++) {
@@ -560,8 +650,8 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         throw new ArgumentNullException_1.ArgumentNullException("promises");
                     var promises = (Array.isArray(first) ? first : [first]).concat(rest);
                     if (!promises.length || promises.every(function (v) { return !v; }))
-                        return new Fulfilled(promises);
-                    return new Promise(function (resolve, reject) {
+                        return new ArrayPromise(function (r) { return r(promises); }, true);
+                    return new ArrayPromise(function (resolve, reject) {
                         var checkedAll = false;
                         var result = [];
                         var len = promises.length;
@@ -619,8 +709,8 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         throw new ArgumentNullException_1.ArgumentNullException("promises");
                     var promises = (Array.isArray(first) ? first : [first]).concat(rest);
                     if (!promises.length || promises.every(function (v) { return !v; }))
-                        return new Fulfilled(promises);
-                    return new Promise(function (resolve, reject) {
+                        return new ArrayPromise(function (r) { return r(promises); }, true);
+                    return new ArrayPromise(function (resolve, reject) {
                         var checkedAll = false;
                         var len = promises.length;
                         var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
@@ -707,7 +797,9 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 function wrap(target) {
                     if (!target)
                         throw new ArgumentNullException_1.ArgumentNullException(TARGET);
-                    return target instanceof PromiseBase ? target : new PromiseWrapper(target);
+                    return isPromise(target)
+                        ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
+                        : new Fulfilled(target);
                 }
                 Promise.wrap = wrap;
                 function createFrom(then) {

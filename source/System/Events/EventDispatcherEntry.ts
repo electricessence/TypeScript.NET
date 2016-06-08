@@ -30,7 +30,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 		if(Type.isObject(listener) && !Type.hasMemberOfType(listener, "handleEvent", Type.FUNCTION))
 			throw new ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
 
-		var _ = this;
+		const _ = this;
 		_.type = type;
 		_.listener = listener;
 		_.params = params;
@@ -50,7 +50,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 	 */
 	dispatch(e:Event):boolean
 	{
-		var _ = this;
+		const _ = this;
 		if(_.wasDisposed) return false;
 
 		var l = _.listener, d = l && e.type==_.type;
@@ -72,7 +72,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 	 */
 	matches(type:string, listener:IEventListener):boolean
 	{
-		var _ = this;
+		const _ = this;
 		return _.type==type
 			&& _.listener==listener;
 	}
@@ -84,7 +84,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 	 */
 	equals(other:EventDispatcherEntry<TParams>):boolean
 	{
-		var _ = this;
+		const _ = this;
 		return _.matches(other.type, other.listener)
 			&& areEquivalent(_.params, other.params, false);
 	}

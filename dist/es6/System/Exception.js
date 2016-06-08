@@ -7,7 +7,7 @@ const NAME = 'Exception';
 export class Exception {
     constructor(message = null, innerException = null, beforeSealing) {
         this.message = message;
-        var _ = this;
+        const _ = this;
         _.name = _.getName();
         _.data = {};
         if (innerException)

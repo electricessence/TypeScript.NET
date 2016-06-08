@@ -22,7 +22,7 @@ var emptyArray = [];
 export class Queue extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);
-        var _ = this;
+        const _ = this;
         _._head = 0;
         _._tail = 0;
         _._size = 0;
@@ -85,7 +85,7 @@ export class Queue extends CollectionBase {
     }
     _onDispose() {
         super._onDispose();
-        var _ = this;
+        const _ = this;
         if (_._array != emptyArray) {
             _._array.length = _._capacity = 0;
             _._array = emptyArray;
@@ -144,7 +144,7 @@ export class Queue extends CollectionBase {
         this.add(item);
     }
     _dequeueInternal(throwIfEmpty = false) {
-        var _ = this;
+        const _ = this;
         if (_._size == 0) {
             if (throwIfEmpty)
                 throw new InvalidOperationException("Cannot dequeue an empty queue.");
@@ -159,7 +159,7 @@ export class Queue extends CollectionBase {
         return removed;
     }
     dequeue(throwIfEmpty = false) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         var modified = !!_._size;
         var v = this._dequeueInternal(throwIfEmpty);
@@ -178,7 +178,7 @@ export class Queue extends CollectionBase {
     }
     _getElement(index) {
         assertIntegerZeroOrGreater(index, "index");
-        var _ = this;
+        const _ = this;
         return _._array[(_._head + index) % _._capacity];
     }
     peek() {
@@ -187,13 +187,13 @@ export class Queue extends CollectionBase {
         return this._array[this._head];
     }
     trimExcess(threshold) {
-        var _ = this;
+        const _ = this;
         var size = _._size;
         if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size))
             _.setCapacity(size);
     }
     getEnumerator() {
-        var _ = this;
+        const _ = this;
         var index;
         var version;
         return new EnumeratorBase(() => {

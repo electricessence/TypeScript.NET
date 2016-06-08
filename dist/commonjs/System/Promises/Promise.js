@@ -61,6 +61,12 @@ function handleDispatch(p, onFulfilled, onRejected) {
     else
         p.then(onFulfilled, onRejected);
 }
+function handleSyncIfPossible(p, onFulfilled, onRejected) {
+    if (p instanceof PromiseBase)
+        return p.thenSynchronous(onFulfilled, onRejected);
+    else
+        return p.then(onFulfilled, onRejected);
+}
 function newODE() {
     return new ObjectDisposedException_1.ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
 }
@@ -187,9 +193,9 @@ var PromiseBase = (function (_super) {
         this.throwIfDisposed();
         return this.then(fin, fin);
     };
-    PromiseBase.prototype.finallyThis = function (fin) {
+    PromiseBase.prototype.finallyThis = function (fin, synchronous) {
         this.throwIfDisposed();
-        var f = function () { return deferImmediate_1.deferImmediate(fin); };
+        var f = synchronous ? f : function () { return deferImmediate_1.deferImmediate(fin); };
         this.thenThis(f, f);
         return this;
     };
@@ -481,6 +487,80 @@ var Promise = (function (_super) {
     return Promise;
 }(Resolvable));
 exports.Promise = Promise;
+var ArrayPromise = (function (_super) {
+    __extends(ArrayPromise, _super);
+    function ArrayPromise() {
+        _super.apply(this, arguments);
+    }
+    ArrayPromise.prototype.map = function (transform) {
+        var _this = this;
+        this.throwIfDisposed();
+        return new ArrayPromise(function (resolve) {
+            _this.thenThis(function (result) { return resolve(result.map(transform)); });
+        }, true);
+    };
+    ArrayPromise.prototype.reduce = function (reduction, initialValue) {
+        return this
+            .thenSynchronous(function (result) { return result.reduce(reduction, initialValue); });
+    };
+    return ArrayPromise;
+}(Promise));
+exports.ArrayPromise = ArrayPromise;
+var PromiseCollection = (function (_super) {
+    __extends(PromiseCollection, _super);
+    function PromiseCollection(source) {
+        _super.call(this);
+        this._source = source && source.slice() || [];
+    }
+    PromiseCollection.prototype._onDispose = function () {
+        _super.prototype._onDispose.call(this);
+        this._source.length = 0;
+        this._source = null;
+    };
+    Object.defineProperty(PromiseCollection.prototype, "promises", {
+        get: function () {
+            this.throwIfDisposed();
+            return this._source.slice();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    PromiseCollection.prototype.all = function () {
+        this.throwIfDisposed();
+        return Promise.all(this._source);
+    };
+    PromiseCollection.prototype.race = function () {
+        this.throwIfDisposed();
+        return Promise.race(this._source);
+    };
+    PromiseCollection.prototype.waitAll = function () {
+        this.throwIfDisposed();
+        return Promise.waitAll(this._source);
+    };
+    PromiseCollection.prototype.map = function (transform) {
+        var _this = this;
+        this.throwIfDisposed();
+        return new ArrayPromise(function (resolve) {
+            _this.all()
+                .thenThis(function (result) { return resolve(result.map(transform)); });
+        }, true);
+    };
+    PromiseCollection.prototype.pipe = function (transform) {
+        this.throwIfDisposed();
+        return new PromiseCollection(this._source.map(function (p) { return handleSyncIfPossible(p, transform); }));
+    };
+    PromiseCollection.prototype.reduce = function (reduction, initialValue) {
+        this.throwIfDisposed();
+        return Promise.wrap(this._source
+            .reduce(function (previous, current, i, array) {
+            return handleSyncIfPossible(previous, function (p) { return handleSyncIfPossible(current, function (c) { return reduction(p, c, i, array); }); });
+        }, isPromise(initialValue)
+            ? initialValue
+            : new Fulfilled(initialValue)));
+    };
+    return PromiseCollection;
+}(DisposableBase_1.DisposableBase));
+exports.PromiseCollection = PromiseCollection;
 var pools;
 (function (pools) {
     var PromiseCallbacks;
@@ -524,6 +604,16 @@ var Promise;
     })(Promise.State || (Promise.State = {}));
     var State = Promise.State;
     Object.freeze(State);
+    function group(first) {
+        var rest = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            rest[_i - 1] = arguments[_i];
+        }
+        if (!first && !rest.length)
+            throw new ArgumentNullException_1.ArgumentNullException("promises");
+        return new PromiseCollection((Array.isArray(first) ? first : [first]).concat(rest));
+    }
+    Promise.group = group;
     function all(first) {
         var rest = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -533,8 +623,8 @@ var Promise;
             throw new ArgumentNullException_1.ArgumentNullException("promises");
         var promises = (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises.length || promises.every(function (v) { return !v; }))
-            return new Fulfilled(promises);
-        return new Promise(function (resolve, reject) {
+            return new ArrayPromise(function (r) { return r(promises); }, true);
+        return new ArrayPromise(function (resolve, reject) {
             var checkedAll = false;
             var result = [];
             var len = promises.length;
@@ -592,8 +682,8 @@ var Promise;
             throw new ArgumentNullException_1.ArgumentNullException("promises");
         var promises = (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises.length || promises.every(function (v) { return !v; }))
-            return new Fulfilled(promises);
-        return new Promise(function (resolve, reject) {
+            return new ArrayPromise(function (r) { return r(promises); }, true);
+        return new ArrayPromise(function (resolve, reject) {
             var checkedAll = false;
             var len = promises.length;
             var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
@@ -680,7 +770,9 @@ var Promise;
     function wrap(target) {
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException(TARGET);
-        return target instanceof PromiseBase ? target : new PromiseWrapper(target);
+        return isPromise(target)
+            ? (target instanceof PromiseBase ? target : new PromiseWrapper(target))
+            : new Fulfilled(target);
     }
     Promise.wrap = wrap;
     function createFrom(then) {

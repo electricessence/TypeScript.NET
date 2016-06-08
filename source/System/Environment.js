@@ -11,13 +11,11 @@
     }
 })(function (require, exports) {
     "use strict";
-    function isCommonJS() {
-        return !!(require && require.resolve);
-    }
-    exports.isCommonJS = isCommonJS;
-    function isRequireJS() {
-        return !!(require && require.toUrl && require.defined);
-    }
-    exports.isRequireJS = isRequireJS;
+    exports.isCommonJS = !!(require && require.resolve);
+    exports.isRequireJS = !!(require && require.toUrl && require.defined);
+    exports.isNodeJS = typeof process == "object"
+        && process.toString() === "[object process]"
+        && process.nextTick != void 0;
+    Object.freeze(exports);
 });
 //# sourceMappingURL=Environment.js.map

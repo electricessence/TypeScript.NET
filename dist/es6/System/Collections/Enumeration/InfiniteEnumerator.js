@@ -15,7 +15,7 @@ export class InfiniteEnumerator extends SimpleEnumerableBase {
         return this._factory != null;
     }
     moveNext() {
-        var _ = this;
+        const _ = this;
         var f = _._factory;
         if (f)
             _._current = f(_._current, _.incrementIndex());

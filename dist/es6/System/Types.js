@@ -6,7 +6,7 @@ const VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = ty
 var typeInfoRegistry = {};
 export class TypeInfo {
     constructor(target, onBeforeFreeze) {
-        var _ = this;
+        const _ = this;
         _.isBoolean = false;
         _.isNumber = false;
         _.isString = false;

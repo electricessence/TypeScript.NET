@@ -27,7 +27,7 @@ export class SetBase extends CollectionBase {
         return this._set ? this._set.unsafeCount : 0;
     }
     exceptWith(other) {
-        var _ = this;
+        const _ = this;
         if (!other)
             throw new ArgumentNullException(OTHER);
         forEach(other, v => {
@@ -39,7 +39,7 @@ export class SetBase extends CollectionBase {
     intersectWith(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
-        var _ = this;
+        const _ = this;
         if (other instanceof SetBase) {
             let s = _._set;
             if (s)
@@ -113,7 +113,7 @@ export class SetBase extends CollectionBase {
     symmetricExceptWith(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
-        var _ = this;
+        const _ = this;
         if (other instanceof SetBase) {
             forEach(other, v => {
                 if (_.contains(v)) {

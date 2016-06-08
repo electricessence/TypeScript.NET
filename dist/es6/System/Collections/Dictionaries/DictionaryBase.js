@@ -53,7 +53,7 @@ export class DictionaryBase extends CollectionBase {
     addByKeyValue(key, value) {
         if (value === VOID0)
             throw new InvalidOperationException("Cannot add 'undefined' as a value.");
-        var _ = this;
+        const _ = this;
         if (_.containsKey(key)) {
             var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
             ex.data['key'] = key;
@@ -63,7 +63,7 @@ export class DictionaryBase extends CollectionBase {
         return _.setValue(key, value);
     }
     setValue(key, value) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         var changed = false, old = _.getValue(key);
         if (!areEqual(value, old) && _._setValueInternal(key, value)) {
@@ -103,7 +103,7 @@ export class DictionaryBase extends CollectionBase {
         return super.importEntries(pairs);
     }
     _importEntries(pairs) {
-        var _ = this;
+        const _ = this;
         if (!pairs)
             return 0;
         let changed = 0;
@@ -114,7 +114,7 @@ export class DictionaryBase extends CollectionBase {
         return changed;
     }
     getEnumerator() {
-        var _ = this;
+        const _ = this;
         var ver, keys, len, i = 0;
         return new EnumeratorBase(() => {
             ver = _._version;

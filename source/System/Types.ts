@@ -46,7 +46,7 @@ export class TypeInfo
 
 	constructor(target:any,onBeforeFreeze?:()=>void)
 	{
-		var _ = this;
+		const _ = this;
 		_.isBoolean = false;
 		_.isNumber = false;
 		_.isString = false;

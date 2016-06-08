@@ -300,10 +300,10 @@ extends PromiseState<T> implements PromiseLike<T>
 		return this.then(fin, fin);
 	}
 
-	finallyThis(fin:()=>void):PromiseBase<T>
+	finallyThis(fin:()=>void, synchronous?:boolean):PromiseBase<T>
 	{
 		this.throwIfDisposed();
-		var f = ()=>deferImmediate(fin);
+		var f:()=>void = synchronous ? f : ()=>deferImmediate(fin);
 		this.thenThis(f, f);
 		return this;
 	}
@@ -869,8 +869,6 @@ export class PromiseCollection<T> extends DisposableBase
 		initialValue?:U|PromiseLike<U>):PromiseBase<U>
 	{
 		this.throwIfDisposed();
-		// Since the majority of this code is self contained, it is possible to do some improved cleanup here.
-		// Holding off on optimizing for now.
 		return Promise.wrap(this._source
 			.reduce(
 				(
@@ -1018,6 +1016,10 @@ export module Promise
 			reject:(reason?:any) => void):void;
 	}
 
+	/**
+	 * Takes a set of promises and returns a PromiseCollection.
+	 * @param promises
+	 */
 	export function group<T>(promises:PromiseLike<T>[]):PromiseCollection<T>
 	export function group<T>(
 		promise:PromiseLike<T>,

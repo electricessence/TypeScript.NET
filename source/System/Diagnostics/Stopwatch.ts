@@ -51,7 +51,7 @@ class Stopwatch implements ITimer
 
 	start():void
 	{
-		var _ = this;
+		const _ = this;
 		if(!_._isRunning)
 		{
 			_._startTimeStamp = getTimestampMilliseconds();
@@ -61,7 +61,7 @@ class Stopwatch implements ITimer
 
 	stop():void
 	{
-		var _ = this;
+		const _ = this;
 		if(_._isRunning)
 		{
 			_._elapsed += _.currentLapMilliseconds;
@@ -71,7 +71,7 @@ class Stopwatch implements ITimer
 
 	reset():void
 	{
-		var _ = this;
+		const _ = this;
 		_._elapsed = 0;
 		_._isRunning = false;
 		_._startTimeStamp = NaN;
@@ -81,7 +81,7 @@ class Stopwatch implements ITimer
 	// Can also be called to effectively start a lap before calling it again to get the elapsed lap time.
 	lap():TimeSpan
 	{
-		var _ = this;
+		const _ = this;
 		if(_._isRunning)
 		{
 			var t = getTimestampMilliseconds();
@@ -111,7 +111,7 @@ class Stopwatch implements ITimer
 
 	get elapsedMilliseconds():number
 	{
-		var _ = this;
+		const _ = this;
 		var timeElapsed = _._elapsed;
 
 		if(_._isRunning)

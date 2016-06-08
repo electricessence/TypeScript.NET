@@ -30,7 +30,7 @@ export class StringBuilder implements IDisposable
 
 	constructor(...initial:any[])
 	{
-		var _ = this;
+		const _ = this;
 		_._latest = null;
 		_._partArray = [];
 		_.appendThese(initial);
@@ -40,7 +40,7 @@ export class StringBuilder implements IDisposable
 	{
 		if(item!==null && item!==VOID0)
 		{
-			var _ = this;
+			const _ = this;
 			_._latest = null;
 			switch(typeof item)
 			{
@@ -56,7 +56,7 @@ export class StringBuilder implements IDisposable
 
 	appendThese(items:any[]):StringBuilder
 	{
-		var _ = this;
+		const _ = this;
 		items.forEach(s=> _.appendSingle(s));
 		return _;
 	}
@@ -75,7 +75,7 @@ export class StringBuilder implements IDisposable
 
 	appendLines(items:any[]):StringBuilder
 	{
-		var _ = this;
+		const _ = this;
 		items.forEach(
 			i=>
 			{

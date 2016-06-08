@@ -35,7 +35,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		protected _equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super();
-		var _ = this;
+		const _ = this;
 		_._disposableObjectName = NAME;
 		_._importEntries(source);
 		_._updateRecursion = 0;
@@ -86,7 +86,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	protected _signalModification(increment?:boolean):boolean
 	{
-		var _ = this;
+		const _ = this;
 		if(increment) _._modifiedCount++;
 		if(_._modifiedCount && !this._updateRecursion)
 		{
@@ -119,7 +119,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	handleUpdate(closure?:() => boolean):boolean
 	{
 		if(!closure) return false;
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		_._updateRecursion++;
 		var updated:boolean = false;
@@ -148,7 +148,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	add(entry:T):void
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		_._updateRecursion++;
 
@@ -164,7 +164,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	remove(entry:T, max:number = Infinity):number
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		_._updateRecursion++;
 
@@ -182,7 +182,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	clear():number
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		_._updateRecursion++;
 
@@ -235,7 +235,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	importEntries(entries:IEnumerableOrArray<T>):number
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 		_._updateRecursion++;
 

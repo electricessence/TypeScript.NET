@@ -80,7 +80,8 @@ var InfiniteEnumerable = (function (_super) {
     };
     InfiniteEnumerable.prototype.doAction = function (action, initializer, isEndless) {
         if (isEndless === void 0) { isEndless = this.isEndless; }
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             var index = 0;

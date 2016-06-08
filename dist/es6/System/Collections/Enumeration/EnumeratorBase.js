@@ -72,7 +72,7 @@ export class EnumeratorBase extends DisposableBase {
         return this._isEndless;
     }
     reset() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         var y = _._yielder;
         _._yielder = null;
@@ -81,7 +81,7 @@ export class EnumeratorBase extends DisposableBase {
             yielder(y);
     }
     moveNext() {
-        var _ = this;
+        const _ = this;
         try {
             switch (_._state) {
                 case EnumeratorState.Before:

@@ -32,7 +32,7 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
     delayAfterResolve(milliseconds?: number): PromiseBase<T>;
     'catch'<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
     'finally'<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
-    finallyThis(fin: () => void): PromiseBase<T>;
+    finallyThis(fin: () => void, synchronous?: boolean): PromiseBase<T>;
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
@@ -61,6 +61,22 @@ export declare class Promise<T> extends Resolvable<T> {
     resolve(result?: T | PromiseLike<T>, throwIfSettled?: boolean): void;
     reject(error: any, throwIfSettled?: boolean): void;
 }
+export declare class ArrayPromise<T> extends Promise<T[]> {
+    map<U>(transform: (value: T) => U): ArrayPromise<U>;
+    reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: T[]) => U, initialValue?: U): PromiseBase<U>;
+}
+export declare class PromiseCollection<T> extends DisposableBase {
+    private _source;
+    constructor(source: PromiseLike<T>[]);
+    protected _onDispose(): void;
+    promises: PromiseLike<T>[];
+    all(): ArrayPromise<T>;
+    race(): PromiseBase<T>;
+    waitAll(): ArrayPromise<PromiseLike<T>>;
+    map<U>(transform: (value: T) => U): ArrayPromise<U>;
+    pipe<U>(transform: (value: T) => U | PromiseLike<U>): PromiseCollection<U>;
+    reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: PromiseLike<T>[]) => U, initialValue?: U | PromiseLike<U>): PromiseBase<U>;
+}
 export declare module Promise {
     enum State {
         Pending = 0,
@@ -80,16 +96,18 @@ export declare module Promise {
     interface Executor<T> {
         (resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void): void;
     }
-    function all<T>(promises: PromiseLike<T>[]): PromiseBase<T[]>;
-    function all<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<T[]>;
-    function waitAll<T>(promises: PromiseLike<T>[]): PromiseBase<PromiseLike<T>[]>;
-    function waitAll<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<PromiseLike<T>[]>;
+    function group<T>(promises: PromiseLike<T>[]): PromiseCollection<T>;
+    function group<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseCollection<T>;
+    function all<T>(promises: PromiseLike<T>[]): ArrayPromise<T>;
+    function all<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): ArrayPromise<T>;
+    function waitAll<T>(promises: PromiseLike<T>[]): ArrayPromise<PromiseLike<T>>;
+    function waitAll<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): ArrayPromise<PromiseLike<T>>;
     function race<T>(promises: PromiseLike<T>[]): PromiseBase<T>;
     function race<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<T>;
     function resolve(): PromiseBase<void>;
     function resolve<T>(value: T | PromiseLike<T>): PromiseBase<T>;
     function reject<T>(reason: T): PromiseBase<T>;
-    function wrap<T>(target: PromiseLike<T>): PromiseBase<T>;
+    function wrap<T>(target: T | PromiseLike<T>): PromiseBase<T>;
     function createFrom<T, TResult>(then: Then<T, TResult>): PromiseBase<T>;
 }
 export default Promise;

@@ -35,7 +35,7 @@ export abstract class DisposableBase implements IDisposableAware
 
 	dispose():void
 	{
-		var _ = this;
+		const _ = this;
 		if(!_.__wasDisposed)
 		{
 			// Preemptively set wasDisposed in order to prevent repeated disposing.

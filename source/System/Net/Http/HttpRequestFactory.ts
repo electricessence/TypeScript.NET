@@ -47,7 +47,7 @@ export default class HttpRequestFactory extends DisposableBase
 	uri(uri:string|IUri):HttpRequestFactory
 	{
 
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		var u = Uri.from(uri, _._uriDefaults);
 		return _._uriDefaults.equals(u)
@@ -57,14 +57,14 @@ export default class HttpRequestFactory extends DisposableBase
 
 	params(params:QueryParam.Convertible):HttpRequestFactory
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		return _.uri(_._uriDefaults.updateQuery(params));
 	}
 
 	request<TResult>(method:HttpMethodValue, data?:any):PromiseLike<TResult>
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		return _._http.request({
 			method: method,

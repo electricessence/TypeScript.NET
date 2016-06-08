@@ -8,7 +8,7 @@ import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
 export class DateTime {
     constructor(value = new Date(), kind = 1) {
-        var _ = this;
+        const _ = this;
         _._kind = kind;
         if (value instanceof DateTime)
             _._value = value.toJsDate();
@@ -83,7 +83,7 @@ export class DateTime {
         return DateTime.between(previous, this);
     }
     get date() {
-        var _ = this;
+        const _ = this;
         return new DateTime(new Date(_.year, _.month, _.day), _._kind);
     }
     get timeOfDay() {
@@ -101,7 +101,7 @@ export class DateTime {
         return new DateTime();
     }
     get toUniversalTime() {
-        var _ = this;
+        const _ = this;
         if (_._kind != 1)
             return new DateTime(_, _._kind);
         var d = _._value;

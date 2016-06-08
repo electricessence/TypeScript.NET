@@ -35,7 +35,7 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 
 	moveNext(value?:any):boolean
 	{
-		var _ = this;
+		const _ = this;
 		var i = _._iterator;
 		if(i)
 		{

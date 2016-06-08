@@ -126,7 +126,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 	reset():void
 	{
-		var _ = this;
+		const _ = this;
 		_.throwIfDisposed();
 		var y = _._yielder;
 		_._yielder = null;
@@ -138,7 +138,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 	moveNext():boolean
 	{
-		var _ = this;
+		const _ = this;
 		try
 		{
 			switch(_._state)

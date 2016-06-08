@@ -7,8 +7,8 @@ import { Type } from "../Types";
 import { LinkedNodeList } from "../Collections/LinkedNodeList";
 import { Queue } from "../Collections/Queue";
 import { ObjectPool } from "../Disposable/ObjectPool";
+import { isNodeJS } from "../Environment";
 var requestTick;
-var isNodeJS = false;
 var flushing = false;
 function flush() {
     var entry;
@@ -92,16 +92,13 @@ export function runAfterDeferred(task) {
     laterQueue.enqueue(task);
     requestFlush();
 }
-if (Type.isObject(process)
-    && process.toString() === "[object process]"
-    && process.nextTick) {
-    isNodeJS = true;
+if (isNodeJS) {
     requestTick = () => {
         process.nextTick(flush);
     };
 }
-else if (typeof setImmediate === "function") {
-    if (typeof window !== "undefined") {
+else if (typeof setImmediate === Type.FUNCTION) {
+    if (typeof window !== Type.UNDEFINED) {
         requestTick = setImmediate.bind(window, flush);
     }
     else {
@@ -110,7 +107,7 @@ else if (typeof setImmediate === "function") {
         };
     }
 }
-else if (typeof MessageChannel !== "undefined") {
+else if (typeof MessageChannel !== Type.UNDEFINED) {
     var channel = new MessageChannel();
     channel.port1.onmessage = function () {
         requestTick = requestPortTick;

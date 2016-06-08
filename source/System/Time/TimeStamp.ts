@@ -33,7 +33,7 @@ export class TimeStamp implements ITimeStamp, IDateTime
 
 	toJsDate():Date
 	{
-		var _ = this;
+		const _ = this;
 		return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick/Ticks.Per.Millisecond);
 	}
 

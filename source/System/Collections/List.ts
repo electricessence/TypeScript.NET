@@ -30,7 +30,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(null, equalityComparer);
-		var _ = this;
+		const _ = this;
 		if(Array.isArray(source))
 		{
 			_._source = source.slice();

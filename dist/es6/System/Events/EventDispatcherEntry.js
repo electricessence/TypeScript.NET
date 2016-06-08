@@ -19,7 +19,7 @@ export class EventDispatcherEntry extends DisposableBase {
             throw new ArgumentNullException('listener');
         if (Type.isObject(listener) && !Type.hasMemberOfType(listener, "handleEvent", Type.FUNCTION))
             throw new ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
-        var _ = this;
+        const _ = this;
         _.type = type;
         _.listener = listener;
         _.params = params;
@@ -30,7 +30,7 @@ export class EventDispatcherEntry extends DisposableBase {
         this.listener = null;
     }
     dispatch(e) {
-        var _ = this;
+        const _ = this;
         if (_.wasDisposed)
             return false;
         var l = _.listener, d = l && e.type == _.type;
@@ -43,12 +43,12 @@ export class EventDispatcherEntry extends DisposableBase {
         return d;
     }
     matches(type, listener) {
-        var _ = this;
+        const _ = this;
         return _.type == type
             && _.listener == listener;
     }
     equals(other) {
-        var _ = this;
+        const _ = this;
         return _.matches(other.type, other.listener)
             && areEquivalent(_.params, other.params, false);
     }

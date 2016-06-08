@@ -57,7 +57,7 @@ function detachExternal(node) {
 export class LinkedList extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);
-        var _ = this;
+        const _ = this;
         _._listInternal = new LinkedNodeList();
         _._importEntries(source);
     }
@@ -161,7 +161,7 @@ export class LinkedList extends CollectionBase {
         this.add(entry);
     }
     _removeNodeInternal(node) {
-        var _ = this;
+        const _ = this;
         if (node && _._listInternal.removeNode(node)) {
             detachExternal(node);
             _._signalModification(true);
@@ -170,33 +170,33 @@ export class LinkedList extends CollectionBase {
         return false;
     }
     removeFirst() {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         return _._removeNodeInternal(_._listInternal.first);
     }
     removeLast() {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         return _._removeNodeInternal(_._listInternal.last);
     }
     removeAt(index) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         return _._removeNodeInternal(_._listInternal.getNodeAt(index));
     }
     removeNode(node) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         return _._removeNodeInternal(getInternal(node, _));
     }
     addBefore(before, entry) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
         _._signalModification(true);
     }
     addAfter(after, entry) {
-        var _ = this;
+        const _ = this;
         _.assertModifiable();
         _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
         _._signalModification(true);

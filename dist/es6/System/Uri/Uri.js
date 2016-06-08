@@ -12,7 +12,7 @@ import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeExc
 const VOID0 = void (0);
 export class Uri {
     constructor(scheme, userInfo, host, port, path, query, fragment) {
-        var _ = this;
+        const _ = this;
         _.scheme = getScheme(scheme) || null;
         _.userInfo = userInfo || null;
         _.host = host || null;

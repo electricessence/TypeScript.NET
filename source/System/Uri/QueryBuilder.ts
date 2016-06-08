@@ -72,7 +72,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|
 		deserialize:boolean = true,
 		decodeValues:boolean = true):QueryBuilder
 	{
-		var _ = this;
+		const _ = this;
 		QueryParams.parse(values,
 			(key, value)=>
 			{

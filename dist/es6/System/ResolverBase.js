@@ -23,7 +23,7 @@ export class ResolverBase extends DisposableBase {
         return this.getError();
     }
     getValue() {
-        var _ = this;
+        const _ = this;
         _.throwIfDisposed();
         if (_._isValueCreated === null)
             throw new Error("Recursion detected.");
@@ -61,7 +61,7 @@ export class ResolverBase extends DisposableBase {
         this._isValueCreated = null;
     }
     tryReset() {
-        var _ = this;
+        const _ = this;
         if (!_._valueFactory)
             return false;
         else {

@@ -16,7 +16,7 @@ export class IteratorEnumerator extends SimpleEnumerableBase {
         return this._iterator != null;
     }
     moveNext(value) {
-        var _ = this;
+        const _ = this;
         var i = _._iterator;
         if (i) {
             var r = arguments.length ? i.next(value) : i.next();

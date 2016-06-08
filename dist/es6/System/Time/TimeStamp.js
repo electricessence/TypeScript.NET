@@ -16,7 +16,7 @@ export class TimeStamp {
         Object.freeze(this);
     }
     toJsDate() {
-        var _ = this;
+        const _ = this;
         return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
     }
     static from(d) {

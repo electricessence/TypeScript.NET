@@ -82,7 +82,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	// Returns true if any value is updated...
 	importMap(values:IMap<TValue>):boolean
 	{
-		var _ = this;
+		const _ = this;
 		return _.handleUpdate(
 			() =>
 			{

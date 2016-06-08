@@ -13,7 +13,7 @@ const __extends = __extendsImport;
 export class List extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(null, equalityComparer);
-        var _ = this;
+        const _ = this;
         if (Array.isArray(source)) {
             _._source = source.slice();
         }

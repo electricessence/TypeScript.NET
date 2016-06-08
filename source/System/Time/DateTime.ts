@@ -36,7 +36,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	constructor(source:DateTime, kind?:DateTime.Kind);
 	constructor(value:any = new Date(), kind:DateTime.Kind = DateTime.Kind.Local)
 	{
-		var _ = this;
+		const _ = this;
 		_._kind = kind;
 		if(value instanceof DateTime)
 			_._value = value.toJsDate();
@@ -165,7 +165,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 */
 	get date():DateTime
 	{
-		var _ = this;
+		const _ = this;
 		return new DateTime(
 			new Date(
 				_.year,
@@ -220,7 +220,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 */
 	get toUniversalTime():DateTime
 	{
-		var _ = this;
+		const _ = this;
 		if(_._kind!=DateTime.Kind.Local)
 			return new DateTime(_, _._kind);
 

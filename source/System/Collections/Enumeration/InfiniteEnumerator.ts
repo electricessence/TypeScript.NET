@@ -40,7 +40,7 @@ export class InfiniteEnumerator<T> extends SimpleEnumerableBase<T>
 
 	moveNext():boolean
 	{
-		var _ = this;
+		const _ = this;
 		var f = _._factory;
 		if(f) _._current = f(_._current, _.incrementIndex());
 		return f!=VOID0;

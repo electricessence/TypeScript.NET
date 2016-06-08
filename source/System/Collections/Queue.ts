@@ -41,7 +41,7 @@ extends CollectionBase<T>
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(null, equalityComparer);
-		var _ = this;
+		const _ = this;
 		_._head = 0;
 		_._tail = 0;
 		_._size = 0;
@@ -132,7 +132,7 @@ extends CollectionBase<T>
 	protected _onDispose():void
 	{
 		super._onDispose();
-		var _ = this;
+		const _ = this;
 		if(_._array!=emptyArray)
 		{
 			_._array.length = _._capacity = 0;
@@ -229,7 +229,7 @@ extends CollectionBase<T>
 
 	protected _dequeueInternal(throwIfEmpty:boolean = false):T
 	{
-		var _ = this;
+		const _ = this;
 		if(_._size==0)
 		{
 			if(throwIfEmpty)
@@ -252,7 +252,7 @@ extends CollectionBase<T>
 
 	dequeue(throwIfEmpty:boolean = false):T
 	{
-		var _ = this;
+		const _ = this;
 		_.assertModifiable();
 
 		// A single dequeue shouldn't need update recursion tracking...
@@ -280,7 +280,7 @@ extends CollectionBase<T>
 	{
 		assertIntegerZeroOrGreater(index, "index");
 
-		var _ = this;
+		const _ = this;
 		return _._array[(_._head + index)%_._capacity];
 	}
 
@@ -294,7 +294,7 @@ extends CollectionBase<T>
 
 	trimExcess(threshold?:number):void
 	{
-		var _ = this;
+		const _ = this;
 		var size = _._size;
 		if(size<Math.floor(_._capacity*0.9) && (isNaN(threshold) || threshold<size))
 			_.setCapacity(size);
@@ -302,7 +302,7 @@ extends CollectionBase<T>
 
 	getEnumerator():IEnumerator<T>
 	{
-		var _ = this;
+		const _ = this;
 		var index:number;
 		var version:number;
 		return new EnumeratorBase<T>(

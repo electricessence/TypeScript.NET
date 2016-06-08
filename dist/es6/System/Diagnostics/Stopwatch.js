@@ -27,27 +27,27 @@ export default class Stopwatch {
         return new TimeSpan(getTimestampMilliseconds() - start);
     }
     start() {
-        var _ = this;
+        const _ = this;
         if (!_._isRunning) {
             _._startTimeStamp = getTimestampMilliseconds();
             _._isRunning = true;
         }
     }
     stop() {
-        var _ = this;
+        const _ = this;
         if (_._isRunning) {
             _._elapsed += _.currentLapMilliseconds;
             _._isRunning = false;
         }
     }
     reset() {
-        var _ = this;
+        const _ = this;
         _._elapsed = 0;
         _._isRunning = false;
         _._startTimeStamp = NaN;
     }
     lap() {
-        var _ = this;
+        const _ = this;
         if (_._isRunning) {
             var t = getTimestampMilliseconds();
             var s = _._startTimeStamp;
@@ -70,7 +70,7 @@ export default class Stopwatch {
             : TimeSpan.zero;
     }
     get elapsedMilliseconds() {
-        var _ = this;
+        const _ = this;
         var timeElapsed = _._elapsed;
         if (_._isRunning)
             timeElapsed += _.currentLapMilliseconds;

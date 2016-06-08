@@ -46,7 +46,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 	getValue():T
 	{
 
-		var _ = this;
+		const _ = this;
 
 		_.throwIfDisposed();
 
@@ -100,7 +100,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 
 	tryReset():boolean
 	{
-		var _ = this;
+		const _ = this;
 
 		if(!_._valueFactory)
 			return false;

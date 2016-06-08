@@ -30,7 +30,7 @@ export class Exception implements Error, IDisposable
 		innerException:Error = null,
 		beforeSealing?:(ex:any)=>void)
 	{
-		var _ = this;
+		const _ = this;
 
 		_.name = _.getName();
 		_.data = {};

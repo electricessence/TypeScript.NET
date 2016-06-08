@@ -12,6 +12,7 @@ import {Closure} from "../FunctionTypes";
 import {ILinkedNode} from "../Collections/ILinkedListNode";
 import {ICancellable} from "./ICancellable";
 import {ObjectPool} from "../Disposable/ObjectPool";
+import {isNodeJS} from "../Environment";
 
 declare module process
 {
@@ -37,7 +38,6 @@ interface ITaskQueueEntry extends ILinkedNode<ITaskQueueEntry>
 
 
 var requestTick:()=>void;
-var isNodeJS:boolean = false;
 var flushing:boolean = false;
 
 // Use the fastest possible means to execute a task in a future turn
@@ -183,33 +183,18 @@ export function runAfterDeferred(task:Closure):void
 	requestFlush();
 }
 
-
-if(Type.isObject(process)
-	&& process.toString()==="[object process]"
-	&& process.nextTick)
+if(isNodeJS)
 {
-	/*
-	Ensure is in a real Node environment, with a `process.nextTick`.
-	To see through fake Node environments:
-	* Mocha test runner - exposes a `process` global without a `nextTick`
-	* Browserify - exposes a `process.nexTick` function that uses
-	  `setTimeout`. In this case `setImmediate` is preferred because
-	   it is faster. Browserify's `process.toString()` yields
-	  "[object Object]", while in a real Node environment
-	  `process.nextTick()` yields "[object process]".
-	*/
-	isNodeJS = true;
-
 	requestTick = ()=>
 	{
 		process.nextTick(flush);
 	};
 
 }
-else if(typeof setImmediate==="function")
+else if(typeof setImmediate===Type.FUNCTION)
 {
 	// In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
-	if(typeof window!=="undefined")
+	if(typeof window!==Type.UNDEFINED)
 	{
 		requestTick = setImmediate.bind(window, flush);
 	}
@@ -222,7 +207,7 @@ else if(typeof setImmediate==="function")
 	}
 
 }
-else if(typeof MessageChannel!=="undefined")
+else if(typeof MessageChannel!==Type.UNDEFINED)
 {
 	// modern browsers
 	// http://www.nonblocking.io/2011/06/windownexttick.html

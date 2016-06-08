@@ -25,8 +25,6 @@ describe("computing sum of integers using promises", function () {
         }, Promise_1.Promise.resolve(0))
             .thenSynchronous(function (value) {
             sw.stop();
-            console.log("");
-            console.log("Synchronous Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
             assert.equal(value, answer);
         });
     });
@@ -37,8 +35,6 @@ describe("computing sum of integers using promises", function () {
             .reduce(function (previousValue, currentValue) { return previousValue + currentValue; }, 0)
             .then(function (value) {
             sw.stop();
-            console.log("");
-            console.log("PromiseCollection Compute Milliseconds: ", sw.elapsedMilliseconds);
             assert.equal(value, answer);
         });
     });

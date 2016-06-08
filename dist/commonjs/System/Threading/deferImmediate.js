@@ -8,8 +8,8 @@ var Types_1 = require("../Types");
 var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
 var Queue_1 = require("../Collections/Queue");
 var ObjectPool_1 = require("../Disposable/ObjectPool");
+var Environment_1 = require("../Environment");
 var requestTick;
-var isNodeJS = false;
 var flushing = false;
 function flush() {
     var entry;
@@ -42,7 +42,7 @@ function runSingle(task, domain, context, params) {
         task.apply(context, params);
     }
     catch (e) {
-        if (isNodeJS) {
+        if (Environment_1.isNodeJS) {
             if (domain) {
                 domain.exit();
             }
@@ -71,7 +71,7 @@ function requestFlush() {
 function deferImmediate(task, context, args) {
     var entry = entryPool.take();
     entry.task = task;
-    entry.domain = isNodeJS && process['domain'];
+    entry.domain = Environment_1.isNodeJS && process['domain'];
     entry.context = context;
     entry.args = args && args.slice();
     entry.canceller = function () {
@@ -95,16 +95,13 @@ function runAfterDeferred(task) {
     requestFlush();
 }
 exports.runAfterDeferred = runAfterDeferred;
-if (Types_1.Type.isObject(process)
-    && process.toString() === "[object process]"
-    && process.nextTick) {
-    isNodeJS = true;
+if (Environment_1.isNodeJS) {
     requestTick = function () {
         process.nextTick(flush);
     };
 }
-else if (typeof setImmediate === "function") {
-    if (typeof window !== "undefined") {
+else if (typeof setImmediate === Types_1.Type.FUNCTION) {
+    if (typeof window !== Types_1.Type.UNDEFINED) {
         requestTick = setImmediate.bind(window, flush);
     }
     else {
@@ -113,7 +110,7 @@ else if (typeof setImmediate === "function") {
         };
     }
 }
-else if (typeof MessageChannel !== "undefined") {
+else if (typeof MessageChannel !== Types_1.Type.UNDEFINED) {
     var channel = new MessageChannel();
     channel.port1.onmessage = function () {
         requestTick = requestPortTick;

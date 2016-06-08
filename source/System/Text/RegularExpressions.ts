@@ -134,7 +134,7 @@ export class Regex
 
 	match(input:string, startIndex:number = 0):Match
 	{
-		var _ = this;
+		const _ = this;
 		var r:RegExpExecArray;
 		if(!input
 			|| startIndex>=input.length

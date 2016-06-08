@@ -59,7 +59,7 @@ export class Regex {
         Object.freeze(this);
     }
     match(input, startIndex = 0) {
-        var _ = this;
+        const _ = this;
         var r;
         if (!input
             || startIndex >= input.length

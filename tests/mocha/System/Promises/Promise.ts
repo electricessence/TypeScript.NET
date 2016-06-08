@@ -38,8 +38,8 @@ describe("computing sum of integers using promises", ()=>
 			.thenSynchronous(value=>
 			{
 				sw.stop();
-				console.log("");
-				console.log("Synchronous Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+				// console.log("");
+				// console.log("Synchronous Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
 				assert.equal(value, answer);
 			});
 	});
@@ -53,8 +53,8 @@ describe("computing sum of integers using promises", ()=>
 			.then(value=>
 			{
 				sw.stop();
-				console.log("");
-				console.log("PromiseCollection Compute Milliseconds: ", sw.elapsedMilliseconds);
+				// console.log("");
+				// console.log("PromiseCollection Compute Milliseconds: ", sw.elapsedMilliseconds);
 				assert.equal(value, answer);
 			});
 	});
