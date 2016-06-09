@@ -20,6 +20,7 @@
     var tsc = require("gulp-tsc");
     function getOptions(destination, target, module, declaration) {
         return {
+            tscPath: PATH.TSC,
             outDir: destination,
             noImplicitAny: true,
             module: module,
@@ -39,7 +40,7 @@
         }
         var render = function () { return gulp
             .src([from + '/**/*.ts'])
-            .pipe(typescript(getOptions(to, target, module, declaration)))
+            .pipe(tsc(getOptions(to, target, module, declaration)))
             .pipe(gulp.dest(to)); };
         return new Promise_1.Promise(function (resolve) {
             if (declaration) {

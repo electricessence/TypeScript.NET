@@ -28,7 +28,7 @@ function getOptions(
 	declaration:boolean):IMap<any>
 {
 	return {
-		// tscPath: PATH.TSC,
+		tscPath: PATH.TSC,
 		outDir: destination,
 		noImplicitAny: true,
 		module: module,
@@ -64,7 +64,7 @@ export function fromTo(
 
 	const render = ()=> gulp
 		.src([from + '/**/*.ts'])
-		.pipe(typescript(getOptions(to, target, module, declaration)))
+		.pipe(tsc(getOptions(to, target, module, declaration)))
 		.pipe(gulp.dest(to));
 
 	return new Promise<void>(resolve=>
