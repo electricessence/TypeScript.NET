@@ -20,7 +20,6 @@
     var tsc = require("gulp-tsc");
     function getOptions(destination, target, module, declaration) {
         return {
-            tscPath: PATH.TSC,
             outDir: destination,
             noImplicitAny: true,
             module: module,
@@ -31,7 +30,6 @@
             noEmitHelpers: true
         };
     }
-    exports.getOptions = getOptions;
     function fromTo(from, to, target, module, declaration, doNotEmit) {
         if (!doNotEmit) {
             if (module)
@@ -41,7 +39,7 @@
         }
         var render = function () { return gulp
             .src([from + '/**/*.ts'])
-            .pipe(tsc(getOptions(to, target, module, declaration)))
+            .pipe(typescript(getOptions(to, target, module, declaration)))
             .pipe(gulp.dest(to)); };
         return new Promise_1.Promise(function (resolve) {
             if (declaration) {
@@ -70,7 +68,8 @@
             module: module,
             target: target,
             removeComments: true,
-            noEmitHelpers: !!noEmitHelpers
+            noEmitHelpers: !!noEmitHelpers,
+            sourceMap: true
         };
         var sourceMapOptions = {
             sourceRoot: null

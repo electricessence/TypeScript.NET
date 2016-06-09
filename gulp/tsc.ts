@@ -21,14 +21,14 @@ import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 const tsc = require("gulp-tsc");
 
 
-export function getOptions(
+function getOptions(
 	destination:string,
 	target:EcmaTarget,
 	module:ModuleType,
 	declaration:boolean):IMap<any>
 {
 	return {
-		tscPath: PATH.TSC,
+		// tscPath: PATH.TSC,
 		outDir: destination,
 		noImplicitAny: true,
 		module: module,
@@ -64,7 +64,7 @@ export function fromTo(
 
 	const render = ()=> gulp
 		.src([from + '/**/*.ts'])
-		.pipe(tsc(getOptions(to, target, module, declaration)))
+		.pipe(typescript(getOptions(to, target, module, declaration)))
 		.pipe(gulp.dest(to));
 
 	return new Promise<void>(resolve=>
@@ -109,7 +109,8 @@ export function atV2(
 		module: module,
 		target: target,
 		removeComments: true,
-		noEmitHelpers: !!noEmitHelpers
+		noEmitHelpers: !!noEmitHelpers,
+		sourceMap:true
 	};
 
 	var sourceMapOptions = {

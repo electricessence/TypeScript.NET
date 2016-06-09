@@ -1,5 +1,6 @@
 export module types
 {
+	export type None = 'none'
 	export type CommonJS = 'commonjs'
 	export type SystemJS = 'system'
 	export type AMD = 'amd'
@@ -9,7 +10,8 @@ export module types
 }
 
 export type ModuleType
-	= types.CommonJS
+	= types.None
+	| types.CommonJS
 	| types.SystemJS
 	| types.AMD
 	| types.UMD
@@ -17,6 +19,7 @@ export type ModuleType
 	| types.ES2015;
 
 export const
+	NONE:types.None         = 'none',
 	COMMONJS:types.CommonJS = 'commonjs',
 	SYSTEMJS:types.SystemJS = 'system',
 	AMD:types.AMD           = 'amd',

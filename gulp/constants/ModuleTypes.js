@@ -7,6 +7,6 @@
     }
 })(function (require, exports) {
     "use strict";
-    exports.COMMONJS = 'commonjs', exports.SYSTEMJS = 'system', exports.AMD = 'amd', exports.UMD = 'umd', exports.ES6 = 'es6', exports.ES2015 = 'es2015';
+    exports.NONE = 'none', exports.COMMONJS = 'commonjs', exports.SYSTEMJS = 'system', exports.AMD = 'amd', exports.UMD = 'umd', exports.ES6 = 'es6', exports.ES2015 = 'es2015';
 });
 //# sourceMappingURL=ModuleTypes.js.map
