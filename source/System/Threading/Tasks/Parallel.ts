@@ -4,7 +4,7 @@
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
 
-import {Promise, PromiseBase, ArrayPromise} from "../../Promises/Promise";
+import {Promise, PromiseBase, ArrayPromise, PromiseCollection} from "../../Promises/Promise";
 import {Type} from "../../Types";
 import Worker from "../Worker";
 import {WorkerLike} from "../WorkerType";
@@ -133,14 +133,17 @@ module workers
 		return null;
 	}
 
-	export function tryGet(key:string):WorkerLike {
+	export function tryGet(key:string):WorkerLike
+	{
 		return getPool(key).tryTake();
 	}
 
-	export function getNew(key:string,url:string):WorkerLike {
+	export function getNew(key:string, url:string):WorkerLike
+	{
 		var worker:any = new Worker(url);
 		worker.__key = key;
-		worker.dispose = ()=>{
+		worker.dispose = ()=>
+		{
 			worker.onmessage = null;
 			worker.onerror = null;
 			worker.dispose = null;
@@ -166,8 +169,9 @@ export class Parallel
 		this._requiredFunctions = [];
 	}
 
-	static maxConcurrency(max:number):Parallel {
-		return new Parallel({maxConcurrency:max});
+	static maxConcurrency(max:number):Parallel
+	{
+		return new Parallel({maxConcurrency: max});
 	}
 
 	getWorkerSource(task:Function|string, env?:any):string
@@ -251,7 +255,7 @@ export class Parallel
 
 		if(isNodeJS || scripts.length || !URL)
 		{
-			worker = workers.getNew(src,evalPath);
+			worker = workers.getNew(src, evalPath);
 			worker.postMessage(src);
 		}
 		else if(URL)
@@ -259,7 +263,7 @@ export class Parallel
 			var blob = new Blob([src], {type: 'text/javascript'});
 			var url = URL.createObjectURL(blob);
 
-			worker = workers.getNew(src,url);
+			worker = workers.getNew(src, url);
 		}
 
 		return worker;
@@ -291,6 +295,15 @@ export class Parallel
 		throw new Error('Workers do not exist and synchronous operation not allowed!');
 	}
 
+	pipe<T,U>(data:T[], task:(data:T) => U, env?:any):PromiseCollection<U>
+	{
+		var {maxConcurrency} = this.options;
+		return new PromiseCollection(
+			data && data.map(
+				d=>new Promise<U>((resolve,reject)=>{
+
+				})));
+	}
 
 	map<T,U>(data:T[], task:(data:T) => U, env?:any):ArrayPromise<U>
 	{
@@ -314,6 +327,7 @@ export class Parallel
 					if(!this.options.allowSynchronous)
 						throw new Error('Workers do not exist and synchronous operation not allowed!');
 
+					// Concurrency doesn't matter in a single thread... Just queue it all up.
 					resolve(Promise
 						.all(data.map(d=>new Promise<U>((r, j)=>
 						{
@@ -412,55 +426,6 @@ export class Parallel
 }
 
 //
-// export class ParallelExtended<TEntry, T extends Array<TEntry>> extends Parallel<T>
-// {
-//
-// 	private _spawnMapWorker<N>(
-// 		data:T,
-// 		task:(data:N) => N,
-// 		done:(e?:any, w?:WorkerLike)=>void,
-// 		env:any,
-// 		worker?:WorkerLike):Promise<N>
-// 	{
-// 		const _ = this;
-//
-// 		if(!worker) worker = _._spawnWorker(task, env);
-// 		if(worker)
-//
-// 			return new Promise<N>(resolve=>
-// 			{
-// 				if(worker!==VOID0)
-// 				{
-// 					interact(
-// 						worker,
-// 						(msg:{data:any})=>
-// 						{
-// 							resolve(msg.data);
-// 							done(null, worker);
-// 						},
-// 						(e:any)=>
-// 						{
-// 							deferImmediate(()=>worker.terminate());
-// 							done(e);
-// 						},
-// 						_.data[i]);
-// 				}
-// 				else if(_.options.allowSynchronous)
-// 				{
-// 					deferImmediate(()=>
-// 					{
-// 						_.data[i] = task(_.data[i]);
-// 						done();
-// 					});
-// 				}
-// 				else
-// 				{
-// 					throw new Error('Workers do not exist and synchronous operation not allowed!');
-// 				}
-// 			}, true);
-//
-//
-// 	}
 //
 // 	private _spawnReduceWorker<N>(
 // 		data:any,
@@ -502,52 +467,6 @@ export class Parallel
 // 	}
 //
 //
-// 	map<N>(callback:(data:N) => N, env?:any)
-// 	{
-// 		env = extend(this.options.env, env || {});
-// 		const _ = this;
-// 		if(!Array.isArray(_.data))
-// 		{
-// 			return _.start(callback, env);
-// 		}
-//
-// 		var startedOps = 0;
-// 		var doneOps = 0;
-//
-// 		_._operation = new Promise<any>((resolve, reject)=>
-// 		{
-//
-// 			const done = (err?:any, wrk?:WorkerLike)=>
-// 			{
-// 				if(err)
-// 				{
-// 					reject(err);
-// 				}
-// 				else if(++doneOps===_.data.length)
-// 				{
-// 					resolve(_.data);
-// 					if(wrk) wrk.terminate();
-// 				}
-// 				else if(startedOps<_.data.length)
-// 				{
-// 					_._spawnMapWorker(startedOps++, callback, done, env, wrk);
-// 				}
-// 				else
-// 				{
-// 					if(wrk) wrk.terminate();
-// 				}
-// 			};
-//
-// 			for(
-// 				; startedOps - doneOps<_.options.maxConcurrency && startedOps<_.data.length;
-// 				  ++startedOps
-// 			)
-// 			{
-// 				_._spawnMapWorker(startedOps, callback, done, env);
-// 			}
-// 		}, true);
-// 		return this;
-// 	}
 //
 //
 // 	reduce<N>(cb:(data:N[]) => N, env?:any):Parallel<T>
@@ -603,8 +522,6 @@ export class Parallel
 // 		return this;
 //
 // 	}
-//
-//
-// }
+
 
 export default Parallel;

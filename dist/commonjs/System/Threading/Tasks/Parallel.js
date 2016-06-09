@@ -195,6 +195,11 @@ var Parallel = (function () {
             });
         throw new Error('Workers do not exist and synchronous operation not allowed!');
     };
+    Parallel.prototype.pipe = function (data, task, env) {
+        var maxConcurrency = this.options.maxConcurrency;
+        return new Promise_1.PromiseCollection(data && data.map(function (d) { return new Promise_1.Promise(function (resolve, reject) {
+        }); }));
+    };
     Parallel.prototype.map = function (data, task, env) {
         var _this = this;
         if (!data || !data.length)

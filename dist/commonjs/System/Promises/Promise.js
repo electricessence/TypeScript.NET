@@ -39,9 +39,12 @@ function handleResolution(p, value, resolver) {
         var v = resolver ? resolver(value) : value;
         if (p)
             p.resolve(v);
+        return null;
     }
     catch (ex) {
-        p.reject(ex);
+        if (p)
+            p.reject(ex);
+        return ex;
     }
 }
 function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
@@ -444,9 +447,10 @@ var Promise = (function (_super) {
                 var c = o_2[_i];
                 var onRejected = c.onRejected, promise = c.promise, p = promise;
                 pools.PromiseCallbacks.recycle(c);
-                if (onRejected)
+                if (onRejected) {
                     handleResolution(p, error, onRejected);
-                else
+                }
+                else if (p)
                     p.reject(error);
             }
             o.length = 0;
@@ -502,6 +506,12 @@ var ArrayPromise = (function (_super) {
     ArrayPromise.prototype.reduce = function (reduction, initialValue) {
         return this
             .thenSynchronous(function (result) { return result.reduce(reduction, initialValue); });
+    };
+    ArrayPromise.prototype.finallyThis = function (fin, synchronous) {
+        return _super.prototype.finallyThis.call(this, fin, synchronous);
+    };
+    ArrayPromise.prototype.thenThis = function (onFulfilled, onRejected) {
+        return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
     };
     ArrayPromise.fulfilled = function (value) {
         return new ArrayPromise(function (resolve) { return value; }, true);

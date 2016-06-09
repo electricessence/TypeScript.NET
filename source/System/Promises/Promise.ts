@@ -47,15 +47,19 @@ function resolve<T>(
 function handleResolution(
 	p:Promise<any>,
 	value:Promise.Resolution<any>,
-	resolver?:(v:Promise.Resolution<any>)=>any):void
+	resolver?:(v:Promise.Resolution<any>)=>any):any
 {
 	try
 	{
 		let v = resolver ? resolver(value) : value;
 		if(p) p.resolve(v);
+		return null;
 	}
 	catch(ex)
-	{ p.reject(ex); }
+	{
+		if(p) p.reject(ex);
+		return ex;
+	}
 }
 
 function handleResolutionMethods(
@@ -655,7 +659,9 @@ export class Promise<T> extends Resolvable<T>
 				{
 					let {onFulfilled, promise} = c, p = (<Promise<T>>promise);
 					pools.PromiseCallbacks.recycle(c);
+					//let ex =
 					handleResolution(p, result, onFulfilled);
+					//if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
 				}
 				o.length = 0;
 			}
@@ -678,8 +684,13 @@ export class Promise<T> extends Resolvable<T>
 			{
 				let {onRejected, promise} = c, p = (<Promise<T>>promise);
 				pools.PromiseCallbacks.recycle(c);
-				if(onRejected) handleResolution(p, error, onRejected);
-				else p.reject(error);
+				if(onRejected)
+				{
+					//let ex =
+					handleResolution(p, error, onRejected);
+					//if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
+				}
+				else if(p) p.reject(error);
 			}
 			o.length = 0;
 		}
@@ -766,8 +777,20 @@ export class ArrayPromise<T> extends Promise<T[]>
 			.thenSynchronous((result:T[])=>result.reduce(reduction, initialValue));
 	}
 
-	static fulfilled<T>(value:T[]):ArrayPromise<T> {
-		return new ArrayPromise<T>(resolve=>value,true);
+
+	finallyThis(fin:()=>void, synchronous?:boolean):ArrayPromise<T>
+	{
+		return <any>super.finallyThis(fin, synchronous);
+	}
+
+	thenThis(onFulfilled:(v?:T[])=>any, onRejected?:(v?:any)=>any):ArrayPromise<T>
+	{
+		return <any>super.thenThis(onFulfilled, onRejected);
+	}
+
+	static fulfilled<T>(value:T[]):ArrayPromise<T>
+	{
+		return new ArrayPromise<T>(resolve=>value, true);
 	}
 }
 

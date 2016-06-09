@@ -27,15 +27,16 @@ it("should work synchronously", function () {
 });
 function setup(maxCon) {
     it("should return the expected sum (concurrency " + maxCon + ")", function () {
+        this.timeout(maxCon * 1000);
         var sw = Stopwatch_1.default.startNew();
         return Parallel_1.default
             .maxConcurrency(maxCon)
             .map(data, test)
+            .thenThis(function (result) { return assert.ok(true); }, function (error) { return assert.ok(false, "mapping failed!"); })
             .reduce(function (p, c) { return p + c; }, 0)
             .then(function (result) { return assert.equal(result, synchronousResult); }, function (error) { return assert.ok(false); })
             .finallyThis(function () { return console.log("\n(" + maxCon + ") Parallel time (ms):", sw.elapsedMilliseconds); });
     });
 }
-setup(2);
-setup(3);
+setup(20);
 //# sourceMappingURL=Parallel.js.map

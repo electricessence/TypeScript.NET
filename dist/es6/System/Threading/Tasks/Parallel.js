@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { Promise, ArrayPromise } from "../../Promises/Promise";
+import { Promise, ArrayPromise, PromiseCollection } from "../../Promises/Promise";
 import { Type } from "../../Types";
 import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";
@@ -179,6 +179,11 @@ export class Parallel {
                 }
             });
         throw new Error('Workers do not exist and synchronous operation not allowed!');
+    }
+    pipe(data, task, env) {
+        var { maxConcurrency } = this.options;
+        return new PromiseCollection(data && data.map(d => new Promise((resolve, reject) => {
+        })));
     }
     map(data, task, env) {
         if (!data || !data.length)

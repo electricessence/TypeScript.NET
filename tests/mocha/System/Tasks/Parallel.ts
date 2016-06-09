@@ -43,12 +43,14 @@ it("should work synchronously",()=>{
 
 function setup(maxCon:number):void
 {
-	it(`should return the expected sum (concurrency ${maxCon})`, ()=>
+	it(`should return the expected sum (concurrency ${maxCon})`, function()
 	{
+		this.timeout(maxCon*1000);
 		var sw = Stopwatch.startNew();
 		return Parallel
 			.maxConcurrency(maxCon)
 			.map(data, test)
+			.thenThis(result=>assert.ok(true),error=>assert.ok(false,"mapping failed!"))
 			.reduce((p,c)=>p+c,0)
 			.then(
 				result=>assert.equal(result, synchronousResult),
@@ -60,7 +62,10 @@ function setup(maxCon:number):void
 	});
 }
 
-//setup(1);
-setup(2);
-setup(3);
-//setup(7);
+//setup(20);
+// setup(15);
+// setup(10);
+// //setup(1);
+// setup(2);
+// setup(3);
+// setup(7);
