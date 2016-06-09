@@ -15,7 +15,7 @@ export declare class ObjectPool<T> extends DisposableBase {
     private _autoFlusher;
     private _localAbsMaxSize;
     autoClearTimeout: number;
-    constructor(_maxSize: number, _generator: (...args: any[]) => T, _recycler?: (o: T) => void);
+    constructor(_maxSize: number, _generator?: (...args: any[]) => T, _recycler?: (o: T) => void);
     maxSize: number;
     count: number;
     protected _trim(): void;
@@ -27,6 +27,8 @@ export declare class ObjectPool<T> extends DisposableBase {
     protected _onDispose(): void;
     extendAutoClear(): void;
     add(o: T): void;
-    take(): T;
+    private _onTaken();
+    tryTake(): T;
+    take(factory?: () => T): T;
 }
 export default ObjectPool;

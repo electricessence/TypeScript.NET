@@ -765,6 +765,10 @@ export class ArrayPromise<T> extends Promise<T[]>
 		return this
 			.thenSynchronous((result:T[])=>result.reduce(reduction, initialValue));
 	}
+
+	static fulfilled<T>(value:T[]):ArrayPromise<T> {
+		return new ArrayPromise<T>(resolve=>value,true);
+	}
 }
 
 /**

@@ -1,3 +1,6 @@
+/*!
+ * From: https://github.com/adambom/parallel.js/blob/master/lib/eval.js
+ */
 var isNode = typeof module !== 'undefined' && module.exports;
 if (isNode) {
     process.once('message', function (code) {

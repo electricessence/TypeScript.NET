@@ -10,6 +10,7 @@ import {DisposableBase} from "./DisposableBase";
 import {TaskHandler} from "../Threading/Tasks/TaskHandler";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
 import __extendsImport from "../../extends";
+import {ArgumentException} from "../Exceptions/ArgumentException";
 const __extends = __extendsImport;
 
 const
@@ -40,7 +41,7 @@ export class ObjectPool<T> extends DisposableBase
 
 	constructor(
 		private _maxSize:number,
-		private _generator:(...args:any[])=>T,
+		private _generator?:(...args:any[])=>T,
 		private _recycler?:(o:T)=>void)
 	{
 		super();
@@ -188,20 +189,39 @@ export class ObjectPool<T> extends DisposableBase
 
 	}
 
-	take():T
+	private _onTaken():void
+	{
+		const _ = this, len = _._pool.length;
+		if(len<=_._maxSize)
+			_._trimmer.cancel();
+		if(len)
+			_.extendAutoClear();
+	}
+
+	tryTake():T
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
-		var e   = _._pool.pop() || _._generator(),
-		    len = _._pool.length;
+		try {
+			return _._pool.pop();
+		} finally {
+			_._onTaken();
+		}
+	}
 
-		if(_._pool.length<=_._maxSize)
-			_._trimmer.cancel();
-		if(len)
-			_.extendAutoClear();
+	take(factory?:()=>T):T
+	{
+		const _ = this;
+		_.throwIfDisposed();
+		if(!_._generator && !factory)
+			throw new ArgumentException('factory', "Must provide a factory if on was not provided at construction time.");
 
-		return e;
+		try {
+			return _._pool.pop() || factory && factory() || _._generator();
+		} finally {
+			_._onTaken();
+		}
 	}
 
 

@@ -422,6 +422,9 @@ export class ArrayPromise extends Promise {
         return this
             .thenSynchronous((result) => result.reduce(reduction, initialValue));
     }
+    static fulfilled(value) {
+        return new ArrayPromise(resolve => value, true);
+    }
 }
 export class PromiseCollection extends DisposableBase {
     constructor(source) {

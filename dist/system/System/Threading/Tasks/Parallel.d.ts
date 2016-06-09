@@ -1,9 +1,9 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
+ * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { PromiseBase } from "../../Promises/Promise";
+import { PromiseBase, ArrayPromise } from "../../Promises/Promise";
 import { WorkerLike } from "../WorkerType";
 export interface ParallelOptions {
     evalPath?: string;
@@ -24,16 +24,18 @@ export declare class Parallel {
         fn: Function;
     }[];
     constructor(options?: ParallelOptions);
-    getWorkerSource(task: Function, env?: any): string;
+    static maxConcurrency(max: number): Parallel;
+    getWorkerSource(task: Function | string, env?: any): string;
     require(...required: RequireType[]): Parallel;
     requireThese(required: RequireType[]): Parallel;
-    protected _spawnWorker(task: Function, env?: any): WorkerLike;
+    protected _spawnWorker(task: Function | string, env?: any): WorkerLike;
     startNew<T, U>(data: T, task: (data: T) => U, env?: any): PromiseBase<U>;
+    map<T, U>(data: T[], task: (data: T) => U, env?: any): ArrayPromise<U>;
     static isSupported: boolean;
     static options(options?: ParallelOptions): Parallel;
     static require(...required: RequireType[]): Parallel;
     static requireThese(required: RequireType[]): Parallel;
     static startNew<T, U>(data: T, task: (data: T) => U, env?: any): PromiseBase<U>;
-    forEach<T>(data: T[], task: (data: T) => void, env?: any): PromiseBase<void>;
+    static map<T, U>(data: T[], task: (data: T) => U, env?: any): ArrayPromise<U>;
 }
 export default Parallel;

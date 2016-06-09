@@ -4,7 +4,7 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
-System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../../extends"], function(exports_1, context_1) {
+System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../../extends", "../Exceptions/ArgumentException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var __extends = (this && this.__extends) || function (d, b) {
@@ -12,7 +12,7 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    var dispose_1, DisposableBase_1, TaskHandler_1, ArgumentOutOfRangeException_1, extends_1;
+    var dispose_1, DisposableBase_1, TaskHandler_1, ArgumentOutOfRangeException_1, extends_1, ArgumentException_1;
     var __extends, OBJECT_POOL, _MAX_SIZE, ABSOLUTE_MAX_SIZE, MUST_BE_GT1, MUST_BE_LTM, ObjectPool;
     return {
         setters:[
@@ -30,6 +30,9 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
+            },
+            function (ArgumentException_1_1) {
+                ArgumentException_1 = ArgumentException_1_1;
             }],
         execute: function() {
             __extends = extends_1.default;
@@ -139,15 +142,34 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     }
                     _.extendAutoClear();
                 };
-                ObjectPool.prototype.take = function () {
-                    var _ = this;
-                    _.throwIfDisposed();
-                    var e = _._pool.pop() || _._generator(), len = _._pool.length;
-                    if (_._pool.length <= _._maxSize)
+                ObjectPool.prototype._onTaken = function () {
+                    var _ = this, len = _._pool.length;
+                    if (len <= _._maxSize)
                         _._trimmer.cancel();
                     if (len)
                         _.extendAutoClear();
-                    return e;
+                };
+                ObjectPool.prototype.tryTake = function () {
+                    var _ = this;
+                    _.throwIfDisposed();
+                    try {
+                        return _._pool.pop();
+                    }
+                    finally {
+                        _._onTaken();
+                    }
+                };
+                ObjectPool.prototype.take = function (factory) {
+                    var _ = this;
+                    _.throwIfDisposed();
+                    if (!_._generator && !factory)
+                        throw new ArgumentException_1.ArgumentException('factory', "Must provide a factory if on was not provided at construction time.");
+                    try {
+                        return _._pool.pop() || factory && factory() || _._generator();
+                    }
+                    finally {
+                        _._onTaken();
+                    }
                 };
                 return ObjectPool;
             }(DisposableBase_1.DisposableBase));

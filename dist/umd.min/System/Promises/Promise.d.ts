@@ -64,6 +64,7 @@ export declare class Promise<T> extends Resolvable<T> {
 export declare class ArrayPromise<T> extends Promise<T[]> {
     map<U>(transform: (value: T) => U): ArrayPromise<U>;
     reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: T[]) => U, initialValue?: U): PromiseBase<U>;
+    static fulfilled<T>(value: T[]): ArrayPromise<T>;
 }
 export declare class PromiseCollection<T> extends DisposableBase {
     private _source;

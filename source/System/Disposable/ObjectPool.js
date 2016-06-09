@@ -9,7 +9,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../../extends"], factory);
+        define(["require", "exports", "./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../../extends", "../Exceptions/ArgumentException"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -18,6 +18,7 @@
     var TaskHandler_1 = require("../Threading/Tasks/TaskHandler");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
     var extends_1 = require("../../extends");
+    var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var __extends = extends_1.default;
     var OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
     var ObjectPool = (function (_super) {
@@ -125,15 +126,34 @@
             }
             _.extendAutoClear();
         };
-        ObjectPool.prototype.take = function () {
-            var _ = this;
-            _.throwIfDisposed();
-            var e = _._pool.pop() || _._generator(), len = _._pool.length;
-            if (_._pool.length <= _._maxSize)
+        ObjectPool.prototype._onTaken = function () {
+            var _ = this, len = _._pool.length;
+            if (len <= _._maxSize)
                 _._trimmer.cancel();
             if (len)
                 _.extendAutoClear();
-            return e;
+        };
+        ObjectPool.prototype.tryTake = function () {
+            var _ = this;
+            _.throwIfDisposed();
+            try {
+                return _._pool.pop();
+            }
+            finally {
+                _._onTaken();
+            }
+        };
+        ObjectPool.prototype.take = function (factory) {
+            var _ = this;
+            _.throwIfDisposed();
+            if (!_._generator && !factory)
+                throw new ArgumentException_1.ArgumentException('factory', "Must provide a factory if on was not provided at construction time.");
+            try {
+                return _._pool.pop() || factory && factory() || _._generator();
+            }
+            finally {
+                _._onTaken();
+            }
         };
         return ObjectPool;
     }(DisposableBase_1.DisposableBase));

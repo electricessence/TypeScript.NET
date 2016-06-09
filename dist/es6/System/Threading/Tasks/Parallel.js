@@ -1,13 +1,14 @@
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
+ * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { Promise, Fulfilled } from "../../Promises/Promise";
+import { Promise, ArrayPromise } from "../../Promises/Promise";
 import { Type } from "../../Types";
 import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";
 import { isNodeJS } from "../../Environment";
+import { ObjectPool } from "../../Disposable/ObjectPool";
 const VOID0 = void 0, URL = typeof self !== Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null, _supports = (isNodeJS || self.Worker) ? true : false;
 const defaults = {
     evalPath: isNodeJS ? __dirname + '/eval.js' : null,
@@ -33,11 +34,6 @@ function interact(w, onMessage, onError, message) {
     if (message !== VOID0)
         w.postMessage(message);
 }
-function terminate(worker) {
-    if (worker)
-        deferImmediate(() => worker.terminate());
-    return null;
-}
 class WorkerPromise extends Promise {
     constructor(worker, data) {
         super((resolve, reject) => {
@@ -49,11 +45,57 @@ class WorkerPromise extends Promise {
         }, true);
     }
 }
+var workers;
+(function (workers) {
+    function getPool(key) {
+        var pool = workerPools[key];
+        if (!pool) {
+            workerPools[key] = pool = new ObjectPool(8);
+            pool.autoClearTimeout = 1000;
+        }
+        return pool;
+    }
+    var workerPools = {};
+    function recycle(w) {
+        if (w) {
+            w.onerror = null;
+            w.onmessage = null;
+            var k = w.__key;
+            if (k) {
+                getPool(k).add(w);
+            }
+            else {
+                deferImmediate(() => w.terminate());
+            }
+        }
+        return null;
+    }
+    workers.recycle = recycle;
+    function tryGet(key) {
+        return getPool(key).tryTake();
+    }
+    workers.tryGet = tryGet;
+    function getNew(key, url) {
+        var worker = new Worker(url);
+        worker.__key = key;
+        worker.dispose = () => {
+            worker.onmessage = null;
+            worker.onerror = null;
+            worker.dispose = null;
+            worker.terminate();
+        };
+        return worker;
+    }
+    workers.getNew = getNew;
+})(workers || (workers = {}));
 export class Parallel {
     constructor(options) {
         this.options = extend(defaults, options);
         this._requiredScripts = [];
         this._requiredFunctions = [];
+    }
+    static maxConcurrency(max) {
+        return new Parallel({ maxConcurrency: max });
     }
     getWorkerSource(task, env) {
         var scripts = this._requiredScripts, functions = this._requiredFunctions;
@@ -95,10 +137,12 @@ export class Parallel {
         return this;
     }
     _spawnWorker(task, env) {
-        var worker;
         var src = this.getWorkerSource(task, env);
         if (Worker === VOID0)
             return VOID0;
+        var worker = workers.tryGet(src);
+        if (worker)
+            return worker;
         var scripts = this._requiredScripts, evalPath = this.options.evalPath;
         if (!evalPath) {
             if (isNodeJS)
@@ -109,13 +153,13 @@ export class Parallel {
                 throw new Error("Can't create a blob URL in this browser!");
         }
         if (isNodeJS || scripts.length || !URL) {
-            worker = new Worker(evalPath);
+            worker = workers.getNew(src, evalPath);
             worker.postMessage(src);
         }
         else if (URL) {
             var blob = new Blob([src], { type: 'text/javascript' });
             var url = URL.createObjectURL(blob);
-            worker = new Worker(url);
+            worker = workers.getNew(src, url);
         }
         return worker;
     }
@@ -124,7 +168,7 @@ export class Parallel {
         let worker = _._spawnWorker(task, extend(_.options.env, env || {}));
         if (worker)
             return new WorkerPromise(worker, data)
-                .finallyThis(() => worker.terminate());
+                .finallyThis(() => workers.recycle(worker));
         if (_.options.allowSynchronous)
             return new Promise((resolve, reject) => {
                 try {
@@ -135,6 +179,69 @@ export class Parallel {
                 }
             });
         throw new Error('Workers do not exist and synchronous operation not allowed!');
+    }
+    map(data, task, env) {
+        if (!data || !data.length)
+            return ArrayPromise.fulfilled(data && []);
+        data = data.slice();
+        return new ArrayPromise((resolve, reject) => {
+            var result = [], len = data.length;
+            result.length = len;
+            var taskString = task.toString();
+            var { maxConcurrency } = this.options, error;
+            let i = 0, resolved = 0;
+            for (let w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
+                let worker = this._spawnWorker(taskString, env);
+                if (!worker) {
+                    if (!this.options.allowSynchronous)
+                        throw new Error('Workers do not exist and synchronous operation not allowed!');
+                    resolve(Promise
+                        .all(data.map(d => new Promise((r, j) => {
+                        try {
+                            r(task(d));
+                        }
+                        catch (ex) {
+                            j(ex);
+                        }
+                    }))));
+                    return;
+                }
+                let next = () => {
+                    if (error) {
+                        worker = workers.recycle(worker);
+                    }
+                    if (worker) {
+                        if (i < len) {
+                            let ii = i++;
+                            let wp = new WorkerPromise(worker, data[ii]);
+                            wp
+                                .thenSynchronous(r => {
+                                result[ii] = r;
+                                next();
+                            }, e => {
+                                if (!error) {
+                                    error = e;
+                                    reject(e);
+                                    worker = workers.recycle(worker);
+                                }
+                            })
+                                .thenThis(() => {
+                                resolved++;
+                                if (resolved > len)
+                                    throw Error("Resolved count exceeds data length.");
+                                if (resolved === len)
+                                    resolve(result);
+                            })
+                                .finallyThis(() => wp.dispose());
+                        }
+                        else {
+                            worker = workers.recycle(worker);
+                        }
+                    }
+                };
+                next();
+            }
+        });
     }
     static get isSupported() { return _supports; }
     static options(options) {
@@ -149,62 +256,8 @@ export class Parallel {
     static startNew(data, task, env) {
         return (new Parallel()).startNew(data, task, env);
     }
-    forEach(data, task, env) {
-        if (!data || !data.length)
-            return new Fulfilled();
-        data = data.slice();
-        return new Promise((resolve, reject) => {
-            var { maxConcurrency } = this.options, error;
-            let i = 0, resolved = 0;
-            for (let w = 0, len = data.length; !error && i < Math.min(len, maxConcurrency); w++) {
-                let worker = this._spawnWorker(task, env);
-                if (!worker) {
-                    if (!this.options.allowSynchronous)
-                        throw new Error('Workers do not exist and synchronous operation not allowed!');
-                    Promise
-                        .all(data.map(d => new Promise((r, j) => {
-                        try {
-                            r(task(d));
-                        }
-                        catch (ex) {
-                            j(ex);
-                        }
-                    })))
-                        .thenThis(() => resolve, reject);
-                    return;
-                }
-                let next = () => {
-                    if (error) {
-                        worker = terminate(worker);
-                    }
-                    if (worker) {
-                        if (i < len) {
-                            let wp = new WorkerPromise(worker, data[i++]);
-                            wp
-                                .thenSynchronous(next, e => {
-                                if (!error) {
-                                    error = e;
-                                    reject(e);
-                                    worker = terminate(worker);
-                                }
-                            })
-                                .thenThis(() => {
-                                resolved++;
-                                if (resolved > len)
-                                    throw Error("Resolved count exceeds data length.");
-                                if (resolved === len)
-                                    resolve();
-                            })
-                                .finallyThis(() => wp.dispose());
-                        }
-                        else {
-                            worker = terminate(worker);
-                        }
-                    }
-                };
-                next();
-            }
-        });
+    static map(data, task, env) {
+        return (new Parallel()).map(data, task, env);
     }
 }
 export default Parallel;

@@ -503,6 +503,9 @@ var ArrayPromise = (function (_super) {
         return this
             .thenSynchronous(function (result) { return result.reduce(reduction, initialValue); });
     };
+    ArrayPromise.fulfilled = function (value) {
+        return new ArrayPromise(function (resolve) { return value; }, true);
+    };
     return ArrayPromise;
 }(Promise));
 exports.ArrayPromise = ArrayPromise;
