@@ -55,7 +55,7 @@ export class NodeJSWorker extends ObservableBase<any> implements WorkerLike
 	{
 		this.throwIfDisposed();
 		this._process.send(JSON.stringify({data: obj}));
-	};
+	}
 
 	terminate()
 	{
