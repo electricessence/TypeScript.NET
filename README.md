@@ -54,7 +54,7 @@ After some time and effort, I've decided that this library should be module base
 ##### Why not take this a step further and break it up into separate NPM style modules/packages?
 There is a point where fragmentation and over-granularity just make life harder.  If one module depends on another and you want to implement improvements it's just easier if they live in the same place.
 
-#### [NPM](https://www.npmjs.com/search?q=typescript-dotnet):
+### [NPM](https://www.npmjs.com/search?q=typescript-dotnet):
 Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.
 
 ***All distributions contain source-maps.***  
@@ -77,28 +77,28 @@ Install on only the module type you need in order to avoid type collisions.
 
 Currently it is possible/supported to use TypeScript .NET in a number of different ways:
 
-##### Import Examples:
+#### Import Examples:
 
 ```typescript
 import Enumerable from "typescript-dotnet-es6/System.Linq/Linq"
 ```
 
-Recommended for users who are deploying to web/browsers:  
+##### Recommended for users who are deploying to web/browsers:  
 ```typescript
 import Enumerable from "typescript-dotnet-umd/System.Linq/Linq"
 ```
 
-Pure (unminified ES5) CommonJS is available this way:  
+##### Pure (unminified ES5) CommonJS is available this way:  
 ```typescript
 import Enumerable from "typescript-dotnet-commonjs/System.Linq/Linq"
 ```
 
-Recommended for users who want pure minified AMD (RequireJS) with source-maps:    
+##### Recommended for users who want pure minified AMD (RequireJS) with source-maps:    
 ```typescript
 import Enumerable from "typescript-dotnet-amd/System.Linq/Linq"
 ```
 
-#### [Bower](http://bower.io/search/?q=typescript-dotnet):
+### [Bower](http://bower.io/search/?q=typescript-dotnet):
 ```
 bower install typescript-dotnet
 ```
@@ -106,7 +106,7 @@ bower install typescript-dotnet
 This should also include require.js in your bower components directory.
 If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.
 
-#### [Nuget](https://www.nuget.org/packages/TypeScript.NET.Library/):
+### [Nuget](https://www.nuget.org/packages/TypeScript.NET.Library/):
 ```
 PM> Install-Package TypeScript.NET.Library
 ```
