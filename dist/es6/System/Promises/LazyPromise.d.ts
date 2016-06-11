@@ -9,7 +9,7 @@ export declare class LazyPromise<T> extends Promise<T> {
     protected _onDispose(): void;
     private _onThen();
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
-    thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): PromiseBase<T>;
+    thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
     delayFromNow(milliseconds?: number): PromiseBase<T>;
     delayAfterResolve(milliseconds?: number): PromiseBase<T>;
 }

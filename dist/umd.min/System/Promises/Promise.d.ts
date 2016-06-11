@@ -25,18 +25,18 @@ export declare class PromiseState<T> extends DisposableBase {
 export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T> {
     constructor();
     abstract thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
-    abstract thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): PromiseBase<T>;
+    abstract thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
     then<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     done(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
     delayFromNow(milliseconds?: number): PromiseBase<T>;
     delayAfterResolve(milliseconds?: number): PromiseBase<T>;
     'catch'<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
     'finally'<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
-    finallyThis(fin: () => void, synchronous?: boolean): PromiseBase<T>;
+    finallyThis(fin: () => void, synchronous?: boolean): this;
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
-    thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): PromiseBase<T>;
+    thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
 }
 export declare abstract class Resolved<T> extends Resolvable<T> {
     constructor(state: Promise.State, result: T, error?: any);
@@ -51,7 +51,7 @@ export declare class Promise<T> extends Resolvable<T> {
     private _waiting;
     constructor(resolver?: Promise.Executor<T>, forceSynchronous?: boolean);
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
-    thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): PromiseBase<T>;
+    thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
     protected _onDispose(): void;
     protected _resolvedCalled: boolean;
     resolveUsing(resolver: Promise.Executor<T>, forceSynchronous?: boolean, throwIfSettled?: boolean): void;
@@ -64,8 +64,6 @@ export declare class Promise<T> extends Resolvable<T> {
 export declare class ArrayPromise<T> extends Promise<T[]> {
     map<U>(transform: (value: T) => U): ArrayPromise<U>;
     reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: T[]) => U, initialValue?: U): PromiseBase<U>;
-    finallyThis(fin: () => void, synchronous?: boolean): ArrayPromise<T>;
-    thenThis(onFulfilled: (v?: T[]) => any, onRejected?: (v?: any) => any): ArrayPromise<T>;
     static fulfilled<T>(value: T[]): ArrayPromise<T>;
 }
 export declare class PromiseCollection<T> extends DisposableBase {

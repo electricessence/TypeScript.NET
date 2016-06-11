@@ -426,12 +426,6 @@ export class ArrayPromise extends Promise {
         return this
             .thenSynchronous((result) => result.reduce(reduction, initialValue));
     }
-    finallyThis(fin, synchronous) {
-        return super.finallyThis(fin, synchronous);
-    }
-    thenThis(onFulfilled, onRejected) {
-        return super.thenThis(onFulfilled, onRejected);
-    }
     static fulfilled(value) {
         return new ArrayPromise(resolve => value, true);
     }

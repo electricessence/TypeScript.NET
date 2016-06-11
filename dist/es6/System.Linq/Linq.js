@@ -101,7 +101,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
-            return Enumerable.empty();
+            return new InfiniteEnumerable(getEmptyEnumerator);
         Integer.assert(count, "count");
         return this.doAction((element, index) => index < count
             ? 2
@@ -1160,11 +1160,10 @@ export class Enumerable extends InfiniteEnumerable {
             });
         });
     }
-    doAction(action, initializer, isEndless = this.isEndless) {
-        return super.doAction(action, initializer, isEndless);
-    }
-    skip(count) {
-        return super.skip(count);
+    asEnumerable() {
+        const _ = this;
+        _.throwIfDisposed();
+        return new Enumerable(() => _.getEnumerator());
     }
     skipWhile(predicate) {
         this.throwIfDisposed();
@@ -1290,9 +1289,6 @@ export class Enumerable extends InfiniteEnumerable {
         return _.reverse()
             .take(count)
             .reverse();
-    }
-    where(predicate) {
-        return super.where(predicate);
     }
     select(selector) {
         return super.select(selector);
@@ -1430,12 +1426,6 @@ export class Enumerable extends InfiniteEnumerable {
                 });
         return result;
     }
-    merge(enumerables) {
-        return super.merge(enumerables);
-    }
-    concat(...enumerables) {
-        return this.merge(enumerables);
-    }
     intersect(second, compareSelector) {
         const _ = this;
         return new Enumerable(() => {
@@ -1475,15 +1465,6 @@ export class Enumerable extends InfiniteEnumerable {
     }
     ofType(type) {
         return super.ofType(type);
-    }
-    except(second, compareSelector) {
-        return super.except(second, compareSelector);
-    }
-    distinct(compareSelector) {
-        return super.distinct(compareSelector);
-    }
-    distinctUntilChanged(compareSelector = Functions.Identity) {
-        return super.distinctUntilChanged(compareSelector);
     }
     orderBy(keySelector = Functions.Identity) {
         return new OrderedEnumerable(this, keySelector, 1);
@@ -1660,15 +1641,6 @@ export class Enumerable extends InfiniteEnumerable {
             value = x;
         });
         return (!found) ? defaultValue : value;
-    }
-    share() {
-        return super.share();
-    }
-    catchError(handler) {
-        return super.catchError(handler);
-    }
-    finallyAction(action) {
-        return super.finallyAction(action);
     }
     memoize() {
         var _ = this, disposed = !_.throwIfDisposed();
