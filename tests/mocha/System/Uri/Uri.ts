@@ -3,7 +3,7 @@
 import Uri from "../../../../dist/commonjs/System/Uri/Uri";
 import * as Scheme from "../../../../dist/commonjs/System/Uri/Scheme";
 import Functions from "../../../../dist/commonjs/System/Functions";
-import assert = require('assert');
+import * as assert from "assert";
 
 const pathAfterRoot= 'one/two/three.html';
 const path = '/'+pathAfterRoot;

@@ -3,7 +3,7 @@
 import * as ICollectionTests from "./ICollection";
 import LinkedList from "../../../../dist/commonjs/System/Collections/LinkedList";
 import {areEqual} from "../../../../dist/commonjs/System/Collections/Array/Compare";
-import assert = require('assert');
+import * as assert from "assert";
 
 const CLASS_NAME = 'LinkedList';
 ICollectionTests.StringCollection(CLASS_NAME, new LinkedList<string>());

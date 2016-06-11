@@ -1,7 +1,6 @@
 ///<reference path="../../import.d.ts"/>
 
 import ObjectPool from "../../../../dist/commonjs/System/Disposable/ObjectPool";
-import assert = require('assert');
 
 const pool = new ObjectPool(40, ()=>new Array<any>(100));
 

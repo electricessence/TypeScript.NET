@@ -1,7 +1,7 @@
 ///<reference path="../../../import"/>
 
 import * as ArrayProcedure from "../../../../../dist/commonjs/System/Collections/Array/Procedure";
-import assert = require('assert');
+import * as assert from "assert";
 
 
 const

@@ -4,7 +4,7 @@
 import ClockTime from "../../../../dist/commonjs/System/Time/ClockTime";
 import {Milliseconds} from "../../../../dist/commonjs/System/Time/HowMany";
 import Integer from "../../../../dist/commonjs/System/Integer";
-import assert = require('assert');
+import * as assert from "assert";
 
 const
 days        = Integer.random(365),

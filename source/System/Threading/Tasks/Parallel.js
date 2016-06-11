@@ -63,7 +63,7 @@
             var pool = workerPools[key];
             if (!pool) {
                 workerPools[key] = pool = new ObjectPool_1.ObjectPool(8);
-                pool.autoClearTimeout = 1000;
+                pool.autoClearTimeout = 3000;
             }
             return pool;
         }
@@ -213,6 +213,10 @@
                 result.length = len;
                 var taskString = task.toString();
                 var maxConcurrency = _this.options.maxConcurrency, error;
+                if (maxConcurrency > 16) {
+                    maxConcurrency = 16;
+                    console.warn("More than 16 workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to 16.");
+                }
                 var i = 0, resolved = 0;
                 var _loop_1 = function(w) {
                     var worker = _this._spawnWorker(taskString, env);

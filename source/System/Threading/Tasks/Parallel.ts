@@ -107,7 +107,7 @@ module workers
 		if(!pool)
 		{
 			workerPools[key] = pool = new ObjectPool<WorkerLike>(8);
-			pool.autoClearTimeout = 1000; // Fast cleanup... 1s.
+			pool.autoClearTimeout = 3000; // Fast cleanup... 1s.
 		}
 		return pool;
 	}
@@ -300,7 +300,8 @@ export class Parallel
 		var {maxConcurrency} = this.options;
 		return new PromiseCollection(
 			data && data.map(
-				d=>new Promise<U>((resolve,reject)=>{
+				d=>new Promise<U>((resolve, reject)=>
+				{
 
 				})));
 	}
@@ -312,11 +313,16 @@ export class Parallel
 		data = data.slice(); // Never use the original.
 		return new ArrayPromise<U>((resolve, reject)=>
 		{
-			var result:U[] = [], len = data.length;
+			const result:U[] = [], len = data.length;
 			result.length = len;
 
-			var taskString = task.toString();
-			var {maxConcurrency} = this.options, error:any;
+			const taskString = task.toString();
+			let {maxConcurrency} = this.options, error:any;
+			if(maxConcurrency>16)
+			{
+				maxConcurrency = 16;
+				console.warn("More than 16 workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to 16.");
+			}
 			let i = 0, resolved = 0;
 			for(let w = 0; !error && i<Math.min(len, maxConcurrency); w++)
 			{

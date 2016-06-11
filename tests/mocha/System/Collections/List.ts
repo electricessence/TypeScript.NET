@@ -2,7 +2,7 @@
 
 import * as ICollectionTests from "./ICollection";
 import List from "../../../../dist/commonjs/System/Collections/List";
-import assert = require('assert');
+import * as assert from "assert";
 
 const CLASS_NAME = 'List';
 

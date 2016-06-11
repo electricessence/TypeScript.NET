@@ -17,26 +17,24 @@ function test(start) {
 var synchronousResult = 0;
 var data = [];
 it("should work synchronously", function () {
-    console.log("\nSynchronous time (ms):", Stopwatch_1.default.measure(function () {
+    Stopwatch_1.default.measure(function () {
         for (var i = 0; i < 20; i++) {
             data.push(i);
             synchronousResult += test(i);
         }
-    })
-        .total.milliseconds);
+    });
 });
 function setup(maxCon) {
     it("should return the expected sum (concurrency " + maxCon + ")", function () {
-        this.timeout(maxCon * 1000);
-        var sw = Stopwatch_1.default.startNew();
         return Parallel_1.default
             .maxConcurrency(maxCon)
             .map(data, test)
             .thenThis(function (result) { return assert.ok(true); }, function (error) { return assert.ok(false, "mapping failed!"); })
             .reduce(function (p, c) { return p + c; }, 0)
-            .then(function (result) { return assert.equal(result, synchronousResult); }, function (error) { return assert.ok(false); })
-            .finallyThis(function () { return console.log("\n(" + maxCon + ") Parallel time (ms):", sw.elapsedMilliseconds); });
+            .then(function (result) { return assert.equal(result, synchronousResult); }, function (error) { return assert.ok(false, error); });
     });
 }
-setup(20);
+setup(1);
+setup(2);
+setup(3);
 //# sourceMappingURL=Parallel.js.map

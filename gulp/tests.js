@@ -12,10 +12,10 @@
     var TASK = require("./constants/TaskNames");
     var gulp = require("gulp");
     var tsc = require("./tsc");
-    gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return tsc.atV2('./tests/qunit', TARGET.ES5, MODULE.UMD); });
+    gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return tsc.atV2('./tests/qunit', TARGET.ES5, MODULE.UMD, false, true); });
     gulp.task(TASK.TYPESCRIPT_MOCHA, [
         TASK.DIST_COMMONJS
-    ], function () { return tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.COMMONJS); });
+    ], function () { return tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.COMMONJS, false, true); });
     gulp.task(TASK.BUILD + ".tests", [
         TASK.TYPESCRIPT_QUNIT,
         TASK.TYPESCRIPT_MOCHA

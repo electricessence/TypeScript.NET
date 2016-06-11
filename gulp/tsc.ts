@@ -101,11 +101,13 @@ export function atV2(
 	folder:string,
 	target:EcmaTarget,
 	module:ModuleType,
-	noEmitHelpers?:boolean):NodeJS.WritableStream
+	noEmitHelpers?:boolean,
+	implicitAny?:boolean
+):NodeJS.WritableStream
 {
 
 	var typescriptOptions = {
-		noImplicitAny: true,
+		noImplicitAny: !implicitAny,
 		module: module,
 		target: target,
 		removeComments: true,

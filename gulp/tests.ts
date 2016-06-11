@@ -8,7 +8,7 @@ import * as tsc from "./tsc";
 gulp.task(
 	// Can't figure out why the TSC doesn't work the same for this folder as it does for the source folder. :(
 	TASK.TYPESCRIPT_QUNIT,
-	()=> tsc.atV2('./tests/qunit', TARGET.ES5, MODULE.UMD)
+	()=> tsc.atV2('./tests/qunit', TARGET.ES5, MODULE.UMD, false, true)
 );
 
 gulp.task(
@@ -16,7 +16,7 @@ gulp.task(
 	[
 		TASK.DIST_COMMONJS
 	],
-	()=> tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.COMMONJS)
+	()=> tsc.atV2('./tests/mocha', TARGET.ES5, MODULE.COMMONJS, false, true)
 );
 
 

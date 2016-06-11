@@ -1,9 +1,7 @@
 ///<reference path="../../import.d.ts"/>
 
 import DateTime from "../../../../dist/commonjs/System/Time/DateTime";
-import assert = require('assert');
-
-
+import * as assert from "assert";
 
 
 describe(".daysInMonth(year,month) & .isLeapYear(year)",()=>{

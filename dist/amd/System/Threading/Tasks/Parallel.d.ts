@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-import { PromiseBase, ArrayPromise } from "../../Promises/Promise";
+import { PromiseBase, ArrayPromise, PromiseCollection } from "../../Promises/Promise";
 import { WorkerLike } from "../WorkerType";
 export interface ParallelOptions {
     evalPath?: string;
@@ -30,6 +30,7 @@ export declare class Parallel {
     requireThese(required: RequireType[]): Parallel;
     protected _spawnWorker(task: Function | string, env?: any): WorkerLike;
     startNew<T, U>(data: T, task: (data: T) => U, env?: any): PromiseBase<U>;
+    pipe<T, U>(data: T[], task: (data: T) => U, env?: any): PromiseCollection<U>;
     map<T, U>(data: T[], task: (data: T) => U, env?: any): ArrayPromise<U>;
     static isSupported: boolean;
     static options(options?: ParallelOptions): Parallel;

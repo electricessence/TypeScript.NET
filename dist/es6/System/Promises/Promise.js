@@ -33,9 +33,12 @@ function handleResolution(p, value, resolver) {
         let v = resolver ? resolver(value) : value;
         if (p)
             p.resolve(v);
+        return null;
     }
     catch (ex) {
-        p.reject(ex);
+        if (p)
+            p.reject(ex);
+        return ex;
     }
 }
 function handleResolutionMethods(targetFulfill, targetReject, value, resolver) {
@@ -372,9 +375,10 @@ export class Promise extends Resolvable {
             for (let c of o) {
                 let { onRejected, promise } = c, p = promise;
                 pools.PromiseCallbacks.recycle(c);
-                if (onRejected)
+                if (onRejected) {
                     handleResolution(p, error, onRejected);
-                else
+                }
+                else if (p)
                     p.reject(error);
             }
             o.length = 0;
@@ -421,6 +425,12 @@ export class ArrayPromise extends Promise {
     reduce(reduction, initialValue) {
         return this
             .thenSynchronous((result) => result.reduce(reduction, initialValue));
+    }
+    finallyThis(fin, synchronous) {
+        return super.finallyThis(fin, synchronous);
+    }
+    thenThis(onFulfilled, onRejected) {
+        return super.thenThis(onFulfilled, onRejected);
     }
     static fulfilled(value) {
         return new ArrayPromise(resolve => value, true);

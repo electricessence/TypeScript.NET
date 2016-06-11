@@ -63,9 +63,9 @@
         return fromTo(folder, folder, target, module);
     }
     exports.at = at;
-    function atV2(folder, target, module, noEmitHelpers) {
+    function atV2(folder, target, module, noEmitHelpers, implicitAny) {
         var typescriptOptions = {
-            noImplicitAny: true,
+            noImplicitAny: !implicitAny,
             module: module,
             target: target,
             removeComments: true,

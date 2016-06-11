@@ -1,7 +1,7 @@
 ///<reference path="../../import.d.ts"/>
 
 import {padRight, padLeft} from "../../../../dist/commonjs/System/Text/Padding";
-import assert = require('assert');
+import * as assert from "assert";
 
 describe('.padLeft()', ()=>
 {

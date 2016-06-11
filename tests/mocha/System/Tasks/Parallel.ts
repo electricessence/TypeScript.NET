@@ -2,7 +2,7 @@
 
 import Parallel from "../../../../dist/commonjs/System/Threading/Tasks/Parallel";
 import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-import assert = require('assert');
+import * as assert from "assert";
 
 it("should return the expected concatenation", ()=>
 {
@@ -28,7 +28,7 @@ function test(start:number):number
 var synchronousResult = 0;
 var data:number[] = [];
 it("should work synchronously",()=>{
-	console.log("\nSynchronous time (ms):",
+	// console.log("\nSynchronous time (ms):",
 		Stopwatch.measure(
 			()=>
 			{
@@ -38,34 +38,36 @@ it("should work synchronously",()=>{
 					synchronousResult += test(i);
 				}
 			})
-			.total.milliseconds);
+			// .total.milliseconds)
+			;
 });
 
 function setup(maxCon:number):void
 {
 	it(`should return the expected sum (concurrency ${maxCon})`, function()
 	{
-		this.timeout(maxCon*1000);
-		var sw = Stopwatch.startNew();
+		//this.timeout(3000);
+		//var sw = Stopwatch.startNew();
 		return Parallel
 			.maxConcurrency(maxCon)
 			.map(data, test)
-			.thenThis(result=>assert.ok(true),error=>assert.ok(false,"mapping failed!"))
+			.thenThis(result=>assert.ok(true),
+				error=>assert.ok(false,"mapping failed!"))
 			.reduce((p,c)=>p+c,0)
 			.then(
 				result=>assert.equal(result, synchronousResult),
-				error=>assert.ok(false)
+				error=>assert.ok(false,error)
 			)
-			.finallyThis(
-				()=>console.log(`\n(${maxCon}) Parallel time (ms):`, sw.elapsedMilliseconds));
+			// .finallyThis(
+			// 	()=>console.log(`\n(${maxCon}) Parallel time (ms):`, sw.elapsedMilliseconds))
+			;
 
 	});
 }
 
-//setup(20);
 // setup(15);
 // setup(10);
-// //setup(1);
-// setup(2);
-// setup(3);
-// setup(7);
+//setup(7);
+setup(1);
+setup(2);
+setup(3);
