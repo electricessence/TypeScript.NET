@@ -53,10 +53,11 @@ After some time and effort, I've decided that this library should be module base
 ##### Why not take this a step further and break it up into separate NPM style modules/packages?
 There is a point where fragmentation and over-granularity just make life harder.  If one module depends on another and you want to implement improvements it's just easier if they live in the same place.
 
-#### [NPM](http://www.npmjs.com/package/typescript-dotnet):
+#### [NPM](https://www.npmjs.com/search?q=typescript-dotnet):
 Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.
 
-***All distributions contain source-maps.***
+***All distributions contain source-maps.***  
+https://www.npmjs.com/search?q=typescript-dotnet  
 
 #### Universal Module Definition (UMD)
 ```
