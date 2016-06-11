@@ -83,7 +83,7 @@ Currently it is possible/supported to use TypeScript .NET in a number of differe
 import Enumerable from "typescript-dotnet-umd/System.Linq/Linq"
 ```
 ```typescript
-// Pure (unminified ES5) CommonJS is availble this way.
+// Pure (unminified ES5) CommonJS is available this way.
 import Enumerable from "typescript-dotnet-commonjs/System.Linq/Linq"
 ```
 ```typescript
