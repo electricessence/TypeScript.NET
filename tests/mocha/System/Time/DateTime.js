@@ -1,6 +1,6 @@
 "use strict";
 var DateTime_1 = require("../../../../dist/commonjs/System/Time/DateTime");
-var assert = require('assert');
+var assert = require("assert");
 describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {
     var startYear = 2000;
     var daysPerMonth = [

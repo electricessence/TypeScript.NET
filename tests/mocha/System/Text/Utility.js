@@ -1,5 +1,5 @@
 "use strict";
-var assert = require('assert');
+var assert = require("assert");
 var TextUtility = require("../../../../dist/commonjs/System/Text/Utility");
 var s1 = "	 HI  ";
 var s2 = ".-.-xHIX//\\";

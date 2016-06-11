@@ -5,7 +5,7 @@ var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
 var Functions_1 = require("../../../dist/commonjs/System/Functions");
 var EmptyEnumerator_1 = require("../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator");
 var List_1 = require("../../../dist/commonjs/System/Collections/List");
-var assert = require('assert');
+var assert = require("assert");
 var source = Object.freeze([
     {
         a: 1,

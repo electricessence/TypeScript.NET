@@ -1,6 +1,6 @@
 "use strict";
 var Integer_1 = require("../../../dist/commonjs/System/Integer");
-var assert = require('assert');
+var assert = require("assert");
 var TEST_FLOAT = 10.915, TEST_INT = 10, MAX = 9007199254740991;
 describe('(value)', function () {
     it('should convert float number to integer without rounding', function () {

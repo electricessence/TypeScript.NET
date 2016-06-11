@@ -1,6 +1,6 @@
 "use strict";
 var ArrayCompare = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
-var assert = require('assert');
+var assert = require("assert");
 var a1 = [1, 2, 3];
 var a2 = [1, 2, 3];
 var b = [4, 5, 6];

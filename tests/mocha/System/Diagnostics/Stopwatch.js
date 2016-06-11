@@ -1,6 +1,6 @@
 "use strict";
 var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
-var assert = require('assert');
+var assert = require("assert");
 it("should measure a closure", function () {
     assert.ok(Stopwatch_1.default.measure(function () {
         for (var i = 0; i < 100000; i++) {

@@ -1,7 +1,7 @@
 "use strict";
 var Parallel_1 = require("../../../../dist/commonjs/System/Threading/Tasks/Parallel");
 var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
-var assert = require('assert');
+var assert = require("assert");
 it("should return the expected concatenation", function () {
     return Parallel_1.default
         .startNew("there", function (x) { return "hello: " + x; })

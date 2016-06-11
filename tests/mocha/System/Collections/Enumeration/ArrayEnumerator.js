@@ -1,6 +1,6 @@
 "use strict";
 var ArrayEnumerator_1 = require("../../../../../dist/commonjs/System/Collections/Enumeration/ArrayEnumerator");
-var assert = require('assert');
+var assert = require("assert");
 it("should allow empty arrays", function () {
     assert.doesNotThrow(function () {
         var i = new ArrayEnumerator_1.default([]);

@@ -2,7 +2,7 @@
 var Types_1 = require("../../../../../dist/commonjs/System/Types");
 var Queue_1 = require("../../../../../dist/commonjs/System/Collections/Queue");
 var Enumerator = require("../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator");
-var assert = require('assert');
+var assert = require("assert");
 var VOID0 = void (0);
 describe(".from(source)", function () {
     it("null should use an empty enumerator", function () {

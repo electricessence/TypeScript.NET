@@ -1,6 +1,6 @@
 "use strict";
 var Dispatch_1 = require("../../../../../dist/commonjs/System/Collections/Array/Dispatch");
-var assert = require('assert');
+var assert = require("assert");
 it("should apply closures in order", function () {
     var result = 0;
     var a = [

@@ -1,7 +1,7 @@
 "use strict";
 var AU = require("../../../../dist/commonjs/System/Collections/Array/Utility");
 var NotImplementedException_1 = require("../../../../dist/commonjs/System/Exceptions/NotImplementedException");
-var assert = require('assert');
+var assert = require("assert");
 function General(collection) {
     var count = collection.count;
     describe(".count", function () {

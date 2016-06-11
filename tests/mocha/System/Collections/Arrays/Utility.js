@@ -2,7 +2,7 @@
 var Arrays = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
 var ArrayUtility = require("../../../../../dist/commonjs/System/Collections/Array/Utility");
 var Stopwatch_1 = require("../../../../../dist/commonjs/System/Diagnostics/Stopwatch");
-var assert = require('assert');
+var assert = require("assert");
 var minA = -10, maxA = 2000;
 function initTestArray() {
     return [5, minA, -1, maxA, -2, NaN, 20];

@@ -20,6 +20,7 @@ declare const __dirname:string;
 
 //noinspection JSUnusedAssignment
 const
+	MAX_WORKERS:number = 16,
 	VOID0:any = void 0,
 	URL       = typeof self!==Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null,
 	_supports = (isNodeJS || self.Worker) ? true : false; // node always supports parallel
@@ -164,9 +165,10 @@ export class Parallel
 	constructor(options?:ParallelOptions)
 	{
 		this.options = extend(defaults, options);
-
 		this._requiredScripts = [];
 		this._requiredFunctions = [];
+
+		this.ensureClampedMaxConcurrency();
 	}
 
 	static maxConcurrency(max:number):Parallel
@@ -297,13 +299,23 @@ export class Parallel
 
 	pipe<T,U>(data:T[], task:(data:T) => U, env?:any):PromiseCollection<U>
 	{
-		var {maxConcurrency} = this.options;
+		let maxConcurrency = this.ensureClampedMaxConcurrency();
 		return new PromiseCollection(
 			data && data.map(
 				d=>new Promise<U>((resolve, reject)=>
 				{
 
 				})));
+	}
+
+	private ensureClampedMaxConcurrency():number {
+		let {maxConcurrency} = this.options;
+		if(maxConcurrency>MAX_WORKERS)
+		{
+			this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
+			console.warn(`More than ${MAX_WORKERS} workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to ${MAX_WORKERS}.`);
+		}
+		return maxConcurrency;
 	}
 
 	map<T,U>(data:T[], task:(data:T) => U, env?:any):ArrayPromise<U>
@@ -317,12 +329,7 @@ export class Parallel
 			result.length = len;
 
 			const taskString = task.toString();
-			let {maxConcurrency} = this.options, error:any;
-			if(maxConcurrency>16)
-			{
-				maxConcurrency = 16;
-				console.warn("More than 16 workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to 16.");
-			}
+			let maxConcurrency = this.ensureClampedMaxConcurrency(), error:any;
 			let i = 0, resolved = 0;
 			for(let w = 0; !error && i<Math.min(len, maxConcurrency); w++)
 			{
