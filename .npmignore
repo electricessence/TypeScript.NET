@@ -11,7 +11,7 @@ tests
 coverage
 documentation
 typings
-coverage.bat
+coverage.cmd
 .npmignore
 test.js
 tsc-flags.txt

@@ -2,6 +2,7 @@
 
 import * as TARGET from "./constants/Targets";
 import * as MODULE from "./constants/ModuleTypes";
+import * as EVENT from "./constants/Events";
 import * as gulp from "gulp";
 import * as tsc from "./tsc";
 import * as TASK from "./constants/TaskNames";
@@ -63,7 +64,19 @@ function savePackage(dist:string, folder:string = dist):PromiseLike<void>
 						if(err) reject(err);
 						else resolve();
 					})
-			}));
+			}))
+		.then(()=>
+			copyReadme(folder));
+}
+
+function copyReadme(folder:string):PromiseLike<void>
+{
+	return new Promise<void>((resolve)=>
+	{
+		gulp.src("./dist/README.md")
+			.pipe(gulp.dest(`./dist/${folder}/`))
+			.on(EVENT.END, resolve);
+	});
 }
 
 gulp.task(

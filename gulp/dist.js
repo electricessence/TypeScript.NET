@@ -3,12 +3,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./constants/Targets", "./constants/ModuleTypes", "gulp", "./tsc", "./constants/TaskNames", "fs", "../source/System/Promises/Promise"], factory);
+        define(["require", "exports", "./constants/Targets", "./constants/ModuleTypes", "./constants/Events", "gulp", "./tsc", "./constants/TaskNames", "fs", "../source/System/Promises/Promise"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var TARGET = require("./constants/Targets");
     var MODULE = require("./constants/ModuleTypes");
+    var EVENT = require("./constants/Events");
     var gulp = require("gulp");
     var tsc = require("./tsc");
     var TASK = require("./constants/TaskNames");
@@ -59,6 +60,16 @@
                         resolve();
                 });
             });
+        })
+            .then(function () {
+            return copyReadme(folder);
+        });
+    }
+    function copyReadme(folder) {
+        return new Promise_1.Promise(function (resolve) {
+            gulp.src("./dist/README.md")
+                .pipe(gulp.dest("./dist/" + folder + "/"))
+                .on(EVENT.END, resolve);
         });
     }
     gulp.task(TASK.DIST_ES6, function () { return tsc

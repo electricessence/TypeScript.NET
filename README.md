@@ -59,7 +59,7 @@ Version 2.5 was the first NPM release.  The goal is to get this as user friendly
 ***All distributions contain source-maps.***  
 https://www.npmjs.com/search?q=typescript-dotnet  
 
-#### Universal Module Definition (UMD)
+#### [Universal Module Definition (UMD)](https://www.npmjs.com/package/typescript-dotnet-umd)
 ```
 npm install typescript-dotnet-umd
 ```
@@ -67,12 +67,10 @@ npm install typescript-dotnet-umd
 It's highly recommended to use the UMD (minified) version for most cases since it works for AMD and CommonJS.
 
 #### Other Published NPM Module Types
-```
-typescript-dotnet-es6
-typescript-dotnet-commonjs
-typescript-dotnet-amd
-typescript-dotnet-system
-```
+* [```typescript-dotnet-es6```](https://www.npmjs.com/package/typescript-dotnet-es6)
+* [```typescript-dotnet-commonjs```](https://www.npmjs.com/package/typescript-dotnet-commonjs)
+* [```typescript-dotnet-amd```](https://www.npmjs.com/package/typescript-dotnet-amd)
+* [```typescript-dotnet-system```](https://www.npmjs.com/package/typescript-dotnet-system)
 
 Install on only the module type you need in order to avoid type collisions.
 
