@@ -31,6 +31,7 @@ export declare class Parallel {
     protected _spawnWorker(task: Function | string, env?: any): WorkerLike;
     startNew<T, U>(data: T, task: (data: T) => U, env?: any): PromiseBase<U>;
     pipe<T, U>(data: T[], task: (data: T) => U, env?: any): PromiseCollection<U>;
+    private ensureClampedMaxConcurrency();
     map<T, U>(data: T[], task: (data: T) => U, env?: any): ArrayPromise<U>;
     static isSupported: boolean;
     static options(options?: ParallelOptions): Parallel;

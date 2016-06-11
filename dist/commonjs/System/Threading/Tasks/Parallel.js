@@ -15,7 +15,7 @@ var Worker_1 = require("../Worker");
 var deferImmediate_1 = require("../deferImmediate");
 var Environment_1 = require("../../Environment");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
-var VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;
+var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;
 var defaults = {
     evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : null,
     maxConcurrency: Environment_1.isNodeJS ? require('os').cpus().length : (navigator.hardwareConcurrency || 4),
@@ -102,6 +102,7 @@ var Parallel = (function () {
         this.options = extend(defaults, options);
         this._requiredScripts = [];
         this._requiredFunctions = [];
+        this.ensureClampedMaxConcurrency();
     }
     Parallel.maxConcurrency = function (max) {
         return new Parallel({ maxConcurrency: max });
@@ -196,9 +197,17 @@ var Parallel = (function () {
         throw new Error('Workers do not exist and synchronous operation not allowed!');
     };
     Parallel.prototype.pipe = function (data, task, env) {
-        var maxConcurrency = this.options.maxConcurrency;
+        var maxConcurrency = this.ensureClampedMaxConcurrency();
         return new Promise_1.PromiseCollection(data && data.map(function (d) { return new Promise_1.Promise(function (resolve, reject) {
         }); }));
+    };
+    Parallel.prototype.ensureClampedMaxConcurrency = function () {
+        var maxConcurrency = this.options.maxConcurrency;
+        if (maxConcurrency > MAX_WORKERS) {
+            this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
+            console.warn("More than " + MAX_WORKERS + " workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to " + MAX_WORKERS + ".");
+        }
+        return maxConcurrency;
     };
     Parallel.prototype.map = function (data, task, env) {
         var _this = this;
@@ -209,11 +218,7 @@ var Parallel = (function () {
             var result = [], len = data.length;
             result.length = len;
             var taskString = task.toString();
-            var maxConcurrency = _this.options.maxConcurrency, error;
-            if (maxConcurrency > 16) {
-                maxConcurrency = 16;
-                console.warn("More than 16 workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to 16.");
-            }
+            var maxConcurrency = _this.ensureClampedMaxConcurrency(), error;
             var i = 0, resolved = 0;
             var _loop_1 = function(w) {
                 var worker = _this._spawnWorker(taskString, env);

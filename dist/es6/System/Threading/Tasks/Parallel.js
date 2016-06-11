@@ -9,7 +9,7 @@ import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";
 import { isNodeJS } from "../../Environment";
 import { ObjectPool } from "../../Disposable/ObjectPool";
-const VOID0 = void 0, URL = typeof self !== Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null, _supports = (isNodeJS || self.Worker) ? true : false;
+const MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null, _supports = (isNodeJS || self.Worker) ? true : false;
 const defaults = {
     evalPath: isNodeJS ? __dirname + '/eval.js' : null,
     maxConcurrency: isNodeJS ? require('os').cpus().length : (navigator.hardwareConcurrency || 4),
@@ -51,7 +51,7 @@ var workers;
         var pool = workerPools[key];
         if (!pool) {
             workerPools[key] = pool = new ObjectPool(8);
-            pool.autoClearTimeout = 1000;
+            pool.autoClearTimeout = 3000;
         }
         return pool;
     }
@@ -93,6 +93,7 @@ export class Parallel {
         this.options = extend(defaults, options);
         this._requiredScripts = [];
         this._requiredFunctions = [];
+        this.ensureClampedMaxConcurrency();
     }
     static maxConcurrency(max) {
         return new Parallel({ maxConcurrency: max });
@@ -181,19 +182,27 @@ export class Parallel {
         throw new Error('Workers do not exist and synchronous operation not allowed!');
     }
     pipe(data, task, env) {
-        var { maxConcurrency } = this.options;
+        let maxConcurrency = this.ensureClampedMaxConcurrency();
         return new PromiseCollection(data && data.map(d => new Promise((resolve, reject) => {
         })));
+    }
+    ensureClampedMaxConcurrency() {
+        let { maxConcurrency } = this.options;
+        if (maxConcurrency > MAX_WORKERS) {
+            this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
+            console.warn(`More than ${MAX_WORKERS} workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to ${MAX_WORKERS}.`);
+        }
+        return maxConcurrency;
     }
     map(data, task, env) {
         if (!data || !data.length)
             return ArrayPromise.fulfilled(data && []);
         data = data.slice();
         return new ArrayPromise((resolve, reject) => {
-            var result = [], len = data.length;
+            const result = [], len = data.length;
             result.length = len;
-            var taskString = task.toString();
-            var { maxConcurrency } = this.options, error;
+            const taskString = task.toString();
+            let maxConcurrency = this.ensureClampedMaxConcurrency(), error;
             let i = 0, resolved = 0;
             for (let w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
                 let worker = this._spawnWorker(taskString, env);
