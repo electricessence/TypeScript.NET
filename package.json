@@ -23,6 +23,7 @@
     "Regex",
     "TypeValidator",
     "Promise",
+    "Parallel",
     "IDisposable",
     "IEnumerable",
     "ICollection",
