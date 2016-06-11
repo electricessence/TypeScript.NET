@@ -54,10 +54,10 @@ export class LazyPromise<T> extends Promise<T>
 
 	thenThis(
 		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):PromiseBase<T>
+		onRejected?:(v?:any)=>any):this
 	{
 		this._onThen();
-		return super.thenThis(onFulfilled, onRejected);
+		return <any> super.thenThis(onFulfilled, onRejected);
 	}
 
 	// NOTE: For a LazyPromise we need to be careful not to trigger the resolve for delay.

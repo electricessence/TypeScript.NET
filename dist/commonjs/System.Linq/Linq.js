@@ -118,7 +118,7 @@ var InfiniteEnumerable = (function (_super) {
         var _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
-            return Enumerable.empty();
+            return new InfiniteEnumerable(getEmptyEnumerator);
         Integer_1.Integer.assert(count, "count");
         return this.doAction(function (element, index) {
             return index < count
@@ -1229,12 +1229,10 @@ var Enumerable = (function (_super) {
             });
         });
     };
-    Enumerable.prototype.doAction = function (action, initializer, isEndless) {
-        if (isEndless === void 0) { isEndless = this.isEndless; }
-        return _super.prototype.doAction.call(this, action, initializer, isEndless);
-    };
-    Enumerable.prototype.skip = function (count) {
-        return _super.prototype.skip.call(this, count);
+    Enumerable.prototype.asEnumerable = function () {
+        var _ = this;
+        _.throwIfDisposed();
+        return new Enumerable(function () { return _.getEnumerator(); });
     };
     Enumerable.prototype.skipWhile = function (predicate) {
         this.throwIfDisposed();
@@ -1375,9 +1373,6 @@ var Enumerable = (function (_super) {
             .take(count)
             .reverse();
     };
-    Enumerable.prototype.where = function (predicate) {
-        return _super.prototype.where.call(this, predicate);
-    };
     Enumerable.prototype.select = function (selector) {
         return _super.prototype.select.call(this, selector);
     };
@@ -1515,16 +1510,6 @@ var Enumerable = (function (_super) {
                 });
         return result;
     };
-    Enumerable.prototype.merge = function (enumerables) {
-        return _super.prototype.merge.call(this, enumerables);
-    };
-    Enumerable.prototype.concat = function () {
-        var enumerables = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            enumerables[_i - 0] = arguments[_i];
-        }
-        return this.merge(enumerables);
-    };
     Enumerable.prototype.intersect = function (second, compareSelector) {
         var _ = this;
         return new Enumerable(function () {
@@ -1565,16 +1550,6 @@ var Enumerable = (function (_super) {
     };
     Enumerable.prototype.ofType = function (type) {
         return _super.prototype.ofType.call(this, type);
-    };
-    Enumerable.prototype.except = function (second, compareSelector) {
-        return _super.prototype.except.call(this, second, compareSelector);
-    };
-    Enumerable.prototype.distinct = function (compareSelector) {
-        return _super.prototype.distinct.call(this, compareSelector);
-    };
-    Enumerable.prototype.distinctUntilChanged = function (compareSelector) {
-        if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-        return _super.prototype.distinctUntilChanged.call(this, compareSelector);
     };
     Enumerable.prototype.orderBy = function (keySelector) {
         if (keySelector === void 0) { keySelector = Functions.Identity; }
@@ -1763,15 +1738,6 @@ var Enumerable = (function (_super) {
             value = x;
         });
         return (!found) ? defaultValue : value;
-    };
-    Enumerable.prototype.share = function () {
-        return _super.prototype.share.call(this);
-    };
-    Enumerable.prototype.catchError = function (handler) {
-        return _super.prototype.catchError.call(this, handler);
-    };
-    Enumerable.prototype.finallyAction = function (action) {
-        return _super.prototype.finallyAction.call(this, action);
     };
     Enumerable.prototype.memoize = function () {
         var _ = this, disposed = !_.throwIfDisposed();

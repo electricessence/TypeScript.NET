@@ -209,7 +209,7 @@ extends PromiseState<T> implements PromiseLike<T>
 	 */
 	abstract thenThis(
 		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):PromiseBase<T>;
+		onRejected?:(v?:any)=>any):this;
 
 
 	/**
@@ -304,7 +304,7 @@ extends PromiseState<T> implements PromiseLike<T>
 		return this.then(fin, fin);
 	}
 
-	finallyThis(fin:()=>void, synchronous?:boolean):PromiseBase<T>
+	finallyThis(fin:()=>void, synchronous?:boolean):this
 	{
 		this.throwIfDisposed();
 		var f:()=>void = synchronous ? f : ()=>deferImmediate(fin);
@@ -347,7 +347,7 @@ export abstract class Resolvable<T> extends PromiseBase<T>
 
 	thenThis(
 		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):PromiseBase<T>
+		onRejected?:(v?:any)=>any):this
 	{
 		this.throwIfDisposed();
 
@@ -459,12 +459,12 @@ class PromiseWrapper<T> extends Resolvable<T>
 
 	thenThis(
 		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):PromiseBase<T>
+		onRejected?:(v?:any)=>any):this
 	{
 		this.throwIfDisposed();
 
 		var t = this._target;
-		if(!t) return super.thenThis(onFulfilled, onRejected);
+		if(!t) return <any>super.thenThis(onFulfilled, onRejected);
 		handleDispatch(t, onFulfilled, onRejected);
 		return this;
 	}
@@ -522,12 +522,13 @@ export class Promise<T> extends Resolvable<T>
 
 	thenThis(
 		onFulfilled:(v?:T)=>any,
-		onRejected?:(v?:any)=>any):PromiseBase<T>
+		onRejected?:(v?:any)=>any):this
 	{
 		this.throwIfDisposed();
 
 		// Already fulfilled?
-		if(this._state) return super.thenThis(onFulfilled, onRejected);
+		if(this._state)
+			return <any>super.thenThis(onFulfilled, onRejected);
 
 		(this._waiting || (this._waiting = []))
 			.push(pools.PromiseCallbacks.init(onFulfilled, onRejected));
@@ -775,17 +776,6 @@ export class ArrayPromise<T> extends Promise<T[]>
 
 		return this
 			.thenSynchronous((result:T[])=>result.reduce(reduction, initialValue));
-	}
-
-
-	finallyThis(fin:()=>void, synchronous?:boolean):ArrayPromise<T>
-	{
-		return <any>super.finallyThis(fin, synchronous);
-	}
-
-	thenThis(onFulfilled:(v?:T[])=>any, onRejected?:(v?:any)=>any):ArrayPromise<T>
-	{
-		return <any>super.thenThis(onFulfilled, onRejected);
 	}
 
 	static fulfilled<T>(value:T[]):ArrayPromise<T>

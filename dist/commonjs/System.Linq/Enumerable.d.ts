@@ -18,14 +18,16 @@ export const enum EnumerableAction
 
 export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 {
+	asEnumerable():this;
+
 	doAction(
 		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
 		initializer?:()=>void,
-		isEndless?:boolean):IInfiniteEnumerable<T>;
+		isEndless?:boolean):this;
 
 	force():void;
 
-	skip(count:number):IInfiniteEnumerable<T>;
+	skip(count:number):this;
 
 	take(count:number):IFiniteEnumerable<T>;
 
@@ -67,7 +69,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):ILinqEnumerable<TSelect>;
 
-	scan(func:(a:T, b:T) => T, seed?:T):ILinqEnumerable<T>;
+	scan(func:(a:T, b:T) => T, seed?:T):this;
 
 	select<TResult>(selector:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
 
@@ -79,7 +81,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	choose():IInfiniteEnumerable<T>;
 	choose<TResult>(selector?:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
 
-	where(predicate:Predicate<T>):IInfiniteEnumerable<T>;
+	where(predicate:Predicate<T>):this
 
 	ofType<TType>(
 		type:{
@@ -88,13 +90,13 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	except<TCompare>(
 		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):IInfiniteEnumerable<T>;
+		compareSelector?:Selector<T, TCompare>):this
 
-	distinct(compareSelector?:(value:T) => T):IInfiniteEnumerable<T>;
+	distinct(compareSelector?:(value:T) => T):this
 
-	distinctUntilChanged<TCompare>(compareSelector?:Selector<T, TCompare>):IInfiniteEnumerable<T>;
+	distinctUntilChanged<TCompare>(compareSelector?:Selector<T, TCompare>):this
 
-	defaultIfEmpty(defaultValue?:T):ILinqEnumerable<T>;
+	defaultIfEmpty(defaultValue?:T):this
 
 	zip<TSecond, TResult>(
 		second:IEnumerableOrArray<TSecond>,
@@ -124,44 +126,39 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		resultSelector:(outer:T, inner:TInner[]) => TResult,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<TResult>;
 
-	merge(enumerables:IArray<IEnumerableOrArray<T>>):IInfiniteEnumerable<T>;
+	merge(enumerables:IArray<IEnumerableOrArray<T>>):this
 
-	concat(...enumerables:Array<IEnumerableOrArray<T>>):IInfiniteEnumerable<T>;
+	concat(...enumerables:Array<IEnumerableOrArray<T>>):this
 
 	union<TCompare>(
 		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):ILinqEnumerable<T>;
+		compareSelector?:Selector<T, TCompare>):this
 
-	insertAt(index:number, other:IEnumerableOrArray<T>):ILinqEnumerable<T>;
+	insertAt(index:number, other:IEnumerableOrArray<T>):this;
 
-	alternateMultiple(sequence:IEnumerableOrArray<T>):ILinqEnumerable<T>;
+	alternateMultiple(sequence:IEnumerableOrArray<T>):this;
 
-	alternateSingle(value:T):ILinqEnumerable<T>;
+	alternateSingle(value:T):this;
 
-	alternate(...sequence:T[]):ILinqEnumerable<T>;
+	alternate(...sequence:T[]):this;
 
-	catchError(handler:(e:any) => void):IInfiniteEnumerable<T>;
+	catchError(handler:(e:any) => void):this;
 
-	finallyAction(action:() => void):IInfiniteEnumerable<T>;
+	finallyAction(action:() => void):this;
 
 	buffer(size:number):IInfiniteEnumerable<T[]>;
 
-	share():IInfiniteEnumerable<T>;
+	share():this;
 }
 export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 {
-	doAction(
-		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
-		initializer?:()=>void,
-		isEndless?:boolean):ILinqEnumerable<T>;
 
-	skip(count:number):ILinqEnumerable<T>;
 
-	skipWhile(predicate:Predicate<T>):ILinqEnumerable<T>;
+	skipWhile(predicate:Predicate<T>):this;
 
-	takeWhile(predicate:Predicate<T>):ILinqEnumerable<T>;
+	takeWhile(predicate:Predicate<T>):this;
 
-	takeUntil(predicate:Predicate<T>, includeUntilValue?:boolean):ILinqEnumerable<T>;
+	takeUntil(predicate:Predicate<T>, includeUntilValue?:boolean):this;
 
 	forEach(action:Predicate<T> | Action<T>):void;
 
@@ -185,11 +182,9 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 
 	toJoinedString(separator?:string, selector?:Selector<T, string>):string;
 
-	takeExceptLast(count?:number):ILinqEnumerable<T>;
+	takeExceptLast(count?:number):this;
 
-	skipToLast(count:number):ILinqEnumerable<T>;
-
-	where(predicate:Predicate<T>):ILinqEnumerable<T>;
+	skipToLast(count:number):this;
 
 	select<TResult>(selector:Selector<T, TResult>):ILinqEnumerable<TResult>;
 
@@ -201,9 +196,9 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	choose():ILinqEnumerable<T>;
 	choose<TResult>(selector?:Selector<T, TResult>):ILinqEnumerable<TResult>;
 
-	reverse():ILinqEnumerable<T>;
+	reverse():this;
 
-	shuffle():ILinqEnumerable<T>;
+	shuffle():this;
 
 	count(predicate?:Predicate<T>):number;
 
@@ -221,13 +216,9 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 
 	lastIndexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number;
 
-	merge(enumerables:IArray<IEnumerableOrArray<T>>):ILinqEnumerable<T>;
-
-	concat(...enumerables:Array<IEnumerableOrArray<T>>):ILinqEnumerable<T>;
-
 	intersect<TCompare>(
 		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):ILinqEnumerable<T>;
+		compareSelector?:Selector<T, TCompare>):this;
 
 	sequenceEqual(second:IEnumerableOrArray<T>, equalityComparer?:EqualityComparison<T>):boolean;
 
@@ -238,11 +229,7 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 
 	except<TCompare>(
 		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):ILinqEnumerable<T>;
-
-	distinct(compareSelector?:(value:T) => T):ILinqEnumerable<T>;
-
-	distinctUntilChanged<TCompare>(compareSelector?:Selector<T, TCompare>):ILinqEnumerable<T>;
+		compareSelector?:Selector<T, TCompare>):this;
 
 	orderBy<TKey extends Comparable>(keySelector?:Selector<T, TKey>):IOrderedEnumerable<T>;
 
@@ -289,13 +276,7 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 
 	lastOrDefault(defaultValue?:T):T;
 
-	share():ILinqEnumerable<T>;
-
-	catchError(handler:(e:any) => void):ILinqEnumerable<T>;
-
-	finallyAction(action:() => void):ILinqEnumerable<T>;
-
-	memoize():ILinqEnumerable<T>;
+	memoize():this;
 }
 export interface IFiniteEnumerable<T> extends ILinqEnumerable<T>
 {

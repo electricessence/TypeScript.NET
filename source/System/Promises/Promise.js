@@ -510,12 +510,6 @@
             return this
                 .thenSynchronous(function (result) { return result.reduce(reduction, initialValue); });
         };
-        ArrayPromise.prototype.finallyThis = function (fin, synchronous) {
-            return _super.prototype.finallyThis.call(this, fin, synchronous);
-        };
-        ArrayPromise.prototype.thenThis = function (onFulfilled, onRejected) {
-            return _super.prototype.thenThis.call(this, onFulfilled, onRejected);
-        };
         ArrayPromise.fulfilled = function (value) {
             return new ArrayPromise(function (resolve) { return value; }, true);
         };
