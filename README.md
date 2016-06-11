@@ -78,19 +78,23 @@ Install on only the module type you need in order to avoid type collisions.
 Currently it is possible/supported to use TypeScript .NET in a number of different ways:
 
 ##### Import Examples:
-```typescript
-// Recommended for users who are deploying to web/browsers.
-import Enumerable from "typescript-dotnet-umd/System.Linq/Linq"
-```
-```typescript
-// Pure (unminified ES5) CommonJS is available this way.
-import Enumerable from "typescript-dotnet-commonjs/System.Linq/Linq"
-```
+
 ```typescript
 import Enumerable from "typescript-dotnet-es6/System.Linq/Linq"
 ```
+
+Recommended for users who are deploying to web/browsers:  
 ```typescript
-// Recommended for users who want pure minified AMD (RequireJS) with source-maps.
+import Enumerable from "typescript-dotnet-umd/System.Linq/Linq"
+```
+
+Pure (unminified ES5) CommonJS is available this way:  
+```typescript
+import Enumerable from "typescript-dotnet-commonjs/System.Linq/Linq"
+```
+
+Recommended for users who want pure minified AMD (RequireJS) with source-maps:    
+```typescript
 import Enumerable from "typescript-dotnet-amd/System.Linq/Linq"
 ```
 
