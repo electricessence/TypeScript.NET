@@ -40,7 +40,6 @@ var NodeJSWorker = (function (_super) {
         this.throwIfDisposed();
         this._process.send(JSON.stringify({ data: obj }));
     };
-    ;
     NodeJSWorker.prototype.terminate = function () {
         this.dispose();
     };

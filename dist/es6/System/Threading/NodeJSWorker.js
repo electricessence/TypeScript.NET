@@ -32,7 +32,6 @@ export class NodeJSWorker extends ObservableBase {
         this.throwIfDisposed();
         this._process.send(JSON.stringify({ data: obj }));
     }
-    ;
     terminate() {
         this.dispose();
     }

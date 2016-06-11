@@ -54,33 +54,44 @@ After some time and effort, I've decided that this library should be module base
 There is a point where fragmentation and over-granularity just make life harder.  If one module depends on another and you want to implement improvements it's just easier if they live in the same place.
 
 #### [NPM](http://www.npmjs.com/package/typescript-dotnet):
+Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.
+
+***All distributions contain source-maps.***
+
+#### Universal Module Definition (UMD)
 ```
-npm install typescript-dotnet
+npm install typescript-dotnet-umd
 ```
 
-Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.
+It's highly recommended to use the UMD (minified) version for most cases since it works for AMD and CommonJS.
+
+#### Other Published NPM Module Types
+```
+typescript-dotnet-es6
+typescript-dotnet-commonjs
+typescript-dotnet-amd
+typescript-dotnet-system
+```
+
+Install on only the module type you need in order to avoid type collisions.
 
 Currently it is possible/supported to use TypeScript .NET in a number of different ways:
 
 ##### Import Examples:
 ```typescript
-// The following works well if you are launching from an index.ts or main.ts in your root.
-import Enumerable from "typescript-dotnet/source/System.Linq/Linq"
-```
-```typescript
-// Using a dist folder is recommended to eliminate any cross compilation from your project.
-import Enumerable from "typescript-dotnet/dist/commonjs/System.Linq/Linq"
-```
-```typescript
-import Enumerable from "typescript-dotnet/dist/es6/System.Linq/Linq"
-```
-```typescript
 // Recommended for users who are deploying to web/browsers.
-import Enumerable from "typescript-dotnet/dist/umd.min/System.Linq/Linq"
+import Enumerable from "typescript-dotnet-umd/System.Linq/Linq"
+```
+```typescript
+// Pure (unminified ES5) CommonJS is availble this way.
+import Enumerable from "typescript-dotnet-commonjs/System.Linq/Linq"
+```
+```typescript
+import Enumerable from "typescript-dotnet-es6/System.Linq/Linq"
 ```
 ```typescript
 // Recommended for users who want pure minified AMD (RequireJS) with source-maps.
-import Enumerable from "typescript-dotnet/dist/amd/System.Linq/Linq"
+import Enumerable from "typescript-dotnet-amd/System.Linq/Linq"
 ```
 
 #### [Bower](http://bower.io/search/?q=typescript-dotnet):

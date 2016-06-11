@@ -49,7 +49,6 @@ System.register(["../Observable/ObservableBase"], function(exports_1, context_1)
                     this.throwIfDisposed();
                     this._process.send(JSON.stringify({ data: obj }));
                 };
-                ;
                 NodeJSWorker.prototype.terminate = function () {
                     this.dispose();
                 };

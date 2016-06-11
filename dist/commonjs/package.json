@@ -1,0 +1,27 @@
+{
+  "name": "typescript-dotnet-commonjs",
+  "version": "3.0.0",
+  "license": "MIT",
+  "author": "electricessence <npm@electrified.net>",
+  "description": "A JavaScript-Friendly .NET Based TypeScript Library.",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/electricessence/TypeScript.NET.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "TypeScript",
+    ".NET",
+    "dotnet",
+    "TypeScript.NET",
+    "LINQ",
+    "Regex",
+    "TypeValidator",
+    "Promise",
+    "IDisposable",
+    "IEnumerable",
+    "ICollection",
+    "typescript-dotnet"
+  ]
+}
