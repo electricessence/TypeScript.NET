@@ -3,9 +3,9 @@ import * as gulp from "gulp";
 import * as fs from "fs";
 
 gulp.task(TASK.NUGET_PACK,
-	[
-		TASK.BUILD
-	],
+	// [
+	// 	TASK.BUILD
+	// ],
 	(callback:()=>void)=>
 	{
 

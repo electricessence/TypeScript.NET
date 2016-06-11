@@ -5,5 +5,10 @@
     "sourceMap": true,
     "removeComments":true,
     "moduleResolution": "node"
-  }
+  },
+  "files": [
+    "import-tests.ts",
+    "System/**/*.ts",
+    "System.Linq/**/*.ts"
+  ]
 }
