@@ -1,0 +1,10 @@
+cd dist/amd
+npm publish
+cd ../commonjs
+npm publish
+cd ../umd.min
+npm publish
+cd ../es6
+npm publish
+cd ../system
+npm publish
