@@ -1,24 +1,26 @@
-call npm publish
+@echo off
+
+call npm publish --silent
 cd dist
 
 cd es6
-call npm publish
+call npm publish --silent
 cd ..
 
 cd commonjs
-call npm publish
+call npm publish --silent
 cd ..
 
 cd amd
-call npm publish
+call npm publish --silent
 cd ..
 
 cd umd.min
-call npm publish
+call npm publish --silent
 cd ..
 
-cd system.js
-call npm publish
+cd system
+call npm publish --silent
 cd ..
 
 cd ..
