@@ -9,7 +9,9 @@ import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";
 import { isNodeJS } from "../../Environment";
 import { ObjectPool } from "../../Disposable/ObjectPool";
-const MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null, _supports = (isNodeJS || self.Worker) ? true : false;
+const MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED
+    ? (self.URL ? self.URL : self.webkitURL)
+    : null, _supports = (isNodeJS || self.Worker) ? true : false;
 const defaults = {
     evalPath: isNodeJS ? __dirname + '/eval.js' : null,
     maxConcurrency: isNodeJS ? require('os').cpus().length : (navigator.hardwareConcurrency || 4),
@@ -98,7 +100,7 @@ export class Parallel {
     static maxConcurrency(max) {
         return new Parallel({ maxConcurrency: max });
     }
-    getWorkerSource(task, env) {
+    _getWorkerSource(task, env) {
         var scripts = this._requiredScripts, functions = this._requiredFunctions;
         var preStr = '';
         if (!isNodeJS && scripts.length) {
@@ -138,7 +140,7 @@ export class Parallel {
         return this;
     }
     _spawnWorker(task, env) {
-        var src = this.getWorkerSource(task, env);
+        var src = this._getWorkerSource(task, env);
         if (Worker === VOID0)
             return VOID0;
         var worker = workers.tryGet(src);
@@ -183,8 +185,52 @@ export class Parallel {
     }
     pipe(data, task, env) {
         let maxConcurrency = this.ensureClampedMaxConcurrency();
-        return new PromiseCollection(data && data.map(d => new Promise((resolve, reject) => {
-        })));
+        var result;
+        if (data && data.length) {
+            const len = data.length;
+            const taskString = task.toString();
+            let maxConcurrency = this.ensureClampedMaxConcurrency(), error;
+            let i = 0;
+            for (let w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
+                let worker = this._spawnWorker(taskString, env);
+                if (!worker) {
+                    if (!this.options.allowSynchronous)
+                        throw new Error('Workers do not exist and synchronous operation not allowed!');
+                    return Promise.map(data, task);
+                }
+                if (!result) {
+                    result = data.map(d => new Promise());
+                }
+                let next = () => {
+                    if (error) {
+                        worker = workers.recycle(worker);
+                    }
+                    if (worker) {
+                        if (i < len) {
+                            let ii = i++, p = result[ii];
+                            let wp = new WorkerPromise(worker, data[ii]);
+                            wp
+                                .thenSynchronous(r => {
+                                p.resolve(r);
+                                next();
+                            }, e => {
+                                if (!error) {
+                                    error = e;
+                                    p.reject(e);
+                                    worker = workers.recycle(worker);
+                                }
+                            })
+                                .finallyThis(() => wp.dispose());
+                        }
+                        else {
+                            worker = workers.recycle(worker);
+                        }
+                    }
+                };
+                next();
+            }
+        }
+        return new PromiseCollection(result);
     }
     ensureClampedMaxConcurrency() {
         let { maxConcurrency } = this.options;
@@ -209,15 +255,7 @@ export class Parallel {
                 if (!worker) {
                     if (!this.options.allowSynchronous)
                         throw new Error('Workers do not exist and synchronous operation not allowed!');
-                    resolve(Promise
-                        .all(data.map(d => new Promise((r, j) => {
-                        try {
-                            r(task(d));
-                        }
-                        catch (ex) {
-                            j(ex);
-                        }
-                    }))));
+                    resolve(Promise.map(data, task).all());
                     return;
                 }
                 let next = () => {

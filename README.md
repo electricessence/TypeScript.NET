@@ -148,4 +148,4 @@ Click an image below to watch.
 [![Intro to TypeScript.NET Library (Part 1)](https://img.youtube.com/vi/dLwl2dGHSZo/0.jpg)](https://www.youtube.com/watch?v=dLwl2dGHSZo)
 
 #### [TypeScript.NET v3 Release Info/Update](https://www.youtube.com/watch?v=izQjE77TmOM)
-[![TypeScript.NET v3 Release Info/Update](https://img.youtube.com/vi/izQjE77TmOM/0.jpg))](https://www.youtube.com/watch?v=izQjE77TmOM)
+[![TypeScript.NET v3 Release Info/Update](https://img.youtube.com/vi/izQjE77TmOM/0.jpg)](https://www.youtube.com/watch?v=izQjE77TmOM)

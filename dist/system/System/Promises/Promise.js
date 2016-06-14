@@ -797,6 +797,29 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     return isPromise(value) ? wrap(value) : new Fulfilled(value);
                 }
                 Promise.resolve = resolve;
+                function resolveAll(first) {
+                    var rest = [];
+                    for (var _i = 1; _i < arguments.length; _i++) {
+                        rest[_i - 1] = arguments[_i];
+                    }
+                    if (!first && !rest.length)
+                        throw new ArgumentNullException_1.ArgumentNullException("resolutions");
+                    return new PromiseCollection((Array.isArray(first) ? first : [first])
+                        .concat(rest)
+                        .map(function (v) { return resolve(v); }));
+                }
+                Promise.resolveAll = resolveAll;
+                function map(source, transform) {
+                    return new PromiseCollection(source.map(function (d) { return new Promise(function (r, j) {
+                        try {
+                            r(transform(d));
+                        }
+                        catch (ex) {
+                            j(ex);
+                        }
+                    }); }));
+                }
+                Promise.map = map;
                 function reject(reason) {
                     return new Rejected(reason);
                 }
