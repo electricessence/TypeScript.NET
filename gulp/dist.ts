@@ -7,7 +7,7 @@ import * as gulp from "gulp";
 import * as tsc from "./tsc";
 import * as TASK from "./constants/TaskNames";
 import * as fs from "fs";
-import {JsonData} from "../source/JSON";
+import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 import {Promise} from "../source/System/Promises/Promise";
 
@@ -22,9 +22,9 @@ const fields:IMap<boolean> = {
 	"keywords": true
 };
 
-function readJsonFile(path:string, encoding:string = 'utf8'):PromiseLike<JsonData>
+function readJsonFile(path:string, encoding:string = 'utf8'):PromiseLike<JsonMap>
 {
-	return new Promise<JsonData>((resolve, reject)=>
+	return new Promise<JsonMap>((resolve, reject)=>
 	{
 		fs.readFile(path, encoding, (err, data)=>
 		{
@@ -34,7 +34,7 @@ function readJsonFile(path:string, encoding:string = 'utf8'):PromiseLike<JsonDat
 	}, true);
 }
 
-function getPackage(dist:string):PromiseLike<JsonData>
+function getPackage(dist:string):PromiseLike<JsonMap>
 {
 	return readJsonFile('./package.json')
 		.then(pkg=>

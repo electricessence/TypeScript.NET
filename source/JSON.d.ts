@@ -13,4 +13,4 @@ extends IMap<JsonEntry> {
 
 }
 
-export type JsonData = JsonMap;
+export type JsonData = JsonMap | JsonArray;
