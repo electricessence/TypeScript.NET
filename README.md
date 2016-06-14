@@ -142,7 +142,10 @@ This library has immense potential and quite often a class, or function that is 
 #### Code Evolution
 [www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ](https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ)
 
-#### [Intro to TypeScript.NET Library (Part 1)](https://www.youtube.com/watch?v=dLwl2dGHSZo)
-Click the image below to watch.
+Click an image below to watch.
 
+#### [Intro to TypeScript.NET Library (Part 1)](https://www.youtube.com/watch?v=dLwl2dGHSZo)
 [![Intro to TypeScript.NET Library (Part 1)](https://img.youtube.com/vi/dLwl2dGHSZo/0.jpg)](https://www.youtube.com/watch?v=dLwl2dGHSZo)
+
+#### TypeScript.NET v3 Release Info/Update](https://www.youtube.com/watch?v=izQjE77TmOM)
+[![TypeScript.NET v3 Release Info/Update](https://img.youtube.com/vi/izQjE77TmOM/0.jpg))](https://www.youtube.com/watch?v=izQjE77TmOM)
