@@ -67,7 +67,8 @@ npm install typescript-dotnet-umd
 
 It's highly recommended to use the UMD (minified) version for most cases since it works for AMD and CommonJS.
 
-#### Other Published NPM Module Types
+#### All Published NPM Module Types
+* [```typescript-dotnet-umd```](https://www.npmjs.com/package/typescript-dotnet-umd)
 * [```typescript-dotnet-es6```](https://www.npmjs.com/package/typescript-dotnet-es6)
 * [```typescript-dotnet-commonjs```](https://www.npmjs.com/package/typescript-dotnet-commonjs)
 * [```typescript-dotnet-amd```](https://www.npmjs.com/package/typescript-dotnet-amd)
