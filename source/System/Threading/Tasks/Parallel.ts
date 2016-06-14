@@ -21,9 +21,11 @@ declare const __dirname:string;
 //noinspection JSUnusedAssignment
 const
 	MAX_WORKERS:number = 16,
-	VOID0:any = void 0,
-	URL       = typeof self!==Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null,
-	_supports = (isNodeJS || self.Worker) ? true : false; // node always supports parallel
+	VOID0:any          = void 0,
+	URL                = typeof self!==Type.UNDEFINED
+		? (self.URL ? self.URL : self.webkitURL)
+		: null,
+	_supports          = (isNodeJS || self.Worker) ? true : false; // node always supports parallel
 
 export interface ParallelOptions
 {
@@ -102,6 +104,12 @@ export type RequireType = string | Function | {name?:string,fn:Function};
 module workers
 {
 
+	/*
+	 * Note:
+	 * Currently there is nothing preventing excessive numbers of workers from being generated.
+	 * Eventually there will be a master pool count which will regulate these workers.
+	 */
+
 	function getPool(key:string):ObjectPool<WorkerLike>
 	{
 		var pool = workerPools[key];
@@ -176,7 +184,7 @@ export class Parallel
 		return new Parallel({maxConcurrency: max});
 	}
 
-	getWorkerSource(task:Function|string, env?:any):string
+	protected _getWorkerSource(task:Function|string, env?:any):string
 	{
 		var scripts = this._requiredScripts, functions = this._requiredFunctions;
 		var preStr = '';
@@ -206,12 +214,12 @@ export class Parallel
 			);
 	}
 
-	require(...required:RequireType[]):Parallel
+	require(...required:RequireType[]):this
 	{
 		return this.requireThese(required);
 	}
 
-	requireThese(required:RequireType[]):Parallel
+	requireThese(required:RequireType[]):this
 	{
 		for(let a of required)
 		{
@@ -237,7 +245,7 @@ export class Parallel
 
 	protected _spawnWorker(task:Function|string, env?:any):WorkerLike
 	{
-		var src = this.getWorkerSource(task, env);
+		var src = this._getWorkerSource(task, env);
 
 		if(Worker===VOID0) return VOID0;
 		var worker = workers.tryGet(src);
@@ -271,7 +279,7 @@ export class Parallel
 		return worker;
 	}
 
-	startNew<T,U>(data:T, task:(data:T) => U, env?:any):PromiseBase<U>
+	startNew<T,U>(data:T, task:(data:T) => U, env?:any):Promise<U>
 	{
 		const _ = this;
 
@@ -297,18 +305,94 @@ export class Parallel
 		throw new Error('Workers do not exist and synchronous operation not allowed!');
 	}
 
+	/**
+	 * Returns an array of promises that each resolve after their task completes.
+	 * Provides a potential performance benefit by not waiting for all promises to resolve before proceeding to next step.
+	 * @param data
+	 * @param task
+	 * @param env
+	 * @returns {PromiseCollection}
+	 */
 	pipe<T,U>(data:T[], task:(data:T) => U, env?:any):PromiseCollection<U>
 	{
 		let maxConcurrency = this.ensureClampedMaxConcurrency();
-		return new PromiseCollection(
-			data && data.map(
-				d=>new Promise<U>((resolve, reject)=>
-				{
 
-				})));
+		// The resultant promise collection will make an internal copy...
+		var result:Promise<U>[];
+
+		if(data && data.length)
+		{
+			const len = data.length;
+			const taskString = task.toString();
+			let maxConcurrency = this.ensureClampedMaxConcurrency(), error:any;
+			let i = 0;
+			for(let w = 0; !error && i<Math.min(len, maxConcurrency); w++)
+			{
+				let worker = this._spawnWorker(taskString, env);
+
+				if(!worker)
+				{
+					if(!this.options.allowSynchronous)
+						throw new Error('Workers do not exist and synchronous operation not allowed!');
+
+					// Concurrency doesn't matter in a single thread... Just queue it all up.
+					return Promise.map(data, task);
+				}
+
+				if(!result)
+				{
+					// There is a small risk that the consumer could call .resolve() which would result in a double resolution.
+					// But it's important to minimize the number of objects created.
+					result = data.map(d=>new Promise<U>());
+				}
+
+				let next = ()=>
+				{
+					if(error)
+					{
+						worker = workers.recycle(worker);
+					}
+
+					if(worker)
+					{
+						if(i<len)
+						{
+							//noinspection JSReferencingMutableVariableFromClosure
+							let ii = i++, p = result[ii];
+							let wp = new WorkerPromise<U>(worker, data[ii]);
+							wp
+								.thenSynchronous(r=>
+								{
+									p.resolve(r);
+									next();
+								}, e=>
+								{
+									if(!error)
+									{
+										error = e;
+										p.reject(e);
+										worker = workers.recycle(worker);
+									}
+								})
+								.finallyThis(()=>
+									wp.dispose());
+						}
+						else
+						{
+							worker = workers.recycle(worker);
+						}
+					}
+				};
+				next();
+			}
+
+		}
+
+		return new PromiseCollection(result);
 	}
 
-	private ensureClampedMaxConcurrency():number {
+	private ensureClampedMaxConcurrency():number
+	{
 		let {maxConcurrency} = this.options;
 		if(maxConcurrency>MAX_WORKERS)
 		{
@@ -318,9 +402,20 @@ export class Parallel
 		return maxConcurrency;
 	}
 
+	/**
+	 * Waits for all tasks to resolve and returns a promise with the results.
+	 * @param data
+	 * @param task
+	 * @param env
+	 * @returns {ArrayPromise}
+	 */
 	map<T,U>(data:T[], task:(data:T) => U, env?:any):ArrayPromise<U>
 	{
-		if(!data || !data.length) return ArrayPromise.fulfilled(data && []);
+		if(!data || !data.length)
+			return ArrayPromise.fulfilled(data && []);
+
+		// Would return the same result, but has extra overhead.
+		// return this.pipe(data,task).all();
 
 		data = data.slice(); // Never use the original.
 		return new ArrayPromise<U>((resolve, reject)=>
@@ -341,19 +436,7 @@ export class Parallel
 						throw new Error('Workers do not exist and synchronous operation not allowed!');
 
 					// Concurrency doesn't matter in a single thread... Just queue it all up.
-					resolve(Promise
-						.all(data.map(d=>new Promise<U>((r, j)=>
-						{
-							try
-							{
-								r(task(d));
-							}
-							catch(ex)
-							{
-								j(ex);
-							}
-						}))));
-
+					resolve(Promise.map(data, task).all());
 					return;
 				}
 

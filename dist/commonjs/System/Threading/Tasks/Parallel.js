@@ -15,7 +15,9 @@ var Worker_1 = require("../Worker");
 var deferImmediate_1 = require("../deferImmediate");
 var Environment_1 = require("../../Environment");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
-var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED ? (self.URL ? self.URL : self.webkitURL) : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;
+var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
+    ? (self.URL ? self.URL : self.webkitURL)
+    : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;
 var defaults = {
     evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : null,
     maxConcurrency: Environment_1.isNodeJS ? require('os').cpus().length : (navigator.hardwareConcurrency || 4),
@@ -107,7 +109,7 @@ var Parallel = (function () {
     Parallel.maxConcurrency = function (max) {
         return new Parallel({ maxConcurrency: max });
     };
-    Parallel.prototype.getWorkerSource = function (task, env) {
+    Parallel.prototype._getWorkerSource = function (task, env) {
         var scripts = this._requiredScripts, functions = this._requiredFunctions;
         var preStr = '';
         if (!Environment_1.isNodeJS && scripts.length) {
@@ -153,7 +155,7 @@ var Parallel = (function () {
         return this;
     };
     Parallel.prototype._spawnWorker = function (task, env) {
-        var src = this.getWorkerSource(task, env);
+        var src = this._getWorkerSource(task, env);
         if (Worker_1.default === VOID0)
             return VOID0;
         var worker = workers.tryGet(src);
@@ -198,8 +200,59 @@ var Parallel = (function () {
     };
     Parallel.prototype.pipe = function (data, task, env) {
         var maxConcurrency = this.ensureClampedMaxConcurrency();
-        return new Promise_1.PromiseCollection(data && data.map(function (d) { return new Promise_1.Promise(function (resolve, reject) {
-        }); }));
+        var result;
+        if (data && data.length) {
+            var len_1 = data.length;
+            var taskString = task.toString();
+            var maxConcurrency_1 = this.ensureClampedMaxConcurrency(), error_1;
+            var i_1 = 0;
+            var _loop_1 = function(w) {
+                var worker = this_1._spawnWorker(taskString, env);
+                if (!worker) {
+                    if (!this_1.options.allowSynchronous)
+                        throw new Error('Workers do not exist and synchronous operation not allowed!');
+                    return { value: Promise_1.Promise.map(data, task) };
+                }
+                if (!result) {
+                    result = data.map(function (d) { return new Promise_1.Promise(); });
+                }
+                var next = function () {
+                    if (error_1) {
+                        worker = workers.recycle(worker);
+                    }
+                    if (worker) {
+                        if (i_1 < len_1) {
+                            var ii = i_1++, p_1 = result[ii];
+                            var wp_1 = new WorkerPromise(worker, data[ii]);
+                            wp_1
+                                .thenSynchronous(function (r) {
+                                p_1.resolve(r);
+                                next();
+                            }, function (e) {
+                                if (!error_1) {
+                                    error_1 = e;
+                                    p_1.reject(e);
+                                    worker = workers.recycle(worker);
+                                }
+                            })
+                                .finallyThis(function () {
+                                return wp_1.dispose();
+                            });
+                        }
+                        else {
+                            worker = workers.recycle(worker);
+                        }
+                    }
+                };
+                next();
+            };
+            var this_1 = this;
+            for (var w = 0; !error_1 && i_1 < Math.min(len_1, maxConcurrency_1); w++) {
+                var state_1 = _loop_1(w);
+                if (typeof state_1 === "object") return state_1.value;
+            }
+        }
+        return new Promise_1.PromiseCollection(result);
     };
     Parallel.prototype.ensureClampedMaxConcurrency = function () {
         var maxConcurrency = this.options.maxConcurrency;
@@ -220,20 +273,12 @@ var Parallel = (function () {
             var taskString = task.toString();
             var maxConcurrency = _this.ensureClampedMaxConcurrency(), error;
             var i = 0, resolved = 0;
-            var _loop_1 = function(w) {
+            var _loop_2 = function(w) {
                 var worker = _this._spawnWorker(taskString, env);
                 if (!worker) {
                     if (!_this.options.allowSynchronous)
                         throw new Error('Workers do not exist and synchronous operation not allowed!');
-                    resolve(Promise_1.Promise
-                        .all(data.map(function (d) { return new Promise_1.Promise(function (r, j) {
-                        try {
-                            r(task(d));
-                        }
-                        catch (ex) {
-                            j(ex);
-                        }
-                    }); })));
+                    resolve(Promise_1.Promise.map(data, task).all());
                     return { value: void 0 };
                 }
                 var next = function () {
@@ -243,8 +288,8 @@ var Parallel = (function () {
                     if (worker) {
                         if (i < len) {
                             var ii_1 = i++;
-                            var wp_1 = new WorkerPromise(worker, data[ii_1]);
-                            wp_1
+                            var wp_2 = new WorkerPromise(worker, data[ii_1]);
+                            wp_2
                                 .thenSynchronous(function (r) {
                                 result[ii_1] = r;
                                 next();
@@ -263,7 +308,7 @@ var Parallel = (function () {
                                     resolve(result);
                             })
                                 .finallyThis(function () {
-                                return wp_1.dispose();
+                                return wp_2.dispose();
                             });
                         }
                         else {
@@ -274,8 +319,8 @@ var Parallel = (function () {
                 next();
             };
             for (var w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
-                var state_1 = _loop_1(w);
-                if (typeof state_1 === "object") return state_1.value;
+                var state_2 = _loop_2(w);
+                if (typeof state_2 === "object") return state_2.value;
             }
         });
     };

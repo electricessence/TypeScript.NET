@@ -42,12 +42,12 @@ it("should work synchronously",()=>{
 			;
 });
 
-function setup(maxCon:number):void
+function setupMap(maxCon:number):void
 {
-	it(`should return the expected sum (concurrency ${maxCon})`, function()
+	it(`should return the expected mapped sum (concurrency ${maxCon})`, function()
 	{
 		//this.timeout(3000);
-		//var sw = Stopwatch.startNew();
+		// var sw = Stopwatch.startNew();
 		return Parallel
 			.maxConcurrency(maxCon)
 			.map(data, test)
@@ -59,15 +59,41 @@ function setup(maxCon:number):void
 				error=>assert.ok(false,error)
 			)
 			// .finallyThis(
-			// 	()=>console.log(`\n(${maxCon}) Parallel time (ms):`, sw.elapsedMilliseconds))
+			// 	()=>console.log(`\n(${maxCon}) Parallel map time (ms):`, sw.elapsedMilliseconds))
 			;
 
 	});
 }
 
+
+function setupPipe(maxCon:number):void
+{
+	it(`should return the expected sum (concurrency ${maxCon})`, function()
+	{
+		//this.timeout(3000);
+		// var sw = Stopwatch.startNew();
+		return Parallel
+			.maxConcurrency(maxCon)
+			.pipe(data, test)
+			.reduce((p,c)=>p+c,0)
+			.then(
+				result=>assert.equal(result, synchronousResult),
+				error=>assert.ok(false,error)
+			)
+			// .finallyThis(
+			// 	()=>console.log(`\n(${maxCon}) Parallel pipe time (ms):`, sw.elapsedMilliseconds))
+			;
+
+	});
+}
+
+setupPipe(1);
+setupPipe(2);
+setupPipe(3);
+
 // setup(15);
 // setup(10);
 //setup(7);
-setup(1);
-setup(2);
-setup(3);
+setupMap(1);
+setupMap(2);
+setupMap(3);

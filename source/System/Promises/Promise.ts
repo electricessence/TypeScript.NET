@@ -1267,6 +1267,49 @@ export module Promise
 	}
 
 	/**
+	 * Takes a set of values or promises and returns a PromiseCollection.
+	 * Similar to 'group' but calls resolve on each entry.
+	 * @param resolutions
+	 */
+	export function resolveAll<T>(resolutions:Array<T | PromiseLike<T>>):PromiseCollection<T>;
+	export function resolveAll<T>(
+		promise:T | PromiseLike<T>,
+		...rest:Array<T | PromiseLike<T>>):PromiseCollection<T>
+	export function resolveAll(
+		first:any | PromiseLike<any>|Array<any | PromiseLike<any>>,
+		...rest:Array<any | PromiseLike<any>>):PromiseCollection<any>
+	{
+		if(!first && !rest.length) throw new ArgumentNullException("resolutions");
+		return new PromiseCollection(
+			(Array.isArray(first) ? first : [first])
+				.concat(rest)
+				.map((v:any)=>resolve(v)));
+	}
+
+	/**
+	 * Creates a PromiseCollection containing promises that will resolve on the next tick using the transform function.
+	 * This utility function does not chain promises together to create the result,
+	 * it only uses one promise per transform.
+	 * @param source
+	 * @param transform
+	 * @returns {PromiseCollection<T>}
+	 */
+	export function map<T,U>(source:T[], transform:(value:T)=>U):PromiseCollection<U>
+	{
+		return new PromiseCollection(source.map(d=>new Promise<U>((r, j)=>
+		{
+			try
+			{
+				r(transform(d));
+			}
+			catch(ex)
+			{
+				j(ex);
+			}
+		})));
+	}
+
+	/**
 	 * Creates a new rejected promise for the provided reason.
 	 * @param reason The reason the promise was rejected.
 	 * @returns A new rejected Promise.

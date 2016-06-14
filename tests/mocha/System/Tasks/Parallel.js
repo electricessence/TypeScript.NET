@@ -24,8 +24,8 @@ it("should work synchronously", function () {
         }
     });
 });
-function setup(maxCon) {
-    it("should return the expected sum (concurrency " + maxCon + ")", function () {
+function setupMap(maxCon) {
+    it("should return the expected mapped sum (concurrency " + maxCon + ")", function () {
         return Parallel_1.default
             .maxConcurrency(maxCon)
             .map(data, test)
@@ -34,7 +34,19 @@ function setup(maxCon) {
             .then(function (result) { return assert.equal(result, synchronousResult); }, function (error) { return assert.ok(false, error); });
     });
 }
-setup(1);
-setup(2);
-setup(3);
+function setupPipe(maxCon) {
+    it("should return the expected sum (concurrency " + maxCon + ")", function () {
+        return Parallel_1.default
+            .maxConcurrency(maxCon)
+            .pipe(data, test)
+            .reduce(function (p, c) { return p + c; }, 0)
+            .then(function (result) { return assert.equal(result, synchronousResult); }, function (error) { return assert.ok(false, error); });
+    });
+}
+setupPipe(1);
+setupPipe(2);
+setupPipe(3);
+setupMap(1);
+setupMap(2);
+setupMap(3);
 //# sourceMappingURL=Parallel.js.map
