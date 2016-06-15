@@ -3,7 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./constants/Targets", "./constants/Paths", "./constants/Events", "gulp", "gulp-sourcemaps", "gulp-typescript", "gulp-replace", "del", "gulp-uglify", "../source/System/Promises/Promise"], factory);
+        define(["require", "exports", "./constants/Targets", "./constants/Paths", "./constants/Events", "gulp", "gulp-sourcemaps", "gulp-typescript", "gulp-replace", "del", "gulp-uglify", "../source/System/Promises/Promise", "merge2"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -17,19 +17,34 @@
     var del = require("del");
     var uglify = require("gulp-uglify");
     var Promise_1 = require("../source/System/Promises/Promise");
+    var merge = require("merge2");
     var tsc = require("gulp-tsc");
-    function getOptions(destination, target, module, declaration) {
-        return {
+    exports.DEFAULTS = Object.freeze({
+        noImplicitAny: true,
+        removeComments: true,
+        noEmitHelpers: true,
+        sourceMap: true
+    });
+    function extend(target, source) {
+        var result = target || {};
+        for (var _i = 0, _a = Object.keys(source); _i < _a.length; _i++) {
+            var key = _a[_i];
+            if (!target.hasOwnProperty(key))
+                target[key] = source[key];
+        }
+        return result;
+    }
+    function ensureDefaults(target) {
+        return extend(target, exports.DEFAULTS);
+    }
+    function getTscOptions(destination, target, module, declaration) {
+        return ensureDefaults({
             tscPath: PATH.TSC,
             outDir: destination,
-            noImplicitAny: true,
             module: module,
             target: target,
-            removeComments: true,
-            sourceMap: true,
-            declaration: !!declaration,
-            noEmitHelpers: true
-        };
+            declaration: !!declaration
+        });
     }
     function fromTo(from, to, target, module, declaration, doNotEmit) {
         if (!doNotEmit) {
@@ -40,7 +55,7 @@
         }
         var render = function () { return gulp
             .src([from + '/**/*.ts'])
-            .pipe(tsc(getOptions(to, target, module, declaration)))
+            .pipe(tsc(getTscOptions(to, target, module, declaration)))
             .pipe(gulp.dest(to)); };
         return new Promise_1.Promise(function (resolve) {
             if (declaration) {
@@ -64,27 +79,42 @@
     }
     exports.at = at;
     function atV2(folder, target, module, noEmitHelpers, implicitAny) {
-        var typescriptOptions = {
+        return fromToV2(folder, folder, target, module, {
             noImplicitAny: !implicitAny,
-            module: module,
-            target: target,
-            removeComments: true,
             noEmitHelpers: !!noEmitHelpers,
-            sourceMap: true
-        };
+        });
+    }
+    exports.atV2 = atV2;
+    function fromToV2(from, to, target, module, options) {
+        var typescriptOptions = options || {};
+        if (target)
+            typescriptOptions.target = target;
+        if (module)
+            typescriptOptions.module = module;
+        typescriptOptions = ensureDefaults(typescriptOptions);
         var sourceMapOptions = {
             sourceRoot: null
         };
-        console.log('TypeScript Render:', target, module, folder);
-        return gulp
-            .src([folder + '/**/*.ts'])
-            .pipe(sourcemaps.init())
-            .pipe(typescript(typescriptOptions))
-            .pipe(sourcemaps.write('.', sourceMapOptions))
-            .pipe(replace(/(\n\s*$)+/gm, ""))
-            .pipe(gulp.dest(folder));
+        console.log('TypeScript Render:', target, module, to);
+        var source = from + '/**/*.ts';
+        function pipeTs(g) {
+            return g.pipe(sourcemaps.init())
+                .pipe(typescript(typescriptOptions))
+                .pipe(sourcemaps.write('.', sourceMapOptions))
+                .pipe(replace(/(\n\s*$)+/gm, ""))
+                .pipe(gulp.dest(to));
+        }
+        if (options.declaration || options.declarationFiles) {
+            var tsResult = gulp.src(source)
+                .pipe(typescript(typescript.createProject(options)));
+            return merge([
+                tsResult.dts.pipe(gulp.dest(to)),
+                pipeTs(tsResult.js)
+            ]);
+        }
+        return pipeTs(gulp.src(source));
     }
-    exports.atV2 = atV2;
+    exports.fromToV2 = fromToV2;
     function sourceTo(folder, target, module, declaration, doNotEmit) {
         return fromTo(PATH.SOURCE, folder, target, module, declaration, doNotEmit);
     }

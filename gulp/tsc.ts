@@ -4,6 +4,7 @@
 ///<reference path="../typings/gulp-replace/gulp-replace" />
 ///<reference path="../typings/gulp-uglify/gulp-uglify" />
 ///<reference path="../typings/del/del" />
+///<reference path="../typings/merge2/merge2" />
 
 import * as TARGET from "./constants/Targets";
 import {EcmaTarget} from "./constants/Targets";
@@ -18,26 +19,48 @@ import * as del from "del";
 import * as uglify from "gulp-uglify";
 import {Promise} from "../source/System/Promises/Promise";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
+import {JsonMap} from "../source/JSON";
+import * as merge from "merge2";
+import WritableStream = NodeJS.WritableStream;
+import ReadableStream = NodeJS.ReadableStream;
+import ReadWriteStream = NodeJS.ReadWriteStream;
 const tsc = require("gulp-tsc");
 
+export const DEFAULTS:typescript.Params = Object.freeze(<typescript.Params>{
+	noImplicitAny: true,
+	removeComments: true,
+	noEmitHelpers: true,
+	sourceMap: true
+});
 
-function getOptions(
+function extend<T extends IMap<any>, U extends IMap<any>>(target:T, source:U):T & U
+{
+	const result:any = target || {};
+	for(let key of Object.keys(source))
+	{
+		if(!target.hasOwnProperty(key)) target[key] = source[key];
+	}
+	return result;
+}
+
+function ensureDefaults<T extends JsonMap | typescript.Params>(target:T):T & typescript.Params
+{
+	return extend(target, DEFAULTS);
+}
+
+function getTscOptions(
 	destination:string,
 	target:EcmaTarget,
 	module:ModuleType,
-	declaration:boolean):IMap<any>
+	declaration:boolean):JsonMap & typescript.Params
 {
-	return {
+	return ensureDefaults({
 		tscPath: PATH.TSC,
 		outDir: destination,
-		noImplicitAny: true,
 		module: module,
 		target: target,
-		removeComments: true,
-		sourceMap: true,
-		declaration: !!declaration,
-		noEmitHelpers: true
-	}
+		declaration: !!declaration
+	});
 }
 
 export function fromTo(
@@ -64,7 +87,7 @@ export function fromTo(
 
 	const render = ()=> gulp
 		.src([from + '/**/*.ts'])
-		.pipe(tsc(getOptions(to, target, module, declaration)))
+		.pipe(tsc(getTscOptions(to, target, module, declaration)))
 		.pipe(gulp.dest(to));
 
 	return new Promise<void>(resolve=>
@@ -102,33 +125,57 @@ export function atV2(
 	target:EcmaTarget,
 	module:ModuleType,
 	noEmitHelpers?:boolean,
-	implicitAny?:boolean
-):NodeJS.WritableStream
+	implicitAny?:boolean):WritableStream
 {
 
-	var typescriptOptions = {
+	return fromToV2(folder, folder, target, module, {
 		noImplicitAny: !implicitAny,
-		module: module,
-		target: target,
-		removeComments: true,
 		noEmitHelpers: !!noEmitHelpers,
-		sourceMap:true
-	};
+	});
+}
 
-	var sourceMapOptions = {
+export function fromToV2(
+	from:string,
+	to:string,
+	target:EcmaTarget,
+	module:ModuleType,
+	options?:typescript.Params)
+{
+
+	var typescriptOptions:typescript.Params = options || {};
+	if(target) typescriptOptions.target = target;
+	if(module) typescriptOptions.module = module;
+	typescriptOptions = ensureDefaults(typescriptOptions);
+
+	const sourceMapOptions = {
 		sourceRoot: <string>null
 	};
 
+	console.log('TypeScript Render:', target, module, to);
 
-	console.log('TypeScript Render:', target, module, folder);
+	var source = from + '/**/*.ts';
 
-	return gulp
-		.src([folder + '/**/*.ts'])
-		.pipe(sourcemaps.init())
-		.pipe(typescript(typescriptOptions))
-		.pipe(sourcemaps.write('.', sourceMapOptions))
-		.pipe(replace(/(\n\s*$)+/gm, "")) // Since gulp-typescript is 'different'
-		.pipe(gulp.dest(folder));
+	function pipeTs(g:ReadableStream):ReadableStream
+	{
+		return g.pipe(sourcemaps.init())
+			.pipe(typescript(typescriptOptions))
+			.pipe(sourcemaps.write('.', sourceMapOptions))
+			.pipe(replace(/(\n\s*$)+/gm, "")) // Since gulp-typescript is 'different'
+			.pipe(gulp.dest(to));
+	}
+
+	if(options.declaration || options.declarationFiles)
+	{
+		var tsResult = gulp.src(source)
+			.pipe(typescript(typescript.createProject(options)));
+
+		return merge([ // Merge the two output streams, so this task is finished when the IO of both operations are done.
+			tsResult.dts.pipe(gulp.dest(to)),
+			pipeTs(tsResult.js)
+		]);
+	}
+
+	return pipeTs(gulp.src(source));
 }
 
 export function sourceTo(
@@ -161,7 +208,7 @@ export function distPostProcess(
 	folder:string,
 	target:EcmaTarget,
 	module:ModuleType,
-	postProcess:()=>NodeJS.ReadWriteStream)
+	postProcess:()=>ReadWriteStream)
 {
 	const d = './dist/' + folder;
 
