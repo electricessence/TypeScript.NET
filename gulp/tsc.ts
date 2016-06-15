@@ -21,8 +21,6 @@ import {Promise} from "../source/System/Promises/Promise";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 import {JsonMap} from "../source/JSON";
 import * as merge from "merge2";
-import WritableStream = NodeJS.WritableStream;
-import ReadableStream = NodeJS.ReadableStream;
 import ReadWriteStream = NodeJS.ReadWriteStream;
 const tsc = require("gulp-tsc");
 
@@ -125,7 +123,7 @@ export function atV2(
 	target:EcmaTarget,
 	module:ModuleType,
 	noEmitHelpers?:boolean,
-	implicitAny?:boolean):WritableStream
+	implicitAny?:boolean):ReadWriteStream
 {
 
 	return fromToV2(folder, folder, target, module, {
@@ -139,7 +137,7 @@ export function fromToV2(
 	to:string,
 	target:EcmaTarget,
 	module:ModuleType,
-	options?:typescript.Params)
+	options?:typescript.Params):ReadWriteStream
 {
 
 	var typescriptOptions:typescript.Params = options || {};
@@ -155,7 +153,7 @@ export function fromToV2(
 
 	var source = from + '/**/*.ts';
 
-	function pipeTs(g:ReadableStream):ReadableStream
+	function pipeTs(g:ReadWriteStream):ReadWriteStream
 	{
 		return g.pipe(sourcemaps.init())
 			.pipe(typescript(typescriptOptions))
