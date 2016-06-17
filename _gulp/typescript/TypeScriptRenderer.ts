@@ -125,6 +125,13 @@ export class TypeScriptRendererFactory
 			this.compilerOptionDefaults);
 	}
 
+	at(targetFolder:string):TypeScriptRendererFactory {
+		return new TypeScriptRendererFactory(
+			targetFolder,
+			targetFolder,
+			this.compilerOptionDefaults);
+	}
+
 	defaults(options:TypeScriptRenderParams):TypeScriptRendererFactory
 	{
 		return new TypeScriptRendererFactory(

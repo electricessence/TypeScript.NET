@@ -80,6 +80,9 @@
         TypeScriptRendererFactory.prototype.to = function (destinationFolder) {
             return new TypeScriptRendererFactory(this.sourceFolder, destinationFolder, this.compilerOptionDefaults);
         };
+        TypeScriptRendererFactory.prototype.at = function (targetFolder) {
+            return new TypeScriptRendererFactory(targetFolder, targetFolder, this.compilerOptionDefaults);
+        };
         TypeScriptRendererFactory.prototype.defaults = function (options) {
             return new TypeScriptRendererFactory(this.sourceFolder, this.destinationFolder, options);
         };

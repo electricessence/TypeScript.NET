@@ -653,6 +653,10 @@ var pools;
         return isPromise(value) ? wrap(value) : new Fulfilled(value);
     }
     Promise.resolve = resolve;
+    function using(resolver, forceSynchronous = false) {
+        return new Promise(resolver, forceSynchronous);
+    }
+    Promise.using = using;
     function resolveAll(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("resolutions");

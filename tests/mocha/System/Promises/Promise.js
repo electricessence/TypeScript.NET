@@ -5,7 +5,6 @@ var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatc
 var defer_1 = require("../../../../dist/commonjs/System/Threading/defer");
 var LazyPromise_1 = require("../../../../dist/commonjs/System/Promises/LazyPromise");
 var ObjectDisposedException_1 = require("../../../../dist/commonjs/System/Disposable/ObjectDisposedException");
-var Promise_2 = require("../../../../dist/commonjs/System/Promises/Promise");
 var assert = require("assert");
 var REASON = "this is not an error, but it might show up in the console";
 var calledAsFunctionThis = (function () { return this; }());
@@ -29,7 +28,7 @@ describe("computing sum of integers using promises", function () {
         });
     });
     it("should compute correct result without blowing stack (Synchronous) (lambda only)", function () {
-        var source = new Promise_2.PromiseCollection(array.map(function (v) { return new Promise_2.Fulfilled(v); }));
+        var source = new Promise_1.PromiseCollection(array.map(function (v) { return new Promise_1.Fulfilled(v); }));
         var sw = Stopwatch_1.default.startNew();
         return source
             .reduce(function (previousValue, currentValue) { return previousValue + currentValue; }, 0)

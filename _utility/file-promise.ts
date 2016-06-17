@@ -34,7 +34,7 @@ function readFile(path:string, encoding:string = ENCODING.UTF8):Promise<string>
 	});
 }
 
-function writeFile(path:string, data:string, options:WriteOptions):PromiseBase<void>
+function writeFile(path:string, data:string, options?:WriteOptions):PromiseBase<void>
 {
 	return Promise.using<void>((resolve, reject)=>
 	{
@@ -65,7 +65,7 @@ export module json {
 	{
 		return Promise
 			.using(resolve=>resolve(JSON.stringify(data, null, 2)))
-			.thenSynchronous(s=>writeFile(path, JSON.stringify(s, null, 2), options));
+			.thenSynchronous(s=>writeFile(path, s, options));
 	}
 
 }

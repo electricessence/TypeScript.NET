@@ -13,14 +13,23 @@
     var gulp = require("gulp");
     var TypeScriptRenderer_1 = require("./typescript/TypeScriptRenderer");
     var TEST_DEFAULTS = Object.freeze({ noEmitHelpers: false });
-    var renderer = TypeScriptRenderer_1.TypeScriptRendererFactory.at("./tests", { noEmitHelpers: false });
+    var renderer = TypeScriptRenderer_1.TypeScriptRendererFactory.defaults({
+        target: TARGET.ES5,
+        module: MODULE.UMD,
+        noEmitHelpers: false,
+        removeComments: true,
+        sourceMap: true,
+    });
     gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return renderer
-        .init('qunit', TARGET.ES5, MODULE.UMD)
+        .at('./tests/qunit')
+        .init()
         .render(); });
     gulp.task(TASK.TYPESCRIPT_MOCHA, [
         TASK.DIST_COMMONJS
     ], function () { return renderer
-        .init('mocha', TARGET.ES5, MODULE.COMMONJS)
+        .at('./tests/mocha')
+        .init()
+        .module(MODULE.COMMONJS)
         .render(); });
     gulp.task(TASK.BUILD + ".tests", [
         TASK.TYPESCRIPT_QUNIT,

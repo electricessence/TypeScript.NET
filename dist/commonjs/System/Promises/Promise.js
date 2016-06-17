@@ -765,6 +765,11 @@ var Promise;
         return isPromise(value) ? wrap(value) : new Fulfilled(value);
     }
     Promise.resolve = resolve;
+    function using(resolver, forceSynchronous) {
+        if (forceSynchronous === void 0) { forceSynchronous = false; }
+        return new Promise(resolver, forceSynchronous);
+    }
+    Promise.using = using;
     function resolveAll(first) {
         var rest = [];
         for (var _i = 1; _i < arguments.length; _i++) {

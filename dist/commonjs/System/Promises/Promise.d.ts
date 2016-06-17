@@ -107,6 +107,7 @@ export declare module Promise {
     function race<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<T>;
     function resolve(): PromiseBase<void>;
     function resolve<T>(value: T | PromiseLike<T>): PromiseBase<T>;
+    function using<T>(resolver: Promise.Executor<T>, forceSynchronous?: boolean): PromiseBase<T>;
     function resolveAll<T>(resolutions: Array<T | PromiseLike<T>>): PromiseCollection<T>;
     function resolveAll<T>(promise: T | PromiseLike<T>, ...rest: Array<T | PromiseLike<T>>): PromiseCollection<T>;
     function map<T, U>(source: T[], transform: (value: T) => U): PromiseCollection<U>;
