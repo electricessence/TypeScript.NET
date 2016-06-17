@@ -1,15 +1,16 @@
 ///<reference path="../typings/gulp/gulp" />
 
-import * as TARGET from "./constants/Targets";
-import * as MODULE from "./constants/ModuleTypes";
+import * as TARGET from "./typescript/Targets";
+import * as MODULE from "./typescript/ModuleTypes";
+import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
-import * as typescript from "./TypeScriptRenderer";
 import * as TASK from "./constants/TaskNames";
-import * as fs from "fs";
+import * as File from "../_utility/file-promise";
+import {TypeScriptRendererFactory} from "./typescript/TypeScriptRenderer";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
-import {Promise} from "../source/System/Promises/Promise";
-import {toPromise} from "./stream-convert";
+import {toPromise} from "../_utility/stream-convert";
+import {CoreTypeScriptOptions} from "./typescript/TypeScriptRendererBase";
 
 const fields:IMap<boolean> = {
 	"name": true,
@@ -22,21 +23,9 @@ const fields:IMap<boolean> = {
 	"keywords": true
 };
 
-function readJsonFile(path:string, encoding:string = 'utf8'):PromiseLike<JsonMap>
-{
-	return new Promise<JsonMap>((resolve, reject)=>
-	{
-		fs.readFile(path, encoding, (err, data)=>
-		{
-			if(err) reject(err);
-			else resolve(JSON.parse(data));
-		});
-	}, true);
-}
-
 function getPackage(dist:string):PromiseLike<JsonMap>
 {
-	return readJsonFile('./package.json')
+	return File.json.read<JsonMap>('./package.json')
 		.then(pkg=>
 		{
 			for(let key of Object.keys(pkg))
@@ -53,20 +42,8 @@ function getPackage(dist:string):PromiseLike<JsonMap>
 function savePackage(dist:string, folder:string = dist):PromiseLike<File[]>
 {
 	return getPackage(dist)
-		.then(pkg=>
-			new Promise<void>((resolve, reject)=>
-			{
-				fs.writeFile(
-					`./dist/${folder}/package.json`,
-					JSON.stringify(pkg, null, 2),
-					err=>
-					{
-						if(err) reject(err);
-						else resolve();
-					})
-			}))
-		.then(()=>
-			copyReadme(folder));
+		.then(pkg=>File.json.write(`./dist/${folder}/package.json`, pkg))
+		.then(()=>copyReadme(folder));
 }
 
 function copyReadme(folder:string):PromiseLike<File[]>
@@ -76,18 +53,29 @@ function copyReadme(folder:string):PromiseLike<File[]>
 			.pipe(gulp.dest(`./dist/${folder}/`)));
 }
 
+const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
+	noImplicitAny: true,
+	removeComments: true,
+	noEmitHelpers: true,
+	sourceMap: true,
+});
+
+const renderer = TypeScriptRendererFactory.fromTo(PATH.SOURCE, "./dist" , DEFAULTS);
+
 gulp.task(
 	TASK.DIST_ES6,
-	()=> typescript
-		.dist(MODULE.ES6, TARGET.ES6, MODULE.ES6)
+	()=> renderer
+		.init(MODULE.ES6, TARGET.ES6, MODULE.ES6)
+		.clear()
 		.render()
 		.then(()=>savePackage(MODULE.ES6))
 );
 
 gulp.task(
 	TASK.DIST_AMD,
-	()=> typescript
-		.dist(MODULE.AMD, TARGET.ES5, MODULE.AMD)
+	()=> renderer
+		.init(MODULE.AMD, TARGET.ES5, MODULE.AMD)
+		.clear()
 		.minify()
 		.render()
 		.then(()=>savePackage(MODULE.AMD))
@@ -95,8 +83,9 @@ gulp.task(
 
 gulp.task(
 	TASK.DIST_UMD,
-	()=> typescript
-		.dist(MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD)
+	()=> renderer
+		.init(MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD)
+		.clear()
 		.minify()
 		.render()
 		.then(()=>savePackage(MODULE.UMD, MODULE.UMD + '.min'))
@@ -104,16 +93,18 @@ gulp.task(
 
 gulp.task( // Need to double process to get the declarations from es6 without modules
 	TASK.DIST_COMMONJS,
-	()=> typescript
-		.dist(MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS)
+	()=> renderer
+		.init(MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS)
+		.clear()
 		.render()
 		.then(()=>savePackage(MODULE.COMMONJS))
 );
 
 gulp.task(
 	TASK.DIST_SYSTEMJS,
-	()=> typescript
-		.dist(MODULE.SYSTEMJS, TARGET.ES5, MODULE.SYSTEMJS)
+	()=> renderer
+		.init(MODULE.SYSTEMJS, TARGET.ES5, MODULE.SYSTEMJS)
+		.clear()
 		.render()
 		.then(()=>savePackage(MODULE.SYSTEMJS))
 );

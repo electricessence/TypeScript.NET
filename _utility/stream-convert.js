@@ -1,3 +1,6 @@
+/*!
+ * Converted to typescript from stream-to-promise
+ */
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;

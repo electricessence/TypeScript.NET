@@ -6,14 +6,14 @@
 ///<reference path="../typings/del/del" />
 ///<reference path="../typings/merge2/merge2" />
 
-import {ModuleType} from "./constants/ModuleTypes";
-import {EcmaTarget} from "./constants/Targets";
+import {ModuleType} from "./typescript/ModuleTypes";
+import {EcmaTarget} from "./typescript/Targets";
 import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
 import * as typescript from "gulp-typescript";
 import {Promise, PromiseBase} from "../source/System/Promises/Promise";
 import {JsonMap} from "../source/JSON";
-import * as StreamConvert from "./stream-convert";
+import * as StreamConvert from "../_utility/stream-convert";
 import mergeValues from "../source/mergeValues";
 import ReadWriteStream = NodeJS.ReadWriteStream;
 const tsc = require("gulp-tsc");

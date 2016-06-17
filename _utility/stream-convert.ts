@@ -1,5 +1,8 @@
-///<reference path="../typings/node/node" />
+/*!
+ * Converted to typescript from stream-to-promise
+ */
 
+///<reference path="../typings/node/node" />
 import {Promise, PromiseBase} from "../source/System/Promises/Promise";
 
 import ReadableStream = NodeJS.ReadableStream;

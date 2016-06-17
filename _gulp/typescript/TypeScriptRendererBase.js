@@ -7,19 +7,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "gulp-uglify", "../source/mergeValues", "del"], factory);
+        define(["require", "exports", "gulp-uglify", "../../source/mergeValues", "del"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var uglify = require("gulp-uglify");
-    var mergeValues_1 = require("../source/mergeValues");
+    var mergeValues_1 = require("../../source/mergeValues");
     var del = require("del");
-    exports.DEFAULTS = Object.freeze({
-        noImplicitAny: true,
-        removeComments: true,
-        noEmitHelpers: true,
-        sourceMap: true,
-    });
     var TypeScriptRendererBase = (function () {
         function TypeScriptRendererBase(sourceFolder, destinationFolder, compilerOptions) {
             this.sourceFolder = sourceFolder;
@@ -28,9 +22,7 @@
                 sourceRoot: null
             };
             this.compilerOptions
-                = compilerOptions
-                    = mergeValues_1.default({}, compilerOptions);
-            mergeValues_1.default(compilerOptions, exports.DEFAULTS);
+                = mergeValues_1.default({}, compilerOptions);
         }
         TypeScriptRendererBase.prototype.minify = function (value) {
             if (value === void 0) { value = true; }
@@ -68,7 +60,7 @@
             this.compilerOptions.module = value;
             return this;
         };
-        TypeScriptRendererBase.prototype.override = function (options) {
+        TypeScriptRendererBase.prototype.addOptions = function (options) {
             for (var _i = 0, _a = Object.keys(options); _i < _a.length; _i++) {
                 var key = _a[_i];
                 this.compilerOptions[key] = options[key];

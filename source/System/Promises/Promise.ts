@@ -1267,6 +1267,16 @@ export module Promise
 	}
 
 	/**
+	 * Syntactic shortcut for avoiding 'new'.
+	 * @param resolver
+	 * @param forceSynchronous
+	 * @returns {Promise}
+	 */
+	export function using<T>(resolver:Promise.Executor<T>, forceSynchronous:boolean = false):PromiseBase<T>{
+		return new Promise<T>(resolver,forceSynchronous);
+	}
+
+	/**
 	 * Takes a set of values or promises and returns a PromiseCollection.
 	 * Similar to 'group' but calls resolve on each entry.
 	 * @param resolutions

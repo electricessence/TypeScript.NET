@@ -1,5 +1,5 @@
-import * as TARGET from "./Targets";
-import * as MODULE from "./ModuleTypes";
+import * as TARGET from "../typescript/Targets";
+import * as MODULE from "../typescript/ModuleTypes";
 
 const
 	DIST_ = 'dist.';

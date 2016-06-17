@@ -3,14 +3,14 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./constants/Paths", "gulp", "../source/System/Promises/Promise", "./stream-convert", "../source/mergeValues"], factory);
+        define(["require", "exports", "./constants/Paths", "gulp", "../source/System/Promises/Promise", "../_utility/stream-convert", "../source/mergeValues"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var PATH = require("./constants/Paths");
     var gulp = require("gulp");
     var Promise_1 = require("../source/System/Promises/Promise");
-    var StreamConvert = require("./stream-convert");
+    var StreamConvert = require("../_utility/stream-convert");
     var mergeValues_1 = require("../source/mergeValues");
     var tsc = require("gulp-tsc");
     exports.DEFAULTS = Object.freeze({

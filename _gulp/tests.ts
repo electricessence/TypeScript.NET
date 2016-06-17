@@ -1,8 +1,8 @@
-import * as TARGET from "./constants/Targets";
-import * as MODULE from "./constants/ModuleTypes";
+import * as TARGET from "./typescript/Targets";
+import * as MODULE from "./typescript/ModuleTypes";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import * as typescript from "./TypeScriptRenderer";
+import * as typescript from "./typescript/TypeScriptRenderer";
 
 const TEST_DEFAULTS = Object.freeze({ noEmitHelpers:false });
 

@@ -1,5 +1,5 @@
-require("./gulp/tests");
-require("./gulp/dist");
-require("./gulp/bumpVersion");
-require("./gulp/nuget-pack");
+require("./_gulp/tests");
+require("./_gulp/dist");
+require("./_gulp/bumpVersion");
+require("./_gulp/nuget-pack");
 //# sourceMappingURL=gulpfile.js.map

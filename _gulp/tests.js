@@ -3,15 +3,15 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./constants/Targets", "./constants/ModuleTypes", "./constants/TaskNames", "gulp", "./TypeScriptRenderer"], factory);
+        define(["require", "exports", "./typescript/Targets", "./typescript/ModuleTypes", "./constants/TaskNames", "gulp", "./typescript/TypeScriptRenderer"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var TARGET = require("./constants/Targets");
-    var MODULE = require("./constants/ModuleTypes");
+    var TARGET = require("./typescript/Targets");
+    var MODULE = require("./typescript/ModuleTypes");
     var TASK = require("./constants/TaskNames");
     var gulp = require("gulp");
-    var typescript = require("./TypeScriptRenderer");
+    var typescript = require("./typescript/TypeScriptRenderer");
     var TEST_DEFAULTS = Object.freeze({ noEmitHelpers: false });
     gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return typescript
         .at('./tests/qunit', TARGET.ES5, MODULE.UMD, TEST_DEFAULTS)

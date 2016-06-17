@@ -3,23 +3,23 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-///<reference path="../typings/gulp-sourcemaps/gulp-sourcemaps" />
-///<reference path="../typings/gulp-uglify/gulp-uglify" />
-///<reference path="../typings/del/del" />
+///<reference path="../../typings/gulp-sourcemaps/gulp-sourcemaps" />
+///<reference path="../../typings/gulp-uglify/gulp-uglify" />
+///<reference path="../../typings/del/del" />
 
 
 import * as uglify from "gulp-uglify";
-import * as sourcemaps from "gulp-sourcemaps";
-import mergeValues from "../source/mergeValues";
-import {ModuleType} from "./constants/ModuleTypes";
-import {EcmaTarget} from "./constants/Targets";
+import * as sourcemaps from "../.";
+import mergeValues from "../../source/mergeValues";
+import {ModuleType} from "./ModuleTypes";
+import {EcmaTarget} from "./Targets";
 import * as del from "del";
 import ReadWriteStream = NodeJS.ReadWriteStream;
 
 
 export interface CoreTypeScriptOptions
 {
-	module?:string;
+	module?:ModuleType;
 	noEmitOnError?:boolean;
 	noExternalResolve?:boolean;
 	noImplicitAny?:boolean;
@@ -27,7 +27,7 @@ export interface CoreTypeScriptOptions
 	removeComments?:boolean;
 	sourceRoot?:string;
 	sortOutput?:boolean;
-	target?:string;
+	target?:EcmaTarget;
 	typescript?:any;
 	outFile?:string;
 	outDir?:string;
@@ -43,13 +43,6 @@ export interface CoreTypeScriptOptions
 	isolatedModules?:boolean;
 	sourceMap?:boolean;
 }
-
-export const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
-	noImplicitAny: true,
-	removeComments: true,
-	noEmitHelpers: true,
-	sourceMap: true,
-});
 
 export abstract class TypeScriptRendererBase<TOptions extends CoreTypeScriptOptions>
 {
@@ -67,13 +60,11 @@ export abstract class TypeScriptRendererBase<TOptions extends CoreTypeScriptOpti
 		};
 
 		this.compilerOptions
-			= compilerOptions
-			= mergeValues({},compilerOptions); // Make a copy first...
-
-		mergeValues(compilerOptions, DEFAULTS);
+			= mergeValues({}, compilerOptions); // Make a copy first...
 	}
 
 	protected _minify:boolean;
+
 	minify(value:boolean = true):this
 	{
 		this._minify = value;
@@ -84,7 +75,8 @@ export abstract class TypeScriptRendererBase<TOptions extends CoreTypeScriptOpti
 
 	protected abstract onRender():PromiseLike<File[]>;
 
-	render():PromiseLike<File[]> {
+	render():PromiseLike<File[]>
+	{
 
 		var from = this.sourceFolder, to = this.destinationFolder;
 
@@ -97,7 +89,7 @@ export abstract class TypeScriptRendererBase<TOptions extends CoreTypeScriptOpti
 		if(this._clear && from==to)
 			throw new Error("Cannot clear a source folder.");
 
-		var {module,target} = this.compilerOptions;
+		var {module, target} = this.compilerOptions;
 
 		if(module && module!=target)
 			console.log('TypeScript Render:',
@@ -114,6 +106,7 @@ export abstract class TypeScriptRendererBase<TOptions extends CoreTypeScriptOpti
 	}
 
 	protected _clear:boolean;
+
 	clear(value:boolean = true):this
 	{
 		this._clear = value;
@@ -132,7 +125,7 @@ export abstract class TypeScriptRendererBase<TOptions extends CoreTypeScriptOpti
 		return this;
 	}
 
-	override(options:TOptions):this
+	addOptions(options:TOptions):this
 	{
 		for(let key of Object.keys(options)) (<any>this.compilerOptions)[key] = (<any>options)[key];
 		return this;
