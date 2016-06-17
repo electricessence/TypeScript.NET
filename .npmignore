@@ -2,8 +2,8 @@
 .bowerrc
 .idea
 .nuget
-.gulp*
-gulp-tsc-tmp*
+**/.gulp*
+**/gulp-tsc-tmp*
 gulpfile.*
 node_modules
 bower_components
@@ -11,10 +11,9 @@ tests
 coverage
 documentation
 typings
-coverage.cmd
+*.cmd
 .npmignore
 test.js
-tsc-flags.txt
 tsconfig.json
 tsd.json
 bower.json
