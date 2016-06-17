@@ -4,16 +4,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase"], function(exports_1, context_1) {
+System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var __extends = (this && this.__extends) || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-    var LinkedNodeList_1, dispose_1, Subscription_1, DisposableBase_1;
-    var SubscribableBase;
+    var LinkedNodeList_1, dispose_1, Subscription_1, DisposableBase_1, extends_1;
+    var __extends, SubscribableBase;
     return {
         setters:[
             function (LinkedNodeList_1_1) {
@@ -27,8 +22,12 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
             },
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             SubscribableBase = (function (_super) {
                 __extends(SubscribableBase, _super);
                 function SubscribableBase() {

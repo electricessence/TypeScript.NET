@@ -6,6 +6,8 @@
 
 import {WorkerLike} from "./WorkerType";
 import {ObservableBase} from "../Observable/ObservableBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 declare const require:any;
 const ps = require("child_process");

@@ -8,11 +8,13 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Observable/ObservableBase"], factory);
+        define(["require", "exports", "../Observable/ObservableBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var ObservableBase_1 = require("../Observable/ObservableBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var ps = require("child_process");
     var NodeJSWorker = (function (_super) {
         __extends(NodeJSWorker, _super);

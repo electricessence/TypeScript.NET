@@ -2,14 +2,14 @@
 
 import * as TARGET from "./constants/Targets";
 import * as MODULE from "./constants/ModuleTypes";
-import * as EVENT from "./constants/Events";
 import * as gulp from "gulp";
-import * as tsc from "./tsc";
+import * as typescript from "./typescript";
 import * as TASK from "./constants/TaskNames";
 import * as fs from "fs";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 import {Promise} from "../source/System/Promises/Promise";
+import {toPromise} from "./stream-convert";
 
 const fields:IMap<boolean> = {
 	"name": true,
@@ -50,7 +50,7 @@ function getPackage(dist:string):PromiseLike<JsonMap>
 
 }
 
-function savePackage(dist:string, folder:string = dist):PromiseLike<void>
+function savePackage(dist:string, folder:string = dist):PromiseLike<File[]>
 {
 	return getPackage(dist)
 		.then(pkg=>
@@ -69,48 +69,52 @@ function savePackage(dist:string, folder:string = dist):PromiseLike<void>
 			copyReadme(folder));
 }
 
-function copyReadme(folder:string):PromiseLike<void>
+function copyReadme(folder:string):PromiseLike<File[]>
 {
-	return new Promise<void>((resolve)=>
-	{
+	return toPromise<File[]>(
 		gulp.src("./dist/README.md")
-			.pipe(gulp.dest(`./dist/${folder}/`))
-			.on(EVENT.END, resolve);
-	});
+			.pipe(gulp.dest(`./dist/${folder}/`)));
 }
 
 gulp.task(
 	TASK.DIST_ES6,
-	()=> tsc
-		.distES6(MODULE.ES6, true)
+	()=> typescript
+		.dist(MODULE.ES6, TARGET.ES6, MODULE.ES6)
+		.render()
 		.then(()=>savePackage(MODULE.ES6))
 );
 
 gulp.task(
 	TASK.DIST_AMD,
-	()=> tsc
-		.distMini(MODULE.AMD, TARGET.ES5, MODULE.AMD)
+	()=> typescript
+		.dist(MODULE.AMD, TARGET.ES5, MODULE.AMD)
+		.minify()
+		.render()
 		.then(()=>savePackage(MODULE.AMD))
 );
 
 gulp.task(
 	TASK.DIST_UMD,
-	()=> tsc
-		.distMini(MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD)
+	()=> typescript
+		.dist(MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD)
+		.minify()
+		.render()
 		.then(()=>savePackage(MODULE.UMD, MODULE.UMD + '.min'))
 );
 
 gulp.task( // Need to double process to get the declarations from es6 without modules
 	TASK.DIST_COMMONJS,
-	()=> tsc
+	()=> typescript
 		.dist(MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS)
+		.render()
 		.then(()=>savePackage(MODULE.COMMONJS))
 );
 
 gulp.task(
 	TASK.DIST_SYSTEMJS,
-	()=> tsc
+	()=> typescript
 		.dist(MODULE.SYSTEMJS, TARGET.ES5, MODULE.SYSTEMJS)
+		.render()
 		.then(()=>savePackage(MODULE.SYSTEMJS))
 );
 
@@ -121,3 +125,9 @@ gulp.task(TASK.DIST, [
 	TASK.DIST_COMMONJS,
 	TASK.DIST_SYSTEMJS
 ]);
+
+gulp.task(
+	TASK.SOURCE,
+	()=>typescript
+		.at('./source',TARGET.ES5, MODULE.UMD)
+		.render());

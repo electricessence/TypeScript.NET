@@ -12,6 +12,8 @@ import {deferImmediate} from "../deferImmediate";
 import {isNodeJS} from "../../Environment";
 import {ObjectPool} from "../../Disposable/ObjectPool";
 import {IMap} from "../../Collections/Dictionaries/IDictionary";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 
 declare const navigator:any;
 declare const require:any;

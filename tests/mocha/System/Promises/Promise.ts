@@ -1,12 +1,16 @@
 ///<reference path="../../import.d.ts"/>
 
-import {Promise, PromiseBase} from "../../../../dist/commonjs/System/Promises/Promise";
+import {
+	Promise,
+	PromiseBase,
+	Fulfilled,
+	PromiseCollection
+} from "../../../../dist/commonjs/System/Promises/Promise";
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
 import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 import {defer} from "../../../../dist/commonjs/System/Threading/defer";
 import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise";
 import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
-import {Fulfilled, PromiseCollection} from "../../../../source/System/Promises/Promise";
 import * as assert from "assert";
 
 

@@ -5,11 +5,6 @@
  * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var Types_1 = require("../Types");
 var deferImmediate_1 = require("../Threading/deferImmediate");
 var DisposableBase_1 = require("../Disposable/DisposableBase");

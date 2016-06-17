@@ -7,11 +7,6 @@
 System.register(["../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var __extends = (this && this.__extends) || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
     var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1;
     var __extends, VOID0, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PromiseCollection, pools;
     function isPromise(value) {

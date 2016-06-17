@@ -4,12 +4,9 @@
  * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
  */
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var ObservableBase_1 = require("../Observable/ObservableBase");
+var extends_1 = require("../../extends");
+var __extends = extends_1.default;
 var ps = require("child_process");
 var NodeJSWorker = (function (_super) {
     __extends(NodeJSWorker, _super);

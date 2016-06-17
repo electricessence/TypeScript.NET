@@ -8,7 +8,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool"], factory);
+        define(["require", "exports", "../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool", "../../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -18,6 +18,8 @@
     var deferImmediate_1 = require("../deferImmediate");
     var Environment_1 = require("../../Environment");
     var ObjectPool_1 = require("../../Disposable/ObjectPool");
+    var extends_1 = require("../../../extends");
+    var __extends = extends_1.default;
     var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
         ? (self.URL ? self.URL : self.webkitURL)
         : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;

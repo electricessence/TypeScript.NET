@@ -3,16 +3,11 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-System.register(["../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool"], function(exports_1, context_1) {
+System.register(["../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var __extends = (this && this.__extends) || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-    var Promise_1, Types_1, Worker_1, deferImmediate_1, Environment_1, ObjectPool_1;
-    var MAX_WORKERS, VOID0, URL, _supports, defaults, WorkerPromise, workers, Parallel;
+    var Promise_1, Types_1, Worker_1, deferImmediate_1, Environment_1, ObjectPool_1, extends_1;
+    var __extends, MAX_WORKERS, VOID0, URL, _supports, defaults, WorkerPromise, workers, Parallel;
     function extend(from, to) {
         if (!to)
             to = {};
@@ -50,8 +45,12 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
             },
             function (ObjectPool_1_1) {
                 ObjectPool_1 = ObjectPool_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
+            __extends = extends_1.default;
             MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
                 ? (self.URL ? self.URL : self.webkitURL)
                 : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;

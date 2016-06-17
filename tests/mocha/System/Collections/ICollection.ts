@@ -1,5 +1,4 @@
 ///<reference path="../../import.d.ts"/>
-///<reference path="../../../../dist/commonjs/System/Collections/ICollection.d.ts"/>
 
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
 import NotImplementedException from "../../../../dist/commonjs/System/Exceptions/NotImplementedException";

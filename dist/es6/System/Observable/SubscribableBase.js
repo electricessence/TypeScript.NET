@@ -8,6 +8,8 @@ import { LinkedNodeList } from "../Collections/LinkedNodeList";
 import { dispose } from "../Disposable/dispose";
 import { Subscription } from "./Subscription";
 import { DisposableBase } from "../Disposable/DisposableBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 export class SubscribableBase extends DisposableBase {
     constructor() {
         super();

@@ -6,11 +6,6 @@
 System.register(["../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var __extends = (this && this.__extends) || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
     var extends_1;
     var __extends, EMPTY, UNDEFINED, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
     return {

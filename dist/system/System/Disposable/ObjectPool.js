@@ -7,11 +7,6 @@
 System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../../extends", "../Exceptions/ArgumentException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var __extends = (this && this.__extends) || function (d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
     var dispose_1, DisposableBase_1, TaskHandler_1, ArgumentOutOfRangeException_1, extends_1, ArgumentException_1;
     var __extends, OBJECT_POOL, _MAX_SIZE, ABSOLUTE_MAX_SIZE, MUST_BE_GT1, MUST_BE_LTM, ObjectPool;
     return {

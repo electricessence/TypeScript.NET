@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 export default function (d, b) {
-    for (var p in b)
+    for (const p in b)
         if (b.hasOwnProperty(p))
             d[p] = b[p];
     function __() { this.constructor = d; }

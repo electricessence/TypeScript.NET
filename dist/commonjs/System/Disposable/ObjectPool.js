@@ -5,11 +5,6 @@
  * Uses .add(T) and .take():T
  */
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var dispose_1 = require("./dispose");
 var DisposableBase_1 = require("./DisposableBase");
 var TaskHandler_1 = require("../Threading/Tasks/TaskHandler");

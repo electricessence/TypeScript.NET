@@ -9,7 +9,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase"], factory);
+        define(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -17,6 +17,8 @@
     var dispose_1 = require("../Disposable/dispose");
     var Subscription_1 = require("./Subscription");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
+    var extends_1 = require("../../extends");
+    var __extends = extends_1.default;
     var SubscribableBase = (function (_super) {
         __extends(SubscribableBase, _super);
         function SubscribableBase() {

@@ -9,6 +9,8 @@ import Worker from "../Worker";
 import { deferImmediate } from "../deferImmediate";
 import { isNodeJS } from "../../Environment";
 import { ObjectPool } from "../../Disposable/ObjectPool";
+import __extendsImport from "../../../extends";
+const __extends = __extendsImport;
 const MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED
     ? (self.URL ? self.URL : self.webkitURL)
     : null, _supports = (isNodeJS || self.Worker) ? true : false;

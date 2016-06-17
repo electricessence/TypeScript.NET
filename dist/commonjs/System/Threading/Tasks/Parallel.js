@@ -4,17 +4,14 @@
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 var Promise_1 = require("../../Promises/Promise");
 var Types_1 = require("../../Types");
 var Worker_1 = require("../Worker");
 var deferImmediate_1 = require("../deferImmediate");
 var Environment_1 = require("../../Environment");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
+var extends_1 = require("../../../extends");
+var __extends = extends_1.default;
 var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
     ? (self.URL ? self.URL : self.webkitURL)
     : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;

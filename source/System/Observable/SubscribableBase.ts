@@ -12,6 +12,8 @@ import {Subscription} from "./Subscription";
 import {ILinkedNodeWithValue} from "../Collections/ILinkedListNode";
 import {IDisposable} from "../Disposable/IDisposable";
 import {DisposableBase} from "../Disposable/DisposableBase";
+import __extendsImport from "../../extends";
+const __extends = __extendsImport;
 
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
 export class SubscribableBase<TSubscriber>
