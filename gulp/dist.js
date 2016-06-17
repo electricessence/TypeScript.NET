@@ -3,14 +3,14 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./constants/Targets", "./constants/ModuleTypes", "gulp", "./typescript", "./constants/TaskNames", "fs", "../source/System/Promises/Promise", "./stream-convert"], factory);
+        define(["require", "exports", "./constants/Targets", "./constants/ModuleTypes", "gulp", "./TypeScriptRenderer", "./constants/TaskNames", "fs", "../source/System/Promises/Promise", "./stream-convert"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var TARGET = require("./constants/Targets");
     var MODULE = require("./constants/ModuleTypes");
     var gulp = require("gulp");
-    var typescript = require("./typescript");
+    var typescript = require("./TypeScriptRenderer");
     var TASK = require("./constants/TaskNames");
     var fs = require("fs");
     var Promise_1 = require("../source/System/Promises/Promise");
@@ -98,8 +98,5 @@
         TASK.DIST_COMMONJS,
         TASK.DIST_SYSTEMJS
     ]);
-    gulp.task(TASK.SOURCE, function () { return typescript
-        .at('./source', TARGET.ES5, MODULE.UMD)
-        .render(); });
 });
 //# sourceMappingURL=dist.js.map

@@ -3,7 +3,7 @@
 import * as TARGET from "./constants/Targets";
 import * as MODULE from "./constants/ModuleTypes";
 import * as gulp from "gulp";
-import * as typescript from "./typescript";
+import * as typescript from "./TypeScriptRenderer";
 import * as TASK from "./constants/TaskNames";
 import * as fs from "fs";
 import {JsonMap} from "../source/JSON";
@@ -126,8 +126,14 @@ gulp.task(TASK.DIST, [
 	TASK.DIST_SYSTEMJS
 ]);
 
-gulp.task(
-	TASK.SOURCE,
-	()=>typescript
-		.at('./source',TARGET.ES5, MODULE.UMD)
-		.render());
+// gulp.task(
+// 	TASK.SOURCE,
+// 	()=>{
+// 		var r = typescript
+// 			.at('./source', TARGET.ES5, MODULE.UMD, {noEmitHelpers: true});
+// 		var s = r.sourceMapOptions;
+// 		s.sourceRoot = "";
+// 		s.includeContent = false;
+//
+// 		return r.render()
+// 	});

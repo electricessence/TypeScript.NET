@@ -82,4 +82,4 @@
     }
     exports.dist = dist;
 });
-//# sourceMappingURL=typescript.js.map
+//# sourceMappingURL=TypeScriptRenderer.js.map

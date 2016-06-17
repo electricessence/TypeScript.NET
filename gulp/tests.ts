@@ -2,7 +2,7 @@ import * as TARGET from "./constants/Targets";
 import * as MODULE from "./constants/ModuleTypes";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import * as typescript from "./typescript";
+import * as typescript from "./TypeScriptRenderer";
 
 const TEST_DEFAULTS = Object.freeze({ noEmitHelpers:false });
 
