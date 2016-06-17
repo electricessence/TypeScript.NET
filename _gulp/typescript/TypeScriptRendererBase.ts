@@ -9,7 +9,7 @@
 
 
 import * as uglify from "gulp-uglify";
-import * as sourcemaps from "../.";
+import * as sourcemaps from "gulp-sourcemaps";
 import mergeValues from "../../source/mergeValues";
 import {ModuleType} from "./ModuleTypes";
 import {EcmaTarget} from "./Targets";
@@ -91,18 +91,38 @@ export abstract class TypeScriptRendererBase<TOptions extends CoreTypeScriptOpti
 
 		var {module, target} = this.compilerOptions;
 
-		if(module && module!=target)
-			console.log('TypeScript Render:',
-				target, module,
-				from==to ? from : (from + ' >> ' + to));
-		else
-			console.log('TypeScript Render:',
-				target || module,
-				from==to ? from : (from + ' >> ' + to));
+		var message = 'TypeScript Render: ';
+		if(module && module!=target) message += target + " " + module;
+		else message += target || module;
+		message += " " + (from==to ? from : (from + ' >> ' + to));
 
-		return this._clear
-			? del(to + '/**/*').then(()=>this.onRender())
+
+		function emitStart()
+		{
+			console.log(message);
+		}
+
+		if(!this._clear) emitStart();
+
+		var render = this._clear
+			? del(to + '/**/*').then(
+			results=>
+			{
+				if(results && results.length)
+					console.info("Folder cleared:", to);
+				emitStart();
+				return this.onRender();
+			})
 			: this.onRender(); // Could hook up post render console logs here?
+
+		render.then(()=>{
+			//console.log(message,"COMPLETE");
+		},err=>{
+			console.warn(message,"FAILED");
+			console.error(err);
+		});
+
+		return render;
 	}
 
 	protected _clear:boolean;

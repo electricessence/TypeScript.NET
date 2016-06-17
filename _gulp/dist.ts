@@ -58,6 +58,7 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 	removeComments: true,
 	noEmitHelpers: true,
 	sourceMap: true,
+	declaration: true
 });
 
 const renderer = TypeScriptRendererFactory.fromTo(PATH.SOURCE, "./dist" , DEFAULTS);

@@ -39,13 +39,31 @@
             if (this._clear && from == to)
                 throw new Error("Cannot clear a source folder.");
             var _a = this.compilerOptions, module = _a.module, target = _a.target;
+            var message = 'TypeScript Render: ';
             if (module && module != target)
-                console.log('TypeScript Render:', target, module, from == to ? from : (from + ' >> ' + to));
+                message += target + " " + module;
             else
-                console.log('TypeScript Render:', target || module, from == to ? from : (from + ' >> ' + to));
-            return this._clear
-                ? del(to + '/**/*').then(function () { return _this.onRender(); })
+                message += target || module;
+            message += " " + (from == to ? from : (from + ' >> ' + to));
+            function emitStart() {
+                console.log(message);
+            }
+            if (!this._clear)
+                emitStart();
+            var render = this._clear
+                ? del(to + '/**/*').then(function (results) {
+                    if (results && results.length)
+                        console.info("Folder cleared:", to);
+                    emitStart();
+                    return _this.onRender();
+                })
                 : this.onRender();
+            render.then(function () {
+            }, function (err) {
+                console.warn(message, "FAILED");
+                console.error(err);
+            });
+            return render;
         };
         TypeScriptRendererBase.prototype.clear = function (value) {
             if (value === void 0) { value = true; }

@@ -2,15 +2,18 @@ import * as TARGET from "./typescript/Targets";
 import * as MODULE from "./typescript/ModuleTypes";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import * as typescript from "./typescript/TypeScriptRenderer";
+import {TypeScriptRendererFactory} from "./typescript/TypeScriptRenderer";
 
 const TEST_DEFAULTS = Object.freeze({ noEmitHelpers:false });
+
+const renderer = TypeScriptRendererFactory.at("./tests", { noEmitHelpers:false });
+
 
 gulp.task(
 	// Can't figure out why the TSC doesn't work the same for this folder as it does for the source folder. :(
 	TASK.TYPESCRIPT_QUNIT,
-	()=> typescript
-		.at('./tests/qunit', TARGET.ES5, MODULE.UMD, TEST_DEFAULTS)
+	()=> renderer
+		.init('qunit', TARGET.ES5, MODULE.UMD)
 		.render()
 );
 
@@ -19,8 +22,8 @@ gulp.task(
 	[
 		TASK.DIST_COMMONJS
 	],
-	()=> typescript
-		.at('./tests/mocha', TARGET.ES5, MODULE.COMMONJS, TEST_DEFAULTS)
+	()=> renderer
+		.init('mocha', TARGET.ES5, MODULE.COMMONJS)
 		.render()
 );
 

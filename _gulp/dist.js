@@ -52,6 +52,7 @@
         removeComments: true,
         noEmitHelpers: true,
         sourceMap: true,
+        declaration: true
     });
     var renderer = TypeScriptRenderer_1.TypeScriptRendererFactory.fromTo(PATH.SOURCE, "./dist", DEFAULTS);
     gulp.task(TASK.DIST_ES6, function () { return renderer

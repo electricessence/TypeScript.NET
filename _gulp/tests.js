@@ -11,15 +11,16 @@
     var MODULE = require("./typescript/ModuleTypes");
     var TASK = require("./constants/TaskNames");
     var gulp = require("gulp");
-    var typescript = require("./typescript/TypeScriptRenderer");
+    var TypeScriptRenderer_1 = require("./typescript/TypeScriptRenderer");
     var TEST_DEFAULTS = Object.freeze({ noEmitHelpers: false });
-    gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return typescript
-        .at('./tests/qunit', TARGET.ES5, MODULE.UMD, TEST_DEFAULTS)
+    var renderer = TypeScriptRenderer_1.TypeScriptRendererFactory.at("./tests", { noEmitHelpers: false });
+    gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return renderer
+        .init('qunit', TARGET.ES5, MODULE.UMD)
         .render(); });
     gulp.task(TASK.TYPESCRIPT_MOCHA, [
         TASK.DIST_COMMONJS
-    ], function () { return typescript
-        .at('./tests/mocha', TARGET.ES5, MODULE.COMMONJS, TEST_DEFAULTS)
+    ], function () { return renderer
+        .init('mocha', TARGET.ES5, MODULE.COMMONJS)
         .render(); });
     gulp.task(TASK.BUILD + ".tests", [
         TASK.TYPESCRIPT_QUNIT,

@@ -49,7 +49,7 @@
         json.read = read;
         function write(path, data, options) {
             return Promise_1.Promise
-                .using(function (resolve) { return JSON.stringify(data, null, 2); })
+                .using(function (resolve) { return resolve(JSON.stringify(data, null, 2)); })
                 .thenSynchronous(function (s) { return writeFile(path, JSON.stringify(s, null, 2), options); });
         }
         json.write = write;
