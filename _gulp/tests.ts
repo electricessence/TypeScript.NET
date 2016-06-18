@@ -1,15 +1,15 @@
-import * as TARGET from "./typescript/Targets";
-import * as MODULE from "./typescript/ModuleTypes";
+import {Target, Module, TypeScriptRenderer} from "gulp-typescript-helper";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import {TypeScriptRendererFactory} from "./typescript/TypeScriptRenderer";
+import {Promise} from "../source/System/Promises/Promise";
 
 const TEST_DEFAULTS = Object.freeze({noEmitHelpers: false});
 
-const renderer = TypeScriptRendererFactory.defaults(
-	{
-		target: TARGET.ES5,
-		module: MODULE.UMD,
+const renderer = TypeScriptRenderer
+	.inject(Promise)
+	.defaults({
+		target: Target.ES5,
+		module: Module.UMD,
 		noEmitHelpers: false,
 		removeComments: true,
 		sourceMap: true,
@@ -33,7 +33,7 @@ gulp.task(
 	()=> renderer
 		.at('./tests/mocha')
 		.init()
-		.module(MODULE.COMMONJS)
+		.module(Module.COMMONJS)
 		.render()
 );
 

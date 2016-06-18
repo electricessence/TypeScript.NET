@@ -3,19 +3,20 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./typescript/Targets", "./typescript/ModuleTypes", "./constants/TaskNames", "gulp", "./typescript/TypeScriptRenderer"], factory);
+        define(["require", "exports", "gulp-typescript-helper", "./constants/TaskNames", "gulp", "../source/System/Promises/Promise"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var TARGET = require("./typescript/Targets");
-    var MODULE = require("./typescript/ModuleTypes");
+    var gulp_typescript_helper_1 = require("gulp-typescript-helper");
     var TASK = require("./constants/TaskNames");
     var gulp = require("gulp");
-    var TypeScriptRenderer_1 = require("./typescript/TypeScriptRenderer");
+    var Promise_1 = require("../source/System/Promises/Promise");
     var TEST_DEFAULTS = Object.freeze({ noEmitHelpers: false });
-    var renderer = TypeScriptRenderer_1.TypeScriptRendererFactory.defaults({
-        target: TARGET.ES5,
-        module: MODULE.UMD,
+    var renderer = gulp_typescript_helper_1.TypeScriptRenderer
+        .inject(Promise_1.Promise)
+        .defaults({
+        target: gulp_typescript_helper_1.Target.ES5,
+        module: gulp_typescript_helper_1.Module.UMD,
         noEmitHelpers: false,
         removeComments: true,
         sourceMap: true,
@@ -29,7 +30,7 @@
     ], function () { return renderer
         .at('./tests/mocha')
         .init()
-        .module(MODULE.COMMONJS)
+        .module(gulp_typescript_helper_1.Module.COMMONJS)
         .render(); });
     gulp.task(TASK.BUILD + ".tests", [
         TASK.TYPESCRIPT_QUNIT,

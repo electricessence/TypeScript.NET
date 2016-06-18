@@ -6,38 +6,36 @@
 ///<reference path="../typings/del/del" />
 ///<reference path="../typings/merge2/merge2" />
 
-import {ModuleType} from "./typescript/ModuleTypes";
-import {EcmaTarget} from "./typescript/Targets";
+import {Target, Module, CoreTypeScriptOptions} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
-import * as typescript from "gulp-typescript";
-import {Promise, PromiseBase} from "../source/System/Promises/Promise";
+import {Promise} from "../source/System/Promises/Promise";
 import {JsonMap} from "../source/JSON";
-import * as StreamConvert from "../_utility/stream-convert";
+import streamToPromise from "stream-to-promise-agnostic";
 import mergeValues from "../source/mergeValues";
 import ReadWriteStream = NodeJS.ReadWriteStream;
 const tsc = require("gulp-tsc");
 
+const convert = streamToPromise(Promise);
 
 
-
-export const DEFAULTS:typescript.Params = Object.freeze(<typescript.Params>{
+export const DEFAULTS:CoreTypeScriptOptions = Object.freeze({
 	noImplicitAny: true,
 	removeComments: true,
 	noEmitHelpers: true,
 	sourceMap: true
 });
 
-function ensureDefaults<T extends JsonMap | typescript.Params>(target:T):T & typescript.Params
+function ensureDefaults<T extends JsonMap | CoreTypeScriptOptions>(target:T):T & CoreTypeScriptOptions
 {
 	return mergeValues(target, DEFAULTS);
 }
 
 function getTscOptions(
 	destination:string,
-	target:EcmaTarget,
-	module:ModuleType,
-	declaration:boolean):JsonMap & typescript.Params
+	target:Target.Type,
+	module:Module.Type,
+	declaration:boolean):JsonMap & CoreTypeScriptOptions
 {
 	return ensureDefaults({
 		tscPath: PATH.TSC,
@@ -51,8 +49,8 @@ function getTscOptions(
 export function fromTo(
 	from:string,
 	to:string,
-	target:EcmaTarget,
-	module:ModuleType,
+	target:Target.Type,
+	module:Module.Type,
 	declaration?:boolean,
 	doNotEmit?:boolean):PromiseLike<File[]>
 {
@@ -70,14 +68,14 @@ export function fromTo(
 	}
 	// In order to mirror WebStorm's compiler option (the tsc), gulp-tsc is used.
 
-	const start:PromiseBase<any> = declaration
-		? StreamConvert.toPromise(
+	const start:PromiseLike<any> = declaration
+		? convert.toPromise<void>(
 		gulp
 			.src([from + '/**/*.d.ts'])
 			.pipe(gulp.dest(to)))
 		: Promise.resolve();
 
-	return start.then(()=>StreamConvert.toPromise<File[]>(
+	return start.then(()=>convert.toPromise<File[]>(
 		gulp
 			.src([from + '/**/*.ts'])
 			.pipe(tsc(getTscOptions(to, target, module, declaration)))
@@ -87,16 +85,16 @@ export function fromTo(
 
 export function at(
 	folder:string,
-	target:EcmaTarget,
-	module:ModuleType):PromiseLike<File[]>
+	target:Target.Type,
+	module:Module.Type):PromiseLike<File[]>
 {
 	return fromTo(folder, folder, target, module);
 }
 
 export function sourceTo(
 	folder:string,
-	target:EcmaTarget,
-	module:ModuleType,
+	target:Target.Type,
+	module:Module.Type,
 	declaration?:boolean,
 	doNotEmit?:boolean):PromiseLike<File[]>
 {

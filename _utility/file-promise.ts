@@ -64,7 +64,7 @@ export module json {
 	export function write(path:string, data:JsonData, options?:WriteOptions):PromiseBase<void>
 	{
 		return Promise
-			.using(resolve=>resolve(JSON.stringify(data, null, 2)))
+			.using<string>(resolve=>resolve(JSON.stringify(data, null, 2)))
 			.thenSynchronous(s=>writeFile(path, s, options));
 	}
 

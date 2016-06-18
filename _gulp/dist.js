@@ -3,18 +3,18 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./typescript/Targets", "./typescript/ModuleTypes", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "./typescript/TypeScriptRenderer", "../_utility/stream-convert"], factory);
+        define(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../source/System/Promises/Promise", "stream-to-promise-agnostic"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var TARGET = require("./typescript/Targets");
-    var MODULE = require("./typescript/ModuleTypes");
+    var gulp_typescript_helper_1 = require("gulp-typescript-helper");
     var PATH = require("./constants/Paths");
     var gulp = require("gulp");
     var TASK = require("./constants/TaskNames");
     var File = require("../_utility/file-promise");
-    var TypeScriptRenderer_1 = require("./typescript/TypeScriptRenderer");
-    var stream_convert_1 = require("../_utility/stream-convert");
+    var Promise_1 = require("../source/System/Promises/Promise");
+    var stream_to_promise_agnostic_1 = require("stream-to-promise-agnostic");
+    var convert = stream_to_promise_agnostic_1.default(Promise_1.Promise);
     var fields = {
         "name": true,
         "version": true,
@@ -44,7 +44,7 @@
             .then(function () { return copyReadme(folder); });
     }
     function copyReadme(folder) {
-        return stream_convert_1.toPromise(gulp.src("./dist/README.md")
+        return convert.toPromise(gulp.src("./dist/README.md")
             .pipe(gulp.dest("./dist/" + folder + "/")));
     }
     var DEFAULTS = Object.freeze({
@@ -54,34 +54,36 @@
         sourceMap: true,
         declaration: true
     });
-    var renderer = TypeScriptRenderer_1.TypeScriptRendererFactory.fromTo(PATH.SOURCE, "./dist", DEFAULTS);
+    var renderer = gulp_typescript_helper_1.TypeScriptRenderer
+        .inject(Promise_1.Promise)
+        .fromTo(PATH.SOURCE, "./dist", DEFAULTS);
     gulp.task(TASK.DIST_ES6, function () { return renderer
-        .init(MODULE.ES6, TARGET.ES6, MODULE.ES6)
+        .init(gulp_typescript_helper_1.Module.ES6, gulp_typescript_helper_1.Target.ES6, gulp_typescript_helper_1.Module.ES6)
         .clear()
         .render()
-        .then(function () { return savePackage(MODULE.ES6); }); });
+        .then(function () { return savePackage(gulp_typescript_helper_1.Module.ES6); }); });
     gulp.task(TASK.DIST_AMD, function () { return renderer
-        .init(MODULE.AMD, TARGET.ES5, MODULE.AMD)
+        .init(gulp_typescript_helper_1.Module.AMD, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.AMD)
         .clear()
         .minify()
         .render()
-        .then(function () { return savePackage(MODULE.AMD); }); });
+        .then(function () { return savePackage(gulp_typescript_helper_1.Module.AMD); }); });
     gulp.task(TASK.DIST_UMD, function () { return renderer
-        .init(MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD)
+        .init(gulp_typescript_helper_1.Module.UMD + '.min', gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.UMD)
         .clear()
         .minify()
         .render()
-        .then(function () { return savePackage(MODULE.UMD, MODULE.UMD + '.min'); }); });
+        .then(function () { return savePackage(gulp_typescript_helper_1.Module.UMD, gulp_typescript_helper_1.Module.UMD + '.min'); }); });
     gulp.task(TASK.DIST_COMMONJS, function () { return renderer
-        .init(MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS)
+        .init(gulp_typescript_helper_1.Module.COMMONJS, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.COMMONJS)
         .clear()
         .render()
-        .then(function () { return savePackage(MODULE.COMMONJS); }); });
+        .then(function () { return savePackage(gulp_typescript_helper_1.Module.COMMONJS); }); });
     gulp.task(TASK.DIST_SYSTEMJS, function () { return renderer
-        .init(MODULE.SYSTEMJS, TARGET.ES5, MODULE.SYSTEMJS)
+        .init(gulp_typescript_helper_1.Module.SYSTEMJS, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.SYSTEMJS)
         .clear()
         .render()
-        .then(function () { return savePackage(MODULE.SYSTEMJS); }); });
+        .then(function () { return savePackage(gulp_typescript_helper_1.Module.SYSTEMJS); }); });
     gulp.task(TASK.DIST, [
         TASK.DIST_ES6,
         TASK.DIST_AMD,

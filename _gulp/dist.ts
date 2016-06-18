@@ -1,16 +1,16 @@
 ///<reference path="../typings/gulp/gulp" />
 
-import * as TARGET from "./typescript/Targets";
-import * as MODULE from "./typescript/ModuleTypes";
+import {Target, Module, CoreTypeScriptOptions, TypeScriptRenderer} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
 import * as TASK from "./constants/TaskNames";
 import * as File from "../_utility/file-promise";
-import {TypeScriptRendererFactory} from "./typescript/TypeScriptRenderer";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
-import {toPromise} from "../_utility/stream-convert";
-import {CoreTypeScriptOptions} from "./typescript/TypeScriptRendererBase";
+import {Promise} from "../source/System/Promises/Promise";
+import streamToPromise from "stream-to-promise-agnostic";
+
+const convert = streamToPromise(Promise);
 
 const fields:IMap<boolean> = {
 	"name": true,
@@ -48,7 +48,7 @@ function savePackage(dist:string, folder:string = dist):PromiseLike<File[]>
 
 function copyReadme(folder:string):PromiseLike<File[]>
 {
-	return toPromise<File[]>(
+	return convert.toPromise<File[]>(
 		gulp.src("./dist/README.md")
 			.pipe(gulp.dest(`./dist/${folder}/`)));
 }
@@ -61,53 +61,55 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 	declaration: true
 });
 
-const renderer = TypeScriptRendererFactory.fromTo(PATH.SOURCE, "./dist" , DEFAULTS);
+const renderer = TypeScriptRenderer
+	.inject(Promise)
+	.fromTo(PATH.SOURCE, "./dist" , DEFAULTS);
 
 gulp.task(
 	TASK.DIST_ES6,
 	()=> renderer
-		.init(MODULE.ES6, TARGET.ES6, MODULE.ES6)
+		.init(Module.ES6, Target.ES6, Module.ES6)
 		.clear()
 		.render()
-		.then(()=>savePackage(MODULE.ES6))
+		.then(()=>savePackage(Module.ES6))
 );
 
 gulp.task(
 	TASK.DIST_AMD,
 	()=> renderer
-		.init(MODULE.AMD, TARGET.ES5, MODULE.AMD)
+		.init(Module.AMD, Target.ES5, Module.AMD)
 		.clear()
 		.minify()
 		.render()
-		.then(()=>savePackage(MODULE.AMD))
+		.then(()=>savePackage(Module.AMD))
 );
 
 gulp.task(
 	TASK.DIST_UMD,
 	()=> renderer
-		.init(MODULE.UMD + '.min', TARGET.ES5, MODULE.UMD)
+		.init(Module.UMD + '.min', Target.ES5, Module.UMD)
 		.clear()
 		.minify()
 		.render()
-		.then(()=>savePackage(MODULE.UMD, MODULE.UMD + '.min'))
+		.then(()=>savePackage(Module.UMD, Module.UMD + '.min'))
 );
 
 gulp.task( // Need to double process to get the declarations from es6 without modules
 	TASK.DIST_COMMONJS,
 	()=> renderer
-		.init(MODULE.COMMONJS, TARGET.ES5, MODULE.COMMONJS)
+		.init(Module.COMMONJS, Target.ES5, Module.COMMONJS)
 		.clear()
 		.render()
-		.then(()=>savePackage(MODULE.COMMONJS))
+		.then(()=>savePackage(Module.COMMONJS))
 );
 
 gulp.task(
 	TASK.DIST_SYSTEMJS,
 	()=> renderer
-		.init(MODULE.SYSTEMJS, TARGET.ES5, MODULE.SYSTEMJS)
+		.init(Module.SYSTEMJS, Target.ES5, Module.SYSTEMJS)
 		.clear()
 		.render()
-		.then(()=>savePackage(MODULE.SYSTEMJS))
+		.then(()=>savePackage(Module.SYSTEMJS))
 );
 
 gulp.task(TASK.DIST, [
@@ -122,7 +124,7 @@ gulp.task(TASK.DIST, [
 // 	TASK.SOURCE,
 // 	()=>{
 // 		var r = typescript
-// 			.at('./source', TARGET.ES5, MODULE.UMD, {noEmitHelpers: true});
+// 			.at('./source', Target.ES5, Module.UMD, {noEmitHelpers: true});
 // 		var s = r.sourceMapOptions;
 // 		s.sourceRoot = "";
 // 		s.includeContent = false;
