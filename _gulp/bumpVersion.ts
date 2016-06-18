@@ -2,33 +2,42 @@
 ///<reference path="../typings/semver/semver" />
 import * as gulp from "gulp";
 import * as semver from "semver";
-import * as fs from "fs";
+import * as file from "../_utility/file-promise";
+import {streamToPromise as stream} from "../_utility/stream-to-promise";
+
+
+// No tsd yet.
+const bump = require('gulp-bump');
 
 const
 	VERSION_BUMP_MINOR = 'version-bump-minor',
-	VERSION_BUMP_PATCH ='version-bump-patch';
+	VERSION_BUMP_PATCH = 'version-bump-patch';
 
 
 /**
  * @param {string} type
  * @returns {NodeJS.ReadableStream}
  */
-function bumpVersion(type:string):void
+function bumpVersion(type:string):PromiseLike<File[]>
 {
-	// No tsd yet.
-	const bump = require('gulp-bump');
-
-	var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-	// increment version
-	var newVer = semver.inc(pkg.version, type);
-
-	return gulp.src(['./bower.json', './package.json'])
-		.pipe(bump({version: newVer}))
-		.pipe(gulp.dest('./'));
-
+	return file.json
+		.read('./package.json')
+		.then((pkg:any)=>
+		{
+			let newVer = semver.inc(pkg.version, type);
+			return stream.toPromise<File[]>(
+				gulp.src(['./bower.json', './package.json'])
+					.pipe(bump({version: newVer}))
+					.pipe(gulp.dest('./'))
+			);
+		});
 }
 
 
-gulp.task(VERSION_BUMP_PATCH, function() { bumpVersion('patch'); });
+gulp.task(
+	VERSION_BUMP_PATCH,
+	()=> bumpVersion('patch'));
 
-gulp.task(VERSION_BUMP_MINOR, function() { bumpVersion('minor'); });
+gulp.task(
+	VERSION_BUMP_MINOR,
+	()=> bumpVersion('minor'));

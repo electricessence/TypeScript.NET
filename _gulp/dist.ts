@@ -8,9 +8,7 @@ import * as File from "../_utility/file-promise";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 import {Promise} from "../source/System/Promises/Promise";
-import streamToPromise from "stream-to-promise-agnostic";
-
-const convert = streamToPromise(Promise);
+import {streamToPromise as stream} from "../_utility/stream-to-promise";
 
 const fields:IMap<boolean> = {
 	"name": true,
@@ -48,7 +46,7 @@ function savePackage(dist:string, folder:string = dist):PromiseLike<File[]>
 
 function copyReadme(folder:string):PromiseLike<File[]>
 {
-	return convert.toPromise<File[]>(
+	return stream.toPromise<File[]>(
 		gulp.src("./dist/README.md")
 			.pipe(gulp.dest(`./dist/${folder}/`)));
 }

@@ -11,12 +11,10 @@ import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
 import {Promise} from "../source/System/Promises/Promise";
 import {JsonMap} from "../source/JSON";
-import streamToPromise from "stream-to-promise-agnostic";
+import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import mergeValues from "../source/mergeValues";
 import ReadWriteStream = NodeJS.ReadWriteStream;
 const tsc = require("gulp-tsc");
-
-const convert = streamToPromise(Promise);
 
 
 export const DEFAULTS:CoreTypeScriptOptions = Object.freeze({
@@ -69,13 +67,13 @@ export function fromTo(
 	// In order to mirror WebStorm's compiler option (the tsc), gulp-tsc is used.
 
 	const start:PromiseLike<any> = declaration
-		? convert.toPromise<void>(
+		? stream.toPromise<void>(
 		gulp
 			.src([from + '/**/*.d.ts'])
 			.pipe(gulp.dest(to)))
 		: Promise.resolve();
 
-	return start.then(()=>convert.toPromise<File[]>(
+	return start.then(()=>stream.toPromise<File[]>(
 		gulp
 			.src([from + '/**/*.ts'])
 			.pipe(tsc(getTscOptions(to, target, module, declaration)))

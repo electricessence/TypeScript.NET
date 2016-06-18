@@ -3,7 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../source/System/Promises/Promise", "stream-to-promise-agnostic"], factory);
+        define(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../source/System/Promises/Promise", "../_utility/stream-to-promise"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -13,8 +13,7 @@
     var TASK = require("./constants/TaskNames");
     var File = require("../_utility/file-promise");
     var Promise_1 = require("../source/System/Promises/Promise");
-    var stream_to_promise_agnostic_1 = require("stream-to-promise-agnostic");
-    var convert = stream_to_promise_agnostic_1.default(Promise_1.Promise);
+    var stream_to_promise_1 = require("../_utility/stream-to-promise");
     var fields = {
         "name": true,
         "version": true,
@@ -44,7 +43,7 @@
             .then(function () { return copyReadme(folder); });
     }
     function copyReadme(folder) {
-        return convert.toPromise(gulp.src("./dist/README.md")
+        return stream_to_promise_1.streamToPromise.toPromise(gulp.src("./dist/README.md")
             .pipe(gulp.dest("./dist/" + folder + "/")));
     }
     var DEFAULTS = Object.freeze({
