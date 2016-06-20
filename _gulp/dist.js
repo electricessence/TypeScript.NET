@@ -53,35 +53,35 @@
         sourceMap: true,
         declaration: true
     });
-    var renderer = gulp_typescript_helper_1.TypeScriptRenderer
-        .inject(Promise_1.Promise)
+    var builder = gulp_typescript_helper_1.BuildHelper
+        .inject(Promise_1.Promise.factory)
         .fromTo(PATH.SOURCE, "./dist", DEFAULTS);
-    gulp.task(TASK.DIST_ES6, function () { return renderer
+    gulp.task(TASK.DIST_ES6, function () { return builder
         .init(gulp_typescript_helper_1.Module.ES6, gulp_typescript_helper_1.Target.ES6, gulp_typescript_helper_1.Module.ES6)
         .clear()
-        .render()
+        .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.ES6); }); });
-    gulp.task(TASK.DIST_AMD, function () { return renderer
+    gulp.task(TASK.DIST_AMD, function () { return builder
         .init(gulp_typescript_helper_1.Module.AMD, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.AMD)
         .clear()
         .minify()
-        .render()
+        .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.AMD); }); });
-    gulp.task(TASK.DIST_UMD, function () { return renderer
+    gulp.task(TASK.DIST_UMD, function () { return builder
         .init(gulp_typescript_helper_1.Module.UMD + '.min', gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.UMD)
         .clear()
         .minify()
-        .render()
+        .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.UMD, gulp_typescript_helper_1.Module.UMD + '.min'); }); });
-    gulp.task(TASK.DIST_COMMONJS, function () { return renderer
+    gulp.task(TASK.DIST_COMMONJS, function () { return builder
         .init(gulp_typescript_helper_1.Module.COMMONJS, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.COMMONJS)
         .clear()
-        .render()
+        .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.COMMONJS); }); });
-    gulp.task(TASK.DIST_SYSTEMJS, function () { return renderer
+    gulp.task(TASK.DIST_SYSTEMJS, function () { return builder
         .init(gulp_typescript_helper_1.Module.SYSTEMJS, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.SYSTEMJS)
         .clear()
-        .render()
+        .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.SYSTEMJS); }); });
     gulp.task(TASK.DIST, [
         TASK.DIST_ES6,

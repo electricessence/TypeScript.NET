@@ -517,6 +517,10 @@ var pools;
     })(Promise.State || (Promise.State = {}));
     var State = Promise.State;
     Object.freeze(State);
+    function factory(e) {
+        return new Promise(e);
+    }
+    Promise.factory = factory;
     function group(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");

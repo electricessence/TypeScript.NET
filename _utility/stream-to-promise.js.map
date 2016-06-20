@@ -1,1 +1,1 @@
-{"version":3,"file":"stream-to-promise.js","sourceRoot":"","sources":["stream-to-promise.ts"],"names":[],"mappings":"AAAA;;;GAGG;;;;;;;;;;IAEH,wBAAsB,mCAAmC,CAAC,CAAA;IAC1D,2CAAqC,4BAA4B,CAAC,CAAA;IAErD,uBAAe,GAAG,4CAAG,CAAC,iBAAO,CAAC,CAAC;IAC5C;sBAAe,uBAAe,CAAC"}
+{"version":3,"file":"stream-to-promise.js","sourceRoot":"","sources":["stream-to-promise.ts"],"names":[],"mappings":"AAAA;;;GAGG;;;;;;;;;;IAEH,wBAAsB,mCAAmC,CAAC,CAAA;IAC1D,2CAAqC,4BAA4B,CAAC,CAAA;IAErD,uBAAe,GAAG,4CAAG,CAAC,iBAAO,CAAC,OAAO,CAAC,CAAC;IACpD;sBAAe,uBAAe,CAAC"}

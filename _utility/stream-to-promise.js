@@ -13,7 +13,7 @@
     "use strict";
     var Promise_1 = require("../source/System/Promises/Promise");
     var stream_to_promise_agnostic_1 = require("stream-to-promise-agnostic");
-    exports.streamToPromise = stream_to_promise_agnostic_1.streamToPromise(Promise_1.Promise);
+    exports.streamToPromise = stream_to_promise_agnostic_1.streamToPromise(Promise_1.Promise.factory);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = exports.streamToPromise;
 });

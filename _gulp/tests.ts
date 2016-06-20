@@ -1,12 +1,12 @@
-import {Target, Module, TypeScriptRenderer} from "gulp-typescript-helper";
+import {Target, Module, BuildHelper} from "gulp-typescript-helper";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
 import {Promise} from "../source/System/Promises/Promise";
 
 const TEST_DEFAULTS = Object.freeze({noEmitHelpers: false});
 
-const renderer = TypeScriptRenderer
-	.inject(Promise)
+const renderer = BuildHelper
+	.inject(Promise.factory)
 	.defaults({
 		target: Target.ES5,
 		module: Module.UMD,
@@ -22,7 +22,7 @@ gulp.task(
 	()=> renderer
 		.at('./tests/qunit')
 		.init()
-		.render()
+		.execute()
 );
 
 gulp.task(
@@ -34,7 +34,7 @@ gulp.task(
 		.at('./tests/mocha')
 		.init()
 		.module(Module.COMMONJS)
-		.render()
+		.execute()
 );
 
 

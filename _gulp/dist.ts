@@ -1,6 +1,6 @@
 ///<reference path="../typings/gulp/gulp" />
 
-import {Target, Module, CoreTypeScriptOptions, TypeScriptRenderer} from "gulp-typescript-helper";
+import {Target, Module, CoreTypeScriptOptions, BuildHelper} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
 import * as TASK from "./constants/TaskNames";
@@ -59,54 +59,54 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 	declaration: true
 });
 
-const renderer = TypeScriptRenderer
-	.inject(Promise)
-	.fromTo(PATH.SOURCE, "./dist" , DEFAULTS);
+const builder = BuildHelper
+	.inject(Promise.factory)
+	.fromTo(PATH.SOURCE, "./dist", DEFAULTS);
 
 gulp.task(
 	TASK.DIST_ES6,
-	()=> renderer
+	()=> builder
 		.init(Module.ES6, Target.ES6, Module.ES6)
 		.clear()
-		.render()
+		.execute()
 		.then(()=>savePackage(Module.ES6))
 );
 
 gulp.task(
 	TASK.DIST_AMD,
-	()=> renderer
+	()=> builder
 		.init(Module.AMD, Target.ES5, Module.AMD)
 		.clear()
 		.minify()
-		.render()
+		.execute()
 		.then(()=>savePackage(Module.AMD))
 );
 
 gulp.task(
 	TASK.DIST_UMD,
-	()=> renderer
+	()=> builder
 		.init(Module.UMD + '.min', Target.ES5, Module.UMD)
 		.clear()
 		.minify()
-		.render()
+		.execute()
 		.then(()=>savePackage(Module.UMD, Module.UMD + '.min'))
 );
 
 gulp.task( // Need to double process to get the declarations from es6 without modules
 	TASK.DIST_COMMONJS,
-	()=> renderer
+	()=> builder
 		.init(Module.COMMONJS, Target.ES5, Module.COMMONJS)
 		.clear()
-		.render()
+		.execute()
 		.then(()=>savePackage(Module.COMMONJS))
 );
 
 gulp.task(
 	TASK.DIST_SYSTEMJS,
-	()=> renderer
+	()=> builder
 		.init(Module.SYSTEMJS, Target.ES5, Module.SYSTEMJS)
 		.clear()
-		.render()
+		.execute()
 		.then(()=>savePackage(Module.SYSTEMJS))
 );
 
@@ -127,5 +127,5 @@ gulp.task(TASK.DIST, [
 // 		s.sourceRoot = "";
 // 		s.includeContent = false;
 //
-// 		return r.render()
+// 		return r.execute()
 // 	});

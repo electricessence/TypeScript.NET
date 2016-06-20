@@ -12,8 +12,8 @@
     var gulp = require("gulp");
     var Promise_1 = require("../source/System/Promises/Promise");
     var TEST_DEFAULTS = Object.freeze({ noEmitHelpers: false });
-    var renderer = gulp_typescript_helper_1.TypeScriptRenderer
-        .inject(Promise_1.Promise)
+    var renderer = gulp_typescript_helper_1.BuildHelper
+        .inject(Promise_1.Promise.factory)
         .defaults({
         target: gulp_typescript_helper_1.Target.ES5,
         module: gulp_typescript_helper_1.Module.UMD,
@@ -24,14 +24,14 @@
     gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return renderer
         .at('./tests/qunit')
         .init()
-        .render(); });
+        .execute(); });
     gulp.task(TASK.TYPESCRIPT_MOCHA, [
         TASK.DIST_COMMONJS
     ], function () { return renderer
         .at('./tests/mocha')
         .init()
         .module(gulp_typescript_helper_1.Module.COMMONJS)
-        .render(); });
+        .execute(); });
     gulp.task(TASK.BUILD + ".tests", [
         TASK.TYPESCRIPT_QUNIT,
         TASK.TYPESCRIPT_MOCHA

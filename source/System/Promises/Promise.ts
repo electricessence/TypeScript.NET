@@ -1023,7 +1023,7 @@ export module Promise
 	{
 		(
 			onFulfilled:Fulfill<T,TResult>,
-			onRejected?:Reject<TResult>):PromiseBase<TResult>
+			onRejected?:Reject<TResult>):PromiseLike<TResult>
 	}
 
 	export interface Executor<T>
@@ -1031,6 +1031,14 @@ export module Promise
 		(
 			resolve:(value?:T | PromiseLike<T>) => void,
 			reject:(reason?:any) => void):void;
+	}
+
+	export interface Factory {
+		<T>(executor:Executor<T>):PromiseLike<T>;
+	}
+
+	export function factory<T>(e:Executor<T>):Promise<T> {
+		return new Promise(e);
 	}
 
 	/**
