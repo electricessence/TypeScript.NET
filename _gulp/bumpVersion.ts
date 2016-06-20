@@ -1,5 +1,5 @@
-///<reference path="../typings/gulp/gulp" />
-///<reference path="../typings/semver/semver" />
+/// <reference path="../typings/gulp/gulp" />
+/// <reference path="../typings/semver/semver" />
 import * as gulp from "gulp";
 import * as semver from "semver";
 import * as file from "../_utility/file-promise";

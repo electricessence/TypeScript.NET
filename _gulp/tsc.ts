@@ -1,11 +1,3 @@
-///<reference path="../typings/gulp/gulp" />
-///<reference path="../typings/gulp-sourcemaps/gulp-sourcemaps" />
-///<reference path="../typings/gulp-typescript/gulp-typescript" />
-///<reference path="../typings/gulp-replace/gulp-replace" />
-///<reference path="../typings/gulp-uglify/gulp-uglify" />
-///<reference path="../typings/del/del" />
-///<reference path="../typings/merge2/merge2" />
-
 import {Target, Module, CoreTypeScriptOptions} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";

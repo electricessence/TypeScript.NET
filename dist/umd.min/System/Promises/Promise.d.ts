@@ -92,11 +92,15 @@ export declare module Promise {
         (err?: any): Resolution<TResult>;
     }
     interface Then<T, TResult> {
-        (onFulfilled: Fulfill<T, TResult>, onRejected?: Reject<TResult>): PromiseBase<TResult>;
+        (onFulfilled: Fulfill<T, TResult>, onRejected?: Reject<TResult>): PromiseLike<TResult>;
     }
     interface Executor<T> {
         (resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void): void;
     }
+    interface Factory {
+        <T>(executor: Executor<T>): PromiseLike<T>;
+    }
+    function factory<T>(e: Executor<T>): Promise<T>;
     function group<T>(promises: PromiseLike<T>[]): PromiseCollection<T>;
     function group<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseCollection<T>;
     function all<T>(promises: PromiseLike<T>[]): ArrayPromise<T>;

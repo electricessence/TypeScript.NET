@@ -2,12 +2,9 @@
  * From: https://github.com/adambom/parallel.js/blob/master/lib/eval.js
  */
 
-declare var module:any;
-declare var process:any;
+///<reference path="../../../../typings/node/node"/>
 
-const isNode = typeof module !== 'undefined' && module.exports;
-
-if (isNode) {
+if (typeof module !== 'undefined' && module.exports) {
 	process.once('message', (code:string)=> {
 		eval(JSON.parse(code).data);
 	});

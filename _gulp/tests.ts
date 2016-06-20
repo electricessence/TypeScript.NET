@@ -1,3 +1,4 @@
+/// <reference path="../typings/gulp/gulp" />
 import {Target, Module, BuildHelper} from "gulp-typescript-helper";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";

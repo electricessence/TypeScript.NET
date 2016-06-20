@@ -633,6 +633,10 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 })(Promise.State || (Promise.State = {}));
                 var State = Promise.State;
                 Object.freeze(State);
+                function factory(e) {
+                    return new Promise(e);
+                }
+                Promise.factory = factory;
                 function group(first) {
                     var rest = [];
                     for (var _i = 1; _i < arguments.length; _i++) {
