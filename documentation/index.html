@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>typescript-dotnet</title>
+	<title>TypeScript.NET</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -23,7 +23,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">typescript-dotnet</a>
+					<a href="index.html" class="title">TypeScript.NET</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -41,8 +41,6 @@
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
 							<input type="checkbox" id="tsd-filter-externals" checked />
 							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -57,7 +55,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> typescript-dotnet</h1>
+			<h1> TypeScript.NET</h1>
 		</div>
 	</div>
 </header>
@@ -99,6 +97,7 @@
 					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/Uri.ts"><strong>Uri</strong></a>, <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/QueryParams.ts"><strong>QueryParams</strong></a>, &amp; <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Uri/QueryBuilder.ts"><strong>QueryBuilder</strong></a>:  Having a typed class and interface for an Uri tends to be very useful in web development.  Originally inspired by the .NET System.Uri class, these have been written from scratch to be more useful and helpful for debugging in JavaScript and are based upon the URI specification.</li>
 					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Text/RegularExpressions.ts"><strong>Regex</strong></a>: Includes named group captures.  Very handy for accessing groups in regular expression results.</li>
 					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/Promise.ts"><strong>Promise\<T\></strong></a> and <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Promises/LazyPromise.ts"><strong>LazyPromise\<T\></strong></a>: An efficient set of promises that fills that follows the standard ES6 usage while allowing for some useful methods that can improve performance of your application.  Read more <a href="https://www.reddit.com/r/typescript/comments/4l9orj/lazypromiset/">here</a>.</li>
+					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/Threading/Tasks/Parallel.ts"><strong>Parallel</strong></a>: Simplifies distributing tasks to a &#39;Worker&#39;.  Has ability to <code>map</code> and <code>reduce</code> and results in a Promise\<T\>.</li>
 					<li><a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.ts"><strong>TypeValidator\<T\></strong></a>: An easy to use runtime type checker for complex types or JSON.  Read more <a href="https://github.com/electricessence/TypeScript.NET/blob/master/source/System/TypeValidator.md">here</a>. </li>
 					<li><strong><em>Currently no external dependencies.</em></strong></li>
 				</ul>
@@ -115,30 +114,39 @@
 				</ul>
 				<h5 id="why-not-take-this-a-step-further-and-break-it-up-into-separate-npm-style-modules-packages-">Why not take this a step further and break it up into separate NPM style modules/packages?</h5>
 				<p>There is a point where fragmentation and over-granularity just make life harder.  If one module depends on another and you want to implement improvements it&#39;s just easier if they live in the same place.</p>
-				<h4 id="-npm-http-www-npmjs-com-package-typescript-dotnet-"><a href="http://www.npmjs.com/package/typescript-dotnet">NPM</a>:</h4>
-				<pre><code>npm <span class="hljs-keyword">install</span> typescript-<span class="hljs-keyword">dotnet</span>
-</code></pre><p>Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.</p>
+				<h3 id="-npm-https-www-npmjs-com-search-q-typescript-dotnet-"><a href="https://www.npmjs.com/search?q=typescript-dotnet">NPM</a>:</h3>
+				<p>Version 2.5 was the first NPM release.  The goal is to get this as user friendly as possible.</p>
+				<p><strong><em>All distributions contain source-maps.</em></strong><br><a href="https://www.npmjs.com/search?q=typescript-dotnet">https://www.npmjs.com/search?q=typescript-dotnet</a>  </p>
+				<h4 id="-universal-module-definition-umd-https-www-npmjs-com-package-typescript-dotnet-umd-"><a href="https://www.npmjs.com/package/typescript-dotnet-umd">Universal Module Definition (UMD)</a></h4>
+				<pre><code>npm <span class="hljs-keyword">install</span> typescript-<span class="hljs-keyword">dotnet</span>-umd
+</code></pre><p>It&#39;s highly recommended to use the UMD (minified) version for most cases since it works for AMD and CommonJS.</p>
+				<h4 id="all-published-npm-module-types">All Published NPM Module Types</h4>
+				<ul>
+					<li><a href="https://www.npmjs.com/package/typescript-dotnet-umd"><code>typescript-dotnet-umd</code></a></li>
+					<li><a href="https://www.npmjs.com/package/typescript-dotnet-es6"><code>typescript-dotnet-es6</code></a></li>
+					<li><a href="https://www.npmjs.com/package/typescript-dotnet-commonjs"><code>typescript-dotnet-commonjs</code></a></li>
+					<li><a href="https://www.npmjs.com/package/typescript-dotnet-amd"><code>typescript-dotnet-amd</code></a></li>
+					<li><a href="https://www.npmjs.com/package/typescript-dotnet-system"><code>typescript-dotnet-system</code></a></li>
+				</ul>
+				<p>Install on only the module type you need in order to avoid type collisions.</p>
 				<p>Currently it is possible/supported to use TypeScript .NET in a number of different ways:</p>
-				<h5 id="import-examples-">Import Examples:</h5>
-				<pre><code class="lang-typescript"><span class="hljs-comment">// The following works well if you are launching from an index.ts or main.ts in your root.</span>
-<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/source/System.Linq/Linq"</span>
+				<h4 id="import-examples-">Import Examples:</h4>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet-es6/System.Linq/Linq"</span>
 </code></pre>
-				<pre><code class="lang-typescript"><span class="hljs-comment">// Using a dist folder is recommended to eliminate any cross compilation from your project.</span>
-<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/commonjs/System.Linq/Linq"</span>
+				<h5 id="recommended-for-users-who-are-deploying-to-web-browsers-">Recommended for users who are deploying to web/browsers:</h5>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet-umd/System.Linq/Linq"</span>
 </code></pre>
-				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/es6/System.Linq/Linq"</span>
+				<h5 id="pure-unminified-es5-commonjs-is-available-this-way-">Pure (unminified ES5) CommonJS is available this way:</h5>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet-commonjs/System.Linq/Linq"</span>
 </code></pre>
-				<pre><code class="lang-typescript"><span class="hljs-comment">// Recommended for users who are deploying to web/browsers.</span>
-<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/umd.min/System.Linq/Linq"</span>
+				<h5 id="recommended-for-users-who-want-pure-minified-amd-requirejs-with-source-maps-">Recommended for users who want pure minified AMD (RequireJS) with source-maps:</h5>
+				<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet-amd/System.Linq/Linq"</span>
 </code></pre>
-				<pre><code class="lang-typescript"><span class="hljs-comment">// Recommended for users who want pure minified AMD (RequireJS) with source-maps.</span>
-<span class="hljs-keyword">import</span> Enumerable from <span class="hljs-string">"typescript-dotnet/dist/amd/System.Linq/Linq"</span>
-</code></pre>
-				<h4 id="-bower-http-bower-io-search-q-typescript-dotnet-"><a href="http://bower.io/search/?q=typescript-dotnet">Bower</a>:</h4>
+				<h3 id="-bower-http-bower-io-search-q-typescript-dotnet-"><a href="http://bower.io/search/?q=typescript-dotnet">Bower</a>:</h3>
 				<pre><code><span class="hljs-keyword">bower </span><span class="hljs-keyword">install </span>typescript-dotnet
 </code></pre><p>This should also include require.js in your bower components directory.
 				If you need another module type other than AMD, the TypeScript files are included so you can rebuild however you need.</p>
-				<h4 id="-nuget-https-www-nuget-org-packages-typescript-net-library-"><a href="https://www.nuget.org/packages/TypeScript.NET.Library/">Nuget</a>:</h4>
+				<h3 id="-nuget-https-www-nuget-org-packages-typescript-net-library-"><a href="https://www.nuget.org/packages/TypeScript.NET.Library/">Nuget</a>:</h3>
 				<pre><code>PM&gt; Install-Package TypeScript<span class="hljs-selector-class">.NET</span><span class="hljs-selector-class">.Library</span>
 </code></pre><h2 id="unit-tests">Unit Tests</h2>
 				<p>Mocha tests are in place for core functionality and expanding all the time.
@@ -160,9 +168,11 @@
 				<h2 id="learn-connect-evolve">Learn, Connect &amp; Evolve</h2>
 				<h4 id="code-evolution">Code Evolution</h4>
 				<p><a href="https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ">www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ</a></p>
+				<p>Click an image below to watch.</p>
 				<h4 id="-intro-to-typescript-net-library-part-1-https-www-youtube-com-watch-v-dlwl2dghszo-"><a href="https://www.youtube.com/watch?v=dLwl2dGHSZo">Intro to TypeScript.NET Library (Part 1)</a></h4>
-				<p>Click the image below to watch.</p>
 				<p><a href="https://www.youtube.com/watch?v=dLwl2dGHSZo"><img src="https://img.youtube.com/vi/dLwl2dGHSZo/0.jpg" alt="Intro to TypeScript.NET Library (Part 1)"></a></p>
+				<h4 id="-typescript-net-v3-release-info-update-https-www-youtube-com-watch-v-izqje77tmom-"><a href="https://www.youtube.com/watch?v=izQjE77TmOM">TypeScript.NET v3 Release Info/Update</a></h4>
+				<p><a href="https://www.youtube.com/watch?v=izQjE77TmOM"><img src="https://img.youtube.com/vi/izQjE77TmOM/0.jpg" alt="TypeScript.NET v3 Release Info/Update"></a></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -171,293 +181,500 @@
 					<li class="globals  ">
 						<a href="globals.html"><em>Globals</em></a>
 					</li>
+					<li class="label tsd-is-external">
+						<span>Internals</span>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_json_d_.html">"source/JSON.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_linq_enumerable_d_.html">"source/<wbr>System.<wbr>Linq/<wbr>Enumerable.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_linq_linq_.html">"source/<wbr>System.<wbr>Linq/<wbr>Linq"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_char_.html">"source/<wbr>System/<wbr>Char"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_array_compare_.html">"source/<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Compare"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_array_dispatch_.html">"source/<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Dispatch"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_array_iarray_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Array/IArray.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_array_procedure_.html">"source/<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Procedure"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_array_readonlyarraywrapper_.html">"source/<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Read<wbr>Only<wbr>Array<wbr>Wrapper"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_array_sort_.html">"source/<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Sort"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_array_utility_.html">"source/<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Utility"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_collectionbase_.html">"source/<wbr>System/<wbr>Collections/<wbr>Collection<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_dictionaries_dictionary_.html">"source/<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_dictionaries_dictionarybase_.html">"source/<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_dictionaries_idictionary_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Dictionaries/IDictionary.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_dictionaries_orderedstringkeydictionary_.html">"source/<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Ordered<wbr>String<wbr>Key<wbr>Dictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_dictionaries_stringkeydictionary_.html">"source/<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>String<wbr>Key<wbr>Dictionary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_arrayenumerator_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Array<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_emptyenumerator_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Empty<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_enumerator_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_enumeratorbase_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_ienumerable_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerable.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_ienumerateeach_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerate<wbr>Each.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_ienumerator_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/IEnumerator.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_iiterator_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/IIterator.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_iyield_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/IYield.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_indexenumerator_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Index<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_infiniteenumerator_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Infinite<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_iteratorenumerator_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Iterator<wbr>Enumerator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_iteratorresult_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Iterator<wbr>Result"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_simpleenumerablebase_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Simple<wbr>Enumerable<wbr>Base"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_enumeration_unsupportedenumerableexception_.html">"source/<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Unsupported<wbr>Enumerable<wbr>Exception"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_collections_icollection_d_.html">"source/<wbr>System/<wbr>Collections/ICollection.d"</a>
+					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_linq_linq_.html">"<wbr>System.<wbr>Linq/<wbr>Linq"</a>
+						<a href="modules/_source_system_collections_ienumerableorarray_d_.html">"source/<wbr>System/<wbr>Collections/IEnumerable<wbr>OrArray.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_char_.html">"<wbr>System/<wbr>Char"</a>
+						<a href="modules/_source_system_collections_ilinkedlist_d_.html">"source/<wbr>System/<wbr>Collections/ILinked<wbr>List.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_array_compare_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Compare"</a>
+						<a href="modules/_source_system_collections_ilinkedlistnode_d_.html">"source/<wbr>System/<wbr>Collections/ILinked<wbr>List<wbr>Node.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_array_dispatch_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Dispatch"</a>
+						<a href="modules/_source_system_collections_ilist_d_.html">"source/<wbr>System/<wbr>Collections/IList.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_array_procedure_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Procedure"</a>
+						<a href="modules/_source_system_collections_ireadonlycollection_d_.html">"source/<wbr>System/<wbr>Collections/IRead<wbr>Only<wbr>Collection.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_array_readonlyarraywrapper_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Read<wbr>Only<wbr>Array<wbr>Wrapper"</a>
+						<a href="modules/_source_system_collections_iset_d_.html">"source/<wbr>System/<wbr>Collections/ISet.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_array_sort_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Sort"</a>
+						<a href="modules/_source_system_collections_linkedlist_.html">"source/<wbr>System/<wbr>Collections/<wbr>Linked<wbr>List"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_array_utility_.html">"<wbr>System/<wbr>Collections/<wbr>Array/<wbr>Utility"</a>
+						<a href="modules/_source_system_collections_linkednodelist_.html">"source/<wbr>System/<wbr>Collections/<wbr>Linked<wbr>Node<wbr>List"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_collectionbase_.html">"<wbr>System/<wbr>Collections/<wbr>Collection<wbr>Base"</a>
+						<a href="modules/_source_system_collections_list_.html">"source/<wbr>System/<wbr>Collections/<wbr>List"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_dictionaries_dictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary"</a>
+						<a href="modules/_source_system_collections_queue_.html">"source/<wbr>System/<wbr>Collections/<wbr>Queue"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_dictionaries_dictionarybase_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Dictionary<wbr>Base"</a>
+						<a href="modules/_source_system_collections_readonlycollectionbase_.html">"source/<wbr>System/<wbr>Collections/<wbr>Read<wbr>Only<wbr>Collection<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_dictionaries_orderedstringkeydictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>Ordered<wbr>String<wbr>Key<wbr>Dictionary"</a>
+						<a href="modules/_source_system_collections_readonlycollectionwrapper_.html">"source/<wbr>System/<wbr>Collections/<wbr>Read<wbr>Only<wbr>Collection<wbr>Wrapper"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_dictionaries_stringkeydictionary_.html">"<wbr>System/<wbr>Collections/<wbr>Dictionaries/<wbr>String<wbr>Key<wbr>Dictionary"</a>
+						<a href="modules/_source_system_collections_set_.html">"source/<wbr>System/<wbr>Collections/<wbr>Set"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_arrayenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Array<wbr>Enumerator"</a>
+						<a href="modules/_source_system_collections_setbase_.html">"source/<wbr>System/<wbr>Collections/<wbr>Set<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_emptyenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Empty<wbr>Enumerator"</a>
+						<a href="modules/_source_system_collections_sorting_keysortedcontext_.html">"source/<wbr>System/<wbr>Collections/<wbr>Sorting/<wbr>Key<wbr>Sorted<wbr>Context"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_enumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator"</a>
+						<a href="modules/_source_system_collections_sorting_order_d_.html">"source/<wbr>System/<wbr>Collections/<wbr>Sorting/<wbr>Order.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_enumeratorbase_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Enumerator<wbr>Base"</a>
+						<a href="modules/_source_system_collections_sorting_sortcontext_.html">"source/<wbr>System/<wbr>Collections/<wbr>Sorting/<wbr>Sort<wbr>Context"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_indexenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Index<wbr>Enumerator"</a>
+						<a href="modules/_source_system_compare_.html">"source/<wbr>System/<wbr>Compare"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_infiniteenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Infinite<wbr>Enumerator"</a>
+						<a href="modules/_source_system_compareresult_d_.html">"source/<wbr>System/<wbr>Compare<wbr>Result.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_iteratorenumerator_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Iterator<wbr>Enumerator"</a>
+						<a href="modules/_source_system_diagnostics_stopwatch_.html">"source/<wbr>System/<wbr>Diagnostics/<wbr>Stopwatch"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_iteratorresult_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Iterator<wbr>Result"</a>
+						<a href="modules/_source_system_disposable_disposablebase_.html">"source/<wbr>System/<wbr>Disposable/<wbr>Disposable<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_simpleenumerablebase_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Simple<wbr>Enumerable<wbr>Base"</a>
+						<a href="modules/_source_system_disposable_idisposable_d_.html">"source/<wbr>System/<wbr>Disposable/IDisposable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_enumeration_unsupportedenumerableexception_.html">"<wbr>System/<wbr>Collections/<wbr>Enumeration/<wbr>Unsupported<wbr>Enumerable<wbr>Exception"</a>
+						<a href="modules/_source_system_disposable_idisposableaware_d_.html">"source/<wbr>System/<wbr>Disposable/IDisposable<wbr>Aware.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_linkedlist_.html">"<wbr>System/<wbr>Collections/<wbr>Linked<wbr>List"</a>
+						<a href="modules/_source_system_disposable_objectdisposedexception_.html">"source/<wbr>System/<wbr>Disposable/<wbr>Object<wbr>Disposed<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_linkednodelist_.html">"<wbr>System/<wbr>Collections/<wbr>Linked<wbr>Node<wbr>List"</a>
+						<a href="modules/_source_system_disposable_objectpool_.html">"source/<wbr>System/<wbr>Disposable/<wbr>Object<wbr>Pool"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_list_.html">"<wbr>System/<wbr>Collections/<wbr>List"</a>
+						<a href="modules/_source_system_disposable_dispose_.html">"source/<wbr>System/<wbr>Disposable/dispose"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_queue_.html">"<wbr>System/<wbr>Collections/<wbr>Queue"</a>
+						<a href="modules/_source_system_environment_.html">"source/<wbr>System/<wbr>Environment"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_readonlycollectionbase_.html">"<wbr>System/<wbr>Collections/<wbr>Read<wbr>Only<wbr>Collection<wbr>Base"</a>
+						<a href="modules/_source_system_events_eventdispatcherbase_.html">"source/<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_readonlycollectionwrapper_.html">"<wbr>System/<wbr>Collections/<wbr>Read<wbr>Only<wbr>Collection<wbr>Wrapper"</a>
+						<a href="modules/_source_system_events_eventdispatcherentry_.html">"source/<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher<wbr>Entry"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_set_.html">"<wbr>System/<wbr>Collections/<wbr>Set"</a>
+						<a href="modules/_source_system_events_eventsimple_.html">"source/<wbr>System/<wbr>Events/<wbr>Event<wbr>Simple"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_setbase_.html">"<wbr>System/<wbr>Collections/<wbr>Set<wbr>Base"</a>
+						<a href="modules/_source_system_events_ieventdispatcher_d_.html">"source/<wbr>System/<wbr>Events/IEvent<wbr>Dispatcher.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_sorting_keysortedcontext_.html">"<wbr>System/<wbr>Collections/<wbr>Sorting/<wbr>Key<wbr>Sorted<wbr>Context"</a>
+						<a href="modules/_source_system_events_ieventlistener_d_.html">"source/<wbr>System/<wbr>Events/IEvent<wbr>Listener.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_collections_sorting_sortcontext_.html">"<wbr>System/<wbr>Collections/<wbr>Sorting/<wbr>Sort<wbr>Context"</a>
+						<a href="modules/_source_system_exception_.html">"source/<wbr>System/<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_compare_.html">"<wbr>System/<wbr>Compare"</a>
+						<a href="modules/_source_system_exceptiontype_.html">"source/<wbr>System/<wbr>Exception<wbr>Type"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_diagnostics_stopwatch_.html">"<wbr>System/<wbr>Diagnostics/<wbr>Stopwatch"</a>
+						<a href="modules/_source_system_exceptions_argumentexception_.html">"source/<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_disposable_disposablebase_.html">"<wbr>System/<wbr>Disposable/<wbr>Disposable<wbr>Base"</a>
+						<a href="modules/_source_system_exceptions_argumentnullexception_.html">"source/<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Null<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_disposable_objectdisposedexception_.html">"<wbr>System/<wbr>Disposable/<wbr>Object<wbr>Disposed<wbr>Exception"</a>
+						<a href="modules/_source_system_exceptions_argumentoutofrangeexception_.html">"source/<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Out<wbr>OfRange<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_disposable_objectpool_.html">"<wbr>System/<wbr>Disposable/<wbr>Object<wbr>Pool"</a>
+						<a href="modules/_source_system_exceptions_invalidoperationexception_.html">"source/<wbr>System/<wbr>Exceptions/<wbr>Invalid<wbr>Operation<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_disposable_dispose_.html">"<wbr>System/<wbr>Disposable/dispose"</a>
+						<a href="modules/_source_system_exceptions_notimplementedexception_.html">"source/<wbr>System/<wbr>Exceptions/<wbr>Not<wbr>Implemented<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_environment_.html">"<wbr>System/<wbr>Environment"</a>
+						<a href="modules/_source_system_exceptions_nullreferenceexception_.html">"source/<wbr>System/<wbr>Exceptions/<wbr>Null<wbr>Reference<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_events_eventdispatcherbase_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher<wbr>Base"</a>
+						<a href="modules/_source_system_exceptions_systemexception_.html">"source/<wbr>System/<wbr>Exceptions/<wbr>System<wbr>Exception"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_events_eventdispatcherentry_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Dispatcher<wbr>Entry"</a>
+						<a href="modules/_source_system_functiontypes_d_.html">"source/<wbr>System/<wbr>Function<wbr>Types.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_events_eventsimple_.html">"<wbr>System/<wbr>Events/<wbr>Event<wbr>Simple"</a>
+						<a href="modules/_source_system_functions_.html">"source/<wbr>System/<wbr>Functions"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exception_.html">"<wbr>System/<wbr>Exception"</a>
+						<a href="modules/_source_system_icloneable_d_.html">"source/<wbr>System/ICloneable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptiontype_.html">"<wbr>System/<wbr>Exception<wbr>Type"</a>
+						<a href="modules/_source_system_icomparable_d_.html">"source/<wbr>System/IComparable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_argumentexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Exception"</a>
+						<a href="modules/_source_system_icomparer_d_.html">"source/<wbr>System/IComparer.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_argumentnullexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Null<wbr>Exception"</a>
+						<a href="modules/_source_system_iconvertable_d_.html">"source/<wbr>System/IConvertable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_argumentoutofrangeexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Argument<wbr>Out<wbr>OfRange<wbr>Exception"</a>
+						<a href="modules/_source_system_iequatable_d_.html">"source/<wbr>System/IEquatable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_invalidoperationexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Invalid<wbr>Operation<wbr>Exception"</a>
+						<a href="modules/_source_system_iformatprovider_d_.html">"source/<wbr>System/IFormat<wbr>Provider.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_notimplementedexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Not<wbr>Implemented<wbr>Exception"</a>
+						<a href="modules/_source_system_iformattable_d_.html">"source/<wbr>System/IFormattable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_nullreferenceexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>Null<wbr>Reference<wbr>Exception"</a>
+						<a href="modules/_source_system_ilazy_d_.html">"source/<wbr>System/ILazy.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_exceptions_systemexception_.html">"<wbr>System/<wbr>Exceptions/<wbr>System<wbr>Exception"</a>
+						<a href="modules/_source_system_integer_.html">"source/<wbr>System/<wbr>Integer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_functions_.html">"<wbr>System/<wbr>Functions"</a>
+						<a href="modules/_source_system_keyvalueextract_.html">"source/<wbr>System/<wbr>Key<wbr>Value<wbr>Extract"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_integer_.html">"<wbr>System/<wbr>Integer"</a>
+						<a href="modules/_source_system_keyvaluepair_d_.html">"source/<wbr>System/<wbr>Key<wbr>Value<wbr>Pair.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_keyvalueextract_.html">"<wbr>System/<wbr>Key<wbr>Value<wbr>Extract"</a>
+						<a href="modules/_source_system_lazy_.html">"source/<wbr>System/<wbr>Lazy"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_lazy_.html">"<wbr>System/<wbr>Lazy"</a>
+						<a href="modules/_source_system_net_cache_irequestcachepolicy_d_.html">"source/<wbr>System/<wbr>Net/<wbr>Cache/IRequest<wbr>Cache<wbr>Policy.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_net_http_httpmethod_.html">"<wbr>System/<wbr>Net/<wbr>Http/<wbr>Http<wbr>Method"</a>
+						<a href="modules/_source_system_net_cache_requestcachelevel_d_.html">"source/<wbr>System/<wbr>Net/<wbr>Cache/<wbr>Request<wbr>Cache<wbr>Level.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_net_http_httprequestfactory_.html">"<wbr>System/<wbr>Net/<wbr>Http/<wbr>Http<wbr>Request<wbr>Factory"</a>
+						<a href="modules/_source_system_net_http_httpmethod_.html">"source/<wbr>System/<wbr>Net/<wbr>Http/<wbr>Http<wbr>Method"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_observablebase_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Base"</a>
+						<a href="modules/_source_system_net_http_httpmethodvalue_d_.html">"source/<wbr>System/<wbr>Net/<wbr>Http/<wbr>Http<wbr>Method<wbr>Value.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_observablenodebase_.html">"<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Node<wbr>Base"</a>
+						<a href="modules/_source_system_net_http_httprequestfactory_.html">"source/<wbr>System/<wbr>Net/<wbr>Http/<wbr>Http<wbr>Request<wbr>Factory"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_subscribablebase_.html">"<wbr>System/<wbr>Observable/<wbr>Subscribable<wbr>Base"</a>
+						<a href="modules/_source_system_net_http_ihttprequestadapter_d_.html">"source/<wbr>System/<wbr>Net/<wbr>Http/IHttp<wbr>Request<wbr>Adapter.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_observable_subscription_.html">"<wbr>System/<wbr>Observable/<wbr>Subscription"</a>
+						<a href="modules/_source_system_net_http_ihttprequestparams_d_.html">"source/<wbr>System/<wbr>Net/<wbr>Http/IHttp<wbr>Request<wbr>Params.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_promises_lazypromise_.html">"<wbr>System/<wbr>Promises/<wbr>Lazy<wbr>Promise"</a>
+						<a href="modules/_source_system_net_iwebrequest_d_.html">"source/<wbr>System/<wbr>Net/IWeb<wbr>Request.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_promises_promise_.html">"<wbr>System/<wbr>Promises/<wbr>Promise"</a>
+						<a href="modules/_source_system_net_security_authenticationlevel_d_.html">"source/<wbr>System/<wbr>Net/<wbr>Security/<wbr>Authentication<wbr>Level.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_resolverbase_.html">"<wbr>System/<wbr>Resolver<wbr>Base"</a>
+						<a href="modules/_source_system_observable_iobservable_d_.html">"source/<wbr>System/<wbr>Observable/IObservable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_serialization_utility_.html">"<wbr>System/<wbr>Serialization/<wbr>Utility"</a>
+						<a href="modules/_source_system_observable_iobserver_d_.html">"source/<wbr>System/<wbr>Observable/IObserver.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_text_padding_.html">"<wbr>System/<wbr>Text/<wbr>Padding"</a>
+						<a href="modules/_source_system_observable_isubscribable_d_.html">"source/<wbr>System/<wbr>Observable/ISubscribable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_text_regexmatchenumerator_.html">"<wbr>System/<wbr>Text/<wbr>Regex<wbr>Match<wbr>Enumerator"</a>
+						<a href="modules/_source_system_observable_observablebase_.html">"source/<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_text_regularexpressions_.html">"<wbr>System/<wbr>Text/<wbr>Regular<wbr>Expressions"</a>
+						<a href="modules/_source_system_observable_observablenodebase_.html">"source/<wbr>System/<wbr>Observable/<wbr>Observable<wbr>Node<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_text_stringbuilder_.html">"<wbr>System/<wbr>Text/<wbr>String<wbr>Builder"</a>
+						<a href="modules/_source_system_observable_subscribablebase_.html">"source/<wbr>System/<wbr>Observable/<wbr>Subscribable<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_text_utility_.html">"<wbr>System/<wbr>Text/<wbr>Utility"</a>
+						<a href="modules/_source_system_observable_subscription_.html">"source/<wbr>System/<wbr>Observable/<wbr>Subscription"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_threading_tasks_task_.html">"<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task"</a>
+						<a href="modules/_source_system_primitive_d_.html">"source/<wbr>System/<wbr>Primitive.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_threading_tasks_taskhandler_.html">"<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task<wbr>Handler"</a>
+						<a href="modules/_source_system_promises_lazypromise_.html">"source/<wbr>System/<wbr>Promises/<wbr>Lazy<wbr>Promise"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_threading_tasks_taskhandlerbase_.html">"<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task<wbr>Handler<wbr>Base"</a>
+						<a href="modules/_source_system_promises_promise_.html">"source/<wbr>System/<wbr>Promises/<wbr>Promise"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_threading_defer_.html">"<wbr>System/<wbr>Threading/defer"</a>
+						<a href="modules/_source_system_resolverbase_.html">"source/<wbr>System/<wbr>Resolver<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_threading_deferimmediate_.html">"<wbr>System/<wbr>Threading/defer<wbr>Immediate"</a>
+						<a href="modules/_source_system_serialization_iserializable_d_.html">"source/<wbr>System/<wbr>Serialization/ISerializable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_clocktime_.html">"<wbr>System/<wbr>Time/<wbr>Clock<wbr>Time"</a>
+						<a href="modules/_source_system_serialization_utility_.html">"source/<wbr>System/<wbr>Serialization/<wbr>Utility"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_datetime_.html">"<wbr>System/<wbr>Time/<wbr>Date<wbr>Time"</a>
+						<a href="modules/_source_system_text_padding_.html">"source/<wbr>System/<wbr>Text/<wbr>Padding"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_timequantity_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Quantity"</a>
+						<a href="modules/_source_system_text_regexmatchenumerator_.html">"source/<wbr>System/<wbr>Text/<wbr>Regex<wbr>Match<wbr>Enumerator"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_timespan_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Span"</a>
+						<a href="modules/_source_system_text_regularexpressions_.html">"source/<wbr>System/<wbr>Text/<wbr>Regular<wbr>Expressions"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_timestamp_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Stamp"</a>
+						<a href="modules/_source_system_text_stringbuilder_.html">"source/<wbr>System/<wbr>Text/<wbr>String<wbr>Builder"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_timeunit_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Unit"</a>
+						<a href="modules/_source_system_text_utility_.html">"source/<wbr>System/<wbr>Text/<wbr>Utility"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_time_timeunitvalue_.html">"<wbr>System/<wbr>Time/<wbr>Time<wbr>Unit<wbr>Value"</a>
+						<a href="modules/_source_system_threading_icancellable_d_.html">"source/<wbr>System/<wbr>Threading/ICancellable.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_timers_timer_.html">"<wbr>System/<wbr>Timers/<wbr>Timer"</a>
+						<a href="modules/_source_system_threading_nodejsworker_.html">"source/<wbr>System/<wbr>Threading/<wbr>NodeJSWorker"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_typevalidator_.html">"<wbr>System/<wbr>Type<wbr>Validator"</a>
+						<a href="modules/_source_system_threading_tasks_itaskstate_d_.html">"source/<wbr>System/<wbr>Threading/<wbr>Tasks/ITask<wbr>State.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_types_.html">"<wbr>System/<wbr>Types"</a>
+						<a href="modules/_source_system_threading_tasks_parallel_.html">"source/<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Parallel"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_hostnametype_.html">"<wbr>System/<wbr>Uri/<wbr>Host<wbr>Name<wbr>Type"</a>
+						<a href="modules/_source_system_threading_tasks_task_.html">"source/<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_querybuilder_.html">"<wbr>System/<wbr>Uri/<wbr>Query<wbr>Builder"</a>
+						<a href="modules/_source_system_threading_tasks_taskhandler_.html">"source/<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task<wbr>Handler"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_queryparams_.html">"<wbr>System/<wbr>Uri/<wbr>Query<wbr>Params"</a>
+						<a href="modules/_source_system_threading_tasks_taskhandlerbase_.html">"source/<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task<wbr>Handler<wbr>Base"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_scheme_.html">"<wbr>System/<wbr>Uri/<wbr>Scheme"</a>
+						<a href="modules/_source_system_threading_tasks_taskstatus_d_.html">"source/<wbr>System/<wbr>Threading/<wbr>Tasks/<wbr>Task<wbr>Status.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_uri_uri_.html">"<wbr>System/<wbr>Uri/<wbr>Uri"</a>
+						<a href="modules/_source_system_threading_tasks_eval_.html">"source/<wbr>System/<wbr>Threading/<wbr>Tasks/eval"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_utility_applymixins_.html">"<wbr>System/<wbr>Utility/apply<wbr>Mixins"</a>
+						<a href="modules/_source_system_threading_worker_.html">"source/<wbr>System/<wbr>Threading/<wbr>Worker"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_utility_clone_.html">"<wbr>System/<wbr>Utility/clone"</a>
+						<a href="modules/_source_system_threading_workertype_d_.html">"source/<wbr>System/<wbr>Threading/<wbr>Worker<wbr>Type.d"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_utility_shallowcopy_.html">"<wbr>System/<wbr>Utility/shallow<wbr>Copy"</a>
+						<a href="modules/_source_system_threading_defer_.html">"source/<wbr>System/<wbr>Threading/defer"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_system_validation_validationresult_.html">"<wbr>System/<wbr>Validation/<wbr>Validation<wbr>Result"</a>
+						<a href="modules/_source_system_threading_deferimmediate_.html">"source/<wbr>System/<wbr>Threading/defer<wbr>Immediate"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_extends_.html">"extends"</a>
+						<a href="modules/_source_system_time_calendars_d_.html">"source/<wbr>System/<wbr>Time/<wbr>Calendars.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_clocktime_.html">"source/<wbr>System/<wbr>Time/<wbr>Clock<wbr>Time"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_datetime_.html">"source/<wbr>System/<wbr>Time/<wbr>Date<wbr>Time"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_howmany_d_.html">"source/<wbr>System/<wbr>Time/<wbr>How<wbr>Many.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_idatetime_d_.html">"source/<wbr>System/<wbr>Time/IDate<wbr>Time.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_itimemeasurement_d_.html">"source/<wbr>System/<wbr>Time/ITime<wbr>Measurement.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_itimequantity_d_.html">"source/<wbr>System/<wbr>Time/ITime<wbr>Quantity.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_itimestamp_d_.html">"source/<wbr>System/<wbr>Time/ITime<wbr>Stamp.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_timequantity_.html">"source/<wbr>System/<wbr>Time/<wbr>Time<wbr>Quantity"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_timespan_.html">"source/<wbr>System/<wbr>Time/<wbr>Time<wbr>Span"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_timestamp_.html">"source/<wbr>System/<wbr>Time/<wbr>Time<wbr>Stamp"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_timeunit_.html">"source/<wbr>System/<wbr>Time/<wbr>Time<wbr>Unit"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_time_timeunitvalue_.html">"source/<wbr>System/<wbr>Time/<wbr>Time<wbr>Unit<wbr>Value"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_timers_itimer_d_.html">"source/<wbr>System/<wbr>Timers/ITimer.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_timers_timer_.html">"source/<wbr>System/<wbr>Timers/<wbr>Timer"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_typevalidator_.html">"source/<wbr>System/<wbr>Type<wbr>Validator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_types_.html">"source/<wbr>System/<wbr>Types"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_hostnametype_.html">"source/<wbr>System/<wbr>Uri/<wbr>Host<wbr>Name<wbr>Type"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_iuri_d_.html">"source/<wbr>System/<wbr>Uri/IUri.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_iuridotnet_d_.html">"source/<wbr>System/<wbr>Uri/IUri<wbr>Dot<wbr>Net.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_querybuilder_.html">"source/<wbr>System/<wbr>Uri/<wbr>Query<wbr>Builder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_queryparam_d_.html">"source/<wbr>System/<wbr>Uri/<wbr>Query<wbr>Param.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_queryparams_.html">"source/<wbr>System/<wbr>Uri/<wbr>Query<wbr>Params"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_scheme_.html">"source/<wbr>System/<wbr>Uri/<wbr>Scheme"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_schemevalue_d_.html">"source/<wbr>System/<wbr>Uri/<wbr>Scheme<wbr>Value.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_uri_.html">"source/<wbr>System/<wbr>Uri/<wbr>Uri"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_uri_uricomponent_d_.html">"source/<wbr>System/<wbr>Uri/<wbr>Uri<wbr>Component.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_utility_applymixins_.html">"source/<wbr>System/<wbr>Utility/apply<wbr>Mixins"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_utility_clone_.html">"source/<wbr>System/<wbr>Utility/clone"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_utility_shallowcopy_.html">"source/<wbr>System/<wbr>Utility/shallow<wbr>Copy"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_validation_ivalidationresult_d_.html">"source/<wbr>System/<wbr>Validation/IValidation<wbr>Result.d"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_system_validation_validationresult_.html">"source/<wbr>System/<wbr>Validation/<wbr>Validation<wbr>Result"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_extends_.html">"source/extends"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_source_mergevalues_.html">"source/merge<wbr>Values"</a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-external-module tsd-is-external">
+						<a href="modules/_typings_node_node_d_.html">"typings/node/node.d"</a>
 					</li>
 				</ul>
 			</nav>
