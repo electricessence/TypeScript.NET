@@ -1,8 +1,11 @@
+///<reference path="../typings/gulp/gulp"/>
+///<reference path="../typings/gulp-typedoc/gulp-typedoc"/>
+
 import {Target, Module} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
-import * as typedoc from "gulp-typedoc";
+import typedoc = require("gulp-typedoc");
 
 gulp.task(
 	TASK.TYPEDOC, ()=>
