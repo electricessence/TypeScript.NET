@@ -91,7 +91,7 @@ gulp.task(
 		.then(()=>savePackage(Module.UMD, Module.UMD + '.min'))
 );
 
-gulp.task( // Need to double process to get the declarations from es6 without modules
+gulp.task(
 	TASK.DIST_COMMONJS,
 	()=> builder
 		.init(Module.COMMONJS, Target.ES5, Module.COMMONJS)
