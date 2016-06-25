@@ -119,6 +119,7 @@ export class PromiseBase extends PromiseState {
         this._disposableObjectName = PROMISE;
     }
     then(onFulfilled, onRejected) {
+        this.throwIfDisposed();
         return new Promise((resolve, reject) => {
             this.thenThis(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
                 ? handleResolutionMethods(resolve, reject, error, onRejected)
@@ -126,6 +127,7 @@ export class PromiseBase extends PromiseState {
         });
     }
     thenAllowFatal(onFulfilled, onRejected) {
+        this.throwIfDisposed();
         return new Promise((resolve, reject) => {
             this.thenThis(result => resolve((onFulfilled ? onFulfilled(result) : result)), error => reject(onRejected ? onRejected(error) : error));
         });
@@ -150,12 +152,16 @@ export class PromiseBase extends PromiseState {
         }, true);
     }
     'catch'(onRejected) {
-        this.throwIfDisposed();
         return this.then(VOID0, onRejected);
     }
+    catchAllowFatal(onRejected) {
+        return this.thenAllowFatal(VOID0, onRejected);
+    }
     'finally'(fin) {
-        this.throwIfDisposed();
         return this.then(fin, fin);
+    }
+    finallyAllowFatal(fin) {
+        return this.thenAllowFatal(fin, fin);
     }
     finallyThis(fin, synchronous) {
         this.throwIfDisposed();

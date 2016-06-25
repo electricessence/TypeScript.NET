@@ -153,6 +153,7 @@ var PromiseBase = (function (_super) {
     }
     PromiseBase.prototype.then = function (onFulfilled, onRejected) {
         var _this = this;
+        this.throwIfDisposed();
         return new Promise(function (resolve, reject) {
             _this.thenThis(function (result) {
                 return handleResolutionMethods(resolve, reject, result, onFulfilled);
@@ -165,6 +166,7 @@ var PromiseBase = (function (_super) {
     };
     PromiseBase.prototype.thenAllowFatal = function (onFulfilled, onRejected) {
         var _this = this;
+        this.throwIfDisposed();
         return new Promise(function (resolve, reject) {
             _this.thenThis(function (result) {
                 return resolve((onFulfilled ? onFulfilled(result) : result));
@@ -200,12 +202,16 @@ var PromiseBase = (function (_super) {
         }, true);
     };
     PromiseBase.prototype['catch'] = function (onRejected) {
-        this.throwIfDisposed();
         return this.then(VOID0, onRejected);
     };
+    PromiseBase.prototype.catchAllowFatal = function (onRejected) {
+        return this.thenAllowFatal(VOID0, onRejected);
+    };
     PromiseBase.prototype['finally'] = function (fin) {
-        this.throwIfDisposed();
         return this.then(fin, fin);
+    };
+    PromiseBase.prototype.finallyAllowFatal = function (fin) {
+        return this.thenAllowFatal(fin, fin);
     };
     PromiseBase.prototype.finallyThis = function (fin, synchronous) {
         this.throwIfDisposed();

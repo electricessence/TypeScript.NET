@@ -32,7 +32,9 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
     delayFromNow(milliseconds?: number): PromiseBase<T>;
     delayAfterResolve(milliseconds?: number): PromiseBase<T>;
     'catch'<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
+    catchAllowFatal<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
     'finally'<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
+    finallyAllowFatal<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
     finallyThis(fin: () => void, synchronous?: boolean): this;
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {

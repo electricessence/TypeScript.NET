@@ -203,7 +203,6 @@ extends PromiseState<T> implements PromiseLike<T>
 	/**
 	 * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
 	 * You may not need an additional promise result, and this will not create a new one.
-	 * Errors are not trapped.
 	 * @param onFulfilled
 	 * @param onRejected
 	 */
@@ -222,6 +221,8 @@ extends PromiseState<T> implements PromiseLike<T>
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
+		this.throwIfDisposed();
+
 		return new Promise<TResult>((resolve, reject)=>
 		{
 			this.thenThis(
@@ -245,6 +246,8 @@ extends PromiseState<T> implements PromiseLike<T>
 		onFulfilled:Promise.Fulfill<T,TResult>,
 		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
+		this.throwIfDisposed();
+
 		return new Promise<TResult>((resolve, reject)=>
 		{
 			this.thenThis(
@@ -316,18 +319,53 @@ extends PromiseState<T> implements PromiseLike<T>
 		);
 	}
 
+	/**
+	 * Shortcut for trapping a rejection.
+	 * @param onRejected
+	 * @returns {PromiseBase<TResult>}
+	 */
 	'catch'<TResult>(onRejected:Promise.Reject<TResult>):PromiseBase<TResult>
 	{
-		this.throwIfDisposed();
 		return this.then(VOID0, onRejected)
 	}
 
+	/**
+	 * Shortcut for trapping a rejection but will allow exceptions to propagate within the onRejected handler.
+	 * @param onRejected
+	 * @returns {PromiseBase<TResult>}
+	 */
+	catchAllowFatal<TResult>(onRejected:Promise.Reject<TResult>):PromiseBase<TResult>
+	{
+		return this.thenAllowFatal(VOID0, onRejected)
+	}
+
+	/**
+	 * Shortcut to for handling either resolve or reject.
+	 * @param fin
+	 * @returns {PromiseBase<TResult>}
+	 */
 	'finally'<TResult>(fin:()=>Promise.Resolution<TResult>):PromiseBase<TResult>
 	{
-		this.throwIfDisposed();
 		return this.then(fin, fin);
 	}
 
+	/**
+	 * Shortcut to for handling either resolve or reject but will allow exceptions to propagate within the handler.
+	 * @param fin
+	 * @returns {PromiseBase<TResult>}
+	 */
+	finallyAllowFatal<TResult>(fin:()=>Promise.Resolution<TResult>):PromiseBase<TResult>
+	{
+		return this.thenAllowFatal(fin, fin);
+	}
+
+	/**
+	 * Shortcut to for handling either resolve or reject.  Returns the current promise instead.
+	 * You may not need an additional promise result, and this will not create a new one.
+	 * @param fin
+	 * @param synchronous
+	 * @returns {PromiseBase}
+	 */
 	finallyThis(fin:()=>void, synchronous?:boolean):this
 	{
 		this.throwIfDisposed();
