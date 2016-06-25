@@ -22,6 +22,7 @@ import {Set} from "../Collections/Set";
 import {defer} from "../Threading/defer";
 import {ObjectDisposedException} from "../Disposable/ObjectDisposedException";
 import __extendsImport from "../../extends";
+//noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void 0, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
@@ -190,7 +191,6 @@ extends PromiseState<T> implements PromiseLike<T>
 		this._disposableObjectName = PROMISE;
 	}
 
-
 	/**
 	 * Calls the respective handlers once the promise is resolved.
 	 * @param onFulfilled
@@ -225,10 +225,33 @@ extends PromiseState<T> implements PromiseLike<T>
 		return new Promise<TResult>((resolve, reject)=>
 		{
 			this.thenThis(
-				result=>handleResolutionMethods(resolve, reject, result, onFulfilled),
-				error=>onRejected
-					? handleResolutionMethods(resolve, null, error, onRejected)
-					: reject(error)
+				result=>
+					handleResolutionMethods(resolve, reject, result, onFulfilled),
+				error=>
+					onRejected
+						? handleResolutionMethods(resolve, reject, error, onRejected)
+						: reject(error)
+			);
+		});
+	}
+
+	/**
+	 * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
+	 * @param onFulfilled
+	 * @param onRejected
+	 * @returns {Promise}
+	 */
+	thenAllowFatal<TResult>(
+		onFulfilled:Promise.Fulfill<T,TResult>,
+		onRejected?:Promise.Reject<TResult>):PromiseBase<TResult>
+	{
+		return new Promise<TResult>((resolve, reject)=>
+		{
+			this.thenThis(
+				result=>
+					resolve(<any>(onFulfilled ? onFulfilled(result) : result)),
+				error=>
+					reject(onRejected ? onRejected(error) : error)
 			);
 		});
 	}
@@ -243,7 +266,8 @@ extends PromiseState<T> implements PromiseLike<T>
 		onFulfilled:Promise.Fulfill<T,any>,
 		onRejected?:Promise.Reject<any>):void
 	{
-		defer(()=>this.thenThis(onFulfilled, onRejected));
+		defer(()=>
+			this.thenThis(onFulfilled, onRejected));
 	}
 
 	/**
@@ -658,10 +682,10 @@ export class Promise<T> extends Resolvable<T>
 				this._waiting = VOID0;
 				for(let c of o)
 				{
-					let {onFulfilled, promise} = c, p = (<Promise<T>>promise);
+					let {onFulfilled, promise} = c;
 					pools.PromiseCallbacks.recycle(c);
 					//let ex =
-					handleResolution(p, result, onFulfilled);
+					handleResolution(promise, result, onFulfilled);
 					//if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
 				}
 				o.length = 0;
@@ -683,15 +707,15 @@ export class Promise<T> extends Resolvable<T>
 			this._waiting = null; // null = finished. undefined = hasn't started.
 			for(let c of o)
 			{
-				let {onRejected, promise} = c, p = (<Promise<T>>promise);
+				let {onRejected, promise} = c;
 				pools.PromiseCallbacks.recycle(c);
 				if(onRejected)
 				{
 					//let ex =
-					handleResolution(p, error, onRejected);
+					handleResolution(promise, error, onRejected);
 					//if(!p && ex) console.error("Unhandled exception in onRejected:",ex);
 				}
-				else if(p) p.reject(error);
+				else if(promise) promise.reject(error);
 			}
 			o.length = 0;
 		}
@@ -972,7 +996,7 @@ module pools
 		export function init<T>(
 			onFulfilled:Promise.Fulfill<T,any>,
 			onRejected?:Promise.Reject<any>,
-			promise?:PromiseLike<any>):IPromiseCallbacks<T>
+			promise?:Promise<any>):IPromiseCallbacks<T>
 		{
 
 			var c = getPool().take();
@@ -1033,11 +1057,14 @@ export module Promise
 			reject:(reason?:any) => void):void;
 	}
 
-	export interface Factory {
+	//noinspection JSUnusedGlobalSymbols
+	export interface Factory
+	{
 		<T>(executor:Executor<T>):PromiseLike<T>;
 	}
 
-	export function factory<T>(e:Executor<T>):Promise<T> {
+	export function factory<T>(e:Executor<T>):Promise<T>
+	{
 		return new Promise(e);
 	}
 
@@ -1075,7 +1102,6 @@ export module Promise
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
 		return new ArrayPromise<any>((resolve, reject)=>
 		{
-			let checkedAll = false;
 			let result:any[] = [];
 			let len = promises.length;
 			result.length = len;
@@ -1153,7 +1179,6 @@ export module Promise
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
 		return new ArrayPromise<any>((resolve, reject)=>
 		{
-			let checkedAll = false;
 			let len = promises.length;
 
 			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
@@ -1280,8 +1305,11 @@ export module Promise
 	 * @param forceSynchronous
 	 * @returns {Promise}
 	 */
-	export function using<T>(resolver:Promise.Executor<T>, forceSynchronous:boolean = false):PromiseBase<T>{
-		return new Promise<T>(resolver,forceSynchronous);
+	export function using<T>(
+		resolver:Promise.Executor<T>,
+		forceSynchronous:boolean = false):PromiseBase<T>
+	{
+		return new Promise<T>(resolver, forceSynchronous);
 	}
 
 	/**
@@ -1368,7 +1396,7 @@ interface IPromiseCallbacks<T>
 {
 	onFulfilled:Promise.Fulfill<T,any>;
 	onRejected:Promise.Reject<any>;
-	promise?:PromiseLike<any>;
+	promise?:Promise<any>;
 }
 
 export default Promise;

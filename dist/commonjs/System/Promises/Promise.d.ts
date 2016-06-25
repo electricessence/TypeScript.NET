@@ -27,6 +27,7 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
     abstract thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     abstract thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
     then<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    thenAllowFatal<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     done(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
     delayFromNow(milliseconds?: number): PromiseBase<T>;
     delayAfterResolve(milliseconds?: number): PromiseBase<T>;

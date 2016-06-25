@@ -154,14 +154,30 @@ var PromiseBase = (function (_super) {
     PromiseBase.prototype.then = function (onFulfilled, onRejected) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.thenThis(function (result) { return handleResolutionMethods(resolve, reject, result, onFulfilled); }, function (error) { return onRejected
-                ? handleResolutionMethods(resolve, null, error, onRejected)
-                : reject(error); });
+            _this.thenThis(function (result) {
+                return handleResolutionMethods(resolve, reject, result, onFulfilled);
+            }, function (error) {
+                return onRejected
+                    ? handleResolutionMethods(resolve, reject, error, onRejected)
+                    : reject(error);
+            });
+        });
+    };
+    PromiseBase.prototype.thenAllowFatal = function (onFulfilled, onRejected) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.thenThis(function (result) {
+                return resolve((onFulfilled ? onFulfilled(result) : result));
+            }, function (error) {
+                return reject(onRejected ? onRejected(error) : error);
+            });
         });
     };
     PromiseBase.prototype.done = function (onFulfilled, onRejected) {
         var _this = this;
-        defer_1.defer(function () { return _this.thenThis(onFulfilled, onRejected); });
+        defer_1.defer(function () {
+            return _this.thenThis(onFulfilled, onRejected);
+        });
     };
     PromiseBase.prototype.delayFromNow = function (milliseconds) {
         var _this = this;
@@ -422,9 +438,9 @@ var Promise = (function (_super) {
                 this._waiting = VOID0;
                 for (var _i = 0, o_1 = o; _i < o_1.length; _i++) {
                     var c = o_1[_i];
-                    var onFulfilled = c.onFulfilled, promise = c.promise, p = promise;
+                    var onFulfilled = c.onFulfilled, promise = c.promise;
                     pools.PromiseCallbacks.recycle(c);
-                    handleResolution(p, result, onFulfilled);
+                    handleResolution(promise, result, onFulfilled);
                 }
                 o.length = 0;
             }
@@ -440,13 +456,13 @@ var Promise = (function (_super) {
             this._waiting = null;
             for (var _i = 0, o_2 = o; _i < o_2.length; _i++) {
                 var c = o_2[_i];
-                var onRejected = c.onRejected, promise = c.promise, p = promise;
+                var onRejected = c.onRejected, promise = c.promise;
                 pools.PromiseCallbacks.recycle(c);
                 if (onRejected) {
-                    handleResolution(p, error, onRejected);
+                    handleResolution(promise, error, onRejected);
                 }
-                else if (p)
-                    p.reject(error);
+                else if (promise)
+                    promise.reject(error);
             }
             o.length = 0;
         }
@@ -631,7 +647,6 @@ var Promise;
         if (!promises.length || promises.every(function (v) { return !v; }))
             return new ArrayPromise(function (r) { return r(promises); }, true);
         return new ArrayPromise(function (resolve, reject) {
-            var checkedAll = false;
             var result = [];
             var len = promises.length;
             result.length = len;
@@ -690,7 +705,6 @@ var Promise;
         if (!promises.length || promises.every(function (v) { return !v; }))
             return new ArrayPromise(function (r) { return r(promises); }, true);
         return new ArrayPromise(function (resolve, reject) {
-            var checkedAll = false;
             var len = promises.length;
             var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
             var cleanup = function () {

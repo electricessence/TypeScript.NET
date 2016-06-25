@@ -121,8 +121,13 @@ export class PromiseBase extends PromiseState {
     then(onFulfilled, onRejected) {
         return new Promise((resolve, reject) => {
             this.thenThis(result => handleResolutionMethods(resolve, reject, result, onFulfilled), error => onRejected
-                ? handleResolutionMethods(resolve, null, error, onRejected)
+                ? handleResolutionMethods(resolve, reject, error, onRejected)
                 : reject(error));
+        });
+    }
+    thenAllowFatal(onFulfilled, onRejected) {
+        return new Promise((resolve, reject) => {
+            this.thenThis(result => resolve((onFulfilled ? onFulfilled(result) : result)), error => reject(onRejected ? onRejected(error) : error));
         });
     }
     done(onFulfilled, onRejected) {
@@ -356,9 +361,9 @@ export class Promise extends Resolvable {
             if (o) {
                 this._waiting = VOID0;
                 for (let c of o) {
-                    let { onFulfilled, promise } = c, p = promise;
+                    let { onFulfilled, promise } = c;
                     pools.PromiseCallbacks.recycle(c);
-                    handleResolution(p, result, onFulfilled);
+                    handleResolution(promise, result, onFulfilled);
                 }
                 o.length = 0;
             }
@@ -373,13 +378,13 @@ export class Promise extends Resolvable {
         if (o) {
             this._waiting = null;
             for (let c of o) {
-                let { onRejected, promise } = c, p = promise;
+                let { onRejected, promise } = c;
                 pools.PromiseCallbacks.recycle(c);
                 if (onRejected) {
-                    handleResolution(p, error, onRejected);
+                    handleResolution(promise, error, onRejected);
                 }
-                else if (p)
-                    p.reject(error);
+                else if (promise)
+                    promise.reject(error);
             }
             o.length = 0;
         }
@@ -534,7 +539,6 @@ var pools;
         if (!promises.length || promises.every(v => !v))
             return new ArrayPromise(r => r(promises), true);
         return new ArrayPromise((resolve, reject) => {
-            let checkedAll = false;
             let result = [];
             let len = promises.length;
             result.length = len;
@@ -586,7 +590,6 @@ var pools;
         if (!promises.length || promises.every(v => !v))
             return new ArrayPromise(r => r(promises), true);
         return new ArrayPromise((resolve, reject) => {
-            let checkedAll = false;
             let len = promises.length;
             let remaining = new Set(promises.map((v, i) => i));
             let cleanup = () => {

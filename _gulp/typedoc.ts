@@ -13,7 +13,7 @@ gulp.task(
 		const typedocOptions = {
 			name: 'TypeScript.NET',
 			out: PATH.DOCS,
-			tscPath: PATH.TSC,
+			//tscPath: PATH.TSC,
 
 			module: Module.UMD,
 			target: Target.ES5,

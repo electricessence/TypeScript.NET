@@ -176,6 +176,13 @@ describe("Resolution and Rejection", function () {
         })
             .then(function (v) {
             assert.equal(v, 10);
+            throw "force catch";
+        })
+            .catch(function () {
+            throw BREAK;
+        })
+            .catch(function (e) {
+            assert.equal(e, BREAK);
         });
     }
     it("should follow expected promise behavior flow for a resolved promise", function () {
@@ -188,6 +195,11 @@ describe("Resolution and Rejection", function () {
             assert.equal(v, BREAK);
             return true;
         }));
+    });
+    it("should pass through", function () {
+        return Promise_1.Promise.resolve(true)
+            .thenAllowFatal(function () {
+        });
     });
     it("should follow expected promise behavior flow for a pending then resolved promise", function () {
         var p = new Promise_1.Promise();

@@ -16,7 +16,6 @@
         var typedocOptions = {
             name: 'TypeScript.NET',
             out: PATH.DOCS,
-            tscPath: PATH.TSC,
             module: gulp_typescript_helper_1.Module.UMD,
             target: gulp_typescript_helper_1.Target.ES5,
             excludeNotExported: true,

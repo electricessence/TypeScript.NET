@@ -275,7 +275,15 @@ describe("Resolution and Rejection", ()=>
 			.then(v=>
 			{
 				assert.equal(v, 10);
-			});
+				throw "force catch"
+			})
+			.catch(()=>{
+				throw BREAK; // Make sure throws inside reject are captured.
+			})
+			.catch(e=>
+			{
+				assert.equal(e, BREAK);
+			})
 	}
 
 	it("should follow expected promise behavior flow for a resolved promise", ()=>
@@ -296,6 +304,12 @@ describe("Resolution and Rejection", ()=>
 				}));
 	});
 
+	it("should pass through",()=>{
+		return Promise.resolve(true)
+			.thenAllowFatal<void>(()=>{
+				// throw "BAM!";
+			});
+	});
 
 	it("should follow expected promise behavior flow for a pending then resolved promise", ()=>
 	{
