@@ -1,0 +1,6 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+define(["require","exports","./EnumeratorBase","../../../extends"],function(e,r,t,n){"use strict";var i=n["default"],o=function(e){function r(r){var t;e.call(this,function(){if(t=r(),t&&t.source){var e=t.length;if(0>e)throw new Error("length must be zero or greater");if(!isFinite(e))throw new Error("length must finite number");if(e&&0===t.step)throw new Error("Invalid IndexEnumerator step value (0).");var n=t.pointer;if(n){if(n!=Math.floor(n))throw new Error("Invalid IndexEnumerator pointer value ("+n+") has decimal.")}else n=0;t.pointer=n;var i=t.step;if(i){if(i!=Math.floor(i))throw new Error("Invalid IndexEnumerator step value ("+i+") has decimal.")}else i=1;t.step=i}},function(e){var r=t&&t.source?t.length:0;if(!r||isNaN(r))return e.yieldBreak();var n=t.pointer;return t.pointer+=t.step,r>n&&n>=0?e.yieldReturn(t.source[n]):e.yieldBreak()},function(){t&&(t.source=null)}),this._isEndless=!1}return i(r,e),r}(t.EnumeratorBase);r.IndexEnumerator=o,Object.defineProperty(r,"__esModule",{value:!0}),r["default"]=o});
+//# sourceMappingURL=IndexEnumerator.js.map

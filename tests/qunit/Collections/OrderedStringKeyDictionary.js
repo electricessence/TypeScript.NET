@@ -1,5 +1,14 @@
-define(["require", "exports", "./ICollection", "source/System/Collections/Dictionaries/OrderedStringKeyDictionary"], function (require, exports, ICollectionTests, OrderedStringKeyDictionary_1) {
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "./ICollection", "source/System/Collections/Dictionaries/OrderedStringKeyDictionary"], factory);
+    }
+})(function (require, exports) {
     "use strict";
+    var ICollectionTests = require("./ICollection");
+    var OrderedStringKeyDictionary_1 = require("source/System/Collections/Dictionaries/OrderedStringKeyDictionary");
     function run() {
         ICollectionTests.Collection('OrderedStringKeyDictionary<number>', new OrderedStringKeyDictionary_1.default(), [
             { key: 'A', value: 1 },

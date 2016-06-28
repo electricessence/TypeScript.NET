@@ -1,5 +1,13 @@
-define(["require", "exports", "source/System/Uri/Uri", "QUnit"], function (require, exports, Uri_1) {
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "QUnit", "source/System/Uri/Uri"], factory);
+    }
+})(function (require, exports) {
     "use strict";
+    var Uri_1 = require("source/System/Uri/Uri");
     function run() {
         var validUri = {
             scheme: 'http',

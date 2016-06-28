@@ -1,5 +1,15 @@
-define(["require", "exports", "./Utility", "./Procedure", "./Compare", "QUnit"], function (require, exports, Utility_1, Procedure_1, Compare_1) {
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "QUnit", './Utility', './Procedure', './Compare'], factory);
+    }
+})(function (require, exports) {
     "use strict";
+    var Utility_1 = require('./Utility');
+    var Procedure_1 = require('./Procedure');
+    var Compare_1 = require('./Compare');
     function run() {
         Utility_1.default();
         Procedure_1.default();

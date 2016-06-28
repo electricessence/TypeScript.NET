@@ -1,0 +1,6 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+define(["require","exports","../../extends"],function(n,t,e){"use strict";function i(n,t,e){return new c(n,t,e)}function r(n,t,e){return void 0===e&&(e=1/0),new l(n,t,e)}var u=e["default"],o=function(){function n(){}return n.prototype.dispose=function(){this.cancel()},n}(),c=function(n){function t(e,i,r){n.call(this),i>0||(i=0),this._id=setTimeout(t.handler,i,e,this,r)}return u(t,n),t.prototype.cancel=function(){var n=this._id;return n?(clearTimeout(n),this._id=null,!0):!1},t.handler=function(n,t,e){t.cancel(),n(e)},t}(o),l=function(n){function t(e,i,r){if(void 0===r&&(r=1/0),n.call(this),this._remaining=r,null===i||void 0===i)throw"'interval' must be a valid number.";if(0>i)throw"'interval' cannot be negative.";this._id=setInterval(t.handler,i,e,this)}return u(t,n),t.prototype.cancel=function(){var n=this._id;return n?(clearInterval(n),this._id=null,!0):!1},t.handler=function(n,t){--t._remaining||t.cancel(),n()},t}(o);t.defer=i,t.interval=r,Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=i});
+//# sourceMappingURL=defer.js.map

@@ -1,5 +1,13 @@
-define(["require", "exports", "source/System/Integer", "QUnit"], function (require, exports, Integer_1) {
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "QUnit", 'source/System/Integer'], factory);
+    }
+})(function (require, exports) {
     "use strict";
+    var Integer_1 = require('source/System/Integer');
     function run() {
         var TEST_FLOAT = 10.915, TEST_INT = 10;
         QUnit.test('Integer: convert', function (assert) {

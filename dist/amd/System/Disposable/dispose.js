@@ -1,0 +1,6 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+define(["require","exports","../Types"],function(e,n,r){"use strict";function t(){for(var e=[],n=0;n<arguments.length;n++)e[n-0]=arguments[n];f(e,!1)}function i(e,n){try{return n(e)}finally{o(e,!1)}}function o(e,n){if(e&&r.Type.of(e).member("dispose").isFunction)if(n)try{e.dispose()}catch(t){return t}else e.dispose();return null}function f(e,n,r){void 0===r&&(r=0);for(var t,i=e.length;i>r;r++){var u=e[r];if(u)if(n){var s=o(u,!0);s&&(t||(t=[]),t.push(s))}else{var l=!1;try{o(u,!1),l=!0}finally{!l&&i>r+1&&f(e,!1,r+1)}if(!l)break}}return t}n.dispose=t;var t;!function(e){function n(){for(var e=[],n=0;n<arguments.length;n++)e[n-0]=arguments[n];t.deferred(e)}function r(){for(var e=[],n=0;n<arguments.length;n++)e[n-0]=arguments[n];return f(e,!0)}function t(e,n){return e&&e.length?f(e.slice(),n):null}e.deferred=n,e.withoutException=r,e.these=t;var t;!function(e){function n(e,n){void 0===n&&(n=0),e&&e.length&&(n>=0||(n=0),setTimeout(f,n,e.slice(),!0))}e.deferred=n}(t=e.these||(e.these={}))}(t=n.dispose||(n.dispose={})),n.using=i,Object.defineProperty(n,"__esModule",{value:!0}),n["default"]=t});
+//# sourceMappingURL=dispose.js.map
