@@ -1,15 +1,5 @@
-(function (factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", './LinkedList', './Queue', './OrderedStringKeyDictionary'], factory);
-    }
-})(function (require, exports) {
+define(["require", "exports", "./LinkedList", "./Queue", "./OrderedStringKeyDictionary", "QUnit"], function (require, exports, LinkedList_1, Queue_1, OrderedStringKeyDictionary_1) {
     "use strict";
-    var LinkedList_1 = require('./LinkedList');
-    var Queue_1 = require('./Queue');
-    var OrderedStringKeyDictionary_1 = require('./OrderedStringKeyDictionary');
     function run() {
         LinkedList_1.default();
         Queue_1.default();
