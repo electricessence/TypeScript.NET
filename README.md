@@ -65,7 +65,8 @@ https://www.npmjs.com/search?q=typescript-dotnet
 npm install typescript-dotnet-umd
 ```
 
-It's highly recommended to use the UMD (minified) version for most cases since it works for AMD and CommonJS.
+It's highly recommended to use the UMD (minified) version for most cases since it works for AMD and CommonJS.  
+*Note: WebPack has trouble with UMD. Use CommonJS or AMD if you intend to use WebPack.*
 
 #### All Published NPM Module Types
 * [```typescript-dotnet-umd```](https://www.npmjs.com/package/typescript-dotnet-umd)
@@ -84,7 +85,8 @@ Currently it is possible/supported to use TypeScript .NET in a number of differe
 import Enumerable from "typescript-dotnet-es6/System.Linq/Linq"
 ```
 
-##### Recommended for users who are deploying to web/browsers:  
+##### Recommended for users who are deploying directly to web/browsers:
+*Note: WebPack has trouble with UMD. Use CommonJS or AMD if you intend to use WebPack.*
 ```typescript
 import Enumerable from "typescript-dotnet-umd/System.Linq/Linq"
 ```
