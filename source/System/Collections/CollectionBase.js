@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types", "../../extends"], factory);
+        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -16,8 +16,8 @@
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var Types_1 = require("../Types");
     var extends_1 = require("../../extends");
+    var Environment_1 = require("../Environment");
     var __extends = extends_1.default;
     var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
     var CollectionBase = (function (_super) {
@@ -230,7 +230,7 @@
         };
         Object.defineProperty(CollectionBase.prototype, "linq", {
             get: function () {
-                if (Types_1.Type.hasMember(require, RESOLVE) && require.length == 1) {
+                if (Environment_1.isCommonJS) {
                     var e = this._linq;
                     if (!e)
                         this._linq = e = require(LINQ_PATH).default.from(this);

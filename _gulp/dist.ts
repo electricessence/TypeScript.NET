@@ -17,7 +17,8 @@ const fields:IMap<boolean> = {
 	"description": true,
 	"repository": true,
 	"private": true,
-	"keywords": true
+	"keywords": true,
+	"browser": true
 };
 
 function getPackage(dist:string):PromiseLike<JsonMap>
@@ -89,6 +90,20 @@ gulp.task(
 		.minify()
 		.execute()
 		.then(()=>savePackage(Module.UMD, Module.UMD + '.min'))
+);
+
+gulp.task(
+	TASK.DIST_COMMONJS+" js-only",
+	()=> builder
+		.init(Module.COMMONJS + ' js-only', Target.ES5, Module.COMMONJS)
+		.addOptions({
+			declaration:false,
+			sourceMap:false
+		})
+		.clear()
+		//.minify()
+		.execute()
+		.then(()=>savePackage(Module.COMMONJS+'-js-only', Module.COMMONJS + ' js-only'))
 );
 
 gulp.task(

@@ -7,8 +7,8 @@ import { areEqual } from "../Compare";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { DisposableBase } from "../Disposable/DisposableBase";
-import { Type } from "../Types";
 import __extendsImport from "../../extends";
+import { isCommonJS } from "../Environment";
 const __extends = __extendsImport;
 const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
 export class CollectionBase extends DisposableBase {
@@ -202,7 +202,7 @@ export class CollectionBase extends DisposableBase {
         return this.copyTo(count > 65536 ? new Array(count) : []);
     }
     get linq() {
-        if (Type.hasMember(require, RESOLVE) && require.length == 1) {
+        if (isCommonJS) {
             var e = this._linq;
             if (!e)
                 this._linq = e = require(LINQ_PATH).default.from(this);

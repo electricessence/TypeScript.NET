@@ -3,16 +3,20 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-declare const require:any;
 declare const process:any;
 
+// Need to spoof this so WebPack doesn't panic (warnings).
+const r:any = eval('require');
+
+//noinspection JSUnusedGlobalSymbols
 export const
 	isCommonJS:boolean
-		= !!(require && require.resolve);
+		= !!(r && r.resolve);
 
+//noinspection JSUnusedGlobalSymbols
 export const
 	isRequireJS:boolean
-		= !!(require && require.toUrl && require.defined);
+		= !!(r && r.toUrl && r.defined);
 
 /*
  * Ensure is in a real Node environment, with a `process.nextTick`.
@@ -32,4 +36,5 @@ export const
 		&& process.nextTick!= void 0;
 
 declare const exports:any;
+//noinspection JSUnusedAssignment
 Object.freeze(exports);

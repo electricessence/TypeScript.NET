@@ -3,8 +3,9 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-exports.isCommonJS = !!(require && require.resolve);
-exports.isRequireJS = !!(require && require.toUrl && require.defined);
+var r = eval('require');
+exports.isCommonJS = !!(r && r.resolve);
+exports.isRequireJS = !!(r && r.toUrl && r.defined);
 exports.isNodeJS = typeof process == "object"
     && process.toString() === "[object process]"
     && process.nextTick != void 0;

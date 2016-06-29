@@ -14,9 +14,10 @@ import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
-import {Type} from "../Types";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
 import __extendsImport from "../../extends";
+import {isCommonJS} from "../Environment";
+
 const __extends = __extendsImport;
 
 //noinspection SpellCheckingInspection
@@ -306,7 +307,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	private _linq:ILinqEnumerable<T>;
 	get linq():ILinqEnumerable<T>
 	{
-		if(Type.hasMember(require, RESOLVE) && require.length==1)
+		if(isCommonJS)
 		{
 			var e = this._linq;
 			if(!e) this._linq = e = require(LINQ_PATH).default.from(this);

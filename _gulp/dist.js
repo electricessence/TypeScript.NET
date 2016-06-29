@@ -22,7 +22,8 @@
         "description": true,
         "repository": true,
         "private": true,
-        "keywords": true
+        "keywords": true,
+        "browser": true
     };
     function getPackage(dist) {
         return File.json.read('./package.json')
@@ -73,6 +74,15 @@
         .minify()
         .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.UMD, gulp_typescript_helper_1.Module.UMD + '.min'); }); });
+    gulp.task(TASK.DIST_COMMONJS + " js-only", function () { return builder
+        .init(gulp_typescript_helper_1.Module.COMMONJS + ' js-only', gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.COMMONJS)
+        .addOptions({
+        declaration: false,
+        sourceMap: false
+    })
+        .clear()
+        .execute()
+        .then(function () { return savePackage(gulp_typescript_helper_1.Module.COMMONJS + '-js-only', gulp_typescript_helper_1.Module.COMMONJS + ' js-only'); }); });
     gulp.task(TASK.DIST_COMMONJS, function () { return builder
         .init(gulp_typescript_helper_1.Module.COMMONJS, gulp_typescript_helper_1.Target.ES5, gulp_typescript_helper_1.Module.COMMONJS)
         .clear()

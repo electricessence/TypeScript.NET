@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Types", "../../extends"], function(exports_1, context_1) {
+System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Types_1, extends_1;
+    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, extends_1, Environment_1;
     var __extends, NAME, CMDC, CMRO, RESOLVE, LINQ_PATH, CollectionBase;
     return {
         setters:[
@@ -24,11 +24,11 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
-            function (Types_1_1) {
-                Types_1 = Types_1_1;
-            },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
+            },
+            function (Environment_1_1) {
+                Environment_1 = Environment_1_1;
             }],
         execute: function() {
             __extends = extends_1.default;
@@ -243,7 +243,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 };
                 Object.defineProperty(CollectionBase.prototype, "linq", {
                     get: function () {
-                        if (Types_1.Type.hasMember(require, RESOLVE) && require.length == 1) {
+                        if (Environment_1.isCommonJS) {
                             var e = this._linq;
                             if (!e)
                                 this._linq = e = require(LINQ_PATH).default.from(this);

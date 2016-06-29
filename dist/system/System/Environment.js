@@ -5,12 +5,13 @@
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var isCommonJS, isRequireJS, isNodeJS;
+    var r, isCommonJS, isRequireJS, isNodeJS;
     return {
         setters:[],
         execute: function() {
-            exports_1("isCommonJS", isCommonJS = !!(require && require.resolve));
-            exports_1("isRequireJS", isRequireJS = !!(require && require.toUrl && require.defined));
+            r = eval('require');
+            exports_1("isCommonJS", isCommonJS = !!(r && r.resolve));
+            exports_1("isRequireJS", isRequireJS = !!(r && r.toUrl && r.defined));
             exports_1("isNodeJS", isNodeJS = typeof process == "object"
                 && process.toString() === "[object process]"
                 && process.nextTick != void 0);
