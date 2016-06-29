@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], factory);
+        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -16,10 +16,10 @@
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var extends_1 = require("../../extends");
     var Environment_1 = require("../Environment");
+    var extends_1 = require("../../extends");
     var __extends = extends_1.default;
-    var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
+    var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve";
     var CollectionBase = (function (_super) {
         __extends(CollectionBase, _super);
         function CollectionBase(source, _equalityComparer) {
@@ -233,7 +233,7 @@
                 if (Environment_1.isCommonJS) {
                     var e = this._linq;
                     if (!e)
-                        this._linq = e = require(LINQ_PATH).default.from(this);
+                        this._linq = e = require("../../System.Linq/Linq").default.from(this);
                     return e;
                 }
                 else {

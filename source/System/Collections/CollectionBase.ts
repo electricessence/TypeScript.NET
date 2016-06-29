@@ -15,17 +15,15 @@ import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
-import __extendsImport from "../../extends";
 import {isCommonJS} from "../Environment";
-
+import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 
 //noinspection SpellCheckingInspection
 const NAME      = "CollectionBase",
       CMDC      = "Cannot modify a disposed collection.",
       CMRO      = "Cannot modify a read-only collection.",
-      RESOLVE   = "resolve",
-      LINQ_PATH = "../../System.Linq/Linq";
+      RESOLVE   = "resolve";
 
 export abstract class CollectionBase<T>
 extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
@@ -310,7 +308,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		if(isCommonJS)
 		{
 			var e = this._linq;
-			if(!e) this._linq = e = require(LINQ_PATH).default.from(this);
+			if(!e) this._linq = e = require("../../System.Linq/Linq").default.from(this);
 			return e;
 		}
 		else

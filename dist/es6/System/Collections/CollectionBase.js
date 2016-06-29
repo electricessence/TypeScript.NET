@@ -7,10 +7,10 @@ import { areEqual } from "../Compare";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { DisposableBase } from "../Disposable/DisposableBase";
-import __extendsImport from "../../extends";
 import { isCommonJS } from "../Environment";
+import __extendsImport from "../../extends";
 const __extends = __extendsImport;
-const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve", LINQ_PATH = "../../System.Linq/Linq";
+const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve";
 export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {
         super();
@@ -205,7 +205,7 @@ export class CollectionBase extends DisposableBase {
         if (isCommonJS) {
             var e = this._linq;
             if (!e)
-                this._linq = e = require(LINQ_PATH).default.from(this);
+                this._linq = e = require("../../System.Linq/Linq").default.from(this);
             return e;
         }
         else {
