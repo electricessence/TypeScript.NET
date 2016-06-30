@@ -43,4 +43,5 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
     toArray(): T[];
     private _linq;
     linq: ILinqEnumerable<T>;
+    linqAsync(callback?: (linq: ILinqEnumerable<T>) => void): ILinqEnumerable<T>;
 }

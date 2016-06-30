@@ -2,11 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], function(exports_1, context_1) {
+System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Environment_1, extends_1;
-    var __extends, NAME, CMDC, CMRO, RESOLVE, CollectionBase;
+    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, extends_1, Environment_1;
+    var __extends, NAME, CMDC, CMRO, LINQ_PATH, CollectionBase;
     return {
         setters:[
             function (Enumerator_1_1) {
@@ -24,15 +24,16 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
-            function (Environment_1_1) {
-                Environment_1 = Environment_1_1;
-            },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
+            },
+            function (Environment_1_1) {
+                Environment_1 = Environment_1_1;
             }],
         execute: function() {
             __extends = extends_1.default;
-            NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve";
+            NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+            LINQ_PATH = "../../System.Linq/Linq";
             CollectionBase = (function (_super) {
                 __extends(CollectionBase, _super);
                 function CollectionBase(source, _equalityComparer) {
@@ -243,19 +244,43 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 };
                 Object.defineProperty(CollectionBase.prototype, "linq", {
                     get: function () {
-                        if (Environment_1.isCommonJS) {
-                            var e = this._linq;
-                            if (!e)
-                                this._linq = e = require("../../System.Linq/Linq").default.from(this);
-                            return e;
+                        this.throwIfDisposed();
+                        var e = this._linq;
+                        if (!e) {
+                            if (!Environment_1.isNodeJS || !Environment_1.isCommonJS)
+                                throw "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nOr use .linqAsync(callback) for AMD/RequireJS.";
+                            this._linq = e = eval("require")(LINQ_PATH).default.from(this);
                         }
-                        else {
-                            throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
-                        }
+                        return e;
                     },
                     enumerable: true,
                     configurable: true
                 });
+                CollectionBase.prototype.linqAsync = function (callback) {
+                    var _this = this;
+                    this.throwIfDisposed();
+                    var e = this._linq;
+                    if (!e) {
+                        if (Environment_1.isRequireJS) {
+                            eval("require")([LINQ_PATH], function (linq) {
+                                e = _this._linq;
+                                if (!e)
+                                    _this._linq = e = linq.default.from(_this);
+                                callback(e);
+                                callback = null;
+                            });
+                        }
+                        else if (Environment_1.isNodeJS && Environment_1.isCommonJS) {
+                            e = this.linq;
+                        }
+                        else {
+                            throw "Cannot find a compatible loader for importing System.Linq/Linq";
+                        }
+                    }
+                    if (e && callback)
+                        callback(e);
+                    return e;
+                };
                 return CollectionBase;
             }(DisposableBase_1.DisposableBase));
             exports_1("CollectionBase", CollectionBase);

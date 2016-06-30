@@ -7,10 +7,11 @@ import { areEqual } from "../Compare";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { DisposableBase } from "../Disposable/DisposableBase";
-import { isCommonJS } from "../Environment";
 import __extendsImport from "../../extends";
+import { isCommonJS, isRequireJS, isNodeJS } from "../Environment";
 const __extends = __extendsImport;
-const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve";
+const NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+const LINQ_PATH = "../../System.Linq/Linq";
 export class CollectionBase extends DisposableBase {
     constructor(source, _equalityComparer = areEqual) {
         super();
@@ -202,15 +203,40 @@ export class CollectionBase extends DisposableBase {
         return this.copyTo(count > 65536 ? new Array(count) : []);
     }
     get linq() {
-        if (isCommonJS) {
-            var e = this._linq;
-            if (!e)
-                this._linq = e = require("../../System.Linq/Linq").default.from(this);
-            return e;
+        this.throwIfDisposed();
+        var e = this._linq;
+        if (!e) {
+            if (!isNodeJS || !isCommonJS)
+                throw `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
+Import System.Linq/Linq and use Enumerable.from(e) instead.
+Or use .linqAsync(callback) for AMD/RequireJS.`;
+            this._linq = e = eval("require")(LINQ_PATH).default.from(this);
         }
-        else {
-            throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
+        return e;
+    }
+    linqAsync(callback) {
+        this.throwIfDisposed();
+        var e = this._linq;
+        if (!e) {
+            if (isRequireJS) {
+                eval("require")([LINQ_PATH], (linq) => {
+                    e = this._linq;
+                    if (!e)
+                        this._linq = e = linq.default.from(this);
+                    callback(e);
+                    callback = null;
+                });
+            }
+            else if (isNodeJS && isCommonJS) {
+                e = this.linq;
+            }
+            else {
+                throw "Cannot find a compatible loader for importing System.Linq/Linq";
+            }
         }
+        if (e && callback)
+            callback(e);
+        return e;
     }
 }
 //# sourceMappingURL=CollectionBase.js.map
