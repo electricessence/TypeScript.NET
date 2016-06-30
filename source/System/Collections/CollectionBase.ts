@@ -15,15 +15,19 @@ import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
-import {isCommonJS} from "../Environment";
 import __extendsImport from "../../extends";
+import {isCommonJS, isRequireJS, isNodeJS} from "../Environment";
+
+//noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 //noinspection SpellCheckingInspection
-const NAME      = "CollectionBase",
-      CMDC      = "Cannot modify a disposed collection.",
-      CMRO      = "Cannot modify a read-only collection.",
-      RESOLVE   = "resolve";
+const
+	NAME = "CollectionBase",
+	CMDC = "Cannot modify a disposed collection.",
+	CMRO = "Cannot modify a read-only collection.";
+const
+	LINQ_PATH = "../../System.Linq/Linq";
 
 export abstract class CollectionBase<T>
 extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
@@ -55,6 +59,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return false;
 	}
 
+	//noinspection JSUnusedGlobalSymbols
 	get isReadOnly():boolean
 	{
 		return this.getIsReadOnly();
@@ -107,6 +112,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	protected _incrementModified():void { this._modifiedCount++; }
 
+	//noinspection JSUnusedGlobalSymbols
 	get isUpdating():boolean { return this._updateRecursion!=0; }
 
 	/**
@@ -303,20 +309,70 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	}
 
 	private _linq:ILinqEnumerable<T>;
+
+	/**
+	 * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
+	 * @returns {ILinqEnumerable}
+	 */
 	get linq():ILinqEnumerable<T>
 	{
-		if(isCommonJS)
+		this.throwIfDisposed();
+		var e = this._linq;
+
+		if(!e)
 		{
-			var e = this._linq;
-			if(!e) this._linq = e = require("../../System.Linq/Linq").default.from(this);
-			return e;
+			if(!isNodeJS || !isCommonJS)
+				throw `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
+Import System.Linq/Linq and use Enumerable.from(e) instead.
+Or use .linqAsync(callback) for AMD/RequireJS.`;
+
+			this._linq = e = eval("require")(LINQ_PATH).default.from(this);
 		}
-		else
-		{
-			throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
-		}
+
+		return e;
 	}
 
+	/**
+	 * .linqAsync() is for use with deferred loading.
+	 * Ensures an instance of the Linq extensions is available and then passes it to the callback.
+	 * Returns an ILinqEnumerable if one is already available, otherwise undefined.
+	 * Passing no parameters will still initiate loading and initializing the ILinqEnumerable which can be useful for pre-loading.
+	 * Any call to .linqAsync() where an ILinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
+	 * @param callback
+	 * @returns {ILinqEnumerable}
+	 */
+	linqAsync(callback?:(linq:ILinqEnumerable<T>)=>void):ILinqEnumerable<T>
+	{
+		this.throwIfDisposed();
+		var e = this._linq;
+
+		if(!e)
+		{
+			if(isRequireJS)
+			{
+				eval("require")([LINQ_PATH], (linq:any)=>
+				{
+					// Could end up being called more than once, be sure to check for ._linq before setting...
+					e = this._linq;
+					if(!e) this._linq = e = linq.default.from(this);
+					callback(e);
+					callback = null; // In case this is return synchronously..
+				});
+			}
+			else if(isNodeJS && isCommonJS)
+			{
+				e = this.linq;
+			}
+			else
+			{
+				throw "Cannot find a compatible loader for importing System.Linq/Linq";
+			}
+		}
+
+		if(e && callback) callback(e);
+
+		return e;
+	}
 }
 
 declare var require:any;

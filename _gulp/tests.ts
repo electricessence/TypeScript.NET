@@ -4,8 +4,6 @@ import * as TASK from "./constants/TaskNames";
 import * as gulp from "gulp";
 import {Promise} from "../source/System/Promises/Promise";
 
-const TEST_DEFAULTS = Object.freeze({noEmitHelpers: false});
-
 const renderer = BuildHelper
 	.inject(Promise.factory)
 	.defaults({
@@ -20,6 +18,9 @@ const renderer = BuildHelper
 gulp.task(
 	// Can't figure out why the TSC doesn't work the same for this folder as it does for the source folder. :(
 	TASK.TYPESCRIPT_QUNIT,
+	[
+		TASK.DIST_AMD
+	],
 	()=> renderer
 		.at('./tests/qunit')
 		.init()

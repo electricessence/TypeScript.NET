@@ -1,27 +1,27 @@
-///<reference path="../../../source/System/Collections/ICollection.d.ts"/>
 ///<reference path="../../../typings/qunit/qunit.d.ts"/>
 ///<amd-dependency path="QUnit"/>
 
 import * as Text from "source/System/Text/Utility";
 import * as AU from "source/System/Collections/Array/Utility";
 import NotImplementedException from "source/System/Exceptions/NotImplementedException";
-import {ICollection} from "../../../source/System/Collections/ICollection";
+import {ICollection} from "source/System/Collections/ICollection";
+import {CollectionBase} from "source/System/Collections/CollectionBase";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
  */
 
-export function General<T>(
-	name:string,
-	collection:ICollection<string>):void
-{
-	var count = collection.count;
-
-	QUnit.test(name + ".count", function(assert:QUnitAssert)
-	{
-		assert.ok(!isNaN(count), "Count must be a number.");
-	});
-}
+// export function General<T>(
+// 	name:string,
+// 	collection:CollectionBase<string>):void
+// {
+// 	var count = collection.count;
+//
+// 	QUnit.test(name + ".count", (assert:QUnitAssert)=>
+// 	{
+// 		assert.ok(!isNaN(count), "Count must be a number.");
+// 	});
+// }
 
 function assertIsNumber(assert:QUnitAssert, value:any, name:string)
 {
@@ -95,7 +95,7 @@ function assertRemoving<T>(assert:QUnitAssert, c:ICollection<T>)
 	}
 	catch(ex)
 	{
-		if((ex)instanceof(NotImplementedException))
+		if((ex) instanceof (NotImplementedException))
 		{
 			console.log(ex);
 		}
@@ -109,7 +109,7 @@ function assertRemoving<T>(assert:QUnitAssert, c:ICollection<T>)
 
 export function Collection<T>(
 	name:string,
-	collection:ICollection<T>,
+	collection:CollectionBase<T>,
 	sourceValues:T[]):void
 {
 	if(sourceValues.indexOf(null)!= -1)
@@ -127,11 +127,21 @@ export function Collection<T>(
 		assert.ok(!collection.contains(null), 'Equality comparison is not strict.');
 	});
 
+	QUnit.asyncTest(name + ".linqAsync()", (assert:QUnitAssert)=>
+	{
+		collection.linqAsync(linq=>
+		{
+			assert.ok(!!linq, "Expects a linq enumerable instance.");
+			assert.ok(!!collection.linq, "Expects a linq enumerable instance.");
+			QUnit.start();
+		});
+	})
+
 }
 
 export function StringCollection(
 	name:string,
-	collection:ICollection<string>):void
+	collection:CollectionBase<string>):void
 {
 
 	//noinspection SpellCheckingInspection
@@ -148,7 +158,7 @@ export function StringCollection(
 
 export function NumberCollection(
 	name:string,
-	collection:ICollection<number>):void
+	collection:CollectionBase<number>):void
 {
 	//noinspection SpellCheckingInspection
 	Collection(name + '<' + 'number>', collection, [
@@ -167,7 +177,7 @@ export function NumberCollection(
 
 export function InstanceCollection(
 	name:string,
-	collection:ICollection<Object>):void
+	collection:CollectionBase<Object>):void
 {
 	var repeat = {};
 	//noinspection SpellCheckingInspection

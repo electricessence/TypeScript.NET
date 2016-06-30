@@ -10,13 +10,6 @@
     var Text = require("source/System/Text/Utility");
     var AU = require("source/System/Collections/Array/Utility");
     var NotImplementedException_1 = require("source/System/Exceptions/NotImplementedException");
-    function General(name, collection) {
-        var count = collection.count;
-        QUnit.test(name + ".count", function (assert) {
-            assert.ok(!isNaN(count), "Count must be a number.");
-        });
-    }
-    exports.General = General;
     function assertIsNumber(assert, value, name) {
         assert.ok(!isNaN(value), Text.format("'{0}' must be a real number.", name));
     }
@@ -94,6 +87,13 @@
             assertCopyToClear(assert, collection);
             assertRemoving(assert, collection);
             assert.ok(!collection.contains(null), 'Equality comparison is not strict.');
+        });
+        QUnit.asyncTest(name + ".linqAsync()", function (assert) {
+            collection.linqAsync(function (linq) {
+                assert.ok(!!linq, "Expects a linq enumerable instance.");
+                assert.ok(!!collection.linq, "Expects a linq enumerable instance.");
+                QUnit.start();
+            });
         });
     }
     exports.Collection = Collection;

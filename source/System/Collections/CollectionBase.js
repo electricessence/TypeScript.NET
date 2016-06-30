@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], factory);
+        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -16,10 +16,11 @@
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var Environment_1 = require("../Environment");
     var extends_1 = require("../../extends");
+    var Environment_1 = require("../Environment");
     var __extends = extends_1.default;
-    var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.", RESOLVE = "resolve";
+    var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
+    var LINQ_PATH = "../../System.Linq/Linq";
     var CollectionBase = (function (_super) {
         __extends(CollectionBase, _super);
         function CollectionBase(source, _equalityComparer) {
@@ -230,19 +231,43 @@
         };
         Object.defineProperty(CollectionBase.prototype, "linq", {
             get: function () {
-                if (Environment_1.isCommonJS) {
-                    var e = this._linq;
-                    if (!e)
-                        this._linq = e = require("../../System.Linq/Linq").default.from(this);
-                    return e;
+                this.throwIfDisposed();
+                var e = this._linq;
+                if (!e) {
+                    if (!Environment_1.isNodeJS || !Environment_1.isCommonJS)
+                        throw "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nOr use .linqAsync(callback) for AMD/RequireJS.";
+                    this._linq = e = eval("require")(LINQ_PATH).default.from(this);
                 }
-                else {
-                    throw ".linq currently only supported within CommonJS.\nImport System.Linq/Linq and use Enumerable.from(e) instead.";
-                }
+                return e;
             },
             enumerable: true,
             configurable: true
         });
+        CollectionBase.prototype.linqAsync = function (callback) {
+            var _this = this;
+            this.throwIfDisposed();
+            var e = this._linq;
+            if (!e) {
+                if (Environment_1.isRequireJS) {
+                    eval("require")([LINQ_PATH], function (linq) {
+                        e = _this._linq;
+                        if (!e)
+                            _this._linq = e = linq.default.from(_this);
+                        callback(e);
+                        callback = null;
+                    });
+                }
+                else if (Environment_1.isNodeJS && Environment_1.isCommonJS) {
+                    e = this.linq;
+                }
+                else {
+                    throw "Cannot find a compatible loader for importing System.Linq/Linq";
+                }
+            }
+            if (e && callback)
+                callback(e);
+            return e;
+        };
         return CollectionBase;
     }(DisposableBase_1.DisposableBase));
     exports.CollectionBase = CollectionBase;

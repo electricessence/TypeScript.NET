@@ -11,7 +11,6 @@
     var TASK = require("./constants/TaskNames");
     var gulp = require("gulp");
     var Promise_1 = require("../source/System/Promises/Promise");
-    var TEST_DEFAULTS = Object.freeze({ noEmitHelpers: false });
     var renderer = gulp_typescript_helper_1.BuildHelper
         .inject(Promise_1.Promise.factory)
         .defaults({
@@ -21,7 +20,9 @@
         removeComments: true,
         sourceMap: true,
     });
-    gulp.task(TASK.TYPESCRIPT_QUNIT, function () { return renderer
+    gulp.task(TASK.TYPESCRIPT_QUNIT, [
+        TASK.DIST_AMD
+    ], function () { return renderer
         .at('./tests/qunit')
         .init()
         .execute(); });
