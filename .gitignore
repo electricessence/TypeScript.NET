@@ -204,3 +204,4 @@ typings
 
 # TypeDoc
 documentation
+*.nupkg
