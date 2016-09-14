@@ -58,9 +58,34 @@
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(DateTime.prototype, "calendarMonth", {
+            get: function () {
+                return this._value.getMonth() + 1;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DateTime.prototype, "calendar", {
+            get: function () {
+                return {
+                    year: this.year,
+                    month: this.calendarMonth,
+                    day: this.day
+                };
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(DateTime.prototype, "day", {
             get: function () {
                 return this._value.getDate();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(DateTime.prototype, "dayIndex", {
+            get: function () {
+                return this._value.getDate() - 1;
             },
             enumerable: true,
             configurable: true
@@ -171,13 +196,31 @@
         });
         DateTime.between = function (first, last) {
             var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
-            return new TimeSpan_1.TimeSpan(f.getTime() - l.getTime());
+            return new TimeSpan_1.TimeSpan(l.getTime() - f.getTime());
         };
         DateTime.isLeapYear = function (year) {
             return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
         };
         DateTime.daysInMonth = function (year, month) {
             return (new Date(year, month + 1, 0)).getDate();
+        };
+        DateTime.from = function (yearOrDate, month, day) {
+            var year;
+            if (typeof yearOrDate == "object") {
+                day = yearOrDate.day;
+                month = yearOrDate.month;
+                year = yearOrDate.year;
+            }
+            return new DateTime(new Date(year, month, day));
+        };
+        DateTime.fromCalendarDate = function (yearOrDate, month, day) {
+            var year;
+            if (typeof yearOrDate == "object") {
+                day = yearOrDate.day;
+                month = yearOrDate.month;
+                year = yearOrDate.year;
+            }
+            return new DateTime(new Date(year, month - 1, day));
         };
         return DateTime;
     }());

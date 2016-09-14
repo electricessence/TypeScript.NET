@@ -35,8 +35,21 @@ export class DateTime {
     get month() {
         return this._value.getMonth();
     }
+    get calendarMonth() {
+        return this._value.getMonth() + 1;
+    }
+    get calendar() {
+        return {
+            year: this.year,
+            month: this.calendarMonth,
+            day: this.day
+        };
+    }
     get day() {
         return this._value.getDate();
+    }
+    get dayIndex() {
+        return this._value.getDate() - 1;
     }
     get dayOfWeek() {
         return this._value.getDay();
@@ -116,13 +129,31 @@ export class DateTime {
     }
     static between(first, last) {
         var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
-        return new TimeSpan(f.getTime() - l.getTime());
+        return new TimeSpan(l.getTime() - f.getTime());
     }
     static isLeapYear(year) {
         return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
     }
     static daysInMonth(year, month) {
         return (new Date(year, month + 1, 0)).getDate();
+    }
+    static from(yearOrDate, month, day) {
+        var year;
+        if (typeof yearOrDate == "object") {
+            day = yearOrDate.day;
+            month = yearOrDate.month;
+            year = yearOrDate.year;
+        }
+        return new DateTime(new Date(year, month, day));
+    }
+    static fromCalendarDate(yearOrDate, month, day) {
+        var year;
+        if (typeof yearOrDate == "object") {
+            day = yearOrDate.day;
+            month = yearOrDate.month;
+            year = yearOrDate.year;
+        }
+        return new DateTime(new Date(year, month - 1, day));
     }
 }
 Object.freeze(DateTime);

@@ -769,4 +769,15 @@ describe(".weave(enumerables)", function () {
         assert.throws(function () { return Linq_1.default.weave(null); });
     });
 });
+describe("xxx", function () {
+    it("yyy", function () {
+        var r = Linq_1.default.from([1, 2, 3, 4, 5, 6])
+            .skip(1)
+            .takeExceptLast(2)
+            .toArray();
+        assert.equal(r[0], 2);
+        assert.equal(r[1], 3);
+        assert.equal(r[2], 4);
+    });
+});
 //# sourceMappingURL=Enumerable.js.map

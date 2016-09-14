@@ -1176,3 +1176,18 @@ describe(".weave(enumerables)", ()=>
 	});
 
 });
+
+describe("xxx",()=>{
+
+	it("yyy",()=>{
+		var r = Enumerable.from([1,2,3,4,5,6])
+			.skip(1)
+			.takeExceptLast(2)
+			.toArray();
+
+		assert.equal(r[0],2);
+		assert.equal(r[1],3);
+		assert.equal(r[2],4);
+	})
+
+});

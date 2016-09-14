@@ -38,3 +38,8 @@ describe(".daysInMonth(year,month) & .isLeapYear(year)",()=>{
 
 });
 
+describe(".between(first,last)",()=>{
+	it("should return a positive delta for proper dates",()=>{
+		assert.ok(DateTime.between(new Date("2016-06-06"),new Date("2016-07-06")).total.milliseconds>0);
+	});
+});

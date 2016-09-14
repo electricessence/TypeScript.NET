@@ -30,4 +30,9 @@ describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {
         }
     });
 });
+describe(".between(first,last)", function () {
+    it("should return a positive delta for proper dates", function () {
+        assert.ok(DateTime_1.default.between(new Date("2016-06-06"), new Date("2016-07-06")).total.milliseconds > 0);
+    });
+});
 //# sourceMappingURL=DateTime.js.map

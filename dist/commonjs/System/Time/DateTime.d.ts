@@ -22,7 +22,10 @@ export declare class DateTime implements ICalendarDate, IDateTime {
     kind: DateTime.Kind;
     year: number;
     month: Gregorian.Month;
+    calendarMonth: number;
+    calendar: ICalendarDate;
     day: number;
+    dayIndex: number;
     dayOfWeek: Gregorian.DayOfWeek;
     addMilliseconds(ms: number): DateTime;
     addSeconds(seconds: number): DateTime;
@@ -45,6 +48,10 @@ export declare class DateTime implements ICalendarDate, IDateTime {
     static between(first: Date | DateTime, last: Date | DateTime): TimeSpan;
     static isLeapYear(year: number): boolean;
     static daysInMonth(year: number, month: Gregorian.Month): number;
+    static from(calendarDate: ICalendarDate): DateTime;
+    static from(year: number, month: Gregorian.Month, day: number): DateTime;
+    static fromCalendarDate(calendarDate: ICalendarDate): DateTime;
+    static fromCalendarDate(year: number, month: number, day: number): DateTime;
 }
 export declare module DateTime {
     const enum Kind {

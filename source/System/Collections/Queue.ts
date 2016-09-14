@@ -116,7 +116,7 @@ extends CollectionBase<T>
 			AU.clear(array, head, tail);
 		else
 		{
-			AU.clear(array, head, array.length - head);
+			AU.clear(array, head);
 			AU.clear(array, 0, tail);
 		}
 

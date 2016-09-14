@@ -11,7 +11,10 @@ It is recommended you select the module type that you intend to use:
 * [```typescript-dotnet-amd```](https://www.npmjs.com/package/typescript-dotnet-amd)
 * [```typescript-dotnet-system```](https://www.npmjs.com/package/typescript-dotnet-system)
 
-**Example:**
+
+---
+
+##### Examples:
 
 The following example will install the UMD version which works with both CommonJS and AMD module types.
 
@@ -19,3 +22,16 @@ The following example will install the UMD version which works with both CommonJ
 npm install typescript-dotnet-umd
 ```
 
+...
+
+*Note: WebPack has trouble with UMD. Use CommonJS or AMD if you intend to use WebPack.*
+
+```
+npm install typescript-dotnet-commonjs
+```
+
+or
+
+```
+npm install typescript-dotnet-amd
+```
