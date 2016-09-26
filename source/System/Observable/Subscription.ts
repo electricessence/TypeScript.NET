@@ -18,11 +18,12 @@ export class Subscription<T> implements IDisposableAware
 		private _subscribable: ISubscribable<T>,
 		private _subscriber: T)
 	{
-		if (!_subscribable || !_subscriber)
+		if(!_subscribable || !_subscriber)
 			throw 'Subscribable and subscriber cannot be null.';
 	}
 
-	get subscriber():T {
+	get subscriber(): T
+	{
 		return this._subscriber;
 	}
 
@@ -51,14 +52,20 @@ export class Subscription<T> implements IDisposableAware
 		var subscriber = this.subscriber;
 		var subscribable = this._subscribable;
 
-		// Release the references.  Will prevent potential unwanted recursion.
-		this._subscriber = null;
+		// Release this reference.  It will prevent potential unwanted recursion.
 		this._subscribable = null;
 
-
-		if (subscriber && subscribable)
+		try
 		{
-			subscribable.unsubscribe(subscriber);
+			if(subscriber && subscribable)
+			{
+				subscribable.unsubscribe(subscriber);
+			}
+		}
+		finally
+		{
+			// Keep this reference until the end so it can be identified by the list.
+			this._subscriber = null;
 		}
 	}
 }

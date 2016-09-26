@@ -13,6 +13,7 @@ import {ILinkedNodeWithValue} from "../Collections/ILinkedListNode";
 import {IDisposable} from "../Disposable/IDisposable";
 import {DisposableBase} from "../Disposable/DisposableBase";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
@@ -21,9 +22,9 @@ extends DisposableBase
 {
 
 	// Use a linked list since it's much easier to remove a subscriber from anywhere in the list.
-	private __subscriptions:LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>;
+	private __subscriptions: LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>;
 
-	protected _getSubscribers():TSubscriber[]
+	protected _getSubscribers(): TSubscriber[]
 	{
 		var s = this.__subscriptions;
 		return s && s.map(node=>node.value && node.value.subscriber);
@@ -35,14 +36,14 @@ extends DisposableBase
 	}
 
 	private _findEntryNode(
-		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>
+		subscriber: TSubscriber): ILinkedNodeWithValue<Subscription<TSubscriber>>
 	{
 		var s = this.__subscriptions;
 		return s && s.find(n=>n.value.subscriber===subscriber);
 	}
 
 	// It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
-	subscribe(subscriber:TSubscriber):IDisposable
+	subscribe(subscriber: TSubscriber): IDisposable
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -52,7 +53,8 @@ extends DisposableBase
 			return n.value;
 
 		var _s = _.__subscriptions;
-		if(!_s) _.__subscriptions = _s = new LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>();
+		if(!_s) _.__subscriptions = _s
+			= new LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>();
 
 		var s = new Subscription(_, subscriber);
 		_s.addNode({value: s});
@@ -60,7 +62,7 @@ extends DisposableBase
 		return s;
 	}
 
-	unsubscribe(subscriber:TSubscriber):void
+	unsubscribe(subscriber: TSubscriber): void
 	{
 		const _ = this;
 		// _.throwIfDisposed(); If it was disposed, then it's still safe to try and unsubscribe.
@@ -73,7 +75,7 @@ extends DisposableBase
 		}
 	}
 
-	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[]
+	protected _unsubscribeAll(returnSubscribers: boolean = false): TSubscriber[]
 	{
 		var _ = this, _s = _.__subscriptions;
 		if(!_s) return null;
@@ -86,7 +88,7 @@ extends DisposableBase
 		return u;
 	}
 
-	unsubscribeAll():void
+	unsubscribeAll(): void
 	{
 		this._unsubscribeAll();
 	}

@@ -2,14 +2,17 @@
  * @author electricessence / https://github.com/electricessence/
  * Based upon .NET source.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+ * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
 
 import {SubscribableBase} from "./SubscribableBase";
 import {IObservable} from "./IObservable";
 import {IObserver} from "./IObserver";
+import {IDisposable} from "../Disposable/IDisposable";
+import {Action, Closure} from "../FunctionTypes";
 import __extendsImport from "../../extends";
+//noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
@@ -18,7 +21,7 @@ export abstract class ObservableBase<T>
 extends SubscribableBase<IObserver<T>> implements IObservable<T>
 {
 
-	protected _onNext(value:T):void
+	protected _onNext(value: T): void
 	{
 		processAction(
 			this._getSubscribers(),
@@ -26,7 +29,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		);
 	}
 
-	protected _onError(error:any):void
+	protected _onError(error: any): void
 	{
 		processAction(
 			this._getSubscribers(),
@@ -34,23 +37,52 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		);
 	}
 
-	protected _onCompleted():void
+	protected _onCompleted(): void
 	{
 		processAction(
 			this._unsubscribeAll(true),
 			s => { s.onCompleted && s.onCompleted(); }
 		);
 	}
+
+	subscribe(subscriber: IObserver<T>): IDisposable
+	subscribe(
+		subscriber: Action<T>,
+		onError?: Action<any>,
+		onCompleted?: Closure): IDisposable
+	subscribe(
+		subscriber: IObserver<T> | Action<T>,
+		onError?: Action<any>,
+		onCompleted?: Closure): IDisposable
+	{
+		var s: IObserver<T>;
+		var isFn = typeof subscriber=='function';
+		if(onError || onCompleted || isFn)
+		{
+			if(subscriber && !isFn) throw "Invalid subscriber type.";
+			s = {
+				onNext: <Action<T>>subscriber,
+				onError: onError,
+				onCompleted: onCompleted
+			}
+		}
+		else
+		{
+			s = subscriber;
+		}
+
+		return super.subscribe(s);
+	}
 }
 
-const OBSERVER_ERROR_MESSAGE:string = 'One or more observers had errors when attempting to pass information.';
+const OBSERVER_ERROR_MESSAGE: string = 'One or more observers had errors when attempting to pass information.';
 
 function processAction<T>(
-	observers:IObserver<T>[],
-	handler:(s:IObserver<T>)=>void)
+	observers: IObserver<T>[],
+	handler: (s: IObserver<T>)=>void)
 {
 	if(!observers) return;
-	var observersErrors:{observer:IObserver<T>,ex:any}[] = null;
+	var observersErrors: {observer: IObserver<T>,ex: any}[] = null;
 
 	for(let s of observers)
 	{

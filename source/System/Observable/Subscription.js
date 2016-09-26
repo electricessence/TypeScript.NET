@@ -37,10 +37,14 @@
         Subscription.prototype.dispose = function () {
             var subscriber = this.subscriber;
             var subscribable = this._subscribable;
-            this._subscriber = null;
             this._subscribable = null;
-            if (subscriber && subscribable) {
-                subscribable.unsubscribe(subscriber);
+            try {
+                if (subscriber && subscribable) {
+                    subscribable.unsubscribe(subscriber);
+                }
+            }
+            finally {
+                this._subscriber = null;
             }
         };
         return Subscription;

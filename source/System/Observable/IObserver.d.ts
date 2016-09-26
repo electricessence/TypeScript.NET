@@ -5,12 +5,13 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 
+import {Action, Closure} from "../FunctionTypes";
 export interface IObserver<T>
 {
 	// onNext is optional because an observer may only care about onCompleted.
-	onNext?:(value:T)=>void;
-	onError?:(error:any)=>void;
-	onCompleted?:()=>void;
+	onNext?:Action<T>;
+	onError?:Action<any>;
+	onCompleted?:Closure;
 }
 
 export default IObserver;

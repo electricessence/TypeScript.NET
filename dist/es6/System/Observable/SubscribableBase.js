@@ -30,7 +30,8 @@ export class SubscribableBase extends DisposableBase {
             return n.value;
         var _s = _.__subscriptions;
         if (!_s)
-            _.__subscriptions = _s = new LinkedNodeList();
+            _.__subscriptions = _s
+                = new LinkedNodeList();
         var s = new Subscription(_, subscriber);
         _s.addNode({ value: s });
         return s;

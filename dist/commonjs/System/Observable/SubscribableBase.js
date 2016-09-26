@@ -32,7 +32,8 @@ var SubscribableBase = (function (_super) {
             return n.value;
         var _s = _.__subscriptions;
         if (!_s)
-            _.__subscriptions = _s = new LinkedNodeList_1.LinkedNodeList();
+            _.__subscriptions = _s
+                = new LinkedNodeList_1.LinkedNodeList();
         var s = new Subscription_1.Subscription(_, subscriber);
         _s.addNode({ value: s });
         return s;

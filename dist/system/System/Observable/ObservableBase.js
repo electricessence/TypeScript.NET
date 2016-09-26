@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Based upon .NET source.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+ * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 System.register(["./SubscribableBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
@@ -57,6 +57,23 @@ System.register(["./SubscribableBase", "../../extends"], function(exports_1, con
                 };
                 ObservableBase.prototype._onCompleted = function () {
                     processAction(this._unsubscribeAll(true), function (s) { s.onCompleted && s.onCompleted(); });
+                };
+                ObservableBase.prototype.subscribe = function (subscriber, onError, onCompleted) {
+                    var s;
+                    var isFn = typeof subscriber == 'function';
+                    if (onError || onCompleted || isFn) {
+                        if (subscriber && !isFn)
+                            throw "Invalid subscriber type.";
+                        s = {
+                            onNext: subscriber,
+                            onError: onError,
+                            onCompleted: onCompleted
+                        };
+                    }
+                    else {
+                        s = subscriber;
+                    }
+                    return _super.prototype.subscribe.call(this, s);
                 };
                 return ObservableBase;
             }(SubscribableBase_1.SubscribableBase));

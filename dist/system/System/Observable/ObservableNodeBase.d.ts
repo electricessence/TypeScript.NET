@@ -8,7 +8,7 @@ import ObservableBase from "./ObservableBase";
 import { IObserver } from "./IObserver";
 export declare class ObservableNodeBase<T> extends ObservableBase<T> implements IObserver<T> {
     onNext(value: T): void;
-    onError(error: Error): void;
+    onError(error: any): void;
     onCompleted(): void;
 }
 export default ObservableNodeBase;

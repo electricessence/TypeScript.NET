@@ -9,24 +9,24 @@
 import ObservableBase from "./ObservableBase";
 import {IObserver} from "./IObserver";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 export class ObservableNodeBase<T>
-extends ObservableBase<T>
-implements IObserver<T>
+extends ObservableBase<T> implements IObserver<T>
 {
 
-	onNext(value:T):void
+	onNext(value: T): void
 	{
 		this._onNext(value);
 	}
 
-	onError(error:Error):void
+	onError(error: any): void
 	{
 		this._onError(error);
 	}
 
-	onCompleted():void
+	onCompleted(): void
 	{
 		this._onCompleted();
 	}
