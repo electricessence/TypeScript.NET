@@ -8,8 +8,8 @@ import { dispose } from "./dispose";
 import { DisposableBase } from "./DisposableBase";
 import { TaskHandler } from "../Threading/Tasks/TaskHandler";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
-import __extendsImport from "../../extends";
 import { ArgumentException } from "../Exceptions/ArgumentException";
+import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 const OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
 export class ObjectPool extends DisposableBase {
@@ -50,7 +50,8 @@ export class ObjectPool extends DisposableBase {
         this._trimmer.start(defer);
     }
     _clear() {
-        var _ = this, p = _._pool;
+        const _ = this;
+        var p = _._pool;
         _._trimmer.cancel();
         _._flusher.cancel();
         _._autoFlusher.cancel();

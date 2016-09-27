@@ -16,7 +16,11 @@ export class Exception {
             beforeSealing(_);
         try {
             var stack = (new Error()).stack;
-            stack = stack && stack.replace(/^Error\n/, '').replace(/(.|\n)+\s+at new.+/, '') || '';
+            stack = stack
+                && stack
+                    .replace(/^Error\n/, '')
+                    .replace(/(.|\n)+\s+at new.+/, '')
+                || '';
             this.stack = _.toStringWithoutBrackets() + stack;
         }
         catch (ex) { }
@@ -27,7 +31,8 @@ export class Exception {
         return `[${this.toStringWithoutBrackets()}]`;
     }
     toStringWithoutBrackets() {
-        var _ = this, m = _.message;
+        const _ = this;
+        var m = _.message;
         return _.name + (m ? (': ' + m) : '');
     }
     dispose() {

@@ -50,7 +50,8 @@ System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../
                 });
                 Object.defineProperty(TimeSpan.prototype, "time", {
                     get: function () {
-                        var _ = this, t = _._time;
+                        var _ = this;
+                        var t = _._time;
                         if (!t)
                             _._time = t = new ClockTime_1.ClockTime(_.getTotalMilliseconds());
                         return t;

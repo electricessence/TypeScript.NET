@@ -5,7 +5,8 @@
 
 export declare module Gregorian
 {
-	export const enum Month {
+	export const enum Month
+	{
 		January,
 		February,
 		March,
@@ -20,7 +21,8 @@ export declare module Gregorian
 		December
 	}
 
-	export const enum DayOfWeek {
+	export const enum DayOfWeek
+	{
 		Sunday,
 		Monday,
 		Tuesday,

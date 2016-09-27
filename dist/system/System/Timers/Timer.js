@@ -55,6 +55,7 @@ System.register(["../Observable/ObservableBase", "../../extends"], function(expo
                 });
                 Timer.prototype.start = function () {
                     var _ = this;
+                    _.throwIfDisposed("This timer has been disposed and can't be reused.");
                     if (!_._cancel && _._count < _._maxCount) {
                         if (_._count || _._initialDelay == _._interval) {
                             var i_1 = setInterval(Timer._onTick, _._interval, _);
@@ -77,6 +78,11 @@ System.register(["../Observable/ObservableBase", "../../extends"], function(expo
                     this.stop();
                     this._count = 0;
                 };
+                Timer.prototype.complete = function () {
+                    this.cancel();
+                    this._onCompleted();
+                    return this._count;
+                };
                 Timer.prototype.cancel = function () {
                     if (this._cancel) {
                         this._cancel();
@@ -85,9 +91,9 @@ System.register(["../Observable/ObservableBase", "../../extends"], function(expo
                     }
                     return false;
                 };
-                Timer.prototype.dispose = function () {
+                Timer.prototype._onDispose = function () {
                     this.cancel();
-                    _super.prototype.dispose.call(this);
+                    _super.prototype._onDispose.call(this);
                 };
                 Timer._onTick = function (timer, reInitTimer) {
                     var index = timer._count++, max = timer._maxCount, isComplete = timer._count >= max;

@@ -19,6 +19,7 @@ export declare const enum TaskStatus
 	//  *  The task is waiting to be activated and scheduled internally by the .NET Framework infrastructure.
 	//  */
 	// WaitingForActivation,
+
 	/**
 	 *  The task has been scheduled for execution but has not yet begun executing.
 	 */

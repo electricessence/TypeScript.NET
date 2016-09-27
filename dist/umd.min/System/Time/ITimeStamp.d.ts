@@ -3,13 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-export interface ICalendarDate {
+export interface ICalendarDate
+{
 	year:number;
 	month:number;
 	day:number;
 }
 
-export interface IClockTime {
+export interface IClockTime
+{
 	hour:number;
 	minute:number;
 	second:number;
@@ -17,7 +19,8 @@ export interface IClockTime {
 	tick:number;
 }
 
-export interface ITimeStamp extends ICalendarDate, IClockTime {
+export interface ITimeStamp extends ICalendarDate, IClockTime
+{
 
 }
 

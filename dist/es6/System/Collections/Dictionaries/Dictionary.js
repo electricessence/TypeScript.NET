@@ -73,8 +73,8 @@ export class Dictionary extends DictionaryBase {
         var _ = this, comparer = _._keyComparer, compareKey = comparer(key);
         if (!bucket)
             bucket = _._getBucket(hash || getHashString(compareKey));
-        return bucket && bucket
-            .find(e => comparer(e.key) === compareKey);
+        return bucket
+            && bucket.find(e => comparer(e.key) === compareKey);
     }
     _getEntry(key) {
         var e = this._getBucketEntry(key);
@@ -116,7 +116,8 @@ export class Dictionary extends DictionaryBase {
         return false;
     }
     _clearInternal() {
-        var _ = this, buckets = _._buckets;
+        const _ = this;
+        var buckets = _._buckets;
         for (let key in buckets) {
             if (buckets.hasOwnProperty(key)) {
                 let bucket = buckets[key];
@@ -127,7 +128,8 @@ export class Dictionary extends DictionaryBase {
         return _._entries.clear();
     }
     getEnumerator() {
-        var _ = this, ver, currentEntry;
+        const _ = this;
+        var ver, currentEntry;
         return new EnumeratorBase(() => {
             ver = _._version;
             currentEntry = _._entries.first;
@@ -142,7 +144,8 @@ export class Dictionary extends DictionaryBase {
         });
     }
     getKeys() {
-        var _ = this, result = [];
+        const _ = this;
+        var result = [];
         var e = _._entries.first;
         while (e) {
             result.push(e.key);
@@ -151,7 +154,8 @@ export class Dictionary extends DictionaryBase {
         return result;
     }
     getValues() {
-        var _ = this, result = [];
+        const _ = this;
+        var result = [];
         var e = _._entries.first;
         while (e) {
             result.push(e.value);

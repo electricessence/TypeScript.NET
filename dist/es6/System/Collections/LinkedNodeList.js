@@ -48,7 +48,8 @@ export class LinkedNodeList {
         return result;
     }
     clear() {
-        var _ = this, n, cF = 0, cL = 0;
+        const _ = this;
+        var n, cF = 0, cL = 0;
         n = _._first;
         _._first = null;
         while (n) {
@@ -206,7 +207,7 @@ export class LinkedNodeList {
     static valueEnumeratorFrom(list) {
         if (!list)
             throw new ArgumentNullException('list');
-        var _ = this, current, next;
+        var current, next;
         return new EnumeratorBase(() => {
             current = null;
             next = list.first;

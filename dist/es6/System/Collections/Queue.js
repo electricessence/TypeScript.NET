@@ -50,17 +50,17 @@ export class Queue extends CollectionBase {
         return this._size;
     }
     _addInternal(item) {
-        var _ = this, array = _._array, size = _._size, len = _._capacity;
+        const _ = this;
+        var size = _._size, len = _._capacity;
         if (size == len) {
             var newCapacity = len * GROW_FACTOR_HALF;
             if (newCapacity < len + MINIMUM_GROW)
                 newCapacity = len + MINIMUM_GROW;
             _.setCapacity(newCapacity);
-            array = _._array;
             len = _._capacity;
         }
         var tail = _._tail;
-        array[tail] = item;
+        _._array[tail] = item;
         _._tail = (tail + 1) % len;
         _._size = size + 1;
         return true;
@@ -70,7 +70,8 @@ export class Queue extends CollectionBase {
             " since it would require destroying the underlying array to remove the item.");
     }
     _clearInternal() {
-        var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
+        const _ = this;
+        var array = _._array, head = _._head, tail = _._tail, size = _._size;
         if (head < tail)
             AU.clear(array, head, tail);
         else {
@@ -92,7 +93,8 @@ export class Queue extends CollectionBase {
         }
     }
     dump(max = Infinity) {
-        var _ = this, result = [];
+        const _ = this;
+        var result = [];
         if (isFinite(max)) {
             Integer.assertZeroOrGreater(max);
             if (max !== 0) {
@@ -115,7 +117,8 @@ export class Queue extends CollectionBase {
     }
     setCapacity(capacity) {
         assertIntegerZeroOrGreater(capacity, "capacity");
-        var _ = this, array = _._array, len = _._capacity;
+        const _ = this;
+        var array = _._array, len = _._capacity;
         if (capacity == len)
             return;
         var head = _._head, tail = _._tail, size = _._size;
@@ -194,8 +197,7 @@ export class Queue extends CollectionBase {
     }
     getEnumerator() {
         const _ = this;
-        var index;
-        var version;
+        var index, version;
         return new EnumeratorBase(() => {
             version = _._version;
             index = 0;

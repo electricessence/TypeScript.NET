@@ -30,6 +30,7 @@ export default class Timer extends ObservableBase {
     }
     start() {
         const _ = this;
+        _.throwIfDisposed("This timer has been disposed and can't be reused.");
         if (!_._cancel && _._count < _._maxCount) {
             if (_._count || _._initialDelay == _._interval) {
                 let i = setInterval(Timer._onTick, _._interval, _);
@@ -52,6 +53,11 @@ export default class Timer extends ObservableBase {
         this.stop();
         this._count = 0;
     }
+    complete() {
+        this.cancel();
+        this._onCompleted();
+        return this._count;
+    }
     cancel() {
         if (this._cancel) {
             this._cancel();
@@ -60,9 +66,9 @@ export default class Timer extends ObservableBase {
         }
         return false;
     }
-    dispose() {
+    _onDispose() {
         this.cancel();
-        super.dispose();
+        super._onDispose();
     }
     static _onTick(timer, reInitTimer) {
         var index = timer._count++, max = timer._maxCount, isComplete = timer._count >= max;

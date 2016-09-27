@@ -24,7 +24,9 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
         if (Types_1.Type.isString(s)) {
             if (!s)
                 return null;
-            s = Utility_1.trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY);
+            s = Utility_1.trim(s)
+                .toLowerCase()
+                .replace(/[^a-z0-9+.-]+$/g, EMPTY);
             if (!s)
                 return null;
             if (Scheme.isValid(s))

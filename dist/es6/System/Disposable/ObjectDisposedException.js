@@ -17,7 +17,8 @@ export class ObjectDisposedException extends InvalidOperationException {
         return NAME;
     }
     toString() {
-        var _ = this, oName = _.objectName;
+        const _ = this;
+        var oName = _.objectName;
         oName = oName ? ('{' + oName + '} ') : '';
         return '[' + _.name + ': ' + oName + _.message + ']';
     }

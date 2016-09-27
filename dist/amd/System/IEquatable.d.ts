@@ -7,7 +7,7 @@
 
 export interface IEquatable<T>
 {
-	equals(other:T): boolean;
+	equals(other:T):boolean;
 }
 
 export default IEquatable;

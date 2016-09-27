@@ -13,7 +13,8 @@ export class KeySortedContext extends SortContext {
         this._keySelector = _keySelector;
     }
     compare(a, b) {
-        var _ = this, ks = _._keySelector;
+        const _ = this;
+        var ks = _._keySelector;
         if (!ks || ks == Functions.Identity)
             return super.compare(a, b);
         var d = Values.compare(ks(a), ks(b));

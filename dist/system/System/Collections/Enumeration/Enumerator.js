@@ -159,7 +159,8 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
                 IteratorEnumerator_1 = IteratorEnumerator_1_1;
             }],
         execute: function() {
-            VOID0 = void (0), STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
+            VOID0 = void (0);
+            STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
                 'Would result in an infinite loop that could hang the current process.';
         }
     }

@@ -100,7 +100,8 @@ export class DateTime {
         return new DateTime(new Date(_.year, _.month, _.day), _._kind);
     }
     get timeOfDay() {
-        var _ = this, t = _._time;
+        const _ = this;
+        var t = _._time;
         if (!t) {
             var d = this._value;
             _._time = t = new ClockTime(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());

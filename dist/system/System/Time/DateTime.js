@@ -153,7 +153,8 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function(exports_1
                 });
                 Object.defineProperty(DateTime.prototype, "timeOfDay", {
                     get: function () {
-                        var _ = this, t = _._time;
+                        var _ = this;
+                        var t = _._time;
                         if (!t) {
                             var d = this._value;
                             _._time = t = new ClockTime_1.ClockTime(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());

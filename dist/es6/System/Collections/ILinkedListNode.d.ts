@@ -18,7 +18,8 @@ export interface INodeWithValue<TValue>
 }
 
 export interface ILinkedNodeWithValue<T>
-extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T> {
+extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T>
+{
 
 }
 
@@ -29,12 +30,12 @@ extends ILinkedNodeWithValue<T>
 	previous:ILinkedListNode<T>;
 	next:ILinkedListNode<T>;
 
-	list: ILinkedList<T>;
+	list:ILinkedList<T>;
 
-	addBefore(entry:T): void;
-	addAfter(entry:T): void;
+	addBefore(entry:T):void;
+	addAfter(entry:T):void;
 
-	remove(): void;
+	remove():void;
 }
 
 export default ILinkedListNode;

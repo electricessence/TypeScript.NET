@@ -44,7 +44,8 @@ export default class EventDispatcherBase extends DisposableBase {
         dispose.these(this._entries.filter(entry => entry.matches(type, listener)));
     }
     dispatchEvent(e, params) {
-        var _ = this, l = _._entries;
+        const _ = this;
+        var l = _._entries;
         if (!l || !l.length)
             return false;
         var event;

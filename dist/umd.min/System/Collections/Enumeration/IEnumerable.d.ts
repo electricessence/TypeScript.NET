@@ -7,7 +7,7 @@ import {IEnumerator} from "./IEnumerator";
 
 export interface IEnumerable<T>
 {
-	getEnumerator(): IEnumerator<T>;
+	getEnumerator():IEnumerator<T>;
 
 	/**
 	 * Provides a way of flagging endless enumerations that may cause issues.

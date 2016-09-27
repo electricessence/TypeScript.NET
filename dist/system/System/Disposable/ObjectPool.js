@@ -4,10 +4,10 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
-System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../../extends", "../Exceptions/ArgumentException"], function(exports_1, context_1) {
+System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../Exceptions/ArgumentException", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var dispose_1, DisposableBase_1, TaskHandler_1, ArgumentOutOfRangeException_1, extends_1, ArgumentException_1;
+    var dispose_1, DisposableBase_1, TaskHandler_1, ArgumentOutOfRangeException_1, ArgumentException_1, extends_1;
     var __extends, OBJECT_POOL, _MAX_SIZE, ABSOLUTE_MAX_SIZE, MUST_BE_GT1, MUST_BE_LTM, ObjectPool;
     return {
         setters:[
@@ -23,11 +23,11 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
             function (ArgumentOutOfRangeException_1_1) {
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             },
-            function (extends_1_1) {
-                extends_1 = extends_1_1;
-            },
             function (ArgumentException_1_1) {
                 ArgumentException_1 = ArgumentException_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
             __extends = extends_1.default;
@@ -79,7 +79,8 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     this._trimmer.start(defer);
                 };
                 ObjectPool.prototype._clear = function () {
-                    var _ = this, p = _._pool;
+                    var _ = this;
+                    var p = _._pool;
                     _._trimmer.cancel();
                     _._flusher.cancel();
                     _._autoFlusher.cancel();

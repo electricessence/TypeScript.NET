@@ -6,6 +6,7 @@
 
 
 import {SchemeValue} from "./SchemeValue";
+// noinspection SpellCheckingInspection
 /**
  * https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  *
@@ -15,7 +16,8 @@ import {SchemeValue} from "./SchemeValue";
  *   scheme             path
  * ```
  */
-export interface IUrn {
+export interface IUrn
+{
 
 	/**
 	 * The scheme name for this URI.
@@ -43,7 +45,8 @@ export interface IUrn {
  *  scheme  user information     host     port            query   fragment
  * ```
  */
-export interface IUri extends IUrn {
+export interface IUri extends IUrn
+{
 
 
 	/**

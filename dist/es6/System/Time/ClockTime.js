@@ -40,7 +40,8 @@ export class ClockTime extends TimeQuantity {
         return value;
     }
     toString() {
-        var _ = this, a = [];
+        const _ = this;
+        var a = [];
         if (_.days)
             a.push(pluralize(_.days, "day"));
         if (_.hour)

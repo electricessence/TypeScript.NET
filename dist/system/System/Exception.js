@@ -25,7 +25,11 @@ System.register([], function(exports_1, context_1) {
                         beforeSealing(_);
                     try {
                         var stack = (new Error()).stack;
-                        stack = stack && stack.replace(/^Error\n/, '').replace(/(.|\n)+\s+at new.+/, '') || '';
+                        stack = stack
+                            && stack
+                                .replace(/^Error\n/, '')
+                                .replace(/(.|\n)+\s+at new.+/, '')
+                            || '';
                         this.stack = _.toStringWithoutBrackets() + stack;
                     }
                     catch (ex) { }
@@ -36,7 +40,8 @@ System.register([], function(exports_1, context_1) {
                     return "[" + this.toStringWithoutBrackets() + "]";
                 };
                 Exception.prototype.toStringWithoutBrackets = function () {
-                    var _ = this, m = _.message;
+                    var _ = this;
+                    var m = _.message;
                     return _.name + (m ? (': ' + m) : '');
                 };
                 Exception.prototype.dispose = function () {

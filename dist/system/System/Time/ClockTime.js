@@ -66,7 +66,8 @@ System.register(["./TimeQuantity", "../../extends"], function(exports_1, context
                     return value;
                 };
                 ClockTime.prototype.toString = function () {
-                    var _ = this, a = [];
+                    var _ = this;
+                    var a = [];
                     if (_.days)
                         a.push(pluralize(_.days, "day"));
                     if (_.hour)

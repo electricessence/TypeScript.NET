@@ -11,6 +11,9 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+/**
+ * A timer class that uses an Observable pattern to allow for subscribing to ticks.
+ */
 export default class Timer extends ObservableBase<number> implements ITimer, ICancellable
 {
 
@@ -30,6 +33,13 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 			throw "'interval' cannot be negative.";
 	}
 
+	/**
+	 * Initializes a new timer and starts it.
+	 * @param millisecondInterval
+	 * @param maxCount
+	 * @param initialDelay
+	 * @returns {Timer}
+	 */
 	static startNew(
 		millisecondInterval:number,
 		maxCount:number = Infinity,
@@ -40,19 +50,31 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		return t;
 	}
 
+	/**
+	 * Returns true if the timer is running.
+	 * @returns {boolean}
+	 */
 	get isRunning():boolean
 	{
 		return !!this._cancel;
 	}
 
+	/**
+	 * Returns the number of times the timer has ticked (onNext);
+	 * @returns {number}
+	 */
 	get count():number
 	{
 		return this._count;
 	}
 
+	/**
+	 * Starts the timer.
+	 */
 	start():void
 	{
 		const _ = this;
+		_.throwIfDisposed("This timer has been disposed and can't be reused.");
 		if(!_._cancel && _._count<_._maxCount)
 		{
 			// For now, if it's isn't the start...
@@ -84,17 +106,37 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 
 	}
 
+	/**
+	 * Stops the timer.  Is the same as cancel.
+	 */
 	stop():void
 	{
 		this.cancel();
 	}
 
+	/**
+	 * Stops the timer and resets the count.
+	 */
 	reset():void
 	{
 		this.stop();
 		this._count = 0;
 	}
 
+	/**
+	 * Forces the onComplete to propagate and returns the number of times the timer ticked.
+	 * @returns {number}
+	 */
+	complete():number {
+		this.cancel();
+		this._onCompleted();
+		return this._count;
+	}
+
+	/**
+	 * Cancels the timer and returns true if the timer was running.  Returns false if already cancelled.
+	 * @returns {boolean}
+	 */
 	cancel():boolean
 	{
 		if(this._cancel)
@@ -106,10 +148,10 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		return false;
 	}
 
-	dispose():void
+	protected _onDispose():void
 	{
 		this.cancel();
-		super.dispose();
+		super._onDispose();
 	}
 
 	// We use a private static here so there's no need to create a handler every time.

@@ -41,7 +41,8 @@ export class StringKeyDictionary extends DictionaryBase {
         return this._map[key];
     }
     _setValueInternal(key, value) {
-        var _ = this, map = _._map, old = map[key];
+        const _ = this;
+        var map = _._map, old = map[key];
         if (old !== value) {
             if (value === VOID0) {
                 if ((key) in (map)) {
@@ -70,7 +71,8 @@ export class StringKeyDictionary extends DictionaryBase {
         });
     }
     toMap(selector) {
-        var _ = this, result = {};
+        const _ = this;
+        var result = {};
         if (_._count)
             for (let key in _._map) {
                 if (_._map.hasOwnProperty(key)) {

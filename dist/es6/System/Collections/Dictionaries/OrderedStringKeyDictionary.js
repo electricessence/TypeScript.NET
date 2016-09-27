@@ -22,7 +22,8 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
         return index < o.length ? this.getValue(o[index]) : VOID0;
     }
     setValue(key, value, keepIndex) {
-        var _ = this, exists = _.indexOfKey(key) != -1;
+        const _ = this;
+        var exists = _.indexOfKey(key) != -1;
         if (!exists && (value !== VOID0 || keepIndex))
             _._order.push(key);
         else if (exists && value === VOID0 && !keepIndex)
@@ -30,7 +31,8 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
         return super.setValue(key, value);
     }
     setByIndex(index, value) {
-        var _ = this, order = _._order;
+        const _ = this;
+        var order = _._order;
         if (index < 0)
             throw new ArgumentOutOfRangeException('index', index, 'Is less than zero.');
         if (index >= order.length)
@@ -55,7 +57,8 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
         return this.setByIndex(index, VOID0);
     }
     getKeys() {
-        var _ = this, o = _._order;
+        const _ = this;
+        var o = _._order;
         return o.length && o.filter(key => _.containsKey(key)) || [];
     }
 }

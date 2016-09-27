@@ -88,17 +88,17 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     return this._size;
                 };
                 Queue.prototype._addInternal = function (item) {
-                    var _ = this, array = _._array, size = _._size, len = _._capacity;
+                    var _ = this;
+                    var size = _._size, len = _._capacity;
                     if (size == len) {
                         var newCapacity = len * GROW_FACTOR_HALF;
                         if (newCapacity < len + MINIMUM_GROW)
                             newCapacity = len + MINIMUM_GROW;
                         _.setCapacity(newCapacity);
-                        array = _._array;
                         len = _._capacity;
                     }
                     var tail = _._tail;
-                    array[tail] = item;
+                    _._array[tail] = item;
                     _._tail = (tail + 1) % len;
                     _._size = size + 1;
                     return true;
@@ -108,7 +108,8 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                         " since it would require destroying the underlying array to remove the item.");
                 };
                 Queue.prototype._clearInternal = function () {
-                    var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
+                    var _ = this;
+                    var array = _._array, head = _._head, tail = _._tail, size = _._size;
                     if (head < tail)
                         AU.clear(array, head, tail);
                     else {
@@ -131,7 +132,8 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 };
                 Queue.prototype.dump = function (max) {
                     if (max === void 0) { max = Infinity; }
-                    var _ = this, result = [];
+                    var _ = this;
+                    var result = [];
                     if (isFinite(max)) {
                         Integer_1.Integer.assertZeroOrGreater(max);
                         if (max !== 0) {
@@ -154,7 +156,8 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 };
                 Queue.prototype.setCapacity = function (capacity) {
                     assertIntegerZeroOrGreater(capacity, "capacity");
-                    var _ = this, array = _._array, len = _._capacity;
+                    var _ = this;
+                    var array = _._array, len = _._capacity;
                     if (capacity == len)
                         return;
                     var head = _._head, tail = _._tail, size = _._size;
@@ -235,8 +238,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 };
                 Queue.prototype.getEnumerator = function () {
                     var _ = this;
-                    var index;
-                    var version;
+                    var index, version;
                     return new EnumeratorBase_1.EnumeratorBase(function () {
                         version = _._version;
                         index = 0;

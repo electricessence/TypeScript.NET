@@ -25,7 +25,8 @@ export class TimeSpan extends TimeQuantity {
         return this;
     }
     get time() {
-        var _ = this, t = _._time;
+        const _ = this;
+        var t = _._time;
         if (!t)
             _._time = t = new ClockTime(_.getTotalMilliseconds());
         return t;

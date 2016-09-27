@@ -42,7 +42,8 @@ System.register(["../../extends"], function(exports_1, context_1) {
                     if (!pattern)
                         throw new Error("'pattern' cannot be null or empty.");
                     var patternString, flags = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
-                        .join(EMPTY).toLowerCase();
+                        .join(EMPTY)
+                        .toLowerCase();
                     if (pattern instanceof RegExp) {
                         var p = pattern;
                         if (p.ignoreCase && flags.indexOf(_I) === -1)

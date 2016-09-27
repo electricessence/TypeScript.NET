@@ -16,7 +16,9 @@ const MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED
     : null, _supports = (isNodeJS || self.Worker) ? true : false;
 const defaults = {
     evalPath: isNodeJS ? __dirname + '/eval.js' : null,
-    maxConcurrency: isNodeJS ? require('os').cpus().length : (navigator.hardwareConcurrency || 4),
+    maxConcurrency: isNodeJS
+        ? require('os').cpus().length
+        : (navigator.hardwareConcurrency || 4),
     allowSynchronous: true,
     env: {},
     envNamespace: 'env'
@@ -211,8 +213,7 @@ export class Parallel {
                         if (i < len) {
                             let ii = i++, p = result[ii];
                             let wp = new WorkerPromise(worker, data[ii]);
-                            wp
-                                .thenSynchronous(r => {
+                            wp.thenSynchronous(r => {
                                 p.resolve(r);
                                 next();
                             }, e => {
@@ -268,8 +269,7 @@ export class Parallel {
                         if (i < len) {
                             let ii = i++;
                             let wp = new WorkerPromise(worker, data[ii]);
-                            wp
-                                .thenSynchronous(r => {
+                            wp.thenSynchronous(r => {
                                 result[ii] = r;
                                 next();
                             }, e => {

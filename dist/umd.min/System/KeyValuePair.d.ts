@@ -5,8 +5,8 @@
 
 export interface IKeyValuePair<TKey, TValue>
 {
-	key: TKey;
-	value: TValue;
+	key:TKey;
+	value:TValue;
 }
 
 export declare type KeyValuePair<TKey,TValue> = IKeyValuePair<TKey,TValue> | [TKey,TValue];

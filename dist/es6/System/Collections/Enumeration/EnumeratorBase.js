@@ -128,7 +128,8 @@ export class EnumeratorBase extends DisposableBase {
         }
     }
     _onDispose() {
-        var _ = this, disposer = _._disposer;
+        const _ = this;
+        var disposer = _._disposer;
         _._initializer = null;
         _._disposer = null;
         var y = _._yielder;

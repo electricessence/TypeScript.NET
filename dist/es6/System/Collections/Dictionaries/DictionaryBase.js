@@ -24,7 +24,8 @@ export class DictionaryBase extends CollectionBase {
         return extractKeyValue(item, (key, value) => this.addByKeyValue(key, value));
     }
     _clearInternal() {
-        var _ = this, count = 0;
+        const _ = this;
+        var count = 0;
         for (let key of _.keys) {
             if (_.removeByKey(key))
                 count++;
@@ -90,7 +91,8 @@ export class DictionaryBase extends CollectionBase {
         return this.setValue(key, VOID0);
     }
     removeByValue(value) {
-        var _ = this, count = 0, equal = areEqual;
+        const _ = this;
+        var count = 0, equal = areEqual;
         for (let key of _.getKeys()) {
             if (equal(_.getValue(key), value, true)) {
                 _.removeByKey(key);

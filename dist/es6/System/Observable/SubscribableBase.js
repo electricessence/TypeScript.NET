@@ -46,7 +46,8 @@ export class SubscribableBase extends DisposableBase {
         }
     }
     _unsubscribeAll(returnSubscribers = false) {
-        var _ = this, _s = _.__subscriptions;
+        const _ = this;
+        var _s = _.__subscriptions;
         if (!_s)
             return null;
         var s = _s.map(n => n.value);

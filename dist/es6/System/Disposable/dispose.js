@@ -43,7 +43,10 @@ export function using(disposable, closure) {
     }
 }
 function disposeSingle(disposable, trapExceptions) {
-    if (disposable && Type.of(disposable).member('dispose').isFunction) {
+    if (disposable
+        && Type.of(disposable)
+            .member('dispose')
+            .isFunction) {
         if (trapExceptions) {
             try {
                 disposable.dispose();

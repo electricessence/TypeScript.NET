@@ -70,7 +70,8 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                 };
                 EventDispatcherBase.prototype.dispatchEvent = function (e, params) {
                     var _this = this;
-                    var _ = this, l = _._entries;
+                    var _ = this;
+                    var l = _._entries;
                     if (!l || !l.length)
                         return false;
                     var event;
