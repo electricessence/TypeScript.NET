@@ -9,7 +9,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../../extends", "../Exceptions/ArgumentException"], factory);
+        define(["require", "exports", "./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandler", "../Exceptions/ArgumentOutOfRangeException", "../Exceptions/ArgumentException", "../../extends"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -17,8 +17,8 @@
     var DisposableBase_1 = require("./DisposableBase");
     var TaskHandler_1 = require("../Threading/Tasks/TaskHandler");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
-    var extends_1 = require("../../extends");
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
+    var extends_1 = require("../../extends");
     var __extends = extends_1.default;
     var OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
     var ObjectPool = (function (_super) {
@@ -68,7 +68,8 @@
             this._trimmer.start(defer);
         };
         ObjectPool.prototype._clear = function () {
-            var _ = this, p = _._pool;
+            var _ = this;
+            var p = _._pool;
             _._trimmer.cancel();
             _._flusher.cancel();
             _._autoFlusher.cancel();

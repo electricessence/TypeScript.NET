@@ -92,6 +92,7 @@ export const All:SchemeValue[] = Object.freeze([
 	File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID
 ]);
 
-export function isValid(scheme:string):scheme is SchemeValue {
-	return All.indexOf(<any>scheme)!=-1;
+export function isValid(scheme:string):scheme is SchemeValue
+{
+	return All.indexOf(<any>scheme)!= -1;
 }

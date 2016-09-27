@@ -9,6 +9,7 @@
 export class Functions
 {
 
+	//noinspection JSMethodCanBeStatic
 	/**
 	 * A typed method for use with simple selection of the parameter.
 	 * @returns {T}
@@ -16,6 +17,7 @@ export class Functions
 	Identity<T>(x:T):T
 	{ return x; }
 
+	//noinspection JSMethodCanBeStatic
 	/**
 	 * Returns true.
 	 * @returns {boolean}
@@ -23,6 +25,7 @@ export class Functions
 	True():boolean
 	{ return true; }
 
+	//noinspection JSMethodCanBeStatic
 	/**
 	 * Returns false.
 	 * @returns {boolean}

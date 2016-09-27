@@ -8,6 +8,7 @@ import {TimeQuantity} from "./TimeQuantity";
 import {IClockTime} from "./ITimeStamp";
 import {Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 
@@ -87,7 +88,8 @@ export class ClockTime extends TimeQuantity implements IClockTime
 		/* INSERT CUSTOM FORMATTING CODE HERE */
 
 
-		var _ = this, a:string[] = [];
+		const _ = this;
+		var a:string[] = [];
 
 		if(_.days)
 			a.push(pluralize(_.days, "day"));

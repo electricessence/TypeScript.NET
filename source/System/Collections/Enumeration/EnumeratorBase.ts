@@ -12,6 +12,7 @@ import {IIteratorResult} from "./IIterator";
 import {IYield} from "./IYield";
 import {IteratorResult} from "./IteratorResult";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void(0);
@@ -23,7 +24,7 @@ function yielder(recycle?:Yielder<any>):Yielder<any>
 {
 	if(!yielderPool)
 		yielderPool
-			= new ObjectPool<Yielder<any>>(40, ()=>new Yielder<any>(),y=>y.yieldBreak());
+			= new ObjectPool<Yielder<any>>(40, ()=>new Yielder<any>(), y=>y.yieldBreak());
 	if(!recycle) return yielderPool.take();
 	yielderPool.add(recycle);
 }
@@ -206,7 +207,8 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 	protected _onDispose():void
 	{
-		var _ = this, disposer = _._disposer;
+		const _ = this;
+		var disposer = _._disposer;
 
 		_._initializer = null;
 		_._disposer = null;

@@ -21,7 +21,8 @@ var ObjectDisposedException = (function (_super) {
         return NAME;
     };
     ObjectDisposedException.prototype.toString = function () {
-        var _ = this, oName = _.objectName;
+        var _ = this;
+        var oName = _.objectName;
         oName = oName ? ('{' + oName + '} ') : '';
         return '[' + _.name + ': ' + oName + _.message + ']';
     };

@@ -43,7 +43,8 @@ var StringKeyDictionary = (function (_super) {
         return this._map[key];
     };
     StringKeyDictionary.prototype._setValueInternal = function (key, value) {
-        var _ = this, map = _._map, old = map[key];
+        var _ = this;
+        var map = _._map, old = map[key];
         if (old !== value) {
             if (value === VOID0) {
                 if ((key) in (map)) {
@@ -72,7 +73,8 @@ var StringKeyDictionary = (function (_super) {
         });
     };
     StringKeyDictionary.prototype.toMap = function (selector) {
-        var _ = this, result = {};
+        var _ = this;
+        var result = {};
         if (_._count)
             for (var key in _._map) {
                 if (_._map.hasOwnProperty(key)) {

@@ -16,6 +16,7 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {Predicate, Selector, Action} from "../FunctionTypes";
 import {IArray} from "./Array/IArray";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 
@@ -124,7 +125,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 */
 	clear():number
 	{
-		var _ = this, n:TNode, cF:number = 0, cL:number = 0;
+		const _ = this;
+		var n:TNode, cF:number = 0, cL:number = 0;
 
 		// First, clear in the forward direction.
 		n = _._first;
@@ -195,10 +197,13 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 	}
 
-	find(condition:Predicate<TNode>):TNode {
+	find(condition:Predicate<TNode>):TNode
+	{
 		var node:TNode = null;
-		this.forEach((n,i)=>{
-			if(condition(n,i)) {
+		this.forEach((n, i)=>
+		{
+			if(condition(n, i))
+			{
 				node = n;
 				return false;
 			}
@@ -281,7 +286,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		}
 
 		var removed = !a && !b;
-		if(removed) {
+		if(removed)
+		{
 			_.unsafeCount--;
 			node.previous = null;
 			node.next = null;
@@ -395,12 +401,12 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(node==_._last) _._last = replacement;
 	}
 
-	static valueEnumeratorFrom<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>):IEnumerator<T> {
+	static valueEnumeratorFrom<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>):IEnumerator<T>
+	{
 
 		if(!list) throw new ArgumentNullException('list');
 
-		var _ = this,
-		    current:ILinkedNodeWithValue<T>,
+		var current:ILinkedNodeWithValue<T>,
 		    next:ILinkedNodeWithValue<T>;
 
 		return new EnumeratorBase<T>(
@@ -447,7 +453,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 }
 
-function assertValidDetached<TNode extends ILinkedNode<TNode>>(node:TNode, propName:string = 'node')
+function assertValidDetached<TNode extends ILinkedNode<TNode>>(
+	node:TNode,
+	propName:string = 'node')
 {
 
 	if(node==null)

@@ -8,6 +8,7 @@ import {ReadOnlyCollectionBase} from "../ReadOnlyCollectionBase";
 import {IArray} from "./IArray";
 import {from as enumeratorFrom} from "../Enumeration/Enumerator";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionBase<T>

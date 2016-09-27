@@ -7,7 +7,7 @@
 
 export interface IFormatProvider
 {
-	getFormat(formatType:Object): Object;
+	getFormat(formatType:Object):Object;
 }
 
 export default IFormatProvider;

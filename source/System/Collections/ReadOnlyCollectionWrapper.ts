@@ -7,6 +7,7 @@ import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {ReadOnlyCollectionBase} from "./ReadOnlyCollectionBase";
 import {ICollection} from "./ICollection";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 export default class ReadOnlyCollectionWrapper<T> extends ReadOnlyCollectionBase<T>

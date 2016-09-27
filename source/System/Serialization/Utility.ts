@@ -44,8 +44,9 @@ export function toString(
 
 }
 
-export function isSerializable(instance:any):instance is ISerializable {
-	return Type.hasMemberOfType<ISerializable>(instance,'serialize',Type.FUNCTION);
+export function isSerializable(instance:any):instance is ISerializable
+{
+	return Type.hasMemberOfType<ISerializable>(instance, 'serialize', Type.FUNCTION);
 }
 
 export function toPrimitive(
@@ -71,13 +72,17 @@ export function toPrimitive(
 				return false;
 			default:
 
-				var cleaned = value.replace(/^\s+|,|\s+$/g,EMPTY);
-				if(cleaned) {
+				var cleaned = value.replace(/^\s+|,|\s+$/g, EMPTY);
+				if(cleaned)
+				{
 
-					if(/^\d+$/g.test(cleaned)) {
+					if(/^\d+$/g.test(cleaned))
+					{
 						var int = parseInt(cleaned);
 						if(!isNaN(int)) return int;
-					} else {
+					}
+					else
+					{
 						var number = parseFloat(value);
 						if(!isNaN(number)) return number;
 					}

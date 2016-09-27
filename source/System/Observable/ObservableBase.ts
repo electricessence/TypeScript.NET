@@ -21,7 +21,7 @@ export abstract class ObservableBase<T>
 extends SubscribableBase<IObserver<T>> implements IObservable<T>
 {
 
-	protected _onNext(value: T): void
+	protected _onNext(value:T):void
 	{
 		processAction(
 			this._getSubscribers(),
@@ -29,7 +29,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		);
 	}
 
-	protected _onError(error: any): void
+	protected _onError(error:any):void
 	{
 		processAction(
 			this._getSubscribers(),
@@ -37,7 +37,7 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		);
 	}
 
-	protected _onCompleted(): void
+	protected _onCompleted():void
 	{
 		processAction(
 			this._unsubscribeAll(true),
@@ -45,17 +45,17 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		);
 	}
 
-	subscribe(subscriber: IObserver<T>): IDisposable
+	subscribe(subscriber:IObserver<T>):IDisposable
 	subscribe(
-		subscriber: Action<T>,
-		onError?: Action<any>,
-		onCompleted?: Closure): IDisposable
+		subscriber:Action<T>,
+		onError?:Action<any>,
+		onCompleted?:Closure):IDisposable
 	subscribe(
-		subscriber: IObserver<T> | Action<T>,
-		onError?: Action<any>,
-		onCompleted?: Closure): IDisposable
+		subscriber:IObserver<T> | Action<T>,
+		onError?:Action<any>,
+		onCompleted?:Closure):IDisposable
 	{
-		var s: IObserver<T>;
+		var s:IObserver<T>;
 		var isFn = typeof subscriber=='function';
 		if(onError || onCompleted || isFn)
 		{
@@ -75,14 +75,14 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 	}
 }
 
-const OBSERVER_ERROR_MESSAGE: string = 'One or more observers had errors when attempting to pass information.';
+const OBSERVER_ERROR_MESSAGE:string = 'One or more observers had errors when attempting to pass information.';
 
 function processAction<T>(
-	observers: IObserver<T>[],
-	handler: (s: IObserver<T>)=>void)
+	observers:IObserver<T>[],
+	handler:(s:IObserver<T>)=>void)
 {
 	if(!observers) return;
-	var observersErrors: {observer: IObserver<T>,ex: any}[] = null;
+	var observersErrors:{observer:IObserver<T>,ex:any}[] = null;
 
 	for(let s of observers)
 	{

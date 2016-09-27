@@ -12,6 +12,7 @@ import {Milliseconds, Ticks} from "./HowMany";
 import {ITimeMeasurement} from "./ITimeMeasurement";
 import {ITimeQuantity} from "./ITimeQuantity";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 
@@ -56,7 +57,8 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 	// Instead of the confusing getTotal versus unit name, expose a 'ClockTime' value which reports the individual components.
 	get time():ClockTime
 	{
-		var _ = this, t = _._time;
+		const _ = this;
+		var t = _._time;
 		if(!t) _._time = t = new ClockTime(_.getTotalMilliseconds());
 		return t;
 	}

@@ -8,6 +8,7 @@ import {StringKeyDictionary} from "./StringKeyDictionary";
 import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
 import {IOrderedDictionary} from "./IDictionary";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void 0;
@@ -40,7 +41,8 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 	setValue(key:string, value:TValue, keepIndex?:boolean):boolean
 	{
 		// TODO: This may be inefficient and could be improved.
-		var _ = this, exists = _.indexOfKey(key)!= -1;
+		const _ = this;
+		var exists = _.indexOfKey(key)!= -1;
 		if(!exists && (value!==VOID0 || keepIndex))
 			_._order.push(key);
 		else if(exists && value===VOID0 && !keepIndex)
@@ -51,7 +53,8 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 
 	setByIndex(index:number, value:TValue):boolean
 	{
-		var _ = this, order = _._order;
+		const _ = this;
+		var order = _._order;
 		if(index<0)
 			throw new ArgumentOutOfRangeException('index', index, 'Is less than zero.');
 		if(index>=order.length)
@@ -91,7 +94,8 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 
 	protected getKeys():string[]
 	{
-		var _ = this, o = _._order;
+		const _ = this;
+		var o = _._order;
 		return o.length && o.filter(key=> _.containsKey(key)) || [];
 	}
 

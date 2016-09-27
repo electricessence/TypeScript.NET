@@ -8,7 +8,8 @@
 import {IRequestCachePolicy} from "./Cache/IRequestCachePolicy";
 import {AuthenticationLevel} from "./Security/AuthenticationLevel";
 
-export interface IWebRequest {
+export interface IWebRequest
+{
 
 	authenticationLevel:AuthenticationLevel;
 	cachePolicy:IRequestCachePolicy;

@@ -21,6 +21,7 @@
 import {TypeInfo} from "./Types";
 import {areEqual} from "./Compare";
 import __extendsImport from "../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 
@@ -59,7 +60,7 @@ export class TypeInfoHelper extends TypeInfo
 				return this.isBoolean;
 		}
 
-		if(this.type != typeof descriptor || this.isPrimitive && !areEqual(value,descriptor))
+		if(this.type!= typeof descriptor || this.isPrimitive && !areEqual(value, descriptor))
 			return false;
 
 		// Check array contents and confirm intersections.
@@ -116,12 +117,15 @@ function areInvalid(v:any, d:any)
 	return false;
 }
 
-export class TypeValidator<T> {
-	constructor(private _typeDescriptor:any) {
+export class TypeValidator<T>
+{
+	constructor(private _typeDescriptor:any)
+	{
 		Object.freeze(this);
 	}
 
-	isSubsetOf(o:any):o is T {
+	isSubsetOf(o:any):o is T
+	{
 		var t = new TypeInfoHelper(o);
 		return t.contains(this._typeDescriptor);
 	}

@@ -18,8 +18,10 @@ export class IteratorResult<T> implements IIteratorResult<T>
 	}
 }
 
-export module IteratorResult {
+export module IteratorResult
+{
 	export const Done:IteratorResult<any> = new IteratorResult<any>(VOID0, VOID0, true);
+
 	export function GetDone(value?:any):IteratorResult<any> { return Done; }
 }
 

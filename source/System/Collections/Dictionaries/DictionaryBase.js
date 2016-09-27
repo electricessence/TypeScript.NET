@@ -35,7 +35,8 @@
             return KeyValueExtract_1.extractKeyValue(item, function (key, value) { return _this.addByKeyValue(key, value); });
         };
         DictionaryBase.prototype._clearInternal = function () {
-            var _ = this, count = 0;
+            var _ = this;
+            var count = 0;
             for (var _i = 0, _a = _.keys; _i < _a.length; _i++) {
                 var key = _a[_i];
                 if (_.removeByKey(key))
@@ -112,7 +113,8 @@
             return this.setValue(key, VOID0);
         };
         DictionaryBase.prototype.removeByValue = function (value) {
-            var _ = this, count = 0, equal = Compare_1.areEqual;
+            var _ = this;
+            var count = 0, equal = Compare_1.areEqual;
             for (var _i = 0, _a = _.getKeys(); _i < _a.length; _i++) {
                 var key = _a[_i];
                 if (equal(_.getValue(key), value, true)) {

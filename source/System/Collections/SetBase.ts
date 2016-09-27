@@ -18,6 +18,7 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {ISet} from "./ISet";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const OTHER = 'other';

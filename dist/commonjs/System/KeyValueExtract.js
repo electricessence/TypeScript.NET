@@ -32,7 +32,8 @@ function assertNotUndefined(value, name) {
 }
 exports.assertNotUndefined = assertNotUndefined;
 function extractKeyValue(item, to) {
-    var _ = this, key, value;
+    var _ = this;
+    var key, value;
     if (item instanceof Array) {
         assertTuple(item);
         key = item[0];

@@ -8,6 +8,7 @@
 import {Exception} from "../Exception";
 import {ArgumentException} from "./ArgumentException";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'ArgumentOutOfRangeException';
@@ -22,7 +23,8 @@ export class ArgumentOutOfRangeException extends ArgumentException
 		message:string = ' ',
 		innerException:Exception = null)
 	{
-		super(paramName, + `(${actualValue}) ` + message , innerException, (_)=>{
+		super(paramName, +`(${actualValue}) ` + message, innerException, (_)=>
+		{
 			_.actualValue = actualValue;
 		});
 	}

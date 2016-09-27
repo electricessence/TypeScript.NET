@@ -59,7 +59,10 @@ function using(disposable, closure) {
 }
 exports.using = using;
 function disposeSingle(disposable, trapExceptions) {
-    if (disposable && Types_1.Type.of(disposable).member('dispose').isFunction) {
+    if (disposable
+        && Types_1.Type.of(disposable)
+            .member('dispose')
+            .isFunction) {
         if (trapExceptions) {
             try {
                 disposable.dispose();

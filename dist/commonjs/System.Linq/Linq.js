@@ -201,7 +201,8 @@ var InfiniteEnumerable = (function (_super) {
     };
     InfiniteEnumerable.prototype.traverseBreadthFirst = function (childrenSelector, resultSelector) {
         if (resultSelector === void 0) { resultSelector = Functions.Identity; }
-        var _ = this, isEndless = _._isEndless || null;
+        var _ = this;
+        var isEndless = _._isEndless || null;
         return new Enumerable(function () {
             var enumerator;
             var nestLevel = 0;
@@ -241,7 +242,8 @@ var InfiniteEnumerable = (function (_super) {
     };
     InfiniteEnumerable.prototype.traverseDepthFirst = function (childrenSelector, resultSelector) {
         if (resultSelector === void 0) { resultSelector = Functions.Identity; }
-        var _ = this, isEndless = _._isEndless || null;
+        var _ = this;
+        var isEndless = _._isEndless || null;
         return new Enumerable(function () {
             var enumeratorStack = [];
             var enumerator;
@@ -275,7 +277,8 @@ var InfiniteEnumerable = (function (_super) {
         }, null, isEndless);
     };
     InfiniteEnumerable.prototype.flatten = function () {
-        var _ = this, isEndless = _._isEndless || null;
+        var _ = this;
+        var isEndless = _._isEndless || null;
         return new Enumerable(function () {
             var enumerator;
             var middleEnumerator = null;
@@ -296,11 +299,10 @@ var InfiniteEnumerable = (function (_super) {
                         var c = enumerator.current;
                         var e = !Types_1.Type.isString(c) && Enumerable.fromAny(c);
                         if (e) {
-                            middleEnumerator
-                                = e
-                                    .selectMany(Functions.Identity)
-                                    .flatten()
-                                    .getEnumerator();
+                            middleEnumerator = e
+                                .selectMany(Functions.Identity)
+                                .flatten()
+                                .getEnumerator();
                             continue;
                         }
                         else {
@@ -331,8 +333,8 @@ var InfiniteEnumerable = (function (_super) {
         }, null, _._isEndless);
     };
     InfiniteEnumerable.prototype.scan = function (func, seed) {
-        var isUseSeed = seed !== VOID0;
         var _ = this;
+        var isUseSeed = seed !== VOID0;
         return new Enumerable(function () {
             var enumerator;
             var value;
@@ -357,7 +359,8 @@ var InfiniteEnumerable = (function (_super) {
         }, null, _._isEndless);
     };
     InfiniteEnumerable.prototype.select = function (selector) {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             var index = 0;
@@ -378,7 +381,8 @@ var InfiniteEnumerable = (function (_super) {
         }, _._isEndless);
     };
     InfiniteEnumerable.prototype._selectMany = function (collectionSelector, resultSelector) {
-        var _ = this, isEndless = _._isEndless || null;
+        var _ = this;
+        var isEndless = _._isEndless || null;
         if (!resultSelector)
             resultSelector = function (a, b) { return b; };
         return new Enumerable(function () {
@@ -416,7 +420,8 @@ var InfiniteEnumerable = (function (_super) {
         return this._selectMany(collectionSelector, resultSelector);
     };
     InfiniteEnumerable.prototype._choose = function (selector) {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             var index = 0;
@@ -444,7 +449,8 @@ var InfiniteEnumerable = (function (_super) {
         return this._choose(selector);
     };
     InfiniteEnumerable.prototype.where = function (predicate) {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             var index = 0;
@@ -490,7 +496,8 @@ var InfiniteEnumerable = (function (_super) {
             .where(function (x) { return (typeof x) === typeName; });
     };
     InfiniteEnumerable.prototype.except = function (second, compareSelector) {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             var keys;
@@ -523,7 +530,8 @@ var InfiniteEnumerable = (function (_super) {
     };
     InfiniteEnumerable.prototype.distinctUntilChanged = function (compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             var compareKey;
@@ -554,7 +562,8 @@ var InfiniteEnumerable = (function (_super) {
     };
     InfiniteEnumerable.prototype.defaultIfEmpty = function (defaultValue) {
         if (defaultValue === void 0) { defaultValue = null; }
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             var isFirst;
@@ -688,7 +697,8 @@ var InfiniteEnumerable = (function (_super) {
         });
     };
     InfiniteEnumerable.prototype.merge = function (enumerables) {
-        var _ = this, isEndless = _._isEndless || null;
+        var _ = this;
+        var isEndless = _._isEndless || null;
         if (!enumerables || enumerables.length == 0)
             return _;
         return new Enumerable(function () {
@@ -725,7 +735,8 @@ var InfiniteEnumerable = (function (_super) {
     };
     InfiniteEnumerable.prototype.union = function (second, compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
-        var _ = this, isEndless = _._isEndless || null;
+        var _ = this;
+        var isEndless = _._isEndless || null;
         return new Enumerable(function () {
             var firstEnumerator;
             var secondEnumerator;
@@ -761,7 +772,8 @@ var InfiniteEnumerable = (function (_super) {
     InfiniteEnumerable.prototype.insertAt = function (index, other) {
         Integer_1.Integer.assertZeroOrGreater(index, 'index');
         var n = index;
-        var _ = this, isEndless = _._isEndless || null;
+        var _ = this;
+        var isEndless = _._isEndless || null;
         _.throwIfDisposed();
         return new Enumerable(function () {
             var firstEnumerator;
@@ -839,7 +851,8 @@ var InfiniteEnumerable = (function (_super) {
         return this.alternateMultiple(sequence);
     };
     InfiniteEnumerable.prototype.catchError = function (handler) {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -865,7 +878,8 @@ var InfiniteEnumerable = (function (_super) {
         });
     };
     InfiniteEnumerable.prototype.finallyAction = function (action) {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         return new Enumerable(function () {
             var enumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -890,7 +904,8 @@ var InfiniteEnumerable = (function (_super) {
         if (size < 1 || !isFinite(size))
             throw new Error("Invalid buffer size.");
         Integer_1.Integer.assert(size, "size");
-        var _ = this, len;
+        var _ = this;
+        var len;
         return new Enumerable(function () {
             var enumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -1328,7 +1343,10 @@ var Enumerable = (function (_super) {
     Enumerable.prototype.toJoinedString = function (separator, selector) {
         if (separator === void 0) { separator = ""; }
         if (selector === void 0) { selector = Functions.Identity; }
-        return this.select(selector).toArray().join(separator);
+        return this
+            .select(selector)
+            .toArray()
+            .join(separator);
     };
     Enumerable.prototype.takeExceptLast = function (count) {
         if (count === void 0) { count = 1; }
@@ -1379,7 +1397,8 @@ var Enumerable = (function (_super) {
         return this._choose(selector);
     };
     Enumerable.prototype.reverse = function () {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         Enumerator_1.throwIfEndless(_._isEndless);
         return new Enumerable(function () {
             var buffer;
@@ -1396,7 +1415,8 @@ var Enumerable = (function (_super) {
         });
     };
     Enumerable.prototype.shuffle = function () {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         Enumerator_1.throwIfEndless(_._isEndless);
         return new Enumerable(function () {
             var buffer;
@@ -1567,7 +1587,8 @@ var Enumerable = (function (_super) {
         var _this = this;
         if (!elementSelector)
             elementSelector = Functions.Identity;
-        return new Enumerable(function () { return _this.toLookup(keySelector, elementSelector, compareSelector)
+        return new Enumerable(function () { return _this
+            .toLookup(keySelector, elementSelector, compareSelector)
             .getEnumerator(); });
     };
     Enumerable.prototype.partitionBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
@@ -1622,7 +1643,9 @@ var Enumerable = (function (_super) {
         });
     };
     Enumerable.prototype.aggregate = function (func, seed) {
-        return this.scan(func, seed).lastOrDefault();
+        return this
+            .scan(func, seed)
+            .lastOrDefault();
     };
     Enumerable.prototype.average = function (selector) {
         if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
@@ -1735,7 +1758,8 @@ var Enumerable = (function (_super) {
         return (!found) ? defaultValue : value;
     };
     Enumerable.prototype.memoize = function () {
-        var _ = this, disposed = !_.throwIfDisposed();
+        var _ = this;
+        var disposed = !_.throwIfDisposed();
         var cache;
         var enumerator;
         return new Enumerable(function () {
@@ -1987,7 +2011,8 @@ var OrderedEnumerable = (function (_super) {
         return new EnumeratorBase_1.EnumeratorBase(function () {
             index = 0;
             buffer = Enumerable.toArray(_.source);
-            indexes = createSortContext(_).generateSortedIndexes(buffer);
+            indexes = createSortContext(_)
+                .generateSortedIndexes(buffer);
         }, function (yielder) {
             return (index < indexes.length)
                 ? yielder.yieldReturn(buffer[indexes[index++]])

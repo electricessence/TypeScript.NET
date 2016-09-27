@@ -8,6 +8,7 @@
 import {SystemException} from "./SystemException";
 import {trim} from "../Text/Utility";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'ArgumentException';
@@ -25,7 +26,8 @@ export class ArgumentException extends SystemException
 		beforeSealing?:(ex:any)=>void)
 	{
 		var pn = paramName ? ('{' + paramName + '} ') : '';
-		super(trim(pn + (message||'')), innerException, (_)=>{
+		super(trim(pn + (message || '')), innerException, (_)=>
+		{
 			_.paramName = paramName;
 			if(beforeSealing) beforeSealing(_);
 		});

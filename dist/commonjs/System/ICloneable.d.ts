@@ -6,7 +6,7 @@
 
 export interface ICloneable<T>
 {
-	clone(): T;
+	clone():T;
 }
 
 export default ICloneable;

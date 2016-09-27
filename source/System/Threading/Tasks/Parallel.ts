@@ -13,6 +13,7 @@ import {isNodeJS} from "../../Environment";
 import {ObjectPool} from "../../Disposable/ObjectPool";
 import {IMap} from "../../Collections/Dictionaries/IDictionary";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 declare const navigator:any;
@@ -53,7 +54,9 @@ export interface ParallelOptions
 //noinspection JSUnusedAssignment
 const defaults:ParallelOptions = {
 	evalPath: isNodeJS ? __dirname + '/eval.js' : null,
-	maxConcurrency: isNodeJS ? require('os').cpus().length : (navigator.hardwareConcurrency || 4),
+	maxConcurrency: isNodeJS
+		? require('os').cpus().length
+		: (navigator.hardwareConcurrency || 4),
 	allowSynchronous: true,
 	env: {},
 	envNamespace: 'env'
@@ -362,12 +365,13 @@ export class Parallel
 							//noinspection JSReferencingMutableVariableFromClosure
 							let ii = i++, p = result[ii];
 							let wp = new WorkerPromise<U>(worker, data[ii]);
-							wp
-								.thenSynchronous(r=>
+							wp.thenSynchronous(
+								r=>
 								{
 									p.resolve(r);
 									next();
-								}, e=>
+								},
+								e=>
 								{
 									if(!error)
 									{
@@ -455,12 +459,13 @@ export class Parallel
 						{
 							let ii = i++;
 							let wp = new WorkerPromise<U>(worker, data[ii]);
-							wp
-								.thenSynchronous(r=>
+							wp.thenSynchronous(
+								r=>
 								{
 									result[ii] = r;
 									next();
-								}, e=>
+								},
+								e=>
 								{
 									if(!error)
 									{

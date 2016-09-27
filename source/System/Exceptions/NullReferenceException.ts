@@ -7,12 +7,14 @@
 
 import {SystemException} from "./SystemException";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'NullReferenceException';
 
 export default
-class NullReferenceException extends SystemException {
+class NullReferenceException extends SystemException
+{
 
 	protected getName():string
 	{

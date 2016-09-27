@@ -8,6 +8,7 @@ import {TimeUnit} from "./TimeUnit";
 import {TimeQuantity} from "./TimeQuantity";
 import {ITimeQuantity} from "./ITimeQuantity";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 /**
@@ -49,7 +50,7 @@ class TimeUnitValue extends TimeQuantity
 
 	to(units:TimeUnit = this.units):TimeUnitValue
 	{
-		return TimeUnitValue.from(this,units);
+		return TimeUnitValue.from(this, units);
 	}
 
 	static from(value:number|ITimeQuantity, units:TimeUnit = TimeUnit.Milliseconds):TimeUnitValue

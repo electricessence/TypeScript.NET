@@ -8,13 +8,13 @@ import {Exception} from "../Exception";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {IDisposableAware} from "./IDisposableAware";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 
 const NAME:string = 'ObjectDisposedException';
 
-export class ObjectDisposedException
-extends InvalidOperationException
+export class ObjectDisposedException extends InvalidOperationException
 {
 
 	objectName:string;
@@ -25,7 +25,8 @@ extends InvalidOperationException
 		message:string = null,
 		innerException:Exception = null)
 	{
-		super(message, innerException, (_)=>{
+		super(message, innerException, (_)=>
+		{
 			_.objectName = objectName;
 		});
 	}
@@ -38,7 +39,8 @@ extends InvalidOperationException
 
 	toString():string
 	{
-		var _ = this, oName = _.objectName;
+		const _ = this;
+		var oName = _.objectName;
 		oName = oName ? ('{' + oName + '} ') : '';
 
 		return '[' + _.name + ': ' + oName + _.message + ']';

@@ -58,7 +58,8 @@
             return value;
         };
         ClockTime.prototype.toString = function () {
-            var _ = this, a = [];
+            var _ = this;
+            var a = [];
             if (_.days)
                 a.push(pluralize(_.days, "day"));
             if (_.hour)

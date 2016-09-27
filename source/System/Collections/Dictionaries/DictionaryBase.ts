@@ -16,6 +16,7 @@ import {IDictionary} from "./IDictionary";
 import {IEnumerator} from "../Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void(0);
@@ -47,7 +48,8 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	protected _clearInternal():number
 	{
-		var _ = this, count = 0;
+		const _ = this;
+		var count = 0;
 
 		for(let key of _.keys)
 		{
@@ -146,7 +148,9 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	containsValue(value:TValue):boolean
 	{
-		var e = this.getEnumerator(), equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
+		var e                           = this.getEnumerator(), equal:(
+			a:any, b:any,
+			strict?:boolean) => boolean = areEqual;
 
 		while(e.moveNext())
 		{
@@ -166,7 +170,8 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	removeByValue(value:TValue):number
 	{
-		var _ = this, count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
+		const _ = this;
+		var count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
 		for(let key of _.getKeys())
 		{
 			if(equal(_.getValue(key), value, true))

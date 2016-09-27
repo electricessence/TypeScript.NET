@@ -9,6 +9,7 @@ import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
 import {Selector} from "../FunctionTypes";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const EMPTY:string = "";
@@ -86,7 +87,8 @@ export class Regex
 		var patternString:string,
 		    flags:string
 			    = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
-			    .join(EMPTY).toLowerCase();
+			    .join(EMPTY)
+			    .toLowerCase();
 
 		if(pattern instanceof RegExp)
 		{
@@ -152,7 +154,8 @@ export class Regex
 		{
 			let text = r[i];
 			let g = EmptyGroup;
-			if(text!==null || text!==void 0) {
+			if(text!==null || text!== void 0)
+			{
 				// Empty string might mean \b match or similar.
 				g = new Group(text, loc);
 				g.freeze();

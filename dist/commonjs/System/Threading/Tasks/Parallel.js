@@ -17,7 +17,9 @@ var MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFIN
     : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;
 var defaults = {
     evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : null,
-    maxConcurrency: Environment_1.isNodeJS ? require('os').cpus().length : (navigator.hardwareConcurrency || 4),
+    maxConcurrency: Environment_1.isNodeJS
+        ? require('os').cpus().length
+        : (navigator.hardwareConcurrency || 4),
     allowSynchronous: true,
     env: {},
     envNamespace: 'env'
@@ -221,8 +223,7 @@ var Parallel = (function () {
                         if (i_1 < len_1) {
                             var ii = i_1++, p_1 = result[ii];
                             var wp_1 = new WorkerPromise(worker, data[ii]);
-                            wp_1
-                                .thenSynchronous(function (r) {
+                            wp_1.thenSynchronous(function (r) {
                                 p_1.resolve(r);
                                 next();
                             }, function (e) {
@@ -286,8 +287,7 @@ var Parallel = (function () {
                         if (i < len) {
                             var ii_1 = i++;
                             var wp_2 = new WorkerPromise(worker, data[ii_1]);
-                            wp_2
-                                .thenSynchronous(function (r) {
+                            wp_2.thenSynchronous(function (r) {
                                 result[ii_1] = r;
                                 next();
                             }, function (e) {

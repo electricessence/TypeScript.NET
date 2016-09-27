@@ -112,9 +112,10 @@ export function quotient(source:number[], ignoreNaN:boolean = false):number
 	var result = source[0];
 
 	var found = false;
-	source.every((n,i) =>
+	source.every((n, i) =>
 	{
-		if(i) {
+		if(i)
+		{
 			if(n===0)
 			{
 				result = NaN;

@@ -28,8 +28,8 @@ export interface IConvertible
 //	toDecimal(provider: IFormatProvider): Decimal;
 //	toDateTime(provider: IFormatProvider): DateTime;
 
-	toNumber(provider:IFormatProvider): number;
-	toString(provider:IFormatProvider): string;
+	toNumber(provider:IFormatProvider):number;
+	toString(provider:IFormatProvider):string;
 
 //	toType(conversionType: Type, provider: IFormatProvider): Object;
 }

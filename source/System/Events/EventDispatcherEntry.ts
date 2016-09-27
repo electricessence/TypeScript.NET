@@ -11,6 +11,7 @@ import {areEquivalent} from "../Compare";
 import {IEventListener} from "./IEventListener";
 import {IEquatable} from "../IEquatable";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 export class EventDispatcherEntry<TParams>

@@ -69,7 +69,8 @@
             return result;
         };
         LinkedNodeList.prototype.clear = function () {
-            var _ = this, n, cF = 0, cL = 0;
+            var _ = this;
+            var n, cF = 0, cL = 0;
             n = _._first;
             _._first = null;
             while (n) {
@@ -227,7 +228,7 @@
         LinkedNodeList.valueEnumeratorFrom = function (list) {
             if (!list)
                 throw new ArgumentNullException_1.ArgumentNullException('list');
-            var _ = this, current, next;
+            var current, next;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 current = null;
                 next = list.first;

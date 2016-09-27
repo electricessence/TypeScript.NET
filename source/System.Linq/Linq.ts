@@ -51,6 +51,7 @@ import {
 	EnumerableAction
 } from "./Enumerable";
 import __extendsImport from "../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 
@@ -63,11 +64,14 @@ const BREAK:(e:any)=>EnumerableAction = element => EnumerableAction.Break;
 // Leave internal to avoid accidental overwriting.
 class LinqFunctions extends BaseFunctions
 {
+	// noinspection JSMethodCanBeStatic
 	Greater<T>(a:T, b:T)
 	{
 		return a>b ? a : b;
 	}
 
+
+	// noinspection JSMethodCanBeStatic
 	Lesser<T>(a:T, b:T)
 	{
 		return a<b ? a : b;
@@ -84,7 +88,6 @@ function getEmptyEnumerator():IEnumerator<any>
 }
 
 // #endregion
-
 
 
 /*
@@ -401,7 +404,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			element:TNode,
 			nestLevel?:number) => any = Functions.Identity):Enumerable<any>
 	{
-		var _ = this, isEndless = _._isEndless || null; // Is endless is not affirmative if false.
+		const _ = this;
+		var isEndless = _._isEndless || null; // Is endless is not affirmative if false.
 
 
 		return new Enumerable<any>(
@@ -488,7 +492,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			element:TNode,
 			nestLevel?:number) => any = Functions.Identity):Enumerable<any>
 	{
-		var _ = this, isEndless = _._isEndless || null; // Is endless is not affirmative if false.
+		const _ = this;
+		var isEndless = _._isEndless || null; // Is endless is not affirmative if false.
 
 		return new Enumerable<any>(
 			() =>
@@ -549,7 +554,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	flatten():Enumerable<any>
 	{
-		var _ = this, isEndless = _._isEndless || null; // Is endless is not affirmative if false.;
+		const _ = this;
+		var isEndless = _._isEndless || null; // Is endless is not affirmative if false.;
 
 		return new Enumerable<any>(
 			() =>
@@ -588,8 +594,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 								var e = !Type.isString(c) && Enumerable.fromAny(c);
 								if(e)
 								{
-									middleEnumerator
-										= e
+									middleEnumerator = e
 										.selectMany(Functions.Identity)
 										.flatten()
 										.getEnumerator();
@@ -659,8 +664,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	scan(func:(a:T, b:T) => T, seed?:T):this
 	{
 
-		var isUseSeed = seed!==VOID0; // For now...
 		const _ = this;
+		var isUseSeed = seed!==VOID0; // For now...
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -711,7 +716,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	select<TResult>(selector:Selector<T, TResult>):InfiniteEnumerable<TResult>
 	{
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 
 		return new Enumerable<TResult>(
 			() =>
@@ -766,7 +772,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
 		resultSelector?:(collection:T, element:TElement) => TResult):Enumerable<TResult>
 	{
-		var _ = this, isEndless = _._isEndless || null; // Do second enumeration, it will be indeterminate if false.
+		const _ = this;
+		var isEndless = _._isEndless || null; // Do second enumeration, it will be indeterminate if false.
 		if(!resultSelector)
 			resultSelector = (a:T, b:any) => <TResult>b;
 
@@ -859,7 +866,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	protected _choose<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
 	{
 
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 
 		return new Enumerable<TResult>(
 			() =>
@@ -921,7 +929,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	where(predicate:Predicate<T>):this
 	{
 
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -1000,7 +1009,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		second:IEnumerableOrArray<T>,
 		compareSelector?:Selector<T, TCompare>):this
 	{
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -1061,7 +1071,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	distinctUntilChanged<TCompare>(compareSelector:Selector<T, TCompare> = Functions.Identity):this
 	{
 
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -1125,7 +1136,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	 */
 	defaultIfEmpty(defaultValue:T = null):this
 	{
-		var _ = this, disposed:boolean = !_.throwIfDisposed();
+		const _ = this;
+		var disposed:boolean = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -1383,7 +1395,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	merge(enumerables:IArray<IEnumerableOrArray<T>>):this
 	{
-		var _ = this, isEndless = _._isEndless || null;
+		const _ = this;
+		var isEndless = _._isEndless || null;
 
 		if(!enumerables || enumerables.length==0)
 			return _;
@@ -1449,7 +1462,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		second:IEnumerableOrArray<T>,
 		compareSelector:Selector<T, TCompare> = Functions.Identity):this
 	{
-		var _ = this, isEndless = _._isEndless || null;
+		const _ = this;
+		var isEndless = _._isEndless || null;
 		return <any> new Enumerable<T>(
 			() =>
 			{
@@ -1511,7 +1525,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		Integer.assertZeroOrGreater(index, 'index');
 		var n:number = index;
 
-		var _ = this, isEndless = _._isEndless || null;
+		const _ = this;
+		var isEndless = _._isEndless || null;
 		_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
@@ -1659,7 +1674,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	// #region Error Handling
 	catchError(handler:(e:any) => void):this
 	{
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 		return <any> new Enumerable<T>(
 			() =>
 			{
@@ -1705,7 +1721,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	finallyAction(action:() => void):this
 	{
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -1751,7 +1768,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 		Integer.assert(size, "size");
 
-		var _ = this, len:number;
+		const _ = this;
+		var len:number;
 
 		return new Enumerable<T[]>(
 			() =>
@@ -2187,7 +2205,9 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		);
 	}
 
-	static matches(input:string, pattern:any, flags:string = ""):FiniteEnumerable<RegExpExecArray>
+	static matches(
+		input:string, pattern:any,
+		flags:string = ""):FiniteEnumerable<RegExpExecArray>
 	{
 		if(input===null || input===VOID0)
 			throw new ArgumentNullException("input");
@@ -2227,7 +2247,9 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	static generate<T>(factory:(index?:number) => T):InfiniteEnumerable<T>;
 	static generate<T>(factory:(index?:number) => T, count:number):FiniteEnumerable<T>;
-	static generate<T>(factory:(index?:number) => T, count:number = Infinity):InfiniteEnumerable<T>
+	static generate<T>(
+		factory:(index?:number) => T,
+		count:number = Infinity):InfiniteEnumerable<T>
 	{
 
 		if(isNaN(count) || count<=0)
@@ -2579,7 +2601,10 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
 	{
-		return this.select(selector).toArray().join(separator);
+		return this
+			.select(selector)
+			.toArray()
+			.join(separator);
 	}
 
 	// #endregion
@@ -2684,7 +2709,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	reverse():this
 	{
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 		throwIfEndless(_._isEndless); // Cannot reverse an endless collection...
 
 		return <any> new Enumerable<T>(
@@ -2719,7 +2745,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	shuffle():this
 	{
-		var _ = this, disposed = !_.throwIfDisposed();
+		const _ = this;
+		var disposed = !_.throwIfDisposed();
 		throwIfEndless(_._isEndless); // Cannot shuffle an endless collection...
 
 		return <any> new Enumerable<T>(
@@ -3090,7 +3117,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	{
 		if(!elementSelector) elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
 		return new Enumerable<IGrouping<TKey, TElement>>(
-			() => this.toLookup(keySelector, elementSelector, compareSelector)
+			() => this
+				.toLookup(keySelector, elementSelector, compareSelector)
 				.getEnumerator()
 		);
 	}
@@ -3188,7 +3216,9 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		func:(a:T, b:T) => T,
 		seed?:T):T
 	{
-		return this.scan(func, seed).lastOrDefault();
+		return this
+			.scan(func, seed)
+			.lastOrDefault();
 	}
 
 	average(selector:Selector<T, number> = Type.numberOrNaN):number
@@ -3371,7 +3401,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	memoize():this
 	{
-		var _ = this, disposed:boolean = !_.throwIfDisposed();
+		const _ = this;
+		var disposed:boolean = !_.throwIfDisposed();
 
 		var cache:T[];
 		var enumerator:IEnumerator<T>;
@@ -3752,7 +3783,8 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 			{
 				index = 0;
 				buffer = Enumerable.toArray(_.source);
-				indexes = createSortContext(_).generateSortedIndexes(buffer);
+				indexes = createSortContext(_)
+					.generateSortedIndexes(buffer);
 			},
 
 			(yielder)=>

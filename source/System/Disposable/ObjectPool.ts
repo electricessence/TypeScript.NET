@@ -9,8 +9,9 @@ import {dispose} from "./dispose";
 import {DisposableBase} from "./DisposableBase";
 import {TaskHandler} from "../Threading/Tasks/TaskHandler";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
-import __extendsImport from "../../extends";
 import {ArgumentException} from "../Exceptions/ArgumentException";
+import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const
@@ -101,7 +102,8 @@ export class ObjectPool<T> extends DisposableBase
 
 	protected _clear():void
 	{
-		var _ = this, p = _._pool;
+		const _ = this;
+		var p = _._pool;
 		_._trimmer.cancel();
 		_._flusher.cancel();
 		_._autoFlusher.cancel();
@@ -203,9 +205,12 @@ export class ObjectPool<T> extends DisposableBase
 		const _ = this;
 		_.throwIfDisposed();
 
-		try {
+		try
+		{
 			return _._pool.pop();
-		} finally {
+		}
+		finally
+		{
 			_._onTaken();
 		}
 	}
@@ -217,9 +222,12 @@ export class ObjectPool<T> extends DisposableBase
 		if(!_._generator && !factory)
 			throw new ArgumentException('factory', "Must provide a factory if on was not provided at construction time.");
 
-		try {
+		try
+		{
 			return _._pool.pop() || factory && factory() || _._generator();
-		} finally {
+		}
+		finally
+		{
 			_._onTaken();
 		}
 	}

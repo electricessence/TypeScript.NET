@@ -11,6 +11,7 @@ import {Comparable} from "../../IComparable";
 import {IComparer} from "../../IComparer";
 import {Order} from "./Order";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
@@ -26,7 +27,8 @@ export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 
 	compare(a:T, b:T):number
 	{
-		var _ = this, ks = _._keySelector;
+		const _ = this;
+		var ks = _._keySelector;
 		if(!ks || ks==Functions.Identity) return super.compare(a, b);
 		// We force <any> here since it can be a Primitive or IComparable<any>
 		var d = Values.compare(<any>ks(a), <any>ks(b));

@@ -9,7 +9,7 @@
 import {IFormatProvider} from "./IFormatProvider";
 export interface IFormattable
 {
-	toString(format?:string, formatProvider?:IFormatProvider): string;
+	toString(format?:string, formatProvider?:IFormatProvider):string;
 }
 
 export default IFormattable;

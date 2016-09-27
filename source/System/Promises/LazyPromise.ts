@@ -9,6 +9,7 @@ import {ICancellable} from "../Threading/ICancellable";
 import {defer} from "../Threading/defer";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void 0;

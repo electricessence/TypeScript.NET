@@ -19,13 +19,13 @@ export interface IList<T> extends ICollection<T>
 	 remove(item: T): number;
 	 */
 
-	get(index:number): T;
+	get(index:number):T;
 	set(index:number, value:T):boolean;
 
-	indexOf(item:T): number;
+	indexOf(item:T):number;
 	insert(index:number, value:T):void;
 
-	removeAt(index:number): boolean;
+	removeAt(index:number):boolean;
 
 }
 

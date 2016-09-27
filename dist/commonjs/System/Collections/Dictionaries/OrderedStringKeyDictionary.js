@@ -24,7 +24,8 @@ var OrderedStringKeyDictionary = (function (_super) {
         return index < o.length ? this.getValue(o[index]) : VOID0;
     };
     OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {
-        var _ = this, exists = _.indexOfKey(key) != -1;
+        var _ = this;
+        var exists = _.indexOfKey(key) != -1;
         if (!exists && (value !== VOID0 || keepIndex))
             _._order.push(key);
         else if (exists && value === VOID0 && !keepIndex)
@@ -32,7 +33,8 @@ var OrderedStringKeyDictionary = (function (_super) {
         return _super.prototype.setValue.call(this, key, value);
     };
     OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {
-        var _ = this, order = _._order;
+        var _ = this;
+        var order = _._order;
         if (index < 0)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, 'Is less than zero.');
         if (index >= order.length)
@@ -61,7 +63,8 @@ var OrderedStringKeyDictionary = (function (_super) {
         return this.setByIndex(index, VOID0);
     };
     OrderedStringKeyDictionary.prototype.getKeys = function () {
-        var _ = this, o = _._order;
+        var _ = this;
+        var o = _._order;
         return o.length && o.filter(function (key) { return _.containsKey(key); }) || [];
     };
     return OrderedStringKeyDictionary;

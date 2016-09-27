@@ -647,7 +647,8 @@
             }
             if (!first && !rest.length)
                 throw new ArgumentNullException_1.ArgumentNullException("promises");
-            return new PromiseCollection((Array.isArray(first) ? first : [first]).concat(rest));
+            return new PromiseCollection((Array.isArray(first) ? first : [first])
+                .concat(rest));
         }
         Promise.group = group;
         function all(first) {

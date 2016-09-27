@@ -85,8 +85,8 @@
             var _ = this, comparer = _._keyComparer, compareKey = comparer(key);
             if (!bucket)
                 bucket = _._getBucket(hash || getHashString(compareKey));
-            return bucket && bucket
-                .find(function (e) { return comparer(e.key) === compareKey; });
+            return bucket
+                && bucket.find(function (e) { return comparer(e.key) === compareKey; });
         };
         Dictionary.prototype._getEntry = function (key) {
             var e = this._getBucketEntry(key);
@@ -128,7 +128,8 @@
             return false;
         };
         Dictionary.prototype._clearInternal = function () {
-            var _ = this, buckets = _._buckets;
+            var _ = this;
+            var buckets = _._buckets;
             for (var key in buckets) {
                 if (buckets.hasOwnProperty(key)) {
                     var bucket = buckets[key];
@@ -139,7 +140,8 @@
             return _._entries.clear();
         };
         Dictionary.prototype.getEnumerator = function () {
-            var _ = this, ver, currentEntry;
+            var _ = this;
+            var ver, currentEntry;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 ver = _._version;
                 currentEntry = _._entries.first;
@@ -154,7 +156,8 @@
             });
         };
         Dictionary.prototype.getKeys = function () {
-            var _ = this, result = [];
+            var _ = this;
+            var result = [];
             var e = _._entries.first;
             while (e) {
                 result.push(e.key);
@@ -163,7 +166,8 @@
             return result;
         };
         Dictionary.prototype.getValues = function () {
-            var _ = this, result = [];
+            var _ = this;
+            var result = [];
             var e = _._entries.first;
             while (e) {
                 result.push(e.value);

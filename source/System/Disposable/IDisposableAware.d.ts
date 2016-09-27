@@ -7,7 +7,7 @@ import {IDisposable} from "./IDisposable";
 
 export interface IDisposableAware extends IDisposable
 {
-	wasDisposed: boolean;
+	wasDisposed:boolean;
 }
 
 export default IDisposableAware;

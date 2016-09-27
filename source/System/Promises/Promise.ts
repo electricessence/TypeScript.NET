@@ -960,7 +960,9 @@ export class PromiseCollection<T> extends DisposableBase
 
 				isPromise(initialValue)
 					? initialValue
-					: new Fulfilled(initialValue)));
+					: new Fulfilled(initialValue)
+			)
+		);
 	}
 }
 
@@ -1120,7 +1122,10 @@ export module Promise
 	{
 
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
-		return new PromiseCollection((Array.isArray(first) ? first : [first]).concat(rest));
+		return new PromiseCollection(
+			(Array.isArray(first) ? first : [first])
+				.concat(rest)
+		);
 	}
 
 	/**

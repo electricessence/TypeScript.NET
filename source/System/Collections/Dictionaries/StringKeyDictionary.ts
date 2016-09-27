@@ -8,6 +8,7 @@ import {IStringKeyDictionary, IMap} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
 import {DictionaryBase} from "./DictionaryBase";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void 0;
@@ -55,7 +56,8 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 	protected _setValueInternal(key:string, value:TValue):boolean
 	{
-		var _ = this, map = _._map, old = map[key];
+		const _ = this;
+		var map = _._map, old = map[key];
 		if(old!==value)
 		{
 
@@ -99,7 +101,8 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 	toMap(selector?:(key:string, value:TValue) => TValue):IMap<TValue>
 	{
-		var _ = this, result:IMap<TValue> = {};
+		const _ = this;
+		var result:IMap<TValue> = {};
 		if(_._count) for(let key in _._map)
 		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.

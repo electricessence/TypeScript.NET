@@ -13,6 +13,7 @@ import {Uri} from "../../Uri/Uri";
 import {IUri} from "../../Uri/IUri";
 import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 /**

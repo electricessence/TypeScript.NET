@@ -7,6 +7,7 @@
 import {WorkerLike} from "./WorkerType";
 import {ObservableBase} from "../Observable/ObservableBase";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 declare const require:any;

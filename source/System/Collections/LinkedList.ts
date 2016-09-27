@@ -17,6 +17,7 @@ import {ILinkedList} from "./ILinkedList";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IDisposable} from "../Disposable/IDisposable";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void 0;

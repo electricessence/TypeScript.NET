@@ -7,6 +7,7 @@ import {DisposableBase} from "./Disposable/DisposableBase";
 import {Func} from "./FunctionTypes";
 import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
 import __extendsImport from "../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 /**
@@ -47,7 +48,6 @@ export abstract class ResolverBase<T> extends DisposableBase
 	{
 
 		const _ = this;
-
 		_.throwIfDisposed();
 
 		if(_._isValueCreated===null)

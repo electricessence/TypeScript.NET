@@ -57,7 +57,8 @@
         };
         SubscribableBase.prototype._unsubscribeAll = function (returnSubscribers) {
             if (returnSubscribers === void 0) { returnSubscribers = false; }
-            var _ = this, _s = _.__subscriptions;
+            var _ = this;
+            var _s = _.__subscriptions;
             if (!_s)
                 return null;
             var s = _s.map(function (n) { return n.value; });

@@ -15,14 +15,14 @@ import {ISubscribable} from "./ISubscribable"; // For compatibility with (let, c
 export class Subscription<T> implements IDisposableAware
 {
 	constructor(
-		private _subscribable: ISubscribable<T>,
-		private _subscriber: T)
+		private _subscribable:ISubscribable<T>,
+		private _subscriber:T)
 	{
 		if(!_subscribable || !_subscriber)
 			throw 'Subscribable and subscriber cannot be null.';
 	}
 
-	get subscriber(): T
+	get subscriber():T
 	{
 		return this._subscriber;
 	}
@@ -42,12 +42,12 @@ export class Subscription<T> implements IDisposableAware
 	 u.dispose(); // Calling this again should do nothing and 'x' should still work.
 	 */
 
-	get wasDisposed(): boolean
+	get wasDisposed():boolean
 	{
 		return !this._subscribable || !this._subscriber;
 	}
 
-	dispose(): void
+	dispose():void
 	{
 		var subscriber = this.subscriber;
 		var subscribable = this._subscribable;

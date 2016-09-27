@@ -8,12 +8,12 @@
  */
 export interface ITimeMeasurement
 {
-	ticks: number;
-	milliseconds: number;
-	seconds: number;
-	minutes: number;
-	hours: number;
-	days: number;
+	ticks:number;
+	milliseconds:number;
+	seconds:number;
+	minutes:number;
+	hours:number;
+	days:number;
 }
 
 export default ITimeMeasurement;

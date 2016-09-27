@@ -12,8 +12,7 @@ const valid = new ValidationResult(true);
  * A class for generating responses to validation.
  */
 export default
-class ValidationResult
-implements IValidationResult, IEquatable<IValidationResult>
+class ValidationResult implements IValidationResult, IEquatable<IValidationResult>
 {
 	/**
 	 * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
@@ -44,7 +43,8 @@ implements IValidationResult, IEquatable<IValidationResult>
 	 * Represents a single/shared instance of a valid result.
 	 * Allows for returning this instance like you would return 'true'.
 	 */
-	static get valid():IValidationResult {
+	static get valid():IValidationResult
+	{
 		return valid;
 	}
 

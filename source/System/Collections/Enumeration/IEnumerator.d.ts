@@ -14,17 +14,17 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	/**
 	 * The current value within the enumeration.
 	 */
-	current: T;
+	current:T;
 
 	/**
 	 * Safely moves to the next entry and returns true if there is one.
 	 */
-	moveNext(value?:any): boolean;
+	moveNext(value?:any):boolean;
 
 	/**
 	 * Restarts the enumeration.
 	 */
-	reset(): void;
+	reset():void;
 
 	/**
 	 * Calls .moveNext() and returns .current
@@ -36,8 +36,6 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	 */
 	isEndless?:boolean;
 }
-
-
 
 
 export default IEnumerator;

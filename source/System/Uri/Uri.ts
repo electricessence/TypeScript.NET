@@ -301,10 +301,14 @@ function getScheme(scheme:string):SchemeValue
 	if(Type.isString(s))
 	{
 		if(!s) return null;
-		s = trim(s).toLowerCase().replace(/[^a-z0-9+.-]+$/g, EMPTY);
+		s = trim(s)
+			.toLowerCase()
+			.replace(/[^a-z0-9+.-]+$/g, EMPTY);
 		if(!s) return null;
 		if(Scheme.isValid(s)) return s;
-	} else {
+	}
+	else
+	{
 		if(s===null || s===undefined) return s;
 	}
 	throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');

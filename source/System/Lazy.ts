@@ -7,6 +7,7 @@ import {ILazy} from "./ILazy";
 import {Func} from "./FunctionTypes";
 import {ResolverBase} from "./ResolverBase";
 import __extendsImport from "../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 

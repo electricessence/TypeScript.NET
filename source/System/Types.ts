@@ -44,7 +44,7 @@ export class TypeInfo
 	isNullOrUndefined:boolean;
 	isPrimitive:boolean;
 
-	constructor(target:any,onBeforeFreeze?:()=>void)
+	constructor(target:any, onBeforeFreeze?:()=>void)
 	{
 		const _ = this;
 		_.isBoolean = false;
@@ -140,8 +140,7 @@ export class TypeInfo
 		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
 		return info;
 	}
-	
-	
+
 
 }
 

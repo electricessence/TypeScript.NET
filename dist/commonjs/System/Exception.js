@@ -19,7 +19,11 @@ var Exception = (function () {
             beforeSealing(_);
         try {
             var stack = (new Error()).stack;
-            stack = stack && stack.replace(/^Error\n/, '').replace(/(.|\n)+\s+at new.+/, '') || '';
+            stack = stack
+                && stack
+                    .replace(/^Error\n/, '')
+                    .replace(/(.|\n)+\s+at new.+/, '')
+                || '';
             this.stack = _.toStringWithoutBrackets() + stack;
         }
         catch (ex) { }
@@ -30,7 +34,8 @@ var Exception = (function () {
         return "[" + this.toStringWithoutBrackets() + "]";
     };
     Exception.prototype.toStringWithoutBrackets = function () {
-        var _ = this, m = _.message;
+        var _ = this;
+        var m = _.message;
         return _.name + (m ? (': ' + m) : '');
     };
     Exception.prototype.dispose = function () {

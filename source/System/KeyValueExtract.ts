@@ -58,7 +58,8 @@ export function extractKeyValue<TKey, TValue, TResult>(
 	to:(key:TKey, value:TValue)=>TResult):TResult
 {
 
-	var _ = this, key:TKey, value:TValue;
+	const _ = this;
+	var key:TKey, value:TValue;
 	if(item instanceof Array)
 	{
 		assertTuple(item);

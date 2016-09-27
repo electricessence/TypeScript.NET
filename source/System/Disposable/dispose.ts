@@ -20,9 +20,11 @@ export function dispose(...disposables:IDisposable[]):void
 	disposeTheseInternal(disposables, false);
 }
 
-export module dispose {
+export module dispose
+{
 
-	export function deferred(...disposables:IDisposable[]):void {
+	export function deferred(...disposables:IDisposable[]):void
+	{
 		these.deferred(disposables);
 	}
 
@@ -52,11 +54,14 @@ export module dispose {
 			: null;
 	}
 
-	export module these {
-		export function deferred(disposables:IDisposable[], delay:number = 0):void {
-			if(disposables && disposables.length) {
+	export module these
+	{
+		export function deferred(disposables:IDisposable[], delay:number = 0):void
+		{
+			if(disposables && disposables.length)
+			{
 				if(!(delay>=0)) delay = 0;
-				setTimeout(disposeTheseInternal,delay,disposables.slice(), true);
+				setTimeout(disposeTheseInternal, delay, disposables.slice(), true);
 			}
 		}
 	}
@@ -101,7 +106,12 @@ function disposeSingle(
 	disposable:IDisposable,
 	trapExceptions:boolean):any
 {
-	if(disposable && Type.of(disposable).member('dispose').isFunction)
+	if(
+		disposable
+		&& Type.of(disposable)
+			.member('dispose')
+			.isFunction
+	)
 	{
 		if(trapExceptions)
 		{

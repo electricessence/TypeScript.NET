@@ -3,7 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 
-export interface IDateTime {
+export interface IDateTime
+{
 	toJsDate():Date;
 }
 

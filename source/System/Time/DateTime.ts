@@ -16,25 +16,25 @@ import {ITimeQuantity} from "./ITimeQuantity";
 
 export class DateTime implements ICalendarDate, IDateTime
 {
-	private _value: Date;
+	private _value:Date;
 
-	toJsDate(): Date
+	toJsDate():Date
 	{
 		return new Date(this._value.getTime()); // return a clone.
 	}
 
-	private _setJsDate(value: Date)
+	private _setJsDate(value:Date)
 	{
 		this._time = null;
 		this._value = new Date(value.getTime());
 	}
 
 	constructor();
-	constructor(dateString: string, kind?: DateTime.Kind);
-	constructor(milliseconds: number, kind?: DateTime.Kind);
-	constructor(source: Date, kind?: DateTime.Kind);
-	constructor(source: DateTime, kind?: DateTime.Kind);
-	constructor(value: any = new Date(), kind: DateTime.Kind = DateTime.Kind.Local)
+	constructor(dateString:string, kind?:DateTime.Kind);
+	constructor(milliseconds:number, kind?:DateTime.Kind);
+	constructor(source:Date, kind?:DateTime.Kind);
+	constructor(source:DateTime, kind?:DateTime.Kind);
+	constructor(value:any = new Date(), kind:DateTime.Kind = DateTime.Kind.Local)
 	{
 		const _ = this;
 		_._kind = kind;
@@ -48,13 +48,13 @@ export class DateTime implements ICalendarDate, IDateTime
 				: new Date(value);
 	}
 
-	private _kind: DateTime.Kind;
-	get kind(): DateTime.Kind
+	private _kind:DateTime.Kind;
+	get kind():DateTime.Kind
 	{
 		return this._kind;
 	}
 
-	get year(): number
+	get year():number
 	{
 		return this._value.getFullYear();
 	}
@@ -63,7 +63,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Returns the Gregorian Month (zero indexed).
 	 * @returns {number}
 	 */
-	get month(): Gregorian.Month
+	get month():Gregorian.Month
 	{
 		return this._value.getMonth();
 	}
@@ -72,12 +72,12 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Returns the month number (1-12).
 	 * @returns {number}
 	 */
-	get calendarMonth(): number
+	get calendarMonth():number
 	{
 		return this._value.getMonth() + 1;
 	}
 
-	get calendar(): ICalendarDate
+	get calendar():ICalendarDate
 	{
 		return {
 			year: this.year,
@@ -90,7 +90,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Returns the day of the month.  An integer between 1 and 31.
 	 * @returns {number}
 	 */
-	get day(): number
+	get day():number
 	{
 		return this._value.getDate();
 	}
@@ -99,7 +99,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Returns the day of the month indexed starting at zero.
 	 * @returns {number}
 	 */
-	get dayIndex(): number
+	get dayIndex():number
 	{
 		return this._value.getDate() - 1;
 	}
@@ -108,43 +108,43 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Returns the zero indexed day of the week. (Sunday == 0)
 	 * @returns {number}
 	 */
-	get dayOfWeek(): Gregorian.DayOfWeek
+	get dayOfWeek():Gregorian.DayOfWeek
 	{
 		return this._value.getDay();
 	}
 
 
-	addMilliseconds(ms: number): DateTime
+	addMilliseconds(ms:number):DateTime
 	{
 		ms = ms || 0;
 		return new DateTime(this._value.getTime() + ms, this._kind);
 	}
 
-	addSeconds(seconds: number): DateTime
+	addSeconds(seconds:number):DateTime
 	{
 		seconds = seconds || 0;
 		return this.addMilliseconds(seconds*Milliseconds.Per.Second);
 	}
 
-	addMinutes(minutes: number): DateTime
+	addMinutes(minutes:number):DateTime
 	{
 		minutes = minutes || 0;
 		return this.addMilliseconds(minutes*Milliseconds.Per.Minute);
 	}
 
-	addHours(hours: number): DateTime
+	addHours(hours:number):DateTime
 	{
 		hours = hours || 0;
 		return this.addMilliseconds(hours*Milliseconds.Per.Hour);
 	}
 
-	addDays(days: number): DateTime
+	addDays(days:number):DateTime
 	{
 		days = days || 0;
 		return this.addMilliseconds(days*Milliseconds.Per.Day);
 	}
 
-	addMonths(months: number): DateTime
+	addMonths(months:number):DateTime
 	{
 		months = months || 0;
 		var d = this.toJsDate();
@@ -152,7 +152,7 @@ export class DateTime implements ICalendarDate, IDateTime
 		return new DateTime(d, this._kind);
 	}
 
-	addYears(years: number): DateTime
+	addYears(years:number):DateTime
 	{
 		years = years || 0;
 		var d = this.toJsDate();
@@ -166,7 +166,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * @param {ITimeQuantity} time
 	 * @returns {DateTime}
 	 */
-	add(time: ITimeQuantity): DateTime
+	add(time:ITimeQuantity):DateTime
 	{
 		return this.addMilliseconds(time.getTotalMilliseconds());
 	}
@@ -176,7 +176,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * @param {ITimeQuantity} time
 	 * @returns {DateTime}
 	 */
-	subtract(time: ITimeQuantity): DateTime
+	subtract(time:ITimeQuantity):DateTime
 	{
 		return this.addMilliseconds(-time.getTotalMilliseconds());
 	}
@@ -186,7 +186,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * @param previous
 	 * @returns {TimeSpan}
 	 */
-	timePassedSince(previous: Date|DateTime): TimeSpan
+	timePassedSince(previous:Date|DateTime):TimeSpan
 	{
 		return DateTime.between(previous, this);
 	}
@@ -194,7 +194,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	/**
 	 * Returns a DateTime object for 00:00 of this date.
 	 */
-	get date(): DateTime
+	get date():DateTime
 	{
 		const _ = this;
 		return new DateTime(
@@ -207,15 +207,16 @@ export class DateTime implements ICalendarDate, IDateTime
 		);
 	}
 
-	private _time: ClockTime;
+	private _time:ClockTime;
 
 	/**
 	 * Returns the time of day represented by a ClockTime object.
 	 * @returns {ClockTime}
 	 */
-	get timeOfDay(): ClockTime
+	get timeOfDay():ClockTime
 	{
-		var _ = this, t = _._time;
+		const _ = this;
+		var t = _._time;
 		if(!t)
 		{
 			var d = this._value;
@@ -231,7 +232,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	/**
 	 * Returns a readonly object which contains all the date and time components.
 	 */
-	toTimeStamp(): ITimeStamp
+	toTimeStamp():ITimeStamp
 	{
 		return TimeStamp.from(this);
 	}
@@ -240,7 +241,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Returns the now local time.
 	 * @returns {DateTime}
 	 */
-	static get now(): DateTime
+	static get now():DateTime
 	{
 		return new DateTime();
 	}
@@ -249,7 +250,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Returns a UTC version of this date if its kind is local.
 	 * @returns {DateTime}
 	 */
-	get toUniversalTime(): DateTime
+	get toUniversalTime():DateTime
 	{
 		const _ = this;
 		if(_._kind!=DateTime.Kind.Local)
@@ -274,7 +275,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * The date component for now.
 	 * @returns {DateTime}
 	 */
-	static get today(): DateTime
+	static get today():DateTime
 	{
 		return DateTime.now.date;
 	}
@@ -283,9 +284,9 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * Midnight tomorrow.
 	 * @returns {DateTime}
 	 */
-	static get tomorrow(): DateTime
+	static get tomorrow():DateTime
 	{
-		var today: DateTime = DateTime.today;
+		var today:DateTime = DateTime.today;
 		return today.addDays(1);
 	}
 
@@ -294,10 +295,10 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * @param first
 	 * @param last
 	 */
-	static between(first: Date|DateTime, last: Date|DateTime): TimeSpan
+	static between(first:Date|DateTime, last:Date|DateTime):TimeSpan
 	{
-		var f: Date = first instanceof DateTime ? first._value : <Date>first,
-		    l: Date = last instanceof DateTime ? last._value : <Date>last;
+		var f:Date = first instanceof DateTime ? first._value : <Date>first,
+		    l:Date = last instanceof DateTime ? last._value : <Date>last;
 
 		return new TimeSpan(l.getTime() - f.getTime());
 	}
@@ -308,7 +309,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * @param year
 	 * @returns {boolean}
 	 */
-	static isLeapYear(year: number): boolean
+	static isLeapYear(year:number):boolean
 	{
 		return ((year%4==0) && (year%100!=0)) || (year%400==0);
 	}
@@ -319,20 +320,20 @@ export class DateTime implements ICalendarDate, IDateTime
 	 * @param month
 	 * @returns {any}
 	 */
-	static daysInMonth(year: number, month: Gregorian.Month): number
+	static daysInMonth(year:number, month:Gregorian.Month):number
 	{
 		// Basically, add 1 month, subtract a day... What's the date?
 		return (new Date(year, month + 1, 0)).getDate();
 	}
 
-	static from(calendarDate: ICalendarDate): DateTime;
-	static from(year: number, month: Gregorian.Month, day: number): DateTime;
+	static from(calendarDate:ICalendarDate):DateTime;
+	static from(year:number, month:Gregorian.Month, day:number):DateTime;
 	static from(
-		yearOrDate: number|ICalendarDate,
-		month?: number,
-		day?: number): DateTime
+		yearOrDate:number|ICalendarDate,
+		month?:number,
+		day?:number):DateTime
 	{
-		var year: number;
+		var year:number;
 		if(typeof yearOrDate=="object")
 		{
 			day = (<ICalendarDate>yearOrDate).day;
@@ -345,14 +346,14 @@ export class DateTime implements ICalendarDate, IDateTime
 	}
 
 
-	static fromCalendarDate(calendarDate: ICalendarDate): DateTime;
-	static fromCalendarDate(year: number, month: number, day: number): DateTime;
+	static fromCalendarDate(calendarDate:ICalendarDate):DateTime;
+	static fromCalendarDate(year:number, month:number, day:number):DateTime;
 	static fromCalendarDate(
-		yearOrDate: number|ICalendarDate,
-		month?: number,
-		day?: number): DateTime
+		yearOrDate:number|ICalendarDate,
+		month?:number,
+		day?:number):DateTime
 	{
-		var year: number;
+		var year:number;
 		if(typeof yearOrDate=="object")
 		{
 			day = (<ICalendarDate>yearOrDate).day;

@@ -12,6 +12,7 @@ import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {Primitive} from "../Primitive";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const OTHER = 'other';
@@ -35,10 +36,8 @@ extends SetBase<T>
 			if(!Type.isPrimitive(type))
 				throw new ArgumentException("item", "A Set can only index primitives.  Complex objects require a HashSet.");
 
-			var r = _._registry;
-			var t = r && r[type];
-			if(!r) _._registry = r = {};
-			if(!t) r[type] = t = {};
+			var r = _._registry || (_._registry = {});
+			var t = r[type] || (r[type] = {});
 			var node:ILinkedNodeWithValue<T> = {value: item};
 			_._getSet().addNode(node);
 			t[<any>item] = node;

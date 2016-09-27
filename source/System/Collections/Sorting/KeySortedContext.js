@@ -25,7 +25,8 @@
             this._keySelector = _keySelector;
         }
         KeySortedContext.prototype.compare = function (a, b) {
-            var _ = this, ks = _._keySelector;
+            var _ = this;
+            var ks = _._keySelector;
             if (!ks || ks == Functions_1.Functions.Identity)
                 return _super.prototype.compare.call(this, a, b);
             var d = Values.compare(ks(a), ks(b));

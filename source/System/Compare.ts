@@ -65,7 +65,9 @@ export function compare(a:any, b:any, strict:boolean = true):CompareResult
  * @param extraDepth
  * @returns {boolean}
  */
-export function areEquivalent(a:any, b:any, nullEquivalency:boolean = true, extraDepth:number = 0):boolean
+export function areEquivalent(
+	a:any, b:any, nullEquivalency:boolean = true,
+	extraDepth:number = 0):boolean
 {
 
 	// Take a step by step approach to ensure efficiency.
@@ -105,10 +107,12 @@ export function areEquivalent(a:any, b:any, nullEquivalency:boolean = true, extr
 		}
 
 		// Doesn't track circular references but allows for controlling the amount of recursion.
-		if(extraDepth>0) {
+		if(extraDepth>0)
+		{
 
-			for(let key of aKeys) {
-				if(!areEquivalent(a[key], b[key], nullEquivalency, extraDepth-1)) return false;
+			for(let key of aKeys)
+			{
+				if(!areEquivalent(a[key], b[key], nullEquivalency, extraDepth - 1)) return false;
 			}
 		}
 

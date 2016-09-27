@@ -32,11 +32,13 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 	}
 
 	protected abstract canMoveNext():boolean;
+
 	abstract moveNext():boolean;
 
-	protected incrementIndex():number {
+	protected incrementIndex():number
+	{
 		let i = this._index;
-		this._index = i = i===VOID0 ? 0 : (i+1);
+		this._index = i = i===VOID0 ? 0 : (i + 1);
 		return i;
 	}
 
@@ -49,7 +51,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 	next():IIteratorResult<T>
 	{
 		return this.moveNext()
-			? new IteratorResult(this._current,this._index)
+			? new IteratorResult(this._current, this._index)
 			: IteratorResult.Done;
 	}
 
@@ -60,7 +62,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		try
 		{
 			return value!==VOID0 && this.canMoveNext()
-				? new IteratorResult(value,VOID0,true)
+				? new IteratorResult(value, VOID0, true)
 				: IteratorResult.Done;
 		}
 		finally
@@ -80,7 +82,8 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		this.reset();
 	}
 
-	protected getIsEndless():boolean {
+	protected getIsEndless():boolean
+	{
 		return this.canMoveNext();
 	}
 

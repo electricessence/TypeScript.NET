@@ -76,7 +76,9 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	selectMany<TResult>(collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):IInfiniteEnumerable<TResult>;
 	selectMany<TElement, TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
-		resultSelector:(collection:T, element:TElement) => TResult):IInfiniteEnumerable<TResult>;
+		resultSelector:(
+			collection:T,
+			element:TElement) => TResult):IInfiniteEnumerable<TResult>;
 
 	choose():IInfiniteEnumerable<T>;
 	choose<TResult>(selector?:Selector<T, TResult>):IInfiniteEnumerable<TResult>;

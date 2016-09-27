@@ -18,8 +18,8 @@ import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
 import {IIterator, IIteratorResult} from "./IIterator";
 import {IteratorEnumerator} from "./IteratorEnumerator";
 
+const VOID0:any = void(0);
 const
-	VOID0:any                 = void(0),
 	STRING_EMPTY:string       = "",
 	ENDLESS_EXCEPTION_MESSAGE =
 		'Cannot call forEach on an endless enumerable. ' +
@@ -165,7 +165,8 @@ export function forEach<T>(
 			);
 		}
 
-		if(isIterator<T>(e)) {
+		if(isIterator<T>(e))
+		{
 			// For our purpose iterators are endless and a max must be specified before iterating.
 			throwIfEndless(!isFinite(max));
 

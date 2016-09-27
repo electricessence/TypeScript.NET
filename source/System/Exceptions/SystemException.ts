@@ -6,6 +6,7 @@
 
 import {Exception} from "../Exception";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'SystemException';

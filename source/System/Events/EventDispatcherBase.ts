@@ -12,6 +12,7 @@ import {IEventListener} from "./IEventListener";
 import {EventDispatcherEntry} from "./EventDispatcherEntry";
 import {IEventDispatcher} from "./IEventDispatcher";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const DISPOSING:string = 'disposing',
@@ -103,7 +104,10 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 	dispatchEvent(e:any, params?:any):boolean
 	{
 
-		var _ = this, l = _._entries;
+		const _ = this;
+
+
+		var l = _._entries;
 		if(!l || !l.length)
 			return false;
 

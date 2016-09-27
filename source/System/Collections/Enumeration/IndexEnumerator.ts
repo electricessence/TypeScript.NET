@@ -5,16 +5,17 @@
 
 import {EnumeratorBase} from "./EnumeratorBase";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 export class IndexEnumerator<T> extends EnumeratorBase<T>
 {
 
 	constructor(
-		sourceFactory:() => { source: { [index: number]: T }; pointer?: number; length: number; step?: number })
+		sourceFactory:() => { source:{ [index:number]:T }; pointer?:number; length:number; step?:number })
 	{
 
-		var source:{ source: { [index: number]: T }; pointer?: number; length: number; step?: number };
+		var source:{ source:{ [index:number]:T }; pointer?:number; length:number; step?:number };
 		super(
 			() =>
 			{

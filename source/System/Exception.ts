@@ -45,11 +45,19 @@ export class Exception implements Error, IDisposable
 		if(beforeSealing) beforeSealing(_);
 
 		// Node has a .stack, let's use it...
-		try {
+		try
+		{
 			var stack:string = (<any>new Error()).stack;
-			stack = stack && stack.replace(/^Error\n/,'').replace(/(.|\n)+\s+at new.+/,'') || '';
+			stack = stack
+				&& stack
+					.replace(/^Error\n/, '')
+					.replace(/(.|\n)+\s+at new.+/, '')
+				|| '';
+
 			this.stack = _.toStringWithoutBrackets() + stack;
-		} catch(ex) {}
+		}
+		catch(ex)
+		{}
 
 		Object.freeze(_);
 	}
@@ -73,8 +81,10 @@ export class Exception implements Error, IDisposable
 		return `[${this.toStringWithoutBrackets()}]`;
 	}
 
-	protected toStringWithoutBrackets():string {
-		var _ = this, m = _.message;
+	protected toStringWithoutBrackets():string
+	{
+		const _ = this;
+		var m = _.message;
 		return _.name + (m ? (': ' + m) : '');
 	}
 

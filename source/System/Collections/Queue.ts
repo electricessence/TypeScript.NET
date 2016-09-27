@@ -17,6 +17,7 @@ import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const MINIMUM_GROW:number = 4;
@@ -82,7 +83,8 @@ extends CollectionBase<T>
 
 	protected _addInternal(item:T):boolean
 	{
-		var _ = this, array = _._array, size = _._size, len = _._capacity;
+		const _ = this;
+		var size = _._size, len = _._capacity;
 		if(size==len)
 		{
 			var newCapacity = len*GROW_FACTOR_HALF;
@@ -90,12 +92,11 @@ extends CollectionBase<T>
 				newCapacity = len + MINIMUM_GROW;
 
 			_.setCapacity(newCapacity);
-			array = _._array;
 			len = _._capacity;
 		}
 
 		var tail = _._tail;
-		array[tail] = item;
+		_._array[tail] = item;
 		_._tail = (tail + 1)%len;
 		_._size = size + 1;
 		return true;
@@ -111,7 +112,8 @@ extends CollectionBase<T>
 
 	protected _clearInternal():number
 	{
-		var _ = this, array = _._array, head = _._head, tail = _._tail, size = _._size;
+		const _ = this;
+		var array = _._array, head = _._head, tail = _._tail, size = _._size;
 		if(head<tail)
 			AU.clear(array, head, tail);
 		else
@@ -146,7 +148,8 @@ extends CollectionBase<T>
 	 */
 	dump(max:number = Infinity):T[]
 	{
-		var _ = this, result:T[] = [];
+		const _ = this;
+		var result:T[] = [];
 
 		if(isFinite(max))
 		{
@@ -183,7 +186,8 @@ extends CollectionBase<T>
 
 		assertIntegerZeroOrGreater(capacity, "capacity");
 
-		var _ = this, array = _._array, len = _._capacity;
+		const _ = this;
+		var array = _._array, len = _._capacity;
 
 		if(capacity==len)
 			return;
@@ -303,8 +307,7 @@ extends CollectionBase<T>
 	getEnumerator():IEnumerator<T>
 	{
 		const _ = this;
-		var index:number;
-		var version:number;
+		var index:number, version:number;
 		return new EnumeratorBase<T>(
 			() =>
 			{

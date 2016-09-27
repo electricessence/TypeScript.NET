@@ -16,17 +16,17 @@ export class ObservableNodeBase<T>
 extends ObservableBase<T> implements IObserver<T>
 {
 
-	onNext(value: T): void
+	onNext(value:T):void
 	{
 		this._onNext(value);
 	}
 
-	onError(error: any): void
+	onError(error:any):void
 	{
 		this._onError(error);
 	}
 
-	onCompleted(): void
+	onCompleted():void
 	{
 		this._onCompleted();
 	}

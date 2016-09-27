@@ -17,6 +17,7 @@ import {ILinkedNode} from "../ILinkedListNode";
 import {Selector} from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
 import __extendsImport from "../../../extends";
+// noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const VOID0:any = void 0;
@@ -128,8 +129,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 		if(!bucket) bucket = _._getBucket(hash || getHashString(compareKey));
 
-		return bucket && bucket
-				.find(e=>comparer(e.key)===compareKey);
+		return bucket
+			&& bucket.find(e=>comparer(e.key)===compareKey);
 	}
 
 	protected _getEntry(key:TKey):IHashEntry<TKey,TValue>
@@ -197,7 +198,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	protected _clearInternal():number
 	{
-		var _ = this, buckets = _._buckets;
+		const _ = this;
+		var buckets = _._buckets;
 
 		// Ensure reset and clean...
 		for(let key in buckets)
@@ -219,7 +221,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	 */
 	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
 	{
-		var _ = this, ver:number, currentEntry:IHashEntry<TKey, TValue>;
+		const _ = this;
+		var ver:number, currentEntry:IHashEntry<TKey, TValue>;
 
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>
@@ -244,7 +247,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	protected getKeys():TKey[]
 	{
-		var _ = this, result:TKey[] = [];
+		const _ = this;
+		var result:TKey[] = [];
 		var e = _._entries.first;
 		while(e)
 		{
@@ -256,7 +260,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	protected getValues():TValue[]
 	{
-		var _ = this, result:TValue[] = [];
+		const _ = this;
+		var result:TValue[] = [];
 		var e = _._entries.first;
 		while(e)
 		{

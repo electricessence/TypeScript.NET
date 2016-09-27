@@ -151,7 +151,8 @@ var EnumeratorBase = (function (_super) {
         }
     };
     EnumeratorBase.prototype._onDispose = function () {
-        var _ = this, disposer = _._disposer;
+        var _ = this;
+        var disposer = _._disposer;
         _._initializer = null;
         _._disposer = null;
         var y = _._yielder;

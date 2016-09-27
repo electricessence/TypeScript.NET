@@ -3,7 +3,8 @@
  * Licensing: MIT
  */
 
-export declare interface WorkerLike {
+export declare interface WorkerLike
+{
 	onmessage:(message:{data:any})=>void;
 	onerror:(error:any)=>void;
 
@@ -11,6 +12,7 @@ export declare interface WorkerLike {
 	terminate():void;
 }
 
-export declare interface WorkerConstructor {
+export declare interface WorkerConstructor
+{
 	new (url:string):WorkerLike;
 }
