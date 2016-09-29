@@ -5,6 +5,7 @@
  * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
 import { DisposableBase } from "../Disposable/DisposableBase";
+import { Closure } from "../FunctionTypes";
 export declare class PromiseState<T> extends DisposableBase {
     protected _state: Promise.State;
     protected _result: T;
@@ -36,7 +37,7 @@ export declare abstract class PromiseBase<T> extends PromiseState<T> implements 
     catchAllowFatal<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
     'finally'<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
     finallyAllowFatal<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
-    finallyThis(fin: () => void, synchronous?: boolean): this;
+    finallyThis(fin: Closure, synchronous?: boolean): this;
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;

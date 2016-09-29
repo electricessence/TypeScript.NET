@@ -1744,7 +1744,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
-	finallyAction(action:() => void):this
+	finallyAction(action:Closure):this
 	{
 		const _ = this;
 		var disposed = !_.throwIfDisposed();
@@ -3496,7 +3496,7 @@ extends Enumerable<T> implements IFiniteEnumerable<T>
 {
 	constructor(
 		enumeratorFactory:() => IEnumerator<T>,
-		finalizer?:() => void)
+		finalizer?:Closure)
 	{
 		super(enumeratorFactory, finalizer, false);
 	}

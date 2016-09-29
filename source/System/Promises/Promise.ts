@@ -22,6 +22,7 @@ import {Set} from "../Collections/Set";
 import {defer} from "../Threading/defer";
 import {ObjectDisposedException} from "../Disposable/ObjectDisposedException";
 import __extendsImport from "../../extends";
+import {Closure} from "../FunctionTypes";
 //noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -370,10 +371,10 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @param synchronous
 	 * @returns {PromiseBase}
 	 */
-	finallyThis(fin:()=>void, synchronous?:boolean):this
+	finallyThis(fin:Closure, synchronous?:boolean):this
 	{
 		this.throwIfDisposed();
-		var f:()=>void = synchronous ? fin : ()=>deferImmediate(fin);
+		var f:Closure = synchronous ? fin : ()=>deferImmediate(fin);
 		this.thenThis(f, f);
 		return this;
 	}

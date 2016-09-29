@@ -69,7 +69,7 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     alternateSingle(value: T): this;
     alternate(...sequence: T[]): this;
     catchError(handler: (e: any) => void): this;
-    finallyAction(action: () => void): this;
+    finallyAction(action: Closure): this;
     buffer(size: number): InfiniteEnumerable<T[]>;
     share(): this;
 }
@@ -160,6 +160,6 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILin
     memoize(): this;
 }
 export declare class FiniteEnumerable<T> extends Enumerable<T> implements IFiniteEnumerable<T> {
-    constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void);
+    constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure);
 }
 export default Enumerable;

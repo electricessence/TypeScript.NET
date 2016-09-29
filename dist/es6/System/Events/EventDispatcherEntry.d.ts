@@ -5,11 +5,12 @@
 import { DisposableBase } from "../Disposable/DisposableBase";
 import { IEventListener } from "./IEventListener";
 import { IEquatable } from "../IEquatable";
+import { Closure } from "../FunctionTypes";
 export declare class EventDispatcherEntry<TParams> extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>> {
     type: string;
     listener: IEventListener;
     params: TParams;
-    constructor(type: string, listener: IEventListener, params?: TParams, finalizer?: () => void);
+    constructor(type: string, listener: IEventListener, params?: TParams, finalizer?: Closure);
     protected _onDispose(): void;
     dispatch(e: Event): boolean;
     matches(type: string, listener: IEventListener): boolean;

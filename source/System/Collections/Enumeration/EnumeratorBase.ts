@@ -62,8 +62,6 @@ class Yielder<T> implements IYield<T>, IDisposable
 	}
 }
 
-type ActionVoid = ()=>void;
-
 // IEnumerator State
 enum EnumeratorState { Before, Running, After }
 
@@ -98,9 +96,9 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		disposer?:Closure|null,
 		isEndless?:boolean);
 	constructor(
-		private _initializer:() => void,
+		private _initializer:Closure,
 		private _tryGetNext:(yielder:IYield<T>) => boolean,
-		disposer?:ActionVoid|boolean|null,
+		disposer?:Closure|boolean|null,
 		isEndless?:boolean)
 	{
 		super();

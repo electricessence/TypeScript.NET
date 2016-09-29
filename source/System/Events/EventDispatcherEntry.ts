@@ -11,6 +11,7 @@ import {areEquivalent} from "../Compare";
 import {IEventListener} from "./IEventListener";
 import {IEquatable} from "../IEquatable";
 import __extendsImport from "../../extends";
+import {Closure} from "../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -22,7 +23,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 		public type:string,
 		public listener:IEventListener,
 		public params?:TParams,
-		finalizer?:() => void)//, useWeakReference: boolean = false)
+		finalizer?:Closure)//, useWeakReference: boolean = false)
 	{
 		super(finalizer);
 

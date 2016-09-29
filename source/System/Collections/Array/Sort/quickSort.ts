@@ -1,6 +1,6 @@
 /*!
+ * @author Sebastian Belmar / https://github.com/sebabelmar/
  * @author electricessence / https://github.com/electricessence/
- * Special thanks to: Sebastian Belmar
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 

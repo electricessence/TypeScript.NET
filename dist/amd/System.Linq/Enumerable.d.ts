@@ -1,4 +1,7 @@
-import {Action, Predicate, Selector, EqualityComparison, Comparison} from "../System/FunctionTypes";
+import {
+	Action, Predicate, Selector, EqualityComparison, Comparison,
+	Closure
+} from "../System/FunctionTypes";
 import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";
 import {IArray} from "../System/Collections/Array/IArray";
 import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
@@ -22,7 +25,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	doAction(
 		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
-		initializer?:()=>void,
+		initializer?:Closure,
 		isEndless?:boolean|null|undefined):this;
 
 	force():void;
@@ -146,7 +149,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	catchError(handler:(e:any) => void):this;
 
-	finallyAction(action:() => void):this;
+	finallyAction(action:Closure):this;
 
 	buffer(size:number):IInfiniteEnumerable<T[]>;
 

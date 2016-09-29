@@ -26,6 +26,10 @@ If you have a .NET Library class that you want to see represented in TypeScript,
 
 To name a few.
 
+
+## Release Notes:
+* 4.0.0: Marks the first release using TypeScript 2.  Strict Null Checking is built in and will propagate through generics as it should.
+
 ## Highlights
 * [**Linq**](https://github.com/electricessence/TypeScript.NET/tree/master/source/System.Linq): Full linq.js library ported to TypeScript with improvements and optimizations.  Proper use of IEnumerable&lt;T&gt; with passing unit tests.  All the things you love about Linq, but fully typed and JS compatible.    **\*\*All collections now support a ```.linq``` lazy helper property when using NodeJS/CommonJS.**
 * [**Exceptions**](https://github.com/electricessence/TypeScript.NET/tree/master/source/System/Exceptions): There is a growing set of Exceptions like ArgumentNullException, ArgumentOutOfRangeException, etc that are useful in making decisions about how to handle errors using *instanceof* as if you used multiple *catch* statements in C#.
