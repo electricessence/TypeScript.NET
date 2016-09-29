@@ -41,8 +41,8 @@ export default class HttpRequestFactory extends DisposableBase
 	protected _onDispose()
 	{
 		// super._onDispose(); // Not required for first level inheritance.
-		this._http = null;
-		this._uriDefaults = null;
+		this._http = <any>null;
+		this._uriDefaults = <any>null;
 	}
 
 	uri(uri:string|IUri):HttpRequestFactory
@@ -50,8 +50,10 @@ export default class HttpRequestFactory extends DisposableBase
 
 		const _ = this;
 		_.throwIfDisposed();
-		var u = Uri.from(uri, _._uriDefaults);
-		return _._uriDefaults.equals(u)
+		var d = _._uriDefaults,
+		    u = Uri.from(uri, d);
+
+		return d && u.equals(d)
 			? _
 			: new HttpRequestFactory(_._http, u);
 	}
@@ -69,7 +71,7 @@ export default class HttpRequestFactory extends DisposableBase
 		_.throwIfDisposed();
 		return _._http.request({
 			method: method,
-			uri: _._uriDefaults,
+			uri: <any>_._uriDefaults,
 			data: data
 		});
 	}

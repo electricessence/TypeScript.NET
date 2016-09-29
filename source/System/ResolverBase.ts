@@ -9,6 +9,7 @@ import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
 import __extendsImport from "../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
+const NULL:any = null;
 
 /**
  * The ResolverBase class handles resolving a factory method and detects recursion.
@@ -19,13 +20,13 @@ const __extends = __extendsImport;
 export abstract class ResolverBase<T> extends DisposableBase
 {
 
-	protected _isValueCreated:boolean;
+	protected _isValueCreated:boolean|null; // null = 'creating'
 	protected _value:T;
 
 	constructor(
 		protected _valueFactory:Func<T>,
 		private _trapExceptions:boolean,
-		private _allowReset?:boolean)
+		private _allowReset:boolean = false)
 	{
 		super();
 		if(!_valueFactory) throw new ArgumentNullException("valueFactory");
@@ -62,7 +63,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 				if(!_._isValueCreated && (c = _._valueFactory))
 				{
 					_._isValueCreated = null; // Mark this as 'resolving'.
-					if(!this._allowReset) this._valueFactory = null;
+					if(!this._allowReset) this._valueFactory = NULL;
 					var v = c();
 					_._value = v;
 					_._error = void 0;
@@ -93,9 +94,9 @@ export abstract class ResolverBase<T> extends DisposableBase
 
 	protected _onDispose():void
 	{
-		this._valueFactory = null;
-		this._value = null;
-		this._isValueCreated = null;
+		this._valueFactory = NULL;
+		this._value = NULL;
+		this._isValueCreated = NULL;
 	}
 
 	tryReset():boolean
@@ -107,7 +108,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 		else
 		{
 			_._isValueCreated = false;
-			_._value = null;
+			_._value = NULL;
 			_._error = void 0;
 			return true;
 		}

@@ -50,7 +50,7 @@ export default class EventDispatcherBase extends DisposableBase {
             return false;
         var event;
         if (typeof e == "string") {
-            event = Event && Object.create(Event) || {};
+            event = (Event && Object.create(Event) || {});
             if (!params)
                 params = {};
             if (params['cancellable'])
@@ -64,7 +64,8 @@ export default class EventDispatcherBase extends DisposableBase {
         var entries = l.filter(e => e.type == type);
         if (!entries.length)
             return false;
-        entries.sort((a, b) => b.params.priority - a.params.priority);
+        entries.sort((a, b) => (b.params ? b.params.priority : 0)
+            - (a.params ? a.params.priority : 0));
         entries.forEach(entry => {
             var newEvent = Object.create(Event);
             shallowCopy(event, newEvent);

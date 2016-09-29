@@ -90,18 +90,17 @@ function appendKeyValue(
  */
 export function encodeValue(value:UriComponent.Value):string
 {
-	var v:string = null;
 	if(isUriComponentFormattable(value))
 	{
-		v = value.toUriComponent();
+		var v:string = value.toUriComponent();
 		if(v && v.indexOf(ENTRY_SEPARATOR)!=1)
 			throw '.toUriComponent() did not encode the value.';
+		return v;
 	}
 	else
 	{
-		v = encodeURIComponent(Serialization.toString(v));
+		return encodeURIComponent(Serialization.toString(value));
 	}
-	return v;
 }
 
 /**

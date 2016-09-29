@@ -16,6 +16,8 @@ var __extends = extends_1.default;
 var VOID0 = void 0;
 var HashEntry = (function () {
     function HashEntry(key, value, previous, next) {
+        if (previous === void 0) { previous = null; }
+        if (next === void 0) { next = null; }
         this.key = key;
         this.value = value;
         this.previous = previous;
@@ -60,116 +62,125 @@ var Dictionary = (function (_super) {
     Dictionary.prototype.getCount = function () {
         return this._entries.unsafeCount;
     };
-    Dictionary.prototype._getBucket = function (hash, createIfMissing) {
-        if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
-            return null;
-        var buckets = this._buckets;
-        var bucket = callHasOwnProperty(buckets, hash) ? buckets[hash] : VOID0;
-        if (createIfMissing && !bucket)
-            buckets[hash]
-                = bucket
-                    = linkedNodeList();
-        return bucket;
-    };
-    Dictionary.prototype._getBucketEntry = function (key, hash, bucket) {
-        if (key === null || key === VOID0 || !this.getCount())
-            return null;
-        var _ = this, comparer = _._keyComparer, compareKey = comparer(key);
-        if (!bucket)
-            bucket = _._getBucket(hash || getHashString(compareKey));
-        return bucket
-            && bucket.find(function (e) { return comparer(e.key) === compareKey; });
-    };
-    Dictionary.prototype._getEntry = function (key) {
-        var e = this._getBucketEntry(key);
-        return e && e.value;
-    };
-    Dictionary.prototype.getValue = function (key) {
-        var e = this._getEntry(key);
-        return e ? e.value : VOID0;
-    };
-    Dictionary.prototype._setValueInternal = function (key, value) {
-        var _ = this, buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
-        if (bucketEntry) {
-            if (value === VOID0) {
-                var x = bucket.removeNode(bucketEntry), y = entries.removeNode(bucketEntry.value);
-                if (x && !bucket.count) {
-                    delete buckets[hash];
-                    linkedNodeList(bucket);
-                    bucket = null;
-                }
-                if (x !== y)
-                    throw "Entries and buckets are out of sync.";
-                if (x)
-                    return true;
-            }
-            else {
-                var old = bucketEntry.value.value;
-                bucketEntry.value.value = value;
-                return !Compare_1.areEqual(value, old);
-            }
-        }
-        else if (value !== VOID0) {
-            if (!bucket)
-                bucket = _._getBucket(hash, true);
-            var entry = new HashEntry(key, value);
-            entries.addNode(entry);
-            bucket.addNode(new HashEntry(key, entry));
-            return true;
-        }
-        return false;
-    };
-    Dictionary.prototype._clearInternal = function () {
-        var _ = this;
-        var buckets = _._buckets;
-        for (var key in buckets) {
-            if (buckets.hasOwnProperty(key)) {
-                var bucket = buckets[key];
-                delete buckets[key];
-                linkedNodeList(bucket);
-            }
-        }
-        return _._entries.clear();
-    };
-    Dictionary.prototype.getEnumerator = function () {
-        var _ = this;
-        var ver, currentEntry;
-        return new EnumeratorBase_1.EnumeratorBase(function () {
-            ver = _._version;
-            currentEntry = _._entries.first;
-        }, function (yielder) {
-            if (currentEntry != null) {
-                _.assertVersion(ver);
-                var result = { key: currentEntry.key, value: currentEntry.value };
-                currentEntry = currentEntry.next;
-                return yielder.yieldReturn(result);
-            }
-            return yielder.yieldBreak();
-        });
-    };
-    Dictionary.prototype.getKeys = function () {
-        var _ = this;
-        var result = [];
-        var e = _._entries.first;
-        while (e) {
-            result.push(e.key);
-            e = e.next;
-        }
-        return result;
-    };
-    Dictionary.prototype.getValues = function () {
-        var _ = this;
-        var result = [];
-        var e = _._entries.first;
-        while (e) {
-            result.push(e.value);
-            e = e.next;
-        }
-        return result;
-    };
+    Dictionary.prototype._getBucket = ;
     return Dictionary;
 }(DictionaryBase_1.default));
 exports.Dictionary = Dictionary;
+{
+    if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
+        return null;
+    var buckets = this._buckets;
+    var bucket = callHasOwnProperty(buckets, hash) ? buckets[hash] : VOID0;
+    if (createIfMissing && !bucket)
+        buckets[hash]
+            = bucket
+                = linkedNodeList();
+    return bucket;
+}
+_getBucketEntry(key, TKey, hash ?  : string, bucket ?  : HashEntryLinkedList( | null), IHashEntry( | null, {
+    if: function (key) { },
+    return: null,
+    var: _ = this,
+    comparer: comparer,
+    compareKey: compareKey,
+    if: function () { } }, !bucket), bucket = _._getBucket(hash || getHashString(compareKey)));
+return bucket
+    && bucket.find(function (e) { return comparer(e.key) === compareKey; });
+_getEntry(key, TKey);
+IHashEntry( | null, {
+    var: e = this._getBucketEntry(key),
+    return: e && e.value
+}, getValue(key, TKey), TValue, {
+    var: e = this._getEntry(key),
+    return: e ? e.value : VOID0
+}, protected, _setValueInternal(key, TKey, value, TValue), boolean, {
+    var: _ = this,
+    buckets: buckets,
+    entries: entries,
+    comparer: comparer,
+    compareKey: compareKey,
+    hash: hash,
+    bucket: bucket,
+    bucketEntry: bucketEntry,
+    if: function (bucketEntry) {
+        var b = bucket;
+        if (value === VOID0) {
+            var x = b.removeNode(bucketEntry), y = entries.removeNode(bucketEntry.value);
+            if (x && !b.count) {
+                delete buckets[hash];
+                linkedNodeList(b);
+                bucket = null;
+            }
+            if (x !== y)
+                throw "Entries and buckets are out of sync.";
+            if (x)
+                return true;
+        }
+        else {
+            var old = bucketEntry.value.value;
+            bucketEntry.value.value = value;
+            return !Compare_1.areEqual(value, old);
+        }
+    },
+    else: , if: function (value) {
+        if (value === void 0) { value =  !== VOID0; }
+        if (!bucket)
+            bucket = _._getBucket(hash, true);
+        if (!bucket)
+            throw new Error("\"" + hash + "\" cannot be added to lookup table.");
+        var entry = new HashEntry(key, value);
+        entries.addNode(entry);
+        bucket.addNode(new HashEntry(key, entry));
+        return true;
+    },
+    return: false
+}, protected, _clearInternal(), number, {
+    const: _ = this,
+    var: buckets = _._buckets,
+    for: function (let) {
+        if (let === void 0) { let = key in buckets; }
+        if (buckets.hasOwnProperty(key)) {
+            var bucket_1 = buckets[key];
+            delete buckets[key];
+            linkedNodeList(bucket_1);
+        }
+    },
+    return: _._entries.clear()
+}, getEnumerator(), IEnumerator < IKeyValuePair < TKey, TValue >>
+    {
+        const: _ = this,
+        var: ver, number: number, currentEntry: IHashEntry( | null),
+        return: new EnumeratorBase_1.EnumeratorBase(function () {
+            ver = _._version;
+            currentEntry = _._entries.first;
+        }, function (yielder) {
+            if (currentEntry) {
+                _.assertVersion(ver);
+                var result = { key: currentEntry.key, value: currentEntry.value };
+                currentEntry = currentEntry.next || null;
+                return yielder.yieldReturn(result);
+            }
+            return yielder.yieldBreak();
+        })
+    }, protected, getKeys(), TKey[], {
+    const: _ = this,
+    var: result, TKey: [],
+    var: e, any: any,
+    while: function (e) {
+        result.push(e.key);
+        e = e.next;
+    },
+    return: result
+}, protected, getValues(), TValue[], {
+    const: _ = this,
+    var: result, TValue: [],
+    var: e, any: any,
+    while: function (e) {
+        result.push(e.value);
+        e = e.next;
+    },
+    return: result
+});
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Dictionary;
 //# sourceMappingURL=Dictionary.js.map

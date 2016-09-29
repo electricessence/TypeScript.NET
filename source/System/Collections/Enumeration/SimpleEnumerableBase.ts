@@ -18,7 +18,7 @@ const VOID0:any = void 0;
 export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 {
 
-	protected _current:T;
+	protected _current:T|undefined;
 	protected _index:number;
 
 	constructor()
@@ -26,7 +26,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		this.reset();
 	}
 
-	get current():T
+	get current():T|undefined
 	{
 		return this._current;
 	}
@@ -42,7 +42,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		return i;
 	}
 
-	nextValue():T
+	nextValue():T|undefined
 	{
 		this.moveNext();
 		return this._current;
@@ -87,7 +87,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		return this.canMoveNext();
 	}
 
-	get isEndless():boolean
+	get isEndless():boolean|undefined
 	{
 		return this.getIsEndless();
 	}

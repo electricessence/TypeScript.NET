@@ -8,6 +8,7 @@ import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
 export class DateTime {
     constructor(value = new Date(), kind = 1) {
+        this._time = null;
         const _ = this;
         _._kind = kind;
         if (value instanceof DateTime)
@@ -138,21 +139,27 @@ export class DateTime {
     static daysInMonth(year, month) {
         return (new Date(year, month + 1, 0)).getDate();
     }
-    static from(yearOrDate, month, day) {
+    static from(yearOrDate, month = 0, day = 1) {
         var year;
         if (typeof yearOrDate == "object") {
             day = yearOrDate.day;
             month = yearOrDate.month;
             year = yearOrDate.year;
         }
+        else {
+            year = yearOrDate;
+        }
         return new DateTime(new Date(year, month, day));
     }
-    static fromCalendarDate(yearOrDate, month, day) {
+    static fromCalendarDate(yearOrDate, month = 1, day = 1) {
         var year;
         if (typeof yearOrDate == "object") {
             day = yearOrDate.day;
             month = yearOrDate.month;
             year = yearOrDate.year;
+        }
+        else {
+            year = yearOrDate;
         }
         return new DateTime(new Date(year, month - 1, day));
     }

@@ -20,11 +20,12 @@
     var CollectionBase_1 = require("./CollectionBase");
     var extends_1 = require("../../extends");
     var __extends = extends_1.default;
+    var VOID0 = void 0;
     var OTHER = 'other';
     var SetBase = (function (_super) {
         __extends(SetBase, _super);
         function SetBase(source) {
-            _super.call(this, null, Compare_1.areEqual);
+            _super.call(this, VOID0, Compare_1.areEqual);
             this._importEntries(source);
         }
         SetBase.prototype._getSet = function () {
@@ -173,9 +174,8 @@
                 : this._set.forEach(function (node, i) { return action(node.value, i); });
         };
         SetBase.prototype._removeNode = function (node) {
-            if (!node)
-                return false;
-            return this.remove(node.value) != 0;
+            return !!node
+                && this.remove(node.value) != 0;
         };
         SetBase.prototype.removeFirst = function () {
             var s = this._set;

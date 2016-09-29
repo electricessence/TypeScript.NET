@@ -53,7 +53,7 @@ export interface ParallelOptions
 
 //noinspection JSUnusedAssignment
 const defaults:ParallelOptions = {
-	evalPath: isNodeJS ? __dirname + '/eval.js' : null,
+	evalPath: isNodeJS ? __dirname + '/eval.js' : VOID0,
 	maxConcurrency: isNodeJS
 		? require('os').cpus().length
 		: (navigator.hardwareConcurrency || 4),
@@ -62,14 +62,14 @@ const defaults:ParallelOptions = {
 	envNamespace: 'env'
 };
 
-function extend<T extends any>(from:T, to:T):T
+function extend<TFrom extends any,TTo extends any>(from:TFrom, to:TTo):TFrom & TTo
 {
 	if(!to) to = <any>{};
 	for(var i of Object.keys(from))
 	{
 		if(to[i]=== void 0) to[i] = from[i];
 	}
-	return to;
+	return <any>to;
 }
 
 function interact(
@@ -128,12 +128,12 @@ module workers
 
 	var workerPools:IMap<ObjectPool<WorkerLike>> = {};
 
-	export function recycle(w:WorkerLike):WorkerLike
+	export function recycle(w:WorkerLike|null|undefined):null
 	{ // always returns null.
 		if(w)
 		{
-			w.onerror = null;
-			w.onmessage = null;
+			w.onerror = <any>null;
+			w.onmessage = <any>null;
 			var k = (<any>w).__key;
 			if(k)
 			{
@@ -147,7 +147,7 @@ module workers
 		return null;
 	}
 
-	export function tryGet(key:string):WorkerLike
+	export function tryGet(key:string):WorkerLike|undefined
 	{
 		return getPool(key).tryTake();
 	}
@@ -248,7 +248,7 @@ export class Parallel
 	}
 
 
-	protected _spawnWorker(task:Function|string, env?:any):WorkerLike
+	protected _spawnWorker(task:Function|string, env?:any):WorkerLike|undefined
 	{
 		var src = this._getWorkerSource(task, env);
 
@@ -270,7 +270,7 @@ export class Parallel
 
 		if(isNodeJS || scripts.length || !URL)
 		{
-			worker = workers.getNew(src, evalPath);
+			worker = workers.getNew(src, <string>evalPath);
 			worker.postMessage(src);
 		}
 		else if(URL)
@@ -290,8 +290,10 @@ export class Parallel
 
 		let worker = _._spawnWorker(task, extend(_.options.env, env || {}));
 		if(worker)
+		{
 			return new WorkerPromise<U>(worker, data)
 				.finallyThis(()=>workers.recycle(worker));
+		}
 
 		if(_.options.allowSynchronous)
 			return new Promise<U>(
@@ -323,7 +325,7 @@ export class Parallel
 		let maxConcurrency = this.ensureClampedMaxConcurrency();
 
 		// The resultant promise collection will make an internal copy...
-		var result:Promise<U>[];
+		var result:Promise<U>[]|undefined;
 
 		if(data && data.length)
 		{
@@ -333,7 +335,7 @@ export class Parallel
 			let i = 0;
 			for(let w = 0; !error && i<Math.min(len, maxConcurrency); w++)
 			{
-				let worker = this._spawnWorker(taskString, env);
+				let worker:WorkerLike|null|undefined = this._spawnWorker(taskString, env);
 
 				if(!worker)
 				{
@@ -363,7 +365,7 @@ export class Parallel
 						if(i<len)
 						{
 							//noinspection JSReferencingMutableVariableFromClosure
-							let ii = i++, p = result[ii];
+							let ii = i++, p = result![ii];
 							let wp = new WorkerPromise<U>(worker, data[ii]);
 							wp.thenSynchronous(
 								r=>
@@ -394,7 +396,7 @@ export class Parallel
 
 		}
 
-		return new PromiseCollection(result);
+		return new PromiseCollection<U>(result);
 	}
 
 	private ensureClampedMaxConcurrency():number
@@ -405,7 +407,7 @@ export class Parallel
 			this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
 			console.warn(`More than ${MAX_WORKERS} workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to ${MAX_WORKERS}.`);
 		}
-		return maxConcurrency;
+		return (maxConcurrency || maxConcurrency===0) ? maxConcurrency : MAX_WORKERS;
 	}
 
 	/**
@@ -434,7 +436,7 @@ export class Parallel
 			let i = 0, resolved = 0;
 			for(let w = 0; !error && i<Math.min(len, maxConcurrency); w++)
 			{
-				let worker = this._spawnWorker(taskString, env);
+				let worker:WorkerLike|null|undefined = this._spawnWorker(taskString, env);
 
 				if(!worker)
 				{
@@ -462,7 +464,7 @@ export class Parallel
 							wp.thenSynchronous(
 								r=>
 								{
-									result[ii] = r;
+									result[ii] = <any>r;
 									next();
 								},
 								e=>

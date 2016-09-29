@@ -53,7 +53,7 @@ export class Subscription<T> implements IDisposableAware
 		var subscribable = this._subscribable;
 
 		// Release this reference.  It will prevent potential unwanted recursion.
-		this._subscribable = null;
+		this._subscribable = <any>null;
 
 		try
 		{
@@ -65,7 +65,7 @@ export class Subscription<T> implements IDisposableAware
 		finally
 		{
 			// Keep this reference until the end so it can be identified by the list.
-			this._subscriber = null;
+			this._subscriber = <any>null;
 		}
 	}
 }

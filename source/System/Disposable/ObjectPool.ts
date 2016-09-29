@@ -145,7 +145,7 @@ export class ObjectPool<T> extends DisposableBase
 	protected _onDispose():void
 	{
 		super._onDispose();
-		const _ = this;
+		const _:any = this;
 		_._generator = null;
 		_._recycler = null;
 		dispose(
@@ -200,7 +200,7 @@ export class ObjectPool<T> extends DisposableBase
 			_.extendAutoClear();
 	}
 
-	tryTake():T
+	tryTake():T|undefined
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -224,7 +224,7 @@ export class ObjectPool<T> extends DisposableBase
 
 		try
 		{
-			return _._pool.pop() || factory && factory() || _._generator();
+			return _._pool.pop() || factory && factory() || _._generator!();
 		}
 		finally
 		{

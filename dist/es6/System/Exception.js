@@ -5,11 +5,15 @@
  */
 const NAME = 'Exception';
 export class Exception {
-    constructor(message = null, innerException = null, beforeSealing) {
-        this.message = message;
+    constructor(message, innerException, beforeSealing) {
+        this.readonly = name;
+        this.readonly = message;
+        this.readonly = stack;
+        this.readonly = data;
         const _ = this;
-        _.name = _.getName();
-        _.data = {};
+        this.name = _.getName();
+        this.message = message;
+        this.data = {};
         if (innerException)
             _.data['innerException'] = innerException;
         if (beforeSealing)

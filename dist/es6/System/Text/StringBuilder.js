@@ -7,6 +7,7 @@ import { Type } from "../Types";
 const VOID0 = void 0;
 export class StringBuilder {
     constructor(...initial) {
+        this._latest = null;
         const _ = this;
         _._latest = null;
         _._partArray = [];

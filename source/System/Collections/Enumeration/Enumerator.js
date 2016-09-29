@@ -98,7 +98,7 @@
                 return i;
             }
             if (isEnumerator(e)) {
-                throwIfEndless(!isFinite(max) && e.isEndless);
+                throwIfEndless(!isFinite(max) && !!e.isEndless);
                 var i = 0;
                 while (max > i && e.moveNext()) {
                     if (action(e.current, i++) === false)
@@ -107,7 +107,7 @@
                 return i;
             }
             if (isEnumerable(e)) {
-                throwIfEndless(!isFinite(max) && e.isEndless);
+                throwIfEndless(!isFinite(max) && !!e.isEndless);
                 return dispose_1.using(e.getEnumerator(), function (f) { return forEach(f, action, max); });
             }
             if (isIterator(e)) {

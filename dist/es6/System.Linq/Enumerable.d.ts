@@ -23,7 +23,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	doAction(
 		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
 		initializer?:()=>void,
-		isEndless?:boolean):this;
+		isEndless?:boolean|null|undefined):this;
 
 	force():void;
 
@@ -33,15 +33,15 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	elementAt(index:number):T;
 
-	elementAtOrDefault(index:number, defaultValue?:T):T;
+	elementAtOrDefault(index:number, defaultValue?:T):T|undefined;
 
 	first():T;
 
-	firstOrDefault(defaultValue?:T):T;
+	firstOrDefault(defaultValue?:T):T|undefined;
 
 	single():T;
 
-	singleOrDefault(defaultValue?:T):T;
+	singleOrDefault(defaultValue?:T):T|undefined;
 
 	any():boolean;
 
@@ -256,17 +256,17 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 		resultSelector?:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, TElement>>;
 
-	aggregate(func:(a:T, b:T) => T, seed?:T):T;
+	aggregate(func:(a:T, b:T) => T, seed?:T):T|undefined;
 
 	average(selector?:Selector<T, number>):number;
 
-	max():T;
+	max():T|undefined;
 
-	min():T;
+	min():T|undefined;
 
-	maxBy<TCompare>(keySelector?:Selector<T, TCompare>):T;
+	maxBy<TCompare>(keySelector?:Selector<T, TCompare>):T|undefined;
 
-	minBy<TCompare>(keySelector?:Selector<T, TCompare>):T;
+	minBy<TCompare>(keySelector?:Selector<T, TCompare>):T|undefined;
 
 	sum(selector?:Selector<T, number>):number;
 
@@ -276,7 +276,7 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 
 	last():T;
 
-	lastOrDefault(defaultValue?:T):T;
+	lastOrDefault(defaultValue?:T):T|undefined;
 
 	memoize():this;
 }

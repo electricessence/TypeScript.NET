@@ -67,7 +67,7 @@ var Regex = (function () {
     Regex.prototype.match = function (input, startIndex) {
         if (startIndex === void 0) { startIndex = 0; }
         var _ = this;
-        var r;
+        var r = null;
         if (!input
             || startIndex >= input.length
             || !(r = this._re.exec(input.substring(startIndex))))

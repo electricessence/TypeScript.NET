@@ -17,7 +17,11 @@ export class Exception implements Error, IDisposable
 	 * A string representation of the error type.
 	 * The default is 'Error'.
 	 */
-	name:string;
+	readonly name:string;
+
+	readonly message:string;
+	readonly stack:string;
+	readonly data:IMap<any>;
 
 	/**
 	 * Initializes a new instance of the Exception class with a specified error message and optionally a reference to the inner exception that is the cause of this exception.
@@ -26,14 +30,16 @@ export class Exception implements Error, IDisposable
 	 * @param beforeSealing This delegate is used to allow actions to occur just before this constructor finishes.  Since some compilers do not allow the use of 'this' before super.
 	 */
 	constructor(
-		public message:string = null,
-		innerException:Error = null,
+		message:string,
+		innerException?:Error,
 		beforeSealing?:(ex:any)=>void)
 	{
 		const _ = this;
 
-		_.name = _.getName();
-		_.data = {};
+		this.name = _.getName();
+		this.message = message;
+		this.data = {};
+
 		if(innerException)
 			_.data['innerException'] = innerException;
 
@@ -62,9 +68,6 @@ export class Exception implements Error, IDisposable
 		Object.freeze(_);
 	}
 
-	stack:string;
-
-	data:IMap<any>;
 
 	/**
 	 * A string representation of the error type.

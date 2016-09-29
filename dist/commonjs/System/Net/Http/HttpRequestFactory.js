@@ -26,8 +26,8 @@ var HttpRequestFactory = (function (_super) {
     HttpRequestFactory.prototype.uri = function (uri) {
         var _ = this;
         _.throwIfDisposed();
-        var u = Uri_1.Uri.from(uri, _._uriDefaults);
-        return _._uriDefaults.equals(u)
+        var d = _._uriDefaults, u = Uri_1.Uri.from(uri, d);
+        return d && u.equals(d)
             ? _
             : new HttpRequestFactory(_._http, u);
     };

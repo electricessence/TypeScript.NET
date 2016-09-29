@@ -31,7 +31,7 @@
     exports.read = readFile;
     function writeFile(path, data, options) {
         return Promise_1.Promise.using(function (resolve, reject) {
-            fs.writeFile(path, data, options, function (err) {
+            fs.writeFile(path, data, options || {}, function (err) {
                 if (err)
                     reject(err);
                 else

@@ -41,7 +41,7 @@ function entryFinalizer()
 {
 	var p:IEntryParams = this.params;
 	p.dispatcher.removeEntry(this);
-	p.dispatcher = null;
+	(<any>p).dispatcher = null;
 }
 
 export default
@@ -115,7 +115,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 
 		if(typeof e=="string")
 		{
-			event = Event && Object.create(Event) || {};
+			event = <any>(Event && Object.create(Event) || {});
 			if(!params)
 				params = {};
 			if(params['cancellable'])
@@ -133,13 +133,16 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		if(!entries.length)
 			return false;
 
-		entries.sort((a, b)=> b.params.priority - a.params.priority);
+		entries.sort((a, b)=>
+			(b.params ? b.params.priority : 0)
+			- (a.params ? a.params.priority : 0)
+		);
 
 		// For now... Just use simple...
 		entries.forEach(
 			entry=>
 			{
-				var newEvent = Object.create(Event);
+				var newEvent:any = Object.create(Event);
 				shallowCopy(event, newEvent);
 				newEvent.target = this;
 				entry.dispatch(newEvent);
@@ -179,7 +182,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 			var l = _._entries;
 			if(l)
 			{
-				this._entries = null;
+				this._entries = <any>null;
 				l.forEach(e=> e.dispose());
 			}
 		}

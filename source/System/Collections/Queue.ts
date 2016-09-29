@@ -20,6 +20,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+const VOID0:undefined = void 0;
 const MINIMUM_GROW:number = 4;
 const SHRINK_THRESHOLD:number = 32; // Unused?
 // var GROW_FACTOR: number = 200;  // double each time
@@ -41,7 +42,7 @@ extends CollectionBase<T>
 		source?:IEnumerableOrArray<T> | number,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		super(null, equalityComparer);
+		super(VOID0, equalityComparer);
 		const _ = this;
 		_._head = 0;
 		_._tail = 0;
@@ -238,13 +239,13 @@ extends CollectionBase<T>
 		{
 			if(throwIfEmpty)
 				throw new InvalidOperationException("Cannot dequeue an empty queue.");
-			return void 0;
+			return <any>VOID0;
 		}
 
 		var array = _._array, head = _._head;
 
 		var removed = _._array[head];
-		array[head] = null;
+		array[head] = <any>null;
 		_._head = (head + 1)%_._capacity;
 
 		_._size--;
@@ -300,7 +301,7 @@ extends CollectionBase<T>
 	{
 		const _ = this;
 		var size = _._size;
-		if(size<Math.floor(_._capacity*0.9) && (isNaN(threshold) || threshold<size))
+		if(size<Math.floor(_._capacity*0.9) && (!threshold && threshold!==0 || isNaN(threshold) || threshold<size))
 			_.setCapacity(size);
 	}
 

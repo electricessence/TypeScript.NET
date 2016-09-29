@@ -60,7 +60,7 @@ export module Integer
 			return min + next(range);
 		}
 
-		export function select<T>(source:IArray<T>):T
+		export function select<T>(source:IArray<T>):T|undefined
 		{
 			return source && source.length
 				? source[r(source.length)]
@@ -69,7 +69,7 @@ export module Integer
 
 		export module select
 		{
-			export function one<T>(source:IArray<T>):T
+			export function one<T>(source:IArray<T>):T|undefined
 			{
 				return random.select(source);
 			}
@@ -77,7 +77,7 @@ export module Integer
 
 	}
 
-	export function as32Bit(n:number):number
+	export function as32Bit(n:number):number|null
 	{
 		var result = n | 0;
 		return (n=== -1 || result!== -1) ? result : null;

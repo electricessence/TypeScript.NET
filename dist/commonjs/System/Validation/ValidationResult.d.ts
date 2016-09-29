@@ -5,9 +5,11 @@
 import { IEquatable } from "../IEquatable";
 import { IValidationResult } from "./IValidationResult";
 export default class ValidationResult implements IValidationResult, IEquatable<IValidationResult> {
-    isValid: boolean;
-    message: string;
-    data: any;
+    readonly: any;
+    boolean: any;
+    readonly: any;
+    readonly: any;
+    any: any;
     constructor(isValid?: boolean, message?: string, data?: any);
     equals(other: IValidationResult): boolean;
     static valid: IValidationResult;

@@ -11,6 +11,7 @@ var DateTime = (function () {
     function DateTime(value, kind) {
         if (value === void 0) { value = new Date(); }
         if (kind === void 0) { kind = 1; }
+        this._time = null;
         var _ = this;
         _._kind = kind;
         if (value instanceof DateTime)
@@ -198,20 +199,30 @@ var DateTime = (function () {
         return (new Date(year, month + 1, 0)).getDate();
     };
     DateTime.from = function (yearOrDate, month, day) {
+        if (month === void 0) { month = 0; }
+        if (day === void 0) { day = 1; }
         var year;
         if (typeof yearOrDate == "object") {
             day = yearOrDate.day;
             month = yearOrDate.month;
             year = yearOrDate.year;
         }
+        else {
+            year = yearOrDate;
+        }
         return new DateTime(new Date(year, month, day));
     };
     DateTime.fromCalendarDate = function (yearOrDate, month, day) {
+        if (month === void 0) { month = 1; }
+        if (day === void 0) { day = 1; }
         var year;
         if (typeof yearOrDate == "object") {
             day = yearOrDate.day;
             month = yearOrDate.month;
             year = yearOrDate.year;
+        }
+        else {
+            year = yearOrDate;
         }
         return new DateTime(new Date(year, month - 1, day));
     };

@@ -15,9 +15,11 @@
     var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
     var extends_1 = require("../extends");
     var __extends = extends_1.default;
+    var NULL = null;
     var ResolverBase = (function (_super) {
         __extends(ResolverBase, _super);
         function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
+            if (_allowReset === void 0) { _allowReset = false; }
             _super.call(this);
             this._valueFactory = _valueFactory;
             this._trapExceptions = _trapExceptions;
@@ -48,7 +50,7 @@
                     if (!_._isValueCreated && (c = _._valueFactory)) {
                         _._isValueCreated = null;
                         if (!this._allowReset)
-                            this._valueFactory = null;
+                            this._valueFactory = NULL;
                         var v = c();
                         _._value = v;
                         _._error = void 0;
@@ -74,9 +76,9 @@
             configurable: true
         });
         ResolverBase.prototype._onDispose = function () {
-            this._valueFactory = null;
-            this._value = null;
-            this._isValueCreated = null;
+            this._valueFactory = NULL;
+            this._value = NULL;
+            this._isValueCreated = NULL;
         };
         ResolverBase.prototype.tryReset = function () {
             var _ = this;
@@ -84,7 +86,7 @@
                 return false;
             else {
                 _._isValueCreated = false;
-                _._value = null;
+                _._value = NULL;
                 _._error = void 0;
                 return true;
             }

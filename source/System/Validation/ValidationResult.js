@@ -15,7 +15,6 @@
     var ValidationResult = (function () {
         function ValidationResult(isValid, message, data) {
             if (isValid === void 0) { isValid = false; }
-            if (message === void 0) { message = null; }
             if (data === void 0) { data = null; }
             this.isValid = isValid;
             this.message = message;

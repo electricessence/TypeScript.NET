@@ -40,7 +40,8 @@
         });
         Object.defineProperty(LinkedNodeList.prototype, "count", {
             get: function () {
-                var next = this._first, i = 0;
+                var next = this._first;
+                var i = 0;
                 while (next) {
                     i++;
                     next = next.next;
@@ -51,7 +52,8 @@
             configurable: true
         });
         LinkedNodeList.prototype.forEach = function (action) {
-            var current = null, next = this.first, index = 0;
+            var current = null, next = this.first;
+            var index = 0;
             do {
                 current = next;
                 next = current && current.next;
@@ -101,11 +103,12 @@
         LinkedNodeList.prototype.getNodeAt = function (index) {
             if (index < 0)
                 return null;
-            var next = this._first, i = 0;
+            var next = this._first;
+            var i = 0;
             while (next && i++ < index) {
                 next = next.next;
             }
-            return next;
+            return next || null;
         };
         LinkedNodeList.prototype.find = function (condition) {
             var node = null;
@@ -131,16 +134,17 @@
             return -1;
         };
         LinkedNodeList.prototype.removeFirst = function () {
-            return this.removeNode(this._first);
+            return !!this._first && this.removeNode(this._first);
         };
         LinkedNodeList.prototype.removeLast = function () {
-            return this.removeNode(this._last);
+            return !!this._last && this.removeNode(this._last);
         };
         LinkedNodeList.prototype.removeNode = function (node) {
             if (node == null)
                 throw new ArgumentNullException_1.ArgumentNullException('node');
             var _ = this;
-            var prev = node.previous, next = node.next, a = false, b = false;
+            var prev = node.previous || null, next = node.next || null;
+            var a = false, b = false;
             if (prev)
                 prev.next = next;
             else if (_._first == node)
@@ -169,6 +173,8 @@
         };
         LinkedNodeList.prototype.addNodeBefore = function (node, before) {
             assertValidDetached(node);
+            if (before === null)
+                throw new ArgumentNullException_1.ArgumentNullException("before");
             var _ = this;
             if (!before) {
                 before = _._first;
@@ -190,6 +196,8 @@
         };
         LinkedNodeList.prototype.addNodeAfter = function (node, after) {
             assertValidDetached(node);
+            if (after === null)
+                throw new ArgumentNullException_1.ArgumentNullException("after");
             var _ = this;
             if (!after) {
                 after = _._last;

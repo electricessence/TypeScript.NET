@@ -14,14 +14,21 @@ const valid = new ValidationResult(true);
 export default
 class ValidationResult implements IValidationResult, IEquatable<IValidationResult>
 {
+	readonly isValid:boolean;
+	readonly message?:string;
+	readonly data:any;
+
 	/**
 	 * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
 	 */
 	constructor(
-		public isValid:boolean = false,
-		public message:string = null,
-		public data:any = null)
+		isValid:boolean = false,
+		message?:string,
+		data:any = null)
 	{
+		this.isValid = isValid;
+		this.message = message;
+		this.data = data;
 
 		// Readonly...
 		Object.freeze(this);

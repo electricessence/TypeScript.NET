@@ -44,16 +44,15 @@
         }
     }
     function encodeValue(value) {
-        var v = null;
         if (isUriComponentFormattable(value)) {
-            v = value.toUriComponent();
+            var v = value.toUriComponent();
             if (v && v.indexOf(ENTRY_SEPARATOR) != 1)
                 throw '.toUriComponent() did not encode the value.';
+            return v;
         }
         else {
-            v = encodeURIComponent(Serialization.toString(v));
+            return encodeURIComponent(Serialization.toString(value));
         }
-        return v;
     }
     exports.encodeValue = encodeValue;
     function isUriComponentFormattable(instance) {

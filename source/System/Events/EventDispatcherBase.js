@@ -65,7 +65,7 @@
                 return false;
             var event;
             if (typeof e == "string") {
-                event = Event && Object.create(Event) || {};
+                event = (Event && Object.create(Event) || {});
                 if (!params)
                     params = {};
                 if (params['cancellable'])
@@ -79,7 +79,10 @@
             var entries = l.filter(function (e) { return e.type == type; });
             if (!entries.length)
                 return false;
-            entries.sort(function (a, b) { return b.params.priority - a.params.priority; });
+            entries.sort(function (a, b) {
+                return (b.params ? b.params.priority : 0)
+                    - (a.params ? a.params.priority : 0);
+            });
             entries.forEach(function (entry) {
                 var newEvent = Object.create(Event);
                 shallowCopy_1.shallowCopy(event, newEvent);

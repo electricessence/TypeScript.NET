@@ -35,6 +35,7 @@
     var __extends = extends_1.default;
     var INVALID_DEFAULT = {};
     var VOID0 = void 0;
+    var NULL = null;
     var BREAK = function (element) { return 0; };
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
@@ -84,6 +85,7 @@
         InfiniteEnumerable.prototype.doAction = function (action, initializer, isEndless) {
             if (isEndless === void 0) { isEndless = this.isEndless; }
             var _ = this;
+            var isE = isEndless || undefined;
             var disposed = !_.throwIfDisposed();
             return new Enumerable(function () {
                 var enumerator;
@@ -106,10 +108,10 @@
                     return false;
                 }, function () {
                     dispose_1.dispose(enumerator);
-                }, isEndless);
+                }, isE);
             }, function () {
                 disposed = true;
-            }, isEndless);
+            }, isE);
         };
         InfiniteEnumerable.prototype.force = function () {
             this.throwIfDisposed();
@@ -146,7 +148,6 @@
             return v;
         };
         InfiniteEnumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
-            if (defaultValue === void 0) { defaultValue = null; }
             var _ = this;
             _.throwIfDisposed();
             Integer_1.Integer.assertZeroOrGreater(index, 'index');
@@ -168,7 +169,6 @@
             return v;
         };
         InfiniteEnumerable.prototype.firstOrDefault = function (defaultValue) {
-            if (defaultValue === void 0) { defaultValue = null; }
             var _ = this;
             _.throwIfDisposed();
             return dispose_1.using(this.getEnumerator(), function (e) { return e.moveNext() ? e.current : defaultValue; });
@@ -187,7 +187,6 @@
             });
         };
         InfiniteEnumerable.prototype.singleOrDefault = function (defaultValue) {
-            if (defaultValue === void 0) { defaultValue = null; }
             var _ = this;
             _.throwIfDisposed();
             return dispose_1.using(this.getEnumerator(), function (e) {
@@ -210,7 +209,7 @@
         InfiniteEnumerable.prototype.traverseBreadthFirst = function (childrenSelector, resultSelector) {
             if (resultSelector === void 0) { resultSelector = Functions.Identity; }
             var _ = this;
-            var isEndless = _._isEndless || null;
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 var nestLevel = 0;
@@ -251,7 +250,7 @@
         InfiniteEnumerable.prototype.traverseDepthFirst = function (childrenSelector, resultSelector) {
             if (resultSelector === void 0) { resultSelector = Functions.Identity; }
             var _ = this;
-            var isEndless = _._isEndless || null;
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumeratorStack = [];
                 var enumerator;
@@ -286,7 +285,7 @@
         };
         InfiniteEnumerable.prototype.flatten = function () {
             var _ = this;
-            var isEndless = _._isEndless || null;
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 var middleEnumerator = null;
@@ -326,6 +325,7 @@
         };
         InfiniteEnumerable.prototype.pairwise = function (selector) {
             var _ = this;
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -337,8 +337,8 @@
                         && yielder.yieldReturn(selector(prev, enumerator.current));
                 }, function () {
                     dispose_1.dispose(enumerator);
-                }, _._isEndless);
-            }, null, _._isEndless);
+                }, isEndless);
+            }, null, isEndless);
         };
         InfiniteEnumerable.prototype.scan = function (func, seed) {
             var _ = this;
@@ -355,8 +355,8 @@
                         isFirst = false;
                         return isUseSeed
                             ? yielder.yieldReturn(value = seed)
-                            : enumerator.moveNext() && yielder.yieldReturn(value
-                                = enumerator.current);
+                            : enumerator.moveNext()
+                                && yielder.yieldReturn(value = enumerator.current);
                     }
                     return (enumerator.moveNext())
                         ? yielder.yieldReturn(value = func(value, enumerator.current))
@@ -390,7 +390,7 @@
         };
         InfiniteEnumerable.prototype._selectMany = function (collectionSelector, resultSelector) {
             var _ = this;
-            var isEndless = _._isEndless || null;
+            var isEndless = _._isEndless;
             if (!resultSelector)
                 resultSelector = function (a, b) { return b; };
             return new Enumerable(function () {
@@ -399,7 +399,7 @@
                 var index = 0;
                 return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
-                    middleEnumerator = undefined;
+                    middleEnumerator = VOID0;
                     index = 0;
                 }, function (yielder) {
                     if (middleEnumerator === VOID0 && !enumerator.moveNext())
@@ -419,7 +419,7 @@
                     return false;
                 }, function () {
                     dispose_1.dispose(enumerator, middleEnumerator);
-                    enumerator = null;
+                    enumerator = NULL;
                     middleEnumerator = null;
                 }, isEndless);
             }, null, isEndless);
@@ -430,6 +430,7 @@
         InfiniteEnumerable.prototype._choose = function (selector) {
             var _ = this;
             var disposed = !_.throwIfDisposed();
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 var index = 0;
@@ -447,10 +448,10 @@
                     return false;
                 }, function () {
                     dispose_1.dispose(enumerator);
-                }, _._isEndless);
+                }, isEndless);
             }, function () {
                 disposed = true;
-            }, _._isEndless);
+            }, isEndless);
         };
         InfiniteEnumerable.prototype.choose = function (selector) {
             if (selector === void 0) { selector = Functions.Identity; }
@@ -469,8 +470,9 @@
                 }, function (yielder) {
                     throwIfDisposed(disposed);
                     while (enumerator.moveNext()) {
-                        if (predicate(enumerator.current, index++))
-                            return yielder.yieldReturn(enumerator.current);
+                        var v = enumerator.current;
+                        if (predicate(v, index++))
+                            return yielder.yieldReturn(v);
                     }
                     return false;
                 }, function () {
@@ -506,6 +508,7 @@
         InfiniteEnumerable.prototype.except = function (second, compareSelector) {
             var _ = this;
             var disposed = !_.throwIfDisposed();
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 var keys;
@@ -528,18 +531,19 @@
                 }, function () {
                     dispose_1.dispose(enumerator);
                     keys.clear();
-                }, _._isEndless);
+                }, isEndless);
             }, function () {
                 disposed = true;
-            }, _._isEndless);
+            }, isEndless);
         };
         InfiniteEnumerable.prototype.distinct = function (compareSelector) {
-            return this.except(null, compareSelector);
+            return this.except(NULL, compareSelector);
         };
         InfiniteEnumerable.prototype.distinctUntilChanged = function (compareSelector) {
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
             var _ = this;
             var disposed = !_.throwIfDisposed();
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 var compareKey;
@@ -563,15 +567,15 @@
                     return false;
                 }, function () {
                     dispose_1.dispose(enumerator);
-                }, _._isEndless);
+                }, isEndless);
             }, function () {
                 disposed = true;
-            }, _._isEndless);
+            }, isEndless);
         };
         InfiniteEnumerable.prototype.defaultIfEmpty = function (defaultValue) {
-            if (defaultValue === void 0) { defaultValue = null; }
             var _ = this;
             var disposed = !_.throwIfDisposed();
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 var isFirst;
@@ -592,8 +596,8 @@
                     return false;
                 }, function () {
                     dispose_1.dispose(enumerator);
-                }, _._isEndless);
-            }, null, _._isEndless);
+                }, isEndless);
+            }, null, isEndless);
         };
         InfiniteEnumerable.prototype.zip = function (second, resultSelector) {
             var _ = this;
@@ -627,7 +631,7 @@
                     secondTemp = new Queue_1.Queue(second);
                     index = 0;
                     firstEnumerator = _.getEnumerator();
-                    secondEnumerator = null;
+                    secondEnumerator = NULL;
                 }, function (yielder) {
                     if (firstEnumerator.moveNext()) {
                         while (true) {
@@ -643,7 +647,7 @@
                             if (secondEnumerator.moveNext())
                                 return yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++));
                             secondEnumerator.dispose();
-                            secondEnumerator = null;
+                            secondEnumerator = NULL;
                         }
                     }
                     return yielder.yieldBreak();
@@ -658,7 +662,7 @@
             return new Enumerable(function () {
                 var outerEnumerator;
                 var lookup;
-                var innerElements = null;
+                var innerElements;
                 var innerCount = 0;
                 return new EnumeratorBase_1.EnumeratorBase(function () {
                     outerEnumerator = _.getEnumerator();
@@ -666,11 +670,11 @@
                         .toLookup(innerKeySelector, Functions.Identity, compareSelector);
                 }, function (yielder) {
                     while (true) {
-                        if (innerElements != null) {
+                        if (innerElements) {
                             var innerElement = innerElements[innerCount++];
                             if (innerElement !== VOID0)
                                 return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
-                            innerElement = null;
+                            innerElements = null;
                             innerCount = 0;
                         }
                         if (outerEnumerator.moveNext()) {
@@ -683,6 +687,9 @@
                     }
                 }, function () {
                     dispose_1.dispose(outerEnumerator);
+                    innerElements = null;
+                    outerEnumerator = NULL;
+                    lookup = NULL;
                 });
             });
         };
@@ -691,7 +698,7 @@
             var _ = this;
             return new Enumerable(function () {
                 var enumerator;
-                var lookup = null;
+                var lookup;
                 return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     lookup = Enumerable.from(inner)
@@ -701,12 +708,14 @@
                         && yielder.yieldReturn(resultSelector(enumerator.current, lookup.get(outerKeySelector(enumerator.current))));
                 }, function () {
                     dispose_1.dispose(enumerator);
+                    enumerator = NULL;
+                    lookup = NULL;
                 });
             });
         };
         InfiniteEnumerable.prototype.merge = function (enumerables) {
             var _ = this;
-            var isEndless = _._isEndless || null;
+            var isEndless = _._isEndless;
             if (!enumerables || enumerables.length == 0)
                 return _;
             return new Enumerable(function () {
@@ -724,7 +733,7 @@
                             return yielder.yieldReturn(enumerator.current);
                         if (enumerator) {
                             enumerator.dispose();
-                            enumerator = null;
+                            enumerator = NULL;
                             continue;
                         }
                         return yielder.yieldBreak();
@@ -744,7 +753,7 @@
         InfiniteEnumerable.prototype.union = function (second, compareSelector) {
             if (compareSelector === void 0) { compareSelector = Functions.Identity; }
             var _ = this;
-            var isEndless = _._isEndless || null;
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
@@ -781,8 +790,8 @@
             Integer_1.Integer.assertZeroOrGreater(index, 'index');
             var n = index;
             var _ = this;
-            var isEndless = _._isEndless || null;
             _.throwIfDisposed();
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var firstEnumerator;
                 var secondEnumerator;
@@ -813,6 +822,7 @@
         };
         InfiniteEnumerable.prototype.alternateMultiple = function (sequence) {
             var _ = this;
+            var isEndless = _._isEndless;
             return new Enumerable(function () {
                 var buffer, mode, enumerator, alternateEnumerator;
                 return new EnumeratorBase_1.EnumeratorBase(function () {
@@ -845,8 +855,8 @@
                     return yielder.yieldReturn(latest);
                 }, function () {
                     dispose_1.dispose(enumerator, alternateEnumerator);
-                }, _._isEndless);
-            }, null, _._isEndless);
+                }, isEndless);
+            }, null, isEndless);
         };
         InfiniteEnumerable.prototype.alternateSingle = function (value) {
             return this.alternateMultiple(Enumerable.make(value));
@@ -913,6 +923,7 @@
                 throw new Error("Invalid buffer size.");
             Integer_1.Integer.assert(size, "size");
             var _ = this;
+            var isEndless = _._isEndless;
             var len;
             return new Enumerable(function () {
                 var enumerator;
@@ -925,11 +936,11 @@
                         array[len++] = enumerator.current;
                     }
                     array.length = len;
-                    return len && yielder.yieldReturn(array);
+                    return !!len && yielder.yieldReturn(array);
                 }, function () {
                     dispose_1.dispose(enumerator);
-                }, _._isEndless);
-            }, null, _._isEndless);
+                }, isEndless);
+            }, null, isEndless);
         };
         InfiniteEnumerable.prototype.share = function () {
             var _ = this;
@@ -947,7 +958,6 @@
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(enumeratorFactory, finalizer, isEndless) {
-            if (isEndless === void 0) { isEndless = null; }
             _super.call(this, enumeratorFactory, finalizer);
             this._isEndless = isEndless;
         }
@@ -958,7 +968,6 @@
             return e;
         };
         Enumerable.fromAny = function (source, defaultEnumerable) {
-            if (defaultEnumerable === void 0) { defaultEnumerable = null; }
             if (Types_1.Type.isObject(source) || Types_1.Type.isString(source)) {
                 if (source instanceof Enumerable)
                     return source;
@@ -1203,14 +1212,16 @@
             return Enumerator_1.map(enumerable, selector);
         };
         Enumerable.max = function (values) {
-            return values
+            var v = values
                 .takeUntil(function (v) { return v == +Infinity; }, true)
                 .aggregate(Functions.Greater);
+            return v === VOID0 ? NaN : v;
         };
         Enumerable.min = function (values) {
-            return values
+            var v = values
                 .takeUntil(function (v) { return v == -Infinity; }, true)
                 .aggregate(Functions.Lesser);
+            return v === VOID0 ? NaN : v;
         };
         Enumerable.weave = function (enumerables) {
             if (!enumerables)
@@ -1224,11 +1235,11 @@
                     queue = new Queue_1.Queue();
                     mainEnumerator = Enumerator_1.from(enumerables);
                 }, function (yielder) {
-                    var e;
+                    var e = null;
                     if (mainEnumerator) {
                         while (!e && mainEnumerator.moveNext()) {
                             var c = mainEnumerator.current;
-                            e = nextEnumerator(queue, c && Enumerator_1.from(c));
+                            e = nextEnumerator(queue, c ? Enumerator_1.from(c) : NULL);
                         }
                         if (!e)
                             mainEnumerator = null;
@@ -1243,7 +1254,7 @@
                     dispose_1.dispose.these(queue.dump());
                     dispose_1.dispose(mainEnumerator, queue);
                     mainEnumerator = null;
-                    queue = null;
+                    queue = NULL;
                 });
             });
         };
@@ -1415,7 +1426,7 @@
                     throwIfDisposed(disposed);
                     buffer = _.toArray();
                     index = buffer.length;
-                }, function (yielder) { return index && yielder.yieldReturn(buffer[--index]); }, function () {
+                }, function (yielder) { return !!index && yielder.yieldReturn(buffer[--index]); }, function () {
                     buffer.length = 0;
                 });
             }, function () {
@@ -1440,7 +1451,7 @@
                     var selectedIndex = Integer_1.Integer.random(len);
                     var selectedValue = buffer[selectedIndex];
                     buffer[selectedIndex] = buffer[--len];
-                    buffer[len] = null;
+                    buffer[len] = NULL;
                     if (len % 32 == 0)
                         buffer.length = len;
                     return yielder.yieldReturn(selectedValue);
@@ -1535,6 +1546,7 @@
         };
         Enumerable.prototype.intersect = function (second, compareSelector) {
             var _ = this;
+            var isEndless = _.isEndless;
             return new Enumerable(function () {
                 var enumerator;
                 var keys;
@@ -1557,8 +1569,8 @@
                     return yielder.yieldBreak();
                 }, function () {
                     dispose_1.dispose(enumerator, keys, outs);
-                }, _._isEndless);
-            }, null, _._isEndless);
+                }, isEndless);
+            }, null, isEndless);
         };
         Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
@@ -1614,9 +1626,10 @@
                 return new EnumeratorBase_1.EnumeratorBase(function () {
                     enumerator = _.getEnumerator();
                     if (enumerator.moveNext()) {
-                        key = keySelector(enumerator.current);
+                        var v = enumerator.current;
+                        key = keySelector(v);
                         compareKey = compareSelector(key);
-                        group = [elementSelector(enumerator.current)];
+                        group = [elementSelector(v)];
                         len = 1;
                     }
                     else
@@ -1743,7 +1756,7 @@
         Enumerable.prototype.last = function () {
             var _ = this;
             _.throwIfDisposed();
-            var value = undefined;
+            var value = VOID0;
             var found = false;
             _.forEach(function (x) {
                 found = true;
@@ -1754,10 +1767,9 @@
             return value;
         };
         Enumerable.prototype.lastOrDefault = function (defaultValue) {
-            if (defaultValue === void 0) { defaultValue = null; }
             var _ = this;
             _.throwIfDisposed();
-            var value = undefined;
+            var value = VOID0;
             var found = false;
             _.forEach(function (x) {
                 found = true;
@@ -1793,9 +1805,9 @@
                 disposed = true;
                 if (cache)
                     cache.length = 0;
-                cache = null;
+                cache = NULL;
                 dispose_1.dispose(enumerator);
-                enumerator = null;
+                enumerator = NULL;
             });
         };
         return Enumerable;
@@ -1825,7 +1837,7 @@
         }
         ArrayEnumerable.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
-            this._source = null;
+            this._source = NULL;
         };
         Object.defineProperty(ArrayEnumerable.prototype, "source", {
             get: function () {
@@ -1852,7 +1864,7 @@
             var _ = this;
             _.throwIfDisposed();
             var source = _._source, len = source.length;
-            return len && (!predicate || _super.prototype.any.call(this, predicate));
+            return !!len && (!predicate || _super.prototype.any.call(this, predicate));
         };
         ArrayEnumerable.prototype.count = function (predicate) {
             var _ = this;
@@ -1861,7 +1873,6 @@
             return len && (predicate ? _super.prototype.count.call(this, predicate) : len);
         };
         ArrayEnumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
-            if (defaultValue === void 0) { defaultValue = null; }
             var _ = this;
             _.throwIfDisposed();
             Integer_1.Integer.assertZeroOrGreater(index, 'index');
@@ -1879,7 +1890,6 @@
                 : _super.prototype.last.call(this);
         };
         ArrayEnumerable.prototype.lastOrDefault = function (defaultValue) {
-            if (defaultValue === void 0) { defaultValue = null; }
             var _ = this;
             _.throwIfDisposed();
             var source = _._source, len = source.length;
@@ -1988,13 +1998,13 @@
         __extends(OrderedEnumerable, _super);
         function OrderedEnumerable(source, keySelector, order, parent, comparer) {
             if (comparer === void 0) { comparer = Values.compare; }
-            _super.call(this, null);
+            _super.call(this, NULL);
             this.source = source;
             this.keySelector = keySelector;
             this.order = order;
             this.parent = parent;
             this.comparer = comparer;
-            Enumerator_1.throwIfEndless(source && source.isEndless);
+            Enumerator_1.throwIfEndless(!!source && !!source.isEndless);
         }
         OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {
             return new OrderedEnumerable(this.source, keySelector, order, this);
@@ -2028,18 +2038,19 @@
             }, function () {
                 if (buffer)
                     buffer.length = 0;
-                buffer = null;
+                buffer = NULL;
                 if (indexes)
                     indexes.length = 0;
-                indexes = null;
+                indexes = NULL;
             }, false);
         };
         OrderedEnumerable.prototype._onDispose = function () {
+            var _ = this;
             _super.prototype._onDispose.call(this);
-            this.source = null;
-            this.keySelector = null;
-            this.order = null;
-            this.parent = null;
+            _.source = NULL;
+            _.keySelector = NULL;
+            _.order = NULL;
+            _.parent = NULL;
         };
         return OrderedEnumerable;
     }(FiniteEnumerable));
@@ -2050,7 +2061,7 @@
             }
             else {
                 dispose_1.dispose(e);
-                e = null;
+                return null;
             }
         }
         return e;

@@ -20,6 +20,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+const VOID0:undefined = void 0;
 export class List<T>
 extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 {
@@ -30,7 +31,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		source?:IEnumerableOrArray<T>,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		super(null, equalityComparer);
+		super(VOID0, equalityComparer);
 		const _ = this;
 		if(Array.isArray(source))
 		{
@@ -68,7 +69,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		return len;
 	}
 
-	protected _importEntries(entries:IEnumerableOrArray<T>):number
+	protected _importEntries(entries:IEnumerableOrArray<T>|null|undefined):number
 	{
 		if(Type.isArrayLike(entries))
 		{

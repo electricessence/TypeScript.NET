@@ -24,7 +24,7 @@
         ? (self.URL ? self.URL : self.webkitURL)
         : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;
     var defaults = {
-        evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : null,
+        evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : VOID0,
         maxConcurrency: Environment_1.isNodeJS
             ? require('os').cpus().length
             : (navigator.hardwareConcurrency || 4),
@@ -191,9 +191,10 @@
         Parallel.prototype.startNew = function (data, task, env) {
             var _ = this;
             var worker = _._spawnWorker(task, extend(_.options.env, env || {}));
-            if (worker)
+            if (worker) {
                 return new WorkerPromise(worker, data)
                     .finallyThis(function () { return workers.recycle(worker); });
+            }
             if (_.options.allowSynchronous)
                 return new Promise_1.Promise(function (resolve, reject) {
                     try {
@@ -266,7 +267,7 @@
                 this.options.maxConcurrency = maxConcurrency = MAX_WORKERS;
                 console.warn("More than " + MAX_WORKERS + " workers can reach worker limits and cause unexpected results.  maxConcurrency reduced to " + MAX_WORKERS + ".");
             }
-            return maxConcurrency;
+            return (maxConcurrency || maxConcurrency === 0) ? maxConcurrency : MAX_WORKERS;
         };
         Parallel.prototype.map = function (data, task, env) {
             var _this = this;

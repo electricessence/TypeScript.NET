@@ -19,9 +19,7 @@
     var ObjectDisposedException = (function (_super) {
         __extends(ObjectDisposedException, _super);
         function ObjectDisposedException(objectName, message, innerException) {
-            if (message === void 0) { message = null; }
-            if (innerException === void 0) { innerException = null; }
-            _super.call(this, message, innerException, function (_) {
+            _super.call(this, message || '', innerException, function (_) {
                 _.objectName = objectName;
             });
         }

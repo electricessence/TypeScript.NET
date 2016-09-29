@@ -33,7 +33,14 @@ import {ArgumentNullException} from "../System/Exceptions/ArgumentNullException"
 import {ArgumentOutOfRangeException} from "../System/Exceptions/ArgumentOutOfRangeException";
 import {IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
 import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
-import {Action, Predicate, Selector, EqualityComparison, Comparison} from "../System/FunctionTypes";
+import {
+	Action,
+	Predicate,
+	Selector,
+	EqualityComparison,
+	Comparison,
+	Closure
+} from "../System/FunctionTypes";
 import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";
 import {IArray} from "../System/Collections/Array/IArray";
 import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
@@ -58,7 +65,8 @@ const __extends = __extendsImport;
 // #region Local Constants.
 
 const INVALID_DEFAULT:any = {}; // create a private unique instance for referencing.
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
+const NULL:any = null;
 const BREAK:(e:any)=>EnumerableAction = element => EnumerableAction.Break;
 
 // Leave internal to avoid accidental overwriting.
@@ -104,14 +112,14 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 {
 	constructor(
 		protected _enumeratorFactory:() => IEnumerator<T>,
-		finalizer?:() => void)
+		finalizer?:Closure|null)
 	{
 		super(finalizer);
 		this._isEndless = true;
 	}
 
-	protected _isEndless:boolean;
-	get isEndless():boolean
+	protected _isEndless:boolean|undefined;
+	get isEndless():boolean|undefined
 	{
 		return this._isEndless;
 	}
@@ -131,7 +139,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	protected _onDispose():void
 	{
 		super._onDispose(); // Just in case.
-		this._enumeratorFactory = null;
+		(<any>this)._enumeratorFactory = null;
 	}
 
 	// #endregion
@@ -144,27 +152,31 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <any> new InfiniteEnumerable<T>(() => _.getEnumerator());
 	}
 
-
 	/**
 	 * Similar to forEach, but executes an action for each time a value is enumerated.
 	 * If the action explicitly returns false or 0 (EnumerationAction.Break), the enumeration will complete.
 	 * If it returns a 2 (EnumerationAction.Skip) it will move on to the next item.
 	 * This also automatically handles disposing the enumerator.
+	 * @param action
+	 * @param initializer
+	 * @param isEndless Special case where isEndless can be null in order to negate inheritance.
+	 * @returns {any}
 	 */
 	doAction(
 		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
-		initializer?:()=>void,
-		isEndless:boolean = this.isEndless):this
+		initializer?:Closure|null,
+		isEndless:boolean|null|undefined = this.isEndless):this
 	{
 
 		const _ = this;
+		const isE:boolean|undefined = isEndless || undefined; // In case it's null.
 		var disposed = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var index:number = 0;
+				let enumerator:IEnumerator<T>;
+				let index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -183,7 +195,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 						while(enumerator.moveNext())
 						{
-							var actionResult = <any>action(enumerator.current, index++);
+							let actionResult = <any>action(<T>enumerator.current, index++);
 
 							if(actionResult===false || actionResult===EnumerableAction.Break)
 								return yielder.yieldBreak();
@@ -201,7 +213,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						dispose(enumerator);
 					},
 
-					isEndless
+					isE
 				);
 
 			},
@@ -212,7 +224,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 				disposed = true;
 			},
 
-			isEndless
+			isE
 		);
 	}
 
@@ -269,10 +281,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	{
 		var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
 		if(v===INVALID_DEFAULT) throw new ArgumentOutOfRangeException('index', index, "is greater than or equal to the number of elements in source");
-		return v;
+		return <T>v;
 	}
 
-	elementAtOrDefault(index:number, defaultValue:T = null):T
+	elementAtOrDefault(index:number, defaultValue?:T):T|undefined
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -284,7 +296,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			this.getEnumerator(),
 			e=>
 			{
-				var i = 0;
+				let i = 0;
 				while(e.moveNext())
 				{
 					if(i==n) return e.current;
@@ -308,10 +320,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	{
 		var v = this.firstOrDefault(INVALID_DEFAULT);
 		if(v===INVALID_DEFAULT) throw new Error("first:The sequence is empty.");
-		return v;
+		return <T>v;
 	}
 
-	firstOrDefault(defaultValue:T = null):T
+	firstOrDefault(defaultValue?:T):T|undefined
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -328,13 +340,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		return using(
+		return <T>using(
 			this.getEnumerator(),
 			e=>
 			{
 				if(e.moveNext())
 				{
-					var value = e.current;
+					let value = e.current;
 					if(!e.moveNext()) return value;
 					throw new Error("single:sequence contains more than one element.");
 				}
@@ -343,7 +355,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
-	singleOrDefault(defaultValue:T = null):T
+	singleOrDefault(defaultValue?:T):T|undefined
 	{
 
 		const _ = this;
@@ -355,7 +367,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			{
 				if(e.moveNext())
 				{
-					var value = e.current;
+					let value = e.current;
 					if(!e.moveNext()) return value;
 				}
 				return defaultValue;
@@ -405,15 +417,15 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			nestLevel?:number) => any = Functions.Identity):Enumerable<any>
 	{
 		const _ = this;
-		var isEndless = _._isEndless || null; // Is endless is not affirmative if false.
+		const isEndless = _._isEndless; // Is endless is not affirmative if false.
 
 
 		return new Enumerable<any>(
 			() =>
 			{
-				var enumerator:IEnumerator<any>;
-				var nestLevel:number = 0;
-				var buffer:any[], len:number;
+				let enumerator:IEnumerator<any>;
+				let nestLevel:number = 0;
+				let buffer:any[], len:number;
 
 				return new EnumeratorBase<any>(
 					() =>
@@ -437,7 +449,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 							if(!len)
 								return yielder.yieldBreak();
 
-							var next = Enumerable
+							let next = Enumerable
 								.from(buffer)
 								.selectMany(childrenSelector);
 
@@ -493,15 +505,15 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			nestLevel?:number) => any = Functions.Identity):Enumerable<any>
 	{
 		const _ = this;
-		var isEndless = _._isEndless || null; // Is endless is not affirmative if false.
+		const isEndless = _._isEndless; // Is endless is not affirmative if false.
 
 		return new Enumerable<any>(
 			() =>
 			{
 				// Dev Note: May want to consider using an actual stack and not an array.
-				var enumeratorStack:IEnumerator<any>[] = [];
-				var enumerator:IEnumerator<any>;
-				var len:number;  // Avoid using push/pop since they query .length every time and can be slower.
+				let enumeratorStack:IEnumerator<any>[] = [];
+				let enumerator:IEnumerator<any>;
+				let len:number;  // Avoid using push/pop since they query .length every time and can be slower.
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -516,9 +528,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						{
 							if(enumerator.moveNext())
 							{
-								let value = resultSelector(enumerator.current, len);
+								let value = resultSelector(<TNode>enumerator.current, len);
 								enumeratorStack[len++] = enumerator;
-								let e = Enumerable.fromAny<any>(childrenSelector(enumerator.current));
+								let e = Enumerable.fromAny(childrenSelector(<T|TNode>enumerator.current));
 								enumerator = e ? e.getEnumerator() : EmptyEnumerator;
 								return yielder.yieldReturn(value);
 							}
@@ -555,13 +567,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	flatten():Enumerable<any>
 	{
 		const _ = this;
-		var isEndless = _._isEndless || null; // Is endless is not affirmative if false.;
+		const isEndless = _._isEndless; // Is endless is not affirmative if false.;
 
 		return new Enumerable<any>(
 			() =>
 			{
-				var enumerator:IEnumerator<any>;
-				var middleEnumerator:IEnumerator<any> = null;
+				let enumerator:IEnumerator<any>;
+				let middleEnumerator:IEnumerator<any>|null = null;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -588,10 +600,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 							if(enumerator.moveNext())
 							{
-								var c = enumerator.current;
+								let c = enumerator.current;
 								// Because strings are enumerable, we can get stuck in an infinite loop.
 								// Treat strings as primitives here.
-								var e = !Type.isString(c) && Enumerable.fromAny(c);
+								let e = !Type.isString(c) && Enumerable.fromAny(c);
 								if(e)
 								{
 									middleEnumerator = e
@@ -627,11 +639,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):Enumerable<TSelect>
 	{
 		const _ = this;
+		const isEndless = _._isEndless;
 
 		return new Enumerable<TSelect>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
+				let enumerator:IEnumerator<T>;
 
 				return new EnumeratorBase<TSelect>(
 					() =>
@@ -642,9 +655,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					(yielder)=>
 					{
-						var prev = enumerator.current;
+						let prev = <T>enumerator.current;
 						return enumerator.moveNext()
-							&& yielder.yieldReturn(selector(prev, enumerator.current));
+							&& yielder.yieldReturn(selector(prev, <T>enumerator.current));
 					},
 
 					() =>
@@ -652,12 +665,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						dispose(enumerator);
 					},
 
-					_._isEndless
+					isEndless
 				);
 			},
 			null,
 
-			_._isEndless
+			isEndless
 		);
 	}
 
@@ -670,9 +683,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var value:T;
-				var isFirst:boolean;
+				let enumerator:IEnumerator<T>;
+				let value:T;
+				let isFirst:boolean;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -688,13 +701,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 							isFirst = false;
 							//noinspection JSUnusedAssignment
 							return isUseSeed
-								? yielder.yieldReturn(value = seed)
-								: enumerator.moveNext() && yielder.yieldReturn(value
-								= enumerator.current);
+								? yielder.yieldReturn(value = <T>seed)
+								: enumerator.moveNext()
+							&& yielder.yieldReturn(value = <T>enumerator.current);
 						}
 
 						return (enumerator.moveNext())
-							? yielder.yieldReturn(value = func(value, enumerator.current))
+							? yielder.yieldReturn(value = func(value, <T>enumerator.current))
 							: false;
 					},
 
@@ -722,8 +735,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return new Enumerable<TResult>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var index:number = 0;
+				let enumerator:IEnumerator<T>;
+				let index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -739,7 +752,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						throwIfDisposed(disposed);
 
 						return enumerator.moveNext()
-							? yielder.yieldReturn(selector(enumerator.current, index++))
+							? yielder.yieldReturn(selector(<T>enumerator.current, index++))
 							: yielder.yieldBreak();
 					},
 
@@ -773,22 +786,22 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		resultSelector?:(collection:T, element:TElement) => TResult):Enumerable<TResult>
 	{
 		const _ = this;
-		var isEndless = _._isEndless || null; // Do second enumeration, it will be indeterminate if false.
+		const isEndless = _._isEndless; // Do second enumeration, it will be indeterminate if false.
 		if(!resultSelector)
 			resultSelector = (a:T, b:any) => <TResult>b;
 
 		return new Enumerable<TResult>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var middleEnumerator:IEnumerator<any>;
-				var index:number = 0;
+				let enumerator:IEnumerator<T>;
+				let middleEnumerator:IEnumerator<any>|null|undefined;
+				let index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
 					{
 						enumerator = _.getEnumerator();
-						middleEnumerator = undefined;
+						middleEnumerator = VOID0;
 						index = 0;
 					},
 
@@ -806,7 +819,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 							// Initialize middle if there isn't one.
 							if(!middleEnumerator)
 							{
-								var middleSeq = collectionSelector(enumerator.current, index++);
+								let middleSeq = collectionSelector(<T>enumerator.current, index++);
 
 								// Collection is null?  Skip it...
 								if(!middleSeq)
@@ -817,8 +830,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 							if(middleEnumerator.moveNext())
 								return yielder.yieldReturn(
-									resultSelector(
-										enumerator.current, middleEnumerator.current
+									resultSelector!(
+										<T>enumerator.current, <TElement>middleEnumerator.current
 									)
 								);
 
@@ -836,7 +849,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 					() =>
 					{
 						dispose(enumerator, middleEnumerator);
-						enumerator = null;
+						enumerator = NULL;
 						middleEnumerator = null;
 					},
 
@@ -868,12 +881,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 		const _ = this;
 		var disposed = !_.throwIfDisposed();
+		const isEndless = _._isEndless;
 
 		return new Enumerable<TResult>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var index:number = 0;
+				let enumerator:IEnumerator<T>;
+				let index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -890,7 +904,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 						while(enumerator.moveNext())
 						{
-							var result = selector(enumerator.current, index++);
+							let result = selector(<T>enumerator.current, index++);
 							if(result!==null && result!==VOID0)
 								return yielder.yieldReturn(result);
 						}
@@ -903,7 +917,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						dispose(enumerator);
 					},
 
-					_._isEndless
+					isEndless
 				);
 			},
 
@@ -912,7 +926,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 				disposed = true;
 			},
 
-			_._isEndless
+			isEndless
 		);
 	}
 
@@ -935,8 +949,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var index:number = 0;
+				let enumerator:IEnumerator<T>;
+				let index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -953,8 +967,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 						while(enumerator.moveNext())
 						{
-							if(predicate(enumerator.current, index++))
-								return yielder.yieldReturn(enumerator.current);
+							let v = <T>enumerator.current;
+							if(predicate(v, index++))
+								return yielder.yieldReturn(v);
 						}
 						return false;
 					},
@@ -1011,12 +1026,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	{
 		const _ = this;
 		var disposed = !_.throwIfDisposed();
+		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var keys:Dictionary<T, boolean>;
+				let enumerator:IEnumerator<T>;
+				let keys:Dictionary<T, boolean>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1033,7 +1049,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						throwIfDisposed(disposed);
 						while(enumerator.moveNext())
 						{
-							var current = enumerator.current;
+							let current = <T>enumerator.current;
 							if(!keys.containsKey(current))
 							{
 								keys.addByKeyValue(current, true);
@@ -1049,7 +1065,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						keys.clear();
 					},
 
-					_._isEndless
+					isEndless
 				);
 			},
 
@@ -1058,13 +1074,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 				disposed = true;
 			},
 
-			_._isEndless
+			isEndless
 		);
 	}
 
 	distinct(compareSelector?:(value:T) => T):this
 	{
-		return this.except(null, compareSelector);
+		return this.except(NULL, compareSelector);
 	}
 
 	// [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
@@ -1073,13 +1089,14 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 		const _ = this;
 		var disposed = !_.throwIfDisposed();
+		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var compareKey:TCompare;
-				var initial:boolean = true;
+				let enumerator:IEnumerator<T>;
+				let compareKey:TCompare;
+				let initial:boolean = true;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1093,7 +1110,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						throwIfDisposed(disposed);
 						while(enumerator.moveNext())
 						{
-							var key = compareSelector(enumerator.current);
+							let key = compareSelector(<T>enumerator.current);
 
 							if(initial)
 							{
@@ -1115,7 +1132,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						dispose(enumerator);
 					},
 
-					_._isEndless
+					isEndless
 				);
 			},
 
@@ -1124,7 +1141,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 				disposed = true;
 			},
 
-			_._isEndless
+			isEndless
 		);
 	}
 
@@ -1134,16 +1151,17 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	 * @param defaultValue
 	 * @returns {Enumerable}
 	 */
-	defaultIfEmpty(defaultValue:T = null):this
+	defaultIfEmpty(defaultValue?:T):this
 	{
 		const _ = this;
 		var disposed:boolean = !_.throwIfDisposed();
+		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var isFirst:boolean;
+				let enumerator:IEnumerator<T>;
+				let isFirst:boolean;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1175,12 +1193,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						dispose(enumerator);
 					},
 
-					_._isEndless
+					isEndless
 				);
 			},
 			null,
 
-			_._isEndless
+			isEndless
 		);
 	}
 
@@ -1195,9 +1213,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return new Enumerable<TResult>(
 			() =>
 			{
-				var firstEnumerator:IEnumerator<T>;
-				var secondEnumerator:IEnumerator<TSecond>;
-				var index:number = 0;
+				let firstEnumerator:IEnumerator<T>;
+				let secondEnumerator:IEnumerator<TSecond>;
+				let index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -1209,7 +1227,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					(yielder)=> firstEnumerator.moveNext()
 					&& secondEnumerator.moveNext()
-					&& yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++)),
+					&& yielder.yieldReturn(resultSelector(<T>firstEnumerator.current, <TSecond>secondEnumerator.current, index++)),
 
 					() =>
 					{
@@ -1234,10 +1252,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return new Enumerable<TResult>(
 			() =>
 			{
-				var secondTemp:Queue<any>;
-				var firstEnumerator:IEnumerator<T>;
-				var secondEnumerator:IEnumerator<TSecond>;
-				var index:number = 0;
+				let secondTemp:Queue<any>;
+				let firstEnumerator:IEnumerator<T>;
+				let secondEnumerator:IEnumerator<TSecond>;
+				let index:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -1245,7 +1263,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						secondTemp = new Queue<any>(second);
 						index = 0;
 						firstEnumerator = _.getEnumerator();
-						secondEnumerator = null;
+						secondEnumerator = NULL;
 					},
 
 					(yielder)=>
@@ -1258,7 +1276,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 								{
 									if(secondTemp.count)
 									{
-										var next = secondTemp.dequeue();
+										let next = secondTemp.dequeue();
 										if(next) // In case by chance next is null, then try again.
 											secondEnumerator = enumeratorFrom<TSecond>(next);
 									}
@@ -1268,11 +1286,11 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 								if(secondEnumerator.moveNext())
 									return yielder.yieldReturn(
-										resultSelector(firstEnumerator.current, secondEnumerator.current, index++)
+										resultSelector(<T>firstEnumerator.current, <TSecond>secondEnumerator.current, index++)
 									);
 
 								secondEnumerator.dispose();
-								secondEnumerator = null;
+								secondEnumerator = NULL;
 							}
 						}
 
@@ -1303,10 +1321,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return new Enumerable<TResult>(
 			() =>
 			{
-				var outerEnumerator:IEnumerator<T>;
-				var lookup:ILookup<TKey,TInner>;
-				var innerElements:TInner[] = null;
-				var innerCount:number = 0;
+				let outerEnumerator:IEnumerator<T>;
+				let lookup:ILookup<TKey,TInner>;
+				let innerElements:TInner[]|null;
+				let innerCount:number = 0;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -1320,19 +1338,19 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 					{
 						while(true)
 						{
-							if(innerElements!=null)
+							if(innerElements)
 							{
-								var innerElement = innerElements[innerCount++];
+								let innerElement = innerElements[innerCount++];
 								if(innerElement!==VOID0)
-									return yielder.yieldReturn(resultSelector(outerEnumerator.current, innerElement));
+									return yielder.yieldReturn(resultSelector(<T>outerEnumerator.current, innerElement));
 
-								innerElement = null;
+								innerElements = null;
 								innerCount = 0;
 							}
 
 							if(outerEnumerator.moveNext())
 							{
-								var key = outerKeySelector(outerEnumerator.current);
+								let key = outerKeySelector(<T>outerEnumerator.current);
 								innerElements = lookup.get(key);
 							}
 							else
@@ -1345,6 +1363,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 					() =>
 					{
 						dispose(outerEnumerator);
+						innerElements = null;
+						outerEnumerator = NULL;
+						lookup = NULL;
 					}
 				);
 			}
@@ -1363,8 +1384,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return new Enumerable<TResult>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var lookup:ILookup<TKey, TInner> = null;
+				let enumerator:IEnumerator<T>;
+				let lookup:ILookup<TKey, TInner>;
 
 				return new EnumeratorBase<TResult>(
 					() =>
@@ -1378,14 +1399,16 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 					enumerator.moveNext()
 					&& yielder.yieldReturn(
 						resultSelector(
-							enumerator.current,
-							lookup.get(outerKeySelector(enumerator.current))
+							<T>enumerator.current,
+							lookup.get(outerKeySelector(<T>enumerator.current))
 						)
 					),
 
 					() =>
 					{
 						dispose(enumerator);
+						enumerator = NULL;
+						lookup = NULL;
 					}
 				);
 			}
@@ -1396,7 +1419,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	merge(enumerables:IArray<IEnumerableOrArray<T>>):this
 	{
 		const _ = this;
-		var isEndless = _._isEndless || null;
+		const isEndless = _._isEndless;
 
 		if(!enumerables || enumerables.length==0)
 			return _;
@@ -1404,8 +1427,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var queue:Queue<IEnumerableOrArray<T>>;
+				let enumerator:IEnumerator<T>;
+				let queue:Queue<IEnumerableOrArray<T>>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1431,7 +1454,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 							if(enumerator) // 3) Dispose and reset for next.
 							{
 								enumerator.dispose();
-								enumerator = null;
+								enumerator = NULL;
 								continue;
 							}
 
@@ -1463,13 +1486,14 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		compareSelector:Selector<T, TCompare> = Functions.Identity):this
 	{
 		const _ = this;
-		var isEndless = _._isEndless || null;
+		const isEndless = _._isEndless;
+
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var firstEnumerator:IEnumerator<T>;
-				var secondEnumerator:IEnumerator<T>;
-				var keys:Dictionary<T, any>;
+				let firstEnumerator:IEnumerator<T>;
+				let secondEnumerator:IEnumerator<T>;
+				let keys:Dictionary<T, any>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1480,12 +1504,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					(yielder)=>
 					{
-						var current:T;
+						let current:T;
 						if(secondEnumerator===VOID0)
 						{
 							while(firstEnumerator.moveNext())
 							{
-								current = firstEnumerator.current;
+								current = <T>firstEnumerator.current;
 								if(!keys.containsKey(current))
 								{
 									keys.addByKeyValue(current, null);
@@ -1496,7 +1520,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						}
 						while(secondEnumerator.moveNext())
 						{
-							current = secondEnumerator.current;
+							current = <T>secondEnumerator.current;
 							if(!keys.containsKey(current))
 							{
 								keys.addByKeyValue(current, null);
@@ -1526,18 +1550,18 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		var n:number = index;
 
 		const _ = this;
-		var isEndless = _._isEndless || null;
 		_.throwIfDisposed();
+		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
 			() =>
 			{
 
-				var firstEnumerator:IEnumerator<T>;
-				var secondEnumerator:IEnumerator<T>;
+				let firstEnumerator:IEnumerator<T>;
+				let secondEnumerator:IEnumerator<T>;
 
-				var count:number = 0;
-				var isEnumerated:boolean = false;
+				let count:number = 0;
+				let isEnumerated:boolean = false;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1586,11 +1610,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	alternateMultiple(sequence:IEnumerableOrArray<T>):this
 	{
 		const _ = this;
+		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var buffer:T,
+				let buffer:T,
 				    mode:EnumerableAction,
 				    enumerator:IEnumerator<T>,
 				    alternateEnumerator:IEnumerator<T>;
@@ -1605,13 +1630,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 						enumerator = _.getEnumerator();
 
-						var hasAtLeastOne = enumerator.moveNext();
+						let hasAtLeastOne = enumerator.moveNext();
 						mode = hasAtLeastOne
 							? EnumerableAction.Return
 							: EnumerableAction.Break;
 
 						if(hasAtLeastOne)
-							buffer = enumerator.current;
+							buffer = <T>enumerator.current;
 					},
 
 					(yielder)=>
@@ -1629,18 +1654,18 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 								break;
 						}
 
-						var latest = buffer;
+						let latest = buffer;
 
 						// Set up the next round...
 
 						// Is there another one?  Set the buffer and setup instruct for the next one to be the alternate.
-						var another = enumerator.moveNext();
+						let another = enumerator.moveNext();
 						mode = another
 							? EnumerableAction.Skip
 							: EnumerableAction.Break;
 
 						if(another)
-							buffer = enumerator.current;
+							buffer = <T>enumerator.current;
 
 						return yielder.yieldReturn(latest);
 
@@ -1651,12 +1676,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						dispose(enumerator, alternateEnumerator);
 					},
 
-					_._isEndless
+					isEndless
 				);
 			},
 			null,
 
-			_._isEndless
+			isEndless
 		);
 	}
 
@@ -1679,7 +1704,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
+				let enumerator:IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1727,7 +1752,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
+				let enumerator:IEnumerator<T>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -1769,12 +1794,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		Integer.assert(size, "size");
 
 		const _ = this;
+		const isEndless = _._isEndless;
 		var len:number;
 
 		return new Enumerable<T[]>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
+				let enumerator:IEnumerator<T>;
 				return new EnumeratorBase<T[]>(
 					() =>
 					{
@@ -1783,15 +1809,15 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 					(yielder)=>
 					{
-						var array:T[] = ArrayUtility.initialize<T>(size);
+						let array:T[] = ArrayUtility.initialize<T>(size);
 						len = 0;
 						while(len<size && enumerator.moveNext())
 						{
-							array[len++] = enumerator.current;
+							array[len++] = <T>enumerator.current;
 						}
 
 						array.length = len;
-						return len && yielder.yieldReturn(array);
+						return !!len && yielder.yieldReturn(array);
 					},
 
 					() =>
@@ -1799,12 +1825,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 						dispose(enumerator);
 					},
 
-					_._isEndless
+					isEndless
 				);
 			},
 			null,
 
-			_._isEndless
+			isEndless
 		);
 	}
 
@@ -1814,7 +1840,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var sharedEnumerator:IEnumerator<T>;
+		let sharedEnumerator:IEnumerator<T>;
 		return <any> new Enumerable<T>(
 			() =>
 			{
@@ -1846,8 +1872,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	constructor(
 		enumeratorFactory:() => IEnumerator<T>,
-		finalizer?:() => void,
-		isEndless:boolean = null)
+		finalizer?:Closure|null,
+		isEndless?:boolean)
 	{
 		super(enumeratorFactory, finalizer);
 		this._isEndless = isEndless;
@@ -1865,20 +1891,19 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return e;
 	}
 
+	static fromAny<T>(
+		source:IEnumerableOrArray<T>):Enumerable<T>
+
 	static fromAny(
 		source:any):Enumerable<any>
 
 	static fromAny<T>(
 		source:IEnumerableOrArray<T>,
-		defaultEnumerable?:Enumerable<T>):Enumerable<T>
+		defaultEnumerable:Enumerable<T>):Enumerable<T>
 
 	static fromAny<T>(
 		source:any,
-		defaultEnumerable?:Enumerable<T>):Enumerable<T>
-
-	static fromAny<T>(
-		source:any,
-		defaultEnumerable:Enumerable<T> = null):Enumerable<T>
+		defaultEnumerable?:Enumerable<T>):Enumerable<T>|undefined
 	{
 		if(Type.isObject(source) || Type.isString(source))
 		{
@@ -1952,7 +1977,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new InfiniteEnumerable<T>(
 			() =>
 			{
-				var index:number = 0;
+				let index:number = 0;
 				return new EnumeratorBase<T>(
 					() =>
 					{
@@ -1991,8 +2016,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			? new FiniteEnumerable<T>(
 			() =>
 			{
-				var c:number = count;
-				var index:number = 0;
+				let c:number = count;
+				let index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() => { index = 0; },
@@ -2021,7 +2046,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new InfiniteEnumerable<T>(
 			() =>
 			{
-				var element:T;
+				let element:T;
 				return new EnumeratorBase<T>(
 					() =>
 					{
@@ -2076,9 +2101,9 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new FiniteEnumerable<number>(
 			() =>
 			{
-				var value:number;
-				var c:number = count; // Force integer evaluation.
-				var index:number = 0;
+				let value:number;
+				let c:number = count; // Force integer evaluation.
+				let index:number = 0;
 
 				return new EnumeratorBase<number>(
 					() =>
@@ -2089,7 +2114,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 					(yielder)=>
 					{
-						var result:boolean =
+						let result:boolean =
 							    index++<c
 							    && yielder.yieldReturn(value);
 
@@ -2131,7 +2156,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new InfiniteEnumerable<number>(
 			() =>
 			{
-				var value:number;
+				let value:number;
 
 				return new EnumeratorBase<number>(
 					() =>
@@ -2141,7 +2166,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 					(yielder)=>
 					{
-						var current:number = value;
+						let current:number = value;
 						value += step;
 						return yielder.yieldReturn(current);
 					},
@@ -2176,14 +2201,14 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new FiniteEnumerable<number>(
 			() =>
 			{
-				var value:number;
+				let value:number;
 
 				return new EnumeratorBase<number>(() => { value = start; },
 					start<to
 						?
 						yielder=>
 						{
-							var result:boolean = value<=to && yielder.yieldReturn(value);
+							let result:boolean = value<=to && yielder.yieldReturn(value);
 
 							if(result)
 								value += step;
@@ -2193,7 +2218,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						:
 						yielder=>
 						{
-							var result:boolean = value>=to && yielder.yieldReturn(value);
+							let result:boolean = value>=to && yielder.yieldReturn(value);
 
 							if(result)
 								value -= step;
@@ -2227,7 +2252,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new FiniteEnumerable<RegExpExecArray>(
 			() =>
 			{
-				var regex:RegExp;
+				let regex:RegExp;
 				return new EnumeratorBase<RegExpExecArray>(
 					() =>
 					{
@@ -2237,7 +2262,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 					(yielder)=>
 					{
 						// Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
-						var match = regex.exec(input);
+						let match = regex.exec(input);
 						return (match!==null) ? yielder.yieldReturn(match) : false;
 					}
 				);
@@ -2260,8 +2285,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			new FiniteEnumerable<T>(
 				() =>
 				{
-					var c:number = count;
-					var index:number = 0;
+					let c:number = count;
+					let index:number = 0;
 
 					return new EnumeratorBase<T>(
 						() =>
@@ -2271,7 +2296,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 						(yielder)=>
 						{
-							var current:number = index++;
+							let current:number = index++;
 							return current<c && yielder.yieldReturn(factory(current));
 						},
 
@@ -2282,7 +2307,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			new InfiniteEnumerable<T>(
 				() =>
 				{
-					var index:number = 0;
+					let index:number = 0;
 					return new EnumeratorBase<T>(
 						() =>
 						{
@@ -2304,9 +2329,9 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new InfiniteEnumerable<T>(
 			() =>
 			{
-				var index:number = 0;
-				var value:T;
-				var isFirst:boolean;
+				let index:number = 0;
+				let value:T;
+				let isFirst:boolean;
 				return new EnumeratorBase<T>(
 					() =>
 					{
@@ -2317,7 +2342,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 					(yielder)=>
 					{
-						var i = index++;
+						let i = index++;
 						if(isFirst)
 							isFirst = false;
 						else
@@ -2354,16 +2379,20 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	// Slightly optimized versions for numbers.
 	static max(values:FiniteEnumerable<number>):number
 	{
-		return values
+		var v = values
 			.takeUntil(v=> v== +Infinity, true)
 			.aggregate(Functions.Greater);
+
+		return v===VOID0 ? NaN : v;
 	}
 
 	static min(values:FiniteEnumerable<number>):number
 	{
-		return values
+		var v = values
 			.takeUntil(v=> v== -Infinity, true)
 			.aggregate(Functions.Lesser);
+
+		return v===VOID0 ? NaN : v;
 	}
 
 
@@ -2381,9 +2410,9 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new Enumerable<T>(
 			() =>
 			{
-				var queue:Queue<IEnumerator<T>>;
-				var mainEnumerator:IEnumerator<IEnumerableOrArray<T>>;
-				var index:number;
+				let queue:Queue<IEnumerator<T>>;
+				let mainEnumerator:IEnumerator<IEnumerableOrArray<T>>|null;
+				let index:number;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2395,7 +2424,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 					(yielder)=>
 					{
-						let e:IEnumerator<T>;
+						let e:IEnumerator<T>|null = null;
 
 						// First pass...
 						if(mainEnumerator)
@@ -2403,7 +2432,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 							while(!e && mainEnumerator.moveNext())
 							{
 								let c = mainEnumerator.current;
-								e = nextEnumerator(queue, c && enumeratorFrom(c));
+								e = nextEnumerator(queue, c ? enumeratorFrom(c) : NULL);
 							}
 
 							if(!e)
@@ -2426,7 +2455,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						dispose.these(queue.dump());
 						dispose(mainEnumerator, queue);
 						mainEnumerator = null;
-						queue = null;
+						queue = NULL;
 					}
 				);
 			}
@@ -2491,7 +2520,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 				null // We don't know the state if it is endless or not.
 			);
 
-		var found:boolean = false;
+		let found:boolean = false;
 		return this.doAction(
 			(element:T, index?:number) =>
 			{
@@ -2527,7 +2556,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
 				while(_.throwIfDisposed() && e.moveNext())
 				{
-					if(action(e.current, index++)===false)
+					if(action(<T>e.current, index++)===false)
 						break;
 				}
 			}
@@ -2566,10 +2595,10 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		this.forEach(
 			x=>
 			{
-				var key = keySelector(x);
-				var element = elementSelector(x);
+				let key = keySelector(x);
+				let element = elementSelector(x);
 
-				var array = dict.getValue(key);
+				let array = dict.getValue(key);
 				if(array!==VOID0) array.push(element);
 				else dict.addByKeyValue(key, [element]);
 			}
@@ -2626,8 +2655,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var q:Queue<T>;
+				let enumerator:IEnumerator<T>;
+				let q:Queue<T>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2641,7 +2670,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						while(enumerator.moveNext())
 						{
 							// Add the next one to the queue.
-							q.enqueue(enumerator.current);
+							q.enqueue(<T>enumerator.current);
 
 							// Did we reach our quota?
 							if(q.count>c)
@@ -2716,8 +2745,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var buffer:T[];
-				var index:number = 0;
+				let buffer:T[];
+				let index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2727,7 +2756,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						index = buffer.length;
 					},
 
-					(yielder)=> index && yielder.yieldReturn(buffer[--index]),
+					(yielder)=> !!index && yielder.yieldReturn(buffer[--index]),
 
 					() =>
 					{
@@ -2752,9 +2781,9 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var buffer:T[];
-				var capacity:number;
-				var len:number;
+				let buffer:T[];
+				let capacity:number;
+				let len:number;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2770,11 +2799,11 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						if(!len)
 							return yielder.yieldBreak();
 
-						var selectedIndex = Integer.random(len);
-						var selectedValue = buffer[selectedIndex];
+						let selectedIndex = Integer.random(len);
+						let selectedValue = buffer[selectedIndex];
 
 						buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
-						buffer[len] = null; // clear possible reference.
+						buffer[len] = NULL; // clear possible reference.
 
 						if(len%32==0) // Shrink?
 							buffer.length = len;
@@ -2884,7 +2913,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		this.forEach(
 			compareSelector
 				?
-				(element:T, i?:number) =>
+				(element:T, i:number) =>
 				{
 					if(Values.areEqual(compareSelector(element, i), compareSelector(value, i), true))
 					{
@@ -2893,7 +2922,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 					}
 				}
 				:
-				(element:T, i?:number) =>
+				(element:T, i:number) =>
 				{
 					// Why?  Because NaN doesn't equal NaN. :P
 					if(Values.areEqual(element, value, true))
@@ -2913,14 +2942,14 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		this.forEach(
 			compareSelector
 				?
-				(element:T, i?:number) =>
+				(element:T, i:number) =>
 				{
 					if(Values.areEqual(compareSelector(element, i), compareSelector(value, i), true)) result
 						= i;
 				}
 
 				:
-				(element:T, i?:number) =>
+				(element:T, i:number) =>
 				{
 					if(Values.areEqual(element, value, true)) result = i;
 				});
@@ -2934,13 +2963,14 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		compareSelector?:Selector<T, TCompare>):this
 	{
 		const _ = this;
+		const isEndless = _.isEndless;
 
 		return <any> new Enumerable<T>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var keys:Dictionary<T,boolean>;
-				var outs:Dictionary<T,boolean>;
+				let enumerator:IEnumerator<T>;
+				let keys:Dictionary<T,boolean>;
+				let outs:Dictionary<T,boolean>;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -2960,7 +2990,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 					{
 						while(enumerator.moveNext())
 						{
-							var current = enumerator.current;
+							let current = <T>enumerator.current;
 							if(!outs.containsKey(current) && keys.containsKey(current))
 							{
 								outs.addByKeyValue(current, true);
@@ -2974,11 +3004,11 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 					{
 						dispose(enumerator, keys, outs);
 					},
-					_._isEndless
+					isEndless
 				);
 			},
 			null,
-			_._isEndless
+			isEndless
 		);
 	}
 
@@ -2997,7 +3027,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 					while(e1.moveNext())
 					{
-						if(!e2.moveNext() || !equalityComparer(e1.current, e2.current))
+						if(!e2.moveNext() || !equalityComparer(<T>e1.current, <T>e2.current))
 							return false;
 					}
 
@@ -3143,11 +3173,11 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return new Enumerable<IGrouping<TKey, TElement>>(
 			() =>
 			{
-				var enumerator:IEnumerator<T>;
-				var key:TKey;
-				var compareKey:TCompare;
-				var group:TElement[];
-				var len:number;
+				let enumerator:IEnumerator<T>;
+				let key:TKey;
+				let compareKey:TCompare;
+				let group:TElement[]|null;
+				let len:number;
 
 				return new EnumeratorBase<IGrouping<TKey, TElement>>(
 					() =>
@@ -3155,9 +3185,10 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						enumerator = _.getEnumerator();
 						if(enumerator.moveNext())
 						{
-							key = keySelector(enumerator.current);
+							let v = <T>enumerator.current;
+							key = keySelector(v);
 							compareKey = compareSelector(key);
-							group = [elementSelector(enumerator.current)];
+							group = [elementSelector!(v)];
 							len = 1;
 						}
 						else
@@ -3169,25 +3200,25 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						if(!group)
 							return yielder.yieldBreak();
 
-						var hasNext:boolean, c:T;
+						let hasNext:boolean, c:T;
 						while((hasNext = enumerator.moveNext()))
 						{
-							c = enumerator.current;
+							c = <T>enumerator.current;
 							if(compareKey===compareSelector(keySelector(c)))
-								group[len++] = elementSelector(c);
+								group[len++] = elementSelector!(c);
 							else
 								break;
 						}
 
-						var result:IGrouping<TKey, TElement>
+						let result:IGrouping<TKey, TElement>
 							    = resultSelector(key, group);
 
 						if(hasNext)
 						{
-							c = enumerator.current;
+							c = <T>enumerator.current;
 							key = keySelector(c);
 							compareKey = compareSelector(key);
-							group = [elementSelector(c)];
+							group = [elementSelector!(c)];
 							len = 1;
 						}
 						else
@@ -3214,7 +3245,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	aggregate(
 		func:(a:T, b:T) => T,
-		seed?:T):T
+		seed?:T):T|undefined
 	{
 		return this
 			.scan(func, seed)
@@ -3236,22 +3267,22 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	// If using numbers, it may be useful to call .takeUntil(v=>v==Infinity,true) before calling max. See static versions for numbers.
-	max():T
+	max():T|undefined
 	{
 		return this.aggregate(Functions.Greater);
 	}
 
-	min():T
+	min():T|undefined
 	{
 		return this.aggregate(Functions.Lesser);
 	}
 
-	maxBy<TCompare>(keySelector:Selector<T, TCompare> = Functions.Identity):T
+	maxBy<TCompare>(keySelector:Selector<T, TCompare> = Functions.Identity):T|undefined
 	{
 		return this.aggregate((a:T, b:T) => (keySelector(a)>keySelector(b)) ? a : b);
 	}
 
-	minBy<TCompare>(keySelector:Selector<T, TCompare> = Functions.Identity):T
+	minBy<TCompare>(keySelector:Selector<T, TCompare> = Functions.Identity):T|undefined
 	{
 		return this.aggregate((a:T, b:T) => (keySelector(a)<keySelector(b)) ? a : b);
 	}
@@ -3267,7 +3298,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		this.forEach(
 			x=>
 			{
-				var value = selector(x);
+				let value = selector(x);
 				if(isNaN(value))
 				{
 					sum = NaN;
@@ -3295,7 +3326,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			(x, i)=>
 			{
 				exists = true;
-				var value = selector(x, i);
+				let value = selector(x, i);
 				if(isNaN(value))
 				{
 					result = NaN;
@@ -3330,7 +3361,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		this.forEach(
 			(x, i)=>
 			{
-				var value = selector(x, i);
+				let value = selector(x, i);
 				count++;
 
 				if(count===1)
@@ -3366,7 +3397,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var value:T = undefined;
+		var value:T|undefined = VOID0;
 		var found:boolean = false;
 		_.forEach(
 			x =>
@@ -3377,15 +3408,15 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		);
 
 		if(!found) throw new Error("last:No element satisfies the condition.");
-		return value;
+		return <any>value;
 	}
 
-	lastOrDefault(defaultValue:T = null):T
+	lastOrDefault(defaultValue?:T):T|undefined
 	{
 		const _ = this;
 		_.throwIfDisposed();
 
-		var value:T = undefined;
+		var value:T|undefined = VOID0;
 		var found:boolean = false;
 		_.forEach(
 			x=>
@@ -3411,7 +3442,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			() =>
 			{
 
-				var index:number = 0;
+				let index:number = 0;
 
 				return new EnumeratorBase<T>(
 					() =>
@@ -3428,12 +3459,12 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 					{
 						throwIfDisposed(disposed);
 
-						var i = index++;
+						let i = index++;
 
 						if(i>=cache.length)
 						{
 							return (enumerator.moveNext())
-								? yielder.yieldReturn(cache[i] = enumerator.current)
+								? yielder.yieldReturn(cache[i] = <T>enumerator.current)
 								: false;
 						}
 
@@ -3447,10 +3478,10 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 				disposed = true;
 				if(cache)
 					cache.length = 0;
-				cache = null;
+				cache = NULL;
 
 				dispose(enumerator);
-				enumerator = null;
+				enumerator = NULL;
 			}
 		);
 	}
@@ -3499,7 +3530,7 @@ extends FiniteEnumerable<T>
 	protected _onDispose():void
 	{
 		super._onDispose();
-		this._source = <any>null;
+		this._source = NULL;
 	}
 
 	get source():IArray<T>
@@ -3537,7 +3568,7 @@ extends FiniteEnumerable<T>
 		_.throwIfDisposed();
 
 		var source = _._source, len = source.length;
-		return len && (!predicate || super.any(predicate));
+		return !!len && (!predicate || super.any(predicate));
 	}
 
 	count(predicate?:Predicate<T>):number
@@ -3549,7 +3580,7 @@ extends FiniteEnumerable<T>
 		return len && (predicate ? super.count(predicate) : len);
 	}
 
-	elementAtOrDefault(index:number, defaultValue:T = null):T
+	elementAtOrDefault(index:number, defaultValue?:T):T|undefined
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -3572,7 +3603,7 @@ extends FiniteEnumerable<T>
 			: super.last();
 	}
 
-	lastOrDefault(defaultValue:T = null):T
+	lastOrDefault(defaultValue?:T):T|undefined
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -3715,8 +3746,7 @@ implements ILookup<TKey, TElement>
 				if(!enumerator.moveNext())
 					return false;
 
-				var current = enumerator.current;
-
+				let current = <IKeyValuePair<TKey, TElement[]>>enumerator.current;
 				return yielder.yieldReturn(new Grouping<TKey, TElement>(current.key, current.value));
 			},
 			() =>
@@ -3735,17 +3765,17 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 
 	constructor(
 		private source:IEnumerable<T>,
-		public keySelector:(value:T) => TOrderBy,
+		public keySelector:Selector<T,TOrderBy>|null,
 		public order:Order,
-		public parent?:OrderedEnumerable<T,any>,
+		public parent?:OrderedEnumerable<T,any>|null,
 		public comparer:Comparison<T> = Values.compare)
 	{
-		super(null);
-		throwIfEndless(source && source.isEndless);
+		super(NULL);
+		throwIfEndless(!!source && !!source.isEndless);
 	}
 
 	private createOrderedEnumerable(
-		keySelector:(value:T) => TOrderBy,
+		keySelector:Selector<T,TOrderBy>,
 		order:Order):IOrderedEnumerable<T>
 	{
 		return new OrderedEnumerable<T,TOrderBy>(this.source, keySelector, order, this);
@@ -3798,10 +3828,10 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 			{
 				if(buffer)
 					buffer.length = 0;
-				buffer = null;
+				buffer = NULL;
 				if(indexes)
 					indexes.length = 0;
-				indexes = null;
+				indexes = NULL;
 			},
 
 			false
@@ -3810,17 +3840,18 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 
 	protected _onDispose():void
 	{
+		const _:this = this;
 		super._onDispose();
-		this.source = null;
-		this.keySelector = null;
-		this.order = null;
-		this.parent = null;
+		_.source = NULL;
+		_.keySelector = NULL;
+		_.order = NULL;
+		_.parent = NULL;
 	}
 
 }
 
 // A private static helper for the weave function.
-function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnumerator<T>
+function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnumerator<T>|null
 {
 	if(e)
 	{
@@ -3831,7 +3862,7 @@ function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnume
 		else
 		{
 			dispose(e);
-			e = null;
+			return null;
 		}
 	}
 	return e;
@@ -3845,7 +3876,7 @@ function nextEnumerator<T>(queue:Queue<IEnumerator<T>>, e:IEnumerator<T>):IEnume
  */
 function createSortContext<T, TOrderBy extends Comparable>(
 	orderedEnumerable:OrderedEnumerable<T,TOrderBy>,
-	currentContext:IComparer<T> = null):KeySortedContext<T, TOrderBy>
+	currentContext:IComparer<T>|null = null):KeySortedContext<T, TOrderBy>
 {
 
 	var context = new KeySortedContext<T, TOrderBy>(

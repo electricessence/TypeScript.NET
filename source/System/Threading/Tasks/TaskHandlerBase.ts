@@ -42,7 +42,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 		this.cancel();
 		this._status = TaskStatus.WaitingToRun;
 		if(!(defer>0)) defer = 0;
-		if(isFinite(defer))
+		if(isFinite(<any>defer))
 			this._timeoutId = setTimeout(TaskHandlerBase._handler, defer, this);
 	}
 
@@ -83,7 +83,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 	protected _onDispose():void
 	{
 		this.cancel();
-		this._status = null;
+		(<any>this)._status = null;
 	}
 
 	cancel():boolean

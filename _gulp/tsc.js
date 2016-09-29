@@ -32,6 +32,8 @@
         });
     }
     function fromTo(from, to, target, module, declaration, doNotEmit) {
+        if (declaration === void 0) { declaration = false; }
+        if (doNotEmit === void 0) { doNotEmit = false; }
         if (!doNotEmit) {
             if (module)
                 console.log('TypeScript Render:', target, module, from == to ? from : (from + ' >> ' + to));

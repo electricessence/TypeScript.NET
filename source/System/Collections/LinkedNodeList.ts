@@ -42,8 +42,8 @@ export class LinkedNodeList<TNode extends ILinkedNode<TNode>>
 implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 {
 
-	private _first:TNode;
-	private _last:TNode;
+	private _first:TNode|null;
+	private _last:TNode|null;
 	unsafeCount:number;
 
 	constructor()
@@ -57,7 +57,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	/**
 	 * The first node.  Will be null if the collection is empty.
 	 */
-	get first():TNode
+	get first():TNode|null
 	{
 		return this._first;
 	}
@@ -65,7 +65,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	/**
 	 * The last node.
 	 */
-	get last():TNode
+	get last():TNode|null
 	{
 		return this._last;
 	}
@@ -78,7 +78,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	get count():number
 	{
 
-		var next = this._first, i:number = 0;
+		var next:TNode|null|undefined = this._first;
+
+		var i:number = 0;
 		while(next)
 		{
 			i++;
@@ -93,10 +95,10 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	forEach(
 		action:Predicate<TNode> | Action<TNode>):number
 	{
-		var current:TNode = null,
-		    next:TNode    = this.first, // Be sure to track the next node so if current node is removed.
-		    index:number  = 0;
+		var current:TNode|null|undefined = null,
+		    next:TNode|null|undefined    = this.first; // Be sure to track the next node so if current node is removed.
 
+		var index:number = 0;
 		do {
 			current = next;
 			next = current && current.next;
@@ -126,7 +128,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	clear():number
 	{
 		const _ = this;
-		var n:TNode, cF:number = 0, cL:number = 0;
+		var n:TNode|null|undefined, cF:number = 0, cL:number = 0;
 
 		// First, clear in the forward direction.
 		n = _._first;
@@ -182,24 +184,26 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 * Gets the index of a particular node.
 	 * @param index
 	 */
-	getNodeAt(index:number):TNode
+	getNodeAt(index:number):TNode|null
 	{
 		if(index<0)
 			return null;
 
-		var next = this._first, i:number = 0;
+		var next:TNode|null|undefined = this._first;
+
+		var i:number = 0;
 		while(next && i++<index)
 		{
 			next = next.next;
 		}
 
-		return next;
+		return next || null;
 
 	}
 
-	find(condition:Predicate<TNode>):TNode
+	find(condition:Predicate<TNode>):TNode|null
 	{
-		var node:TNode = null;
+		var node:TNode|null = null;
 		this.forEach((n, i)=>
 		{
 			if(condition(n, i))
@@ -222,7 +226,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		{
 
 			var index = 0;
-			var c:TNode, n:TNode = this._first;
+			var c:TNode|null|undefined,
+			    n:TNode|null|undefined = this._first;
+
 			do {
 				c = n;
 				if(c===node) return index;
@@ -240,7 +246,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 */
 	removeFirst():boolean
 	{
-		return this.removeNode(this._first);
+		return !!this._first && this.removeNode(this._first);
 	}
 
 	/**
@@ -249,7 +255,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 */
 	removeLast():boolean
 	{
-		return this.removeNode(this._last);
+		return !!this._last && this.removeNode(this._last);
 	}
 
 
@@ -265,7 +271,11 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			throw new ArgumentNullException('node');
 
 		const _ = this;
-		var prev = node.previous, next = node.next, a:boolean = false, b:boolean = false;
+		var prev:TNode|null = node.previous || null,
+		    next:TNode|null = node.next || null;
+
+		var a:boolean = false,
+		    b:boolean = false;
 
 		if(prev) prev.next = next;
 		else if(_._first==node) _._first = next;
@@ -315,12 +325,13 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	addNodeBefore(node:TNode, before?:TNode):void
 	{
 		assertValidDetached(node);
+		if(before===null) throw new ArgumentNullException("before");
 
 		const _ = this;
 
 		if(!before)
 		{
-			before = _._first;
+			before = <any>_._first;
 		}
 
 		if(before)
@@ -350,12 +361,13 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	addNodeAfter(node:TNode, after?:TNode):void
 	{
 		assertValidDetached(node);
+		if(after===null) throw new ArgumentNullException("after");
 
 		const _ = this;
 
 		if(!after)
 		{
-			after = _._last;
+			after = <any>_._last;
 		}
 
 		if(after)
@@ -406,8 +418,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 		if(!list) throw new ArgumentNullException('list');
 
-		var current:ILinkedNodeWithValue<T>,
-		    next:ILinkedNodeWithValue<T>;
+		var current:ILinkedNodeWithValue<T>|null|undefined,
+		    next:ILinkedNodeWithValue<T>|null|undefined;
 
 		return new EnumeratorBase<T>(
 			() =>

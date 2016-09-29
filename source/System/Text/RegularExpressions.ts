@@ -137,7 +137,7 @@ export class Regex
 	match(input:string, startIndex:number = 0):Match
 	{
 		const _ = this;
-		var r:RegExpExecArray;
+		var r:RegExpExecArray | null;
 		if(!input
 			|| startIndex>=input.length
 			|| !(r = this._re.exec(input.substring(startIndex))))

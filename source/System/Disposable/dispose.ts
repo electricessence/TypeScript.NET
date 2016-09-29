@@ -6,6 +6,10 @@
 import {Type} from "../Types";
 import {IDisposable} from "./IDisposable";
 
+// Allows for more flexible parameters.
+export type DisposableItem = IDisposable|null|undefined;
+export type DisposableItemArray = Array<DisposableItem>|null|undefined;
+
 /**
  * Takes any number of disposables as arguments and attempts to dispose them.
  * Any exceptions thrown within a dispose are not trapped.
@@ -14,7 +18,7 @@ import {IDisposable} from "./IDisposable";
  * Can accept <any> and will ignore objects that don't have a dispose() method.
  * @param disposables
  */
-export function dispose(...disposables:IDisposable[]):void
+export function dispose(...disposables:DisposableItem[]):void
 {
 	// The disposables arguments array is effectively localized so it's safe.
 	disposeTheseInternal(disposables, false);
@@ -23,7 +27,7 @@ export function dispose(...disposables:IDisposable[]):void
 export module dispose
 {
 
-	export function deferred(...disposables:IDisposable[]):void
+	export function deferred(...disposables:DisposableItem[]):void
 	{
 		these.deferred(disposables);
 	}
@@ -35,7 +39,7 @@ export module dispose
 	 * @param disposables
 	 * @returns {any[]} Returns an array of exceptions that occurred, if there are any.
 	 */
-	export function withoutException(...disposables:IDisposable[]):any[]
+	export function withoutException(...disposables:DisposableItem[]):any[]|undefined
 	{
 		// The disposables arguments array is effectively localized so it's safe.
 		return disposeTheseInternal(disposables, true);
@@ -47,16 +51,16 @@ export module dispose
 	 * @param trapExceptions If true, prevents exceptions from being thrown when disposing.
 	 * @returns {any[]} If 'trapExceptions' is true, returns an array of exceptions that occurred, if there are any.
 	 */
-	export function these(disposables:IDisposable[], trapExceptions?:boolean):any[]
+	export function these(disposables:DisposableItemArray, trapExceptions?:boolean):any[]|undefined
 	{
 		return disposables && disposables.length
 			? disposeTheseInternal(disposables.slice(), trapExceptions)
-			: null;
+			: void 0;
 	}
 
 	export module these
 	{
-		export function deferred(disposables:IDisposable[], delay:number = 0):void
+		export function deferred(disposables:DisposableItemArray, delay:number = 0):void
 		{
 			if(disposables && disposables.length)
 			{
@@ -135,16 +139,16 @@ function disposeSingle(
  * This dispose method assumes it's working on a local copy and is unsafe for external use.
  */
 function disposeTheseInternal(
-	disposables:IDisposable[],
-	trapExceptions:boolean,
-	index:number = 0):any[]
+	disposables:DisposableItemArray,
+	trapExceptions?:boolean,
+	index:number = 0):any[]|undefined
 {
-	var exceptions:any[];
-	var len = disposables.length;
+	var exceptions:any[]|undefined;
+	var len = disposables ? disposables.length : 0;
 
 	for(; index<len; index++)
 	{
-		var next = disposables[index];
+		var next = disposables![index];
 		if(!next) continue;
 		if(trapExceptions)
 		{

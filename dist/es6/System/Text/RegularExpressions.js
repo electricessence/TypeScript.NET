@@ -61,7 +61,7 @@ export class Regex {
     }
     match(input, startIndex = 0) {
         const _ = this;
-        var r;
+        var r = null;
         if (!input
             || startIndex >= input.length
             || !(r = this._re.exec(input.substring(startIndex))))

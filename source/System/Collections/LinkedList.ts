@@ -39,8 +39,8 @@ implements ILinkedNode<InternalNode<T>>, INodeWithValue<T>
 {
 	constructor(
 		public value?:T,
-		public previous?:InternalNode<T>,
-		public next?:InternalNode<T>)
+		public previous?:InternalNode<T>|null,
+		public next?:InternalNode<T>|null)
 	{
 	}
 
@@ -55,7 +55,7 @@ implements ILinkedNode<InternalNode<T>>, INodeWithValue<T>
 
 }
 
-function ensureExternal<T>(node:InternalNode<T>, list:LinkedList<T>):ILinkedListNode<T>
+function ensureExternal<T>(node:InternalNode<T>|null|undefined, list:LinkedList<T>):ILinkedListNode<T>|null
 {
 	if(!node)
 		return null;
@@ -111,7 +111,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		source?:IEnumerableOrArray<T>,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
-		super(null, equalityComparer);
+		super(VOID0, equalityComparer);
 		const _ = this;
 		_._listInternal = new LinkedNodeList<InternalNode<T>>();
 		_._importEntries(source);
@@ -121,7 +121,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 	{
 		super._onDispose();
 		var l = this._listInternal;
-		this._listInternal = null;
+		this._listInternal = <any>null;
 		l.dispose();
 	}
 
@@ -146,7 +146,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 		list.forEach(node=>
 		{
-			if(equals(entry, node.value) && _._removeNodeInternal(node))
+			if(node && equals(entry, node.value) && _._removeNodeInternal(node))
 				removedCount++;
 
 			return removedCount<max;
@@ -170,7 +170,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		this.throwIfDisposed();
 		return useCopy
 			? super.forEach(action, useCopy)
-			: this._listInternal.forEach((node, i)=>action(node.value, i));
+			: this._listInternal.forEach((node, i)=>action(<any>node.value, i));
 	}
 
 	// #endregion
@@ -184,12 +184,14 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	// #endregion
 
-	private _findFirst(entry:T):InternalNode<T>
+	private _findFirst(entry:T):InternalNode<T>|null
 	{
 		//noinspection UnnecessaryLocalVariableJS
-		var _      = this,
-		    equals = _._equalityComparer,
-		    next   = _._listInternal && _._listInternal.first;
+		const
+			_      = this,
+			equals = _._equalityComparer;
+
+		var next:any = _._listInternal && _._listInternal.first;
 		while(next)
 		{
 			if(equals(entry, next.value))
@@ -199,12 +201,14 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return null;
 	}
 
-	private _findLast(entry:T):InternalNode<T>
+	private _findLast(entry:T):InternalNode<T>|null
 	{
 		//noinspection UnnecessaryLocalVariableJS
-		var _      = this,
-		    equals = _._equalityComparer,
-		    prev   = _._listInternal && _._listInternal.last;
+		const
+			_      = this,
+			equals = _._equalityComparer;
+
+		var prev:any = _._listInternal && _._listInternal.last;
 		while(prev)
 		{
 			if(equals(entry, prev.value))
@@ -219,7 +223,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return this.remove(entry, 1)!==0;
 	}
 
-	get first():ILinkedListNode<T>
+	get first():ILinkedListNode<T>|null
 	{
 		var li = this._listInternal;
 		return li && ensureExternal(li.first, this);
@@ -231,7 +235,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return node ? node.value : VOID0;
 	}
 
-	get last():ILinkedListNode<T>
+	get last():ILinkedListNode<T>|null
 	{
 		var li = this._listInternal;
 		return ensureExternal(li.last, this);
@@ -252,19 +256,19 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return node ? node.value : VOID0;
 	}
 
-	getNodeAt(index:number):ILinkedListNode<T>
+	getNodeAt(index:number):ILinkedListNode<T>|null
 	{
 		var li = this._listInternal;
 		return li && ensureExternal(li.getNodeAt(index), this);
 	}
 
-	find(entry:T):ILinkedListNode<T>
+	find(entry:T):ILinkedListNode<T>|null
 	{
 		var li = this._listInternal;
 		return li && ensureExternal(this._findFirst(entry), this);
 	}
 
-	findLast(entry:T):ILinkedListNode<T>
+	findLast(entry:T):ILinkedListNode<T>|null
 	{
 		var li = this._listInternal;
 		return li && ensureExternal(this._findLast(entry), this);
@@ -282,7 +286,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		this.add(entry);
 	}
 
-	private _removeNodeInternal(node:InternalNode<T>):boolean
+	private _removeNodeInternal(node:InternalNode<T>|null|undefined):boolean
 	{
 		const _ = this;
 		if(node && _._listInternal.removeNode(node))
@@ -369,13 +373,13 @@ class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 		return this._list;
 	}
 
-	get previous():ILinkedListNode<T>
+	get previous():ILinkedListNode<T>|null
 	{
 		this.throwIfDetached();
 		return ensureExternal(this._nodeInternal.previous, this._list);
 	}
 
-	get next():ILinkedListNode<T>
+	get next():ILinkedListNode<T>|null
 	{
 		this.throwIfDetached();
 		return ensureExternal(this._nodeInternal.next, this._list);
@@ -384,7 +388,7 @@ class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 	get value():T
 	{
 		this.throwIfDetached();
-		return this._nodeInternal.value;
+		return <any>this._nodeInternal.value;
 	}
 
 	set value(v:T)

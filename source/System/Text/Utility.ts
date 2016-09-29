@@ -143,7 +143,7 @@ export function supplant(source:string, params:{[key:string]:any}|any[]):string
 }
 
 
-function canMatch(source:string, match:string):boolean
+function canMatch(source:string, match:string):boolean|null|void
 {
 	if(!Type.isString(source) || !match) return false;
 	if(source===match) return true;

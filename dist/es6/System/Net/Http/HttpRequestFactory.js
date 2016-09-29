@@ -24,8 +24,8 @@ export default class HttpRequestFactory extends DisposableBase {
     uri(uri) {
         const _ = this;
         _.throwIfDisposed();
-        var u = Uri.from(uri, _._uriDefaults);
-        return _._uriDefaults.equals(u)
+        var d = _._uriDefaults, u = Uri.from(uri, d);
+        return d && u.equals(d)
             ? _
             : new HttpRequestFactory(_._http, u);
     }

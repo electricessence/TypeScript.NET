@@ -17,8 +17,8 @@ const __extends = __extendsImport;
 export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 {
 	constructor(
-		next:IComparer<T>,
-		protected _keySelector:Selector<T,TKey>,
+		next:IComparer<T>|null,
+		protected _keySelector:Selector<T,TKey>|null,
 		order:Order = Order.Ascending,
 		comparer:Comparison<T> = Values.compare)
 	{

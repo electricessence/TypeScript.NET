@@ -207,7 +207,7 @@ export class DateTime implements ICalendarDate, IDateTime
 		);
 	}
 
-	private _time:ClockTime;
+	private _time:ClockTime|null;
 
 	/**
 	 * Returns the time of day represented by a ClockTime object.
@@ -330,8 +330,8 @@ export class DateTime implements ICalendarDate, IDateTime
 	static from(year:number, month:Gregorian.Month, day:number):DateTime;
 	static from(
 		yearOrDate:number|ICalendarDate,
-		month?:number,
-		day?:number):DateTime
+		month:number = 0,
+		day:number = 1):DateTime
 	{
 		var year:number;
 		if(typeof yearOrDate=="object")
@@ -339,6 +339,8 @@ export class DateTime implements ICalendarDate, IDateTime
 			day = (<ICalendarDate>yearOrDate).day;
 			month = (<ICalendarDate>yearOrDate).month;
 			year = (<ICalendarDate>yearOrDate).year;
+		} else {
+			year = yearOrDate;
 		}
 
 		return new DateTime(new Date(year, month, day));
@@ -350,8 +352,8 @@ export class DateTime implements ICalendarDate, IDateTime
 	static fromCalendarDate(year:number, month:number, day:number):DateTime;
 	static fromCalendarDate(
 		yearOrDate:number|ICalendarDate,
-		month?:number,
-		day?:number):DateTime
+		month:number = 1,
+		day:number = 1):DateTime
 	{
 		var year:number;
 		if(typeof yearOrDate=="object")
@@ -359,6 +361,8 @@ export class DateTime implements ICalendarDate, IDateTime
 			day = (<ICalendarDate>yearOrDate).day;
 			month = (<ICalendarDate>yearOrDate).month;
 			year = (<ICalendarDate>yearOrDate).year;
+		} else {
+			year = yearOrDate;
 		}
 
 		return new DateTime(new Date(year, month - 1, day));

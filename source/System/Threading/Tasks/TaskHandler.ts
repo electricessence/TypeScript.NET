@@ -27,7 +27,7 @@ export class TaskHandler extends TaskHandlerBase
 	protected _onDispose():void
 	{
 		super._onDispose();
-		this._action = null;
+		(<any>this)._action = null;
 	}
 }
 

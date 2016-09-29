@@ -105,8 +105,8 @@ export class LazyPromise<T> extends Promise<T>
 						e=> reject(e)
 					);
 					timeout.dispose();
-					timeout = null;
-					pass = null;
+					timeout = VOID0;
+					pass = VOID0;
 				};
 
 				// If the timeout completed already go ahead and pass the request on to the parent.
@@ -146,13 +146,13 @@ export class LazyPromise<T> extends Promise<T>
 			if(timeout)
 			{
 				timeout.dispose();
-				timeout = null;
+				timeout = VOID0;
 			}
 			// If the promise was requested already go ahead and pass the request on to the parent.
 			if(pass)
 				pass();
 
-			finalize = null;
+			finalize = VOID0;
 		};
 
 		{
@@ -166,7 +166,8 @@ export class LazyPromise<T> extends Promise<T>
 			// This simply waits for resolution to happen.
 			// Is effectively the timer by when resolution has occurred.
 			super.thenThis(detector, detector);
-			detector = null;
+			//noinspection JSUnusedAssignment
+			detector = <any>null;
 		}
 
 		return new LazyPromise<T>(

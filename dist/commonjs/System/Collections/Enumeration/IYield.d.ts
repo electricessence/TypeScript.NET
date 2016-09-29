@@ -6,8 +6,8 @@
 
 export interface IYield<T>
 {
-	current:T;
-	yieldReturn(value:T):boolean;
+	current:T|undefined;
+	yieldReturn(value:T|undefined):boolean;
 	yieldBreak():boolean;
 }
 

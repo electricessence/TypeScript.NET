@@ -4,7 +4,6 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import {Exception} from "../Exception";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {IDisposableAware} from "./IDisposableAware";
 import __extendsImport from "../../extends";
@@ -22,10 +21,10 @@ export class ObjectDisposedException extends InvalidOperationException
 	// For simplicity and consistency, lets stick with 1 signature.
 	constructor(
 		objectName:string,
-		message:string = null,
-		innerException:Exception = null)
+		message?:string,
+		innerException?:Error)
 	{
-		super(message, innerException, (_)=>
+		super(message || '', innerException, (_)=>
 		{
 			_.objectName = objectName;
 		});
@@ -48,7 +47,7 @@ export class ObjectDisposedException extends InvalidOperationException
 
 	static throwIfDisposed(
 		disposable:IDisposableAware,
-		objectName?:string,
+		objectName:string,
 		message?:string):void
 	{
 		if(disposable.wasDisposed)

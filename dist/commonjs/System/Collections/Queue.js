@@ -15,6 +15,7 @@ var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeExc
 var CollectionBase_1 = require("./CollectionBase");
 var extends_1 = require("../../extends");
 var __extends = extends_1.default;
+var VOID0 = void 0;
 var MINIMUM_GROW = 4;
 var SHRINK_THRESHOLD = 32;
 var GROW_FACTOR_HALF = 100;
@@ -24,7 +25,7 @@ var Queue = (function (_super) {
     __extends(Queue, _super);
     function Queue(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        _super.call(this, null, equalityComparer);
+        _super.call(this, VOID0, equalityComparer);
         var _ = this;
         _._head = 0;
         _._tail = 0;
@@ -156,7 +157,7 @@ var Queue = (function (_super) {
         if (_._size == 0) {
             if (throwIfEmpty)
                 throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
-            return void 0;
+            return VOID0;
         }
         var array = _._array, head = _._head;
         var removed = _._array[head];
@@ -198,7 +199,7 @@ var Queue = (function (_super) {
     Queue.prototype.trimExcess = function (threshold) {
         var _ = this;
         var size = _._size;
-        if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size))
+        if (size < Math.floor(_._capacity * 0.9) && (!threshold && threshold !== 0 || isNaN(threshold) || threshold < size))
             _.setCapacity(size);
     };
     Queue.prototype.getEnumerator = function () {

@@ -8,8 +8,8 @@ import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 const NAME = 'ObjectDisposedException';
 export class ObjectDisposedException extends InvalidOperationException {
-    constructor(objectName, message = null, innerException = null) {
-        super(message, innerException, (_) => {
+    constructor(objectName, message, innerException) {
+        super(message || '', innerException, (_) => {
             _.objectName = objectName;
         });
     }

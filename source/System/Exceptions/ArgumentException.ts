@@ -21,8 +21,8 @@ export class ArgumentException extends SystemException
 	// For simplicity and consistency, lets stick with 1 signature.
 	constructor(
 		paramName:string,
-		message:string = null,
-		innerException:Error = null,
+		message?:string,
+		innerException?:Error,
 		beforeSealing?:(ex:any)=>void)
 	{
 		var pn = paramName ? ('{' + paramName + '} ') : '';

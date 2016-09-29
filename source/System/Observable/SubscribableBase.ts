@@ -24,10 +24,12 @@ extends DisposableBase
 	// Use a linked list since it's much easier to remove a subscriber from anywhere in the list.
 	private __subscriptions:LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>;
 
-	protected _getSubscribers():TSubscriber[]
+	protected _getSubscribers():TSubscriber[]|null
 	{
 		var s = this.__subscriptions;
-		return s && s.map(node=>node.value && node.value.subscriber);
+		return s
+			? s.map(node=><TSubscriber>(node && node.value && node.value.subscriber))
+			: null;
 	}
 
 	constructor()
@@ -36,10 +38,10 @@ extends DisposableBase
 	}
 
 	private _findEntryNode(
-		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>
+		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>|null
 	{
 		var s = this.__subscriptions;
-		return s && s.find(n=>n.value.subscriber===subscriber);
+		return s && s.find(n=>!!n.value && n.value.subscriber===subscriber);
 	}
 
 	// It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
@@ -50,7 +52,7 @@ extends DisposableBase
 
 		var n = _._findEntryNode(subscriber);
 		if(n) // Ensure only one instance of the existing subscription exists.
-			return n.value;
+			return <IDisposable>n.value;
 
 		var _s = _.__subscriptions;
 		if(!_s) _.__subscriptions = _s
@@ -71,17 +73,17 @@ extends DisposableBase
 		{
 			var s = n.value;
 			_.__subscriptions.removeNode(n);
-			s.dispose(); // Prevent further usage of a dead subscription.
+			if(s) s.dispose(); // Prevent further usage of a dead subscription.
 		}
 	}
 
-	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[]
+	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[]|null
 	{
 		const _ = this;
 		var _s = _.__subscriptions;
 		if(!_s) return null;
 		var s = _s.map(n=>n.value);
-		var u = returnSubscribers ? s.map(o=>o.subscriber) : null;
+		var u = returnSubscribers ? s.map(o=>o!.subscriber) : null;
 		_s.clear(); // Reset...
 
 		dispose.these(s);
@@ -99,7 +101,7 @@ extends DisposableBase
 		super._onDispose();
 		this._unsubscribeAll();
 		var s = this.__subscriptions;
-		this.__subscriptions = null;
+		this.__subscriptions = <any>null;
 		dispose(s);
 	}
 

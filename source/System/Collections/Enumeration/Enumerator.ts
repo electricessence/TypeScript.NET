@@ -25,7 +25,7 @@ const
 		'Cannot call forEach on an endless enumerable. ' +
 		'Would result in an infinite loop that could hang the current process.';
 
-export function throwIfEndless(isEndless:boolean):void
+export function throwIfEndless(isEndless:boolean|undefined):void
 {
 	if(isEndless) throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
 }
@@ -119,6 +119,16 @@ export function isIterator<T>(instance:any):instance is IIterator<T>
  */
 export function forEach<T>(
 	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	action:(element:T) => any,
+	max?:number):number
+
+export function forEach<T>(
+	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	action:(element:T, index:number) => any,
+	max?:number):number
+
+export function forEach<T>(
+	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
 	action:(element:T, index?:number) => any,
 	max:number = Infinity):number
 {
@@ -142,13 +152,13 @@ export function forEach<T>(
 
 		if(isEnumerator<T>(e))
 		{
-			throwIfEndless(!isFinite(max) && e.isEndless);
+			throwIfEndless(!isFinite(max) && !!e.isEndless);
 
 			let i = 0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
 			while(max>i && e.moveNext())
 			{
-				if(action(e.current, i++)===false)
+				if(action(<any>e.current, i++)===false)
 					break;
 			}
 			return i;
@@ -156,7 +166,7 @@ export function forEach<T>(
 
 		if(isEnumerable<T>(e))
 		{
-			throwIfEndless(!isFinite(max) && e.isEndless);
+			throwIfEndless(!isFinite(max) && !!e.isEndless);
 
 			// For enumerators that aren't EnumerableBase, ensure dispose is called.
 			return using(
@@ -174,7 +184,7 @@ export function forEach<T>(
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
 			while(max>i && !(r = e.next()).done)
 			{
-				if(action(r.value, i++)===false)
+				if(action(<any>r.value, i++)===false)
 					break;
 			}
 			return i;

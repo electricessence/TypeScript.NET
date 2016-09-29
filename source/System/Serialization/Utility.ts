@@ -12,7 +12,7 @@ import {Primitive} from "../Primitive";
 const EMPTY = '', TRUE = 'true', FALSE = 'false';
 
 export function toString(
-	value:Primitive|ISerializable,
+	value:Primitive|ISerializable|undefined|null,
 	defaultForUnknown?:string):string
 {
 
@@ -33,7 +33,7 @@ export function toString(
 
 			if(isSerializable(v))
 				return v.serialize();
-			else if(arguments.length>1)
+			else if(defaultForUnknown)
 				return defaultForUnknown;
 
 			var ex = new InvalidOperationException('Attempting to serialize unidentifiable type.');
@@ -52,7 +52,7 @@ export function isSerializable(instance:any):instance is ISerializable
 export function toPrimitive(
 	value:string,
 	caseInsensitive?:boolean,
-	unknownHandler?:(v:string)=>string):Primitive
+	unknownHandler?:(v:string)=>string):Primitive|null|undefined
 {
 
 
@@ -65,7 +65,7 @@ export function toPrimitive(
 			case 'null':
 				return null;
 			case Type.UNDEFINED:
-				return undefined;
+				return void(0);
 			case TRUE:
 				return true;
 			case FALSE:

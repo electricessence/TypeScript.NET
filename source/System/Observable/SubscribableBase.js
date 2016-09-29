@@ -26,11 +26,13 @@
         }
         SubscribableBase.prototype._getSubscribers = function () {
             var s = this.__subscriptions;
-            return s && s.map(function (node) { return node.value && node.value.subscriber; });
+            return s
+                ? s.map(function (node) { return (node && node.value && node.value.subscriber); })
+                : null;
         };
         SubscribableBase.prototype._findEntryNode = function (subscriber) {
             var s = this.__subscriptions;
-            return s && s.find(function (n) { return n.value.subscriber === subscriber; });
+            return s && s.find(function (n) { return !!n.value && n.value.subscriber === subscriber; });
         };
         SubscribableBase.prototype.subscribe = function (subscriber) {
             var _ = this;
@@ -52,7 +54,8 @@
             if (n) {
                 var s = n.value;
                 _.__subscriptions.removeNode(n);
-                s.dispose();
+                if (s)
+                    s.dispose();
             }
         };
         SubscribableBase.prototype._unsubscribeAll = function (returnSubscribers) {

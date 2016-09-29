@@ -55,7 +55,7 @@ extends SetBase<T>
 	protected _onDispose():void
 	{
 		super._onDispose();
-		this._registry = null;
+		this._registry = <any>null;
 	}
 
 	protected _getNode(item:T):ILinkedNodeWithValue<T>

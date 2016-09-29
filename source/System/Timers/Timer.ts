@@ -8,6 +8,7 @@ import {ICancellable} from "../Threading/ICancellable";
 import {ObservableBase} from "../Observable/ObservableBase";
 import {ITimer} from "./ITimer";
 import __extendsImport from "../../extends";
+import {Closure} from "../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -17,7 +18,7 @@ const __extends = __extendsImport;
 export default class Timer extends ObservableBase<number> implements ITimer, ICancellable
 {
 
-	private _cancel:()=>void;
+	private _cancel:Closure | null;
 	private _count:number = 0;
 
 	constructor(
@@ -127,7 +128,8 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 	 * Forces the onComplete to propagate and returns the number of times the timer ticked.
 	 * @returns {number}
 	 */
-	complete():number {
+	complete():number
+	{
 		this.cancel();
 		this._onCompleted();
 		return this._count;

@@ -21,7 +21,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 	constructor(
 		public type:string,
 		public listener:IEventListener,
-		public params:TParams = null,
+		public params?:TParams,
 		finalizer?:() => void)//, useWeakReference: boolean = false)
 	{
 		super(finalizer);
@@ -41,7 +41,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 	protected _onDispose():void
 	{
 		super._onDispose();
-		this.listener = null;
+		this.listener = <any>null;
 	}
 
 	/**

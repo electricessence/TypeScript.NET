@@ -87,7 +87,6 @@
                 return false;
             var r = !!immediateQueue.removeNode(entry);
             entryPool.add(entry);
-            entry = null;
             return r;
         };
         immediateQueue.addNode(entry);

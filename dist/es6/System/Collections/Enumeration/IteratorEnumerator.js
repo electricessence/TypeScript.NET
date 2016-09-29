@@ -33,7 +33,7 @@ export class IteratorEnumerator extends SimpleEnumerableBase {
         this._iterator = VOID0;
     }
     getIsEndless() {
-        return this._isEndless && super.getIsEndless();
+        return !!this._isEndless && super.getIsEndless();
     }
 }
 export default IteratorEnumerator;

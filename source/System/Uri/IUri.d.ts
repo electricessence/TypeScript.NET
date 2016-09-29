@@ -22,12 +22,12 @@ export interface IUrn
 	/**
 	 * The scheme name for this URI.
 	 */
-	scheme?:SchemeValue; // string literal
+	scheme?:SchemeValue|null; // string literal
 
 	/**
 	 * The absolute path of the URI.
 	 */
-	path?:string;
+	path?:string|null;
 
 }
 
@@ -52,27 +52,27 @@ export interface IUri extends IUrn
 	/**
 	 * The user name, password, or other user-specific information associated with the specified URI.
 	 */
-	userInfo?:string;
+	userInfo?:string | null;
 
 	/**
 	 * The host component of this instance.
 	 */
-	host?:string;
+	host?:string | null;
 
 	/**
 	 * The port number of this URI.
 	 */
-	port?:number;
+	port?:number | null;
 
 	/**
 	 * Gets any query information included in the specified URI.
 	 */
-	query?:string;
+	query?:string | null;
 
 	/**
 	 * The escaped URI fragment.
 	 */
-	fragment?:string;
+	fragment?:string | null;
 
 
 }

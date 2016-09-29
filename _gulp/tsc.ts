@@ -41,8 +41,8 @@ export function fromTo(
 	to:string,
 	target:Target.Type,
 	module:Module.Type,
-	declaration?:boolean,
-	doNotEmit?:boolean):PromiseLike<File[]>
+	declaration:boolean = false,
+	doNotEmit:boolean = false):PromiseLike<File[]>
 {
 
 	if(!doNotEmit)

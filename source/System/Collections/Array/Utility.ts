@@ -67,8 +67,8 @@ const
  * @param length An optional limit to stop copying.
  * @returns The destination array.
  */
-export function copyTo<T,TDestination extends IArray<any>>(
-	source:IArray<T>,
+export function copyTo<T,TDestination extends IArray<T>>(
+	source:ArrayLike<T>,
 	destination:TDestination,
 	sourceIndex:number = 0,
 	destinationIndex:number = 0,
@@ -179,7 +179,7 @@ export function replace<T>(
 	{
 		if(array[i]===old)
 		{
-			array[i] = newValue;
+			(<any>array)[i] = newValue;
 			++count;
 			if(count==max) break;
 		}
@@ -197,7 +197,7 @@ export function replace<T>(
  * @param stop
  */
 export function updateRange<T>(
-	array:IArray<T>,
+	array:ArrayLike<T>,
 	value:T,
 	start:number = 0,
 	stop?:number):void
@@ -210,7 +210,7 @@ export function updateRange<T>(
 
 	for(let i:number = start; i<stop; i++)
 	{
-		array[i] = value;
+		(<any>array)[i] = value;
 	}
 }
 
@@ -243,7 +243,7 @@ export function register<T>(
 		throw new ArgumentNullException('array', CBN);
 	var len = array.length; // avoid querying .length more than once. *
 	var ok = !len || !contains(array, item, equalityComparer);
-	if(ok) array[len] = item; // * push would query length again.
+	if(ok) (<any>array)[len] = item; // * push would query length again.
 	return ok;
 }
 
@@ -318,7 +318,7 @@ export function applyTo<T>(target:IArray<T>, fn:(a:T) => T):void
 	{
 		for(let i = 0; i<target.length; i++)
 		{
-			target[i] = fn(target[i]);
+			(<any>target)[i] = fn(target[i]);
 		}
 	}
 }

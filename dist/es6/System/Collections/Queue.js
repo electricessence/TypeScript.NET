@@ -14,6 +14,7 @@ import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeExc
 import { CollectionBase } from "./CollectionBase";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
+const VOID0 = void 0;
 const MINIMUM_GROW = 4;
 const SHRINK_THRESHOLD = 32;
 const GROW_FACTOR_HALF = 100;
@@ -21,7 +22,7 @@ const DEFAULT_CAPACITY = MINIMUM_GROW;
 var emptyArray = [];
 export class Queue extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
-        super(null, equalityComparer);
+        super(VOID0, equalityComparer);
         const _ = this;
         _._head = 0;
         _._tail = 0;
@@ -151,7 +152,7 @@ export class Queue extends CollectionBase {
         if (_._size == 0) {
             if (throwIfEmpty)
                 throw new InvalidOperationException("Cannot dequeue an empty queue.");
-            return void 0;
+            return VOID0;
         }
         var array = _._array, head = _._head;
         var removed = _._array[head];
@@ -192,7 +193,7 @@ export class Queue extends CollectionBase {
     trimExcess(threshold) {
         const _ = this;
         var size = _._size;
-        if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size))
+        if (size < Math.floor(_._capacity * 0.9) && (!threshold && threshold !== 0 || isNaN(threshold) || threshold < size))
             _.setCapacity(size);
     }
     getEnumerator() {

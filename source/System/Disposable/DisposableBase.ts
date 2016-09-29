@@ -5,11 +5,12 @@
 
 import {ObjectDisposedException} from "./ObjectDisposedException";
 import {IDisposableAware} from "./IDisposableAware";
+import {Closure} from "../FunctionTypes";
 
 export abstract class DisposableBase implements IDisposableAware
 {
 
-	constructor(private __finalizer?:() => void)
+	constructor(private __finalizer?:Closure|null)
 	{
 	}
 

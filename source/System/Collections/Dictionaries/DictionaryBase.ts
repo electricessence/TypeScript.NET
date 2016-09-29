@@ -118,7 +118,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return _.setValue(key, value);
 	}
 
-	protected abstract _getEntry(key:TKey):IKeyValuePair<TKey,TValue>;
+	protected abstract _getEntry(key:TKey):IKeyValuePair<TKey,TValue>|null;
 
 	abstract getValue(key:TKey):TValue;
 
@@ -183,13 +183,13 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return count;
 	}
 
-	importEntries(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>):number
+	importEntries(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>|null|undefined):number
 	{
 		// Allow piping through to trigger onModified properly.
 		return super.importEntries(<any>pairs);
 	}
 
-	protected _importEntries(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>):number
+	protected _importEntries(pairs:IEnumerableOrArray<KeyValuePair<TKey, TValue>>|null|undefined):number
 	{
 		const _ = this;
 		if(!pairs) return 0;

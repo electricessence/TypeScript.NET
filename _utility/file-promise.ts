@@ -17,7 +17,11 @@ export type UTF8 = 'utf8';
 export type Encoding = UTF8;
 
 
-export type WriteOptions = { encoding?: string; mode?: string; flag?: string; };
+export type WriteOptions = {
+	encoding?:string;
+	mode?:string;
+	flag?:string;
+};
 
 function readFile(path:string, encoding:string = ENCODING.UTF8):Promise<string>
 {
@@ -27,10 +31,10 @@ function readFile(path:string, encoding:string = ENCODING.UTF8):Promise<string>
 			path,
 			encoding,
 			(err, data)=>
-		{
-			if(err) reject(err);
-			else resolve(data);
-		});
+			{
+				if(err) reject(err);
+				else resolve(data);
+			});
 	});
 }
 
@@ -41,7 +45,7 @@ function writeFile(path:string, data:string, options?:WriteOptions):PromiseBase<
 		fs.writeFile(
 			path,
 			data,
-			options,
+			options || {},
 			err=>
 			{
 				if(err) reject(err);
@@ -52,13 +56,18 @@ function writeFile(path:string, data:string, options?:WriteOptions):PromiseBase<
 
 export {readFile as read, writeFile as write};
 
-export module json {
+export module json
+{
 
-	export function read<T extends JsonMap | JsonArray>(path:string, encoding?:string):PromiseBase<T>
+	export function read<T extends JsonMap | JsonArray>(
+		path:string,
+		encoding?:string):PromiseBase<T>
 	export function read(path:string, encoding?:string):PromiseBase<JsonData>
-	export function read<T extends JsonMap | JsonArray>(path:string, encoding:string = ENCODING.UTF8):PromiseBase<T>
+	export function read<T extends JsonMap | JsonArray>(
+		path:string,
+		encoding:string = ENCODING.UTF8):PromiseBase<T>
 	{
-		return readFile(path,encoding).then(result=>JSON.parse(result));
+		return readFile(path, encoding).then(result=>JSON.parse(result));
 	}
 
 	export function write(path:string, data:JsonData, options?:WriteOptions):PromiseBase<void>

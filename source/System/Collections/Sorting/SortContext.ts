@@ -20,7 +20,7 @@ export class SortContext<T> implements IComparer<T>
 	{ return this._order; }
 
 	constructor(
-		protected _next:IComparer<T>,
+		protected _next:IComparer<T>|null,
 		protected _comparer:Comparison<T> = Values.compare,
 		protected _order:Order = Order.Ascending)
 	{

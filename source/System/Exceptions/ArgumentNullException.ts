@@ -16,7 +16,7 @@ export class ArgumentNullException extends ArgumentException
 	constructor(
 		paramName:string,
 		message:string = '',
-		innerException:Error = null)
+		innerException?:Error)
 	{
 		super(paramName, message, innerException);
 	}

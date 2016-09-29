@@ -21,6 +21,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+const VOID0:undefined = void 0;
 const OTHER = 'other';
 
 export abstract class SetBase<T>
@@ -29,7 +30,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	constructor(source?:IEnumerableOrArray<T>)
 	{
-		super(null, areEqual);
+		super(VOID0, areEqual);
 		this._importEntries(source);
 	}
 
@@ -73,7 +74,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 			let s = _._set;
 			if(s) s.forEach(n=>
 			{
-				if(!other.contains(n.value) && _._removeInternal(n.value))
+				if(!other.contains(n.value) && _._removeInternal(<any>n.value))
 					_._incrementModified();
 			});
 
@@ -206,7 +207,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	protected _onDispose():void
 	{
 		super._onDispose();
-		this._set = null;
+		this._set = <any>null;
 	}
 
 	protected abstract _getNode(item:T):ILinkedNodeWithValue<T>;
@@ -230,13 +231,13 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		return useCopy
 			? super.forEach(action, useCopy)
-			: this._set.forEach((node, i)=>action(node.value, i));
+			: this._set.forEach((node, i)=>action(<any>node.value, i));
 	}
 
-	protected _removeNode(node:ILinkedNodeWithValue<T>):boolean
+	protected _removeNode(node:ILinkedNodeWithValue<T>|null|undefined):boolean
 	{
-		if(!node) return false;
-		return this.remove(node.value)!=0;
+		return !!node
+			&& this.remove(<any>node.value)!=0;
 	}
 
 	removeFirst():boolean

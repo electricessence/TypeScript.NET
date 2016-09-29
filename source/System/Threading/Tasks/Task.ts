@@ -90,7 +90,7 @@ export class Task<T> extends TaskHandlerBase
 
 		if(r)
 		{
-			this._result = null;
+			(<any>this)._result = null;
 			r.dispose();
 		}
 	}

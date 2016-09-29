@@ -33,18 +33,21 @@ class HashEntry<TKey, TValue>
 implements IHashEntry<TKey, TValue>
 {
 	constructor(
-		public key?:TKey,
-		public value?:TValue,
-		public previous?:IHashEntry<TKey, TValue>,
-		public next?:IHashEntry<TKey, TValue>)
-	{ }
+		public key:TKey,
+		public value:TValue,
+		public previous?:IHashEntry<TKey, TValue>|null,
+		public next?:IHashEntry<TKey, TValue>|null)
+	{
+
+	}
 }
 
+type HashEntryLinkedList<TKey,TValue> = LinkedNodeList<IHashEntry<TKey,IHashEntry<TKey,TValue>>>;
 
 var linkedListPool:ObjectPool<LinkedNodeList<any>>;
 function linkedNodeList():LinkedNodeList<any>;
 function linkedNodeList(recycle?:LinkedNodeList<any>):void;
-function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>
+function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>|void
 {
 	if(!linkedListPool)
 		linkedListPool
@@ -68,7 +71,7 @@ function getHashString(obj:any):string
 	// See IHashable.
 	if(Type.hasMemberOfType(obj, GET_HASH_CODE, Type.FUNCTION))
 	{
-		return obj.getHashCode();
+		return (<any>obj).getHashCode();
 	}
 
 	return (typeof obj.toString==Type.FUNCTION)
@@ -99,7 +102,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	private _getBucket(
 		hash:string,
-		createIfMissing?:boolean):LinkedNodeList<IHashEntry<TKey,IHashEntry<TKey,TValue>>>
+		createIfMissing?:boolean):HashEntryLinkedList<TKey,TValue>|null
 	{
 		if(hash===null || hash===VOID0 || !createIfMissing && !this.getCount())
 			return null;
@@ -118,7 +121,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	private _getBucketEntry(
 		key:TKey,
 		hash?:string,
-		bucket?:LinkedNodeList<IHashEntry<TKey,IHashEntry<TKey,TValue>>>):IHashEntry<TKey,IHashEntry<TKey,TValue>>
+		bucket?:HashEntryLinkedList<TKey,TValue>|null):IHashEntry<TKey,IHashEntry<TKey,TValue>>|null
 	{
 		if(key===null || key===VOID0 || !this.getCount())
 			return null;
@@ -133,7 +136,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 			&& bucket.find(e=>comparer(e.key)===compareKey);
 	}
 
-	protected _getEntry(key:TKey):IHashEntry<TKey,TValue>
+	protected _getEntry(key:TKey):IHashEntry<TKey,TValue>|null
 	{
 		var e = this._getBucketEntry(key);
 		return e && e.value;
@@ -159,15 +162,16 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		// Entry exits? Delete or update
 		if(bucketEntry)
 		{
+			var b = <HashEntryLinkedList<TKey,TValue>>bucket;
 			if(value===VOID0)
 			{
-				let x = bucket.removeNode(bucketEntry),
+				let x = b.removeNode(bucketEntry),
 				    y = entries.removeNode(bucketEntry.value);
 
-				if(x && !bucket.count)
+				if(x && !b.count)
 				{
 					delete buckets[hash];
-					linkedNodeList(bucket);
+					linkedNodeList(b);
 					bucket = null;
 				}
 
@@ -187,6 +191,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		else if(value!==VOID0)
 		{
 			if(!bucket) bucket = _._getBucket(hash, true);
+			if(!bucket) throw new Error(`"${hash}" cannot be added to lookup table.`);
 			let entry = new HashEntry(key, value);
 			entries.addNode(entry);
 			bucket.addNode(new HashEntry(key, entry));
@@ -222,7 +227,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
 	{
 		const _ = this;
-		var ver:number, currentEntry:IHashEntry<TKey, TValue>;
+		var ver:number, currentEntry:IHashEntry<TKey, TValue>|null;
 
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>
@@ -232,11 +237,11 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 			},
 			(yielder) =>
 			{
-				if(currentEntry!=null)
+				if(currentEntry)
 				{
 					_.assertVersion(ver);
 					var result = {key: currentEntry.key, value: currentEntry.value};
-					currentEntry = currentEntry.next;
+					currentEntry = currentEntry.next || null;
 					return yielder.yieldReturn(result);
 				}
 				return yielder.yieldBreak();
@@ -249,7 +254,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	{
 		const _ = this;
 		var result:TKey[] = [];
-		var e = _._entries.first;
+		var e:any = _._entries.first;
 		while(e)
 		{
 			result.push(e.key);
@@ -262,7 +267,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	{
 		const _ = this;
 		var result:TValue[] = [];
-		var e = _._entries.first;
+		var e:any = _._entries.first;
 		while(e)
 		{
 			result.push(e.value);

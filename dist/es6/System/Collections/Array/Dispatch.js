@@ -25,7 +25,7 @@ export function unsafe(listeners, payload, trap) {
 }
 export function mapped(listeners, payload, trap) {
     if (!listeners)
-        return null;
+        return listeners;
     var result = copy(listeners);
     if (listeners.length) {
         for (let i = 0, len = result.length; i < len; i++) {

@@ -4,7 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { IKeyValuePair } from "../../KeyValuePair";
-import { IEnumerator } from "../Enumeration/IEnumerator";
 import { ILinkedNode } from "../ILinkedListNode";
 import { Selector } from "../../FunctionTypes";
 import DictionaryBase from "./DictionaryBase";
@@ -17,13 +16,6 @@ export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
     constructor(_keyComparer?: Selector<TKey, any>);
     protected getCount(): number;
     private _getBucket(hash, createIfMissing?);
-    private _getBucketEntry(key, hash?, bucket?);
-    protected _getEntry(key: TKey): IHashEntry<TKey, TValue>;
-    getValue(key: TKey): TValue;
-    protected _setValueInternal(key: TKey, value: TValue): boolean;
-    protected _clearInternal(): number;
-    getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
-    protected getKeys(): TKey[];
-    protected getValues(): TValue[];
+    null: any;
 }
 export default Dictionary;

@@ -12,6 +12,7 @@ import {IIteratorResult} from "./IIterator";
 import {IYield} from "./IYield";
 import {IteratorResult} from "./IteratorResult";
 import __extendsImport from "../../../extends";
+import {Closure} from "../../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -20,7 +21,7 @@ const VOID0:any = void(0);
 var yielderPool:ObjectPool<Yielder<any>>;
 function yielder():Yielder<any>;
 function yielder(recycle?:Yielder<any>):void;
-function yielder(recycle?:Yielder<any>):Yielder<any>
+function yielder(recycle?:Yielder<any>):Yielder<any>|void
 {
 	if(!yielderPool)
 		yielderPool
@@ -31,10 +32,10 @@ function yielder(recycle?:Yielder<any>):Yielder<any>
 
 class Yielder<T> implements IYield<T>, IDisposable
 {
-	private _current:T = VOID0;
+	private _current:T|undefined = VOID0;
 	private _index:number;
 
-	get current():T { return this._current; } // this class is not entirely local/private.  Still needs protection.
+	get current():T|undefined { return this._current; } // this class is not entirely local/private.  Still needs protection.
 
 	get index():number { return this._index; }
 
@@ -75,7 +76,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	private _state:EnumeratorState;
 	private _disposer:()=>void;
 
-	get current():T
+	get current():T|undefined
 	{
 		var y = this._yielder;
 		return y && y.current;
@@ -88,18 +89,18 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	}
 
 	constructor(
-		initializer:() => void,
+		initializer:Closure|null,
 		tryGetNext:(yielder:IYield<T>) => boolean,
 		isEndless?:boolean);
 	constructor(
-		initializer:() => void,
+		initializer:Closure|null,
 		tryGetNext:(yielder:IYield<T>) => boolean,
-		disposer?:()=>void,
+		disposer?:Closure|null,
 		isEndless?:boolean);
 	constructor(
 		private _initializer:() => void,
 		private _tryGetNext:(yielder:IYield<T>) => boolean,
-		disposer?:ActionVoid|boolean,
+		disposer?:ActionVoid|boolean|null,
 		isEndless?:boolean)
 	{
 		super();
@@ -120,7 +121,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	 * Explicit false means it has an end.
 	 * Implicit void means unknown.
 	 */
-	get isEndless():boolean
+	get isEndless():boolean|undefined
 	{
 		return this._isEndless;
 	}
@@ -130,7 +131,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		const _ = this;
 		_.throwIfDisposed();
 		var y = _._yielder;
-		_._yielder = null;
+		_._yielder = <any>null;
 
 		_._state = EnumeratorState.Before;
 
@@ -161,7 +162,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 						this.dispose();
 						return false;
 					}
-				case EnumeratorState.After:
+				default:
 					return false;
 			}
 		}
@@ -210,12 +211,12 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		const _ = this;
 		var disposer = _._disposer;
 
-		_._initializer = null;
-		_._disposer = null;
+		_._initializer = <any>null;
+		_._disposer = <any>null;
 
 
 		var y = _._yielder;
-		_._yielder = null;
+		_._yielder = <any>null;
 		this._state = EnumeratorState.After;
 
 		if(y) yielder(y);

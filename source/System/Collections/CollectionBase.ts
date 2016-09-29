@@ -35,7 +35,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	constructor(
 		source?:IEnumerableOrArray<T>,
-		protected _equalityComparer:EqualityComparison<T> = areEqual)
+		protected _equalityComparer:EqualityComparison<T|null|undefined> = areEqual)
 	{
 		super();
 		const _ = this;
@@ -210,11 +210,11 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		this._updateRecursion = 0;
 		this._modifiedCount = 0;
 		var l = this._linq;
-		this._linq = null;
+		this._linq = <any>null;
 		if(l) l.dispose();
 	}
 
-	protected _importEntries(entries:IEnumerableOrArray<T>):number
+	protected _importEntries(entries:IEnumerableOrArray<T>|null|undefined):number
 	{
 		var added = 0;
 		if(entries)
@@ -238,9 +238,10 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return added;
 	}
 
-	importEntries(entries:IEnumerableOrArray<T>):number
+	importEntries(entries:IEnumerableOrArray<T>|null|undefined):number
 	{
 		const _ = this;
+		if(!entries) return 0;
 		_.assertModifiable();
 		_._updateRecursion++;
 
@@ -297,7 +298,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		var e = this.getEnumerator();
 		while(e.moveNext()) // Disposes when finished.
 		{
-			target[index++] = e.current;
+			target[index++] = <any>e.current;
 		}
 		return target;
 	}
@@ -355,8 +356,8 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
 					// Could end up being called more than once, be sure to check for ._linq before setting...
 					e = this._linq;
 					if(!e) this._linq = e = linq.default.from(this);
-					callback(e);
-					callback = null; // In case this is return synchronously..
+					if(callback) callback(e);
+					callback = void 0; // In case this is return synchronously..
 				});
 			}
 			else if(isNodeJS && isCommonJS)

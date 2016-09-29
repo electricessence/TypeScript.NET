@@ -44,9 +44,10 @@ var ObservableBase = (function (_super) {
 exports.ObservableBase = ObservableBase;
 var OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
 function processAction(observers, handler) {
+    if (observers === void 0) { observers = null; }
     if (!observers)
         return;
-    var observersErrors = null;
+    var observersErrors = null = null;
     for (var _i = 0, observers_1 = observers; _i < observers_1.length; _i++) {
         var s = observers_1[_i];
         try {

@@ -25,7 +25,7 @@ import __extendsImport from "../../extends";
 //noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
+const VOID0:any = void 0, NULL:any = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
 
 function isPromise<T>(value:any):value is PromiseLike<T>
 {
@@ -46,7 +46,7 @@ function resolve<T>(
 }
 
 function handleResolution(
-	p:Promise<any>,
+	p:Promise<any>|null|undefined,
 	value:Promise.Resolution<any>,
 	resolver?:(v:Promise.Resolution<any>)=>any):any
 {
@@ -64,8 +64,8 @@ function handleResolution(
 }
 
 function handleResolutionMethods(
-	targetFulfill:Promise.Fulfill<any,any>,
-	targetReject:Promise.Reject<any>,
+	targetFulfill:Promise.Fulfill<any,any>|null|undefined,
+	targetReject:Promise.Reject<any>|null|undefined,
 	value:Promise.Resolution<any>,
 	resolver?:(v:Promise.Resolution<any>)=>any):void
 {
@@ -158,12 +158,12 @@ extends DisposableBase
 	/*
 	 * Providing overrides allows for special defer or lazy sub classes.
 	 */
-	protected getResult():T
+	protected getResult():T|undefined
 	{
 		return this._result;
 	}
 
-	get result():T
+	get result():T|undefined
 	{
 		this.throwIfDisposed();
 		return this.getResult();
@@ -206,6 +206,10 @@ extends PromiseState<T> implements PromiseLike<T>
 	 * @param onFulfilled
 	 * @param onRejected
 	 */
+	abstract thenThis(
+		onFulfilled:Promise.Fulfill<T,any>,
+		onRejected?:Promise.Reject<any>):this;
+
 	abstract thenThis(
 		onFulfilled:(v?:T)=>any,
 		onRejected?:(v?:any)=>any):this;
@@ -369,7 +373,7 @@ extends PromiseState<T> implements PromiseLike<T>
 	finallyThis(fin:()=>void, synchronous?:boolean):this
 	{
 		this.throwIfDisposed();
-		var f:()=>void = synchronous ? f : ()=>deferImmediate(fin);
+		var f:()=>void = synchronous ? fin : ()=>deferImmediate(fin);
 		this.thenThis(f, f);
 		return this;
 	}
@@ -449,7 +453,7 @@ export abstract class Resolved<T> extends Resolvable<T>
  */
 export class Fulfilled<T> extends Resolved<T>
 {
-	constructor(value?:T)
+	constructor(value:T)
 	{
 		super(Promise.State.Fulfilled, value);
 	}
@@ -483,7 +487,7 @@ class PromiseWrapper<T> extends Resolvable<T>
 			throw new ArgumentException(TARGET, "Must be a promise-like object.");
 
 		_target.then(
-			v=>
+			(v:T)=>
 			{
 				this._state = Promise.State.Fulfilled;
 				this._result = v;
@@ -546,7 +550,7 @@ class PromiseWrapper<T> extends Resolvable<T>
 export class Promise<T> extends Resolvable<T>
 {
 
-	private _waiting:IPromiseCallbacks<any>[];
+	private _waiting:IPromiseCallbacks<any>[]|null|undefined;
 
 	/*
 	 * A note about deferring:
@@ -723,7 +727,7 @@ export class Promise<T> extends Resolvable<T>
 					let {onFulfilled, promise} = c;
 					pools.PromiseCallbacks.recycle(c);
 					//let ex =
-					handleResolution(promise, result, onFulfilled);
+					handleResolution(<any>promise, result, onFulfilled);
 					//if(!p && ex) console.error("Unhandled exception in onFulfilled:",ex);
 				}
 				o.length = 0;
@@ -853,7 +857,7 @@ export class PromiseCollection<T> extends DisposableBase
 {
 	private _source:PromiseLike<T>[];
 
-	constructor(source:PromiseLike<T>[])
+	constructor(source:PromiseLike<T>[]|null|undefined)
 	{
 		super();
 		this._source = source && source.slice() || [];
@@ -863,7 +867,7 @@ export class PromiseCollection<T> extends DisposableBase
 	{
 		super._onDispose();
 		this._source.length = 0;
-		this._source = null;
+		(<any>this)._source = null;
 	}
 
 	/**
@@ -956,7 +960,7 @@ export class PromiseCollection<T> extends DisposableBase
 					i:number,
 					array:PromiseLike<T>[]) =>
 					handleSyncIfPossible(previous,
-						p=>handleSyncIfPossible(current, c=>reduction(p, c, i, array))),
+						(p:U)=>handleSyncIfPossible(current, (c:T)=>reduction(p, c, i, array))),
 
 				isPromise(initialValue)
 					? initialValue
@@ -1018,18 +1022,18 @@ module pools
 			return pool
 				|| (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory, c=>
 				{
-					c.onFulfilled = null;
-					c.onRejected = null;
-					c.promise = null;
+					c.onFulfilled = NULL;
+					c.onRejected = NULL;
+					c.promise = NULL;
 				}));
 		}
 
 		function factory():IPromiseCallbacks<any>
 		{
 			return {
-				onFulfilled: null,
-				onRejected: null,
-				promise: null
+				onFulfilled: NULL,
+				onRejected: NULL,
+				promise: NULL
 			}
 		}
 
@@ -1153,12 +1157,12 @@ export module Promise
 
 			let cleanup = ()=>
 			{
-				reject = null;
-				resolve = null;
+				reject = VOID0;
+				resolve = VOID0;
 				promises.length = 0;
-				promises = null;
+				promises = VOID0;
 				remaining.dispose();
-				remaining = null;
+				remaining = VOID0;
 			};
 
 			let checkIfShouldResolve = ()=>
@@ -1229,10 +1233,10 @@ export module Promise
 
 			let cleanup = ()=>
 			{
-				reject = null;
-				resolve = null;
+				reject = NULL;
+				resolve = NULL;
 				remaining.dispose();
-				remaining = null;
+				remaining = NULL;
 			};
 
 			let checkIfShouldResolve = ()=>
@@ -1296,10 +1300,10 @@ export module Promise
 		{
 			let cleanup = ()=>
 			{
-				reject = null;
-				resolve = null;
+				reject = NULL;
+				resolve = NULL;
 				promises.length = 0;
-				promises = null;
+				promises = NULL;
 			};
 
 			let onResolve = (r:(x:any)=>void, v:any)=>
@@ -1385,17 +1389,19 @@ export module Promise
 	 */
 	export function map<T,U>(source:T[], transform:(value:T)=>U):PromiseCollection<U>
 	{
-		return new PromiseCollection(source.map(d=>new Promise<U>((r, j)=>
-		{
-			try
+		return new PromiseCollection<U>(
+			source.map(d=>new Promise<U>((r, j)=>
 			{
-				r(transform(d));
-			}
-			catch(ex)
-			{
-				j(ex);
-			}
-		})));
+				try
+				{
+					r(transform(d));
+				}
+				catch(ex)
+				{
+					j(ex);
+				}
+			}))
+		);
 	}
 
 	/**
@@ -1438,7 +1444,7 @@ export module Promise
 interface IPromiseCallbacks<T>
 {
 	onFulfilled:Promise.Fulfill<T,any>;
-	onRejected:Promise.Reject<any>;
+	onRejected?:Promise.Reject<any>;
 	promise?:Promise<any>;
 }
 

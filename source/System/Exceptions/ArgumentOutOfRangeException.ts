@@ -5,8 +5,8 @@
  */
 
 
-import {Exception} from "../Exception";
 import {ArgumentException} from "./ArgumentException";
+import {Primitive} from "../Primitive";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -15,13 +15,13 @@ const NAME:string = 'ArgumentOutOfRangeException';
 
 export class ArgumentOutOfRangeException extends ArgumentException
 {
-	actualValue:string|number|boolean;
+	actualValue:Primitive | null | undefined;
 
 	constructor(
 		paramName:string,
-		actualValue:string|number|boolean,
+		actualValue:Primitive | null | undefined,
 		message:string = ' ',
-		innerException:Exception = null)
+		innerException?:Error)
 	{
 		super(paramName, +`(${actualValue}) ` + message, innerException, (_)=>
 		{

@@ -59,7 +59,7 @@ export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITim
 
 
 	// Clear this value if sub-class values change.
-	protected _total:ITimeMeasurement;
+	protected _total:ITimeMeasurement | null;
 
 	/**
 	 * Returns an object with all units exposed as totals.

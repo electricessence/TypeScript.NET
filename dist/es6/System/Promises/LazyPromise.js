@@ -51,8 +51,8 @@ export class LazyPromise extends Promise {
             pass = () => {
                 this.thenThis(v => resolve(v), e => reject(e));
                 timeout.dispose();
-                timeout = null;
-                pass = null;
+                timeout = VOID0;
+                pass = VOID0;
             };
             if (timedOut)
                 pass();
@@ -67,11 +67,11 @@ export class LazyPromise extends Promise {
         var finalize = () => {
             if (timeout) {
                 timeout.dispose();
-                timeout = null;
+                timeout = VOID0;
             }
             if (pass)
                 pass();
-            finalize = null;
+            finalize = VOID0;
         };
         {
             let detector = () => {

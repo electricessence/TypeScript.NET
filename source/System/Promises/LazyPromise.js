@@ -63,8 +63,8 @@
                 pass = function () {
                     _this.thenThis(function (v) { return resolve(v); }, function (e) { return reject(e); });
                     timeout.dispose();
-                    timeout = null;
-                    pass = null;
+                    timeout = VOID0;
+                    pass = VOID0;
                 };
                 if (timedOut)
                     pass();
@@ -81,11 +81,11 @@
             var finalize = function () {
                 if (timeout) {
                     timeout.dispose();
-                    timeout = null;
+                    timeout = VOID0;
                 }
                 if (pass)
                     pass();
-                finalize = null;
+                finalize = VOID0;
             };
             {
                 var detector = function () {

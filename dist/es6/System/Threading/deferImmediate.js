@@ -11,7 +11,7 @@ import { isNodeJS } from "../Environment";
 var requestTick;
 var flushing = false;
 function flush() {
-    var entry;
+    var entry = null;
     while (entry = immediateQueue.first) {
         let { task, domain, context, args } = entry;
         entry.canceller();
@@ -27,7 +27,7 @@ function flush() {
 }
 var immediateQueue = new LinkedNodeList();
 var laterQueue = new Queue();
-var entryPool = new ObjectPool(40, () => ({}), o => {
+var entryPool = new ObjectPool(40, () => ({}), (o) => {
     o.task = null;
     o.domain = null;
     o.context = null;
@@ -78,7 +78,6 @@ export function deferImmediate(task, context, args) {
             return false;
         let r = !!immediateQueue.removeNode(entry);
         entryPool.add(entry);
-        entry = null;
         return r;
     };
     immediateQueue.addNode(entry);

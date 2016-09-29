@@ -10,7 +10,7 @@ import { areEquivalent } from "../Compare";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 export class EventDispatcherEntry extends DisposableBase {
-    constructor(type, listener, params = null, finalizer) {
+    constructor(type, listener, params, finalizer) {
         super(finalizer);
         this.type = type;
         this.listener = listener;

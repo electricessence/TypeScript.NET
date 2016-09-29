@@ -47,7 +47,7 @@ var flushing:boolean = false;
 function flush():void
 {
 	/* jshint loopfunc: true */
-	var entry:ITaskQueueEntry;
+	var entry:ITaskQueueEntry|null;
 	while(entry = immediateQueue.first)
 	{
 		let {task, domain, context, args} = entry;
@@ -74,7 +74,7 @@ var laterQueue = new Queue<Closure>();
 
 var entryPool = new ObjectPool<ITaskQueueEntry>(40,
 	()=><any>{},
-	o=>
+	(o:any)=>
 	{
 		o.task = null;
 		o.domain = null;
@@ -159,7 +159,6 @@ export function deferImmediate(task:Closure|Function, context?:any, args?:any[])
 		if(!entry) return false;
 		let r = !!immediateQueue.removeNode(entry);
 		entryPool.add(entry);
-		entry = null;
 		return r;
 	};
 

@@ -8,7 +8,7 @@ import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 const NAME = 'ArgumentNullException';
 export class ArgumentNullException extends ArgumentException {
-    constructor(paramName, message = '', innerException = null) {
+    constructor(paramName, message = '', innerException) {
         super(paramName, message, innerException);
     }
     getName() {

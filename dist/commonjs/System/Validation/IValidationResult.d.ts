@@ -6,7 +6,7 @@
 export interface IValidationResult
 {
 	isValid:boolean;
-	message:string;
+	message?:string;
 	data:any;
 }
 

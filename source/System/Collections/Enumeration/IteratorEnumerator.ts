@@ -56,7 +56,7 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 
 	protected getIsEndless():boolean
 	{
-		return this._isEndless && super.getIsEndless();
+		return !!this._isEndless && super.getIsEndless();
 	}
 }
 

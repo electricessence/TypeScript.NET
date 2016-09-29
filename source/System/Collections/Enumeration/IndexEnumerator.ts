@@ -8,14 +8,22 @@ import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+export interface IndexEnumeratorSource<T> {
+	source:{ [index:number]:T };
+	length:number;
+	step?:number
+
+	pointer?:number;
+}
+
 export class IndexEnumerator<T> extends EnumeratorBase<T>
 {
 
 	constructor(
-		sourceFactory:() => { source:{ [index:number]:T }; pointer?:number; length:number; step?:number })
+		sourceFactory:() => IndexEnumeratorSource<T>)
 	{
 
-		var source:{ source:{ [index:number]:T }; pointer?:number; length:number; step?:number };
+		var source:IndexEnumeratorSource<T>;
 		super(
 			() =>
 			{
@@ -52,7 +60,7 @@ export class IndexEnumerator<T> extends EnumeratorBase<T>
 				var len = (source && source.source) ? source.length : 0;
 				if(!len || isNaN(len))
 					return yielder.yieldBreak();
-				var current = source.pointer;
+				var current = <number>source.pointer;
 				source.pointer += source.step;
 				return (current<len && current>=0)
 					? yielder.yieldReturn(source.source[current])
@@ -63,7 +71,7 @@ export class IndexEnumerator<T> extends EnumeratorBase<T>
 			{
 				if(source)
 				{
-					source.source = null;
+					source.source = <any>null;
 				}
 			}
 		);

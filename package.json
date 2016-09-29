@@ -44,7 +44,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tsc": "^1.1.5",
     "gulp-typedoc": "^2.0.0",
-    "gulp-typescript": "^2.13.6",
+    "gulp-typescript": "^2.14.1",
     "gulp-typescript-helper": "^1.1.6",
     "gulp-uglify": "^1.4.1",
     "karma": "^0.13.21",
@@ -55,9 +55,9 @@
     "stream-to-promise-agnostic": "^1.0.3",
     "tsd": "^0.6.4",
     "typedoc": "^0.4.5",
-    "typescript": "^1.8.10"
+    "typescript": "^2.0.3"
   },
   "optionalDependencies": {
-    "typescript": "^1.8.10"
+    "typescript": "^2.0.3"
   }
 }

@@ -15,6 +15,7 @@ var Timer = (function (_super) {
         this._interval = _interval;
         this._maxCount = _maxCount;
         this._initialDelay = _initialDelay;
+        this._cancel = null;
         this._count = 0;
         if (_interval === null || _interval === void (0))
             throw "'interval' must be a valid number.";

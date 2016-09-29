@@ -20,7 +20,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	private _count:number = 0;
 	private _map:IMap<TValue> = {};
 
-	protected _getEntry(key:string):IKeyValuePair<string,TValue>
+	protected _getEntry(key:string):IKeyValuePair<string,TValue>|null
 	{
 		return !this.containsKey(key)
 			? null : {

@@ -26,7 +26,7 @@ export class StringBuilder implements IDisposable
 {
 	//noinspection JSMismatchedCollectionQueryUpdate
 	private _partArray:any[];
-	private _latest:string; // AKA persistentString
+	private _latest:string|null; // AKA persistentString
 
 	constructor(...initial:any[])
 	{

@@ -12,7 +12,6 @@ var ArgumentNullException = (function (_super) {
     __extends(ArgumentNullException, _super);
     function ArgumentNullException(paramName, message, innerException) {
         if (message === void 0) { message = ''; }
-        if (innerException === void 0) { innerException = null; }
         _super.call(this, paramName, message, innerException);
     }
     ArgumentNullException.prototype.getName = function () {

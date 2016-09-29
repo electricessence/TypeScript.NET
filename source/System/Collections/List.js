@@ -19,11 +19,12 @@
     var CollectionBase_1 = require("./CollectionBase");
     var extends_1 = require("../../extends");
     var __extends = extends_1.default;
+    var VOID0 = void 0;
     var List = (function (_super) {
         __extends(List, _super);
         function List(source, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-            _super.call(this, null, equalityComparer);
+            _super.call(this, VOID0, equalityComparer);
             var _ = this;
             if (Array.isArray(source)) {
                 _._source = source.slice();

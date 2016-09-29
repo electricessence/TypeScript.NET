@@ -78,11 +78,11 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 const OBSERVER_ERROR_MESSAGE:string = 'One or more observers had errors when attempting to pass information.';
 
 function processAction<T>(
-	observers:IObserver<T>[],
+	observers:IObserver<T>[]|null,
 	handler:(s:IObserver<T>)=>void)
 {
 	if(!observers) return;
-	var observersErrors:{observer:IObserver<T>,ex:any}[] = null;
+	var observersErrors:{observer:IObserver<T>,ex:any}[]|null = null;
 
 	for(let s of observers)
 	{

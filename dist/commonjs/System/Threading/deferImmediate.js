@@ -12,7 +12,7 @@ var Environment_1 = require("../Environment");
 var requestTick;
 var flushing = false;
 function flush() {
-    var entry;
+    var entry = null;
     while (entry = immediateQueue.first) {
         var task_1 = entry.task, domain = entry.domain, context = entry.context, args = entry.args;
         entry.canceller();
@@ -79,7 +79,6 @@ function deferImmediate(task, context, args) {
             return false;
         var r = !!immediateQueue.removeNode(entry);
         entryPool.add(entry);
-        entry = null;
         return r;
     };
     immediateQueue.addNode(entry);
