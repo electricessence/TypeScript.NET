@@ -32,7 +32,7 @@ export declare abstract class SetBase<T> extends CollectionBase<T> implements IS
     contains(item: T): boolean;
     getEnumerator(): IEnumerator<T>;
     forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
-    protected _removeNode(node: ILinkedNodeWithValue<T>): boolean;
+    protected _removeNode(node: ILinkedNodeWithValue<T> | null | undefined): boolean;
     removeFirst(): boolean;
     removeLast(): boolean;
 }

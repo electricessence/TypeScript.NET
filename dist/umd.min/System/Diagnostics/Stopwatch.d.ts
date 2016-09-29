@@ -9,7 +9,7 @@ export default class Stopwatch implements ITimer {
     private _elapsed;
     private _startTimeStamp;
     private _isRunning;
-    isRunning: boolean;
+    readonly isRunning: boolean;
     constructor();
     static startNew(): Stopwatch;
     static measure(closure: () => void): TimeSpan;
@@ -17,8 +17,8 @@ export default class Stopwatch implements ITimer {
     stop(): void;
     reset(): void;
     lap(): TimeSpan;
-    currentLapMilliseconds: number;
-    currentLap: TimeSpan;
-    elapsedMilliseconds: number;
-    elapsed: TimeSpan;
+    readonly currentLapMilliseconds: number;
+    readonly currentLap: TimeSpan;
+    readonly elapsedMilliseconds: number;
+    readonly elapsed: TimeSpan;
 }

@@ -16,8 +16,8 @@ function entryFinalizer() {
     p.dispatcher = null;
 }
 export default class EventDispatcherBase extends DisposableBase {
-    constructor(...args) {
-        super(...args);
+    constructor() {
+        super(...arguments);
         this._isDisposing = false;
     }
     addEventListener(type, listener, priority = 0) {

@@ -16,9 +16,9 @@ export declare class TimeSpan extends TimeQuantity implements ITimeMeasurement {
     hours: number;
     days: number;
     constructor(value: number, units?: TimeUnit);
-    total: TimeSpan;
+    readonly total: TimeSpan;
     private _time;
-    time: ClockTime;
+    readonly time: ClockTime;
     add(other: ITimeQuantity): TimeSpan;
     addUnit(value: number, units?: TimeUnit): TimeSpan;
     static from(value: number, units: TimeUnit): TimeSpan;
@@ -28,6 +28,6 @@ export declare class TimeSpan extends TimeQuantity implements ITimeMeasurement {
     static fromSeconds(value: number): TimeSpan;
     static fromMilliseconds(value: number): TimeSpan;
     static fromTicks(value: number): TimeSpan;
-    static zero: TimeSpan;
+    static readonly zero: TimeSpan;
 }
 export default TimeSpan;

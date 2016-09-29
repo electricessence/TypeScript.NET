@@ -191,6 +191,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 };
                 CollectionBase.prototype.importEntries = function (entries) {
                     var _ = this;
+                    if (!entries)
+                        return 0;
                     _.assertModifiable();
                     _._updateRecursion++;
                     var n;
@@ -266,8 +268,9 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                                 e = _this._linq;
                                 if (!e)
                                     _this._linq = e = linq.default.from(_this);
-                                callback(e);
-                                callback = null;
+                                if (callback)
+                                    callback(e);
+                                callback = void 0;
                             });
                         }
                         else if (Environment_1.isNodeJS && Environment_1.isCommonJS) {

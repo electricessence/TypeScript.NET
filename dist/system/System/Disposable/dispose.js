@@ -45,7 +45,7 @@ System.register(["../Types"], function(exports_1, context_1) {
     function disposeTheseInternal(disposables, trapExceptions, index) {
         if (index === void 0) { index = 0; }
         var exceptions;
-        var len = disposables.length;
+        var len = disposables ? disposables.length : 0;
         for (; index < len; index++) {
             var next = disposables[index];
             if (!next)
@@ -101,7 +101,7 @@ System.register(["../Types"], function(exports_1, context_1) {
                 function these(disposables, trapExceptions) {
                     return disposables && disposables.length
                         ? disposeTheseInternal(disposables.slice(), trapExceptions)
-                        : null;
+                        : void 0;
                 }
                 dispose.these = these;
                 var these;

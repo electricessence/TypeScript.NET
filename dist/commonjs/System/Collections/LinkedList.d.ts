@@ -4,6 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { CollectionBase } from "./CollectionBase";
+import { ILinkedListNode } from "./ILinkedListNode";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { Predicate, Action, EqualityComparison } from "../FunctionTypes";
 import { ILinkedList } from "./ILinkedList";
@@ -19,6 +20,24 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
     getEnumerator(): IEnumerator<T>;
     private _findFirst(entry);
-    null: any;
+    private _findLast(entry);
+    removeOnce(entry: T): boolean;
+    readonly first: ILinkedListNode<T> | null;
+    readonly firstValue: T;
+    readonly last: ILinkedListNode<T> | null;
+    readonly lastValue: T;
+    getValueAt(index: number): T;
+    getNodeAt(index: number): ILinkedListNode<T> | null;
+    find(entry: T): ILinkedListNode<T> | null;
+    findLast(entry: T): ILinkedListNode<T> | null;
+    addFirst(entry: T): void;
+    addLast(entry: T): void;
+    private _removeNodeInternal(node);
+    removeFirst(): boolean;
+    removeLast(): boolean;
+    removeAt(index: number): boolean;
+    removeNode(node: ILinkedListNode<T>): boolean;
+    addBefore(before: ILinkedListNode<T>, entry: T): void;
+    addAfter(after: ILinkedListNode<T>, entry: T): void;
 }
 export default LinkedList;

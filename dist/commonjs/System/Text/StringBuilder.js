@@ -12,7 +12,6 @@ var StringBuilder = (function () {
         for (var _i = 0; _i < arguments.length; _i++) {
             initial[_i - 0] = arguments[_i];
         }
-        this._latest = null;
         var _ = this;
         _._latest = null;
         _._partArray = [];

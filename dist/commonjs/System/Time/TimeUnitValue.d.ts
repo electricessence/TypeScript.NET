@@ -10,7 +10,7 @@ export default class TimeUnitValue extends TimeQuantity {
     constructor(value: number | ITimeQuantity, _units: TimeUnit);
     value: number;
     getTotalMilliseconds(): number;
-    units: TimeUnit;
+    readonly units: TimeUnit;
     to(units?: TimeUnit): TimeUnitValue;
     static from(value: number | ITimeQuantity, units?: TimeUnit): TimeUnitValue;
 }

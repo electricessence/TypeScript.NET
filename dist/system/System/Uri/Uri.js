@@ -65,7 +65,7 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
         if (result) {
             if (uri.userInfo)
                 result = uri.userInfo + AT + result;
-            if (!isNaN(uri.port))
+            if (!isNaN((uri.port)))
                 result += ':' + uri.port;
             result = SLASH2 + result;
         }
@@ -174,32 +174,33 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
             Uri = (function () {
                 function Uri(scheme, userInfo, host, port, path, query, fragment) {
                     var _ = this;
-                    _.scheme = getScheme(scheme) || null;
-                    _.userInfo = userInfo || null;
-                    _.host = host || null;
-                    _.port = getPort(port);
-                    _.authority = _.getAuthority() || null;
-                    _.path = path || null;
+                    this.scheme = getScheme(scheme) || null;
+                    this.userInfo = userInfo || null;
+                    this.host = host || null;
+                    this.port = getPort(port);
+                    this.authority = _.getAuthority() || null;
+                    this.path = path || null;
                     if (!Types_1.Type.isString(query))
                         query = QueryParams.encode(query);
-                    _.query = formatQuery(query) || null;
-                    Object.freeze(_.queryParams
+                    this.query = formatQuery(query) || null;
+                    Object.freeze(this.queryParams
                         = _.query
                             ? QueryParams.parseToMap(_.query)
                             : {});
-                    _.pathAndQuery = _.getPathAndQuery() || null;
-                    _.fragment = formatFragment(fragment) || null;
-                    _.absoluteUri = _.getAbsoluteUri();
-                    _.baseUri = _.absoluteUri.replace(/[?#].*/, '');
-                    Object.freeze(_);
+                    this.pathAndQuery = _.getPathAndQuery() || null;
+                    this.fragment = formatFragment(fragment) || null;
+                    this.absoluteUri = _.getAbsoluteUri();
+                    this.baseUri = _.absoluteUri.replace(/[?#].*/, '');
+                    Object.freeze(this);
                 }
                 Uri.prototype.equals = function (other) {
                     return this === other || this.absoluteUri == Uri.toString(other);
                 };
                 Uri.from = function (uri, defaults) {
-                    var u = (!uri || Types_1.Type.isString(uri))
-                        ? Uri.parse(uri) : uri;
-                    return new Uri(u.scheme || defaults && defaults.scheme, u.userInfo || defaults && defaults.userInfo, u.host || defaults && defaults.host, isNaN(u.port) ? defaults && defaults.port : u.port, u.path || defaults && defaults.path, u.query || defaults && defaults.query, u.fragment || defaults && defaults.fragment);
+                    var u = Types_1.Type.isString(uri)
+                        ? Uri.parse(uri)
+                        : uri;
+                    return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
                 };
                 Uri.parse = function (url, throwIfInvalid) {
                     if (throwIfInvalid === void 0) { throwIfInvalid = true; }
@@ -234,7 +235,9 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
                 };
                 Object.defineProperty(Uri.prototype, "pathSegments", {
                     get: function () {
-                        return this.path.match(/^[/]|[^/]*[/]|[^/]+$/g);
+                        return this.path
+                            && this.path.match(/^[/]|[^/]*[/]|[^/]+$/g)
+                            || [];
                     },
                     enumerable: true,
                     configurable: true

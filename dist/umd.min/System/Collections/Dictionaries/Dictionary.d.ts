@@ -18,7 +18,7 @@ export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValu
     protected getCount(): number;
     private _getBucket(hash, createIfMissing?);
     private _getBucketEntry(key, hash?, bucket?);
-    protected _getEntry(key: TKey): IHashEntry<TKey, TValue>;
+    protected _getEntry(key: TKey): IHashEntry<TKey, TValue> | null;
     getValue(key: TKey): TValue;
     protected _setValueInternal(key: TKey, value: TValue): boolean;
     protected _clearInternal(): number;

@@ -7,7 +7,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Compare_1, AU, Types_1, Integer_1, EnumeratorBase_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1, CollectionBase_1, extends_1;
-    var __extends, MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
+    var __extends, VOID0, MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     function assertZeroOrGreater(value, property) {
         if (value < 0)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(property, value, "Must be greater than zero");
@@ -50,6 +50,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
             }],
         execute: function() {
             __extends = extends_1.default;
+            VOID0 = void 0;
             MINIMUM_GROW = 4;
             SHRINK_THRESHOLD = 32;
             GROW_FACTOR_HALF = 100;
@@ -59,7 +60,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 __extends(Queue, _super);
                 function Queue(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-                    _super.call(this, null, equalityComparer);
+                    _super.call(this, VOID0, equalityComparer);
                     var _ = this;
                     _._head = 0;
                     _._tail = 0;
@@ -191,7 +192,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     if (_._size == 0) {
                         if (throwIfEmpty)
                             throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
-                        return void 0;
+                        return VOID0;
                     }
                     var array = _._array, head = _._head;
                     var removed = _._array[head];
@@ -233,7 +234,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 Queue.prototype.trimExcess = function (threshold) {
                     var _ = this;
                     var size = _._size;
-                    if (size < Math.floor(_._capacity * 0.9) && (isNaN(threshold) || threshold < size))
+                    if (size < Math.floor(_._capacity * 0.9) && (!threshold && threshold !== 0 || isNaN(threshold) || threshold < size))
                         _.setCapacity(size);
                 };
                 Queue.prototype.getEnumerator = function () {

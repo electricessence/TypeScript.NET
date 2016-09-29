@@ -8,14 +8,14 @@ export declare abstract class ResolverBase<T> extends DisposableBase {
     protected _valueFactory: Func<T>;
     private _trapExceptions;
     private _allowReset;
-    protected _isValueCreated: boolean;
+    protected _isValueCreated: boolean | null;
     protected _value: T;
     constructor(_valueFactory: Func<T>, _trapExceptions: boolean, _allowReset?: boolean);
     protected _error: any;
     protected getError(): any;
-    error: any;
+    readonly error: any;
     getValue(): T;
-    canReset: boolean;
+    readonly canReset: boolean;
     protected _onDispose(): void;
     tryReset(): boolean;
 }

@@ -14,7 +14,7 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	/**
 	 * The current value within the enumeration.
 	 */
-	current:T;
+	current:T|undefined;
 
 	/**
 	 * Safely moves to the next entry and returns true if there is one.
@@ -29,7 +29,7 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	/**
 	 * Calls .moveNext() and returns .current
 	 */
-	nextValue(value?:any):T;
+	nextValue(value?:any):T|undefined;
 
 	/**
 	 * Provides a way of flagging endless enumerations that may cause issues.

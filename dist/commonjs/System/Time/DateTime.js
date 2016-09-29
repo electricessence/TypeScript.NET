@@ -11,7 +11,6 @@ var DateTime = (function () {
     function DateTime(value, kind) {
         if (value === void 0) { value = new Date(); }
         if (kind === void 0) { kind = 1; }
-        this._time = null;
         var _ = this;
         _._kind = kind;
         if (value instanceof DateTime)

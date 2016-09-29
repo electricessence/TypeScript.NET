@@ -3,11 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { IDisposableAware } from "./IDisposableAware";
+import { Closure } from "../FunctionTypes";
 export declare abstract class DisposableBase implements IDisposableAware {
     private __finalizer;
-    constructor(__finalizer?: () => void);
+    constructor(__finalizer?: Closure | null);
     private __wasDisposed;
-    wasDisposed: boolean;
+    readonly wasDisposed: boolean;
     protected _disposableObjectName: string;
     protected throwIfDisposed(message?: string, objectName?: string): boolean;
     dispose(): void;

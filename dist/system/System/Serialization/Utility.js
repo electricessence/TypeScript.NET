@@ -22,7 +22,7 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
                     return v;
                 if (isSerializable(v))
                     return v.serialize();
-                else if (arguments.length > 1)
+                else if (defaultForUnknown)
                     return defaultForUnknown;
                 var ex = new InvalidOperationException_1.InvalidOperationException('Attempting to serialize unidentifiable type.');
                 ex.data['value'] = v;
@@ -42,7 +42,7 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
                 case 'null':
                     return null;
                 case Types_1.Type.UNDEFINED:
-                    return undefined;
+                    return void (0);
                 case TRUE:
                     return true;
                 case FALSE:

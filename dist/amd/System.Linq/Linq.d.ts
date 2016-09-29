@@ -5,7 +5,7 @@
  */
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
-import { Action, Predicate, Selector, EqualityComparison, Comparison } from "../System/FunctionTypes";
+import { Action, Predicate, Selector, EqualityComparison, Comparison, Closure } from "../System/FunctionTypes";
 import { IEnumerableOrArray } from "../System/Collections/IEnumerableOrArray";
 import { IArray } from "../System/Collections/Array/IArray";
 import { IMap, IDictionary } from "../System/Collections/Dictionaries/IDictionary";
@@ -13,22 +13,22 @@ import { Comparable } from "../System/IComparable";
 import { IInfiniteEnumerable, ILinqEnumerable, IFiniteEnumerable, ILookup, IOrderedEnumerable, IGrouping, EnumerableAction } from "./Enumerable";
 export declare class InfiniteEnumerable<T> extends DisposableBase implements IInfiniteEnumerable<T> {
     protected _enumeratorFactory: () => IEnumerator<T>;
-    constructor(_enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void);
-    protected _isEndless: boolean;
-    isEndless: boolean;
+    constructor(_enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure | null);
+    protected _isEndless: boolean | undefined;
+    readonly isEndless: boolean | undefined;
     getEnumerator(): IEnumerator<T>;
     protected _onDispose(): void;
     asEnumerable(): this;
-    doAction(action: Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>, initializer?: () => void, isEndless?: boolean): this;
+    doAction(action: Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>, initializer?: Closure | null, isEndless?: boolean | null | undefined): this;
     force(): void;
     skip(count: number): this;
     take(count: number): FiniteEnumerable<T>;
     elementAt(index: number): T;
-    elementAtOrDefault(index: number, defaultValue?: T): T;
+    elementAtOrDefault(index: number, defaultValue?: T): T | undefined;
     first(): T;
-    firstOrDefault(defaultValue?: T): T;
+    firstOrDefault(defaultValue?: T): T | undefined;
     single(): T;
-    singleOrDefault(defaultValue?: T): T;
+    singleOrDefault(defaultValue?: T): T | undefined;
     any(): boolean;
     isEmpty(): boolean;
     traverseBreadthFirst(childrenSelector: (element: T) => IEnumerableOrArray<T>): Enumerable<T>;
@@ -74,11 +74,11 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     share(): this;
 }
 export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILinqEnumerable<T> {
-    constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: () => void, isEndless?: boolean);
+    constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure | null, isEndless?: boolean);
     static from<T>(source: IEnumerableOrArray<T>): Enumerable<T>;
+    static fromAny<T>(source: IEnumerableOrArray<T>): Enumerable<T>;
     static fromAny(source: any): Enumerable<any>;
-    static fromAny<T>(source: IEnumerableOrArray<T>, defaultEnumerable?: Enumerable<T>): Enumerable<T>;
-    static fromAny<T>(source: any, defaultEnumerable?: Enumerable<T>): Enumerable<T>;
+    static fromAny<T>(source: IEnumerableOrArray<T>, defaultEnumerable: Enumerable<T>): Enumerable<T>;
     static fromOrEmpty<T>(source: IEnumerableOrArray<T>): Enumerable<T>;
     static toArray<T>(source: IEnumerableOrArray<T>): T[];
     static choice<T>(values: IArray<T>): InfiniteEnumerable<T>;
@@ -146,17 +146,17 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILin
     groupBy<TKey, TCompare>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, T>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, T>>;
     partitionBy<TKey>(keySelector: Selector<T, TKey>): Enumerable<IGrouping<TKey, T>>;
     partitionBy<TKey, TElement, TCompare>(keySelector: Selector<T, TKey>, elementSelector: Selector<T, TElement>, resultSelector?: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>, compareSelector?: Selector<TKey, TCompare>): Enumerable<IGrouping<TKey, TElement>>;
-    aggregate(func: (a: T, b: T) => T, seed?: T): T;
+    aggregate(func: (a: T, b: T) => T, seed?: T): T | undefined;
     average(selector?: Selector<T, number>): number;
-    max(): T;
-    min(): T;
-    maxBy<TCompare>(keySelector?: Selector<T, TCompare>): T;
-    minBy<TCompare>(keySelector?: Selector<T, TCompare>): T;
+    max(): T | undefined;
+    min(): T | undefined;
+    maxBy<TCompare>(keySelector?: Selector<T, TCompare>): T | undefined;
+    minBy<TCompare>(keySelector?: Selector<T, TCompare>): T | undefined;
     sum(selector?: Selector<T, number>): number;
     product(selector?: Selector<T, number>): number;
     quotient(selector?: Selector<T, number>): number;
     last(): T;
-    lastOrDefault(defaultValue?: T): T;
+    lastOrDefault(defaultValue?: T): T | undefined;
     memoize(): this;
 }
 export declare class FiniteEnumerable<T> extends Enumerable<T> implements IFiniteEnumerable<T> {

@@ -12,19 +12,20 @@ export declare class PromiseState<T> extends DisposableBase {
     constructor(_state: Promise.State, _result?: T, _error?: any);
     protected _onDispose(): void;
     protected getState(): Promise.State;
-    state: Promise.State;
-    isPending: boolean;
-    isSettled: boolean;
-    isFulfilled: boolean;
-    isRejected: boolean;
-    protected getResult(): T;
-    result: T;
+    readonly state: Promise.State;
+    readonly isPending: boolean;
+    readonly isSettled: boolean;
+    readonly isFulfilled: boolean;
+    readonly isRejected: boolean;
+    protected getResult(): T | undefined;
+    readonly result: T | undefined;
     protected getError(): any;
-    error: any;
+    readonly error: any;
 }
 export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T> {
     constructor();
     abstract thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    abstract thenThis(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): this;
     abstract thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
     then<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     thenAllowFatal<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
@@ -45,7 +46,7 @@ export declare abstract class Resolved<T> extends Resolvable<T> {
     constructor(state: Promise.State, result: T, error?: any);
 }
 export declare class Fulfilled<T> extends Resolved<T> {
-    constructor(value?: T);
+    constructor(value: T);
 }
 export declare class Rejected<T> extends Resolved<T> {
     constructor(error: any);
@@ -71,9 +72,9 @@ export declare class ArrayPromise<T> extends Promise<T[]> {
 }
 export declare class PromiseCollection<T> extends DisposableBase {
     private _source;
-    constructor(source: PromiseLike<T>[]);
+    constructor(source: PromiseLike<T>[] | null | undefined);
     protected _onDispose(): void;
-    promises: PromiseLike<T>[];
+    readonly promises: PromiseLike<T>[];
     all(): ArrayPromise<T>;
     race(): PromiseBase<T>;
     waitAll(): ArrayPromise<PromiseLike<T>>;

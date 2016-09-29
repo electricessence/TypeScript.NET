@@ -113,11 +113,12 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
                 Dictionary.prototype._setValueInternal = function (key, value) {
                     var _ = this, buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
                     if (bucketEntry) {
+                        var b = bucket;
                         if (value === VOID0) {
-                            var x = bucket.removeNode(bucketEntry), y = entries.removeNode(bucketEntry.value);
-                            if (x && !bucket.count) {
+                            var x = b.removeNode(bucketEntry), y = entries.removeNode(bucketEntry.value);
+                            if (x && !b.count) {
                                 delete buckets[hash];
-                                linkedNodeList(bucket);
+                                linkedNodeList(b);
                                 bucket = null;
                             }
                             if (x !== y)
@@ -134,6 +135,8 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
                     else if (value !== VOID0) {
                         if (!bucket)
                             bucket = _._getBucket(hash, true);
+                        if (!bucket)
+                            throw new Error("\"" + hash + "\" cannot be added to lookup table.");
                         var entry = new HashEntry(key, value);
                         entries.addNode(entry);
                         bucket.addNode(new HashEntry(key, entry));
@@ -160,10 +163,10 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
                         ver = _._version;
                         currentEntry = _._entries.first;
                     }, function (yielder) {
-                        if (currentEntry != null) {
+                        if (currentEntry) {
                             _.assertVersion(ver);
                             var result = { key: currentEntry.key, value: currentEntry.value };
-                            currentEntry = currentEntry.next;
+                            currentEntry = currentEntry.next || null;
                             return yielder.yieldReturn(result);
                         }
                         return yielder.yieldBreak();

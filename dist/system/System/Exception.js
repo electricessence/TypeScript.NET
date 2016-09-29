@@ -13,12 +13,10 @@ System.register([], function(exports_1, context_1) {
             NAME = 'Exception';
             Exception = (function () {
                 function Exception(message, innerException, beforeSealing) {
-                    if (message === void 0) { message = null; }
-                    if (innerException === void 0) { innerException = null; }
-                    this.message = message;
                     var _ = this;
-                    _.name = _.getName();
-                    _.data = {};
+                    this.name = _.getName();
+                    this.message = message;
+                    this.data = {};
                     if (innerException)
                         _.data['innerException'] = innerException;
                     if (beforeSealing)

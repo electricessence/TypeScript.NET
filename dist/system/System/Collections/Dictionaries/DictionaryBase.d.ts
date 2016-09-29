@@ -15,11 +15,11 @@ export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBas
     contains(item: KeyValuePair<TKey, TValue>): boolean;
     protected _removeInternal(item: IKeyValuePair<TKey, TValue> | [TKey, TValue]): number;
     protected abstract getKeys(): TKey[];
-    keys: TKey[];
+    readonly keys: TKey[];
     protected abstract getValues(): TValue[];
-    values: TValue[];
+    readonly values: TValue[];
     addByKeyValue(key: TKey, value: TValue): boolean;
-    protected abstract _getEntry(key: TKey): IKeyValuePair<TKey, TValue>;
+    protected abstract _getEntry(key: TKey): IKeyValuePair<TKey, TValue> | null;
     abstract getValue(key: TKey): TValue;
     protected abstract _setValueInternal(key: TKey, value: TValue): boolean;
     setValue(key: TKey, value: TValue): boolean;
@@ -27,8 +27,8 @@ export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBas
     containsValue(value: TValue): boolean;
     removeByKey(key: TKey): boolean;
     removeByValue(value: TValue): number;
-    importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>>): number;
-    protected _importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>>): number;
+    importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | null | undefined): number;
+    protected _importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | null | undefined): number;
     getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
 }
 export default DictionaryBase;

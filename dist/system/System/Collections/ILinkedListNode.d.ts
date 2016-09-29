@@ -8,13 +8,13 @@ import {ILinkedList} from "./ILinkedList";
 
 export interface ILinkedNode<TNode extends ILinkedNode<TNode>>
 {
-	previous?:TNode;
-	next?:TNode;
+	previous?:TNode|null;
+	next?:TNode|null;
 }
 
 export interface INodeWithValue<TValue>
 {
-	value:TValue;
+	value?:TValue;
 }
 
 export interface ILinkedNodeWithValue<T>
@@ -27,8 +27,8 @@ extends ILinkedNode<ILinkedListNode<T>>, INodeWithValue<T>
 export interface ILinkedListNode<T>
 extends ILinkedNodeWithValue<T>
 {
-	previous:ILinkedListNode<T>;
-	next:ILinkedListNode<T>;
+	previous:ILinkedListNode<T>|null;
+	next:ILinkedListNode<T>|null;
 
 	list:ILinkedList<T>;
 

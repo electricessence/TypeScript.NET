@@ -8,9 +8,6 @@ var ValidationResult = (function () {
     function ValidationResult(isValid, message, data) {
         if (isValid === void 0) { isValid = false; }
         if (data === void 0) { data = null; }
-        this.readonly = isValid;
-        this.readonly = message ?  : string;
-        this.readonly = data;
         this.isValid = isValid;
         this.message = message;
         this.data = data;

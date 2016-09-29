@@ -11,7 +11,7 @@ import { isNodeJS } from "../Environment";
 var requestTick;
 var flushing = false;
 function flush() {
-    var entry = null;
+    var entry;
     while (entry = immediateQueue.first) {
         let { task, domain, context, args } = entry;
         entry.canceller();

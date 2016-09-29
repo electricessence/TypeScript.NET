@@ -9,11 +9,11 @@ export declare abstract class TaskHandlerBase extends DisposableBase implements 
     private _status;
     constructor();
     private _timeoutId;
-    isScheduled: boolean;
+    readonly isScheduled: boolean;
     start(defer?: number): void;
     runSynchronously(): void;
     protected getStatus(): TaskStatus;
-    status: TaskStatus;
+    readonly status: TaskStatus;
     private static _handler(d);
     protected abstract _onExecute(): void;
     protected _onDispose(): void;

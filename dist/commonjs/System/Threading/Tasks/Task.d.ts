@@ -13,9 +13,9 @@ export declare class Task<T> extends TaskHandlerBase {
     protected getState(): ITaskState<T>;
     start(defer?: number): void;
     runSynchronously(): void;
-    state: ITaskState<T>;
-    result: T;
-    error: any;
+    readonly state: ITaskState<T>;
+    readonly result: T;
+    readonly error: any;
     protected _onDispose(): void;
 }
 export default Task;

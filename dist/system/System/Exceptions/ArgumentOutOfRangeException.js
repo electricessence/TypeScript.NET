@@ -23,7 +23,6 @@ System.register(["./ArgumentException", "../../extends"], function(exports_1, co
                 __extends(ArgumentOutOfRangeException, _super);
                 function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
                     if (message === void 0) { message = ' '; }
-                    if (innerException === void 0) { innerException = null; }
                     _super.call(this, paramName, +("(" + actualValue + ") ") + message, innerException, function (_) {
                         _.actualValue = actualValue;
                     });

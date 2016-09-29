@@ -8,7 +8,7 @@ import { DictionaryBase } from "./DictionaryBase";
 export declare class StringKeyDictionary<TValue> extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue> {
     private _count;
     private _map;
-    protected _getEntry(key: string): IKeyValuePair<string, TValue>;
+    protected _getEntry(key: string): IKeyValuePair<string, TValue> | null;
     containsKey(key: string): boolean;
     containsValue(value: TValue): boolean;
     getValue(key: string): TValue;

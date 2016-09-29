@@ -10,8 +10,8 @@ export declare class Subscription<T> implements IDisposableAware {
     private _subscribable;
     private _subscriber;
     constructor(_subscribable: ISubscribable<T>, _subscriber: T);
-    subscriber: T;
-    wasDisposed: boolean;
+    readonly subscriber: T;
+    readonly wasDisposed: boolean;
     dispose(): void;
 }
 export default Subscription;

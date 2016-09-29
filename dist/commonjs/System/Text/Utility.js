@@ -91,14 +91,14 @@ function supplant(source, params) {
     });
 }
 exports.supplant = supplant;
-null | void {
-    if: function () { } };
-!Types_1.Type.isString(source) || !match;
-return false;
-if (source === match)
-    return true;
-if (match.length < source.length)
-    return null;
+function canMatch(source, match) {
+    if (!Types_1.Type.isString(source) || !match)
+        return false;
+    if (source === match)
+        return true;
+    if (match.length < source.length)
+        return null;
+}
 function startsWith(source, pattern) {
     var m = canMatch(source, pattern);
     return Types_1.Type.isBoolean(m) ? m : source.indexOf(pattern) == 0;

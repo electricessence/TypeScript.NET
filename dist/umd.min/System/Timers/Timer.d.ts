@@ -13,8 +13,8 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
     private _count;
     constructor(_interval: number, _maxCount?: number, _initialDelay?: number);
     static startNew(millisecondInterval: number, maxCount?: number, initialDelay?: number): Timer;
-    isRunning: boolean;
-    count: number;
+    readonly isRunning: boolean;
+    readonly count: number;
     start(): void;
     stop(): void;
     reset(): void;

@@ -36,10 +36,10 @@ export class ObservableBase extends SubscribableBase {
     }
 }
 const OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
-function processAction(observers = null, handler) {
+function processAction(observers, handler) {
     if (!observers)
         return;
-    var observersErrors = null = null;
+    var observersErrors = null;
     for (let s of observers) {
         try {
             handler(s);

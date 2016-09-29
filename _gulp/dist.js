@@ -52,7 +52,8 @@
         removeComments: true,
         noEmitHelpers: true,
         sourceMap: true,
-        declaration: true
+        declaration: true,
+        strictNullChecks: true
     });
     var builder = gulp_typescript_helper_1.BuildHelper
         .inject(Promise_1.Promise.factory)

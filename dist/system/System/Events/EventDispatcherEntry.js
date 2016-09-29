@@ -32,7 +32,6 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
             EventDispatcherEntry = (function (_super) {
                 __extends(EventDispatcherEntry, _super);
                 function EventDispatcherEntry(type, listener, params, finalizer) {
-                    if (params === void 0) { params = null; }
                     _super.call(this, finalizer);
                     this.type = type;
                     this.listener = listener;

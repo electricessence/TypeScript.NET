@@ -8,8 +8,8 @@ import { Comparable } from "../../IComparable";
 import { IComparer } from "../../IComparer";
 import { Order } from "./Order";
 export declare class KeySortedContext<T, TKey extends Comparable> extends SortContext<T> {
-    protected _keySelector: Selector<T, TKey>;
-    constructor(next: IComparer<T>, _keySelector: Selector<T, TKey>, order?: Order, comparer?: Comparison<T>);
+    protected _keySelector: Selector<T, TKey> | null;
+    constructor(next: IComparer<T> | null, _keySelector: Selector<T, TKey> | null, order?: Order, comparer?: Comparison<T>);
     compare(a: T, b: T): number;
 }
 export default KeySortedContext;

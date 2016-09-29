@@ -6,11 +6,11 @@
 import { IDisposable } from "./Disposable/IDisposable";
 import { IMap } from "./Collections/Dictionaries/IDictionary";
 export declare class Exception implements Error, IDisposable {
-    message: string;
-    name: string;
-    constructor(message?: string, innerException?: Error, beforeSealing?: (ex: any) => void);
-    stack: string;
-    data: IMap<any>;
+    readonly name: string;
+    readonly message: string;
+    readonly stack: string;
+    readonly data: IMap<any>;
+    constructor(message: string, innerException?: Error, beforeSealing?: (ex: any) => void);
     protected getName(): string;
     toString(): string;
     protected toStringWithoutBrackets(): string;

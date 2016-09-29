@@ -11,11 +11,11 @@ export declare class TimeQuantity implements IEquatable<ITimeQuantity>, ICompara
     protected _quantity: number;
     constructor(_quantity?: number);
     getTotalMilliseconds(): number;
-    direction: number;
+    readonly direction: number;
     equals(other: ITimeQuantity): boolean;
     compareTo(other: ITimeQuantity): number;
-    protected _total: ITimeMeasurement;
-    total: ITimeMeasurement;
+    protected _total: ITimeMeasurement | null;
+    readonly total: ITimeMeasurement;
     getTotal(units: TimeUnit): number;
 }
 export default TimeQuantity;

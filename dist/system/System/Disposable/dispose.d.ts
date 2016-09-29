@@ -3,13 +3,15 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { IDisposable } from "./IDisposable";
-export declare function dispose(...disposables: IDisposable[]): void;
+export declare type DisposableItem = IDisposable | null | undefined;
+export declare type DisposableItemArray = Array<DisposableItem> | null | undefined;
+export declare function dispose(...disposables: DisposableItem[]): void;
 export declare module dispose {
-    function deferred(...disposables: IDisposable[]): void;
-    function withoutException(...disposables: IDisposable[]): any[];
-    function these(disposables: IDisposable[], trapExceptions?: boolean): any[];
+    function deferred(...disposables: DisposableItem[]): void;
+    function withoutException(...disposables: DisposableItem[]): any[] | undefined;
+    function these(disposables: DisposableItemArray, trapExceptions?: boolean): any[] | undefined;
     module these {
-        function deferred(disposables: IDisposable[], delay?: number): void;
+        function deferred(disposables: DisposableItemArray, delay?: number): void;
     }
 }
 export declare function using<TDisposable extends IDisposable, TReturn>(disposable: TDisposable, closure: (disposable: TDisposable) => TReturn): TReturn;

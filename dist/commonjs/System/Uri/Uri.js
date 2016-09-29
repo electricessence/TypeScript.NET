@@ -6,157 +6,99 @@
 "use strict";
 var Types_1 = require("../Types");
 var QueryParams = require("./QueryParams");
-var QueryParam = require("./QueryParam");
 var Scheme = require("./Scheme");
 var Utility_1 = require("../Text/Utility");
-var Exception_1 = require("../Exception");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
 var VOID0 = void (0);
 var Uri = (function () {
-    function Uri() {
-        this.readonly = scheme;
-        this.SchemeValue =  | null;
-        this.readonly = userInfo;
+    function Uri(scheme, userInfo, host, port, path, query, fragment) {
+        var _ = this;
+        this.scheme = getScheme(scheme) || null;
+        this.userInfo = userInfo || null;
+        this.host = host || null;
+        this.port = getPort(port);
+        this.authority = _.getAuthority() || null;
+        this.path = path || null;
+        if (!Types_1.Type.isString(query))
+            query = QueryParams.encode(query);
+        this.query = formatQuery(query) || null;
+        Object.freeze(this.queryParams
+            = _.query
+                ? QueryParams.parseToMap(_.query)
+                : {});
+        this.pathAndQuery = _.getPathAndQuery() || null;
+        this.fragment = formatFragment(fragment) || null;
+        this.absoluteUri = _.getAbsoluteUri();
+        this.baseUri = _.absoluteUri.replace(/[?#].*/, '');
+        Object.freeze(this);
     }
+    Uri.prototype.equals = function (other) {
+        return this === other || this.absoluteUri == Uri.toString(other);
+    };
+    Uri.from = function (uri, defaults) {
+        var u = Types_1.Type.isString(uri)
+            ? Uri.parse(uri)
+            : uri;
+        return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
+    };
+    Uri.parse = function (url, throwIfInvalid) {
+        if (throwIfInvalid === void 0) { throwIfInvalid = true; }
+        var result = null;
+        var ex = tryParse(url, function (out) { result = out; });
+        if (throwIfInvalid && ex)
+            throw ex;
+        return result;
+    };
+    Uri.tryParse = function (url, out) {
+        return !tryParse(url, out);
+    };
+    Uri.copyOf = function (map) {
+        return copyUri(map);
+    };
+    Uri.prototype.copyTo = function (map) {
+        return copyUri(this, map);
+    };
+    Uri.prototype.updateQuery = function (query) {
+        var map = this.toMap();
+        map.query = query;
+        return Uri.from(map);
+    };
+    Uri.prototype.getAbsoluteUri = function () {
+        return uriToString(this);
+    };
+    Uri.prototype.getAuthority = function () {
+        return getAuthority(this);
+    };
+    Uri.prototype.getPathAndQuery = function () {
+        return getPathAndQuery(this);
+    };
+    Object.defineProperty(Uri.prototype, "pathSegments", {
+        get: function () {
+            return this.path
+                && this.path.match(/^[/]|[^/]*[/]|[^/]+$/g)
+                || [];
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Uri.prototype.toMap = function () {
+        return this.copyTo({});
+    };
+    Uri.prototype.toString = function () {
+        return this.absoluteUri;
+    };
+    Uri.toString = function (uri) {
+        return uri instanceof Uri
+            ? uri.absoluteUri
+            : uriToString(uri);
+    };
+    Uri.getAuthority = function (uri) {
+        return getAuthority(uri);
+    };
     return Uri;
 }());
 exports.Uri = Uri;
-string | null;
-readonly;
-host: string | null;
-readonly;
-port: number | null;
-readonly;
-path: string | null;
-readonly;
-query: string | null;
-readonly;
-fragment: string | null;
-readonly;
-queryParams: IMap();
-constructor(scheme, SchemeValue | null, userInfo, string | null, host, string | null, port, number | null, path, string | null, query ?  : QueryParam.Convertible, fragment ?  : string);
-{
-    var _ = this;
-    this.scheme = getScheme(scheme) || null;
-    this.userInfo = userInfo || null;
-    this.host = host || null;
-    this.port = getPort(port);
-    this.authority = _.getAuthority() || null;
-    this.path = path || null;
-    if (!Types_1.Type.isString(query))
-        query = QueryParams.encode(query);
-    this.query = formatQuery(query) || null;
-    Object.freeze(this.queryParams
-        = _.query
-            ? QueryParams.parseToMap(_.query)
-            : {});
-    this.pathAndQuery = _.getPathAndQuery() || null;
-    this.fragment = formatFragment(fragment) || null;
-    this.absoluteUri = _.getAbsoluteUri();
-    this.baseUri = _.absoluteUri.replace(/[?#].*/, '');
-    Object.freeze(this);
-}
-equals(other, IUri);
-boolean;
-{
-    return this === other || this.absoluteUri == Uri.toString(other);
-}
-from(uri, string | IUri | null | undefined, defaults ?  : IUri);
-Uri;
-{
-    var u = Types_1.Type.isString(uri)
-        ? Uri.parse(uri)
-        : uri;
-    return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
-}
-parse(url, string);
-IUri;
-parse(url, string, throwIfInvalid, boolean);
-IUri | null;
-parse(url, string, throwIfInvalid, boolean = true);
-IUri | null;
-{
-    var result = null = null;
-    var ex = tryParse(url, function (out) { result = out; });
-    if (throwIfInvalid && ex)
-        throw ex;
-    return result;
-}
-tryParse(url, string, out, function (result) { return void ; });
-boolean;
-{
-    return !tryParse(url, out);
-}
-copyOf(map, IUri);
-IUri;
-{
-    return copyUri(map);
-}
-copyTo(map, IUri);
-IUri;
-{
-    return copyUri(this, map);
-}
-updateQuery(query, QueryParam.Convertible);
-Uri;
-{
-    var map = this.toMap();
-    map.query = query;
-    return Uri.from(map);
-}
-getAbsoluteUri();
-string;
-{
-    return uriToString(this);
-}
-getAuthority();
-string;
-{
-    return getAuthority(this);
-}
-getPathAndQuery();
-string;
-{
-    return getPathAndQuery(this);
-}
-absoluteUri: string;
-readonly;
-authority: string | null;
-readonly;
-pathAndQuery: string | null;
-readonly;
-baseUri: string;
-get;
-pathSegments();
-string[];
-{
-    return this.path
-        && this.path.match(/^[/]|[^/]*[/]|[^/]+$/g)
-        || [];
-}
-toMap();
-IUri;
-{
-    return this.copyTo({});
-}
-toString();
-string;
-{
-    return this.absoluteUri;
-}
-toString(uri, IUri);
-string;
-{
-    return uri instanceof Uri
-        ? uri.absoluteUri
-        : uriToString(uri);
-}
-getAuthority(uri, IUri);
-string;
-{
-    return getAuthority(uri);
-}
 (function (Fields) {
     Fields[Fields["scheme"] = 0] = "scheme";
     Fields[Fields["userInfo"] = 1] = "userInfo";
@@ -180,8 +122,7 @@ function copyUri(from, to) {
     return to;
 }
 var SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
-null;
-{
+function getScheme(scheme) {
     var s = scheme;
     if (Types_1.Type.isString(s)) {
         if (!s)
@@ -200,8 +141,7 @@ null;
     }
     throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
 }
-null;
-{
+function getPort(port) {
     if (port === 0)
         return port;
     if (!port)
@@ -234,12 +174,10 @@ function getAuthority(uri) {
     }
     return result;
 }
-null | undefined;
-{
+function formatQuery(query) {
     return query && ((query.indexOf(QM) !== 0 ? QM : EMPTY) + query);
 }
-null | undefined;
-{
+function formatFragment(fragment) {
     return fragment && ((fragment.indexOf(HASH) !== 0 ? HASH : EMPTY) + fragment);
 }
 function getPathAndQuery(uri) {
@@ -262,8 +200,7 @@ function uriToString(uri) {
         part2 = SLASH + part2;
     return part1 + part2;
 }
-null | Exception_1.Exception;
-{
+function tryParse(url, out) {
     if (!url)
         return new ArgumentException_1.ArgumentException('url', 'Nothing to parse.');
     var i, result = {};

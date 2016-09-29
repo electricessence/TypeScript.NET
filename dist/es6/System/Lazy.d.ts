@@ -7,8 +7,8 @@ import { Func } from "./FunctionTypes";
 import { ResolverBase } from "./ResolverBase";
 export declare class Lazy<T> extends ResolverBase<T> implements ILazy<T> {
     constructor(valueFactory: Func<T>, trapExceptions?: boolean, allowReset?: boolean);
-    isValueCreated: boolean;
-    value: T;
+    readonly isValueCreated: boolean;
+    readonly value: T;
     equals(other: Lazy<T>): boolean;
     valueEquals(other: Lazy<T>): boolean;
 }

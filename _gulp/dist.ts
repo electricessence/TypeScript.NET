@@ -56,7 +56,8 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 	removeComments: true,
 	noEmitHelpers: true,
 	sourceMap: true,
-	declaration: true
+	declaration: true,
+	strictNullChecks: true
 });
 
 const builder = BuildHelper

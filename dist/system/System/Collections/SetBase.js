@@ -6,7 +6,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var LinkedNodeList_1, ArgumentNullException_1, Enumerator_1, EmptyEnumerator_1, dispose_1, Compare_1, CollectionBase_1, extends_1;
-    var __extends, OTHER, SetBase;
+    var __extends, VOID0, OTHER, SetBase;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
         if (map && depth) {
@@ -46,11 +46,12 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
             }],
         execute: function() {
             __extends = extends_1.default;
+            VOID0 = void 0;
             OTHER = 'other';
             SetBase = (function (_super) {
                 __extends(SetBase, _super);
                 function SetBase(source) {
-                    _super.call(this, null, Compare_1.areEqual);
+                    _super.call(this, VOID0, Compare_1.areEqual);
                     this._importEntries(source);
                 }
                 SetBase.prototype._getSet = function () {
@@ -199,9 +200,8 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                         : this._set.forEach(function (node, i) { return action(node.value, i); });
                 };
                 SetBase.prototype._removeNode = function (node) {
-                    if (!node)
-                        return false;
-                    return this.remove(node.value) != 0;
+                    return !!node
+                        && this.remove(node.value) != 0;
                 };
                 SetBase.prototype.removeFirst = function () {
                     var s = this._set;

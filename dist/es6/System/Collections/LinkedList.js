@@ -12,7 +12,7 @@ import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 const VOID0 = void 0;
 class InternalNode {
-    constructor(value, previous = null, next = null) {
+    constructor(value, previous, next) {
         this.value = value;
         this.previous = previous;
         this.next = next;
@@ -22,8 +22,7 @@ class InternalNode {
             throw new InvalidOperationException("Adding a node that is already placed.");
     }
 }
-null;
-{
+function ensureExternal(node, list) {
     if (!node)
         return null;
     if (!list)
@@ -100,96 +99,112 @@ export class LinkedList extends CollectionBase {
         this.throwIfDisposed();
         return LinkedNodeList.valueEnumeratorFrom(this._listInternal);
     }
-    _findFirst(entry) { }
-}
-{
-    const _ = this, equals = _._equalityComparer;
-    var next = _._listInternal && _._listInternal.first;
-    while (next) {
-        if (equals(entry, next.value))
-            return next;
-        next = next.next;
+    _findFirst(entry) {
+        const _ = this, equals = _._equalityComparer;
+        var next = _._listInternal && _._listInternal.first;
+        while (next) {
+            if (equals(entry, next.value))
+                return next;
+            next = next.next;
+        }
+        return null;
     }
-    return null;
-}
-_findLast(entry, T);
-InternalNode( | null, {
-    const: _ = this,
-    equals = _._equalityComparer,
-    var: prev, any = _._listInternal && _._listInternal.last,
-    while(prev) {
-        if (equals(entry, prev.value))
-            return prev;
-        prev = prev.previous;
-    },
-    return: null
-}, removeOnce(entry, T), boolean, {
-    return: this.remove(entry, 1) !== 0
-}, get, first(), ILinkedListNode( | null, {
-    var: li = this._listInternal,
-    return: li && ensureExternal(li.first, this)
-}, get, firstValue(), T, {
-    var: li = this._listInternal, node = li && li.first,
-    return: node ? node.value : VOID0
-}, get, last(), ILinkedListNode( | null, {
-    var: li = this._listInternal,
-    return: ensureExternal(li.last, this)
-}, get, lastValue(), T, {
-    var: li = this._listInternal, node = li && li.last,
-    return: node ? node.value : VOID0
-}, getValueAt(index, number), T, {
-    var: li = this._listInternal, node = li && li.getNodeAt(index),
-    return: node ? node.value : VOID0
-}, getNodeAt(index, number), ILinkedListNode( | null, {
-    var: li = this._listInternal,
-    return: li && ensureExternal(li.getNodeAt(index), this)
-}, find(entry, T), ILinkedListNode( | null, {
-    var: li = this._listInternal,
-    return: li && ensureExternal(this._findFirst(entry), this)
-}, findLast(entry, T), ILinkedListNode( | null, {
-    var: li = this._listInternal,
-    return: li && ensureExternal(this._findLast(entry), this)
-}, addFirst(entry, T), void {
-    this: .assertModifiable(),
-    this: ._listInternal.addNodeBefore(new InternalNode(entry)),
-    this: ._signalModification(true)
-}, addLast(entry, T), void {
-    this: .add(entry)
-}, private, _removeNodeInternal(node, InternalNode( | null | undefined), boolean, {
-    const: _ = this,
-    if(node =  && _._listInternal.removeNode(node)) {
-        detachExternal(node);
+    _findLast(entry) {
+        const _ = this, equals = _._equalityComparer;
+        var prev = _._listInternal && _._listInternal.last;
+        while (prev) {
+            if (equals(entry, prev.value))
+                return prev;
+            prev = prev.previous;
+        }
+        return null;
+    }
+    removeOnce(entry) {
+        return this.remove(entry, 1) !== 0;
+    }
+    get first() {
+        var li = this._listInternal;
+        return li && ensureExternal(li.first, this);
+    }
+    get firstValue() {
+        var li = this._listInternal, node = li && li.first;
+        return node ? node.value : VOID0;
+    }
+    get last() {
+        var li = this._listInternal;
+        return ensureExternal(li.last, this);
+    }
+    get lastValue() {
+        var li = this._listInternal, node = li && li.last;
+        return node ? node.value : VOID0;
+    }
+    getValueAt(index) {
+        var li = this._listInternal, node = li && li.getNodeAt(index);
+        return node ? node.value : VOID0;
+    }
+    getNodeAt(index) {
+        var li = this._listInternal;
+        return li && ensureExternal(li.getNodeAt(index), this);
+    }
+    find(entry) {
+        var li = this._listInternal;
+        return li && ensureExternal(this._findFirst(entry), this);
+    }
+    findLast(entry) {
+        var li = this._listInternal;
+        return li && ensureExternal(this._findLast(entry), this);
+    }
+    addFirst(entry) {
+        this.assertModifiable();
+        this._listInternal.addNodeBefore(new InternalNode(entry));
+        this._signalModification(true);
+    }
+    addLast(entry) {
+        this.add(entry);
+    }
+    _removeNodeInternal(node) {
+        const _ = this;
+        if (node && _._listInternal.removeNode(node)) {
+            detachExternal(node);
+            _._signalModification(true);
+            return true;
+        }
+        return false;
+    }
+    removeFirst() {
+        const _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(_._listInternal.first);
+    }
+    removeLast() {
+        const _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(_._listInternal.last);
+    }
+    removeAt(index) {
+        const _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(_._listInternal.getNodeAt(index));
+    }
+    removeNode(node) {
+        const _ = this;
+        _.assertModifiable();
+        return _._removeNodeInternal(getInternal(node, _));
+    }
+    addBefore(before, entry) {
+        const _ = this;
+        _.assertModifiable();
+        _._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _));
         _._signalModification(true);
-        return true;
-    },
-    return: false
-}, removeFirst(), boolean, {
-    const: _ = this,
-    _: .assertModifiable(),
-    return: _._removeNodeInternal(_._listInternal.first)
-}, removeLast(), boolean, {
-    const: _ = this,
-    _: .assertModifiable(),
-    return: _._removeNodeInternal(_._listInternal.last)
-}, removeAt(index, number), boolean, {
-    const: _ = this,
-    _: .assertModifiable(),
-    return: _._removeNodeInternal(_._listInternal.getNodeAt(index))
-}, removeNode(node, ILinkedListNode(), boolean, {
-    const: _ = this,
-    _: .assertModifiable(),
-    return: _._removeNodeInternal(getInternal(node, _))
-}, addBefore(before, ILinkedListNode < T > , entry, T), void {
-    const: _ = this,
-    _: .assertModifiable(),
-    _: ._listInternal.addNodeBefore(new InternalNode(entry), getInternal(before, _)),
-    _: ._signalModification(true)
-}, addAfter(after, ILinkedListNode < T > , entry, T), void {
-    const: _ = this,
-    _: .assertModifiable(),
-    _: ._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _)),
-    _: ._signalModification(true)
-}, class LinkedListNode {
+    }
+    addAfter(after, entry) {
+        const _ = this;
+        _.assertModifiable();
+        _._listInternal.addNodeAfter(new InternalNode(entry), getInternal(after, _));
+        _._signalModification(true);
+    }
+}
+class LinkedListNode {
     constructor(_list, _nodeInternal) {
         this._list = _list;
         this._nodeInternal = _nodeInternal;
@@ -201,33 +216,40 @@ InternalNode( | null, {
     get list() {
         return this._list;
     }
-    get previous() { }
+    get previous() {
+        this.throwIfDetached();
+        return ensureExternal(this._nodeInternal.previous, this._list);
+    }
+    get next() {
+        this.throwIfDetached();
+        return ensureExternal(this._nodeInternal.next, this._list);
+    }
+    get value() {
+        this.throwIfDetached();
+        return this._nodeInternal.value;
+    }
+    set value(v) {
+        this.throwIfDetached();
+        this._nodeInternal.value = v;
+    }
+    addBefore(entry) {
+        this.throwIfDetached();
+        this._list.addBefore(this, entry);
+    }
+    addAfter(entry) {
+        this.throwIfDetached();
+        this._list.addAfter(this, entry);
+    }
+    remove() {
+        var list = this._list;
+        if (list)
+            list.removeNode(this);
+        this._list = VOID0;
+        this._nodeInternal = VOID0;
+    }
+    dispose() {
+        this.remove();
+    }
 }
-, {
-    this: .throwIfDetached(),
-    return: ensureExternal(this._nodeInternal.previous, this._list)
-}, get, next(), ILinkedListNode( | null, {
-    this: .throwIfDetached(),
-    return: ensureExternal(this._nodeInternal.next, this._list)
-}, get, value(), T, {
-    this: .throwIfDetached(),
-    return() { }, this: ._nodeInternal.value
-}, set, value(v, T), {
-    this: .throwIfDetached(),
-    this: ._nodeInternal.value = v
-}, addBefore(entry, T), void {
-    this: .throwIfDetached(),
-    this: ._list.addBefore(this, entry)
-}, addAfter(entry, T), void {
-    this: .throwIfDetached(),
-    this: ._list.addAfter(this, entry)
-}, remove(), void {
-    var: list = this._list,
-    if(list) { }, list: .removeNode(this),
-    this: ._list = VOID0,
-    this: ._nodeInternal = VOID0
-}, dispose(), void {
-    this: .remove()
-})))))))));
 export default LinkedList;
 //# sourceMappingURL=LinkedList.js.map

@@ -10,12 +10,12 @@ export declare module Integer {
     module random {
         function next(boundary: number, inclusive?: boolean): number;
         function nextInRange(min: number, max: number, inclusive?: boolean): number;
-        function select<T>(source: IArray<T>): T;
+        function select<T>(source: IArray<T>): T | undefined;
         module select {
-            function one<T>(source: IArray<T>): T;
+            function one<T>(source: IArray<T>): T | undefined;
         }
     }
-    function as32Bit(n: number): number;
+    function as32Bit(n: number): number | null;
     function is(n: number): boolean;
     function is32Bit(n: number): boolean;
     function assert(n: number, argumentName?: string): boolean;

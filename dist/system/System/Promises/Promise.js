@@ -8,7 +8,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1;
-    var __extends, VOID0, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PromiseCollection, pools;
+    var __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PromiseCollection, pools;
     function isPromise(value) {
         return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
     }
@@ -96,7 +96,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             }],
         execute: function() {
             __extends = extends_1.default;
-            VOID0 = void 0, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
+            VOID0 = void 0, NULL = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
             PromiseState = (function (_super) {
                 __extends(PromiseState, _super);
                 function PromiseState(_state, _result, _error) {
@@ -244,7 +244,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 };
                 PromiseBase.prototype.finallyThis = function (fin, synchronous) {
                     this.throwIfDisposed();
-                    var f = synchronous ? f : function () { return deferImmediate_1.deferImmediate(fin); };
+                    var f = synchronous ? fin : function () { return deferImmediate_1.deferImmediate(fin); };
                     this.thenThis(f, f);
                     return this;
                 };
@@ -621,16 +621,16 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     function getPool() {
                         return pool
                             || (pool = new ObjectPool_1.ObjectPool(40, factory, function (c) {
-                                c.onFulfilled = null;
-                                c.onRejected = null;
-                                c.promise = null;
+                                c.onFulfilled = NULL;
+                                c.onRejected = NULL;
+                                c.promise = NULL;
                             }));
                     }
                     function factory() {
                         return {
-                            onFulfilled: null,
-                            onRejected: null,
-                            promise: null
+                            onFulfilled: NULL,
+                            onRejected: NULL,
+                            promise: NULL
                         };
                     }
                     function init(onFulfilled, onRejected, promise) {
@@ -686,12 +686,12 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         result.length = len;
                         var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
                         var cleanup = function () {
-                            reject = null;
-                            resolve = null;
+                            reject = VOID0;
+                            resolve = VOID0;
                             promises.length = 0;
-                            promises = null;
+                            promises = VOID0;
                             remaining.dispose();
-                            remaining = null;
+                            remaining = VOID0;
                         };
                         var checkIfShouldResolve = function () {
                             var r = resolve;
@@ -742,10 +742,10 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         var len = promises.length;
                         var remaining = new Set_1.Set(promises.map(function (v, i) { return i; }));
                         var cleanup = function () {
-                            reject = null;
-                            resolve = null;
+                            reject = NULL;
+                            resolve = NULL;
                             remaining.dispose();
-                            remaining = null;
+                            remaining = NULL;
                         };
                         var checkIfShouldResolve = function () {
                             var r = resolve;
@@ -791,10 +791,10 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     }
                     return new Promise(function (resolve, reject) {
                         var cleanup = function () {
-                            reject = null;
-                            resolve = null;
+                            reject = NULL;
+                            resolve = NULL;
                             promises.length = 0;
-                            promises = null;
+                            promises = NULL;
                         };
                         var onResolve = function (r, v) {
                             if (r) {

@@ -13,8 +13,8 @@ export declare class StringBuilder implements IDisposable {
     append(...items: any[]): StringBuilder;
     appendLine(...items: any[]): StringBuilder;
     appendLines(items: any[]): StringBuilder;
-    isEmpty: boolean;
-    toString(): any;
+    readonly isEmpty: boolean;
+    toString(): string | null;
     join(delimiter: string): string;
     clear(): void;
     dispose(): void;

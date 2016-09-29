@@ -5,9 +5,6 @@
 const valid = new ValidationResult(true);
 export default class ValidationResult {
     constructor(isValid = false, message, data = null) {
-        this.readonly = isValid;
-        this.readonly = message ?  : string;
-        this.readonly = data;
         this.isValid = isValid;
         this.message = message;
         this.data = data;

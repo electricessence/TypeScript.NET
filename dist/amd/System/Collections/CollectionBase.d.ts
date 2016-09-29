@@ -11,12 +11,12 @@ import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { IArray } from "./Array/IArray";
 import { ILinqEnumerable } from "../../System.Linq/Enumerable";
 export declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
-    protected _equalityComparer: EqualityComparison<T>;
-    constructor(source?: IEnumerableOrArray<T>, _equalityComparer?: EqualityComparison<T>);
+    protected _equalityComparer: EqualityComparison<T | null | undefined>;
+    constructor(source?: IEnumerableOrArray<T>, _equalityComparer?: EqualityComparison<T | null | undefined>);
     protected abstract getCount(): number;
-    count: number;
+    readonly count: number;
     protected getIsReadOnly(): boolean;
-    isReadOnly: boolean;
+    readonly isReadOnly: boolean;
     protected assertModifiable(): void;
     protected _version: number;
     assertVersion(version: number): void;
@@ -25,7 +25,7 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
     protected _onModified(): void;
     protected _signalModification(increment?: boolean): boolean;
     protected _incrementModified(): void;
-    isUpdating: boolean;
+    readonly isUpdating: boolean;
     handleUpdate(closure?: () => boolean): boolean;
     protected abstract _addInternal(entry: T): boolean;
     add(entry: T): void;
@@ -34,14 +34,14 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
     protected abstract _clearInternal(): number;
     clear(): number;
     protected _onDispose(): void;
-    protected _importEntries(entries: IEnumerableOrArray<T>): number;
-    importEntries(entries: IEnumerableOrArray<T>): number;
+    protected _importEntries(entries: IEnumerableOrArray<T> | null | undefined): number;
+    importEntries(entries: IEnumerableOrArray<T> | null | undefined): number;
     abstract getEnumerator(): IEnumerator<T>;
     contains(entry: T): boolean;
     forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
     copyTo<TTarget extends IArray<T>>(target: TTarget, index?: number): TTarget;
     toArray(): T[];
     private _linq;
-    linq: ILinqEnumerable<T>;
+    readonly linq: ILinqEnumerable<T>;
     linqAsync(callback?: (linq: ILinqEnumerable<T>) => void): ILinqEnumerable<T>;
 }

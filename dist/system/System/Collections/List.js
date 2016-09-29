@@ -6,7 +6,7 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Compare_1, Utility_1, Enumerator_1, Types_1, ArrayEnumerator_1, CollectionBase_1, extends_1;
-    var __extends, List;
+    var __extends, VOID0, List;
     return {
         setters:[
             function (Compare_1_1) {
@@ -32,11 +32,12 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
             }],
         execute: function() {
             __extends = extends_1.default;
+            VOID0 = void 0;
             List = (function (_super) {
                 __extends(List, _super);
                 function List(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-                    _super.call(this, null, equalityComparer);
+                    _super.call(this, VOID0, equalityComparer);
                     var _ = this;
                     if (Array.isArray(source)) {
                         _._source = source.slice();

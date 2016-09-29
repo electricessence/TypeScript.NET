@@ -136,7 +136,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                                     this.dispose();
                                     return false;
                                 }
-                            case EnumeratorState.After:
+                            default:
                                 return false;
                         }
                     }

@@ -28,7 +28,7 @@ System.register(["../../Types", "./Utility"], function(exports_1, context_1) {
     exports_1("unsafe", unsafe);
     function mapped(listeners, payload, trap) {
         if (!listeners)
-            return null;
+            return listeners;
         var result = Utility_1.copy(listeners);
         if (listeners.length) {
             for (var i = 0, len = result.length; i < len; i++) {

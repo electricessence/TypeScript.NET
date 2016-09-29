@@ -8,7 +8,6 @@ import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
 export class DateTime {
     constructor(value = new Date(), kind = 1) {
-        this._time = null;
         const _ = this;
         _._kind = kind;
         if (value instanceof DateTime)

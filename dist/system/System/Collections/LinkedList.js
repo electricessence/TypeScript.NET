@@ -79,7 +79,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 __extends(LinkedList, _super);
                 function LinkedList(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-                    _super.call(this, null, equalityComparer);
+                    _super.call(this, VOID0, equalityComparer);
                     var _ = this;
                     _._listInternal = new LinkedNodeList_1.LinkedNodeList();
                     _._importEntries(source);
@@ -102,7 +102,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     if (max === void 0) { max = Infinity; }
                     var _ = this, equals = _._equalityComparer, list = _._listInternal, removedCount = 0;
                     list.forEach(function (node) {
-                        if (equals(entry, node.value) && _._removeNodeInternal(node))
+                        if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                             removedCount++;
                         return removedCount < max;
                     });
@@ -125,7 +125,8 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     return LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(this._listInternal);
                 };
                 LinkedList.prototype._findFirst = function (entry) {
-                    var _ = this, equals = _._equalityComparer, next = _._listInternal && _._listInternal.first;
+                    var _ = this, equals = _._equalityComparer;
+                    var next = _._listInternal && _._listInternal.first;
                     while (next) {
                         if (equals(entry, next.value))
                             return next;
@@ -134,7 +135,8 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     return null;
                 };
                 LinkedList.prototype._findLast = function (entry) {
-                    var _ = this, equals = _._equalityComparer, prev = _._listInternal && _._listInternal.last;
+                    var _ = this, equals = _._equalityComparer;
+                    var prev = _._listInternal && _._listInternal.last;
                     while (prev) {
                         if (equals(entry, prev.value))
                             return prev;

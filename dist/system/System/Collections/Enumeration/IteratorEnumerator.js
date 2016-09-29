@@ -46,7 +46,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
                     this._iterator = VOID0;
                 };
                 IteratorEnumerator.prototype.getIsEndless = function () {
-                    return this._isEndless && _super.prototype.getIsEndless.call(this);
+                    return !!this._isEndless && _super.prototype.getIsEndless.call(this);
                 };
                 return IteratorEnumerator;
             }(SimpleEnumerableBase_1.SimpleEnumerableBase));

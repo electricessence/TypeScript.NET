@@ -211,20 +211,30 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function(exports_1
                     return (new Date(year, month + 1, 0)).getDate();
                 };
                 DateTime.from = function (yearOrDate, month, day) {
+                    if (month === void 0) { month = 0; }
+                    if (day === void 0) { day = 1; }
                     var year;
                     if (typeof yearOrDate == "object") {
                         day = yearOrDate.day;
                         month = yearOrDate.month;
                         year = yearOrDate.year;
                     }
+                    else {
+                        year = yearOrDate;
+                    }
                     return new DateTime(new Date(year, month, day));
                 };
                 DateTime.fromCalendarDate = function (yearOrDate, month, day) {
+                    if (month === void 0) { month = 1; }
+                    if (day === void 0) { day = 1; }
                     var year;
                     if (typeof yearOrDate == "object") {
                         day = yearOrDate.day;
                         month = yearOrDate.month;
                         year = yearOrDate.year;
+                    }
+                    else {
+                        year = yearOrDate;
                     }
                     return new DateTime(new Date(year, month - 1, day));
                 };

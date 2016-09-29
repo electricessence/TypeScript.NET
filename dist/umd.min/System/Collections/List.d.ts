@@ -16,7 +16,7 @@ export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnu
     protected _addInternal(entry: T): boolean;
     protected _removeInternal(entry: T, max?: number): number;
     protected _clearInternal(): number;
-    protected _importEntries(entries: IEnumerableOrArray<T>): number;
+    protected _importEntries(entries: IEnumerableOrArray<T> | null | undefined): number;
     get(index: number): T;
     set(index: number, value: T): boolean;
     indexOf(item: T): number;

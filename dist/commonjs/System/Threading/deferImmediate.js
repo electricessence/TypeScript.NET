@@ -12,7 +12,7 @@ var Environment_1 = require("../Environment");
 var requestTick;
 var flushing = false;
 function flush() {
-    var entry = null;
+    var entry;
     while (entry = immediateQueue.first) {
         var task_1 = entry.task, domain = entry.domain, context = entry.context, args = entry.args;
         entry.canceller();

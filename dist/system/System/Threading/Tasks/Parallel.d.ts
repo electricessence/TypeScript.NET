@@ -28,12 +28,12 @@ export declare class Parallel {
     protected _getWorkerSource(task: Function | string, env?: any): string;
     require(...required: RequireType[]): this;
     requireThese(required: RequireType[]): this;
-    protected _spawnWorker(task: Function | string, env?: any): WorkerLike;
+    protected _spawnWorker(task: Function | string, env?: any): WorkerLike | undefined;
     startNew<T, U>(data: T, task: (data: T) => U, env?: any): Promise<U>;
     pipe<T, U>(data: T[], task: (data: T) => U, env?: any): PromiseCollection<U>;
     private ensureClampedMaxConcurrency();
     map<T, U>(data: T[], task: (data: T) => U, env?: any): ArrayPromise<U>;
-    static isSupported: boolean;
+    static readonly isSupported: boolean;
     static options(options?: ParallelOptions): Parallel;
     static require(...required: RequireType[]): Parallel;
     static requireThese(required: RequireType[]): Parallel;

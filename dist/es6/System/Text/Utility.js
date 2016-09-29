@@ -77,14 +77,14 @@ export function supplant(source, params) {
         }
     });
 }
-null | void {
-    if() { } };
-!Type.isString(source) || !match;
-return false;
-if (source === match)
-    return true;
-if (match.length < source.length)
-    return null;
+function canMatch(source, match) {
+    if (!Type.isString(source) || !match)
+        return false;
+    if (source === match)
+        return true;
+    if (match.length < source.length)
+        return null;
+}
 export function startsWith(source, pattern) {
     var m = canMatch(source, pattern);
     return Type.isBoolean(m) ? m : source.indexOf(pattern) == 0;

@@ -25,9 +25,9 @@ export default class EventDispatcherBase extends DisposableBase implements IEven
     removeEventListener(type: string, listener: IEventListener): void;
     dispatchEvent(type: string, params?: any): boolean;
     dispatchEvent(event: IEvent): boolean;
-    static DISPOSING: string;
-    static DISPOSED: string;
+    static readonly DISPOSING: string;
+    static readonly DISPOSED: string;
     private _isDisposing;
-    isDisposing: boolean;
+    readonly isDisposing: boolean;
     dispose(): void;
 }

@@ -45,20 +45,20 @@ export declare class Regex {
 export declare class Capture {
     value: string;
     index: number;
-    length: number;
+    readonly length: number;
     constructor(value?: string, index?: number);
     freeze(): void;
 }
 export declare class Group extends Capture {
-    success: boolean;
+    readonly success: boolean;
     constructor(value?: string, index?: number);
-    static Empty: Group;
+    static readonly Empty: Group;
 }
 export declare class Match extends Group {
     groups: Group[];
     namedGroups: IMap<Group>;
     constructor(value?: string, index?: number, groups?: Group[], namedGroups?: IMap<Group>);
     freeze(): void;
-    static Empty: Match;
+    static readonly Empty: Match;
 }
 export default Regex;
