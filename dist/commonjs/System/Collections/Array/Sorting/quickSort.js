@@ -5,11 +5,14 @@
  */
 "use strict";
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
-function quickSort(target, low, high) {
-    if (low === void 0) { low = 0; }
-    if (high === void 0) { high = target && (target.length - 1) || 0; }
+function quickSort(target) {
     if (!target)
         throw new ArgumentNullException_1.ArgumentNullException("target");
+    var len = target.length;
+    return target.length < 2 ? target : sort(target, 0, len - 1);
+}
+exports.quickSort = quickSort;
+function sort(target, low, high) {
     if (low < high) {
         var swap, pivotIndex = Math.floor((low + high) / 2);
         swap = target[pivotIndex];
@@ -27,10 +30,9 @@ function quickSort(target, low, high) {
         swap = target[i];
         target[i] = target[high];
         target[high] = swap;
-        quickSort(target, low, i - 1);
-        quickSort(target, i + 1, high);
+        sort(target, low, i - 1);
+        sort(target, i + 1, high);
     }
     return target;
 }
-exports.quickSort = quickSort;
 //# sourceMappingURL=quickSort.js.map

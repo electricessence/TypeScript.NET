@@ -47,6 +47,19 @@ export module Integer
 			return r(boundary);
 		}
 
+		export function set(
+			count:number,
+			boundary:number,
+			inclusive?:boolean):number[]
+		{
+			var s:number[] = [];
+			s.length = count;
+			for(let i=0;i<count;i++) {
+				s[i] = next(boundary,inclusive);
+			}
+			return s;
+		}
+
 		export function nextInRange(
 			min:number,
 			max:number,

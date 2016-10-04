@@ -2,11 +2,14 @@
 
 import * as assert from "assert";
 import {Selector} from "../../../../../dist/commonjs/System/FunctionTypes";
-import {quickSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort";
-import {mergeSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort";
 import {areEqual} from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import {compare} from "../../../../../dist/commonjs/System/Compare";
+import {Integer} from "../../../../../source/System/Integer";
+import {quickSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort";
+import {mergeSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort";
+import {insertionSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort";
 
+const performanceCheck = false;  // Change to true to performance test/log
 
 function arraySort(a:number[]):number[]
 {
@@ -19,13 +22,12 @@ function nullSort(a:number[]):number[]
 	return a;
 }
 
-const
-	source:number[][] = Object.freeze([
-		Object.freeze([2, 5, 4, 1, 3, 10, 20, 14, 7, 2, 5, 4, 1, 3, 10, 20, 14, 7]),
-		Object.freeze([2, 18, 14, 37, 20, 33, 26, 21, 5, 31, 2, 18, 14, 37, 20, 33, 26, 21, 5, 31]),
-		Object.freeze([9, 19, 5, 7, 38, 13, 20, 2, 12, 35, 9, 19, 5, 7, 38, 13, 20, 2, 12, 35])
-	]),
-	sourceCount       = source.length;
+const sourceCount = 4, sourceMax = 200;
+const source:number[][] = [];
+for(let i = 0;i<sourceCount;i++) {
+	source.push(Object.freeze(Integer.random.set(sourceMax,sourceMax/2)));
+}
+Object.freeze(source);
 
 function test(target:number[][], fn:Selector<number[],number[]>):void
 {
@@ -57,6 +59,12 @@ function array()
 	test(arrayResults, arraySort);
 }
 
+const insertionResults:number[][] = [];
+function insertion()
+{
+	test(insertionResults, insertionSort);
+}
+
 const quickResults:number[][] = [];
 function quick()
 {
@@ -69,8 +77,7 @@ function merge()
 	test(mergeResults, mergeSort);
 }
 
-const performanceCheck = true;  // Change to true to performance test/log
-const count = performanceCheck ? 500000 : 1;
+const count = performanceCheck ? 100000 : 1;
 function measure(fn:Function):number
 {
 	var time = Date.now();
@@ -96,6 +103,17 @@ if(count>1) {
 report("Dummy Sort (copy only):", dummy);
 report("Array Sort:", array);
 array();
+
+
+describe("Insertion Sort", ()=>
+{
+	report("Insertion Sort:", insertion);
+	it("should match array sort", ()=>
+	{
+		insertion();
+		assertResults(insertionResults);
+	});
+});
 
 describe("Quick Sort", ()=>
 {

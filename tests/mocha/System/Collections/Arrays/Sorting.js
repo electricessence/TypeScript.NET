@@ -4,6 +4,9 @@ var quickSort_1 = require("../../../../../dist/commonjs/System/Collections/Array
 var mergeSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort");
 var Compare_1 = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
 var Compare_2 = require("../../../../../dist/commonjs/System/Compare");
+var insertionSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort");
+var Integer_1 = require("../../../../../source/System/Integer");
+var performanceCheck = false;
 function arraySort(a) {
     a.sort(Compare_2.compare);
     return a;
@@ -11,11 +14,12 @@ function arraySort(a) {
 function nullSort(a) {
     return a;
 }
-var source = Object.freeze([
-    Object.freeze([2, 5, 4, 1, 3, 10, 20, 14, 7, 2, 5, 4, 1, 3, 10, 20, 14, 7]),
-    Object.freeze([2, 18, 14, 37, 20, 33, 26, 21, 5, 31, 2, 18, 14, 37, 20, 33, 26, 21, 5, 31]),
-    Object.freeze([9, 19, 5, 7, 38, 13, 20, 2, 12, 35, 9, 19, 5, 7, 38, 13, 20, 2, 12, 35])
-]), sourceCount = source.length;
+var sourceCount = 4, sourceMax = 200;
+var source = [];
+for (var i = 0; i < sourceCount; i++) {
+    source.push(Object.freeze(Integer_1.Integer.random.set(sourceMax, sourceMax / 2)));
+}
+Object.freeze(source);
 function test(target, fn) {
     for (var i = 0; i < sourceCount; i++) {
         target[i] = fn(source[i].slice());
@@ -36,6 +40,10 @@ function dummy() {
 function array() {
     test(arrayResults, arraySort);
 }
+var insertionResults = [];
+function insertion() {
+    test(insertionResults, insertionSort_1.insertionSort);
+}
 var quickResults = [];
 function quick() {
     test(quickResults, quickSort_1.quickSort);
@@ -44,8 +52,7 @@ var mergeResults = [];
 function merge() {
     test(mergeResults, mergeSort_1.mergeSort);
 }
-var performanceCheck = true;
-var count = performanceCheck ? 500000 : 1;
+var count = performanceCheck ? 100000 : 1;
 function measure(fn) {
     var time = Date.now();
     for (var i = 0; i < count; i++) {
@@ -63,6 +70,13 @@ if (count > 1) {
 report("Dummy Sort (copy only):", dummy);
 report("Array Sort:", array);
 array();
+describe("Insertion Sort", function () {
+    report("Insertion Sort:", insertion);
+    it("should match array sort", function () {
+        insertion();
+        assertResults(insertionResults);
+    });
+});
 describe("Quick Sort", function () {
     report("Quick Sort:", quick);
     it("should match array sort", function () {

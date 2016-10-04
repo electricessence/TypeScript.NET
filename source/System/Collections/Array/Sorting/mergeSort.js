@@ -2,6 +2,7 @@
  * @author Sebastian Belmar / https://github.com/sebabelmar/
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * https://en.wikipedia.org/wiki/Merge_sort
  */
 (function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
@@ -18,7 +19,7 @@
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");
         var len = target.length;
-        return target.length < 2 ? target : sort(target, 0, len, Utility_1.initialize(len));
+        return len < 2 ? target : sort(target, 0, len, Utility_1.initialize(len));
     }
     exports.mergeSort = mergeSort;
     function sort(target, start, end, temp) {

@@ -1,5 +1,9 @@
 import {
-	Action, Predicate, Selector, EqualityComparison, Comparison,
+	Action,
+	Predicate,
+	Selector,
+	EqualityComparison,
+	Comparison,
 	Closure
 } from "../System/FunctionTypes";
 import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";

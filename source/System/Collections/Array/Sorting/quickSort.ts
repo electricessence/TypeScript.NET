@@ -12,16 +12,20 @@ import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
  * Quick sort O(n log (n))
  * Warning: Uses recursion.
  * @param target
- * @param low
- * @param high
- * @returns {Array}
+ * @returns {T[]}
  */
-export function quickSort<T extends Primitive>(
-	target:T[],
-	low:number = 0,
-	high:number = target && (target.length - 1) || 0):T[]
+export function quickSort<T extends Primitive>(target:T[]):T[]
 {
 	if(!target) throw new ArgumentNullException("target");
+	var len = target.length;
+	return target.length<2 ? target : sort(target, 0, len - 1);
+}
+
+function sort<T extends Primitive>(
+	target:T[],
+	low:number,
+	high:number):T[]
+{
 	if(low<high)
 	{
 		// Partition first...
@@ -47,8 +51,8 @@ export function quickSort<T extends Primitive>(
 		target[i] = target[high];
 		target[high] = swap;
 
-		quickSort(target, low, i - 1);
-		quickSort(target, i + 1, high);
+		sort(target, low, i - 1);
+		sort(target, i + 1, high);
 	}
 
 	return target;

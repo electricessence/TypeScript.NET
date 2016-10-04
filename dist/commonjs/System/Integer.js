@@ -31,6 +31,15 @@ var Integer;
             return r(boundary);
         }
         random.next = next;
+        function set(count, boundary, inclusive) {
+            var s = [];
+            s.length = count;
+            for (var i = 0; i < count; i++) {
+                s[i] = next(boundary, inclusive);
+            }
+            return s;
+        }
+        random.set = set;
         function nextInRange(min, max, inclusive) {
             assert(min, 'min');
             assert(max, 'max');

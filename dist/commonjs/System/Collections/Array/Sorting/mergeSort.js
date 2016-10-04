@@ -2,6 +2,7 @@
  * @author Sebastian Belmar / https://github.com/sebabelmar/
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * https://en.wikipedia.org/wiki/Merge_sort
  */
 "use strict";
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
@@ -10,7 +11,7 @@ function mergeSort(target) {
     if (!target)
         throw new ArgumentNullException_1.ArgumentNullException("target");
     var len = target.length;
-    return target.length < 2 ? target : sort(target, 0, len, Utility_1.initialize(len));
+    return len < 2 ? target : sort(target, 0, len, Utility_1.initialize(len));
 }
 exports.mergeSort = mergeSort;
 function sort(target, start, end, temp) {
@@ -19,8 +20,7 @@ function sort(target, start, end, temp) {
         sort(target, start, middle, temp);
         sort(target, middle, end, temp);
         for (var i_1 = 0, len = target.length; i_1 < len; i_1++) {
-            if (temp[i_1] !== target[i_1])
-                temp[i_1] = target[i_1];
+            temp[i_1] = target[i_1];
         }
         var k = start, i = start, j = middle;
         while (i < middle && j < end) {
