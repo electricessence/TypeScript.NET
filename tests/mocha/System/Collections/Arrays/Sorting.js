@@ -1,7 +1,7 @@
 "use strict";
 var assert = require("assert");
-var quickSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sort/quickSort");
-var mergeSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sort/mergeSort");
+var quickSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort");
+var mergeSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort");
 var Compare_1 = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
 var Compare_2 = require("../../../../../dist/commonjs/System/Compare");
 function arraySort(a) {
@@ -44,7 +44,8 @@ var mergeResults = [];
 function merge() {
     test(mergeResults, mergeSort_1.mergeSort);
 }
-var count = 1;
+var performanceCheck = true;
+var count = performanceCheck ? 500000 : 1;
 function measure(fn) {
     var time = Date.now();
     for (var i = 0; i < count; i++) {
@@ -76,4 +77,4 @@ describe("Merge Sort", function () {
         assertResults(mergeResults);
     });
 });
-//# sourceMappingURL=Sort.js.map
+//# sourceMappingURL=Sorting.js.map

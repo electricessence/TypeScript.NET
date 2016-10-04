@@ -2,8 +2,8 @@
 
 import * as assert from "assert";
 import {Selector} from "../../../../../dist/commonjs/System/FunctionTypes";
-import {quickSort} from "../../../../../dist/commonjs/System/Collections/Array/Sort/quickSort";
-import {mergeSort} from "../../../../../dist/commonjs/System/Collections/Array/Sort/mergeSort";
+import {quickSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort";
+import {mergeSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort";
 import {areEqual} from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import {compare} from "../../../../../dist/commonjs/System/Compare";
 
@@ -69,8 +69,8 @@ function merge()
 	test(mergeResults, mergeSort);
 }
 
-
-const count = 1; // Change to 500000 to performance test/log
+const performanceCheck = true;  // Change to true to performance test/log
+const count = performanceCheck ? 500000 : 1;
 function measure(fn:Function):number
 {
 	var time = Date.now();

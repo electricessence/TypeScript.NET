@@ -13,29 +13,37 @@
 })(function (require, exports) {
     "use strict";
     var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
-    function mergeSort(target, low, high) {
-        if (low === void 0) { low = 0; }
-        if (high === void 0) { high = target && (target.length - 1) || 0; }
+    function mergeSort(target) {
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");
-        if (low < high) {
-            var middle = Math.floor((low + high) / 2);
-            var i = low, j = middle + 1, k = low;
-            mergeSort(target, low, middle);
-            mergeSort(target, j, high);
-            var temp = target.slice();
-            while (i <= middle && j <= high) {
+        return target.length < 2 ? target : sort(target, 0, target.length);
+    }
+    exports.mergeSort = mergeSort;
+    function sort(target, start, end, temp) {
+        if (end - start > 1) {
+            var middle = Math.floor((start + end) / 2);
+            sort(target, start, middle, temp);
+            sort(target, middle, end, temp);
+            if (temp) {
+                for (var i_1 = 0, len = target.length; i_1 < len; i_1++) {
+                    temp[i_1] = target[i_1];
+                }
+            }
+            else {
+                temp = target.slice();
+            }
+            var k = start, i = start, j = middle;
+            while (i < middle && j < end) {
                 target[k++]
                     = temp[i] > temp[j]
                         ? temp[j++]
                         : temp[i++];
             }
-            while (i <= middle) {
+            while (i < middle) {
                 target[k++] = temp[i++];
             }
         }
         return target;
     }
-    exports.mergeSort = mergeSort;
 });
 //# sourceMappingURL=mergeSort.js.map

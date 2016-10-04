@@ -1,5 +1,5 @@
-import {createComparer} from "./Sort/createComparer";
-export * from "./Sort/quickSort";
+import {createComparer} from "./Sorting/createComparer";
+export * from "./Sorting/quickSort";
 
 export {
 	createComparer,
