@@ -8,15 +8,17 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../../Exceptions/ArgumentNullException"], factory);
+        define(["require", "exports", "../../../Exceptions/ArgumentNullException", "../Utility"], factory);
     }
 })(function (require, exports) {
     "use strict";
     var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
+    var Utility_1 = require("../Utility");
     function mergeSort(target) {
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");
-        return target.length < 2 ? target : sort(target, 0, target.length);
+        var len = target.length;
+        return target.length < 2 ? target : sort(target, 0, len, Utility_1.initialize(len));
     }
     exports.mergeSort = mergeSort;
     function sort(target, start, end, temp) {
@@ -24,13 +26,8 @@
             var middle = Math.floor((start + end) / 2);
             sort(target, start, middle, temp);
             sort(target, middle, end, temp);
-            if (temp) {
-                for (var i_1 = 0, len = target.length; i_1 < len; i_1++) {
-                    temp[i_1] = target[i_1];
-                }
-            }
-            else {
-                temp = target.slice();
+            for (var i_1 = 0, len = target.length; i_1 < len; i_1++) {
+                temp[i_1] = target[i_1];
             }
             var k = start, i = start, j = middle;
             while (i < middle && j < end) {

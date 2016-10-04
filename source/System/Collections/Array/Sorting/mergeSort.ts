@@ -7,6 +7,7 @@
 
 import {Primitive} from "../../../Primitive";
 import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
+import {initialize} from "../Utility";
 
 /**
  * Merge sort O(n log (n))
@@ -17,14 +18,15 @@ import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 export function mergeSort<T extends Primitive>(target:T[]):T[]
 {
 	if(!target) throw new ArgumentNullException("target");
-	return target.length<2 ? target : sort(target, 0, target.length);
+	var len = target.length;
+	return target.length<2 ? target : sort(target, 0, len, initialize<T>(len));
 }
 
 function sort<T extends Primitive>(
 	target:T[],
 	start:number,
 	end:number,
-	temp?:T[]):T[]
+	temp:T[]):T[]
 {
 	if(end - start>1)
 	{
@@ -34,14 +36,9 @@ function sort<T extends Primitive>(
 		sort(target, middle, end, temp);
 
 		// Step 2: Copy the original array
-		if(temp)
+		for(let i = 0, len = target.length; i<len; i++)
 		{
-			for(let i = 0, len = target.length; i<len; i++)
-			{
-				temp[i] = target[i];
-			}
-		} else {
-			temp = target.slice();
+			temp[i] = target[i];
 		}
 
 		// Step 3: Create variables to traverse
