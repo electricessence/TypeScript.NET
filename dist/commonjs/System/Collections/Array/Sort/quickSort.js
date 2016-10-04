@@ -7,7 +7,7 @@
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
 function quickSort(target, low, high) {
     if (low === void 0) { low = 0; }
-    if (high === void 0) { high = target && (target.length - 1); }
+    if (high === void 0) { high = target && (target.length - 1) || 0; }
     if (!target)
         throw new ArgumentNullException_1.ArgumentNullException("target");
     if (low < high) {

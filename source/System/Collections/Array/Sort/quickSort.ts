@@ -9,7 +9,7 @@ import {Primitive} from "../../../Primitive";
 import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 
 /**
- * Quick sort O (n log n)
+ * Quick sort O(n log (n))
  * Warning: Uses recursion.
  * @param target
  * @param low
@@ -19,7 +19,7 @@ import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 export function quickSort<T extends Primitive>(
 	target:T[],
 	low:number = 0,
-	high:number = target && (target.length - 1)):T[]
+	high:number = target && (target.length - 1) || 0):T[]
 {
 	if(!target) throw new ArgumentNullException("target");
 	if(low<high)

@@ -13,33 +13,29 @@
 })(function (require, exports) {
     "use strict";
     var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
-    function quickSort(target, low, high) {
+    function mergeSort(target, low, high) {
         if (low === void 0) { low = 0; }
         if (high === void 0) { high = target && (target.length - 1) || 0; }
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");
         if (low < high) {
-            var swap, pivotIndex = Math.floor((low + high) / 2);
-            swap = target[pivotIndex];
-            target[pivotIndex] = target[high];
-            target[high] = swap;
-            var i = low;
-            for (var j = low; j < high; j++) {
-                if (target[j] < target[high]) {
-                    swap = target[i];
-                    target[i] = target[j];
-                    target[j] = swap;
-                    i++;
-                }
+            var middle = Math.floor((low + high) / 2);
+            var i = low, j = middle + 1, k = low;
+            mergeSort(target, low, middle);
+            mergeSort(target, j, high);
+            var temp = target.slice();
+            while (i <= middle && j <= high) {
+                target[k++]
+                    = temp[i] > temp[j]
+                        ? temp[j++]
+                        : temp[i++];
             }
-            swap = target[i];
-            target[i] = target[high];
-            target[high] = swap;
-            quickSort(target, low, i - 1);
-            quickSort(target, i + 1, high);
+            while (i <= middle) {
+                target[k++] = temp[i++];
+            }
         }
         return target;
     }
-    exports.quickSort = quickSort;
+    exports.mergeSort = mergeSort;
 });
-//# sourceMappingURL=quickSort.js.map
+//# sourceMappingURL=mergeSort.js.map
