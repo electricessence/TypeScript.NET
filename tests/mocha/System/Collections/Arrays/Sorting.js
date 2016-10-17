@@ -1,11 +1,11 @@
 "use strict";
 var assert = require("assert");
-var quickSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort");
-var mergeSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort");
 var Compare_1 = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
 var Compare_2 = require("../../../../../dist/commonjs/System/Compare");
-var insertionSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort");
 var Integer_1 = require("../../../../../source/System/Integer");
+var quickSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort");
+var mergeSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort");
+var insertionSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort");
 var performanceCheck = false;
 function arraySort(a) {
     a.sort(Compare_2.compare);

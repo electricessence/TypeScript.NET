@@ -4,9 +4,13 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
-export function quickSort(target, low = 0, high = target && (target.length - 1)) {
+export function quickSort(target) {
     if (!target)
         throw new ArgumentNullException("target");
+    var len = target.length;
+    return target.length < 2 ? target : sort(target, 0, len - 1);
+}
+function sort(target, low, high) {
     if (low < high) {
         var swap, pivotIndex = Math.floor((low + high) / 2);
         swap = target[pivotIndex];
@@ -24,8 +28,8 @@ export function quickSort(target, low = 0, high = target && (target.length - 1))
         swap = target[i];
         target[i] = target[high];
         target[high] = swap;
-        quickSort(target, low, i - 1);
-        quickSort(target, i + 1, high);
+        sort(target, low, i - 1);
+        sort(target, i + 1, high);
     }
     return target;
 }

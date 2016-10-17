@@ -1,4 +1,4 @@
-System.register(["./Sort/createComparer", "./Sort/quickSort"], function(exports_1, context_1) {
+System.register(["./Sorting/createComparer", "./Sorting/quickSort"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var createComparer_1;
