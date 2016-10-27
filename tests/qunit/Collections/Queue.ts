@@ -1,5 +1,5 @@
-import * as ICollectionTests from './ICollection';
-import Queue from 'source/System/Collections/Queue';
+import * as ICollectionTests from "./ICollection";
+import Queue from "../../../dist/amd/System/Collections/Queue";
 
 export default function run()
 {

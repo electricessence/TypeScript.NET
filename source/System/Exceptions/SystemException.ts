@@ -4,12 +4,14 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
  */
 
-import {Exception} from "../Exception";
+import {Exception, Error} from "../Exception";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'SystemException';
+
+export {Error};
 
 export class SystemException extends Exception
 {

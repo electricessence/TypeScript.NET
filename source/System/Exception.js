@@ -24,7 +24,7 @@
             if (beforeSealing)
                 beforeSealing(_);
             try {
-                var stack = (new Error()).stack;
+                var stack = eval("new Error()").stack;
                 stack = stack
                     && stack
                         .replace(/^Error\n/, '')

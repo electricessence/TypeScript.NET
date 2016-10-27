@@ -1,7 +1,6 @@
-///<reference path="../../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import * as ArrayCompare from "../../../../../dist/commonjs/System/Collections/Array/Compare";
-import * as assert from "assert";
 
 const a1 = [1,2,3];
 const a2 = [1,2,3];
@@ -20,8 +19,8 @@ describe(".areEqual()",()=>{
 	});
 
 	it("should not be equal",()=>{
-		assert.ok(!ArrayCompare.areEqual(null,a1));
-		assert.ok(!ArrayCompare.areEqual(a1,null));
+		assert.ok(!ArrayCompare.areEqual(<any>null,a1));
+		assert.ok(!ArrayCompare.areEqual(a1,<any>null));
 		assert.ok(!ArrayCompare.areEqual(a1,b));
 		assert.ok(!ArrayCompare.areEqual(b,c));
 	});
@@ -36,13 +35,13 @@ describe(".areAllEqual()",()=>{
 	});
 
 	it("should not be equal",()=>{
-		assert.ok(!ArrayCompare.areAllEqual([a1,null]));
+		assert.ok(!ArrayCompare.areAllEqual([a1,<any>null]));
 		assert.ok(!ArrayCompare.areAllEqual([a1,b,c]));
 		assert.ok(!ArrayCompare.areAllEqual([a1,b],true,()=>false));
 	});
 
 	it("should error for invalid",()=>{
-		assert.throws(()=>ArrayCompare.areAllEqual(null));
+		assert.throws(()=>ArrayCompare.areAllEqual(<any>null));
 		assert.throws(()=>ArrayCompare.areAllEqual([]));
 		assert.throws(()=>ArrayCompare.areAllEqual([a1]));
 	});

@@ -53,7 +53,8 @@
         noEmitHelpers: true,
         sourceMap: true,
         declaration: true,
-        strictNullChecks: true
+        strictNullChecks: true,
+        moduleResolution: "node"
     });
     var builder = gulp_typescript_helper_1.BuildHelper
         .inject(Promise_1.Promise.factory)

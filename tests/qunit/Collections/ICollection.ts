@@ -1,11 +1,11 @@
-///<reference path="../../../typings/qunit/qunit.d.ts"/>
+///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
 
-import * as Text from "source/System/Text/Utility";
-import * as AU from "source/System/Collections/Array/Utility";
-import NotImplementedException from "source/System/Exceptions/NotImplementedException";
-import {ICollection} from "source/System/Collections/ICollection";
-import {CollectionBase} from "source/System/Collections/CollectionBase";
+import * as Text from "../../../dist/amd/System/Text/Utility";
+import * as AU from "../../../dist/amd/System/Collections/Array/Utility";
+import NotImplementedException from "../../../dist/amd/System/Exceptions/NotImplementedException";
+import {ICollection} from "../../../dist/amd/System/Collections/ICollection";
+import {CollectionBase} from "../../../dist/amd/System/Collections/CollectionBase";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
@@ -23,12 +23,12 @@ import {CollectionBase} from "source/System/Collections/CollectionBase";
 // 	});
 // }
 
-function assertIsNumber(assert:QUnitAssert, value:any, name:string)
+function assertIsNumber(assert:Assert, value:any, name:string)
 {
 	assert.ok(!isNaN(value), Text.format("'{0}' must be a real number.", name));
 }
 
-function assertAdding<T>(assert:QUnitAssert, c:ICollection<T>, a:T[])
+function assertAdding<T>(assert:Assert, c:ICollection<T>, a:T[])
 {
 	var count:number;
 	for(let v of a)
@@ -41,7 +41,7 @@ function assertAdding<T>(assert:QUnitAssert, c:ICollection<T>, a:T[])
 	}
 }
 
-function assertCopyToClear<T>(assert:QUnitAssert, c:ICollection<T>)
+function assertCopyToClear<T>(assert:Assert, c:ICollection<T>)
 {
 	var count:number;
 	assertIsNumber(assert, count = c.count, 'count');
@@ -73,7 +73,7 @@ function assertCopyToClear<T>(assert:QUnitAssert, c:ICollection<T>)
 	assert.equal(c.count, a.length, "A collection's count should be equal to the number of items added.");
 }
 
-function assertRemoving<T>(assert:QUnitAssert, c:ICollection<T>)
+function assertRemoving<T>(assert:Assert, c:ICollection<T>)
 {
 	var count:number;
 	assertIsNumber(assert, count = c.count, 'count');
@@ -119,7 +119,7 @@ export function Collection<T>(
 	 - count
 	 - contains
 	 */
-	QUnit.test(name, function(assert:QUnitAssert)
+	QUnit.test(name, assert=>
 	{
 		assertAdding(assert, collection, sourceValues);
 		assertCopyToClear(assert, collection);
@@ -127,7 +127,7 @@ export function Collection<T>(
 		assert.ok(!collection.contains(null), 'Equality comparison is not strict.');
 	});
 
-	QUnit.asyncTest(name + ".linqAsync()", (assert:QUnitAssert)=>
+	(<any>QUnit).asyncTest(name + ".linqAsync()", (assert:Assert)=>
 	{
 		collection.linqAsync(linq=>
 		{

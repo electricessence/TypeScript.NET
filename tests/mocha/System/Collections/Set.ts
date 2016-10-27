@@ -1,10 +1,9 @@
-///<reference path="../../import.d.ts"/>
-///<reference path="../../../../dist/commonjs/System/Primitive.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import * as ICollectionTests from "./ICollection";
 import Set from "../../../../dist/commonjs/System/Collections/Set";
 import {Primitive} from "../../../../dist/commonjs/System/Primitive";
-import * as assert from "assert";
+
 
 //noinspection SpellCheckingInspection
 ICollectionTests.Collection('Set<' + 'string>', new Set<string>(), [

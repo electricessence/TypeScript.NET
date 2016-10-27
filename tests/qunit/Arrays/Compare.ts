@@ -1,7 +1,5 @@
-///<reference path="../../../typings/qunit/qunit.d.ts"/>
+///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-
-import * as ArrayCompare from 'source/System/Collections/Array/Compare';
 
 export default function run() {
 

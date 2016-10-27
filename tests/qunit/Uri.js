@@ -3,11 +3,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", "source/System/Uri/Uri"], factory);
+        define(["require", "exports", "QUnit", "../../dist/amd/System/Uri/Uri"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Uri_1 = require("source/System/Uri/Uri");
+    var Uri_1 = require("../../dist/amd/System/Uri/Uri");
     function run() {
         var validUri = {
             scheme: 'http',

@@ -1,4 +1,3 @@
-/// <reference path="../typings/gulp/gulp" />
 import {Target, Module, CoreTypeScriptOptions, BuildHelper} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";
 import * as gulp from "gulp";
@@ -57,7 +56,8 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 	noEmitHelpers: true,
 	sourceMap: true,
 	declaration: true,
-	strictNullChecks: true
+	strictNullChecks: true,
+	moduleResolution: "node"
 });
 
 const builder = BuildHelper

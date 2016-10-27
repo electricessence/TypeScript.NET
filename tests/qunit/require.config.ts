@@ -1,27 +1,29 @@
-///<reference path="../../typings/requirejs/require.d.ts"/>
-///<reference path="../../typings/qunit/qunit.d.ts"/>
+///<reference types="qunit"/>
 
+declare const requirejs:any;
+
+//noinspection SpellCheckingInspection
 requirejs.config({
 
-    baseUrl: './',
-	urlArgs: 't='+(new Date()).getTime(),
+	baseUrl: './',
+	urlArgs: 't=' + (new Date()).getTime(),
 
-    paths: {
-        "QUnit": "../../bower_components"+"/qunit/qunit/qunit",
-        "source": "../../dist/amd"+""
-    },
+	paths: {
+		"QUnit": "../../bower_components" + "/qunit/qunit/qunit"
+	},
 
-    shim: {
-        'QUnit': {
-            //deps: [
-            //	'css!bower_components/qunit/qunit/qunit'
-            //],
-            exports: 'QUnit',
-            init: function () {
-                //QUnit.config.autoload = false;
-                QUnit.config.autostart = false;
-            }
-        }
-    }
+	shim: {
+		'QUnit': {
+			//deps: [
+			//	'css!bower_components/qunit/qunit/qunit'
+			//],
+			exports: 'QUnit',
+			init: function()
+			{
+				//QUnit.config.autoload = false;
+				QUnit.config.autostart = false;
+			}
+		}
+	}
 });
 

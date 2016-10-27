@@ -1,5 +1,4 @@
-///<reference path="../typings/gulp/gulp"/>
-///<reference path="../typings/gulp-typedoc/gulp-typedoc"/>
+///<reference types="gulp-typedoc"/>
 
 import {Target, Module} from "gulp-typescript-helper";
 import * as PATH from "./constants/Paths";

@@ -3,7 +3,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", './LinkedList', './Queue', './OrderedStringKeyDictionary'], factory);
+        define(["require", "exports", './LinkedList', './Queue', './OrderedStringKeyDictionary'], factory);
     }
 })(function (require, exports) {
     "use strict";

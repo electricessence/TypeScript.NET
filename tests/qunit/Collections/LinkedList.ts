@@ -1,5 +1,5 @@
-import * as ICollectionTests from './ICollection';
-import LinkedList from 'source/System/Collections/LinkedList';
+import * as ICollectionTests from "./ICollection";
+import LinkedList from "../../../dist/amd/System/Collections/LinkedList";
 
 export default function run() {
 	ICollectionTests.StringCollection('LinkedList',new LinkedList<string>());

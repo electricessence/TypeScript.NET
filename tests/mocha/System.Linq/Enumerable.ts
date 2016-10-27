@@ -1,5 +1,5 @@
-﻿///<reference path="../import.d.ts"/>
-
+﻿///<reference types="assert"/>
+import assert = require("assert");
 import {contains, repeat} from "../../../dist/commonjs/System/Collections/Array/Utility";
 import * as Procedure from "../../../dist/commonjs/System/Collections/Array/Procedure";
 import Enumerable from "../../../dist/commonjs/System.Linq/Linq";
@@ -7,7 +7,6 @@ import Functions from "../../../dist/commonjs/System/Functions";
 import {EmptyEnumerator} from "../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator";
 import {List} from "../../../dist/commonjs/System/Collections/List";
 import {ILinqEnumerable} from "../../../dist/commonjs/System.Linq/Enumerable";
-import * as assert from "assert";
 
 
 interface TestItem

@@ -1,5 +1,3 @@
-/// <reference path="../typings/gulp/gulp" />
-/// <reference path="../typings/semver/semver" />
 import * as gulp from "gulp";
 import * as semver from "semver";
 import * as file from "../_utility/file-promise";
@@ -14,6 +12,7 @@ const
 	VERSION_BUMP_PATCH = 'version-bump-patch';
 
 
+//noinspection JSValidateJSDoc
 /**
  * @param {string} type
  * @returns {NodeJS.ReadableStream}

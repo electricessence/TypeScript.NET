@@ -1,8 +1,8 @@
 "use strict";
+var assert = require("assert");
 var Uri_1 = require("../../../../dist/commonjs/System/Uri/Uri");
 var Scheme = require("../../../../dist/commonjs/System/Uri/Scheme");
 var Functions_1 = require("../../../../dist/commonjs/System/Functions");
-var assert = require("assert");
 var pathAfterRoot = 'one/two/three.html';
 var path = '/' + pathAfterRoot;
 var params = [['four', 'five'], ['six', 'seven']];

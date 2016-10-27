@@ -1,5 +1,3 @@
-///<reference path="import"/>
-
 import * as fs from "fs";
 
 const root = "./tests/mocha/";

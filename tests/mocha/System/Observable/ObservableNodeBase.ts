@@ -1,12 +1,6 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT
- */
-
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import ObservableNodeBase from "../../../../dist/commonjs/System/Observable/ObservableNodeBase";
-import * as assert from "assert";
 
 
 it("should receive signals only when subscribed", ()=>

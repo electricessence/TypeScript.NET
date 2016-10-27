@@ -1,9 +1,9 @@
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import * as ICollectionTests from "./ICollection";
 import LinkedList from "../../../../dist/commonjs/System/Collections/LinkedList";
 import {areEqual} from "../../../../dist/commonjs/System/Collections/Array/Compare";
-import * as assert from "assert";
+
 
 const CLASS_NAME = 'LinkedList';
 ICollectionTests.StringCollection(CLASS_NAME, new LinkedList<string>());

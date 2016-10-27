@@ -1,8 +1,8 @@
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import TaskHandler from "../../../../dist/commonjs/System/Threading/Tasks/TaskHandler";
 import Functions from "../../../../dist/commonjs/System/Functions";
-import * as assert from "assert";
+
 
 describe('new',()=>{
 	it("should throw",()=>{

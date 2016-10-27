@@ -1,11 +1,11 @@
 "use strict";
+var assert = require("assert");
 var Utility_1 = require("../../../dist/commonjs/System/Collections/Array/Utility");
 var Procedure = require("../../../dist/commonjs/System/Collections/Array/Procedure");
 var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
 var Functions_1 = require("../../../dist/commonjs/System/Functions");
 var EmptyEnumerator_1 = require("../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator");
 var List_1 = require("../../../dist/commonjs/System/Collections/List");
-var assert = require("assert");
 var source = Object.freeze([
     {
         a: 1,

@@ -11,11 +11,11 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
-            var task_1 = entry.task, domain = entry.domain, context = entry.context, args = entry.args;
+            var task_1 = entry.task, domain = entry.domain, context_2 = entry.context, args = entry.args;
             entry.canceller();
             if (domain)
                 domain.enter();
-            runSingle(task_1, domain, context, args);
+            runSingle(task_1, domain, context_2, args);
         }
         var task;
         while (task = laterQueue.dequeue()) {

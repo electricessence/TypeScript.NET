@@ -4,7 +4,7 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
+import {InvalidOperationException, Error} from "../Exceptions/InvalidOperationException";
 import {IDisposableAware} from "./IDisposableAware";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -12,6 +12,8 @@ const __extends = __extendsImport;
 
 
 const NAME:string = 'ObjectDisposedException';
+
+export {Error};
 
 export class ObjectDisposedException extends InvalidOperationException
 {

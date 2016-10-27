@@ -1,7 +1,7 @@
-/// <reference path="../../../source/System/Collections/Dictionaries/IDictionary.d.ts"/>
 import * as ICollectionTests from "./ICollection";
-import OrderedStringKeyDictionary from "source/System/Collections/Dictionaries/OrderedStringKeyDictionary";
-import {IKeyValuePair} from "source/System/KeyValuePair";
+import OrderedStringKeyDictionary from "../../../dist/amd/System/Collections/Dictionaries/OrderedStringKeyDictionary";
+import {IKeyValuePair} from "../../../dist/amd/System/KeyValuePair";
+
 
 export default function run()
 {

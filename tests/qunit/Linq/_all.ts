@@ -1,7 +1,7 @@
-﻿///<reference path="../../../typings/qunit/qunit"/>
+﻿///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
 
-import Enumerable from "source/System.Linq/Linq";
+import Enumerable from "../../../dist/amd/System.Linq/Linq";
 
 interface TestItem
 {
@@ -48,7 +48,7 @@ export default function run()
 
 	var sourceEnumerable = Enumerable.from(source);
 
-	QUnit.test("Linq.memoize", function (assert:QUnitAssert)
+	QUnit.test("Linq.memoize", assert=>
 	{
 
 		var source = sourceEnumerable;
@@ -62,7 +62,7 @@ export default function run()
 		assert.equal(sum, source.sum(o=>o.b), "Values must be equal after memoize pass 2.");
 	});
 
-	QUnit.test("Linq.where.memoize", function (assert:QUnitAssert)
+	QUnit.test("Linq.where.memoize", assert=>
 	{
 		var source = sourceEnumerable.where(i => i.a==1);
 
@@ -87,7 +87,7 @@ export default function run()
 
 	});
 
-	QUnit.test("Linq.orderBy", function (assert:QUnitAssert)
+	QUnit.test("Linq.orderBy", assert=>
 	{
 
 		var source = sourceEnumerable.reverse();
@@ -119,7 +119,7 @@ export default function run()
 	});
 
 
-	QUnit.test("Linq.orderByDescending", function (assert:QUnitAssert)
+	QUnit.test("Linq.orderByDescending", assert=>
 	{
 
 		var source = sourceEnumerable.reverse();
@@ -150,7 +150,7 @@ export default function run()
 
 	});
 
-	QUnit.test("Linq.orderBy.thenBy", function (assert:QUnitAssert)
+	QUnit.test("Linq.orderBy.thenBy", assert=>
 	{
 
 		var B = sourceEnumerable
@@ -184,7 +184,7 @@ export default function run()
 	});
 
 
-	QUnit.test("Linq.groupBy", function (assert:QUnitAssert)
+	QUnit.test("Linq.groupBy", assert=>
 	{
 		var A_distinct = sourceEnumerable
 			.select(o=>o.a).distinct();

@@ -1,8 +1,6 @@
-// ///<reference path="../../import.d.ts"/>
+///<reference types="assert"/>
+import assert = require("assert");
 //
-// import Parallel from "../../../../dist/commonjs/System/Threading/Tasks/Parallel";
-// import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-// import * as assert from "assert";
 //
 // it("should return the expected concatenation", ()=>
 // {

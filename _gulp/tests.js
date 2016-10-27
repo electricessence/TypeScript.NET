@@ -19,6 +19,7 @@
         noEmitHelpers: false,
         removeComments: true,
         sourceMap: true,
+        moduleResolution: "node"
     });
     gulp.task(TASK.TYPESCRIPT_QUNIT, [
         TASK.DIST_AMD

@@ -1,6 +1,5 @@
-///<reference path="../../../import"/>
-
-import * as assert from "assert";
+///<reference types="assert"/>
+import assert = require("assert");
 import {Selector} from "../../../../../dist/commonjs/System/FunctionTypes";
 import {areEqual} from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import {compare} from "../../../../../dist/commonjs/System/Compare";

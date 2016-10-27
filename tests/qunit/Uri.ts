@@ -1,21 +1,21 @@
-﻿///<reference path="../../typings/qunit/qunit.d.ts"/>
+﻿///<reference types="qunit"/>
 ///<amd-dependency path='QUnit'/>
 
-import Uri from "source/System/Uri/Uri";
-import {IUri} from "source/System/Uri/IUri";
+import Uri from "../../dist/amd/System/Uri/Uri";
+import {IUri} from "../../dist/amd/System/Uri/IUri";
 
 
 export default function run()
 {
 
 	var validUri:IUri = {
-		scheme:'http',
-		userInfo:'username:password',
-		host:'domain.com',
-		port:1234,
-		path:'/tree/node/index.html',
-		query:'?param=hello%20there&flag=false&blah',
-		fragment:'#home'
+		scheme: 'http',
+		userInfo: 'username:password',
+		host: 'domain.com',
+		port: 1234,
+		path: '/tree/node/index.html',
+		query: '?param=hello%20there&flag=false&blah',
+		fragment: '#home'
 	};
 	var validUrl:string = ''
 		+ validUri.scheme + '://'
@@ -26,7 +26,8 @@ export default function run()
 		+ validUri.query
 		+ validUri.fragment;
 
-	QUnit.test('Uri: parse valid', (assert:QUnitAssert)=>{
+	QUnit.test('Uri: parse valid', assert=>
+	{
 
 		assert.equal(
 			Uri.from(validUrl).absoluteUri,
@@ -35,7 +36,8 @@ export default function run()
 
 	});
 
-	QUnit.test('Uri: parse equality', (assert:QUnitAssert)=>{
+	QUnit.test('Uri: parse equality', assert=>
+	{
 
 		assert.equal(
 			Uri.from(validUrl).equals(validUri),
@@ -44,7 +46,7 @@ export default function run()
 
 	});
 
-	QUnit.test('Uri: valid', (assert:QUnitAssert)=>
+	QUnit.test('Uri: valid', assert=>
 	{
 
 		assert.equal(
@@ -66,7 +68,7 @@ export default function run()
 
 		assert.equal(
 			uri.pathAndQuery,
-			uri.path+uri.query,
+			uri.path + uri.query,
 			'Uri path and query must equal expected.');
 
 		assert.equal(
@@ -87,40 +89,45 @@ export default function run()
 
 	});
 
-	QUnit.test('Uri: invalid scheme', (assert:QUnitAssert)=>
+	QUnit.test('Uri: invalid scheme', assert=>
 	{
 
-		assert.throws(()=>{
+		assert.throws(()=>
+		{
 			Uri.from({
-				scheme:<any>'x y z'
+				scheme: <any>'x y z'
 			});
 		});
 
-		assert.throws(()=>{
+		assert.throws(()=>
+		{
 			Uri.from('http//');
 		});
 
 
-		assert.throws(()=>{
+		assert.throws(()=>
+		{
 			Uri.from({
-				scheme:<any>'https:s'
+				scheme: <any>'https:s'
 			});
 		});
 
 	});
 
-	QUnit.test('Uri: invalid authority', (assert:QUnitAssert)=>
+	QUnit.test('Uri: invalid authority', assert=>
 	{
 
-		assert.throws(()=>{
+		assert.throws(()=>
+		{
 			Uri.from({
-				userInfo:validUri.userInfo
+				userInfo: validUri.userInfo
 			})
 		});
 
-		assert.throws(()=>{
+		assert.throws(()=>
+		{
 			Uri.from({
-				port:validUri.port
+				port: validUri.port
 			})
 		});
 

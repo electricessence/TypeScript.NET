@@ -2,8 +2,7 @@ requirejs.config({
     baseUrl: './',
     urlArgs: 't=' + (new Date()).getTime(),
     paths: {
-        "QUnit": "../../bower_components" + "/qunit/qunit/qunit",
-        "source": "../../dist/amd" + ""
+        "QUnit": "../../bower_components" + "/qunit/qunit/qunit"
     },
     shim: {
         'QUnit': {

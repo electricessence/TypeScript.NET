@@ -1,8 +1,8 @@
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import * as ICollectionTests from "./ICollection";
 import List from "../../../../dist/commonjs/System/Collections/List";
-import * as assert from "assert";
+
 
 const CLASS_NAME = 'List';
 

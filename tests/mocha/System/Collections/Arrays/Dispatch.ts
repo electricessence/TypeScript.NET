@@ -1,16 +1,16 @@
-///<reference path="../../../import"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import {
 	dispatch,
 	mapped,
 	unsafe
 } from "../../../../../dist/commonjs/System/Collections/Array/Dispatch";
-import * as assert from "assert";
+import {Action} from "../../../../../source/System/FunctionTypes";
 
 it("should apply closures in order", ()=>
 {
 	var result = 0;
-	var a = [
+	var a:Action<number>[] = [
 		(p:number)=>
 		{
 			result += p;
@@ -19,17 +19,17 @@ it("should apply closures in order", ()=>
 		{
 			result *= p;
 		},
-		null
+		<any>null
 	];
 
 
 	dispatch(a, 10);
 	assert.equal(result, 100);
 
-	assert.equal(mapped(null, 20), null);
+	assert.equal(mapped(<any>null, 20), null);
 	assert.equal(mapped([], 20).length, 0);
 	assert.equal(mapped(a, 20).length, 3);
-	unsafe(null,10);
+	unsafe(<any>null,10);
 	assert.equal(result, 2400);
 });
 

@@ -1,11 +1,11 @@
 "use strict";
+var assert = require("assert");
 var Promise_1 = require("../../../../dist/commonjs/System/Promises/Promise");
 var AU = require("../../../../dist/commonjs/System/Collections/Array/Utility");
 var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
 var defer_1 = require("../../../../dist/commonjs/System/Threading/defer");
 var LazyPromise_1 = require("../../../../dist/commonjs/System/Promises/LazyPromise");
 var ObjectDisposedException_1 = require("../../../../dist/commonjs/System/Disposable/ObjectDisposedException");
-var assert = require("assert");
 var REASON = "this is not an error, but it might show up in the console";
 var calledAsFunctionThis = (function () { return this; }());
 afterEach(function () {

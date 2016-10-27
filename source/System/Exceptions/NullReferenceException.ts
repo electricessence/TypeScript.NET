@@ -5,12 +5,15 @@
  */
 
 
-import {SystemException} from "./SystemException";
+import {SystemException, Error} from "./SystemException";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'NullReferenceException';
+
+
+export {Error};
 
 export default
 class NullReferenceException extends SystemException

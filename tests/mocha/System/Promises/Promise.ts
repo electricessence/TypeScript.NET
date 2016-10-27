@@ -1,5 +1,5 @@
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import {
 	Promise,
 	PromiseBase,
@@ -11,7 +11,6 @@ import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 import {defer} from "../../../../dist/commonjs/System/Threading/defer";
 import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise";
 import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
-import * as assert from "assert";
 
 
 var REASON = "this is not an error, but it might show up in the console";

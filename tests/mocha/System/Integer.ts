@@ -1,7 +1,6 @@
-///<reference path="../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import Integer from "../../../dist/commonjs/System/Integer";
-import * as assert from "assert";
 
 
 const TEST_FLOAT = 10.915, TEST_INT = 10, MAX = 9007199254740991;

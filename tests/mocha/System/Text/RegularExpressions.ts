@@ -1,8 +1,7 @@
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import RegexMatchEnumerator from "../../../../dist/commonjs/System/Text/RegexMatchEnumerator";
 import Regex, {Match} from "../../../../dist/commonjs/System/Text/RegularExpressions";
-const assert = require('../../../../node_modules/assert/assert');
 
 const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const regex = new Regex("(?<first>[A-E]+)", ["i"]);

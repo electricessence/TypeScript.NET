@@ -8,6 +8,12 @@ import {IDisposable} from "./Disposable/IDisposable";
 import {IMap} from "./Collections/Dictionaries/IDictionary";
 const NAME:string = 'Exception';
 
+// Avoid importing node reference..
+export interface Error {
+	name: string;
+	message: string;
+}
+
 /**
  * Represents errors that occur during application execution.
  */
@@ -53,7 +59,7 @@ export class Exception implements Error, IDisposable
 		// Node has a .stack, let's use it...
 		try
 		{
-			var stack:string = (<any>new Error()).stack;
+			var stack:string = eval("new Error()").stack;
 			stack = stack
 				&& stack
 					.replace(/^Error\n/, '')

@@ -1,7 +1,7 @@
 "use strict";
+var assert = require("assert");
 var RegexMatchEnumerator_1 = require("../../../../dist/commonjs/System/Text/RegexMatchEnumerator");
 var RegularExpressions_1 = require("../../../../dist/commonjs/System/Text/RegularExpressions");
-var assert = require('../../../../node_modules/assert/assert');
 var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 var regex = new RegularExpressions_1.default("(?<first>[A-E]+)", ["i"]);
 var regex2 = new RegularExpressions_1.default(/([A-E]+)/im);

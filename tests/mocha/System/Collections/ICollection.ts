@@ -1,9 +1,8 @@
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
 import NotImplementedException from "../../../../dist/commonjs/System/Exceptions/NotImplementedException";
 import {ICollection} from "../../../../dist/commonjs/System/Collections/ICollection";
-import * as assert from "assert";
 
 /*
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.

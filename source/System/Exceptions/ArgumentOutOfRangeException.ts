@@ -5,13 +5,15 @@
  */
 
 
-import {ArgumentException} from "./ArgumentException";
+import {ArgumentException, Error} from "./ArgumentException";
 import {Primitive} from "../Primitive";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'ArgumentOutOfRangeException';
+
+export {Error};
 
 export class ArgumentOutOfRangeException extends ArgumentException
 {

@@ -5,13 +5,15 @@
  */
 
 
-import {SystemException} from "./SystemException";
+import {SystemException, Error} from "./SystemException";
 import {trim} from "../Text/Utility";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'ArgumentException';
+
+export {Error};
 
 export class ArgumentException extends SystemException
 {

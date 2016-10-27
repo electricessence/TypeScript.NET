@@ -1,8 +1,6 @@
-
-///<reference path="../../import.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-import * as assert from "assert";
 
 
 it("should measure a closure",()=>{

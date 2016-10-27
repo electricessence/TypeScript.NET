@@ -1,10 +1,6 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT
- */
 "use strict";
-var ObservableNodeBase_1 = require("../../../../dist/commonjs/System/Observable/ObservableNodeBase");
 var assert = require("assert");
+var ObservableNodeBase_1 = require("../../../../dist/commonjs/System/Observable/ObservableNodeBase");
 it("should receive signals only when subscribed", function () {
     var ERR = "err";
     var o = new ObservableNodeBase_1.default();

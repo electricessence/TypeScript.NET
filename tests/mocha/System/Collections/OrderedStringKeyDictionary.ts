@@ -1,4 +1,3 @@
-/// <reference path="../../../../dist/commonjs/System/Collections/Dictionaries/IDictionary.d.ts"/>
 import * as ICollectionTests from "./ICollection";
 import OrderedStringKeyDictionary from "../../../../dist/commonjs/System/Collections/Dictionaries/OrderedStringKeyDictionary";
 import {IKeyValuePair} from "../../../../dist/commonjs/System/KeyValuePair";

@@ -5,6 +5,10 @@
  */
 import { IDisposable } from "./Disposable/IDisposable";
 import { IMap } from "./Collections/Dictionaries/IDictionary";
+export interface Error {
+    name: string;
+    message: string;
+}
 export declare class Exception implements Error, IDisposable {
     readonly name: string;
     readonly message: string;

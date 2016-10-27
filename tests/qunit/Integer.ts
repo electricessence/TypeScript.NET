@@ -1,7 +1,7 @@
-///<reference path='../../typings/qunit/qunit.d.ts'/>
+///<reference types='qunit'/>
 ///<amd-dependency path='QUnit'/>
 
-import Integer from 'source/System/Integer';
+import Integer from "../../dist/amd/System/Integer";
 
 
 export default function run()
@@ -9,7 +9,7 @@ export default function run()
 
 	const TEST_FLOAT = 10.915, TEST_INT = 10;
 
-	QUnit.test('Integer: convert', (assert:QUnitAssert)=>
+	QUnit.test('Integer: convert', assert=>
 	{
 
 		assert.equal(
@@ -19,7 +19,7 @@ export default function run()
 
 	});
 
-	QUnit.test('Integer: is', (assert:QUnitAssert)=>
+	QUnit.test('Integer: is', assert=>
 	{
 
 		assert.equal(
@@ -34,7 +34,7 @@ export default function run()
 
 	});
 
-	QUnit.test('Integer: assert', (assert:QUnitAssert)=>
+	QUnit.test('Integer: assert', assert=>
 	{
 
 		assert.equal(

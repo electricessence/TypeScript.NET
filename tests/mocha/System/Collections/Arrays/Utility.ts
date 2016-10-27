@@ -1,10 +1,10 @@
-///<reference path="../../../import"/>
+///<reference types="assert"/>
+import assert = require("assert");
 
 import * as Arrays from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import * as ArrayUtility from "../../../../../dist/commonjs/System/Collections/Array/Utility";
 import Stopwatch from "../../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArray";
-import * as assert from "assert";
 
 
 // Min/Max tests...

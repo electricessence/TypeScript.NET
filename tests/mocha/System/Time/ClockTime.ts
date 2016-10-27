@@ -1,10 +1,9 @@
-///<reference path="../../import.d.ts"/>
-///<reference path="../../../../dist/commonjs/System/Time/HowMany.d.ts"/>
-
+///<reference types="assert"/>
+import assert = require("assert");
 import ClockTime from "../../../../dist/commonjs/System/Time/ClockTime";
 import {Milliseconds} from "../../../../dist/commonjs/System/Time/HowMany";
 import Integer from "../../../../dist/commonjs/System/Integer";
-import * as assert from "assert";
+
 
 const
 days        = Integer.random(365),

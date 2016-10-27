@@ -4,12 +4,14 @@
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
 
-import {ArgumentException} from "./ArgumentException";
+import {ArgumentException, Error} from "./ArgumentException";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 const NAME:string = 'ArgumentNullException';
+
+export {Error};
 
 export class ArgumentNullException extends ArgumentException
 {
