@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import * as ICollectionTests from "./ICollection";
 import Set from "../../../../dist/commonjs/System/Collections/Set";
 import {Primitive} from "../../../../dist/commonjs/System/Primitive";

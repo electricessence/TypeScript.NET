@@ -1,6 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
-
+import * as assert from "assert";
 import * as Arrays from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import * as ArrayUtility from "../../../../../dist/commonjs/System/Collections/Array/Utility";
 import Stopwatch from "../../../../../dist/commonjs/System/Diagnostics/Stopwatch";
@@ -39,9 +37,9 @@ describe(".copy(source) & .equals(old,new)", ()=>
 		    s2 = ArrayUtility.copy(s1),
 		    s3 = ArrayUtility.copy(s1, 1),
 		    s4 = ArrayUtility.copy(s1, 1, 3),
-		    s5 = ArrayUtility.copy(null);
+		    s5 = ArrayUtility.copy(<any>null);
 		assert.ok(Arrays.areEqual(s1, s2));
-		assert.equal(s5, null);
+		assert.equal(s5, <any>null);
 	});
 
 });
@@ -50,8 +48,8 @@ describe(".copyTo(source,destination)", ()=>
 {
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.copyTo(null, null);});
-		assert.throws(()=> {ArrayUtility.copyTo([], null);});
+		assert.throws(()=> {ArrayUtility.copyTo(<any>null, <any>null);});
+		assert.throws(()=> {ArrayUtility.copyTo([], <any>null);});
 		assert.throws(()=> {ArrayUtility.copyTo([1], [], -1);});
 		assert.throws(()=> {ArrayUtility.copyTo([1], [], 2);});
 		assert.throws(()=> {ArrayUtility.copyTo([1], {length: -1});});
@@ -89,7 +87,7 @@ describe(".replace(source,oldValue,newValue)", ()=>
 	a.push(5);
 	it("should properly replace items with max", ()=>
 	{
-		assert.equal(ArrayUtility.replace(null, 5, 6), 0);
+		assert.equal(ArrayUtility.replace(<any>null, 5, 6), 0);
 		assert.equal(ArrayUtility.replace([], 5, 6), 0);
 		assert.equal(ArrayUtility.replace(a, 5, 6), 2);
 		assert.ok(ArrayUtility.contains(a, 6));
@@ -122,8 +120,8 @@ describe(".findIndex(source,of)", ()=>
 
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.findIndex(null, ()=>true)});
-		assert.throws(()=> {ArrayUtility.findIndex(a, null)});
+		assert.throws(()=> {ArrayUtility.findIndex(<any>null, ()=>true)});
+		assert.throws(()=> {ArrayUtility.findIndex(a, <any>null)});
 	});
 });
 
@@ -147,7 +145,7 @@ describe(".register(target,value)", ()=>
 
 	it("should throw for invalid parameter", ()=>
 	{
-		assert.throws(()=> {ArrayUtility.register(null, -1, ()=>true)});
+		assert.throws(()=> {ArrayUtility.register(<any>null, -1, ()=>true)});
 	});
 
 });
@@ -180,7 +178,7 @@ describe(".remove(target,value)", ()=>
 		assert.equal(s.length, len - 1, ".length should be less by one");
 		len = s.length;
 
-		assert.equal(ArrayUtility.remove(s, 3, null), 3, "All 3s removed.");
+		assert.equal(ArrayUtility.remove(s, 3, <any>null), 3, "All 3s removed.");
 		assert.equal(s.length, len - 3, ".length should be the same");
 		len = s.length;
 
@@ -192,7 +190,7 @@ describe(".remove(target,value)", ()=>
 	{
 		assert.throws(()=>
 		{
-			ArrayUtility.removeIndex(null, 0);
+			ArrayUtility.removeIndex(<any>null, 0);
 		});
 		assert.throws(()=>
 		{
@@ -216,7 +214,7 @@ describe(".updateRange(value,count)", ()=>
 	{
 
 		var value = 10, count = 3, r = [1, 2, 3];
-		assert.doesNotThrow(()=> {ArrayUtility.updateRange(null, value)});
+		assert.doesNotThrow(()=> {ArrayUtility.updateRange(<any>null, value)});
 		ArrayUtility.updateRange(r, value);
 
 		assert.equal(r.length, count, ".length should be 3");
@@ -244,7 +242,7 @@ describe(".applyTo(source,action)", ()=>
 	{
 
 		var value = 10, count = 3, r = [1, 2, 3];
-		assert.doesNotThrow(()=> {ArrayUtility.applyTo(null, ()=>null)});
+		assert.doesNotThrow(()=> {ArrayUtility.applyTo(<any>null, ()=>null)});
 		ArrayUtility.applyTo(r, ()=>null);
 		assert.equal(r.length, count, ".length should be 3");
 		for(let i = 0; i<count; i++)
@@ -261,7 +259,7 @@ describe(".applyTo(source,action)", ()=>
 	{
 
 		var count = 0, r = [1, 2, 3];
-		assert.doesNotThrow(()=> {ArrayUtility.forEach(null, ()=>true)});
+		assert.doesNotThrow(()=> {ArrayUtility.forEach(<any>null, ()=>true)});
 		ArrayUtility.forEach(r, (n, i)=>
 		{
 			assert.equal(count, i, "count should be " + i);

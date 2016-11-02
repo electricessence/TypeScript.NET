@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import * as ArrayProcedure from "../../../../../dist/commonjs/System/Collections/Array/Procedure";
 
 
@@ -90,7 +89,7 @@ describe(".min(source)", ()=>
 	});
 
 	it("should be NaN",()=>{
-		assert.ok(isNaN(ArrayProcedure.min(null)));
+		assert.ok(isNaN(ArrayProcedure.min(<any>null)));
 		assert.ok(isNaN(ArrayProcedure.min([NaN],true)));
 	});
 
@@ -109,7 +108,7 @@ describe(".max(source)", ()=>
 	});
 
 	it("should be NaN",()=>{
-		assert.ok(isNaN(ArrayProcedure.max(null)));
+		assert.ok(isNaN(ArrayProcedure.max(<any>null)));
 		assert.ok(isNaN(ArrayProcedure.max([NaN],true)));
 	});
 });

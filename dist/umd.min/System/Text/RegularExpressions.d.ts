@@ -5,7 +5,7 @@
  */
 import { IMap } from "../Collections/Dictionaries/IDictionary";
 import { Primitive } from "../Primitive";
-import { Selector } from "../FunctionTypes";
+import { Selector, SelectorIndexed } from "../FunctionTypes";
 export declare module RegexOptions {
     const IGNORE_CASE: string;
     const I: string;
@@ -29,6 +29,8 @@ export declare module RegexOptions {
 }
 export interface MatchEvaluator extends Selector<Match, Primitive> {
 }
+export interface MatchEvaluatorIndexed extends SelectorIndexed<Match, Primitive> {
+}
 export declare class Regex {
     private _re;
     private _keys;
@@ -36,6 +38,7 @@ export declare class Regex {
     match(input: string, startIndex?: number): Match;
     matches(input: string): Match[];
     replace(input: string, replacement: Primitive, count?: number): string;
+    replace(input: string, evaluator: MatchEvaluatorIndexed, count?: number): string;
     replace(input: string, evaluator: MatchEvaluator, count?: number): string;
     isMatch(input: string): boolean;
     static isMatch(input: string, pattern: string, options?: RegexOptions.Literal[]): boolean;

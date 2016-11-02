@@ -1,5 +1,3 @@
-///<reference types="assert"/>
-import assert = require("assert");
 //
 //
 // it("should return the expected concatenation", ()=>

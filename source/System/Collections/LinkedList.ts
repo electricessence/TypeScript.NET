@@ -55,7 +55,9 @@ implements ILinkedNode<InternalNode<T>>, INodeWithValue<T>
 
 }
 
-function ensureExternal<T>(node:InternalNode<T>|null|undefined, list:LinkedList<T>):ILinkedListNode<T>|null
+function ensureExternal<T>(
+	node:InternalNode<T>|null|undefined,
+	list:LinkedList<T>):ILinkedListNode<T>|null
 {
 	if(!node)
 		return null;
@@ -229,7 +231,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return li && ensureExternal(li.first, this);
 	}
 
-	get firstValue():T
+	get firstValue():T | undefined
 	{
 		var li = this._listInternal, node = li && li.first;
 		return node ? node.value : VOID0;
@@ -241,7 +243,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return ensureExternal(li.last, this);
 	}
 
-	get lastValue():T
+	get lastValue():T | undefined
 	{
 		var li = this._listInternal, node = li && li.last;
 		return node ? node.value : VOID0;
@@ -250,25 +252,25 @@ extends CollectionBase<T> implements ILinkedList<T>
 	// get methods are available for convenience but is an n*index operation.
 
 
-	getValueAt(index:number):T
+	getValueAt(index:number):T | undefined
 	{
 		var li = this._listInternal, node = li && li.getNodeAt(index);
 		return node ? node.value : VOID0;
 	}
 
-	getNodeAt(index:number):ILinkedListNode<T>|null
+	getNodeAt(index:number):ILinkedListNode<T> | null
 	{
 		var li = this._listInternal;
 		return li && ensureExternal(li.getNodeAt(index), this);
 	}
 
-	find(entry:T):ILinkedListNode<T>|null
+	find(entry:T):ILinkedListNode<T> | null
 	{
 		var li = this._listInternal;
 		return li && ensureExternal(this._findFirst(entry), this);
 	}
 
-	findLast(entry:T):ILinkedListNode<T>|null
+	findLast(entry:T):ILinkedListNode<T> | null
 	{
 		var li = this._listInternal;
 		return li && ensureExternal(this._findLast(entry), this);
@@ -385,13 +387,13 @@ class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 		return ensureExternal(this._nodeInternal.next, this._list);
 	}
 
-	get value():T
+	get value():T|undefined
 	{
 		this.throwIfDetached();
-		return <any>this._nodeInternal.value;
+		return this._nodeInternal.value;
 	}
 
-	set value(v:T)
+	set value(v:T|undefined)
 	{
 		this.throwIfDetached();
 		this._nodeInternal.value = v;

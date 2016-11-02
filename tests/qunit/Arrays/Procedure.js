@@ -3,11 +3,11 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", '../../../dist/amd/System/Collections/Array/Procedure'], factory);
+        define(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Procedure"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var ArrayProcedure = require('../../../dist/amd/System/Collections/Array/Procedure');
+    var ArrayProcedure = require("../../../dist/amd/System/Collections/Array/Procedure");
     function run() {
         var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity;
         var a = [5, minA, -1, maxA, -2, NaN, 20], sum = 5 + minA + -1 + maxA + -2 + 20, average = sum / 6, product = 5 * minA * -1 * maxA * -2 * 20;

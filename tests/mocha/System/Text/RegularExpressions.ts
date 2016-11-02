@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import RegexMatchEnumerator from "../../../../dist/commonjs/System/Text/RegexMatchEnumerator";
 import Regex, {Match} from "../../../../dist/commonjs/System/Text/RegularExpressions";
 
@@ -17,7 +16,7 @@ describe("Regex", ()=>
 	{
 		it("should throw", ()=>
 		{
-			assert.throws(()=>new Regex(null));
+			assert.throws(()=>new Regex(<any>null));
 		});
 	});
 
@@ -85,7 +84,7 @@ describe("Regex", ()=>
 			assert.equal(Regex.replace(str, pattern, "XXX",['i']), "XXXFGHIJKLMNOPQRSTUVWXYZXXXfghijklmnopqrstuvwxyz");
 			//noinspection SpellCheckingInspection
 			assert.equal(regex.replace(str, ""), "FGHIJKLMNOPQRSTUVWXYZfghijklmnopqrstuvwxyz");
-			assert.equal(regex.replace(str, null), str);
+			assert.equal(regex.replace(str, <any>null), str);
 			//noinspection SpellCheckingInspection
 			assert.equal(regex.replace(str, (x,i)=>i), "0FGHIJKLMNOPQRSTUVWXYZ1fghijklmnopqrstuvwxyz");
 		});
@@ -101,8 +100,10 @@ describe("RegexMatchEnumerator",()=>{
 			assert.equal(v.value, value);
 			assert.equal(v.index, index);
 		}
-		check(m.nextValue(),"ABCDE",0);
-		check(m.nextValue(),"abcde",26);
+		//noinspection SpellCheckingInspection
+		check(m.nextValue()!,"ABCDE",0);
+		//noinspection SpellCheckingInspection
+		check(m.nextValue()!,"abcde",26);
 		assert.ok(!m.moveNext());
 	})
 });

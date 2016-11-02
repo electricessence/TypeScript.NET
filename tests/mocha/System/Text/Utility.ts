@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import * as TextUtility from "../../../../dist/commonjs/System/Text/Utility";
 
 var s1 = "	 HI  ";

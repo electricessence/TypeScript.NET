@@ -3,12 +3,12 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", '../../../dist/amd/System/Collections/Array/Compare', '../../../dist/amd/System/Collections/Array/Utility'], factory);
+        define(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Compare", "../../../dist/amd/System/Collections/Array/Utility"], factory);
     }
 })(function (require, exports) {
     "use strict";
-    var Arrays = require('../../../dist/amd/System/Collections/Array/Compare');
-    var ArrayUtility = require('../../../dist/amd/System/Collections/Array/Utility');
+    var Arrays = require("../../../dist/amd/System/Collections/Array/Compare");
+    var ArrayUtility = require("../../../dist/amd/System/Collections/Array/Utility");
     function run() {
         var minA = -10, maxA = 2000;
         var a = [5, minA, -1, maxA, -2, NaN, 20];

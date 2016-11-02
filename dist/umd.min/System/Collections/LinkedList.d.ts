@@ -23,10 +23,10 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     private _findLast(entry);
     removeOnce(entry: T): boolean;
     readonly first: ILinkedListNode<T> | null;
-    readonly firstValue: T;
+    readonly firstValue: T | undefined;
     readonly last: ILinkedListNode<T> | null;
-    readonly lastValue: T;
-    getValueAt(index: number): T;
+    readonly lastValue: T | undefined;
+    getValueAt(index: number): T | undefined;
     getNodeAt(index: number): ILinkedListNode<T> | null;
     find(entry: T): ILinkedListNode<T> | null;
     findLast(entry: T): ILinkedListNode<T> | null;

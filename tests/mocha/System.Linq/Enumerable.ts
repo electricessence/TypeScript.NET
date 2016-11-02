@@ -1,5 +1,4 @@
-﻿///<reference types="assert"/>
-import assert = require("assert");
+﻿import * as assert from "assert";
 import {contains, repeat} from "../../../dist/commonjs/System/Collections/Array/Utility";
 import * as Procedure from "../../../dist/commonjs/System/Collections/Array/Procedure";
 import Enumerable from "../../../dist/commonjs/System.Linq/Linq";
@@ -97,7 +96,7 @@ function compileTest():ILinqEnumerable<TestItem>
 
 const sourceMany:Enumerable<string> = Enumerable.from(Object.freeze([
 	"a,b,c,d,e",
-	null,
+	<any>null,
 	"f,g,h,i,j",
 	"k,l,m,n,o",
 	"p,q,r,s,t",
@@ -175,7 +174,7 @@ describe(".choose(predicate)", ()=>
 {
 	it("should filter out null and undefined values.", ()=>
 	{
-		var other = <TestItem[]>[null, void(0)];
+		var other = <TestItem[]>[<any>null, <any>void(0)];
 		assert.equal(sourceArrayEnumerable
 			.concat(other)
 			.choose()
@@ -406,7 +405,7 @@ describe(".groupBy(selector)", ()=>
 			.groupBy(o=>o.b);
 
 		var C = sourceArrayEnumerable
-			.groupBy(o=>o.b, null, Functions.Identity);
+			.groupBy(o=>o.b, <any>null, Functions.Identity);
 
 		var D = sourceArrayEnumerable
 			.groupBy(o=>o.b, Functions.Identity, Functions.Identity);
@@ -733,12 +732,12 @@ describe(".lastOrDefault()", ()=>
 
 	it("should match last", ()=>
 	{
-		assert.equal(sourceArrayEnumerable.lastOrDefault().c, "f");
+		assert.equal(sourceArrayEnumerable.lastOrDefault()!.c, "f");
 	});
 
 	it("should be defaulted", ()=>
 	{
-		assert.equal(Enumerable.from([]).lastOrDefault("f"), "f");
+		assert.equal(Enumerable.from<string>([]).lastOrDefault("f"), "f");
 	});
 
 });
@@ -890,8 +889,8 @@ describe(".minBy(selector)", ()=>
 {
 	it("should return the minimum of the selected", ()=>
 	{
-		assert.equal(sourceArrayEnumerable.minBy(e=>e.b).b, 1);
-		assert.equal(sourceArrayEnumerable.minBy(e=>e.c).c, "a");
+		assert.equal(sourceArrayEnumerable.minBy(e=>e.b)!.b, 1);
+		assert.equal(sourceArrayEnumerable.minBy(e=>e.c)!.c, "a");
 
 		assert.equal(sourceArrayEnumerable.select(e=>e.b).minBy(), 1);
 		assert.equal(sourceArrayEnumerable.select(e=>e.c).minBy(), "a");
@@ -903,8 +902,8 @@ describe(".maxBy(selector)", ()=>
 {
 	it("should return the maximum of the selected", ()=>
 	{
-		assert.equal(sourceArrayEnumerable.maxBy(e=>e.b).b, 3);
-		assert.equal(sourceArrayEnumerable.maxBy(e=>e.c).c, "f");
+		assert.equal(sourceArrayEnumerable.maxBy(e=>e.b)!.b, 3);
+		assert.equal(sourceArrayEnumerable.maxBy(e=>e.c)!.c, "f");
 
 		assert.equal(sourceArrayEnumerable.select(e=>e.b).maxBy(), 3);
 		assert.equal(sourceArrayEnumerable.select(e=>e.c).maxBy(), "f");
@@ -916,7 +915,7 @@ describe(".concat(...)", ()=>
 {
 	it("should remain the same", ()=>
 	{
-		assert.equal(sourceArrayEnumerable.merge(null).count(), 6);
+		assert.equal(sourceArrayEnumerable.merge(<any>null).count(), 6);
 		assert.equal(sourceArrayEnumerable.merge([]).count(), 6);
 	});
 	it("should combine two into one", ()=>
@@ -935,8 +934,8 @@ describe(".selectMany(...)", ()=>
 			assert.equal(values.toJoinedString(), sourceManyFlat);
 		}
 
-		var split:(s:string)=>string[] = (s)=>s && s.split(",");
-		var sm:(s:string,e:string)=>string = (c, e)=>e;
+		var split:(s:string)=>string[] = s=>s ? s.split(",") : [];
+		var sm:(s:string, e:string)=>string = (c, e)=>e;
 
 		var a = sourceMany.selectMany(split);
 		test(a);
@@ -1160,8 +1159,8 @@ describe(".weave(enumerables)", ()=>
 			["c", "f", "h"]
 		]);
 
-		assert.equal(w.count(),9);
-		assert.equal(w.toJoinedString(),"abcdefghi");
+		assert.equal(w.count(), 9);
+		assert.equal(w.toJoinedString(), "abcdefghi");
 
 		assert.equal(
 			Enumerable.weave([
@@ -1170,23 +1169,26 @@ describe(".weave(enumerables)", ()=>
 
 	});
 
-	it("should throw",()=>{
-		assert.throws(()=>Enumerable.weave(null));
+	it("should throw", ()=>
+	{
+		assert.throws(()=>Enumerable.weave(<any>null));
 	});
 
 });
 
-describe("xxx",()=>{
+describe("xxx", ()=>
+{
 
-	it("yyy",()=>{
-		var r = Enumerable.from([1,2,3,4,5,6])
+	it("yyy", ()=>
+	{
+		var r = Enumerable.from([1, 2, 3, 4, 5, 6])
 			.skip(1)
 			.takeExceptLast(2)
 			.toArray();
 
-		assert.equal(r[0],2);
-		assert.equal(r[1],3);
-		assert.equal(r[2],4);
+		assert.equal(r[0], 2);
+		assert.equal(r[1], 3);
+		assert.equal(r[2], 4);
 	})
 
 });

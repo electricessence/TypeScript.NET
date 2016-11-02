@@ -25,7 +25,7 @@ extends ILinkedNodeList<ILinkedListNode<T>>,
 	first:ILinkedListNode<T> | null;
 	last:ILinkedListNode<T> | null;
 
-	getValueAt(index:number):T | null;
+	getValueAt(index:number):T | undefined;
 	find(entry:T):ILinkedListNode<T> | null;
 	findLast(entry:T):ILinkedListNode<T> | null;
 	addFirst(entry:T):void;

@@ -165,7 +165,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     this._updateRecursion = 0;
                     this._modifiedCount = 0;
                     var l = this._linq;
-                    this._linq = null;
+                    this._linq = void 0;
                     if (l)
                         l.dispose();
                 };
@@ -252,6 +252,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                             if (!Environment_1.isNodeJS || !Environment_1.isCommonJS)
                                 throw "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nOr use .linqAsync(callback) for AMD/RequireJS.";
                             this._linq = e = eval("require")(LINQ_PATH).default.from(this);
+                            if (!e)
+                                throw "There was a problem importing System.Linq/Linq";
                         }
                         return e;
                     },
@@ -268,6 +270,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                                 e = _this._linq;
                                 if (!e)
                                     _this._linq = e = linq.default.from(_this);
+                                if (!e)
+                                    throw "There was a problem importing System.Linq/Linq";
                                 if (callback)
                                     callback(e);
                                 callback = void 0;

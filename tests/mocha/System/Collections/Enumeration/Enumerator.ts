@@ -12,7 +12,7 @@ const VOID0:any = void(0);
 describe(".from(source)",()=>{
 
 	it("null should use an empty enumerator",()=>{
-		var test = Enumerator.from(null), count = 0;
+		var test = Enumerator.from(<any>null), count = 0;
 		while(test.moveNext()) {
 			count++;
 		}
@@ -110,7 +110,7 @@ describe(".forEach(source)",()=>
 	it("null values ignored", ()=>
 	{
 		assert.doesNotThrow(()=>{
-			assert.equal(Enumerator.forEach(null,blankAction),-1);
+			assert.equal(Enumerator.forEach(<any>null,blankAction),-1);
 		});
 	});
 

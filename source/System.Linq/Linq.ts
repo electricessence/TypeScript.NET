@@ -284,6 +284,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <T>v;
 	}
 
+	elementAtOrDefault(index:number):T|undefined
+	elementAtOrDefault(index:number, defaultValue:T):T
 	elementAtOrDefault(index:number, defaultValue?:T):T|undefined
 	{
 		const _ = this;
@@ -323,6 +325,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return <T>v;
 	}
 
+	firstOrDefault():T|undefined
+	firstOrDefault(defaultValue:T):T
 	firstOrDefault(defaultValue?:T):T|undefined
 	{
 		const _ = this;
@@ -355,6 +359,8 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
+	singleOrDefault():T|undefined
+	singleOrDefault(defaultValue:T):T
 	singleOrDefault(defaultValue?:T):T|undefined
 	{
 
@@ -397,21 +403,21 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	// #region Projection and Filtering Methods
 
 	traverseBreadthFirst(
-		childrenSelector:(element:T) => IEnumerableOrArray<T>):Enumerable<T>;
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):Enumerable<T>;
 
 	traverseBreadthFirst<TNode>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode>):Enumerable<TNode>;
+		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined):Enumerable<TNode>;
 
 	traverseBreadthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T>,
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
 		resultSelector?:(element:T, nestLevel?:number) => TResult):Enumerable<TResult>;
 
 	traverseBreadthFirst<TNode, TResult>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode>,
+		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
 		resultSelector?:(element:TNode, nestLevel?:number) => TResult):Enumerable<TResult>;
 
 	traverseBreadthFirst<TNode>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode>,
+		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
 		resultSelector:(
 			element:TNode,
 			nestLevel?:number) => any = Functions.Identity):Enumerable<any>
@@ -485,21 +491,21 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 
 	traverseDepthFirst(
-		childrenSelector:(element:T) => IEnumerableOrArray<T>):Enumerable<T>;
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):Enumerable<T>;
 
 	traverseDepthFirst<TNode>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode>):Enumerable<TNode>;
+		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined):Enumerable<TNode>;
 
 	traverseDepthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T>,
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
 		resultSelector?:(element:T, nestLevel?:number) => TResult):Enumerable<TResult>;
 
 	traverseDepthFirst<TNode, TResult>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode>,
+		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
 		resultSelector?:(element:TNode, nestLevel?:number) => TResult):Enumerable<TResult>;
 
 	traverseDepthFirst<TNode>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode>,
+		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
 		resultSelector:(
 			element:TNode,
 			nestLevel?:number) => any = Functions.Identity):Enumerable<any>
@@ -782,7 +788,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	 */
 
 	protected _selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
 		resultSelector?:(collection:T, element:TElement) => TResult):Enumerable<TResult>
 	{
 		const _ = this;
@@ -863,14 +869,14 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	}
 
 	selectMany<TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):InfiniteEnumerable<TResult>;
+		collectionSelector:Selector<T, IEnumerableOrArray<TResult> | null | undefined>):InfiniteEnumerable<TResult>;
 
 	selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
 		resultSelector:(collection:T, element:TElement) => TResult):InfiniteEnumerable<TResult>;
 
 	selectMany<TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<any>>,
+		collectionSelector:Selector<T, IEnumerableOrArray<any> | null | undefined>,
 		resultSelector?:(collection:T, element:any) => TResult):InfiniteEnumerable<TResult>
 	{
 		return this._selectMany(collectionSelector, resultSelector);
@@ -2715,15 +2721,14 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	selectMany<TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):Enumerable<TResult>;
-
+		collectionSelector:Selector<T, IEnumerableOrArray<TResult> | null | undefined>):Enumerable<TResult>;
 
 	selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
 		resultSelector:(collection:T, element:TElement)=>TResult):Enumerable<TResult>;
 
 	selectMany<TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<any>>,
+		collectionSelector:Selector<T, IEnumerableOrArray<any> | null | undefined>,
 		resultSelector?:(collection:T, element:any)=>TResult):Enumerable<TResult>
 	{
 		return this._selectMany(collectionSelector, resultSelector);
@@ -3411,6 +3416,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return <any>value;
 	}
 
+	lastOrDefault():T|undefined
+	lastOrDefault(defaultValue:T):T
 	lastOrDefault(defaultValue?:T):T|undefined
 	{
 		const _ = this;
@@ -3580,6 +3587,8 @@ extends FiniteEnumerable<T>
 		return len && (predicate ? super.count(predicate) : len);
 	}
 
+	elementAtOrDefault(index:number):T|undefined
+	elementAtOrDefault(index:number, defaultValue:T):T
 	elementAtOrDefault(index:number, defaultValue?:T):T|undefined
 	{
 		const _ = this;
@@ -3603,6 +3612,8 @@ extends FiniteEnumerable<T>
 			: super.last();
 	}
 
+	lastOrDefault():T|undefined
+	lastOrDefault(defaultValue:T):T
 	lastOrDefault(defaultValue?:T):T|undefined
 	{
 		const _ = this;

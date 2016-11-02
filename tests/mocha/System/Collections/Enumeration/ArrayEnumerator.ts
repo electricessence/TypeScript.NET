@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import ArrayEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/ArrayEnumerator";
 
 it("should allow empty arrays", ()=>
@@ -12,7 +11,7 @@ it("should allow empty arrays", ()=>
 
 	assert.doesNotThrow(()=>
 	{
-		var i = new ArrayEnumerator(null);
+		var i = new ArrayEnumerator(<any>null);
 		i.moveNext();
 	});
 

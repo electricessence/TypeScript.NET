@@ -54,22 +54,22 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	isEmpty():boolean;
 
-	traverseBreadthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T>):ILinqEnumerable<T>;
-	traverseBreadthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode>):ILinqEnumerable<TNode>;
+	traverseBreadthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
+	traverseBreadthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
 	traverseBreadthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T>,
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
 		resultSelector?:(element:T, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
 	traverseBreadthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode>,
+		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
 		resultSelector?:(element:TNode, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
 
-	traverseDepthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T>):ILinqEnumerable<T>;
-	traverseDepthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode>):ILinqEnumerable<TNode>;
+	traverseDepthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
+	traverseDepthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
 	traverseDepthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T>,
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
 		resultSelector?:(element:T, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
 	traverseDepthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode>,
+		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
 		resultSelector?:(element:TNode, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
 
 	flatten():ILinqEnumerable<any>;
@@ -80,9 +80,9 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 
 	select<TResult>(selector:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
 
-	selectMany<TResult>(collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):IInfiniteEnumerable<TResult>;
+	selectMany<TResult>(collectionSelector:Selector<T, IEnumerableOrArray<TResult> | null | undefined>):IInfiniteEnumerable<TResult>;
 	selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
 		resultSelector:(
 			collection:T,
 			element:TElement) => TResult):IInfiniteEnumerable<TResult>;

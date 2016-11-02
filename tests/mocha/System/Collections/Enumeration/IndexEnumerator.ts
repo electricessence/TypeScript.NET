@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import IndexEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/IndexEnumerator";
 
 const VOID0:any = void(0);
@@ -16,7 +15,7 @@ it("should ignore null sources", ()=>
 		var i = new IndexEnumerator(()=>
 		{
 			return {
-				source: null,
+				source: <any>null,
 				pointer: 1,
 				length: 3,
 				step: 0
@@ -30,7 +29,7 @@ it("should ignore null sources", ()=>
 		var i = new IndexEnumerator(()=>
 		{
 			return {
-				source: null,
+				source: <any>null,
 				length: 3,
 			}
 		});
@@ -122,10 +121,10 @@ it("should enumerate by 1 with no step",()=>{
 			length: 5,
 		}
 	});
-	var last:number = null;
+	var last:number = <any>null;
 	while(test.moveNext()) {
 		count++;
-		last = test.current;
+		last = test.current!;
 	}
 	assert.equal(count,len);
 	assert.equal(last,4);

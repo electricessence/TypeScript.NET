@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import Enumerable from "../../../dist/commonjs/System.Linq/Linq";
 
 

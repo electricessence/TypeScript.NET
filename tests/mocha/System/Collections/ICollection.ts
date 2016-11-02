@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
 import NotImplementedException from "../../../../dist/commonjs/System/Exceptions/NotImplementedException";
 import {ICollection} from "../../../../dist/commonjs/System/Collections/ICollection";
@@ -119,7 +118,7 @@ export function Collection<T>(
 	collection:ICollection<T>,
 	sourceValues:T[]):void
 {
-	if(sourceValues.indexOf(null)!= -1)
+	if(sourceValues.indexOf(<any>null)!= -1)
 		throw "Source values should not contain null as checking against null is one of the tests.";
 
 	/* The following tests inherently test:
@@ -133,7 +132,7 @@ export function Collection<T>(
 		assertRemoving(collection);
 		it("equality comparison should be strict", ()=>
 		{
-			assert.ok(!collection.contains(null));
+			assert.ok(!collection.contains(<any>null));
 		})
 
 	});

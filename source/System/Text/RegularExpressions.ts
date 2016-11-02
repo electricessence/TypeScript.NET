@@ -7,7 +7,7 @@
 // NOTE: Avoid real (types/interfaces only = ok) dependencies so this class can be used cleanly.
 import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
-import {Selector} from "../FunctionTypes";
+import {Selector, SelectorIndexed} from "../FunctionTypes";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -71,6 +71,12 @@ export module RegexOptions
 export interface MatchEvaluator extends Selector<Match,Primitive>
 {
 }
+
+
+export interface MatchEvaluatorIndexed extends SelectorIndexed<Match,Primitive>
+{
+}
+
 
 export class Regex
 {
@@ -184,6 +190,11 @@ export class Regex
 	replace(
 		input:string,
 		replacement:Primitive,
+		count?:number):string;
+
+	replace(
+		input:string,
+		evaluator:MatchEvaluatorIndexed,
 		count?:number):string;
 
 	replace(

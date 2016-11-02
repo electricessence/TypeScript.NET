@@ -1,5 +1,3 @@
-///<reference types="assert"/>
-import assert = require("assert");
 import ObjectPool from "../../../../dist/commonjs/System/Disposable/ObjectPool";
 
 const pool = new ObjectPool(40, ()=>new Array<any>(100));

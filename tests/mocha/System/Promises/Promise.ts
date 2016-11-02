@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import {
 	Promise,
 	PromiseBase,
@@ -202,7 +201,7 @@ describe("Resolution and Rejection", ()=>
 	function testPromiseFlow(p:PromiseBase<boolean>):PromiseBase<void>
 	{
 		return p
-			.then(null) // ensure pass through
+			.then(<any>null) // ensure pass through
 			.then(v=> // onFulfilled
 			{
 				assert.ok(v); // v === true
@@ -236,7 +235,7 @@ describe("Resolution and Rejection", ()=>
 				assert.ok(false);
 				return NO;
 			})
-			.then(null, null) // ensure pass through
+			.then(<any>null, <any>null) // ensure pass through
 			.then(v=>
 			{
 				// The previous promise threw/rejected so should never go here.

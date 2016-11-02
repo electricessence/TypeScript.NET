@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import ClockTime from "../../../../dist/commonjs/System/Time/ClockTime";
 import {Milliseconds} from "../../../../dist/commonjs/System/Time/HowMany";
 import Integer from "../../../../dist/commonjs/System/Integer";

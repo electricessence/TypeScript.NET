@@ -11,7 +11,7 @@
   },
   "exclude": [
     "typings",
-    "tests",
+    "tests/qunit",
     "node_modules",
     "bower_components",
     "dist",

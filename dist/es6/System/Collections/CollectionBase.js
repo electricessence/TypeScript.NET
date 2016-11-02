@@ -128,7 +128,7 @@ export class CollectionBase extends DisposableBase {
         this._updateRecursion = 0;
         this._modifiedCount = 0;
         var l = this._linq;
-        this._linq = null;
+        this._linq = void 0;
         if (l)
             l.dispose();
     }
@@ -213,6 +213,8 @@ export class CollectionBase extends DisposableBase {
 Import System.Linq/Linq and use Enumerable.from(e) instead.
 Or use .linqAsync(callback) for AMD/RequireJS.`;
             this._linq = e = eval("require")(LINQ_PATH).default.from(this);
+            if (!e)
+                throw "There was a problem importing System.Linq/Linq";
         }
         return e;
     }
@@ -225,6 +227,8 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
                     e = this._linq;
                     if (!e)
                         this._linq = e = linq.default.from(this);
+                    if (!e)
+                        throw "There was a problem importing System.Linq/Linq";
                     if (callback)
                         callback(e);
                     callback = void 0;

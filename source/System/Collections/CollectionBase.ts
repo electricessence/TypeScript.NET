@@ -210,7 +210,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		this._updateRecursion = 0;
 		this._modifiedCount = 0;
 		var l = this._linq;
-		this._linq = <any>null;
+		this._linq = void 0;
 		if(l) l.dispose();
 	}
 
@@ -309,7 +309,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return this.copyTo(count>65536 ? new Array<T>(count) : []);
 	}
 
-	private _linq:ILinqEnumerable<T>;
+	private _linq:ILinqEnumerable<T> | undefined;
 
 	/**
 	 * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
@@ -328,6 +328,7 @@ Import System.Linq/Linq and use Enumerable.from(e) instead.
 Or use .linqAsync(callback) for AMD/RequireJS.`;
 
 			this._linq = e = eval("require")(LINQ_PATH).default.from(this);
+			if(!e) throw "There was a problem importing System.Linq/Linq";
 		}
 
 		return e;
@@ -342,7 +343,7 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
 	 * @param callback
 	 * @returns {ILinqEnumerable}
 	 */
-	linqAsync(callback?:(linq:ILinqEnumerable<T>)=>void):ILinqEnumerable<T>
+	linqAsync(callback?:(linq:ILinqEnumerable<T>)=>void):ILinqEnumerable<T>|undefined
 	{
 		this.throwIfDisposed();
 		var e = this._linq;
@@ -356,6 +357,7 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
 					// Could end up being called more than once, be sure to check for ._linq before setting...
 					e = this._linq;
 					if(!e) this._linq = e = linq.default.from(this);
+					if(!e) throw "There was a problem importing System.Linq/Linq";
 					if(callback) callback(e);
 					callback = void 0; // In case this is return synchronously..
 				});

@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import * as ArrayCompare from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 
 const a1 = [1,2,3];

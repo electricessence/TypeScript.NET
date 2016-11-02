@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import {TypeInfoHelper, TypeValidator} from "../../../dist/commonjs/System/TypeValidator";
 
 
@@ -233,34 +232,35 @@ describe("Example", ()=>
 describe("Complex test", ()=>
 	it("should work", ()=>
 	{
-		interface ISystem {
-			volume_str: String,
-			buy: Boolean,
-			issued: String,
-			price: Number,
-			volumeEntered: Number,
-			minVolume: Number,
-			volume: Number,
-			range: String,
-			href: String,
-			duration_str: String,
-			location: {
-				id_str: String,
-				href: String,
-				id: Number,
-				name: String,
+		interface ISystem
+		{
+			volume_str:String,
+			buy:Boolean,
+			issued:String,
+			price:Number,
+			volumeEntered:Number,
+			minVolume:Number,
+			volume:Number,
+			range:String,
+			href:String,
+			duration_str:String,
+			location:{
+				id_str:String,
+				href:String,
+				id:Number,
+				name:String,
 			},
-			duration: Number,
-			minVolume_str: String,
-			volumeEntered_str: String,
-			type: {
-				id_str: String,
-				href: String,
-				id: Number,
-				name: String,
+			duration:Number,
+			minVolume_str:String,
+			volumeEntered_str:String,
+			type:{
+				id_str:String,
+				href:String,
+				id:Number,
+				name:String,
 			},
-			id: Number,
-			id_str: String,
+			id:Number,
+			id_str:String,
 		}
 
 		const ISystemTypeValidator

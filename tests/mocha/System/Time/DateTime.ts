@@ -1,5 +1,4 @@
-///<reference types="assert"/>
-import assert = require("assert");
+import * as assert from "assert";
 import DateTime from "../../../../dist/commonjs/System/Time/DateTime";
 
 
