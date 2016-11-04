@@ -9,7 +9,14 @@ import {Type} from "../../Types";
 import {ArrayEnumerator} from "./ArrayEnumerator";
 import {IndexEnumerator} from "./IndexEnumerator";
 import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
-import {Selector} from "../../FunctionTypes";
+import {
+	Selector,
+	SelectorWithIndex,
+	Action,
+	Predicate,
+	ActionWithIndex,
+	PredicateWithIndex
+} from "../../FunctionTypes";
 import {IEnumerator} from "./IEnumerator";
 import {IEnumerable} from "./IEnumerable";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
@@ -18,7 +25,7 @@ import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
 import {IIterator, IIteratorResult} from "./IIterator";
 import {IteratorEnumerator} from "./IteratorEnumerator";
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 const
 	STRING_EMPTY:string       = "",
 	ENDLESS_EXCEPTION_MESSAGE =
@@ -119,17 +126,27 @@ export function isIterator<T>(instance:any):instance is IIterator<T>
  */
 export function forEach<T>(
 	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
-	action:(element:T) => any,
+	action:Action<T>,
 	max?:number):number
 
 export function forEach<T>(
 	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
-	action:(element:T, index:number) => any,
+	action:ActionWithIndex<T>,
 	max?:number):number
 
 export function forEach<T>(
 	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
-	action:(element:T, index?:number) => any,
+	action:Predicate<T>,
+	max?:number):number
+
+export function forEach<T>(
+	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	action:PredicateWithIndex<T>,
+	max?:number):number
+
+export function forEach<T>(
+	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	action:ActionWithIndex<T> | PredicateWithIndex<T>,
 	max:number = Infinity):number
 {
 	if(<any>e===STRING_EMPTY) return 0;
@@ -227,6 +244,16 @@ export function toArray<T>(
 export function map<T,TResult>(
 	source:IEnumerableOrArray<T>|IEnumerator<T>,
 	selector:Selector<T,TResult>,
+	max?:number):TResult[]
+
+export function map<T,TResult>(
+	source:IEnumerableOrArray<T>|IEnumerator<T>,
+	selector:SelectorWithIndex<T,TResult>,
+	max?:number):TResult[]
+
+export function map<T,TResult>(
+	source:IEnumerableOrArray<T>|IEnumerator<T>,
+	selector:SelectorWithIndex<T,TResult>,
 	max:number = Infinity):TResult[]
 {
 	if(<any>source===STRING_EMPTY) return [];
@@ -235,7 +262,7 @@ export function map<T,TResult>(
 		return source.map(selector);
 
 	var result:TResult[] = initArrayFrom(source, max);
-	if(-1===forEach(source, (e, i) => { result[i] = selector(e); }, max))
+	if(-1===forEach(source, (e, i) => { result[i] = selector(e, i); }, max))
 		throw new UnsupportedEnumerableException();
 
 	return result;

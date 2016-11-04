@@ -6,7 +6,6 @@
 var SimpleEnumerableBase_1 = require("./SimpleEnumerableBase");
 var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
-var VOID0 = void 0;
 var InfiniteEnumerator = (function (_super) {
     __extends(InfiniteEnumerator, _super);
     function InfiniteEnumerator(_factory) {
@@ -19,13 +18,15 @@ var InfiniteEnumerator = (function (_super) {
     InfiniteEnumerator.prototype.moveNext = function () {
         var _ = this;
         var f = _._factory;
-        if (f)
+        if (f) {
             _._current = f(_._current, _.incrementIndex());
-        return f != VOID0;
+            return true;
+        }
+        return false;
     };
     InfiniteEnumerator.prototype.dispose = function () {
         _super.prototype.dispose.call(this);
-        this._factory = VOID0;
+        this._factory = null;
     };
     return InfiniteEnumerator;
 }(SimpleEnumerableBase_1.SimpleEnumerableBase));

@@ -12,7 +12,13 @@ import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {CollectionBase} from "./CollectionBase";
 import {ILinkedListNode, ILinkedNode, INodeWithValue} from "./ILinkedListNode";
 import {IEnumerator} from "./Enumeration/IEnumerator";
-import {Predicate, Action, EqualityComparison} from "../FunctionTypes";
+import {
+	Predicate,
+	Action,
+	EqualityComparison,
+	PredicateWithIndex,
+	ActionWithIndex
+} from "../FunctionTypes";
 import {ILinkedList} from "./ILinkedList";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IDisposable} from "../Disposable/IDisposable";
@@ -20,7 +26,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
@@ -44,7 +50,7 @@ implements ILinkedNode<InternalNode<T>>, INodeWithValue<T>
 	{
 	}
 
-	external:ILinkedListNode<T>;
+	external?:ILinkedListNode<T>;
 
 	assertDetached():void
 	{
@@ -64,11 +70,11 @@ function ensureExternal<T>(
 	if(!list)
 		throw new ArgumentNullException("list");
 
-	var external:ILinkedListNode<T> = node.external;
+	var external = node.external;
 	if(!external)
 		node.external = external = new LinkedListNode<T>(list, node);
 
-	return external;
+	return external || null;
 }
 
 function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNode<T>
@@ -107,23 +113,30 @@ function detachExternal(node:InternalNode<any>):void
 export class LinkedList<T>
 extends CollectionBase<T> implements ILinkedList<T>
 {
-	private _listInternal:LinkedNodeList<InternalNode<T>>;
+	private readonly _listInternal:LinkedNodeList<InternalNode<T>>;
 
 	constructor(
 		source?:IEnumerableOrArray<T>,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(VOID0, equalityComparer);
-		const _ = this;
-		_._listInternal = new LinkedNodeList<InternalNode<T>>();
-		_._importEntries(source);
+		this._listInternal = new LinkedNodeList<InternalNode<T>>();
+		this._importEntries(source);
+	}
+
+	assertVersion(version:number):void
+	{
+		if(this._listInternal)
+			this._listInternal.assertVersion(version);
+		else // In case it's been disposed.
+			super.assertVersion(version);
 	}
 
 	protected _onDispose():void
 	{
 		super._onDispose();
 		var l = this._listInternal;
-		this._listInternal = <any>null;
+		(<any>this)._listInternal = null;
 		l.dispose();
 	}
 
@@ -152,7 +165,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 				removedCount++;
 
 			return removedCount<max;
-		});
+		}, true /* override versioning check */);
 
 		return removedCount;
 	}
@@ -164,9 +177,11 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return list.clear();
 	}
 
-
-	forEach(
-		action:Predicate<T> | Action<T>,
+	forEach(action:Action<T>, useCopy?:boolean):number;
+	forEach(action:Predicate<T>, useCopy?:boolean):number;
+	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number;
+	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number;
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>,
 		useCopy:boolean = false):number
 	{
 		this.throwIfDisposed();
@@ -414,10 +429,11 @@ class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 
 	remove():void
 	{
-		var list = this._list;
+		const _:any = this;
+		var list = _._list;
 		if(list) list.removeNode(this);
-		this._list = VOID0;
-		this._nodeInternal = VOID0;
+		_._list = VOID0;
+		_._nodeInternal = VOID0;
 	}
 
 	dispose():void

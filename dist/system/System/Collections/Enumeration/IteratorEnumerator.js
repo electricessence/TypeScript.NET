@@ -6,7 +6,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var SimpleEnumerableBase_1, extends_1;
-    var __extends, VOID0, IteratorEnumerator;
+    var __extends, IteratorEnumerator;
     return {
         setters:[
             function (SimpleEnumerableBase_1_1) {
@@ -17,7 +17,6 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
             }],
         execute: function() {
             __extends = extends_1.default;
-            VOID0 = void 0;
             IteratorEnumerator = (function (_super) {
                 __extends(IteratorEnumerator, _super);
                 function IteratorEnumerator(_iterator, _isEndless) {
@@ -43,7 +42,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
                 };
                 IteratorEnumerator.prototype.dispose = function () {
                     _super.prototype.dispose.call(this);
-                    this._iterator = VOID0;
+                    this._iterator = null;
                 };
                 IteratorEnumerator.prototype.getIsEndless = function () {
                     return !!this._isEndless && _super.prototype.getIsEndless.call(this);

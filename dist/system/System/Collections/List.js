@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./Enumeration/ArrayEnumerator", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
+System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Utility_1, Enumerator_1, Types_1, ArrayEnumerator_1, CollectionBase_1, extends_1;
+    var Compare_1, Utility_1, Enumerator_1, Types_1, CollectionBase_1, extends_1, EnumeratorBase_1;
     var __extends, VOID0, List;
     return {
         setters:[
@@ -21,14 +21,14 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
-            function (ArrayEnumerator_1_1) {
-                ArrayEnumerator_1 = ArrayEnumerator_1_1;
-            },
             function (CollectionBase_1_1) {
                 CollectionBase_1 = CollectionBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
+            },
+            function (EnumeratorBase_1_1) {
+                EnumeratorBase_1 = EnumeratorBase_1_1;
             }],
         execute: function() {
             __extends = extends_1.default;
@@ -38,15 +38,18 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                 function List(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
                     _super.call(this, VOID0, equalityComparer);
-                    var _ = this;
                     if (Array.isArray(source)) {
-                        _._source = source.slice();
+                        this._source = source.slice();
                     }
                     else {
-                        _._source = [];
-                        _._importEntries(source);
+                        this._source = [];
+                        this._importEntries(source);
                     }
                 }
+                List.prototype._onDispose = function () {
+                    _super.prototype._onDispose.call(this);
+                    this._source = null;
+                };
                 List.prototype.getCount = function () {
                     return this._source.length;
                 };
@@ -88,25 +91,26 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                     if (index < s.length && Compare_1.areEqual(value, s[index]))
                         return false;
                     s[index] = value;
-                    this._onModified();
+                    this._signalModification(true);
                     return true;
                 };
                 List.prototype.indexOf = function (item) {
                     return Utility_1.indexOf(this._source, item, this._equalityComparer);
                 };
                 List.prototype.insert = function (index, value) {
-                    var s = this._source;
+                    var _ = this;
+                    var s = _._source;
                     if (index < s.length) {
-                        this._source.splice(index, 0, value);
+                        _._source.splice(index, 0, value);
                     }
                     else {
-                        this._source[index] = value;
+                        _._source[index] = value;
                     }
-                    this._onModified();
+                    _._signalModification(true);
                 };
                 List.prototype.removeAt = function (index) {
                     if (Utility_1.removeIndex(this._source, index)) {
-                        this._onModified();
+                        this._signalModification(true);
                         return true;
                     }
                     return false;
@@ -118,11 +122,28 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                     return Utility_1.copyTo(this._source, target, 0, index);
                 };
                 List.prototype.getEnumerator = function () {
-                    return new ArrayEnumerator_1.ArrayEnumerator(this._source);
+                    var _ = this;
+                    _.throwIfDisposed();
+                    var source, index, version;
+                    return new EnumeratorBase_1.EnumeratorBase(function () {
+                        source = _._source;
+                        version = _._version;
+                        index = 0;
+                    }, function (yielder) {
+                        if (index)
+                            _.throwIfDisposed();
+                        else if (_.wasDisposed) {
+                            return yielder.yieldBreak();
+                        }
+                        _.assertVersion(version);
+                        if (index >= source.length)
+                            return yielder.yieldBreak();
+                        return yielder.yieldReturn(source[index++]);
+                    });
                 };
                 List.prototype.forEach = function (action, useCopy) {
                     var s = this._source;
-                    return Enumerator_1.forEach(useCopy ? s.slice() : s, action);
+                    return Enumerator_1.forEach(useCopy ? s.slice() : this, action);
                 };
                 return List;
             }(CollectionBase_1.CollectionBase));

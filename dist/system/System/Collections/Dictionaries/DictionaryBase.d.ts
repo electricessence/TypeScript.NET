@@ -7,9 +7,10 @@ import { IKeyValuePair, KeyValuePair } from "../../KeyValuePair";
 import { IDictionary } from "./IDictionary";
 import { IEnumerator } from "../Enumeration/IEnumerator";
 import { IEnumerableOrArray } from "../IEnumerableOrArray";
+import { Action } from "../../FunctionTypes";
 export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBase<IKeyValuePair<TKey, TValue>> implements IDictionary<TKey, TValue> {
     constructor(source?: IEnumerableOrArray<IKeyValuePair<TKey, TValue>>);
-    protected _onValueModified(key: TKey, value: TValue, old: TValue): void;
+    protected _onValueModified(key: TKey, value: TValue | undefined, old: TValue | undefined): void;
     protected _addInternal(item: KeyValuePair<TKey, TValue>): boolean;
     protected _clearInternal(): number;
     contains(item: KeyValuePair<TKey, TValue>): boolean;
@@ -20,9 +21,11 @@ export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBas
     readonly values: TValue[];
     addByKeyValue(key: TKey, value: TValue): boolean;
     protected abstract _getEntry(key: TKey): IKeyValuePair<TKey, TValue> | null;
-    abstract getValue(key: TKey): TValue;
-    protected abstract _setValueInternal(key: TKey, value: TValue): boolean;
-    setValue(key: TKey, value: TValue): boolean;
+    abstract getValue(key: TKey): TValue | undefined;
+    getAssuredValue(key: TKey): TValue;
+    tryGetValue(key: TKey, out: Action<TValue>): boolean;
+    protected abstract _setValueInternal(key: TKey, value: TValue | undefined): boolean;
+    setValue(key: TKey, value: TValue | undefined): boolean;
     containsKey(key: TKey): boolean;
     containsValue(value: TValue): boolean;
     removeByKey(key: TKey): boolean;

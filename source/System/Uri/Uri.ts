@@ -20,8 +20,9 @@ import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
 import {StringKeyValuePair} from "../KeyValuePair";
 import {IEquatable} from "../IEquatable";
+import {Action} from "../FunctionTypes";
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 
 /**
  * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
@@ -419,7 +420,7 @@ function uriToString(uri:IUri):string
 }
 
 
-function tryParse(url:string, out:(result:IUri)=>void):null|Exception
+function tryParse(url:string, out:Action<IUri>):null|Exception
 {
 	if(!url)
 		return new ArgumentException('url', 'Nothing to parse.');

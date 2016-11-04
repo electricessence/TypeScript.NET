@@ -28,32 +28,37 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
                     this._count = 0;
                     this._map = {};
                 }
+                StringKeyDictionary.prototype._onDispose = function () {
+                    _super.prototype._onDispose.call(this);
+                    this._map = null;
+                };
                 StringKeyDictionary.prototype._getEntry = function (key) {
                     return !this.containsKey(key)
                         ? null : {
                         key: key,
-                        value: this.getValue(key)
+                        value: this.getAssuredValue(key)
                     };
                 };
                 StringKeyDictionary.prototype.containsKey = function (key) {
-                    if (key === null || key === VOID0 || !this._count)
-                        return false;
-                    return (key) in (this._map);
+                    return key !== null
+                        && key !== VOID0
+                        && this._count != 0
+                        && this._map[key] !== VOID0;
                 };
                 StringKeyDictionary.prototype.containsValue = function (value) {
                     if (!this._count)
                         return false;
-                    var map = this._map, equal = Compare_1.areEqual;
+                    var map = this._map;
                     for (var key in map) {
-                        if (map.hasOwnProperty(key) && equal(map[key], value))
+                        if (map.hasOwnProperty(key) && Compare_1.areEqual(map[key], value))
                             return true;
                     }
                     return false;
                 };
                 StringKeyDictionary.prototype.getValue = function (key) {
-                    if (key === null || key === VOID0 || !this._count)
-                        return VOID0;
-                    return this._map[key];
+                    return key === null || key === VOID0 || !this._count
+                        ? VOID0
+                        : this._map[key];
                 };
                 StringKeyDictionary.prototype._setValueInternal = function (key, value) {
                     var _ = this;

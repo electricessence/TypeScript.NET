@@ -13,7 +13,13 @@ import {NotImplementedException} from "../Exceptions/NotImplementedException";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
 import {CollectionBase} from "./CollectionBase";
-import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
+import {
+	EqualityComparison,
+	Predicate,
+	Action,
+	ActionWithIndex,
+	PredicateWithIndex
+} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
@@ -177,19 +183,22 @@ extends CollectionBase<T>
 		return result;
 	}
 
-	forEach(action:Predicate<T> | Action<T>):number
+	forEach(action:Action<T>):number
+	forEach(action:Predicate<T>):number
+	forEach(action:ActionWithIndex<T>):number
+	forEach(action:PredicateWithIndex<T>):number
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T> | Action<T> | Predicate<T>):number
 	{
 		return super.forEach(action, true);
 	}
 
 	setCapacity(capacity:number):void
 	{
-
+		const _ = this;
 		assertIntegerZeroOrGreater(capacity, "capacity");
 
-		const _ = this;
 		var array = _._array, len = _._capacity;
-
+		if(capacity>len) _.throwIfDisposed();
 		if(capacity==len)
 			return;
 
@@ -273,7 +282,7 @@ extends CollectionBase<T>
 	}
 
 
-	tryDequeue(out:(value:T)=>void):boolean
+	tryDequeue(out:Action<T>):boolean
 	{
 		if(!this._size) return false;
 		var d = this.dequeue();
@@ -308,18 +317,22 @@ extends CollectionBase<T>
 	getEnumerator():IEnumerator<T>
 	{
 		const _ = this;
-		var index:number, version:number;
+		_.throwIfDisposed();
+
+		var index:number, version:number, size:number;
 		return new EnumeratorBase<T>(
 			() =>
 			{
 				version = _._version;
+				size = _._size;
 				index = 0;
 			},
 			(yielder)=>
 			{
+				_.throwIfDisposed();
 				_.assertVersion(version);
 
-				if(index==_._size)
+				if(index==size)
 					return yielder.yieldBreak();
 
 				return yielder.yieldReturn(_._getElement(index++));

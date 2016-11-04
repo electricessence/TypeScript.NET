@@ -5,7 +5,7 @@
 
 import {IIteratorResult} from "./IIterator";
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 
 export class IteratorResult<T> implements IIteratorResult<T>
 {

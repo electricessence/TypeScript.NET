@@ -6,22 +6,25 @@ import { areEqual } from "../Compare";
 import { remove, indexOf, contains, copyTo, removeIndex } from "./Array/Utility";
 import { forEach } from "./Enumeration/Enumerator";
 import { Type } from "../Types";
-import { ArrayEnumerator } from "./Enumeration/ArrayEnumerator";
 import { CollectionBase } from "./CollectionBase";
 import __extendsImport from "../../extends";
+import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
 const __extends = __extendsImport;
 const VOID0 = void 0;
 export class List extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(VOID0, equalityComparer);
-        const _ = this;
         if (Array.isArray(source)) {
-            _._source = source.slice();
+            this._source = source.slice();
         }
         else {
-            _._source = [];
-            _._importEntries(source);
+            this._source = [];
+            this._importEntries(source);
         }
+    }
+    _onDispose() {
+        super._onDispose();
+        this._source = null;
     }
     getCount() {
         return this._source.length;
@@ -63,25 +66,26 @@ export class List extends CollectionBase {
         if (index < s.length && areEqual(value, s[index]))
             return false;
         s[index] = value;
-        this._onModified();
+        this._signalModification(true);
         return true;
     }
     indexOf(item) {
         return indexOf(this._source, item, this._equalityComparer);
     }
     insert(index, value) {
-        var s = this._source;
+        const _ = this;
+        var s = _._source;
         if (index < s.length) {
-            this._source.splice(index, 0, value);
+            _._source.splice(index, 0, value);
         }
         else {
-            this._source[index] = value;
+            _._source[index] = value;
         }
-        this._onModified();
+        _._signalModification(true);
     }
     removeAt(index) {
         if (removeIndex(this._source, index)) {
-            this._onModified();
+            this._signalModification(true);
             return true;
         }
         return false;
@@ -93,11 +97,28 @@ export class List extends CollectionBase {
         return copyTo(this._source, target, 0, index);
     }
     getEnumerator() {
-        return new ArrayEnumerator(this._source);
+        const _ = this;
+        _.throwIfDisposed();
+        var source, index, version;
+        return new EnumeratorBase(() => {
+            source = _._source;
+            version = _._version;
+            index = 0;
+        }, (yielder) => {
+            if (index)
+                _.throwIfDisposed();
+            else if (_.wasDisposed) {
+                return yielder.yieldBreak();
+            }
+            _.assertVersion(version);
+            if (index >= source.length)
+                return yielder.yieldBreak();
+            return yielder.yieldReturn(source[index++]);
+        });
     }
     forEach(action, useCopy) {
         var s = this._source;
-        return forEach(useCopy ? s.slice() : s, action);
+        return forEach(useCopy ? s.slice() : this, action);
     }
 }
 export default List;

@@ -9,7 +9,7 @@ import * as Scheme from "./Scheme";
 import { trim } from "../Text/Utility";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
-const VOID0 = void (0);
+const VOID0 = void 0;
 export class Uri {
     constructor(scheme, userInfo, host, port, path, query, fragment) {
         const _ = this;

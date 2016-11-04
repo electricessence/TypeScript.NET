@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-var VOID0 = void (0);
+var VOID0 = void 0;
 var IteratorResult = (function () {
     function IteratorResult(value, index, done) {
         if (done === void 0) { done = false; }

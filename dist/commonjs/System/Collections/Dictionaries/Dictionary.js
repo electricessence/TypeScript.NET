@@ -57,8 +57,13 @@ var Dictionary = (function (_super) {
         this._entries = linkedNodeList();
         this._buckets = {};
     }
+    Dictionary.prototype._onDispose = function () {
+        _super.prototype._onDispose.call(this);
+        this._entries = null;
+        this._buckets = null;
+    };
     Dictionary.prototype.getCount = function () {
-        return this._entries.unsafeCount;
+        return this._entries && this._entries.unsafeCount || 0;
     };
     Dictionary.prototype._getBucket = function (hash, createIfMissing) {
         if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
@@ -69,7 +74,7 @@ var Dictionary = (function (_super) {
             buckets[hash]
                 = bucket
                     = linkedNodeList();
-        return bucket;
+        return bucket || null;
     };
     Dictionary.prototype._getBucketEntry = function (key, hash, bucket) {
         if (key === null || key === VOID0 || !this.getCount())
@@ -89,7 +94,8 @@ var Dictionary = (function (_super) {
         return e ? e.value : VOID0;
     };
     Dictionary.prototype._setValueInternal = function (key, value) {
-        var _ = this, buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+        var _ = this;
+        var buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
         if (bucketEntry) {
             var b = bucket;
             if (value === VOID0) {
@@ -136,12 +142,15 @@ var Dictionary = (function (_super) {
     };
     Dictionary.prototype.getEnumerator = function () {
         var _ = this;
+        _.throwIfDisposed();
         var ver, currentEntry;
         return new EnumeratorBase_1.EnumeratorBase(function () {
+            _.throwIfDisposed();
             ver = _._version;
             currentEntry = _._entries.first;
         }, function (yielder) {
             if (currentEntry) {
+                _.throwIfDisposed();
                 _.assertVersion(ver);
                 var result = { key: currentEntry.key, value: currentEntry.value };
                 currentEntry = currentEntry.next || null;
@@ -153,7 +162,7 @@ var Dictionary = (function (_super) {
     Dictionary.prototype.getKeys = function () {
         var _ = this;
         var result = [];
-        var e = _._entries.first;
+        var e = _._entries && _._entries.first;
         while (e) {
             result.push(e.key);
             e = e.next;
@@ -163,7 +172,7 @@ var Dictionary = (function (_super) {
     Dictionary.prototype.getValues = function () {
         var _ = this;
         var result = [];
-        var e = _._entries.first;
+        var e = _._entries && _._entries.first;
         while (e) {
             result.push(e.value);
             e = e.next;

@@ -4,7 +4,7 @@
  */
 import { Type } from "../../Types";
 import { copy } from "./Utility";
-const VOID0 = void (0);
+const VOID0 = void 0;
 export function unsafe(listeners, payload, trap) {
     if (listeners && listeners.length) {
         for (let i = 0, len = listeners.length; i < len; i++) {

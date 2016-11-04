@@ -63,7 +63,7 @@ System.register(["../../Types", "./Utility"], function(exports_1, context_1) {
                 Utility_1 = Utility_1_1;
             }],
         execute: function() {
-            VOID0 = void (0);
+            VOID0 = void 0;
             exports_1("default",dispatch);
         }
     }

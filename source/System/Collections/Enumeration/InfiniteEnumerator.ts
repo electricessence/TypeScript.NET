@@ -9,8 +9,6 @@ import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0;
-
 /**
  * An aggregate/reduce style factory function that expects a previous value and the current index of the enumeration.
  */
@@ -43,14 +41,17 @@ export class InfiniteEnumerator<T> extends SimpleEnumerableBase<T>
 	{
 		const _ = this;
 		var f = _._factory;
-		if(f) _._current = f(_._current, _.incrementIndex());
-		return f!=VOID0;
+		if(f) {
+			_._current = f(_._current, _.incrementIndex());
+			return true;
+		}
+		return false;
 	}
 
 	dispose():void
 	{
 		super.dispose();
-		this._factory = VOID0;
+		(<any>this)._factory = null;
 	}
 
 }

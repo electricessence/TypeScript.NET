@@ -6,7 +6,6 @@
 var SimpleEnumerableBase_1 = require("./SimpleEnumerableBase");
 var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
-var VOID0 = void 0;
 var IteratorEnumerator = (function (_super) {
     __extends(IteratorEnumerator, _super);
     function IteratorEnumerator(_iterator, _isEndless) {
@@ -32,7 +31,7 @@ var IteratorEnumerator = (function (_super) {
     };
     IteratorEnumerator.prototype.dispose = function () {
         _super.prototype.dispose.call(this);
-        this._iterator = VOID0;
+        this._iterator = null;
     };
     IteratorEnumerator.prototype.getIsEndless = function () {
         return !!this._isEndless && _super.prototype.getIsEndless.call(this);

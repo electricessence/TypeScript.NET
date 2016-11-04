@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-const VOID0 = void (0);
+const VOID0 = void 0;
 export class IteratorResult {
     constructor(value, index, done = false) {
         this.value = value;

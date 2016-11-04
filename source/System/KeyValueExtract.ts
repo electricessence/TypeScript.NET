@@ -9,7 +9,7 @@ import {KeyValuePair, IKeyValuePair} from "./KeyValuePair";
 import {IArray} from "./Collections/Array/IArray";
 
 const
-	VOID0:any                  = void 0,
+	VOID0:undefined                  = void 0,
 	DOT:string                 = '.',
 	KEY:string                 = 'key',
 	VALUE:string               = 'value',

@@ -9,7 +9,7 @@ System.register([], function(exports_1, context_1) {
     return {
         setters:[],
         execute: function() {
-            VOID0 = void (0);
+            VOID0 = void 0;
             IteratorResult = (function () {
                 function IteratorResult(value, index, done) {
                     if (done === void 0) { done = false; }

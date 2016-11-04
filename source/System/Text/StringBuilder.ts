@@ -7,7 +7,7 @@
 import {Type} from "../Types";
 import {IDisposable} from "../Disposable/IDisposable";
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:

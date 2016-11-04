@@ -23,6 +23,7 @@ System.register(["./IteratorResult", "../../Functions"], function(exports_1, con
                 nextValue: Functions_1.Functions.Blank,
                 next: IteratorResult_1.IteratorResult.GetDone,
                 "return": IteratorResult_1.IteratorResult.GetDone,
+                end: Functions_1.Functions.Blank,
                 reset: Functions_1.Functions.Blank,
                 dispose: Functions_1.Functions.Blank,
                 isEndless: false

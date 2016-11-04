@@ -8,15 +8,21 @@ import {areEqual} from "../Compare";
 import {remove, indexOf, contains, copyTo, removeIndex} from "./Array/Utility";
 import {forEach} from "./Enumeration/Enumerator";
 import {Type} from "../Types";
-import {ArrayEnumerator} from "./Enumeration/ArrayEnumerator";
 import {CollectionBase} from "./CollectionBase";
-import {Predicate, Action, EqualityComparison} from "../FunctionTypes";
+import {
+	Predicate,
+	Action,
+	EqualityComparison,
+	ActionWithIndex,
+	PredicateWithIndex
+} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IList} from "./IList";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
 import __extendsImport from "../../extends";
+import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -25,23 +31,27 @@ export class List<T>
 extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 {
 
-	protected _source:T[];
+	protected readonly _source:T[];
 
 	constructor(
 		source?:IEnumerableOrArray<T>,
 		equalityComparer:EqualityComparison<T> = areEqual)
 	{
 		super(VOID0, equalityComparer);
-		const _ = this;
 		if(Array.isArray(source))
 		{
-			_._source = source.slice();
+			this._source = source.slice();
 		}
 		else
 		{
-			_._source = [];
-			_._importEntries(source);
+			this._source = [];
+			this._importEntries(source);
 		}
+	}
+
+	protected _onDispose() {
+		super._onDispose();
+		(<any>this)._source = null;
 	}
 
 	protected getCount():number
@@ -104,7 +114,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 			return false;
 
 		s[index] = value;
-		this._onModified();
+		this._signalModification(true);
 		return true;
 	}
 
@@ -117,23 +127,24 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 
 	insert(index:number, value:T):void
 	{
-		var s = this._source;
+		const _ = this;
+		var s = _._source;
 		if(index<s.length)
 		{
-			this._source.splice(index, 0, value);
+			_._source.splice(index, 0, value);
 		}
 		else
 		{
-			this._source[index] = value;
+			_._source[index] = value;
 		}
-		this._onModified();
+		_._signalModification(true);
 	}
 
 	removeAt(index:number):boolean
 	{
 		if(removeIndex(this._source, index))
 		{
-			this._onModified();
+			this._signalModification(true);
 			return true;
 		}
 		return false;
@@ -153,13 +164,43 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 
 	getEnumerator():IEnumerator<T>
 	{
-		return new ArrayEnumerator(this._source);
+		const _ = this;
+		_.throwIfDisposed();
+
+		var source:T[], index:number, version:number;
+		return new EnumeratorBase<T>(
+			() =>
+			{
+				source = _._source;
+				version = _._version;
+				index = 0;
+			},
+			(yielder)=>
+			{
+				if(index) _.throwIfDisposed();
+				else if(_.wasDisposed) {
+					// We never actually started? Then no biggie.
+					return yielder.yieldBreak();
+				}
+
+				_.assertVersion(version);
+
+				if(index>=source.length) // Just in case the size changes as we enumerate use '>='.
+					return yielder.yieldBreak();
+
+				return yielder.yieldReturn(source[index++]);
+			}
+		);
 	}
 
-	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):number
+	forEach(action:Action<T>, useCopy?:boolean):number
+	forEach(action:Predicate<T>, useCopy?:boolean):number
+	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
+	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T> | Action<T> | Predicate<T>, useCopy?:boolean):number
 	{
 		var s = this._source;
-		return forEach(useCopy ? s.slice() : s, action);
+		return forEach(useCopy ? s.slice() : this, action);
 	}
 
 }

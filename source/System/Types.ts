@@ -8,7 +8,7 @@ import {Primitive} from "./Primitive";
 import {IArray} from "./Collections/Array/IArray"; // For compatibility with (let, const, function, class);
 
 const
-	VOID0:any         = void(0),
+	VOID0:undefined         = void(0),
 	_BOOLEAN:string   = typeof true,
 	_NUMBER:string    = typeof 0,
 	_STRING:string    = typeof "",

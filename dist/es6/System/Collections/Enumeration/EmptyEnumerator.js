@@ -11,6 +11,7 @@ export const EmptyEnumerator = Object.freeze({
     nextValue: Functions.Blank,
     next: IteratorResult.GetDone,
     "return": IteratorResult.GetDone,
+    end: Functions.Blank,
     reset: Functions.Blank,
     dispose: Functions.Blank,
     isEndless: false

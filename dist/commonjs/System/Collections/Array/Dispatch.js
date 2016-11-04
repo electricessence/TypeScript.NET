@@ -5,7 +5,7 @@
 "use strict";
 var Types_1 = require("../../Types");
 var Utility_1 = require("./Utility");
-var VOID0 = void (0);
+var VOID0 = void 0;
 function unsafe(listeners, payload, trap) {
     if (listeners && listeners.length) {
         for (var i = 0, len = listeners.length; i < len; i++) {

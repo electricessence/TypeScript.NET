@@ -11,7 +11,7 @@ import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 export class OrderedStringKeyDictionary<TValue>
 extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue>
@@ -31,14 +31,14 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 		return o.length ? o.indexOf(key, 0) : -1;
 	}
 
-	getValueByIndex(index:number):TValue
+	getValueByIndex(index:number):TValue|undefined
 	{
 		var o = this._order;
 		return index<o.length ? this.getValue(o[index]) : VOID0;
 	}
 
 	// adding keepIndex allows for clearing a value while still retaining it's index.
-	setValue(key:string, value:TValue, keepIndex?:boolean):boolean
+	setValue(key:string, value:TValue|undefined, keepIndex?:boolean):boolean
 	{
 		// TODO: This may be inefficient and could be improved.
 		const _ = this;
@@ -51,7 +51,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 		return super.setValue(key, value);
 	}
 
-	setByIndex(index:number, value:TValue):boolean
+	setByIndex(index:number, value:TValue|undefined):boolean
 	{
 		const _ = this;
 		var order = _._order;

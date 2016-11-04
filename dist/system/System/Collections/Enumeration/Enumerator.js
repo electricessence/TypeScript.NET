@@ -127,7 +127,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         if (!isFinite(max) && Array.isArray(source))
             return source.map(selector);
         var result = initArrayFrom(source, max);
-        if (-1 === forEach(source, function (e, i) { result[i] = selector(e); }, max))
+        if (-1 === forEach(source, function (e, i) { result[i] = selector(e, i); }, max))
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
         return result;
     }
@@ -159,7 +159,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
                 IteratorEnumerator_1 = IteratorEnumerator_1_1;
             }],
         execute: function() {
-            VOID0 = void (0);
+            VOID0 = void 0;
             STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
                 'Would result in an infinite loop that could hang the current process.';
         }

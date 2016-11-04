@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Enumerator_1, CollectionBase_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1, extends_1;
+    var Compare_1, Enumerator_1, CollectionBase_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1, extends_1, KeyNotFoundException_1;
     var __extends, VOID0, DictionaryBase;
     return {
         setters:[
@@ -32,10 +32,13 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
+            },
+            function (KeyNotFoundException_1_1) {
+                KeyNotFoundException_1 = KeyNotFoundException_1_1;
             }],
         execute: function() {
             __extends = extends_1.default;
-            VOID0 = void (0);
+            VOID0 = void 0;
             DictionaryBase = (function (_super) {
                 __extends(DictionaryBase, _super);
                 function DictionaryBase(source) {
@@ -100,6 +103,20 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                     }
                     return _.setValue(key, value);
                 };
+                DictionaryBase.prototype.getAssuredValue = function (key) {
+                    var value = this.getValue(key);
+                    if (value === VOID0)
+                        throw new KeyNotFoundException_1.KeyNotFoundException("Key '" + key + "' not found.");
+                    return value;
+                };
+                DictionaryBase.prototype.tryGetValue = function (key, out) {
+                    var value = this.getValue(key);
+                    if (value !== VOID0) {
+                        out(value);
+                        return true;
+                    }
+                    return false;
+                };
                 DictionaryBase.prototype.setValue = function (key, value) {
                     var _ = this;
                     _.assertModifiable();
@@ -115,9 +132,9 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                     return !!this._getEntry(key);
                 };
                 DictionaryBase.prototype.containsValue = function (value) {
-                    var e = this.getEnumerator(), equal = Compare_1.areEqual;
+                    var e = this.getEnumerator();
                     while (e.moveNext()) {
-                        if (equal(e.current, value, true)) {
+                        if (Compare_1.areEqual(e.current, value, true)) {
                             e.dispose();
                             return true;
                         }
@@ -129,10 +146,10 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                 };
                 DictionaryBase.prototype.removeByValue = function (value) {
                     var _ = this;
-                    var count = 0, equal = Compare_1.areEqual;
+                    var count = 0;
                     for (var _i = 0, _a = _.getKeys(); _i < _a.length; _i++) {
                         var key = _a[_i];
-                        if (equal(_.getValue(key), value, true)) {
+                        if (Compare_1.areEqual(_.getValue(key), value, true)) {
                             _.removeByKey(key);
                             count++;
                         }
@@ -155,15 +172,18 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                 };
                 DictionaryBase.prototype.getEnumerator = function () {
                     var _ = this;
-                    var ver, keys, len, i = 0;
+                    _.throwIfDisposed();
+                    var ver, keys, len, index = 0;
                     return new EnumeratorBase_1.EnumeratorBase(function () {
+                        _.throwIfDisposed();
                         ver = _._version;
                         keys = _.getKeys();
                         len = keys.length;
                     }, function (yielder) {
+                        _.throwIfDisposed();
                         _.assertVersion(ver);
-                        while (i < len) {
-                            var key = keys[i++], value = _.getValue(key);
+                        while (index < len) {
+                            var key = keys[index++], value = _.getValue(key);
                             if (value !== VOID0)
                                 return yielder.yieldReturn({ key: key, value: value });
                         }

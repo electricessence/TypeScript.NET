@@ -6,7 +6,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var SimpleEnumerableBase_1, extends_1;
-    var __extends, VOID0, InfiniteEnumerator;
+    var __extends, InfiniteEnumerator;
     return {
         setters:[
             function (SimpleEnumerableBase_1_1) {
@@ -17,7 +17,6 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
             }],
         execute: function() {
             __extends = extends_1.default;
-            VOID0 = void 0;
             InfiniteEnumerator = (function (_super) {
                 __extends(InfiniteEnumerator, _super);
                 function InfiniteEnumerator(_factory) {
@@ -30,13 +29,15 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
                 InfiniteEnumerator.prototype.moveNext = function () {
                     var _ = this;
                     var f = _._factory;
-                    if (f)
+                    if (f) {
                         _._current = f(_._current, _.incrementIndex());
-                    return f != VOID0;
+                        return true;
+                    }
+                    return false;
                 };
                 InfiniteEnumerator.prototype.dispose = function () {
                     _super.prototype.dispose.call(this);
-                    this._factory = VOID0;
+                    this._factory = null;
                 };
                 return InfiniteEnumerator;
             }(SimpleEnumerableBase_1.SimpleEnumerableBase));

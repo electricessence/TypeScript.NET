@@ -6,7 +6,8 @@
 import * as Values from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
-import { from as enumeratorFrom, forEach, toArray, map, isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
+import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
+import { isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
 import { EmptyEnumerator } from "../System/Collections/Enumeration/EmptyEnumerator";
 import { Type } from "../System/Types";
 import { Integer } from "../System/Integer";
@@ -23,6 +24,8 @@ import { KeySortedContext } from "../System/Collections/Sorting/KeySortedContext
 import { ArgumentNullException } from "../System/Exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../System/Exceptions/ArgumentOutOfRangeException";
 import __extendsImport from "../extends";
+import { copy } from "../System/Collections/Array/Utility";
+import { IndexEnumerator } from "../System/Collections/Enumeration/IndexEnumerator";
 const __extends = __extendsImport;
 const INVALID_DEFAULT = {};
 const VOID0 = void 0;
@@ -186,17 +189,20 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     traverseBreadthFirst(childrenSelector, resultSelector = Functions.Identity) {
         const _ = this;
+        var disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumerator;
             let nestLevel = 0;
             let buffer, len;
             return new EnumeratorBase(() => {
+                throwIfDisposed(disposed);
+                enumerator = _.getEnumerator();
                 nestLevel = 0;
                 buffer = [];
                 len = 0;
-                enumerator = _.getEnumerator();
             }, (yielder) => {
+                throwIfDisposed(disposed);
                 while (true) {
                     if (enumerator.moveNext()) {
                         buffer[len++] = enumerator.current;
@@ -222,19 +228,24 @@ export class InfiniteEnumerable extends DisposableBase {
                 dispose(enumerator);
                 buffer.length = 0;
             }, isEndless);
-        }, null, isEndless);
+        }, () => {
+            disposed = true;
+        }, isEndless);
     }
     traverseDepthFirst(childrenSelector, resultSelector = Functions.Identity) {
         const _ = this;
+        var disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumeratorStack = [];
             let enumerator;
             let len;
             return new EnumeratorBase(() => {
+                throwIfDisposed(disposed);
                 enumerator = _.getEnumerator();
                 len = 0;
             }, (yielder) => {
+                throwIfDisposed(disposed);
                 while (true) {
                     if (enumerator.moveNext()) {
                         let value = resultSelector(enumerator.current, len);
@@ -257,17 +268,22 @@ export class InfiniteEnumerable extends DisposableBase {
                     dispose.these(enumeratorStack);
                 }
             }, isEndless);
-        }, null, isEndless);
+        }, () => {
+            disposed = true;
+        }, isEndless);
     }
     flatten() {
         const _ = this;
+        var disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumerator;
             let middleEnumerator = null;
             return new EnumeratorBase(() => {
+                throwIfDisposed(disposed);
                 enumerator = _.getEnumerator();
             }, (yielder) => {
+                throwIfDisposed(disposed);
                 while (true) {
                     if (middleEnumerator) {
                         if (middleEnumerator.moveNext()) {
@@ -297,36 +313,50 @@ export class InfiniteEnumerable extends DisposableBase {
             }, () => {
                 dispose(enumerator, middleEnumerator);
             }, isEndless);
-        }, null, isEndless);
+        }, () => {
+            disposed = true;
+        }, isEndless);
     }
     pairwise(selector) {
         const _ = this;
+        _.throwIfDisposed();
+        if (!selector)
+            throw new ArgumentNullException("selector");
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumerator;
             return new EnumeratorBase(() => {
+                throwIfDisposed(!selector);
                 enumerator = _.getEnumerator();
                 enumerator.moveNext();
             }, (yielder) => {
+                throwIfDisposed(!selector);
                 let prev = enumerator.current;
                 return enumerator.moveNext()
                     && yielder.yieldReturn(selector(prev, enumerator.current));
             }, () => {
                 dispose(enumerator);
             }, isEndless);
-        }, null, isEndless);
+        }, () => {
+            selector = NULL;
+        }, isEndless);
     }
     scan(func, seed) {
         const _ = this;
+        _.throwIfDisposed();
+        if (!func)
+            throw new ArgumentNullException("func");
         var isUseSeed = seed !== VOID0;
         return new Enumerable(() => {
             let enumerator;
             let value;
             let isFirst;
             return new EnumeratorBase(() => {
+                throwIfDisposed(!func);
                 enumerator = _.getEnumerator();
                 isFirst = true;
             }, (yielder) => {
+                throwIfDisposed(!func);
                 if (isFirst) {
                     isFirst = false;
                     return isUseSeed
@@ -340,20 +370,24 @@ export class InfiniteEnumerable extends DisposableBase {
             }, () => {
                 dispose(enumerator);
             }, _._isEndless);
-        }, null, _._isEndless);
+        }, () => {
+            func = NULL;
+        }, _._isEndless);
     }
     select(selector) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        _.throwIfDisposed();
+        if (!selector)
+            throw new ArgumentNullException("selector");
         return new Enumerable(() => {
             let enumerator;
             let index = 0;
             return new EnumeratorBase(() => {
-                throwIfDisposed(disposed);
+                throwIfDisposed(!selector);
                 index = 0;
                 enumerator = _.getEnumerator();
             }, (yielder) => {
-                throwIfDisposed(disposed);
+                throwIfDisposed(!selector);
                 return enumerator.moveNext()
                     ? yielder.yieldReturn(selector(enumerator.current, index++))
                     : yielder.yieldBreak();
@@ -361,11 +395,14 @@ export class InfiniteEnumerable extends DisposableBase {
                 dispose(enumerator);
             }, _._isEndless);
         }, () => {
-            disposed = true;
+            selector = NULL;
         }, _._isEndless);
     }
     _selectMany(collectionSelector, resultSelector) {
         const _ = this;
+        _.throwIfDisposed();
+        if (!collectionSelector)
+            throw new ArgumentNullException("collectionSelector");
         const isEndless = _._isEndless;
         if (!resultSelector)
             resultSelector = (a, b) => b;
@@ -374,10 +411,12 @@ export class InfiniteEnumerable extends DisposableBase {
             let middleEnumerator;
             let index = 0;
             return new EnumeratorBase(() => {
+                throwIfDisposed(!collectionSelector);
                 enumerator = _.getEnumerator();
                 middleEnumerator = VOID0;
                 index = 0;
             }, (yielder) => {
+                throwIfDisposed(!collectionSelector);
                 if (middleEnumerator === VOID0 && !enumerator.moveNext())
                     return false;
                 do {
@@ -385,7 +424,7 @@ export class InfiniteEnumerable extends DisposableBase {
                         let middleSeq = collectionSelector(enumerator.current, index++);
                         if (!middleSeq)
                             continue;
-                        middleEnumerator = enumeratorFrom(middleSeq);
+                        middleEnumerator = enumUtil.from(middleSeq);
                     }
                     if (middleEnumerator.moveNext())
                         return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
@@ -398,7 +437,9 @@ export class InfiniteEnumerable extends DisposableBase {
                 enumerator = NULL;
                 middleEnumerator = null;
             }, isEndless);
-        }, null, isEndless);
+        }, () => {
+            collectionSelector = NULL;
+        }, isEndless);
     }
     selectMany(collectionSelector, resultSelector) {
         return this._selectMany(collectionSelector, resultSelector);
@@ -492,7 +533,7 @@ export class InfiniteEnumerable extends DisposableBase {
                 enumerator = _.getEnumerator();
                 keys = new Dictionary(compareSelector);
                 if (second)
-                    forEach(second, key => { keys.addByKeyValue(key, true); });
+                    enumUtil.forEach(second, key => { keys.addByKeyValue(key, true); });
             }, (yielder) => {
                 throwIfDisposed(disposed);
                 while (enumerator.moveNext()) {
@@ -583,7 +624,7 @@ export class InfiniteEnumerable extends DisposableBase {
             return new EnumeratorBase(() => {
                 index = 0;
                 firstEnumerator = _.getEnumerator();
-                secondEnumerator = enumeratorFrom(second);
+                secondEnumerator = enumUtil.from(second);
             }, (yielder) => firstEnumerator.moveNext()
                 && secondEnumerator.moveNext()
                 && yielder.yieldReturn(resultSelector(firstEnumerator.current, secondEnumerator.current, index++)), () => {
@@ -613,7 +654,7 @@ export class InfiniteEnumerable extends DisposableBase {
                             if (secondTemp.count) {
                                 let next = secondTemp.dequeue();
                                 if (next)
-                                    secondEnumerator = enumeratorFrom(next);
+                                    secondEnumerator = enumUtil.from(next);
                             }
                             else
                                 return yielder.yieldBreak();
@@ -697,7 +738,7 @@ export class InfiniteEnumerable extends DisposableBase {
             }, (yielder) => {
                 while (true) {
                     while (!enumerator && queue.count) {
-                        enumerator = enumeratorFrom(queue.dequeue());
+                        enumerator = enumUtil.from(queue.dequeue());
                     }
                     if (enumerator && enumerator.moveNext())
                         return yielder.yieldReturn(enumerator.current);
@@ -736,7 +777,7 @@ export class InfiniteEnumerable extends DisposableBase {
                             return yielder.yieldReturn(current);
                         }
                     }
-                    secondEnumerator = enumeratorFrom(second);
+                    secondEnumerator = enumUtil.from(second);
                 }
                 while (secondEnumerator.moveNext()) {
                     current = secondEnumerator.current;
@@ -765,7 +806,7 @@ export class InfiniteEnumerable extends DisposableBase {
             return new EnumeratorBase(() => {
                 count = 0;
                 firstEnumerator = _.getEnumerator();
-                secondEnumerator = enumeratorFrom(other);
+                secondEnumerator = enumUtil.from(other);
                 isEnumerated = false;
             }, (yielder) => {
                 if (count == n) {
@@ -919,279 +960,6 @@ export class Enumerable extends InfiniteEnumerable {
         super(enumeratorFactory, finalizer);
         this._isEndless = isEndless;
     }
-    static from(source) {
-        var e = Enumerable.fromAny(source);
-        if (!e)
-            throw new UnsupportedEnumerableException();
-        return e;
-    }
-    static fromAny(source, defaultEnumerable) {
-        if (Type.isObject(source) || Type.isString(source)) {
-            if (source instanceof Enumerable)
-                return source;
-            if (Type.isArrayLike(source))
-                return new ArrayEnumerable(source);
-            if (isEnumerable(source))
-                return new Enumerable(() => source.getEnumerator(), null, source.isEndless);
-        }
-        return defaultEnumerable;
-    }
-    static fromOrEmpty(source) {
-        return Enumerable.fromAny(source) || Enumerable.empty();
-    }
-    static toArray(source) {
-        if (source instanceof Enumerable)
-            return source.toArray();
-        return toArray(source);
-    }
-    static choice(values) {
-        var len = values && values.length;
-        if (!len || !isFinite(len))
-            throw new ArgumentOutOfRangeException('length', length);
-        return new InfiniteEnumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(Integer.random.select(values)), true));
-    }
-    static chooseFrom(...args) {
-        return Enumerable.choice(args);
-    }
-    static cycle(values) {
-        var len = values && values.length;
-        if (!len || !isFinite(len))
-            throw new ArgumentOutOfRangeException('length', length);
-        return new InfiniteEnumerable(() => {
-            let index = 0;
-            return new EnumeratorBase(() => {
-                index = 0;
-            }, (yielder) => {
-                if (index >= values.length)
-                    index = 0;
-                return yielder.yieldReturn(values[index++]);
-            }, true);
-        });
-    }
-    static cycleThrough(...args) {
-        return Enumerable.cycle(args);
-    }
-    static empty() {
-        return new FiniteEnumerable(getEmptyEnumerator);
-    }
-    static repeat(element, count = Infinity) {
-        if (!(count > 0))
-            return Enumerable.empty();
-        return isFinite(count) && Integer.assert(count, "count")
-            ? new FiniteEnumerable(() => {
-                let c = count;
-                let index = 0;
-                return new EnumeratorBase(() => { index = 0; }, (yielder) => (index++ < c) && yielder.yieldReturn(element), null, false);
-            })
-            : new Enumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(element), true));
-    }
-    static repeatWithFinalize(initializer, finalizer) {
-        return new InfiniteEnumerable(() => {
-            let element;
-            return new EnumeratorBase(() => {
-                element = initializer();
-            }, (yielder) => yielder.yieldReturn(element), () => {
-                finalizer(element);
-            }, true);
-        });
-    }
-    static make(element) {
-        return Enumerable.repeat(element, 1);
-    }
-    static range(start, count, step = 1) {
-        if (!isFinite(start))
-            throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
-        if (!(count > 0))
-            return Enumerable.empty();
-        if (!step)
-            throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
-        if (!isFinite(step))
-            throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
-        Integer.assert(count, "count");
-        return new FiniteEnumerable(() => {
-            let value;
-            let c = count;
-            let index = 0;
-            return new EnumeratorBase(() => {
-                index = 0;
-                value = start;
-            }, (yielder) => {
-                let result = index++ < c
-                    && yielder.yieldReturn(value);
-                if (result && index < count)
-                    value += step;
-                return result;
-            }, false);
-        });
-    }
-    static rangeDown(start, count, step = 1) {
-        step = Math.abs(step) * -1;
-        return Enumerable.range(start, count, step);
-    }
-    static toInfinity(start = 0, step = 1) {
-        if (!isFinite(start))
-            throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
-        if (!step)
-            throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
-        if (!isFinite(step))
-            throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
-        return new InfiniteEnumerable(() => {
-            let value;
-            return new EnumeratorBase(() => {
-                value = start;
-            }, (yielder) => {
-                let current = value;
-                value += step;
-                return yielder.yieldReturn(current);
-            }, true);
-        });
-    }
-    static toNegativeInfinity(start = 0, step = 1) {
-        return Enumerable.toInfinity(start, -step);
-    }
-    static rangeTo(start, to, step = 1) {
-        if (isNaN(to) || !isFinite(to))
-            throw new ArgumentOutOfRangeException("to", to, "Must be a finite number.");
-        if (step && !isFinite(step))
-            throw new ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
-        step = Math.abs(step);
-        return new FiniteEnumerable(() => {
-            let value;
-            return new EnumeratorBase(() => { value = start; }, start < to
-                ?
-                    yielder => {
-                        let result = value <= to && yielder.yieldReturn(value);
-                        if (result)
-                            value += step;
-                        return result;
-                    }
-                :
-                    yielder => {
-                        let result = value >= to && yielder.yieldReturn(value);
-                        if (result)
-                            value -= step;
-                        return result;
-                    }, false);
-        });
-    }
-    static matches(input, pattern, flags = "") {
-        if (input === null || input === VOID0)
-            throw new ArgumentNullException("input");
-        var type = typeof input;
-        if (type != Type.STRING)
-            throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
-        if (pattern instanceof RegExp) {
-            flags += (pattern.ignoreCase) ? "i" : "";
-            flags += (pattern.multiline) ? "m" : "";
-            pattern = pattern.source;
-        }
-        if (flags.indexOf("g") === -1)
-            flags += "g";
-        return new FiniteEnumerable(() => {
-            let regex;
-            return new EnumeratorBase(() => {
-                regex = new RegExp(pattern, flags);
-            }, (yielder) => {
-                let match = regex.exec(input);
-                return (match !== null) ? yielder.yieldReturn(match) : false;
-            });
-        });
-    }
-    static generate(factory, count = Infinity) {
-        if (isNaN(count) || count <= 0)
-            return Enumerable.empty();
-        return isFinite(count) && Integer.assert(count, "count")
-            ?
-                new FiniteEnumerable(() => {
-                    let c = count;
-                    let index = 0;
-                    return new EnumeratorBase(() => {
-                        index = 0;
-                    }, (yielder) => {
-                        let current = index++;
-                        return current < c && yielder.yieldReturn(factory(current));
-                    }, false);
-                })
-            :
-                new InfiniteEnumerable(() => {
-                    let index = 0;
-                    return new EnumeratorBase(() => {
-                        index = 0;
-                    }, (yielder) => yielder.yieldReturn(factory(index++)), true);
-                });
-    }
-    static unfold(seed, valueFactory, skipSeed = false) {
-        return new InfiniteEnumerable(() => {
-            let index = 0;
-            let value;
-            let isFirst;
-            return new EnumeratorBase(() => {
-                index = 0;
-                value = seed;
-                isFirst = !skipSeed;
-            }, (yielder) => {
-                let i = index++;
-                if (isFirst)
-                    isFirst = false;
-                else
-                    value = valueFactory(value, i);
-                return yielder.yieldReturn(value);
-            }, true);
-        });
-    }
-    static forEach(enumerable, action, max = Infinity) {
-        return forEach(enumerable, action, max);
-    }
-    static map(enumerable, selector) {
-        return map(enumerable, selector);
-    }
-    static max(values) {
-        var v = values
-            .takeUntil(v => v == +Infinity, true)
-            .aggregate(Functions.Greater);
-        return v === VOID0 ? NaN : v;
-    }
-    static min(values) {
-        var v = values
-            .takeUntil(v => v == -Infinity, true)
-            .aggregate(Functions.Lesser);
-        return v === VOID0 ? NaN : v;
-    }
-    static weave(enumerables) {
-        if (!enumerables)
-            throw new ArgumentNullException('enumerables');
-        return new Enumerable(() => {
-            let queue;
-            let mainEnumerator;
-            let index;
-            return new EnumeratorBase(() => {
-                index = 0;
-                queue = new Queue();
-                mainEnumerator = enumeratorFrom(enumerables);
-            }, (yielder) => {
-                let e = null;
-                if (mainEnumerator) {
-                    while (!e && mainEnumerator.moveNext()) {
-                        let c = mainEnumerator.current;
-                        e = nextEnumerator(queue, c ? enumeratorFrom(c) : NULL);
-                    }
-                    if (!e)
-                        mainEnumerator = null;
-                }
-                while (!e && queue.count) {
-                    e = nextEnumerator(queue, queue.dequeue());
-                }
-                return e
-                    ? yielder.yieldReturn(e.current)
-                    : yielder.yieldBreak();
-            }, () => {
-                dispose.these(queue.dump());
-                dispose(mainEnumerator, queue);
-                mainEnumerator = null;
-                queue = NULL;
-            });
-        });
-    }
     asEnumerable() {
         const _ = this;
         _.throwIfDisposed();
@@ -1229,18 +997,20 @@ export class Enumerable extends InfiniteEnumerable {
             found = false;
         }, null);
     }
-    forEach(action) {
+    forEach(action, max = Infinity) {
         const _ = this;
         _.throwIfDisposed();
         throwIfEndless(_.isEndless);
         var index = 0;
-        using(_.getEnumerator(), e => {
-            throwIfEndless(e.isEndless);
-            while (_.throwIfDisposed() && e.moveNext()) {
-                if (action(e.current, index++) === false)
+        return max > 0 ? using(_.getEnumerator(), e => {
+            throwIfEndless(!isFinite(max) && !!e.isEndless);
+            let i = 0;
+            while (max > i && _.throwIfDisposed() && e.moveNext()) {
+                if (action(e.current, i++) === false)
                     break;
             }
-        });
+            return i;
+        }) : 0;
     }
     toArray(predicate) {
         return predicate
@@ -1252,16 +1022,16 @@ export class Enumerable extends InfiniteEnumerable {
         if (!target)
             throw new ArgumentNullException("target");
         Integer.assertZeroOrGreater(index);
-        forEach(this, (x, i) => {
+        enumUtil.forEach(this, (x, i) => {
             target[i + index] = x;
         }, count);
         return target;
     }
     toLookup(keySelector, elementSelector = Functions.Identity, compareSelector = Functions.Identity) {
         var dict = new Dictionary(compareSelector);
-        this.forEach(x => {
-            let key = keySelector(x);
-            let element = elementSelector(x);
+        this.forEach((x, i) => {
+            let key = keySelector(x, i);
+            let element = elementSelector(x, i);
             let array = dict.getValue(key);
             if (array !== VOID0)
                 array.push(element);
@@ -1343,6 +1113,7 @@ export class Enumerable extends InfiniteEnumerable {
             let index = 0;
             return new EnumeratorBase(() => {
                 throwIfDisposed(disposed);
+                _.throwIfDisposed();
                 buffer = _.toArray();
                 index = buffer.length;
             }, (yielder) => !!index && yielder.yieldReturn(buffer[--index]), () => {
@@ -1465,16 +1236,20 @@ export class Enumerable extends InfiniteEnumerable {
     }
     intersect(second, compareSelector) {
         const _ = this;
+        _.throwIfDisposed();
+        if (!second)
+            throw new ArgumentNullException("second");
         const isEndless = _.isEndless;
         return new Enumerable(() => {
             let enumerator;
             let keys;
             let outs;
             return new EnumeratorBase(() => {
+                throwIfDisposed(!second);
                 enumerator = _.getEnumerator();
                 keys = new Dictionary(compareSelector);
                 outs = new Dictionary(compareSelector);
-                forEach(second, key => {
+                enumUtil.forEach(second, key => {
                     keys.addByKeyValue(key, true);
                 });
             }, (yielder) => {
@@ -1489,10 +1264,13 @@ export class Enumerable extends InfiniteEnumerable {
             }, () => {
                 dispose(enumerator, keys, outs);
             }, isEndless);
-        }, null, isEndless);
+        }, () => {
+            second = NULL;
+        }, isEndless);
     }
     sequenceEqual(second, equalityComparer = Values.areEqual) {
-        return using(this.getEnumerator(), e1 => using(enumeratorFrom(second), e2 => {
+        this.throwIfDisposed();
+        return using(this.getEnumerator(), e1 => using(enumUtil.from(second), e2 => {
             throwIfEndless(e1.isEndless && e2.isEndless);
             while (e1.moveNext()) {
                 if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
@@ -1502,18 +1280,23 @@ export class Enumerable extends InfiniteEnumerable {
         }));
     }
     ofType(type) {
+        this.throwIfDisposed();
         return super.ofType(type);
     }
     orderBy(keySelector = Functions.Identity) {
+        this.throwIfDisposed();
         return new OrderedEnumerable(this, keySelector, 1);
     }
     orderUsing(comparison) {
+        this.throwIfDisposed();
         return new OrderedEnumerable(this, null, 1, null, comparison);
     }
     orderUsingReversed(comparison) {
+        this.throwIfDisposed();
         return new OrderedEnumerable(this, null, -1, null, comparison);
     }
     orderByDescending(keySelector = Functions.Identity) {
+        this.throwIfDisposed();
         return new OrderedEnumerable(this, keySelector, -1);
     }
     buffer(size) {
@@ -1537,6 +1320,7 @@ export class Enumerable extends InfiniteEnumerable {
             let group;
             let len;
             return new EnumeratorBase(() => {
+                throwIfDisposed(!elementSelector);
                 enumerator = _.getEnumerator();
                 if (enumerator.moveNext()) {
                     let v = enumerator.current;
@@ -1548,6 +1332,7 @@ export class Enumerable extends InfiniteEnumerable {
                 else
                     group = null;
             }, (yielder) => {
+                throwIfDisposed(!elementSelector);
                 if (!group)
                     return yielder.yieldBreak();
                 let hasNext, c;
@@ -1574,6 +1359,8 @@ export class Enumerable extends InfiniteEnumerable {
                 dispose(enumerator);
                 group = null;
             });
+        }, () => {
+            elementSelector = NULL;
         });
     }
     aggregate(func, seed) {
@@ -1606,8 +1393,8 @@ export class Enumerable extends InfiniteEnumerable {
     sum(selector = Type.numberOrNaN) {
         var sum = 0;
         var sumInfinite = 0;
-        this.forEach(x => {
-            let value = selector(x);
+        this.forEach((x, i) => {
+            let value = selector(x, i);
             if (isNaN(value)) {
                 sum = NaN;
                 return false;
@@ -1746,15 +1533,17 @@ class ArrayEnumerable extends FiniteEnumerable {
     toArray() {
         const _ = this;
         _.throwIfDisposed();
-        return toArray(_._source);
+        return enumUtil.toArray(_._source);
     }
     asEnumerable() {
+        const _ = this;
+        _.throwIfDisposed();
         return new ArrayEnumerable(this._source);
     }
     forEach(action, max = Infinity) {
         const _ = this;
         _.throwIfDisposed();
-        return forEach(_._source, action, max);
+        return enumUtil.forEach(_._source, action, max);
     }
     any(predicate) {
         const _ = this;
@@ -1795,18 +1584,21 @@ class ArrayEnumerable extends FiniteEnumerable {
     }
     skip(count) {
         const _ = this;
+        _.throwIfDisposed();
         if (!(count > 0))
             return _;
         return new Enumerable(() => new ArrayEnumerator(() => _._source, count));
     }
     takeExceptLast(count = 1) {
         const _ = this;
+        _.throwIfDisposed();
         return _.take(_._source.length - count);
     }
     skipToLast(count) {
+        const _ = this;
+        _.throwIfDisposed();
         if (!(count > 0))
             return Enumerable.empty();
-        const _ = this;
         if (!isFinite(count))
             return _;
         var len = _._source
@@ -1816,9 +1608,22 @@ class ArrayEnumerable extends FiniteEnumerable {
     }
     reverse() {
         const _ = this;
-        return new Enumerable(() => new ArrayEnumerator(() => _._source, _._source
-            ? (_._source.length - 1)
-            : 0, -1));
+        var disposed = !_.throwIfDisposed();
+        return new Enumerable(() => {
+            _.throwIfDisposed();
+            return new IndexEnumerator(() => {
+                var s = _._source;
+                throwIfDisposed(disposed || !s);
+                return {
+                    source: s,
+                    pointer: (s.length - 1),
+                    length: s.length,
+                    step: -1
+                };
+            });
+        }, () => {
+            disposed = true;
+        });
     }
     memoize() {
         return this.asEnumerable();
@@ -1854,7 +1659,7 @@ class Lookup {
         return this._dictionary.count;
     }
     get(key) {
-        return this._dictionary.getValue(key);
+        return this._dictionary.getValue(key) || null;
     }
     contains(key) {
         return this._dictionary.containsKey(key);
@@ -1871,6 +1676,7 @@ class Lookup {
             return yielder.yieldReturn(new Grouping(current.key, current.value));
         }, () => {
             dispose(enumerator);
+            enumerator = NULL;
         });
     }
 }
@@ -1885,6 +1691,7 @@ class OrderedEnumerable extends FiniteEnumerable {
         throwIfEndless(!!source && !!source.isEndless);
     }
     createOrderedEnumerable(keySelector, order) {
+        this.throwIfDisposed();
         return new OrderedEnumerable(this.source, keySelector, order, this);
     }
     thenBy(keySelector) {
@@ -1901,15 +1708,18 @@ class OrderedEnumerable extends FiniteEnumerable {
     }
     getEnumerator() {
         const _ = this;
+        _.throwIfDisposed();
         var buffer;
         var indexes;
         var index = 0;
         return new EnumeratorBase(() => {
+            _.throwIfDisposed();
             index = 0;
             buffer = Enumerable.toArray(_.source);
             indexes = createSortContext(_)
                 .generateSortedIndexes(buffer);
         }, (yielder) => {
+            _.throwIfDisposed();
             return (index < indexes.length)
                 ? yielder.yieldReturn(buffer[indexes[index++]])
                 : false;
@@ -1953,5 +1763,358 @@ function throwIfDisposed(disposed) {
     if (disposed)
         throw new ObjectDisposedException("Enumerable");
 }
+(function (Enumerable) {
+    function from(source) {
+        var e = fromAny(source);
+        if (!e)
+            throw new UnsupportedEnumerableException();
+        return e;
+    }
+    Enumerable.from = from;
+    function fromAny(source, defaultEnumerable) {
+        if (Type.isObject(source) || Type.isString(source)) {
+            if (source instanceof Enumerable)
+                return source;
+            if (Type.isArrayLike(source))
+                return new ArrayEnumerable(source);
+            if (isEnumerable(source))
+                return new Enumerable(() => source.getEnumerator(), null, source.isEndless);
+        }
+        return defaultEnumerable;
+    }
+    Enumerable.fromAny = fromAny;
+    function fromOrEmpty(source) {
+        return Enumerable.fromAny(source) || Enumerable.empty();
+    }
+    Enumerable.fromOrEmpty = fromOrEmpty;
+    function toArray(source) {
+        if (source instanceof Enumerable)
+            return source.toArray();
+        return enumUtil.toArray(source);
+    }
+    Enumerable.toArray = toArray;
+    function _choice(values) {
+        return new InfiniteEnumerable(() => new EnumeratorBase(null, (yielder) => {
+            throwIfDisposed(!values);
+            return yielder.yieldReturn(Integer.random.select(values));
+        }, true), () => {
+            values.length = 0;
+            values = NULL;
+        });
+    }
+    Enumerable._choice = _choice;
+    function choice(values) {
+        var len = values && values.length;
+        if (!len || !isFinite(len))
+            throw new ArgumentOutOfRangeException('length', length);
+        return _choice(copy(values));
+    }
+    Enumerable.choice = choice;
+    function chooseFrom(...args) {
+        if (!args.length)
+            throw new ArgumentOutOfRangeException('length', length);
+        return _choice(args);
+    }
+    Enumerable.chooseFrom = chooseFrom;
+    function _cycle(values) {
+        return new InfiniteEnumerable(() => {
+            let index = 0;
+            return new EnumeratorBase(() => {
+                index = 0;
+            }, (yielder) => {
+                throwIfDisposed(!values);
+                if (index >= values.length)
+                    index = 0;
+                return yielder.yieldReturn(values[index++]);
+            }, true);
+        }, () => {
+            values.length = 0;
+            values = NULL;
+        });
+    }
+    function cycle(values) {
+        var len = values && values.length;
+        if (!len || !isFinite(len))
+            throw new ArgumentOutOfRangeException('length', length);
+        return _cycle(copy(values));
+    }
+    Enumerable.cycle = cycle;
+    function cycleThrough(...args) {
+        if (!args.length)
+            throw new ArgumentOutOfRangeException('length', length);
+        return _cycle(args);
+    }
+    Enumerable.cycleThrough = cycleThrough;
+    function empty() {
+        return new FiniteEnumerable(getEmptyEnumerator);
+    }
+    Enumerable.empty = empty;
+    function repeat(element, count = Infinity) {
+        if (!(count > 0))
+            return Enumerable.empty();
+        return isFinite(count) && Integer.assert(count, "count")
+            ? new FiniteEnumerable(() => {
+                let c = count;
+                let index = 0;
+                return new EnumeratorBase(() => { index = 0; }, (yielder) => (index++ < c) && yielder.yieldReturn(element), null, false);
+            })
+            : new Enumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(element), true));
+    }
+    Enumerable.repeat = repeat;
+    function repeatWithFinalize(initializer, finalizer) {
+        if (!initializer)
+            throw new ArgumentNullException("initializer");
+        return new InfiniteEnumerable(() => {
+            let element;
+            return new EnumeratorBase(() => {
+                if (initializer)
+                    element = initializer();
+            }, (yielder) => {
+                return initializer
+                    ? yielder.yieldReturn(element)
+                    : yielder.yieldBreak();
+            }, () => {
+                element = NULL;
+                if (finalizer)
+                    finalizer(element);
+            }, true);
+        }, () => {
+            initializer = NULL;
+            finalizer = VOID0;
+        });
+    }
+    Enumerable.repeatWithFinalize = repeatWithFinalize;
+    function make(element) {
+        return repeat(element, 1);
+    }
+    Enumerable.make = make;
+    function range(start, count, step = 1) {
+        if (!isFinite(start))
+            throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
+        if (!(count > 0))
+            return empty();
+        if (!step)
+            throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
+        if (!isFinite(step))
+            throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+        Integer.assert(count, "count");
+        return new FiniteEnumerable(() => {
+            let value;
+            let c = count;
+            let index = 0;
+            return new EnumeratorBase(() => {
+                index = 0;
+                value = start;
+            }, (yielder) => {
+                let result = index++ < c
+                    && yielder.yieldReturn(value);
+                if (result && index < count)
+                    value += step;
+                return result;
+            }, false);
+        });
+    }
+    Enumerable.range = range;
+    function rangeDown(start, count, step = 1) {
+        step = Math.abs(step) * -1;
+        return range(start, count, step);
+    }
+    Enumerable.rangeDown = rangeDown;
+    function toInfinity(start = 0, step = 1) {
+        if (!isFinite(start))
+            throw new ArgumentOutOfRangeException("start", start, "Must be a finite number.");
+        if (!step)
+            throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
+        if (!isFinite(step))
+            throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
+        return new InfiniteEnumerable(() => {
+            let value;
+            return new EnumeratorBase(() => {
+                value = start;
+            }, (yielder) => {
+                let current = value;
+                value += step;
+                return yielder.yieldReturn(current);
+            }, true);
+        });
+    }
+    Enumerable.toInfinity = toInfinity;
+    function toNegativeInfinity(start = 0, step = 1) {
+        return toInfinity(start, -step);
+    }
+    Enumerable.toNegativeInfinity = toNegativeInfinity;
+    function rangeTo(start, to, step = 1) {
+        if (isNaN(to) || !isFinite(to))
+            throw new ArgumentOutOfRangeException("to", to, "Must be a finite number.");
+        if (step && !isFinite(step))
+            throw new ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
+        step = Math.abs(step);
+        return new FiniteEnumerable(() => {
+            let value;
+            return new EnumeratorBase(() => { value = start; }, start < to
+                ?
+                    yielder => {
+                        let result = value <= to && yielder.yieldReturn(value);
+                        if (result)
+                            value += step;
+                        return result;
+                    }
+                :
+                    yielder => {
+                        let result = value >= to && yielder.yieldReturn(value);
+                        if (result)
+                            value -= step;
+                        return result;
+                    }, false);
+        });
+    }
+    Enumerable.rangeTo = rangeTo;
+    function matches(input, pattern, flags = "") {
+        if (input === null || input === VOID0)
+            throw new ArgumentNullException("input");
+        var type = typeof input;
+        if (type != Type.STRING)
+            throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
+        if (pattern instanceof RegExp) {
+            flags += (pattern.ignoreCase) ? "i" : "";
+            flags += (pattern.multiline) ? "m" : "";
+            pattern = pattern.source;
+        }
+        if (flags.indexOf("g") === -1)
+            flags += "g";
+        return new FiniteEnumerable(() => {
+            let regex;
+            return new EnumeratorBase(() => {
+                regex = new RegExp(pattern, flags);
+            }, (yielder) => {
+                let match = regex.exec(input);
+                return (match !== null) ? yielder.yieldReturn(match) : false;
+            });
+        });
+    }
+    Enumerable.matches = matches;
+    function generate(factory, count = Infinity) {
+        if (!factory)
+            throw new ArgumentNullException("factory");
+        if (isNaN(count) || count <= 0)
+            return Enumerable.empty();
+        return isFinite(count) && Integer.assert(count, "count")
+            ?
+                new FiniteEnumerable(() => {
+                    let c = count;
+                    let index = 0;
+                    return new EnumeratorBase(() => {
+                        index = 0;
+                    }, (yielder) => {
+                        throwIfDisposed(!factory);
+                        let current = index++;
+                        return current < c && yielder.yieldReturn(factory(current));
+                    }, false);
+                }, () => {
+                    factory = NULL;
+                })
+            :
+                new InfiniteEnumerable(() => {
+                    let index = 0;
+                    return new EnumeratorBase(() => {
+                        index = 0;
+                    }, (yielder) => {
+                        throwIfDisposed(!factory);
+                        return yielder.yieldReturn(factory(index++));
+                    }, true);
+                }, () => {
+                    factory = NULL;
+                });
+    }
+    Enumerable.generate = generate;
+    function unfold(seed, valueFactory, skipSeed = false) {
+        if (!valueFactory)
+            throw new ArgumentNullException("factory");
+        return new InfiniteEnumerable(() => {
+            let index = 0;
+            let value;
+            let isFirst;
+            return new EnumeratorBase(() => {
+                index = 0;
+                value = seed;
+                isFirst = !skipSeed;
+            }, (yielder) => {
+                throwIfDisposed(!valueFactory);
+                let i = index++;
+                if (isFirst)
+                    isFirst = false;
+                else
+                    value = valueFactory(value, i);
+                return yielder.yieldReturn(value);
+            }, true);
+        }, () => {
+            valueFactory = NULL;
+        });
+    }
+    Enumerable.unfold = unfold;
+    function forEach(enumerable, action, max = Infinity) {
+        return enumUtil.forEach(enumerable, action, max);
+    }
+    Enumerable.forEach = forEach;
+    function map(enumerable, selector) {
+        return enumUtil.map(enumerable, selector);
+    }
+    Enumerable.map = map;
+    function max(values) {
+        var v = values
+            .takeUntil(v => v == +Infinity, true)
+            .aggregate(Functions.Greater);
+        return v === VOID0 ? NaN : v;
+    }
+    Enumerable.max = max;
+    function min(values) {
+        var v = values
+            .takeUntil(v => v == -Infinity, true)
+            .aggregate(Functions.Lesser);
+        return v === VOID0 ? NaN : v;
+    }
+    Enumerable.min = min;
+    function weave(enumerables) {
+        if (!enumerables)
+            throw new ArgumentNullException('enumerables');
+        var disposed = false;
+        return new Enumerable(() => {
+            let queue;
+            let mainEnumerator;
+            let index;
+            return new EnumeratorBase(() => {
+                throwIfDisposed(disposed);
+                index = 0;
+                queue = new Queue();
+                mainEnumerator = enumUtil.from(enumerables);
+            }, (yielder) => {
+                throwIfDisposed(disposed);
+                let e = null;
+                if (mainEnumerator) {
+                    while (!e && mainEnumerator.moveNext()) {
+                        let c = mainEnumerator.current;
+                        e = nextEnumerator(queue, c ? enumUtil.from(c) : NULL);
+                    }
+                    if (!e)
+                        mainEnumerator = null;
+                }
+                while (!e && queue.count) {
+                    e = nextEnumerator(queue, queue.dequeue());
+                }
+                return e
+                    ? yielder.yieldReturn(e.current)
+                    : yielder.yieldBreak();
+            }, () => {
+                dispose.these(queue.dump());
+                dispose(mainEnumerator, queue);
+                mainEnumerator = null;
+                queue = NULL;
+            });
+        }, () => {
+            disposed = true;
+        });
+    }
+    Enumerable.weave = weave;
+})(Enumerable || (Enumerable = {}));
 export default Enumerable;
 //# sourceMappingURL=Linq.js.map

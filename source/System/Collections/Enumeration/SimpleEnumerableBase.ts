@@ -13,7 +13,7 @@ import {IIteratorResult} from "./IIterator";
 import {IteratorResult} from "./IteratorResult";
 import {IEnumerator} from "./IEnumerator";
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 {
@@ -38,7 +38,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 	protected incrementIndex():number
 	{
 		let i = this._index;
-		this._index = i = i===VOID0 ? 0 : (i + 1);
+		this._index = i = isNaN(i) ? 0 : (i + 1);
 		return i;
 	}
 
@@ -53,6 +53,10 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		return this.moveNext()
 			? new IteratorResult(this._current, this._index)
 			: IteratorResult.Done;
+	}
+
+	end():void {
+		this.dispose();
 	}
 
 	'return'():IIteratorResult<void>
@@ -74,7 +78,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 	reset():void
 	{
 		this._current = VOID0;
-		this._index = VOID0;
+		this._index = NaN;
 	}
 
 	dispose():void

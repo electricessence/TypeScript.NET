@@ -6,12 +6,13 @@
 import {Type} from "../../Types";
 import {copy} from "./Utility";
 import {IArray} from "./IArray";
+import {Selector} from "../../FunctionTypes";
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 
 export interface DispatchErrorHandler
 {
-	(ex?:any, i?:number):void;
+	(ex:any, index:number):void
 }
 
 /**
@@ -36,7 +37,7 @@ export interface DispatchErrorHandler
  * @param trap
  */
 export function unsafe<T>(
-	listeners:IArray<(payload:T)=>any>,
+	listeners:IArray<Selector<T,any>>,
 	payload:T, trap?:boolean|DispatchErrorHandler):void
 {
 	if(listeners && listeners.length)
@@ -70,7 +71,7 @@ export function unsafe<T>(
  * @returns {any}
  */
 export function mapped<T,TResult>(
-	listeners:IArray<(payload:T)=>TResult>,
+	listeners:IArray<Selector<T,TResult>>,
 	payload:T, trap?:boolean|DispatchErrorHandler):TResult[]
 {
 
@@ -113,7 +114,7 @@ export function mapped<T,TResult>(
  * @param trap
  */
 export function dispatch<T>(
-	listeners:IArray<(payload:T)=>any>,
+	listeners:IArray<Selector<T,any>>,
 	payload:T, trap?:boolean|DispatchErrorHandler):void
 {
 	unsafe(copy(listeners), payload, trap);

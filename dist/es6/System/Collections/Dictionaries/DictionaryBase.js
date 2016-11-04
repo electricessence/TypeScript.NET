@@ -10,8 +10,9 @@ import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../../Exceptions/InvalidOperationException";
 import { extractKeyValue } from "../../KeyValueExtract";
 import __extendsImport from "../../../extends";
+import { KeyNotFoundException } from "../KeyNotFoundException";
 const __extends = __extendsImport;
-const VOID0 = void (0);
+const VOID0 = void 0;
 export class DictionaryBase extends CollectionBase {
     constructor(source) {
         super(source);
@@ -63,6 +64,20 @@ export class DictionaryBase extends CollectionBase {
         }
         return _.setValue(key, value);
     }
+    getAssuredValue(key) {
+        var value = this.getValue(key);
+        if (value === VOID0)
+            throw new KeyNotFoundException(`Key '${key}' not found.`);
+        return value;
+    }
+    tryGetValue(key, out) {
+        var value = this.getValue(key);
+        if (value !== VOID0) {
+            out(value);
+            return true;
+        }
+        return false;
+    }
     setValue(key, value) {
         const _ = this;
         _.assertModifiable();
@@ -78,9 +93,9 @@ export class DictionaryBase extends CollectionBase {
         return !!this._getEntry(key);
     }
     containsValue(value) {
-        var e = this.getEnumerator(), equal = areEqual;
+        var e = this.getEnumerator();
         while (e.moveNext()) {
-            if (equal(e.current, value, true)) {
+            if (areEqual(e.current, value, true)) {
                 e.dispose();
                 return true;
             }
@@ -92,9 +107,9 @@ export class DictionaryBase extends CollectionBase {
     }
     removeByValue(value) {
         const _ = this;
-        var count = 0, equal = areEqual;
+        var count = 0;
         for (let key of _.getKeys()) {
-            if (equal(_.getValue(key), value, true)) {
+            if (areEqual(_.getValue(key), value, true)) {
                 _.removeByKey(key);
                 count++;
             }
@@ -117,15 +132,18 @@ export class DictionaryBase extends CollectionBase {
     }
     getEnumerator() {
         const _ = this;
-        var ver, keys, len, i = 0;
+        _.throwIfDisposed();
+        var ver, keys, len, index = 0;
         return new EnumeratorBase(() => {
+            _.throwIfDisposed();
             ver = _._version;
             keys = _.getKeys();
             len = keys.length;
         }, (yielder) => {
+            _.throwIfDisposed();
             _.assertVersion(ver);
-            while (i < len) {
-                var key = keys[i++], value = _.getValue(key);
+            while (index < len) {
+                var key = keys[index++], value = _.getValue(key);
                 if (value !== VOID0)
                     return yielder.yieldReturn({ key: key, value: value });
             }

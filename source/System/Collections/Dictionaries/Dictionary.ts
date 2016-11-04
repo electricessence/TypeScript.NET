@@ -20,7 +20,7 @@ import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 
 export interface IHashEntry<TKey, TValue>
@@ -83,8 +83,8 @@ function getHashString(obj:any):string
 export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 {
 	// Retains the order...
-	private _entries:LinkedNodeList<IHashEntry<TKey, TValue>>;
-	private _buckets:IMap<LinkedNodeList<IHashEntry<TKey, IHashEntry<TKey, TValue>>>>;
+	private readonly _entries:LinkedNodeList<IHashEntry<TKey, TValue>>;
+	private readonly _buckets:IMap<LinkedNodeList<IHashEntry<TKey, IHashEntry<TKey, TValue>>>>;
 
 	constructor(
 		private _keyComparer:Selector<TKey,any> = Functions.Identity)
@@ -94,11 +94,17 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		this._buckets = {};
 	}
 
-	protected getCount():number
+	protected _onDispose()
 	{
-		return this._entries.unsafeCount;
+		super._onDispose();
+		(<any>this)._entries = null;
+		(<any>this)._buckets = null;
 	}
 
+	protected getCount():number
+	{
+		return this._entries && this._entries.unsafeCount || 0;
+	}
 
 	private _getBucket(
 		hash:string,
@@ -115,7 +121,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 				= bucket
 				= linkedNodeList();
 
-		return bucket;
+		return bucket || null;
 	}
 
 	private _getBucketEntry(
@@ -142,16 +148,16 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		return e && e.value;
 	}
 
-	getValue(key:TKey):TValue
+	getValue(key:TKey):TValue|undefined
 	{
 		var e = this._getEntry(key);
 		return e ? e.value : VOID0;
 	}
 
-	protected _setValueInternal(key:TKey, value:TValue):boolean
+	protected _setValueInternal(key:TKey, value:TValue|undefined):boolean
 	{
-		var _           = this,
-		    buckets     = _._buckets,
+		const _ = this;
+		var buckets     = _._buckets,
 		    entries     = _._entries,
 		    comparer    = _._keyComparer,
 		    compareKey  = comparer(key),
@@ -227,11 +233,13 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
 	{
 		const _ = this;
-		var ver:number, currentEntry:IHashEntry<TKey, TValue>|null;
+		_.throwIfDisposed();
 
+		var ver:number, currentEntry:IHashEntry<TKey, TValue>|null;
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>
 			{
+				_.throwIfDisposed();
 				ver = _._version;
 				currentEntry = _._entries.first;
 			},
@@ -239,6 +247,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 			{
 				if(currentEntry)
 				{
+					_.throwIfDisposed();
 					_.assertVersion(ver);
 					var result = {key: currentEntry.key, value: currentEntry.value};
 					currentEntry = currentEntry.next || null;
@@ -254,7 +263,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	{
 		const _ = this;
 		var result:TKey[] = [];
-		var e:any = _._entries.first;
+		var e:any = _._entries && _._entries.first;
 		while(e)
 		{
 			result.push(e.key);
@@ -267,7 +276,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	{
 		const _ = this;
 		var result:TValue[] = [];
-		var e:any = _._entries.first;
+		var e:any = _._entries && _._entries.first;
 		while(e)
 		{
 			result.push(e.value);

@@ -9,7 +9,7 @@ requirejs.config({
 	urlArgs: 't=' + (new Date()).getTime(),
 
 	paths: {
-		"QUnit": "../../node_modules" + "/qunitjs/qunit/qunit"
+		"QUnit": "./qunit"
 	},
 
 	shim: {

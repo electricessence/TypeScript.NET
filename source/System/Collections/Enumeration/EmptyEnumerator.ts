@@ -8,7 +8,7 @@ import {IEnumerator} from "./IEnumerator";
 import {IteratorResult} from "./IteratorResult";
 import {Functions} from "../../Functions";
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 
 /**
@@ -22,6 +22,7 @@ export const EmptyEnumerator:IEnumerator<any> = Object.freeze({
 	nextValue: Functions.Blank,
 	next: IteratorResult.GetDone,
 	"return": IteratorResult.GetDone,
+	end: Functions.Blank,
 	reset: Functions.Blank,
 	dispose: Functions.Blank,
 	isEndless: false

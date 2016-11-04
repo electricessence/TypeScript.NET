@@ -117,13 +117,13 @@ export function findIndex(array, predicate) {
     var len = array.length;
     if (Array.isArray(array)) {
         for (let i = 0; i < len; i++) {
-            if (predicate(array[i]))
+            if (predicate(array[i], i))
                 return i;
         }
     }
     else {
         for (let i = 0; i < len; i++) {
-            if ((i) in (array) && predicate(array[i]))
+            if ((i) in (array) && predicate(array[i], i))
                 return i;
         }
     }
@@ -140,7 +140,7 @@ export function forEach(source, action) {
 export function applyTo(target, fn) {
     if (target && fn) {
         for (let i = 0; i < target.length; i++) {
-            target[i] = fn(target[i]);
+            target[i] = fn(target[i], i);
         }
     }
 }

@@ -57,7 +57,7 @@
                 throw new InvalidOperationException_1.InvalidOperationException(CMRO);
         };
         CollectionBase.prototype.assertVersion = function (version) {
-            if (version != this._version)
+            if (version !== this._version)
                 throw new InvalidOperationException_1.InvalidOperationException("Collection was modified.");
         };
         CollectionBase.prototype._onModified = function () { };
@@ -201,6 +201,8 @@
             return found;
         };
         CollectionBase.prototype.forEach = function (action, useCopy) {
+            if (this.wasDisposed)
+                return 0;
             if (useCopy) {
                 var a = this.toArray();
                 try {
@@ -218,18 +220,23 @@
             if (index === void 0) { index = 0; }
             if (!target)
                 throw new ArgumentNullException_1.ArgumentNullException('target');
-            var count = this.getCount(), newLength = count + index;
-            if (target.length < newLength)
-                target.length = newLength;
-            var e = this.getEnumerator();
-            while (e.moveNext()) {
-                target[index++] = e.current;
+            var count = this.getCount();
+            if (count) {
+                var newLength = count + index;
+                if (target.length < newLength)
+                    target.length = newLength;
+                var e = this.getEnumerator();
+                while (e.moveNext()) {
+                    target[index++] = e.current;
+                }
             }
             return target;
         };
         CollectionBase.prototype.toArray = function () {
             var count = this.getCount();
-            return this.copyTo(count > 65536 ? new Array(count) : []);
+            return count
+                ? this.copyTo(count > 65536 ? new Array(count) : [])
+                : [];
         };
         Object.defineProperty(CollectionBase.prototype, "linq", {
             get: function () {

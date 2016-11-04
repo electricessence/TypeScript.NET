@@ -14,6 +14,11 @@ export class LinkedNodeList {
         this._first = null;
         this._last = null;
         this.unsafeCount = 0;
+        this._version = 0;
+    }
+    assertVersion(version) {
+        if (version !== this._version)
+            throw new InvalidOperationException("Collection was modified.");
     }
     get first() {
         return this._first;
@@ -30,10 +35,14 @@ export class LinkedNodeList {
         }
         return i;
     }
-    forEach(action) {
-        var current = null, next = this.first;
+    forEach(action, ignoreVersioning) {
+        const _ = this;
+        var current = null, next = _.first;
+        var version = _._version;
         var index = 0;
         do {
+            if (!ignoreVersioning)
+                _.assertVersion(version);
             current = next;
             next = current && current.next;
         } while (current
@@ -44,8 +53,8 @@ export class LinkedNodeList {
         if (!selector)
             throw new ArgumentNullException('selector');
         var result = [];
-        this.forEach(node => {
-            result.push(selector(node));
+        this.forEach((node, i) => {
+            result.push(selector(node, i));
         });
         return result;
     }
@@ -70,6 +79,7 @@ export class LinkedNodeList {
         }
         if (cF !== cL)
             console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
+        _._version++;
         _.unsafeCount = 0;
         return cF;
     }
@@ -85,9 +95,9 @@ export class LinkedNodeList {
         var next = this._first;
         var i = 0;
         while (next && i++ < index) {
-            next = next.next;
+            next = next.next || null;
         }
-        return next || null;
+        return next;
     }
     find(condition) {
         var node = null;
@@ -141,6 +151,7 @@ export class LinkedNodeList {
         }
         var removed = !a && !b;
         if (removed) {
+            _._version++;
             _.unsafeCount--;
             node.previous = null;
             node.next = null;
@@ -150,10 +161,8 @@ export class LinkedNodeList {
     addNode(node) {
         this.addNodeAfter(node);
     }
-    addNodeBefore(node, before) {
+    addNodeBefore(node, before = null) {
         assertValidDetached(node);
-        if (before === null)
-            throw new ArgumentNullException("before");
         const _ = this;
         if (!before) {
             before = _._first;
@@ -171,12 +180,11 @@ export class LinkedNodeList {
         else {
             _._first = _._last = node;
         }
+        _._version++;
         _.unsafeCount++;
     }
-    addNodeAfter(node, after) {
+    addNodeAfter(node, after = null) {
         assertValidDetached(node);
-        if (after === null)
-            throw new ArgumentNullException("after");
         const _ = this;
         if (!after) {
             after = _._last;
@@ -194,11 +202,14 @@ export class LinkedNodeList {
         else {
             _._first = _._last = node;
         }
+        _._version++;
         _.unsafeCount++;
     }
     replace(node, replacement) {
         if (node == null)
             throw new ArgumentNullException('node');
+        if (node == replacement)
+            return;
         assertValidDetached(replacement, 'replacement');
         const _ = this;
         replacement.previous = node.previous;
@@ -211,16 +222,19 @@ export class LinkedNodeList {
             _._first = replacement;
         if (node == _._last)
             _._last = replacement;
+        _._version++;
     }
     static valueEnumeratorFrom(list) {
         if (!list)
             throw new ArgumentNullException('list');
-        var current, next;
+        var current, next, version;
         return new EnumeratorBase(() => {
             current = null;
             next = list.first;
+            version = list._version;
         }, (yielder) => {
             if (next) {
+                list.assertVersion(version);
                 current = next;
                 next = current && current.next;
                 return yielder.yieldReturn(current.value);

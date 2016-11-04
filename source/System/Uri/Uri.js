@@ -18,7 +18,7 @@
     var Utility_1 = require("../Text/Utility");
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
-    var VOID0 = void (0);
+    var VOID0 = void 0;
     var Uri = (function () {
         function Uri(scheme, userInfo, host, port, path, query, fragment) {
             var _ = this;

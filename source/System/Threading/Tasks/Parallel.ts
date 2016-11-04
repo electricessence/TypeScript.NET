@@ -24,7 +24,7 @@ declare const __dirname:string;
 //noinspection JSUnusedAssignment
 const
 	MAX_WORKERS:number = 16,
-	VOID0:any          = void 0,
+	VOID0:undefined          = void 0,
 	URL                = typeof self!==Type.UNDEFINED
 		? (self.URL ? self.URL : self.webkitURL)
 		: null,

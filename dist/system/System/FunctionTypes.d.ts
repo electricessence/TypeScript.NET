@@ -5,10 +5,10 @@
 
 export interface Selector<TSource, TResult>
 {
-	(source:TSource, index?:number):TResult;
+	(source:TSource):TResult;
 }
 
-export interface SelectorIndexed<TSource, TResult>
+export interface SelectorWithIndex<TSource, TResult>
 {
 	(source:TSource, index:number):TResult;
 }
@@ -17,18 +17,17 @@ export interface Action<T> extends Selector<T, void>
 {
 }
 
+export interface ActionWithIndex<T> extends SelectorWithIndex<T, void>
+{
+}
+
 export interface Predicate<T> extends Selector<T, boolean>
 {
 }
 
-export interface ActionIndexed<T> extends SelectorIndexed<T, void>
+export interface PredicateWithIndex<T> extends SelectorWithIndex<T, boolean>
 {
 }
-
-export interface PredicateIndexed<T> extends SelectorIndexed<T, boolean>
-{
-}
-
 
 export interface Comparison<T>
 {

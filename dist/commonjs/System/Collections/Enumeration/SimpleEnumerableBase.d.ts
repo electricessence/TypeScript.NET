@@ -14,6 +14,7 @@ export declare abstract class SimpleEnumerableBase<T> implements IEnumerator<T> 
     protected incrementIndex(): number;
     nextValue(): T | undefined;
     next(): IIteratorResult<T>;
+    end(): void;
     'return'(): IIteratorResult<void>;
     'return'<TReturn>(value: TReturn): IIteratorResult<TReturn>;
     reset(): void;

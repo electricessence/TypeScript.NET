@@ -10,7 +10,7 @@ describe(".doAction(...)",()=>{
 		a.force();
 		var n = a.getEnumerator();
 		assert.ok(n.moveNext());
-		n.dispose();
+		n.end();
 		assert.ok(!n.moveNext());
 		n = a.getEnumerator();
 		assert.ok(n.moveNext());

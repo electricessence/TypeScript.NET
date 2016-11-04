@@ -5,7 +5,7 @@
  */
 import { IMap } from "../Collections/Dictionaries/IDictionary";
 import { Primitive } from "../Primitive";
-import { Selector, SelectorIndexed } from "../FunctionTypes";
+import { Selector, SelectorWithIndex } from "../FunctionTypes";
 export declare module RegexOptions {
     const IGNORE_CASE: string;
     const I: string;
@@ -29,7 +29,7 @@ export declare module RegexOptions {
 }
 export interface MatchEvaluator extends Selector<Match, Primitive> {
 }
-export interface MatchEvaluatorIndexed extends SelectorIndexed<Match, Primitive> {
+export interface MatchEvaluatorIndexed extends SelectorWithIndex<Match, Primitive> {
 }
 export declare class Regex {
     private _re;

@@ -11,50 +11,59 @@ import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 export class StringKeyDictionary<TValue>
 extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 {
 
+	protected _onDispose() {
+		super._onDispose();
+		(<any>this)._map = null;
+	}
+
 	private _count:number = 0;
-	private _map:IMap<TValue> = {};
+	private readonly _map:IMap<TValue> = {};
 
 	protected _getEntry(key:string):IKeyValuePair<string,TValue>|null
 	{
 		return !this.containsKey(key)
 			? null : {
 			key: key,
-			value: this.getValue(key)
+			value: this.getAssuredValue(key)
 		}
 	}
 
 	containsKey(key:string):boolean
 	{
-		if(key===null || key===VOID0 || !this._count) return false;
-		return (key) in (this._map);
+		return key!==null
+			&& key!==VOID0
+			&& this._count!=0
+			&& this._map[key]!==VOID0;
 	}
 
 	containsValue(value:TValue):boolean
 	{
 		if(!this._count) return false;
-		var map = this._map, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
+		var map = this._map;
 		for(let key in map)
 		{
-			if(map.hasOwnProperty(key) && equal(map[key], value))
+			if(map.hasOwnProperty(key) && areEqual(map[key], value))
 				return true;
 		}
 		return false;
 	}
 
 
-	getValue(key:string):TValue
+	getValue(key:string):TValue|undefined
 	{
-		if(key===null || key===VOID0 || !this._count) return VOID0;
-		return this._map[key];
+		return key===null || key===VOID0 || !this._count
+			? VOID0
+			: this._map[key];
 	}
 
-	protected _setValueInternal(key:string, value:TValue):boolean
+
+	protected _setValueInternal(key:string, value:TValue|undefined):boolean
 	{
 		const _ = this;
 		var map = _._map, old = map[key];

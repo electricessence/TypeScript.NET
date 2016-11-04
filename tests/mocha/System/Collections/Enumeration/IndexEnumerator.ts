@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import IndexEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/IndexEnumerator";
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 
 
 const a:{ [index:number]:number } = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4};

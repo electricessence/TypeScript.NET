@@ -13,32 +13,37 @@ export class StringKeyDictionary extends DictionaryBase {
         this._count = 0;
         this._map = {};
     }
+    _onDispose() {
+        super._onDispose();
+        this._map = null;
+    }
     _getEntry(key) {
         return !this.containsKey(key)
             ? null : {
             key: key,
-            value: this.getValue(key)
+            value: this.getAssuredValue(key)
         };
     }
     containsKey(key) {
-        if (key === null || key === VOID0 || !this._count)
-            return false;
-        return (key) in (this._map);
+        return key !== null
+            && key !== VOID0
+            && this._count != 0
+            && this._map[key] !== VOID0;
     }
     containsValue(value) {
         if (!this._count)
             return false;
-        var map = this._map, equal = areEqual;
+        var map = this._map;
         for (let key in map) {
-            if (map.hasOwnProperty(key) && equal(map[key], value))
+            if (map.hasOwnProperty(key) && areEqual(map[key], value))
                 return true;
         }
         return false;
     }
     getValue(key) {
-        if (key === null || key === VOID0 || !this._count)
-            return VOID0;
-        return this._map[key];
+        return key === null || key === VOID0 || !this._count
+            ? VOID0
+            : this._map[key];
     }
     _setValueInternal(key, value) {
         const _ = this;

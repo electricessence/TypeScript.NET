@@ -13,7 +13,14 @@ import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeList} from "./ILinkedList";
 import {IEnumerator} from "./Enumeration/IEnumerator";
-import {Predicate, Selector, Action} from "../FunctionTypes";
+import {
+	Predicate,
+	Selector,
+	Action,
+	PredicateWithIndex,
+	ActionWithIndex,
+	SelectorWithIndex
+} from "../FunctionTypes";
 import {IArray} from "./Array/IArray";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -51,8 +58,16 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		this._first = null;
 		this._last = null;
 		this.unsafeCount = 0;
+		this._version = 0;
 	}
 
+	private _version:number;
+
+	assertVersion(version:number):void
+	{
+		if(version!==this._version)
+			throw new InvalidOperationException("Collection was modified.");
+	}
 
 	/**
 	 * The first node.  Will be null if the collection is empty.
@@ -93,13 +108,24 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	// Note, no need for 'useCopy' since this avoids any modification conflict.
 	// If iterating over a copy is necessary, a copy should be made manually.
 	forEach(
-		action:Predicate<TNode> | Action<TNode>):number
+		action:Action<TNode>, ignoreVersioning?:boolean):number
+	forEach(
+		action:Predicate<TNode>, ignoreVersioning?:boolean):number
+	forEach(
+		action:ActionWithIndex<TNode>, ignoreVersioning?:boolean):number
+	forEach(
+		action:PredicateWithIndex<TNode>, ignoreVersioning?:boolean):number
+	forEach(
+		action:ActionWithIndex<TNode> | PredicateWithIndex<TNode>, ignoreVersioning?:boolean):number
 	{
+		const _ = this;
 		var current:TNode|null|undefined = null,
-		    next:TNode|null|undefined    = this.first; // Be sure to track the next node so if current node is removed.
+		    next:TNode|null|undefined    = _.first; // Be sure to track the next node so if current node is removed.
 
+		var version = _._version;
 		var index:number = 0;
 		do {
+			if(!ignoreVersioning) _.assertVersion(version);
 			current = next;
 			next = current && current.next;
 		}
@@ -110,13 +136,15 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	}
 
 	map<T>(selector:Selector<TNode,T>):T[]
+	map<T>(selector:SelectorWithIndex<TNode,T>):T[]
+	map<T>(selector:SelectorWithIndex<TNode,T>):T[]
 	{
 		if(!selector) throw new ArgumentNullException('selector');
 
 		var result:T[] = [];
-		this.forEach(node=>
+		this.forEach((node, i)=>
 		{
-			result.push(selector(node));
+			result.push(selector(node, i));
 		});
 		return result;
 	}
@@ -156,6 +184,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 		if(cF!==cL) console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
 
+		_._version++;
 		_.unsafeCount = 0;
 
 		return cF;
@@ -189,19 +218,21 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(index<0)
 			return null;
 
-		var next:TNode|null|undefined = this._first;
+		var next = this._first;
 
 		var i:number = 0;
 		while(next && i++<index)
 		{
-			next = next.next;
+			next = next.next || null;
 		}
 
-		return next || null;
+		return next;
 
 	}
 
 	find(condition:Predicate<TNode>):TNode|null
+	find(condition:PredicateWithIndex<TNode>):TNode|null
+	find(condition:PredicateWithIndex<TNode>):TNode|null
 	{
 		var node:TNode|null = null;
 		this.forEach((n, i)=>
@@ -298,6 +329,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		var removed = !a && !b;
 		if(removed)
 		{
+			_._version++;
 			_.unsafeCount--;
 			node.previous = null;
 			node.next = null;
@@ -322,16 +354,15 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 * @param node
 	 * @param before
 	 */
-	addNodeBefore(node:TNode, before?:TNode):void
+	addNodeBefore(node:TNode, before:TNode|null = null):void
 	{
 		assertValidDetached(node);
-		if(before===null) throw new ArgumentNullException("before");
 
 		const _ = this;
 
 		if(!before)
 		{
-			before = <any>_._first;
+			before = _._first;
 		}
 
 		if(before)
@@ -349,6 +380,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			_._first = _._last = node;
 		}
 
+		_._version++;
 		_.unsafeCount++;
 	}
 
@@ -358,16 +390,14 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	 * @param node
 	 * @param after
 	 */
-	addNodeAfter(node:TNode, after?:TNode):void
+	addNodeAfter(node:TNode, after:TNode|null = null):void
 	{
 		assertValidDetached(node);
-		if(after===null) throw new ArgumentNullException("after");
-
 		const _ = this;
 
 		if(!after)
 		{
-			after = <any>_._last;
+			after = _._last;
 		}
 
 		if(after)
@@ -385,6 +415,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			_._first = _._last = node;
 		}
 
+		_._version++;
 		_.unsafeCount++;
 
 	}
@@ -400,6 +431,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(node==null)
 			throw new ArgumentNullException('node');
 
+		if(node==replacement) return;
+
 		assertValidDetached(replacement, 'replacement');
 
 		const _ = this;
@@ -411,6 +444,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 		if(node==_._first) _._first = replacement;
 		if(node==_._last) _._last = replacement;
+
+		_._version++;
 	}
 
 	static valueEnumeratorFrom<T>(list:LinkedNodeList<ILinkedNodeWithValue<T>>):IEnumerator<T>
@@ -419,7 +454,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(!list) throw new ArgumentNullException('list');
 
 		var current:ILinkedNodeWithValue<T>|null|undefined,
-		    next:ILinkedNodeWithValue<T>|null|undefined;
+		    next:ILinkedNodeWithValue<T>|null|undefined,
+		    version:number;
 
 		return new EnumeratorBase<T>(
 			() =>
@@ -427,12 +463,14 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 				// Initialize anchor...
 				current = null;
 				next = list.first;
+				version = list._version;
 			},
 			(yielder)=>
 			{
-
 				if(next)
 				{
+					list.assertVersion(version);
+
 					current = next;
 					next = current && current.next;
 					return yielder.yieldReturn(current.value);

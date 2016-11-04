@@ -6,7 +6,7 @@ import { DisposableBase } from "../Disposable/DisposableBase";
 import { ICollection } from "./ICollection";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
-import { EqualityComparison, Predicate, Action } from "../FunctionTypes";
+import { EqualityComparison, Predicate, Action, PredicateWithIndex, ActionWithIndex } from "../FunctionTypes";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { IArray } from "./Array/IArray";
 import { ILinqEnumerable } from "../../System.Linq/Enumerable";
@@ -38,10 +38,13 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
     importEntries(entries: IEnumerableOrArray<T> | null | undefined): number;
     abstract getEnumerator(): IEnumerator<T>;
     contains(entry: T): boolean;
-    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
+    forEach(action: Action<T>, useCopy?: boolean): number;
+    forEach(action: Predicate<T>, useCopy?: boolean): number;
+    forEach(action: ActionWithIndex<T>, useCopy?: boolean): number;
+    forEach(action: PredicateWithIndex<T>, useCopy?: boolean): number;
     copyTo<TTarget extends IArray<T>>(target: TTarget, index?: number): TTarget;
     toArray(): T[];
-    private _linq;
+    private _linq?;
     readonly linq: ILinqEnumerable<T>;
-    linqAsync(callback?: (linq: ILinqEnumerable<T>) => void): ILinqEnumerable<T> | undefined;
+    linqAsync(callback?: Action<ILinqEnumerable<T>>): ILinqEnumerable<T> | undefined;
 }

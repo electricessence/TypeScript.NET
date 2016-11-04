@@ -7,7 +7,7 @@ import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArr
 import {IEnumerator} from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
 import assert = require("assert");
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 
 describe(".from(source)",()=>{
 

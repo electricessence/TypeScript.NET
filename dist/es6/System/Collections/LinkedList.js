@@ -30,7 +30,7 @@ function ensureExternal(node, list) {
     var external = node.external;
     if (!external)
         node.external = external = new LinkedListNode(list, node);
-    return external;
+    return external || null;
 }
 function getInternal(node, list) {
     if (!node)
@@ -57,9 +57,14 @@ function detachExternal(node) {
 export class LinkedList extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(VOID0, equalityComparer);
-        const _ = this;
-        _._listInternal = new LinkedNodeList();
-        _._importEntries(source);
+        this._listInternal = new LinkedNodeList();
+        this._importEntries(source);
+    }
+    assertVersion(version) {
+        if (this._listInternal)
+            this._listInternal.assertVersion(version);
+        else
+            super.assertVersion(version);
     }
     _onDispose() {
         super._onDispose();
@@ -81,7 +86,7 @@ export class LinkedList extends CollectionBase {
             if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                 removedCount++;
             return removedCount < max;
-        });
+        }, true);
         return removedCount;
     }
     _clearInternal() {
@@ -241,11 +246,12 @@ class LinkedListNode {
         this._list.addAfter(this, entry);
     }
     remove() {
-        var list = this._list;
+        const _ = this;
+        var list = _._list;
         if (list)
             list.removeNode(this);
-        this._list = VOID0;
-        this._nodeInternal = VOID0;
+        _._list = VOID0;
+        _._nodeInternal = VOID0;
     }
     dispose() {
         this.remove();

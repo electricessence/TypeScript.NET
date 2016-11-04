@@ -27,6 +27,11 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	reset():void;
 
 	/**
+	 * Interrupts/completes the enumeration.
+	 */
+	end():void;
+
+	/**
 	 * Calls .moveNext() and returns .current
 	 */
 	nextValue(value?:any):T|undefined;

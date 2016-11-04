@@ -10,7 +10,7 @@ import { UnsupportedEnumerableException } from "./UnsupportedEnumerableException
 import { InfiniteEnumerator } from "./InfiniteEnumerator";
 import { EmptyEnumerator as Empty } from "./EmptyEnumerator";
 import { IteratorEnumerator } from "./IteratorEnumerator";
-const VOID0 = void (0);
+const VOID0 = void 0;
 const STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
     'Would result in an infinite loop that could hang the current process.';
 export function throwIfEndless(isEndless) {
@@ -121,7 +121,7 @@ export function map(source, selector, max = Infinity) {
     if (!isFinite(max) && Array.isArray(source))
         return source.map(selector);
     var result = initArrayFrom(source, max);
-    if (-1 === forEach(source, (e, i) => { result[i] = selector(e); }, max))
+    if (-1 === forEach(source, (e, i) => { result[i] = selector(e, i); }, max))
         throw new UnsupportedEnumerableException();
     return result;
 }

@@ -117,9 +117,11 @@ export class Queue extends CollectionBase {
         return super.forEach(action, true);
     }
     setCapacity(capacity) {
-        assertIntegerZeroOrGreater(capacity, "capacity");
         const _ = this;
+        assertIntegerZeroOrGreater(capacity, "capacity");
         var array = _._array, len = _._capacity;
+        if (capacity > len)
+            _.throwIfDisposed();
         if (capacity == len)
             return;
         var head = _._head, tail = _._tail, size = _._size;
@@ -198,13 +200,16 @@ export class Queue extends CollectionBase {
     }
     getEnumerator() {
         const _ = this;
-        var index, version;
+        _.throwIfDisposed();
+        var index, version, size;
         return new EnumeratorBase(() => {
             version = _._version;
+            size = _._size;
             index = 0;
         }, (yielder) => {
+            _.throwIfDisposed();
             _.assertVersion(version);
-            if (index == _._size)
+            if (index == size)
                 return yielder.yieldBreak();
             return yielder.yieldReturn(_._getElement(index++));
         });

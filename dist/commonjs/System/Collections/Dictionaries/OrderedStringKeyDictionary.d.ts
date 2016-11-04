@@ -8,9 +8,9 @@ export declare class OrderedStringKeyDictionary<TValue> extends StringKeyDiction
     private _order;
     constructor();
     indexOfKey(key: string): number;
-    getValueByIndex(index: number): TValue;
-    setValue(key: string, value: TValue, keepIndex?: boolean): boolean;
-    setByIndex(index: number, value: TValue): boolean;
+    getValueByIndex(index: number): TValue | undefined;
+    setValue(key: string, value: TValue | undefined, keepIndex?: boolean): boolean;
+    setByIndex(index: number, value: TValue | undefined): boolean;
     importValues(values: TValue[]): boolean;
     setValues(...values: TValue[]): boolean;
     removeByIndex(index: number): boolean;

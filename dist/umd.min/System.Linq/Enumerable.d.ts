@@ -1,290 +1,275 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
+import {IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
 import {
 	Action,
 	Predicate,
 	Selector,
 	EqualityComparison,
 	Comparison,
-	Closure
+	Closure,
+	ActionWithIndex,
+	PredicateWithIndex,
+	SelectorWithIndex
 } from "../System/FunctionTypes";
 import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";
 import {IArray} from "../System/Collections/Array/IArray";
 import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
+import {EnumerableAction} from "./EnumerableAction";
 import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
 import {IDisposable} from "../System/Disposable/IDisposable";
 
-/**
- * Defined values for doAction.
- */
-export const enum EnumerableAction
-{
-	Break  = 0,
-	Return = 1,
-	Skip   = 2
-}
-
 export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 {
+	getEnumerator():IEnumerator<T>;
 	asEnumerable():this;
-
 	doAction(
 		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
-		initializer?:Closure,
-		isEndless?:boolean|null|undefined):this;
-
+		initializer?:Closure | null, isEndless?:boolean | null | undefined):this;
+	doAction(
+		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
+		initializer?:Closure | null, isEndless?:boolean | null | undefined):this;
 	force():void;
-
 	skip(count:number):this;
-
 	take(count:number):IFiniteEnumerable<T>;
-
 	elementAt(index:number):T;
-
-	elementAtOrDefault(index:number, defaultValue?:T):T|undefined;
-
+	elementAtOrDefault(index:number):T | undefined;
+	elementAtOrDefault(index:number, defaultValue:T):T;
 	first():T;
-
-	firstOrDefault(defaultValue?:T):T|undefined;
-
+	firstOrDefault():T | undefined;
+	firstOrDefault(defaultValue:T):T;
 	single():T;
-
-	singleOrDefault(defaultValue?:T):T|undefined;
-
+	singleOrDefault():T | undefined;
+	singleOrDefault(defaultValue:T):T;
 	any():boolean;
-
 	isEmpty():boolean;
-
 	traverseBreadthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
 	traverseBreadthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
 	traverseBreadthFirst<TResult>(
 		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
-		resultSelector?:(element:T, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
+		resultSelector:Selector<T, TResult>):ILinqEnumerable<TResult>;
+	traverseBreadthFirst<TResult>(
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
+		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	traverseBreadthFirst<TNode, TResult>(
 		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
-		resultSelector?:(element:TNode, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
-
+		resultSelector:Selector<T, TResult>):ILinqEnumerable<TResult>;
+	traverseBreadthFirst<TNode, TResult>(
+		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
+		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	traverseDepthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
 	traverseDepthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
 	traverseDepthFirst<TResult>(
 		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
-		resultSelector?:(element:T, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
+		resultSelector:Selector<T, TResult>):ILinqEnumerable<TResult>;
+	traverseDepthFirst<TResult>(
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
+		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	traverseDepthFirst<TNode, TResult>(
 		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
-		resultSelector?:(element:TNode, nestLevel?:number) => TResult):ILinqEnumerable<TResult>;
-
+		resultSelector:Selector<T, TResult>):ILinqEnumerable<TResult>;
+	traverseDepthFirst<TNode, TResult>(
+		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
+		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	flatten():ILinqEnumerable<any>;
-
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):ILinqEnumerable<TSelect>;
-
 	scan(func:(a:T, b:T) => T, seed?:T):this;
-
 	select<TResult>(selector:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
-
+	select<TResult>(selector:SelectorWithIndex<T, TResult>):IInfiniteEnumerable<TResult>;
 	selectMany<TResult>(collectionSelector:Selector<T, IEnumerableOrArray<TResult> | null | undefined>):IInfiniteEnumerable<TResult>;
 	selectMany<TElement, TResult>(
 		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
-		resultSelector:(
-			collection:T,
-			element:TElement) => TResult):IInfiniteEnumerable<TResult>;
-
+		resultSelector:(collection:T, element:TElement) => TResult):IInfiniteEnumerable<TResult>;
+	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TResult> | null | undefined>):IInfiniteEnumerable<TResult>;
+	selectMany<TElement, TResult>(
+		collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TElement> | null | undefined>,
+		resultSelector:(collection:T, element:TElement) => TResult):IInfiniteEnumerable<TResult>;
 	choose():IInfiniteEnumerable<T>;
 	choose<TResult>(selector?:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
-
-	where(predicate:Predicate<T>):this
-
+	where(predicate:Predicate<T>):this;
+	where(predicate:PredicateWithIndex<T>):this;
 	ofType<TType>(
 		type:{
 			new (...params:any[]):TType;
 		}):IInfiniteEnumerable<TType>;
-
-	except<TCompare>(
-		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):this
-
-	distinct(compareSelector?:(value:T) => T):this
-
-	distinctUntilChanged<TCompare>(compareSelector?:Selector<T, TCompare>):this
-
-	defaultIfEmpty(defaultValue?:T):this
-
+	except<TCompare>(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, TCompare>):this;
+	distinct(compareSelector?:(value:T) => T):this;
+	distinctUntilChanged<TCompare>(compareSelector?:Selector<T, TCompare>):this;
+	defaultIfEmpty(defaultValue?:T):this;
 	zip<TSecond, TResult>(
 		second:IEnumerableOrArray<TSecond>,
-		resultSelector:(
-			first:T,
-			second:TSecond,
-			index?:number) => TResult):ILinqEnumerable<TResult>;
-
+		resultSelector:(first:T, second:TSecond) => TResult):ILinqEnumerable<TResult>;
+	zip<TSecond, TResult>(
+		second:IEnumerableOrArray<TSecond>,
+		resultSelector:(first:T, second:TSecond, index:number) => TResult):ILinqEnumerable<TResult>;
 	zipMultiple<TSecond, TResult>(
 		second:IArray<IEnumerableOrArray<TSecond>>,
-		resultSelector:(
-			first:T,
-			second:TSecond,
-			index?:number) => TResult):ILinqEnumerable<TResult>;
-
+		resultSelector:(first:T, second:TSecond) => TResult):ILinqEnumerable<TResult>;
+	zipMultiple<TSecond, TResult>(
+		second:IArray<IEnumerableOrArray<TSecond>>,
+		resultSelector:(first:T, second:TSecond, index:number) => TResult):ILinqEnumerable<TResult>;
 	join<TInner, TKey, TResult, TCompare>(
 		inner:IEnumerableOrArray<TInner>,
-		outerKeySelector:Selector<T, TKey>,
-		innerKeySelector:Selector<TInner, TKey>,
+		outerKeySelector:Selector<T, TKey>, innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<TResult>;
-
 	groupJoin<TInner, TKey, TResult, TCompare>(
 		inner:IEnumerableOrArray<TInner>,
-		outerKeySelector:Selector<T, TKey>,
-		innerKeySelector:Selector<TInner, TKey>,
-		resultSelector:(outer:T, inner:TInner[]) => TResult,
+		outerKeySelector:Selector<T, TKey>, innerKeySelector:Selector<TInner, TKey>,
+		resultSelector:(outer:T, inner:TInner[] | null) => TResult,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<TResult>;
-
-	merge(enumerables:IArray<IEnumerableOrArray<T>>):this
-
-	concat(...enumerables:Array<IEnumerableOrArray<T>>):this
-
-	union<TCompare>(
-		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):this
-
+	merge(enumerables:IArray<IEnumerableOrArray<T>>):this;
+	concat(...enumerables:Array<IEnumerableOrArray<T>>):this;
+	union<TCompare>(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, TCompare>):this;
 	insertAt(index:number, other:IEnumerableOrArray<T>):this;
-
 	alternateMultiple(sequence:IEnumerableOrArray<T>):this;
-
 	alternateSingle(value:T):this;
-
 	alternate(...sequence:T[]):this;
-
 	catchError(handler:(e:any) => void):this;
-
 	finallyAction(action:Closure):this;
-
 	buffer(size:number):IInfiniteEnumerable<T[]>;
-
 	share():this;
 }
 export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 {
 
-
 	skipWhile(predicate:Predicate<T>):this;
-
+	skipWhile(predicate:PredicateWithIndex<T>):this;
 	takeWhile(predicate:Predicate<T>):this;
-
+	takeWhile(predicate:PredicateWithIndex<T>):this;
 	takeUntil(predicate:Predicate<T>, includeUntilValue?:boolean):this;
-
-	forEach(action:Predicate<T> | Action<T>):void;
-
+	takeUntil(predicate:PredicateWithIndex<T>, includeUntilValue?:boolean):this;
+	forEach(action:Action<T>, max?:number):number;
+	forEach(action:Predicate<T>, max?:number):number;
+	forEach(action:ActionWithIndex<T>, max?:number):number;
+	forEach(action:PredicateWithIndex<T>, max?:number):number;
 	toArray(predicate?:Predicate<T>):T[];
-
+	toArray(predicate?:PredicateWithIndex<T>):T[];
 	copyTo(target:T[], index?:number, count?:number):T[];
-
 	toLookup<TKey, TValue, TCompare>(
 		keySelector:Selector<T, TKey>,
-		elementSelector?:Selector<T, TValue>,
+		elementSelector:Selector<T, TValue>,
 		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>;
-
+	toLookup<TKey, TValue, TCompare>(
+		keySelector:Selector<T, TKey>,
+		elementSelector:SelectorWithIndex<T, TValue>,
+		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>;
+	toLookup<TKey, TValue, TCompare>(
+		keySelector:SelectorWithIndex<T, TKey>,
+		elementSelector:Selector<T, TValue>,
+		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>;
+	toLookup<TKey, TValue, TCompare>(
+		keySelector:SelectorWithIndex<T, TKey>,
+		elementSelector?:SelectorWithIndex<T, TValue>,
+		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>;
 	toMap<TResult>(
 		keySelector:Selector<T, string>,
 		elementSelector:Selector<T, TResult>):IMap<TResult>;
-
 	toDictionary<TKey, TValue, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TValue>,
+		keySelector:SelectorWithIndex<T, TKey> | Selector<T, TKey>,
+		elementSelector:SelectorWithIndex<T, TValue> | Selector<T, TValue>,
 		compareSelector?:Selector<TKey, TCompare>):IDictionary<TKey, TValue>;
-
 	toJoinedString(separator?:string, selector?:Selector<T, string>):string;
-
 	takeExceptLast(count?:number):this;
-
 	skipToLast(count:number):this;
-
 	select<TResult>(selector:Selector<T, TResult>):ILinqEnumerable<TResult>;
-
-	selectMany<TResult>(collectionSelector:Selector<T, IEnumerableOrArray<TResult>>):ILinqEnumerable<TResult>;
+	select<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
+	selectMany<TResult>(collectionSelector:Selector<T, IEnumerableOrArray<TResult> | null | undefined>):ILinqEnumerable<TResult>;
 	selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TElement>>,
+		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
 		resultSelector:(collection:T, element:TElement) => TResult):ILinqEnumerable<TResult>;
-
+	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TResult> | null | undefined>):ILinqEnumerable<TResult>;
+	selectMany<TElement, TResult>(
+		collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TElement> | null | undefined>,
+		resultSelector:(collection:T, element:TElement) => TResult):ILinqEnumerable<TResult>;
 	choose():ILinqEnumerable<T>;
-	choose<TResult>(selector?:Selector<T, TResult>):ILinqEnumerable<TResult>;
-
+	choose<TResult>(selector:Selector<T, TResult>):ILinqEnumerable<TResult>;
+	choose<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	reverse():this;
-
 	shuffle():this;
-
-	count(predicate?:Predicate<T>):number;
-
+	count(predicate:Predicate<T>):number;
+	count(predicate?:PredicateWithIndex<T>):number;
 	all(predicate:Predicate<T>):boolean;
-
+	all(predicate:PredicateWithIndex<T>):boolean;
 	every(predicate:Predicate<T>):boolean;
-
-	any(predicate?:Predicate<T>):boolean;
-
+	every(predicate:PredicateWithIndex<T>):boolean;
+	any(predicate:Predicate<T>):boolean;
+	any(predicate?:PredicateWithIndex<T>):boolean;
 	some(predicate:Predicate<T>):boolean;
-
+	some(predicate?:PredicateWithIndex<T>):boolean;
 	contains<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):boolean;
-
-	indexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number;
-
-	lastIndexOf<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):number;
-
-	intersect<TCompare>(
-		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):this;
-
+	indexOf<TCompare>(value:T, compareSelector:Selector<T, TCompare>):number;
+	indexOf<TCompare>(value:T, compareSelector?:SelectorWithIndex<T, TCompare>):number;
+	lastIndexOf<TCompare>(value:T, compareSelector:Selector<T, TCompare>):number;
+	lastIndexOf<TCompare>(value:T, compareSelector?:SelectorWithIndex<T, TCompare>):number;
+	intersect<TCompare>(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, TCompare>):this;
 	sequenceEqual(second:IEnumerableOrArray<T>, equalityComparer?:EqualityComparison<T>):boolean;
-
 	ofType<TType>(
 		type:{
 			new (...params:any[]):TType;
 		}):ILinqEnumerable<TType>;
-
-	except<TCompare>(
-		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):this;
-
 	orderBy<TKey extends Comparable>(keySelector?:Selector<T, TKey>):IOrderedEnumerable<T>;
-
 	orderUsing(comparison:Comparison<T>):IOrderedEnumerable<T>;
-
 	orderUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T>;
-
 	orderByDescending<TKey extends Comparable>(keySelector?:Selector<T, TKey>):IOrderedEnumerable<T>;
-
 	buffer(size:number):ILinqEnumerable<T[]>;
-
 	groupBy<TKey>(keySelector:Selector<T, TKey>):ILinqEnumerable<IGrouping<TKey, T>>;
+	groupBy<TKey>(keySelector:SelectorWithIndex<T, TKey>):ILinqEnumerable<IGrouping<TKey, T>>;
 	groupBy<TKey, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector?:Selector<T, T>,
+		keySelector:Selector<T, TKey>, elementSelector:Selector<T, T>,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, T>>;
-
+	groupBy<TKey, TCompare>(
+		keySelector:Selector<T, TKey>, elementSelector:SelectorWithIndex<T, T>,
+		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, T>>;
+	groupBy<TKey, TCompare>(
+		keySelector:SelectorWithIndex<T, TKey>, elementSelector:Selector<T, T>,
+		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, T>>;
+	groupBy<TKey, TCompare>(
+		keySelector:SelectorWithIndex<T, TKey>,
+		elementSelector:SelectorWithIndex<T, T>,
+		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, T>>;
+	groupBy<TKey, TElement, TCompare>(
+		keySelector:Selector<T, TKey>,
+		elementSelector:Selector<T, TElement>,
+		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, TElement>>;
+	groupBy<TKey, TElement, TCompare>(
+		keySelector:Selector<T, TKey>,
+		elementSelector:SelectorWithIndex<T, TElement>,
+		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, TElement>>;
+	groupBy<TKey, TElement, TCompare>(
+		keySelector:SelectorWithIndex<T, TKey>,
+		elementSelector:Selector<T, TElement>,
+		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, TElement>>;
+	groupBy<TKey, TElement, TCompare>(
+		keySelector:SelectorWithIndex<T, TKey>,
+		elementSelector:SelectorWithIndex<T, TElement>,
+		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, TElement>>;
 	partitionBy<TKey>(keySelector:Selector<T, TKey>):ILinqEnumerable<IGrouping<TKey, T>>;
 	partitionBy<TKey, TElement, TCompare>(
 		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TElement>,
+		elementSelector?:Selector<T, TElement>,
 		resultSelector?:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<IGrouping<TKey, TElement>>;
-
-	aggregate(func:(a:T, b:T) => T, seed?:T):T|undefined;
-
-	average(selector?:Selector<T, number>):number;
-
-	max():T|undefined;
-
-	min():T|undefined;
-
-	maxBy<TCompare>(keySelector?:Selector<T, TCompare>):T|undefined;
-
-	minBy<TCompare>(keySelector?:Selector<T, TCompare>):T|undefined;
-
-	sum(selector?:Selector<T, number>):number;
-
-	product(selector?:Selector<T, number>):number;
-
-	quotient(selector?:Selector<T, number>):number;
-
+	aggregate(func:(a:T, b:T) => T, seed?:T):T | undefined;
+	average(selector:Selector<T, number>):number;
+	average(selector?:SelectorWithIndex<T, number>):number;
+	max():T | undefined;
+	min():T | undefined;
+	maxBy<TCompare>(keySelector?:Selector<T, TCompare>):T | undefined;
+	minBy<TCompare>(keySelector?:Selector<T, TCompare>):T | undefined;
+	sum(selector:Selector<T, number>):number;
+	sum(selector?:SelectorWithIndex<T, number>):number;
+	product(selector:Selector<T, number>):number;
+	product(selector?:SelectorWithIndex<T, number>):number;
+	quotient(selector:Selector<T, number>):number;
+	quotient(selector?:SelectorWithIndex<T, number>):number;
 	last():T;
-
-	lastOrDefault(defaultValue?:T):T|undefined;
-
+	lastOrDefault():T | undefined;
+	lastOrDefault(defaultValue:T):T;
 	memoize():this;
 }
 export interface IFiniteEnumerable<T> extends ILinqEnumerable<T>
@@ -298,7 +283,7 @@ export interface IGrouping<TKey, TElement> extends ILinqEnumerable<TElement>
 export interface ILookup<TKey, TElement> extends IEnumerable<IGrouping<TKey, TElement>>
 {
 	count:number;
-	get(key:TKey):TElement[];
+	get(key:TKey):TElement[]|null;
 	contains(key:TKey):boolean;
 }
 export interface IOrderedEnumerable<T> extends IFiniteEnumerable<T>

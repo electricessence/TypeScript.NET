@@ -11,7 +11,7 @@ var UnsupportedEnumerableException_1 = require("./UnsupportedEnumerableException
 var InfiniteEnumerator_1 = require("./InfiniteEnumerator");
 var EmptyEnumerator_1 = require("./EmptyEnumerator");
 var IteratorEnumerator_1 = require("./IteratorEnumerator");
-var VOID0 = void (0);
+var VOID0 = void 0;
 var STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
     'Would result in an infinite loop that could hang the current process.';
 function throwIfEndless(isEndless) {
@@ -134,7 +134,7 @@ function map(source, selector, max) {
     if (!isFinite(max) && Array.isArray(source))
         return source.map(selector);
     var result = initArrayFrom(source, max);
-    if (-1 === forEach(source, function (e, i) { result[i] = selector(e); }, max))
+    if (-1 === forEach(source, function (e, i) { result[i] = selector(e, i); }, max))
         throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
     return result;
 }

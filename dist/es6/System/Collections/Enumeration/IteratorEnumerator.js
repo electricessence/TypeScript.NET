@@ -5,7 +5,6 @@
 import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
 import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
-const VOID0 = void 0;
 export class IteratorEnumerator extends SimpleEnumerableBase {
     constructor(_iterator, _isEndless) {
         super();
@@ -30,7 +29,7 @@ export class IteratorEnumerator extends SimpleEnumerableBase {
     }
     dispose() {
         super.dispose();
-        this._iterator = VOID0;
+        this._iterator = null;
     }
     getIsEndless() {
         return !!this._isEndless && super.getIsEndless();

@@ -16,7 +16,7 @@ import {Closure} from "../../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 
 var yielderPool:ObjectPool<Yielder<any>>;
 function yielder():Yielder<any>;
@@ -33,7 +33,7 @@ function yielder(recycle?:Yielder<any>):Yielder<any>|void
 class Yielder<T> implements IYield<T>, IDisposable
 {
 	private _current:T|undefined = VOID0;
-	private _index:number;
+	private _index:number = NaN;
 
 	get current():T|undefined { return this._current; } // this class is not entirely local/private.  Still needs protection.
 
@@ -42,7 +42,7 @@ class Yielder<T> implements IYield<T>, IDisposable
 	yieldReturn(value:T):boolean
 	{
 		this._current = value;
-		if(this._index===VOID0)
+		if(isNaN(this._index))
 			this._index = 0;
 		else
 			this._index++;
@@ -52,7 +52,7 @@ class Yielder<T> implements IYield<T>, IDisposable
 	yieldBreak():boolean
 	{
 		this._current = VOID0;
-		this._index = VOID0;
+		this._index = NaN;
 		return false;
 	}
 
@@ -63,7 +63,7 @@ class Yielder<T> implements IYield<T>, IDisposable
 }
 
 // IEnumerator State
-enum EnumeratorState { Before, Running, After }
+enum EnumeratorState { Before, Running, Completed, Faulted, Interrupted, Disposed }
 
 // "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
@@ -136,9 +136,25 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		if(y) yielder(y); // recycle until actually needed.
 	}
 
+	private _assertBadState() {
+		const _ = this;
+		switch(_._state)
+		{
+			case EnumeratorState.Faulted:
+				_.throwIfDisposed("This enumerator caused a fault and was disposed.");
+				break;
+			case EnumeratorState.Disposed:
+				_.throwIfDisposed("This enumerator was manually disposed.");
+				break;
+		}
+	}
+
 	moveNext():boolean
 	{
 		const _ = this;
+
+		_._assertBadState();
+
 		try
 		{
 			switch(_._state)
@@ -158,6 +174,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 					else
 					{
 						this.dispose();
+						_._state = EnumeratorState.Completed;
 						return false;
 					}
 				default:
@@ -167,11 +184,12 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		catch(e)
 		{
 			this.dispose();
+			_._state = EnumeratorState.Faulted;
 			throw e;
 		}
 	}
 
-	nextValue():T
+	nextValue():T|undefined
 	{
 		return this.moveNext()
 			? this.current
@@ -188,25 +206,41 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			: IteratorResult.Done
 	}
 
+	end():void {
+		this._ensureDisposeState(EnumeratorState.Interrupted);
+	}
+
 	'return'():IIteratorResult<void>
 	'return'<TReturn>(value:TReturn):IIteratorResult<TReturn>
 	'return'(value?:any):IIteratorResult<any>
 	{
+		const _ = this;
+		_._assertBadState();
+
 		try
 		{
-			return value===VOID0 || this._state===EnumeratorState.After
+			return value===VOID0 || _._state===EnumeratorState.Completed || _._state===EnumeratorState.Interrupted
 				? IteratorResult.Done
 				: new IteratorResult(value, VOID0, true);
 		}
 		finally
 		{
-			this.dispose();
+			_.end();
+		}
+	}
+
+	private _ensureDisposeState(state:EnumeratorState):void {
+		const _ = this;
+		if(!_.wasDisposed) {
+			_.dispose();
+			_._state = state;
 		}
 	}
 
 	protected _onDispose():void
 	{
 		const _ = this;
+		_._isEndless = false;
 		var disposer = _._disposer;
 
 		_._initializer = <any>null;
@@ -215,7 +249,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 		var y = _._yielder;
 		_._yielder = <any>null;
-		this._state = EnumeratorState.After;
+		this._state = EnumeratorState.Disposed;
 
 		if(y) yielder(y);
 

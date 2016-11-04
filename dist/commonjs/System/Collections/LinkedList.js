@@ -32,7 +32,7 @@ function ensureExternal(node, list) {
     var external = node.external;
     if (!external)
         node.external = external = new LinkedListNode(list, node);
-    return external;
+    return external || null;
 }
 function getInternal(node, list) {
     if (!node)
@@ -61,10 +61,15 @@ var LinkedList = (function (_super) {
     function LinkedList(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         _super.call(this, VOID0, equalityComparer);
-        var _ = this;
-        _._listInternal = new LinkedNodeList_1.LinkedNodeList();
-        _._importEntries(source);
+        this._listInternal = new LinkedNodeList_1.LinkedNodeList();
+        this._importEntries(source);
     }
+    LinkedList.prototype.assertVersion = function (version) {
+        if (this._listInternal)
+            this._listInternal.assertVersion(version);
+        else
+            _super.prototype.assertVersion.call(this, version);
+    };
     LinkedList.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
         var l = this._listInternal;
@@ -86,7 +91,7 @@ var LinkedList = (function (_super) {
             if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                 removedCount++;
             return removedCount < max;
-        });
+        }, true);
         return removedCount;
     };
     LinkedList.prototype._clearInternal = function () {
@@ -281,11 +286,12 @@ var LinkedListNode = (function () {
         this._list.addAfter(this, entry);
     };
     LinkedListNode.prototype.remove = function () {
-        var list = this._list;
+        var _ = this;
+        var list = _._list;
         if (list)
             list.removeNode(this);
-        this._list = VOID0;
-        this._nodeInternal = VOID0;
+        _._list = VOID0;
+        _._nodeInternal = VOID0;
     };
     LinkedListNode.prototype.dispose = function () {
         this.remove();

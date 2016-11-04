@@ -47,7 +47,7 @@ export class SetBase extends CollectionBase {
                 s.forEach(n => {
                     if (!other.contains(n.value) && _._removeInternal(n.value))
                         _._incrementModified();
-                });
+                }, true);
             _._signalModification();
         }
         else {
@@ -147,12 +147,14 @@ export class SetBase extends CollectionBase {
         return !(!this.getCount() || !this._getNode(item));
     }
     getEnumerator() {
-        var s = this._set;
-        return s && this.getCount()
+        const _ = this;
+        _.throwIfDisposed();
+        var s = _._set;
+        return s && _.getCount()
             ? LinkedNodeList.valueEnumeratorFrom(s)
             : EmptyEnumerator;
     }
-    forEach(action, useCopy = false) {
+    forEach(action, useCopy) {
         return useCopy
             ? super.forEach(action, useCopy)
             : this._set.forEach((node, i) => action(node.value, i));

@@ -10,8 +10,6 @@ import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void 0;
-
 /**
  * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
  * This is analogous to a 'generator' and has a compatible interface.
@@ -51,7 +49,7 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 	dispose():void
 	{
 		super.dispose();
-		this._iterator = VOID0;
+		(<any>this)._iterator = null;
 	}
 
 	protected getIsEndless():boolean

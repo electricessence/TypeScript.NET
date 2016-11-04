@@ -13,7 +13,7 @@ export class SimpleEnumerableBase {
     }
     incrementIndex() {
         let i = this._index;
-        this._index = i = i === VOID0 ? 0 : (i + 1);
+        this._index = i = isNaN(i) ? 0 : (i + 1);
         return i;
     }
     nextValue() {
@@ -24,6 +24,9 @@ export class SimpleEnumerableBase {
         return this.moveNext()
             ? new IteratorResult(this._current, this._index)
             : IteratorResult.Done;
+    }
+    end() {
+        this.dispose();
     }
     'return'(value) {
         try {
@@ -37,7 +40,7 @@ export class SimpleEnumerableBase {
     }
     reset() {
         this._current = VOID0;
-        this._index = VOID0;
+        this._index = NaN;
     }
     dispose() {
         this.reset();

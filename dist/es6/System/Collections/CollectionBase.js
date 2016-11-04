@@ -38,7 +38,7 @@ export class CollectionBase extends DisposableBase {
             throw new InvalidOperationException(CMRO);
     }
     assertVersion(version) {
-        if (version != this._version)
+        if (version !== this._version)
             throw new InvalidOperationException("Collection was modified.");
     }
     _onModified() { }
@@ -175,6 +175,8 @@ export class CollectionBase extends DisposableBase {
         return found;
     }
     forEach(action, useCopy) {
+        if (this.wasDisposed)
+            return 0;
         if (useCopy) {
             var a = this.toArray();
             try {
@@ -191,18 +193,23 @@ export class CollectionBase extends DisposableBase {
     copyTo(target, index = 0) {
         if (!target)
             throw new ArgumentNullException('target');
-        var count = this.getCount(), newLength = count + index;
-        if (target.length < newLength)
-            target.length = newLength;
-        var e = this.getEnumerator();
-        while (e.moveNext()) {
-            target[index++] = e.current;
+        var count = this.getCount();
+        if (count) {
+            var newLength = count + index;
+            if (target.length < newLength)
+                target.length = newLength;
+            var e = this.getEnumerator();
+            while (e.moveNext()) {
+                target[index++] = e.current;
+            }
         }
         return target;
     }
     toArray() {
         var count = this.getCount();
-        return this.copyTo(count > 65536 ? new Array(count) : []);
+        return count
+            ? this.copyTo(count > 65536 ? new Array(count) : [])
+            : [];
     }
     get linq() {
         this.throwIfDisposed();

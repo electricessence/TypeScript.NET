@@ -6,18 +6,22 @@
 import { CollectionBase } from "./CollectionBase";
 import { ILinkedListNode } from "./ILinkedListNode";
 import { IEnumerator } from "./Enumeration/IEnumerator";
-import { Predicate, Action, EqualityComparison } from "../FunctionTypes";
+import { Predicate, Action, EqualityComparison, PredicateWithIndex, ActionWithIndex } from "../FunctionTypes";
 import { ILinkedList } from "./ILinkedList";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {
-    private _listInternal;
+    private readonly _listInternal;
     constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
+    assertVersion(version: number): void;
     protected _onDispose(): void;
     protected getCount(): number;
     protected _addInternal(entry: T): boolean;
     protected _removeInternal(entry: T, max?: number): number;
     protected _clearInternal(): number;
-    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
+    forEach(action: Action<T>, useCopy?: boolean): number;
+    forEach(action: Predicate<T>, useCopy?: boolean): number;
+    forEach(action: ActionWithIndex<T>, useCopy?: boolean): number;
+    forEach(action: PredicateWithIndex<T>, useCopy?: boolean): number;
     getEnumerator(): IEnumerator<T>;
     private _findFirst(entry);
     private _findLast(entry);

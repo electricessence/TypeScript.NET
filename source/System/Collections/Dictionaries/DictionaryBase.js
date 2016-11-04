@@ -7,7 +7,7 @@
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends"], factory);
+        define(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -19,8 +19,9 @@
     var InvalidOperationException_1 = require("../../Exceptions/InvalidOperationException");
     var KeyValueExtract_1 = require("../../KeyValueExtract");
     var extends_1 = require("../../../extends");
+    var KeyNotFoundException_1 = require("../KeyNotFoundException");
     var __extends = extends_1.default;
-    var VOID0 = void (0);
+    var VOID0 = void 0;
     var DictionaryBase = (function (_super) {
         __extends(DictionaryBase, _super);
         function DictionaryBase(source) {
@@ -85,6 +86,20 @@
             }
             return _.setValue(key, value);
         };
+        DictionaryBase.prototype.getAssuredValue = function (key) {
+            var value = this.getValue(key);
+            if (value === VOID0)
+                throw new KeyNotFoundException_1.KeyNotFoundException("Key '" + key + "' not found.");
+            return value;
+        };
+        DictionaryBase.prototype.tryGetValue = function (key, out) {
+            var value = this.getValue(key);
+            if (value !== VOID0) {
+                out(value);
+                return true;
+            }
+            return false;
+        };
         DictionaryBase.prototype.setValue = function (key, value) {
             var _ = this;
             _.assertModifiable();
@@ -100,9 +115,9 @@
             return !!this._getEntry(key);
         };
         DictionaryBase.prototype.containsValue = function (value) {
-            var e = this.getEnumerator(), equal = Compare_1.areEqual;
+            var e = this.getEnumerator();
             while (e.moveNext()) {
-                if (equal(e.current, value, true)) {
+                if (Compare_1.areEqual(e.current, value, true)) {
                     e.dispose();
                     return true;
                 }
@@ -114,10 +129,10 @@
         };
         DictionaryBase.prototype.removeByValue = function (value) {
             var _ = this;
-            var count = 0, equal = Compare_1.areEqual;
+            var count = 0;
             for (var _i = 0, _a = _.getKeys(); _i < _a.length; _i++) {
                 var key = _a[_i];
-                if (equal(_.getValue(key), value, true)) {
+                if (Compare_1.areEqual(_.getValue(key), value, true)) {
                     _.removeByKey(key);
                     count++;
                 }
@@ -140,15 +155,18 @@
         };
         DictionaryBase.prototype.getEnumerator = function () {
             var _ = this;
-            var ver, keys, len, i = 0;
+            _.throwIfDisposed();
+            var ver, keys, len, index = 0;
             return new EnumeratorBase_1.EnumeratorBase(function () {
+                _.throwIfDisposed();
                 ver = _._version;
                 keys = _.getKeys();
                 len = keys.length;
             }, function (yielder) {
+                _.throwIfDisposed();
                 _.assertVersion(ver);
-                while (i < len) {
-                    var key = keys[i++], value = _.getValue(key);
+                while (index < len) {
+                    var key = keys[index++], value = _.getValue(key);
                     if (value !== VOID0)
                         return yielder.yieldReturn({ key: key, value: value });
                 }

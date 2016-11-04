@@ -17,7 +17,7 @@
     var IteratorResult_1 = require("./IteratorResult");
     var extends_1 = require("../../../extends");
     var __extends = extends_1.default;
-    var VOID0 = void (0);
+    var VOID0 = void 0;
     var yielderPool;
     function yielder(recycle) {
         if (!yielderPool)
@@ -30,6 +30,7 @@
     var Yielder = (function () {
         function Yielder() {
             this._current = VOID0;
+            this._index = NaN;
         }
         Object.defineProperty(Yielder.prototype, "current", {
             get: function () { return this._current; },
@@ -43,7 +44,7 @@
         });
         Yielder.prototype.yieldReturn = function (value) {
             this._current = value;
-            if (this._index === VOID0)
+            if (isNaN(this._index))
                 this._index = 0;
             else
                 this._index++;
@@ -51,7 +52,7 @@
         };
         Yielder.prototype.yieldBreak = function () {
             this._current = VOID0;
-            this._index = VOID0;
+            this._index = NaN;
             return false;
         };
         Yielder.prototype.dispose = function () {
@@ -63,7 +64,10 @@
     (function (EnumeratorState) {
         EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
         EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
-        EnumeratorState[EnumeratorState["After"] = 2] = "After";
+        EnumeratorState[EnumeratorState["Completed"] = 2] = "Completed";
+        EnumeratorState[EnumeratorState["Faulted"] = 3] = "Faulted";
+        EnumeratorState[EnumeratorState["Interrupted"] = 4] = "Interrupted";
+        EnumeratorState[EnumeratorState["Disposed"] = 5] = "Disposed";
     })(EnumeratorState || (EnumeratorState = {}));
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
@@ -111,8 +115,20 @@
             if (y)
                 yielder(y);
         };
+        EnumeratorBase.prototype._assertBadState = function () {
+            var _ = this;
+            switch (_._state) {
+                case EnumeratorState.Faulted:
+                    _.throwIfDisposed("This enumerator caused a fault and was disposed.");
+                    break;
+                case EnumeratorState.Disposed:
+                    _.throwIfDisposed("This enumerator was manually disposed.");
+                    break;
+            }
+        };
         EnumeratorBase.prototype.moveNext = function () {
             var _ = this;
+            _._assertBadState();
             try {
                 switch (_._state) {
                     case EnumeratorState.Before:
@@ -127,6 +143,7 @@
                         }
                         else {
                             this.dispose();
+                            _._state = EnumeratorState.Completed;
                             return false;
                         }
                     default:
@@ -135,6 +152,7 @@
             }
             catch (e) {
                 this.dispose();
+                _._state = EnumeratorState.Faulted;
                 throw e;
             }
         };
@@ -148,24 +166,37 @@
                 ? new IteratorResult_1.IteratorResult(this.current, this.index)
                 : IteratorResult_1.IteratorResult.Done;
         };
+        EnumeratorBase.prototype.end = function () {
+            this._ensureDisposeState(EnumeratorState.Interrupted);
+        };
         EnumeratorBase.prototype['return'] = function (value) {
+            var _ = this;
+            _._assertBadState();
             try {
-                return value === VOID0 || this._state === EnumeratorState.After
+                return value === VOID0 || _._state === EnumeratorState.Completed || _._state === EnumeratorState.Interrupted
                     ? IteratorResult_1.IteratorResult.Done
                     : new IteratorResult_1.IteratorResult(value, VOID0, true);
             }
             finally {
-                this.dispose();
+                _.end();
+            }
+        };
+        EnumeratorBase.prototype._ensureDisposeState = function (state) {
+            var _ = this;
+            if (!_.wasDisposed) {
+                _.dispose();
+                _._state = state;
             }
         };
         EnumeratorBase.prototype._onDispose = function () {
             var _ = this;
+            _._isEndless = false;
             var disposer = _._disposer;
             _._initializer = null;
             _._disposer = null;
             var y = _._yielder;
             _._yielder = null;
-            this._state = EnumeratorState.After;
+            this._state = EnumeratorState.Disposed;
             if (y)
                 yielder(y);
             if (disposer)

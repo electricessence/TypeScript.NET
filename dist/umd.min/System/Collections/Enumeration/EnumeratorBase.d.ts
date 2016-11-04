@@ -20,11 +20,14 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
     protected _isEndless: boolean;
     readonly isEndless: boolean | undefined;
     reset(): void;
+    private _assertBadState();
     moveNext(): boolean;
-    nextValue(): T;
+    nextValue(): T | undefined;
     next(): IIteratorResult<T>;
+    end(): void;
     'return'(): IIteratorResult<void>;
     'return'<TReturn>(value: TReturn): IIteratorResult<TReturn>;
+    private _ensureDisposeState(state);
     protected _onDispose(): void;
 }
 export default EnumeratorBase;

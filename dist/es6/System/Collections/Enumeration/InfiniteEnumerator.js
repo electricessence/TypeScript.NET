@@ -5,7 +5,6 @@
 import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
 import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
-const VOID0 = void 0;
 export class InfiniteEnumerator extends SimpleEnumerableBase {
     constructor(_factory) {
         super();
@@ -17,13 +16,15 @@ export class InfiniteEnumerator extends SimpleEnumerableBase {
     moveNext() {
         const _ = this;
         var f = _._factory;
-        if (f)
+        if (f) {
             _._current = f(_._current, _.incrementIndex());
-        return f != VOID0;
+            return true;
+        }
+        return false;
     }
     dispose() {
         super.dispose();
-        this._factory = VOID0;
+        this._factory = null;
     }
 }
 export default InfiniteEnumerator;

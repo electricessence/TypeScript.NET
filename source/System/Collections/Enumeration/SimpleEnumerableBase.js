@@ -26,7 +26,7 @@
         });
         SimpleEnumerableBase.prototype.incrementIndex = function () {
             var i = this._index;
-            this._index = i = i === VOID0 ? 0 : (i + 1);
+            this._index = i = isNaN(i) ? 0 : (i + 1);
             return i;
         };
         SimpleEnumerableBase.prototype.nextValue = function () {
@@ -37,6 +37,9 @@
             return this.moveNext()
                 ? new IteratorResult_1.IteratorResult(this._current, this._index)
                 : IteratorResult_1.IteratorResult.Done;
+        };
+        SimpleEnumerableBase.prototype.end = function () {
+            this.dispose();
         };
         SimpleEnumerableBase.prototype['return'] = function (value) {
             try {
@@ -50,7 +53,7 @@
         };
         SimpleEnumerableBase.prototype.reset = function () {
             this._current = VOID0;
-            this._index = VOID0;
+            this._index = NaN;
         };
         SimpleEnumerableBase.prototype.dispose = function () {
             this.reset();

@@ -10,7 +10,7 @@ import {IComparable} from "./IComparable";
 import {CompareResult} from "./CompareResult";
 import isTrueNaN = Type.isTrueNaN;
 
-const VOID0:any = void 0;
+const VOID0:undefined = void 0;
 
 /**
  * Used for special comparison including NaN.

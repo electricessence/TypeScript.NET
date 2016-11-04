@@ -16,10 +16,12 @@ import {IDictionary} from "./IDictionary";
 import {IEnumerator} from "../Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
 import __extendsImport from "../../../extends";
+import {KeyNotFoundException} from "../KeyNotFoundException";
+import {Action} from "../../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const VOID0:any = void(0);
+const VOID0:undefined = void 0;
 
 // Design Note: Should DictionaryAbstractBase be IDisposable?
 export abstract class DictionaryBase<TKey, TValue>
@@ -31,7 +33,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	}
 
 
-	protected _onValueModified(key:TKey, value:TValue, old:TValue):void
+	protected _onValueModified(key:TKey, value:TValue|undefined, old:TValue|undefined):void
 	{
 	}
 
@@ -120,11 +122,35 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	protected abstract _getEntry(key:TKey):IKeyValuePair<TKey,TValue>|null;
 
-	abstract getValue(key:TKey):TValue;
+	abstract getValue(key:TKey):TValue|undefined;
 
-	protected abstract _setValueInternal(key:TKey, value:TValue):boolean;
+	getAssuredValue(key:TKey):TValue
+	{
+		var value = this.getValue(key);
+		if(value===VOID0)
+			throw new KeyNotFoundException(`Key '${key}' not found.`);
+		return value;
+	}
 
-	setValue(key:TKey, value:TValue):boolean
+	tryGetValue(key:TKey,out:Action<TValue>):boolean {
+		var value = this.getValue(key);
+		if(value!==VOID0) {
+			out(value);
+			return true;
+		}
+		return false;
+	}
+
+	protected abstract _setValueInternal(key:TKey, value:TValue|undefined):boolean;
+
+	/**
+	 * Sets the value of an entry.
+	 * It's important to know that 'undefined' cannot exist as a value in the dictionary and is used as a flag for removal.
+	 * @param key
+	 * @param value
+	 * @returns {boolean}
+	 */
+	setValue(key:TKey, value:TValue|undefined):boolean
 	{
 		// setValue shouldn't need to worry about recursion...
 		const _ = this;
@@ -148,13 +174,10 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	containsValue(value:TValue):boolean
 	{
-		var e                           = this.getEnumerator(), equal:(
-			a:any, b:any,
-			strict?:boolean) => boolean = areEqual;
-
+		var e = this.getEnumerator();
 		while(e.moveNext())
 		{
-			if(equal(e.current, value, true))
+			if(areEqual(e.current, value, true))
 			{
 				e.dispose();
 				return true;
@@ -171,10 +194,10 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	removeByValue(value:TValue):number
 	{
 		const _ = this;
-		var count = 0, equal:(a:any, b:any, strict?:boolean) => boolean = areEqual;
+		var count = 0;
 		for(let key of _.getKeys())
 		{
-			if(equal(_.getValue(key), value, true))
+			if(areEqual(_.getValue(key), value, true))
 			{
 				_.removeByKey(key);
 				count++;
@@ -207,10 +230,13 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	getEnumerator():IEnumerator<IKeyValuePair<TKey, TValue>>
 	{
 		const _ = this;
-		var ver:number, keys:TKey[], len:number, i = 0;
+		_.throwIfDisposed();
+
+		var ver:number, keys:TKey[], len:number, index = 0;
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>
 			{
+				_.throwIfDisposed();
 				ver = _._version; // Track the version since getKeys is a copy.
 				keys = _.getKeys();
 				len = keys.length;
@@ -218,11 +244,12 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 			(yielder)=>
 			{
+				_.throwIfDisposed();
 				_.assertVersion(ver);
 
-				while(i<len)
+				while(index<len)
 				{
-					var key = keys[i++], value = _.getValue(key);
+					var key = keys[index++], value = _.getValue(key);
 					if(value!==VOID0) // Still valid?
 						return yielder.yieldReturn({key: key, value: value});
 				}

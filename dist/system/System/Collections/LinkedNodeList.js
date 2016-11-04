@@ -41,7 +41,12 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     this._first = null;
                     this._last = null;
                     this.unsafeCount = 0;
+                    this._version = 0;
                 }
+                LinkedNodeList.prototype.assertVersion = function (version) {
+                    if (version !== this._version)
+                        throw new InvalidOperationException_1.InvalidOperationException("Collection was modified.");
+                };
                 Object.defineProperty(LinkedNodeList.prototype, "first", {
                     get: function () {
                         return this._first;
@@ -69,10 +74,14 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     enumerable: true,
                     configurable: true
                 });
-                LinkedNodeList.prototype.forEach = function (action) {
-                    var current = null, next = this.first;
+                LinkedNodeList.prototype.forEach = function (action, ignoreVersioning) {
+                    var _ = this;
+                    var current = null, next = _.first;
+                    var version = _._version;
                     var index = 0;
                     do {
+                        if (!ignoreVersioning)
+                            _.assertVersion(version);
                         current = next;
                         next = current && current.next;
                     } while (current
@@ -83,8 +92,8 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     if (!selector)
                         throw new ArgumentNullException_1.ArgumentNullException('selector');
                     var result = [];
-                    this.forEach(function (node) {
-                        result.push(selector(node));
+                    this.forEach(function (node, i) {
+                        result.push(selector(node, i));
                     });
                     return result;
                 };
@@ -109,6 +118,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     }
                     if (cF !== cL)
                         console.warn('LinkedNodeList: Forward versus reverse count does not match when clearing. Forward: ' + cF + ", Reverse: " + cL);
+                    _._version++;
                     _.unsafeCount = 0;
                     return cF;
                 };
@@ -124,9 +134,9 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     var next = this._first;
                     var i = 0;
                     while (next && i++ < index) {
-                        next = next.next;
+                        next = next.next || null;
                     }
-                    return next || null;
+                    return next;
                 };
                 LinkedNodeList.prototype.find = function (condition) {
                     var node = null;
@@ -180,6 +190,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     }
                     var removed = !a && !b;
                     if (removed) {
+                        _._version++;
                         _.unsafeCount--;
                         node.previous = null;
                         node.next = null;
@@ -190,9 +201,8 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     this.addNodeAfter(node);
                 };
                 LinkedNodeList.prototype.addNodeBefore = function (node, before) {
+                    if (before === void 0) { before = null; }
                     assertValidDetached(node);
-                    if (before === null)
-                        throw new ArgumentNullException_1.ArgumentNullException("before");
                     var _ = this;
                     if (!before) {
                         before = _._first;
@@ -210,12 +220,12 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     else {
                         _._first = _._last = node;
                     }
+                    _._version++;
                     _.unsafeCount++;
                 };
                 LinkedNodeList.prototype.addNodeAfter = function (node, after) {
+                    if (after === void 0) { after = null; }
                     assertValidDetached(node);
-                    if (after === null)
-                        throw new ArgumentNullException_1.ArgumentNullException("after");
                     var _ = this;
                     if (!after) {
                         after = _._last;
@@ -233,11 +243,14 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     else {
                         _._first = _._last = node;
                     }
+                    _._version++;
                     _.unsafeCount++;
                 };
                 LinkedNodeList.prototype.replace = function (node, replacement) {
                     if (node == null)
                         throw new ArgumentNullException_1.ArgumentNullException('node');
+                    if (node == replacement)
+                        return;
                     assertValidDetached(replacement, 'replacement');
                     var _ = this;
                     replacement.previous = node.previous;
@@ -250,16 +263,19 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                         _._first = replacement;
                     if (node == _._last)
                         _._last = replacement;
+                    _._version++;
                 };
                 LinkedNodeList.valueEnumeratorFrom = function (list) {
                     if (!list)
                         throw new ArgumentNullException_1.ArgumentNullException('list');
-                    var current, next;
+                    var current, next, version;
                     return new EnumeratorBase_1.EnumeratorBase(function () {
                         current = null;
                         next = list.first;
+                        version = list._version;
                     }, function (yielder) {
                         if (next) {
+                            list.assertVersion(version);
                             current = next;
                             next = current && current.next;
                             return yielder.yieldReturn(current.value);

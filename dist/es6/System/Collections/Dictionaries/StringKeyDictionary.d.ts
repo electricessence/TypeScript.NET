@@ -6,13 +6,14 @@ import { IStringKeyDictionary, IMap } from "./IDictionary";
 import { IKeyValuePair } from "../../KeyValuePair";
 import { DictionaryBase } from "./DictionaryBase";
 export declare class StringKeyDictionary<TValue> extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue> {
+    protected _onDispose(): void;
     private _count;
-    private _map;
+    private readonly _map;
     protected _getEntry(key: string): IKeyValuePair<string, TValue> | null;
     containsKey(key: string): boolean;
     containsValue(value: TValue): boolean;
-    getValue(key: string): TValue;
-    protected _setValueInternal(key: string, value: TValue): boolean;
+    getValue(key: string): TValue | undefined;
+    protected _setValueInternal(key: string, value: TValue | undefined): boolean;
     importMap(values: IMap<TValue>): boolean;
     toMap(selector?: (key: string, value: TValue) => TValue): IMap<TValue>;
     protected getKeys(): string[];

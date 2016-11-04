@@ -3,15 +3,16 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { CollectionBase } from "./CollectionBase";
-import { Predicate, Action, EqualityComparison } from "../FunctionTypes";
+import { Predicate, Action, EqualityComparison, ActionWithIndex, PredicateWithIndex } from "../FunctionTypes";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IList } from "./IList";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 import { IArray } from "./Array/IArray";
 export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnumerateEach<T> {
-    protected _source: T[];
+    protected readonly _source: T[];
     constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
+    protected _onDispose(): void;
     protected getCount(): number;
     protected _addInternal(entry: T): boolean;
     protected _removeInternal(entry: T, max?: number): number;
@@ -25,6 +26,9 @@ export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnu
     contains(item: T): boolean;
     copyTo<TTarget extends IArray<any>>(target: TTarget, index?: number): TTarget;
     getEnumerator(): IEnumerator<T>;
-    forEach(action: Predicate<T> | Action<T>, useCopy?: boolean): number;
+    forEach(action: Action<T>, useCopy?: boolean): number;
+    forEach(action: Predicate<T>, useCopy?: boolean): number;
+    forEach(action: ActionWithIndex<T>, useCopy?: boolean): number;
+    forEach(action: PredicateWithIndex<T>, useCopy?: boolean): number;
 }
 export default List;

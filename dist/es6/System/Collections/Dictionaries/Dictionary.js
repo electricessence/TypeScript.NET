@@ -53,8 +53,13 @@ export class Dictionary extends DictionaryBase {
         this._entries = linkedNodeList();
         this._buckets = {};
     }
+    _onDispose() {
+        super._onDispose();
+        this._entries = null;
+        this._buckets = null;
+    }
     getCount() {
-        return this._entries.unsafeCount;
+        return this._entries && this._entries.unsafeCount || 0;
     }
     _getBucket(hash, createIfMissing) {
         if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
@@ -65,7 +70,7 @@ export class Dictionary extends DictionaryBase {
             buckets[hash]
                 = bucket
                     = linkedNodeList();
-        return bucket;
+        return bucket || null;
     }
     _getBucketEntry(key, hash, bucket) {
         if (key === null || key === VOID0 || !this.getCount())
@@ -85,7 +90,8 @@ export class Dictionary extends DictionaryBase {
         return e ? e.value : VOID0;
     }
     _setValueInternal(key, value) {
-        var _ = this, buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+        const _ = this;
+        var buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
         if (bucketEntry) {
             var b = bucket;
             if (value === VOID0) {
@@ -132,12 +138,15 @@ export class Dictionary extends DictionaryBase {
     }
     getEnumerator() {
         const _ = this;
+        _.throwIfDisposed();
         var ver, currentEntry;
         return new EnumeratorBase(() => {
+            _.throwIfDisposed();
             ver = _._version;
             currentEntry = _._entries.first;
         }, (yielder) => {
             if (currentEntry) {
+                _.throwIfDisposed();
                 _.assertVersion(ver);
                 var result = { key: currentEntry.key, value: currentEntry.value };
                 currentEntry = currentEntry.next || null;
@@ -149,7 +158,7 @@ export class Dictionary extends DictionaryBase {
     getKeys() {
         const _ = this;
         var result = [];
-        var e = _._entries.first;
+        var e = _._entries && _._entries.first;
         while (e) {
             result.push(e.key);
             e = e.next;
@@ -159,7 +168,7 @@ export class Dictionary extends DictionaryBase {
     getValues() {
         const _ = this;
         var result = [];
-        var e = _._entries.first;
+        var e = _._entries && _._entries.first;
         while (e) {
             result.push(e.value);
             e = e.next;

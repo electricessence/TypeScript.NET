@@ -5,6 +5,7 @@
 
 import {ICollection} from "../ICollection";
 import {IKeyValuePair, IStringKeyValuePair} from "../../KeyValuePair";
+import {Action} from "../../FunctionTypes";
 
 /**
  * JavaScript hashing can only truly be done with strings.
@@ -26,8 +27,10 @@ export interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKe
 	values:TValue[];
 
 	addByKeyValue(key:TKey, value:TValue):boolean;
-	getValue(key:TKey):TValue;
-	setValue(key:TKey, value:TValue):boolean;
+	setValue(key:TKey, value:TValue|undefined):boolean;
+	getValue(key:TKey):TValue|undefined; // It's very common in JS to allow for undefined and check against it.
+	getAssuredValue(key:TKey):TValue;
+	tryGetValue(key:TKey,out:Action<TValue>):boolean;
 	containsKey(key:TKey):boolean;
 	containsValue(value:TValue):boolean;
 	removeByKey(key:TKey):boolean;
@@ -45,7 +48,7 @@ export interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue
 export interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue>
 {
 	indexOfKey(key:TKey):number;
-	getValueByIndex(index:number):TValue;
+	getValueByIndex(index:number):TValue|undefined;
 }
 
 export default IDictionary;

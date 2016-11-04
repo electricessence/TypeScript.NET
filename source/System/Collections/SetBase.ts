@@ -12,7 +12,7 @@ import {areEqual} from "../Compare";
 import {CollectionBase} from "./CollectionBase";
 import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
-import {Predicate, Action} from "../FunctionTypes";
+import {Predicate, Action, ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
 import {IMap} from "./Dictionaries/IDictionary";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
@@ -76,7 +76,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 			{
 				if(!other.contains(n.value) && _._removeInternal(<any>n.value))
 					_._incrementModified();
-			});
+			},true);
 
 			_._signalModification();
 		}
@@ -219,15 +219,19 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	getEnumerator():IEnumerator<T>
 	{
-		var s = this._set;
-		return s && this.getCount()
+		const _ = this;
+		_.throwIfDisposed();
+		var s = _._set;
+		return s && _.getCount()
 			? LinkedNodeList.valueEnumeratorFrom<T>(s)
 			: EmptyEnumerator;
 	}
 
-	forEach(
-		action:Predicate<T> | Action<T>,
-		useCopy:boolean = false):number
+	forEach(action:Action<T>, useCopy?:boolean):number
+	forEach(action:Predicate<T>, useCopy?:boolean):number
+	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
+	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, useCopy?:boolean):number
 	{
 		return useCopy
 			? super.forEach(action, useCopy)

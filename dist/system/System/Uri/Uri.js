@@ -170,7 +170,7 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             }],
         execute: function() {
-            VOID0 = void (0);
+            VOID0 = void 0;
             Uri = (function () {
                 function Uri(scheme, userInfo, host, port, path, query, fragment) {
                     var _ = this;

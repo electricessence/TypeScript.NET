@@ -129,9 +129,11 @@
             return _super.prototype.forEach.call(this, action, true);
         };
         Queue.prototype.setCapacity = function (capacity) {
-            assertIntegerZeroOrGreater(capacity, "capacity");
             var _ = this;
+            assertIntegerZeroOrGreater(capacity, "capacity");
             var array = _._array, len = _._capacity;
+            if (capacity > len)
+                _.throwIfDisposed();
             if (capacity == len)
                 return;
             var head = _._head, tail = _._tail, size = _._size;
@@ -212,13 +214,16 @@
         };
         Queue.prototype.getEnumerator = function () {
             var _ = this;
-            var index, version;
+            _.throwIfDisposed();
+            var index, version, size;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 version = _._version;
+                size = _._size;
                 index = 0;
             }, function (yielder) {
+                _.throwIfDisposed();
                 _.assertVersion(version);
-                if (index == _._size)
+                if (index == size)
                     return yielder.yieldBreak();
                 return yielder.yieldReturn(_._getElement(index++));
             });

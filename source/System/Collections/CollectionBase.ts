@@ -11,7 +11,13 @@ import {DisposableBase} from "../Disposable/DisposableBase";
 import {ICollection} from "./ICollection";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {EqualityComparison, Predicate, Action} from "../FunctionTypes";
+import {
+	EqualityComparison,
+	Predicate,
+	Action,
+	PredicateWithIndex,
+	ActionWithIndex
+} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
@@ -75,7 +81,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	protected _version:number; // Provides an easy means of tracking changes and invalidating enumerables.
 	assertVersion(version:number):void
 	{
-		if(version!=this._version)
+		if(version!==this._version)
 			throw new InvalidOperationException("Collection was modified.");
 	}
 
@@ -266,8 +272,15 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return found;
 	}
 
-	forEach(action:Predicate<T>|Action<T>, useCopy?:boolean):number
+	forEach(action:Action<T>, useCopy?:boolean):number
+	forEach(action:Predicate<T>, useCopy?:boolean):number
+	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
+	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, useCopy?:boolean):number
 	{
+		if(this.wasDisposed)
+			return 0;
+
 		if(useCopy)
 		{
 			var a = this.toArray();
@@ -292,13 +305,17 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	{
 		if(!target) throw new ArgumentNullException('target');
 
-		var count = this.getCount(), newLength = count + index;
-		if(target.length<newLength) target.length = newLength;
-
-		var e = this.getEnumerator();
-		while(e.moveNext()) // Disposes when finished.
+		var count = this.getCount();
+		if(count)
 		{
-			target[index++] = <any>e.current;
+			var newLength = count + index;
+			if(target.length<newLength) target.length = newLength;
+
+			var e = this.getEnumerator();
+			while(e.moveNext()) // Disposes when finished.
+			{
+				target[index++] = <any>e.current;
+			}
 		}
 		return target;
 	}
@@ -306,10 +323,12 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	toArray():T[]
 	{
 		var count = this.getCount();
-		return this.copyTo(count>65536 ? new Array<T>(count) : []);
+		return count
+			? this.copyTo(count>65536 ? new Array<T>(count) : [])
+			: [];
 	}
 
-	private _linq:ILinqEnumerable<T> | undefined;
+	private _linq?:ILinqEnumerable<T>;
 
 	/**
 	 * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
@@ -343,7 +362,7 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
 	 * @param callback
 	 * @returns {ILinqEnumerable}
 	 */
-	linqAsync(callback?:(linq:ILinqEnumerable<T>)=>void):ILinqEnumerable<T>|undefined
+	linqAsync(callback?:Action<ILinqEnumerable<T>>):ILinqEnumerable<T>|undefined
 	{
 		this.throwIfDisposed();
 		var e = this._linq;

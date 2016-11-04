@@ -11,7 +11,7 @@
     var Queue_1 = require("../../../../../dist/commonjs/System/Collections/Queue");
     var Enumerator = require("../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator");
     var assert = require("assert");
-    var VOID0 = void (0);
+    var VOID0 = void 0;
     describe(".from(source)", function () {
         it("null should use an empty enumerator", function () {
             var test = Enumerator.from(null), count = 0;

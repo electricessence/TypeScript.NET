@@ -83,7 +83,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                             s.forEach(function (n) {
                                 if (!other.contains(n.value) && _._removeInternal(n.value))
                                     _._incrementModified();
-                            });
+                            }, true);
                         _._signalModification();
                     }
                     else {
@@ -188,13 +188,14 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     return !(!this.getCount() || !this._getNode(item));
                 };
                 SetBase.prototype.getEnumerator = function () {
-                    var s = this._set;
-                    return s && this.getCount()
+                    var _ = this;
+                    _.throwIfDisposed();
+                    var s = _._set;
+                    return s && _.getCount()
                         ? LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(s)
                         : EmptyEnumerator_1.EmptyEnumerator;
                 };
                 SetBase.prototype.forEach = function (action, useCopy) {
-                    if (useCopy === void 0) { useCopy = false; }
                     return useCopy
                         ? _super.prototype.forEach.call(this, action, useCopy)
                         : this._set.forEach(function (node, i) { return action(node.value, i); });

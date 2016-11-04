@@ -9,7 +9,15 @@ import {areEqual} from "../../Compare";
 import {ArgumentException} from "../../Exceptions/ArgumentException";
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
-import {EqualityComparison, Predicate, Action} from "../../FunctionTypes";
+import {
+	EqualityComparison,
+	Predicate,
+	Action,
+	PredicateWithIndex,
+	Selector,
+	SelectorWithIndex,
+	ActionWithIndex
+} from "../../FunctionTypes";
 import {IArray} from "./IArray";
 
 /**
@@ -255,6 +263,8 @@ export function register<T>(
  * @returns {number}
  */
 export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
+export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):number
+export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):number
 {
 	if(!array)
 		throw new ArgumentNullException('array', CBN);
@@ -266,7 +276,7 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 	{
 		for(let i = 0; i<len; i++)
 		{
-			if(predicate(array[i]))
+			if(predicate(array[i],i))
 				return i;
 		}
 	}
@@ -274,7 +284,7 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
 	{
 		for(let i = 0; i<len; i++)
 		{
-			if((i) in (array) && predicate(array[i]))
+			if((i) in (array) && predicate(array[i],i))
 				return i;
 		}
 	}
@@ -292,7 +302,19 @@ export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
  */
 export function forEach<T>(
 	source:IArray<T>,
-	action:Predicate<T> | Action<T>):void
+	action:Action<T>):void
+export function forEach<T>(
+	source:IArray<T>,
+	action:Predicate<T>):void
+export function forEach<T>(
+	source:IArray<T>,
+	action:ActionWithIndex<T>):void
+export function forEach<T>(
+	source:IArray<T>,
+	action:PredicateWithIndex<T>):void
+export function forEach<T>(
+	source:IArray<T>,
+	action:ActionWithIndex<T> | PredicateWithIndex<T>):void
 {
 	if(source && action)
 	{
@@ -312,13 +334,15 @@ export function forEach<T>(
  * @param target
  * @param fn
  */
-export function applyTo<T>(target:IArray<T>, fn:(a:T) => T):void
+export function applyTo<T>(target:IArray<T>, fn:Selector<T,T>):void
+export function applyTo<T>(target:IArray<T>, fn:SelectorWithIndex<T,T>):void
+export function applyTo<T>(target:IArray<T>, fn:SelectorWithIndex<T,T>):void
 {
 	if(target && fn)
 	{
 		for(let i = 0; i<target.length; i++)
 		{
-			(<any>target)[i] = fn(target[i]);
+			(<any>target)[i] = fn(target[i],i);
 		}
 	}
 }
