@@ -396,5 +396,3 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
 		return e;
 	}
 }
-
-declare var require:any;

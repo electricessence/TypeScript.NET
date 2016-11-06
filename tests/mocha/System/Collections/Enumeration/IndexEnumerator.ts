@@ -1,132 +1,135 @@
+///<reference types="node"/>
 import * as assert from "assert";
+import "mocha";
 import IndexEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/IndexEnumerator";
-
-const VOID0:undefined = void 0;
-
 
 const a:{ [index:number]:number } = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4};
 
-
-it("should ignore null sources", ()=>
+describe("new & .moveNext()", ()=>
 {
-
-	assert.doesNotThrow(()=>
+	it("should ignore null sources", ()=>
 	{
-		var i = new IndexEnumerator(()=>
+
+		assert.doesNotThrow(()=>
 		{
-			return {
-				source: <any>null,
-				pointer: 1,
-				length: 3,
-				step: 0
-			}
+			var i = new IndexEnumerator(()=>
+			{
+				return {
+					source: <any>null,
+					pointer: 1,
+					length: 3,
+					step: 0
+				}
+			});
+			i.moveNext();
 		});
-		i.moveNext();
+
+		assert.doesNotThrow(()=>
+		{
+			var i = new IndexEnumerator(()=>
+			{
+				return {
+					source: <any>null,
+					length: 3,
+				}
+			});
+			i.dispose();
+		});
+
 	});
 
-	assert.doesNotThrow(()=>
+
+	it("should throw for invalid step", ()=>
 	{
-		var i = new IndexEnumerator(()=>
+
+		assert.throws(()=>
 		{
-			return {
-				source: <any>null,
-				length: 3,
-			}
+			var i = new IndexEnumerator(()=>
+			{
+				return {
+					source: a,
+					pointer: 1,
+					length: 3,
+					step: 0
+				}
+			});
+			i.moveNext();
 		});
-		i.dispose();
+
+		assert.throws(()=>
+		{
+			var i = new IndexEnumerator(()=>
+			{
+				return {
+					source: a,
+					pointer: 1,
+					length: 3,
+					step: 1.2
+				}
+			});
+			i.moveNext();
+		});
 	});
 
-});
-
-
-it("should throw for invalid step", ()=>
-{
-
-	assert.throws(()=>
+	it("should throw for invalid pointer", ()=>
 	{
-		var i = new IndexEnumerator(()=>
+
+		assert.throws(()=>
 		{
-			return {
-				source: a,
-				pointer: 1,
-				length: 3,
-				step: 0
-			}
+			var i = new IndexEnumerator(()=>
+			{
+				return {
+					source: a,
+					pointer: 1.3,
+					length: 3,
+					step: 1
+				}
+			});
+			i.moveNext();
 		});
-		i.moveNext();
+
 	});
 
-	assert.throws(()=>
+	it("should throw for invalid length", ()=>
 	{
-		var i = new IndexEnumerator(()=>
-		{
-			return {
-				source: a,
-				pointer: 1,
-				length: 3,
-				step: 1.2
-			}
-		});
-		i.moveNext();
-	});
-});
 
-it("should throw for invalid pointer", ()=>
-{
-
-	assert.throws(()=>
-	{
-		var i = new IndexEnumerator(()=>
+		assert.throws(()=>
 		{
-			return {
-				source: a,
-				pointer: 1.3,
-				length: 3,
-				step: 1
-			}
+			var i = new IndexEnumerator(()=>
+			{
+				return {
+					source: a,
+					pointer: 1,
+					length: -1,
+					step: 1
+				}
+			});
+			i.moveNext();
 		});
-		i.moveNext();
+
 	});
 
-});
-
-it("should throw for invalid length", ()=>
-{
-
-	assert.throws(()=>
+	it("should enumerate by 1 with no step", ()=>
 	{
-		var i = new IndexEnumerator(()=>
+
+
+		var a = [0, 1, 2, 3, 4];
+		var len = a.length, count = 0;
+		var test = new IndexEnumerator(()=>
 		{
 			return {
-				source: a,
-				pointer: 1,
-				length: -1,
-				step: 1
+				source: [0, 1, 2, 3, 4],
+				length: 5,
 			}
 		});
-		i.moveNext();
-	});
-
-});
-
-it("should enumerate by 1 with no step",()=>{
-
-
-	var a = [0,1,2,3,4];
-	var len = a.length, count = 0;
-	var test = new IndexEnumerator(()=>
-	{
-		return {
-			source: [0,1,2,3,4],
-			length: 5,
+		var last:number = <any>null;
+		while(test.moveNext())
+		{
+			count++;
+			last = test.current!;
 		}
+		assert.equal(count, len);
+		assert.equal(last, 4);
+		test.dispose();
 	});
-	var last:number = <any>null;
-	while(test.moveNext()) {
-		count++;
-		last = test.current!;
-	}
-	assert.equal(count,len);
-	assert.equal(last,4);
-	test.dispose();
 });

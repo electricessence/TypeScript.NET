@@ -60,15 +60,6 @@
         };
         return Yielder;
     }());
-    var EnumeratorState;
-    (function (EnumeratorState) {
-        EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
-        EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
-        EnumeratorState[EnumeratorState["Completed"] = 2] = "Completed";
-        EnumeratorState[EnumeratorState["Faulted"] = 3] = "Faulted";
-        EnumeratorState[EnumeratorState["Interrupted"] = 4] = "Interrupted";
-        EnumeratorState[EnumeratorState["Disposed"] = 5] = "Disposed";
-    })(EnumeratorState || (EnumeratorState = {}));
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
         function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
@@ -94,7 +85,7 @@
         Object.defineProperty(EnumeratorBase.prototype, "index", {
             get: function () {
                 var y = this._yielder;
-                return y && y.index;
+                return y ? y.index : NaN;
             },
             enumerable: true,
             configurable: true
@@ -111,39 +102,54 @@
             _.throwIfDisposed();
             var y = _._yielder;
             _._yielder = null;
-            _._state = EnumeratorState.Before;
+            _._state = 0;
             if (y)
                 yielder(y);
         };
         EnumeratorBase.prototype._assertBadState = function () {
             var _ = this;
             switch (_._state) {
-                case EnumeratorState.Faulted:
+                case 3:
                     _.throwIfDisposed("This enumerator caused a fault and was disposed.");
                     break;
-                case EnumeratorState.Disposed:
+                case 5:
                     _.throwIfDisposed("This enumerator was manually disposed.");
                     break;
             }
         };
+        EnumeratorBase.prototype.tryGetCurrent = function (out) {
+            this._assertBadState();
+            if (this._state === 1) {
+                out(this.current);
+                return true;
+            }
+            return false;
+        };
+        Object.defineProperty(EnumeratorBase.prototype, "canMoveNext", {
+            get: function () {
+                return this._state < 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
         EnumeratorBase.prototype.moveNext = function () {
             var _ = this;
             _._assertBadState();
             try {
                 switch (_._state) {
-                    case EnumeratorState.Before:
+                    case 0:
                         _._yielder = _._yielder || yielder();
-                        _._state = EnumeratorState.Running;
+                        _._state = 1;
                         var initializer = _._initializer;
                         if (initializer)
                             initializer();
-                    case EnumeratorState.Running:
+                    case 1:
                         if (_._tryGetNext(_._yielder)) {
                             return true;
                         }
                         else {
                             this.dispose();
-                            _._state = EnumeratorState.Completed;
+                            _._state = 2;
                             return false;
                         }
                     default:
@@ -152,9 +158,16 @@
             }
             catch (e) {
                 this.dispose();
-                _._state = EnumeratorState.Faulted;
+                _._state = 3;
                 throw e;
             }
+        };
+        EnumeratorBase.prototype.tryMoveNext = function (out) {
+            if (this.moveNext()) {
+                out(this.current);
+                return true;
+            }
+            return false;
         };
         EnumeratorBase.prototype.nextValue = function () {
             return this.moveNext()
@@ -167,13 +180,13 @@
                 : IteratorResult_1.IteratorResult.Done;
         };
         EnumeratorBase.prototype.end = function () {
-            this._ensureDisposeState(EnumeratorState.Interrupted);
+            this._ensureDisposeState(4);
         };
         EnumeratorBase.prototype['return'] = function (value) {
             var _ = this;
             _._assertBadState();
             try {
-                return value === VOID0 || _._state === EnumeratorState.Completed || _._state === EnumeratorState.Interrupted
+                return value === VOID0 || _._state === 2 || _._state === 4
                     ? IteratorResult_1.IteratorResult.Done
                     : new IteratorResult_1.IteratorResult(value, VOID0, true);
             }
@@ -196,7 +209,7 @@
             _._disposer = null;
             var y = _._yielder;
             _._yielder = null;
-            this._state = EnumeratorState.Disposed;
+            this._state = 5;
             if (y)
                 yielder(y);
             if (disposer)

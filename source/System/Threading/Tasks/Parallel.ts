@@ -17,8 +17,6 @@ import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
 
 declare const navigator:any;
-declare const require:any;
-declare const self:any;
 declare const __dirname:string;
 
 //noinspection JSUnusedAssignment
@@ -26,9 +24,9 @@ const
 	MAX_WORKERS:number = 16,
 	VOID0:undefined          = void 0,
 	URL                = typeof self!==Type.UNDEFINED
-		? (self.URL ? self.URL : self.webkitURL)
+		? (self.URL ? self.URL : (<any>self).webkitURL)
 		: null,
-	_supports          = (isNodeJS || self.Worker) ? true : false; // node always supports parallel
+	_supports          = (isNodeJS || (<any>self).Worker) ? true : false; // node always supports parallel
 
 export interface ParallelOptions
 {
@@ -55,7 +53,7 @@ export interface ParallelOptions
 const defaults:ParallelOptions = {
 	evalPath: isNodeJS ? __dirname + '/eval.js' : VOID0,
 	maxConcurrency: isNodeJS
-		? require('os').cpus().length
+		? (<any>require)('os').cpus().length
 		: (navigator.hardwareConcurrency || 4),
 	allowSynchronous: true,
 	env: {},

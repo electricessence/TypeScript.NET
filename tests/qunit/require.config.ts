@@ -1,9 +1,7 @@
 ///<reference types="qunit"/>
 
-declare const requirejs:any;
-
 //noinspection SpellCheckingInspection
-requirejs.config({
+(<any>requirejs).config({
 
 	baseUrl: './',
 	urlArgs: 't=' + (new Date()).getTime(),

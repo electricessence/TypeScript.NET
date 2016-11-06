@@ -12,6 +12,7 @@
 import {IIteratorResult} from "./IIterator";
 import {IteratorResult} from "./IteratorResult";
 import {IEnumerator} from "./IEnumerator";
+import {Action} from "../../FunctionTypes";
 
 const VOID0:undefined = void 0;
 
@@ -31,9 +32,22 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 		return this._current;
 	}
 
-	protected abstract canMoveNext():boolean;
+	protected abstract _canMoveNext():boolean;
+
+	get canMoveNext():boolean {
+		return this._canMoveNext();
+	}
 
 	abstract moveNext():boolean;
+
+	tryMoveNext(out:Action<T>):boolean {
+		if(this.moveNext()) {
+			out(<T>this._current);
+			return true;
+		}
+		return false;
+	}
+
 
 	protected incrementIndex():number
 	{
@@ -65,7 +79,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 	{
 		try
 		{
-			return value!==VOID0 && this.canMoveNext()
+			return value!==VOID0 && this._canMoveNext()
 				? new IteratorResult(value, VOID0, true)
 				: IteratorResult.Done;
 		}
@@ -88,7 +102,7 @@ export abstract class SimpleEnumerableBase<T> implements IEnumerator<T>
 
 	protected getIsEndless():boolean
 	{
-		return this.canMoveNext();
+		return this._canMoveNext();
 	}
 
 	get isEndless():boolean|undefined

@@ -1,4 +1,6 @@
+///<reference types="node"/>
 import * as assert from "assert";
+import "mocha";
 import * as ICollectionTests from "./ICollection";
 import List from "../../../../dist/commonjs/System/Collections/List";
 

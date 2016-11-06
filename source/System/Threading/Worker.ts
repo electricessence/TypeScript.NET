@@ -6,8 +6,5 @@
 import {isNodeJS} from "../Environment";
 import {WorkerConstructor} from "./WorkerType";
 
-declare const require:any;
-declare const self:any;
-
-export const Worker:WorkerConstructor = isNodeJS ? require('./NodeJSWorker').default : self.Worker;
+export const Worker:WorkerConstructor = isNodeJS ? (<any>require)('./NodeJSWorker').default : (<any>self).Worker;
 export default Worker;

@@ -32,7 +32,7 @@ export class InfiniteEnumerator<T> extends SimpleEnumerableBase<T>
 		super();
 	}
 
-	protected canMoveNext():boolean
+	protected _canMoveNext():boolean
 	{
 		return this._factory!=null;
 	}

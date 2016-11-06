@@ -7,6 +7,7 @@
 var Values = require("../System/Compare");
 var Arrays = require("../System/Collections/Array/Compare");
 var ArrayUtility = require("../System/Collections/Array/Utility");
+var Utility_1 = require("../System/Collections/Array/Utility");
 var enumUtil = require("../System/Collections/Enumeration/Enumerator");
 var Enumerator_1 = require("../System/Collections/Enumeration/Enumerator");
 var EmptyEnumerator_1 = require("../System/Collections/Enumeration/EmptyEnumerator");
@@ -25,7 +26,6 @@ var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext
 var ArgumentNullException_1 = require("../System/Exceptions/ArgumentNullException");
 var ArgumentOutOfRangeException_1 = require("../System/Exceptions/ArgumentOutOfRangeException");
 var extends_1 = require("../extends");
-var Utility_1 = require("../System/Collections/Array/Utility");
 var IndexEnumerator_1 = require("../System/Collections/Enumeration/IndexEnumerator");
 var __extends = extends_1.default;
 var INVALID_DEFAULT = {};

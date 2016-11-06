@@ -12,7 +12,7 @@ import {IIteratorResult} from "./IIterator";
 import {IYield} from "./IYield";
 import {IteratorResult} from "./IteratorResult";
 import __extendsImport from "../../../extends";
-import {Closure} from "../../FunctionTypes";
+import {Closure, Action} from "../../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -63,7 +63,7 @@ class Yielder<T> implements IYield<T>, IDisposable
 }
 
 // IEnumerator State
-enum EnumeratorState { Before, Running, Completed, Faulted, Interrupted, Disposed }
+const enum EnumeratorState { Before, Active, Completed, Faulted, Interrupted, Disposed }
 
 // "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
@@ -83,7 +83,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	get index():number
 	{
 		var y = this._yielder;
-		return y && y.index;
+		return y ? y.index : NaN;
 	}
 
 	constructor(
@@ -124,6 +124,9 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		return this._isEndless;
 	}
 
+	/**
+	 * Added for compatibility but only works if the enumerator is active.
+	 */
 	reset():void
 	{
 		const _ = this;
@@ -149,6 +152,27 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		}
 	}
 
+	/**
+	 * Passes the current value to the out callback if the enumerator is active.
+	 * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+	 */
+	tryGetCurrent(out:Action<T>):boolean {
+		this._assertBadState();
+		if(this._state===EnumeratorState.Active) {
+			out(<T>this.current);
+			return true;
+		}
+		return false;
+	}
+
+	get canMoveNext():boolean {
+		return this._state < EnumeratorState.Completed;
+	}
+
+	/**
+	 * Safely moves to the next entry and returns true if there is one.
+	 * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+	 */
 	moveNext():boolean
 	{
 		const _ = this;
@@ -161,12 +185,12 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			{
 				case EnumeratorState.Before:
 					_._yielder = _._yielder || yielder();
-					_._state = EnumeratorState.Running;
+					_._state = EnumeratorState.Active;
 					var initializer = _._initializer;
 					if(initializer)
 						initializer();
 				// fall through
-				case EnumeratorState.Running:
+				case EnumeratorState.Active:
 					if(_._tryGetNext(_._yielder))
 					{
 						return true;
@@ -187,6 +211,18 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 			_._state = EnumeratorState.Faulted;
 			throw e;
 		}
+	}
+
+	/**
+	 * Moves to the next entry and emits the value through the out callback.
+	 * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+	 */
+	tryMoveNext(out:Action<T>):boolean {
+		if(this.moveNext()) {
+			out(<T>this.current);
+			return true;
+		}
+		return false;
 	}
 
 	nextValue():T|undefined

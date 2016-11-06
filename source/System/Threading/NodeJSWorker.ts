@@ -10,8 +10,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-declare const require:any;
-const ps = require("child_process");
+const ps = (<any>require)("child_process");
 //import {ChildProcess} from "child_process";
 
 /**

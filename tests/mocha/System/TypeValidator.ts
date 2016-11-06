@@ -1,4 +1,6 @@
+///<reference types="node"/>
 import * as assert from "assert";
+import "mocha";
 import {TypeInfoHelper, TypeValidator} from "../../../dist/commonjs/System/TypeValidator";
 
 

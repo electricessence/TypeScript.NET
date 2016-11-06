@@ -20,7 +20,7 @@
             _super.call(this);
             this._factory = _factory;
         }
-        InfiniteEnumerator.prototype.canMoveNext = function () {
+        InfiniteEnumerator.prototype._canMoveNext = function () {
             return this._factory != null;
         };
         InfiniteEnumerator.prototype.moveNext = function () {

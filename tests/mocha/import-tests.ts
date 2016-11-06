@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as fs from "fs";
 
 const root = "./tests/mocha/";

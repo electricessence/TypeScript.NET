@@ -24,6 +24,20 @@
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(SimpleEnumerableBase.prototype, "canMoveNext", {
+            get: function () {
+                return this._canMoveNext();
+            },
+            enumerable: true,
+            configurable: true
+        });
+        SimpleEnumerableBase.prototype.tryMoveNext = function (out) {
+            if (this.moveNext()) {
+                out(this._current);
+                return true;
+            }
+            return false;
+        };
         SimpleEnumerableBase.prototype.incrementIndex = function () {
             var i = this._index;
             this._index = i = isNaN(i) ? 0 : (i + 1);
@@ -43,7 +57,7 @@
         };
         SimpleEnumerableBase.prototype['return'] = function (value) {
             try {
-                return value !== VOID0 && this.canMoveNext()
+                return value !== VOID0 && this._canMoveNext()
                     ? new IteratorResult_1.IteratorResult(value, VOID0, true)
                     : IteratorResult_1.IteratorResult.Done;
             }
@@ -59,7 +73,7 @@
             this.reset();
         };
         SimpleEnumerableBase.prototype.getIsEndless = function () {
-            return this.canMoveNext();
+            return this._canMoveNext();
         };
         Object.defineProperty(SimpleEnumerableBase.prototype, "isEndless", {
             get: function () {

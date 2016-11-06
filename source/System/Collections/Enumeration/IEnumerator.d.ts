@@ -17,9 +17,19 @@ export interface IEnumerator<T> extends IIterator<T>, IDisposable
 	current:T|undefined;
 
 	/**
+	 * Will indicate if moveNext is safe.
+	 */
+	canMoveNext?:boolean;
+
+	/**
 	 * Safely moves to the next entry and returns true if there is one.
 	 */
 	moveNext(value?:any):boolean;
+
+	/**
+	 * Moves to the next entry and emits the value through the out callback.
+	 */
+	tryMoveNext(out:(value:T)=>void):boolean;
 
 	/**
 	 * Restarts the enumeration.

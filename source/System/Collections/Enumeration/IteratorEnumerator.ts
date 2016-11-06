@@ -27,7 +27,7 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 		super();
 	}
 
-	protected canMoveNext():boolean
+	protected _canMoveNext():boolean
 	{
 		return this._iterator!=null;
 	}

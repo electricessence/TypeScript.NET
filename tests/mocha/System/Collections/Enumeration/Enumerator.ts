@@ -1,11 +1,11 @@
-///<reference types="assert"/>
-
+///<reference types="node"/>
+import * as assert from "assert";
+import "mocha";
 import {TypeInfo} from "../../../../../dist/commonjs/System/Types";
 import Queue from "../../../../../dist/commonjs/System/Collections/Queue";
 import * as Enumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator";
 import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArray";
 import {IEnumerator} from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
-import assert = require("assert");
 
 const VOID0:undefined = void 0;
 
