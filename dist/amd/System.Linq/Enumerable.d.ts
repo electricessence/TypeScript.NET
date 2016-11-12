@@ -5,8 +5,6 @@
  */
 import {IEnumerator} from "../System/Collections/Enumeration/IEnumerator";
 import {
-	Action,
-	Predicate,
 	Selector,
 	EqualityComparison,
 	Comparison,

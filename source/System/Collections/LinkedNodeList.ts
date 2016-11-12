@@ -16,7 +16,6 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {
 	Predicate,
 	Selector,
-	Action,
 	PredicateWithIndex,
 	ActionWithIndex,
 	SelectorWithIndex
@@ -107,10 +106,6 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 	// Note, no need for 'useCopy' since this avoids any modification conflict.
 	// If iterating over a copy is necessary, a copy should be made manually.
-	forEach(
-		action:Action<TNode>, ignoreVersioning?:boolean):number
-	forEach(
-		action:Predicate<TNode>, ignoreVersioning?:boolean):number
 	forEach(
 		action:ActionWithIndex<TNode>, ignoreVersioning?:boolean):number
 	forEach(

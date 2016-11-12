@@ -14,7 +14,6 @@ import {
 	Predicate,
 	Action,
 	PredicateWithIndex,
-	Selector,
 	SelectorWithIndex,
 	ActionWithIndex
 } from "../../FunctionTypes";
@@ -334,8 +333,6 @@ export function forEach<T>(
  * @param target
  * @param fn
  */
-export function applyTo<T>(target:IArray<T>, fn:Selector<T,T>):void
-export function applyTo<T>(target:IArray<T>, fn:SelectorWithIndex<T,T>):void
 export function applyTo<T>(target:IArray<T>, fn:SelectorWithIndex<T,T>):void
 {
 	if(target && fn)

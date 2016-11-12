@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { EqualityComparison, Predicate, Action, PredicateWithIndex, Selector, SelectorWithIndex, ActionWithIndex } from "../../FunctionTypes";
+import { EqualityComparison, Predicate, Action, PredicateWithIndex, SelectorWithIndex, ActionWithIndex } from "../../FunctionTypes";
 import { IArray } from "./IArray";
 export declare function initialize<T>(length: number): T[];
 export declare function copy<T>(source: IArray<T>, sourceIndex?: number, length?: number): T[];
@@ -19,7 +19,6 @@ export declare function forEach<T>(source: IArray<T>, action: Action<T>): void;
 export declare function forEach<T>(source: IArray<T>, action: Predicate<T>): void;
 export declare function forEach<T>(source: IArray<T>, action: ActionWithIndex<T>): void;
 export declare function forEach<T>(source: IArray<T>, action: PredicateWithIndex<T>): void;
-export declare function applyTo<T>(target: IArray<T>, fn: Selector<T, T>): void;
 export declare function applyTo<T>(target: IArray<T>, fn: SelectorWithIndex<T, T>): void;
 export declare function removeIndex<T>(array: T[], index: number): boolean;
 export declare function remove<T>(array: T[], value: T, max?: number, equalityComparer?: EqualityComparison<T>): number;

@@ -7,7 +7,7 @@ import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { IDisposable } from "../Disposable/IDisposable";
 import { ILinkedNodeList } from "./ILinkedList";
 import { IEnumerator } from "./Enumeration/IEnumerator";
-import { Predicate, Selector, Action, PredicateWithIndex, ActionWithIndex, SelectorWithIndex } from "../FunctionTypes";
+import { Predicate, Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex } from "../FunctionTypes";
 import { IArray } from "./Array/IArray";
 export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable {
     private _first;
@@ -19,8 +19,6 @@ export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements
     readonly first: TNode | null;
     readonly last: TNode | null;
     readonly count: number;
-    forEach(action: Action<TNode>, ignoreVersioning?: boolean): number;
-    forEach(action: Predicate<TNode>, ignoreVersioning?: boolean): number;
     forEach(action: ActionWithIndex<TNode>, ignoreVersioning?: boolean): number;
     forEach(action: PredicateWithIndex<TNode>, ignoreVersioning?: boolean): number;
     map<T>(selector: Selector<TNode, T>): T[];
