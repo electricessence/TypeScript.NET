@@ -15,7 +15,7 @@ import {IHttpRequestAdapter} from "./IHttpRequestAdapter";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
-
+const NAME = 'HttpRequestFactory';
 /**
  * This class exposes a factory for making requests to prepared uri and params.
  */
@@ -30,7 +30,7 @@ export default class HttpRequestFactory extends DisposableBase
 	{
 		super();
 
-		this._disposableObjectName = 'HttpRequestFactory';
+		this._disposableObjectName = NAME;
 
 		if(!_http)
 			throw new ArgumentNullException('_http');

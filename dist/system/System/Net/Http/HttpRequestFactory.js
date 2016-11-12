@@ -6,7 +6,7 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var ArgumentNullException_1, DisposableBase_1, HttpMethod_1, Uri_1, extends_1;
-    var __extends, HttpRequestFactory;
+    var __extends, NAME, HttpRequestFactory;
     return {
         setters:[
             function (ArgumentNullException_1_1) {
@@ -26,12 +26,13 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
             }],
         execute: function() {
             __extends = extends_1.default;
+            NAME = 'HttpRequestFactory';
             HttpRequestFactory = (function (_super) {
                 __extends(HttpRequestFactory, _super);
                 function HttpRequestFactory(_http, uriDefaults) {
                     _super.call(this);
                     this._http = _http;
-                    this._disposableObjectName = 'HttpRequestFactory';
+                    this._disposableObjectName = NAME;
                     if (!_http)
                         throw new ArgumentNullException_1.ArgumentNullException('_http');
                     this._uriDefaults = Uri_1.Uri.from(uriDefaults);

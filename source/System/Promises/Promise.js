@@ -538,10 +538,12 @@
         return ArrayPromise;
     }(Promise));
     exports.ArrayPromise = ArrayPromise;
+    var PROMISE_COLLECTION = "PromiseCollection";
     var PromiseCollection = (function (_super) {
         __extends(PromiseCollection, _super);
         function PromiseCollection(source) {
             _super.call(this);
+            this._disposableObjectName = PROMISE_COLLECTION;
             this._source = source && source.slice() || [];
         }
         PromiseCollection.prototype._onDispose = function () {

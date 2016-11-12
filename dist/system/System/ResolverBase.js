@@ -6,7 +6,7 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var DisposableBase_1, ArgumentNullException_1, extends_1;
-    var __extends, NULL, ResolverBase;
+    var __extends, NULL, NAME, ResolverBase;
     return {
         setters:[
             function (DisposableBase_1_1) {
@@ -21,6 +21,7 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
         execute: function() {
             __extends = extends_1.default;
             NULL = null;
+            NAME = "ResolverBase";
             ResolverBase = (function (_super) {
                 __extends(ResolverBase, _super);
                 function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
@@ -29,6 +30,7 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
                     this._valueFactory = _valueFactory;
                     this._trapExceptions = _trapExceptions;
                     this._allowReset = _allowReset;
+                    this._disposableObjectName = NAME;
                     if (!_valueFactory)
                         throw new ArgumentNullException_1.ArgumentNullException("valueFactory");
                     this._isValueCreated = false;

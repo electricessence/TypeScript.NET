@@ -60,12 +60,14 @@
         };
         return Yielder;
     }());
+    var NAME = "EnumeratorBase";
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
         function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
             _super.call(this);
             this._initializer = _initializer;
             this._tryGetNext = _tryGetNext;
+            this._disposableObjectName = NAME;
             this.reset();
             if (Types_1.Type.isBoolean(isEndless))
                 this._isEndless = isEndless;

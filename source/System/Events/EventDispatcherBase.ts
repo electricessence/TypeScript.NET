@@ -44,9 +44,16 @@ function entryFinalizer()
 	(<any>p).dispatcher = null;
 }
 
+const NAME = "EventDispatcherBase";
+
 export default
 class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 {
+
+	constructor() {
+		super();
+		this._disposableObjectName = NAME;
+	}
 
 	protected _entries:EventDispatcherEntry<IEntryParams>[];
 

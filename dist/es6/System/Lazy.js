@@ -27,6 +27,7 @@ export class Lazy extends ResolverBase {
 export class ResettableLazy extends Lazy {
     constructor(valueFactory, trapExceptions = false) {
         super(valueFactory, trapExceptions, true);
+        this._disposableObjectName = 'ResettableLazy';
     }
 }
 export default Lazy;

@@ -1074,8 +1074,17 @@ describe(".share()", ()=>
 
 });
 
-var mathTree      = sourceEnumerable.traverseDepthFirst(e=>e.children),
+var mathTree      = sourceEnumerable.traverseDepthFirst(e=>e.children).throwWhenEmpty(), // Add throwWhenEmpty to validate safe case.
     mathTreeArray = mathTree.select(e=>e.b).toArray();
+
+describe(".throwWhenEmpty()",()=>{
+
+	assert.throws(()=>{
+		var e = Enumerable.empty<number>().throwWhenEmpty();
+		var c:number = e.max(); // Add this for a compile check.
+	});
+
+});
 
 describe(".sum()", ()=>
 {

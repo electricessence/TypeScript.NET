@@ -17,12 +17,13 @@
     var Uri_1 = require("../../Uri/Uri");
     var extends_1 = require("../../../extends");
     var __extends = extends_1.default;
+    var NAME = 'HttpRequestFactory';
     var HttpRequestFactory = (function (_super) {
         __extends(HttpRequestFactory, _super);
         function HttpRequestFactory(_http, uriDefaults) {
             _super.call(this);
             this._http = _http;
-            this._disposableObjectName = 'HttpRequestFactory';
+            this._disposableObjectName = NAME;
             if (!_http)
                 throw new ArgumentNullException_1.ArgumentNullException('_http');
             this._uriDefaults = Uri_1.Uri.from(uriDefaults);

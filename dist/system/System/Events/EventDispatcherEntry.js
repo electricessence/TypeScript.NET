@@ -6,7 +6,7 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, DisposableBase_1, ArgumentNullException_1, ArgumentException_1, Compare_1, extends_1;
-    var __extends, EventDispatcherEntry;
+    var __extends, NAME, EventDispatcherEntry;
     return {
         setters:[
             function (Types_1_1) {
@@ -29,6 +29,7 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
             }],
         execute: function() {
             __extends = extends_1.default;
+            NAME = "EventDispatcherEntry";
             EventDispatcherEntry = (function (_super) {
                 __extends(EventDispatcherEntry, _super);
                 function EventDispatcherEntry(type, listener, params, finalizer) {
@@ -44,7 +45,7 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
                     _.type = type;
                     _.listener = listener;
                     _.params = params;
-                    _._disposableObjectName = "EventDispatcherEntry";
+                    _._disposableObjectName = NAME;
                 }
                 EventDispatcherEntry.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);

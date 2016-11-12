@@ -6,7 +6,7 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var AU, shallowCopy_1, DisposableBase_1, dispose_1, EventDispatcherEntry_1, extends_1;
-    var __extends, DISPOSING, DISPOSED, EventDispatcherBase;
+    var __extends, DISPOSING, DISPOSED, NAME, EventDispatcherBase;
     function entryFinalizer() {
         var p = this.params;
         p.dispatcher.removeEntry(this);
@@ -35,11 +35,13 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
         execute: function() {
             __extends = extends_1.default;
             DISPOSING = 'disposing', DISPOSED = 'disposed';
+            NAME = "EventDispatcherBase";
             EventDispatcherBase = (function (_super) {
                 __extends(EventDispatcherBase, _super);
                 function EventDispatcherBase() {
-                    _super.apply(this, arguments);
+                    _super.call(this);
                     this._isDisposing = false;
+                    this._disposableObjectName = NAME;
                 }
                 EventDispatcherBase.prototype.addEventListener = function (type, listener, priority) {
                     if (priority === void 0) { priority = 0; }

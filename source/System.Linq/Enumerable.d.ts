@@ -30,7 +30,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
 		initializer?:Closure | null, isEndless?:boolean | null | undefined):this;
 	force():void;
-	skip(count:number):this;
+	skip(count:number):IInfiniteEnumerable<T>;
 	take(count:number):IFiniteEnumerable<T>;
 	elementAt(index:number):T;
 	elementAtOrDefault(index:number):T | undefined;
@@ -43,14 +43,6 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	singleOrDefault(defaultValue:T):T;
 	any():boolean;
 	isEmpty():boolean;
-	traverseBreadthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
-	traverseBreadthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
-	traverseBreadthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
-		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
-	traverseBreadthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
-		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	traverseDepthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
 	traverseDepthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
 	traverseDepthFirst<TResult>(
@@ -59,8 +51,9 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	traverseDepthFirst<TNode, TResult>(
 		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
-	flatten():ILinqEnumerable<any>;
-	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):ILinqEnumerable<TSelect>;
+	flatten<TFlat>():IInfiniteEnumerable<TFlat>
+	flatten():IInfiniteEnumerable<any>
+	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):IInfiniteEnumerable<TSelect>;
 	scan(func:(a:T, b:T) => T, seed?:T):this;
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):IInfiniteEnumerable<TResult>;
 	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TResult> | null | undefined>):IInfiniteEnumerable<TResult>;
@@ -70,6 +63,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	choose():IInfiniteEnumerable<T>;
 	choose<TResult>(selector?:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
 	where(predicate:PredicateWithIndex<T>):this;
+	nonNull():this;
 	ofType<TType>(
 		type:{
 			new (...params:any[]):TType;
@@ -108,8 +102,8 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 }
 export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 {
-
-	skipWhile(predicate:PredicateWithIndex<T>):this;
+	skip(count:number):ILinqEnumerable<T>;
+	skipWhile(predicate:PredicateWithIndex<T>):ILinqEnumerable<T>;
 	takeWhile(predicate:PredicateWithIndex<T>):this;
 	takeUntil(predicate:PredicateWithIndex<T>, includeUntilValue?:boolean):this;
 	forEach(action:ActionWithIndex<T>, max?:number):number;
@@ -147,12 +141,20 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	contains(value:T, compareSelector?:Selector<T, any>):boolean;
 	indexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number;
 	lastIndexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number;
-	intersect(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, string|number|symbol>):this;
+	intersect(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, string|number|symbol>):ILinqEnumerable<T>;
 	sequenceEqual(second:IEnumerableOrArray<T>, equalityComparer?:EqualityComparison<T>):boolean;
 	ofType<TType>(
 		type:{
 			new (...params:any[]):TType;
 		}):ILinqEnumerable<TType>;
+	traverseBreadthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
+	traverseBreadthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
+	traverseBreadthFirst<TResult>(
+		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
+		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
+	traverseBreadthFirst<TNode, TResult>(
+		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
+		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	orderBy<TKey extends Comparable>(keySelector?:Selector<T, TKey>):IOrderedEnumerable<T>;
 	orderUsing(comparison:Comparison<T>):IOrderedEnumerable<T>;
 	orderUsingReversed(comparison:Comparison<T>):IOrderedEnumerable<T>;
@@ -173,7 +175,15 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 		elementSelector?:Selector<T,TElement>,
 		resultSelector?:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>,
 		compareSelector?:Selector<TKey, any>):ILinqEnumerable<IGrouping<TKey, TElement>>;
-	aggregate(func:(a:T, b:T) => T, seed?:T):T | undefined;
+	flatten<TFlat>():IInfiniteEnumerable<TFlat>
+	flatten():IInfiniteEnumerable<any>
+	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):ILinqEnumerable<TSelect>;
+	aggregate(
+		func:(previous:T, current:T, index:number) => T,
+		seed:T):T
+	aggregate(
+		func:(previous:T, current:T, index:number) => T,
+		seed?:T):T|undefined
 	average(selector:Selector<T, number>):number;
 	average(selector?:SelectorWithIndex<T, number>):number;
 	max():T | undefined;
@@ -187,7 +197,21 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	lastOrDefault():T | undefined;
 	lastOrDefault(defaultValue:T):T;
 	memoize():this;
+	throwWhenEmpty():NotEmptyEnumerable<T>;
 }
+
+export interface NotEmptyEnumerable<T> extends ILinqEnumerable<T>
+{
+	aggregate(
+		func:(previous:T|undefined, current:T) => T,
+		seed?:T):T
+
+	max():T
+	min():T
+	maxBy(keySelector?:Selector<T, Primitive>):T
+	minBy(keySelector?:Selector<T, Primitive>):T
+}
+
 export interface IFiniteEnumerable<T> extends ILinqEnumerable<T>
 {
 

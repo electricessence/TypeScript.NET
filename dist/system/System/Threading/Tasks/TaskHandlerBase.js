@@ -6,7 +6,7 @@ System.register(["../../Disposable/DisposableBase", "../../../extends"], functio
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var DisposableBase_1, extends_1;
-    var __extends, TaskHandlerBase;
+    var __extends, NAME, TaskHandlerBase;
     return {
         setters:[
             function (DisposableBase_1_1) {
@@ -17,10 +17,12 @@ System.register(["../../Disposable/DisposableBase", "../../../extends"], functio
             }],
         execute: function() {
             __extends = extends_1.default;
+            NAME = "TaskHandlerBase";
             TaskHandlerBase = (function (_super) {
                 __extends(TaskHandlerBase, _super);
                 function TaskHandlerBase() {
                     _super.call(this);
+                    this._disposableObjectName = NAME;
                     this._timeoutId = null;
                     this._status = 0;
                 }

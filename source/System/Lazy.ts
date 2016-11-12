@@ -49,6 +49,7 @@ export class ResettableLazy<T> extends Lazy<T>
 	constructor(valueFactory:Func<T>, trapExceptions:boolean = false)
 	{
 		super(valueFactory, trapExceptions, true);
+		this._disposableObjectName = 'ResettableLazy';
 	}
 }
 

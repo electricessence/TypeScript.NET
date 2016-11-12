@@ -15,6 +15,7 @@ import {Closure} from "../FunctionTypes";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+const NAME = "EventDispatcherEntry";
 export class EventDispatcherEntry<TParams>
 extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 {
@@ -36,7 +37,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 		_.type = type;
 		_.listener = listener;
 		_.params = params;
-		_._disposableObjectName = "EventDispatcherEntry";
+		_._disposableObjectName = NAME;
 	}
 
 	protected _onDispose():void

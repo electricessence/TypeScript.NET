@@ -65,6 +65,8 @@ class Yielder<T> implements IYield<T>, IDisposable
 // IEnumerator State
 const enum EnumeratorState { Before, Active, Completed, Faulted, Interrupted, Disposed }
 
+const NAME = "EnumeratorBase";
+
 // "Enumerator" is conflict JScript's "Enumerator"
 // Naming this class EnumeratorBase to avoid collision with IE.
 export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
@@ -102,6 +104,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 		isEndless?:boolean)
 	{
 		super();
+		this._disposableObjectName = NAME;
 		this.reset();
 		if(Type.isBoolean(isEndless))
 			this._isEndless = isEndless;

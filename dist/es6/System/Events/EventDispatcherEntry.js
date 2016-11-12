@@ -9,6 +9,7 @@ import { ArgumentException } from "../Exceptions/ArgumentException";
 import { areEquivalent } from "../Compare";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
+const NAME = "EventDispatcherEntry";
 export class EventDispatcherEntry extends DisposableBase {
     constructor(type, listener, params, finalizer) {
         super(finalizer);
@@ -23,7 +24,7 @@ export class EventDispatcherEntry extends DisposableBase {
         _.type = type;
         _.listener = listener;
         _.params = params;
-        _._disposableObjectName = "EventDispatcherEntry";
+        _._disposableObjectName = NAME;
     }
     _onDispose() {
         super._onDispose();

@@ -10,9 +10,11 @@ import { Subscription } from "./Subscription";
 import { DisposableBase } from "../Disposable/DisposableBase";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
+const NAME = "SubscribableBase";
 export class SubscribableBase extends DisposableBase {
     constructor() {
         super();
+        this._disposableObjectName = NAME;
     }
     _getSubscribers() {
         var s = this.__subscriptions;

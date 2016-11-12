@@ -18,6 +18,7 @@
     var Compare_1 = require("../Compare");
     var extends_1 = require("../../extends");
     var __extends = extends_1.default;
+    var NAME = "EventDispatcherEntry";
     var EventDispatcherEntry = (function (_super) {
         __extends(EventDispatcherEntry, _super);
         function EventDispatcherEntry(type, listener, params, finalizer) {
@@ -33,7 +34,7 @@
             _.type = type;
             _.listener = listener;
             _.params = params;
-            _._disposableObjectName = "EventDispatcherEntry";
+            _._disposableObjectName = NAME;
         }
         EventDispatcherEntry.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);

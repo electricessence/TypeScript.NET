@@ -24,11 +24,13 @@
         p.dispatcher.removeEntry(this);
         p.dispatcher = null;
     }
+    var NAME = "EventDispatcherBase";
     var EventDispatcherBase = (function (_super) {
         __extends(EventDispatcherBase, _super);
         function EventDispatcherBase() {
-            _super.apply(this, arguments);
+            _super.call(this);
             this._isDisposing = false;
+            this._disposableObjectName = NAME;
         }
         EventDispatcherBase.prototype.addEventListener = function (type, listener, priority) {
             if (priority === void 0) { priority = 0; }

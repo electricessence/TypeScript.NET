@@ -851,6 +851,7 @@ export class ArrayPromise<T> extends Promise<T[]>
 	}
 }
 
+const PROMISE_COLLECTION = "PromiseCollection";
 /**
  * A Promise collection exposes useful methods for handling a collection of promises and their results.
  */
@@ -861,6 +862,7 @@ export class PromiseCollection<T> extends DisposableBase
 	constructor(source:PromiseLike<T>[]|null|undefined)
 	{
 		super();
+		this._disposableObjectName = PROMISE_COLLECTION;
 		this._source = source && source.slice() || [];
 	}
 

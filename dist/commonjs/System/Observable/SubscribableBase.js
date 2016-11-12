@@ -11,10 +11,12 @@ var Subscription_1 = require("./Subscription");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
 var extends_1 = require("../../extends");
 var __extends = extends_1.default;
+var NAME = "SubscribableBase";
 var SubscribableBase = (function (_super) {
     __extends(SubscribableBase, _super);
     function SubscribableBase() {
         _super.call(this);
+        this._disposableObjectName = NAME;
     }
     SubscribableBase.prototype._getSubscribers = function () {
         var s = this.__subscriptions;

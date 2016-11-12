@@ -195,6 +195,15 @@ export module Type
 	export const FUNCTION:string = _FUNCTION;
 
 	/**
+	 * Returns true if the value parameter is null or undefined.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	function isNullOrUndefined(value:any):value is null|undefined {
+		return value===null || value===VOID0;
+	}
+
+	/**
 	 * Returns true if the value parameter is a boolean.
 	 * @param value
 	 * @returns {boolean}

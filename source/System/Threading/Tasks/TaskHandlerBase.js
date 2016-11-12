@@ -14,10 +14,12 @@
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var extends_1 = require("../../../extends");
     var __extends = extends_1.default;
+    var NAME = "TaskHandlerBase";
     var TaskHandlerBase = (function (_super) {
         __extends(TaskHandlerBase, _super);
         function TaskHandlerBase() {
             _super.call(this);
+            this._disposableObjectName = NAME;
             this._timeoutId = null;
             this._status = 0;
         }

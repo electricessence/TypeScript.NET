@@ -441,9 +441,11 @@ export class ArrayPromise extends Promise {
         return new ArrayPromise(resolve => value, true);
     }
 }
+const PROMISE_COLLECTION = "PromiseCollection";
 export class PromiseCollection extends DisposableBase {
     constructor(source) {
         super();
+        this._disposableObjectName = PROMISE_COLLECTION;
         this._source = source && source.slice() || [];
     }
     _onDispose() {

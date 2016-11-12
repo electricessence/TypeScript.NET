@@ -8,6 +8,7 @@ var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
 var extends_1 = require("../extends");
 var __extends = extends_1.default;
 var NULL = null;
+var NAME = "ResolverBase";
 var ResolverBase = (function (_super) {
     __extends(ResolverBase, _super);
     function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
@@ -16,6 +17,7 @@ var ResolverBase = (function (_super) {
         this._valueFactory = _valueFactory;
         this._trapExceptions = _trapExceptions;
         this._allowReset = _allowReset;
+        this._disposableObjectName = NAME;
         if (!_valueFactory)
             throw new ArgumentNullException_1.ArgumentNullException("valueFactory");
         this._isValueCreated = false;

@@ -15,10 +15,12 @@ function entryFinalizer() {
     p.dispatcher.removeEntry(this);
     p.dispatcher = null;
 }
+const NAME = "EventDispatcherBase";
 export default class EventDispatcherBase extends DisposableBase {
     constructor() {
-        super(...arguments);
+        super();
         this._isDisposing = false;
+        this._disposableObjectName = NAME;
     }
     addEventListener(type, listener, priority = 0) {
         var e = this._entries;

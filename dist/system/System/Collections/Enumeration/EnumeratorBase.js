@@ -6,7 +6,7 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, DisposableBase_1, ObjectPool_1, IteratorResult_1, extends_1;
-    var __extends, VOID0, yielderPool, Yielder, EnumeratorBase;
+    var __extends, VOID0, yielderPool, Yielder, NAME, EnumeratorBase;
     function yielder(recycle) {
         if (!yielderPool)
             yielderPool
@@ -68,12 +68,14 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                 };
                 return Yielder;
             }());
+            NAME = "EnumeratorBase";
             EnumeratorBase = (function (_super) {
                 __extends(EnumeratorBase, _super);
                 function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
                     _super.call(this);
                     this._initializer = _initializer;
                     this._tryGetNext = _tryGetNext;
+                    this._disposableObjectName = NAME;
                     this.reset();
                     if (Types_1.Type.isBoolean(isEndless))
                         this._isEndless = isEndless;

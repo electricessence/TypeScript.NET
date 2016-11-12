@@ -16,6 +16,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+const NAME = "SubscribableBase";
 // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
 export class SubscribableBase<TSubscriber>
 extends DisposableBase
@@ -35,6 +36,7 @@ extends DisposableBase
 	constructor()
 	{
 		super();
+		this._disposableObjectName = NAME;
 	}
 
 	private _findEntryNode(

@@ -10,6 +10,7 @@ import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
+const NAME = "TaskHandlerBase";
 /**
  * A simple class for handling potentially repeated executions either deferred or immediate.
  */
@@ -20,6 +21,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 	constructor()
 	{
 		super();
+		this._disposableObjectName = NAME;
 		this._timeoutId = null;
 		this._status = TaskStatus.Created
 	}

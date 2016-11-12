@@ -18,7 +18,7 @@ export {Error};
 export class ObjectDisposedException extends InvalidOperationException
 {
 
-	objectName:string;
+	readonly objectName:string;
 
 	// For simplicity and consistency, lets stick with 1 signature.
 	constructor(
@@ -28,7 +28,7 @@ export class ObjectDisposedException extends InvalidOperationException
 	{
 		super(message || '', innerException, (_)=>
 		{
-			_.objectName = objectName;
+			(<any>_).objectName = objectName;
 		});
 	}
 

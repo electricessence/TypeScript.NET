@@ -54,6 +54,7 @@ System.register(["./ResolverBase", "../extends"], function(exports_1, context_1)
                 function ResettableLazy(valueFactory, trapExceptions) {
                     if (trapExceptions === void 0) { trapExceptions = false; }
                     _super.call(this, valueFactory, trapExceptions, true);
+                    this._disposableObjectName = 'ResettableLazy';
                 }
                 return ResettableLazy;
             }(Lazy));

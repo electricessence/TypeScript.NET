@@ -5,9 +5,11 @@
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
+const NAME = "TaskHandlerBase";
 export class TaskHandlerBase extends DisposableBase {
     constructor() {
         super();
+        this._disposableObjectName = NAME;
         this._timeoutId = null;
         this._status = 0;
     }

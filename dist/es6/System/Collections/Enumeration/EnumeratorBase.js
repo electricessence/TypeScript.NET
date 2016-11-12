@@ -42,11 +42,13 @@ class Yielder {
         this.yieldBreak();
     }
 }
+const NAME = "EnumeratorBase";
 export class EnumeratorBase extends DisposableBase {
     constructor(_initializer, _tryGetNext, disposer, isEndless) {
         super();
         this._initializer = _initializer;
         this._tryGetNext = _tryGetNext;
+        this._disposableObjectName = NAME;
         this.reset();
         if (Type.isBoolean(isEndless))
             this._isEndless = isEndless;

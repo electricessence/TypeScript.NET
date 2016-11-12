@@ -3,11 +3,20 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../extends", "../System/Collections/Enumeration/IndexEnumerator"], function(exports_1, context_1) {
+System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, extends_1, IndexEnumerator_1;
-    var __extends, INVALID_DEFAULT, VOID0, NULL, BREAK, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
+    var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, extends_1;
+    var select, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
+    function BREAK(e) {
+        return 0;
+    }
+    function RETURN(e) {
+        return 1;
+    }
+    function isNotNullOrUndefined(e) {
+        return e !== null && e !== VOID0;
+    }
     function getEmptyEnumerator() {
         return EmptyEnumerator_1.EmptyEnumerator;
     }
@@ -33,6 +42,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
     function throwIfDisposed(disposed) {
         if (disposed)
             throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
+        return true;
     }
     return {
         setters:[
@@ -95,18 +105,17 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             function (ArgumentOutOfRangeException_1_1) {
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
             },
-            function (extends_1_1) {
-                extends_1 = extends_1_1;
-            },
             function (IndexEnumerator_1_1) {
                 IndexEnumerator_1 = IndexEnumerator_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }],
         execute: function() {
             __extends = extends_1.default;
             INVALID_DEFAULT = {};
             VOID0 = void 0;
             NULL = null;
-            BREAK = function (element) { return 0; };
             LinqFunctions = (function (_super) {
                 __extends(LinqFunctions, _super);
                 function LinqFunctions() {
@@ -128,6 +137,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     _super.call(this, finalizer);
                     this._enumeratorFactory = _enumeratorFactory;
                     this._isEndless = true;
+                    this._disposableObjectName = "InfiniteEnumerable";
                 }
                 Object.defineProperty(InfiniteEnumerable.prototype, "isEndless", {
                     get: function () {
@@ -149,35 +159,40 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     _.throwIfDisposed();
                     return new InfiniteEnumerable(function () { return _.getEnumerator(); });
                 };
-                InfiniteEnumerable.prototype.doAction = function (action, initializer, isEndless) {
+                InfiniteEnumerable.prototype.doAction = function (action, initializer, isEndless, onComplete) {
                     if (isEndless === void 0) { isEndless = this.isEndless; }
                     var _ = this;
+                    _.throwIfDisposed();
                     var isE = isEndless || undefined;
-                    var disposed = !_.throwIfDisposed();
+                    if (!action)
+                        throw new ArgumentNullException_1.ArgumentNullException("action");
                     return new Enumerable(function () {
                         var enumerator;
                         var index = 0;
                         return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(disposed);
+                            throwIfDisposed(!action);
                             if (initializer)
                                 initializer();
                             index = 0;
                             enumerator = _.getEnumerator();
                         }, function (yielder) {
-                            throwIfDisposed(disposed);
+                            throwIfDisposed(!action);
                             while (enumerator.moveNext()) {
-                                var actionResult = action(enumerator.current, index++);
+                                var c = enumerator.current;
+                                var actionResult = action(c, index++);
                                 if (actionResult === false || actionResult === 0)
                                     return yielder.yieldBreak();
                                 if (actionResult !== 2)
-                                    return yielder.yieldReturn(enumerator.current);
+                                    return yielder.yieldReturn(c);
                             }
+                            if (onComplete)
+                                onComplete(index);
                             return false;
                         }, function () {
                             dispose_1.dispose(enumerator);
                         }, isE);
                     }, function () {
-                        disposed = true;
+                        action = NULL;
                     }, isE);
                 };
                 InfiniteEnumerable.prototype.force = function () {
@@ -192,11 +207,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (!isFinite(count))
                         return new InfiniteEnumerable(getEmptyEnumerator);
                     Integer_1.Integer.assert(count, "count");
-                    return this.doAction(function (element, index) {
-                        return index < count
-                            ? 2
-                            : 1;
-                    });
+                    return this.where(function (element, index) { return index >= count; });
                 };
                 InfiniteEnumerable.prototype.take = function (count) {
                     if (!(count > 0))
@@ -273,52 +284,6 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 InfiniteEnumerable.prototype.isEmpty = function () {
                     return !this.any();
                 };
-                InfiniteEnumerable.prototype.traverseBreadthFirst = function (childrenSelector, resultSelector) {
-                    if (resultSelector === void 0) { resultSelector = Functions.Identity; }
-                    var _ = this;
-                    var disposed = !_.throwIfDisposed();
-                    var isEndless = _._isEndless;
-                    return new Enumerable(function () {
-                        var enumerator;
-                        var nestLevel = 0;
-                        var buffer, len;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(disposed);
-                            enumerator = _.getEnumerator();
-                            nestLevel = 0;
-                            buffer = [];
-                            len = 0;
-                        }, function (yielder) {
-                            throwIfDisposed(disposed);
-                            while (true) {
-                                if (enumerator.moveNext()) {
-                                    buffer[len++] = enumerator.current;
-                                    return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
-                                }
-                                if (!len)
-                                    return yielder.yieldBreak();
-                                var next = Enumerable
-                                    .from(buffer)
-                                    .selectMany(childrenSelector);
-                                if (!next.any()) {
-                                    return yielder.yieldBreak();
-                                }
-                                else {
-                                    nestLevel++;
-                                    buffer = [];
-                                    len = 0;
-                                    enumerator.dispose();
-                                    enumerator = next.getEnumerator();
-                                }
-                            }
-                        }, function () {
-                            dispose_1.dispose(enumerator);
-                            buffer.length = 0;
-                        }, isEndless);
-                    }, function () {
-                        disposed = true;
-                    }, isEndless);
-                };
                 InfiniteEnumerable.prototype.traverseDepthFirst = function (childrenSelector, resultSelector) {
                     if (resultSelector === void 0) { resultSelector = Functions.Identity; }
                     var _ = this;
@@ -338,7 +303,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                                 if (enumerator.moveNext()) {
                                     var value = resultSelector(enumerator.current, len);
                                     enumeratorStack[len++] = enumerator;
-                                    var e = Enumerable.fromAny(childrenSelector(enumerator.current));
+                                    var c = childrenSelector(enumerator.current);
+                                    var e = !Types_1.Type.isString(c) && Enumerable.fromAny(c);
                                     enumerator = e ? e.getEnumerator() : EmptyEnumerator_1.EmptyEnumerator;
                                     return yielder.yieldReturn(value);
                                 }
@@ -361,130 +327,34 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     }, isEndless);
                 };
                 InfiniteEnumerable.prototype.flatten = function () {
-                    var _ = this;
-                    var disposed = !_.throwIfDisposed();
-                    var isEndless = _._isEndless;
-                    return new Enumerable(function () {
-                        var enumerator;
-                        var middleEnumerator = null;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(disposed);
-                            enumerator = _.getEnumerator();
-                        }, function (yielder) {
-                            throwIfDisposed(disposed);
-                            while (true) {
-                                if (middleEnumerator) {
-                                    if (middleEnumerator.moveNext()) {
-                                        return yielder.yieldReturn(middleEnumerator.current);
-                                    }
-                                    else {
-                                        middleEnumerator.dispose();
-                                        middleEnumerator = null;
-                                    }
-                                }
-                                if (enumerator.moveNext()) {
-                                    var c = enumerator.current;
-                                    var e = !Types_1.Type.isString(c) && Enumerable.fromAny(c);
-                                    if (e) {
-                                        middleEnumerator = e
-                                            .selectMany(Functions.Identity)
-                                            .flatten()
-                                            .getEnumerator();
-                                        continue;
-                                    }
-                                    else {
-                                        return yielder.yieldReturn(c);
-                                    }
-                                }
-                                return yielder.yieldBreak();
-                            }
-                        }, function () {
-                            dispose_1.dispose(enumerator, middleEnumerator);
-                        }, isEndless);
-                    }, function () {
-                        disposed = true;
-                    }, isEndless);
+                    return this.selectMany(function (entry, i) {
+                        var e = !Types_1.Type.isString(entry) && Enumerable.fromAny(entry);
+                        return e ? e.flatten() : [entry];
+                    });
                 };
                 InfiniteEnumerable.prototype.pairwise = function (selector) {
                     var _ = this;
                     _.throwIfDisposed();
                     if (!selector)
                         throw new ArgumentNullException_1.ArgumentNullException("selector");
-                    var isEndless = _._isEndless;
-                    return new Enumerable(function () {
-                        var enumerator;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(!selector);
-                            enumerator = _.getEnumerator();
-                            enumerator.moveNext();
-                        }, function (yielder) {
-                            throwIfDisposed(!selector);
-                            var prev = enumerator.current;
-                            return enumerator.moveNext()
-                                && yielder.yieldReturn(selector(prev, enumerator.current));
-                        }, function () {
-                            dispose_1.dispose(enumerator);
-                        }, isEndless);
-                    }, function () {
-                        selector = NULL;
-                    }, isEndless);
+                    var previous;
+                    return this.select(function (value, i) {
+                        var result = i ? selector(previous, value, i) : NULL;
+                        previous = value;
+                        return result;
+                    }).skip(1);
                 };
                 InfiniteEnumerable.prototype.scan = function (func, seed) {
                     var _ = this;
                     _.throwIfDisposed();
                     if (!func)
                         throw new ArgumentNullException_1.ArgumentNullException("func");
-                    var isUseSeed = seed !== VOID0;
-                    return new Enumerable(function () {
-                        var enumerator;
-                        var value;
-                        var isFirst;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(!func);
-                            enumerator = _.getEnumerator();
-                            isFirst = true;
-                        }, function (yielder) {
-                            throwIfDisposed(!func);
-                            if (isFirst) {
-                                isFirst = false;
-                                return isUseSeed
-                                    ? yielder.yieldReturn(value = seed)
-                                    : enumerator.moveNext()
-                                        && yielder.yieldReturn(value = enumerator.current);
-                            }
-                            return (enumerator.moveNext())
-                                ? yielder.yieldReturn(value = func(value, enumerator.current))
-                                : false;
-                        }, function () {
-                            dispose_1.dispose(enumerator);
-                        }, _._isEndless);
-                    }, function () {
-                        func = NULL;
-                    }, _._isEndless);
+                    return (seed === VOID0
+                        ? this.select(function (value, i) { return seed = i ? func(seed, value, i) : value; })
+                        : this.select(function (value, i) { return seed = func(seed, value, i); }));
                 };
                 InfiniteEnumerable.prototype.select = function (selector) {
-                    var _ = this;
-                    _.throwIfDisposed();
-                    if (!selector)
-                        throw new ArgumentNullException_1.ArgumentNullException("selector");
-                    return new Enumerable(function () {
-                        var enumerator;
-                        var index = 0;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(!selector);
-                            index = 0;
-                            enumerator = _.getEnumerator();
-                        }, function (yielder) {
-                            throwIfDisposed(!selector);
-                            return enumerator.moveNext()
-                                ? yielder.yieldReturn(selector(enumerator.current, index++))
-                                : yielder.yieldBreak();
-                        }, function () {
-                            dispose_1.dispose(enumerator);
-                        }, _._isEndless);
-                    }, function () {
-                        selector = NULL;
-                    }, _._isEndless);
+                    return this._filterSelected(selector);
                 };
                 InfiniteEnumerable.prototype._selectMany = function (collectionSelector, resultSelector) {
                     var _ = this;
@@ -532,60 +402,44 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 InfiniteEnumerable.prototype.selectMany = function (collectionSelector, resultSelector) {
                     return this._selectMany(collectionSelector, resultSelector);
                 };
-                InfiniteEnumerable.prototype._choose = function (selector) {
-                    var _ = this;
-                    var disposed = !_.throwIfDisposed();
-                    var isEndless = _._isEndless;
-                    return new Enumerable(function () {
-                        var enumerator;
-                        var index = 0;
-                        return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(disposed);
-                            index = 0;
-                            enumerator = _.getEnumerator();
-                        }, function (yielder) {
-                            throwIfDisposed(disposed);
-                            while (enumerator.moveNext()) {
-                                var result = selector(enumerator.current, index++);
-                                if (result !== null && result !== VOID0)
-                                    return yielder.yieldReturn(result);
-                            }
-                            return false;
-                        }, function () {
-                            dispose_1.dispose(enumerator);
-                        }, isEndless);
-                    }, function () {
-                        disposed = true;
-                    }, isEndless);
-                };
-                InfiniteEnumerable.prototype.choose = function (selector) {
+                InfiniteEnumerable.prototype._filterSelected = function (selector, filter) {
                     if (selector === void 0) { selector = Functions.Identity; }
-                    return this._choose(selector);
-                };
-                InfiniteEnumerable.prototype.where = function (predicate) {
                     var _ = this;
                     var disposed = !_.throwIfDisposed();
+                    if (!selector)
+                        throw new ArgumentNullException_1.ArgumentNullException("selector");
                     return new Enumerable(function () {
                         var enumerator;
                         var index = 0;
                         return new EnumeratorBase_1.EnumeratorBase(function () {
-                            throwIfDisposed(disposed);
+                            throwIfDisposed(!selector);
                             index = 0;
                             enumerator = _.getEnumerator();
                         }, function (yielder) {
                             throwIfDisposed(disposed);
                             while (enumerator.moveNext()) {
-                                var v = enumerator.current;
-                                if (predicate(v, index++))
-                                    return yielder.yieldReturn(v);
+                                var i = index++;
+                                var result = selector(enumerator.current, i);
+                                if (!filter || filter(result, i++))
+                                    return yielder.yieldReturn(result);
                             }
                             return false;
                         }, function () {
                             dispose_1.dispose(enumerator);
                         }, _._isEndless);
                     }, function () {
-                        disposed = true;
+                        disposed = false;
                     }, _._isEndless);
+                };
+                InfiniteEnumerable.prototype.choose = function (selector) {
+                    if (selector === void 0) { selector = Functions.Identity; }
+                    return this._filterSelected(selector, isNotNullOrUndefined);
+                };
+                InfiniteEnumerable.prototype.where = function (predicate) {
+                    return this._filterSelected(Functions.Identity, predicate);
+                };
+                InfiniteEnumerable.prototype.nonNull = function () {
+                    return this.where(function (v) { return v != null && v != VOID0; });
                 };
                 InfiniteEnumerable.prototype.ofType = function (type) {
                     var typeName;
@@ -607,8 +461,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                                 .where(function (x) { return x instanceof type; });
                     }
                     return this
-                        .choose()
-                        .where(function (x) { return (typeof x) === typeName; });
+                        .where(function (x) { return isNotNullOrUndefined(x) && typeof x === typeName; });
                 };
                 InfiniteEnumerable.prototype.except = function (second, compareSelector) {
                     var _ = this;
@@ -1065,11 +918,15 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 function Enumerable(enumeratorFactory, finalizer, isEndless) {
                     _super.call(this, enumeratorFactory, finalizer);
                     this._isEndless = isEndless;
+                    this._disposableObjectName = "Enumerable";
                 }
                 Enumerable.prototype.asEnumerable = function () {
                     var _ = this;
                     _.throwIfDisposed();
                     return new Enumerable(function () { return _.getEnumerator(); });
+                };
+                Enumerable.prototype.skip = function (count) {
+                    return _super.prototype.skip.call(this, count);
                 };
                 Enumerable.prototype.skipWhile = function (predicate) {
                     this.throwIfDisposed();
@@ -1109,10 +966,58 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         found = false;
                     }, null);
                 };
+                Enumerable.prototype.traverseBreadthFirst = function (childrenSelector, resultSelector) {
+                    if (resultSelector === void 0) { resultSelector = Functions.Identity; }
+                    var _ = this;
+                    var disposed = !_.throwIfDisposed();
+                    var isEndless = _._isEndless;
+                    return new Enumerable(function () {
+                        var enumerator;
+                        var nestLevel = 0;
+                        var buffer, len;
+                        return new EnumeratorBase_1.EnumeratorBase(function () {
+                            throwIfDisposed(disposed);
+                            enumerator = _.getEnumerator();
+                            nestLevel = 0;
+                            buffer = [];
+                            len = 0;
+                        }, function (yielder) {
+                            throwIfDisposed(disposed);
+                            while (true) {
+                                if (enumerator.moveNext()) {
+                                    buffer[len++] = enumerator.current;
+                                    return yielder.yieldReturn(resultSelector(enumerator.current, nestLevel));
+                                }
+                                if (!len)
+                                    return yielder.yieldBreak();
+                                var next = Enumerable
+                                    .from(buffer)
+                                    .selectMany(childrenSelector);
+                                if (!next.any()) {
+                                    return yielder.yieldBreak();
+                                }
+                                else {
+                                    nestLevel++;
+                                    buffer = [];
+                                    len = 0;
+                                    enumerator.dispose();
+                                    enumerator = next.getEnumerator();
+                                }
+                            }
+                        }, function () {
+                            dispose_1.dispose(enumerator);
+                            buffer.length = 0;
+                        }, isEndless);
+                    }, function () {
+                        disposed = true;
+                    }, isEndless);
+                };
                 Enumerable.prototype.forEach = function (action, max) {
                     if (max === void 0) { max = Infinity; }
                     var _ = this;
                     _.throwIfDisposed();
+                    if (!action)
+                        throw new ArgumentNullException_1.ArgumentNullException("action");
                     Enumerator_1.throwIfEndless(_.isEndless);
                     var index = 0;
                     return max > 0 ? dispose_1.using(_.getEnumerator(), function (e) {
@@ -1224,7 +1129,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 Enumerable.prototype.choose = function (selector) {
                     if (selector === void 0) { selector = Functions.Identity; }
-                    return this._choose(selector);
+                    return this._filterSelected(selector, isNotNullOrUndefined);
                 };
                 Enumerable.prototype.reverse = function () {
                     var _ = this;
@@ -1493,10 +1398,17 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         elementSelector = NULL;
                     });
                 };
+                Enumerable.prototype.flatten = function () {
+                    return _super.prototype.flatten.call(this);
+                };
+                Enumerable.prototype.pairwise = function (selector) {
+                    return _super.prototype.pairwise.call(this, selector);
+                };
                 Enumerable.prototype.aggregate = function (func, seed) {
-                    return this
-                        .scan(func, seed)
-                        .lastOrDefault();
+                    this.forEach(function (value, i) {
+                        seed = i ? func(seed, value, i) : value;
+                    });
+                    return seed;
                 };
                 Enumerable.prototype.average = function (selector) {
                     if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
@@ -1640,6 +1552,12 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         enumerator = NULL;
                     });
                 };
+                Enumerable.prototype.throwWhenEmpty = function () {
+                    return this.doAction(RETURN, null, this.isEndless, function (count) {
+                        if (!count)
+                            throw "Collection is empty.";
+                    });
+                };
                 return Enumerable;
             }(InfiniteEnumerable));
             exports_1("Enumerable", Enumerable);
@@ -1647,6 +1565,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 __extends(FiniteEnumerable, _super);
                 function FiniteEnumerable(enumeratorFactory, finalizer) {
                     _super.call(this, enumeratorFactory, finalizer, false);
+                    this._disposableObjectName = "FiniteEnumerable";
                 }
                 return FiniteEnumerable;
             }(Enumerable));
@@ -1799,6 +1718,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 function Grouping(_groupKey, elements) {
                     _super.call(this, elements);
                     this._groupKey = _groupKey;
+                    this._disposableObjectName = "Grouping";
                 }
                 Object.defineProperty(Grouping.prototype, "key", {
                     get: function () {
@@ -1854,6 +1774,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     this.parent = parent;
                     this.comparer = comparer;
                     Enumerator_1.throwIfEndless(!!source && !!source.isEndless);
+                    this._disposableObjectName = "OrderedEnumerable";
                 }
                 OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {
                     this.throwIfDisposed();

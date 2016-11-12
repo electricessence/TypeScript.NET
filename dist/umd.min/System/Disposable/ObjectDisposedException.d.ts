@@ -7,7 +7,7 @@ import { InvalidOperationException, Error } from "../Exceptions/InvalidOperation
 import { IDisposableAware } from "./IDisposableAware";
 export { Error };
 export declare class ObjectDisposedException extends InvalidOperationException {
-    objectName: string;
+    readonly objectName: string;
     constructor(objectName: string, message?: string, innerException?: Error);
     protected getName(): string;
     toString(): string;

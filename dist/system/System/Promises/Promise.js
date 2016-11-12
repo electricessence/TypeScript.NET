@@ -8,7 +8,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1;
-    var __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PromiseCollection, pools;
+    var __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PROMISE_COLLECTION, PromiseCollection, pools;
     function isPromise(value) {
         return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
     }
@@ -559,10 +559,12 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 return ArrayPromise;
             }(Promise));
             exports_1("ArrayPromise", ArrayPromise);
+            PROMISE_COLLECTION = "PromiseCollection";
             PromiseCollection = (function (_super) {
                 __extends(PromiseCollection, _super);
                 function PromiseCollection(source) {
                     _super.call(this);
+                    this._disposableObjectName = PROMISE_COLLECTION;
                     this._source = source && source.slice() || [];
                 }
                 PromiseCollection.prototype._onDispose = function () {

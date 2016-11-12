@@ -10,6 +10,7 @@ import __extendsImport from "../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 const NULL:any = null;
+const NAME:string = "ResolverBase";
 
 /**
  * The ResolverBase class handles resolving a factory method and detects recursion.
@@ -29,6 +30,7 @@ export abstract class ResolverBase<T> extends DisposableBase
 		private _allowReset:boolean = false)
 	{
 		super();
+		this._disposableObjectName = NAME;
 		if(!_valueFactory) throw new ArgumentNullException("valueFactory");
 		this._isValueCreated = false;
 	}

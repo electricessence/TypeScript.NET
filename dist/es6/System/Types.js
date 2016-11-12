@@ -91,6 +91,9 @@ export var Type;
     Type.SYMBOL = _SYMBOL;
     Type.UNDEFINED = _UNDEFINED;
     Type.FUNCTION = _FUNCTION;
+    function isNullOrUndefined(value) {
+        return value === null || value === VOID0;
+    }
     function isBoolean(value) {
         return typeof value === _BOOLEAN;
     }

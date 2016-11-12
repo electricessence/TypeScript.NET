@@ -712,7 +712,13 @@
             assert.equal(e2.current, "b");
         });
     });
-    var mathTree = sourceEnumerable.traverseDepthFirst(function (e) { return e.children; }), mathTreeArray = mathTree.select(function (e) { return e.b; }).toArray();
+    var mathTree = sourceEnumerable.traverseDepthFirst(function (e) { return e.children; }).throwWhenEmpty(), mathTreeArray = mathTree.select(function (e) { return e.b; }).toArray();
+    describe(".throwWhenEmpty()", function () {
+        assert.throws(function () {
+            var e = Linq_1.default.empty().throwWhenEmpty();
+            var c = e.max();
+        });
+    });
     describe(".sum()", function () {
         it("should render the sum value", function () {
             var v = Procedure.sum(mathTreeArray);
