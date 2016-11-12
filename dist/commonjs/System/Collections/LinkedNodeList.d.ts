@@ -7,7 +7,7 @@ import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { IDisposable } from "../Disposable/IDisposable";
 import { ILinkedNodeList } from "./ILinkedList";
 import { IEnumerator } from "./Enumeration/IEnumerator";
-import { Predicate, Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex } from "../FunctionTypes";
+import { Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex } from "../FunctionTypes";
 import { IArray } from "./Array/IArray";
 export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable {
     private _first;
@@ -27,7 +27,6 @@ export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements
     dispose(): void;
     contains(node: TNode): boolean;
     getNodeAt(index: number): TNode | null;
-    find(condition: Predicate<TNode>): TNode | null;
     find(condition: PredicateWithIndex<TNode>): TNode | null;
     indexOf(node: TNode): number;
     removeFirst(): boolean;

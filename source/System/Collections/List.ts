@@ -9,13 +9,7 @@ import {remove, indexOf, contains, copyTo, removeIndex} from "./Array/Utility";
 import {forEach} from "./Enumeration/Enumerator";
 import {Type} from "../Types";
 import {CollectionBase} from "./CollectionBase";
-import {
-	Predicate,
-	Action,
-	EqualityComparison,
-	ActionWithIndex,
-	PredicateWithIndex
-} from "../FunctionTypes";
+import {EqualityComparison, ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IList} from "./IList";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
@@ -196,7 +190,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
-	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T> | Action<T> | Predicate<T>, useCopy?:boolean):number
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, useCopy?:boolean):number
 	{
 		var s = this._source;
 		return forEach(useCopy ? s.slice() : this, action);

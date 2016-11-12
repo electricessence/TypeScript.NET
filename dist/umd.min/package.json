@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet-umd",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",

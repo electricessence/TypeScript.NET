@@ -11,8 +11,6 @@ import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
 import {
 	EqualityComparison,
-	Predicate,
-	Action,
 	PredicateWithIndex,
 	SelectorWithIndex,
 	ActionWithIndex
@@ -261,8 +259,6 @@ export function register<T>(
  * @param predicate
  * @returns {number}
  */
-export function findIndex<T>(array:IArray<T>, predicate:Predicate<T>):number
-export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):number
 export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):number
 {
 	if(!array)
@@ -299,12 +295,6 @@ export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):n
  * @param source
  * @param action
  */
-export function forEach<T>(
-	source:IArray<T>,
-	action:Action<T>):void
-export function forEach<T>(
-	source:IArray<T>,
-	action:Predicate<T>):void
 export function forEach<T>(
 	source:IArray<T>,
 	action:ActionWithIndex<T>):void

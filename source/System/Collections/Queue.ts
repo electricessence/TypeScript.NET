@@ -13,13 +13,7 @@ import {NotImplementedException} from "../Exceptions/NotImplementedException";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
 import {CollectionBase} from "./CollectionBase";
-import {
-	EqualityComparison,
-	Predicate,
-	Action,
-	ActionWithIndex,
-	PredicateWithIndex
-} from "../FunctionTypes";
+import {EqualityComparison, Action, ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import __extendsImport from "../../extends";
@@ -183,11 +177,9 @@ extends CollectionBase<T>
 		return result;
 	}
 
-	forEach(action:Action<T>):number
-	forEach(action:Predicate<T>):number
 	forEach(action:ActionWithIndex<T>):number
 	forEach(action:PredicateWithIndex<T>):number
-	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T> | Action<T> | Predicate<T>):number
+	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>):number
 	{
 		return super.forEach(action, true);
 	}

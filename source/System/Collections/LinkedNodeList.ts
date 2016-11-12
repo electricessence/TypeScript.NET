@@ -13,13 +13,7 @@ import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeList} from "./ILinkedList";
 import {IEnumerator} from "./Enumeration/IEnumerator";
-import {
-	Predicate,
-	Selector,
-	PredicateWithIndex,
-	ActionWithIndex,
-	SelectorWithIndex
-} from "../FunctionTypes";
+import {Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex} from "../FunctionTypes";
 import {IArray} from "./Array/IArray";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -225,8 +219,6 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 	}
 
-	find(condition:Predicate<TNode>):TNode|null
-	find(condition:PredicateWithIndex<TNode>):TNode|null
 	find(condition:PredicateWithIndex<TNode>):TNode|null
 	{
 		var node:TNode|null = null;

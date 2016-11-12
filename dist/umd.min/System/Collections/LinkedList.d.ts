@@ -6,7 +6,7 @@
 import { CollectionBase } from "./CollectionBase";
 import { ILinkedListNode } from "./ILinkedListNode";
 import { IEnumerator } from "./Enumeration/IEnumerator";
-import { Predicate, Action, EqualityComparison, PredicateWithIndex, ActionWithIndex } from "../FunctionTypes";
+import { EqualityComparison, PredicateWithIndex, ActionWithIndex } from "../FunctionTypes";
 import { ILinkedList } from "./ILinkedList";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {
@@ -18,8 +18,6 @@ export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedL
     protected _addInternal(entry: T): boolean;
     protected _removeInternal(entry: T, max?: number): number;
     protected _clearInternal(): number;
-    forEach(action: Action<T>, useCopy?: boolean): number;
-    forEach(action: Predicate<T>, useCopy?: boolean): number;
     forEach(action: ActionWithIndex<T>, useCopy?: boolean): number;
     forEach(action: PredicateWithIndex<T>, useCopy?: boolean): number;
     getEnumerator(): IEnumerator<T>;

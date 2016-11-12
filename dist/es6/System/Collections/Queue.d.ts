@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { CollectionBase } from "./CollectionBase";
-import { EqualityComparison, Predicate, Action, ActionWithIndex, PredicateWithIndex } from "../FunctionTypes";
+import { EqualityComparison, Action, ActionWithIndex, PredicateWithIndex } from "../FunctionTypes";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
 export declare class Queue<T> extends CollectionBase<T> {
@@ -20,8 +20,6 @@ export declare class Queue<T> extends CollectionBase<T> {
     protected _clearInternal(): number;
     protected _onDispose(): void;
     dump(max?: number): T[];
-    forEach(action: Action<T>): number;
-    forEach(action: Predicate<T>): number;
     forEach(action: ActionWithIndex<T>): number;
     forEach(action: PredicateWithIndex<T>): number;
     setCapacity(capacity: number): void;

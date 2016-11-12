@@ -12,13 +12,7 @@ import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {CollectionBase} from "./CollectionBase";
 import {ILinkedListNode, ILinkedNode, INodeWithValue} from "./ILinkedListNode";
 import {IEnumerator} from "./Enumeration/IEnumerator";
-import {
-	Predicate,
-	Action,
-	EqualityComparison,
-	PredicateWithIndex,
-	ActionWithIndex
-} from "../FunctionTypes";
+import {EqualityComparison, PredicateWithIndex, ActionWithIndex} from "../FunctionTypes";
 import {ILinkedList} from "./ILinkedList";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IDisposable} from "../Disposable/IDisposable";
@@ -177,8 +171,6 @@ extends CollectionBase<T> implements ILinkedList<T>
 		return list.clear();
 	}
 
-	forEach(action:Action<T>, useCopy?:boolean):number;
-	forEach(action:Predicate<T>, useCopy?:boolean):number;
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number;
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number;
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>,

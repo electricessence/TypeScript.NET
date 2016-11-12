@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import { EqualityComparison, Predicate, Action, PredicateWithIndex, SelectorWithIndex, ActionWithIndex } from "../../FunctionTypes";
+import { EqualityComparison, PredicateWithIndex, SelectorWithIndex, ActionWithIndex } from "../../FunctionTypes";
 import { IArray } from "./IArray";
 export declare function initialize<T>(length: number): T[];
 export declare function copy<T>(source: IArray<T>, sourceIndex?: number, length?: number): T[];
@@ -13,10 +13,7 @@ export declare function replace<T>(array: IArray<T>, old: T, newValue: T, max?: 
 export declare function updateRange<T>(array: ArrayLike<T>, value: T, start?: number, stop?: number): void;
 export declare function clear(array: IArray<any>, start?: number, stop?: number): void;
 export declare function register<T>(array: IArray<T>, item: T, equalityComparer?: EqualityComparison<T>): boolean;
-export declare function findIndex<T>(array: IArray<T>, predicate: Predicate<T>): number;
 export declare function findIndex<T>(array: IArray<T>, predicate: PredicateWithIndex<T>): number;
-export declare function forEach<T>(source: IArray<T>, action: Action<T>): void;
-export declare function forEach<T>(source: IArray<T>, action: Predicate<T>): void;
 export declare function forEach<T>(source: IArray<T>, action: ActionWithIndex<T>): void;
 export declare function forEach<T>(source: IArray<T>, action: PredicateWithIndex<T>): void;
 export declare function applyTo<T>(target: IArray<T>, fn: SelectorWithIndex<T, T>): void;
