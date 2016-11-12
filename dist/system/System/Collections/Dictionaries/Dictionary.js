@@ -3,11 +3,11 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../Compare", "../../Types", "../../Functions", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./DictionaryBase", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Types_1, Functions_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, DictionaryBase_1, extends_1;
-    var __extends, VOID0, HashEntry, linkedListPool, NULL, GET_HASH_CODE, Dictionary;
+    var Compare_1, Types_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, getIdentifier_1, DictionaryBase_1, extends_1;
+    var __extends, VOID0, HashEntry, linkedListPool, Dictionary;
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
@@ -15,21 +15,6 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
         if (!recycle)
             return linkedListPool.take();
         linkedListPool.add(recycle);
-    }
-    function callHasOwnProperty(target, key) {
-        return Object.prototype.hasOwnProperty.call(target, key);
-    }
-    function getHashString(obj) {
-        if (obj === null)
-            return NULL;
-        if (obj === VOID0)
-            return Types_1.Type.UNDEFINED;
-        if (Types_1.Type.hasMemberOfType(obj, GET_HASH_CODE, Types_1.Type.FUNCTION)) {
-            return obj.getHashCode();
-        }
-        return (typeof obj.toString == Types_1.Type.FUNCTION)
-            ? obj.toString()
-            : Object.prototype.toString.call(obj);
     }
     return {
         setters:[
@@ -39,9 +24,6 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
-            function (Functions_1_1) {
-                Functions_1 = Functions_1_1;
-            },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
             },
@@ -50,6 +32,9 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
             },
             function (ObjectPool_1_1) {
                 ObjectPool_1 = ObjectPool_1_1;
+            },
+            function (getIdentifier_1_1) {
+                getIdentifier_1 = getIdentifier_1_1;
             },
             function (DictionaryBase_1_1) {
                 DictionaryBase_1 = DictionaryBase_1_1;
@@ -69,20 +54,20 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
                 }
                 return HashEntry;
             }());
-            NULL = "null", GET_HASH_CODE = "getHashCode";
             Dictionary = (function (_super) {
                 __extends(Dictionary, _super);
-                function Dictionary(_keyComparer) {
-                    if (_keyComparer === void 0) { _keyComparer = Functions_1.Functions.Identity; }
+                function Dictionary(keyGenerator) {
                     _super.call(this);
-                    this._keyComparer = _keyComparer;
+                    this._keyGenerator = keyGenerator;
                     this._entries = linkedNodeList();
                     this._buckets = {};
                 }
                 Dictionary.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
-                    this._entries = null;
-                    this._buckets = null;
+                    var _ = this;
+                    _._entries = null;
+                    _._buckets = null;
+                    _._hashGenerator = null;
                 };
                 Dictionary.prototype.getCount = function () {
                     return this._entries && this._entries.unsafeCount || 0;
@@ -90,8 +75,10 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
                 Dictionary.prototype._getBucket = function (hash, createIfMissing) {
                     if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
                         return null;
+                    if (!Types_1.Type.isPrimitiveOrSymbol(hash))
+                        console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
                     var buckets = this._buckets;
-                    var bucket = callHasOwnProperty(buckets, hash) ? buckets[hash] : VOID0;
+                    var bucket = buckets[hash];
                     if (createIfMissing && !bucket)
                         buckets[hash]
                             = bucket
@@ -101,11 +88,13 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
                 Dictionary.prototype._getBucketEntry = function (key, hash, bucket) {
                     if (key === null || key === VOID0 || !this.getCount())
                         return null;
-                    var _ = this, comparer = _._keyComparer, compareKey = comparer(key);
+                    var _ = this, comparer = _._keyGenerator, compareKey = comparer ? comparer(key) : key;
                     if (!bucket)
-                        bucket = _._getBucket(hash || getHashString(compareKey));
+                        bucket = _._getBucket(hash || getIdentifier_1.getIdentifier(compareKey));
                     return bucket
-                        && bucket.find(function (e) { return comparer(e.key) === compareKey; });
+                        && (comparer
+                            ? bucket.find(function (e) { return comparer(e.key) === compareKey; })
+                            : bucket.find(function (e) { return e.key === compareKey; }));
                 };
                 Dictionary.prototype._getEntry = function (key) {
                     var e = this._getBucketEntry(key);
@@ -117,7 +106,7 @@ System.register(["../../Compare", "../../Types", "../../Functions", "../Enumerat
                 };
                 Dictionary.prototype._setValueInternal = function (key, value) {
                     var _ = this;
-                    var buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+                    var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier_1.getIdentifier(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
                     if (bucketEntry) {
                         var b = bucket;
                         if (value === VOID0) {

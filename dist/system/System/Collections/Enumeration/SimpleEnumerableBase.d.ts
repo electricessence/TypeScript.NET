@@ -4,13 +4,16 @@
  */
 import { IIteratorResult } from "./IIterator";
 import { IEnumerator } from "./IEnumerator";
+import { Action } from "../../FunctionTypes";
 export declare abstract class SimpleEnumerableBase<T> implements IEnumerator<T> {
     protected _current: T | undefined;
     protected _index: number;
     constructor();
     readonly current: T | undefined;
-    protected abstract canMoveNext(): boolean;
+    protected abstract _canMoveNext(): boolean;
+    readonly canMoveNext: boolean;
     abstract moveNext(): boolean;
+    tryMoveNext(out: Action<T>): boolean;
     protected incrementIndex(): number;
     nextValue(): T | undefined;
     next(): IIteratorResult<T>;

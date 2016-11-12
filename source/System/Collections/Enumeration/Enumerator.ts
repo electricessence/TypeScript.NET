@@ -9,14 +9,7 @@ import {Type} from "../../Types";
 import {ArrayEnumerator} from "./ArrayEnumerator";
 import {IndexEnumerator} from "./IndexEnumerator";
 import {UnsupportedEnumerableException} from "./UnsupportedEnumerableException";
-import {
-	Selector,
-	SelectorWithIndex,
-	Action,
-	Predicate,
-	ActionWithIndex,
-	PredicateWithIndex
-} from "../../FunctionTypes";
+import {SelectorWithIndex, ActionWithIndex, PredicateWithIndex} from "../../FunctionTypes";
 import {IEnumerator} from "./IEnumerator";
 import {IEnumerable} from "./IEnumerable";
 import {IEnumerableOrArray} from "../IEnumerableOrArray";
@@ -124,19 +117,10 @@ export function isIterator<T>(instance:any):instance is IIterator<T>
  * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
  * @returns the total times iterated.  If the enumerable is unrecognized then -1.
  */
-export function forEach<T>(
-	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
-	action:Action<T>,
-	max?:number):number
 
 export function forEach<T>(
 	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
 	action:ActionWithIndex<T>,
-	max?:number):number
-
-export function forEach<T>(
-	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
-	action:Predicate<T>,
 	max?:number):number
 
 export function forEach<T>(
@@ -241,15 +225,6 @@ export function toArray<T>(
  * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
  * @returns {TResult[]}
  */
-export function map<T,TResult>(
-	source:IEnumerableOrArray<T>|IEnumerator<T>,
-	selector:Selector<T,TResult>,
-	max?:number):TResult[]
-
-export function map<T,TResult>(
-	source:IEnumerableOrArray<T>|IEnumerator<T>,
-	selector:SelectorWithIndex<T,TResult>,
-	max?:number):TResult[]
 
 export function map<T,TResult>(
 	source:IEnumerableOrArray<T>|IEnumerator<T>,

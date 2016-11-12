@@ -8,8 +8,6 @@ import {Action, Predicate, PredicateWithIndex, ActionWithIndex} from "../../Func
 export interface IEnumerateEach<T>
 {
 	// Enforcing an interface that allows operating on a copy can prevent changing underlying data while enumerating.
-	forEach(action:Action<T>, useCopy?:boolean):number;
-	forEach(action:Predicate<T>, useCopy?:boolean):number;
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number;
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number;
 }

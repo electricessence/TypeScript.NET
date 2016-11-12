@@ -13,7 +13,12 @@ import {Action} from "../../FunctionTypes";
  */
 export interface IHashable
 {
-	getHashCode():string;
+	getHashCode():string|number;
+}
+
+export interface ISymbolizable
+{
+	getSymbol():symbol;
 }
 
 export interface IMap<TValue>

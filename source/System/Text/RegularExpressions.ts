@@ -7,7 +7,7 @@
 // NOTE: Avoid real (types/interfaces only = ok) dependencies so this class can be used cleanly.
 import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
-import {Selector, SelectorWithIndex} from "../FunctionTypes";
+import {SelectorWithIndex} from "../FunctionTypes";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -66,15 +66,6 @@ export module RegexOptions
 	export type IgnorePatternWhitespace = "w";
 
 	export type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky | IgnorePatternWhitespace;
-}
-
-export interface MatchEvaluator extends Selector<Match,Primitive>
-{
-}
-
-
-export interface MatchEvaluatorIndexed extends SelectorWithIndex<Match,Primitive>
-{
 }
 
 
@@ -194,12 +185,7 @@ export class Regex
 
 	replace(
 		input:string,
-		evaluator:MatchEvaluatorIndexed,
-		count?:number):string;
-
-	replace(
-		input:string,
-		evaluator:MatchEvaluator,
+		evaluator:SelectorWithIndex<Match,Primitive>,
 		count?:number):string;
 
 	replace(
@@ -248,7 +234,7 @@ export class Regex
 	static replace(
 		input:string,
 		pattern:string,
-		evaluator:MatchEvaluator,
+		evaluator:SelectorWithIndex<Match,Primitive>,
 		options?:RegexOptions.Literal[]):string;
 
 	static replace(

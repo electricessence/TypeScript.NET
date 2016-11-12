@@ -5,7 +5,7 @@
  */
 
 
-import * as Values from "../System/Compare";
+import {areEqual as areEqualValues, compare as compareValues} from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
 import {copy} from "../System/Collections/Array/Utility";
@@ -57,6 +57,7 @@ import {
 import {EnumerableAction} from "./EnumerableAction";
 import __extendsImport from "../extends";
 import {IndexEnumerator} from "../System/Collections/Enumeration/IndexEnumerator";
+import {Primitive} from "../System/Primitive";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -161,16 +162,6 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	 * @param isEndless Special case where isEndless can be null in order to negate inheritance.
 	 * @returns {any}
 	 */
-	doAction(
-		action:Action<T> | Predicate<T> | Selector<T, number> | Selector<T, EnumerableAction>,
-		initializer?:Closure|null,
-		isEndless?:boolean|null|undefined):this
-
-	doAction(
-		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
-		initializer?:Closure|null,
-		isEndless?:boolean|null|undefined):this
-
 	doAction(
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
 		initializer?:Closure|null,
@@ -420,15 +411,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	traverseBreadthFirst<TResult>(
 		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
-		resultSelector:Selector<T,TResult>):Enumerable<TResult>;
-
-	traverseBreadthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
 		resultSelector:SelectorWithIndex<T,TResult>):Enumerable<TResult>;
-
-	traverseBreadthFirst<TNode, TResult>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
-		resultSelector:Selector<T,TResult>):Enumerable<TResult>;
 
 	traverseBreadthFirst<TNode, TResult>(
 		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
@@ -525,15 +508,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	traverseDepthFirst<TResult>(
 		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
-		resultSelector:Selector<T,TResult>):Enumerable<TResult>;
-
-	traverseDepthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
 		resultSelector:SelectorWithIndex<T,TResult>):Enumerable<TResult>;
-
-	traverseDepthFirst<TNode, TResult>(
-		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
-		resultSelector:Selector<T,TResult>):Enumerable<TResult>;
 
 	traverseDepthFirst<TNode, TResult>(
 		childrenSelector:(element:T|TNode) => IEnumerableOrArray<TNode> | null | undefined,
@@ -801,8 +776,6 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	// #endregion
 
-	select<TResult>(selector:Selector<T, TResult>):InfiniteEnumerable<TResult>
-	select<TResult>(selector:SelectorWithIndex<T, TResult>):InfiniteEnumerable<TResult>
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):InfiniteEnumerable<TResult>
 	{
 		const _ = this;
@@ -950,12 +923,6 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
-	selectMany<TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TResult> | null | undefined>):InfiniteEnumerable<TResult>;
-
-	selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
-		resultSelector:(collection:T, element:TElement) => TResult):InfiniteEnumerable<TResult>;
 
 	selectMany<TResult>(
 		collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TResult> | null | undefined>):InfiniteEnumerable<TResult>;
@@ -1035,8 +1002,6 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		return this._choose(selector)
 	}
 
-	where(predicate:Predicate<T>):this
-	where(predicate:PredicateWithIndex<T>):this
 	where(predicate:PredicateWithIndex<T>):this
 	{
 
@@ -1117,9 +1082,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			.where(x=>(typeof x)===typeName);
 	}
 
-	except<TCompare>(
+	except(
 		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):this
+		compareSelector?:Selector<T, string|number|symbol>):this
 	{
 		const _ = this;
 		var disposed = !_.throwIfDisposed();
@@ -1175,13 +1140,14 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
-	distinct(compareSelector?:(value:T) => T):this
+
+	distinct(compareSelector?:Selector<T, string|number|symbol>):this
 	{
 		return this.except(NULL, compareSelector);
 	}
 
 	// [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
-	distinctUntilChanged<TCompare>(compareSelector:Selector<T, TCompare> = Functions.Identity):this
+	distinctUntilChanged(compareSelector:Selector<T, any> = Functions.Identity):this
 	{
 
 		const _ = this;
@@ -1192,7 +1158,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			() =>
 			{
 				let enumerator:IEnumerator<T>;
-				let compareKey:TCompare;
+				let compareKey:any;
 				let initial:boolean = true;
 
 				return new EnumeratorBase<T>(
@@ -1213,7 +1179,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 							{
 								initial = false;
 							}
-							else if(Values.areEqual(compareKey, key))
+							else if(areEqualValues(compareKey, key))
 							{
 								continue;
 							}
@@ -1299,13 +1265,6 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
-	zip<TSecond, TResult>(
-		second:IEnumerableOrArray<TSecond>,
-		resultSelector:(first:T, second:TSecond) => TResult):Enumerable<TResult>
-
-	zip<TSecond, TResult>(
-		second:IEnumerableOrArray<TSecond>,
-		resultSelector:(first:T, second:TSecond, index:number) => TResult):Enumerable<TResult>
 
 	zip<TSecond, TResult>(
 		second:IEnumerableOrArray<TSecond>,
@@ -1343,14 +1302,6 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
-
-	zipMultiple<TSecond, TResult>(
-		second:IArray<IEnumerableOrArray<TSecond>>,
-		resultSelector:(first:T, second:TSecond) => TResult):Enumerable<TResult>
-
-	zipMultiple<TSecond, TResult>(
-		second:IArray<IEnumerableOrArray<TSecond>>,
-		resultSelector:(first:T, second:TSecond, index:number) => TResult):Enumerable<TResult>
 
 	zipMultiple<TSecond, TResult>(
 		second:IArray<IEnumerableOrArray<TSecond>>,
@@ -1422,12 +1373,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	// #region Join Methods
 
-	join<TInner, TKey, TResult, TCompare>(
+	join<TInner, TKey, TResult>(
 		inner:IEnumerableOrArray<TInner>,
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
-		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Enumerable<TResult>
+		compareSelector:Selector<TKey, string|number|symbol> = Functions.Identity):Enumerable<TResult>
 	{
 
 		const _ = this;
@@ -1485,12 +1436,12 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		);
 	}
 
-	groupJoin<TInner, TKey, TResult, TCompare>(
+	groupJoin<TInner, TKey, TResult>(
 		inner:IEnumerableOrArray<TInner>,
 		outerKeySelector:Selector<T, TKey>,
 		innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[]|null) => TResult,
-		compareSelector:Selector<TKey, TCompare> = Functions.Identity):Enumerable<TResult>
+		compareSelector:Selector<TKey, string|number|symbol> = Functions.Identity):Enumerable<TResult>
 	{
 		const _ = this;
 
@@ -1594,9 +1545,9 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	}
 
 
-	union<TCompare>(
+	union(
 		second:IEnumerableOrArray<T>,
-		compareSelector:Selector<T, TCompare> = Functions.Identity):this
+		compareSelector:Selector<T, string|number|symbol> = Functions.Identity):this
 	{
 		const _ = this;
 		const isEndless = _._isEndless;
@@ -2003,8 +1954,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 // #region Indexing/Paging methods.
 
-	skipWhile(predicate:Predicate<T>):this
-	skipWhile(predicate:PredicateWithIndex<T>):this
 	skipWhile(predicate:PredicateWithIndex<T>):this
 	{
 		this.throwIfDisposed();
@@ -2016,8 +1965,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		);
 	}
 
-	takeWhile(predicate:Predicate<T>):this
-	takeWhile(predicate:PredicateWithIndex<T>):this
 	takeWhile(predicate:PredicateWithIndex<T>):this
 	{
 		this.throwIfDisposed();
@@ -2036,8 +1983,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	// Is like the inverse of take While with the ability to return the value identified by the predicate.
-	takeUntil(predicate:Predicate<T>, includeUntilValue?:boolean):this
-	takeUntil(predicate:PredicateWithIndex<T>, includeUntilValue?:boolean):this
 	takeUntil(predicate:PredicateWithIndex<T>, includeUntilValue?:boolean):this
 	{
 		this.throwIfDisposed();
@@ -2074,8 +2019,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 
-	forEach(action:Action<T>, max?:number):number
-	forEach(action:Predicate<T>, max?:number):number
 	forEach(action:ActionWithIndex<T>, max?:number):number
 	forEach(action:PredicateWithIndex<T>, max?:number):number
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, max:number = Infinity):number
@@ -2111,8 +2054,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	// #region Conversion Methods
-	toArray(predicate?:Predicate<T>):T[]
-	toArray(predicate?:PredicateWithIndex<T>):T[]
 	toArray(predicate?:PredicateWithIndex<T>):T[]
 	{
 		return predicate
@@ -2135,30 +2076,11 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return target;
 	}
 
-	toLookup<TKey, TValue, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TValue>,
-		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>
 
-	toLookup<TKey, TValue, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:SelectorWithIndex<T, TValue>,
-		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>
-
-	toLookup<TKey, TValue, TCompare>(
-		keySelector:SelectorWithIndex<T, TKey>,
-		elementSelector:Selector<T, TValue>,
-		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>
-
-	toLookup<TKey, TValue, TCompare>(
-		keySelector:SelectorWithIndex<T, TKey>,
-		elementSelector?:SelectorWithIndex<T, TValue>,
-		compareSelector?:Selector<TKey, TCompare>):ILookup<TKey, TValue>
-
-	toLookup<TKey, TValue, TCompare>(
+	toLookup<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TValue> = Functions.Identity,
-		compareSelector:Selector<TKey, TCompare> = Functions.Identity):ILookup<TKey, TValue>
+		compareSelector:Selector<TKey, string|number|symbol> = Functions.Identity):ILookup<TKey, TValue>
 	{
 		var dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
 		this.forEach(
@@ -2176,10 +2098,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	toMap<TResult>(
-		keySelector:Selector<T, string>,
-		elementSelector:Selector<T, TResult>):IMap<TResult>
-	toMap<TResult>(
-		keySelector:SelectorWithIndex<T, string>,
+		keySelector:SelectorWithIndex<T, string|number|symbol>,
 		elementSelector:SelectorWithIndex<T, TResult>):IMap<TResult>
 	{
 		var obj:IMap<TResult> = {};
@@ -2190,14 +2109,11 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return obj;
 	}
 
-	toDictionary<TKey, TValue, TCompare>(
-		keySelector:SelectorWithIndex<T, TKey>|Selector<T, TKey>,
-		elementSelector:SelectorWithIndex<T, TValue>|Selector<T, TValue>,
-		compareSelector?:Selector<TKey, TCompare>):IDictionary<TKey, TValue>
-	toDictionary<TKey, TValue, TCompare>(
+
+	toDictionary<TKey, TValue>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TValue>,
-		compareSelector:Selector<TKey, TCompare> = Functions.Identity):IDictionary<TKey, TValue>
+		compareSelector:Selector<TKey, string|number|symbol> = Functions.Identity):IDictionary<TKey, TValue>
 	{
 		var dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
 		this.forEach((x, i)=> dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
@@ -2285,19 +2201,10 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	// To help with type guarding.
 
-	select<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
-	select<TResult>(selector:SelectorWithIndex<T, TResult>):Enumerable<TResult>
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):Enumerable<TResult>
 	{
 		return <Enumerable<TResult>>super.select(selector);
 	}
-
-	selectMany<TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TResult> | null | undefined>):Enumerable<TResult>;
-
-	selectMany<TElement, TResult>(
-		collectionSelector:Selector<T, IEnumerableOrArray<TElement> | null | undefined>,
-		resultSelector:(collection:T, element:TElement)=>TResult):Enumerable<TResult>;
 
 	selectMany<TResult>(
 		collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TResult> | null | undefined>):Enumerable<TResult>;
@@ -2314,7 +2221,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	choose():Enumerable<T>;
-	choose<TResult>(selector:Selector<T, TResult>):Enumerable<TResult>
 	choose<TResult>(selector:SelectorWithIndex<T, TResult>):Enumerable<TResult>
 	choose(selector:SelectorWithIndex<T, any> = Functions.Identity):Enumerable<any>
 	{
@@ -2411,8 +2317,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		);
 	}
 
-	count(predicate:Predicate<T>):number
-	count(predicate?:PredicateWithIndex<T>):number
 	count(predicate?:PredicateWithIndex<T>):number
 	{
 		var count:number = 0;
@@ -2436,8 +2340,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	// Akin to '.every' on an array.
-	all(predicate:Predicate<T>):boolean
-	all(predicate:PredicateWithIndex<T>):boolean
 	all(predicate:PredicateWithIndex<T>):boolean
 	{
 		if(!predicate)
@@ -2456,16 +2358,12 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	// 'every' has been added here for parity/compatibility with an array.
-	every(predicate:Predicate<T>):boolean
-	every(predicate:PredicateWithIndex<T>):boolean
 	every(predicate:PredicateWithIndex<T>):boolean
 	{
 		return this.all(predicate);
 	}
 
 	// Akin to '.some' on an array.
-	any(predicate:Predicate<T>):boolean
-	any(predicate?:PredicateWithIndex<T>):boolean
 	any(predicate?:PredicateWithIndex<T>):boolean
 	{
 		if(!predicate)
@@ -2485,27 +2383,25 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	// 'some' has been added here for parity/compatibility with an array.
-	some(predicate:Predicate<T>):boolean
-	some(predicate?:PredicateWithIndex<T>):boolean
 	some(predicate?:PredicateWithIndex<T>):boolean
 	{
 		return this.any(predicate);
 	}
 
 
-	contains<TCompare>(value:T, compareSelector?:Selector<T, TCompare>):boolean
+	contains(value:T, compareSelector?:Selector<T, any>):boolean
 	{
-		return compareSelector
-			? this.any(v=> compareSelector(v)===compareSelector(value))
-			: this.any(v=> v===value);
+		if(compareSelector) {
+			var s = compareSelector(value);
+			return this.any(v=> areEqualValues(compareSelector(v),s));
+		}
+		return this.any(v=> areEqualValues(v,value));
 	}
 
 	// Originally has an overload for a predicate,
 	// but that's a bad idea since this could be an enumeration of functions and therefore fail the intent.
 	// Better to chain a where statement first to be more explicit.
-	indexOf<TCompare>(value:T, compareSelector:Selector<T, TCompare>):number
-	indexOf<TCompare>(value:T, compareSelector?:SelectorWithIndex<T, TCompare>):number
-	indexOf<TCompare>(value:T, compareSelector?:SelectorWithIndex<T, TCompare>):number
+	indexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number
 	{
 		var found:number = -1;
 		this.forEach(
@@ -2513,7 +2409,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 				?
 				(element:T, i:number) =>
 				{
-					if(Values.areEqual(compareSelector(element, i), compareSelector(value, i), true))
+					if(areEqualValues(compareSelector(element, i), compareSelector(value, i), true))
 					{
 						found = i;
 						return false;
@@ -2523,7 +2419,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 				(element:T, i:number) =>
 				{
 					// Why?  Because NaN doesn't equal NaN. :P
-					if(Values.areEqual(element, value, true))
+					if(areEqualValues(element, value, true))
 					{
 						found = i;
 						return false;
@@ -2534,9 +2430,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return found;
 	}
 
-	lastIndexOf<TCompare>(value:T, compareSelector:Selector<T, TCompare>):number
-	lastIndexOf<TCompare>(value:T, compareSelector?:SelectorWithIndex<T, TCompare>):number
-	lastIndexOf<TCompare>(value:T, compareSelector?:SelectorWithIndex<T, TCompare>):number
+	lastIndexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number
 	{
 		var result:number = -1;
 		this.forEach(
@@ -2544,23 +2438,23 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 				?
 				(element:T, i:number) =>
 				{
-					if(Values.areEqual(compareSelector(element, i), compareSelector(value, i), true)) result
+					if(areEqualValues(compareSelector(element, i), compareSelector(value, i), true)) result
 						= i;
 				}
 
 				:
 				(element:T, i:number) =>
 				{
-					if(Values.areEqual(element, value, true)) result = i;
+					if(areEqualValues(element, value, true)) result = i;
 				});
 
 		return result;
 	}
 
 
-	intersect<TCompare>(
+	intersect(
 		second:IEnumerableOrArray<T>,
-		compareSelector?:Selector<T, TCompare>):this
+		compareSelector?:Selector<T, string|number|symbol>):this
 	{
 		const _ = this;
 		_.throwIfDisposed();
@@ -2623,7 +2517,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	sequenceEqual(
 		second:IEnumerableOrArray<T>,
-		equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
+		equalityComparer:EqualityComparison<T> = areEqualValues):boolean
 	{
 		this.throwIfDisposed();
 
@@ -2649,7 +2543,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	//isEquivalent(second:IEnumerableOrArray<T>,
-	//	equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
+	//	equalityComparer:EqualityComparison<T> = valuesAreEqual):boolean
 	//{
 	//	return this
 	//		.orderBy(keySelector)
@@ -2750,55 +2644,23 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	// Originally contained a result selector (not common use), but this could be done simply by a select statement after.
 
-
-	groupBy<TKey>(keySelector:Selector<T,TKey>):Enumerable<IGrouping<TKey, T>>;
 	groupBy<TKey>(keySelector:SelectorWithIndex<T, TKey>):Enumerable<IGrouping<TKey, T>>;
 
-	groupBy<TKey, TCompare>(
-		keySelector:Selector<T,TKey>,
-		elementSelector:Selector<T,T>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, T>>;
-
-	groupBy<TKey, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:SelectorWithIndex<T, T>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, T>>;
-
-	groupBy<TKey, TCompare>(
-		keySelector:SelectorWithIndex<T, TKey>,
-		elementSelector:Selector<T, T>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, T>>;
-
-	groupBy<TKey, TCompare>(
+	groupBy<TKey>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, T>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, T>>;
+		compareSelector?:Selector<TKey, string|number|symbol>):Enumerable<IGrouping<TKey, T>>;
 
-	groupBy<TKey, TElement, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:Selector<T, TElement>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>
-
-	groupBy<TKey, TElement, TCompare>(
-		keySelector:Selector<T, TKey>,
-		elementSelector:SelectorWithIndex<T, TElement>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>
-
-	groupBy<TKey, TElement, TCompare>(
-		keySelector:SelectorWithIndex<T, TKey>,
-		elementSelector:Selector<T, TElement>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>
-
-	groupBy<TKey, TElement, TCompare>(
+	groupBy<TKey, TElement>(
 		keySelector:SelectorWithIndex<T, TKey>,
 		elementSelector:SelectorWithIndex<T, TElement>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>
+		compareSelector?:Selector<TKey, string|number|symbol>):Enumerable<IGrouping<TKey, TElement>>
 
 
-	groupBy<TKey, TElement, TCompare>(
+	groupBy<TKey, TElement>(
 		keySelector:SelectorWithIndex<T, TKey>|Selector<T,TKey>,
 		elementSelector?:SelectorWithIndex<T, TElement>|Selector<T,TElement>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>
+		compareSelector?:Selector<TKey, string|number|symbol>):Enumerable<IGrouping<TKey, TElement>>
 	{
 		if(!elementSelector) elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
 		return new Enumerable<IGrouping<TKey, TElement>>(
@@ -2809,17 +2671,17 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	partitionBy<TKey>(keySelector:Selector<T, TKey>):Enumerable<IGrouping<TKey, T>>;
-	partitionBy<TKey, TElement, TCompare>(
+	partitionBy<TKey, TElement>(
 		keySelector:Selector<T,TKey>,
 		elementSelector?:Selector<T,TElement>,
 		resultSelector?:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>,
-		compareSelector?:Selector<TKey, TCompare>):Enumerable<IGrouping<TKey, TElement>>;
-	partitionBy<TKey, TElement, TCompare>(
+		compareSelector?:Selector<TKey, any>):Enumerable<IGrouping<TKey, TElement>>;
+	partitionBy<TKey, TElement>(
 		keySelector:Selector<T,TKey>,
 		elementSelector?:Selector<T,TElement>,
 		resultSelector:(key:TKey, element:TElement[]) => IGrouping<TKey, TElement>
 			= (key:TKey, elements:TElement[]) => new Grouping<TKey, TElement>(key, elements),
-		compareSelector:Selector<TKey, TCompare>
+		compareSelector:Selector<TKey, any>
 			= Functions.Identity):Enumerable<IGrouping<TKey, T>>|Enumerable<IGrouping<TKey, TElement>>
 	{
 
@@ -2830,7 +2692,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			{
 				let enumerator:IEnumerator<T>;
 				let key:TKey;
-				let compareKey:TCompare;
+				let compareKey:any;
 				let group:TElement[]|null;
 				let len:number;
 
@@ -2862,7 +2724,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 						while((hasNext = enumerator.moveNext()))
 						{
 							c = <T>enumerator.current;
-							if(compareKey===compareSelector(keySelector(c)))
+							if(areEqualValues(compareKey,compareSelector(keySelector(c))))
 								group[len++] = elementSelector!(c);
 							else
 								break;
@@ -2914,8 +2776,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			.lastOrDefault();
 	}
 
-	average(selector:Selector<T, number>):number
-	average(selector?:SelectorWithIndex<T, number>):number
 	average(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
 		var count = 0;
@@ -2941,19 +2801,17 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		return this.aggregate(Functions.Lesser);
 	}
 
-	maxBy<TCompare>(keySelector:Selector<T, TCompare> = Functions.Identity):T|undefined
+	maxBy(keySelector:Selector<T, Primitive> = Functions.Identity):T|undefined
 	{
 		return this.aggregate((a:T, b:T) => (keySelector(a)>keySelector(b)) ? a : b);
 	}
 
-	minBy<TCompare>(keySelector:Selector<T, TCompare> = Functions.Identity):T|undefined
+	minBy(keySelector:Selector<T, Primitive> = Functions.Identity):T|undefined
 	{
 		return this.aggregate((a:T, b:T) => (keySelector(a)<keySelector(b)) ? a : b);
 	}
 
 	// Addition...  Only works with numerical enumerations.
-	sum(selector:Selector<T, number>):number
-	sum(selector?:SelectorWithIndex<T, number>):number
 	sum(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
 		var sum = 0;
@@ -2984,8 +2842,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	}
 
 	// Multiplication...
-	product(selector:Selector<T, number>):number
-	product(selector?:SelectorWithIndex<T, number>):number
 	product(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
 		var result = 1, exists:boolean = false;
@@ -3021,8 +2877,6 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	 * @param selector
 	 * @returns {number}
 	 */
-	quotient(selector:Selector<T, number>):number
-	quotient(selector?:SelectorWithIndex<T, number>):number
 	quotient(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
 		var count = 0;
@@ -3227,8 +3081,6 @@ extends FiniteEnumerable<T>
 	}
 
 	// Optimize forEach so that subsequent usage is optimized.
-	forEach(action:Action<T>, max?:number):number
-	forEach(action:Predicate<T>, max?:number):number
 	forEach(action:ActionWithIndex<T>, max?:number):number
 	forEach(action:PredicateWithIndex<T>, max?:number):number
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, max:number = Infinity):number
@@ -3374,7 +3226,7 @@ extends FiniteEnumerable<T>
 
 	sequenceEqual(
 		second:IEnumerableOrArray<T>,
-		equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
+		equalityComparer:EqualityComparison<T> = areEqualValues):boolean
 	{
 		if(Type.isArrayLike(second))
 			return Arrays.areEqual(this.source, second, true, equalityComparer);
@@ -3475,7 +3327,7 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 		public keySelector:Selector<T,TOrderBy>|null,
 		public order:Order,
 		public parent?:OrderedEnumerable<T,any>|null,
-		public comparer:Comparison<T> = Values.compare)
+		public comparer:Comparison<T> = compareValues)
 	{
 		super(NULL);
 		throwIfEndless(!!source && !!source.isEndless);
@@ -4137,14 +3989,6 @@ export module Enumerable
 
 	export function unfold<T>(
 		seed:T,
-		valueFactory:Selector<T, T>,
-		skipSeed?:Boolean):InfiniteEnumerable<T>
-	export function unfold<T>(
-		seed:T,
-		valueFactory:SelectorWithIndex<T, T>,
-		skipSeed?:Boolean):InfiniteEnumerable<T>
-	export function unfold<T>(
-		seed:T,
 		valueFactory:SelectorWithIndex<T, T>,
 		skipSeed:Boolean = false):InfiniteEnumerable<T>
 	{
@@ -4188,17 +4032,7 @@ export module Enumerable
 
 	export function forEach<T>(
 		e:IEnumerableOrArray<T>,
-		action:Action<T>,
-		max?:number):number
-
-	export function forEach<T>(
-		e:IEnumerableOrArray<T>,
 		action:ActionWithIndex<T>,
-		max?:number):number
-
-	export function forEach<T>(
-		e:IEnumerableOrArray<T>,
-		action:PredicateWithIndex<T>,
 		max?:number):number
 
 	export function forEach<T>(
@@ -4218,7 +4052,7 @@ export module Enumerable
 
 	export function map<T,TResult>(
 		enumerable:IEnumerableOrArray<T>,
-		selector:Selector<T,TResult>):TResult[]
+		selector:SelectorWithIndex<T,TResult>):TResult[]
 	{
 		// Will properly dispose created enumerable.
 		// Will throw if enumerable is endless.

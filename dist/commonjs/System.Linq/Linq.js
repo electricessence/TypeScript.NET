@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-var Values = require("../System/Compare");
+var Compare_1 = require("../System/Compare");
 var Arrays = require("../System/Collections/Array/Compare");
 var ArrayUtility = require("../System/Collections/Array/Utility");
 var Utility_1 = require("../System/Collections/Array/Utility");
@@ -591,7 +591,7 @@ var InfiniteEnumerable = (function (_super) {
                     if (initial) {
                         initial = false;
                     }
-                    else if (Values.areEqual(compareKey, key)) {
+                    else if (Compare_1.areEqual(compareKey, key)) {
                         continue;
                     }
                     compareKey = key;
@@ -1245,23 +1245,25 @@ var Enumerable = (function (_super) {
         return this.any(predicate);
     };
     Enumerable.prototype.contains = function (value, compareSelector) {
-        return compareSelector
-            ? this.any(function (v) { return compareSelector(v) === compareSelector(value); })
-            : this.any(function (v) { return v === value; });
+        if (compareSelector) {
+            var s = compareSelector(value);
+            return this.any(function (v) { return Compare_1.areEqual(compareSelector(v), s); });
+        }
+        return this.any(function (v) { return Compare_1.areEqual(v, value); });
     };
     Enumerable.prototype.indexOf = function (value, compareSelector) {
         var found = -1;
         this.forEach(compareSelector
             ?
                 function (element, i) {
-                    if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
+                    if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
                         found = i;
                         return false;
                     }
                 }
             :
                 function (element, i) {
-                    if (Values.areEqual(element, value, true)) {
+                    if (Compare_1.areEqual(element, value, true)) {
                         found = i;
                         return false;
                     }
@@ -1273,13 +1275,13 @@ var Enumerable = (function (_super) {
         this.forEach(compareSelector
             ?
                 function (element, i) {
-                    if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true))
+                    if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true))
                         result
                             = i;
                 }
             :
                 function (element, i) {
-                    if (Values.areEqual(element, value, true))
+                    if (Compare_1.areEqual(element, value, true))
                         result = i;
                 });
         return result;
@@ -1319,7 +1321,7 @@ var Enumerable = (function (_super) {
         }, isEndless);
     };
     Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-        if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         this.throwIfDisposed();
         return dispose_1.using(this.getEnumerator(), function (e1) { return dispose_1.using(enumUtil.from(second), function (e2) {
             Enumerator_1.throwIfEndless(e1.isEndless && e2.isEndless);
@@ -1394,7 +1396,7 @@ var Enumerable = (function (_super) {
                 var hasNext, c;
                 while ((hasNext = enumerator.moveNext())) {
                     c = enumerator.current;
-                    if (compareKey === compareSelector(keySelector(c)))
+                    if (Compare_1.areEqual(compareKey, compareSelector(keySelector(c))))
                         group[len++] = elementSelector(c);
                     else
                         break;
@@ -1703,7 +1705,7 @@ var ArrayEnumerable = (function (_super) {
         return this.asEnumerable();
     };
     ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-        if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
+        if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (Types_1.Type.isArrayLike(second))
             return Arrays.areEqual(this.source, second, true, equalityComparer);
         if (second instanceof ArrayEnumerable)
@@ -1772,7 +1774,7 @@ var Lookup = (function () {
 var OrderedEnumerable = (function (_super) {
     __extends(OrderedEnumerable, _super);
     function OrderedEnumerable(source, keySelector, order, parent, comparer) {
-        if (comparer === void 0) { comparer = Values.compare; }
+        if (comparer === void 0) { comparer = Compare_1.compare; }
         _super.call(this, NULL);
         this.source = source;
         this.keySelector = keySelector;

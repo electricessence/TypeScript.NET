@@ -11,13 +11,7 @@ import {DisposableBase} from "../Disposable/DisposableBase";
 import {ICollection} from "./ICollection";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
-import {
-	EqualityComparison,
-	Predicate,
-	Action,
-	PredicateWithIndex,
-	ActionWithIndex
-} from "../FunctionTypes";
+import {EqualityComparison, Action, PredicateWithIndex, ActionWithIndex} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
@@ -272,8 +266,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return found;
 	}
 
-	forEach(action:Action<T>, useCopy?:boolean):number
-	forEach(action:Predicate<T>, useCopy?:boolean):number
+
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, useCopy?:boolean):number

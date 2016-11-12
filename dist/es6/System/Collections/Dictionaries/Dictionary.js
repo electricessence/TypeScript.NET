@@ -5,10 +5,10 @@
  */
 import { areEqual } from "../../Compare";
 import { Type } from "../../Types";
-import { Functions } from "../../Functions";
 import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
 import { LinkedNodeList } from "../LinkedNodeList";
 import { ObjectPool } from "../../Disposable/ObjectPool";
+import { getIdentifier } from "./getIdentifier";
 import DictionaryBase from "./DictionaryBase";
 import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
@@ -30,33 +30,19 @@ function linkedNodeList(recycle) {
         return linkedListPool.take();
     linkedListPool.add(recycle);
 }
-function callHasOwnProperty(target, key) {
-    return Object.prototype.hasOwnProperty.call(target, key);
-}
-const NULL = "null", GET_HASH_CODE = "getHashCode";
-function getHashString(obj) {
-    if (obj === null)
-        return NULL;
-    if (obj === VOID0)
-        return Type.UNDEFINED;
-    if (Type.hasMemberOfType(obj, GET_HASH_CODE, Type.FUNCTION)) {
-        return obj.getHashCode();
-    }
-    return (typeof obj.toString == Type.FUNCTION)
-        ? obj.toString()
-        : Object.prototype.toString.call(obj);
-}
 export class Dictionary extends DictionaryBase {
-    constructor(_keyComparer = Functions.Identity) {
+    constructor(keyGenerator) {
         super();
-        this._keyComparer = _keyComparer;
+        this._keyGenerator = keyGenerator;
         this._entries = linkedNodeList();
         this._buckets = {};
     }
     _onDispose() {
         super._onDispose();
-        this._entries = null;
-        this._buckets = null;
+        const _ = this;
+        _._entries = null;
+        _._buckets = null;
+        _._hashGenerator = null;
     }
     getCount() {
         return this._entries && this._entries.unsafeCount || 0;
@@ -64,8 +50,10 @@ export class Dictionary extends DictionaryBase {
     _getBucket(hash, createIfMissing) {
         if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
             return null;
+        if (!Type.isPrimitiveOrSymbol(hash))
+            console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
         var buckets = this._buckets;
-        var bucket = callHasOwnProperty(buckets, hash) ? buckets[hash] : VOID0;
+        var bucket = buckets[hash];
         if (createIfMissing && !bucket)
             buckets[hash]
                 = bucket
@@ -75,11 +63,13 @@ export class Dictionary extends DictionaryBase {
     _getBucketEntry(key, hash, bucket) {
         if (key === null || key === VOID0 || !this.getCount())
             return null;
-        var _ = this, comparer = _._keyComparer, compareKey = comparer(key);
+        var _ = this, comparer = _._keyGenerator, compareKey = comparer ? comparer(key) : key;
         if (!bucket)
-            bucket = _._getBucket(hash || getHashString(compareKey));
+            bucket = _._getBucket(hash || getIdentifier(compareKey));
         return bucket
-            && bucket.find(e => comparer(e.key) === compareKey);
+            && (comparer
+                ? bucket.find(e => comparer(e.key) === compareKey)
+                : bucket.find(e => e.key === compareKey));
     }
     _getEntry(key) {
         var e = this._getBucketEntry(key);
@@ -91,7 +81,7 @@ export class Dictionary extends DictionaryBase {
     }
     _setValueInternal(key, value) {
         const _ = this;
-        var buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+        var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
         if (bucketEntry) {
             var b = bucket;
             if (value === VOID0) {

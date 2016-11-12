@@ -6,7 +6,7 @@
 System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../extends", "../System/Collections/Enumeration/IndexEnumerator"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Values, Arrays, ArrayUtility, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, extends_1, Utility_1, IndexEnumerator_1;
+    var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, extends_1, IndexEnumerator_1;
     var __extends, INVALID_DEFAULT, VOID0, NULL, BREAK, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
     function getEmptyEnumerator() {
         return EmptyEnumerator_1.EmptyEnumerator;
@@ -36,8 +36,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
     }
     return {
         setters:[
-            function (Values_1) {
-                Values = Values_1;
+            function (Compare_1_1) {
+                Compare_1 = Compare_1_1;
             },
             function (Arrays_1) {
                 Arrays = Arrays_1;
@@ -663,7 +663,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                                 if (initial) {
                                     initial = false;
                                 }
-                                else if (Values.areEqual(compareKey, key)) {
+                                else if (Compare_1.areEqual(compareKey, key)) {
                                     continue;
                                 }
                                 compareKey = key;
@@ -1317,23 +1317,25 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return this.any(predicate);
                 };
                 Enumerable.prototype.contains = function (value, compareSelector) {
-                    return compareSelector
-                        ? this.any(function (v) { return compareSelector(v) === compareSelector(value); })
-                        : this.any(function (v) { return v === value; });
+                    if (compareSelector) {
+                        var s = compareSelector(value);
+                        return this.any(function (v) { return Compare_1.areEqual(compareSelector(v), s); });
+                    }
+                    return this.any(function (v) { return Compare_1.areEqual(v, value); });
                 };
                 Enumerable.prototype.indexOf = function (value, compareSelector) {
                     var found = -1;
                     this.forEach(compareSelector
                         ?
                             function (element, i) {
-                                if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
+                                if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
                                     found = i;
                                     return false;
                                 }
                             }
                         :
                             function (element, i) {
-                                if (Values.areEqual(element, value, true)) {
+                                if (Compare_1.areEqual(element, value, true)) {
                                     found = i;
                                     return false;
                                 }
@@ -1345,13 +1347,13 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     this.forEach(compareSelector
                         ?
                             function (element, i) {
-                                if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true))
+                                if (Compare_1.areEqual(compareSelector(element, i), compareSelector(value, i), true))
                                     result
                                         = i;
                             }
                         :
                             function (element, i) {
-                                if (Values.areEqual(element, value, true))
+                                if (Compare_1.areEqual(element, value, true))
                                     result = i;
                             });
                     return result;
@@ -1391,7 +1393,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     }, isEndless);
                 };
                 Enumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-                    if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
+                    if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
                     this.throwIfDisposed();
                     return dispose_1.using(this.getEnumerator(), function (e1) { return dispose_1.using(enumUtil.from(second), function (e2) {
                         Enumerator_1.throwIfEndless(e1.isEndless && e2.isEndless);
@@ -1466,7 +1468,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                             var hasNext, c;
                             while ((hasNext = enumerator.moveNext())) {
                                 c = enumerator.current;
-                                if (compareKey === compareSelector(keySelector(c)))
+                                if (Compare_1.areEqual(compareKey, compareSelector(keySelector(c))))
                                     group[len++] = elementSelector(c);
                                 else
                                     break;
@@ -1775,7 +1777,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     return this.asEnumerable();
                 };
                 ArrayEnumerable.prototype.sequenceEqual = function (second, equalityComparer) {
-                    if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
+                    if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
                     if (Types_1.Type.isArrayLike(second))
                         return Arrays.areEqual(this.source, second, true, equalityComparer);
                     if (second instanceof ArrayEnumerable)
@@ -1844,7 +1846,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             OrderedEnumerable = (function (_super) {
                 __extends(OrderedEnumerable, _super);
                 function OrderedEnumerable(source, keySelector, order, parent, comparer) {
-                    if (comparer === void 0) { comparer = Values.compare; }
+                    if (comparer === void 0) { comparer = Compare_1.compare; }
                     _super.call(this, NULL);
                     this.source = source;
                     this.keySelector = keySelector;

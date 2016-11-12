@@ -12,7 +12,7 @@ import {areEqual} from "../Compare";
 import {CollectionBase} from "./CollectionBase";
 import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
-import {Predicate, Action, ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
+import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
 import {IMap} from "./Dictionaries/IDictionary";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
@@ -210,7 +210,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 		this._set = <any>null;
 	}
 
-	protected abstract _getNode(item:T):ILinkedNodeWithValue<T>;
+	protected abstract _getNode(item:T):ILinkedNodeWithValue<T>|undefined;
 
 	contains(item:T):boolean
 	{
@@ -227,8 +227,6 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 			: EmptyEnumerator;
 	}
 
-	forEach(action:Action<T>, useCopy?:boolean):number
-	forEach(action:Predicate<T>, useCopy?:boolean):number
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, useCopy?:boolean):number

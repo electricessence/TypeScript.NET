@@ -8,6 +8,7 @@ const VOID0 = void 0;
 export const EmptyEnumerator = Object.freeze({
     current: VOID0,
     moveNext: Functions.False,
+    tryMoveNext: Functions.False,
     nextValue: Functions.Blank,
     next: IteratorResult.GetDone,
     "return": IteratorResult.GetDone,

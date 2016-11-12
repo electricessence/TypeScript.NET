@@ -6,10 +6,10 @@
 "use strict";
 var Compare_1 = require("../../Compare");
 var Types_1 = require("../../Types");
-var Functions_1 = require("../../Functions");
 var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
 var LinkedNodeList_1 = require("../LinkedNodeList");
 var ObjectPool_1 = require("../../Disposable/ObjectPool");
+var getIdentifier_1 = require("./getIdentifier");
 var DictionaryBase_1 = require("./DictionaryBase");
 var extends_1 = require("../../../extends");
 var __extends = extends_1.default;
@@ -32,35 +32,20 @@ function linkedNodeList(recycle) {
         return linkedListPool.take();
     linkedListPool.add(recycle);
 }
-function callHasOwnProperty(target, key) {
-    return Object.prototype.hasOwnProperty.call(target, key);
-}
-var NULL = "null", GET_HASH_CODE = "getHashCode";
-function getHashString(obj) {
-    if (obj === null)
-        return NULL;
-    if (obj === VOID0)
-        return Types_1.Type.UNDEFINED;
-    if (Types_1.Type.hasMemberOfType(obj, GET_HASH_CODE, Types_1.Type.FUNCTION)) {
-        return obj.getHashCode();
-    }
-    return (typeof obj.toString == Types_1.Type.FUNCTION)
-        ? obj.toString()
-        : Object.prototype.toString.call(obj);
-}
 var Dictionary = (function (_super) {
     __extends(Dictionary, _super);
-    function Dictionary(_keyComparer) {
-        if (_keyComparer === void 0) { _keyComparer = Functions_1.Functions.Identity; }
+    function Dictionary(keyGenerator) {
         _super.call(this);
-        this._keyComparer = _keyComparer;
+        this._keyGenerator = keyGenerator;
         this._entries = linkedNodeList();
         this._buckets = {};
     }
     Dictionary.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);
-        this._entries = null;
-        this._buckets = null;
+        var _ = this;
+        _._entries = null;
+        _._buckets = null;
+        _._hashGenerator = null;
     };
     Dictionary.prototype.getCount = function () {
         return this._entries && this._entries.unsafeCount || 0;
@@ -68,8 +53,10 @@ var Dictionary = (function (_super) {
     Dictionary.prototype._getBucket = function (hash, createIfMissing) {
         if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
             return null;
+        if (!Types_1.Type.isPrimitiveOrSymbol(hash))
+            console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
         var buckets = this._buckets;
-        var bucket = callHasOwnProperty(buckets, hash) ? buckets[hash] : VOID0;
+        var bucket = buckets[hash];
         if (createIfMissing && !bucket)
             buckets[hash]
                 = bucket
@@ -79,11 +66,13 @@ var Dictionary = (function (_super) {
     Dictionary.prototype._getBucketEntry = function (key, hash, bucket) {
         if (key === null || key === VOID0 || !this.getCount())
             return null;
-        var _ = this, comparer = _._keyComparer, compareKey = comparer(key);
+        var _ = this, comparer = _._keyGenerator, compareKey = comparer ? comparer(key) : key;
         if (!bucket)
-            bucket = _._getBucket(hash || getHashString(compareKey));
+            bucket = _._getBucket(hash || getIdentifier_1.getIdentifier(compareKey));
         return bucket
-            && bucket.find(function (e) { return comparer(e.key) === compareKey; });
+            && (comparer
+                ? bucket.find(function (e) { return comparer(e.key) === compareKey; })
+                : bucket.find(function (e) { return e.key === compareKey; }));
     };
     Dictionary.prototype._getEntry = function (key) {
         var e = this._getBucketEntry(key);
@@ -95,7 +84,7 @@ var Dictionary = (function (_super) {
     };
     Dictionary.prototype._setValueInternal = function (key, value) {
         var _ = this;
-        var buckets = _._buckets, entries = _._entries, comparer = _._keyComparer, compareKey = comparer(key), hash = getHashString(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+        var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier_1.getIdentifier(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
         if (bucketEntry) {
             var b = bucket;
             if (value === VOID0) {

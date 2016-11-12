@@ -86,6 +86,8 @@ describe("Regex", ()=>
 			assert.equal(regex.replace(str, ""), "FGHIJKLMNOPQRSTUVWXYZfghijklmnopqrstuvwxyz");
 			assert.equal(regex.replace(str, <any>null), str);
 			//noinspection SpellCheckingInspection
+			assert.equal(regex.replace(str, ()=>"*"), "*FGHIJKLMNOPQRSTUVWXYZ*fghijklmnopqrstuvwxyz");
+			assert.equal(regex.replace(str, (x)=>x.value+"*"), "ABCDE*FGHIJKLMNOPQRSTUVWXYZabcde*fghijklmnopqrstuvwxyz");
 			assert.equal(regex.replace(str, (x,i)=>i), "0FGHIJKLMNOPQRSTUVWXYZ1fghijklmnopqrstuvwxyz");
 		});
 

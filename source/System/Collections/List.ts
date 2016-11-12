@@ -193,8 +193,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 		);
 	}
 
-	forEach(action:Action<T>, useCopy?:boolean):number
-	forEach(action:Predicate<T>, useCopy?:boolean):number
+
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T> | Action<T> | Predicate<T>, useCopy?:boolean):number

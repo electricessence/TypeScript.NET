@@ -8,7 +8,7 @@ export declare class IteratorEnumerator<T> extends SimpleEnumerableBase<T> {
     private _iterator;
     private _isEndless;
     constructor(_iterator: IIterator<T>, _isEndless?: boolean);
-    protected canMoveNext(): boolean;
+    protected _canMoveNext(): boolean;
     moveNext(value?: any): boolean;
     dispose(): void;
     protected getIsEndless(): boolean;

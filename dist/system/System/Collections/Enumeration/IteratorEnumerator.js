@@ -24,7 +24,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
                     this._iterator = _iterator;
                     this._isEndless = _isEndless;
                 }
-                IteratorEnumerator.prototype.canMoveNext = function () {
+                IteratorEnumerator.prototype._canMoveNext = function () {
                     return this._iterator != null;
                 };
                 IteratorEnumerator.prototype.moveNext = function (value) {

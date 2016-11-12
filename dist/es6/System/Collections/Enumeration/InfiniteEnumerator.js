@@ -10,7 +10,7 @@ export class InfiniteEnumerator extends SimpleEnumerableBase {
         super();
         this._factory = _factory;
     }
-    canMoveNext() {
+    _canMoveNext() {
         return this._factory != null;
     }
     moveNext() {

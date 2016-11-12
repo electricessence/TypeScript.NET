@@ -3,9 +3,10 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import * as Values from "../System/Compare";
+import { areEqual as areEqualValues, compare as compareValues } from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
+import { copy } from "../System/Collections/Array/Utility";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
 import { isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
 import { EmptyEnumerator } from "../System/Collections/Enumeration/EmptyEnumerator";
@@ -24,7 +25,6 @@ import { KeySortedContext } from "../System/Collections/Sorting/KeySortedContext
 import { ArgumentNullException } from "../System/Exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../System/Exceptions/ArgumentOutOfRangeException";
 import __extendsImport from "../extends";
-import { copy } from "../System/Collections/Array/Utility";
 import { IndexEnumerator } from "../System/Collections/Enumeration/IndexEnumerator";
 const __extends = __extendsImport;
 const INVALID_DEFAULT = {};
@@ -573,7 +573,7 @@ export class InfiniteEnumerable extends DisposableBase {
                     if (initial) {
                         initial = false;
                     }
-                    else if (Values.areEqual(compareKey, key)) {
+                    else if (areEqualValues(compareKey, key)) {
                         continue;
                     }
                     compareKey = key;
@@ -1195,23 +1195,25 @@ export class Enumerable extends InfiniteEnumerable {
         return this.any(predicate);
     }
     contains(value, compareSelector) {
-        return compareSelector
-            ? this.any(v => compareSelector(v) === compareSelector(value))
-            : this.any(v => v === value);
+        if (compareSelector) {
+            var s = compareSelector(value);
+            return this.any(v => areEqualValues(compareSelector(v), s));
+        }
+        return this.any(v => areEqualValues(v, value));
     }
     indexOf(value, compareSelector) {
         var found = -1;
         this.forEach(compareSelector
             ?
                     (element, i) => {
-                    if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true)) {
+                    if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true)) {
                         found = i;
                         return false;
                     }
                 }
             :
                     (element, i) => {
-                    if (Values.areEqual(element, value, true)) {
+                    if (areEqualValues(element, value, true)) {
                         found = i;
                         return false;
                     }
@@ -1223,13 +1225,13 @@ export class Enumerable extends InfiniteEnumerable {
         this.forEach(compareSelector
             ?
                     (element, i) => {
-                    if (Values.areEqual(compareSelector(element, i), compareSelector(value, i), true))
+                    if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true))
                         result
                             = i;
                 }
             :
                     (element, i) => {
-                    if (Values.areEqual(element, value, true))
+                    if (areEqualValues(element, value, true))
                         result = i;
                 });
         return result;
@@ -1268,7 +1270,7 @@ export class Enumerable extends InfiniteEnumerable {
             second = NULL;
         }, isEndless);
     }
-    sequenceEqual(second, equalityComparer = Values.areEqual) {
+    sequenceEqual(second, equalityComparer = areEqualValues) {
         this.throwIfDisposed();
         return using(this.getEnumerator(), e1 => using(enumUtil.from(second), e2 => {
             throwIfEndless(e1.isEndless && e2.isEndless);
@@ -1338,7 +1340,7 @@ export class Enumerable extends InfiniteEnumerable {
                 let hasNext, c;
                 while ((hasNext = enumerator.moveNext())) {
                     c = enumerator.current;
-                    if (compareKey === compareSelector(keySelector(c)))
+                    if (areEqualValues(compareKey, compareSelector(keySelector(c))))
                         group[len++] = elementSelector(c);
                     else
                         break;
@@ -1628,7 +1630,7 @@ class ArrayEnumerable extends FiniteEnumerable {
     memoize() {
         return this.asEnumerable();
     }
-    sequenceEqual(second, equalityComparer = Values.areEqual) {
+    sequenceEqual(second, equalityComparer = areEqualValues) {
         if (Type.isArrayLike(second))
             return Arrays.areEqual(this.source, second, true, equalityComparer);
         if (second instanceof ArrayEnumerable)
@@ -1681,7 +1683,7 @@ class Lookup {
     }
 }
 class OrderedEnumerable extends FiniteEnumerable {
-    constructor(source, keySelector, order, parent, comparer = Values.compare) {
+    constructor(source, keySelector, order, parent, comparer = compareValues) {
         super(NULL);
         this.source = source;
         this.keySelector = keySelector;

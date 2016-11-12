@@ -42,15 +42,6 @@ class Yielder {
         this.yieldBreak();
     }
 }
-var EnumeratorState;
-(function (EnumeratorState) {
-    EnumeratorState[EnumeratorState["Before"] = 0] = "Before";
-    EnumeratorState[EnumeratorState["Running"] = 1] = "Running";
-    EnumeratorState[EnumeratorState["Completed"] = 2] = "Completed";
-    EnumeratorState[EnumeratorState["Faulted"] = 3] = "Faulted";
-    EnumeratorState[EnumeratorState["Interrupted"] = 4] = "Interrupted";
-    EnumeratorState[EnumeratorState["Disposed"] = 5] = "Disposed";
-})(EnumeratorState || (EnumeratorState = {}));
 export class EnumeratorBase extends DisposableBase {
     constructor(_initializer, _tryGetNext, disposer, isEndless) {
         super();
@@ -70,7 +61,7 @@ export class EnumeratorBase extends DisposableBase {
     }
     get index() {
         var y = this._yielder;
-        return y && y.index;
+        return y ? y.index : NaN;
     }
     get isEndless() {
         return this._isEndless;
@@ -80,39 +71,50 @@ export class EnumeratorBase extends DisposableBase {
         _.throwIfDisposed();
         var y = _._yielder;
         _._yielder = null;
-        _._state = EnumeratorState.Before;
+        _._state = 0;
         if (y)
             yielder(y);
     }
     _assertBadState() {
         const _ = this;
         switch (_._state) {
-            case EnumeratorState.Faulted:
+            case 3:
                 _.throwIfDisposed("This enumerator caused a fault and was disposed.");
                 break;
-            case EnumeratorState.Disposed:
+            case 5:
                 _.throwIfDisposed("This enumerator was manually disposed.");
                 break;
         }
+    }
+    tryGetCurrent(out) {
+        this._assertBadState();
+        if (this._state === 1) {
+            out(this.current);
+            return true;
+        }
+        return false;
+    }
+    get canMoveNext() {
+        return this._state < 2;
     }
     moveNext() {
         const _ = this;
         _._assertBadState();
         try {
             switch (_._state) {
-                case EnumeratorState.Before:
+                case 0:
                     _._yielder = _._yielder || yielder();
-                    _._state = EnumeratorState.Running;
+                    _._state = 1;
                     var initializer = _._initializer;
                     if (initializer)
                         initializer();
-                case EnumeratorState.Running:
+                case 1:
                     if (_._tryGetNext(_._yielder)) {
                         return true;
                     }
                     else {
                         this.dispose();
-                        _._state = EnumeratorState.Completed;
+                        _._state = 2;
                         return false;
                     }
                 default:
@@ -121,9 +123,16 @@ export class EnumeratorBase extends DisposableBase {
         }
         catch (e) {
             this.dispose();
-            _._state = EnumeratorState.Faulted;
+            _._state = 3;
             throw e;
         }
+    }
+    tryMoveNext(out) {
+        if (this.moveNext()) {
+            out(this.current);
+            return true;
+        }
+        return false;
     }
     nextValue() {
         return this.moveNext()
@@ -136,13 +145,13 @@ export class EnumeratorBase extends DisposableBase {
             : IteratorResult.Done;
     }
     end() {
-        this._ensureDisposeState(EnumeratorState.Interrupted);
+        this._ensureDisposeState(4);
     }
     'return'(value) {
         const _ = this;
         _._assertBadState();
         try {
-            return value === VOID0 || _._state === EnumeratorState.Completed || _._state === EnumeratorState.Interrupted
+            return value === VOID0 || _._state === 2 || _._state === 4
                 ? IteratorResult.Done
                 : new IteratorResult(value, VOID0, true);
         }
@@ -165,7 +174,7 @@ export class EnumeratorBase extends DisposableBase {
         _._disposer = null;
         var y = _._yielder;
         _._yielder = null;
-        this._state = EnumeratorState.Disposed;
+        this._state = 5;
         if (y)
             yielder(y);
         if (disposer)

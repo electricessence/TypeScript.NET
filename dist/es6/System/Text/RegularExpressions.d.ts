@@ -5,7 +5,7 @@
  */
 import { IMap } from "../Collections/Dictionaries/IDictionary";
 import { Primitive } from "../Primitive";
-import { Selector, SelectorWithIndex } from "../FunctionTypes";
+import { SelectorWithIndex } from "../FunctionTypes";
 export declare module RegexOptions {
     const IGNORE_CASE: string;
     const I: string;
@@ -27,10 +27,6 @@ export declare module RegexOptions {
     type IgnorePatternWhitespace = "w";
     type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky | IgnorePatternWhitespace;
 }
-export interface MatchEvaluator extends Selector<Match, Primitive> {
-}
-export interface MatchEvaluatorIndexed extends SelectorWithIndex<Match, Primitive> {
-}
 export declare class Regex {
     private _re;
     private _keys;
@@ -38,12 +34,11 @@ export declare class Regex {
     match(input: string, startIndex?: number): Match;
     matches(input: string): Match[];
     replace(input: string, replacement: Primitive, count?: number): string;
-    replace(input: string, evaluator: MatchEvaluatorIndexed, count?: number): string;
-    replace(input: string, evaluator: MatchEvaluator, count?: number): string;
+    replace(input: string, evaluator: SelectorWithIndex<Match, Primitive>, count?: number): string;
     isMatch(input: string): boolean;
     static isMatch(input: string, pattern: string, options?: RegexOptions.Literal[]): boolean;
     static replace(input: string, pattern: string, replacement: string, options?: RegexOptions.Literal[]): string;
-    static replace(input: string, pattern: string, evaluator: MatchEvaluator, options?: RegexOptions.Literal[]): string;
+    static replace(input: string, pattern: string, evaluator: SelectorWithIndex<Match, Primitive>, options?: RegexOptions.Literal[]): string;
 }
 export declare class Capture {
     value: string;

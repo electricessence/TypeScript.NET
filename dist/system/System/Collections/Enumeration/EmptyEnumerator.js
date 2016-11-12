@@ -20,6 +20,7 @@ System.register(["./IteratorResult", "../../Functions"], function(exports_1, con
             exports_1("EmptyEnumerator", EmptyEnumerator = Object.freeze({
                 current: VOID0,
                 moveNext: Functions_1.Functions.False,
+                tryMoveNext: Functions_1.Functions.False,
                 nextValue: Functions_1.Functions.Blank,
                 next: IteratorResult_1.IteratorResult.GetDone,
                 "return": IteratorResult_1.IteratorResult.GetDone,

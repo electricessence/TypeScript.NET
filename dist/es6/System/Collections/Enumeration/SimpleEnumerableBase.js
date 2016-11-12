@@ -11,6 +11,16 @@ export class SimpleEnumerableBase {
     get current() {
         return this._current;
     }
+    get canMoveNext() {
+        return this._canMoveNext();
+    }
+    tryMoveNext(out) {
+        if (this.moveNext()) {
+            out(this._current);
+            return true;
+        }
+        return false;
+    }
     incrementIndex() {
         let i = this._index;
         this._index = i = isNaN(i) ? 0 : (i + 1);
@@ -30,7 +40,7 @@ export class SimpleEnumerableBase {
     }
     'return'(value) {
         try {
-            return value !== VOID0 && this.canMoveNext()
+            return value !== VOID0 && this._canMoveNext()
                 ? new IteratorResult(value, VOID0, true)
                 : IteratorResult.Done;
         }
@@ -46,7 +56,7 @@ export class SimpleEnumerableBase {
         this.reset();
     }
     getIsEndless() {
-        return this.canMoveNext();
+        return this._canMoveNext();
     }
     get isEndless() {
         return this.getIsEndless();

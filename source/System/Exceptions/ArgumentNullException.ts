@@ -17,7 +17,7 @@ export class ArgumentNullException extends ArgumentException
 {
 	constructor(
 		paramName:string,
-		message:string = '',
+		message:string = `'${paramName}' is null (or undefined).`,
 		innerException?:Error)
 	{
 		super(paramName, message, innerException);

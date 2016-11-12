@@ -11,7 +11,7 @@ export class IteratorEnumerator extends SimpleEnumerableBase {
         this._iterator = _iterator;
         this._isEndless = _isEndless;
     }
-    canMoveNext() {
+    _canMoveNext() {
         return this._iterator != null;
     }
     moveNext(value) {

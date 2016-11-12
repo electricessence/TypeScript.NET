@@ -9,7 +9,7 @@ export interface InfiniteValueFactory<T> {
 export declare class InfiniteEnumerator<T> extends SimpleEnumerableBase<T> {
     private _factory;
     constructor(_factory: InfiniteValueFactory<T>);
-    protected canMoveNext(): boolean;
+    protected _canMoveNext(): boolean;
     moveNext(): boolean;
     dispose(): void;
 }

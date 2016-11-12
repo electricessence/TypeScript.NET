@@ -8,10 +8,11 @@ import {Primitive} from "./Primitive";
 import {IArray} from "./Collections/Array/IArray"; // For compatibility with (let, const, function, class);
 
 const
-	VOID0:undefined         = void(0),
+	VOID0:undefined   = void(0),
 	_BOOLEAN:string   = typeof true,
 	_NUMBER:string    = typeof 0,
 	_STRING:string    = typeof "",
+	_SYMBOL:string    = "symbol",
 	_OBJECT:string    = typeof {},
 	_UNDEFINED:string = typeof VOID0,
 	_FUNCTION:string  = typeof function() {},
@@ -26,83 +27,87 @@ var typeInfoRegistry:{[key:string]:TypeInfo} = {};
 export class TypeInfo
 {
 	// Not retained for primitives. Since they have no members.
-	protected target:any;
+	protected readonly target:any;
 
-	type:string;
+	readonly type:string;
 
-	isBoolean:boolean;
-	isNumber:boolean;
-	isFinite:boolean;
-	isValidNumber:boolean;
-	isString:boolean;
-	isTrueNaN:boolean;
-	isObject:boolean;
-	isArray:boolean;
-	isFunction:boolean;
-	isUndefined:boolean;
-	isNull:boolean;
-	isNullOrUndefined:boolean;
-	isPrimitive:boolean;
+	readonly isBoolean:boolean;
+	readonly isNumber:boolean;
+	readonly isFinite:boolean;
+	readonly isValidNumber:boolean;
+	readonly isString:boolean;
+	readonly isTrueNaN:boolean;
+	readonly isObject:boolean;
+	readonly isArray:boolean;
+	readonly isFunction:boolean;
+	readonly isUndefined:boolean;
+	readonly isNull:boolean;
+	readonly isNullOrUndefined:boolean;
+	readonly isPrimitive:boolean;
+	readonly isSymbol:boolean;
 
 	constructor(target:any, onBeforeFreeze?:()=>void)
 	{
-		const _ = this;
-		_.isBoolean = false;
-		_.isNumber = false;
-		_.isString = false;
-		_.isTrueNaN = false;
-		_.isObject = false;
-		_.isFunction = false;
-		_.isUndefined = false;
-		_.isNull = false;
-		_.isPrimitive = false;
+		this.isBoolean = false;
+		this.isNumber = false;
+		this.isString = false;
+		this.isTrueNaN = false;
+		this.isObject = false;
+		this.isFunction = false;
+		this.isUndefined = false;
+		this.isNull = false;
+		this.isPrimitive = false;
+		this.isSymbol = false;
 
-		switch(_.type = typeof target)
+		switch(this.type = typeof target)
 		{
 			case _BOOLEAN:
-				_.isBoolean = true;
-				_.isPrimitive = true;
+				this.isBoolean = true;
+				this.isPrimitive = true;
 				break;
 			case _NUMBER:
-				_.isNumber = true;
-				_.isTrueNaN = isNaN(target);
-				_.isFinite = isFinite(target);
-				_.isValidNumber = !_.isTrueNaN;
-				_.isPrimitive = true;
+				this.isNumber = true;
+				this.isTrueNaN = isNaN(target);
+				this.isFinite = isFinite(target);
+				this.isValidNumber = !this.isTrueNaN;
+				this.isPrimitive = true;
 				break;
 			case _STRING:
-				_.isString = true;
-				_.isPrimitive = true;
+				this.isString = true;
+				this.isPrimitive = true;
+				break;
+			case _SYMBOL:
+				this.isSymbol = true;
 				break;
 			case _OBJECT:
-				_.target = target;
+				this.target = target;
 				if(target===null)
 				{
-					_.isNull = true;
-					_.isNullOrUndefined = true;
-					_.isPrimitive = true;
+					this.isNull = true;
+					this.isNullOrUndefined = true;
+					this.isPrimitive = true;
 				}
 				else
 				{
-					_.isArray = Array.isArray(target);
-					_.isObject = true;
+					this.isArray = Array.isArray(target);
+					this.isObject = true;
 				}
 				break;
 			case _FUNCTION:
-				_.target = target;
-				_.isFunction = true;
+				this.target = target;
+				this.isFunction = true;
 				break;
 			case _UNDEFINED:
-				_.isUndefined = true;
-				_.isNullOrUndefined = true;
-				_.isPrimitive = true;
+				this.isUndefined = true;
+				this.isNullOrUndefined = true;
+				this.isPrimitive = true;
 				break;
 			default:
-				throw "Fatal type failure.  Unknown type: " + _.type;
+				throw "Fatal type failure.  Unknown type: " + this.type;
 		}
 
 		if(onBeforeFreeze) onBeforeFreeze();
-		Object.freeze(_);
+		Object.freeze(this);
 
 	}
 
@@ -112,13 +117,13 @@ export class TypeInfo
 	 * @param name
 	 * @returns {TypeInfo}
 	 */
-	member(name:string):TypeInfo
+	member(name:string|number|symbol):TypeInfo
 	{
 		var t = this.target;
 		return TypeInfo.getFor(
 			t && (name) in (t)
 				? t[name]
-				: undefined);
+				: VOID0);
 	}
 
 	/**
@@ -170,6 +175,12 @@ export module Type
 	 */
 	export const OBJECT:string = _OBJECT;
 
+
+	/**
+	 * typeof Symbol
+	 * @type {string}
+	 */
+	export const SYMBOL:string = _SYMBOL;
 
 	/**
 	 * typeof undefined
@@ -228,9 +239,10 @@ export module Type
 	/**
 	 * Returns true if the value is a boolean, string, number, null, or undefined.
 	 * @param value
+	 * @param allowUndefined if set to true will return true if the value is undefined.
 	 * @returns {boolean}
 	 */
-	export function isPrimitive(value:any):value is Primitive
+	export function isPrimitive(value:any, allowUndefined:boolean = false):value is Primitive
 	{
 		var t = typeof value;
 		switch(t)
@@ -238,11 +250,35 @@ export module Type
 			case _BOOLEAN:
 			case _STRING:
 			case _NUMBER:
-			case _UNDEFINED:
 				return true;
+			case _UNDEFINED:
+				return allowUndefined;
 			case _OBJECT:
 				return value===null;
 
+		}
+		return false;
+	}
+
+	export function isPrimitiveOrSymbol(value:any, allowUndefined:boolean = false):value is Primitive|symbol
+	{
+		return typeof value===_SYMBOL ? true : isPrimitive(value,allowUndefined);
+	}
+
+	/**
+	 * Returns true if the value is a string, number, or symbol.
+	 * @param value
+	 * @returns {boolean}
+	 */
+	export function isPropertyKey(value:any):value is string|number|symbol
+	{
+		var t = typeof value;
+		switch(t)
+		{
+			case _STRING:
+			case _NUMBER:
+			case _SYMBOL:
+				return true;
 		}
 		return false;
 	}
@@ -283,14 +319,19 @@ export module Type
 		return TypeInfo.getFor(target);
 	}
 
-	export function hasMember(value:any, property:string):boolean
+	export function hasMember(instance:any, property:string):boolean
 	{
-		return value && !isPrimitive(value) && (property) in (value);
+		return instance && !isPrimitive(instance) && (property) in (instance);
 	}
 
 	export function hasMemberOfType<T>(instance:any, property:string, type:string):instance is T
 	{
 		return hasMember(instance, property) && typeof(instance[property])===type;
+	}
+
+	export function hasMethod<T>(instance:any, property:string):instance is T
+	{
+		return hasMemberOfType<T>(instance, property, _FUNCTION);
 	}
 
 	export function isArrayLike<T>(instance:any):instance is IArray<T>
