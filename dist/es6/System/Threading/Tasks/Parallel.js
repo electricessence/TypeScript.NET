@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
- */
 import { Promise, ArrayPromise, PromiseCollection } from "../../Promises/Promise";
 import { Type } from "../../Types";
 import Worker from "../Worker";
@@ -13,7 +8,7 @@ import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
 const MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Type.UNDEFINED
     ? (self.URL ? self.URL : self.webkitURL)
-    : null, _supports = (isNodeJS || self.Worker) ? true : false;
+    : null, _supports = !!(isNodeJS || self.Worker);
 const defaults = {
     evalPath: isNodeJS ? __dirname + '/eval.js' : VOID0,
     maxConcurrency: isNodeJS
@@ -26,7 +21,7 @@ const defaults = {
 function extend(from, to) {
     if (!to)
         to = {};
-    for (var i of Object.keys(from)) {
+    for (let i of Object.keys(from)) {
         if (to[i] === void 0)
             to[i] = from[i];
     }
@@ -54,19 +49,19 @@ class WorkerPromise extends Promise {
 var workers;
 (function (workers) {
     function getPool(key) {
-        var pool = workerPools[key];
+        let pool = workerPools[key];
         if (!pool) {
             workerPools[key] = pool = new ObjectPool(8);
             pool.autoClearTimeout = 3000;
         }
         return pool;
     }
-    var workerPools = {};
+    const workerPools = {};
     function recycle(w) {
         if (w) {
             w.onerror = null;
             w.onmessage = null;
-            var k = w.__key;
+            const k = w.__key;
             if (k) {
                 getPool(k).add(w);
             }
@@ -82,7 +77,7 @@ var workers;
     }
     workers.tryGet = tryGet;
     function getNew(key, url) {
-        var worker = new Worker(url);
+        const worker = new Worker(url);
         worker.__key = key;
         worker.dispose = () => {
             worker.onmessage = null;
@@ -105,13 +100,13 @@ export class Parallel {
         return new Parallel({ maxConcurrency: max });
     }
     _getWorkerSource(task, env) {
-        var scripts = this._requiredScripts, functions = this._requiredFunctions;
-        var preStr = '';
+        const scripts = this._requiredScripts, functions = this._requiredFunctions;
+        let preStr = '';
         if (!isNodeJS && scripts.length) {
             preStr += 'importScripts("' + scripts.join('","') + '");\r\n';
         }
         for (let { name, fn } of functions) {
-            var source = fn.toString();
+            const source = fn.toString();
             preStr += name
                 ? `var ${name} = ${source};`
                 : source;
@@ -144,13 +139,14 @@ export class Parallel {
         return this;
     }
     _spawnWorker(task, env) {
-        var src = this._getWorkerSource(task, env);
+        const src = this._getWorkerSource(task, env);
         if (Worker === VOID0)
             return VOID0;
-        var worker = workers.tryGet(src);
+        let worker = workers.tryGet(src);
         if (worker)
             return worker;
-        var scripts = this._requiredScripts, evalPath = this.options.evalPath;
+        const scripts = this._requiredScripts;
+        let evalPath = this.options.evalPath;
         if (!evalPath) {
             if (isNodeJS)
                 throw new Error("Can't use NodeJD without eval.js!");
@@ -164,8 +160,8 @@ export class Parallel {
             worker.postMessage(src);
         }
         else if (URL) {
-            var blob = new Blob([src], { type: 'text/javascript' });
-            var url = URL.createObjectURL(blob);
+            const blob = new Blob([src], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
             worker = workers.getNew(src, url);
         }
         return worker;
@@ -189,8 +185,7 @@ export class Parallel {
         throw new Error('Workers do not exist and synchronous operation not allowed!');
     }
     pipe(data, task, env) {
-        let maxConcurrency = this.ensureClampedMaxConcurrency();
-        var result;
+        let result;
         if (data && data.length) {
             const len = data.length;
             const taskString = task.toString();

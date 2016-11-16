@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { forEach } from "./Enumeration/Enumerator";
 import { areEqual } from "../Compare";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
@@ -67,7 +63,7 @@ export class CollectionBase extends DisposableBase {
         const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
-        var updated = false;
+        let updated = false;
         try {
             if (updated = closure())
                 _._modifiedCount++;
@@ -95,7 +91,7 @@ export class CollectionBase extends DisposableBase {
         const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
-        var n;
+        let n;
         try {
             if (n = _._removeInternal(entry, max))
                 _._modifiedCount++;
@@ -110,7 +106,7 @@ export class CollectionBase extends DisposableBase {
         const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
-        var n;
+        let n;
         try {
             if (n = _._clearInternal())
                 _._modifiedCount++;
@@ -127,13 +123,13 @@ export class CollectionBase extends DisposableBase {
         this._version = 0;
         this._updateRecursion = 0;
         this._modifiedCount = 0;
-        var l = this._linq;
+        const l = this._linq;
         this._linq = void 0;
         if (l)
             l.dispose();
     }
     _importEntries(entries) {
-        var added = 0;
+        let added = 0;
         if (entries) {
             if (Array.isArray(entries)) {
                 for (let e of entries) {
@@ -156,7 +152,7 @@ export class CollectionBase extends DisposableBase {
             return 0;
         _.assertModifiable();
         _._updateRecursion++;
-        var n;
+        let n;
         try {
             if (n = _._importEntries(entries))
                 _._modifiedCount++;
@@ -170,7 +166,8 @@ export class CollectionBase extends DisposableBase {
     contains(entry) {
         if (!this.getCount())
             return false;
-        var found = false, equals = this._equalityComparer;
+        let found = false;
+        const equals = this._equalityComparer;
         this.forEach(e => !(found = equals(entry, e)));
         return found;
     }
@@ -178,7 +175,7 @@ export class CollectionBase extends DisposableBase {
         if (this.wasDisposed)
             return 0;
         if (useCopy) {
-            var a = this.toArray();
+            const a = this.toArray();
             try {
                 return forEach(a, action);
             }
@@ -193,12 +190,12 @@ export class CollectionBase extends DisposableBase {
     copyTo(target, index = 0) {
         if (!target)
             throw new ArgumentNullException('target');
-        var count = this.getCount();
+        const count = this.getCount();
         if (count) {
-            var newLength = count + index;
+            const newLength = count + index;
             if (target.length < newLength)
                 target.length = newLength;
-            var e = this.getEnumerator();
+            const e = this.getEnumerator();
             while (e.moveNext()) {
                 target[index++] = e.current;
             }
@@ -206,14 +203,14 @@ export class CollectionBase extends DisposableBase {
         return target;
     }
     toArray() {
-        var count = this.getCount();
+        const count = this.getCount();
         return count
             ? this.copyTo(count > 65536 ? new Array(count) : [])
             : [];
     }
     get linq() {
         this.throwIfDisposed();
-        var e = this._linq;
+        let e = this._linq;
         if (!e) {
             if (!isNodeJS || !isCommonJS)
                 throw `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
@@ -227,7 +224,7 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
     }
     linqAsync(callback) {
         this.throwIfDisposed();
-        var e = this._linq;
+        let e = this._linq;
         if (!e) {
             if (isRequireJS) {
                 eval("require")([LINQ_PATH], (linq) => {

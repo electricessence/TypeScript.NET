@@ -1,9 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
 export class Subscription {
     constructor(_subscribable, _subscriber) {
         this._subscribable = _subscribable;
@@ -18,8 +12,8 @@ export class Subscription {
         return !this._subscribable || !this._subscriber;
     }
     dispose() {
-        var subscriber = this.subscriber;
-        var subscribable = this._subscribable;
+        const subscriber = this.subscriber;
+        const subscribable = this._subscribable;
         this._subscribable = null;
         try {
             if (subscriber && subscribable) {

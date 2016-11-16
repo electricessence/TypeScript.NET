@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 "use strict";
 var TimeSpan_1 = require("../Time/TimeSpan");
 function getTimestampMilliseconds() {

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { LinkedNodeList } from "./LinkedNodeList";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { forEach } from "./Enumeration/Enumerator";
@@ -19,7 +15,7 @@ export class SetBase extends CollectionBase {
         this._importEntries(source);
     }
     _getSet() {
-        var s = this._set;
+        let s = this._set;
         if (!s)
             this._set = s = new LinkedNodeList();
         return s;
@@ -64,7 +60,7 @@ export class SetBase extends CollectionBase {
     isProperSupersetOf(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
-        var result = true, count;
+        let result = true, count;
         if (other instanceof SetBase) {
             result = this.isSupersetOf(other);
             count = other.getCount();
@@ -90,7 +86,7 @@ export class SetBase extends CollectionBase {
     isSupersetOf(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
-        var result = true;
+        let result = true;
         forEach(other, v => {
             return result = this.contains(v);
         });
@@ -99,7 +95,7 @@ export class SetBase extends CollectionBase {
     overlaps(other) {
         if (!other)
             throw new ArgumentNullException(OTHER);
-        var result = false;
+        let result = false;
         forEach(other, v => !(result = this.contains(v)));
         return result;
     }
@@ -136,7 +132,7 @@ export class SetBase extends CollectionBase {
         this.importEntries(other);
     }
     _clearInternal() {
-        var s = this._set;
+        const s = this._set;
         return s ? s.clear() : 0;
     }
     _onDispose() {
@@ -149,7 +145,7 @@ export class SetBase extends CollectionBase {
     getEnumerator() {
         const _ = this;
         _.throwIfDisposed();
-        var s = _._set;
+        const s = _._set;
         return s && _.getCount()
             ? LinkedNodeList.valueEnumeratorFrom(s)
             : EmptyEnumerator;
@@ -164,18 +160,18 @@ export class SetBase extends CollectionBase {
             && this.remove(node.value) != 0;
     }
     removeFirst() {
-        var s = this._set;
+        const s = this._set;
         return this._removeNode(s && s.first);
     }
     removeLast() {
-        var s = this._set;
+        const s = this._set;
         return this._removeNode(s && s.last);
     }
 }
 function wipe(map, depth = 1) {
     if (map && depth) {
-        for (var key of Object.keys(map)) {
-            var v = map[key];
+        for (let key of Object.keys(map)) {
+            const v = map[key];
             delete map[key];
             wipe(v, depth - 1);
         }

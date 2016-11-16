@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends"], function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     var TimeUnit_1 = require("./TimeUnit");
@@ -22,15 +17,17 @@
         __extends(TimeSpan, _super);
         function TimeSpan(value, units) {
             if (units === void 0) { units = TimeUnit_1.TimeUnit.Milliseconds; }
+            var _this;
             var ms = TimeUnit_1.TimeUnit.toMilliseconds(value, units);
-            _super.call(this, ms);
-            var _ = this;
+            _this = _super.call(this, ms) || this;
+            var _ = _this;
             _.ticks = ms * 10000;
             _.milliseconds = ms;
             _.seconds = ms / 1000;
-            _.minutes = ms / HowMany_1.Milliseconds.Per.Minute;
-            _.hours = ms / HowMany_1.Milliseconds.Per.Hour;
-            _.days = ms / HowMany_1.Milliseconds.Per.Day;
+            _.minutes = ms / 60000;
+            _.hours = ms / 3600000;
+            _.days = ms / 86400000;
+            return _this;
         }
         Object.defineProperty(TimeSpan.prototype, "total", {
             get: function () {

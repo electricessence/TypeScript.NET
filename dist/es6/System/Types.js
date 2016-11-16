@@ -1,9 +1,5 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 const VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _SYMBOL = "symbol", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
-var typeInfoRegistry = {};
+const typeInfoRegistry = {};
 export class TypeInfo {
     constructor(target, onBeforeFreeze) {
         this.isBoolean = false;
@@ -64,19 +60,19 @@ export class TypeInfo {
         Object.freeze(this);
     }
     member(name) {
-        var t = this.target;
+        const t = this.target;
         return TypeInfo.getFor(t && (name) in (t)
             ? t[name]
             : VOID0);
     }
     static getFor(target) {
-        var type = typeof target;
+        const type = typeof target;
         switch (type) {
             case _OBJECT:
             case _FUNCTION:
                 return new TypeInfo(target);
         }
-        var info = typeInfoRegistry[type];
+        let info = typeInfoRegistry[type];
         if (!info)
             typeInfoRegistry[type] = info = new TypeInfo(target);
         return info;
@@ -94,6 +90,7 @@ export var Type;
     function isNullOrUndefined(value) {
         return value === null || value === VOID0;
     }
+    Type.isNullOrUndefined = isNullOrUndefined;
     function isBoolean(value) {
         return typeof value === _BOOLEAN;
     }
@@ -113,7 +110,7 @@ export var Type;
     }
     Type.isString = isString;
     function isPrimitive(value, allowUndefined = false) {
-        var t = typeof value;
+        const t = typeof value;
         switch (t) {
             case _BOOLEAN:
             case _STRING:
@@ -132,7 +129,7 @@ export var Type;
     }
     Type.isPrimitiveOrSymbol = isPrimitiveOrSymbol;
     function isPropertyKey(value) {
-        var t = typeof value;
+        const t = typeof value;
         switch (t) {
             case _STRING:
             case _NUMBER:

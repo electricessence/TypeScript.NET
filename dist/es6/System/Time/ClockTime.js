@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { TimeQuantity } from "./TimeQuantity";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
@@ -12,8 +7,8 @@ export class ClockTime extends TimeQuantity {
             ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
             : (args.length > 0 && args[0] || 0));
         const _ = this;
-        var ms = Math.abs(_.getTotalMilliseconds());
-        var msi = Math.floor(ms);
+        const ms = Math.abs(_.getTotalMilliseconds());
+        let msi = Math.floor(ms);
         _.tick = (ms - msi) * 10000;
         _.days = (msi / 86400000) | 0;
         msi -= _.days * 86400000;
@@ -30,7 +25,7 @@ export class ClockTime extends TimeQuantity {
         return new ClockTime(hours, minutes, seconds, milliseconds);
     }
     static millisecondsFromTime(hours, minutes, seconds = 0, milliseconds = 0) {
-        var value = hours;
+        let value = hours;
         value *= 60;
         value += minutes;
         value *= 60;
@@ -41,7 +36,7 @@ export class ClockTime extends TimeQuantity {
     }
     toString() {
         const _ = this;
-        var a = [];
+        const a = [];
         if (_.days)
             a.push(pluralize(_.days, "day"));
         if (_.hour)

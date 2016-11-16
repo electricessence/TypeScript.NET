@@ -1,12 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../Types", "./Dictionaries/getIdentifier", "./HashSet", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, getIdentifier_1, HashSet_1, extends_1;
-    var __extends, OTHER, VOID0, Set;
+    var __extends, Set;
     function getId(obj) {
         return getIdentifier_1.getIdentifier(obj, typeof obj != Types_1.Type.BOOLEAN);
     }
@@ -26,8 +22,6 @@ System.register(["../Types", "./Dictionaries/getIdentifier", "./HashSet", "../..
             }],
         execute: function() {
             __extends = extends_1.default;
-            OTHER = 'other';
-            VOID0 = void 0;
             Set = (function (_super) {
                 __extends(Set, _super);
                 function Set(source) {

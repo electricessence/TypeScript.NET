@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import * as Serialization from "../Serialization/Utility";
 import { Type } from "../Types";
 import { extractKeyValue } from "../KeyValueExtract";
@@ -10,7 +6,7 @@ const EMPTY = "", QUERY_SEPARATOR = "?", ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARA
 export function encode(values, prefixIfNotEmpty) {
     if (!values)
         return EMPTY;
-    var entries = [];
+    const entries = [];
     if (isEnumerableOrArrayLike(values)) {
         forEach(values, entry => extractKeyValue(entry, (key, value) => appendKeyValue(entries, key, value)));
     }
@@ -33,7 +29,7 @@ function appendKeyValue(entries, key, value) {
 }
 export function encodeValue(value) {
     if (isUriComponentFormattable(value)) {
-        var v = value.toUriComponent();
+        const v = value.toUriComponent();
         if (v && v.indexOf(ENTRY_SEPARATOR) != 1)
             throw '.toUriComponent() did not encode the value.';
         return v;
@@ -47,12 +43,12 @@ export function isUriComponentFormattable(instance) {
 }
 export function parse(query, entryHandler, deserialize = true, decodeValues = true) {
     if (query && (query = query.replace(/^\s*\?+/, ''))) {
-        var entries = query.split(ENTRY_SEPARATOR);
+        const entries = query.split(ENTRY_SEPARATOR);
         for (let entry of entries) {
-            var si = entry.indexOf(KEY_VALUE_SEPARATOR);
+            const si = entry.indexOf(KEY_VALUE_SEPARATOR);
             if (si != -1) {
-                var key = entry.substring(0, si);
-                var value = entry.substring(si + 1);
+                let key = entry.substring(0, si);
+                let value = entry.substring(si + 1);
                 if (decodeValues)
                     value = decodeURIComponent(value);
                 if (deserialize)
@@ -63,10 +59,10 @@ export function parse(query, entryHandler, deserialize = true, decodeValues = tr
     }
 }
 export function parseToMap(query, deserialize = true, decodeValues = true) {
-    var result = {};
+    const result = {};
     parse(query, (key, value) => {
         if ((key) in (result)) {
-            var prev = result[key];
+            let prev = result[key];
             if (!(Array.isArray(prev)))
                 result[key] = prev = [prev];
             prev.push(value);
@@ -77,7 +73,7 @@ export function parseToMap(query, deserialize = true, decodeValues = true) {
     return result;
 }
 export function parseToArray(query, deserialize = true, decodeValues = true) {
-    var result = [];
+    const result = [];
     parse(query, (key, value) => { result.push({ key: key, value: value }); }, deserialize, decodeValues);
     return result;
 }

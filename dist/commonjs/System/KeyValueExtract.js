@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 "use strict";
 var ArgumentException_1 = require("./Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");

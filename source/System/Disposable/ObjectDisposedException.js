@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Exceptions/InvalidOperationException", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Exceptions/InvalidOperationException", "../../extends"], function (require, exports) {
     "use strict";
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var extends_1 = require("../../extends");
@@ -19,9 +14,9 @@
     var ObjectDisposedException = (function (_super) {
         __extends(ObjectDisposedException, _super);
         function ObjectDisposedException(objectName, message, innerException) {
-            _super.call(this, message || '', innerException, function (_) {
+            return _super.call(this, message || '', innerException, function (_) {
                 _.objectName = objectName;
-            });
+            }) || this;
         }
         ObjectDisposedException.prototype.getName = function () {
             return NAME;

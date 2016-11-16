@@ -1,17 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports"], function (require, exports) {
     "use strict";
     var Subscription = (function () {
         function Subscription(_subscribable, _subscriber) {

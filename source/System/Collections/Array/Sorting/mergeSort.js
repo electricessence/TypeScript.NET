@@ -1,17 +1,11 @@
-/*!
- * @author Sebastian Belmar / https://github.com/sebabelmar/
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * https://en.wikipedia.org/wiki/Merge_sort
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../../Exceptions/ArgumentNullException", "../Utility"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../../Exceptions/ArgumentNullException", "../Utility"], function (require, exports) {
     "use strict";
     var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
     var Utility_1 = require("../Utility");

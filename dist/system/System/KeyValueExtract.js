@@ -1,12 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var ArgumentException_1, ArgumentNullException_1;
-    var VOID0, DOT, KEY, VALUE, ITEM, ITEM_1, ITEM_KEY, ITEM_VALUE, INVALID_KVP_MESSAGE, CANNOT_BE_UNDEFINED;
+    var VOID0, DOT, KEY, VALUE, ITEM, ITEM_1, ITEM_VALUE, INVALID_KVP_MESSAGE, CANNOT_BE_UNDEFINED;
     function isKeyValuePair(kvp) {
         return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
     }
@@ -33,7 +29,6 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullExc
     }
     exports_1("assertNotUndefined", assertNotUndefined);
     function extractKeyValue(item, to) {
-        var _ = this;
         var key, value;
         if (item instanceof Array) {
             assertTuple(item);
@@ -59,7 +54,7 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullExc
                 ArgumentNullException_1 = ArgumentNullException_1_1;
             }],
         execute: function() {
-            VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_KEY = ITEM + DOT + KEY, ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
+            VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
             exports_1("default",extractKeyValue);
         }
     }

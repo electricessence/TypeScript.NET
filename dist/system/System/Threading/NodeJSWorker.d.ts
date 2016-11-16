@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
- */
 import { WorkerLike } from "./WorkerType";
 import { ObservableBase } from "../Observable/ObservableBase";
 export declare class NodeJSWorker extends ObservableBase<any> implements WorkerLike {

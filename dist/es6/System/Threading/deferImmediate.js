@@ -1,17 +1,12 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on code from: https://github.com/kriskowal/q
- */
 import { Type } from "../Types";
 import { LinkedNodeList } from "../Collections/LinkedNodeList";
 import { Queue } from "../Collections/Queue";
 import { ObjectPool } from "../Disposable/ObjectPool";
 import { isNodeJS } from "../Environment";
-var requestTick;
-var flushing = false;
+let requestTick;
+let flushing = false;
 function flush() {
-    var entry;
+    let entry;
     while (entry = immediateQueue.first) {
         let { task, domain, context, args } = entry;
         entry.canceller();
@@ -25,9 +20,9 @@ function flush() {
     }
     flushing = false;
 }
-var immediateQueue = new LinkedNodeList();
-var laterQueue = new Queue();
-var entryPool = new ObjectPool(40, () => ({}), (o) => {
+const immediateQueue = new LinkedNodeList();
+const laterQueue = new Queue();
+const entryPool = new ObjectPool(40, () => ({}), (o) => {
     o.task = null;
     o.domain = null;
     o.context = null;
@@ -68,7 +63,7 @@ function requestFlush() {
     }
 }
 export function deferImmediate(task, context, args) {
-    var entry = entryPool.take();
+    let entry = entryPool.take();
     entry.task = task;
     entry.domain = isNodeJS && process['domain'];
     entry.context = context;
@@ -76,7 +71,7 @@ export function deferImmediate(task, context, args) {
     entry.canceller = () => {
         if (!entry)
             return false;
-        let r = !!immediateQueue.removeNode(entry);
+        let r = Boolean(immediateQueue.removeNode(entry));
         entryPool.add(entry);
         return r;
     };
@@ -107,13 +102,13 @@ else if (typeof setImmediate === Type.FUNCTION) {
     }
 }
 else if (typeof MessageChannel !== Type.UNDEFINED) {
-    var channel = new MessageChannel();
+    const channel = new MessageChannel();
     channel.port1.onmessage = function () {
         requestTick = requestPortTick;
         channel.port1.onmessage = flush;
         flush();
     };
-    var requestPortTick = () => {
+    let requestPortTick = () => {
         channel.port2.postMessage(0);
     };
     requestTick = () => {

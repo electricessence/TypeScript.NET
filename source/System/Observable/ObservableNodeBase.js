@@ -4,14 +4,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./ObservableBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./ObservableBase", "../../extends"], function (require, exports) {
     "use strict";
     var ObservableBase_1 = require("./ObservableBase");
     var extends_1 = require("../../extends");
@@ -19,7 +19,7 @@
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);
         function ObservableNodeBase() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         ObservableNodeBase.prototype.onNext = function (value) {
             this._onNext(value);

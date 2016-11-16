@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../Compare");
     var Utility_1 = require("./Array/Utility");
@@ -24,14 +20,15 @@
         __extends(List, _super);
         function List(source, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-            _super.call(this, VOID0, equalityComparer);
+            var _this = _super.call(this, VOID0, equalityComparer) || this;
             if (Array.isArray(source)) {
-                this._source = source.slice();
+                _this._source = source.slice();
             }
             else {
-                this._source = [];
-                this._importEntries(source);
+                _this._source = [];
+                _this._importEntries(source);
             }
+            return _this;
         }
         List.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);

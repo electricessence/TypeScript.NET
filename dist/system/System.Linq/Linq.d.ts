@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
 import { Action, Selector, EqualityComparison, Comparison, Closure, ActionWithIndex, PredicateWithIndex, SelectorWithIndex } from "../System/FunctionTypes";

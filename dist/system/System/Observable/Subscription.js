@@ -1,9 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;

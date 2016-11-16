@@ -1,17 +1,12 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, extends_1;
     var select, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
-    function BREAK(e) {
+    function BREAK() {
         return 0;
     }
-    function RETURN(e) {
+    function RETURN() {
         return 1;
     }
     function isNotNullOrUndefined(e) {
@@ -327,7 +322,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     }, isEndless);
                 };
                 InfiniteEnumerable.prototype.flatten = function () {
-                    return this.selectMany(function (entry, i) {
+                    return this.selectMany(function (entry) {
                         var e = !Types_1.Type.isString(entry) && Enumerable.fromAny(entry);
                         return e ? e.flatten() : [entry];
                     });
@@ -1019,9 +1014,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     if (!action)
                         throw new ArgumentNullException_1.ArgumentNullException("action");
                     Enumerator_1.throwIfEndless(_.isEndless);
-                    var index = 0;
                     return max > 0 ? dispose_1.using(_.getEnumerator(), function (e) {
-                        Enumerator_1.throwIfEndless(!isFinite(max) && !!e.isEndless);
+                        Enumerator_1.throwIfEndless(!isFinite(max) && e.isEndless);
                         var i = 0;
                         while (max > i && _.throwIfDisposed() && e.moveNext()) {
                             if (action(e.current, i++) === false)
@@ -1223,8 +1217,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 Enumerable.prototype.contains = function (value, compareSelector) {
                     if (compareSelector) {
-                        var s = compareSelector(value);
-                        return this.any(function (v) { return Compare_1.areEqual(compareSelector(v), s); });
+                        var s_1 = compareSelector(value);
+                        return this.any(function (v) { return Compare_1.areEqual(compareSelector(v), s_1); });
                     }
                     return this.any(function (v) { return Compare_1.areEqual(v, value); });
                 };
@@ -1614,7 +1608,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 ArrayEnumerable.prototype.any = function (predicate) {
                     var _ = this;
                     _.throwIfDisposed();
-                    var source = _._source, len = source.length;
+                    var source = _._source;
+                    var len = source.length;
                     return !!len && (!predicate || _super.prototype.any.call(this, predicate));
                 };
                 ArrayEnumerable.prototype.count = function (predicate) {
@@ -1773,7 +1768,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     this.order = order;
                     this.parent = parent;
                     this.comparer = comparer;
-                    Enumerator_1.throwIfEndless(!!source && !!source.isEndless);
+                    Enumerator_1.throwIfEndless(source && source.isEndless);
                     this._disposableObjectName = "OrderedEnumerable";
                 }
                 OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {

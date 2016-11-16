@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Collections/Array/Utility", "../Utility/shallowCopy", "../Disposable/DisposableBase", "../Disposable/dispose", "./EventDispatcherEntry", "../../extends"], function (require, exports) {
     "use strict";
     var AU = require("../Collections/Array/Utility");
     var shallowCopy_1 = require("../Utility/shallowCopy");
@@ -28,9 +24,10 @@
     var EventDispatcherBase = (function (_super) {
         __extends(EventDispatcherBase, _super);
         function EventDispatcherBase() {
-            _super.call(this);
-            this._isDisposing = false;
-            this._disposableObjectName = NAME;
+            var _this = _super.call(this) || this;
+            _this._isDisposing = false;
+            _this._disposableObjectName = NAME;
+            return _this;
         }
         EventDispatcherBase.prototype.addEventListener = function (type, listener, priority) {
             if (priority === void 0) { priority = 0; }

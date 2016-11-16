@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { IDisposable } from "./IDisposable";
 export declare type DisposableItem = IDisposable | null | undefined;
 export declare type DisposableItemArray = Array<DisposableItem> | null | undefined;

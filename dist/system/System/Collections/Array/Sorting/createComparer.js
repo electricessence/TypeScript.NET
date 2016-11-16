@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../../../Types", "../../../Compare"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -21,7 +17,8 @@ System.register(["../../../Types", "../../../Compare"], function(exports_1, cont
             var len = Math.min(aValue.length, bValue.length);
             var oArray = Array.isArray(order) ? order : null;
             for (var i = 0; i < len; i++) {
-                var vA = aValue[i], vB = bValue[i], o = oArray
+                var vA = aValue[i], vB = bValue[i];
+                var o = oArray
                     ? (i < oArray.length ? oArray[i] : 1)
                     : order;
                 if (nanHasEquivalent) {

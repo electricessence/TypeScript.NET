@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -106,7 +101,9 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                 };
                 Dictionary.prototype._setValueInternal = function (key, value) {
                     var _ = this;
-                    var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier_1.getIdentifier(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+                    var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier_1.getIdentifier(compareKey);
+                    var bucket = _._getBucket(hash);
+                    var bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
                     if (bucketEntry) {
                         var b = bucket;
                         if (value === VOID0) {

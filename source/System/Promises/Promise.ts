@@ -226,12 +226,12 @@ extends PromiseState<T> implements PromiseLike<T>
 	{
 		this.throwIfDisposed();
 
-		return new Promise<TResult>((resolve, reject)=>
+		return new Promise<TResult>((resolve, reject) =>
 		{
 			this.thenThis(
-				result=>
+				result =>
 					handleResolutionMethods(resolve, reject, result, onFulfilled),
-				error=>
+				error =>
 					onRejected
 						? handleResolutionMethods(resolve, reject, error, onRejected)
 						: reject(error)
@@ -251,12 +251,12 @@ extends PromiseState<T> implements PromiseLike<T>
 	{
 		this.throwIfDisposed();
 
-		return new Promise<TResult>((resolve, reject)=>
+		return new Promise<TResult>((resolve, reject) =>
 		{
 			this.thenThis(
-				result=>
+				result =>
 					resolve(<any>(onFulfilled ? onFulfilled(result) : result)),
-				error=>
+				error =>
 					reject(onRejected ? onRejected(error) : error)
 			);
 		});
@@ -272,7 +272,7 @@ extends PromiseState<T> implements PromiseLike<T>
 		onFulfilled:Promise.Fulfill<T,any>,
 		onRejected?:Promise.Reject<any>):void
 	{
-		defer(()=>
+		defer(() =>
 			this.thenThis(onFulfilled, onRejected));
 	}
 
@@ -286,13 +286,13 @@ extends PromiseState<T> implements PromiseLike<T>
 		this.throwIfDisposed();
 
 		return new Promise<T>(
-			(resolve, reject)=>
+			(resolve, reject) =>
 			{
-				defer(()=>
+				defer(() =>
 				{
 					this.thenThis(
-						v=> resolve(v),
-						e=> reject(e));
+						v => resolve(v),
+						e => reject(e));
 				}, milliseconds)
 			},
 			true // Since the resolve/reject is deferred.
@@ -312,11 +312,11 @@ extends PromiseState<T> implements PromiseLike<T>
 		if(this.isSettled) return this.delayFromNow(milliseconds);
 
 		return new Promise<T>(
-			(resolve, reject)=>
+			(resolve, reject) =>
 			{
 				this.thenThis(
-					v=>defer(()=>resolve(v), milliseconds),
-					e=>defer(()=>reject(e), milliseconds))
+					v => defer(() => resolve(v), milliseconds),
+					e => defer(() => reject(e), milliseconds))
 			},
 			true // Since the resolve/reject is deferred.
 		);
@@ -486,14 +486,14 @@ class PromiseWrapper<T> extends Resolvable<T>
 			throw new ArgumentException(TARGET, "Must be a promise-like object.");
 
 		_target.then(
-			(v:T)=>
+			(v:T) =>
 			{
 				this._state = Promise.State.Fulfilled;
 				this._result = v;
 				this._error = VOID0;
 				this._target = VOID0;
 			},
-			e=>
+			e =>
 			{
 				this._state = Promise.State.Rejected;
 				this._error = e;
@@ -510,11 +510,11 @@ class PromiseWrapper<T> extends Resolvable<T>
 		let t = this._target;
 		if(!t) return super.thenSynchronous(onFulfilled, onRejected);
 
-		return new Promise<TResult>((resolve, reject)=>
+		return new Promise<TResult>((resolve, reject) =>
 		{
 			handleDispatch(t,
-				result=>handleResolutionMethods(resolve, reject, result, onFulfilled),
-				error=>onRejected
+				result => handleResolutionMethods(resolve, reject, result, onFulfilled),
+				error => onRejected
 					? handleResolutionMethods(resolve, null, error, onRejected)
 					: reject(error)
 			);
@@ -663,7 +663,7 @@ export class Promise<T> extends Resolvable<T>
 		if(forceSynchronous)
 			resolver(fulfillHandler, rejectHandler);
 		else
-			deferImmediate(()=>resolver(fulfillHandler, rejectHandler));
+			deferImmediate(() => resolver(fulfillHandler, rejectHandler));
 
 	}
 
@@ -690,8 +690,8 @@ export class Promise<T> extends Resolvable<T>
 			{
 				case Promise.State.Pending:
 					r.thenSynchronous(
-						v=>this._resolveInternal(v),
-						e=>this._rejectInternal(e)
+						v => this._resolveInternal(v),
+						e => this._rejectInternal(e)
 					);
 					return;
 				case Promise.State.Rejected:
@@ -706,8 +706,8 @@ export class Promise<T> extends Resolvable<T>
 		if(isPromise(result))
 		{
 			result.then(
-				v=>this._resolveInternal(v),
-				e=>this._rejectInternal(e)
+				v => this._resolveInternal(v),
+				e => this._rejectInternal(e)
 			);
 		}
 		else
@@ -821,9 +821,9 @@ export class ArrayPromise<T> extends Promise<T[]>
 	map<U>(transform:(value:T)=>U):ArrayPromise<U>
 	{
 		this.throwIfDisposed();
-		return new ArrayPromise<U>(resolve=>
+		return new ArrayPromise<U>(resolve =>
 		{
-			this.thenThis((result:T[])=>resolve(result.map(transform)));
+			this.thenThis((result:T[]) => resolve(result.map(transform)));
 		}, true);
 	}
 
@@ -839,12 +839,12 @@ export class ArrayPromise<T> extends Promise<T[]>
 	{
 
 		return this
-			.thenSynchronous((result:T[])=>result.reduce(reduction, initialValue));
+			.thenSynchronous((result:T[]) => result.reduce(reduction, initialValue));
 	}
 
 	static fulfilled<T>(value:T[]):ArrayPromise<T>
 	{
-		return new ArrayPromise<T>(resolve=>value, true);
+		return new ArrayPromise<T>(resolve => value, true);
 	}
 }
 
@@ -920,10 +920,10 @@ export class PromiseCollection<T> extends DisposableBase
 	map<U>(transform:(value:T)=>U):ArrayPromise<U>
 	{
 		this.throwIfDisposed();
-		return new ArrayPromise<U>(resolve=>
+		return new ArrayPromise<U>(resolve =>
 		{
 			this.all()
-				.thenThis((result:T[])=>resolve(result.map(transform)));
+				.thenThis((result:T[]) => resolve(result.map(transform)));
 		}, true);
 	}
 
@@ -937,7 +937,7 @@ export class PromiseCollection<T> extends DisposableBase
 	pipe<U>(transform:(value:T)=>U|PromiseLike<U>):PromiseCollection<U>
 	{
 		this.throwIfDisposed();
-		return new PromiseCollection<U>(this._source.map(p=>handleSyncIfPossible(p, transform)));
+		return new PromiseCollection<U>(this._source.map(p => handleSyncIfPossible(p, transform)));
 	}
 
 	/**
@@ -960,7 +960,7 @@ export class PromiseCollection<T> extends DisposableBase
 					i:number,
 					array:PromiseLike<T>[]) =>
 					handleSyncIfPossible(previous,
-						(p:U)=>handleSyncIfPossible(current, (c:T)=>reduction(p, c, i, array))),
+						(p:U) => handleSyncIfPossible(current, (c:T) => reduction(p, c, i, array))),
 
 				isPromise(initialValue)
 					? initialValue
@@ -1021,7 +1021,7 @@ module pools
 		function getPool()
 		{
 			return pool
-				|| (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory, c=>
+				|| (pool = new ObjectPool<IPromiseCallbacks<any>>(40, factory, c =>
 				{
 					c.onFulfilled = NULL;
 					c.onRejected = NULL;
@@ -1076,7 +1076,7 @@ export module Promise
 	}
 	Object.freeze(State);
 
-	export type Resolution<TResult> = PromiseLike<TResult>|TResult|void;
+	export type Resolution<TResult> = TResult | PromiseLike<TResult>;
 
 	export interface Fulfill<T, TResult>
 	{
@@ -1085,14 +1085,13 @@ export module Promise
 
 	export interface Reject<TResult>
 	{
-		(err?:any):Resolution<TResult>
+		(reason:any):TResult | PromiseLike<TResult>;
 	}
 
 	export interface Then<T,TResult>
 	{
-		(
-			onFulfilled:Fulfill<T,TResult>,
-			onRejected?:Reject<TResult>):PromiseLike<TResult>
+		(onfulfilled?:Fulfill<T,TResult>, onrejected?:Reject<TResult>):PromiseLike<TResult>;
+		(onfulfilled?:Fulfill<T,TResult>, onrejected?:Reject<void>):PromiseLike<TResult>;
 	}
 
 	export interface Executor<T>
@@ -1144,19 +1143,19 @@ export module Promise
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
 		let promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
-		if(!promises.length || promises.every(v=>!v)) return new ArrayPromise<any>(
-			r=>r(promises), true); // it's a new empty, reuse it. :|
+		if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
+			r => r(promises), true); // it's a new empty, reuse it. :|
 
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
-		return new ArrayPromise<any>((resolve, reject)=>
+		return new ArrayPromise<any>((resolve, reject) =>
 		{
 			let result:any[] = [];
 			let len = promises.length;
 			result.length = len;
 			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
-			let remaining = new Set(promises.map((v, i)=>i)); // get all the indexes...
+			let remaining = new Set(promises.map((v, i) => i)); // get all the indexes...
 
-			let cleanup = ()=>
+			let cleanup = () =>
 			{
 				reject = VOID0;
 				resolve = VOID0;
@@ -1166,7 +1165,7 @@ export module Promise
 				remaining = VOID0;
 			};
 
-			let checkIfShouldResolve = ()=>
+			let checkIfShouldResolve = () =>
 			{
 				let r = resolve;
 				if(r && !remaining.count)
@@ -1176,7 +1175,7 @@ export module Promise
 				}
 			};
 
-			let onFulfill = (v:any, i:number)=>
+			let onFulfill = (v:any, i:number) =>
 			{
 				if(resolve)
 				{
@@ -1186,7 +1185,7 @@ export module Promise
 				}
 			};
 
-			let onReject = (e?:any)=>
+			let onReject = (e?:any) =>
 			{
 				let r = reject;
 				if(r)
@@ -1199,7 +1198,7 @@ export module Promise
 			for(let i = 0; remaining && i<len; i++)
 			{
 				let p = promises[i];
-				if(p) p.then(v=>onFulfill(v, i), onReject);
+				if(p) p.then(v => onFulfill(v, i), onReject);
 				else remaining.remove(i);
 				checkIfShouldResolve();
 			}
@@ -1220,19 +1219,19 @@ export module Promise
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
 		const promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
-		if(!promises.length || promises.every(v=>!v)) return new ArrayPromise<any>(
-			r=>r(promises), true); // it's a new empty, reuse it. :|
+		if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
+			r => r(promises), true); // it's a new empty, reuse it. :|
 
 
 		// Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
-		return new ArrayPromise<any>((resolve, reject)=>
+		return new ArrayPromise<any>((resolve, reject) =>
 		{
 			let len = promises.length;
 
 			// Using a set instead of -- a number is more reliable if just in case one of the provided promises resolves twice.
-			let remaining = new Set(promises.map((v, i)=>i)); // get all the indexes...
+			let remaining = new Set(promises.map((v, i) => i)); // get all the indexes...
 
-			let cleanup = ()=>
+			let cleanup = () =>
 			{
 				reject = NULL;
 				resolve = NULL;
@@ -1240,7 +1239,7 @@ export module Promise
 				remaining = NULL;
 			};
 
-			let checkIfShouldResolve = ()=>
+			let checkIfShouldResolve = () =>
 			{
 				let r = resolve;
 				if(r && !remaining.count)
@@ -1250,7 +1249,7 @@ export module Promise
 				}
 			};
 
-			let onResolved = (i:number)=>
+			let onResolved = (i:number) =>
 			{
 				if(remaining)
 				{
@@ -1262,7 +1261,7 @@ export module Promise
 			for(let i = 0; remaining && i<len; i++)
 			{
 				let p = promises[i];
-				if(p) p.then(v=>onResolved(i), e=>onResolved(i));
+				if(p) p.then(v => onResolved(i), e => onResolved(i));
 				else onResolved(i);
 			}
 		});
@@ -1282,7 +1281,7 @@ export module Promise
 		...rest:PromiseLike<any>[]):PromiseBase<any>
 	{
 		let promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
-		if(!promises || !promises.length || !(promises = promises.filter(v=>v!=null)).length)
+		if(!promises || !promises.length || !(promises = promises.filter(v => v!=null)).length)
 			throw new ArgumentException("Nothing to wait for.");
 
 		const len = promises.length;
@@ -1297,9 +1296,9 @@ export module Promise
 			if(p instanceof PromiseBase && p.isSettled) return p;
 		}
 
-		return new Promise((resolve, reject)=>
+		return new Promise((resolve, reject) =>
 		{
-			let cleanup = ()=>
+			let cleanup = () =>
 			{
 				reject = NULL;
 				resolve = NULL;
@@ -1307,7 +1306,7 @@ export module Promise
 				promises = NULL;
 			};
 
-			let onResolve = (r:(x:any)=>void, v:any)=>
+			let onResolve = (r:(x:any)=>void, v:any) =>
 			{
 				if(r)
 				{
@@ -1316,8 +1315,8 @@ export module Promise
 				}
 			};
 
-			let onFulfill = (v:any)=> onResolve(resolve, v);
-			let onReject = (e?:any)=> onResolve(reject, e);
+			let onFulfill = (v:any) => onResolve(resolve, v);
+			let onReject = (e?:any) => onResolve(reject, e);
 
 			for(let p of promises)
 			{
@@ -1377,7 +1376,7 @@ export module Promise
 		return new PromiseCollection(
 			(Array.isArray(first) ? first : [first])
 				.concat(rest)
-				.map((v:any)=>resolve(v)));
+				.map((v:any) => resolve(v)));
 	}
 
 	/**
@@ -1391,7 +1390,7 @@ export module Promise
 	export function map<T,U>(source:T[], transform:(value:T)=>U):PromiseCollection<U>
 	{
 		return new PromiseCollection<U>(
-			source.map(d=>new Promise<U>((r, j)=>
+			source.map(d => new Promise<U>((r, j) =>
 			{
 				try
 				{
@@ -1433,10 +1432,10 @@ export module Promise
 	 * @param then
 	 * @returns {PromiseWrapper<T>}
 	 */
-	export function createFrom<T,TResult>(then:Then<T,TResult>):PromiseBase<T>
+	export function createFrom<T>(then:Then<T,any>):PromiseBase<T>
 	{
 		if(!then) throw new ArgumentNullException(THEN);
-		return new PromiseWrapper({then: then});
+		return new PromiseWrapper<T>({then: then});
 	}
 
 }

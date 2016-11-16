@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../Types";
 export function dispose(...disposables) {
     disposeTheseInternal(disposables, false);
@@ -61,14 +57,14 @@ function disposeSingle(disposable, trapExceptions) {
     return null;
 }
 function disposeTheseInternal(disposables, trapExceptions, index = 0) {
-    var exceptions;
-    var len = disposables ? disposables.length : 0;
+    let exceptions;
+    const len = disposables ? disposables.length : 0;
     for (; index < len; index++) {
-        var next = disposables[index];
+        let next = disposables[index];
         if (!next)
             continue;
         if (trapExceptions) {
-            var ex = disposeSingle(next, true);
+            const ex = disposeSingle(next, true);
             if (ex) {
                 if (!exceptions)
                     exceptions = [];
@@ -76,7 +72,7 @@ function disposeTheseInternal(disposables, trapExceptions, index = 0) {
             }
         }
         else {
-            var success = false;
+            let success = false;
             try {
                 disposeSingle(next, false);
                 success = true;

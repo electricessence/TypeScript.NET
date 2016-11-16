@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Observable/ObservableBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Observable/ObservableBase", "../../extends"], function (require, exports) {
     "use strict";
     var ObservableBase_1 = require("../Observable/ObservableBase");
     var extends_1 = require("../../extends");
@@ -19,11 +14,11 @@
     var NodeJSWorker = (function (_super) {
         __extends(NodeJSWorker, _super);
         function NodeJSWorker(url) {
-            var _this = this;
-            _super.call(this);
-            var process = this._process = ps.fork(url);
+            var _this = _super.call(this) || this;
+            var process = _this._process = ps.fork(url);
             process.on('message', function (msg) { return _this._onNext(JSON.parse(msg)); });
             process.on('error', function (err) { return _this._onError(err); });
+            return _this;
         }
         NodeJSWorker.prototype._onNext = function (data) {
             _super.prototype._onNext.call(this, data);

@@ -1,9 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
 import { SubscribableBase } from "./SubscribableBase";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
@@ -18,8 +12,8 @@ export class ObservableBase extends SubscribableBase {
         processAction(this._unsubscribeAll(true), s => { s.onCompleted && s.onCompleted(); });
     }
     subscribe(subscriber, onError, onCompleted) {
-        var s;
-        var isFn = typeof subscriber == 'function';
+        let s;
+        let isFn = typeof subscriber == 'function';
         if (onError || onCompleted || isFn) {
             if (subscriber && !isFn)
                 throw "Invalid subscriber type.";
@@ -39,7 +33,7 @@ const OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting
 function processAction(observers, handler) {
     if (!observers)
         return;
-    var observersErrors = null;
+    let observersErrors = null;
     for (let s of observers) {
         try {
             handler(s);

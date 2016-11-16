@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "assert", "../../../../dist/commonjs/System/Observable/ObservableNodeBase"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "assert", "../../../../dist/commonjs/System/Observable/ObservableNodeBase"], function (require, exports) {
     "use strict";
     var assert = require("assert");
     var ObservableNodeBase_1 = require("../../../../dist/commonjs/System/Observable/ObservableNodeBase");

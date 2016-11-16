@@ -1,13 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../Types";
 import { SetBase } from "./SetBase";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
-const OTHER = 'other';
 const VOID0 = void 0;
 export class HashSet extends SetBase {
     constructor(source, keyGenerator) {
@@ -28,7 +23,7 @@ export class HashSet extends SetBase {
     _addInternal(item) {
         const _ = this;
         const type = typeof item;
-        var r = _._registry, t = r && r[type];
+        let r = _._registry, t = r && r[type];
         const key = _._keyGenerator(item);
         if (!t || t[key] === VOID0) {
             if (!r) {
@@ -63,7 +58,7 @@ export class HashSet extends SetBase {
         const r = this._registry, t = r && r[typeof item], node = t && t[item];
         if (node) {
             delete t[item];
-            var s = this._set;
+            const s = this._set;
             if (s && s.removeNode(node)) {
                 return 1;
             }

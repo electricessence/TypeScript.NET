@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./TimeUnit"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Compare", "./TimeUnit"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../Compare");
     var TimeUnit_1 = require("./TimeUnit");
@@ -43,9 +39,9 @@
                         ticks: ms * 10000,
                         milliseconds: ms,
                         seconds: ms / 1000,
-                        minutes: ms / HowMany_1.Milliseconds.Per.Minute,
-                        hours: ms / HowMany_1.Milliseconds.Per.Hour,
-                        days: ms / HowMany_1.Milliseconds.Per.Day,
+                        minutes: ms / 60000,
+                        hours: ms / 3600000,
+                        days: ms / 86400000,
                     });
                 }
                 return t;

@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function (require, exports) {
     "use strict";
     var Enumerator_1 = require("./Enumeration/Enumerator");
     var Compare_1 = require("../Compare");
@@ -25,14 +21,15 @@
         __extends(CollectionBase, _super);
         function CollectionBase(source, _equalityComparer) {
             if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
-            _super.call(this);
-            this._equalityComparer = _equalityComparer;
-            var _ = this;
+            var _this = _super.call(this) || this;
+            _this._equalityComparer = _equalityComparer;
+            var _ = _this;
             _._disposableObjectName = NAME;
             _._importEntries(source);
             _._updateRecursion = 0;
             _._modifiedCount = 0;
             _._version = 0;
+            return _this;
         }
         Object.defineProperty(CollectionBase.prototype, "count", {
             get: function () {
@@ -119,7 +116,7 @@
             var _ = this;
             _.assertModifiable();
             _._updateRecursion++;
-            var n;
+            var n = NaN;
             try {
                 if (n = _._removeInternal(entry, max))
                     _._modifiedCount++;
@@ -134,7 +131,7 @@
             var _ = this;
             _.assertModifiable();
             _._updateRecursion++;
-            var n;
+            var n = NaN;
             try {
                 if (n = _._clearInternal())
                     _._modifiedCount++;
@@ -191,7 +188,7 @@
                 _._updateRecursion--;
             }
             _._signalModification();
-            return n;
+            return n = NaN;
         };
         CollectionBase.prototype.contains = function (entry) {
             if (!this.getCount())

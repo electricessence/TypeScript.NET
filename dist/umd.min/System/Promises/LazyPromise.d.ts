@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT
- */
 import { Promise, PromiseBase } from "./Promise";
 export declare class LazyPromise<T> extends Promise<T> {
     private _resolver;

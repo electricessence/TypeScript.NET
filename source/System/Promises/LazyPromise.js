@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], function (require, exports) {
     "use strict";
     var Promise_1 = require("./Promise");
     var defer_1 = require("../Threading/defer");
@@ -20,11 +16,12 @@
     var LazyPromise = (function (_super) {
         __extends(LazyPromise, _super);
         function LazyPromise(_resolver) {
-            _super.call(this);
-            this._resolver = _resolver;
+            var _this = _super.call(this) || this;
+            _this._resolver = _resolver;
             if (!_resolver)
                 throw new ArgumentNullException_1.ArgumentNullException("resolver");
-            this._resolvedCalled = true;
+            _this._resolvedCalled = true;
+            return _this;
         }
         LazyPromise.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);

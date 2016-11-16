@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Types"], function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     function dispose() {
@@ -20,7 +16,6 @@
         disposeTheseInternal(disposables, false);
     }
     exports.dispose = dispose;
-    var dispose;
     (function (dispose) {
         function deferred() {
             var disposables = [];
@@ -44,7 +39,6 @@
                 : void 0;
         }
         dispose.these = these;
-        var these;
         (function (these) {
             function deferred(disposables, delay) {
                 if (delay === void 0) { delay = 0; }

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT
- */
 "use strict";
 var Promise_1 = require("./Promise");
 var defer_1 = require("../Threading/defer");

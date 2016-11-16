@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -120,7 +116,8 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                 DictionaryBase.prototype.setValue = function (key, value) {
                     var _ = this;
                     _.assertModifiable();
-                    var changed = false, old = _.getValue(key);
+                    var changed = false;
+                    var old = _.getValue(key);
                     if (!Compare_1.areEqual(value, old) && _._setValueInternal(key, value)) {
                         changed = true;
                         _._onValueModified(key, value, old);

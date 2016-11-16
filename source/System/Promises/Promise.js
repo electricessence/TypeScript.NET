@@ -4,14 +4,14 @@
  * Although most of the following code is written from scratch, it is
  * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     var deferImmediate_1 = require("../Threading/deferImmediate");
@@ -79,11 +79,12 @@
     var PromiseState = (function (_super) {
         __extends(PromiseState, _super);
         function PromiseState(_state, _result, _error) {
-            _super.call(this);
-            this._state = _state;
-            this._result = _result;
-            this._error = _error;
-            this._disposableObjectName = PROMISE_STATE;
+            var _this = _super.call(this) || this;
+            _this._state = _state;
+            _this._result = _result;
+            _this._error = _error;
+            _this._disposableObjectName = PROMISE_STATE;
+            return _this;
         }
         PromiseState.prototype._onDispose = function () {
             this._state = VOID0;
@@ -156,8 +157,9 @@
     var PromiseBase = (function (_super) {
         __extends(PromiseBase, _super);
         function PromiseBase() {
-            _super.call(this, Promise.State.Pending);
-            this._disposableObjectName = PROMISE;
+            var _this = _super.call(this, Promise.State.Pending) || this;
+            _this._disposableObjectName = PROMISE;
+            return _this;
         }
         PromiseBase.prototype.then = function (onFulfilled, onRejected) {
             var _this = this;
@@ -233,7 +235,7 @@
     var Resolvable = (function (_super) {
         __extends(Resolvable, _super);
         function Resolvable() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
             this.throwIfDisposed();
@@ -274,10 +276,11 @@
     var Resolved = (function (_super) {
         __extends(Resolved, _super);
         function Resolved(state, result, error) {
-            _super.call(this);
-            this._result = result;
-            this._error = error;
-            this._state = state;
+            var _this = _super.call(this) || this;
+            _this._result = result;
+            _this._error = error;
+            _this._state = state;
+            return _this;
         }
         return Resolved;
     }(Resolvable));
@@ -285,7 +288,7 @@
     var Fulfilled = (function (_super) {
         __extends(Fulfilled, _super);
         function Fulfilled(value) {
-            _super.call(this, Promise.State.Fulfilled, value);
+            return _super.call(this, Promise.State.Fulfilled, value) || this;
         }
         return Fulfilled;
     }(Resolved));
@@ -293,7 +296,7 @@
     var Rejected = (function (_super) {
         __extends(Rejected, _super);
         function Rejected(error) {
-            _super.call(this, Promise.State.Rejected, VOID0, error);
+            return _super.call(this, Promise.State.Rejected, VOID0, error) || this;
         }
         return Rejected;
     }(Resolved));
@@ -301,9 +304,8 @@
     var PromiseWrapper = (function (_super) {
         __extends(PromiseWrapper, _super);
         function PromiseWrapper(_target) {
-            var _this = this;
-            _super.call(this);
-            this._target = _target;
+            var _this = _super.call(this) || this;
+            _this._target = _target;
             if (!_target)
                 throw new ArgumentNullException_1.ArgumentNullException(TARGET);
             if (!isPromise(_target))
@@ -318,6 +320,7 @@
                 _this._error = e;
                 _this._target = VOID0;
             });
+            return _this;
         }
         PromiseWrapper.prototype.thenSynchronous = function (onFulfilled, onRejected) {
             this.throwIfDisposed();
@@ -348,9 +351,10 @@
         __extends(Promise, _super);
         function Promise(resolver, forceSynchronous) {
             if (forceSynchronous === void 0) { forceSynchronous = false; }
-            _super.call(this);
+            var _this = _super.call(this) || this;
             if (resolver)
-                this.resolveUsing(resolver, forceSynchronous);
+                _this.resolveUsing(resolver, forceSynchronous);
+            return _this;
         }
         Promise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
             this.throwIfDisposed();
@@ -518,7 +522,7 @@
     var ArrayPromise = (function (_super) {
         __extends(ArrayPromise, _super);
         function ArrayPromise() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         ArrayPromise.prototype.map = function (transform) {
             var _this = this;
@@ -541,9 +545,10 @@
     var PromiseCollection = (function (_super) {
         __extends(PromiseCollection, _super);
         function PromiseCollection(source) {
-            _super.call(this);
-            this._disposableObjectName = PROMISE_COLLECTION;
-            this._source = source && source.slice() || [];
+            var _this = _super.call(this) || this;
+            _this._disposableObjectName = PROMISE_COLLECTION;
+            _this._source = source && source.slice() || [];
+            return _this;
         }
         PromiseCollection.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
@@ -628,7 +633,6 @@
             PromiseCallbacks.recycle = recycle;
         })(PromiseCallbacks = pools.PromiseCallbacks || (pools.PromiseCallbacks = {}));
     })(pools || (pools = {}));
-    var Promise;
     (function (Promise) {
         (function (State) {
             State[State["Pending"] = 0] = "Pending";
@@ -696,7 +700,7 @@
                         r(e);
                     }
                 };
-                var _loop_1 = function(i) {
+                var _loop_1 = function (i) {
                     var p = promises[i];
                     if (p)
                         p.then(function (v) { return onFulfill(v, i); }, onReject);
@@ -742,7 +746,7 @@
                         checkIfShouldResolve();
                     }
                 };
-                var _loop_2 = function(i) {
+                var _loop_2 = function (i) {
                     var p = promises[i];
                     if (p)
                         p.then(function (v) { return onResolved(i); }, function (e) { return onResolved(i); });

@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../Compare");
     var AU = require("./Array/Utility");
@@ -33,8 +28,8 @@
         __extends(Queue, _super);
         function Queue(source, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-            _super.call(this, VOID0, equalityComparer);
-            var _ = this;
+            var _this = _super.call(this, VOID0, equalityComparer) || this;
+            var _ = _this;
             _._head = 0;
             _._tail = 0;
             _._size = 0;
@@ -57,6 +52,7 @@
                 }
             }
             _._capacity = _._array.length;
+            return _this;
         }
         Queue.prototype.getCount = function () {
             return this._size;

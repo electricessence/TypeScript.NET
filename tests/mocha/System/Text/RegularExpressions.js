@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "assert", "../../../../dist/commonjs/System/Text/RegexMatchEnumerator", "../../../../dist/commonjs/System/Text/RegularExpressions"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "assert", "../../../../dist/commonjs/System/Text/RegexMatchEnumerator", "../../../../dist/commonjs/System/Text/RegularExpressions"], function (require, exports) {
     "use strict";
     var assert = require("assert");
     var RegexMatchEnumerator_1 = require("../../../../dist/commonjs/System/Text/RegexMatchEnumerator");

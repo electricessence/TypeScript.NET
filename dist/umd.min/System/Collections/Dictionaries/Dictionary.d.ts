@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { IKeyValuePair } from "../../KeyValuePair";
 import { IEnumerator } from "../Enumeration/IEnumerator";
 import { ILinkedNode } from "../ILinkedListNode";

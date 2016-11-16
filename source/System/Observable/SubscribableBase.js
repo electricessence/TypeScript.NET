@@ -1,17 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], function (require, exports) {
     "use strict";
     var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
     var dispose_1 = require("../Disposable/dispose");
@@ -23,8 +17,9 @@
     var SubscribableBase = (function (_super) {
         __extends(SubscribableBase, _super);
         function SubscribableBase() {
-            _super.call(this);
-            this._disposableObjectName = NAME;
+            var _this = _super.call(this) || this;
+            _this._disposableObjectName = NAME;
+            return _this;
         }
         SubscribableBase.prototype._getSubscribers = function () {
             var s = this.__subscriptions;

@@ -1,12 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../Types";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 const EMPTY = '', TRUE = 'true', FALSE = 'false';
 export function toString(value, defaultForUnknown) {
-    var v = value;
+    let v = value;
     switch (typeof v) {
         case Type.UNDEFINED:
         case Type.STRING:
@@ -22,7 +18,7 @@ export function toString(value, defaultForUnknown) {
                 return v.serialize();
             else if (defaultForUnknown)
                 return defaultForUnknown;
-            var ex = new InvalidOperationException('Attempting to serialize unidentifiable type.');
+            const ex = new InvalidOperationException('Attempting to serialize unidentifiable type.');
             ex.data['value'] = v;
             throw ex;
     }
@@ -44,15 +40,15 @@ export function toPrimitive(value, caseInsensitive, unknownHandler) {
             case FALSE:
                 return false;
             default:
-                var cleaned = value.replace(/^\s+|,|\s+$/g, EMPTY);
+                const cleaned = value.replace(/^\s+|,|\s+$/g, EMPTY);
                 if (cleaned) {
                     if (/^\d+$/g.test(cleaned)) {
-                        var int = parseInt(cleaned);
+                        const int = parseInt(cleaned);
                         if (!isNaN(int))
                             return int;
                     }
                     else {
-                        var number = parseFloat(value);
+                        const number = parseFloat(value);
                         if (!isNaN(number))
                             return number;
                     }

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { ArgumentException } from "./Exceptions/ArgumentException";
 import { ArgumentOutOfRangeException } from "./Exceptions/ArgumentOutOfRangeException";
 export function Integer(n) {
@@ -30,7 +26,7 @@ export var Integer;
         }
         random.next = next;
         function set(count, boundary, inclusive) {
-            var s = [];
+            const s = [];
             s.length = count;
             for (let i = 0; i < count; i++) {
                 s[i] = next(boundary, inclusive);
@@ -41,7 +37,7 @@ export var Integer;
         function nextInRange(min, max, inclusive) {
             assert(min, 'min');
             assert(max, 'max');
-            var range = max - min;
+            let range = max - min;
             if (range === 0)
                 return min;
             if (inclusive)
@@ -64,7 +60,7 @@ export var Integer;
         })(select = random.select || (random.select = {}));
     })(random = Integer.random || (Integer.random = {}));
     function as32Bit(n) {
-        var result = n | 0;
+        const result = n | 0;
         return (n === -1 || result !== -1) ? result : null;
     }
     Integer.as32Bit = as32Bit;
@@ -78,21 +74,21 @@ export var Integer;
     }
     Integer.is32Bit = is32Bit;
     function assert(n, argumentName) {
-        var i = is(n);
+        let i = is(n);
         if (!i)
             throw new ArgumentException(argumentName || 'n', "Must be a integer.");
         return i;
     }
     Integer.assert = assert;
     function assertZeroOrGreater(n, argumentName) {
-        var i = assert(n, argumentName) && n >= 0;
+        let i = assert(n, argumentName) && n >= 0;
         if (!i)
             throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be a valid integer greater than or equal to zero.");
         return i;
     }
     Integer.assertZeroOrGreater = assertZeroOrGreater;
     function assertPositive(n, argumentName) {
-        var i = assert(n, argumentName) && n > 0;
+        let i = assert(n, argumentName) && n > 0;
         if (!i)
             throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be greater than zero.");
         return i;

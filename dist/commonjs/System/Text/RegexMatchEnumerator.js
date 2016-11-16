@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 "use strict";
 var RegularExpressions_1 = require("./RegularExpressions");
 var EmptyEnumerator_1 = require("../Collections/Enumeration/EmptyEnumerator");

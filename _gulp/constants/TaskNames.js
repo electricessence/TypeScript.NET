@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "gulp-typescript-helper"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "gulp-typescript-helper"], function (require, exports) {
     "use strict";
     var gulp_typescript_helper_1 = require("gulp-typescript-helper");
     var DIST_ = 'dist.';

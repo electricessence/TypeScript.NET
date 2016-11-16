@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual as areEqualValues, compare as compareValues } from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
@@ -30,10 +25,10 @@ const __extends = __extendsImport;
 const INVALID_DEFAULT = {};
 const VOID0 = void 0;
 const NULL = null;
-function BREAK(e) {
+function BREAK() {
     return 0;
 }
-function RETURN(e) {
+function RETURN() {
     return 1;
 }
 function isNotNullOrUndefined(e) {
@@ -47,7 +42,7 @@ class LinqFunctions extends BaseFunctions {
         return a < b ? a : b;
     }
 }
-var Functions = new LinqFunctions();
+const Functions = new LinqFunctions();
 Object.freeze(Functions);
 function getEmptyEnumerator() {
     return EmptyEnumerator;
@@ -135,7 +130,7 @@ export class InfiniteEnumerable extends DisposableBase {
         return _.doAction((element, index) => index < count, null, false);
     }
     elementAt(index) {
-        var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
+        const v = this.elementAtOrDefault(index, INVALID_DEFAULT);
         if (v === INVALID_DEFAULT)
             throw new ArgumentOutOfRangeException('index', index, "is greater than or equal to the number of elements in source");
         return v;
@@ -144,7 +139,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         _.throwIfDisposed();
         Integer.assertZeroOrGreater(index, 'index');
-        var n = index;
+        const n = index;
         return using(this.getEnumerator(), e => {
             let i = 0;
             while (e.moveNext()) {
@@ -156,7 +151,7 @@ export class InfiniteEnumerable extends DisposableBase {
         });
     }
     first() {
-        var v = this.firstOrDefault(INVALID_DEFAULT);
+        const v = this.firstOrDefault(INVALID_DEFAULT);
         if (v === INVALID_DEFAULT)
             throw new Error("first:The sequence is empty.");
         return v;
@@ -201,7 +196,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     traverseDepthFirst(childrenSelector, resultSelector = Functions.Identity) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumeratorStack = [];
@@ -241,7 +236,7 @@ export class InfiniteEnumerable extends DisposableBase {
         }, isEndless);
     }
     flatten() {
-        return this.selectMany((entry, i) => {
+        return this.selectMany(entry => {
             let e = !Type.isString(entry) && Enumerable.fromAny(entry);
             return e ? e.flatten() : [entry];
         });
@@ -251,9 +246,9 @@ export class InfiniteEnumerable extends DisposableBase {
         _.throwIfDisposed();
         if (!selector)
             throw new ArgumentNullException("selector");
-        var previous;
+        let previous;
         return this.select((value, i) => {
-            var result = i ? selector(previous, value, i) : NULL;
+            const result = i ? selector(previous, value, i) : NULL;
             previous = value;
             return result;
         }).skip(1);
@@ -318,7 +313,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     _filterSelected(selector = Functions.Identity, filter) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         if (!selector)
             throw new ArgumentNullException("selector");
         return new Enumerable(() => {
@@ -354,7 +349,7 @@ export class InfiniteEnumerable extends DisposableBase {
         return this.where(v => v != null && v != VOID0);
     }
     ofType(type) {
-        var typeName;
+        let typeName;
         switch (type) {
             case Number:
                 typeName = Type.NUMBER;
@@ -377,7 +372,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     except(second, compareSelector) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumerator;
@@ -411,7 +406,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     distinctUntilChanged(compareSelector = Functions.Identity) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumerator;
@@ -443,7 +438,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     defaultIfEmpty(defaultValue) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        const disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumerator;
@@ -648,7 +643,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     insertAt(index, other) {
         Integer.assertZeroOrGreater(index, 'index');
-        var n = index;
+        const n = index;
         const _ = this;
         _.throwIfDisposed();
         const isEndless = _._isEndless;
@@ -726,7 +721,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     catchError(handler) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        const disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             let enumerator;
             return new EnumeratorBase(() => {
@@ -753,7 +748,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     finallyAction(action) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        const disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             let enumerator;
             return new EnumeratorBase(() => {
@@ -780,7 +775,7 @@ export class InfiniteEnumerable extends DisposableBase {
         Integer.assert(size, "size");
         const _ = this;
         const isEndless = _._isEndless;
-        var len;
+        let len;
         return new Enumerable(() => {
             let enumerator;
             return new EnumeratorBase(() => {
@@ -857,7 +852,7 @@ export class Enumerable extends InfiniteEnumerable {
     }
     traverseBreadthFirst(childrenSelector, resultSelector = Functions.Identity) {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
         return new Enumerable(() => {
             let enumerator;
@@ -906,9 +901,8 @@ export class Enumerable extends InfiniteEnumerable {
         if (!action)
             throw new ArgumentNullException("action");
         throwIfEndless(_.isEndless);
-        var index = 0;
         return max > 0 ? using(_.getEnumerator(), e => {
-            throwIfEndless(!isFinite(max) && !!e.isEndless);
+            throwIfEndless(!isFinite(max) && e.isEndless);
             let i = 0;
             while (max > i && _.throwIfDisposed() && e.moveNext()) {
                 if (action(e.current, i++) === false)
@@ -933,7 +927,7 @@ export class Enumerable extends InfiniteEnumerable {
         return target;
     }
     toLookup(keySelector, elementSelector = Functions.Identity, compareSelector = Functions.Identity) {
-        var dict = new Dictionary(compareSelector);
+        const dict = new Dictionary(compareSelector);
         this.forEach((x, i) => {
             let key = keySelector(x, i);
             let element = elementSelector(x, i);
@@ -946,14 +940,14 @@ export class Enumerable extends InfiniteEnumerable {
         return new Lookup(dict);
     }
     toMap(keySelector, elementSelector) {
-        var obj = {};
+        const obj = {};
         this.forEach((x, i) => {
             obj[keySelector(x, i)] = elementSelector(x, i);
         });
         return obj;
     }
     toDictionary(keySelector, elementSelector, compareSelector = Functions.Identity) {
-        var dict = new Dictionary(compareSelector);
+        const dict = new Dictionary(compareSelector);
         this.forEach((x, i) => dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
         return dict;
     }
@@ -970,7 +964,7 @@ export class Enumerable extends InfiniteEnumerable {
         if (!isFinite(count))
             return Enumerable.empty();
         Integer.assert(count, "count");
-        var c = count;
+        const c = count;
         return new Enumerable(() => {
             let enumerator;
             let q;
@@ -1011,7 +1005,7 @@ export class Enumerable extends InfiniteEnumerable {
     }
     reverse() {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         throwIfEndless(_._isEndless);
         return new Enumerable(() => {
             let buffer;
@@ -1030,7 +1024,7 @@ export class Enumerable extends InfiniteEnumerable {
     }
     shuffle() {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         throwIfEndless(_._isEndless);
         return new Enumerable(() => {
             let buffer;
@@ -1058,7 +1052,7 @@ export class Enumerable extends InfiniteEnumerable {
         });
     }
     count(predicate) {
-        var count = 0;
+        let count = 0;
         this.forEach(predicate
             ?
                     (x, i) => {
@@ -1074,7 +1068,7 @@ export class Enumerable extends InfiniteEnumerable {
     all(predicate) {
         if (!predicate)
             throw new ArgumentNullException("predicate");
-        var result = true;
+        let result = true;
         this.forEach((x, i) => {
             if (!predicate(x, i)) {
                 result = false;
@@ -1089,7 +1083,7 @@ export class Enumerable extends InfiniteEnumerable {
     any(predicate) {
         if (!predicate)
             return super.any();
-        var result = false;
+        let result = false;
         this.forEach((x, i) => {
             result = predicate(x, i);
             return !result;
@@ -1101,13 +1095,13 @@ export class Enumerable extends InfiniteEnumerable {
     }
     contains(value, compareSelector) {
         if (compareSelector) {
-            var s = compareSelector(value);
+            const s = compareSelector(value);
             return this.any(v => areEqualValues(compareSelector(v), s));
         }
         return this.any(v => areEqualValues(v, value));
     }
     indexOf(value, compareSelector) {
-        var found = -1;
+        let found = -1;
         this.forEach(compareSelector
             ?
                     (element, i) => {
@@ -1126,7 +1120,7 @@ export class Enumerable extends InfiniteEnumerable {
         return found;
     }
     lastIndexOf(value, compareSelector) {
-        var result = -1;
+        let result = -1;
         this.forEach(compareSelector
             ?
                     (element, i) => {
@@ -1283,8 +1277,8 @@ export class Enumerable extends InfiniteEnumerable {
         return seed;
     }
     average(selector = Type.numberOrNaN) {
-        var count = 0;
-        var sum = this.sum((e, i) => {
+        let count = 0;
+        const sum = this.sum((e, i) => {
             count++;
             return selector(e, i);
         });
@@ -1305,8 +1299,8 @@ export class Enumerable extends InfiniteEnumerable {
         return this.aggregate((a, b) => (keySelector(a) < keySelector(b)) ? a : b);
     }
     sum(selector = Type.numberOrNaN) {
-        var sum = 0;
-        var sumInfinite = 0;
+        let sum = 0;
+        let sumInfinite = 0;
         this.forEach((x, i) => {
             let value = selector(x, i);
             if (isNaN(value)) {
@@ -1324,7 +1318,7 @@ export class Enumerable extends InfiniteEnumerable {
         return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
     }
     product(selector = Type.numberOrNaN) {
-        var result = 1, exists = false;
+        let result = 1, exists = false;
         this.forEach((x, i) => {
             exists = true;
             let value = selector(x, i);
@@ -1341,8 +1335,8 @@ export class Enumerable extends InfiniteEnumerable {
         return (exists && isNaN(result)) ? NaN : result;
     }
     quotient(selector = Type.numberOrNaN) {
-        var count = 0;
-        var result = NaN;
+        let count = 0;
+        let result = NaN;
         this.forEach((x, i) => {
             let value = selector(x, i);
             count++;
@@ -1364,8 +1358,8 @@ export class Enumerable extends InfiniteEnumerable {
     last() {
         const _ = this;
         _.throwIfDisposed();
-        var value = VOID0;
-        var found = false;
+        let value = VOID0;
+        let found = false;
         _.forEach(x => {
             found = true;
             value = x;
@@ -1377,8 +1371,8 @@ export class Enumerable extends InfiniteEnumerable {
     lastOrDefault(defaultValue) {
         const _ = this;
         _.throwIfDisposed();
-        var value = VOID0;
-        var found = false;
+        let value = VOID0;
+        let found = false;
         _.forEach(x => {
             found = true;
             value = x;
@@ -1387,9 +1381,9 @@ export class Enumerable extends InfiniteEnumerable {
     }
     memoize() {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
-        var cache;
-        var enumerator;
+        let disposed = !_.throwIfDisposed();
+        let cache;
+        let enumerator;
         return new Enumerable(() => {
             let index = 0;
             return new EnumeratorBase(() => {
@@ -1469,20 +1463,21 @@ class ArrayEnumerable extends FiniteEnumerable {
     any(predicate) {
         const _ = this;
         _.throwIfDisposed();
-        var source = _._source, len = source.length;
+        const source = _._source;
+        let len = source.length;
         return !!len && (!predicate || super.any(predicate));
     }
     count(predicate) {
         const _ = this;
         _.throwIfDisposed();
-        var source = _._source, len = source.length;
+        const source = _._source, len = source.length;
         return len && (predicate ? super.count(predicate) : len);
     }
     elementAtOrDefault(index, defaultValue) {
         const _ = this;
         _.throwIfDisposed();
         Integer.assertZeroOrGreater(index, 'index');
-        var source = _._source;
+        const source = _._source;
         return index < source.length
             ? source[index]
             : defaultValue;
@@ -1490,7 +1485,7 @@ class ArrayEnumerable extends FiniteEnumerable {
     last() {
         const _ = this;
         _.throwIfDisposed();
-        var source = _._source, len = source.length;
+        const source = _._source, len = source.length;
         return (len)
             ? source[len - 1]
             : super.last();
@@ -1498,7 +1493,7 @@ class ArrayEnumerable extends FiniteEnumerable {
     lastOrDefault(defaultValue) {
         const _ = this;
         _.throwIfDisposed();
-        var source = _._source, len = source.length;
+        const source = _._source, len = source.length;
         return len
             ? source[len - 1]
             : defaultValue;
@@ -1522,18 +1517,18 @@ class ArrayEnumerable extends FiniteEnumerable {
             return Enumerable.empty();
         if (!isFinite(count))
             return _;
-        var len = _._source
+        const len = _._source
             ? _._source.length
             : 0;
         return _.skip(len - count);
     }
     reverse() {
         const _ = this;
-        var disposed = !_.throwIfDisposed();
+        let disposed = !_.throwIfDisposed();
         return new Enumerable(() => {
             _.throwIfDisposed();
             return new IndexEnumerator(() => {
-                var s = _._source;
+                let s = _._source;
                 throwIfDisposed(disposed || !s);
                 return {
                     source: s,
@@ -1557,7 +1552,7 @@ class ArrayEnumerable extends FiniteEnumerable {
         return super.sequenceEqual(second, equalityComparer);
     }
     toJoinedString(separator = "", selector = Functions.Identity) {
-        var s = this._source;
+        const s = this._source;
         return !selector && Array.isArray(s)
             ? s.join(separator)
             : super.toJoinedString(separator, selector);
@@ -1588,7 +1583,7 @@ class Lookup {
     }
     getEnumerator() {
         const _ = this;
-        var enumerator;
+        let enumerator;
         return new EnumeratorBase(() => {
             enumerator = _._dictionary.getEnumerator();
         }, (yielder) => {
@@ -1610,7 +1605,7 @@ class OrderedEnumerable extends FiniteEnumerable {
         this.order = order;
         this.parent = parent;
         this.comparer = comparer;
-        throwIfEndless(!!source && !!source.isEndless);
+        throwIfEndless(source && source.isEndless);
         this._disposableObjectName = "OrderedEnumerable";
     }
     createOrderedEnumerable(keySelector, order) {
@@ -1632,9 +1627,9 @@ class OrderedEnumerable extends FiniteEnumerable {
     getEnumerator() {
         const _ = this;
         _.throwIfDisposed();
-        var buffer;
-        var indexes;
-        var index = 0;
+        let buffer;
+        let indexes;
+        let index = 0;
         return new EnumeratorBase(() => {
             _.throwIfDisposed();
             index = 0;
@@ -1677,7 +1672,7 @@ function nextEnumerator(queue, e) {
     return e;
 }
 function createSortContext(orderedEnumerable, currentContext = null) {
-    var context = new KeySortedContext(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
+    const context = new KeySortedContext(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
     if (orderedEnumerable.parent)
         return createSortContext(orderedEnumerable.parent, context);
     return context;
@@ -1689,7 +1684,7 @@ function throwIfDisposed(disposed) {
 }
 (function (Enumerable) {
     function from(source) {
-        var e = fromAny(source);
+        let e = fromAny(source);
         if (!e)
             throw new UnsupportedEnumerableException();
         return e;
@@ -1728,7 +1723,7 @@ function throwIfDisposed(disposed) {
     }
     Enumerable._choice = _choice;
     function choice(values) {
-        var len = values && values.length;
+        let len = values && values.length;
         if (!len || !isFinite(len))
             throw new ArgumentOutOfRangeException('length', length);
         return _choice(copy(values));
@@ -1757,7 +1752,7 @@ function throwIfDisposed(disposed) {
         });
     }
     function cycle(values) {
-        var len = values && values.length;
+        let len = values && values.length;
         if (!len || !isFinite(len))
             throw new ArgumentOutOfRangeException('length', length);
         return _cycle(copy(values));
@@ -1896,7 +1891,7 @@ function throwIfDisposed(disposed) {
     function matches(input, pattern, flags = "") {
         if (input === null || input === VOID0)
             throw new ArgumentNullException("input");
-        var type = typeof input;
+        const type = typeof input;
         if (type != Type.STRING)
             throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
         if (pattern instanceof RegExp) {
@@ -1985,14 +1980,14 @@ function throwIfDisposed(disposed) {
     }
     Enumerable.map = map;
     function max(values) {
-        var v = values
+        const v = values
             .takeUntil(v => v == +Infinity, true)
             .aggregate(Functions.Greater);
         return v === VOID0 ? NaN : v;
     }
     Enumerable.max = max;
     function min(values) {
-        var v = values
+        const v = values
             .takeUntil(v => v == -Infinity, true)
             .aggregate(Functions.Lesser);
         return v === VOID0 ? NaN : v;
@@ -2001,7 +1996,7 @@ function throwIfDisposed(disposed) {
     function weave(enumerables) {
         if (!enumerables)
             throw new ArgumentNullException('enumerables');
-        var disposed = false;
+        let disposed = false;
         return new Enumerable(() => {
             let queue;
             let mainEnumerator;

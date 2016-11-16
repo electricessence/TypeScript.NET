@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../../Compare");
     var Enumerator_1 = require("../Enumeration/Enumerator");
@@ -25,7 +21,7 @@
     var DictionaryBase = (function (_super) {
         __extends(DictionaryBase, _super);
         function DictionaryBase(source) {
-            _super.call(this, source);
+            return _super.call(this, source) || this;
         }
         DictionaryBase.prototype._onValueModified = function (key, value, old) {
         };

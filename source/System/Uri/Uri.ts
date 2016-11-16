@@ -257,7 +257,7 @@ export class Uri implements IUri, IEquatable<IUri>
 	 */
 	static toString(uri:IUri):string
 	{
-		return uri instanceof Uri
+		return uri instanceof <any>Uri
 			? (<Uri>uri).absoluteUri
 			: uriToString(uri);
 	}

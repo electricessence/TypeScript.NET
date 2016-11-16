@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../System/Compare");
     var Arrays = require("../System/Collections/Array/Compare");
@@ -51,7 +46,7 @@
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
         function LinqFunctions() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         LinqFunctions.prototype.Greater = function (a, b) {
             return a > b ? a : b;
@@ -69,10 +64,11 @@
     var InfiniteEnumerable = (function (_super) {
         __extends(InfiniteEnumerable, _super);
         function InfiniteEnumerable(_enumeratorFactory, finalizer) {
-            _super.call(this, finalizer);
-            this._enumeratorFactory = _enumeratorFactory;
-            this._isEndless = true;
-            this._disposableObjectName = "InfiniteEnumerable";
+            var _this = _super.call(this, finalizer) || this;
+            _this._enumeratorFactory = _enumeratorFactory;
+            _this._isEndless = true;
+            _this._disposableObjectName = "InfiniteEnumerable";
+            return _this;
         }
         Object.defineProperty(InfiniteEnumerable.prototype, "isEndless", {
             get: function () {
@@ -851,9 +847,10 @@
     var Enumerable = (function (_super) {
         __extends(Enumerable, _super);
         function Enumerable(enumeratorFactory, finalizer, isEndless) {
-            _super.call(this, enumeratorFactory, finalizer);
-            this._isEndless = isEndless;
-            this._disposableObjectName = "Enumerable";
+            var _this = _super.call(this, enumeratorFactory, finalizer) || this;
+            _this._isEndless = isEndless;
+            _this._disposableObjectName = "Enumerable";
+            return _this;
         }
         Enumerable.prototype.asEnumerable = function () {
             var _ = this;
@@ -1498,8 +1495,9 @@
     var FiniteEnumerable = (function (_super) {
         __extends(FiniteEnumerable, _super);
         function FiniteEnumerable(enumeratorFactory, finalizer) {
-            _super.call(this, enumeratorFactory, finalizer, false);
-            this._disposableObjectName = "FiniteEnumerable";
+            var _this = _super.call(this, enumeratorFactory, finalizer, false) || this;
+            _this._disposableObjectName = "FiniteEnumerable";
+            return _this;
         }
         return FiniteEnumerable;
     }(Enumerable));
@@ -1507,16 +1505,17 @@
     var ArrayEnumerable = (function (_super) {
         __extends(ArrayEnumerable, _super);
         function ArrayEnumerable(source) {
-            _super.call(this, function () {
+            var _this = _super.call(this, function () {
                 _.throwIfDisposed();
                 return new ArrayEnumerator_1.ArrayEnumerator(function () {
                     _.throwIfDisposed("The underlying ArrayEnumerable was disposed.", "ArrayEnumerator");
                     return _._source;
                 });
-            });
-            var _ = this;
+            }) || this;
+            var _ = _this;
             _._disposableObjectName = "ArrayEnumerable";
             _._source = source;
+            return _this;
         }
         ArrayEnumerable.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
@@ -1651,9 +1650,10 @@
     var Grouping = (function (_super) {
         __extends(Grouping, _super);
         function Grouping(_groupKey, elements) {
-            _super.call(this, elements);
-            this._groupKey = _groupKey;
-            this._disposableObjectName = "Grouping";
+            var _this = _super.call(this, elements) || this;
+            _this._groupKey = _groupKey;
+            _this._disposableObjectName = "Grouping";
+            return _this;
         }
         Object.defineProperty(Grouping.prototype, "key", {
             get: function () {
@@ -1702,14 +1702,15 @@
         __extends(OrderedEnumerable, _super);
         function OrderedEnumerable(source, keySelector, order, parent, comparer) {
             if (comparer === void 0) { comparer = Compare_1.compare; }
-            _super.call(this, NULL);
-            this.source = source;
-            this.keySelector = keySelector;
-            this.order = order;
-            this.parent = parent;
-            this.comparer = comparer;
+            var _this = _super.call(this, NULL) || this;
+            _this.source = source;
+            _this.keySelector = keySelector;
+            _this.order = order;
+            _this.parent = parent;
+            _this.comparer = comparer;
             Enumerator_1.throwIfEndless(source && source.isEndless);
-            this._disposableObjectName = "OrderedEnumerable";
+            _this._disposableObjectName = "OrderedEnumerable";
+            return _this;
         }
         OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {
             this.throwIfDisposed();
@@ -1787,7 +1788,6 @@
             throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
         return true;
     }
-    var Enumerable;
     (function (Enumerable) {
         function from(source) {
             var e = fromAny(source);

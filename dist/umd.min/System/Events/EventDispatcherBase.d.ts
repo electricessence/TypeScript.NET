@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { DisposableBase } from "../Disposable/DisposableBase";
 import { IEventListener } from "./IEventListener";
 import { EventDispatcherEntry } from "./EventDispatcherEntry";

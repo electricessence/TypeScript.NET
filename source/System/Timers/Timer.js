@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Observable/ObservableBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Observable/ObservableBase", "../../extends"], function (require, exports) {
     "use strict";
     var ObservableBase_1 = require("../Observable/ObservableBase");
     var extends_1 = require("../../extends");
@@ -19,15 +15,16 @@
         function Timer(_interval, _maxCount, _initialDelay) {
             if (_maxCount === void 0) { _maxCount = Infinity; }
             if (_initialDelay === void 0) { _initialDelay = _interval; }
-            _super.call(this);
-            this._interval = _interval;
-            this._maxCount = _maxCount;
-            this._initialDelay = _initialDelay;
-            this._count = 0;
+            var _this = _super.call(this) || this;
+            _this._interval = _interval;
+            _this._maxCount = _maxCount;
+            _this._initialDelay = _initialDelay;
+            _this._count = 0;
             if (_interval === null || _interval === void (0))
                 throw "'interval' must be a valid number.";
             if (_interval < 0)
                 throw "'interval' cannot be negative.";
+            return _this;
         }
         Timer.startNew = function (millisecondInterval, maxCount, initialDelay) {
             if (maxCount === void 0) { maxCount = Infinity; }

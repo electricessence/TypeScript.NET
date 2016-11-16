@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -105,7 +100,8 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 };
                 LinkedList.prototype._removeInternal = function (entry, max) {
                     if (max === void 0) { max = Infinity; }
-                    var _ = this, equals = _._equalityComparer, list = _._listInternal, removedCount = 0;
+                    var _ = this, equals = _._equalityComparer, list = _._listInternal;
+                    var removedCount = 0;
                     list.forEach(function (node) {
                         if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                             removedCount++;

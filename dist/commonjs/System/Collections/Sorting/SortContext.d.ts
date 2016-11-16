@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Comparison } from "../../FunctionTypes";
 import { IComparer } from "../../IComparer";
 import { Order } from "./Order";

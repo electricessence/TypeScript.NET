@@ -1,10 +1,6 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { ArgumentException } from "./Exceptions/ArgumentException";
 import { ArgumentNullException } from "./Exceptions/ArgumentNullException";
-const VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_KEY = ITEM + DOT + KEY, ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
+const VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
 export function isKeyValuePair(kvp) {
     return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
 }
@@ -25,8 +21,7 @@ export function assertNotUndefined(value, name) {
     return value;
 }
 export function extractKeyValue(item, to) {
-    const _ = this;
-    var key, value;
+    let key, value;
     if (item instanceof Array) {
         assertTuple(item);
         key = item[0];

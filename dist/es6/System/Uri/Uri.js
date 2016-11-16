@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
- */
 import { Type } from "../Types";
 import * as QueryParams from "./QueryParams";
 import * as Scheme from "./Scheme";
@@ -36,14 +31,14 @@ export class Uri {
         return this === other || this.absoluteUri == Uri.toString(other);
     }
     static from(uri, defaults) {
-        var u = Type.isString(uri)
+        const u = Type.isString(uri)
             ? Uri.parse(uri)
             : uri;
         return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
     }
     static parse(url, throwIfInvalid = true) {
-        var result = null;
-        var ex = tryParse(url, (out) => { result = out; });
+        let result = null;
+        const ex = tryParse(url, (out) => { result = out; });
         if (throwIfInvalid && ex)
             throw ex;
         return result;
@@ -58,7 +53,7 @@ export class Uri {
         return copyUri(this, map);
     }
     updateQuery(query) {
-        var map = this.toMap();
+        const map = this.toMap();
         map.query = query;
         return Uri.from(map);
     }
@@ -103,11 +98,11 @@ export var Fields;
 })(Fields || (Fields = {}));
 Object.freeze(Fields);
 function copyUri(from, to) {
-    var i = 0, field;
+    let i = 0, field;
     if (!to)
         to = {};
     while (field = Fields[i++]) {
-        var value = from[field];
+        const value = from[field];
         if (value)
             to[field] = value;
     }
@@ -115,7 +110,7 @@ function copyUri(from, to) {
 }
 const SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 function getScheme(scheme) {
-    var s = scheme;
+    let s = scheme;
     if (Type.isString(s)) {
         if (!s)
             return null;
@@ -138,7 +133,7 @@ function getPort(port) {
         return port;
     if (!port)
         return null;
-    var p;
+    let p;
     if (Type.isNumber(port, true)) {
         p = port;
         if (p >= 0 && isFinite(p))
@@ -156,7 +151,7 @@ function getAuthority(uri) {
         if (Type.isNumber(uri.port, false))
             throw new ArgumentException('host', 'Cannot include a port when there is no host.');
     }
-    var result = uri.host || EMPTY;
+    let result = uri.host || EMPTY;
     if (result) {
         if (uri.userInfo)
             result = uri.userInfo + AT + result;
@@ -173,17 +168,19 @@ function formatFragment(fragment) {
     return fragment && ((fragment.indexOf(HASH) !== 0 ? HASH : EMPTY) + fragment);
 }
 function getPathAndQuery(uri) {
-    var path = uri.path, query = uri.query;
+    const path = uri.path, query = uri.query;
     return EMPTY
         + (path || EMPTY)
         + (formatQuery(query) || EMPTY);
 }
 function uriToString(uri) {
-    var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
-    var part1 = EMPTY
+    const scheme = getScheme(uri.scheme);
+    let authority = getAuthority(uri);
+    const pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
+    const part1 = EMPTY
         + ((scheme && (scheme + ':')) || EMPTY)
         + (authority || EMPTY);
-    var part2 = EMPTY
+    let part2 = EMPTY
         + (pathAndQuery || EMPTY)
         + (fragment || EMPTY);
     if (part1 && part2 && scheme && !authority)
@@ -195,7 +192,8 @@ function uriToString(uri) {
 function tryParse(url, out) {
     if (!url)
         return new ArgumentException('url', 'Nothing to parse.');
-    var i, result = {};
+    let i;
+    const result = {};
     i = url.indexOf(HASH);
     if (i != -1) {
         result.fragment = url.substring(i + 1) || VOID0;
@@ -208,7 +206,8 @@ function tryParse(url, out) {
     }
     i = url.indexOf(SLASH2);
     if (i != -1) {
-        var scheme = trim(url.substring(0, i)), c = /:$/;
+        let scheme = trim(url.substring(0, i));
+        const c = /:$/;
         if (!c.test(scheme))
             return new ArgumentException('url', 'Scheme was improperly formatted');
         scheme = trim(scheme.replace(c, EMPTY));
@@ -232,7 +231,7 @@ function tryParse(url, out) {
     }
     i = url.indexOf(':');
     if (i != -1) {
-        var port = parseInt(trim(url.substring(i + 1)));
+        const port = parseInt(trim(url.substring(i + 1)));
         if (isNaN(port))
             return new ArgumentException('url', 'Port was invalid.');
         result.port = port;

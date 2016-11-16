@@ -1,13 +1,7 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../Types";
 export const EMPTY = '';
-const SPACE = ' ';
-const ZERO = '0';
 export function getHashCode(source) {
-    var hash = 0 | 0;
+    let hash = 0 | 0;
     if (source.length == 0)
         return hash;
     for (let i = 0, l = source.length; i < l; i++) {
@@ -18,7 +12,7 @@ export function getHashCode(source) {
     return hash;
 }
 export function repeat(source, count) {
-    var result = EMPTY;
+    let result = EMPTY;
     if (!isNaN(count)) {
         for (let i = 0; i < count; i++) {
             result += source;
@@ -39,13 +33,13 @@ export function fromChars(chOrChars, count = 1) {
     }
 }
 export function escapeRegExp(source) {
-    return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+    return source.replace(/[-[\]\/{}()*+?.\\^$|]/g, "\\$&");
 }
 export function trim(source, chars, ignoreCase) {
     if (chars === EMPTY)
         return source;
     if (chars) {
-        var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
+        const escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
         return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase
             ? 'i'
             : '')), EMPTY);
@@ -56,15 +50,15 @@ export function format(source, ...args) {
     return supplant(source, args);
 }
 export function supplant(source, params) {
-    var oIsArray = Array.isArray(params);
-    return source.replace(/\{([^{}]*)\}/g, (a, b) => {
-        var n = b;
+    const oIsArray = Array.isArray(params);
+    return source.replace(/\{([^{}]*)}/g, (a, b) => {
+        let n = b;
         if (oIsArray) {
             let i = parseInt(b);
             if (!isNaN(i))
                 n = i;
         }
-        var r = params[n];
+        let r = params[n];
         switch (typeof r) {
             case Type.STRING:
             case Type.NUMBER:
@@ -86,11 +80,11 @@ function canMatch(source, match) {
         return null;
 }
 export function startsWith(source, pattern) {
-    var m = canMatch(source, pattern);
+    const m = canMatch(source, pattern);
     return Type.isBoolean(m) ? m : source.indexOf(pattern) == 0;
 }
 export function endsWith(source, pattern) {
-    var m = canMatch(source, pattern);
+    const m = canMatch(source, pattern);
     return Type.isBoolean(m) ? m : source.lastIndexOf(pattern) == (source.length - pattern.length);
 }
 //# sourceMappingURL=Utility.js.map

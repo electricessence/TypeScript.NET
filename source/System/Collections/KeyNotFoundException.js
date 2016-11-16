@@ -3,14 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/system.collections.generic.KeyNotFoundException(v=vs.110).aspx
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Exceptions/SystemException", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Exceptions/SystemException", "../../extends"], function (require, exports) {
     "use strict";
     var SystemException_1 = require("../Exceptions/SystemException");
     var extends_1 = require("../../extends");
@@ -19,7 +19,7 @@
     var KeyNotFoundException = (function (_super) {
         __extends(KeyNotFoundException, _super);
         function KeyNotFoundException() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         KeyNotFoundException.prototype.getName = function () {
             return NAME;

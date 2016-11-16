@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Primitive } from "../../Primitive";
 import { EqualityComparison, Comparison } from "../../FunctionTypes";
 import { IArray } from "./IArray";

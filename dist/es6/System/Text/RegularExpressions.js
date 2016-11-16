@@ -6,7 +6,6 @@
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 const EMPTY = "";
-const UNDEFINED = "undefined";
 const _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
 export var RegexOptions;
 (function (RegexOptions) {
@@ -27,7 +26,7 @@ export class Regex {
     constructor(pattern, options, ...extra) {
         if (!pattern)
             throw new Error("'pattern' cannot be null or empty.");
-        var patternString, flags = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
+        let patternString, flags = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
             .join(EMPTY)
             .toLowerCase();
         if (pattern instanceof RegExp) {
@@ -41,9 +40,9 @@ export class Regex {
         else {
             patternString = pattern;
         }
-        var ignoreWhiteSpace = flags.indexOf(_W) != -1;
+        const ignoreWhiteSpace = flags.indexOf(_W) != -1;
         flags = flags.replace(/[gw]/g, EMPTY);
-        var keys = [];
+        const keys = [];
         {
             let k = patternString.match(/(?!\(\?<)(\w+)(?=>)/g);
             if (k) {
@@ -61,14 +60,16 @@ export class Regex {
     }
     match(input, startIndex = 0) {
         const _ = this;
-        var r;
+        let r;
         if (!input
             || startIndex >= input.length
             || !(r = this._re.exec(input.substring(startIndex))))
             return Match.Empty;
         if (!(startIndex > 0))
             startIndex = 0;
-        var first = startIndex + r.index, loc = first, groups = [], groupMap = {};
+        const first = startIndex + r.index;
+        let loc = first;
+        const groups = [], groupMap = {};
         for (let i = 0, len = r.length; i < len; ++i) {
             let text = r[i];
             let g = EmptyGroup;
@@ -82,12 +83,14 @@ export class Regex {
             if (i !== 0)
                 loc += text.length;
         }
-        var m = new Match(r[0], first, groups, groupMap);
+        const m = new Match(r[0], first, groups, groupMap);
         m.freeze();
         return m;
     }
     matches(input) {
-        var matches = [], m, p = 0, end = input && input.length || 0;
+        const matches = [];
+        let m, p = 0;
+        const end = input && input.length || 0;
         while (p < end && (m = this.match(input, p)) && m.success) {
             matches.push(m);
             p = m.index + m.length;
@@ -97,9 +100,10 @@ export class Regex {
     replace(input, r, count = Infinity) {
         if (!input || r === null || r === void 0 || !(count > 0))
             return input;
-        var result = [];
-        var p = 0, end = input.length, isEvaluator = typeof r == "function";
-        var m, i = 0;
+        const result = [];
+        let p = 0;
+        const end = input.length, isEvaluator = typeof r == "function";
+        let m, i = 0;
         while (i < count && p < end && (m = this.match(input, p)) && m.success) {
             let { index, length } = m;
             if (p !== index)
@@ -115,11 +119,11 @@ export class Regex {
         return this._re.test(input);
     }
     static isMatch(input, pattern, options) {
-        var r = new Regex(pattern, options);
+        const r = new Regex(pattern, options);
         return r.isMatch(input);
     }
     static replace(input, pattern, e, options) {
-        var r = new Regex(pattern, options);
+        const r = new Regex(pattern, options);
         return r.replace(input, e);
     }
 }
@@ -129,7 +133,7 @@ export class Capture {
         this.index = index;
     }
     get length() {
-        var v = this.value;
+        const v = this.value;
         return v && v.length || 0;
     }
     freeze() {

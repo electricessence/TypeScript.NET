@@ -1,9 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
- * Uses .add(T) and .take():T
- */
 "use strict";
 var dispose_1 = require("./dispose");
 var DisposableBase_1 = require("./DisposableBase");

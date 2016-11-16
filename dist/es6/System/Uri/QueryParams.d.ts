@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import * as UriComponent from "./UriComponent";
 import * as QueryParam from "./QueryParam";
 import { IMap } from "../Collections/Dictionaries/IDictionary";

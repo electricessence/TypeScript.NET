@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../../Compare");
     var Types_1 = require("../../Types");
@@ -43,10 +38,11 @@
     var Dictionary = (function (_super) {
         __extends(Dictionary, _super);
         function Dictionary(keyGenerator) {
-            _super.call(this);
-            this._keyGenerator = keyGenerator;
-            this._entries = linkedNodeList();
-            this._buckets = {};
+            var _this = _super.call(this) || this;
+            _this._keyGenerator = keyGenerator;
+            _this._entries = linkedNodeList();
+            _this._buckets = {};
+            return _this;
         }
         Dictionary.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);

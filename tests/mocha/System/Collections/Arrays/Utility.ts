@@ -90,7 +90,7 @@ describe(".replace(source,oldValue,newValue)", ()=>
 	it("should properly replace items with max", ()=>
 	{
 		assert.equal(ArrayUtility.replace(<any>null, 5, 6), 0);
-		assert.equal(ArrayUtility.replace([], 5, 6), 0);
+		assert.equal(ArrayUtility.replace(<number[]>[], 5, 6), 0);
 		assert.equal(ArrayUtility.replace(a, 5, 6), 2);
 		assert.ok(ArrayUtility.contains(a, 6));
 		assert.equal(ArrayUtility.replace(a, 6, 5, 1), 1);

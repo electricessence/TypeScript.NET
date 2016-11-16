@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -45,7 +41,7 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
                     this._iterator = null;
                 };
                 IteratorEnumerator.prototype.getIsEndless = function () {
-                    return !!this._isEndless && _super.prototype.getIsEndless.call(this);
+                    return Boolean(this._isEndless) && _super.prototype.getIsEndless.call(this);
                 };
                 return IteratorEnumerator;
             }(SimpleEnumerableBase_1.SimpleEnumerableBase));

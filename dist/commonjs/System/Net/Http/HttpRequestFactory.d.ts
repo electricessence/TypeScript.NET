@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import * as QueryParam from "../../Uri/QueryParam";
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import { HttpMethodValue } from "./HttpMethodValue";

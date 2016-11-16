@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./SimpleEnumerableBase", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./SimpleEnumerableBase", "../../../extends"], function (require, exports) {
     "use strict";
     var SimpleEnumerableBase_1 = require("./SimpleEnumerableBase");
     var extends_1 = require("../../../extends");
@@ -17,9 +13,10 @@
     var IteratorEnumerator = (function (_super) {
         __extends(IteratorEnumerator, _super);
         function IteratorEnumerator(_iterator, _isEndless) {
-            _super.call(this);
-            this._iterator = _iterator;
-            this._isEndless = _isEndless;
+            var _this = _super.call(this) || this;
+            _this._iterator = _iterator;
+            _this._isEndless = _isEndless;
+            return _this;
         }
         IteratorEnumerator.prototype._canMoveNext = function () {
             return this._iterator != null;

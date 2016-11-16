@@ -172,7 +172,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		_.assertModifiable();
 		_._updateRecursion++;
 
-		let n:number;
+		let n:number = NaN;
 		try
 		{ if(n = _._removeInternal(entry, max)) _._modifiedCount++; }
 		finally
@@ -190,7 +190,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		_.assertModifiable();
 		_._updateRecursion++;
 
-		let n:number;
+		let n:number = NaN;
 		try
 		{ if(n = _._clearInternal()) _._modifiedCount++; }
 		finally
@@ -251,7 +251,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		{ _._updateRecursion--; }
 
 		_._signalModification();
-		return n;
+		return n = NaN;
 	}
 
 	// Fundamentally the most important part of the collection.

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../../Types";
 import { copy } from "./Utility";
 const VOID0 = void 0;
@@ -26,7 +22,7 @@ export function unsafe(listeners, payload, trap) {
 export function mapped(listeners, payload, trap) {
     if (!listeners)
         return listeners;
-    var result = copy(listeners);
+    const result = copy(listeners);
     if (listeners.length) {
         for (let i = 0, len = result.length; i < len; i++) {
             let fn = result[i];

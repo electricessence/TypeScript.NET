@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./Dictionaries/getIdentifier", "./HashSet", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Types", "./Dictionaries/getIdentifier", "./HashSet", "../../extends"], function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     var getIdentifier_1 = require("./Dictionaries/getIdentifier");
@@ -22,7 +18,7 @@
     var Set = (function (_super) {
         __extends(Set, _super);
         function Set(source) {
-            _super.call(this, source, getId);
+            return _super.call(this, source, getId) || this;
         }
         return Set;
     }(HashSet_1.HashSet));

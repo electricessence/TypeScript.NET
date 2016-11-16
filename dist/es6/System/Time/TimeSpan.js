@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../Types";
 import { TimeUnit } from "./TimeUnit";
 import { ClockTime } from "./ClockTime";
@@ -11,7 +6,7 @@ import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 export class TimeSpan extends TimeQuantity {
     constructor(value, units = TimeUnit.Milliseconds) {
-        var ms = TimeUnit.toMilliseconds(value, units);
+        const ms = TimeUnit.toMilliseconds(value, units);
         super(ms);
         const _ = this;
         _.ticks = ms * 10000;
@@ -26,7 +21,7 @@ export class TimeSpan extends TimeQuantity {
     }
     get time() {
         const _ = this;
-        var t = _._time;
+        let t = _._time;
         if (!t)
             _._time = t = new ClockTime(_.getTotalMilliseconds());
         return t;
@@ -65,6 +60,6 @@ export class TimeSpan extends TimeQuantity {
         return timeSpanZero || (timeSpanZero = new TimeSpan(0));
     }
 }
-var timeSpanZero;
+let timeSpanZero;
 export default TimeSpan;
 //# sourceMappingURL=TimeSpan.js.map

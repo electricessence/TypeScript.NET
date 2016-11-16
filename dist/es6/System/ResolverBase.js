@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { DisposableBase } from "./Disposable/DisposableBase";
 import { ArgumentNullException } from "./Exceptions/ArgumentNullException";
 import __extendsImport from "../extends";
@@ -38,7 +34,7 @@ export class ResolverBase extends DisposableBase {
                     _._isValueCreated = null;
                     if (!this._allowReset)
                         this._valueFactory = NULL;
-                    var v = c();
+                    const v = c();
                     _._value = v;
                     _._error = void 0;
                     return v;

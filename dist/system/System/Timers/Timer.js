@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../Observable/ObservableBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -35,7 +31,7 @@ System.register(["../Observable/ObservableBase", "../../extends"], function(expo
                 Timer.startNew = function (millisecondInterval, maxCount, initialDelay) {
                     if (maxCount === void 0) { maxCount = Infinity; }
                     if (initialDelay === void 0) { initialDelay = millisecondInterval; }
-                    var t = new Timer(millisecondInterval, maxCount, millisecondInterval);
+                    var t = new Timer(millisecondInterval, maxCount, initialDelay);
                     t.start();
                     return t;
                 };

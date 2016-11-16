@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
- */
 System.register(["../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool", "../../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -53,7 +48,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
             __extends = extends_1.default;
             MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
                 ? (self.URL ? self.URL : self.webkitURL)
-                : null, _supports = (Environment_1.isNodeJS || self.Worker) ? true : false;
+                : null, _supports = !!(Environment_1.isNodeJS || self.Worker);
             defaults = {
                 evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : VOID0,
                 maxConcurrency: Environment_1.isNodeJS
@@ -180,7 +175,8 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                     var worker = workers.tryGet(src);
                     if (worker)
                         return worker;
-                    var scripts = this._requiredScripts, evalPath = this.options.evalPath;
+                    var scripts = this._requiredScripts;
+                    var evalPath = this.options.evalPath;
                     if (!evalPath) {
                         if (Environment_1.isNodeJS)
                             throw new Error("Can't use NodeJD without eval.js!");
@@ -219,12 +215,11 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                     throw new Error('Workers do not exist and synchronous operation not allowed!');
                 };
                 Parallel.prototype.pipe = function (data, task, env) {
-                    var maxConcurrency = this.ensureClampedMaxConcurrency();
                     var result;
                     if (data && data.length) {
                         var len_1 = data.length;
                         var taskString = task.toString();
-                        var maxConcurrency_1 = this.ensureClampedMaxConcurrency(), error_1;
+                        var maxConcurrency = this.ensureClampedMaxConcurrency(), error_1;
                         var i_1 = 0;
                         var _loop_1 = function(w) {
                             var worker = this_1._spawnWorker(taskString, env);
@@ -266,7 +261,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                             next();
                         };
                         var this_1 = this;
-                        for (var w = 0; !error_1 && i_1 < Math.min(len_1, maxConcurrency_1); w++) {
+                        for (var w = 0; !error_1 && i_1 < Math.min(len_1, maxConcurrency); w++) {
                             var state_1 = _loop_1(w);
                             if (typeof state_1 === "object") return state_1.value;
                         }

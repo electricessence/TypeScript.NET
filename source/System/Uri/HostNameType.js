@@ -3,14 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://msdn.microsoft.com/en-us/library/system.UriHostNameType%28v=vs.110%29.aspx
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports"], function (require, exports) {
     "use strict";
     (function (UriHostNameType) {
         UriHostNameType[UriHostNameType["Basic"] = 0] = "Basic";

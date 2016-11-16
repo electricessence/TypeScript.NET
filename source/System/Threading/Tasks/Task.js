@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy", "../../../extends"], function (require, exports) {
     "use strict";
     var TaskHandlerBase_1 = require("./TaskHandlerBase");
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
@@ -19,10 +15,11 @@
     var Task = (function (_super) {
         __extends(Task, _super);
         function Task(valueFactory) {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             if (!valueFactory)
                 throw new ArgumentNullException_1.ArgumentNullException('valueFactory');
-            this._result = new Lazy_1.Lazy(valueFactory, false);
+            _this._result = new Lazy_1.Lazy(valueFactory, false);
+            return _this;
         }
         Task.prototype._onExecute = function () {
             this._result.getValue();

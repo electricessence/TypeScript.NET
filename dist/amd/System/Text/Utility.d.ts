@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 export declare const EMPTY: string;
 export declare function getHashCode(source: string): number;
 export declare function repeat(source: string, count: number): string;

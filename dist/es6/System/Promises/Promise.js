@@ -165,7 +165,7 @@ export class PromiseBase extends PromiseState {
     }
     finallyThis(fin, synchronous) {
         this.throwIfDisposed();
-        var f = synchronous ? fin : () => deferImmediate(fin);
+        const f = synchronous ? fin : () => deferImmediate(fin);
         this.thenThis(f, f);
         return this;
     }
@@ -244,7 +244,7 @@ class PromiseWrapper extends Resolvable {
     }
     thenSynchronous(onFulfilled, onRejected) {
         this.throwIfDisposed();
-        var t = this._target;
+        let t = this._target;
         if (!t)
             return super.thenSynchronous(onFulfilled, onRejected);
         return new Promise((resolve, reject) => {
@@ -255,7 +255,7 @@ class PromiseWrapper extends Resolvable {
     }
     thenThis(onFulfilled, onRejected) {
         this.throwIfDisposed();
-        var t = this._target;
+        let t = this._target;
         if (!t)
             return super.thenThis(onFulfilled, onRejected);
         handleDispatch(t, onFulfilled, onRejected);
@@ -276,7 +276,7 @@ export class Promise extends Resolvable {
         this.throwIfDisposed();
         if (this._state)
             return super.thenSynchronous(onFulfilled, onRejected);
-        var p = new Promise();
+        const p = new Promise();
         (this._waiting || (this._waiting = []))
             .push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
         return p;
@@ -293,7 +293,7 @@ export class Promise extends Resolvable {
         super._onDispose();
         this._resolvedCalled = VOID0;
     }
-    resolveUsing(resolver, forceSynchronous = false, throwIfSettled = false) {
+    resolveUsing(resolver, forceSynchronous = false) {
         if (!resolver)
             throw new ArgumentNullException("resolver");
         if (this._resolvedCalled)
@@ -301,8 +301,8 @@ export class Promise extends Resolvable {
         if (this.state)
             throw new InvalidOperationException("Already resolved: " + Promise.State[this.state]);
         this._resolvedCalled = true;
-        var state = 0;
-        var rejectHandler = (reason) => {
+        let state = 0;
+        const rejectHandler = (reason) => {
             if (state) {
                 console.warn(state == -1
                     ? "Rejection called multiple times"
@@ -314,7 +314,7 @@ export class Promise extends Resolvable {
                 this.reject(reason);
             }
         };
-        var fulfillHandler = (v) => {
+        const fulfillHandler = (v) => {
             if (state) {
                 console.warn(state == 1
                     ? "Fulfill called multiple times"
@@ -332,7 +332,7 @@ export class Promise extends Resolvable {
             deferImmediate(() => resolver(fulfillHandler, rejectHandler));
     }
     _emitDisposalRejection(p) {
-        var d = p.wasDisposed;
+        const d = p.wasDisposed;
         if (d)
             this._rejectInternal(newODE());
         return d;
@@ -363,7 +363,7 @@ export class Promise extends Resolvable {
             this._state = Promise.State.Fulfilled;
             this._result = result;
             this._error = VOID0;
-            var o = this._waiting;
+            const o = this._waiting;
             if (o) {
                 this._waiting = VOID0;
                 for (let c of o) {
@@ -380,7 +380,7 @@ export class Promise extends Resolvable {
             return;
         this._state = Promise.State.Rejected;
         this._error = error;
-        var o = this._waiting;
+        const o = this._waiting;
         if (o) {
             this._waiting = null;
             for (let c of o) {
@@ -492,7 +492,7 @@ var pools;
 (function (pools) {
     var PromiseCallbacks;
     (function (PromiseCallbacks) {
-        var pool;
+        let pool;
         function getPool() {
             return pool
                 || (pool = new ObjectPool(40, factory, c => {
@@ -509,7 +509,7 @@ var pools;
             };
         }
         function init(onFulfilled, onRejected, promise) {
-            var c = getPool().take();
+            const c = getPool().take();
             c.onFulfilled = onFulfilled;
             c.onRejected = onRejected;
             c.promise = promise;
@@ -544,7 +544,7 @@ var pools;
     function all(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
-        var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+        let promises = (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises.length || promises.every(v => !v))
             return new ArrayPromise(r => r(promises), true);
         return new ArrayPromise((resolve, reject) => {
@@ -595,7 +595,7 @@ var pools;
     function waitAll(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
-        var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+        const promises = (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises.length || promises.every(v => !v))
             return new ArrayPromise(r => r(promises), true);
         return new ArrayPromise((resolve, reject) => {
@@ -631,14 +631,14 @@ var pools;
     }
     Promise.waitAll = waitAll;
     function race(first, ...rest) {
-        var promises = first && (Array.isArray(first) ? first : [first]).concat(rest);
+        let promises = first && (Array.isArray(first) ? first : [first]).concat(rest);
         if (!promises || !promises.length || !(promises = promises.filter(v => v != null)).length)
             throw new ArgumentException("Nothing to wait for.");
-        var len = promises.length;
+        const len = promises.length;
         if (len == 1)
             return wrap(promises[0]);
         for (let i = 0; i < len; i++) {
-            var p = promises[i];
+            const p = promises[i];
             if (p instanceof PromiseBase && p.isSettled)
                 return p;
         }

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 class DeferBase {
@@ -17,7 +13,7 @@ class Defer extends DeferBase {
         this._id = setTimeout(Defer.handler, delay, task, this, payload);
     }
     cancel() {
-        var id = this._id;
+        const id = this._id;
         if (id) {
             clearTimeout(id);
             this._id = null;
@@ -41,7 +37,7 @@ class DeferInterval extends DeferBase {
         this._id = setInterval(DeferInterval.handler, interval, task, this);
     }
     cancel() {
-        var id = this._id;
+        const id = this._id;
         if (id) {
             clearInterval(id);
             this._id = null;

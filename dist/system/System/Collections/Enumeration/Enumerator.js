@@ -1,12 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator", "./IndexEnumerator", "./UnsupportedEnumerableException", "./InfiniteEnumerator", "./EmptyEnumerator", "./IteratorEnumerator"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var dispose_1, Types_1, ArrayEnumerator_1, IndexEnumerator_1, UnsupportedEnumerableException_1, InfiniteEnumerator_1, EmptyEnumerator_1, IteratorEnumerator_1;
-    var VOID0, STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
+    var STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
     function throwIfEndless(isEndless) {
         if (isEndless)
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
@@ -159,7 +155,6 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
                 IteratorEnumerator_1 = IteratorEnumerator_1_1;
             }],
         execute: function() {
-            VOID0 = void 0;
             STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
                 'Would result in an infinite loop that could hang the current process.';
         }

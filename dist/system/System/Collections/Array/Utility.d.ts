@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { EqualityComparison, PredicateWithIndex, SelectorWithIndex, ActionWithIndex } from "../../FunctionTypes";
 import { IArray } from "./IArray";
 export declare function initialize<T>(length: number): T[];

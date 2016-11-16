@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -209,7 +205,8 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 CollectionBase.prototype.contains = function (entry) {
                     if (!this.getCount())
                         return false;
-                    var found = false, equals = this._equalityComparer;
+                    var found = false;
+                    var equals = this._equalityComparer;
                     this.forEach(function (e) { return !(found = equals(entry, e)); });
                     return found;
                 };

@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./TimeQuantity", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./TimeQuantity", "../../extends"], function (require, exports) {
     "use strict";
     var TimeQuantity_1 = require("./TimeQuantity");
     var extends_1 = require("../../extends");
@@ -22,23 +17,24 @@
             for (var _i = 0; _i < arguments.length; _i++) {
                 args[_i - 0] = arguments[_i];
             }
-            _super.call(this, args.length > 1
+            var _this = _super.call(this, args.length > 1
                 ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
-                : (args.length > 0 && args[0] || 0));
-            var _ = this;
+                : (args.length > 0 && args[0] || 0)) || this;
+            var _ = _this;
             var ms = Math.abs(_.getTotalMilliseconds());
             var msi = Math.floor(ms);
             _.tick = (ms - msi) * 10000;
-            _.days = (msi / HowMany_1.Milliseconds.Per.Day) | 0;
-            msi -= _.days * HowMany_1.Milliseconds.Per.Day;
-            _.hour = (msi / HowMany_1.Milliseconds.Per.Hour) | 0;
-            msi -= _.hour * HowMany_1.Milliseconds.Per.Hour;
-            _.minute = (msi / HowMany_1.Milliseconds.Per.Minute) | 0;
-            msi -= _.minute * HowMany_1.Milliseconds.Per.Minute;
+            _.days = (msi / 86400000) | 0;
+            msi -= _.days * 86400000;
+            _.hour = (msi / 3600000) | 0;
+            msi -= _.hour * 3600000;
+            _.minute = (msi / 60000) | 0;
+            msi -= _.minute * 60000;
             _.second = (msi / 1000) | 0;
             msi -= _.second * 1000;
             _.millisecond = msi;
             Object.freeze(_);
+            return _this;
         }
         ClockTime.from = function (hours, minutes, seconds, milliseconds) {
             if (seconds === void 0) { seconds = 0; }

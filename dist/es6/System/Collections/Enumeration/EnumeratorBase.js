@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../../Types";
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import { ObjectPool } from "../../Disposable/ObjectPool";
@@ -9,7 +5,7 @@ import { IteratorResult } from "./IteratorResult";
 import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
 const VOID0 = void 0;
-var yielderPool;
+let yielderPool;
 function yielder(recycle) {
     if (!yielderPool)
         yielderPool
@@ -58,11 +54,11 @@ export class EnumeratorBase extends DisposableBase {
             this._disposer = disposer;
     }
     get current() {
-        var y = this._yielder;
+        const y = this._yielder;
         return y && y.current;
     }
     get index() {
-        var y = this._yielder;
+        const y = this._yielder;
         return y ? y.index : NaN;
     }
     get isEndless() {
@@ -71,7 +67,7 @@ export class EnumeratorBase extends DisposableBase {
     reset() {
         const _ = this;
         _.throwIfDisposed();
-        var y = _._yielder;
+        const y = _._yielder;
         _._yielder = null;
         _._state = 0;
         if (y)
@@ -107,7 +103,7 @@ export class EnumeratorBase extends DisposableBase {
                 case 0:
                     _._yielder = _._yielder || yielder();
                     _._state = 1;
-                    var initializer = _._initializer;
+                    const initializer = _._initializer;
                     if (initializer)
                         initializer();
                 case 1:
@@ -171,10 +167,10 @@ export class EnumeratorBase extends DisposableBase {
     _onDispose() {
         const _ = this;
         _._isEndless = false;
-        var disposer = _._disposer;
+        const disposer = _._disposer;
         _._initializer = null;
         _._disposer = null;
-        var y = _._yielder;
+        const y = _._yielder;
         _._yielder = null;
         this._state = 5;
         if (y)

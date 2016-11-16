@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "./Types";
 var isTrueNaN = Type.isTrueNaN;
 const VOID0 = void 0;
@@ -39,7 +35,7 @@ export function areEquivalent(a, b, nullEquivalency = true, extraDepth = 0) {
         return (a === null || a === VOID0) && (b == null || b === VOID0);
     }
     if (Type.isObject(a) && Type.isObject(b)) {
-        var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
+        const aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
         if (len != bKeys.length)
             return false;
         aKeys.sort();

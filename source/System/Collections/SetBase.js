@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase", "../../extends"], function (require, exports) {
     "use strict";
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -25,8 +21,9 @@
     var SetBase = (function (_super) {
         __extends(SetBase, _super);
         function SetBase(source) {
-            _super.call(this, VOID0, Compare_1.areEqual);
-            this._importEntries(source);
+            var _this = _super.call(this, VOID0, Compare_1.areEqual) || this;
+            _this._importEntries(source);
+            return _this;
         }
         SetBase.prototype._getSet = function () {
             var s = this._set;

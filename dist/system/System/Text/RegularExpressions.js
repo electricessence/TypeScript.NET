@@ -7,7 +7,7 @@ System.register(["../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var extends_1;
-    var __extends, EMPTY, UNDEFINED, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
+    var __extends, EMPTY, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
     return {
         setters:[
             function (extends_1_1) {
@@ -16,7 +16,6 @@ System.register(["../../extends"], function(exports_1, context_1) {
         execute: function() {
             __extends = extends_1.default;
             EMPTY = "";
-            UNDEFINED = "undefined";
             _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
             (function (RegexOptions) {
                 RegexOptions.IGNORE_CASE = _I;
@@ -83,7 +82,9 @@ System.register(["../../extends"], function(exports_1, context_1) {
                         return Match.Empty;
                     if (!(startIndex > 0))
                         startIndex = 0;
-                    var first = startIndex + r.index, loc = first, groups = [], groupMap = {};
+                    var first = startIndex + r.index;
+                    var loc = first;
+                    var groups = [], groupMap = {};
                     for (var i = 0, len = r.length; i < len; ++i) {
                         var text = r[i];
                         var g = EmptyGroup;
@@ -102,7 +103,9 @@ System.register(["../../extends"], function(exports_1, context_1) {
                     return m;
                 };
                 Regex.prototype.matches = function (input) {
-                    var matches = [], m, p = 0, end = input && input.length || 0;
+                    var matches = [];
+                    var m, p = 0;
+                    var end = input && input.length || 0;
                     while (p < end && (m = this.match(input, p)) && m.success) {
                         matches.push(m);
                         p = m.index + m.length;
@@ -114,7 +117,8 @@ System.register(["../../extends"], function(exports_1, context_1) {
                     if (!input || r === null || r === void 0 || !(count > 0))
                         return input;
                     var result = [];
-                    var p = 0, end = input.length, isEvaluator = typeof r == "function";
+                    var p = 0;
+                    var end = input.length, isEvaluator = typeof r == "function";
                     var m, i = 0;
                     while (i < count && p < end && (m = this.match(input, p)) && m.success) {
                         var index = m.index, length_1 = m.length;

@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "assert", "./ICollection", "../../../../dist/commonjs/System/Collections/Set"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "assert", "./ICollection", "../../../../dist/commonjs/System/Collections/Set"], function (require, exports) {
     "use strict";
     var assert = require("assert");
     var ICollectionTests = require("./ICollection");

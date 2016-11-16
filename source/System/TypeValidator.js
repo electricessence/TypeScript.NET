@@ -2,14 +2,14 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Types", "./Compare", "../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./Types", "./Compare", "../extends"], function (require, exports) {
     "use strict";
     var Types_1 = require("./Types");
     var Compare_1 = require("./Compare");
@@ -18,8 +18,7 @@
     var TypeInfoHelper = (function (_super) {
         __extends(TypeInfoHelper, _super);
         function TypeInfoHelper(value) {
-            var _this = this;
-            _super.call(this, value, function () { return _this._value = value; });
+            return _super.call(this, value, function () { return _this._value = value; }) || this;
         }
         TypeInfoHelper.prototype.contains = function (descriptor) {
             var value = this._value;

@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./CollectionBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./CollectionBase", "../../extends"], function (require, exports) {
     "use strict";
     var CollectionBase_1 = require("./CollectionBase");
     var extends_1 = require("../../extends");
@@ -17,7 +13,7 @@
     var ReadOnlyCollectionBase = (function (_super) {
         __extends(ReadOnlyCollectionBase, _super);
         function ReadOnlyCollectionBase() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         ReadOnlyCollectionBase.prototype.getCount = function () {
             return this._getCount();

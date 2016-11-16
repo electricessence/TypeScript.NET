@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { TimeSpan } from "../Time/TimeSpan";
 function getTimestampMilliseconds() {
     return (new Date()).getTime();
@@ -17,12 +13,12 @@ export default class Stopwatch {
         return this._isRunning;
     }
     static startNew() {
-        var s = new Stopwatch();
+        const s = new Stopwatch();
         s.start();
         return s;
     }
     static measure(closure) {
-        var start = getTimestampMilliseconds();
+        const start = getTimestampMilliseconds();
         closure();
         return new TimeSpan(getTimestampMilliseconds() - start);
     }
@@ -49,9 +45,9 @@ export default class Stopwatch {
     lap() {
         const _ = this;
         if (_._isRunning) {
-            var t = getTimestampMilliseconds();
-            var s = _._startTimeStamp;
-            var e = t - s;
+            const t = getTimestampMilliseconds();
+            const s = _._startTimeStamp;
+            const e = t - s;
             _._startTimeStamp = t;
             _._elapsed += e;
             return new TimeSpan(e);
@@ -71,7 +67,7 @@ export default class Stopwatch {
     }
     get elapsedMilliseconds() {
         const _ = this;
-        var timeElapsed = _._elapsed;
+        let timeElapsed = _._elapsed;
         if (_._isRunning)
             timeElapsed += _.currentLapMilliseconds;
         return timeElapsed;

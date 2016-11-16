@@ -3,14 +3,14 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../extends"], function (require, exports) {
     "use strict";
     var extends_1 = require("../../extends");
     var __extends = extends_1.default;
@@ -170,7 +170,7 @@
         function Group(value, index) {
             if (value === void 0) { value = EMPTY; }
             if (index === void 0) { index = -1; }
-            _super.call(this, value, index);
+            return _super.call(this, value, index) || this;
         }
         Object.defineProperty(Group.prototype, "success", {
             get: function () {
@@ -198,9 +198,10 @@
             if (index === void 0) { index = -1; }
             if (groups === void 0) { groups = []; }
             if (namedGroups === void 0) { namedGroups = {}; }
-            _super.call(this, value, index);
-            this.groups = groups;
-            this.namedGroups = namedGroups;
+            var _this = _super.call(this, value, index) || this;
+            _this.groups = groups;
+            _this.namedGroups = namedGroups;
+            return _this;
         }
         Match.prototype.freeze = function () {
             if (!this.groups)

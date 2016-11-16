@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import { GET, PUT, POST, DELETE } from "./HttpMethod";
@@ -25,7 +21,7 @@ export default class HttpRequestFactory extends DisposableBase {
     uri(uri) {
         const _ = this;
         _.throwIfDisposed();
-        var d = _._uriDefaults, u = Uri.from(uri, d);
+        const d = _._uriDefaults, u = Uri.from(uri, d);
         return d && u.equals(d)
             ? _
             : new HttpRequestFactory(_._http, u);

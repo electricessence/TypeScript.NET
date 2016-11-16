@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual } from "../../Compare";
 import { DictionaryBase } from "./DictionaryBase";
 import __extendsImport from "../../../extends";
@@ -33,7 +29,7 @@ export class StringKeyDictionary extends DictionaryBase {
     containsValue(value) {
         if (!this._count)
             return false;
-        var map = this._map;
+        const map = this._map;
         for (let key in map) {
             if (map.hasOwnProperty(key) && areEqual(map[key], value))
                 return true;
@@ -47,7 +43,7 @@ export class StringKeyDictionary extends DictionaryBase {
     }
     _setValueInternal(key, value) {
         const _ = this;
-        var map = _._map, old = map[key];
+        const map = _._map, old = map[key];
         if (old !== value) {
             if (value === VOID0) {
                 if ((key) in (map)) {
@@ -67,7 +63,7 @@ export class StringKeyDictionary extends DictionaryBase {
     importMap(values) {
         const _ = this;
         return _.handleUpdate(() => {
-            var changed = false;
+            let changed = false;
             for (let key in values) {
                 if (values.hasOwnProperty(key) && _.setValue(key, values[key]))
                     changed = true;
@@ -77,11 +73,11 @@ export class StringKeyDictionary extends DictionaryBase {
     }
     toMap(selector) {
         const _ = this;
-        var result = {};
+        const result = {};
         if (_._count)
             for (let key in _._map) {
                 if (_._map.hasOwnProperty(key)) {
-                    var value = _._map[key];
+                    let value = _._map[key];
                     if (selector)
                         value = selector(key, value);
                     if (value !== VOID0)
@@ -96,7 +92,7 @@ export class StringKeyDictionary extends DictionaryBase {
     getValues() {
         if (!this._count)
             return [];
-        var result = Object.keys(this._map);
+        const result = Object.keys(this._map);
         for (let i = 0, len = result.length; i < len; i++) {
             result[i] = this._map[result[i]];
         }

@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on code from: https://github.com/kriskowal/q
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     var LinkedNodeList_1 = require("../Collections/LinkedNodeList");
@@ -36,7 +31,7 @@
     }
     var immediateQueue = new LinkedNodeList_1.LinkedNodeList();
     var laterQueue = new Queue_1.Queue();
-    var entryPool = new ObjectPool_1.ObjectPool(40, function () { return {}; }, function (o) {
+    var entryPool = new ObjectPool_1.ObjectPool(40, function () { return ({}); }, function (o) {
         o.task = null;
         o.domain = null;
         o.context = null;

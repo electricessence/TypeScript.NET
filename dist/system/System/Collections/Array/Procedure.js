@@ -53,15 +53,15 @@ System.register([], function(exports_1, context_1) {
             return NaN;
         var result = 1;
         if (ignoreNaN) {
-            var found = false;
+            var found_1 = false;
             source.forEach(function (n) {
                 if (!isNaN(n)) {
                     result *= n;
-                    if (!found)
-                        found = true;
+                    if (!found_1)
+                        found_1 = true;
                 }
             });
-            if (!found)
+            if (!found_1)
                 result = NaN;
         }
         else {
@@ -113,16 +113,16 @@ System.register([], function(exports_1, context_1) {
             return NaN;
         var result = start;
         if (ignoreNaN) {
-            var found = false;
+            var found_2 = false;
             source.forEach(function (n) {
                 if (!isNaN(n)) {
                     if (predicate(n, result))
                         result = n;
-                    if (!found)
-                        found = true;
+                    if (!found_2)
+                        found_2 = true;
                 }
             });
-            if (!found)
+            if (!found_2)
                 result = NaN;
         }
         else {

@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], function (require, exports) {
     "use strict";
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
@@ -21,12 +17,13 @@
     var HttpRequestFactory = (function (_super) {
         __extends(HttpRequestFactory, _super);
         function HttpRequestFactory(_http, uriDefaults) {
-            _super.call(this);
-            this._http = _http;
-            this._disposableObjectName = NAME;
+            var _this = _super.call(this) || this;
+            _this._http = _http;
+            _this._disposableObjectName = NAME;
             if (!_http)
                 throw new ArgumentNullException_1.ArgumentNullException('_http');
-            this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+            _this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+            return _this;
         }
         HttpRequestFactory.prototype._onDispose = function () {
             this._http = null;

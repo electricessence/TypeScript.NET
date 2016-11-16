@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../../Compare", "../../Types"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -47,7 +43,8 @@ System.register(["../../Compare", "../../Types"], function(exports_1, context_1)
     function sort(a, comparer) {
         if (!a || a.length < 2)
             return a;
-        var len = a.length, b;
+        var len = a.length;
+        var b;
         if (len > 65536)
             b = new Array(len);
         else {

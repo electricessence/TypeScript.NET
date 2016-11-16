@@ -1,9 +1,3 @@
-/*!
- * @author Sebastian Belmar / https://github.com/sebabelmar/
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * https://en.wikipedia.org/wiki/Merge_sort
- */
 "use strict";
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
 var Utility_1 = require("../Utility");

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register([], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -23,7 +19,7 @@ System.register([], function(exports_1, context_1) {
             exports_1("IteratorResult", IteratorResult);
             (function (IteratorResult) {
                 IteratorResult.Done = new IteratorResult(VOID0, VOID0, true);
-                function GetDone(value) { return IteratorResult.Done; }
+                function GetDone() { return IteratorResult.Done; }
                 IteratorResult.GetDone = GetDone;
             })(IteratorResult = IteratorResult || (IteratorResult = {}));
             exports_1("IteratorResult", IteratorResult);

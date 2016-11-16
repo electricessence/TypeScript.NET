@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { ObservableBase } from "../Observable/ObservableBase";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
@@ -18,7 +14,7 @@ export default class Timer extends ObservableBase {
             throw "'interval' cannot be negative.";
     }
     static startNew(millisecondInterval, maxCount = Infinity, initialDelay = millisecondInterval) {
-        var t = new Timer(millisecondInterval, maxCount, millisecondInterval);
+        const t = new Timer(millisecondInterval, maxCount, initialDelay);
         t.start();
         return t;
     }
@@ -71,7 +67,7 @@ export default class Timer extends ObservableBase {
         super._onDispose();
     }
     static _onTick(timer, reInitTimer) {
-        var index = timer._count++, max = timer._maxCount, isComplete = timer._count >= max;
+        const index = timer._count++, max = timer._maxCount, isComplete = timer._count >= max;
         if (reInitTimer) {
             timer.cancel();
             timer.start();

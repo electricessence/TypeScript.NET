@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], function (require, exports) {
     "use strict";
     var ArgumentException_1 = require("./Exceptions/ArgumentException");
     var ArgumentOutOfRangeException_1 = require("./Exceptions/ArgumentOutOfRangeException");
@@ -17,7 +13,6 @@
         return Math.floor(n);
     }
     exports.Integer = Integer;
-    var Integer;
     (function (Integer) {
         Integer.MAX_32_BIT = 2147483647;
         function r(maxExclusive) {
@@ -28,7 +23,6 @@
             return r(maxExclusive);
         }
         Integer.random = random;
-        var random;
         (function (random) {
             function next(boundary, inclusive) {
                 assert(boundary, 'max');
@@ -65,7 +59,6 @@
                     : void (0);
             }
             random.select = select;
-            var select;
             (function (select) {
                 function one(source) {
                     return random.select(source);

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import * as AU from "../Collections/Array/Utility";
 import { shallowCopy } from "../Utility/shallowCopy";
 import { DisposableBase } from "../Disposable/DisposableBase";
@@ -11,7 +7,7 @@ import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 const DISPOSING = 'disposing', DISPOSED = 'disposed';
 function entryFinalizer() {
-    var p = this.params;
+    const p = this.params;
     p.dispatcher.removeEntry(this);
     p.dispatcher = null;
 }
@@ -23,7 +19,7 @@ export default class EventDispatcherBase extends DisposableBase {
         this._disposableObjectName = NAME;
     }
     addEventListener(type, listener, priority = 0) {
-        var e = this._entries;
+        let e = this._entries;
         if (!e)
             this._entries = e = [];
         e.push(new EventDispatcherEntry(type, listener, {
@@ -39,7 +35,7 @@ export default class EventDispatcherBase extends DisposableBase {
             this.addEventListener(type, listener, priority);
     }
     hasEventListener(type, listener) {
-        var e = this._entries;
+        const e = this._entries;
         return e && e.some((value) => type == value.type && (!listener || listener == value.listener));
     }
     removeEventListener(type, listener) {
@@ -47,10 +43,10 @@ export default class EventDispatcherBase extends DisposableBase {
     }
     dispatchEvent(e, params) {
         const _ = this;
-        var l = _._entries;
+        let l = _._entries;
         if (!l || !l.length)
             return false;
-        var event;
+        let event;
         if (typeof e == "string") {
             event = (Event && Object.create(Event) || {});
             if (!params)
@@ -62,14 +58,14 @@ export default class EventDispatcherBase extends DisposableBase {
         }
         else
             event = e;
-        var type = event.type;
-        var entries = l.filter(e => e.type == type);
+        const type = event.type;
+        const entries = l.filter(e => e.type == type);
         if (!entries.length)
             return false;
         entries.sort((a, b) => (b.params ? b.params.priority : 0)
             - (a.params ? a.params.priority : 0));
         entries.forEach(entry => {
-            var newEvent = Object.create(Event);
+            const newEvent = Object.create(Event);
             shallowCopy(event, newEvent);
             newEvent.target = this;
             entry.dispatch(newEvent);
@@ -88,7 +84,7 @@ export default class EventDispatcherBase extends DisposableBase {
             _.dispatchEvent(DISPOSING);
             super.dispose();
             _.dispatchEvent(DISPOSED);
-            var l = _._entries;
+            const l = _._entries;
             if (l) {
                 this._entries = null;
                 l.forEach(e => e.dispose());

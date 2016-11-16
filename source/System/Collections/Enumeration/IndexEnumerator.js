@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./EnumeratorBase", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./EnumeratorBase", "../../../extends"], function (require, exports) {
     "use strict";
     var EnumeratorBase_1 = require("./EnumeratorBase");
     var extends_1 = require("../../../extends");
@@ -17,8 +13,9 @@
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);
         function IndexEnumerator(sourceFactory) {
+            var _this;
             var source;
-            _super.call(this, function () {
+            _this = _super.call(this, function () {
                 source = sourceFactory();
                 if (source && source.source) {
                     var len = source.length;
@@ -54,8 +51,9 @@
                 if (source) {
                     source.source = null;
                 }
-            });
-            this._isEndless = false;
+            }) || this;
+            _this._isEndless = false;
+            return _this;
         }
         return IndexEnumerator;
     }(EnumeratorBase_1.EnumeratorBase));

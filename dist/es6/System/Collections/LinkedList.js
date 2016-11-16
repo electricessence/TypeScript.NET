@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual } from "../Compare";
 import { LinkedNodeList } from "./LinkedNodeList";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
@@ -27,7 +22,7 @@ function ensureExternal(node, list) {
         return null;
     if (!list)
         throw new ArgumentNullException("list");
-    var external = node.external;
+    let external = node.external;
     if (!external)
         node.external = external = new LinkedListNode(list, node);
     return external || null;
@@ -39,14 +34,14 @@ function getInternal(node, list) {
         throw new ArgumentNullException("list");
     if (node.list != list)
         throw new InvalidOperationException("Provided node does not belong to this list.");
-    var n = node._nodeInternal;
+    let n = node._nodeInternal;
     if (!n)
         throw new InvalidOperationException("Provided node is not valid.");
     return n;
 }
 function detachExternal(node) {
     if (node) {
-        var e = node.external;
+        const e = node.external;
         if (e) {
             e._list = VOID0;
             e._nodeInternal = VOID0;
@@ -68,12 +63,12 @@ export class LinkedList extends CollectionBase {
     }
     _onDispose() {
         super._onDispose();
-        var l = this._listInternal;
+        const l = this._listInternal;
         this._listInternal = null;
         l.dispose();
     }
     getCount() {
-        var li = this._listInternal;
+        const li = this._listInternal;
         return li ? li.unsafeCount : 0;
     }
     _addInternal(entry) {
@@ -81,7 +76,8 @@ export class LinkedList extends CollectionBase {
         return true;
     }
     _removeInternal(entry, max = Infinity) {
-        var _ = this, equals = _._equalityComparer, list = _._listInternal, removedCount = 0;
+        const _ = this, equals = _._equalityComparer, list = _._listInternal;
+        let removedCount = 0;
         list.forEach(node => {
             if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                 removedCount++;
@@ -90,7 +86,7 @@ export class LinkedList extends CollectionBase {
         return removedCount;
     }
     _clearInternal() {
-        var list = this._listInternal;
+        const list = this._listInternal;
         list.forEach(node => detachExternal(node));
         return list.clear();
     }
@@ -106,7 +102,7 @@ export class LinkedList extends CollectionBase {
     }
     _findFirst(entry) {
         const _ = this, equals = _._equalityComparer;
-        var next = _._listInternal && _._listInternal.first;
+        let next = _._listInternal && _._listInternal.first;
         while (next) {
             if (equals(entry, next.value))
                 return next;
@@ -116,7 +112,7 @@ export class LinkedList extends CollectionBase {
     }
     _findLast(entry) {
         const _ = this, equals = _._equalityComparer;
-        var prev = _._listInternal && _._listInternal.last;
+        let prev = _._listInternal && _._listInternal.last;
         while (prev) {
             if (equals(entry, prev.value))
                 return prev;
@@ -128,35 +124,35 @@ export class LinkedList extends CollectionBase {
         return this.remove(entry, 1) !== 0;
     }
     get first() {
-        var li = this._listInternal;
+        const li = this._listInternal;
         return li && ensureExternal(li.first, this);
     }
     get firstValue() {
-        var li = this._listInternal, node = li && li.first;
+        const li = this._listInternal, node = li && li.first;
         return node ? node.value : VOID0;
     }
     get last() {
-        var li = this._listInternal;
+        const li = this._listInternal;
         return ensureExternal(li.last, this);
     }
     get lastValue() {
-        var li = this._listInternal, node = li && li.last;
+        const li = this._listInternal, node = li && li.last;
         return node ? node.value : VOID0;
     }
     getValueAt(index) {
-        var li = this._listInternal, node = li && li.getNodeAt(index);
+        const li = this._listInternal, node = li && li.getNodeAt(index);
         return node ? node.value : VOID0;
     }
     getNodeAt(index) {
-        var li = this._listInternal;
+        const li = this._listInternal;
         return li && ensureExternal(li.getNodeAt(index), this);
     }
     find(entry) {
-        var li = this._listInternal;
+        const li = this._listInternal;
         return li && ensureExternal(this._findFirst(entry), this);
     }
     findLast(entry) {
-        var li = this._listInternal;
+        const li = this._listInternal;
         return li && ensureExternal(this._findLast(entry), this);
     }
     addFirst(entry) {
@@ -247,7 +243,7 @@ class LinkedListNode {
     }
     remove() {
         const _ = this;
-        var list = _._list;
+        const list = _._list;
         if (list)
             list.removeNode(this);
         _._list = VOID0;

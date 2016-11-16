@@ -1,13 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on code from: https://github.com/kriskowal/q
- */
 System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1;
-    var requestTick, flushing, immediateQueue, laterQueue, entryPool, channel, requestPortTick;
+    var requestTick, flushing, immediateQueue, laterQueue, entryPool;
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
@@ -63,7 +58,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
         entry.canceller = function () {
             if (!entry)
                 return false;
-            var r = !!immediateQueue.removeNode(entry);
+            var r = Boolean(immediateQueue.removeNode(entry));
             entryPool.add(entry);
             return r;
         };
@@ -126,18 +121,18 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 }
             }
             else if (typeof MessageChannel !== Types_1.Type.UNDEFINED) {
-                channel = new MessageChannel();
-                channel.port1.onmessage = function () {
-                    requestTick = requestPortTick;
-                    channel.port1.onmessage = flush;
+                var channel_1 = new MessageChannel();
+                channel_1.port1.onmessage = function () {
+                    requestTick = requestPortTick_1;
+                    channel_1.port1.onmessage = flush;
                     flush();
                 };
-                requestPortTick = function () {
-                    channel.port2.postMessage(0);
+                var requestPortTick_1 = function () {
+                    channel_1.port2.postMessage(0);
                 };
                 requestTick = function () {
                     setTimeout(flush, 0);
-                    requestPortTick();
+                    requestPortTick_1();
                 };
             }
             else {

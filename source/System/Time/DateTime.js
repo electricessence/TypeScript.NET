@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based on .NET DateTime's interface.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./TimeSpan", "./ClockTime", "./TimeStamp"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./TimeSpan", "./ClockTime", "./TimeStamp"], function (require, exports) {
     "use strict";
     var TimeSpan_1 = require("./TimeSpan");
     var ClockTime_1 = require("./ClockTime");
@@ -107,15 +102,15 @@
         };
         DateTime.prototype.addMinutes = function (minutes) {
             minutes = minutes || 0;
-            return this.addMilliseconds(minutes * HowMany_1.Milliseconds.Per.Minute);
+            return this.addMilliseconds(minutes * 60000);
         };
         DateTime.prototype.addHours = function (hours) {
             hours = hours || 0;
-            return this.addMilliseconds(hours * HowMany_1.Milliseconds.Per.Hour);
+            return this.addMilliseconds(hours * 3600000);
         };
         DateTime.prototype.addDays = function (days) {
             days = days || 0;
-            return this.addMilliseconds(days * HowMany_1.Milliseconds.Per.Day);
+            return this.addMilliseconds(days * 86400000);
         };
         DateTime.prototype.addMonths = function (months) {
             months = months || 0;

@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Compare", "./DictionaryBase", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../Compare", "./DictionaryBase", "../../../extends"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../../Compare");
     var DictionaryBase_1 = require("./DictionaryBase");
@@ -19,9 +15,10 @@
     var StringKeyDictionary = (function (_super) {
         __extends(StringKeyDictionary, _super);
         function StringKeyDictionary() {
-            _super.apply(this, arguments);
-            this._count = 0;
-            this._map = {};
+            var _this = _super.apply(this, arguments) || this;
+            _this._count = 0;
+            _this._map = {};
+            return _this;
         }
         StringKeyDictionary.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);

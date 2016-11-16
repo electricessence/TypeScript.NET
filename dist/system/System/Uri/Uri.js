@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
- */
 System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -84,7 +79,9 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
-        var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
+        var scheme = getScheme(uri.scheme);
+        var authority = getAuthority(uri);
+        var pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
         var part1 = EMPTY
             + ((scheme && (scheme + ':')) || EMPTY)
             + (authority || EMPTY);
@@ -100,7 +97,8 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
     function tryParse(url, out) {
         if (!url)
             return new ArgumentException_1.ArgumentException('url', 'Nothing to parse.');
-        var i, result = {};
+        var i;
+        var result = {};
         i = url.indexOf(HASH);
         if (i != -1) {
             result.fragment = url.substring(i + 1) || VOID0;
@@ -113,7 +111,8 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
         }
         i = url.indexOf(SLASH2);
         if (i != -1) {
-            var scheme = Utility_1.trim(url.substring(0, i)), c = /:$/;
+            var scheme = Utility_1.trim(url.substring(0, i));
+            var c = /:$/;
             if (!c.test(scheme))
                 return new ArgumentException_1.ArgumentException('url', 'Scheme was improperly formatted');
             scheme = Utility_1.trim(scheme.replace(c, EMPTY));

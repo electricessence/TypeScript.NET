@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { IStringKeyDictionary, IMap } from "./IDictionary";
 import { IKeyValuePair } from "../../KeyValuePair";
 import { DictionaryBase } from "./DictionaryBase";

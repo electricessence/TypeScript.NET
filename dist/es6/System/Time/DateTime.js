@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based on .NET DateTime's interface.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { TimeSpan } from "./TimeSpan";
 import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
@@ -76,13 +71,13 @@ export class DateTime {
     }
     addMonths(months) {
         months = months || 0;
-        var d = this.toJsDate();
+        const d = this.toJsDate();
         d.setMonth(d.getMonth() + months);
         return new DateTime(d, this._kind);
     }
     addYears(years) {
         years = years || 0;
-        var d = this.toJsDate();
+        const d = this.toJsDate();
         d.setFullYear(d.getFullYear() + years);
         return new DateTime(d, this._kind);
     }
@@ -101,9 +96,9 @@ export class DateTime {
     }
     get timeOfDay() {
         const _ = this;
-        var t = _._time;
+        let t = _._time;
         if (!t) {
-            var d = this._value;
+            const d = this._value;
             _._time = t = new ClockTime(d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
         }
         return t;
@@ -118,18 +113,18 @@ export class DateTime {
         const _ = this;
         if (_._kind != 1)
             return new DateTime(_, _._kind);
-        var d = _._value;
+        const d = _._value;
         return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2);
     }
     static get today() {
         return DateTime.now.date;
     }
     static get tomorrow() {
-        var today = DateTime.today;
+        const today = DateTime.today;
         return today.addDays(1);
     }
     static between(first, last) {
-        var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
+        const f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
         return new TimeSpan(l.getTime() - f.getTime());
     }
     static isLeapYear(year) {
@@ -139,7 +134,7 @@ export class DateTime {
         return (new Date(year, month + 1, 0)).getDate();
     }
     static from(yearOrDate, month = 0, day = 1) {
-        var year;
+        let year;
         if (typeof yearOrDate == "object") {
             day = yearOrDate.day;
             month = yearOrDate.month;
@@ -151,7 +146,7 @@ export class DateTime {
         return new DateTime(new Date(year, month, day));
     }
     static fromCalendarDate(yearOrDate, month = 1, day = 1) {
-        var year;
+        let year;
         if (typeof yearOrDate == "object") {
             day = yearOrDate.day;
             month = yearOrDate.month;

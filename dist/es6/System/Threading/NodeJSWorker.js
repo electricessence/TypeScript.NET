@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
- */
 import { ObservableBase } from "../Observable/ObservableBase";
 import __extendsImport from "../../extends";
 const __extends = __extendsImport;
@@ -10,7 +5,7 @@ const ps = require("child_process");
 export class NodeJSWorker extends ObservableBase {
     constructor(url) {
         super();
-        var process = this._process = ps.fork(url);
+        const process = this._process = ps.fork(url);
         process.on('message', (msg) => this._onNext(JSON.parse(msg)));
         process.on('error', (err) => this._onError(err));
     }

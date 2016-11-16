@@ -69,8 +69,8 @@ export class TypeValidator {
         Object.freeze(this);
     }
     isSubsetOf(o) {
-        var t = new TypeInfoHelper(o);
-        return t.contains(this._typeDescriptor);
+        return (new TypeInfoHelper(o))
+            .contains(this._typeDescriptor);
     }
 }
 export default TypeValidator;

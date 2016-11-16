@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import * as TextUtility from "../Text/Utility";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { ArgumentException } from "../Exceptions/ArgumentException";
@@ -27,8 +23,8 @@ export class LinkedNodeList {
         return this._last;
     }
     get count() {
-        var next = this._first;
-        var i = 0;
+        let next = this._first;
+        let i = 0;
         while (next) {
             i++;
             next = next.next;
@@ -37,9 +33,9 @@ export class LinkedNodeList {
     }
     forEach(action, ignoreVersioning) {
         const _ = this;
-        var current = null, next = _.first;
-        var version = _._version;
-        var index = 0;
+        let current = null, next = _.first;
+        const version = _._version;
+        let index = 0;
         do {
             if (!ignoreVersioning)
                 _.assertVersion(version);
@@ -52,7 +48,7 @@ export class LinkedNodeList {
     map(selector) {
         if (!selector)
             throw new ArgumentNullException('selector');
-        var result = [];
+        const result = [];
         this.forEach((node, i) => {
             result.push(selector(node, i));
         });
@@ -60,7 +56,7 @@ export class LinkedNodeList {
     }
     clear() {
         const _ = this;
-        var n, cF = 0, cL = 0;
+        let n, cF = 0, cL = 0;
         n = _._first;
         _._first = null;
         while (n) {
@@ -92,15 +88,15 @@ export class LinkedNodeList {
     getNodeAt(index) {
         if (index < 0)
             return null;
-        var next = this._first;
-        var i = 0;
+        let next = this._first;
+        let i = 0;
         while (next && i++ < index) {
             next = next.next || null;
         }
         return next;
     }
     find(condition) {
-        var node = null;
+        let node = null;
         this.forEach((n, i) => {
             if (condition(n, i)) {
                 node = n;
@@ -111,8 +107,8 @@ export class LinkedNodeList {
     }
     indexOf(node) {
         if (node && (node.previous || node.next)) {
-            var index = 0;
-            var c, n = this._first;
+            let index = 0;
+            let c, n = this._first;
             do {
                 c = n;
                 if (c === node)
@@ -132,8 +128,8 @@ export class LinkedNodeList {
         if (node == null)
             throw new ArgumentNullException('node');
         const _ = this;
-        var prev = node.previous || null, next = node.next || null;
-        var a = false, b = false;
+        const prev = node.previous || null, next = node.next || null;
+        let a = false, b = false;
         if (prev)
             prev.next = next;
         else if (_._first == node)
@@ -149,7 +145,7 @@ export class LinkedNodeList {
         if (a !== b) {
             throw new ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
         }
-        var removed = !a && !b;
+        const removed = !a && !b;
         if (removed) {
             _._version++;
             _.unsafeCount--;
@@ -227,7 +223,7 @@ export class LinkedNodeList {
     static valueEnumeratorFrom(list) {
         if (!list)
             throw new ArgumentNullException('list');
-        var current, next, version;
+        let current, next, version;
         return new EnumeratorBase(() => {
             current = null;
             next = list.first;

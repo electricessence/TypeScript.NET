@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], function (require, exports) {
     "use strict";
     var ArrayUtility = require("../Array/Utility");
     var StringKeyDictionary_1 = require("./StringKeyDictionary");
@@ -20,8 +16,9 @@
     var OrderedStringKeyDictionary = (function (_super) {
         __extends(OrderedStringKeyDictionary, _super);
         function OrderedStringKeyDictionary() {
-            _super.call(this);
-            this._order = [];
+            var _this = _super.call(this) || this;
+            _this._order = [];
+            return _this;
         }
         OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
             var o = this._order;

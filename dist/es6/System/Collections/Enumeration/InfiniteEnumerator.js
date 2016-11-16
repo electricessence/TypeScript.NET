@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
 import __extendsImport from "../../../extends";
 const __extends = __extendsImport;
@@ -15,7 +11,7 @@ export class InfiniteEnumerator extends SimpleEnumerableBase {
     }
     moveNext() {
         const _ = this;
-        var f = _._factory;
+        const f = _._factory;
         if (f) {
             _._current = f(_._current, _.incrementIndex());
             return true;

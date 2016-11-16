@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT
- */
 import { Promise } from "./Promise";
 import { defer } from "../Threading/defer";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
@@ -21,7 +17,7 @@ export class LazyPromise extends Promise {
         this._resolver = VOID0;
     }
     _onThen() {
-        var r = this._resolver;
+        const r = this._resolver;
         if (r) {
             this._resolver = VOID0;
             this._resolvedCalled = false;
@@ -40,9 +36,9 @@ export class LazyPromise extends Promise {
         this.throwIfDisposed();
         if (!this._resolver || this.isSettled)
             return super.delayFromNow(milliseconds);
-        var pass;
-        var timedOut = false;
-        var timeout = defer(() => {
+        let pass;
+        let timedOut = false;
+        let timeout = defer(() => {
             timedOut = true;
             if (pass)
                 pass();
@@ -62,9 +58,9 @@ export class LazyPromise extends Promise {
         this.throwIfDisposed();
         if (!this._resolver || this.isSettled)
             return super.delayAfterResolve(milliseconds);
-        var pass;
-        var timeout;
-        var finalize = () => {
+        let pass;
+        let timeout;
+        let finalize = () => {
             if (timeout) {
                 timeout.dispose();
                 timeout = VOID0;

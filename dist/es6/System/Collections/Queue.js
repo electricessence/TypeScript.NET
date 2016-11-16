@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual } from "../Compare";
 import * as AU from "./Array/Utility";
 import { Type } from "../Types";
@@ -19,7 +14,7 @@ const MINIMUM_GROW = 4;
 const SHRINK_THRESHOLD = 32;
 const GROW_FACTOR_HALF = 100;
 const DEFAULT_CAPACITY = MINIMUM_GROW;
-var emptyArray = [];
+const emptyArray = Object.freeze([]);
 export class Queue extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(VOID0, equalityComparer);
@@ -31,14 +26,14 @@ export class Queue extends CollectionBase {
             _._array = emptyArray;
         else {
             if (Type.isNumber(source)) {
-                var capacity = source;
+                const capacity = source;
                 assertIntegerZeroOrGreater(capacity, "capacity");
                 _._array = capacity
                     ? AU.initialize(capacity)
                     : emptyArray;
             }
             else {
-                var se = source;
+                const se = source;
                 _._array = AU.initialize(Type.isArrayLike(se)
                     ? se.length
                     : DEFAULT_CAPACITY);
@@ -52,15 +47,16 @@ export class Queue extends CollectionBase {
     }
     _addInternal(item) {
         const _ = this;
-        var size = _._size, len = _._capacity;
+        const size = _._size;
+        let len = _._capacity;
         if (size == len) {
-            var newCapacity = len * GROW_FACTOR_HALF;
+            let newCapacity = len * GROW_FACTOR_HALF;
             if (newCapacity < len + MINIMUM_GROW)
                 newCapacity = len + MINIMUM_GROW;
             _.setCapacity(newCapacity);
             len = _._capacity;
         }
-        var tail = _._tail;
+        const tail = _._tail;
         _._array[tail] = item;
         _._tail = (tail + 1) % len;
         _._size = size + 1;
@@ -72,7 +68,7 @@ export class Queue extends CollectionBase {
     }
     _clearInternal() {
         const _ = this;
-        var array = _._array, head = _._head, tail = _._tail, size = _._size;
+        const array = _._array, head = _._head, tail = _._tail, size = _._size;
         if (head < tail)
             AU.clear(array, head, tail);
         else {
@@ -95,7 +91,7 @@ export class Queue extends CollectionBase {
     }
     dump(max = Infinity) {
         const _ = this;
-        var result = [];
+        const result = [];
         if (isFinite(max)) {
             Integer.assertZeroOrGreater(max);
             if (max !== 0) {
@@ -119,18 +115,18 @@ export class Queue extends CollectionBase {
     setCapacity(capacity) {
         const _ = this;
         assertIntegerZeroOrGreater(capacity, "capacity");
-        var array = _._array, len = _._capacity;
+        const array = _._array, len = _._capacity;
         if (capacity > len)
             _.throwIfDisposed();
         if (capacity == len)
             return;
-        var head = _._head, tail = _._tail, size = _._size;
+        const head = _._head, tail = _._tail, size = _._size;
         if (array != emptyArray && capacity > len && head < tail) {
             array.length = _._capacity = capacity;
             _._version++;
             return;
         }
-        var newArray = AU.initialize(capacity);
+        const newArray = AU.initialize(capacity);
         if (size > 0) {
             if (head < tail) {
                 AU.copyTo(array, newArray, head, 0, size);
@@ -156,8 +152,8 @@ export class Queue extends CollectionBase {
                 throw new InvalidOperationException("Cannot dequeue an empty queue.");
             return VOID0;
         }
-        var array = _._array, head = _._head;
-        var removed = _._array[head];
+        const array = _._array, head = _._head;
+        const removed = _._array[head];
         array[head] = null;
         _._head = (head + 1) % _._capacity;
         _._size--;
@@ -167,8 +163,8 @@ export class Queue extends CollectionBase {
     dequeue(throwIfEmpty = false) {
         const _ = this;
         _.assertModifiable();
-        var modified = !!_._size;
-        var v = this._dequeueInternal(throwIfEmpty);
+        const modified = !!_._size;
+        const v = this._dequeueInternal(throwIfEmpty);
         if (modified && _._size < _._capacity / 2)
             _.trimExcess(SHRINK_THRESHOLD);
         _._signalModification();
@@ -177,7 +173,7 @@ export class Queue extends CollectionBase {
     tryDequeue(out) {
         if (!this._size)
             return false;
-        var d = this.dequeue();
+        const d = this.dequeue();
         if (out)
             out(d);
         return true;
@@ -194,14 +190,14 @@ export class Queue extends CollectionBase {
     }
     trimExcess(threshold) {
         const _ = this;
-        var size = _._size;
+        const size = _._size;
         if (size < Math.floor(_._capacity * 0.9) && (!threshold && threshold !== 0 || isNaN(threshold) || threshold < size))
             _.setCapacity(size);
     }
     getEnumerator() {
         const _ = this;
         _.throwIfDisposed();
-        var index, version, size;
+        let index, version, size;
         return new EnumeratorBase(() => {
             version = _._version;
             size = _._size;

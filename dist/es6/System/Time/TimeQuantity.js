@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual, compare } from "../Compare";
 import { TimeUnit } from "./TimeUnit";
 export class TimeQuantity {
@@ -21,9 +17,9 @@ export class TimeQuantity {
         return compare(this.getTotalMilliseconds(), other && other.total && other.total.milliseconds);
     }
     get total() {
-        var t = this._total;
+        let t = this._total;
         if (!t) {
-            var ms = this.getTotalMilliseconds();
+            const ms = this.getTotalMilliseconds();
             this._total = t = Object.freeze({
                 ticks: ms * 10000,
                 milliseconds: ms,

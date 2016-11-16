@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "gulp", "semver", "../_utility/file-promise", "../_utility/stream-to-promise"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "gulp", "semver", "../_utility/file-promise", "../_utility/stream-to-promise"], function (require, exports) {
     "use strict";
     var gulp = require("gulp");
     var semver = require("semver");

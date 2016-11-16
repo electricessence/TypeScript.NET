@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { using } from "../../Disposable/dispose";
 import { Type } from "../../Types";
 import { ArrayEnumerator } from "./ArrayEnumerator";
@@ -10,7 +6,6 @@ import { UnsupportedEnumerableException } from "./UnsupportedEnumerableException
 import { InfiniteEnumerator } from "./InfiniteEnumerator";
 import { EmptyEnumerator as Empty } from "./EmptyEnumerator";
 import { IteratorEnumerator } from "./IteratorEnumerator";
-const VOID0 = void 0;
 const STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
     'Would result in an infinite loop that could hang the current process.';
 export function throwIfEndless(isEndless) {
@@ -19,11 +14,11 @@ export function throwIfEndless(isEndless) {
 }
 function initArrayFrom(source, max = Infinity) {
     if (Array.isArray(source) || Type.isString(source)) {
-        var len = Math.min(source.length, max);
+        const len = Math.min(source.length, max);
         if (isFinite(len)) {
             if (len > 65535)
                 return new Array(len);
-            var result = [];
+            const result = [];
             result.length = len;
             return result;
         }
@@ -110,7 +105,7 @@ export function toArray(source, max = Infinity) {
         return [];
     if (!isFinite(max) && Array.isArray(source))
         return source.slice();
-    var result = initArrayFrom(source, max);
+    const result = initArrayFrom(source, max);
     if (-1 === forEach(source, (e, i) => { result[i] = e; }, max))
         throw new UnsupportedEnumerableException();
     return result;
@@ -120,7 +115,7 @@ export function map(source, selector, max = Infinity) {
         return [];
     if (!isFinite(max) && Array.isArray(source))
         return source.map(selector);
-    var result = initArrayFrom(source, max);
+    const result = initArrayFrom(source, max);
     if (-1 === forEach(source, (e, i) => { result[i] = selector(e, i); }, max))
         throw new UnsupportedEnumerableException();
     return result;

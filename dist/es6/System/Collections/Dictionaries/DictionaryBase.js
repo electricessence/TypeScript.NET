@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual } from "../../Compare";
 import { forEach } from "../Enumeration/Enumerator";
 import { CollectionBase } from "../CollectionBase";
@@ -26,7 +22,7 @@ export class DictionaryBase extends CollectionBase {
     }
     _clearInternal() {
         const _ = this;
-        var count = 0;
+        let count = 0;
         for (let key of _.keys) {
             if (_.removeByKey(key))
                 count++;
@@ -57,7 +53,7 @@ export class DictionaryBase extends CollectionBase {
             throw new InvalidOperationException("Cannot add 'undefined' as a value.");
         const _ = this;
         if (_.containsKey(key)) {
-            var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
+            const ex = new InvalidOperationException("Adding a key/value when the key already exists.");
             ex.data['key'] = key;
             ex.data['value'] = value;
             throw ex;
@@ -65,13 +61,13 @@ export class DictionaryBase extends CollectionBase {
         return _.setValue(key, value);
     }
     getAssuredValue(key) {
-        var value = this.getValue(key);
+        const value = this.getValue(key);
         if (value === VOID0)
             throw new KeyNotFoundException(`Key '${key}' not found.`);
         return value;
     }
     tryGetValue(key, out) {
-        var value = this.getValue(key);
+        const value = this.getValue(key);
         if (value !== VOID0) {
             out(value);
             return true;
@@ -81,7 +77,8 @@ export class DictionaryBase extends CollectionBase {
     setValue(key, value) {
         const _ = this;
         _.assertModifiable();
-        var changed = false, old = _.getValue(key);
+        let changed = false;
+        const old = _.getValue(key);
         if (!areEqual(value, old) && _._setValueInternal(key, value)) {
             changed = true;
             _._onValueModified(key, value, old);
@@ -93,7 +90,7 @@ export class DictionaryBase extends CollectionBase {
         return !!this._getEntry(key);
     }
     containsValue(value) {
-        var e = this.getEnumerator();
+        const e = this.getEnumerator();
         while (e.moveNext()) {
             if (areEqual(e.current, value, true)) {
                 e.dispose();
@@ -107,7 +104,7 @@ export class DictionaryBase extends CollectionBase {
     }
     removeByValue(value) {
         const _ = this;
-        var count = 0;
+        let count = 0;
         for (let key of _.getKeys()) {
             if (areEqual(_.getValue(key), value, true)) {
                 _.removeByKey(key);
@@ -133,7 +130,7 @@ export class DictionaryBase extends CollectionBase {
     getEnumerator() {
         const _ = this;
         _.throwIfDisposed();
-        var ver, keys, len, index = 0;
+        let ver, keys, len, index = 0;
         return new EnumeratorBase(() => {
             _.throwIfDisposed();
             ver = _._version;
@@ -143,7 +140,7 @@ export class DictionaryBase extends CollectionBase {
             _.throwIfDisposed();
             _.assertVersion(ver);
             while (index < len) {
-                var key = keys[index++], value = _.getValue(key);
+                const key = keys[index++], value = _.getValue(key);
                 if (value !== VOID0)
                     return yielder.yieldReturn({ key: key, value: value });
             }

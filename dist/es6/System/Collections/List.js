@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual } from "../Compare";
 import { remove, indexOf, contains, copyTo, removeIndex } from "./Array/Utility";
 import { forEach } from "./Enumeration/Enumerator";
@@ -37,17 +33,17 @@ export class List extends CollectionBase {
         return remove(this._source, entry, max, this._equalityComparer);
     }
     _clearInternal() {
-        var len = this._source.length;
+        const len = this._source.length;
         this._source.length = 0;
         return len;
     }
     _importEntries(entries) {
         if (Type.isArrayLike(entries)) {
-            var len = entries.length;
+            let len = entries.length;
             if (!len)
                 return 0;
-            var s = this._source;
-            var first = s.length;
+            const s = this._source;
+            const first = s.length;
             s.length += len;
             for (let i = 0; i < len; i++) {
                 s[i + first] = entries[i];
@@ -62,7 +58,7 @@ export class List extends CollectionBase {
         return this._source[index];
     }
     set(index, value) {
-        var s = this._source;
+        const s = this._source;
         if (index < s.length && areEqual(value, s[index]))
             return false;
         s[index] = value;
@@ -74,7 +70,7 @@ export class List extends CollectionBase {
     }
     insert(index, value) {
         const _ = this;
-        var s = _._source;
+        const s = _._source;
         if (index < s.length) {
             _._source.splice(index, 0, value);
         }
@@ -99,7 +95,7 @@ export class List extends CollectionBase {
     getEnumerator() {
         const _ = this;
         _.throwIfDisposed();
-        var source, index, version;
+        let source, index, version;
         return new EnumeratorBase(() => {
             source = _._source;
             version = _._version;
@@ -117,7 +113,7 @@ export class List extends CollectionBase {
         });
     }
     forEach(action, useCopy) {
-        var s = this._source;
+        const s = this._source;
         return forEach(useCopy ? s.slice() : this, action);
     }
 }

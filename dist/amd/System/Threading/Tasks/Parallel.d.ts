@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
- */
 import { Promise, PromiseBase, ArrayPromise, PromiseCollection } from "../../Promises/Promise";
 import { WorkerLike } from "../WorkerType";
 export interface ParallelOptions {

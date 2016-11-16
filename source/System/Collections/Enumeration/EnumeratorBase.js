@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult", "../../../extends"], function (require, exports) {
     "use strict";
     var Types_1 = require("../../Types");
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
@@ -64,17 +60,18 @@
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
         function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
-            _super.call(this);
-            this._initializer = _initializer;
-            this._tryGetNext = _tryGetNext;
-            this._disposableObjectName = NAME;
-            this.reset();
+            var _this = _super.call(this) || this;
+            _this._initializer = _initializer;
+            _this._tryGetNext = _tryGetNext;
+            _this._disposableObjectName = NAME;
+            _this.reset();
             if (Types_1.Type.isBoolean(isEndless))
-                this._isEndless = isEndless;
+                _this._isEndless = isEndless;
             else if (Types_1.Type.isBoolean(disposer))
-                this._isEndless = disposer;
+                _this._isEndless = disposer;
             if (Types_1.Type.isFunction(disposer))
-                this._disposer = disposer;
+                _this._disposer = disposer;
+            return _this;
         }
         Object.defineProperty(EnumeratorBase.prototype, "current", {
             get: function () {

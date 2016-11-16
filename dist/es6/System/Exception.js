@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
- */
 const NAME = 'Exception';
 export class Exception {
     constructor(message, innerException, beforeSealing) {
@@ -15,7 +10,7 @@ export class Exception {
         if (beforeSealing)
             beforeSealing(_);
         try {
-            var stack = eval("new Error()").stack;
+            let stack = eval("new Error()").stack;
             stack = stack
                 && stack
                     .replace(/^Error\n/, '')
@@ -32,11 +27,11 @@ export class Exception {
     }
     toStringWithoutBrackets() {
         const _ = this;
-        var m = _.message;
+        const m = _.message;
         return _.name + (m ? (': ' + m) : '');
     }
     dispose() {
-        var data = this.data;
+        const data = this.data;
         for (let k in data) {
             if (data.hasOwnProperty(k))
                 delete data[k];

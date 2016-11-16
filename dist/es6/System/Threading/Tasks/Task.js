@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { TaskHandlerBase } from "./TaskHandlerBase";
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { Lazy } from "../../Lazy";
@@ -21,7 +17,7 @@ export class Task extends TaskHandlerBase {
         return this._result.value;
     }
     getState() {
-        var r = this._result;
+        const r = this._result;
         return r && {
             status: this.getStatus(),
             result: r.isValueCreated ? r.value : void 0,
@@ -52,7 +48,7 @@ export class Task extends TaskHandlerBase {
     }
     _onDispose() {
         super._onDispose();
-        var r = this._result;
+        const r = this._result;
         if (r) {
             this._result = null;
             r.dispose();

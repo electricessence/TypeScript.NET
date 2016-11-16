@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { SelectorWithIndex, ActionWithIndex, PredicateWithIndex } from "../../FunctionTypes";
 import { IEnumerator } from "./IEnumerator";
 import { IEnumerable } from "./IEnumerable";

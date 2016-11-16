@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -55,7 +50,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
             SHRINK_THRESHOLD = 32;
             GROW_FACTOR_HALF = 100;
             DEFAULT_CAPACITY = MINIMUM_GROW;
-            emptyArray = [];
+            emptyArray = Object.freeze([]);
             Queue = (function (_super) {
                 __extends(Queue, _super);
                 function Queue(source, equalityComparer) {
@@ -90,7 +85,8 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 };
                 Queue.prototype._addInternal = function (item) {
                     var _ = this;
-                    var size = _._size, len = _._capacity;
+                    var size = _._size;
+                    var len = _._capacity;
                     if (size == len) {
                         var newCapacity = len * GROW_FACTOR_HALF;
                         if (newCapacity < len + MINIMUM_GROW)

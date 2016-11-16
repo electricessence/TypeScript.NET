@@ -2,14 +2,14 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../../extends"], function (require, exports) {
     "use strict";
     var TaskHandlerBase_1 = require("./TaskHandlerBase");
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
@@ -18,10 +18,11 @@
     var TaskHandler = (function (_super) {
         __extends(TaskHandler, _super);
         function TaskHandler(_action) {
-            _super.call(this);
-            this._action = _action;
+            var _this = _super.call(this) || this;
+            _this._action = _action;
             if (!_action)
                 throw new ArgumentNullException_1.ArgumentNullException('action');
+            return _this;
         }
         TaskHandler.prototype._onExecute = function () {
             this._action();

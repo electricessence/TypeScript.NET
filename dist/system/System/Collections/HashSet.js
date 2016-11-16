@@ -1,12 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1, SetBase_1, ArgumentNullException_1, extends_1;
-    var __extends, OTHER, VOID0, HashSet;
+    var __extends, VOID0, HashSet;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
         if (map && depth) {
@@ -34,7 +30,6 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
             }],
         execute: function() {
             __extends = extends_1.default;
-            OTHER = 'other';
             VOID0 = void 0;
             HashSet = (function (_super) {
                 __extends(HashSet, _super);

@@ -3,14 +3,14 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
  */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Exception", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Exception", "../../extends"], function (require, exports) {
     "use strict";
     var Exception_1 = require("../Exception");
     var extends_1 = require("../../extends");
@@ -19,7 +19,7 @@
     var SystemException = (function (_super) {
         __extends(SystemException, _super);
         function SystemException() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         SystemException.prototype.getName = function () {
             return NAME;

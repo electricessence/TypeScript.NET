@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../../Disposable/DisposableBase", "../../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../../Disposable/DisposableBase", "../../../extends"], function (require, exports) {
     "use strict";
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var extends_1 = require("../../../extends");
@@ -18,10 +14,11 @@
     var TaskHandlerBase = (function (_super) {
         __extends(TaskHandlerBase, _super);
         function TaskHandlerBase() {
-            _super.call(this);
-            this._disposableObjectName = NAME;
-            this._timeoutId = null;
-            this._status = 0;
+            var _this = _super.call(this) || this;
+            _this._disposableObjectName = NAME;
+            _this._timeoutId = null;
+            _this._status = 0;
+            return _this;
         }
         Object.defineProperty(TaskHandlerBase.prototype, "isScheduled", {
             get: function () {

@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { ILinkedNode, ILinkedNodeWithValue } from "./ILinkedListNode";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { IDisposable } from "../Disposable/IDisposable";

@@ -5,7 +5,7 @@
 export function sum(source, ignoreNaN = false) {
     if (!source || !source.length)
         return 0;
-    var result = 0;
+    let result = 0;
     if (ignoreNaN)
         source.forEach(n => {
             if (!isNaN(n))
@@ -21,7 +21,7 @@ export function sum(source, ignoreNaN = false) {
 export function average(source, ignoreNaN = false) {
     if (!source || !source.length)
         return NaN;
-    var result = 0, count;
+    let result = 0, count;
     if (ignoreNaN) {
         count = 0;
         source.forEach(n => {
@@ -43,9 +43,9 @@ export function average(source, ignoreNaN = false) {
 export function product(source, ignoreNaN = false) {
     if (!source || !source.length)
         return NaN;
-    var result = 1;
+    let result = 1;
     if (ignoreNaN) {
-        var found = false;
+        let found = false;
         source.forEach(n => {
             if (!isNaN(n)) {
                 result *= n;
@@ -71,8 +71,8 @@ export function product(source, ignoreNaN = false) {
 export function quotient(source, ignoreNaN = false) {
     if (!source || source.length < 2)
         return NaN;
-    var result = source[0];
-    var found = false;
+    let result = source[0];
+    let found = false;
     source.every((n, i) => {
         if (i) {
             if (n === 0) {
@@ -100,9 +100,9 @@ export function quotient(source, ignoreNaN = false) {
 function ifSet(source, start, ignoreNaN, predicate) {
     if (!source || !source.length)
         return NaN;
-    var result = start;
+    let result = start;
     if (ignoreNaN) {
-        var found = false;
+        let found = false;
         source.forEach(n => {
             if (!isNaN(n)) {
                 if (predicate(n, result))

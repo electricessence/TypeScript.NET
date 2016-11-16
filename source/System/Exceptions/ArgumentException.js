@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./SystemException", "../Text/Utility", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./SystemException", "../Text/Utility", "../../extends"], function (require, exports) {
     "use strict";
     var SystemException_1 = require("./SystemException");
     var Utility_1 = require("../Text/Utility");
@@ -20,12 +15,14 @@
     var ArgumentException = (function (_super) {
         __extends(ArgumentException, _super);
         function ArgumentException(paramName, message, innerException, beforeSealing) {
+            var _this;
             var pn = paramName ? ('{' + paramName + '} ') : '';
-            _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
+            _this = _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
                 _.paramName = paramName;
                 if (beforeSealing)
                     beforeSealing(_);
-            });
+            }) || this;
+            return _this;
         }
         ArgumentException.prototype.getName = function () {
             return NAME;

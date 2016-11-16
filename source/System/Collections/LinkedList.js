@@ -1,16 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../Compare");
     var LinkedNodeList_1 = require("./LinkedNodeList");
@@ -68,9 +63,10 @@
         __extends(LinkedList, _super);
         function LinkedList(source, equalityComparer) {
             if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-            _super.call(this, VOID0, equalityComparer);
-            this._listInternal = new LinkedNodeList_1.LinkedNodeList();
-            this._importEntries(source);
+            var _this = _super.call(this, VOID0, equalityComparer) || this;
+            _this._listInternal = new LinkedNodeList_1.LinkedNodeList();
+            _this._importEntries(source);
+            return _this;
         }
         LinkedList.prototype.assertVersion = function (version) {
             if (this._listInternal)

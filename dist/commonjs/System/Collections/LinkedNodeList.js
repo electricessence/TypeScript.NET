@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 "use strict";
 var TextUtility = require("../Text/Utility");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");

@@ -1,8 +1,3 @@
-/*!
- * @author Sebastian Belmar / https://github.com/sebabelmar/
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../../../Exceptions/ArgumentNullException"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -16,7 +11,8 @@ System.register(["../../../Exceptions/ArgumentNullException"], function(exports_
     exports_1("quickSort", quickSort);
     function sort(target, low, high) {
         if (low < high) {
-            var swap, pivotIndex = Math.floor((low + high) / 2);
+            var swap = void 0;
+            var pivotIndex = Math.floor((low + high) / 2);
             swap = target[pivotIndex];
             target[pivotIndex] = target[high];
             target[high] = swap;

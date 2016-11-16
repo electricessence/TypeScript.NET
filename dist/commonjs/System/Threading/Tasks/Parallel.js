@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
- */
 "use strict";
 var Promise_1 = require("../../Promises/Promise");
 var Types_1 = require("../../Types");

@@ -1,15 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../Types", "./SetBase", "../Exceptions/ArgumentNullException", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "../Types", "./SetBase", "../Exceptions/ArgumentNullException", "../../extends"], function (require, exports) {
     "use strict";
     var Types_1 = require("../Types");
     var SetBase_1 = require("./SetBase");
@@ -20,16 +16,17 @@
     var HashSet = (function (_super) {
         __extends(HashSet, _super);
         function HashSet(source, keyGenerator) {
-            _super.call(this);
+            var _this = _super.call(this) || this;
             if (Types_1.Type.isFunction(source)) {
-                this._keyGenerator = source;
+                _this._keyGenerator = source;
             }
             else {
                 if (!keyGenerator)
                     throw new ArgumentNullException_1.ArgumentNullException("keyGenerator");
-                this._keyGenerator = keyGenerator;
-                this._importEntries(source);
+                _this._keyGenerator = keyGenerator;
+                _this._importEntries(source);
             }
+            return _this;
         }
         HashSet.prototype.newUsing = function (source) {
             return new HashSet(source, this._keyGenerator);

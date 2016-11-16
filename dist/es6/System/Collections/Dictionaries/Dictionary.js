@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Original: http://linqjs.codeplex.com/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { areEqual } from "../../Compare";
 import { Type } from "../../Types";
 import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
@@ -21,7 +16,7 @@ class HashEntry {
         this.next = next;
     }
 }
-var linkedListPool;
+let linkedListPool;
 function linkedNodeList(recycle) {
     if (!linkedListPool)
         linkedListPool
@@ -52,8 +47,8 @@ export class Dictionary extends DictionaryBase {
             return null;
         if (!Type.isPrimitiveOrSymbol(hash))
             console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
-        var buckets = this._buckets;
-        var bucket = buckets[hash];
+        const buckets = this._buckets;
+        let bucket = buckets[hash];
         if (createIfMissing && !bucket)
             buckets[hash]
                 = bucket
@@ -63,7 +58,7 @@ export class Dictionary extends DictionaryBase {
     _getBucketEntry(key, hash, bucket) {
         if (key === null || key === VOID0 || !this.getCount())
             return null;
-        var _ = this, comparer = _._keyGenerator, compareKey = comparer ? comparer(key) : key;
+        const _ = this, comparer = _._keyGenerator, compareKey = comparer ? comparer(key) : key;
         if (!bucket)
             bucket = _._getBucket(hash || getIdentifier(compareKey));
         return bucket
@@ -72,18 +67,20 @@ export class Dictionary extends DictionaryBase {
                 : bucket.find(e => e.key === compareKey));
     }
     _getEntry(key) {
-        var e = this._getBucketEntry(key);
+        const e = this._getBucketEntry(key);
         return e && e.value;
     }
     getValue(key) {
-        var e = this._getEntry(key);
+        const e = this._getEntry(key);
         return e ? e.value : VOID0;
     }
     _setValueInternal(key, value) {
         const _ = this;
-        var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier(compareKey), bucket = _._getBucket(hash), bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+        const buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier(compareKey);
+        let bucket = _._getBucket(hash);
+        const bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
         if (bucketEntry) {
-            var b = bucket;
+            const b = bucket;
             if (value === VOID0) {
                 let x = b.removeNode(bucketEntry), y = entries.removeNode(bucketEntry.value);
                 if (x && !b.count) {
@@ -97,7 +94,7 @@ export class Dictionary extends DictionaryBase {
                     return true;
             }
             else {
-                var old = bucketEntry.value.value;
+                const old = bucketEntry.value.value;
                 bucketEntry.value.value = value;
                 return !areEqual(value, old);
             }
@@ -116,7 +113,7 @@ export class Dictionary extends DictionaryBase {
     }
     _clearInternal() {
         const _ = this;
-        var buckets = _._buckets;
+        const buckets = _._buckets;
         for (let key in buckets) {
             if (buckets.hasOwnProperty(key)) {
                 let bucket = buckets[key];
@@ -129,7 +126,7 @@ export class Dictionary extends DictionaryBase {
     getEnumerator() {
         const _ = this;
         _.throwIfDisposed();
-        var ver, currentEntry;
+        let ver, currentEntry;
         return new EnumeratorBase(() => {
             _.throwIfDisposed();
             ver = _._version;
@@ -138,7 +135,7 @@ export class Dictionary extends DictionaryBase {
             if (currentEntry) {
                 _.throwIfDisposed();
                 _.assertVersion(ver);
-                var result = { key: currentEntry.key, value: currentEntry.value };
+                const result = { key: currentEntry.key, value: currentEntry.value };
                 currentEntry = currentEntry.next || null;
                 return yielder.yieldReturn(result);
             }
@@ -147,8 +144,8 @@ export class Dictionary extends DictionaryBase {
     }
     getKeys() {
         const _ = this;
-        var result = [];
-        var e = _._entries && _._entries.first;
+        const result = [];
+        let e = _._entries && _._entries.first;
         while (e) {
             result.push(e.key);
             e = e.next;
@@ -157,8 +154,8 @@ export class Dictionary extends DictionaryBase {
     }
     getValues() {
         const _ = this;
-        var result = [];
-        var e = _._entries && _._entries.first;
+        const result = [];
+        let e = _._entries && _._entries.first;
         while (e) {
             result.push(e.value);
             e = e.next;

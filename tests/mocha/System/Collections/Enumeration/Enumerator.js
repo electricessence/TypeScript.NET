@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "assert", "mocha", "../../../../../dist/commonjs/System/Types", "../../../../../dist/commonjs/System/Collections/Queue", "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "assert", "mocha", "../../../../../dist/commonjs/System/Types", "../../../../../dist/commonjs/System/Collections/Queue", "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator"], function (require, exports) {
     "use strict";
     var assert = require("assert");
     require("mocha");

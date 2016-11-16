@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { IArray } from "./Collections/Array/IArray";
 export declare function Integer(n: number): number;
 export declare module Integer {

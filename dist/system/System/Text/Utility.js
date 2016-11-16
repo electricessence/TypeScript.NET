@@ -1,12 +1,8 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../Types"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Types_1;
-    var EMPTY, SPACE, ZERO;
+    var EMPTY;
     function getHashCode(source) {
         var hash = 0 | 0;
         if (source.length == 0)
@@ -45,7 +41,7 @@ System.register(["../Types"], function(exports_1, context_1) {
     }
     exports_1("fromChars", fromChars);
     function escapeRegExp(source) {
-        return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        return source.replace(/[-[\]\/{}()*+?.\\^$|]/g, "\\$&");
     }
     exports_1("escapeRegExp", escapeRegExp);
     function trim(source, chars, ignoreCase) {
@@ -70,7 +66,7 @@ System.register(["../Types"], function(exports_1, context_1) {
     exports_1("format", format);
     function supplant(source, params) {
         var oIsArray = Array.isArray(params);
-        return source.replace(/\{([^{}]*)\}/g, function (a, b) {
+        return source.replace(/\{([^{}]*)}/g, function (a, b) {
             var n = b;
             if (oIsArray) {
                 var i = parseInt(b);
@@ -116,8 +112,6 @@ System.register(["../Types"], function(exports_1, context_1) {
             }],
         execute: function() {
             exports_1("EMPTY", EMPTY = '');
-            SPACE = ' ';
-            ZERO = '0';
         }
     }
 });

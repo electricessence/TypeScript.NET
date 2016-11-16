@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../Types";
 const VOID0 = void 0;
 export class StringBuilder {
@@ -52,7 +47,7 @@ export class StringBuilder {
         return this._partArray.length === 0;
     }
     toString() {
-        var latest = this._latest;
+        let latest = this._latest;
         if (!latest === null)
             this._latest = latest = this._partArray.join();
         return latest;

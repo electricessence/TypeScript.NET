@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], function(exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -151,7 +147,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                 LinkedNodeList.prototype.indexOf = function (node) {
                     if (node && (node.previous || node.next)) {
                         var index = 0;
-                        var c, n = this._first;
+                        var c = void 0, n = this._first;
                         do {
                             c = n;
                             if (c === node)

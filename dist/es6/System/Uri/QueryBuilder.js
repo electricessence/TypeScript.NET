@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../Types";
 import { OrderedStringKeyDictionary } from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import { isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
@@ -32,7 +28,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary {
         const _ = this;
         QueryParams.parse(values, (key, value) => {
             if (_.containsKey(key)) {
-                var prev = _.getValue(key);
+                const prev = _.getValue(key);
                 if (Array.isArray(prev))
                     prev.push(value);
                 else

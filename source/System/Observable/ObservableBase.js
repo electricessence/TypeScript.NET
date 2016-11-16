@@ -1,17 +1,11 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Based upon .NET source.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
- */
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./SubscribableBase", "../../extends"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./SubscribableBase", "../../extends"], function (require, exports) {
     "use strict";
     var SubscribableBase_1 = require("./SubscribableBase");
     var extends_1 = require("../../extends");
@@ -19,7 +13,7 @@
     var ObservableBase = (function (_super) {
         __extends(ObservableBase, _super);
         function ObservableBase() {
-            _super.apply(this, arguments);
+            return _super.apply(this, arguments) || this;
         }
         ObservableBase.prototype._onNext = function (value) {
             processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });

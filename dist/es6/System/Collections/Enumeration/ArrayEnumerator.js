@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { IndexEnumerator } from "./IndexEnumerator";
 import { Type } from "../../Types";
 import __extendsImport from "../../../extends";
@@ -9,7 +5,7 @@ const __extends = __extendsImport;
 export class ArrayEnumerator extends IndexEnumerator {
     constructor(arrayOrFactory, start = 0, step = 1) {
         super(() => {
-            var array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+            const array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
             return {
                 source: array,
                 pointer: start,
