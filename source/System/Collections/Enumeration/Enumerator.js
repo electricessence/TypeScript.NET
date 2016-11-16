@@ -19,7 +19,6 @@
     var InfiniteEnumerator_1 = require("./InfiniteEnumerator");
     var EmptyEnumerator_1 = require("./EmptyEnumerator");
     var IteratorEnumerator_1 = require("./IteratorEnumerator");
-    var VOID0 = void 0;
     var STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
         'Would result in an infinite loop that could hang the current process.';
     function throwIfEndless(isEndless) {

@@ -3,7 +3,6 @@
  * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../Types";
 import {IDisposable} from "../Disposable/IDisposable";
 
@@ -108,7 +107,7 @@ export class StringBuilder implements IDisposable
 
 	toString()
 	{
-		var latest = this._latest;
+		let latest = this._latest;
 		if(!latest===null)
 			this._latest = latest = this._partArray.join();
 

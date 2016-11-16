@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {areEqual} from "../../Compare";
 import {IStringKeyDictionary, IMap} from "./IDictionary";
 import {IKeyValuePair} from "../../KeyValuePair";
@@ -45,7 +44,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	containsValue(value:TValue):boolean
 	{
 		if(!this._count) return false;
-		var map = this._map;
+		const map = this._map;
 		for(let key in map)
 		{
 			if(map.hasOwnProperty(key) && areEqual(map[key], value))
@@ -66,7 +65,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	protected _setValueInternal(key:string, value:TValue|undefined):boolean
 	{
 		const _ = this;
-		var map = _._map, old = map[key];
+		const map = _._map, old = map[key];
 		if(old!==value)
 		{
 
@@ -97,7 +96,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 		return _.handleUpdate(
 			() =>
 			{
-				var changed:boolean = false;
+				let changed:boolean = false;
 				for(let key in values)
 				{
 					if(values.hasOwnProperty(key) && _.setValue(key, values[key]))
@@ -111,12 +110,12 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	toMap(selector?:(key:string, value:TValue) => TValue):IMap<TValue>
 	{
 		const _ = this;
-		var result:IMap<TValue> = {};
+		const result:IMap<TValue> = {};
 		if(_._count) for(let key in _._map)
 		{
 			if(_._map.hasOwnProperty(key)) // This simply satisfies inspection.
 			{
-				var value = _._map[key];
+				let value = _._map[key];
 				if(selector)
 					value = selector(key, value);
 				if(value!==VOID0)
@@ -134,7 +133,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 	protected getValues():TValue[]
 	{
 		if(!this._count) return [];
-		var result:any[] = Object.keys(this._map);
+		const result:any[] = Object.keys(this._map);
 		for(let i = 0, len = result.length; i<len; i++)
 		{
 			result[i] = this._map[result[i]];

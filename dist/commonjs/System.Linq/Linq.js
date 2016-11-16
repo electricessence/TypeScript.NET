@@ -31,10 +31,10 @@ var __extends = extends_1.default;
 var INVALID_DEFAULT = {};
 var VOID0 = void 0;
 var NULL = null;
-function BREAK(e) {
+function BREAK() {
     return 0;
 }
-function RETURN(e) {
+function RETURN() {
     return 1;
 }
 function isNotNullOrUndefined(e) {
@@ -254,7 +254,7 @@ var InfiniteEnumerable = (function (_super) {
         }, isEndless);
     };
     InfiniteEnumerable.prototype.flatten = function () {
-        return this.selectMany(function (entry, i) {
+        return this.selectMany(function (entry) {
             var e = !Types_1.Type.isString(entry) && Enumerable.fromAny(entry);
             return e ? e.flatten() : [entry];
         });
@@ -946,9 +946,8 @@ var Enumerable = (function (_super) {
         if (!action)
             throw new ArgumentNullException_1.ArgumentNullException("action");
         Enumerator_1.throwIfEndless(_.isEndless);
-        var index = 0;
         return max > 0 ? dispose_1.using(_.getEnumerator(), function (e) {
-            Enumerator_1.throwIfEndless(!isFinite(max) && !!e.isEndless);
+            Enumerator_1.throwIfEndless(!isFinite(max) && e.isEndless);
             var i = 0;
             while (max > i && _.throwIfDisposed() && e.moveNext()) {
                 if (action(e.current, i++) === false)
@@ -1150,8 +1149,8 @@ var Enumerable = (function (_super) {
     };
     Enumerable.prototype.contains = function (value, compareSelector) {
         if (compareSelector) {
-            var s = compareSelector(value);
-            return this.any(function (v) { return Compare_1.areEqual(compareSelector(v), s); });
+            var s_1 = compareSelector(value);
+            return this.any(function (v) { return Compare_1.areEqual(compareSelector(v), s_1); });
         }
         return this.any(function (v) { return Compare_1.areEqual(v, value); });
     };
@@ -1541,7 +1540,8 @@ var ArrayEnumerable = (function (_super) {
     ArrayEnumerable.prototype.any = function (predicate) {
         var _ = this;
         _.throwIfDisposed();
-        var source = _._source, len = source.length;
+        var source = _._source;
+        var len = source.length;
         return !!len && (!predicate || _super.prototype.any.call(this, predicate));
     };
     ArrayEnumerable.prototype.count = function (predicate) {
@@ -1700,7 +1700,7 @@ var OrderedEnumerable = (function (_super) {
         this.order = order;
         this.parent = parent;
         this.comparer = comparer;
-        Enumerator_1.throwIfEndless(!!source && !!source.isEndless);
+        Enumerator_1.throwIfEndless(source && source.isEndless);
         this._disposableObjectName = "OrderedEnumerable";
     }
     OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {

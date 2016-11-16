@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {TaskHandlerBase} from "./TaskHandlerBase";
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {Func} from "../../FunctionTypes";
@@ -40,7 +39,7 @@ export class Task<T> extends TaskHandlerBase
 
 	protected getState():ITaskState<T>
 	{
-		var r = this._result;
+		const r = this._result;
 		return r && {
 				status: this.getStatus(),
 				result: r.isValueCreated ? r.value : void 0,
@@ -86,7 +85,7 @@ export class Task<T> extends TaskHandlerBase
 	protected _onDispose():void
 	{
 		super._onDispose();
-		var r = this._result;
+		const r = this._result;
 
 		if(r)
 		{

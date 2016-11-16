@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {areEqual} from "../../Compare";
 import {forEach} from "../Enumeration/Enumerator";
 import {CollectionBase} from "../CollectionBase";
@@ -33,6 +31,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	}
 
 
+	//noinspection JSUnusedLocalSymbols
 	protected _onValueModified(key:TKey, value:TValue|undefined, old:TValue|undefined):void
 	{
 	}
@@ -51,7 +50,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	protected _clearInternal():number
 	{
 		const _ = this;
-		var count = 0;
+		let count = 0;
 
 		for(let key of _.keys)
 		{
@@ -111,7 +110,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		const _ = this;
 		if(_.containsKey(key))
 		{
-			var ex = new InvalidOperationException("Adding a key/value when the key already exists.");
+			const ex = new InvalidOperationException("Adding a key/value when the key already exists.");
 			ex.data['key'] = key;
 			ex.data['value'] = value;
 			throw ex;
@@ -126,14 +125,14 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	getAssuredValue(key:TKey):TValue
 	{
-		var value = this.getValue(key);
+		const value = this.getValue(key);
 		if(value===VOID0)
 			throw new KeyNotFoundException(`Key '${key}' not found.`);
 		return value;
 	}
 
 	tryGetValue(key:TKey,out:Action<TValue>):boolean {
-		var value = this.getValue(key);
+		const value = this.getValue(key);
 		if(value!==VOID0) {
 			out(value);
 			return true;
@@ -156,7 +155,8 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		const _ = this;
 		_.assertModifiable();
 
-		var changed = false, old = _.getValue(key); // get the old value here and pass to internal.
+		let changed = false;
+		const old = _.getValue(key); // get the old value here and pass to internal.
 		if(!areEqual(value, old) && _._setValueInternal(key, value))
 		{
 			changed = true;
@@ -174,7 +174,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 	containsValue(value:TValue):boolean
 	{
-		var e = this.getEnumerator();
+		const e = this.getEnumerator();
 		while(e.moveNext())
 		{
 			if(areEqual(e.current, value, true))
@@ -194,7 +194,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 	removeByValue(value:TValue):number
 	{
 		const _ = this;
-		var count = 0;
+		let count = 0;
 		for(let key of _.getKeys())
 		{
 			if(areEqual(_.getValue(key), value, true))
@@ -232,7 +232,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		const _ = this;
 		_.throwIfDisposed();
 
-		var ver:number, keys:TKey[], len:number, index = 0;
+		let ver:number, keys:TKey[], len:number, index = 0;
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>
 			{
@@ -249,7 +249,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 
 				while(index<len)
 				{
-					var key = keys[index++], value = _.getValue(key);
+					const key = keys[index++], value = _.getValue(key);
 					if(value!==VOID0) // Still valid?
 						return yielder.yieldReturn({key: key, value: value});
 				}

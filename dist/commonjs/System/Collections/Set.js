@@ -8,8 +8,6 @@ var getIdentifier_1 = require("./Dictionaries/getIdentifier");
 var HashSet_1 = require("./HashSet");
 var extends_1 = require("../../extends");
 var __extends = extends_1.default;
-var OTHER = 'other';
-var VOID0 = void 0;
 function getId(obj) {
     return getIdentifier_1.getIdentifier(obj, typeof obj != Types_1.Type.BOOLEAN);
 }

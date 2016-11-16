@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {areEqual, compare} from "../Compare";
 import {TimeUnit} from "./TimeUnit";
 import {Milliseconds, Ticks} from "./HowMany";
@@ -67,10 +65,10 @@ export class TimeQuantity implements IEquatable<ITimeQuantity>, IComparable<ITim
 	 */
 	get total():ITimeMeasurement
 	{
-		var t = this._total;
+		let t = this._total;
 		if(!t)
 		{
-			var ms = this.getTotalMilliseconds();
+			const ms = this.getTotalMilliseconds();
 
 			this._total = t = <ITimeMeasurement>Object.freeze({
 				ticks: ms*Ticks.Per.Millisecond,

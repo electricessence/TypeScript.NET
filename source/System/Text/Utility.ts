@@ -2,12 +2,11 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../Types";
 
 export const EMPTY:string = '';
-const SPACE = ' ';
-const ZERO = '0';
+
+
 
 /**
  * Returns a numerical (integer) hash code of the string.  Can be used for identifying inequality of contents, but two different strings in rare cases will have the same hash code.
@@ -16,7 +15,7 @@ const ZERO = '0';
  */
 export function getHashCode(source:string):number
 {
-	var hash = 0 | 0;
+	let hash = 0 | 0;
 	if(source.length==0) return hash;
 	for(let i = 0, l = source.length; i<l; i++)
 	{
@@ -29,7 +28,7 @@ export function getHashCode(source:string):number
 
 export function repeat(source:string, count:number):string
 {
-	var result = EMPTY;
+	let result = EMPTY;
 	if(!isNaN(count))
 	{
 		for(let i = 0; i<count; i++)
@@ -66,7 +65,7 @@ export function fromChars(chOrChars:any, count:number = 1):string
  */
 export function escapeRegExp(source:string):string
 {
-	return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	return source.replace(/[-[\]\/{}()*+?.\\^$|]/g, "\\$&");
 }
 
 /**
@@ -82,7 +81,7 @@ export function trim(source:string, chars?:string|string[], ignoreCase?:boolean)
 	if(chars===EMPTY) return source;
 	if(chars)
 	{
-		var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : <string>chars);
+		const escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : <string>chars);
 		return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase
 				? 'i'
 				: '')), EMPTY);
@@ -115,18 +114,18 @@ export function format(source:string, ...args:any[])
  */
 export function supplant(source:string, params:{[key:string]:any}|any[]):string
 {
-	var oIsArray = Array.isArray(params);
-	return source.replace(/\{([^{}]*)\}/g,
+	const oIsArray = Array.isArray(params);
+	return source.replace(/\{([^{}]*)}/g,
 		(a:string, b:string):any=>
 		{
-			var n:any = b;
+			let n:any = b;
 			if(oIsArray)
 			{
 				let i = parseInt(b);
 				if(!isNaN(i)) n = i;
 			}
 
-			var r = (<any>params)[n];
+			let r = (<any>params)[n];
 			switch(typeof r)
 			{
 				case Type.STRING:
@@ -158,7 +157,7 @@ function canMatch(source:string, match:string):boolean|null|void
  */
 export function startsWith(source:string, pattern:string):boolean
 {
-	var m = canMatch(source, pattern);
+	const m = canMatch(source, pattern);
 	return Type.isBoolean(m) ? m : source.indexOf(pattern)==0;
 }
 
@@ -170,7 +169,7 @@ export function startsWith(source:string, pattern:string):boolean
  */
 export function endsWith(source:string, pattern:string):boolean
 {
-	var m = canMatch(source, pattern);
+	const m = canMatch(source, pattern);
 	return Type.isBoolean(m) ? m : source.lastIndexOf(pattern)==(source.length - pattern.length);
 }
 

@@ -4,8 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-
-
 import {LinkedNodeList} from "../Collections/LinkedNodeList";
 import {dispose} from "../Disposable/dispose";
 import {Subscription} from "./Subscription";
@@ -27,7 +25,7 @@ extends DisposableBase
 
 	protected _getSubscribers():TSubscriber[]|null
 	{
-		var s = this.__subscriptions;
+		const s = this.__subscriptions;
 		return s
 			? s.map(node=><TSubscriber>(node && node.value && node.value.subscriber))
 			: null;
@@ -42,7 +40,7 @@ extends DisposableBase
 	private _findEntryNode(
 		subscriber:TSubscriber):ILinkedNodeWithValue<Subscription<TSubscriber>>|null
 	{
-		var s = this.__subscriptions;
+		const s = this.__subscriptions;
 		return s && s.find(n=>!!n.value && n.value.subscriber===subscriber);
 	}
 
@@ -52,15 +50,15 @@ extends DisposableBase
 		const _ = this;
 		_.throwIfDisposed();
 
-		var n = _._findEntryNode(subscriber);
+		const n = _._findEntryNode(subscriber);
 		if(n) // Ensure only one instance of the existing subscription exists.
 			return <IDisposable>n.value;
 
-		var _s = _.__subscriptions;
+		let _s = _.__subscriptions;
 		if(!_s) _.__subscriptions = _s
 			= new LinkedNodeList<ILinkedNodeWithValue<Subscription<TSubscriber>>>();
 
-		var s = new Subscription(_, subscriber);
+		const s = new Subscription(_, subscriber);
 		_s.addNode({value: s});
 
 		return s;
@@ -70,10 +68,10 @@ extends DisposableBase
 	{
 		const _ = this;
 		// _.throwIfDisposed(); If it was disposed, then it's still safe to try and unsubscribe.
-		var n = _._findEntryNode(subscriber);
+		const n = _._findEntryNode(subscriber);
 		if(n)
 		{
-			var s = n.value;
+			const s = n.value;
 			_.__subscriptions.removeNode(n);
 			if(s) s.dispose(); // Prevent further usage of a dead subscription.
 		}
@@ -82,10 +80,10 @@ extends DisposableBase
 	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[]|null
 	{
 		const _ = this;
-		var _s = _.__subscriptions;
+		let _s = _.__subscriptions;
 		if(!_s) return null;
-		var s = _s.map(n=>n.value);
-		var u = returnSubscribers ? s.map(o=>o!.subscriber) : null;
+		const s = _s.map(n => n.value);
+		const u = returnSubscribers ? s.map(o => o!.subscriber) : null;
 		_s.clear(); // Reset...
 
 		dispose.these(s);
@@ -102,7 +100,7 @@ extends DisposableBase
 	{
 		super._onDispose();
 		this._unsubscribeAll();
-		var s = this.__subscriptions;
+		const s = this.__subscriptions;
 		this.__subscriptions = <any>null;
 		dispose(s);
 	}

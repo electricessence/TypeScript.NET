@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import {TypeInfo} from "../../../../../dist/commonjs/System/Types";
@@ -12,7 +11,8 @@ const VOID0:undefined = void 0;
 describe(".from(source)",()=>{
 
 	it("null should use an empty enumerator",()=>{
-		var test = Enumerator.from(<any>null), count = 0;
+		const test = Enumerator.from(<any>null);
+		let count = 0;
 		while(test.moveNext()) {
 			count++;
 		}
@@ -33,7 +33,7 @@ describe(".from(source)",()=>{
 	});
 
 	it("functions should be treated as generators",()=>{
-		var e = Enumerator.from((prev:number,i:number)=>(prev || 1)+i);
+		const e = Enumerator.from((prev:number, i:number) => (prev || 1) + i);
 		function pass(e:IEnumerator<number>){
 			assert.equal(e.nextValue(),1);
 			assert.equal(e.nextValue(),2);
@@ -51,13 +51,14 @@ describe(".from(source)",()=>{
 	});
 
 	it("IEnumerable should enumerate",()=>{
-		var a = [0,1,2,3,4];
-		var len = a.length, count = 0;
-		var q = new Queue(a);
-		var type = new TypeInfo(q);
+		const a = [0, 1, 2, 3, 4];
+		const len = a.length;
+		let count = 0;
+		const q = new Queue(a);
+		const type = new TypeInfo(q);
 		type.member("getEnumerator");
 		// Creates an enumerable.
-		var test = Enumerator.from({getEnumerator:()=>Enumerator.from(a)});
+		const test = Enumerator.from({getEnumerator: () => Enumerator.from(a)});
 		while(test.moveNext()) {
 			count++;
 		}
@@ -65,11 +66,12 @@ describe(".from(source)",()=>{
 	});
 
 	it("arrays should enumerate",()=>{
-		var a = [0,1,2,3,4];
-		var type = new TypeInfo(a);
+		const a = [0, 1, 2, 3, 4];
+		const type = new TypeInfo(a);
 		type.member("length");
-		var len = a.length, count = 0;
-		var test = Enumerator.from(a);
+		const len = a.length;
+		let count = 0;
+		const test = Enumerator.from(a);
 		while(test.moveNext()) {
 			count++;
 		}
@@ -77,11 +79,12 @@ describe(".from(source)",()=>{
 	});
 
 	it("strings should enumerate",()=>{
-		var a = "01234";
-		var type = new TypeInfo(a);
+		const a = "01234";
+		const type = new TypeInfo(a);
 		type.member("length");
-		var len = a.length, count = 0;
-		var test = Enumerator.from(a);
+		const len = a.length;
+		let count = 0;
+		const test = Enumerator.from(a);
 		while(test.moveNext()) {
 			count++;
 		}
@@ -89,11 +92,12 @@ describe(".from(source)",()=>{
 	});
 
 	it("array like objects should enumerate",()=>{
-		var a:IArray<number> = {0:0,1:1,2:2,3:3,4:4,length:5};
-		var type = new TypeInfo(a);
+		const a:IArray<number> = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, length: 5};
+		const type = new TypeInfo(a);
 		type.member("length");
-		var len = a.length, count = 0;
-		var test = Enumerator.from(a);
+		const len = a.length;
+		let count = 0;
+		const test = Enumerator.from(a);
 		while(test.moveNext()) {
 			count++;
 		}
@@ -105,7 +109,7 @@ describe(".from(source)",()=>{
 
 describe(".forEach(source)",()=>
 {
-	const blankAction:(n:any,i:number)=>void = (n,i)=>{};
+	const blankAction:(n:any,i:number)=>void = ()=>{};
 
 	it("null values ignored", ()=>
 	{

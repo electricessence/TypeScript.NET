@@ -4,8 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-
-
 import {IDisposableAware} from "../Disposable/IDisposableAware";
 import {ISubscribable} from "./ISubscribable"; // For compatibility with (let, const, function, class);
 
@@ -49,8 +47,8 @@ export class Subscription<T> implements IDisposableAware
 
 	dispose():void
 	{
-		var subscriber = this.subscriber;
-		var subscribable = this._subscribable;
+		const subscriber = this.subscriber;
+		const subscribable = this._subscribable;
 
 		// Release this reference.  It will prevent potential unwanted recursion.
 		this._subscribable = <any>null;

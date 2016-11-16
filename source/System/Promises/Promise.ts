@@ -4,13 +4,11 @@
  * Although most of the following code is written from scratch, it is
  * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
-
 /*
  * Resources:
  * https://promisesaplus.com/
  * https://github.com/kriskowal/q
  */
-
 import Type from "../Types";
 import {deferImmediate} from "../Threading/deferImmediate";
 import {DisposableBase} from "../Disposable/DisposableBase";
@@ -374,7 +372,7 @@ extends PromiseState<T> implements PromiseLike<T>
 	finallyThis(fin:Closure, synchronous?:boolean):this
 	{
 		this.throwIfDisposed();
-		var f:Closure = synchronous ? fin : ()=>deferImmediate(fin);
+		const f:Closure = synchronous ? fin : () => deferImmediate(fin);
 		this.thenThis(f, f);
 		return this;
 	}
@@ -509,7 +507,7 @@ class PromiseWrapper<T> extends Resolvable<T>
 	{
 		this.throwIfDisposed();
 
-		var t = this._target;
+		let t = this._target;
 		if(!t) return super.thenSynchronous(onFulfilled, onRejected);
 
 		return new Promise<TResult>((resolve, reject)=>
@@ -530,7 +528,7 @@ class PromiseWrapper<T> extends Resolvable<T>
 	{
 		this.throwIfDisposed();
 
-		var t = this._target;
+		let t = this._target;
 		if(!t) return <any>super.thenThis(onFulfilled, onRejected);
 		handleDispatch(t, onFulfilled, onRejected);
 		return this;
@@ -581,7 +579,7 @@ export class Promise<T> extends Resolvable<T>
 		// Already fulfilled?
 		if(this._state) return super.thenSynchronous(onFulfilled, onRejected);
 
-		var p = new Promise<TResult>();
+		const p = new Promise<TResult>();
 		(this._waiting || (this._waiting = []))
 			.push(pools.PromiseCallbacks.init(onFulfilled, onRejected, p));
 		return p;
@@ -615,8 +613,7 @@ export class Promise<T> extends Resolvable<T>
 
 	resolveUsing(
 		resolver:Promise.Executor<T>,
-		forceSynchronous:boolean = false,
-		throwIfSettled:boolean = false)
+		forceSynchronous:boolean = false)
 	{
 		if(!resolver)
 			throw new ArgumentNullException("resolver");
@@ -627,8 +624,8 @@ export class Promise<T> extends Resolvable<T>
 
 		this._resolvedCalled = true;
 
-		var state = 0;
-		var rejectHandler = (reason:any)=>
+		let state = 0;
+		const rejectHandler = (reason:any) =>
 		{
 			if(state)
 			{
@@ -645,7 +642,7 @@ export class Promise<T> extends Resolvable<T>
 			}
 		};
 
-		var fulfillHandler = (v:any)=>
+		const fulfillHandler = (v:any) =>
 		{
 			if(state)
 			{
@@ -673,7 +670,7 @@ export class Promise<T> extends Resolvable<T>
 
 	private _emitDisposalRejection(p:PromiseBase<any>):boolean
 	{
-		var d = p.wasDisposed;
+		const d = p.wasDisposed;
 		if(d) this._rejectInternal(newODE());
 		return d;
 	}
@@ -719,7 +716,7 @@ export class Promise<T> extends Resolvable<T>
 
 			this._result = result;
 			this._error = VOID0;
-			var o = this._waiting;
+			const o = this._waiting;
 			if(o)
 			{
 				this._waiting = VOID0;
@@ -744,7 +741,7 @@ export class Promise<T> extends Resolvable<T>
 		this._state = Promise.State.Rejected;
 
 		this._error = error;
-		var o = this._waiting;
+		const o = this._waiting;
 		if(o)
 		{
 			this._waiting = null; // null = finished. undefined = hasn't started.
@@ -1018,8 +1015,9 @@ module pools
 	export module PromiseCallbacks
 	{
 
-		var pool:ObjectPool<IPromiseCallbacks<any>>;
+		let pool:ObjectPool<IPromiseCallbacks<any>>;
 
+		//noinspection JSUnusedLocalSymbols
 		function getPool()
 		{
 			return pool
@@ -1046,7 +1044,7 @@ module pools
 			promise?:Promise<any>):IPromiseCallbacks<T>
 		{
 
-			var c = getPool().take();
+			const c = getPool().take();
 			c.onFulfilled = onFulfilled;
 			c.onRejected = onRejected;
 			c.promise = promise;
@@ -1145,7 +1143,7 @@ export module Promise
 		...rest:PromiseLike<any>[]):ArrayPromise<any>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
-		var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+		let promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
 		if(!promises.length || promises.every(v=>!v)) return new ArrayPromise<any>(
 			r=>r(promises), true); // it's a new empty, reuse it. :|
 
@@ -1221,7 +1219,7 @@ export module Promise
 		...rest:PromiseLike<any>[]):ArrayPromise<PromiseLike<any>>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
-		var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+		const promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
 		if(!promises.length || promises.every(v=>!v)) return new ArrayPromise<any>(
 			r=>r(promises), true); // it's a new empty, reuse it. :|
 
@@ -1283,11 +1281,11 @@ export module Promise
 		first:PromiseLike<any>|PromiseLike<any>[],
 		...rest:PromiseLike<any>[]):PromiseBase<any>
 	{
-		var promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
+		let promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
 		if(!promises || !promises.length || !(promises = promises.filter(v=>v!=null)).length)
 			throw new ArgumentException("Nothing to wait for.");
 
-		var len = promises.length;
+		const len = promises.length;
 
 		// Only one?  Nothing to race.
 		if(len==1) return wrap(promises[0]);
@@ -1295,7 +1293,7 @@ export module Promise
 		// Look for already resolved promises and the first one wins.
 		for(let i = 0; i<len; i++)
 		{
-			var p:any = promises[i];
+			const p:any = promises[i];
 			if(p instanceof PromiseBase && p.isSettled) return p;
 		}
 

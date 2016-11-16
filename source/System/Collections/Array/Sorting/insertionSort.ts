@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {Primitive} from "../../../Primitive";
 import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 
@@ -15,7 +13,7 @@ import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 export function insertionSort<T extends Primitive>(target:T[]):T[]
 {
 	if(!target) throw new ArgumentNullException("target");
-	var len = target.length;
+	const len = target.length;
 
 	for(let i = 1; i<len; i++)
 	{

@@ -26,7 +26,7 @@ export function isDigit(chOrStr:any, index?:number):boolean
 	}
 	else
 	{
-		var ch = chOrStr.charCodeAt(index);
+		const ch = chOrStr.charCodeAt(index);
 		return 48<=ch && ch<=57;
 	}
 }

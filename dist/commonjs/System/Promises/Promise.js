@@ -365,10 +365,9 @@ var Promise = (function (_super) {
         _super.prototype._onDispose.call(this);
         this._resolvedCalled = VOID0;
     };
-    Promise.prototype.resolveUsing = function (resolver, forceSynchronous, throwIfSettled) {
+    Promise.prototype.resolveUsing = function (resolver, forceSynchronous) {
         var _this = this;
         if (forceSynchronous === void 0) { forceSynchronous = false; }
-        if (throwIfSettled === void 0) { throwIfSettled = false; }
         if (!resolver)
             throw new ArgumentNullException_1.ArgumentNullException("resolver");
         if (this._resolvedCalled)
@@ -780,10 +779,10 @@ var Promise;
             var onFulfill = function (v) { return onResolve(resolve, v); };
             var onReject = function (e) { return onResolve(reject, e); };
             for (var _i = 0, promises_1 = promises; _i < promises_1.length; _i++) {
-                var p_1 = promises_1[_i];
+                var p = promises_1[_i];
                 if (!resolve)
                     break;
-                p_1.then(onFulfill, onReject);
+                p.then(onFulfill, onReject);
             }
         });
     }

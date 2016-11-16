@@ -13,7 +13,7 @@ it("should measure a closure",()=>{
 it("should start, stop, and reset with isRunning correctly reflected",()=>
 {
 	assert.ok(Stopwatch.getTimestampMilliseconds()>0);
-	var sw = new Stopwatch();
+	let sw = new Stopwatch();
 	assert.equal(sw.elapsed.milliseconds,0);
 	assert.equal(sw.lap().milliseconds,0);
 	assert.equal(sw.currentLap.milliseconds,0);

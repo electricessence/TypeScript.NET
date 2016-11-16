@@ -12,10 +12,10 @@ import {LazyPromise} from "../../../../dist/commonjs/System/Promises/LazyPromise
 import {ObjectDisposedException} from "../../../../dist/commonjs/System/Disposable/ObjectDisposedException";
 
 
-var REASON = "this is not an error, but it might show up in the console";
+const REASON = "this is not an error, but it might show up in the console";
 
 // In browsers that support strict mode, it'll be `undefined`; otherwise, the global.
-var calledAsFunctionThis = (function() { return this; }());
+// let calledAsFunctionThis = (function() { return this; }());
 
 afterEach(function()
 {
@@ -25,10 +25,10 @@ afterEach(function()
 describe("computing sum of integers using promises", ()=>
 {
 	// Use triangular numbers...
-	var count = 1000;
-	var array = AU.range(1, count);
-	var swA = Stopwatch.startNew();
-	var answer = array.reduce((currentVal, nextVal)=>currentVal + nextVal, 0);
+	const count = 1000;
+	const array = AU.range(1, count);
+	const swA = Stopwatch.startNew();
+	const answer = array.reduce((currentVal, nextVal) => currentVal + nextVal, 0);
 	swA.stop();
 
 	it("should compute correct result without blowing stack (Synchronous) (lambda only)", ()=>
@@ -48,7 +48,7 @@ describe("computing sum of integers using promises", ()=>
 
 	it("should compute correct result without blowing stack (Synchronous) (lambda only)", ()=>
 	{
-		var source = new PromiseCollection(array.map(v=>new Fulfilled(v)));
+		const source = new PromiseCollection(array.map(v => new Fulfilled(v)));
 		let sw = Stopwatch.startNew();
 		return source
 			.reduce((previousValue:number, currentValue:number) =>previousValue+currentValue,0)
@@ -96,7 +96,7 @@ describe("computing sum of integers using promises", ()=>
 	{
 
 		let wasRun = false;
-		var r = Promise.resolve(true).then(()=>
+		const r = Promise.resolve(true).then(() =>
 		{
 			wasRun = true;
 		});
@@ -111,7 +111,7 @@ describe("Resolution and Rejection", ()=>
 {
 	it("should result in a fulfilled promise when given a value", ()=>
 	{
-		var f = Promise.resolve(5);
+		const f = Promise.resolve(5);
 		assert.equal(f.result, 5);
 		assert.equal(f.isSettled, true);
 		assert.equal(f.isFulfilled, true);
@@ -120,7 +120,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should result in a rejected promise when requesting rejected", ()=>
 	{
-		var f = Promise.reject("err");
+		const f = Promise.reject("err");
 		assert.equal(f.error, "err");
 		assert.equal(f.isSettled, true);
 		assert.equal(f.isFulfilled, false);
@@ -129,12 +129,12 @@ describe("Resolution and Rejection", ()=>
 
 	it("resolves multiple observers", done=>
 	{
-		var nextTurn = false;
+		let nextTurn = false;
 
-		var resolution = "Ta-ram pam param!";
-		var pending = new Promise<any>();
-		var count = 10;
-		var i = 0;
+		const resolution = "Ta-ram pam param!";
+		const pending = new Promise<any>();
+		const count = 10;
+		let i = 0;
 
 		function resolve(value:any)
 		{
@@ -160,8 +160,8 @@ describe("Resolution and Rejection", ()=>
 
 	it("observers called even after throw (synchronous)", ()=>
 	{
-		var threw = false;
-		var pending = new Promise();
+		let threw = false;
+		const pending = new Promise();
 		pending.thenSynchronous(()=>
 		{
 			threw = true;
@@ -179,8 +179,8 @@ describe("Resolution and Rejection", ()=>
 
 	it("observers called even after throw (asynchronous)", ()=>
 	{
-		var threw = false;
-		var pending = new Promise();
+		let threw = false;
+		const pending = new Promise();
 		pending.thenSynchronous(()=>
 		{
 			threw = true;
@@ -230,13 +230,13 @@ describe("Resolution and Rejection", ()=>
 			{
 				assert.ok(v);
 				throw BREAK; // *
-			}, e=>
+			}, ()=>
 			{
 				assert.ok(false);
 				return NO;
 			})
 			.then(<any>null, <any>null) // ensure pass through
-			.then(v=>
+			.then(()=>
 			{
 				// The previous promise threw/rejected so should never go here.
 				assert.ok(false);
@@ -250,7 +250,7 @@ describe("Resolution and Rejection", ()=>
 			{
 				assert.equal(v, BREAK);
 				return true; // *
-			}, (e:any)=>
+			}, ()=>
 			{
 				assert.ok(false);
 				return false;
@@ -311,7 +311,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should follow expected promise behavior flow for a pending then resolved promise", ()=>
 	{
-		var p = new Promise<boolean>();
+		const p = new Promise<boolean>();
 		assert.ok(p.isPending);
 		p.resolve(true);
 		return testPromiseFlow(p);
@@ -320,7 +320,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be able to use a then-able", ()=>
 	{
-		var p:any = Promise.createFrom((r:Promise.Fulfill<boolean,boolean>)=>
+		const p:any = Promise.createFrom((r:Promise.Fulfill<boolean,boolean>) =>
 		{
 			r(true);
 			return Promise.resolve(true);
@@ -333,19 +333,19 @@ describe("Resolution and Rejection", ()=>
 	{
 		it(".deferFromNow", ()=>
 		{
-			new LazyPromise<boolean>(resolve=>
+			new LazyPromise<boolean>(()=>
 			{
 				assert.ok(false, "Should not have triggered the resolution.");
 			}).delayFromNow(1000);
 
-			var elapsed = Stopwatch.startNew();
+			const elapsed = Stopwatch.startNew();
 
 			return testPromiseFlow(
 				new LazyPromise<boolean>(resolve=>defer(()=>resolve(true), 1000))
 					.delayFromNow(1000)
-					.thenThis(r=>
+					.thenThis(()=>
 					{
-						var ms = elapsed.elapsedMilliseconds;
+						const ms = elapsed.elapsedMilliseconds;
 						assert.ok(ms>1000 && ms<2000);
 					})
 			);
@@ -353,19 +353,19 @@ describe("Resolution and Rejection", ()=>
 
 		it(".deferFromNow", ()=>
 		{
-			new LazyPromise<boolean>(resolve=>
+			new LazyPromise<boolean>(()=>
 			{
 				assert.ok(false, "Should not have triggered the resolution.");
 			}).delayAfterResolve(1000);
 
-			var elapsed = Stopwatch.startNew();
+			const elapsed = Stopwatch.startNew();
 
 			return testPromiseFlow(
 				new LazyPromise<boolean>(resolve=>defer(()=>resolve(true), 1000))
 					.delayAfterResolve(1000)
-					.thenThis(r=>
+					.thenThis(()=>
 					{
-						var ms = elapsed.elapsedMilliseconds;
+						const ms = elapsed.elapsedMilliseconds;
 						assert.ok(ms>2000 && ms<3000);
 					})
 			);
@@ -375,10 +375,10 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be able to use promise as a resolution", ()=>
 	{
-		var s = new Promise<boolean>();
-		var p = new Promise<boolean>(resolve=>
+		const s = new Promise<boolean>();
+		const p = new Promise<boolean>(resolve =>
 		{
-			defer(()=> resolve(s));
+			defer(() => resolve(s));
 		});
 		assert.ok(s.isPending);
 		assert.ok(p.isPending);
@@ -388,7 +388,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be able to wait for all", ()=>
 	{
-		var other = new LazyPromise<number>(resolve=>
+		const other = new LazyPromise<number>(resolve =>
 		{
 			resolve(4);
 		});
@@ -411,7 +411,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be able to resolve all", ()=>
 	{
-		var other = new LazyPromise<number>(resolve=>
+		const other = new LazyPromise<number>(resolve =>
 		{
 			resolve(4);
 		});
@@ -431,7 +431,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should resolve as rejected", ()=>
 	{
-		var other = new LazyPromise<number>(resolve=>
+		const other = new LazyPromise<number>(resolve =>
 		{
 			resolve(4);
 		});
@@ -452,7 +452,7 @@ describe("Resolution and Rejection", ()=>
 
 	it("should be resolve the first to win the race", ()=>
 	{
-		var other = new LazyPromise<number>((resolve, reject)=>
+		const other = new LazyPromise<number>((resolve, reject) =>
 		{
 			reject(4);
 		});
@@ -502,7 +502,7 @@ describe("Resolution and Rejection", ()=>
 	it("should rejected a disposed promise-result..", ()=>
 		new Promise((resolve=>
 		{
-			var r = Promise.resolve(1);
+			const r = Promise.resolve(1);
 			r.dispose();
 			resolve(r)
 		}))

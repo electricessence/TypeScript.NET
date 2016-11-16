@@ -3,7 +3,6 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../Types";
 import {TimeUnit} from "./TimeUnit";
 import {ClockTime} from "./ClockTime";
@@ -32,7 +31,7 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 	// In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
 	constructor(value:number, units:TimeUnit = TimeUnit.Milliseconds)
 	{
-		var ms = TimeUnit.toMilliseconds(value, units);
+		const ms = TimeUnit.toMilliseconds(value, units);
 		super(ms);
 
 		const _ = this;
@@ -58,7 +57,7 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 	get time():ClockTime
 	{
 		const _ = this;
-		var t = _._time;
+		let t = _._time;
 		if(!t) _._time = t = new ClockTime(_.getTotalMilliseconds());
 		return t;
 	}
@@ -123,6 +122,6 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 }
 
 
-var timeSpanZero:TimeSpan;
+let timeSpanZero:TimeSpan;
 
 export default TimeSpan;

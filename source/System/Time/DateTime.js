@@ -107,15 +107,15 @@
         };
         DateTime.prototype.addMinutes = function (minutes) {
             minutes = minutes || 0;
-            return this.addMilliseconds(minutes * 60000);
+            return this.addMilliseconds(minutes * HowMany_1.Milliseconds.Per.Minute);
         };
         DateTime.prototype.addHours = function (hours) {
             hours = hours || 0;
-            return this.addMilliseconds(hours * 3600000);
+            return this.addMilliseconds(hours * HowMany_1.Milliseconds.Per.Hour);
         };
         DateTime.prototype.addDays = function (days) {
             days = days || 0;
-            return this.addMilliseconds(days * 86400000);
+            return this.addMilliseconds(days * HowMany_1.Milliseconds.Per.Day);
         };
         DateTime.prototype.addMonths = function (months) {
             months = months || 0;

@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../Types";
 
 export default function clone(source:any, depth:number = 0):any
@@ -13,7 +12,7 @@ export default function clone(source:any, depth:number = 0):any
 	// return primitives as is.
 	if(!Type.isObject(source)) return source;
 
-	var result:any;
+	let result:any;
 	if(Array.isArray(source))
 	{
 		result = (<any>source).slice();

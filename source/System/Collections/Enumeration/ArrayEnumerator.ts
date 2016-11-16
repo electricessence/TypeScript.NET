@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {IndexEnumerator} from "./IndexEnumerator";
 import {Type} from "../../Types";
 import {IArray} from "../Array/IArray";
@@ -20,7 +18,7 @@ export class ArrayEnumerator<T> extends IndexEnumerator<T>
 		super(
 			() =>
 			{
-				var array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
+				const array = Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
 				return {
 					source: array,
 					pointer: start,

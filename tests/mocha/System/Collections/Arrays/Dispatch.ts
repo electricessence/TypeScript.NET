@@ -8,13 +8,13 @@ import {Action} from "../../../../../source/System/FunctionTypes";
 
 it("should apply closures in order", ()=>
 {
-	var result = 0;
-	var a:Action<number>[] = [
-		(p:number)=>
+	let result = 0;
+	const a:Action<number>[] = [
+		(p:number) =>
 		{
 			result += p;
 		},
-		(p:number)=>
+		(p:number) =>
 		{
 			result *= p;
 		},
@@ -32,8 +32,8 @@ it("should apply closures in order", ()=>
 	assert.equal(result, 2400);
 });
 
-var b = [
-	(p:number)=>
+const b = [
+	() =>
 	{
 		throw "error";
 	}

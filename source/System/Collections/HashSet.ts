@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {Type} from "../Types";
 import {SetBase} from "./SetBase";
 import {IMap} from "./Dictionaries/IDictionary";
@@ -15,7 +13,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const OTHER = 'other';
+
 const VOID0:undefined = void 0;
 
 export class HashSet<T>
@@ -50,7 +48,7 @@ extends SetBase<T>
 	{
 		const _ = this;
 		const type = typeof item;
-		var r = _._registry, t = r && r[type];
+		let r = _._registry, t = r && r[type];
 		const key = _._keyGenerator(item);
 		if(!t || t[key]===VOID0)
 		{
@@ -101,7 +99,7 @@ extends SetBase<T>
 		if(node)
 		{
 			delete t[<any>item];
-			var s = this._set;
+			const s = this._set;
 			if(s && s.removeNode(node))
 			{
 				return 1;

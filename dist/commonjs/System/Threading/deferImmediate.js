@@ -77,7 +77,7 @@ function deferImmediate(task, context, args) {
     entry.canceller = function () {
         if (!entry)
             return false;
-        var r = !!immediateQueue.removeNode(entry);
+        var r = Boolean(immediateQueue.removeNode(entry));
         entryPool.add(entry);
         return r;
     };
@@ -110,18 +110,18 @@ else if (typeof setImmediate === Types_1.Type.FUNCTION) {
     }
 }
 else if (typeof MessageChannel !== Types_1.Type.UNDEFINED) {
-    var channel = new MessageChannel();
-    channel.port1.onmessage = function () {
-        requestTick = requestPortTick;
-        channel.port1.onmessage = flush;
+    var channel_1 = new MessageChannel();
+    channel_1.port1.onmessage = function () {
+        requestTick = requestPortTick_1;
+        channel_1.port1.onmessage = flush;
         flush();
     };
-    var requestPortTick = function () {
-        channel.port2.postMessage(0);
+    var requestPortTick_1 = function () {
+        channel_1.port2.postMessage(0);
     };
     requestTick = function () {
         setTimeout(flush, 0);
-        requestPortTick();
+        requestPortTick_1();
     };
 }
 else {

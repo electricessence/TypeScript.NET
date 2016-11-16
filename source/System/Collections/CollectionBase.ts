@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {forEach} from "./Enumeration/Enumerator";
 import {areEqual} from "../Compare";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
@@ -127,7 +126,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		const _ = this;
 		_.assertModifiable();
 		_._updateRecursion++;
-		var updated:boolean = false;
+		let updated:boolean = false;
 
 		try
 		{
@@ -173,7 +172,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		_.assertModifiable();
 		_._updateRecursion++;
 
-		var n:number;
+		let n:number;
 		try
 		{ if(n = _._removeInternal(entry, max)) _._modifiedCount++; }
 		finally
@@ -191,7 +190,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		_.assertModifiable();
 		_._updateRecursion++;
 
-		var n:number;
+		let n:number;
 		try
 		{ if(n = _._clearInternal()) _._modifiedCount++; }
 		finally
@@ -209,14 +208,14 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		this._version = 0;
 		this._updateRecursion = 0;
 		this._modifiedCount = 0;
-		var l = this._linq;
+		const l = this._linq;
 		this._linq = void 0;
 		if(l) l.dispose();
 	}
 
 	protected _importEntries(entries:IEnumerableOrArray<T>|null|undefined):number
 	{
-		var added = 0;
+		let added = 0;
 		if(entries)
 		{
 			if(Array.isArray(entries))
@@ -245,7 +244,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		_.assertModifiable();
 		_._updateRecursion++;
 
-		var n:number;
+		let n:number;
 		try
 		{ if(n = _._importEntries(entries)) _._modifiedCount++; }
 		finally
@@ -261,7 +260,8 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	contains(entry:T):boolean
 	{
 		if(!this.getCount()) return false;
-		var found:boolean = false, equals = this._equalityComparer;
+		let found:boolean = false;
+		const equals = this._equalityComparer;
 		this.forEach(e => !(found = equals(entry, e)));
 		return found;
 	}
@@ -276,7 +276,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 		if(useCopy)
 		{
-			var a = this.toArray();
+			const a = this.toArray();
 			try
 			{
 				return forEach(a, action);
@@ -298,13 +298,13 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	{
 		if(!target) throw new ArgumentNullException('target');
 
-		var count = this.getCount();
+		const count = this.getCount();
 		if(count)
 		{
-			var newLength = count + index;
+			const newLength = count + index;
 			if(target.length<newLength) target.length = newLength;
 
-			var e = this.getEnumerator();
+			const e = this.getEnumerator();
 			while(e.moveNext()) // Disposes when finished.
 			{
 				target[index++] = <any>e.current;
@@ -315,7 +315,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	toArray():T[]
 	{
-		var count = this.getCount();
+		const count = this.getCount();
 		return count
 			? this.copyTo(count>65536 ? new Array<T>(count) : [])
 			: [];
@@ -330,7 +330,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	get linq():ILinqEnumerable<T>
 	{
 		this.throwIfDisposed();
-		var e = this._linq;
+		let e = this._linq;
 
 		if(!e)
 		{
@@ -358,7 +358,7 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
 	linqAsync(callback?:Action<ILinqEnumerable<T>>):ILinqEnumerable<T>|undefined
 	{
 		this.throwIfDisposed();
-		var e = this._linq;
+		let e = this._linq;
 
 		if(!e)
 		{

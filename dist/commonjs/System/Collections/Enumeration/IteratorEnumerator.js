@@ -34,7 +34,7 @@ var IteratorEnumerator = (function (_super) {
         this._iterator = null;
     };
     IteratorEnumerator.prototype.getIsEndless = function () {
-        return !!this._isEndless && _super.prototype.getIsEndless.call(this);
+        return Boolean(this._isEndless) && _super.prototype.getIsEndless.call(this);
     };
     return IteratorEnumerator;
 }(SimpleEnumerableBase_1.SimpleEnumerableBase));

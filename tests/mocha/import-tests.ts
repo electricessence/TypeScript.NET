@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as fs from "fs";
 
 const root = "./tests/mocha/";
@@ -21,7 +20,7 @@ function getDirectoriesAt(path:string):string[]
 
 function importRecursive(path:string = "", importFiles:boolean = false, base:string = "")
 {
-	var dirPath = base + path;
+	const dirPath = base + path;
 	if(importFiles) console.log(dirPath);
 	getDirectoriesAt(root + dirPath)
 		.sort()
@@ -35,18 +34,18 @@ function importRecursive(path:string = "", importFiles:boolean = false, base:str
 
 	if(importFiles)
 	{
-		var files = getFilesAt(root + dirPath, '.js'), count = files.length;
+		const files = getFilesAt(root + dirPath, '.js'), count = files.length;
 
 		files
 			.sort()
 			.forEach((filename)=>
 			{
-				var filePath = dirPath + '/' + filename;
+				const filePath = dirPath + '/' + filename;
 				console.log(" ", filename);
 
-				var name = filename.replace(/\.js$/, '');
+				const name = filename.replace(/\.js$/, '');
 
-				var i = ()=>
+				const i = () =>
 				{
 					require('./' + filePath);
 				};

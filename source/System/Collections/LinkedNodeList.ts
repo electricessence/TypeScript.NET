@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import * as TextUtility from "../Text/Utility";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
 import {ArgumentException} from "../Exceptions/ArgumentException";
@@ -86,9 +85,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	get count():number
 	{
 
-		var next:TNode|null|undefined = this._first;
+		let next:TNode|null|undefined = this._first;
 
-		var i:number = 0;
+		let i:number = 0;
 		while(next)
 		{
 			i++;
@@ -108,11 +107,11 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		action:ActionWithIndex<TNode> | PredicateWithIndex<TNode>, ignoreVersioning?:boolean):number
 	{
 		const _ = this;
-		var current:TNode|null|undefined = null,
-		    next:TNode|null|undefined    = _.first; // Be sure to track the next node so if current node is removed.
+		let current:TNode|null|undefined = null,
+		    next:TNode|null|undefined = _.first; // Be sure to track the next node so if current node is removed.
 
-		var version = _._version;
-		var index:number = 0;
+		const version = _._version;
+		let index:number = 0;
 		do {
 			if(!ignoreVersioning) _.assertVersion(version);
 			current = next;
@@ -130,7 +129,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	{
 		if(!selector) throw new ArgumentNullException('selector');
 
-		var result:T[] = [];
+		const result:T[] = [];
 		this.forEach((node, i)=>
 		{
 			result.push(selector(node, i));
@@ -145,7 +144,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	clear():number
 	{
 		const _ = this;
-		var n:TNode|null|undefined, cF:number = 0, cL:number = 0;
+		let n:TNode|null|undefined, cF:number = 0, cL:number = 0;
 
 		// First, clear in the forward direction.
 		n = _._first;
@@ -207,9 +206,9 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(index<0)
 			return null;
 
-		var next = this._first;
+		let next = this._first;
 
-		var i:number = 0;
+		let i:number = 0;
 		while(next && i++<index)
 		{
 			next = next.next || null;
@@ -221,7 +220,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 	find(condition:PredicateWithIndex<TNode>):TNode|null
 	{
-		var node:TNode|null = null;
+		let node:TNode|null = null;
 		this.forEach((n, i)=>
 		{
 			if(condition(n, i))
@@ -243,8 +242,8 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		if(node && (node.previous || node.next))
 		{
 
-			var index = 0;
-			var c:TNode|null|undefined,
+			let index = 0;
+			let c:TNode|null|undefined,
 			    n:TNode|null|undefined = this._first;
 
 			do {
@@ -289,10 +288,10 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			throw new ArgumentNullException('node');
 
 		const _ = this;
-		var prev:TNode|null = node.previous || null,
-		    next:TNode|null = node.next || null;
+		const prev:TNode|null = node.previous || null,
+		      next:TNode|null = node.next || null;
 
-		var a:boolean = false,
+		let a:boolean = false,
 		    b:boolean = false;
 
 		if(prev) prev.next = next;
@@ -313,7 +312,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 			);
 		}
 
-		var removed = !a && !b;
+		const removed = !a && !b;
 		if(removed)
 		{
 			_._version++;
@@ -440,7 +439,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 		if(!list) throw new ArgumentNullException('list');
 
-		var current:ILinkedNodeWithValue<T>|null|undefined,
+		let current:ILinkedNodeWithValue<T>|null|undefined,
 		    next:ILinkedNodeWithValue<T>|null|undefined,
 		    version:number;
 

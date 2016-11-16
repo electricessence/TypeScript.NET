@@ -14,7 +14,8 @@ function quickSort(target) {
 exports.quickSort = quickSort;
 function sort(target, low, high) {
     if (low < high) {
-        var swap, pivotIndex = Math.floor((low + high) / 2);
+        var swap = void 0;
+        var pivotIndex = Math.floor((low + high) / 2);
         swap = target[pivotIndex];
         target[pivotIndex] = target[high];
         target[high] = swap;

@@ -97,6 +97,7 @@ var Type;
     function isNullOrUndefined(value) {
         return value === null || value === VOID0;
     }
+    Type.isNullOrUndefined = isNullOrUndefined;
     function isBoolean(value) {
         return typeof value === _BOOLEAN;
     }

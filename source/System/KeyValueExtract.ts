@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {ArgumentException} from "./Exceptions/ArgumentException";
 import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
 import {KeyValuePair, IKeyValuePair} from "./KeyValuePair";
@@ -15,7 +14,6 @@ const
 	VALUE:string               = 'value',
 	ITEM:string                = 'item',
 	ITEM_1:string              = ITEM + '[1]',
-	ITEM_KEY:string            = ITEM + DOT + KEY,
 	ITEM_VALUE:string          = ITEM + DOT + VALUE,
 	INVALID_KVP_MESSAGE:string = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.',
 	CANNOT_BE_UNDEFINED:string = 'Cannot equal undefined.';
@@ -58,8 +56,8 @@ export function extractKeyValue<TKey, TValue, TResult>(
 	to:(key:TKey, value:TValue)=>TResult):TResult
 {
 
-	const _ = this;
-	var key:TKey, value:TValue;
+
+	let key:TKey, value:TValue;
 	if(item instanceof Array)
 	{
 		assertTuple(item);

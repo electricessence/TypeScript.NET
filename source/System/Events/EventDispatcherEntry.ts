@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../Types";
 import {DisposableBase} from "../Disposable/DisposableBase";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
@@ -56,7 +55,7 @@ extends DisposableBase implements IEquatable<EventDispatcherEntry<TParams>>
 		const _ = this;
 		if(_.wasDisposed) return false;
 
-		var l = _.listener, d = l && e.type==_.type;
+		const l = _.listener, d = l && e.type==_.type;
 		if(d)
 		{
 			if(Type.isFunction(l))

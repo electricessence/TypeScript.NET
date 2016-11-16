@@ -19,7 +19,7 @@ describe(".initialize(length)", ()=>
 	{
 		it("should be length " + len, ()=>
 		{
-			var a = ArrayUtility.initialize(len);
+			const a = ArrayUtility.initialize(len);
 			assert.equal(a.length, len, ".length should be " + len);
 		});
 	}
@@ -33,12 +33,14 @@ describe(".copy(source) & .equals(old,new)", ()=>
 {
 	it("should equal", ()=>
 	{
-		var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3],
-		    s2 = ArrayUtility.copy(s1),
-		    s3 = ArrayUtility.copy(s1, 1),
-		    s4 = ArrayUtility.copy(s1, 1, 3),
-		    s5 = ArrayUtility.copy(<any>null);
+		const s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3],
+		      s2 = ArrayUtility.copy(s1);
+		let s3 = ArrayUtility.copy(s1, 1),
+		    s4 = ArrayUtility.copy(s1, 1, 3);
 		assert.ok(Arrays.areEqual(s1, s2));
+		const s5 = ArrayUtility.copy(<any>null);
+		assert.ok(Arrays.areEqual(s3, s1.slice(1)));
+		assert.ok(Arrays.areEqual(s4, s1.slice(1,4)));
 		assert.equal(s5, <any>null);
 	});
 
@@ -59,7 +61,7 @@ describe(".copyTo(source,destination)", ()=>
 
 describe(".indexOf(source,value)", ()=>
 {
-	var a = initTestArray();
+	const a = initTestArray();
 	it("should return true for a value contained", ()=>
 	{
 		assert.notEqual(ArrayUtility.indexOf(a, -1), -1);
@@ -69,7 +71,7 @@ describe(".indexOf(source,value)", ()=>
 
 describe(".contains(source,value)", ()=>
 {
-	var a = initTestArray();
+	const a = initTestArray();
 	it("should return true for a value contained", ()=>
 	{
 		assert.ok(ArrayUtility.contains(a, -1));
@@ -83,7 +85,7 @@ describe(".contains(source,value)", ()=>
 
 describe(".replace(source,oldValue,newValue)", ()=>
 {
-	var a = initTestArray();
+	const a = initTestArray();
 	a.push(5);
 	it("should properly replace items with max", ()=>
 	{
@@ -104,7 +106,7 @@ describe(".replace(source,oldValue,newValue)", ()=>
 
 describe(".findIndex(source,of)", ()=>
 {
-	var a = initTestArray(), b:IArray<number> = {0: 3, 1: 1, 2: 2, length: 3};
+	const a = initTestArray(), b:IArray<number> = {0: 3, 1: 1, 2: 2, length: 3};
 	it("should find and return the correct index", ()=>
 	{
 		assert.equal(ArrayUtility.findIndex(a, (v:number)=>v== -1), 2);
@@ -129,16 +131,16 @@ describe(".register(target,value)", ()=>
 {
 	it("should add a value that isn't present", ()=>
 	{
-		var a = initTestArray();
-		var len = a.length;
+		const a = initTestArray();
+		const len = a.length;
 		assert.ok(ArrayUtility.register(a, -9876));
 		assert.equal(a.length, len + 1);
 	});
 
 	it("should not add a value that is present", ()=>
 	{
-		var a = initTestArray();
-		var len = a.length;
+		const a = initTestArray();
+		const len = a.length;
 		assert.ok(!ArrayUtility.register(a, -1));
 		assert.equal(a.length, len);
 	});
@@ -155,8 +157,8 @@ describe(".remove(target,value)", ()=>
 {
 	it("should remove the item/value request and return the number of instances removed", ()=>
 	{
-		var s = [10, 9, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 3];
-		var len = s.length;
+		const s = [10, 9, 9, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 3];
+		let len = s.length;
 
 		assert.equal(ArrayUtility.remove(s, 9, 1), 1, "Only 9 removed once");
 		assert.equal(s.length, len - 1, ".length should be less by one");
@@ -213,7 +215,7 @@ describe(".updateRange(value,count)", ()=>
 	it("should correctly overwrite the value requested", ()=>
 	{
 
-		var value = 10, count = 3, r = [1, 2, 3];
+		const value = 10, count = 3, r = [1, 2, 3];
 		assert.doesNotThrow(()=> {ArrayUtility.updateRange(<any>null, value)});
 		ArrayUtility.updateRange(r, value);
 
@@ -241,7 +243,8 @@ describe(".applyTo(source,action)", ()=>
 	it("should correctly overwrite the values", ()=>
 	{
 
-		var value = 10, count = 3, r = [1, 2, 3];
+
+		const count = 3, r = [1, 2, 3];
 		assert.doesNotThrow(()=> {ArrayUtility.applyTo(<any>null, ()=>null)});
 		ArrayUtility.applyTo(r, ()=>null);
 		assert.equal(r.length, count, ".length should be 3");
@@ -258,13 +261,14 @@ describe(".applyTo(source,action)", ()=>
 	it("should correctly overwrite the values", ()=>
 	{
 
-		var count = 0, r = [1, 2, 3];
+		let count = 0;
+		const r = [1, 2, 3];
 		assert.doesNotThrow(()=> {ArrayUtility.forEach(<any>null, ()=>true)});
 		ArrayUtility.forEach(r, (n, i)=>
 		{
 			assert.equal(count, i, "count should be " + i);
 			count++;
-			return i ? false : true;
+			return !i;
 		});
 		assert.equal(count, 2, "count should be 2");
 	});
@@ -274,8 +278,8 @@ describe(".repeat(value,count)", ()=>
 {
 	it("should correctly repeat the value requested", ()=>
 	{
-		var value = 10, count = 3;
-		var r = ArrayUtility.repeat(value, count);
+		const value = 10, count = 3;
+		const r = ArrayUtility.repeat(value, count);
 		assert.equal(r.length, count, ".length should be 3");
 		for(let i = 0; i<count; i++)
 		{
@@ -293,8 +297,8 @@ describe(".rangeUntil(first,until,step)", ()=>
 {
 	it("should correctly increase the value requested", ()=>
 	{
-		var first = 10, count = 3, step = 2, until = first + count*step;
-		var r = ArrayUtility.rangeUntil(first, until, 2);
+		const first = 10, count = 3, step = 2, until = first + count*step;
+		const r = ArrayUtility.rangeUntil(first, until, 2);
 		assert.equal(r.length, count, ".length should be 3");
 		for(let i = 0; i<count; i++)
 		{
@@ -315,16 +319,16 @@ describe(".rangeUntil(first,until,step)", ()=>
 
 describe(".flatten(source,recurseDepth)",()=>{
 	it("should convert multi dimensional array tree to a flat one",()=>{
-		var len = initTestArray().length;
-		var a = [[initTestArray(),initTestArray()],initTestArray()];
-		var b = ArrayUtility.flatten(a,3);
+		const len = initTestArray().length;
+		const a = [[initTestArray(), initTestArray()], initTestArray()];
+		const b = ArrayUtility.flatten(a, 3);
 		assert.equal(b.length,len*3);
 	});
 
 	it("should reduce multi dimensional array tree",()=>{
-		var len = initTestArray().length;
-		var a = [[initTestArray(),initTestArray()],initTestArray()];
-		var b = ArrayUtility.flatten(a);
+		const len = initTestArray().length;
+		const a = [[initTestArray(), initTestArray()], initTestArray()];
+		const b = ArrayUtility.flatten(a);
 		assert.equal(b.length,len+2);
 	})
 
@@ -333,7 +337,7 @@ describe(".flatten(source,recurseDepth)",()=>{
 function measureRepeated(closure:()=>void):number
 {
 	const repeat = 50;
-	var ms = 0;
+	let ms = 0;
 
 	for(let i = 0; i<repeat; i++)
 	{
@@ -343,6 +347,7 @@ function measureRepeated(closure:()=>void):number
 	return ms;
 }
 
+//noinspection JSUnusedLocalSymbols
 function outputMeasured(suffix:string, closure:()=>void):void
 {
 	it(measureRepeated(closure) + " milliseconds: " + suffix, ()=>

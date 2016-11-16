@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {IIterator} from "./IIterator";
 import {SimpleEnumerableBase} from "./SimpleEnumerableBase";
 import __extendsImport from "../../../extends";
@@ -35,10 +33,10 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 	moveNext(value?:any):boolean
 	{
 		const _ = this;
-		var i = _._iterator;
+		const i = _._iterator;
 		if(i)
 		{
-			var r = arguments.length ? i.next(value) : i.next();
+			const r = arguments.length ? i.next(value) : i.next();
 			_._current = r.value;
 			if(r.done) _.dispose();
 			else return true;
@@ -54,7 +52,7 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 
 	protected getIsEndless():boolean
 	{
-		return !!this._isEndless && super.getIsEndless();
+		return Boolean(this._isEndless) && super.getIsEndless();
 	}
 }
 

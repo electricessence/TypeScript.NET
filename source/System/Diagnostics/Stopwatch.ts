@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {TimeSpan} from "../Time/TimeSpan";
 import {ITimer} from "../Timers/ITimer";
 
@@ -37,14 +35,14 @@ class Stopwatch implements ITimer
 
 	static startNew():Stopwatch
 	{
-		var s = new Stopwatch();
+		const s = new Stopwatch();
 		s.start();
 		return s;
 	}
 
 	static measure(closure:()=>void):TimeSpan
 	{
-		var start = getTimestampMilliseconds();
+		const start = getTimestampMilliseconds();
 		closure();
 		return new TimeSpan(getTimestampMilliseconds() - start);
 	}
@@ -84,9 +82,9 @@ class Stopwatch implements ITimer
 		const _ = this;
 		if(_._isRunning)
 		{
-			var t = getTimestampMilliseconds();
-			var s = _._startTimeStamp;
-			var e = t - s;
+			const t = getTimestampMilliseconds();
+			const s = _._startTimeStamp;
+			const e = t - s;
 			_._startTimeStamp = t;
 			_._elapsed += e;
 			return new TimeSpan(e);
@@ -112,7 +110,7 @@ class Stopwatch implements ITimer
 	get elapsedMilliseconds():number
 	{
 		const _ = this;
-		var timeElapsed = _._elapsed;
+		let timeElapsed = _._elapsed;
 
 		if(_._isRunning)
 			timeElapsed += _.currentLapMilliseconds;

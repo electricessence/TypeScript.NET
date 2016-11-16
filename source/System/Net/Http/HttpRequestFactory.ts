@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import * as QueryParam from "../../Uri/QueryParam";
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {DisposableBase} from "../../Disposable/DisposableBase";
@@ -50,8 +48,8 @@ export default class HttpRequestFactory extends DisposableBase
 
 		const _ = this;
 		_.throwIfDisposed();
-		var d = _._uriDefaults,
-		    u = Uri.from(uri, d);
+		const d = _._uriDefaults,
+		      u = Uri.from(uri, d);
 
 		return d && u.equals(d)
 			? _

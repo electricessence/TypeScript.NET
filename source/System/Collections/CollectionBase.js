@@ -196,7 +196,8 @@
         CollectionBase.prototype.contains = function (entry) {
             if (!this.getCount())
                 return false;
-            var found = false, equals = this._equalityComparer;
+            var found = false;
+            var equals = this._equalityComparer;
             this.forEach(function (e) { return !(found = equals(entry, e)); });
             return found;
         };

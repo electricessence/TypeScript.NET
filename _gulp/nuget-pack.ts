@@ -9,7 +9,7 @@ gulp.task(TASK.NUGET_PACK,
 	(callback:()=>void)=>
 	{
 
-		var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+		const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 		require("gulp-nuget-pack")({
 				id: "TypeScript.NET.Library",
 				title: "TypeScript.NET",

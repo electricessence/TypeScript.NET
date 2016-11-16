@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {DisposableBase} from "../../Disposable/DisposableBase";
 import {ICancellable} from "../ICancellable";
 import {TaskStatus} from "./TaskStatus";
@@ -90,7 +89,7 @@ export abstract class TaskHandlerBase extends DisposableBase implements ICancell
 
 	cancel():boolean
 	{
-		var id = this._timeoutId;
+		const id = this._timeoutId;
 		if(id)
 		{
 			clearTimeout(id);

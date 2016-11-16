@@ -3,8 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on code from: https://github.com/kriskowal/q
  */
-
-
 import {Type} from "../Types";
 import {LinkedNodeList} from "../Collections/LinkedNodeList";
 import {Queue} from "../Collections/Queue";
@@ -37,8 +35,8 @@ interface ITaskQueueEntry extends ILinkedNode<ITaskQueueEntry>
 }
 
 
-var requestTick:()=>void;
-var flushing:boolean = false;
+let requestTick:()=>void;
+let flushing:boolean = false;
 
 // Use the fastest possible means to execute a task in a future turn
 // of the event loop.
@@ -47,7 +45,7 @@ var flushing:boolean = false;
 function flush():void
 {
 	/* jshint loopfunc: true */
-	var entry:ITaskQueueEntry|null;
+	let entry:ITaskQueueEntry|null;
 	while(entry = immediateQueue.first)
 	{
 		let {task, domain, context, args} = entry;
@@ -67,14 +65,14 @@ function flush():void
 
 
 // linked list of tasks.  Using a real linked list to allow for removal.
-var immediateQueue = new LinkedNodeList<ITaskQueueEntry>();
+const immediateQueue = new LinkedNodeList<ITaskQueueEntry>();
 
 // queue for late tasks, used by unhandled rejection tracking
-var laterQueue = new Queue<Closure>();
+const laterQueue = new Queue<Closure>();
 
-var entryPool = new ObjectPool<ITaskQueueEntry>(40,
-	()=><any>{},
-	(o:any)=>
+const entryPool = new ObjectPool<ITaskQueueEntry>(40,
+	() => <any>{},
+	(o:any) =>
 	{
 		o.task = null;
 		o.domain = null;
@@ -139,17 +137,21 @@ function requestFlush():void
 	}
 }
 
+
+
 export function deferImmediate(task:Closure, context?:any):ICancellable
-/**
- * @param task The function to call.
- * @param context The context (aka this) to call on. Null or undefined = global.
- * @param args The parameters to pass to the function.
- * @returns {{cancel: (function(): boolean), dispose: (function(): undefined)}}
- */
 export function deferImmediate(task:Function, context?:any, args?:any[]):ICancellable
+//noinspection JSValidateJSDoc
+/**
+ *
+ * @param task
+ * @param context
+ * @param args
+ * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+ */
 export function deferImmediate(task:Closure|Function, context?:any, args?:any[]):ICancellable
 {
-	var entry:ITaskQueueEntry = entryPool.take();
+	let entry:ITaskQueueEntry = entryPool.take();
 	entry.task = task;
 	entry.domain = isNodeJS && (<any>process)['domain'];
 	entry.context = context;
@@ -157,7 +159,7 @@ export function deferImmediate(task:Closure|Function, context?:any, args?:any[])
 	entry.canceller = ()=>
 	{
 		if(!entry) return false;
-		let r = !!immediateQueue.removeNode(entry);
+		let r = Boolean(immediateQueue.removeNode(entry));
 		entryPool.add(entry);
 		return r;
 	};
@@ -210,7 +212,7 @@ else if(typeof MessageChannel!==Type.UNDEFINED)
 {
 	// modern browsers
 	// http://www.nonblocking.io/2011/06/windownexttick.html
-	var channel = new MessageChannel();
+	const channel = new MessageChannel();
 	// At least Safari Version 6.0.5 (8536.30.1) intermittently cannot create
 	// working message ports the first time a page loads.
 	channel.port1.onmessage = function()
@@ -219,7 +221,7 @@ else if(typeof MessageChannel!==Type.UNDEFINED)
 		channel.port1.onmessage = flush;
 		flush();
 	};
-	var requestPortTick = ()=>
+	let requestPortTick = ()=>
 	{
 		// Opera requires us to provide a message payload, regardless of
 		// whether we use it.

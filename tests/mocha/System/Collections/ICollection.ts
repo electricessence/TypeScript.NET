@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";
@@ -9,10 +8,11 @@ import {ICollection} from "../../../../dist/commonjs/System/Collections/ICollect
  * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
  */
 
+//noinspection JSUnusedGlobalSymbols
 export function General<T>(
 	collection:ICollection<string>):void
 {
-	var count = collection.count;
+	const count = collection.count;
 
 	describe(".count", ()=>
 	{
@@ -29,7 +29,7 @@ function assertAdding<T>(c:ICollection<T>, a:T[])
 {
 	it(".add(value)", ()=>
 	{
-		var count:number;
+		let count:number;
 		for(let v of a)
 		{
 			assertIsNumber(count = c.count, "before adding");
@@ -45,11 +45,11 @@ function assertCopyToClear<T>(c:ICollection<T>)
 {
 	it(".copyTo(other) & .clear()", ()=>
 	{
-		var count:number = c.count;
+		const count:number = c.count;
 		assertIsNumber(count);
 		if(count<2) throw "Can't assert '.copyTo()' or '.clear()' without at least (2) entries.";
 
-		var a:T[] = [];
+		const a:T[] = [];
 
 		c.copyTo(a);
 		assertIsNumber(c.count, 'count');
@@ -60,8 +60,8 @@ function assertCopyToClear<T>(c:ICollection<T>)
 		// Restore contents.
 		for(let v of a) c.add(v);
 
-		var extraSize = 10;
-		var b = AU.initialize<T>(count + extraSize);
+		const extraSize = 10;
+		const b = AU.initialize<T>(count + extraSize);
 
 		c.copyTo(b, 1);
 		assert.equal(b.length, count + extraSize, "An array's length should be equal to it's original length if the count added does not exceed the length.");
@@ -82,11 +82,11 @@ function assertRemoving<T>(c:ICollection<T>)
 	it(".remove(values)", ()=>
 	{
 
-		var count:number;
+		let count:number;
 		assertIsNumber(count = c.count);
 		if(c.count<2) throw "Can't assert '.remove()' without at least (2) entries.";
 
-		var a:T[] = [];
+		const a:T[] = [];
 		c.copyTo(a);
 		assertIsNumber(c.count);
 
@@ -181,7 +181,7 @@ export function InstanceCollection(
 	name:string,
 	collection:ICollection<Object>):void
 {
-	var repeat = {};
+	const repeat = {};
 	//noinspection SpellCheckingInspection
 	Collection(name + '<' + 'Object>', collection, [
 		undefined,

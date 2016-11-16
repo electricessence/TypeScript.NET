@@ -3,8 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-
-
 import {SystemException, Error} from "./SystemException";
 import {trim} from "../Text/Utility";
 import __extendsImport from "../../extends";
@@ -27,7 +25,7 @@ export class ArgumentException extends SystemException
 		innerException?:Error,
 		beforeSealing?:(ex:any)=>void)
 	{
-		var pn = paramName ? ('{' + paramName + '} ') : '';
+		let pn = paramName ? ('{' + paramName + '} ') : '';
 		super(trim(pn + (message || '')), innerException, (_)=>
 		{
 			_.paramName = paramName;

@@ -28,7 +28,8 @@
             var len = Math.min(aValue.length, bValue.length);
             var oArray = Array.isArray(order) ? order : null;
             for (var i = 0; i < len; i++) {
-                var vA = aValue[i], vB = bValue[i], o = oArray
+                var vA = aValue[i], vB = bValue[i];
+                var o = oArray
                     ? (i < oArray.length ? oArray[i] : 1)
                     : order;
                 if (nanHasEquivalent) {

@@ -3,8 +3,6 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {areEqual as areEqualValues, compare as compareValues} from "../System/Compare";
 import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
@@ -69,11 +67,11 @@ const __extends = __extendsImport;
 const INVALID_DEFAULT:any = {}; // create a private unique instance for referencing.
 const VOID0:undefined = void 0;
 const NULL:any = null;
-function BREAK(e:any):EnumerableAction
+function BREAK():EnumerableAction
 {
 	return EnumerableAction.Break;
 }
-function RETURN(e:any):EnumerableAction
+function RETURN():EnumerableAction
 {
 	return EnumerableAction.Return;
 }
@@ -100,7 +98,7 @@ class LinqFunctions extends BaseFunctions
 	}
 }
 
-var Functions = new LinqFunctions();
+const Functions = new LinqFunctions();
 Object.freeze(Functions);
 
 // For re-use as a factory.
@@ -295,7 +293,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	elementAt(index:number):T
 	{
-		var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
+		const v = this.elementAtOrDefault(index, INVALID_DEFAULT);
 		if(v===INVALID_DEFAULT) throw new ArgumentOutOfRangeException('index', index, "is greater than or equal to the number of elements in source");
 		return <T>v;
 	}
@@ -308,7 +306,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		_.throwIfDisposed();
 
 		Integer.assertZeroOrGreater(index, 'index');
-		var n:number = index;
+		const n:number = index;
 
 		return using(
 			this.getEnumerator(),
@@ -337,7 +335,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 	first():T
 	{
-		var v = this.firstOrDefault(INVALID_DEFAULT);
+		const v = this.firstOrDefault(INVALID_DEFAULT);
 		if(v===INVALID_DEFAULT) throw new Error("first:The sequence is empty.");
 		return <T>v;
 	}
@@ -441,7 +439,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 			nestLevel:number) => any = Functions.Identity):Enumerable<any>
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 
 		const isEndless = _._isEndless; // Is endless is not affirmative if false.
 
@@ -512,7 +510,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	flatten():InfiniteEnumerable<any>
 	flatten():InfiniteEnumerable<any>
 	{
-		return this.selectMany((entry, i)=>
+		return this.selectMany(entry=>
 		{
 			let e = !Type.isString(entry) && Enumerable.fromAny(entry);
 			return e ? e.flatten() : [entry];
@@ -531,10 +529,10 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		if(!selector)
 			throw new ArgumentNullException("selector");
 
-		var previous:T;
+		let previous:T;
 		return this.select<TSelect>((value, i)=>
 		{
-			var result:any = i ? selector(previous!, value, i) : NULL;
+			const result:any = i ? selector(previous!, value, i) : NULL;
 			previous = value;
 			return result;
 		}).skip(1);
@@ -685,7 +683,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		filter?:PredicateWithIndex<any>):Enumerable<any>
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 		if(!selector)
 			throw new ArgumentNullException("selector");
 
@@ -761,7 +759,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	ofType<TType>(type:{ new (...params:any[]):TType }):InfiniteEnumerable<TType>;
 	ofType<TType>(type:any):InfiniteEnumerable<TType>
 	{
-		var typeName:string;
+		let typeName:string;
 		switch(<any>type)
 		{
 			case Number:
@@ -789,7 +787,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		compareSelector?:Selector<T, string|number|symbol>):this
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
@@ -853,7 +851,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	{
 
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
@@ -918,7 +916,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	defaultIfEmpty(defaultValue?:T):this
 	{
 		const _ = this;
-		var disposed:boolean = !_.throwIfDisposed();
+		const disposed:boolean = !_.throwIfDisposed();
 		const isEndless = _._isEndless;
 
 		return <any> new Enumerable<T>(
@@ -1312,7 +1310,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	insertAt(index:number, other:IEnumerableOrArray<T>):this
 	{
 		Integer.assertZeroOrGreater(index, 'index');
-		var n:number = index;
+		const n:number = index;
 
 		const _ = this;
 		_.throwIfDisposed();
@@ -1465,7 +1463,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	catchError(handler:(e:any) => void):this
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		const disposed = !_.throwIfDisposed();
 		return <any> new Enumerable<T>(
 			() =>
 			{
@@ -1512,7 +1510,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 	finallyAction(action:Closure):this
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		const disposed = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -1561,7 +1559,7 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 
 		const _ = this;
 		const isEndless = _._isEndless;
-		var len:number;
+		let len:number;
 
 		return new Enumerable<T[]>(
 			() =>
@@ -1747,7 +1745,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			nestLevel:number) => any = Functions.Identity):Enumerable<any>
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 
 		const isEndless = _._isEndless; // Is endless is not affirmative if false.
 
@@ -1839,13 +1837,13 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		// But to be more active about checking for disposal, we use this instead:
 		*/
 
-		var index:number = 0;
+
 		// Return value of action can be anything, but if it is (===) false then the enumUtil.forEach will discontinue.
 		return max>0 ? using(
 			_.getEnumerator(), e=>
 			{
 
-				throwIfEndless(!isFinite(max) && !!e.isEndless);
+				throwIfEndless(!isFinite(max) && e.isEndless);
 
 				let i = 0;
 				// It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
@@ -1888,7 +1886,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		elementSelector:SelectorWithIndex<T, TValue> = Functions.Identity,
 		compareSelector:Selector<TKey, string|number|symbol> = Functions.Identity):ILookup<TKey, TValue>
 	{
-		var dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
+		const dict:Dictionary<TKey, TValue[]> = new Dictionary<TKey, TValue[]>(compareSelector);
 		this.forEach(
 			(x, i)=>
 			{
@@ -1907,7 +1905,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		keySelector:SelectorWithIndex<T, string|number|symbol>,
 		elementSelector:SelectorWithIndex<T, TResult>):IMap<TResult>
 	{
-		var obj:IMap<TResult> = {};
+		const obj:IMap<TResult> = {};
 		this.forEach((x, i)=>
 		{
 			obj[keySelector(x, i)] = elementSelector(x, i);
@@ -1921,7 +1919,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		elementSelector:SelectorWithIndex<T, TValue>,
 		compareSelector:Selector<TKey, string|number|symbol> = Functions.Identity):IDictionary<TKey, TValue>
 	{
-		var dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
+		const dict:Dictionary<TKey, TValue> = new Dictionary<TKey, TValue>(compareSelector);
 		this.forEach((x, i)=> dict.addByKeyValue(keySelector(x, i), elementSelector(x, i)));
 		return dict;
 	}
@@ -1948,7 +1946,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			return <any> Enumerable.empty<T>();
 
 		Integer.assert(count, "count");
-		var c = count;
+		const c = count;
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -2036,7 +2034,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	reverse():this
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 		throwIfEndless(_._isEndless); // Cannot reverse an endless collection...
 
 		return <any> new Enumerable<T>(
@@ -2073,7 +2071,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	shuffle():this
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 		throwIfEndless(_._isEndless); // Cannot shuffle an endless collection...
 
 		return <any> new Enumerable<T>(
@@ -2125,7 +2123,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	count(predicate?:PredicateWithIndex<T>):number
 	{
-		var count:number = 0;
+		let count:number = 0;
 		this.forEach(
 			predicate
 
@@ -2151,7 +2149,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		if(!predicate)
 			throw new ArgumentNullException("predicate");
 
-		var result = true;
+		let result = true;
 		this.forEach((x, i) =>
 		{
 			if(!predicate(x, i))
@@ -2175,7 +2173,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		if(!predicate)
 			return super.any();
 
-		var result = false;
+		let result = false;
 		// Splitting the forEach up this way reduces iterative processing.
 		// forEach handles the generation and disposal of the enumerator.
 		this.forEach(
@@ -2199,7 +2197,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	{
 		if(compareSelector)
 		{
-			var s = compareSelector(value);
+			const s = compareSelector(value);
 			return this.any(v=> areEqualValues(compareSelector(v), s));
 		}
 		return this.any(v=> areEqualValues(v, value));
@@ -2210,7 +2208,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	// Better to chain a where statement first to be more explicit.
 	indexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number
 	{
-		var found:number = -1;
+		let found:number = -1;
 		this.forEach(
 			compareSelector
 				?
@@ -2239,7 +2237,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	lastIndexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number
 	{
-		var result:number = -1;
+		let result:number = -1;
 		this.forEach(
 			compareSelector
 				?
@@ -2605,8 +2603,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 
 	average(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
-		var count = 0;
-		var sum = this.sum((e, i)=>
+		let count = 0;
+		const sum = this.sum((e, i) =>
 		{
 			count++;
 			return selector(e, i);
@@ -2641,10 +2639,10 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	// Addition...  Only works with numerical enumerations.
 	sum(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
-		var sum = 0;
+		let sum = 0;
 
 		// This allows for infinity math that doesn't destroy the other values.
-		var sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
+		let sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
 
 		this.forEach(
 			(x, i)=>
@@ -2671,7 +2669,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	// Multiplication...
 	product(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
-		var result = 1, exists:boolean = false;
+		let result = 1, exists:boolean = false;
 
 		this.forEach(
 			(x, i)=>
@@ -2706,8 +2704,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	 */
 	quotient(selector:SelectorWithIndex<T, number> = Type.numberOrNaN):number
 	{
-		var count = 0;
-		var result:number = NaN;
+		let count = 0;
+		let result:number = NaN;
 
 		this.forEach(
 			(x, i)=>
@@ -2748,8 +2746,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var value:T|undefined = VOID0;
-		var found:boolean = false;
+		let value:T|undefined = VOID0;
+		let found:boolean = false;
 		_.forEach(
 			x =>
 			{
@@ -2769,8 +2767,8 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var value:T|undefined = VOID0;
-		var found:boolean = false;
+		let value:T|undefined = VOID0;
+		let found:boolean = false;
 		_.forEach(
 			x=>
 			{
@@ -2786,10 +2784,10 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 	memoize():this
 	{
 		const _ = this;
-		var disposed:boolean = !_.throwIfDisposed();
+		let disposed:boolean = !_.throwIfDisposed();
 
-		var cache:T[];
-		var enumerator:IEnumerator<T>;
+		let cache:T[];
+		let enumerator:IEnumerator<T>;
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -2931,7 +2929,8 @@ extends FiniteEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var source = _._source, len = source.length;
+		const source = _._source;
+		let len = source.length;
 		return !!len && (!predicate || super.any(predicate));
 	}
 
@@ -2940,7 +2939,7 @@ extends FiniteEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var source = _._source, len = source.length;
+		const source = _._source, len = source.length;
 		return len && (predicate ? super.count(predicate) : len);
 	}
 
@@ -2952,7 +2951,7 @@ extends FiniteEnumerable<T>
 		_.throwIfDisposed();
 		Integer.assertZeroOrGreater(index, 'index');
 
-		var source = _._source;
+		const source = _._source;
 		return index<source.length
 			? source[index]
 			: defaultValue;
@@ -2963,7 +2962,7 @@ extends FiniteEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var source = _._source, len = source.length;
+		const source = _._source, len = source.length;
 		return (len)
 			? source[len - 1]
 			: super.last();
@@ -2976,7 +2975,7 @@ extends FiniteEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var source = _._source, len = source.length;
+		const source = _._source, len = source.length;
 		return len
 			? source[len - 1]
 			: defaultValue;
@@ -3015,7 +3014,7 @@ extends FiniteEnumerable<T>
 		if(!isFinite(count))
 			return _;
 
-		var len = _._source
+		const len = _._source
 			? _._source.length
 			: 0;
 
@@ -3025,7 +3024,7 @@ extends FiniteEnumerable<T>
 	reverse():this
 	{
 		const _ = this;
-		var disposed = !_.throwIfDisposed();
+		let disposed = !_.throwIfDisposed();
 
 		return <any> new Enumerable<T>(
 			() =>
@@ -3034,7 +3033,7 @@ extends FiniteEnumerable<T>
 				return new IndexEnumerator<T>(
 					() =>
 					{
-						var s = _._source;
+						let s = _._source;
 						throwIfDisposed(disposed || !s);
 						return {
 							source: s,
@@ -3073,7 +3072,7 @@ extends FiniteEnumerable<T>
 
 	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
 	{
-		var s = this._source;
+		const s = this._source;
 		return !selector && Array.isArray(s)
 			? (<Array<T>>s).join(separator)
 			: super.toJoinedString(separator, selector);
@@ -3125,7 +3124,7 @@ implements ILookup<TKey, TElement>
 	{
 
 		const _ = this;
-		var enumerator:IEnumerator<IKeyValuePair<TKey, TElement[]>>;
+		let enumerator:IEnumerator<IKeyValuePair<TKey, TElement[]>>;
 
 		return new EnumeratorBase<Grouping<TKey, TElement>>(
 			() =>
@@ -3164,7 +3163,7 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 		public comparer:Comparison<T> = compareValues)
 	{
 		super(NULL);
-		throwIfEndless(!!source && !!source.isEndless);
+		throwIfEndless(source && source.isEndless);
 		this._disposableObjectName = "OrderedEnumerable";
 	}
 
@@ -3201,9 +3200,9 @@ extends FiniteEnumerable<T> implements IOrderedEnumerable<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var buffer:T[];
-		var indexes:number[];
-		var index:number = 0;
+		let buffer:T[];
+		let indexes:number[];
+		let index:number = 0;
 
 		return new EnumeratorBase<T>(
 			() =>
@@ -3278,7 +3277,7 @@ function createSortContext<T, TOrderBy extends Comparable>(
 	currentContext:IComparer<T>|null = null):KeySortedContext<T, TOrderBy>
 {
 
-	var context = new KeySortedContext<T, TOrderBy>(
+	const context = new KeySortedContext<T, TOrderBy>(
 		currentContext,
 		orderedEnumerable.keySelector,
 		orderedEnumerable.order,
@@ -3310,7 +3309,7 @@ export module Enumerable
 	 */
 	export function from<T>(source:IEnumerableOrArray<T>):Enumerable<T>
 	{
-		var e = fromAny(source);
+		let e = fromAny(source);
 		if(!e) throw new UnsupportedEnumerableException();
 		return e;
 	}
@@ -3387,7 +3386,7 @@ export module Enumerable
 
 	export function choice<T>(values:IArray<T>):InfiniteEnumerable<T>
 	{
-		var len = values && values.length;
+		let len = values && values.length;
 		// We could return empty if no length, but that would break the typing and produce unexpected results.
 		// Enforcing that there must be at least 1 choice is key.
 		if(!len || !isFinite(len))
@@ -3437,7 +3436,7 @@ export module Enumerable
 
 	export function cycle<T>(values:IArray<T>):InfiniteEnumerable<T>
 	{
-		var len = values && values.length;
+		let len = values && values.length;
 		// We could return empty if no length, but that would break the typing and produce unexpected results.
 		// Enforcing that there must be at least 1 choice is key.
 		if(!len || !isFinite(len))
@@ -3721,7 +3720,7 @@ export module Enumerable
 	{
 		if(input===null || input===VOID0)
 			throw new ArgumentNullException("input");
-		var type = typeof input;
+		const type = typeof input;
 		if(type!=Type.STRING)
 			throw new Error("Cannot exec RegExp matches of type '" + type + "'.");
 
@@ -3896,8 +3895,8 @@ export module Enumerable
 // Slightly optimized versions for numbers.
 	export function max(values:FiniteEnumerable<number>):number
 	{
-		var v = values
-			.takeUntil(v=> v== +Infinity, true)
+		const v = values
+			.takeUntil(v => v== +Infinity, true)
 			.aggregate(Functions.Greater);
 
 		return v===VOID0 ? NaN : v;
@@ -3905,8 +3904,8 @@ export module Enumerable
 
 	export function min(values:FiniteEnumerable<number>):number
 	{
-		var v = values
-			.takeUntil(v=> v== -Infinity, true)
+		const v = values
+			.takeUntil(v => v== -Infinity, true)
 			.aggregate(Functions.Lesser);
 
 		return v===VOID0 ? NaN : v;
@@ -3924,7 +3923,7 @@ export module Enumerable
 		if(!enumerables)
 			throw new ArgumentNullException('enumerables');
 
-		var disposed = false;
+		let disposed = false;
 		return new Enumerable<T>(
 			() =>
 			{

@@ -20,7 +20,7 @@ var MINIMUM_GROW = 4;
 var SHRINK_THRESHOLD = 32;
 var GROW_FACTOR_HALF = 100;
 var DEFAULT_CAPACITY = MINIMUM_GROW;
-var emptyArray = [];
+var emptyArray = Object.freeze([]);
 var Queue = (function (_super) {
     __extends(Queue, _super);
     function Queue(source, equalityComparer) {
@@ -55,7 +55,8 @@ var Queue = (function (_super) {
     };
     Queue.prototype._addInternal = function (item) {
         var _ = this;
-        var size = _._size, len = _._capacity;
+        var size = _._size;
+        var len = _._capacity;
         if (size == len) {
             var newCapacity = len * GROW_FACTOR_HALF;
             if (newCapacity < len + MINIMUM_GROW)

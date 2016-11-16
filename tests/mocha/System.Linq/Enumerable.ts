@@ -1,5 +1,4 @@
-﻿///<reference types="node"/>
-import * as assert from "assert";
+﻿import * as assert from "assert";
 import "mocha";
 import {contains, repeat} from "../../../dist/commonjs/System/Collections/Array/Utility";
 import * as Procedure from "../../../dist/commonjs/System/Collections/Array/Procedure";
@@ -88,9 +87,10 @@ const source:TestItem[] = Object.freeze([
 ]);
 
 // Compile test:
+//noinspection JSUnusedLocalSymbols
 function compileTest():ILinqEnumerable<TestItem>
 {
-	var list = new List(source);
+	const list = new List(source);
 	return list.linq.orderBy(v=>v.a)
 		.takeWhile((g, i)=>i<5);
 }
@@ -106,8 +106,8 @@ const sourceMany:Enumerable<string> = Enumerable.from(Object.freeze([
 ]));
 const sourceManyFlat = "abcdefghijklmnopqrstuvwxy";
 
-var sourceArrayEnumerable = Enumerable.from(source),
-    sourceEnumerable      = new Enumerable(()=>sourceArrayEnumerable.getEnumerator());
+const sourceArrayEnumerable = Enumerable.from(source),
+      sourceEnumerable = new Enumerable(() => sourceArrayEnumerable.getEnumerator());
 
 describe(".force()", ()=>
 {
@@ -141,12 +141,12 @@ describe(".memoize()", ()=>
 {
 	it("should cache the values as it goes for reuse later", ()=>
 	{
-		var source = sourceEnumerable;
-		var A = source.memoize();
+		const source = sourceEnumerable;
+		let A = source.memoize();
 
 		source.memoize().dispose(); // Covers else condition.
 
-		var sum = A.sum(o=>o.a);
+		let sum = A.sum(o => o.a);
 
 		assert.equal(sum, source.sum(o=>o.a), "Values must be equal after memoize pass 1.");
 
@@ -176,7 +176,7 @@ describe(".choose(predicate)", ()=>
 {
 	it("should filter out null and undefined values.", ()=>
 	{
-		var other = <TestItem[]>[<any>null, <any>void(0)];
+		const other = <TestItem[]>[<any>null, <any>void(0)];
 		assert.equal(sourceArrayEnumerable
 			.concat(other)
 			.choose()
@@ -205,9 +205,9 @@ describe(".where(predicate).memoize()", ()=>
 	it("should cache the values as it goes for reuse later", ()=>
 	{
 
-		var source = sourceArrayEnumerable.where(i => i.a==1);
+		const source = sourceArrayEnumerable.where(i => i.a==1);
 
-		var sum:number, A = source;
+		let sum:number, A = source;
 
 		sum = A.sum(o=>o.a);
 
@@ -234,7 +234,7 @@ describe(".orderBy(selector)", ()=>
 {
 	it("should order ascending based upon the selector", ()=>
 	{
-		var source = sourceArrayEnumerable.reverse();
+		const source = sourceArrayEnumerable.reverse();
 		assert.equal(source.first().c, "f");
 	});
 });
@@ -245,9 +245,9 @@ describe(".orderBy(selector)", ()=>
 	it("should order ascending based upon the selector", ()=>
 	{
 
-		var source = sourceArrayEnumerable.reverse();
+		const source = sourceArrayEnumerable.reverse();
 
-		var A = source.orderBy(o=>o.a).toArray();
+		const A = source.orderBy(o => o.a).toArray();
 		for(let i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 1, "First three 'a' values should be 1 when ordered by 'a'.");
@@ -257,7 +257,7 @@ describe(".orderBy(selector)", ()=>
 			assert.equal(A[i].a, 2, "Last three 'a' values should be 2 when ordered by 'a'.");
 		}
 
-		var B = source.orderBy(o=> o.b).toArray();
+		const B = source.orderBy(o => o.b).toArray();
 		for(let i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
@@ -280,9 +280,9 @@ describe(".orderByDescending(selector)", ()=>
 	{
 
 
-		var source = sourceArrayEnumerable.reverse();
+		const source = sourceArrayEnumerable.reverse();
 
-		var A = source.orderByDescending((o:TestItem)=> o.a).toArray();
+		const A = source.orderByDescending((o:TestItem) => o.a).toArray();
 		for(let i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 2, "First three 'a' values should be 2 when ordered by 'a'.");
@@ -292,7 +292,7 @@ describe(".orderByDescending(selector)", ()=>
 			assert.equal(A[i].a, 1, "Last three 'a' values should be 1 when ordered by 'a'.");
 		}
 
-		var B = source.orderByDescending((o:TestItem)=> o.b).toArray();
+		const B = source.orderByDescending((o:TestItem) => o.b).toArray();
 		for(let i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 3, "First two 'b' values should be 3 when ordered by 'b'.");
@@ -314,7 +314,7 @@ describe(".orderBy(selector).thenBy(selector)", ()=>
 	{
 
 
-		var B = sourceArrayEnumerable
+		const B = sourceArrayEnumerable
 			.orderBy(o => o.b)
 			.thenBy(o => o.c)
 			.toArray();
@@ -347,15 +347,15 @@ describe(".orderBy(selector).thenBy(selector)", ()=>
 describe(".select(b)", ()=>
 {
 
-	var b = sourceArrayEnumerable.select(e=>e.b);
+	const b = sourceArrayEnumerable.select(e => e.b);
 	describe(".distinct()", ()=>
 	{
-		var d = b.distinct();
+		const d = b.distinct();
 		describe(".orderBy()", ()=>
 		{
 			it("should be 1,2,3", ()=>
 			{
-				var s = d.orderBy();
+				const s = d.orderBy();
 				assert.equal(s.count(), 3);
 				assert.equal(s.sum(), 6);
 				assert.equal(s.elementAt(0), 1);
@@ -368,7 +368,7 @@ describe(".select(b)", ()=>
 		{
 			it("should be 1,2,3", ()=>
 			{
-				var s = d.orderByDescending();
+				const s = d.orderByDescending();
 				assert.equal(s.count(), 3);
 				assert.equal(s.sum(), 6);
 				assert.equal(s.elementAt(0), 3);
@@ -396,47 +396,47 @@ describe(".groupBy(selector)", ()=>
 	{
 
 
-		var A_distinct = sourceArrayEnumerable
-			.select(o=>o.a).distinct();
-		var A = sourceArrayEnumerable
-			.groupBy(o=>o.a);
+		const A_distinct = sourceArrayEnumerable
+			.select(o => o.a).distinct();
+		const A = sourceArrayEnumerable
+			.groupBy(o => o.a);
 
 		assert.equal(A_distinct.count(), A.count(), "Number of groups should match distinct values.");
 
-		var B = sourceArrayEnumerable
-			.groupBy(o=>o.b);
+		const B = sourceArrayEnumerable
+			.groupBy(o => o.b);
 
-		var C = sourceArrayEnumerable
-			.groupBy(o=>o.b, <any>null, Functions.Identity);
+		const C = sourceArrayEnumerable
+			.groupBy(o => o.b, <any>null, Functions.Identity);
 
-		var D = sourceArrayEnumerable
-			.groupBy(o=>o.b, Functions.Identity, Functions.Identity);
+		const D = sourceArrayEnumerable
+			.groupBy(o => o.b, Functions.Identity, Functions.Identity);
 
 
 		assert.ok(B.first().sequenceEqual(C.first()));
 		assert.ok(C.first().sequenceEqual(D.first()));
 
-		var B_distinct = sourceArrayEnumerable
-			.select(o=>o.b).distinct();
+		const B_distinct = sourceArrayEnumerable
+			.select(o => o.b).distinct();
 
 		assert.equal(B_distinct.count(), B.count(), "Number of groups should match distinct values.");
 
 
 		const COMPANY_A = "Microsoft", COMPANY_B = "Hell Corp.";
-		var objArray = [
+		const objArray = [
 			{Name: "John", Id: 0, Salary: 1300.00, Company: COMPANY_A},
 			{Name: "Peter", Id: 1, Salary: 4800.50, Company: COMPANY_A},
 			{Name: "Sandra", Id: 2, Salary: 999.99, Company: COMPANY_A},
 			{Name: "Me", Id: 3, Salary: 1000000000.00, Company: COMPANY_B}
 		];
-		var groups = Enumerable.from(objArray).groupBy(x => x.Company);
-		var companies = groups.select(x => x.key).toArray();
+		const groups = Enumerable.from(objArray).groupBy(x => x.Company);
+		const companies = groups.select(x => x.key).toArray();
 
 		assert.equal(companies.length, 2, "2 groups expected.");
 		assert.ok(contains(companies, COMPANY_A), "Expect " + COMPANY_A);
 		assert.ok(contains(companies, COMPANY_B), "Expect " + COMPANY_B);
-		var group_A = groups.where(g=>g.key==COMPANY_A).single();
-		var group_B = groups.where(g=>g.key==COMPANY_B).single();
+		const group_A = groups.where(g => g.key==COMPANY_A).single();
+		const group_B = groups.where(g => g.key==COMPANY_B).single();
 		assert.equal(group_A.count(), 3, "Expected count of 3.");
 		assert.equal(group_A.sum(x => x.Salary), 7100.49, "Expected sum to be correct.");
 		assert.equal(group_B.count(), 1, "Expected count of 1.");
@@ -448,7 +448,7 @@ describe(".take(count)", ()=>
 {
 	it("count should match number taken", ()=>
 	{
-		var e = sourceArrayEnumerable.take(2);
+		const e = sourceArrayEnumerable.take(2);
 		assert.equal(e.count(), 2);
 	});
 });
@@ -458,7 +458,7 @@ describe(".takeWhile(predicate)", ()=>
 {
 	it("should take while predicate returns true", ()=>
 	{
-		var e = sourceArrayEnumerable.takeWhile(v=>v.a==1);
+		const e = sourceArrayEnumerable.takeWhile(v => v.a==1);
 		assert.equal(e.count(), 3, "count should match number taken");
 	});
 
@@ -469,13 +469,13 @@ describe(".takeUntil(predicate,includeUntil)", ()=>
 {
 	it("should take until predicate returns true", ()=>
 	{
-		var e = sourceArrayEnumerable.takeUntil(v=>v.a==2);
+		const e = sourceArrayEnumerable.takeUntil(v => v.a==2);
 		assert.equal(e.count(), 3, "count should match number taken");
 	});
 
 	it("should take until predicate returns true and include value matched", ()=>
 	{
-		var e = sourceArrayEnumerable.takeUntil(v=>v.a==2, true);
+		const e = sourceArrayEnumerable.takeUntil(v => v.a==2, true);
 		assert.equal(e.count(), 4, "count should match number taken");
 		assert.equal(e.last().c, "d");
 	});
@@ -486,13 +486,13 @@ describe(".takeExceptLast(count)", ()=>
 {
 	it("should take the first ones minus the last", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>
+		const test = (s:Enumerable<TestItem>) =>
 		{
-			var e = s.takeExceptLast(2);
+			let e = s.takeExceptLast(2);
 			assert.equal(e.count(), 4);
 			assert.equal(e.count(), 4, "count should match number taken");
 			assert.equal(e.last().c, "d");
-			var e = s.takeExceptLast();
+			e = s.takeExceptLast();
 			assert.equal(e.count(), 5);
 			assert.equal(e.count(), 5, "count should match number taken");
 			assert.equal(e.last().c, "e");
@@ -508,9 +508,9 @@ describe(".skipToLast(count)", ()=>
 {
 	it("should take the last items based on the count", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>
+		const test = (s:Enumerable<TestItem>) =>
 		{
-			var e = s.skipToLast(2);
+			let e = s.skipToLast(2);
 			assert.equal(e.count(), 2, "count should match number taken");
 			assert.equal(e.first().c, "e");
 			assert.equal(e.last().c, "f");
@@ -531,9 +531,9 @@ describe(".skip(count)", ()=>
 {
 	it("count should match total less skipped", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>
+		const test = (s:Enumerable<TestItem>) =>
 		{
-			var e = s.skip(2);
+			const e = s.skip(2);
 			assert.equal(e.count(), 4);
 			assert.equal(e.first().c, "c");
 			assert.equal(e.last().c, "f");
@@ -551,7 +551,7 @@ describe(".skipWhile(predicate)", ()=>
 {
 	it("should skip while predicate returns true", ()=>
 	{
-		var e = sourceArrayEnumerable.skipWhile(v=>v.a==1);
+		const e = sourceArrayEnumerable.skipWhile(v => v.a==1);
 		assert.equal(e.count(), 3, "count should match number taken");
 		assert.equal(e.first().c, "d");
 		assert.equal(e.last().c, "f");
@@ -565,9 +565,9 @@ describe(".select(selector)", ()=>
 
 	it("should use appropriate selection mechanism", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>
+		const test = (s:Enumerable<TestItem>) =>
 		{
-			var e = s.select(e=>e.c);
+			const e = s.select(e => e.c);
 			assert.equal(e.count(), 6);
 			assert.equal(e.first(), "a");
 			assert.equal(e.last(), "f");
@@ -578,9 +578,9 @@ describe(".select(selector)", ()=>
 
 	it("should use appropriate selection mechanism", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>
+		const test = (s:Enumerable<TestItem>) =>
 		{
-			var e = s.select((e, i)=>i);
+			const e = s.select((e, i) => i);
 			assert.equal(e.count(), 6);
 			assert.equal(e.first(), 0);
 			assert.equal(e.last(), 5);
@@ -594,7 +594,7 @@ describe(".shuffle()", ()=>
 {
 	it("should randomize the enumerable", ()=>
 	{
-		var e = sourceArrayEnumerable.shuffle();
+		const e = sourceArrayEnumerable.shuffle();
 		assert.equal(e.count(v=>v.a==1), 3);
 		e.dispose();
 		assert.throws(()=>e.count());
@@ -606,9 +606,9 @@ describe(".every(predicate)", ()=>
 {
 	it("should determine if every element matches the criteria", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>
+		const test = (s:Enumerable<TestItem>) =>
 		{
-			assert.ok(!s.every(v=>v.a==1));
+			assert.ok(!s.every(v => v.a==1));
 		};
 		test(sourceArrayEnumerable);
 		test(sourceEnumerable);
@@ -621,9 +621,9 @@ describe(".any(predicate)", ()=>
 {
 	it("should determine if every element matches the criteria", ()=>
 	{
-		var test = (s:Enumerable<TestItem>)=>
+		const test = (s:Enumerable<TestItem>) =>
 		{
-			assert.ok(s.some(v=>v.a==1));
+			assert.ok(s.some(v => v.a==1));
 			assert.ok(!s.isEmpty());
 		};
 		test(sourceArrayEnumerable);
@@ -636,7 +636,7 @@ describe(".any(predicate)", ()=>
 describe(".empty()", ()=>
 {
 
-	var source = Enumerable.empty();
+	const source = Enumerable.empty();
 
 
 	describe(".singleOrDefault()", ()=>
@@ -705,7 +705,7 @@ describe(".empty()", ()=>
 		it("should be defaulted", ()=>
 		{
 			assert.equal(source.lastOrDefault(), null);
-			var d = 1;
+			const d = 1;
 			assert.equal(source.lastOrDefault(d), d);
 		});
 
@@ -772,7 +772,7 @@ describe(".fromAny(x,default)", ()=>
 	});
 	it("should return an enumerable from an IEnumerable", ()=>
 	{
-		var e = Enumerable.fromAny({getEnumerator: ()=> { return EmptyEnumerator; }});
+		const e = Enumerable.fromAny({getEnumerator: () => { return EmptyEnumerator; }});
 		e.getEnumerator();
 		assert.ok(e instanceof Enumerable);
 	});
@@ -855,7 +855,7 @@ describe(".elementAtOrDefault (x)", ()=>
 	{
 		assert.equal(sourceEnumerable.elementAtOrDefault(2), source[2]);
 		assert.equal(sourceArrayEnumerable.elementAtOrDefault(2), source[2]);
-		var d = {};
+		const d = {};
 		assert.equal(sourceArrayEnumerable.elementAtOrDefault(10, <any>d), d);
 	});
 
@@ -936,20 +936,20 @@ describe(".selectMany(...)", ()=>
 			assert.equal(values.toJoinedString(), sourceManyFlat);
 		}
 
-		var split:(s:string)=>string[] = s=>s ? s.split(",") : [];
-		var sm:(s:string, e:string)=>string = (c, e)=>e;
+		const split:(s:string)=>string[] = s => s ? s.split(",") : [];
+		const sm:(s:string, e:string)=>string = (c, e) => e;
 
-		var a = sourceMany.selectMany(split);
+		const a = sourceMany.selectMany(split);
 		test(a);
-		var b = sourceMany.selectMany(split, sm);
+		const b = sourceMany.selectMany(split, sm);
 		test(b);
 
 		assert.equal(Enumerable.from(<string[]>[]).selectMany(split).count(), 0);
 
-		var iSource = Enumerable.toInfinity().selectMany(s=>repeat("" + s, s));
+		const iSource = Enumerable.toInfinity().selectMany(s => repeat("" + s, s));
 		assert.equal(iSource.take(10).toJoinedString(), "1223334444");
 
-		var s = sourceMany.select(s=>s.length);
+		let s = sourceMany.select(s=>s.length);
 		s.dispose();
 		assert.throws(()=>s.toArray());
 	});
@@ -959,9 +959,9 @@ describe(".traverseBreadthFirst()", ()=>
 {
 	it("walk the tree in proper order", ()=>
 	{
-		var tree = sourceEnumerable
-			.traverseBreadthFirst(e=>e.children),
-		    c    = tree.select(e=>e.c);
+		const tree = sourceEnumerable
+			.traverseBreadthFirst(e => e.children),
+		      c    = tree.select(e => e.c);
 
 		assert.equal(c.elementAt(2), "c");
 		assert.equal(c.elementAt(6), "a");
@@ -976,9 +976,9 @@ describe(".traverseDepthFirst()", ()=>
 {
 	it("walk the tree in proper order", ()=>
 	{
-		var tree = sourceEnumerable
-			.traverseDepthFirst(e=>e.children),
-		    c    = tree.select(e=>e.c);
+		const tree = sourceEnumerable
+			.traverseDepthFirst(e => e.children),
+		      c    = tree.select(e => e.c);
 
 		assert.equal(c.elementAt(2), "a");
 		assert.equal(c.elementAt(6), "c");
@@ -1007,7 +1007,7 @@ describe(".flatten()", ()=>
 describe(".ofType(type)", ()=>
 {
 
-	var source = Enumerable.from(<any[]>[
+	const source = Enumerable.from(<any[]>[
 		1,
 		"a",
 		true,
@@ -1041,7 +1041,7 @@ describe(".buffer(size)", ()=>
 {
 	it("should return arrays at the size provided", ()=>
 	{
-		var s2 = sourceEnumerable.buffer(2);
+		const s2 = sourceEnumerable.buffer(2);
 		assert.equal(s2.first().length, 2);
 		assert.equal(s2.count(), 3);
 
@@ -1059,9 +1059,9 @@ describe(".share()", ()=>
 
 	it("should share an enumerator", ()=>
 	{
-		var s = sourceEnumerable.select(e=>e.c).share();
-		var e1 = s.getEnumerator();
-		var e2 = s.getEnumerator();
+		const s = sourceEnumerable.select(e => e.c).share();
+		const e1 = s.getEnumerator();
+		const e2 = s.getEnumerator();
 
 		e1.moveNext();
 		assert.equal(e1.current, "a");
@@ -1074,14 +1074,15 @@ describe(".share()", ()=>
 
 });
 
-var mathTree      = sourceEnumerable.traverseDepthFirst(e=>e.children).throwWhenEmpty(), // Add throwWhenEmpty to validate safe case.
-    mathTreeArray = mathTree.select(e=>e.b).toArray();
+const mathTree      = sourceEnumerable.traverseDepthFirst(e => e.children).throwWhenEmpty(), // Add throwWhenEmpty to validate safe case.
+      mathTreeArray = mathTree.select(e => e.b).toArray();
 
 describe(".throwWhenEmpty()",()=>{
 
 	assert.throws(()=>{
-		var e = Enumerable.empty<number>().throwWhenEmpty();
-		var c:number = e.max(); // Add this for a compile check.
+		const e = Enumerable.empty<number>().throwWhenEmpty();
+		//noinspection JSUnusedLocalSymbols
+		let c:number = e.max(); // Add this for a compile check.
 	});
 
 });
@@ -1090,7 +1091,7 @@ describe(".sum()", ()=>
 {
 	it("should render the sum value", ()=>
 	{
-		var v = Procedure.sum(mathTreeArray);
+		const v = Procedure.sum(mathTreeArray);
 
 		assert.equal(Enumerable.empty().sum(), 0);
 		assert.equal(mathTree.select(e=>e.b).sum(), v);
@@ -1117,7 +1118,7 @@ describe(".product()", ()=>
 {
 	it("should render the product value", ()=>
 	{
-		var v = Procedure.product(mathTreeArray);
+		const v = Procedure.product(mathTreeArray);
 
 		assert.equal(mathTree.select(e=>e.b).product(), v);
 		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).product()));
@@ -1132,7 +1133,7 @@ describe(".quotient()", ()=>
 {
 	it("should render the quotient value", ()=>
 	{
-		var v = Procedure.quotient(mathTreeArray);
+		const v = Procedure.quotient(mathTreeArray);
 
 		assert.equal(mathTree.select(e=>e.b).quotient(), v);
 		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).quotient()));
@@ -1147,9 +1148,10 @@ describe(".average()", ()=>
 {
 	it("should render the average value", ()=>
 	{
-		var tree = sourceEnumerable
-			.traverseDepthFirst(e=>e.children);
-		var v = Procedure.average(mathTreeArray);
+		//noinspection JSUnusedLocalSymbols
+		let tree = sourceEnumerable
+			.traverseDepthFirst(e => e.children);
+		const v = Procedure.average(mathTreeArray);
 
 		assert.equal(mathTree.select(e=>e.b).average(), v);
 		assert.ok(isNaN(mathTree.select(e=>e.b).concat([NaN]).average()));
@@ -1192,7 +1194,7 @@ describe("xxx", ()=>
 
 	it("yyy", ()=>
 	{
-		var r = Enumerable.from([1, 2, 3, 4, 5, 6])
+		const r = Enumerable.from([1, 2, 3, 4, 5, 6])
 			.skip(1)
 			.takeExceptLast(2)
 			.toArray();

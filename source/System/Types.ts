@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {Primitive} from "./Primitive";
 import {IArray} from "./Collections/Array/IArray"; // For compatibility with (let, const, function, class);
 
@@ -19,7 +17,7 @@ const
 	LENGTH:string     = "length";
 
 // Only used for primitives.
-var typeInfoRegistry:{[key:string]:TypeInfo} = {};
+const typeInfoRegistry:{[key:string]:TypeInfo} = {};
 
 /**
  * Exposes easy access to type information including inquiring about members.
@@ -119,7 +117,7 @@ export class TypeInfo
 	 */
 	member(name:string|number|symbol):TypeInfo
 	{
-		var t = this.target;
+		const t = this.target;
 		return TypeInfo.getFor(
 			t && (name) in (t)
 				? t[name]
@@ -134,14 +132,14 @@ export class TypeInfo
 	 */
 	static getFor(target:any):TypeInfo
 	{
-		var type:string = typeof target;
+		const type:string = typeof target;
 		switch(type)
 		{
 			case _OBJECT:
 			case _FUNCTION:
 				return new TypeInfo(target);
 		}
-		var info = typeInfoRegistry[type];
+		let info = typeInfoRegistry[type];
 		if(!info) typeInfoRegistry[type] = info = new TypeInfo(target);
 		return info;
 	}
@@ -199,7 +197,7 @@ export module Type
 	 * @param value
 	 * @returns {boolean}
 	 */
-	function isNullOrUndefined(value:any):value is null|undefined {
+	export function isNullOrUndefined(value:any):value is null|undefined {
 		return value===null || value===VOID0;
 	}
 
@@ -253,7 +251,7 @@ export module Type
 	 */
 	export function isPrimitive(value:any, allowUndefined:boolean = false):value is Primitive
 	{
-		var t = typeof value;
+		const t = typeof value;
 		switch(t)
 		{
 			case _BOOLEAN:
@@ -281,7 +279,7 @@ export module Type
 	 */
 	export function isPropertyKey(value:any):value is string|number|symbol
 	{
-		var t = typeof value;
+		const t = typeof value;
 		switch(t)
 		{
 			case _STRING:

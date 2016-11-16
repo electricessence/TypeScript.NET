@@ -5,7 +5,7 @@ import ObservableNodeBase from "../../../../dist/commonjs/System/Observable/Obse
 it("should receive signals only when subscribed", ()=>
 {
 	const ERR = "err";
-	var o = new ObservableNodeBase<number>();
+	const o = new ObservableNodeBase<number>();
 
 	let completed = false;
 	let count = 0;
@@ -21,7 +21,7 @@ it("should receive signals only when subscribed", ()=>
 			assert.equal(err,ERR);
 		}
 	);
-	let s2 = o.subscribe({
+	o.subscribe({
 		onNext: v=>
 		{
 			assert.equal(completed,false);

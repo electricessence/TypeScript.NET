@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../../Types";
 import {Integer} from "../../Integer";
 import {areEqual} from "../../Compare";
@@ -27,7 +26,7 @@ export function initialize<T>(length:number):T[]
 {
 	Integer.assert(length, 'length');
 	// This logic is based upon JS performance tests that show a significant difference at the level of 65536.
-	var array:T[];
+	let array:T[];
 	if(length>65536)
 		array = new Array(length);
 	else
@@ -88,7 +87,7 @@ export function copyTo<T,TDestination extends IArray<T>>(
 	if(sourceIndex<0)
 		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
 
-	var sourceLength = source.length;
+	let sourceLength = source.length;
 	if(!sourceLength)
 		return destination;
 	if(sourceIndex>=sourceLength)
@@ -97,12 +96,12 @@ export function copyTo<T,TDestination extends IArray<T>>(
 	if(destination.length<0)
 		throw new ArgumentOutOfRangeException('destinationIndex', destinationIndex, CBL0);
 
-	var maxLength = source.length - sourceIndex;
+	const maxLength = source.length - sourceIndex;
 	if(isFinite(length) && length>maxLength)
 		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
 
 	length = Math.min(length, maxLength);
-	var newLength = destinationIndex + length;
+	const newLength = destinationIndex + length;
 	if(newLength>destination.length) destination.length = newLength;
 
 	for(let i = 0; i<length; i++)
@@ -127,7 +126,7 @@ export function indexOf<T>(
 	equalityComparer:EqualityComparison<T> = areEqual):number
 {
 
-	var len = array && array.length;
+	const len = array && array.length;
 	if(len)
 	{
 		// NaN NEVER evaluates its equality so be careful.
@@ -178,7 +177,7 @@ export function replace<T>(
 	if(max<0) throw new ArgumentOutOfRangeException('max', max, CBL0);
 	if(!max) max = Infinity;
 
-	var count = 0;
+	let count = 0;
 
 	for(let i = 0, len = array.length; i<len; i++)
 	{
@@ -246,8 +245,8 @@ export function register<T>(
 {
 	if(!array)
 		throw new ArgumentNullException('array', CBN);
-	var len = array.length; // avoid querying .length more than once. *
-	var ok = !len || !contains(array, item, equalityComparer);
+	let len = array.length; // avoid querying .length more than once. *
+	const ok = !len || !contains(array, item, equalityComparer);
 	if(ok) (<any>array)[len] = item; // * push would query length again.
 	return ok;
 }
@@ -266,7 +265,7 @@ export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):n
 	if(!Type.isFunction(predicate))
 		throw new ArgumentException('predicate', 'Must be a function.');
 
-	var len = array.length;
+	const len = array.length;
 	if(Array.isArray(array))
 	{
 		for(let i = 0; i<len; i++)
@@ -349,7 +348,7 @@ export function removeIndex<T>(array:T[], index:number):boolean
 	if(index<0) throw new ArgumentOutOfRangeException('index', index, CBL0);
 
 
-	var exists = index<array.length;
+	const exists = index<array.length;
 	if(exists)
 		array.splice(index, 1);
 	return exists;
@@ -370,7 +369,7 @@ export function remove<T>(
 	if(!array || !array.length || max===0) return 0;
 	if(max<0) throw new ArgumentOutOfRangeException('max', max, CBL0);
 
-	var count = 0;
+	let count = 0;
 	if(!max || !isFinite(max))
 	{
 		// Don't track the indexes and remove in reverse.
@@ -386,7 +385,7 @@ export function remove<T>(
 	else
 	{
 		// Since the user will expect it to happen in forward order...
-		var found:number[] = []; // indexes;
+		const found:number[] = []; // indexes;
 		for(let i = 0, len = array.length; i<len; i++)
 		{
 			if(equalityComparer(array[i], value))
@@ -418,7 +417,7 @@ export function repeat<T>(element:T, count:number):T[]
 	Integer.assert(count, 'count');
 	if(count<0) throw new ArgumentOutOfRangeException('count', count, CBL0);
 
-	var result = initialize<T>(count);
+	const result = initialize<T>(count);
 	for(let i = 0; i<count; i++)
 	{
 		result[i] = element;
@@ -444,7 +443,7 @@ export function range(
 	if(isNaN(count) || !isFinite(count)) throw new ArgumentOutOfRangeException('count', count, VFN);
 	if(count<0) throw new ArgumentOutOfRangeException('count', count, CBL0);
 
-	var result = initialize<number>(count);
+	const result = initialize<number>(count);
 	for(let i = 0; i<count; i++)
 	{
 		result[i] = first;
@@ -478,7 +477,7 @@ export function distinct(source:string[]):string[];
 export function distinct(source:number[]):number[];
 export function distinct(source:any[]):any[]
 {
-	var seen:any = {};
+	const seen:any = {};
 	return source.filter(e=> !(e in seen) && (seen[e] = true));
 }
 
@@ -491,14 +490,14 @@ export function distinct(source:any[]):any[]
  */
 export function flatten(a:any[], recurseDepth:number = 0):any[]
 {
-	var result:any[] = [];
-	for(var i = 0; i<a.length; i++)
+	const result:any[] = [];
+	for(let i = 0; i<a.length; i++)
 	{
-		var x = a[i];
+		let x = a[i];
 		if(Array.isArray(x))
 		{
 			if(recurseDepth>0) x = flatten(x, recurseDepth - 1);
-			for(var n = 0; n<x.length; n++) result.push(x[n]);
+			for(let n = 0; n<x.length; n++) result.push(x[n]);
 		}
 		else result.push(x);
 	}

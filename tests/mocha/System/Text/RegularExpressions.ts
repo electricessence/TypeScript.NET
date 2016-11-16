@@ -3,8 +3,10 @@ import RegexMatchEnumerator from "../../../../dist/commonjs/System/Text/RegexMat
 import Regex, {Match} from "../../../../dist/commonjs/System/Text/RegularExpressions";
 
 const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-const regex = new Regex("(?<first>[A-E]+)", ["i"]);
+const regex = new Regex("(?<"+"first>[A-E]+)", ["i"]);
+//noinspection JSUnusedLocalSymbols
 const regex2 = new Regex(/([A-E]+)/im);
+//noinspection JSUnusedLocalSymbols
 const regex3 = new Regex(/([A-E]+)/);
 const regex4 = new Regex(/A	B C D  E/,"i","w");
 const pattern = "([A-E]+)";
@@ -43,7 +45,7 @@ describe("Regex", ()=>
 		it("should match correctly", ()=>
 		{
 
-			var m = regex.match(str);
+			let m = regex.match(str);
 			assert.equal(m.value, "ABCDE");
 			assert.equal(m.index, 0);
 			assert.equal(m.namedGroups["first"].value, "ABCDE");
@@ -97,7 +99,7 @@ describe("Regex", ()=>
 
 describe("RegexMatchEnumerator",()=>{
 	it("should enumerate properly",()=>{
-		var m = RegexMatchEnumerator(str,regex);
+		const m = RegexMatchEnumerator(str, regex);
 		function check(v:Match, value:string, index:number):void{
 			assert.equal(v.value, value);
 			assert.equal(v.index, index);

@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {CollectionBase} from "./CollectionBase";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import __extendsImport from "../../extends";
@@ -25,11 +24,13 @@ extends CollectionBase<T>
 		return true;
 	}
 
+	//noinspection JSUnusedLocalSymbols
 	protected _addInternal(entry:T):boolean
 	{
 		return false;
 	}
 
+	//noinspection JSUnusedLocalSymbols
 	protected _removeInternal(entry:T, max?:number):number
 	{
 		return 0;

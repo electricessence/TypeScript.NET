@@ -3,8 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
-
-
 import {Type} from "../Types";
 import * as QueryParams from "./QueryParams";
 import * as QueryParam from "./QueryParam";
@@ -114,7 +112,7 @@ export class Uri implements IUri, IEquatable<IUri>
 	 */
 	static from(uri:string|IUri|null|undefined, defaults?:IUri):Uri
 	{
-		var u = Type.isString(uri)
+		const u = Type.isString(uri)
 			? Uri.parse(<string>uri) // Parsing a string should throw errors.  Null or undefined simply means empty.
 			: <IUri>uri;
 
@@ -140,8 +138,8 @@ export class Uri implements IUri, IEquatable<IUri>
 	 */
 	static parse(url:string, throwIfInvalid:boolean = true):IUri|null
 	{
-		var result:IUri|null = null;
-		var ex = tryParse(url, (out)=> {result = out;});
+		let result:IUri|null = null;
+		const ex = tryParse(url, (out) => {result = out;});
 		if(throwIfInvalid && ex) throw ex;
 		return result;
 	}
@@ -169,7 +167,7 @@ export class Uri implements IUri, IEquatable<IUri>
 
 	updateQuery(query:QueryParam.Convertible):Uri
 	{
-		var map = this.toMap();
+		const map = this.toMap();
 		map.query = <any>query;
 		return Uri.from(map);
 	}
@@ -290,11 +288,11 @@ Object.freeze(Fields);
 
 function copyUri(from:IUri, to?:IUri)
 {
-	var i = 0, field:string;
+	let i = 0, field:string;
 	if(!to) to = {};
 	while(field = Fields[i++])
 	{
-		var value = (<any>from)[field];
+		const value = (<any>from)[field];
 		if(value) (<any>to)[field] = value;
 	}
 	return to;
@@ -304,7 +302,7 @@ const SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', 
 
 function getScheme(scheme:SchemeValue|string|null|undefined):SchemeValue|null
 {
-	var s:any = scheme;
+	let s:any = scheme;
 	if(Type.isString(s))
 	{
 		if(!s) return null;
@@ -325,7 +323,7 @@ function getPort(port:number|string|null|undefined):number|null
 {
 	if(port===0) return <number>port;
 	if(!port) return null;
-	var p:number;
+	let p:number;
 
 	if(Type.isNumber(port, true))
 	{
@@ -357,7 +355,7 @@ function getAuthority(uri:IUri):string
 	 * [//[user:password@]host[:port]]
 	 */
 
-	var result = uri.host || EMPTY;
+	let result = uri.host || EMPTY;
 
 	if(result)
 	{
@@ -382,8 +380,8 @@ function formatFragment(fragment:string|null|undefined):string|null|undefined
 function getPathAndQuery(uri:IUri):string
 {
 
-	var path  = uri.path,
-	    query = uri.query;
+	const path  = uri.path,
+	      query = uri.query;
 
 	return EMPTY
 		+ (path || EMPTY)
@@ -396,16 +394,16 @@ function uriToString(uri:IUri):string
 	// scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
 	// {scheme}{authority}{path}{query}{fragment}
 
-	var scheme       = getScheme(uri.scheme),
-	    authority    = getAuthority(uri),
-	    pathAndQuery = getPathAndQuery(uri),
-	    fragment     = formatFragment(uri.fragment);
+	const scheme = getScheme(uri.scheme);
+	let authority = getAuthority(uri);
+	const pathAndQuery = getPathAndQuery(uri),
+	      fragment     = formatFragment(uri.fragment);
 
-	var part1 = EMPTY
+	const part1 = EMPTY
 		+ ((scheme && (scheme + ':')) || EMPTY)
 		+ (authority || EMPTY);
 
-	var part2 = EMPTY
+	let part2 = EMPTY
 		+ (pathAndQuery || EMPTY)
 		+ (fragment || EMPTY);
 
@@ -430,7 +428,8 @@ function tryParse(url:string, out:Action<IUri>):null|Exception
 	// The intention is to 'gather' the pieces.  This isn't validation (yet).
 
 	// scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
-	var i:number, result:IUri = {};
+	let i:number;
+	const result:IUri = {};
 
 	// Anything after the first # is the fragment.
 	i = url.indexOf(HASH);
@@ -452,7 +451,8 @@ function tryParse(url:string, out:Action<IUri>):null|Exception
 	i = url.indexOf(SLASH2);
 	if(i!= -1)
 	{
-		var scheme = trim(url.substring(0, i)), c = /:$/;
+		let scheme = trim(url.substring(0, i));
+		const c = /:$/;
 		if(!c.test(scheme))
 			return new ArgumentException('url', 'Scheme was improperly formatted');
 
@@ -489,7 +489,7 @@ function tryParse(url:string, out:Action<IUri>):null|Exception
 	i = url.indexOf(':');
 	if(i!= -1)
 	{
-		var port = parseInt(trim(url.substring(i + 1)));
+		const port = parseInt(trim(url.substring(i + 1)));
 		if(isNaN(port))
 			return new ArgumentException('url', 'Port was invalid.');
 

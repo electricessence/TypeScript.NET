@@ -94,7 +94,8 @@
         };
         LinkedList.prototype._removeInternal = function (entry, max) {
             if (max === void 0) { max = Infinity; }
-            var _ = this, equals = _._equalityComparer, list = _._listInternal, removedCount = 0;
+            var _ = this, equals = _._equalityComparer, list = _._listInternal;
+            var removedCount = 0;
             list.forEach(function (node) {
                 if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                     removedCount++;

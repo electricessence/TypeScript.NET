@@ -3,7 +3,7 @@ import OrderedStringKeyDictionary from "../../../../dist/commonjs/System/Collect
 import {IKeyValuePair} from "../../../../dist/commonjs/System/KeyValuePair";
 
 ICollectionTests.Collection<IKeyValuePair<string,number>>(
-	'OrderedStringKeyDictionary<number>',
+	'OrderedStringKeyDictionary<'+'number>',
 	new OrderedStringKeyDictionary<number>(),
 	[
 		{key: 'A', value: 1},

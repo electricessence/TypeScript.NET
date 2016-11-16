@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import * as AU from "../Collections/Array/Utility";
 import {shallowCopy} from "../Utility/shallowCopy";
 import {DisposableBase} from "../Disposable/DisposableBase";
@@ -39,7 +37,7 @@ export interface IEntryParams
 
 function entryFinalizer()
 {
-	var p:IEntryParams = this.params;
+	const p:IEntryParams = this.params;
 	p.dispatcher.removeEntry(this);
 	(<any>p).dispatcher = null;
 }
@@ -62,7 +60,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		listener:IEventListener,
 		priority:number = 0):void
 	{
-		var e = this._entries;
+		let e = this._entries;
 		if(!e) this._entries = e = [];
 
 		// flash/vibe.js means of adding is indiscriminate and will double add listeners...
@@ -92,7 +90,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 
 	hasEventListener(type:string, listener?:IEventListener):boolean
 	{
-		var e = this._entries;
+		const e = this._entries;
 		return e && e.some(
 				(value:EventDispatcherEntry<IEntryParams>):boolean =>
 				type==value.type && (!listener || listener==value.listener)
@@ -114,11 +112,11 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		const _ = this;
 
 
-		var l = _._entries;
+		let l = _._entries;
 		if(!l || !l.length)
 			return false;
 
-		var event:IEventBase<any>;
+		let event:IEventBase<any>;
 
 		if(typeof e=="string")
 		{
@@ -133,10 +131,10 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		else
 			event = e;
 
-		var type = event.type;
+		const type = event.type;
 
 		// noinspection JSMismatchedCollectionQueryUpdate
-		var entries:EventDispatcherEntry<IEntryParams>[] = l.filter(e=>e.type==type);//, propagate = true, prevent = false;
+		const entries:EventDispatcherEntry<IEntryParams>[] = l.filter(e => e.type==type);//, propagate = true, prevent = false;
 		if(!entries.length)
 			return false;
 
@@ -149,7 +147,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 		entries.forEach(
 			entry=>
 			{
-				var newEvent:any = Object.create(Event);
+				const newEvent:any = Object.create(Event);
 				shallowCopy(event, newEvent);
 				newEvent.target = this;
 				entry.dispatch(newEvent);
@@ -186,7 +184,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 
 			_.dispatchEvent(DISPOSED);
 
-			var l = _._entries;
+			const l = _._entries;
 			if(l)
 			{
 				this._entries = <any>null;

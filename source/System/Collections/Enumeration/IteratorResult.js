@@ -26,7 +26,7 @@
     var IteratorResult;
     (function (IteratorResult) {
         IteratorResult.Done = new IteratorResult(VOID0, VOID0, true);
-        function GetDone(value) { return IteratorResult.Done; }
+        function GetDone() { return IteratorResult.Done; }
         IteratorResult.GetDone = GetDone;
     })(IteratorResult = exports.IteratorResult || (exports.IteratorResult = {}));
     Object.freeze(IteratorResult);

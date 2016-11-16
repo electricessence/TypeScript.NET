@@ -13,8 +13,6 @@
     "use strict";
     var Types_1 = require("../Types");
     exports.EMPTY = '';
-    var SPACE = ' ';
-    var ZERO = '0';
     function getHashCode(source) {
         var hash = 0 | 0;
         if (source.length == 0)
@@ -53,7 +51,7 @@
     }
     exports.fromChars = fromChars;
     function escapeRegExp(source) {
-        return source.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        return source.replace(/[-[\]\/{}()*+?.\\^$|]/g, "\\$&");
     }
     exports.escapeRegExp = escapeRegExp;
     function trim(source, chars, ignoreCase) {
@@ -78,7 +76,7 @@
     exports.format = format;
     function supplant(source, params) {
         var oIsArray = Array.isArray(params);
-        return source.replace(/\{([^{}]*)\}/g, function (a, b) {
+        return source.replace(/\{([^{}]*)}/g, function (a, b) {
             var n = b;
             if (oIsArray) {
                 var i = parseInt(b);

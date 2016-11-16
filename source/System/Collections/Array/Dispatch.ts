@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../../Types";
 import {copy} from "./Utility";
 import {IArray} from "./IArray";
@@ -77,7 +76,7 @@ export function mapped<T,TResult>(
 
 	if(!listeners) return listeners;
 	// Reuse the copy as the array result.
-	var result:any[] = copy(listeners);
+	const result:any[] = copy(listeners);
 	if(listeners.length)
 	{
 

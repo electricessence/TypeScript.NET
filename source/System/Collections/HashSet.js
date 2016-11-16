@@ -16,7 +16,6 @@
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var extends_1 = require("../../extends");
     var __extends = extends_1.default;
-    var OTHER = 'other';
     var VOID0 = void 0;
     var HashSet = (function (_super) {
         __extends(HashSet, _super);

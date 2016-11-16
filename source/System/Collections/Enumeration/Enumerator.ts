@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {using} from "../../Disposable/dispose";
 import {Type} from "../../Types";
 import {ArrayEnumerator} from "./ArrayEnumerator";
@@ -18,7 +16,7 @@ import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
 import {IIterator, IIteratorResult} from "./IIterator";
 import {IteratorEnumerator} from "./IteratorEnumerator";
 
-const VOID0:undefined = void 0;
+
 const
 	STRING_EMPTY:string       = "",
 	ENDLESS_EXCEPTION_MESSAGE =
@@ -36,11 +34,11 @@ function initArrayFrom(
 {
 	if(Array.isArray(source) || Type.isString(source))
 	{
-		var len = Math.min(source.length, max);
+		const len = Math.min(source.length, max);
 		if(isFinite(len))
 		{
 			if(len>65535) return new Array(len);
-			var result:any[] = [];
+			const result:any[] = [];
 			result.length = len;
 			return result;
 		}
@@ -211,7 +209,7 @@ export function toArray<T>(
 	if(!isFinite(max) && Array.isArray(source))
 		return source.slice();
 
-	var result:T[] = initArrayFrom(source, max);
+	const result:T[] = initArrayFrom(source, max);
 	if(-1===forEach(source, (e, i) => { result[i] = e; }, max))
 		throw new UnsupportedEnumerableException();
 
@@ -236,7 +234,7 @@ export function map<T,TResult>(
 	if(!isFinite(max) && Array.isArray(source))
 		return source.map(selector);
 
-	var result:TResult[] = initArrayFrom(source, max);
+	const result:TResult[] = initArrayFrom(source, max);
 	if(-1===forEach(source, (e, i) => { result[i] = selector(e, i); }, max))
 		throw new UnsupportedEnumerableException();
 

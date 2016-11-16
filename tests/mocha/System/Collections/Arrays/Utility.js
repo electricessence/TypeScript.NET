@@ -19,8 +19,12 @@ describe(".initialize(length)", function () {
 });
 describe(".copy(source) & .equals(old,new)", function () {
     it("should equal", function () {
-        var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3], s2 = ArrayUtility.copy(s1), s3 = ArrayUtility.copy(s1, 1), s4 = ArrayUtility.copy(s1, 1, 3), s5 = ArrayUtility.copy(null);
+        var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3], s2 = ArrayUtility.copy(s1);
+        var s3 = ArrayUtility.copy(s1, 1), s4 = ArrayUtility.copy(s1, 1, 3);
         assert.ok(Arrays.areEqual(s1, s2));
+        var s5 = ArrayUtility.copy(null);
+        assert.ok(Arrays.areEqual(s3, s1.slice(1)));
+        assert.ok(Arrays.areEqual(s4, s1.slice(1, 4)));
         assert.equal(s5, null);
     });
 });
@@ -156,7 +160,7 @@ describe(".updateRange(value,count)", function () {
 });
 describe(".applyTo(source,action)", function () {
     it("should correctly overwrite the values", function () {
-        var value = 10, count = 3, r = [1, 2, 3];
+        var count = 3, r = [1, 2, 3];
         assert.doesNotThrow(function () { ArrayUtility.applyTo(null, function () { return null; }); });
         ArrayUtility.applyTo(r, function () { return null; });
         assert.equal(r.length, count, ".length should be 3");
@@ -167,12 +171,13 @@ describe(".applyTo(source,action)", function () {
 });
 describe(".applyTo(source,action)", function () {
     it("should correctly overwrite the values", function () {
-        var count = 0, r = [1, 2, 3];
+        var count = 0;
+        var r = [1, 2, 3];
         assert.doesNotThrow(function () { ArrayUtility.forEach(null, function () { return true; }); });
         ArrayUtility.forEach(r, function (n, i) {
             assert.equal(count, i, "count should be " + i);
             count++;
-            return i ? false : true;
+            return !i;
         });
         assert.equal(count, 2, "count should be 2");
     });

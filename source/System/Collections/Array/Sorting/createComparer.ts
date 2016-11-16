@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {Type} from "../../../Types";
 import {compare} from "../../../Compare";
 import {Primitive} from "../../../Primitive";
@@ -46,23 +44,23 @@ export function createComparer<TSource,TSelect extends Primitive>(
 	order:Order | Order[] = Order.Ascending,
 	equivalentToNaN:any = NaN):Comparison<TSource|TSource[]>
 {
-	var nanHasEquivalent = !Type.isTrueNaN(equivalentToNaN);
+	const nanHasEquivalent = !Type.isTrueNaN(equivalentToNaN);
 
 	return (a:TSource|TSource[], b:TSource|TSource[]):CompareResult=>
 	{
 		// Use an array always to ensure a single code path.
-		var aValue = ensureArray(selector(a));
-		var bValue = ensureArray(selector(b));
-		var len = Math.min(aValue.length, bValue.length);
+		const aValue = ensureArray(selector(a));
+		const bValue = ensureArray(selector(b));
+		const len = Math.min(aValue.length, bValue.length);
 
-		var oArray = Array.isArray(order) ? order : null;
+		const oArray = Array.isArray(order) ? order : null;
 		for(let i = 0; i<len; i++)
 		{
-			var vA = aValue[i],
-			    vB = bValue[i],
-			    o  = oArray
-				    ? (i<oArray.length ? oArray[i] : Order.Ascending)
-				    : <Order>order;
+			let vA = aValue[i],
+			    vB = bValue[i];
+			const o = oArray
+				? (i<oArray.length ? oArray[i] : Order.Ascending)
+				: <Order>order;
 
 			if(nanHasEquivalent)
 			{
@@ -73,7 +71,7 @@ export function createComparer<TSource,TSelect extends Primitive>(
 
 			}
 
-			var r = compare(vA, vB);
+			const r = compare(vA, vB);
 			if(r!==CompareResult.Equal)
 				return o*r;
 

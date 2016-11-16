@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {ICancellable} from "./ICancellable";
 import {Closure, Func} from "../FunctionTypes";
 import __extendsImport from "../../extends";
@@ -36,7 +34,7 @@ class Defer extends DeferBase
 
 	cancel():boolean
 	{
-		var id = this._id;
+		const id = this._id;
 		if(id)
 		{
 			clearTimeout(id);
@@ -75,7 +73,7 @@ class DeferInterval extends DeferBase
 
 	cancel():boolean
 	{
-		var id = this._id;
+		const id = this._id;
 		if(id)
 		{
 			clearInterval(id);

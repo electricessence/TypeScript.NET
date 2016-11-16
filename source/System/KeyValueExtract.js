@@ -13,7 +13,7 @@
     "use strict";
     var ArgumentException_1 = require("./Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
-    var VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_KEY = ITEM + DOT + KEY, ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
+    var VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
     function isKeyValuePair(kvp) {
         return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
     }
@@ -40,7 +40,6 @@
     }
     exports.assertNotUndefined = assertNotUndefined;
     function extractKeyValue(item, to) {
-        var _ = this;
         var key, value;
         if (item instanceof Array) {
             assertTuple(item);

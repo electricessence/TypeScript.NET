@@ -195,7 +195,9 @@
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
-        var scheme = getScheme(uri.scheme), authority = getAuthority(uri), pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
+        var scheme = getScheme(uri.scheme);
+        var authority = getAuthority(uri);
+        var pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
         var part1 = EMPTY
             + ((scheme && (scheme + ':')) || EMPTY)
             + (authority || EMPTY);
@@ -211,7 +213,8 @@
     function tryParse(url, out) {
         if (!url)
             return new ArgumentException_1.ArgumentException('url', 'Nothing to parse.');
-        var i, result = {};
+        var i;
+        var result = {};
         i = url.indexOf(HASH);
         if (i != -1) {
             result.fragment = url.substring(i + 1) || VOID0;
@@ -224,7 +227,8 @@
         }
         i = url.indexOf(SLASH2);
         if (i != -1) {
-            var scheme = Utility_1.trim(url.substring(0, i)), c = /:$/;
+            var scheme = Utility_1.trim(url.substring(0, i));
+            var c = /:$/;
             if (!c.test(scheme))
                 return new ArgumentException_1.ArgumentException('url', 'Scheme was improperly formatted');
             scheme = Utility_1.trim(scheme.replace(c, EMPTY));

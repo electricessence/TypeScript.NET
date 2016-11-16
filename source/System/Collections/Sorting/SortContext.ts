@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import * as Values from "../../Compare";
 import {Comparison} from "../../FunctionTypes";
 import {IComparer} from "../../IComparer";
@@ -35,7 +33,7 @@ export class SortContext<T> implements IComparer<T>
 	generateSortedIndexes(source:T[]):number[]
 	{
 		if(source==null) return [];
-		var result:number[] = source.map((s, i)=>i);
+		const result:number[] = source.map((s, i) => i);
 		result.sort((a, b) => this.compare(source[a], source[b]));
 		return result;
 	}
@@ -49,7 +47,7 @@ export class SortContext<T> implements IComparer<T>
 	compare(a:T, b:T):number
 	{
 		const _ = this;
-		var d = _._comparer(a, b);
+		const d = _._comparer(a, b);
 		if(d==0 && _._next) return _._next.compare(a, b);
 		return _._order*d;
 	}

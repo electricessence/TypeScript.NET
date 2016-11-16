@@ -1,8 +1,8 @@
 import * as assert from "assert";
 import * as TextUtility from "../../../../dist/commonjs/System/Text/Utility";
 
-var s1 = "	 HI  ";
-var s2 = ".-.-xHIX//\\";
+const s1 = "	 HI  ";
+const s2 = ".-.-xHIX//\\";
 describe('.trim()',()=>{
 	it("should leave a string without leading or trailing whitespace",()=>{
 		assert.equal(TextUtility.trim(s1),"HI");

@@ -3,8 +3,6 @@
  * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {areEqual} from "../Compare";
 import {LinkedNodeList} from "./LinkedNodeList";
 import {InvalidOperationException} from "../Exceptions/InvalidOperationException";
@@ -64,7 +62,7 @@ function ensureExternal<T>(
 	if(!list)
 		throw new ArgumentNullException("list");
 
-	var external = node.external;
+	let external = node.external;
 	if(!external)
 		node.external = external = new LinkedListNode<T>(list, node);
 
@@ -82,7 +80,7 @@ function getInternal<T>(node:ILinkedListNode<T>, list:LinkedList<T>):InternalNod
 		throw new InvalidOperationException(
 			"Provided node does not belong to this list.");
 
-	var n:InternalNode<T> = (<any>node)._nodeInternal;
+	let n:InternalNode<T> = (<any>node)._nodeInternal;
 	if(!n)
 		throw new InvalidOperationException(
 			"Provided node is not valid.");
@@ -94,7 +92,7 @@ function detachExternal(node:InternalNode<any>):void
 {
 	if(node)
 	{
-		var e:any = node.external;
+		const e:any = node.external;
 		if(e)
 		{
 			e._list = VOID0;
@@ -129,14 +127,14 @@ extends CollectionBase<T> implements ILinkedList<T>
 	protected _onDispose():void
 	{
 		super._onDispose();
-		var l = this._listInternal;
+		const l = this._listInternal;
 		(<any>this)._listInternal = null;
 		l.dispose();
 	}
 
 	protected getCount():number
 	{
-		var li = this._listInternal;
+		const li = this._listInternal;
 		return li ? li.unsafeCount : 0;
 	}
 
@@ -148,10 +146,10 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	protected _removeInternal(entry:T, max:number = Infinity):number
 	{
-		var _            = this,
-		    equals       = _._equalityComparer,
-		    list         = _._listInternal,
-		    removedCount = 0;
+		const _      = this,
+		      equals = _._equalityComparer,
+		      list   = _._listInternal;
+		let removedCount = 0;
 
 		list.forEach(node=>
 		{
@@ -166,7 +164,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	protected _clearInternal():number
 	{
-		var list = this._listInternal;
+		const list = this._listInternal;
 		list.forEach(node=>detachExternal(node));
 		return list.clear();
 	}
@@ -200,7 +198,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 			_      = this,
 			equals = _._equalityComparer;
 
-		var next:any = _._listInternal && _._listInternal.first;
+		let next:any = _._listInternal && _._listInternal.first;
 		while(next)
 		{
 			if(equals(entry, next.value))
@@ -217,7 +215,7 @@ extends CollectionBase<T> implements ILinkedList<T>
 			_      = this,
 			equals = _._equalityComparer;
 
-		var prev:any = _._listInternal && _._listInternal.last;
+		let prev:any = _._listInternal && _._listInternal.last;
 		while(prev)
 		{
 			if(equals(entry, prev.value))
@@ -234,25 +232,25 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	get first():ILinkedListNode<T>|null
 	{
-		var li = this._listInternal;
+		const li = this._listInternal;
 		return li && ensureExternal(li.first, this);
 	}
 
 	get firstValue():T | undefined
 	{
-		var li = this._listInternal, node = li && li.first;
+		const li = this._listInternal, node = li && li.first;
 		return node ? node.value : VOID0;
 	}
 
 	get last():ILinkedListNode<T>|null
 	{
-		var li = this._listInternal;
+		const li = this._listInternal;
 		return ensureExternal(li.last, this);
 	}
 
 	get lastValue():T | undefined
 	{
-		var li = this._listInternal, node = li && li.last;
+		const li = this._listInternal, node = li && li.last;
 		return node ? node.value : VOID0;
 	}
 
@@ -261,25 +259,25 @@ extends CollectionBase<T> implements ILinkedList<T>
 
 	getValueAt(index:number):T | undefined
 	{
-		var li = this._listInternal, node = li && li.getNodeAt(index);
+		const li = this._listInternal, node = li && li.getNodeAt(index);
 		return node ? node.value : VOID0;
 	}
 
 	getNodeAt(index:number):ILinkedListNode<T> | null
 	{
-		var li = this._listInternal;
+		const li = this._listInternal;
 		return li && ensureExternal(li.getNodeAt(index), this);
 	}
 
 	find(entry:T):ILinkedListNode<T> | null
 	{
-		var li = this._listInternal;
+		const li = this._listInternal;
 		return li && ensureExternal(this._findFirst(entry), this);
 	}
 
 	findLast(entry:T):ILinkedListNode<T> | null
 	{
-		var li = this._listInternal;
+		const li = this._listInternal;
 		return li && ensureExternal(this._findLast(entry), this);
 	}
 
@@ -422,7 +420,7 @@ class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 	remove():void
 	{
 		const _:any = this;
-		var list = _._list;
+		const list = _._list;
 		if(list) list.removeNode(this);
 		_._list = VOID0;
 		_._nodeInternal = VOID0;

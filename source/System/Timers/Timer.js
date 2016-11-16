@@ -32,7 +32,7 @@
         Timer.startNew = function (millisecondInterval, maxCount, initialDelay) {
             if (maxCount === void 0) { maxCount = Infinity; }
             if (initialDelay === void 0) { initialDelay = millisecondInterval; }
-            var t = new Timer(millisecondInterval, maxCount, millisecondInterval);
+            var t = new Timer(millisecondInterval, maxCount, initialDelay);
             t.start();
             return t;
         };

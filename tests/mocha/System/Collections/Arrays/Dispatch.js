@@ -21,7 +21,7 @@ it("should apply closures in order", function () {
     assert.equal(result, 2400);
 });
 var b = [
-    function (p) {
+    function () {
         throw "error";
     }
 ];

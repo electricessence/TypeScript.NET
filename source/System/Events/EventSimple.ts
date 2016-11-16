@@ -3,8 +3,6 @@
  * Based on Netjs mscorlib.ts
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {IDisposable} from "../Disposable/IDisposable";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -25,15 +23,15 @@ export default class EventSimple<T extends Function> implements IDisposable
 
 	remove(listener:T):void
 	{
-		var index = this._listeners.indexOf(listener);
+		const index = this._listeners.indexOf(listener);
 		if(index<0) return;
 		this._listeners.splice(index, 1);
 	}
 
 	dispatch(...params:any[]):void
 	{
-		var listeners = this._listeners;
-		for(var f of listeners)
+		const listeners = this._listeners;
+		for(let f of listeners)
 		{
 			f.call(params);
 		}
@@ -41,10 +39,10 @@ export default class EventSimple<T extends Function> implements IDisposable
 
 	toMulticastFunction():Function
 	{
-		var listeners = this._listeners;
+		const listeners = this._listeners;
 		return function()
 		{
-			for(var f of listeners)
+			for(let f of listeners)
 			{
 				f.call(arguments);
 			}

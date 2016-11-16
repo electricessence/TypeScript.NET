@@ -3,8 +3,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {Primitive} from "../../../Primitive";
 import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 
@@ -17,7 +15,7 @@ import {ArgumentNullException} from "../../../Exceptions/ArgumentNullException";
 export function quickSort<T extends Primitive>(target:T[]):T[]
 {
 	if(!target) throw new ArgumentNullException("target");
-	var len = target.length;
+	const len = target.length;
 	return target.length<2 ? target : sort(target, 0, len - 1);
 }
 
@@ -29,13 +27,14 @@ function sort<T extends Primitive>(
 	if(low<high)
 	{
 		// Partition first...
-		var swap:T, pivotIndex = Math.floor((low + high)/2);
+		let swap:T;
+		const pivotIndex = Math.floor((low + high)/2);
 
 		swap = target[pivotIndex];
 		target[pivotIndex] = target[high];
 		target[high] = swap;
 
-		var i = low;
+		let i = low;
 		for(let j = low; j<high; j++)
 		{
 			if(target[j]<target[high])

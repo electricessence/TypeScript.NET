@@ -4,8 +4,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-
-
 import {SubscribableBase} from "./SubscribableBase";
 import {IObservable} from "./IObservable";
 import {IObserver} from "./IObserver";
@@ -55,8 +53,8 @@ extends SubscribableBase<IObserver<T>> implements IObservable<T>
 		onError?:Action<any>,
 		onCompleted?:Closure):IDisposable
 	{
-		var s:IObserver<T>;
-		var isFn = typeof subscriber=='function';
+		let s:IObserver<T>;
+		let isFn = typeof subscriber=='function';
 		if(onError || onCompleted || isFn)
 		{
 			if(subscriber && !isFn) throw "Invalid subscriber type.";
@@ -82,7 +80,7 @@ function processAction<T>(
 	handler:(s:IObserver<T>)=>void)
 {
 	if(!observers) return;
-	var observersErrors:{observer:IObserver<T>,ex:any}[]|null = null;
+	let observersErrors:{observer:IObserver<T>,ex:any}[]|null = null;
 
 	for(let s of observers)
 	{

@@ -3,7 +3,6 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {TimeQuantity} from "./TimeQuantity";
 import {IClockTime} from "./ITimeStamp";
 import {Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
@@ -38,8 +37,8 @@ export class ClockTime extends TimeQuantity implements IClockTime
 		);
 
 		const _ = this;
-		var ms = Math.abs(_.getTotalMilliseconds());
-		var msi = Math.floor(ms);
+		const ms = Math.abs(_.getTotalMilliseconds());
+		let msi = Math.floor(ms);
 
 		_.tick = (ms - msi)*Ticks.Per.Millisecond;
 
@@ -73,7 +72,7 @@ export class ClockTime extends TimeQuantity implements IClockTime
 		seconds:number = 0,
 		milliseconds:number = 0):number
 	{
-		var value = hours;
+		let value = hours;
 		value *= Minutes.Per.Hour;
 		value += minutes;
 		value *= Seconds.Per.Minute;
@@ -89,7 +88,7 @@ export class ClockTime extends TimeQuantity implements IClockTime
 
 
 		const _ = this;
-		var a:string[] = [];
+		const a:string[] = [];
 
 		if(_.days)
 			a.push(pluralize(_.days, "day"));

@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {LinkedNodeList} from "./LinkedNodeList";
 import {ArgumentNullException} from "../Exceptions/ArgumentNullException";
 import {forEach} from "./Enumeration/Enumerator";
@@ -40,7 +39,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	protected _getSet():LinkedNodeList<ILinkedNodeWithValue<T>>
 	{
-		var s = this._set;
+		let s = this._set;
 		if(!s) this._set = s = new LinkedNodeList<ILinkedNodeWithValue<T>>();
 		return s;
 	}
@@ -99,7 +98,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
-		var result = true, count:number;
+		let result = true, count:number;
 		if(other instanceof SetBase)
 		{
 			result = this.isSupersetOf(other);
@@ -135,7 +134,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
-		var result = true;
+		let result = true;
 		forEach(other, v=>
 		{
 			return result = this.contains(v);
@@ -147,7 +146,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		if(!other) throw new ArgumentNullException(OTHER);
 
-		var result = false;
+		let result = false;
 		forEach(other, v => !(result = this.contains(v)));
 		return result;
 	}
@@ -200,7 +199,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	protected _clearInternal():number
 	{
-		var s = this._set;
+		const s = this._set;
 		return s ? s.clear() : 0;
 	}
 
@@ -221,7 +220,7 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 	{
 		const _ = this;
 		_.throwIfDisposed();
-		var s = _._set;
+		const s = _._set;
 		return s && _.getCount()
 			? LinkedNodeList.valueEnumeratorFrom<T>(s)
 			: EmptyEnumerator;
@@ -244,13 +243,13 @@ extends CollectionBase<T> implements ISet<T>, IDisposable
 
 	removeFirst():boolean
 	{
-		var s = this._set;
+		const s = this._set;
 		return this._removeNode(s && s.first);
 	}
 
 	removeLast():boolean
 	{
-		var s = this._set;
+		const s = this._set;
 		return this._removeNode(s && s.last);
 	}
 
@@ -261,9 +260,9 @@ function wipe(map:IMap<any>, depth:number = 1):void
 {
 	if(map && depth)
 	{
-		for(var key of Object.keys(map))
+		for(let key of Object.keys(map))
 		{
-			var v = map[key];
+			const v = map[key];
 			delete map[key];
 			wipe(v, depth - 1);
 		}

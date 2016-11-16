@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
  */
-
 import {WorkerLike} from "./WorkerType";
 import {ObservableBase} from "../Observable/ObservableBase";
 import __extendsImport from "../../extends";
@@ -25,7 +24,7 @@ export class NodeJSWorker extends ObservableBase<any> implements WorkerLike
 	constructor(url:string)
 	{
 		super();
-		var process = this._process = ps.fork(url);
+		const process = this._process = ps.fork(url);
 		process.on('message', (msg:string)=>this._onNext(JSON.parse(msg)));
 		process.on('error', (err:any)=>this._onError(err));
 	}

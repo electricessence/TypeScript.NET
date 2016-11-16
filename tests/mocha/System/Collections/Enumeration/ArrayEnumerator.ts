@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import ArrayEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/ArrayEnumerator";
@@ -8,13 +7,13 @@ describe("new & .moveNext()",()=>{
 	{
 		assert.doesNotThrow(()=>
 		{
-			var i = new ArrayEnumerator([]);
+			const i = new ArrayEnumerator([]);
 			i.moveNext();
 		});
 
 		assert.doesNotThrow(()=>
 		{
-			var i = new ArrayEnumerator(<any>null);
+			const i = new ArrayEnumerator(<any>null);
 			i.moveNext();
 		});
 

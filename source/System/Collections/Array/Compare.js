@@ -54,7 +54,8 @@
     function sort(a, comparer) {
         if (!a || a.length < 2)
             return a;
-        var len = a.length, b;
+        var len = a.length;
+        var b;
         if (len > 65536)
             b = new Array(len);
         else {

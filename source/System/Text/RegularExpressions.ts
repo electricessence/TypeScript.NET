@@ -3,7 +3,6 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 // NOTE: Avoid real (types/interfaces only = ok) dependencies so this class can be used cleanly.
 import {IMap} from "../Collections/Dictionaries/IDictionary";
 import {Primitive} from "../Primitive";
@@ -13,7 +12,7 @@ import __extendsImport from "../../extends";
 const __extends = __extendsImport;
 
 const EMPTY:string = "";
-const UNDEFINED:string = "undefined";
+
 const _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
 
 
@@ -81,7 +80,7 @@ export class Regex
 	{
 		if(!pattern) throw new Error("'pattern' cannot be null or empty.");
 
-		var patternString:string,
+		let patternString:string,
 		    flags:string
 			    = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
 			    .join(EMPTY)
@@ -100,13 +99,13 @@ export class Regex
 		{
 			patternString = pattern;
 		}
-		var ignoreWhiteSpace = flags.indexOf(_W)!= -1;
+		const ignoreWhiteSpace = flags.indexOf(_W)!= -1;
 
 		// For the majority of expected behavior, we need to eliminate global and whitespace ignore.
 		flags = flags.replace(/[gw]/g, EMPTY);
 
 		// find the keys inside the pattern, and place in mapping array {0:'key1', 1:'key2', ...}
-		var keys:string[] = [];
+		const keys:string[] = [];
 		{
 			let k = patternString.match(/(?!\(\?<)(\w+)(?=>)/g);
 			if(k)
@@ -134,7 +133,7 @@ export class Regex
 	match(input:string, startIndex:number = 0):Match
 	{
 		const _ = this;
-		var r:RegExpExecArray | null;
+		let r:RegExpExecArray | null;
 		if(!input
 			|| startIndex>=input.length
 			|| !(r = this._re.exec(input.substring(startIndex))))
@@ -142,10 +141,10 @@ export class Regex
 
 		if(!(startIndex>0)) startIndex = 0;
 
-		var first                = startIndex + r.index,
-		    loc                  = first,
-		    groups:Group[]       = [],
-		    groupMap:IMap<Group> = {};
+		const first = startIndex + r.index;
+		let loc = first;
+		const groups:Group[] = [],
+		      groupMap:IMap<Group> = {};
 
 		for(let i = 0, len = r.length; i<len; ++i)
 		{
@@ -162,14 +161,16 @@ export class Regex
 			if(i!==0) loc += text.length;
 		}
 
-		var m = new Match(r[0], first, groups, groupMap);
+		const m = new Match(r[0], first, groups, groupMap);
 		m.freeze();
 		return m;
 	}
 
 	matches(input:string):Match[]
 	{
-		var matches:Match[] = [], m:Match, p = 0, end = input && input.length || 0;
+		const matches:Match[] = [];
+		let m:Match, p = 0;
+		const end = input && input.length || 0;
 		while(p<end && (m = this.match(input, p)) && m.success)
 		{
 			matches.push(m);
@@ -194,10 +195,11 @@ export class Regex
 		count:number = Infinity):string
 	{
 		if(!input || r===null || r=== void 0 || !(count>0)) return input;
-		var result:string[] = [];
-		var p = 0, end = input.length, isEvaluator = typeof r=="function";
+		const result:string[] = [];
+		let p = 0;
+		const end = input.length, isEvaluator = typeof r=="function";
 
-		var m:Match, i:number = 0;
+		let m:Match, i:number = 0;
 		while(i<count && p<end && (m = this.match(input, p)) && m.success)
 		{
 			let {index, length} = m;
@@ -221,7 +223,7 @@ export class Regex
 		pattern:string,
 		options?:RegexOptions.Literal[]):boolean
 	{
-		var r = new Regex(pattern, options);
+		const r = new Regex(pattern, options);
 		return r.isMatch(input);
 	}
 
@@ -243,7 +245,7 @@ export class Regex
 		e:any,
 		options?:RegexOptions.Literal[]):string
 	{
-		var r = new Regex(pattern, options);
+		const r = new Regex(pattern, options);
 		return r.replace(input, e);
 	}
 }
@@ -253,7 +255,7 @@ export class Capture
 
 	get length():number
 	{
-		var v = this.value;
+		const v = this.value;
 		return v && v.length || 0;
 	}
 

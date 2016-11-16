@@ -103,7 +103,8 @@
         DictionaryBase.prototype.setValue = function (key, value) {
             var _ = this;
             _.assertModifiable();
-            var changed = false, old = _.getValue(key);
+            var changed = false;
+            var old = _.getValue(key);
             if (!Compare_1.areEqual(value, old) && _._setValueInternal(key, value)) {
                 changed = true;
                 _._onValueModified(key, value, old);

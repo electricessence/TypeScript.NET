@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-
 import {InvalidOperationException, Error} from "../Exceptions/InvalidOperationException";
 import {IDisposableAware} from "./IDisposableAware";
 import __extendsImport from "../../extends";
@@ -41,7 +40,7 @@ export class ObjectDisposedException extends InvalidOperationException
 	toString():string
 	{
 		const _ = this;
-		var oName = _.objectName;
+		let oName = _.objectName;
 		oName = oName ? ('{' + oName + '} ') : '';
 
 		return '[' + _.name + ': ' + oName + _.message + ']';

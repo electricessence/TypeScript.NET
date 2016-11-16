@@ -3,7 +3,6 @@
  * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {areEqual} from "../Compare";
 import * as AU from "./Array/Utility";
 import {Type} from "../Types";
@@ -26,7 +25,7 @@ const SHRINK_THRESHOLD:number = 32; // Unused?
 // var GROW_FACTOR: number = 200;  // double each time
 const GROW_FACTOR_HALF:number = 100;
 const DEFAULT_CAPACITY:number = MINIMUM_GROW;
-var emptyArray:any[] = [];
+const emptyArray:any[] = Object.freeze([]);
 
 export class Queue<T>
 extends CollectionBase<T>
@@ -54,7 +53,7 @@ extends CollectionBase<T>
 		{
 			if(Type.isNumber(source))
 			{
-				var capacity = <number>source;
+				const capacity = <number>source;
 				assertIntegerZeroOrGreater(capacity, "capacity");
 
 				_._array = capacity
@@ -63,7 +62,7 @@ extends CollectionBase<T>
 			}
 			else
 			{
-				var se = <IEnumerableOrArray<T>> source;
+				const se = <IEnumerableOrArray<T>> source;
 				_._array = AU.initialize<T>(
 					Type.isArrayLike(se)
 						? se.length
@@ -85,10 +84,11 @@ extends CollectionBase<T>
 	protected _addInternal(item:T):boolean
 	{
 		const _ = this;
-		var size = _._size, len = _._capacity;
+		const size = _._size;
+		let len = _._capacity;
 		if(size==len)
 		{
-			var newCapacity = len*GROW_FACTOR_HALF;
+			let newCapacity = len*GROW_FACTOR_HALF;
 			if(newCapacity<len + MINIMUM_GROW)
 				newCapacity = len + MINIMUM_GROW;
 
@@ -96,13 +96,14 @@ extends CollectionBase<T>
 			len = _._capacity;
 		}
 
-		var tail = _._tail;
+		const tail = _._tail;
 		_._array[tail] = item;
 		_._tail = (tail + 1)%len;
 		_._size = size + 1;
 		return true;
 	}
 
+	//noinspection JSUnusedLocalSymbols
 	protected _removeInternal(item:T, max?:number):number
 	{
 		throw new NotImplementedException(
@@ -114,7 +115,7 @@ extends CollectionBase<T>
 	protected _clearInternal():number
 	{
 		const _ = this;
-		var array = _._array, head = _._head, tail = _._tail, size = _._size;
+		const array = _._array, head = _._head, tail = _._tail, size = _._size;
 		if(head<tail)
 			AU.clear(array, head, tail);
 		else
@@ -150,7 +151,7 @@ extends CollectionBase<T>
 	dump(max:number = Infinity):T[]
 	{
 		const _ = this;
-		var result:T[] = [];
+		const result:T[] = [];
 
 		if(isFinite(max))
 		{
@@ -189,12 +190,12 @@ extends CollectionBase<T>
 		const _ = this;
 		assertIntegerZeroOrGreater(capacity, "capacity");
 
-		var array = _._array, len = _._capacity;
+		const array = _._array, len = _._capacity;
 		if(capacity>len) _.throwIfDisposed();
 		if(capacity==len)
 			return;
 
-		var head = _._head, tail = _._tail, size = _._size;
+		const head = _._head, tail = _._tail, size = _._size;
 
 		// Special case where we can simply extend the length of the array. (JavaScript only)
 		if(array!=emptyArray && capacity>len && head<tail)
@@ -205,7 +206,7 @@ extends CollectionBase<T>
 		}
 
 		// We create a new array because modifying an existing one could be slow.
-		var newArray:T[] = AU.initialize<T>(capacity);
+		const newArray:T[] = AU.initialize<T>(capacity);
 		if(size>0)
 		{
 			if(head<tail)
@@ -243,9 +244,9 @@ extends CollectionBase<T>
 			return <any>VOID0;
 		}
 
-		var array = _._array, head = _._head;
+		const array = _._array, head = _._head;
 
-		var removed = _._array[head];
+		const removed = _._array[head];
 		array[head] = <any>null;
 		_._head = (head + 1)%_._capacity;
 
@@ -262,8 +263,8 @@ extends CollectionBase<T>
 		_.assertModifiable();
 
 		// A single dequeue shouldn't need update recursion tracking...
-		var modified = !!_._size;
-		var v = this._dequeueInternal(throwIfEmpty);
+		const modified = !!_._size;
+		const v = this._dequeueInternal(throwIfEmpty);
 
 		// This may preemptively trigger the _onModified.
 		if(modified && _._size<_._capacity/2)
@@ -277,7 +278,7 @@ extends CollectionBase<T>
 	tryDequeue(out:Action<T>):boolean
 	{
 		if(!this._size) return false;
-		var d = this.dequeue();
+		const d = this.dequeue();
 		if(out) out(d);
 		return true;
 	}
@@ -301,7 +302,7 @@ extends CollectionBase<T>
 	trimExcess(threshold?:number):void
 	{
 		const _ = this;
-		var size = _._size;
+		const size = _._size;
 		if(size<Math.floor(_._capacity*0.9) && (!threshold && threshold!==0 || isNaN(threshold) || threshold<size))
 			_.setCapacity(size);
 	}
@@ -311,7 +312,7 @@ extends CollectionBase<T>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var index:number, version:number, size:number;
+		let index:number, version:number, size:number;
 		return new EnumeratorBase<T>(
 			() =>
 			{

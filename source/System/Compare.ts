@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {Type} from "./Types";
 import {Primitive} from "./Primitive";
 import {IComparable} from "./IComparable";
@@ -93,7 +91,7 @@ export function areEquivalent(
 	if(Type.isObject(a) && Type.isObject(b))
 	{
 
-		var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
+		const aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
 		if(len!=bKeys.length)
 			return false;
 

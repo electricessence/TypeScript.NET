@@ -15,7 +15,6 @@
     var extends_1 = require("../../extends");
     var __extends = extends_1.default;
     var EMPTY = "";
-    var UNDEFINED = "undefined";
     var _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
     var RegexOptions;
     (function (RegexOptions) {
@@ -82,7 +81,9 @@
                 return Match.Empty;
             if (!(startIndex > 0))
                 startIndex = 0;
-            var first = startIndex + r.index, loc = first, groups = [], groupMap = {};
+            var first = startIndex + r.index;
+            var loc = first;
+            var groups = [], groupMap = {};
             for (var i = 0, len = r.length; i < len; ++i) {
                 var text = r[i];
                 var g = EmptyGroup;
@@ -101,7 +102,9 @@
             return m;
         };
         Regex.prototype.matches = function (input) {
-            var matches = [], m, p = 0, end = input && input.length || 0;
+            var matches = [];
+            var m, p = 0;
+            var end = input && input.length || 0;
             while (p < end && (m = this.match(input, p)) && m.success) {
                 matches.push(m);
                 p = m.index + m.length;
@@ -113,7 +116,8 @@
             if (!input || r === null || r === void 0 || !(count > 0))
                 return input;
             var result = [];
-            var p = 0, end = input.length, isEvaluator = typeof r == "function";
+            var p = 0;
+            var end = input.length, isEvaluator = typeof r == "function";
             var m, i = 0;
             while (i < count && p < end && (m = this.match(input, p)) && m.success) {
                 var index = m.index, length_1 = m.length;

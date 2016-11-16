@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../../Types";
 import {DisposableBase} from "../../Disposable/DisposableBase";
 import {ObjectPool} from "../../Disposable/ObjectPool";
@@ -18,9 +17,10 @@ const __extends = __extendsImport;
 
 const VOID0:undefined = void 0;
 
-var yielderPool:ObjectPool<Yielder<any>>;
+let yielderPool:ObjectPool<Yielder<any>>;
 function yielder():Yielder<any>;
 function yielder(recycle?:Yielder<any>):void;
+//noinspection JSUnusedLocalSymbols
 function yielder(recycle?:Yielder<any>):Yielder<any>|void
 {
 	if(!yielderPool)
@@ -78,13 +78,13 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 
 	get current():T|undefined
 	{
-		var y = this._yielder;
+		const y = this._yielder;
 		return y && y.current;
 	}
 
 	get index():number
 	{
-		var y = this._yielder;
+		const y = this._yielder;
 		return y ? y.index : NaN;
 	}
 
@@ -134,7 +134,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	{
 		const _ = this;
 		_.throwIfDisposed();
-		var y = _._yielder;
+		const y = _._yielder;
 		_._yielder = <any>null;
 
 		_._state = EnumeratorState.Before;
@@ -189,7 +189,7 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 				case EnumeratorState.Before:
 					_._yielder = _._yielder || yielder();
 					_._state = EnumeratorState.Active;
-					var initializer = _._initializer;
+					const initializer = _._initializer;
 					if(initializer)
 						initializer();
 				// fall through
@@ -280,13 +280,13 @@ export class EnumeratorBase<T> extends DisposableBase implements IEnumerator<T>
 	{
 		const _ = this;
 		_._isEndless = false;
-		var disposer = _._disposer;
+		const disposer = _._disposer;
 
 		_._initializer = <any>null;
 		_._disposer = <any>null;
 
 
-		var y = _._yielder;
+		const y = _._yielder;
 		_._yielder = <any>null;
 		this._state = EnumeratorState.Disposed;
 

@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import * as ICollectionTests from "./ICollection";
@@ -13,20 +12,20 @@ ICollectionTests.InstanceCollection(CLASS_NAME, new LinkedList<Object>());
 
 describe('.addAfter & .addBefore', ()=>
 {
-	var part1:number[] = [1, 2, 3], part2:number[] = [5, 6, 7];
-	var parts = part1.concat(part2), len1 = parts.length;
-	var list = new LinkedList<number>(parts);
-	var list1 = list.toArray();
-	var count1 = list.count;
+	const part1:number[] = [1, 2, 3], part2:number[] = [5, 6, 7];
+	const parts = part1.concat(part2), len1 = parts.length;
+	const list = new LinkedList<number>(parts);
+	const list1 = list.toArray();
+	const count1 = list.count;
 
-	var partsSpliced = part1.concat([4]).concat(part2);
-	var len2 = partsSpliced.length;
+	const partsSpliced = part1.concat([4]).concat(part2);
+	const len2 = partsSpliced.length;
 	list.find(5)!.addBefore(4);
-	var count2 = list.count;
-	var list2 = list.toArray();
+	const count2 = list.count;
+	const list2 = list.toArray();
 	list.find(6)!.addAfter(6.5);
-	var count3 = list.count;
-	var list3 = list.toArray();
+	const count3 = list.count;
+	const list3 = list.toArray();
 
 
 	it('should match expected initial count', ()=>
@@ -55,7 +54,7 @@ describe("Validate external node detachment", ()=>
 
 	it("should assert if node detached", ()=>
 	{
-		var list = new LinkedList<number>();
+		const list = new LinkedList<number>();
 		list.add(1);
 		list.add(2);
 		assert.equal(list.count, 2);
@@ -80,11 +79,11 @@ describe("Validate external node detachment", ()=>
 		assert.equal(list.getValueAt(4),10);
 		assert.ok(list.removeLast());
 		assert.ok(list.removeFirst());
-		var n = list.getNodeAt(1)!;
+		const n = list.getNodeAt(1)!;
 		assert.ok(list.removeAt(1));
 		assert.throws(()=>n.value);
 
-		var last = list.last!;
+		const last = list.last!;
 		assert.equal(last.previous!.value,1);
 		assert.equal(last.previous!.next,last);
 		last.remove();
@@ -96,7 +95,7 @@ describe("Validate external node detachment", ()=>
 		assert.throws(()=>last.next);
 		assert.throws(()=>last.previous);
 
-		var first = list.first!;
+		const first = list.first!;
 		list.dispose();
 		assert.ok(!first.list);
 		assert.throws(()=>first.value);

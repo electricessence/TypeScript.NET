@@ -32,6 +32,7 @@
     "typescript-dotnet"
   ],
   "devDependencies": {
+    "@types/assert": "0.0.29",
     "@types/gulp": "^3.8.32",
     "@types/gulp-typedoc": "0.0.29",
     "@types/mocha": "^2.2.32",

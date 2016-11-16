@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import IndexEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/IndexEnumerator";
@@ -12,7 +11,7 @@ describe("new & .moveNext()", ()=>
 
 		assert.doesNotThrow(()=>
 		{
-			var i = new IndexEnumerator(()=>
+			const i = new IndexEnumerator(() =>
 			{
 				return {
 					source: <any>null,
@@ -26,7 +25,7 @@ describe("new & .moveNext()", ()=>
 
 		assert.doesNotThrow(()=>
 		{
-			var i = new IndexEnumerator(()=>
+			const i = new IndexEnumerator(() =>
 			{
 				return {
 					source: <any>null,
@@ -44,7 +43,7 @@ describe("new & .moveNext()", ()=>
 
 		assert.throws(()=>
 		{
-			var i = new IndexEnumerator(()=>
+			const i = new IndexEnumerator(() =>
 			{
 				return {
 					source: a,
@@ -58,7 +57,7 @@ describe("new & .moveNext()", ()=>
 
 		assert.throws(()=>
 		{
-			var i = new IndexEnumerator(()=>
+			const i = new IndexEnumerator(() =>
 			{
 				return {
 					source: a,
@@ -76,7 +75,7 @@ describe("new & .moveNext()", ()=>
 
 		assert.throws(()=>
 		{
-			var i = new IndexEnumerator(()=>
+			const i = new IndexEnumerator(() =>
 			{
 				return {
 					source: a,
@@ -95,7 +94,7 @@ describe("new & .moveNext()", ()=>
 
 		assert.throws(()=>
 		{
-			var i = new IndexEnumerator(()=>
+			const i = new IndexEnumerator(() =>
 			{
 				return {
 					source: a,
@@ -113,16 +112,17 @@ describe("new & .moveNext()", ()=>
 	{
 
 
-		var a = [0, 1, 2, 3, 4];
-		var len = a.length, count = 0;
-		var test = new IndexEnumerator(()=>
+		const a = [0, 1, 2, 3, 4];
+		const len = a.length;
+		let count = 0;
+		const test = new IndexEnumerator(() =>
 		{
 			return {
 				source: [0, 1, 2, 3, 4],
 				length: 5,
 			}
 		});
-		var last:number = <any>null;
+		let last:number = <any>null;
 		while(test.moveNext())
 		{
 			count++;

@@ -29,7 +29,7 @@ function importRecursive(path, importFiles, base) {
         });
     });
     if (importFiles) {
-        var files = getFilesAt(root + dirPath, '.js'), count = files.length;
+        var files = getFilesAt(root + dirPath, '.js'), count_1 = files.length;
         files
             .sort()
             .forEach(function (filename) {
@@ -39,7 +39,7 @@ function importRecursive(path, importFiles, base) {
             var i = function () {
                 require('./' + filePath);
             };
-            if (count == 1 && name == path)
+            if (count_1 == 1 && name == path)
                 i();
             else
                 describe(name, i);

@@ -1,11 +1,9 @@
+/*
 import ObjectPool from "../../../../dist/commonjs/System/Disposable/ObjectPool";
+import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 
 const pool = new ObjectPool(40, ()=>new Array<any>(100));
 
-
-
-/*
-import Stopwatch from "../../../../dist/commonjs/System/Diagnostics/Stopwatch";
 function fake(o:any) {}
 const TRIES:number = 1000;
 describe("should be performant", ()=>

@@ -3,8 +3,6 @@
  * Based on .NET DateTime's interface.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {ICalendarDate, ITimeStamp} from "./ITimeStamp";
 import {TimeSpan} from "./TimeSpan";
 import {ClockTime} from "./ClockTime";
@@ -147,7 +145,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	addMonths(months:number):DateTime
 	{
 		months = months || 0;
-		var d = this.toJsDate();
+		const d = this.toJsDate();
 		d.setMonth(d.getMonth() + months);
 		return new DateTime(d, this._kind);
 	}
@@ -155,7 +153,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	addYears(years:number):DateTime
 	{
 		years = years || 0;
-		var d = this.toJsDate();
+		const d = this.toJsDate();
 		d.setFullYear(d.getFullYear() + years);
 		return new DateTime(d, this._kind);
 	}
@@ -216,10 +214,10 @@ export class DateTime implements ICalendarDate, IDateTime
 	get timeOfDay():ClockTime
 	{
 		const _ = this;
-		var t = _._time;
+		let t = _._time;
 		if(!t)
 		{
-			var d = this._value;
+			const d = this._value;
 			_._time = t = new ClockTime(
 				d.getHours(),
 				d.getMinutes(),
@@ -256,7 +254,7 @@ export class DateTime implements ICalendarDate, IDateTime
 		if(_._kind!=DateTime.Kind.Local)
 			return new DateTime(_, _._kind);
 
-		var d = _._value;
+		const d = _._value;
 		return new DateTime(
 			new Date(
 				d.getUTCFullYear(),
@@ -286,7 +284,7 @@ export class DateTime implements ICalendarDate, IDateTime
 	 */
 	static get tomorrow():DateTime
 	{
-		var today:DateTime = DateTime.today;
+		const today:DateTime = DateTime.today;
 		return today.addDays(1);
 	}
 
@@ -297,8 +295,8 @@ export class DateTime implements ICalendarDate, IDateTime
 	 */
 	static between(first:Date|DateTime, last:Date|DateTime):TimeSpan
 	{
-		var f:Date = first instanceof DateTime ? first._value : <Date>first,
-		    l:Date = last instanceof DateTime ? last._value : <Date>last;
+		const f:Date = first instanceof DateTime ? first._value : <Date>first,
+		      l:Date = last instanceof DateTime ? last._value : <Date>last;
 
 		return new TimeSpan(l.getTime() - f.getTime());
 	}
@@ -333,7 +331,7 @@ export class DateTime implements ICalendarDate, IDateTime
 		month:number = 0,
 		day:number = 1):DateTime
 	{
-		var year:number;
+		let year:number;
 		if(typeof yearOrDate=="object")
 		{
 			day = (<ICalendarDate>yearOrDate).day;
@@ -355,7 +353,7 @@ export class DateTime implements ICalendarDate, IDateTime
 		month:number = 1,
 		day:number = 1):DateTime
 	{
-		var year:number;
+		let year:number;
 		if(typeof yearOrDate=="object")
 		{
 			day = (<ICalendarDate>yearOrDate).day;

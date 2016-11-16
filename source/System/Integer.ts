@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {ArgumentException} from "./Exceptions/ArgumentException";
 import {ArgumentOutOfRangeException} from "./Exceptions/ArgumentOutOfRangeException";
 import {IArray} from "./Collections/Array/IArray";
@@ -52,7 +51,7 @@ export module Integer
 			boundary:number,
 			inclusive?:boolean):number[]
 		{
-			var s:number[] = [];
+			const s:number[] = [];
 			s.length = count;
 			for(let i=0;i<count;i++) {
 				s[i] = next(boundary,inclusive);
@@ -67,7 +66,7 @@ export module Integer
 		{
 			assert(min, 'min');
 			assert(max, 'max');
-			var range = max - min;
+			let range = max - min;
 			if(range===0) return min;
 			if(inclusive) range += range/Math.abs(range);
 			return min + next(range);
@@ -92,7 +91,7 @@ export module Integer
 
 	export function as32Bit(n:number):number|null
 	{
-		var result = n | 0;
+		const result = n | 0;
 		return (n=== -1 || result!== -1) ? result : null;
 	}
 
@@ -111,7 +110,7 @@ export module Integer
 
 	export function assert(n:number, argumentName?:string):boolean
 	{
-		var i = is(n);
+		let i = is(n);
 		if(!i)
 			throw new ArgumentException(argumentName || 'n', "Must be a integer.");
 		return i;
@@ -119,7 +118,7 @@ export module Integer
 
 	export function assertZeroOrGreater(n:number, argumentName?:string):boolean
 	{
-		var i = assert(n, argumentName) && n>=0;
+		let i = assert(n, argumentName) && n>=0;
 		if(!i)
 			throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be a valid integer greater than or equal to zero.");
 		return i;
@@ -127,7 +126,7 @@ export module Integer
 
 	export function assertPositive(n:number, argumentName?:string):boolean
 	{
-		var i = assert(n, argumentName) && n>0;
+		let i = assert(n, argumentName) && n>0;
 		if(!i)
 			throw new ArgumentOutOfRangeException(argumentName || 'n', n, "Must be greater than zero.");
 		return i;

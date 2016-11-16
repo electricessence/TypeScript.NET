@@ -59,7 +59,7 @@ export declare class Promise<T> extends Resolvable<T> {
     thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
     protected _onDispose(): void;
     protected _resolvedCalled: boolean;
-    resolveUsing(resolver: Promise.Executor<T>, forceSynchronous?: boolean, throwIfSettled?: boolean): void;
+    resolveUsing(resolver: Promise.Executor<T>, forceSynchronous?: boolean): void;
     private _emitDisposalRejection(p);
     private _resolveInternal(result?);
     private _rejectInternal(error);

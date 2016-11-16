@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
  */
-
 import {IDisposable} from "./Disposable/IDisposable";
 import {IMap} from "./Collections/Dictionaries/IDictionary";
 const NAME:string = 'Exception';
@@ -59,7 +58,7 @@ export class Exception implements Error, IDisposable
 		// Node has a .stack, let's use it...
 		try
 		{
-			var stack:string = eval("new Error()").stack;
+			let stack:string = eval("new Error()").stack;
 			stack = stack
 				&& stack
 					.replace(/^Error\n/, '')
@@ -93,7 +92,7 @@ export class Exception implements Error, IDisposable
 	protected toStringWithoutBrackets():string
 	{
 		const _ = this;
-		var m = _.message;
+		const m = _.message;
 		return _.name + (m ? (': ' + m) : '');
 	}
 
@@ -102,7 +101,7 @@ export class Exception implements Error, IDisposable
 	 */
 	dispose():void
 	{
-		var data = this.data;
+		const data = this.data;
 		for(let k in data)
 		{
 			if(data.hasOwnProperty(k))

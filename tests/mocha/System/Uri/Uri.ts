@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import Uri from "../../../../dist/commonjs/System/Uri/Uri";
@@ -12,7 +11,7 @@ const params = [['four', 'five'], ['six', 'seven']];
 const query = '?' + params[0].join('=') + '&' + params[1].join('=');
 
 
-var u = Uri.from(path + query);
+const u = Uri.from(path + query);
 
 describe('.scheme', ()=>
 {
@@ -33,7 +32,7 @@ describe('.port', ()=>
 {
 	it('should equal', ()=>
 	{
-		var d = 'x.com', port = 80;
+		const d = 'x.com', port = 80;
 		assert.equal((new Uri(null, '', d, 0, '')).port, 0);
 		assert.equal((new Uri(null, '', d, null, '')).port, null);
 		assert.equal((new Uri(null, '', d, <any>'', '')).port, null);
@@ -90,10 +89,10 @@ describe('.from(uri)', ()=>
 {
 	it('should be equal', ()=>
 	{
-		var c1 = Uri.from(u);
+		const c1 = Uri.from(u);
 		assert.ok(u.equals(c1));
 
-		var c2 = Uri.from({}, u);
+		const c2 = Uri.from({}, u);
 		assert.ok(u.equals(c2));
 
 	});
@@ -103,7 +102,7 @@ describe('.updateQuery(query)', ()=>
 {
 	it('should be equal', ()=>
 	{
-		var c = u.updateQuery("x=y");
+		const c = u.updateQuery("x=y");
 		assert.equal(c.queryParams["x"], "y");
 	});
 });
@@ -193,7 +192,7 @@ describe('.tryParse(uri)', ()=>
 
 	it('should parse correctly', ()=>
 	{
-		var fragment = "x##?y", full = "http://x.com/y/z#" + fragment;
+		const fragment = "x##?y", full = "http://x.com/y/z#" + fragment;
 		assert.ok(Uri.tryParse(full, out=>
 		{
 			assert.equal(out.fragment, fragment);
@@ -280,8 +279,8 @@ describe('KVP versus Tuple', ()=>
 
 	it('should be equal', ()=>
 	{
-		var uTuples = new Uri(u.scheme, u.userInfo, u.host, u.port, u.path, <any>params);
-		var uKvp = new Uri(u.scheme, u.userInfo, u.host, u.port, u.path, u.queryParams);
+		const uTuples = new Uri(u.scheme, u.userInfo, u.host, u.port, u.path, <any>params);
+		const uKvp = new Uri(u.scheme, u.userInfo, u.host, u.port, u.path, u.queryParams);
 
 		assert.equal(uTuples.toString(), uKvp.toString());
 	});

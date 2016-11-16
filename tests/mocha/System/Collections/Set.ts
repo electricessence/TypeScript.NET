@@ -47,18 +47,18 @@ ICollectionTests.Collection('Set<' + 'Primitive>', new Set<Primitive>(), [
 
 ]);
 
-var sourcePrimitives = [
+const sourcePrimitives = [
 	1, 2, 1, "1", true, false, "hello", "hello", "hi", true
 ];
-var subset = sourcePrimitives.slice(4);
-var superset = sourcePrimitives.slice();
+const subset = sourcePrimitives.slice(4);
+const superset = sourcePrimitives.slice();
 superset.push("NO");
-var otherWithIntersect = [1,"1",4000,"goodbye"];
+const otherWithIntersect = [1, "1", 4000, "goodbye"];
 
 
 it("should not repeat entries", ()=>
 {
-	var s = new Set<Primitive>(sourcePrimitives);
+	const s = new Set<Primitive>(sourcePrimitives);
 
 	assert.equal(s.count, 7);
 
@@ -70,8 +70,8 @@ describe(".setEquals()", ()=>
 
 	it("the current set should equal to the same set and not equal for different sets", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
-		var v = sourcePrimitives.slice();
+		const s = new Set<Primitive>(sourcePrimitives);
+		const v = sourcePrimitives.slice();
 		v[8] = "hola";
 
 		assert.equal(s.setEquals(sourcePrimitives), true, "Exact same set should be equal.");
@@ -87,7 +87,7 @@ describe(".isSupersetOf()", ()=>
 
 	it("the current set should be a super set of any equal or smaller set", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
+		const s = new Set<Primitive>(sourcePrimitives);
 
 		assert.equal(s.isSupersetOf(sourcePrimitives), true, "Exact same set should be a superset and subset.");
 		assert.equal(s.isSupersetOf(subset), true, "Smaller set should be a subset.");
@@ -102,7 +102,7 @@ describe(".isProperSupersetOf()", ()=>
 
 	it("the current set should be a super set of any smaller matching set", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
+		const s = new Set<Primitive>(sourcePrimitives);
 
 		assert.equal(s.isProperSupersetOf(sourcePrimitives), false, "Exact same set should not be a proper superset or subset.");
 		assert.equal(s.isProperSupersetOf(subset), true, "Smaller set should be a subset.");
@@ -116,7 +116,7 @@ describe(".isSubsetOf()", ()=>
 
 	it("the current set should be a sub set of any equal or larger matching set", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
+		const s = new Set<Primitive>(sourcePrimitives);
 
 		assert.equal(s.isSubsetOf(sourcePrimitives), true, "Exact same set should be a superset and subset.");
 		assert.equal(s.isSubsetOf(subset), false, "Smaller set should be a subset.");
@@ -131,7 +131,7 @@ describe(".isProperSubsetOf()", ()=>
 
 	it("the current set should be a sub set of any larger matching set", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
+		const s = new Set<Primitive>(sourcePrimitives);
 
 		assert.equal(s.isProperSubsetOf(sourcePrimitives), false, "Exact same set should not be a proper superset or subset.");
 		assert.equal(s.isProperSubsetOf(subset), false, "Smaller set should be a subset.");
@@ -143,9 +143,9 @@ describe(".isProperSubsetOf()", ()=>
 describe(".exceptWith()", ()=>
 {
 
-	it("should remove the specified items fromt the set", ()=>
+	it("should remove the specified items front the set", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
+		const s = new Set<Primitive>(sourcePrimitives);
 		s.exceptWith([1,"1"]);
 
 		assert.equal(s.count, 5);
@@ -161,7 +161,7 @@ describe(".intersectWith()", ()=>
 
 	it("should only leave the intersecting items behind", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
+		const s = new Set<Primitive>(sourcePrimitives);
 		s.intersectWith(otherWithIntersect);
 
 		assert.equal(s.count, 2);
@@ -177,8 +177,8 @@ describe(".unionWith()", ()=>
 
 	it("should only leave the intersecting items behind", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
-		var c = s.count;
+		const s = new Set<Primitive>(sourcePrimitives);
+		const c = s.count;
 		s.unionWith(otherWithIntersect);
 
 		assert.equal(s.count, c+2);
@@ -193,8 +193,8 @@ describe(".symmetricExceptWith()", ()=>
 
 	it("should only leave unique items behind", ()=>
 	{
-		var s = new Set<Primitive>(sourcePrimitives);
-		var c = s.count;
+		const s = new Set<Primitive>(sourcePrimitives);
+		const c = s.count;
 		s.symmetricExceptWith(otherWithIntersect);
 
 		assert.equal(s.count, c-2+2);

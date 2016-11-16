@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import ClockTime from "../../../../dist/commonjs/System/Time/ClockTime";
@@ -13,8 +12,8 @@ const
 	second      = Integer.random(60),
 	millisecond = Integer.random(1000);
 
-var c1 = new ClockTime(hour, minute, second, millisecond);
-var c2 = new ClockTime(
+const c1 = new ClockTime(hour, minute, second, millisecond);
+const c2 = new ClockTime(
 	days*Milliseconds.Per.Day
 	+ hour*Milliseconds.Per.Hour
 	+ minute*Milliseconds.Per.Minute

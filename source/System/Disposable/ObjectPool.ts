@@ -4,7 +4,6 @@
  * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
  * Uses .add(T) and .take():T
  */
-
 import {dispose} from "./dispose";
 import {DisposableBase} from "./DisposableBase";
 import {TaskHandler} from "../Threading/Tasks/TaskHandler";
@@ -57,7 +56,7 @@ export class ObjectPool<T> extends DisposableBase
 		_._disposableObjectName = OBJECT_POOL;
 		_._pool = [];
 		_._trimmer = new TaskHandler(()=>_._trim());
-		var clear = ()=>_._clear();
+		const clear = () => _._clear();
 		_._flusher = new TaskHandler(clear);
 		_._autoFlusher = new TaskHandler(clear);
 	}
@@ -77,13 +76,13 @@ export class ObjectPool<T> extends DisposableBase
 	 */
 	get count():number
 	{
-		var p = this._pool;
+		const p = this._pool;
 		return p ? p.length : 0;
 	}
 
 	protected _trim():void
 	{
-		var pool = this._pool;
+		const pool = this._pool;
 		while(pool.length>this._maxSize)
 		{
 			dispose.withoutException(<any>pool.pop());
@@ -103,7 +102,7 @@ export class ObjectPool<T> extends DisposableBase
 	protected _clear():void
 	{
 		const _ = this;
-		var p = _._pool;
+		const p = _._pool;
 		_._trimmer.cancel();
 		_._flusher.cancel();
 		_._autoFlusher.cancel();
@@ -128,7 +127,7 @@ export class ObjectPool<T> extends DisposableBase
 		_.throwIfDisposed();
 		_._trimmer.cancel();
 		_._flusher.cancel();
-		var p = _._pool;
+		const p = _._pool;
 		_._pool = [];
 		return p;
 	}
@@ -165,7 +164,7 @@ export class ObjectPool<T> extends DisposableBase
 	{
 		const _ = this;
 		_.throwIfDisposed();
-		var t = _.autoClearTimeout;
+		const t = _.autoClearTimeout;
 		if(isFinite(t) && !_._autoFlusher.isScheduled)
 			_._autoFlusher.start(t);
 	}
@@ -183,7 +182,7 @@ export class ObjectPool<T> extends DisposableBase
 		{
 			if(_._recycler) _._recycler(o);
 			_._pool.push(o);
-			var m = _._maxSize;
+			const m = _._maxSize;
 			if(m<ABSOLUTE_MAX_SIZE && _._pool.length>m)
 				_._trimmer.start(500);
 		}

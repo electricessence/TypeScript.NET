@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import * as Serialization from "../Serialization/Utility";
 import * as UriComponent from "./UriComponent";
 import * as QueryParam from "./QueryParam";
@@ -39,7 +37,7 @@ export function encode(
 	prefixIfNotEmpty?:boolean):string
 {
 	if(!values) return EMPTY;
-	var entries:string[] = [];
+	const entries:string[] = [];
 
 	if(isEnumerableOrArrayLike(values))
 	{
@@ -92,7 +90,7 @@ export function encodeValue(value:UriComponent.Value):string
 {
 	if(isUriComponentFormattable(value))
 	{
-		var v:string = value.toUriComponent();
+		const v:string = value.toUriComponent();
 		if(v && v.indexOf(ENTRY_SEPARATOR)!=1)
 			throw '.toUriComponent() did not encode the value.';
 		return v;
@@ -128,18 +126,18 @@ export function parse(
 {
 	if(query && (query = query.replace(/^\s*\?+/, '')))
 	{
-		var entries = query.split(ENTRY_SEPARATOR);
+		const entries = query.split(ENTRY_SEPARATOR);
 		for(let entry of entries)
 		{
 			/*
 			 * Since it is technically possible to have multiple '=' we need to identify the first one.
 			 * And if there is no '=' then the entry is ignored.
 			 */
-			var si = entry.indexOf(KEY_VALUE_SEPARATOR);
+			const si = entry.indexOf(KEY_VALUE_SEPARATOR);
 			if(si!= -1)
 			{
-				var key = entry.substring(0, si);
-				var value = <any>entry.substring(si + 1);
+				let key = entry.substring(0, si);
+				let value = <any>entry.substring(si + 1);
 				if(decodeValues) value = decodeURIComponent(value);
 				if(deserialize) value = Serialization.toPrimitive(value);
 				entryHandler(key, value);
@@ -160,13 +158,13 @@ export function parseToMap(
 	deserialize:boolean = true,
 	decodeValues:boolean = true):IMap<Primitive|Primitive[]>
 {
-	var result:IMap<Primitive|Primitive[]> = {};
+	const result:IMap<Primitive|Primitive[]> = {};
 	parse(query,
 		(key, value)=>
 		{
 			if((key) in (result))
 			{
-				var prev:any = result[key];
+				let prev:any = result[key];
 				if(!(Array.isArray(prev)))
 					result[key] = prev = [prev];
 				prev.push(value);
@@ -191,7 +189,7 @@ export function parseToArray(
 	deserialize:boolean = true,
 	decodeValues:boolean = true):IStringKeyValuePair<Primitive>[]
 {
-	var result:IStringKeyValuePair<Primitive>[] = [];
+	const result:IStringKeyValuePair<Primitive>[] = [];
 	parse(query,
 		(key, value)=> {result.push({key: key, value: value});},
 		deserialize,

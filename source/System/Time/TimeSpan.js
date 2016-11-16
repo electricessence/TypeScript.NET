@@ -28,9 +28,9 @@
             _.ticks = ms * 10000;
             _.milliseconds = ms;
             _.seconds = ms / 1000;
-            _.minutes = ms / 60000;
-            _.hours = ms / 3600000;
-            _.days = ms / 86400000;
+            _.minutes = ms / HowMany_1.Milliseconds.Per.Minute;
+            _.hours = ms / HowMany_1.Milliseconds.Per.Hour;
+            _.days = ms / HowMany_1.Milliseconds.Per.Day;
         }
         Object.defineProperty(TimeSpan.prototype, "total", {
             get: function () {

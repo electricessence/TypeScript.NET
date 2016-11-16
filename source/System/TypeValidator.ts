@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-
 /**
  * A descriptor is simply a JSON tree that either has an actual value or a type that identifies what the expect type should be at that leaf in the tree.
  *
@@ -17,7 +16,6 @@
  *      g : "literal"
  * }
  */
-
 import {TypeInfo} from "./Types";
 import {areEqual} from "./Compare";
 import __extendsImport from "../extends";
@@ -126,8 +124,8 @@ export class TypeValidator<T>
 
 	isSubsetOf(o:any):o is T
 	{
-		var t = new TypeInfoHelper(o);
-		return t.contains(this._typeDescriptor);
+		return (new TypeInfoHelper(o))
+			.contains(this._typeDescriptor);
 	}
 }
 

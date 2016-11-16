@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import * as Values from "../../Compare";
 import {SortContext} from "./SortContext";
 import {Functions} from "../../Functions";
@@ -28,10 +27,10 @@ export class KeySortedContext<T, TKey extends Comparable> extends SortContext<T>
 	compare(a:T, b:T):number
 	{
 		const _ = this;
-		var ks = _._keySelector;
+		let ks = _._keySelector;
 		if(!ks || ks==Functions.Identity) return super.compare(a, b);
 		// We force <any> here since it can be a Primitive or IComparable<any>
-		var d = Values.compare(<any>ks(a), <any>ks(b));
+		const d = Values.compare(<any>ks(a), <any>ks(b));
 		if(d==0 && _._next) return _._next.compare(a, b);
 		return _._order*d;
 	}

@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import * as ICollectionTests from "./ICollection";
@@ -12,5 +11,5 @@ ICollectionTests.NumberCollection(CLASS_NAME, new List<number>());
 ICollectionTests.InstanceCollection(CLASS_NAME, new List<Object>());
 
 // Check Linq support...
-var list = new List([1,2,3,4]);
+const list = new List([1, 2, 3, 4]);
 assert.equal(list.linq.where(i=>i>2).count(),2);

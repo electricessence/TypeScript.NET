@@ -33,6 +33,7 @@ export declare module Type {
     const SYMBOL: string;
     const UNDEFINED: string;
     const FUNCTION: string;
+    function isNullOrUndefined(value: any): value is null | undefined;
     function isBoolean(value: any): value is boolean;
     function isNumber(value: any, allowNaN?: boolean): value is number;
     function isTrueNaN(value: any): value is number;

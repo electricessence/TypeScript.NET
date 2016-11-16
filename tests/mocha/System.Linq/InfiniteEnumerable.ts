@@ -1,16 +1,15 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import Enumerable from "../../../dist/commonjs/System.Linq/Linq";
 
 
-var source = Enumerable.toInfinity().asEnumerable();
+const source = Enumerable.toInfinity().asEnumerable();
 
 describe(".doAction(...)",()=>{
 	it("should throw when disposed",()=>{
-		var a = source.doAction(e=>{});
+		const a = source.doAction(() => {});
 		a.force();
-		var n = a.getEnumerator();
+		let n = a.getEnumerator();
 		assert.ok(n.moveNext());
 		n.end();
 		assert.ok(!n.moveNext());
@@ -90,8 +89,8 @@ describe(".take(count)", ()=>
 
 		assert.throws(()=>
 		{
-			var t = source.take(2);
-			var e = t.getEnumerator();
+			const t = source.take(2);
+			const e = t.getEnumerator();
 			e.moveNext();
 			t.dispose();
 			e.moveNext();
@@ -99,7 +98,7 @@ describe(".take(count)", ()=>
 
 		assert.doesNotThrow(()=>
 		{
-			var e = false, f = false;
+			let e = false, f = false;
 			assert.ok(
 				source
 					.where(e=>
@@ -162,7 +161,7 @@ describe(".pairwise(selector)", ()=>
 
 	it("should produce pair selected values", ()=>
 	{
-		var s = Enumerable.toInfinity().pairwise((a,b)=>""+a+""+b);
+		const s = Enumerable.toInfinity().pairwise((a, b) => "" + a + "" + b);
 		assert.equal(s.elementAt(0),"01");
 		assert.equal(s.elementAt(5),"56");
 		s.dispose();

@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Originally based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/parallel.js
  */
-
 import {Promise, PromiseBase, ArrayPromise, PromiseCollection} from "../../Promises/Promise";
 import {Type} from "../../Types";
 import Worker from "../Worker";
@@ -22,11 +21,11 @@ declare const __dirname:string;
 //noinspection JSUnusedAssignment
 const
 	MAX_WORKERS:number = 16,
-	VOID0:undefined          = void 0,
+	VOID0:undefined    = void 0,
 	URL                = typeof self!==Type.UNDEFINED
 		? (self.URL ? self.URL : (<any>self).webkitURL)
 		: null,
-	_supports          = (isNodeJS || (<any>self).Worker) ? true : false; // node always supports parallel
+	_supports          = !!(isNodeJS || (<any>self).Worker); // node always supports parallel
 
 export interface ParallelOptions
 {
@@ -63,7 +62,7 @@ const defaults:ParallelOptions = {
 function extend<TFrom extends any,TTo extends any>(from:TFrom, to:TTo):TFrom & TTo
 {
 	if(!to) to = <any>{};
-	for(var i of Object.keys(from))
+	for(let i of Object.keys(from))
 	{
 		if(to[i]=== void 0) to[i] = from[i];
 	}
@@ -85,15 +84,15 @@ class WorkerPromise<T> extends Promise<T>
 {
 	constructor(worker:WorkerLike, data:any)
 	{
-		super((resolve, reject)=>
+		super((resolve, reject) =>
 		{
 			interact(
 				worker,
-				(response:{data:any})=>
+				(response:{data:any}) =>
 				{
 					resolve(response.data);
 				},
-				(e:any)=>
+				(e:any) =>
 				{
 					reject(e);
 				},
@@ -115,7 +114,7 @@ module workers
 
 	function getPool(key:string):ObjectPool<WorkerLike>
 	{
-		var pool = workerPools[key];
+		let pool = workerPools[key];
 		if(!pool)
 		{
 			workerPools[key] = pool = new ObjectPool<WorkerLike>(8);
@@ -124,7 +123,7 @@ module workers
 		return pool;
 	}
 
-	var workerPools:IMap<ObjectPool<WorkerLike>> = {};
+	const workerPools:IMap<ObjectPool<WorkerLike>> = {};
 
 	export function recycle(w:WorkerLike|null|undefined):null
 	{ // always returns null.
@@ -132,14 +131,14 @@ module workers
 		{
 			w.onerror = <any>null;
 			w.onmessage = <any>null;
-			var k = (<any>w).__key;
+			const k = (<any>w).__key;
 			if(k)
 			{
 				getPool(k).add(w);
 			}
 			else
 			{
-				deferImmediate(()=>w.terminate());
+				deferImmediate(() => w.terminate());
 			}
 		}
 		return null;
@@ -152,9 +151,9 @@ module workers
 
 	export function getNew(key:string, url:string):WorkerLike
 	{
-		var worker:any = new Worker(url);
+		const worker:any = new Worker(url);
 		worker.__key = key;
-		worker.dispose = ()=>
+		worker.dispose = () =>
 		{
 			worker.onmessage = null;
 			worker.onerror = null;
@@ -189,8 +188,8 @@ export class Parallel
 
 	protected _getWorkerSource(task:Function|string, env?:any):string
 	{
-		var scripts = this._requiredScripts, functions = this._requiredFunctions;
-		var preStr = '';
+		const scripts = this._requiredScripts, functions = this._requiredFunctions;
+		let preStr = '';
 
 		if(!isNodeJS && scripts.length)
 		{
@@ -199,7 +198,7 @@ export class Parallel
 
 		for(let {name, fn} of functions)
 		{
-			var source = fn.toString();
+			const source = fn.toString();
 			preStr += name
 				? `var ${name} = ${source};`
 				: source;
@@ -248,13 +247,14 @@ export class Parallel
 
 	protected _spawnWorker(task:Function|string, env?:any):WorkerLike|undefined
 	{
-		var src = this._getWorkerSource(task, env);
+		const src = this._getWorkerSource(task, env);
 
 		if(Worker===VOID0) return VOID0;
-		var worker = workers.tryGet(src);
+		let worker = workers.tryGet(src);
 		if(worker) return worker;
 
-		var scripts = this._requiredScripts, evalPath = this.options.evalPath;
+		const scripts = this._requiredScripts;
+		let evalPath = this.options.evalPath;
 
 		if(!evalPath)
 		{
@@ -273,8 +273,8 @@ export class Parallel
 		}
 		else if(URL)
 		{
-			var blob = new Blob([src], {type: 'text/javascript'});
-			var url = URL.createObjectURL(blob);
+			const blob = new Blob([src], {type: 'text/javascript'});
+			const url = URL.createObjectURL(blob);
 
 			worker = workers.getNew(src, url);
 		}
@@ -290,12 +290,12 @@ export class Parallel
 		if(worker)
 		{
 			return new WorkerPromise<U>(worker, data)
-				.finallyThis(()=>workers.recycle(worker));
+				.finallyThis(() => workers.recycle(worker));
 		}
 
 		if(_.options.allowSynchronous)
 			return new Promise<U>(
-				(resolve, reject)=>
+				(resolve, reject) =>
 				{
 					try
 					{
@@ -320,10 +320,9 @@ export class Parallel
 	 */
 	pipe<T,U>(data:T[], task:(data:T) => U, env?:any):PromiseCollection<U>
 	{
-		let maxConcurrency = this.ensureClampedMaxConcurrency();
 
 		// The resultant promise collection will make an internal copy...
-		var result:Promise<U>[]|undefined;
+		let result:Promise<U>[]|undefined;
 
 		if(data && data.length)
 		{
@@ -348,10 +347,10 @@ export class Parallel
 				{
 					// There is a small risk that the consumer could call .resolve() which would result in a double resolution.
 					// But it's important to minimize the number of objects created.
-					result = data.map(d=>new Promise<U>());
+					result = data.map(d => new Promise<U>());
 				}
 
-				let next = ()=>
+				let next = () =>
 				{
 					if(error)
 					{
@@ -366,12 +365,12 @@ export class Parallel
 							let ii = i++, p = result![ii];
 							let wp = new WorkerPromise<U>(worker, data[ii]);
 							wp.thenSynchronous(
-								r=>
+								r =>
 								{
 									p.resolve(r);
 									next();
 								},
-								e=>
+								e =>
 								{
 									if(!error)
 									{
@@ -380,7 +379,7 @@ export class Parallel
 										worker = workers.recycle(worker);
 									}
 								})
-								.finallyThis(()=>
+								.finallyThis(() =>
 									wp.dispose());
 						}
 						else
@@ -424,7 +423,7 @@ export class Parallel
 		// return this.pipe(data,task).all();
 
 		data = data.slice(); // Never use the original.
-		return new ArrayPromise<U>((resolve, reject)=>
+		return new ArrayPromise<U>((resolve, reject) =>
 		{
 			const result:U[] = [], len = data.length;
 			result.length = len;
@@ -446,7 +445,7 @@ export class Parallel
 					return;
 				}
 
-				let next = ()=>
+				let next = () =>
 				{
 					if(error)
 					{
@@ -460,12 +459,12 @@ export class Parallel
 							let ii = i++;
 							let wp = new WorkerPromise<U>(worker, data[ii]);
 							wp.thenSynchronous(
-								r=>
+								r =>
 								{
 									result[ii] = <any>r;
 									next();
 								},
-								e=>
+								e =>
 								{
 									if(!error)
 									{
@@ -474,13 +473,13 @@ export class Parallel
 										worker = workers.recycle(worker);
 									}
 								})
-								.thenThis(()=>
+								.thenThis(() =>
 								{
 									resolved++;
 									if(resolved>len) throw Error("Resolved count exceeds data length.");
 									if(resolved===len) resolve(result);
 								})
-								.finallyThis(()=>
+								.finallyThis(() =>
 									wp.dispose());
 						}
 						else

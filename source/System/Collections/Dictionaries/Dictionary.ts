@@ -3,7 +3,6 @@
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {areEqual} from "../../Compare";
 import {Type} from "../../Types";
 import {EnumeratorBase} from "../Enumeration/EnumeratorBase";
@@ -44,9 +43,10 @@ implements IHashEntry<TKey, TValue>
 
 type HashEntryLinkedList<TKey,TValue> = LinkedNodeList<IHashEntry<TKey,IHashEntry<TKey,TValue>>>;
 
-var linkedListPool:ObjectPool<LinkedNodeList<any>>;
+let linkedListPool:ObjectPool<LinkedNodeList<any>>;
 function linkedNodeList():LinkedNodeList<any>;
 function linkedNodeList(recycle?:LinkedNodeList<any>):void;
+//noinspection JSUnusedLocalSymbols
 function linkedNodeList(recycle?:LinkedNodeList<any>):LinkedNodeList<any>|void
 {
 	if(!linkedListPool)
@@ -98,8 +98,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		if(!Type.isPrimitiveOrSymbol(hash))
 			console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
 
-		var buckets = this._buckets;
-		var bucket = buckets[hash];
+		const buckets = this._buckets;
+		let bucket = buckets[hash];
 
 		if(createIfMissing && !bucket)
 			buckets[hash]
@@ -117,9 +117,9 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		if(key===null || key===VOID0 || !this.getCount())
 			return null;
 
-		var _          = this,
-		    comparer   = _._keyGenerator,
-		    compareKey = comparer ? comparer(key) : key;
+		const _          = this,
+		      comparer   = _._keyGenerator,
+		      compareKey = comparer ? comparer(key) : key;
 
 		if(!bucket) bucket = _._getBucket(hash || getIdentifier(compareKey));
 
@@ -132,30 +132,30 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 
 	protected _getEntry(key:TKey):IHashEntry<TKey,TValue>|null
 	{
-		var e = this._getBucketEntry(key);
+		const e = this._getBucketEntry(key);
 		return e && e.value;
 	}
 
 	getValue(key:TKey):TValue|undefined
 	{
-		var e = this._getEntry(key);
+		const e = this._getEntry(key);
 		return e ? e.value : VOID0;
 	}
 
 	protected _setValueInternal(key:TKey, value:TValue|undefined):boolean
 	{
 		const _ = this;
-		var buckets     = _._buckets,
-		    entries     = _._entries,
-		    compareKey  = _._keyGenerator ? _._keyGenerator(key) : key,
-		    hash        = getIdentifier(compareKey),
-		    bucket      = _._getBucket(hash),
-		    bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+		const buckets    = _._buckets,
+		      entries    = _._entries,
+		      compareKey = _._keyGenerator ? _._keyGenerator(key) : key,
+		      hash       = getIdentifier(compareKey);
+		let bucket = _._getBucket(hash);
+		const bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
 
 		// Entry exits? Delete or update
 		if(bucketEntry)
 		{
-			var b = <HashEntryLinkedList<TKey,TValue>>bucket;
+			const b = <HashEntryLinkedList<TKey,TValue>>bucket;
 			if(value===VOID0)
 			{
 				let x = b.removeNode(bucketEntry),
@@ -175,7 +175,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 			else
 			{
 				// We don't expose the internal hash entries so replacing the value is ok.
-				var old = bucketEntry.value.value;
+				const old = bucketEntry.value.value;
 				bucketEntry.value.value = value;
 				return !areEqual(value, old);
 			}
@@ -197,7 +197,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	protected _clearInternal():number
 	{
 		const _ = this;
-		var buckets = _._buckets;
+		const buckets = _._buckets;
 
 		// Ensure reset and clean...
 		for(let key in buckets)
@@ -222,7 +222,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		const _ = this;
 		_.throwIfDisposed();
 
-		var ver:number, currentEntry:IHashEntry<TKey, TValue>|null;
+		let ver:number, currentEntry:IHashEntry<TKey, TValue>|null;
 		return new EnumeratorBase<IKeyValuePair<TKey, TValue>>(
 			() =>
 			{
@@ -236,7 +236,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 				{
 					_.throwIfDisposed();
 					_.assertVersion(ver);
-					var result = {key: currentEntry.key, value: currentEntry.value};
+					const result = {key: currentEntry.key, value: currentEntry.value};
 					currentEntry = currentEntry.next || null;
 					return yielder.yieldReturn(result);
 				}
@@ -249,8 +249,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	protected getKeys():TKey[]
 	{
 		const _ = this;
-		var result:TKey[] = [];
-		var e:any = _._entries && _._entries.first;
+		const result:TKey[] = [];
+		let e:any = _._entries && _._entries.first;
 		while(e)
 		{
 			result.push(e.key);
@@ -262,8 +262,8 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	protected getValues():TValue[]
 	{
 		const _ = this;
-		var result:TValue[] = [];
-		var e:any = _._entries && _._entries.first;
+		const result:TValue[] = [];
+		let e:any = _._entries && _._entries.first;
 		while(e)
 		{
 			result.push(e.value);

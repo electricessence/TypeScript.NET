@@ -40,7 +40,7 @@ function assertResults(result:number[][]):void
 {
 	for(let i = 0; i<sourceCount; i++)
 	{
-		var ok = areEqual(arrayResults[i], result[i]);
+		let ok = areEqual(arrayResults[i], result[i]);
 		if(!ok) console.warn(result);
 		assert.ok(ok);
 	}
@@ -78,7 +78,7 @@ function merge()
 const count = performanceCheck ? 100000 : 1;
 function measure(fn:Function):number
 {
-	var time = Date.now();
+	const time = Date.now();
 
 	for(let i = 0; i<count; i++)
 	{

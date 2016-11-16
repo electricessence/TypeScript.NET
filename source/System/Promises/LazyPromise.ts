@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-
 import {Promise, PromiseBase} from "./Promise";
 import {Closure} from "../FunctionTypes";
 import {ICancellable} from "../Threading/ICancellable";
@@ -35,7 +34,7 @@ export class LazyPromise<T> extends Promise<T>
 
 	private _onThen():void
 	{
-		var r = this._resolver;
+		const r = this._resolver;
 		if(r)
 		{
 			this._resolver = VOID0;
@@ -81,11 +80,11 @@ export class LazyPromise<T> extends Promise<T>
 		 * that only requests the resolution from the parent promise
 		 * if a 'then' is called to ensure the lazy pattern.
 		 */
-		var pass:Closure;
-		var timedOut:boolean = false;
+		let pass:Closure;
+		let timedOut:boolean = false;
 
 		// Setup the timer.
-		var timeout = defer(()=>
+		let timeout = defer(() =>
 			{
 				timedOut = true;
 				// If the promise was requested already go ahead and pass the request on to the parent.
@@ -135,13 +134,13 @@ export class LazyPromise<T> extends Promise<T>
 		 * that only requests the resolution from the parent promise
 		 * if a 'then' is called to ensure the lazy pattern.
 		 */
-		var pass:Closure;
+		let pass:Closure;
 
 
 		// Setup the timer.
-		var timeout:ICancellable;
+		let timeout:ICancellable;
 
-		var finalize = ()=>
+		let finalize = () =>
 		{
 			if(timeout)
 			{

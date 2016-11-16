@@ -1,4 +1,3 @@
-///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import {TypeInfoHelper, TypeValidator} from "../../../dist/commonjs/System/TypeValidator";
@@ -193,7 +192,7 @@ describe("Example", ()=>
 		);
 
 		// Step 3: validate as many times as you want:
-		var myItem = {
+		const myItem = {
 			a: {},
 			b: "hello",
 			c: 1,
@@ -296,6 +295,7 @@ describe("Complex test", ()=>
 			id_str: String,
 		});
 
+		//noinspection SpellCheckingInspection
 		assert.ok(ISystemTypeValidator.isSubsetOf(
 			{
 				"volume_str": "590653",

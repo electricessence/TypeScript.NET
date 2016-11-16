@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import * as Values from "../../Compare";
 import {Type} from "../../Types";
 import {Primitive} from "../../Primitive";
@@ -23,7 +22,7 @@ function validateSize(a:IArray<any>, b:IArray<any>):any
 	if(!a || !b)
 		return false;
 
-	var len = a.length;
+	const len = a.length;
 	if(len!==b.length)
 		return false;
 
@@ -44,7 +43,7 @@ export function areAllEqual(
 		throw new Error("ArgumentNullException: 'arrays' cannot be null.");
 	if(arrays.length<2)
 		throw new Error("Cannot compare a set of arrays less than 2.");
-	var first = arrays[0];
+	const first = arrays[0];
 	for(let i = 0, l = arrays.length; i<l; i++)
 	{
 		if(!areEqual(first, arrays[i], strict, equalityComparer))
@@ -58,7 +57,7 @@ export function areEqual<T>(
 	strict?:boolean,
 	equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 {
-	var len = validateSize(a, b);
+	const len = validateSize(a, b);
 	if(Type.isBoolean(len)) return <boolean>len;
 
 	for(let i = 0; i<len; i++)
@@ -75,7 +74,8 @@ function sort<T>(a:IArray<T>, comparer:Comparison<T>):IArray<T>
 {
 	if(!a || a.length<2) return a;
 
-	var len = a.length, b:T[];
+	const len = a.length;
+	let b:T[];
 	if(len>65536)
 		b = new Array(len);
 	else
@@ -99,7 +99,7 @@ export function areEquivalent<T>(
 	a:IArray<T>, b:IArray<T>,
 	comparer:Comparison<T> = Values.compare):boolean
 {
-	var len = validateSize(a, b);
+	const len = validateSize(a, b);
 	if(Type.isBoolean(len)) return <boolean>len;
 
 	// There might be a better more performant way to do this, but for the moment, this

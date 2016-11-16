@@ -133,7 +133,7 @@
         LinkedNodeList.prototype.indexOf = function (node) {
             if (node && (node.previous || node.next)) {
                 var index = 0;
-                var c, n = this._first;
+                var c = void 0, n = this._first;
                 do {
                     c = n;
                     if (c === node)

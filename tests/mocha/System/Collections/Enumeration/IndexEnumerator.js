@@ -78,7 +78,8 @@ describe("new & .moveNext()", function () {
     });
     it("should enumerate by 1 with no step", function () {
         var a = [0, 1, 2, 3, 4];
-        var len = a.length, count = 0;
+        var len = a.length;
+        var count = 0;
         var test = new IndexEnumerator_1.default(function () {
             return {
                 source: [0, 1, 2, 3, 4],

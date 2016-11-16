@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {ICancellable} from "../Threading/ICancellable";
 import {ObservableBase} from "../Observable/ObservableBase";
 import {ITimer} from "./ITimer";
@@ -46,7 +44,7 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		maxCount:number = Infinity,
 		initialDelay:number = millisecondInterval):Timer
 	{
-		var t = new Timer(millisecondInterval, maxCount, millisecondInterval);
+		const t = new Timer(millisecondInterval, maxCount, initialDelay);
 		t.start();
 		return t;
 	}
@@ -161,9 +159,9 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 		timer:Timer,
 		reInitTimer?:boolean):void
 	{
-		var index      = timer._count++,
-		    max        = timer._maxCount,
-		    isComplete = timer._count>=max;
+		const index      = timer._count++,
+		      max        = timer._maxCount,
+		      isComplete = timer._count>=max;
 
 		if(reInitTimer)
 		{
