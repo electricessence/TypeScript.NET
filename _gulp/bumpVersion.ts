@@ -3,7 +3,13 @@ import * as semver from "semver";
 import * as file from "../_utility/file-promise";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {JsonMap} from "../source/JSON";
-
+import {Promise as NETPromise} from "../source/System/Promises/Promise";
+import {awaiter} from "../source/awaiter";
+import {generator} from "../source/generator";
+// noinspection JSUnusedLocalSymbols
+const
+	__awaiter   = awaiter.factory(NETPromise),
+	__generator = generator;
 
 // No tsd yet.
 const bump = require('gulp-bump');

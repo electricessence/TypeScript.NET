@@ -5,15 +5,18 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../source/System/Promises/Promise", "../_utility/stream-to-promise"], function (require, exports) {
+})(["require", "exports", "gulp-typescript-helper", "./constants/Paths", "gulp", "./constants/TaskNames", "../_utility/file-promise", "../_utility/stream-to-promise", "../source/System/Promises/Promise", "../source/awaiter", "../source/generator"], function (require, exports) {
     "use strict";
     var gulp_typescript_helper_1 = require("gulp-typescript-helper");
     var PATH = require("./constants/Paths");
     var gulp = require("gulp");
     var TASK = require("./constants/TaskNames");
     var File = require("../_utility/file-promise");
-    var Promise_1 = require("../source/System/Promises/Promise");
     var stream_to_promise_1 = require("../_utility/stream-to-promise");
+    var Promise_1 = require("../source/System/Promises/Promise");
+    var awaiter_1 = require("../source/awaiter");
+    var generator_1 = require("../source/generator");
+    var __awaiter = awaiter_1.awaiter.factory(Promise_1.Promise), __generator = generator_1.generator;
     var fields = {
         "name": true,
         "version": true,
@@ -26,20 +29,40 @@
         "browser": true
     };
     function getPackage(dist) {
-        var pkg = File.json.read('./package.json');
-        for (var _i = 0, _a = Object.keys(pkg); _i < _a.length; _i++) {
-            var key = _a[_i];
-            if (!fields[key])
-                delete pkg[key];
-        }
-        pkg["name"] += "-" + dist;
-        return pkg;
+        return __awaiter(this, void 0, void 0, function () {
+            var pkg, _i, _a, key;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, File.json.read('./package.json')];
+                    case 1:
+                        pkg = _b.sent();
+                        for (_i = 0, _a = Object.keys(pkg); _i < _a.length; _i++) {
+                            key = _a[_i];
+                            if (!fields[key])
+                                delete pkg[key];
+                        }
+                        pkg["name"] += "-" + dist;
+                        return [2 /*return*/, pkg];
+                }
+            });
+        });
     }
     function savePackage(dist, folder) {
         if (folder === void 0) { folder = dist; }
-        return getPackage(dist)
-            .then(function (pkg) { return File.json.write("./dist/" + folder + "/package.json", pkg); })
-            .then(function () { return copyReadme(folder); });
+        return __awaiter(this, void 0, void 0, function () {
+            var pkg;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, getPackage(dist)];
+                    case 1:
+                        pkg = _a.sent();
+                        return [4 /*yield*/, File.json.write("./dist/" + folder + "/package.json", pkg)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/, copyReadme(folder)];
+                }
+            });
+        });
     }
     function copyReadme(folder) {
         return stream_to_promise_1.streamToPromise.toPromise(gulp.src("./dist/README.md")

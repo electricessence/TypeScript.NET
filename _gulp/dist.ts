@@ -5,8 +5,14 @@ import * as TASK from "./constants/TaskNames";
 import * as File from "../_utility/file-promise";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
-import {Promise} from "../source/System/Promises/Promise";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
+import {Promise as NETPromise} from "../source/System/Promises/Promise";
+import {awaiter} from "../source/awaiter";
+import {generator} from "../source/generator";
+// noinspection JSUnusedLocalSymbols
+const
+	__awaiter   = awaiter.factory(NETPromise),
+	__generator = generator;
 
 const fields:IMap<boolean> = {
 	"name": true,
@@ -20,9 +26,9 @@ const fields:IMap<boolean> = {
 	"browser": true
 };
 
-function getPackage(dist:string):PromiseLike<JsonMap>
+async function getPackage(dist:string):PromiseLike<JsonMap>
 {
-	let pkg = File.json.read<JsonMap>('./package.json');
+	let pkg = await File.json.read<JsonMap>('./package.json');
 	for(let key of Object.keys(pkg))
 	{
 		if(!fields[key])
@@ -33,11 +39,11 @@ function getPackage(dist:string):PromiseLike<JsonMap>
 
 }
 
-function savePackage(dist:string, folder:string = dist):PromiseLike<File[]>
+async function savePackage(dist:string, folder:string = dist):PromiseLike<File[]>
 {
-	return getPackage(dist)
-		.then(pkg=>File.json.write(`./dist/${folder}/package.json`, pkg))
-		.then(()=>copyReadme(folder));
+	let pkg = await getPackage(dist);
+	await File.json.write(`./dist/${folder}/package.json`, pkg);
+	return copyReadme(folder);
 }
 
 function copyReadme(folder:string):PromiseLike<File[]>
@@ -58,68 +64,68 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 });
 
 const builder = BuildHelper
-	.inject(Promise.factory)
+	.inject(NETPromise.factory)
 	.fromTo(PATH.SOURCE, "./dist", DEFAULTS);
 
 gulp.task(
 	TASK.DIST_ES6,
-	()=> builder
+	() => builder
 		.init(Module.ES6, Target.ES6, Module.ES6)
 		.clear()
 		.execute()
-		.then(()=>savePackage(Module.ES6))
+		.then(() => savePackage(Module.ES6))
 );
 
 gulp.task(
 	TASK.DIST_AMD,
-	()=> builder
+	() => builder
 		.init(Module.AMD, Target.ES5, Module.AMD)
 		.clear()
 		.minify()
 		.execute()
-		.then(()=>savePackage(Module.AMD))
+		.then(() => savePackage(Module.AMD))
 );
 
 gulp.task(
 	TASK.DIST_UMD,
-	()=> builder
+	() => builder
 		.init(Module.UMD + '.min', Target.ES5, Module.UMD)
 		.clear()
 		.minify()
 		.execute()
-		.then(()=>savePackage(Module.UMD, Module.UMD + '.min'))
+		.then(() => savePackage(Module.UMD, Module.UMD + '.min'))
 );
 
 gulp.task(
-	TASK.DIST_COMMONJS+" js-only",
-	()=> builder
+	TASK.DIST_COMMONJS + " js-only",
+	() => builder
 		.init(Module.COMMONJS + ' js-only', Target.ES5, Module.COMMONJS)
 		.addOptions({
-			declaration:false,
-			sourceMap:false
+			declaration: false,
+			sourceMap: false
 		})
 		.clear()
 		//.minify()
 		.execute()
-		.then(()=>savePackage(Module.COMMONJS+'-js-only', Module.COMMONJS + ' js-only'))
+		.then(() => savePackage(Module.COMMONJS + '-js-only', Module.COMMONJS + ' js-only'))
 );
 
 gulp.task(
 	TASK.DIST_COMMONJS,
-	()=> builder
+	() => builder
 		.init(Module.COMMONJS, Target.ES5, Module.COMMONJS)
 		.clear()
 		.execute()
-		.then(()=>savePackage(Module.COMMONJS))
+		.then(() => savePackage(Module.COMMONJS))
 );
 
 gulp.task(
 	TASK.DIST_SYSTEMJS,
-	()=> builder
+	() => builder
 		.init(Module.SYSTEMJS, Target.ES5, Module.SYSTEMJS)
 		.clear()
 		.execute()
-		.then(()=>savePackage(Module.SYSTEMJS))
+		.then(() => savePackage(Module.SYSTEMJS))
 );
 
 gulp.task(TASK.DIST, [
