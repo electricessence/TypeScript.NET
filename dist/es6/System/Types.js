@@ -56,7 +56,7 @@ export class TypeInfo {
                 throw "Fatal type failure.  Unknown type: " + this.type;
         }
         if (onBeforeFreeze)
-            onBeforeFreeze();
+            onBeforeFreeze(this);
         Object.freeze(this);
     }
     member(name) {

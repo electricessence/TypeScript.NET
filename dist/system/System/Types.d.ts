@@ -17,7 +17,7 @@ export declare class TypeInfo {
     readonly isNullOrUndefined: boolean;
     readonly isPrimitive: boolean;
     readonly isSymbol: boolean;
-    constructor(target: any, onBeforeFreeze?: () => void);
+    constructor(target: any, onBeforeFreeze?: (instance: any) => void);
     member(name: string | number | symbol): TypeInfo;
     static getFor(target: any): TypeInfo;
 }

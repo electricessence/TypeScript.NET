@@ -1,10 +1,9 @@
-System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy", "../../../extends"], function(exports_1, context_1) {
+System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TaskHandlerBase_1, ArgumentNullException_1, Lazy_1, extends_1;
-    var __extends, Task;
+    var TaskHandlerBase_1, ArgumentNullException_1, Lazy_1, extends_1, __extends, Task;
     return {
-        setters:[
+        setters: [
             function (TaskHandlerBase_1_1) {
                 TaskHandlerBase_1 = TaskHandlerBase_1_1;
             },
@@ -16,16 +15,18 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             Task = (function (_super) {
                 __extends(Task, _super);
                 function Task(valueFactory) {
-                    _super.call(this);
+                    var _this = _super.call(this) || this;
                     if (!valueFactory)
                         throw new ArgumentNullException_1.ArgumentNullException('valueFactory');
-                    this._result = new Lazy_1.Lazy(valueFactory, false);
+                    _this._result = new Lazy_1.Lazy(valueFactory, false);
+                    return _this;
                 }
                 Task.prototype._onExecute = function () {
                     this._result.getValue();
@@ -86,8 +87,8 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
                 return Task;
             }(TaskHandlerBase_1.TaskHandlerBase));
             exports_1("Task", Task);
-            exports_1("default",Task);
+            exports_1("default", Task);
         }
-    }
+    };
 });
 //# sourceMappingURL=Task.js.map

@@ -1,8 +1,6 @@
-System.register(["../../Types", "./Utility"], function(exports_1, context_1) {
+System.register(["../../Types", "./Utility"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, Utility_1;
-    var VOID0;
     function unsafe(listeners, payload, trap) {
         if (listeners && listeners.length) {
             for (var i = 0, len = listeners.length; i < len; i++) {
@@ -21,7 +19,6 @@ System.register(["../../Types", "./Utility"], function(exports_1, context_1) {
             }
         }
     }
-    exports_1("unsafe", unsafe);
     function mapped(listeners, payload, trap) {
         if (!listeners)
             return listeners;
@@ -45,23 +42,26 @@ System.register(["../../Types", "./Utility"], function(exports_1, context_1) {
         }
         return result;
     }
-    exports_1("mapped", mapped);
     function dispatch(listeners, payload, trap) {
         unsafe(Utility_1.copy(listeners), payload, trap);
     }
+    var Types_1, Utility_1, VOID0;
+    exports_1("unsafe", unsafe);
+    exports_1("mapped", mapped);
     exports_1("dispatch", dispatch);
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
             function (Utility_1_1) {
                 Utility_1 = Utility_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             VOID0 = void 0;
-            exports_1("default",dispatch);
+            exports_1("default", dispatch);
         }
-    }
+    };
 });
 //# sourceMappingURL=Dispatch.js.map

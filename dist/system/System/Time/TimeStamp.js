@@ -1,18 +1,14 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(["../Types"], function(exports_1, context_1) {
+System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1;
-    var TimeStamp;
+    var Types_1, TimeStamp;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             TimeStamp = (function () {
                 function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {
                     if (day === void 0) { day = 1; }
@@ -48,8 +44,8 @@ System.register(["../Types"], function(exports_1, context_1) {
                 return TimeStamp;
             }());
             exports_1("TimeStamp", TimeStamp);
-            exports_1("default",TimeStamp);
+            exports_1("default", TimeStamp);
         }
-    }
+    };
 });
 //# sourceMappingURL=TimeStamp.js.map

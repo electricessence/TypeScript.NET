@@ -2,17 +2,20 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./IteratorResult"], function(exports_1, context_1) {
+System.register(["./IteratorResult"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var IteratorResult_1;
-    var VOID0, SimpleEnumerableBase;
+    var IteratorResult_1, VOID0, SimpleEnumerableBase;
     return {
-        setters:[
+        setters: [
             function (IteratorResult_1_1) {
                 IteratorResult_1 = IteratorResult_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             VOID0 = void 0;
             SimpleEnumerableBase = (function () {
                 function SimpleEnumerableBase() {
@@ -86,8 +89,8 @@ System.register(["./IteratorResult"], function(exports_1, context_1) {
                 return SimpleEnumerableBase;
             }());
             exports_1("SimpleEnumerableBase", SimpleEnumerableBase);
-            exports_1("default",SimpleEnumerableBase);
+            exports_1("default", SimpleEnumerableBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=SimpleEnumerableBase.js.map

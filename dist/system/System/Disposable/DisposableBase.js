@@ -1,18 +1,14 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(["./ObjectDisposedException"], function(exports_1, context_1) {
+System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ObjectDisposedException_1;
-    var DisposableBase;
+    var ObjectDisposedException_1, DisposableBase;
     return {
-        setters:[
+        setters: [
             function (ObjectDisposedException_1_1) {
                 ObjectDisposedException_1 = ObjectDisposedException_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             DisposableBase = (function () {
                 function DisposableBase(__finalizer) {
                     this.__finalizer = __finalizer;
@@ -50,8 +46,8 @@ System.register(["./ObjectDisposedException"], function(exports_1, context_1) {
                 return DisposableBase;
             }());
             exports_1("DisposableBase", DisposableBase);
-            exports_1("default",DisposableBase);
+            exports_1("default", DisposableBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=DisposableBase.js.map

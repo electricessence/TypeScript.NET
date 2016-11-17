@@ -1,10 +1,9 @@
-System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], function(exports_1, context_1) {
+System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", "../Types", "./CollectionBase", "../../extends", "./Enumeration/EnumeratorBase"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Utility_1, Enumerator_1, Types_1, CollectionBase_1, extends_1, EnumeratorBase_1;
-    var __extends, VOID0, List;
+    var Compare_1, Utility_1, Enumerator_1, Types_1, CollectionBase_1, extends_1, EnumeratorBase_1, __extends, VOID0, List;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
@@ -25,22 +24,24 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
             },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             List = (function (_super) {
                 __extends(List, _super);
                 function List(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-                    _super.call(this, VOID0, equalityComparer);
+                    var _this = _super.call(this, VOID0, equalityComparer) || this;
                     if (Array.isArray(source)) {
-                        this._source = source.slice();
+                        _this._source = source.slice();
                     }
                     else {
-                        this._source = [];
-                        this._importEntries(source);
+                        _this._source = [];
+                        _this._importEntries(source);
                     }
+                    return _this;
                 }
                 List.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
@@ -144,8 +145,8 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                 return List;
             }(CollectionBase_1.CollectionBase));
             exports_1("List", List);
-            exports_1("default",List);
+            exports_1("default", List);
         }
-    }
+    };
 });
 //# sourceMappingURL=List.js.map

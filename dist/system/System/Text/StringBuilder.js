@@ -1,14 +1,14 @@
-System.register(["../Types"], function(exports_1, context_1) {
+System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1;
-    var VOID0, StringBuilder;
+    var Types_1, VOID0, StringBuilder;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             VOID0 = void 0;
             StringBuilder = (function () {
                 function StringBuilder() {
@@ -91,8 +91,8 @@ System.register(["../Types"], function(exports_1, context_1) {
                 return StringBuilder;
             }());
             exports_1("StringBuilder", StringBuilder);
-            exports_1("default",StringBuilder);
+            exports_1("default", StringBuilder);
         }
-    }
+    };
 });
 //# sourceMappingURL=StringBuilder.js.map

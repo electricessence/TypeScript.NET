@@ -1,10 +1,10 @@
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var VOID0, _BOOLEAN, _NUMBER, _STRING, _SYMBOL, _OBJECT, _UNDEFINED, _FUNCTION, LENGTH, typeInfoRegistry, TypeInfo, Type;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {
             VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _SYMBOL = "symbol", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
             typeInfoRegistry = {};
             TypeInfo = (function () {
@@ -63,7 +63,7 @@ System.register([], function(exports_1, context_1) {
                             throw "Fatal type failure.  Unknown type: " + this.type;
                     }
                     if (onBeforeFreeze)
-                        onBeforeFreeze();
+                        onBeforeFreeze(this);
                     Object.freeze(this);
                 }
                 TypeInfo.prototype.member = function (name) {
@@ -187,8 +187,8 @@ System.register([], function(exports_1, context_1) {
             })(Type = Type || (Type = {}));
             exports_1("Type", Type);
             Object.freeze(Type);
-            exports_1("default",Type);
+            exports_1("default", Type);
         }
-    }
+    };
 });
 //# sourceMappingURL=Types.js.map

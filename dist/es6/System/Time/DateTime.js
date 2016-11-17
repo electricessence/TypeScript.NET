@@ -4,22 +4,18 @@ import { TimeStamp } from "./TimeStamp";
 export class DateTime {
     constructor(value = new Date(), kind = 1) {
         const _ = this;
-        _._kind = kind;
+        this._kind = kind;
         if (value instanceof DateTime)
-            _._value = value.toJsDate();
+            this._value = value.toJsDate();
         else if (value instanceof Date)
-            _._setJsDate(value);
+            this._value = new Date(value.getTime());
         else
-            _._value = value === void (0)
+            this._value = value === void (0)
                 ? new Date()
                 : new Date(value);
     }
     toJsDate() {
         return new Date(this._value.getTime());
-    }
-    _setJsDate(value) {
-        this._time = null;
-        this._value = new Date(value.getTime());
     }
     get kind() {
         return this._kind;

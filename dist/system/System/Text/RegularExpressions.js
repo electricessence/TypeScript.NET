@@ -3,17 +3,21 @@
  * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["../../extends"], function(exports_1, context_1) {
+System.register(["../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var extends_1;
-    var __extends, EMPTY, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
+    var extends_1, __extends, EMPTY, _I, _G, _M, _U, _W, _Y, RegexOptions, Regex, Capture, Group, EmptyGroup, Match, EmptyMatch;
     return {
-        setters:[
+        setters: [
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             __extends = extends_1.default;
             EMPTY = "";
             _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
@@ -171,7 +175,7 @@ System.register(["../../extends"], function(exports_1, context_1) {
                 function Group(value, index) {
                     if (value === void 0) { value = EMPTY; }
                     if (index === void 0) { index = -1; }
-                    _super.call(this, value, index);
+                    return _super.call(this, value, index) || this;
                 }
                 Object.defineProperty(Group.prototype, "success", {
                     get: function () {
@@ -199,16 +203,17 @@ System.register(["../../extends"], function(exports_1, context_1) {
                     if (index === void 0) { index = -1; }
                     if (groups === void 0) { groups = []; }
                     if (namedGroups === void 0) { namedGroups = {}; }
-                    _super.call(this, value, index);
-                    this.groups = groups;
-                    this.namedGroups = namedGroups;
+                    var _this = _super.call(this, value, index) || this;
+                    _this.groups = groups;
+                    _this.namedGroups = namedGroups;
+                    return _this;
                 }
                 Match.prototype.freeze = function () {
                     if (!this.groups)
                         throw new Error("'groups' cannot be null.");
                     if (!this.namedGroups)
                         throw new Error("'groupMap' cannot be null.");
-                    Object.freeze(this.groups.slice());
+                    Object.freeze(this.groups);
                     Object.freeze(this.namedGroups);
                     _super.prototype.freeze.call(this);
                 };
@@ -224,8 +229,8 @@ System.register(["../../extends"], function(exports_1, context_1) {
             exports_1("Match", Match);
             EmptyMatch = new Match();
             EmptyMatch.freeze();
-            exports_1("default",Regex);
+            exports_1("default", Regex);
         }
-    }
+    };
 });
 //# sourceMappingURL=RegularExpressions.js.map

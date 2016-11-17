@@ -1,13 +1,10 @@
-System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator", "./IndexEnumerator", "./UnsupportedEnumerableException", "./InfiniteEnumerator", "./EmptyEnumerator", "./IteratorEnumerator"], function(exports_1, context_1) {
+System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator", "./IndexEnumerator", "./UnsupportedEnumerableException", "./InfiniteEnumerator", "./EmptyEnumerator", "./IteratorEnumerator"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var dispose_1, Types_1, ArrayEnumerator_1, IndexEnumerator_1, UnsupportedEnumerableException_1, InfiniteEnumerator_1, EmptyEnumerator_1, IteratorEnumerator_1;
-    var STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
     function throwIfEndless(isEndless) {
         if (isEndless)
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
     }
-    exports_1("throwIfEndless", throwIfEndless);
     function initArrayFrom(source, max) {
         if (max === void 0) { max = Infinity; }
         if (Array.isArray(source) || Types_1.Type.isString(source)) {
@@ -47,23 +44,18 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         }
         throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
     }
-    exports_1("from", from);
     function isEnumerable(instance) {
         return Types_1.Type.hasMemberOfType(instance, "getEnumerator", Types_1.Type.FUNCTION);
     }
-    exports_1("isEnumerable", isEnumerable);
     function isEnumerableOrArrayLike(instance) {
         return Types_1.Type.isArrayLike(instance) || isEnumerable(instance);
     }
-    exports_1("isEnumerableOrArrayLike", isEnumerableOrArrayLike);
     function isEnumerator(instance) {
         return Types_1.Type.hasMemberOfType(instance, "moveNext", Types_1.Type.FUNCTION);
     }
-    exports_1("isEnumerator", isEnumerator);
     function isIterator(instance) {
         return Types_1.Type.hasMemberOfType(instance, "next", Types_1.Type.FUNCTION);
     }
-    exports_1("isIterator", isIterator);
     function forEach(e, action, max) {
         if (max === void 0) { max = Infinity; }
         if (e === STRING_EMPTY)
@@ -103,7 +95,6 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         }
         return -1;
     }
-    exports_1("forEach", forEach);
     function toArray(source, max) {
         if (max === void 0) { max = Infinity; }
         if (source === STRING_EMPTY)
@@ -115,7 +106,6 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
         return result;
     }
-    exports_1("toArray", toArray);
     function map(source, selector, max) {
         if (max === void 0) { max = Infinity; }
         if (source === STRING_EMPTY)
@@ -127,9 +117,18 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
         return result;
     }
+    var dispose_1, Types_1, ArrayEnumerator_1, IndexEnumerator_1, UnsupportedEnumerableException_1, InfiniteEnumerator_1, EmptyEnumerator_1, IteratorEnumerator_1, STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
+    exports_1("throwIfEndless", throwIfEndless);
+    exports_1("from", from);
+    exports_1("isEnumerable", isEnumerable);
+    exports_1("isEnumerableOrArrayLike", isEnumerableOrArrayLike);
+    exports_1("isEnumerator", isEnumerator);
+    exports_1("isIterator", isIterator);
+    exports_1("forEach", forEach);
+    exports_1("toArray", toArray);
     exports_1("map", map);
     return {
-        setters:[
+        setters: [
             function (dispose_1_1) {
                 dispose_1 = dispose_1_1;
             },
@@ -153,11 +152,12 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
             },
             function (IteratorEnumerator_1_1) {
                 IteratorEnumerator_1 = IteratorEnumerator_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an endless enumerable. ' +
                 'Would result in an infinite loop that could hang the current process.';
         }
-    }
+    };
 });
 //# sourceMappingURL=Enumerator.js.map

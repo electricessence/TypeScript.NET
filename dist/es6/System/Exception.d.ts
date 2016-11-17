@@ -5,8 +5,8 @@ export interface Error {
     message: string;
 }
 export declare class Exception implements Error, IDisposable {
-    readonly name: string;
     readonly message: string;
+    readonly name: string;
     readonly stack: string;
     readonly data: IMap<any>;
     constructor(message: string, innerException?: Error, beforeSealing?: (ex: any) => void);

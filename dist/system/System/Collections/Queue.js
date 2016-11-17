@@ -1,8 +1,6 @@
-System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
+System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, AU, Types_1, Integer_1, EnumeratorBase_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1, CollectionBase_1, extends_1;
-    var __extends, VOID0, MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     function assertZeroOrGreater(value, property) {
         if (value < 0)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(property, value, "Must be greater than zero");
@@ -11,8 +9,9 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
         Integer_1.Integer.assert(value, property);
         assertZeroOrGreater(value, property);
     }
+    var Compare_1, AU, Types_1, Integer_1, EnumeratorBase_1, NotImplementedException_1, InvalidOperationException_1, ArgumentOutOfRangeException_1, CollectionBase_1, extends_1, __extends, VOID0, MINIMUM_GROW, SHRINK_THRESHOLD, GROW_FACTOR_HALF, DEFAULT_CAPACITY, emptyArray, Queue;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
@@ -42,8 +41,9 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             MINIMUM_GROW = 4;
@@ -55,8 +55,8 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 __extends(Queue, _super);
                 function Queue(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-                    _super.call(this, VOID0, equalityComparer);
-                    var _ = this;
+                    var _this = _super.call(this, VOID0, equalityComparer) || this;
+                    var _ = _this;
                     _._head = 0;
                     _._tail = 0;
                     _._size = 0;
@@ -79,6 +79,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                         }
                     }
                     _._capacity = _._array.length;
+                    return _this;
                 }
                 Queue.prototype.getCount = function () {
                     return this._size;
@@ -254,8 +255,8 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                 return Queue;
             }(CollectionBase_1.CollectionBase));
             exports_1("Queue", Queue);
-            exports_1("default",Queue);
+            exports_1("default", Queue);
         }
-    }
+    };
 });
 //# sourceMappingURL=Queue.js.map

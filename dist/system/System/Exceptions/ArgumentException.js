@@ -1,10 +1,9 @@
-System.register(["./SystemException", "../Text/Utility", "../../extends"], function(exports_1, context_1) {
+System.register(["./SystemException", "../Text/Utility", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var SystemException_1, Utility_1, extends_1;
-    var __extends, NAME, ArgumentException;
+    var SystemException_1, Utility_1, extends_1, __extends, NAME, ArgumentException;
     return {
-        setters:[
+        setters: [
             function (SystemException_1_1) {
                 SystemException_1 = SystemException_1_1;
             },
@@ -13,19 +12,22 @@ System.register(["./SystemException", "../Text/Utility", "../../extends"], funct
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             NAME = 'ArgumentException';
             ArgumentException = (function (_super) {
                 __extends(ArgumentException, _super);
                 function ArgumentException(paramName, message, innerException, beforeSealing) {
+                    var _this;
                     var pn = paramName ? ('{' + paramName + '} ') : '';
-                    _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
+                    _this = _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
                         _.paramName = paramName;
                         if (beforeSealing)
                             beforeSealing(_);
-                    });
+                    }) || this;
+                    return _this;
                 }
                 ArgumentException.prototype.getName = function () {
                     return NAME;
@@ -33,8 +35,8 @@ System.register(["./SystemException", "../Text/Utility", "../../extends"], funct
                 return ArgumentException;
             }(SystemException_1.SystemException));
             exports_1("ArgumentException", ArgumentException);
-            exports_1("default",ArgumentException);
+            exports_1("default", ArgumentException);
         }
-    }
+    };
 });
 //# sourceMappingURL=ArgumentException.js.map

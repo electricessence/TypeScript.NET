@@ -1,10 +1,9 @@
-System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function(exports_1, context_1) {
+System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, extends_1, Environment_1;
-    var __extends, NAME, CMDC, CMRO, LINQ_PATH, CollectionBase;
+    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, extends_1, Environment_1, __extends, NAME, CMDC, CMRO, LINQ_PATH, CollectionBase;
     return {
-        setters:[
+        setters: [
             function (Enumerator_1_1) {
                 Enumerator_1 = Enumerator_1_1;
             },
@@ -25,8 +24,9 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             },
             function (Environment_1_1) {
                 Environment_1 = Environment_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
             LINQ_PATH = "../../System.Linq/Linq";
@@ -34,14 +34,15 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                 __extends(CollectionBase, _super);
                 function CollectionBase(source, _equalityComparer) {
                     if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
-                    _super.call(this);
-                    this._equalityComparer = _equalityComparer;
-                    var _ = this;
+                    var _this = _super.call(this) || this;
+                    _this._equalityComparer = _equalityComparer;
+                    var _ = _this;
                     _._disposableObjectName = NAME;
                     _._importEntries(source);
                     _._updateRecursion = 0;
                     _._modifiedCount = 0;
                     _._version = 0;
+                    return _this;
                 }
                 Object.defineProperty(CollectionBase.prototype, "count", {
                     get: function () {
@@ -128,7 +129,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     var _ = this;
                     _.assertModifiable();
                     _._updateRecursion++;
-                    var n;
+                    var n = NaN;
                     try {
                         if (n = _._removeInternal(entry, max))
                             _._modifiedCount++;
@@ -143,7 +144,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     var _ = this;
                     _.assertModifiable();
                     _._updateRecursion++;
-                    var n;
+                    var n = NaN;
                     try {
                         if (n = _._clearInternal())
                             _._modifiedCount++;
@@ -200,7 +201,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                         _._updateRecursion--;
                     }
                     _._signalModification();
-                    return n;
+                    return n = NaN;
                 };
                 CollectionBase.prototype.contains = function (entry) {
                     if (!this.getCount())
@@ -296,6 +297,6 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             }(DisposableBase_1.DisposableBase));
             exports_1("CollectionBase", CollectionBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=CollectionBase.js.map

@@ -1,8 +1,6 @@
-System.register(["../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Promises/Promise", "../../Types", "../Worker", "../deferImmediate", "../../Environment", "../../Disposable/ObjectPool", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Promise_1, Types_1, Worker_1, deferImmediate_1, Environment_1, ObjectPool_1, extends_1;
-    var __extends, MAX_WORKERS, VOID0, URL, _supports, defaults, WorkerPromise, workers, Parallel;
     function extend(from, to) {
         if (!to)
             to = {};
@@ -21,8 +19,9 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
         if (message !== VOID0)
             w.postMessage(message);
     }
+    var Promise_1, Types_1, Worker_1, deferImmediate_1, Environment_1, ObjectPool_1, extends_1, __extends, MAX_WORKERS, VOID0, URL, _supports, defaults, WorkerPromise, workers, Parallel;
     return {
-        setters:[
+        setters: [
             function (Promise_1_1) {
                 Promise_1 = Promise_1_1;
             },
@@ -43,8 +42,9 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
                 ? (self.URL ? self.URL : self.webkitURL)
@@ -61,13 +61,13 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
             WorkerPromise = (function (_super) {
                 __extends(WorkerPromise, _super);
                 function WorkerPromise(worker, data) {
-                    _super.call(this, function (resolve, reject) {
+                    return _super.call(this, function (resolve, reject) {
                         interact(worker, function (response) {
                             resolve(response.data);
                         }, function (e) {
                             reject(e);
                         }, data);
-                    }, true);
+                    }, true) || this;
                 }
                 return WorkerPromise;
             }(Promise_1.Promise));
@@ -221,7 +221,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                         var taskString = task.toString();
                         var maxConcurrency = this.ensureClampedMaxConcurrency(), error_1;
                         var i_1 = 0;
-                        var _loop_1 = function(w) {
+                        var _loop_1 = function (w) {
                             var worker = this_1._spawnWorker(taskString, env);
                             if (!worker) {
                                 if (!this_1.options.allowSynchronous)
@@ -263,7 +263,8 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                         var this_1 = this;
                         for (var w = 0; !error_1 && i_1 < Math.min(len_1, maxConcurrency); w++) {
                             var state_1 = _loop_1(w);
-                            if (typeof state_1 === "object") return state_1.value;
+                            if (typeof state_1 === "object")
+                                return state_1.value;
                         }
                     }
                     return new Promise_1.PromiseCollection(result);
@@ -287,7 +288,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                         var taskString = task.toString();
                         var maxConcurrency = _this.ensureClampedMaxConcurrency(), error;
                         var i = 0, resolved = 0;
-                        var _loop_2 = function(w) {
+                        var _loop_2 = function (w) {
                             var worker = _this._spawnWorker(taskString, env);
                             if (!worker) {
                                 if (!_this.options.allowSynchronous)
@@ -333,7 +334,8 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                         };
                         for (var w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
                             var state_2 = _loop_2(w);
-                            if (typeof state_2 === "object") return state_2.value;
+                            if (typeof state_2 === "object")
+                                return state_2.value;
                         }
                     });
                 };
@@ -364,8 +366,8 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 return Parallel;
             }());
             exports_1("Parallel", Parallel);
-            exports_1("default",Parallel);
+            exports_1("default", Parallel);
         }
-    }
+    };
 });
 //# sourceMappingURL=Parallel.js.map

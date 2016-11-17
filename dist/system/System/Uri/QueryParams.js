@@ -1,8 +1,6 @@
-System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], function(exports_1, context_1) {
+System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Serialization, Types_1, KeyValueExtract_1, Enumerator_1;
-    var EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
     function encode(values, prefixIfNotEmpty) {
         if (!values)
             return EMPTY;
@@ -18,7 +16,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         return (entries.length && prefixIfNotEmpty ? QUERY_SEPARATOR : EMPTY)
             + entries.join(ENTRY_SEPARATOR);
     }
-    exports_1("encode", encode);
     function appendKeyValueSingle(entries, key, value) {
         entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
     }
@@ -41,11 +38,9 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
             return encodeURIComponent(Serialization.toString(value));
         }
     }
-    exports_1("encodeValue", encodeValue);
     function isUriComponentFormattable(instance) {
         return Types_1.Type.hasMemberOfType(instance, TO_URI_COMPONENT, Types_1.Type.FUNCTION);
     }
-    exports_1("isUriComponentFormattable", isUriComponentFormattable);
     function parse(query, entryHandler, deserialize, decodeValues) {
         if (deserialize === void 0) { deserialize = true; }
         if (decodeValues === void 0) { decodeValues = true; }
@@ -66,7 +61,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
             }
         }
     }
-    exports_1("parse", parse);
     function parseToMap(query, deserialize, decodeValues) {
         if (deserialize === void 0) { deserialize = true; }
         if (decodeValues === void 0) { decodeValues = true; }
@@ -83,7 +77,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         }, deserialize, decodeValues);
         return result;
     }
-    exports_1("parseToMap", parseToMap);
     function parseToArray(query, deserialize, decodeValues) {
         if (deserialize === void 0) { deserialize = true; }
         if (decodeValues === void 0) { decodeValues = true; }
@@ -91,9 +84,15 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         parse(query, function (key, value) { result.push({ key: key, value: value }); }, deserialize, decodeValues);
         return result;
     }
+    var Serialization, Types_1, KeyValueExtract_1, Enumerator_1, EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
+    exports_1("encode", encode);
+    exports_1("encodeValue", encodeValue);
+    exports_1("isUriComponentFormattable", isUriComponentFormattable);
+    exports_1("parse", parse);
+    exports_1("parseToMap", parseToMap);
     exports_1("parseToArray", parseToArray);
     return {
-        setters:[
+        setters: [
             function (Serialization_1) {
                 Serialization = Serialization_1;
             },
@@ -105,8 +104,9 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
             },
             function (Enumerator_1_1) {
                 Enumerator_1 = Enumerator_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             EMPTY = "", QUERY_SEPARATOR = "?", ENTRY_SEPARATOR = "&", KEY_VALUE_SEPARATOR = "=", TO_URI_COMPONENT = "toUriComponent";
             (function (Separator) {
                 Separator.Query = QUERY_SEPARATOR;
@@ -116,6 +116,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
             exports_1("Separator", Separator);
             Object.freeze(Separator);
         }
-    }
+    };
 });
 //# sourceMappingURL=QueryParams.js.map

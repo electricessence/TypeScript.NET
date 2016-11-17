@@ -26,9 +26,9 @@ function linkedNodeList(recycle) {
     linkedListPool.add(recycle);
 }
 export class Dictionary extends DictionaryBase {
-    constructor(keyGenerator) {
+    constructor(_keyGenerator) {
         super();
-        this._keyGenerator = keyGenerator;
+        this._keyGenerator = _keyGenerator;
         this._entries = linkedNodeList();
         this._buckets = {};
     }

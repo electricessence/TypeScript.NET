@@ -1,32 +1,33 @@
-System.register(["../Observable/ObservableBase", "../../extends"], function(exports_1, context_1) {
+System.register(["../Observable/ObservableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ObservableBase_1, extends_1;
-    var __extends, Timer;
+    var ObservableBase_1, extends_1, __extends, Timer;
     return {
-        setters:[
+        setters: [
             function (ObservableBase_1_1) {
                 ObservableBase_1 = ObservableBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             Timer = (function (_super) {
                 __extends(Timer, _super);
                 function Timer(_interval, _maxCount, _initialDelay) {
                     if (_maxCount === void 0) { _maxCount = Infinity; }
                     if (_initialDelay === void 0) { _initialDelay = _interval; }
-                    _super.call(this);
-                    this._interval = _interval;
-                    this._maxCount = _maxCount;
-                    this._initialDelay = _initialDelay;
-                    this._count = 0;
+                    var _this = _super.call(this) || this;
+                    _this._interval = _interval;
+                    _this._maxCount = _maxCount;
+                    _this._initialDelay = _initialDelay;
+                    _this._count = 0;
                     if (_interval === null || _interval === void (0))
                         throw "'interval' must be a valid number.";
                     if (_interval < 0)
                         throw "'interval' cannot be negative.";
+                    return _this;
                 }
                 Timer.startNew = function (millisecondInterval, maxCount, initialDelay) {
                     if (maxCount === void 0) { maxCount = Infinity; }
@@ -111,6 +112,6 @@ System.register(["../Observable/ObservableBase", "../../extends"], function(expo
             }(ObservableBase_1.ObservableBase));
             exports_1("default", Timer);
         }
-    }
+    };
 });
 //# sourceMappingURL=Timer.js.map

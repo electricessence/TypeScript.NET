@@ -2,7 +2,7 @@ import { TaskHandlerBase } from "./TaskHandlerBase";
 import { Func } from "../../FunctionTypes";
 import { ITaskState } from "./ITaskState";
 export declare class Task<T> extends TaskHandlerBase {
-    private _result;
+    private readonly _result;
     constructor(valueFactory: Func<T>);
     protected _onExecute(): void;
     protected getResult(): T;

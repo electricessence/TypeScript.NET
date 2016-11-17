@@ -1,10 +1,9 @@
-System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], function(exports_1, context_1) {
+System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Subscription", "../Disposable/DisposableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var LinkedNodeList_1, dispose_1, Subscription_1, DisposableBase_1, extends_1;
-    var __extends, NAME, SubscribableBase;
+    var LinkedNodeList_1, dispose_1, Subscription_1, DisposableBase_1, extends_1, __extends, NAME, SubscribableBase;
     return {
-        setters:[
+        setters: [
             function (LinkedNodeList_1_1) {
                 LinkedNodeList_1 = LinkedNodeList_1_1;
             },
@@ -19,15 +18,17 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             NAME = "SubscribableBase";
             SubscribableBase = (function (_super) {
                 __extends(SubscribableBase, _super);
                 function SubscribableBase() {
-                    _super.call(this);
-                    this._disposableObjectName = NAME;
+                    var _this = _super.call(this) || this;
+                    _this._disposableObjectName = NAME;
+                    return _this;
                 }
                 SubscribableBase.prototype._getSubscribers = function () {
                     var s = this.__subscriptions;
@@ -88,8 +89,8 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
                 return SubscribableBase;
             }(DisposableBase_1.DisposableBase));
             exports_1("SubscribableBase", SubscribableBase);
-            exports_1("default",SubscribableBase);
+            exports_1("default", SubscribableBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=SubscribableBase.js.map

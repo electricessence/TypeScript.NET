@@ -1,8 +1,6 @@
-System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function(exports_1, context_1) {
+System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1;
-    var requestTick, flushing, immediateQueue, laterQueue, entryPool;
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
@@ -69,14 +67,15 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             dispose: function () { entry && entry.canceller(); }
         };
     }
-    exports_1("deferImmediate", deferImmediate);
     function runAfterDeferred(task) {
         laterQueue.enqueue(task);
         requestFlush();
     }
+    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1, requestTick, flushing, immediateQueue, laterQueue, entryPool;
+    exports_1("deferImmediate", deferImmediate);
     exports_1("runAfterDeferred", runAfterDeferred);
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -91,12 +90,13 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             },
             function (Environment_1_1) {
                 Environment_1 = Environment_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             flushing = false;
             immediateQueue = new LinkedNodeList_1.LinkedNodeList();
             laterQueue = new Queue_1.Queue();
-            entryPool = new ObjectPool_1.ObjectPool(40, function () { return {}; }, function (o) {
+            entryPool = new ObjectPool_1.ObjectPool(40, function () { return ({}); }, function (o) {
                 o.task = null;
                 o.domain = null;
                 o.context = null;
@@ -140,8 +140,8 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                     setTimeout(flush, 0);
                 };
             }
-            exports_1("default",deferImmediate);
+            exports_1("default", deferImmediate);
         }
-    }
+    };
 });
 //# sourceMappingURL=deferImmediate.js.map

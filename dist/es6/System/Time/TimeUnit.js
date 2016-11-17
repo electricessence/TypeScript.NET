@@ -12,7 +12,6 @@ export var TimeUnit;
     TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
     TimeUnit[TimeUnit["Days"] = 5] = "Days";
 })(TimeUnit || (TimeUnit = {}));
-export var TimeUnit;
 (function (TimeUnit) {
     function toMilliseconds(value, units = TimeUnit.Milliseconds) {
         switch (units) {

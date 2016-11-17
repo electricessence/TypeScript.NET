@@ -2,7 +2,6 @@ import { Type } from "../Types";
 export function dispose(...disposables) {
     disposeTheseInternal(disposables, false);
 }
-export var dispose;
 (function (dispose) {
     function deferred(...disposables) {
         these.deferred(disposables);
@@ -18,7 +17,6 @@ export var dispose;
             : void 0;
     }
     dispose.these = these;
-    var these;
     (function (these) {
         function deferred(disposables, delay = 0) {
             if (disposables && disposables.length) {

@@ -1,10 +1,9 @@
-System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], function(exports_1, context_1) {
+System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1, extends_1;
-    var __extends, VOID0, OrderedStringKeyDictionary;
+    var ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1, extends_1, __extends, VOID0, OrderedStringKeyDictionary;
     return {
-        setters:[
+        setters: [
             function (ArrayUtility_1) {
                 ArrayUtility = ArrayUtility_1;
             },
@@ -16,15 +15,17 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             OrderedStringKeyDictionary = (function (_super) {
                 __extends(OrderedStringKeyDictionary, _super);
                 function OrderedStringKeyDictionary() {
-                    _super.call(this);
-                    this._order = [];
+                    var _this = _super.call(this) || this;
+                    _this._order = [];
+                    return _this;
                 }
                 OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
                     var o = this._order;
@@ -81,8 +82,8 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
                 return OrderedStringKeyDictionary;
             }(StringKeyDictionary_1.StringKeyDictionary));
             exports_1("OrderedStringKeyDictionary", OrderedStringKeyDictionary);
-            exports_1("default",OrderedStringKeyDictionary);
+            exports_1("default", OrderedStringKeyDictionary);
         }
-    }
+    };
 });
 //# sourceMappingURL=OrderedStringKeyDictionary.js.map

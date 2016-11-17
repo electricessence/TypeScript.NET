@@ -6,20 +6,19 @@ export class ClockTime extends TimeQuantity {
         super(args.length > 1
             ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
             : (args.length > 0 && args[0] || 0));
-        const _ = this;
-        const ms = Math.abs(_.getTotalMilliseconds());
+        const ms = Math.abs(this.getTotalMilliseconds());
         let msi = Math.floor(ms);
-        _.tick = (ms - msi) * 10000;
-        _.days = (msi / 86400000) | 0;
-        msi -= _.days * 86400000;
-        _.hour = (msi / 3600000) | 0;
-        msi -= _.hour * 3600000;
-        _.minute = (msi / 60000) | 0;
-        msi -= _.minute * 60000;
-        _.second = (msi / 1000) | 0;
-        msi -= _.second * 1000;
-        _.millisecond = msi;
-        Object.freeze(_);
+        this.tick = (ms - msi) * 10000;
+        this.days = (msi / 86400000) | 0;
+        msi -= this.days * 86400000;
+        this.hour = (msi / 3600000) | 0;
+        msi -= this.hour * 3600000;
+        this.minute = (msi / 60000) | 0;
+        msi -= this.minute * 60000;
+        this.second = (msi / 1000) | 0;
+        msi -= this.second * 1000;
+        this.millisecond = msi;
+        Object.freeze(this);
     }
     static from(hours, minutes, seconds = 0, milliseconds = 0) {
         return new ClockTime(hours, minutes, seconds, milliseconds);

@@ -1,14 +1,9 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../../extends"], function(exports_1, context_1) {
+System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TaskHandlerBase_1, ArgumentNullException_1, extends_1;
-    var __extends, TaskHandler;
+    var TaskHandlerBase_1, ArgumentNullException_1, extends_1, __extends, TaskHandler;
     return {
-        setters:[
+        setters: [
             function (TaskHandlerBase_1_1) {
                 TaskHandlerBase_1 = TaskHandlerBase_1_1;
             },
@@ -17,16 +12,18 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             TaskHandler = (function (_super) {
                 __extends(TaskHandler, _super);
                 function TaskHandler(_action) {
-                    _super.call(this);
-                    this._action = _action;
+                    var _this = _super.call(this) || this;
+                    _this._action = _action;
                     if (!_action)
                         throw new ArgumentNullException_1.ArgumentNullException('action');
+                    return _this;
                 }
                 TaskHandler.prototype._onExecute = function () {
                     this._action();
@@ -38,8 +35,8 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
                 return TaskHandler;
             }(TaskHandlerBase_1.TaskHandlerBase));
             exports_1("TaskHandler", TaskHandler);
-            exports_1("default",TaskHandler);
+            exports_1("default", TaskHandler);
         }
-    }
+    };
 });
 //# sourceMappingURL=TaskHandler.js.map

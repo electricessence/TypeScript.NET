@@ -1,10 +1,9 @@
-System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], function(exports_1, context_1) {
+System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullException", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Promise_1, defer_1, ArgumentNullException_1, extends_1;
-    var __extends, VOID0, LazyPromise;
+    var Promise_1, defer_1, ArgumentNullException_1, extends_1, __extends, VOID0, LazyPromise;
     return {
-        setters:[
+        setters: [
             function (Promise_1_1) {
                 Promise_1 = Promise_1_1;
             },
@@ -16,18 +15,20 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             LazyPromise = (function (_super) {
                 __extends(LazyPromise, _super);
                 function LazyPromise(_resolver) {
-                    _super.call(this);
-                    this._resolver = _resolver;
+                    var _this = _super.call(this) || this;
+                    _this._resolver = _resolver;
                     if (!_resolver)
                         throw new ArgumentNullException_1.ArgumentNullException("resolver");
-                    this._resolvedCalled = true;
+                    _this._resolvedCalled = true;
+                    return _this;
                 }
                 LazyPromise.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
@@ -115,8 +116,8 @@ System.register(["./Promise", "../Threading/defer", "../Exceptions/ArgumentNullE
                 return LazyPromise;
             }(Promise_1.Promise));
             exports_1("LazyPromise", LazyPromise);
-            exports_1("default",LazyPromise);
+            exports_1("default", LazyPromise);
         }
-    }
+    };
 });
 //# sourceMappingURL=LazyPromise.js.map

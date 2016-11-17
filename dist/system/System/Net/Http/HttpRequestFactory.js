@@ -1,10 +1,9 @@
-System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/DisposableBase", "./HttpMethod", "../../Uri/Uri", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ArgumentNullException_1, DisposableBase_1, HttpMethod_1, Uri_1, extends_1;
-    var __extends, NAME, HttpRequestFactory;
+    var ArgumentNullException_1, DisposableBase_1, HttpMethod_1, Uri_1, extends_1, __extends, NAME, HttpRequestFactory;
     return {
-        setters:[
+        setters: [
             function (ArgumentNullException_1_1) {
                 ArgumentNullException_1 = ArgumentNullException_1_1;
             },
@@ -19,19 +18,21 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             NAME = 'HttpRequestFactory';
             HttpRequestFactory = (function (_super) {
                 __extends(HttpRequestFactory, _super);
                 function HttpRequestFactory(_http, uriDefaults) {
-                    _super.call(this);
-                    this._http = _http;
-                    this._disposableObjectName = NAME;
+                    var _this = _super.call(this) || this;
+                    _this._http = _http;
+                    _this._disposableObjectName = NAME;
                     if (!_http)
                         throw new ArgumentNullException_1.ArgumentNullException('_http');
-                    this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+                    _this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+                    return _this;
                 }
                 HttpRequestFactory.prototype._onDispose = function () {
                     this._http = null;
@@ -75,6 +76,6 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
             }(DisposableBase_1.DisposableBase));
             exports_1("default", HttpRequestFactory);
         }
-    }
+    };
 });
 //# sourceMappingURL=HttpRequestFactory.js.map

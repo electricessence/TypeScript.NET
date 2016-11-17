@@ -1,7 +1,6 @@
-System.register(["../../Compare", "../../Types"], function(exports_1, context_1) {
+System.register(["../../Compare", "../../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Values, Types_1;
     function validateSize(a, b) {
         if (a && b && a === b || !a && !b)
             return true;
@@ -27,7 +26,6 @@ System.register(["../../Compare", "../../Types"], function(exports_1, context_1)
         }
         return true;
     }
-    exports_1("areAllEqual", areAllEqual);
     function areEqual(a, b, strict, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
         var len = validateSize(a, b);
@@ -39,7 +37,6 @@ System.register(["../../Compare", "../../Types"], function(exports_1, context_1)
         }
         return true;
     }
-    exports_1("areEqual", areEqual);
     function sort(a, comparer) {
         if (!a || a.length < 2)
             return a;
@@ -70,17 +67,21 @@ System.register(["../../Compare", "../../Types"], function(exports_1, context_1)
         }
         return true;
     }
+    var Values, Types_1;
+    exports_1("areAllEqual", areAllEqual);
+    exports_1("areEqual", areEqual);
     exports_1("areEquivalent", areEquivalent);
     return {
-        setters:[
+        setters: [
             function (Values_1) {
                 Values = Values_1;
             },
             function (Types_1_1) {
                 Types_1 = Types_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
         }
-    }
+    };
 });
 //# sourceMappingURL=Compare.js.map

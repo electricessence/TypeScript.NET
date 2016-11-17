@@ -1,10 +1,10 @@
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Subscription;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {
             Subscription = (function () {
                 function Subscription(_subscribable, _subscriber) {
                     this._subscribable = _subscribable;
@@ -42,8 +42,8 @@ System.register([], function(exports_1, context_1) {
                 return Subscription;
             }());
             exports_1("Subscription", Subscription);
-            exports_1("default",Subscription);
+            exports_1("default", Subscription);
         }
-    }
+    };
 });
 //# sourceMappingURL=Subscription.js.map

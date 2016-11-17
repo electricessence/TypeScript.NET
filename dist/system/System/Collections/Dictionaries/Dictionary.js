@@ -1,8 +1,6 @@
-System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Types_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, getIdentifier_1, DictionaryBase_1, extends_1;
-    var __extends, VOID0, HashEntry, linkedListPool, Dictionary;
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
@@ -11,8 +9,9 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
             return linkedListPool.take();
         linkedListPool.add(recycle);
     }
+    var Compare_1, Types_1, EnumeratorBase_1, LinkedNodeList_1, ObjectPool_1, getIdentifier_1, DictionaryBase_1, extends_1, __extends, VOID0, HashEntry, linkedListPool, Dictionary;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
@@ -36,8 +35,9 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             HashEntry = (function () {
@@ -51,11 +51,12 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
             }());
             Dictionary = (function (_super) {
                 __extends(Dictionary, _super);
-                function Dictionary(keyGenerator) {
-                    _super.call(this);
-                    this._keyGenerator = keyGenerator;
-                    this._entries = linkedNodeList();
-                    this._buckets = {};
+                function Dictionary(_keyGenerator) {
+                    var _this = _super.call(this) || this;
+                    _this._keyGenerator = _keyGenerator;
+                    _this._entries = linkedNodeList();
+                    _this._buckets = {};
+                    return _this;
                 }
                 Dictionary.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
@@ -190,8 +191,8 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                 return Dictionary;
             }(DictionaryBase_1.default));
             exports_1("Dictionary", Dictionary);
-            exports_1("default",Dictionary);
+            exports_1("default", Dictionary);
         }
-    }
+    };
 });
 //# sourceMappingURL=Dictionary.js.map

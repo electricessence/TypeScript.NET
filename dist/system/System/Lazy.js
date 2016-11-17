@@ -2,29 +2,33 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./ResolverBase", "../extends"], function(exports_1, context_1) {
+System.register(["./ResolverBase", "../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ResolverBase_1, extends_1;
-    var __extends, Lazy, ResettableLazy;
+    var ResolverBase_1, extends_1, __extends, Lazy, ResettableLazy;
     return {
-        setters:[
+        setters: [
             function (ResolverBase_1_1) {
                 ResolverBase_1 = ResolverBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             __extends = extends_1.default;
             Lazy = (function (_super) {
                 __extends(Lazy, _super);
                 function Lazy(valueFactory, trapExceptions, allowReset) {
                     if (trapExceptions === void 0) { trapExceptions = false; }
                     if (allowReset === void 0) { allowReset = false; }
-                    _super.call(this, valueFactory, trapExceptions, allowReset);
-                    this._disposableObjectName = 'Lazy';
-                    this._isValueCreated = false;
+                    var _this = _super.call(this, valueFactory, trapExceptions, allowReset) || this;
+                    _this._disposableObjectName = 'Lazy';
+                    _this._isValueCreated = false;
+                    return _this;
                 }
                 Object.defineProperty(Lazy.prototype, "isValueCreated", {
                     get: function () {
@@ -53,14 +57,15 @@ System.register(["./ResolverBase", "../extends"], function(exports_1, context_1)
                 __extends(ResettableLazy, _super);
                 function ResettableLazy(valueFactory, trapExceptions) {
                     if (trapExceptions === void 0) { trapExceptions = false; }
-                    _super.call(this, valueFactory, trapExceptions, true);
-                    this._disposableObjectName = 'ResettableLazy';
+                    var _this = _super.call(this, valueFactory, trapExceptions, true) || this;
+                    _this._disposableObjectName = 'ResettableLazy';
+                    return _this;
                 }
                 return ResettableLazy;
             }(Lazy));
             exports_1("ResettableLazy", ResettableLazy);
-            exports_1("default",Lazy);
+            exports_1("default", Lazy);
         }
-    }
+    };
 });
 //# sourceMappingURL=Lazy.js.map

@@ -2,11 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT
  */
-System.register(["./Types", "./Compare", "../extends"], function(exports_1, context_1) {
+System.register(["./Types", "./Compare", "../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, Compare_1, extends_1;
-    var __extends, TypeInfoHelper, TypeValidator;
     function areInvalid(v, d) {
         if (!Compare_1.areEqual(v, d)) {
             var memberType = new TypeInfoHelper(v);
@@ -15,8 +13,9 @@ System.register(["./Types", "./Compare", "../extends"], function(exports_1, cont
         }
         return false;
     }
+    var Types_1, Compare_1, extends_1, __extends, TypeInfoHelper, TypeValidator;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -25,14 +24,17 @@ System.register(["./Types", "./Compare", "../extends"], function(exports_1, cont
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT
+             */
             __extends = extends_1.default;
             TypeInfoHelper = (function (_super) {
                 __extends(TypeInfoHelper, _super);
                 function TypeInfoHelper(value) {
-                    var _this = this;
-                    _super.call(this, value, function () { return _this._value = value; });
+                    return _super.call(this, value, function (self) { return self._value = value; }) || this;
                 }
                 TypeInfoHelper.prototype.contains = function (descriptor) {
                     var value = this._value;
@@ -95,8 +97,8 @@ System.register(["./Types", "./Compare", "../extends"], function(exports_1, cont
                 return TypeValidator;
             }());
             exports_1("TypeValidator", TypeValidator);
-            exports_1("default",TypeValidator);
+            exports_1("default", TypeValidator);
         }
-    }
+    };
 });
 //# sourceMappingURL=TypeValidator.js.map

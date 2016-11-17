@@ -6,10 +6,10 @@ import DictionaryBase from "./DictionaryBase";
 export interface IHashEntry<TKey, TValue> extends ILinkedNode<IHashEntry<TKey, TValue>>, IKeyValuePair<TKey, TValue> {
 }
 export declare class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue> {
+    private readonly _keyGenerator;
     private readonly _entries;
     private readonly _buckets;
-    private readonly _keyGenerator;
-    constructor(keyGenerator?: Selector<TKey, string | number | symbol>);
+    constructor(_keyGenerator?: Selector<TKey, string | number | symbol>);
     protected _onDispose(): void;
     protected getCount(): number;
     private _getBucket(hash, createIfMissing?);

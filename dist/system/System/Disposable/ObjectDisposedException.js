@@ -1,25 +1,25 @@
-System.register(["../Exceptions/InvalidOperationException", "../../extends"], function(exports_1, context_1) {
+System.register(["../Exceptions/InvalidOperationException", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var InvalidOperationException_1, extends_1;
-    var __extends, NAME, ObjectDisposedException;
+    var InvalidOperationException_1, extends_1, __extends, NAME, ObjectDisposedException;
     return {
-        setters:[
+        setters: [
             function (InvalidOperationException_1_1) {
                 InvalidOperationException_1 = InvalidOperationException_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             NAME = 'ObjectDisposedException';
             ObjectDisposedException = (function (_super) {
                 __extends(ObjectDisposedException, _super);
                 function ObjectDisposedException(objectName, message, innerException) {
-                    _super.call(this, message || '', innerException, function (_) {
+                    return _super.call(this, message || '', innerException, function (_) {
                         _.objectName = objectName;
-                    });
+                    }) || this;
                 }
                 ObjectDisposedException.prototype.getName = function () {
                     return NAME;
@@ -37,8 +37,8 @@ System.register(["../Exceptions/InvalidOperationException", "../../extends"], fu
                 return ObjectDisposedException;
             }(InvalidOperationException_1.InvalidOperationException));
             exports_1("ObjectDisposedException", ObjectDisposedException);
-            exports_1("default",ObjectDisposedException);
+            exports_1("default", ObjectDisposedException);
         }
-    }
+    };
 });
 //# sourceMappingURL=ObjectDisposedException.js.map

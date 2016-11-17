@@ -1,12 +1,12 @@
 import { TimeQuantity } from "./TimeQuantity";
 import { IClockTime } from "./ITimeStamp";
 export declare class ClockTime extends TimeQuantity implements IClockTime {
-    days: number;
-    hour: number;
-    minute: number;
-    second: number;
-    millisecond: number;
-    tick: number;
+    readonly days: number;
+    readonly hour: number;
+    readonly minute: number;
+    readonly second: number;
+    readonly millisecond: number;
+    readonly tick: number;
     constructor(milliseconds: number);
     constructor(hours: number, minutes: number, seconds?: number, milliseconds?: number);
     static from(hours: number, minutes: number, seconds?: number, milliseconds?: number): ClockTime;

@@ -1,10 +1,9 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 const valid = new ValidationResult(true);
 export default class ValidationResult {
     constructor(isValid = false, message, data = null) {
+        this.isValid = isValid;
+        this.message = message;
+        this.data = data;
         this.isValid = isValid;
         this.message = message;
         this.data = data;

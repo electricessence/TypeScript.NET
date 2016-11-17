@@ -1,7 +1,6 @@
-System.register(["../../../Types", "../../../Compare"], function(exports_1, context_1) {
+System.register(["../../../Types", "../../../Compare"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, Compare_1;
     function ensureArray(value) {
         return Array.isArray(value)
             ? value
@@ -34,17 +33,19 @@ System.register(["../../../Types", "../../../Compare"], function(exports_1, cont
             return 0;
         };
     }
+    var Types_1, Compare_1;
     exports_1("createComparer", createComparer);
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
         }
-    }
+    };
 });
 //# sourceMappingURL=createComparer.js.map

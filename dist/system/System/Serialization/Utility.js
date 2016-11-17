@@ -1,8 +1,6 @@
-System.register(["../Types", "../Exceptions/InvalidOperationException"], function(exports_1, context_1) {
+System.register(["../Types", "../Exceptions/InvalidOperationException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, InvalidOperationException_1;
-    var EMPTY, TRUE, FALSE;
     function toString(value, defaultForUnknown) {
         var v = value;
         switch (typeof v) {
@@ -25,11 +23,9 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
                 throw ex;
         }
     }
-    exports_1("toString", toString);
     function isSerializable(instance) {
         return Types_1.Type.hasMemberOfType(instance, 'serialize', Types_1.Type.FUNCTION);
     }
-    exports_1("isSerializable", isSerializable);
     function toPrimitive(value, caseInsensitive, unknownHandler) {
         if (value) {
             if (caseInsensitive)
@@ -64,18 +60,22 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
         }
         return value;
     }
+    var Types_1, InvalidOperationException_1, EMPTY, TRUE, FALSE;
+    exports_1("toString", toString);
+    exports_1("isSerializable", isSerializable);
     exports_1("toPrimitive", toPrimitive);
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
             function (InvalidOperationException_1_1) {
                 InvalidOperationException_1 = InvalidOperationException_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             EMPTY = '', TRUE = 'true', FALSE = 'false';
         }
-    }
+    };
 });
 //# sourceMappingURL=Utility.js.map

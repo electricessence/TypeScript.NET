@@ -1,21 +1,21 @@
-System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
+System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ArgumentException_1, ArgumentOutOfRangeException_1;
-    var Integer;
     function Integer(n) {
         return Math.floor(n);
     }
+    var ArgumentException_1, ArgumentOutOfRangeException_1;
     exports_1("Integer", Integer);
     return {
-        setters:[
+        setters: [
             function (ArgumentException_1_1) {
                 ArgumentException_1 = ArgumentException_1_1;
             },
             function (ArgumentOutOfRangeException_1_1) {
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             (function (Integer) {
                 Integer.MAX_32_BIT = 2147483647;
                 function r(maxExclusive) {
@@ -26,7 +26,6 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRa
                     return r(maxExclusive);
                 }
                 Integer.random = random;
-                var random;
                 (function (random) {
                     function next(boundary, inclusive) {
                         assert(boundary, 'max');
@@ -63,7 +62,6 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRa
                             : void (0);
                     }
                     random.select = select;
-                    var select;
                     (function (select) {
                         function one(source) {
                             return random.select(source);
@@ -108,8 +106,8 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRa
                 Integer.assertPositive = assertPositive;
             })(Integer = Integer || (Integer = {}));
             exports_1("Integer", Integer);
-            exports_1("default",Integer);
+            exports_1("default", Integer);
         }
-    }
+    };
 });
 //# sourceMappingURL=Integer.js.map

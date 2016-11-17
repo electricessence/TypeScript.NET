@@ -4,11 +4,9 @@
  * Although most of the following code is written from scratch, it is
  * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
  */
-System.register(["../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], function(exports_1, context_1) {
+System.register(["../Types", "../Threading/deferImmediate", "../Disposable/DisposableBase", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "../Disposable/ObjectPool", "../Collections/Set", "../Threading/defer", "../Disposable/ObjectDisposedException", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1;
-    var __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PROMISE_COLLECTION, PromiseCollection, pools;
     function isPromise(value) {
         return Types_1.default.hasMemberOfType(value, THEN, Types_1.default.FUNCTION);
     }
@@ -59,8 +57,9 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
     function newODE() {
         return new ObjectDisposedException_1.ObjectDisposedException("Promise", "An underlying promise-result was disposed.");
     }
+    var Types_1, deferImmediate_1, DisposableBase_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, ObjectPool_1, Set_1, defer_1, ObjectDisposedException_1, extends_1, __extends, VOID0, NULL, PROMISE, PROMISE_STATE, THEN, TARGET, PromiseState, PromiseBase, Resolvable, Resolved, Fulfilled, Rejected, PromiseWrapper, Promise, ArrayPromise, PROMISE_COLLECTION, PromiseCollection, pools;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -93,18 +92,25 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT
+             * Although most of the following code is written from scratch, it is
+             * heavily influenced by Q (https://github.com/kriskowal/q) and uses some of Q's spec.
+             */
             __extends = extends_1.default;
             VOID0 = void 0, NULL = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
             PromiseState = (function (_super) {
                 __extends(PromiseState, _super);
                 function PromiseState(_state, _result, _error) {
-                    _super.call(this);
-                    this._state = _state;
-                    this._result = _result;
-                    this._error = _error;
-                    this._disposableObjectName = PROMISE_STATE;
+                    var _this = _super.call(this) || this;
+                    _this._state = _state;
+                    _this._result = _result;
+                    _this._error = _error;
+                    _this._disposableObjectName = PROMISE_STATE;
+                    return _this;
                 }
                 PromiseState.prototype._onDispose = function () {
                     this._state = VOID0;
@@ -177,8 +183,9 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             PromiseBase = (function (_super) {
                 __extends(PromiseBase, _super);
                 function PromiseBase() {
-                    _super.call(this, Promise.State.Pending);
-                    this._disposableObjectName = PROMISE;
+                    var _this = _super.call(this, Promise.State.Pending) || this;
+                    _this._disposableObjectName = PROMISE;
+                    return _this;
                 }
                 PromiseBase.prototype.then = function (onFulfilled, onRejected) {
                     var _this = this;
@@ -254,7 +261,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             Resolvable = (function (_super) {
                 __extends(Resolvable, _super);
                 function Resolvable() {
-                    _super.apply(this, arguments);
+                    return _super.apply(this, arguments) || this;
                 }
                 Resolvable.prototype.thenSynchronous = function (onFulfilled, onRejected) {
                     this.throwIfDisposed();
@@ -295,10 +302,11 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             Resolved = (function (_super) {
                 __extends(Resolved, _super);
                 function Resolved(state, result, error) {
-                    _super.call(this);
-                    this._result = result;
-                    this._error = error;
-                    this._state = state;
+                    var _this = _super.call(this) || this;
+                    _this._result = result;
+                    _this._error = error;
+                    _this._state = state;
+                    return _this;
                 }
                 return Resolved;
             }(Resolvable));
@@ -306,7 +314,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             Fulfilled = (function (_super) {
                 __extends(Fulfilled, _super);
                 function Fulfilled(value) {
-                    _super.call(this, Promise.State.Fulfilled, value);
+                    return _super.call(this, Promise.State.Fulfilled, value) || this;
                 }
                 return Fulfilled;
             }(Resolved));
@@ -314,7 +322,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             Rejected = (function (_super) {
                 __extends(Rejected, _super);
                 function Rejected(error) {
-                    _super.call(this, Promise.State.Rejected, VOID0, error);
+                    return _super.call(this, Promise.State.Rejected, VOID0, error) || this;
                 }
                 return Rejected;
             }(Resolved));
@@ -322,9 +330,8 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             PromiseWrapper = (function (_super) {
                 __extends(PromiseWrapper, _super);
                 function PromiseWrapper(_target) {
-                    var _this = this;
-                    _super.call(this);
-                    this._target = _target;
+                    var _this = _super.call(this) || this;
+                    _this._target = _target;
                     if (!_target)
                         throw new ArgumentNullException_1.ArgumentNullException(TARGET);
                     if (!isPromise(_target))
@@ -339,6 +346,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                         _this._error = e;
                         _this._target = VOID0;
                     });
+                    return _this;
                 }
                 PromiseWrapper.prototype.thenSynchronous = function (onFulfilled, onRejected) {
                     this.throwIfDisposed();
@@ -369,9 +377,10 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 __extends(Promise, _super);
                 function Promise(resolver, forceSynchronous) {
                     if (forceSynchronous === void 0) { forceSynchronous = false; }
-                    _super.call(this);
+                    var _this = _super.call(this) || this;
                     if (resolver)
-                        this.resolveUsing(resolver, forceSynchronous);
+                        _this.resolveUsing(resolver, forceSynchronous);
+                    return _this;
                 }
                 Promise.prototype.thenSynchronous = function (onFulfilled, onRejected) {
                     this.throwIfDisposed();
@@ -539,7 +548,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             ArrayPromise = (function (_super) {
                 __extends(ArrayPromise, _super);
                 function ArrayPromise() {
-                    _super.apply(this, arguments);
+                    return _super.apply(this, arguments) || this;
                 }
                 ArrayPromise.prototype.map = function (transform) {
                     var _this = this;
@@ -562,9 +571,10 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
             PromiseCollection = (function (_super) {
                 __extends(PromiseCollection, _super);
                 function PromiseCollection(source) {
-                    _super.call(this);
-                    this._disposableObjectName = PROMISE_COLLECTION;
-                    this._source = source && source.slice() || [];
+                    var _this = _super.call(this) || this;
+                    _this._disposableObjectName = PROMISE_COLLECTION;
+                    _this._source = source && source.slice() || [];
+                    return _this;
                 }
                 PromiseCollection.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
@@ -715,7 +725,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                                 r(e);
                             }
                         };
-                        var _loop_1 = function(i) {
+                        var _loop_1 = function (i) {
                             var p = promises[i];
                             if (p)
                                 p.then(function (v) { return onFulfill(v, i); }, onReject);
@@ -761,7 +771,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                                 checkIfShouldResolve();
                             }
                         };
-                        var _loop_2 = function(i) {
+                        var _loop_2 = function (i) {
                             var p = promises[i];
                             if (p)
                                 p.then(function (v) { return onResolved(i); }, function (e) { return onResolved(i); });
@@ -866,8 +876,8 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                 Promise.createFrom = createFrom;
             })(Promise = Promise || (Promise = {}));
             exports_1("Promise", Promise);
-            exports_1("default",Promise);
+            exports_1("default", Promise);
         }
-    }
+    };
 });
 //# sourceMappingURL=Promise.js.map

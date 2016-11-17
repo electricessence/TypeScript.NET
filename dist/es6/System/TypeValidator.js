@@ -8,7 +8,7 @@ import __extendsImport from "../extends";
 const __extends = __extendsImport;
 export class TypeInfoHelper extends TypeInfo {
     constructor(value) {
-        super(value, () => this._value = value);
+        super(value, self => self._value = value);
     }
     contains(descriptor) {
         let value = this._value;

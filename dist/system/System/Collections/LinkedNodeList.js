@@ -1,8 +1,6 @@
-System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], function(exports_1, context_1) {
+System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1, extends_1;
-    var __extends, LinkedNodeList;
     function assertValidDetached(node, propName) {
         if (propName === void 0) { propName = 'node'; }
         if (node == null)
@@ -10,8 +8,9 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
         if (node.next || node.previous)
             throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
     }
+    var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1, extends_1, __extends, LinkedNodeList;
     return {
-        setters:[
+        setters: [
             function (TextUtility_1) {
                 TextUtility = TextUtility_1;
             },
@@ -29,8 +28,9 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             LinkedNodeList = (function () {
                 function LinkedNodeList() {
@@ -293,8 +293,8 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                 return LinkedNodeList;
             }());
             exports_1("LinkedNodeList", LinkedNodeList);
-            exports_1("default",LinkedNodeList);
+            exports_1("default", LinkedNodeList);
         }
-    }
+    };
 });
 //# sourceMappingURL=LinkedNodeList.js.map

@@ -1,14 +1,14 @@
-System.register(["../../extends"], function(exports_1, context_1) {
+System.register(["../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var extends_1;
-    var __extends, EventSimple;
+    var extends_1, __extends, EventSimple;
     return {
-        setters:[
+        setters: [
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             EventSimple = (function () {
                 function EventSimple() {
@@ -50,6 +50,6 @@ System.register(["../../extends"], function(exports_1, context_1) {
             }());
             exports_1("default", EventSimple);
         }
-    }
+    };
 });
 //# sourceMappingURL=EventSimple.js.map

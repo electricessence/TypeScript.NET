@@ -1,8 +1,6 @@
-System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], function(exports_1, context_1) {
+System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, extends_1;
-    var select, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
     function BREAK() {
         return 0;
     }
@@ -39,8 +37,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
         return true;
     }
+    var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, extends_1, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
@@ -105,8 +104,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             INVALID_DEFAULT = {};
             VOID0 = void 0;
@@ -114,7 +114,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             LinqFunctions = (function (_super) {
                 __extends(LinqFunctions, _super);
                 function LinqFunctions() {
-                    _super.apply(this, arguments);
+                    return _super.apply(this, arguments) || this;
                 }
                 LinqFunctions.prototype.Greater = function (a, b) {
                     return a > b ? a : b;
@@ -129,10 +129,11 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             InfiniteEnumerable = (function (_super) {
                 __extends(InfiniteEnumerable, _super);
                 function InfiniteEnumerable(_enumeratorFactory, finalizer) {
-                    _super.call(this, finalizer);
-                    this._enumeratorFactory = _enumeratorFactory;
-                    this._isEndless = true;
-                    this._disposableObjectName = "InfiniteEnumerable";
+                    var _this = _super.call(this, finalizer) || this;
+                    _this._enumeratorFactory = _enumeratorFactory;
+                    _this._isEndless = true;
+                    _this._disposableObjectName = "InfiniteEnumerable";
+                    return _this;
                 }
                 Object.defineProperty(InfiniteEnumerable.prototype, "isEndless", {
                     get: function () {
@@ -911,9 +912,10 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             Enumerable = (function (_super) {
                 __extends(Enumerable, _super);
                 function Enumerable(enumeratorFactory, finalizer, isEndless) {
-                    _super.call(this, enumeratorFactory, finalizer);
-                    this._isEndless = isEndless;
-                    this._disposableObjectName = "Enumerable";
+                    var _this = _super.call(this, enumeratorFactory, finalizer) || this;
+                    _this._isEndless = isEndless;
+                    _this._disposableObjectName = "Enumerable";
+                    return _this;
                 }
                 Enumerable.prototype.asEnumerable = function () {
                     var _ = this;
@@ -1558,8 +1560,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             FiniteEnumerable = (function (_super) {
                 __extends(FiniteEnumerable, _super);
                 function FiniteEnumerable(enumeratorFactory, finalizer) {
-                    _super.call(this, enumeratorFactory, finalizer, false);
-                    this._disposableObjectName = "FiniteEnumerable";
+                    var _this = _super.call(this, enumeratorFactory, finalizer, false) || this;
+                    _this._disposableObjectName = "FiniteEnumerable";
+                    return _this;
                 }
                 return FiniteEnumerable;
             }(Enumerable));
@@ -1567,16 +1570,17 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             ArrayEnumerable = (function (_super) {
                 __extends(ArrayEnumerable, _super);
                 function ArrayEnumerable(source) {
-                    _super.call(this, function () {
+                    var _this = _super.call(this, function () {
                         _.throwIfDisposed();
                         return new ArrayEnumerator_1.ArrayEnumerator(function () {
                             _.throwIfDisposed("The underlying ArrayEnumerable was disposed.", "ArrayEnumerator");
                             return _._source;
                         });
-                    });
-                    var _ = this;
+                    }) || this;
+                    var _ = _this;
                     _._disposableObjectName = "ArrayEnumerable";
                     _._source = source;
+                    return _this;
                 }
                 ArrayEnumerable.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
@@ -1711,9 +1715,10 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             Grouping = (function (_super) {
                 __extends(Grouping, _super);
                 function Grouping(_groupKey, elements) {
-                    _super.call(this, elements);
-                    this._groupKey = _groupKey;
-                    this._disposableObjectName = "Grouping";
+                    var _this = _super.call(this, elements) || this;
+                    _this._groupKey = _groupKey;
+                    _this._disposableObjectName = "Grouping";
+                    return _this;
                 }
                 Object.defineProperty(Grouping.prototype, "key", {
                     get: function () {
@@ -1762,14 +1767,15 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 __extends(OrderedEnumerable, _super);
                 function OrderedEnumerable(source, keySelector, order, parent, comparer) {
                     if (comparer === void 0) { comparer = Compare_1.compare; }
-                    _super.call(this, NULL);
-                    this.source = source;
-                    this.keySelector = keySelector;
-                    this.order = order;
-                    this.parent = parent;
-                    this.comparer = comparer;
+                    var _this = _super.call(this, NULL) || this;
+                    _this.source = source;
+                    _this.keySelector = keySelector;
+                    _this.order = order;
+                    _this.parent = parent;
+                    _this.comparer = comparer;
                     Enumerator_1.throwIfEndless(source && source.isEndless);
-                    this._disposableObjectName = "OrderedEnumerable";
+                    _this._disposableObjectName = "OrderedEnumerable";
+                    return _this;
                 }
                 OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, order) {
                     this.throwIfDisposed();
@@ -2199,8 +2205,8 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.weave = weave;
             })(Enumerable = Enumerable || (Enumerable = {}));
             exports_1("Enumerable", Enumerable);
-            exports_1("default",Enumerable);
+            exports_1("default", Enumerable);
         }
-    }
+    };
 });
 //# sourceMappingURL=Linq.js.map

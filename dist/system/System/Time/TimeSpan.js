@@ -1,10 +1,9 @@
-System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends"], function(exports_1, context_1) {
+System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, TimeUnit_1, ClockTime_1, TimeQuantity_1, extends_1;
-    var __extends, TimeSpan, timeSpanZero;
+    var Types_1, TimeUnit_1, ClockTime_1, TimeQuantity_1, extends_1, __extends, TimeSpan, timeSpanZero;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -19,22 +18,25 @@ System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             TimeSpan = (function (_super) {
                 __extends(TimeSpan, _super);
                 function TimeSpan(value, units) {
                     if (units === void 0) { units = TimeUnit_1.TimeUnit.Milliseconds; }
+                    var _this;
                     var ms = TimeUnit_1.TimeUnit.toMilliseconds(value, units);
-                    _super.call(this, ms);
-                    var _ = this;
+                    _this = _super.call(this, ms) || this;
+                    var _ = _this;
                     _.ticks = ms * 10000;
                     _.milliseconds = ms;
                     _.seconds = ms / 1000;
                     _.minutes = ms / 60000;
                     _.hours = ms / 3600000;
                     _.days = ms / 86400000;
+                    return _this;
                 }
                 Object.defineProperty(TimeSpan.prototype, "total", {
                     get: function () {
@@ -95,8 +97,8 @@ System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../
                 return TimeSpan;
             }(TimeQuantity_1.TimeQuantity));
             exports_1("TimeSpan", TimeSpan);
-            exports_1("default",TimeSpan);
+            exports_1("default", TimeSpan);
         }
-    }
+    };
 });
 //# sourceMappingURL=TimeSpan.js.map

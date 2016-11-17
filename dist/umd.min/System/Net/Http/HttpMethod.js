@@ -3,5 +3,5 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
  */
-!function(e){if("object"==typeof module&&"object"==typeof module.exports){var o=e(require,exports);void 0!==o&&(module.exports=o)}else"function"==typeof define&&define.amd&&define(["require","exports"],e)}(function(e,o){"use strict";o.OPTIONS="OPTIONS",o.HEAD="HEAD",o.GET="GET",o.PUT="PUT",o.POST="POST",o.DELETE="DELETE",o.TRACE="TRACE",o.CONNECT="CONNECT"});
+!function(e,o){if("object"==typeof module&&"object"==typeof module.exports){var t=o(require,exports);void 0!==t&&(module.exports=t)}else"function"==typeof define&&define.amd&&define(e,o)}(["require","exports"],function(e,o){"use strict";o.OPTIONS="OPTIONS",o.HEAD="HEAD",o.GET="GET",o.PUT="PUT",o.POST="POST",o.DELETE="DELETE",o.TRACE="TRACE",o.CONNECT="CONNECT"});
 //# sourceMappingURL=HttpMethod.js.map

@@ -5,15 +5,14 @@ import { IDateTime } from "./IDateTime";
 import { Gregorian } from "./Calendars";
 import { ITimeQuantity } from "./ITimeQuantity";
 export declare class DateTime implements ICalendarDate, IDateTime {
-    private _value;
+    private readonly _value;
     toJsDate(): Date;
-    private _setJsDate(value);
     constructor();
     constructor(dateString: string, kind?: DateTime.Kind);
     constructor(milliseconds: number, kind?: DateTime.Kind);
     constructor(source: Date, kind?: DateTime.Kind);
     constructor(source: DateTime, kind?: DateTime.Kind);
-    private _kind;
+    private readonly _kind;
     readonly kind: DateTime.Kind;
     readonly year: number;
     readonly month: Gregorian.Month;

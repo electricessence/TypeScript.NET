@@ -1,9 +1,9 @@
 const NAME = 'Exception';
 export class Exception {
     constructor(message, innerException, beforeSealing) {
+        this.message = message;
         const _ = this;
         this.name = _.getName();
-        this.message = message;
         this.data = {};
         if (innerException)
             _.data['innerException'] = innerException;

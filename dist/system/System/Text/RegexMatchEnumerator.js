@@ -1,10 +1,9 @@
-System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumerator", "../Collections/Enumeration/EnumeratorBase"], function(exports_1, context_1) {
+System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumerator", "../Collections/Enumeration/EnumeratorBase"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var RegularExpressions_1, EmptyEnumerator_1, EnumeratorBase_1;
-    var RegexMatchEnumerator;
+    var RegularExpressions_1, EmptyEnumerator_1, EnumeratorBase_1, RegexMatchEnumerator;
     return {
-        setters:[
+        setters: [
             function (RegularExpressions_1_1) {
                 RegularExpressions_1 = RegularExpressions_1_1;
             },
@@ -13,8 +12,9 @@ System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumer
             },
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             RegexMatchEnumerator = (function () {
                 function RegexMatchEnumerator(pattern) {
                     if (pattern instanceof RegularExpressions_1.Regex) {
@@ -46,8 +46,8 @@ System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumer
                 return RegexMatchEnumerator;
             }());
             exports_1("RegexMatchEnumerator", RegexMatchEnumerator);
-            exports_1("default",RegexMatchEnumerator.matches);
+            exports_1("default", RegexMatchEnumerator.matches);
         }
-    }
+    };
 });
 //# sourceMappingURL=RegexMatchEnumerator.js.map

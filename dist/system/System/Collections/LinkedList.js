@@ -1,8 +1,6 @@
-System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
+System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1, CollectionBase_1, extends_1;
-    var __extends, VOID0, InternalNode, LinkedList, LinkedListNode;
     function ensureExternal(node, list) {
         if (!node)
             return null;
@@ -35,8 +33,9 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
             node.external = VOID0;
         }
     }
+    var Compare_1, LinkedNodeList_1, InvalidOperationException_1, ArgumentNullException_1, CollectionBase_1, extends_1, __extends, VOID0, InternalNode, LinkedList, LinkedListNode;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
@@ -54,8 +53,9 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             InternalNode = (function () {
@@ -74,9 +74,10 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 __extends(LinkedList, _super);
                 function LinkedList(source, equalityComparer) {
                     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-                    _super.call(this, VOID0, equalityComparer);
-                    this._listInternal = new LinkedNodeList_1.LinkedNodeList();
-                    this._importEntries(source);
+                    var _this = _super.call(this, VOID0, equalityComparer) || this;
+                    _this._listInternal = new LinkedNodeList_1.LinkedNodeList();
+                    _this._importEntries(source);
+                    return _this;
                 }
                 LinkedList.prototype.assertVersion = function (version) {
                     if (this._listInternal)
@@ -313,8 +314,8 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 };
                 return LinkedListNode;
             }());
-            exports_1("default",LinkedList);
+            exports_1("default", LinkedList);
         }
-    }
+    };
 });
 //# sourceMappingURL=LinkedList.js.map

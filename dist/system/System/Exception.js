@@ -1,16 +1,16 @@
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var NAME, Exception;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {
             NAME = 'Exception';
             Exception = (function () {
                 function Exception(message, innerException, beforeSealing) {
+                    this.message = message;
                     var _ = this;
                     this.name = _.getName();
-                    this.message = message;
                     this.data = {};
                     if (innerException)
                         _.data['innerException'] = innerException;
@@ -47,8 +47,8 @@ System.register([], function(exports_1, context_1) {
                 return Exception;
             }());
             exports_1("Exception", Exception);
-            exports_1("default",Exception);
+            exports_1("default", Exception);
         }
-    }
+    };
 });
 //# sourceMappingURL=Exception.js.map

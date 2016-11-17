@@ -1,10 +1,9 @@
-System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function(exports_1, context_1) {
+System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TimeSpan_1, ClockTime_1, TimeStamp_1;
-    var DateTime;
+    var TimeSpan_1, ClockTime_1, TimeStamp_1, DateTime;
     return {
-        setters:[
+        setters: [
             function (TimeSpan_1_1) {
                 TimeSpan_1 = TimeSpan_1_1;
             },
@@ -13,29 +12,26 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function(exports_1
             },
             function (TimeStamp_1_1) {
                 TimeStamp_1 = TimeStamp_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             DateTime = (function () {
                 function DateTime(value, kind) {
                     if (value === void 0) { value = new Date(); }
                     if (kind === void 0) { kind = 1; }
                     var _ = this;
-                    _._kind = kind;
+                    this._kind = kind;
                     if (value instanceof DateTime)
-                        _._value = value.toJsDate();
+                        this._value = value.toJsDate();
                     else if (value instanceof Date)
-                        _._setJsDate(value);
+                        this._value = new Date(value.getTime());
                     else
-                        _._value = value === void (0)
+                        this._value = value === void (0)
                             ? new Date()
                             : new Date(value);
                 }
                 DateTime.prototype.toJsDate = function () {
                     return new Date(this._value.getTime());
-                };
-                DateTime.prototype._setJsDate = function (value) {
-                    this._time = null;
-                    this._value = new Date(value.getTime());
                 };
                 Object.defineProperty(DateTime.prototype, "kind", {
                     get: function () {
@@ -237,8 +233,8 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function(exports_1
             }());
             exports_1("DateTime", DateTime);
             Object.freeze(DateTime);
-            exports_1("default",DateTime);
+            exports_1("default", DateTime);
         }
-    }
+    };
 });
 //# sourceMappingURL=DateTime.js.map

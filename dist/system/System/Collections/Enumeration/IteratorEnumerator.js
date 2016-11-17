@@ -1,24 +1,25 @@
-System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports_1, context_1) {
+System.register(["./SimpleEnumerableBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var SimpleEnumerableBase_1, extends_1;
-    var __extends, IteratorEnumerator;
+    var SimpleEnumerableBase_1, extends_1, __extends, IteratorEnumerator;
     return {
-        setters:[
+        setters: [
             function (SimpleEnumerableBase_1_1) {
                 SimpleEnumerableBase_1 = SimpleEnumerableBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             IteratorEnumerator = (function (_super) {
                 __extends(IteratorEnumerator, _super);
                 function IteratorEnumerator(_iterator, _isEndless) {
-                    _super.call(this);
-                    this._iterator = _iterator;
-                    this._isEndless = _isEndless;
+                    var _this = _super.call(this) || this;
+                    _this._iterator = _iterator;
+                    _this._isEndless = _isEndless;
+                    return _this;
                 }
                 IteratorEnumerator.prototype._canMoveNext = function () {
                     return this._iterator != null;
@@ -46,8 +47,8 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
                 return IteratorEnumerator;
             }(SimpleEnumerableBase_1.SimpleEnumerableBase));
             exports_1("IteratorEnumerator", IteratorEnumerator);
-            exports_1("default",IteratorEnumerator);
+            exports_1("default", IteratorEnumerator);
         }
-    }
+    };
 });
 //# sourceMappingURL=IteratorEnumerator.js.map

@@ -1,10 +1,10 @@
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var VOID0, IteratorResult;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {
             VOID0 = void 0;
             IteratorResult = (function () {
                 function IteratorResult(value, index, done) {
@@ -24,8 +24,8 @@ System.register([], function(exports_1, context_1) {
             })(IteratorResult = IteratorResult || (IteratorResult = {}));
             exports_1("IteratorResult", IteratorResult);
             Object.freeze(IteratorResult);
-            exports_1("default",IteratorResult);
+            exports_1("default", IteratorResult);
         }
-    }
+    };
 });
 //# sourceMappingURL=IteratorResult.js.map

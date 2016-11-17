@@ -1,26 +1,27 @@
-System.register(["../../Disposable/DisposableBase", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Disposable/DisposableBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var DisposableBase_1, extends_1;
-    var __extends, NAME, TaskHandlerBase;
+    var DisposableBase_1, extends_1, __extends, NAME, TaskHandlerBase;
     return {
-        setters:[
+        setters: [
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             NAME = "TaskHandlerBase";
             TaskHandlerBase = (function (_super) {
                 __extends(TaskHandlerBase, _super);
                 function TaskHandlerBase() {
-                    _super.call(this);
-                    this._disposableObjectName = NAME;
-                    this._timeoutId = null;
-                    this._status = 0;
+                    var _this = _super.call(this) || this;
+                    _this._disposableObjectName = NAME;
+                    _this._timeoutId = null;
+                    _this._status = 0;
+                    return _this;
                 }
                 Object.defineProperty(TaskHandlerBase.prototype, "isScheduled", {
                     get: function () {
@@ -80,8 +81,8 @@ System.register(["../../Disposable/DisposableBase", "../../../extends"], functio
                 return TaskHandlerBase;
             }(DisposableBase_1.DisposableBase));
             exports_1("TaskHandlerBase", TaskHandlerBase);
-            exports_1("default",TaskHandlerBase);
+            exports_1("default", TaskHandlerBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=TaskHandlerBase.js.map

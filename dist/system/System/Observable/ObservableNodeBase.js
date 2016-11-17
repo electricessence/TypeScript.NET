@@ -4,25 +4,30 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
-System.register(["./ObservableBase", "../../extends"], function(exports_1, context_1) {
+System.register(["./ObservableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ObservableBase_1, extends_1;
-    var __extends, ObservableNodeBase;
+    var ObservableBase_1, extends_1, __extends, ObservableNodeBase;
     return {
-        setters:[
+        setters: [
             function (ObservableBase_1_1) {
                 ObservableBase_1 = ObservableBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Based upon .NET source.
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+             */
             __extends = extends_1.default;
             ObservableNodeBase = (function (_super) {
                 __extends(ObservableNodeBase, _super);
                 function ObservableNodeBase() {
-                    _super.apply(this, arguments);
+                    return _super.apply(this, arguments) || this;
                 }
                 ObservableNodeBase.prototype.onNext = function (value) {
                     this._onNext(value);
@@ -36,8 +41,8 @@ System.register(["./ObservableBase", "../../extends"], function(exports_1, conte
                 return ObservableNodeBase;
             }(ObservableBase_1.default));
             exports_1("ObservableNodeBase", ObservableNodeBase);
-            exports_1("default",ObservableNodeBase);
+            exports_1("default", ObservableNodeBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=ObservableNodeBase.js.map

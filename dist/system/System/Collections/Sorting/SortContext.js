@@ -1,14 +1,14 @@
-System.register(["../../Compare"], function(exports_1, context_1) {
+System.register(["../../Compare"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Values;
-    var SortContext;
+    var Values, SortContext;
     return {
-        setters:[
+        setters: [
             function (Values_1) {
                 Values = Values_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             SortContext = (function () {
                 function SortContext(_next, _comparer, _order) {
                     if (_comparer === void 0) { _comparer = Values.compare; }
@@ -40,8 +40,8 @@ System.register(["../../Compare"], function(exports_1, context_1) {
                 return SortContext;
             }());
             exports_1("SortContext", SortContext);
-            exports_1("default",SortContext);
+            exports_1("default", SortContext);
         }
-    }
+    };
 });
 //# sourceMappingURL=SortContext.js.map

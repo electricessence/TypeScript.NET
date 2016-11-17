@@ -1,10 +1,9 @@
-System.register(["../../Compare", "./DictionaryBase", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Compare", "./DictionaryBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, DictionaryBase_1, extends_1;
-    var __extends, VOID0, StringKeyDictionary;
+    var Compare_1, DictionaryBase_1, extends_1, __extends, VOID0, StringKeyDictionary;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
@@ -13,16 +12,18 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             StringKeyDictionary = (function (_super) {
                 __extends(StringKeyDictionary, _super);
                 function StringKeyDictionary() {
-                    _super.apply(this, arguments);
-                    this._count = 0;
-                    this._map = {};
+                    var _this = _super.apply(this, arguments) || this;
+                    _this._count = 0;
+                    _this._map = {};
+                    return _this;
                 }
                 StringKeyDictionary.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
@@ -119,8 +120,8 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
                 return StringKeyDictionary;
             }(DictionaryBase_1.DictionaryBase));
             exports_1("StringKeyDictionary", StringKeyDictionary);
-            exports_1("default",StringKeyDictionary);
+            exports_1("default", StringKeyDictionary);
         }
-    }
+    };
 });
 //# sourceMappingURL=StringKeyDictionary.js.map

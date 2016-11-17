@@ -1,8 +1,6 @@
-System.register(["./SubscribableBase", "../../extends"], function(exports_1, context_1) {
+System.register(["./SubscribableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var SubscribableBase_1, extends_1;
-    var __extends, ObservableBase, OBSERVER_ERROR_MESSAGE;
     function processAction(observers, handler) {
         if (!observers)
             return;
@@ -28,20 +26,22 @@ System.register(["./SubscribableBase", "../../extends"], function(exports_1, con
                 };
         }
     }
+    var SubscribableBase_1, extends_1, __extends, ObservableBase, OBSERVER_ERROR_MESSAGE;
     return {
-        setters:[
+        setters: [
             function (SubscribableBase_1_1) {
                 SubscribableBase_1 = SubscribableBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             ObservableBase = (function (_super) {
                 __extends(ObservableBase, _super);
                 function ObservableBase() {
-                    _super.apply(this, arguments);
+                    return _super.apply(this, arguments) || this;
                 }
                 ObservableBase.prototype._onNext = function (value) {
                     processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });
@@ -73,8 +73,8 @@ System.register(["./SubscribableBase", "../../extends"], function(exports_1, con
             }(SubscribableBase_1.SubscribableBase));
             exports_1("ObservableBase", ObservableBase);
             OBSERVER_ERROR_MESSAGE = 'One or more observers had errors when attempting to pass information.';
-            exports_1("default",ObservableBase);
+            exports_1("default", ObservableBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=ObservableBase.js.map

@@ -1,10 +1,9 @@
-System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator", "./QueryParams", "../../extends"], function(exports_1, context_1) {
+System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator", "./QueryParams", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, OrderedStringKeyDictionary_1, Enumerator_1, QueryParams, extends_1;
-    var __extends, QueryBuilder;
+    var Types_1, OrderedStringKeyDictionary_1, Enumerator_1, QueryParams, extends_1, __extends, QueryBuilder;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -19,15 +18,17 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             QueryBuilder = (function (_super) {
                 __extends(QueryBuilder, _super);
                 function QueryBuilder(query, decodeValues) {
                     if (decodeValues === void 0) { decodeValues = true; }
-                    _super.call(this);
-                    this.importQuery(query, decodeValues);
+                    var _this = _super.call(this) || this;
+                    _this.importQuery(query, decodeValues);
+                    return _this;
                 }
                 QueryBuilder.init = function (query, decodeValues) {
                     if (decodeValues === void 0) { decodeValues = true; }
@@ -72,8 +73,8 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
                 return QueryBuilder;
             }(OrderedStringKeyDictionary_1.OrderedStringKeyDictionary));
             exports_1("QueryBuilder", QueryBuilder);
-            exports_1("default",QueryBuilder);
+            exports_1("default", QueryBuilder);
         }
-    }
+    };
 });
 //# sourceMappingURL=QueryBuilder.js.map

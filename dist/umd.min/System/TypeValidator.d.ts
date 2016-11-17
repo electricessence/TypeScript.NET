@@ -9,7 +9,7 @@ export declare class TypeInfoHelper extends TypeInfo {
     contains<TDescriptor>(descriptor: any): this is TDescriptor;
 }
 export declare class TypeValidator<T> {
-    private _typeDescriptor;
+    private readonly _typeDescriptor;
     constructor(_typeDescriptor: any);
     isSubsetOf(o: any): o is T;
 }

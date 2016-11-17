@@ -164,7 +164,7 @@ export class Match extends Group {
             throw new Error("'groups' cannot be null.");
         if (!this.namedGroups)
             throw new Error("'groupMap' cannot be null.");
-        Object.freeze(this.groups.slice());
+        Object.freeze(this.groups);
         Object.freeze(this.namedGroups);
         super.freeze();
     }

@@ -2,13 +2,16 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var Functions, rootFunctions;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             Functions = (function () {
                 function Functions() {
                 }
@@ -28,8 +31,8 @@ System.register([], function(exports_1, context_1) {
             })(Functions = Functions || (Functions = {}));
             exports_1("Functions", Functions);
             Object.freeze(Functions);
-            exports_1("default",Functions);
+            exports_1("default", Functions);
         }
-    }
+    };
 });
 //# sourceMappingURL=Functions.js.map

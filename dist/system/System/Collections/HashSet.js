@@ -1,8 +1,6 @@
-System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException", "../../extends"], function(exports_1, context_1) {
+System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, SetBase_1, ArgumentNullException_1, extends_1;
-    var __extends, VOID0, HashSet;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
         if (map && depth) {
@@ -14,8 +12,9 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
             }
         }
     }
+    var Types_1, SetBase_1, ArgumentNullException_1, extends_1, __extends, VOID0, HashSet;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -27,23 +26,25 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             HashSet = (function (_super) {
                 __extends(HashSet, _super);
                 function HashSet(source, keyGenerator) {
-                    _super.call(this);
+                    var _this = _super.call(this) || this;
                     if (Types_1.Type.isFunction(source)) {
-                        this._keyGenerator = source;
+                        _this._keyGenerator = source;
                     }
                     else {
                         if (!keyGenerator)
                             throw new ArgumentNullException_1.ArgumentNullException("keyGenerator");
-                        this._keyGenerator = keyGenerator;
-                        this._importEntries(source);
+                        _this._keyGenerator = keyGenerator;
+                        _this._importEntries(source);
                     }
+                    return _this;
                 }
                 HashSet.prototype.newUsing = function (source) {
                     return new HashSet(source, this._keyGenerator);
@@ -97,8 +98,8 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
                 return HashSet;
             }(SetBase_1.SetBase));
             exports_1("HashSet", HashSet);
-            exports_1("default",HashSet);
+            exports_1("default", HashSet);
         }
-    }
+    };
 });
 //# sourceMappingURL=HashSet.js.map

@@ -1,23 +1,24 @@
-System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports_1, context_1) {
+System.register(["./SimpleEnumerableBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var SimpleEnumerableBase_1, extends_1;
-    var __extends, InfiniteEnumerator;
+    var SimpleEnumerableBase_1, extends_1, __extends, InfiniteEnumerator;
     return {
-        setters:[
+        setters: [
             function (SimpleEnumerableBase_1_1) {
                 SimpleEnumerableBase_1 = SimpleEnumerableBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             InfiniteEnumerator = (function (_super) {
                 __extends(InfiniteEnumerator, _super);
                 function InfiniteEnumerator(_factory) {
-                    _super.call(this);
-                    this._factory = _factory;
+                    var _this = _super.call(this) || this;
+                    _this._factory = _factory;
+                    return _this;
                 }
                 InfiniteEnumerator.prototype._canMoveNext = function () {
                     return this._factory != null;
@@ -38,8 +39,8 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function(exports
                 return InfiniteEnumerator;
             }(SimpleEnumerableBase_1.SimpleEnumerableBase));
             exports_1("InfiniteEnumerator", InfiniteEnumerator);
-            exports_1("default",InfiniteEnumerator);
+            exports_1("default", InfiniteEnumerator);
         }
-    }
+    };
 });
 //# sourceMappingURL=InfiniteEnumerator.js.map

@@ -3,7 +3,6 @@ import { ArgumentOutOfRangeException } from "./Exceptions/ArgumentOutOfRangeExce
 export function Integer(n) {
     return Math.floor(n);
 }
-export var Integer;
 (function (Integer) {
     Integer.MAX_32_BIT = 2147483647;
     function r(maxExclusive) {
@@ -14,7 +13,6 @@ export var Integer;
         return r(maxExclusive);
     }
     Integer.random = random;
-    var random;
     (function (random) {
         function next(boundary, inclusive) {
             assert(boundary, 'max');
@@ -51,7 +49,6 @@ export var Integer;
                 : void (0);
         }
         random.select = select;
-        var select;
         (function (select) {
             function one(source) {
                 return random.select(source);

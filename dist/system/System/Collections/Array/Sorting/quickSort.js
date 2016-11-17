@@ -1,14 +1,12 @@
-System.register(["../../../Exceptions/ArgumentNullException"], function(exports_1, context_1) {
+System.register(["../../../Exceptions/ArgumentNullException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ArgumentNullException_1;
     function quickSort(target) {
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");
         var len = target.length;
         return target.length < 2 ? target : sort(target, 0, len - 1);
     }
-    exports_1("quickSort", quickSort);
     function sort(target, low, high) {
         if (low < high) {
             var swap = void 0;
@@ -33,13 +31,16 @@ System.register(["../../../Exceptions/ArgumentNullException"], function(exports_
         }
         return target;
     }
+    var ArgumentNullException_1;
+    exports_1("quickSort", quickSort);
     return {
-        setters:[
+        setters: [
             function (ArgumentNullException_1_1) {
                 ArgumentNullException_1 = ArgumentNullException_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
         }
-    }
+    };
 });
 //# sourceMappingURL=quickSort.js.map

@@ -1055,12 +1055,12 @@ export class Enumerable extends InfiniteEnumerable {
         let count = 0;
         this.forEach(predicate
             ?
-                    (x, i) => {
+                (x, i) => {
                     if (predicate(x, i))
                         ++count;
                 }
             :
-                    () => {
+                () => {
                     ++count;
                 });
         return count;
@@ -1104,14 +1104,14 @@ export class Enumerable extends InfiniteEnumerable {
         let found = -1;
         this.forEach(compareSelector
             ?
-                    (element, i) => {
+                (element, i) => {
                     if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true)) {
                         found = i;
                         return false;
                     }
                 }
             :
-                    (element, i) => {
+                (element, i) => {
                     if (areEqualValues(element, value, true)) {
                         found = i;
                         return false;
@@ -1123,13 +1123,13 @@ export class Enumerable extends InfiniteEnumerable {
         let result = -1;
         this.forEach(compareSelector
             ?
-                    (element, i) => {
+                (element, i) => {
                     if (areEqualValues(compareSelector(element, i), compareSelector(value, i), true))
                         result
                             = i;
                 }
             :
-                    (element, i) => {
+                (element, i) => {
                     if (areEqualValues(element, value, true))
                         result = i;
                 });

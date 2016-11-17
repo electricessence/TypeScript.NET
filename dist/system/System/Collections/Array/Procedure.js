@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function sum(source, ignoreNaN) {
@@ -22,7 +22,6 @@ System.register([], function(exports_1, context_1) {
             });
         return result;
     }
-    exports_1("sum", sum);
     function average(source, ignoreNaN) {
         if (ignoreNaN === void 0) { ignoreNaN = false; }
         if (!source || !source.length)
@@ -46,7 +45,6 @@ System.register([], function(exports_1, context_1) {
         }
         return (!count || isNaN(result)) ? NaN : (result / count);
     }
-    exports_1("average", average);
     function product(source, ignoreNaN) {
         if (ignoreNaN === void 0) { ignoreNaN = false; }
         if (!source || !source.length)
@@ -76,7 +74,6 @@ System.register([], function(exports_1, context_1) {
         }
         return result;
     }
-    exports_1("product", product);
     function quotient(source, ignoreNaN) {
         if (ignoreNaN === void 0) { ignoreNaN = false; }
         if (!source || source.length < 2)
@@ -107,7 +104,6 @@ System.register([], function(exports_1, context_1) {
             result = NaN;
         return result;
     }
-    exports_1("quotient", quotient);
     function ifSet(source, start, ignoreNaN, predicate) {
         if (!source || !source.length)
             return NaN;
@@ -142,16 +138,23 @@ System.register([], function(exports_1, context_1) {
         if (ignoreNaN === void 0) { ignoreNaN = false; }
         return ifSet(source, +Infinity, ignoreNaN, function (n, result) { return n < result; });
     }
-    exports_1("min", min);
     function max(source, ignoreNaN) {
         if (ignoreNaN === void 0) { ignoreNaN = false; }
         return ifSet(source, -Infinity, ignoreNaN, function (n, result) { return n > result; });
     }
+    exports_1("sum", sum);
+    exports_1("average", average);
+    exports_1("product", product);
+    exports_1("quotient", quotient);
+    exports_1("min", min);
     exports_1("max", max);
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
         }
-    }
+    };
 });
 //# sourceMappingURL=Procedure.js.map

@@ -1,8 +1,6 @@
-System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase", "../../extends"], function(exports_1, context_1) {
+System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./Enumeration/Enumerator", "./Enumeration/EmptyEnumerator", "../Disposable/dispose", "../Compare", "./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var LinkedNodeList_1, ArgumentNullException_1, Enumerator_1, EmptyEnumerator_1, dispose_1, Compare_1, CollectionBase_1, extends_1;
-    var __extends, VOID0, OTHER, SetBase;
     function wipe(map, depth) {
         if (depth === void 0) { depth = 1; }
         if (map && depth) {
@@ -14,8 +12,9 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
             }
         }
     }
+    var LinkedNodeList_1, ArgumentNullException_1, Enumerator_1, EmptyEnumerator_1, dispose_1, Compare_1, CollectionBase_1, extends_1, __extends, VOID0, OTHER, SetBase;
     return {
-        setters:[
+        setters: [
             function (LinkedNodeList_1_1) {
                 LinkedNodeList_1 = LinkedNodeList_1_1;
             },
@@ -39,16 +38,18 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             OTHER = 'other';
             SetBase = (function (_super) {
                 __extends(SetBase, _super);
                 function SetBase(source) {
-                    _super.call(this, VOID0, Compare_1.areEqual);
-                    this._importEntries(source);
+                    var _this = _super.call(this, VOID0, Compare_1.areEqual) || this;
+                    _this._importEntries(source);
+                    return _this;
                 }
                 SetBase.prototype._getSet = function () {
                     var s = this._set;
@@ -211,8 +212,8 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                 return SetBase;
             }(CollectionBase_1.CollectionBase));
             exports_1("SetBase", SetBase);
-            exports_1("default",SetBase);
+            exports_1("default", SetBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=SetBase.js.map

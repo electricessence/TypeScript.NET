@@ -1,10 +1,9 @@
-System.register(["../../Compare", "./SortContext", "../../Functions", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Compare", "./SortContext", "../../Functions", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Values, SortContext_1, Functions_1, extends_1;
-    var __extends, KeySortedContext;
+    var Values, SortContext_1, Functions_1, extends_1, __extends, KeySortedContext;
     return {
-        setters:[
+        setters: [
             function (Values_1) {
                 Values = Values_1;
             },
@@ -16,16 +15,18 @@ System.register(["../../Compare", "./SortContext", "../../Functions", "../../../
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             KeySortedContext = (function (_super) {
                 __extends(KeySortedContext, _super);
                 function KeySortedContext(next, _keySelector, order, comparer) {
                     if (order === void 0) { order = 1; }
                     if (comparer === void 0) { comparer = Values.compare; }
-                    _super.call(this, next, comparer, order);
-                    this._keySelector = _keySelector;
+                    var _this = _super.call(this, next, comparer, order) || this;
+                    _this._keySelector = _keySelector;
+                    return _this;
                 }
                 KeySortedContext.prototype.compare = function (a, b) {
                     var _ = this;
@@ -40,8 +41,8 @@ System.register(["../../Compare", "./SortContext", "../../Functions", "../../../
                 return KeySortedContext;
             }(SortContext_1.SortContext));
             exports_1("KeySortedContext", KeySortedContext);
-            exports_1("default",KeySortedContext);
+            exports_1("default", KeySortedContext);
         }
-    }
+    };
 });
 //# sourceMappingURL=KeySortedContext.js.map

@@ -1,17 +1,17 @@
-System.register(["../Compare", "./TimeUnit"], function(exports_1, context_1) {
+System.register(["../Compare", "./TimeUnit"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, TimeUnit_1;
-    var TimeQuantity;
+    var Compare_1, TimeUnit_1, TimeQuantity;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
             function (TimeUnit_1_1) {
                 TimeUnit_1 = TimeUnit_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             TimeQuantity = (function () {
                 function TimeQuantity(_quantity) {
                     if (_quantity === void 0) { _quantity = 0; }
@@ -58,8 +58,8 @@ System.register(["../Compare", "./TimeUnit"], function(exports_1, context_1) {
                 return TimeQuantity;
             }());
             exports_1("TimeQuantity", TimeQuantity);
-            exports_1("default",TimeQuantity);
+            exports_1("default", TimeQuantity);
         }
-    }
+    };
 });
 //# sourceMappingURL=TimeQuantity.js.map

@@ -1,19 +1,18 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var valid, ValidationResult;
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {
             valid = new ValidationResult(true);
             ValidationResult = (function () {
                 function ValidationResult(isValid, message, data) {
                     if (isValid === void 0) { isValid = false; }
                     if (data === void 0) { data = null; }
+                    this.isValid = isValid;
+                    this.message = message;
+                    this.data = data;
                     this.isValid = isValid;
                     this.message = message;
                     this.data = data;
@@ -40,6 +39,6 @@ System.register([], function(exports_1, context_1) {
             }());
             exports_1("default", ValidationResult);
         }
-    }
+    };
 });
 //# sourceMappingURL=ValidationResult.js.map

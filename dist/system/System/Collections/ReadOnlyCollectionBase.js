@@ -1,22 +1,22 @@
-System.register(["./CollectionBase", "../../extends"], function(exports_1, context_1) {
+System.register(["./CollectionBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var CollectionBase_1, extends_1;
-    var __extends, ReadOnlyCollectionBase;
+    var CollectionBase_1, extends_1, __extends, ReadOnlyCollectionBase;
     return {
-        setters:[
+        setters: [
             function (CollectionBase_1_1) {
                 CollectionBase_1 = CollectionBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             ReadOnlyCollectionBase = (function (_super) {
                 __extends(ReadOnlyCollectionBase, _super);
                 function ReadOnlyCollectionBase() {
-                    _super.apply(this, arguments);
+                    return _super.apply(this, arguments) || this;
                 }
                 ReadOnlyCollectionBase.prototype.getCount = function () {
                     return this._getCount();
@@ -39,8 +39,8 @@ System.register(["./CollectionBase", "../../extends"], function(exports_1, conte
                 return ReadOnlyCollectionBase;
             }(CollectionBase_1.CollectionBase));
             exports_1("ReadOnlyCollectionBase", ReadOnlyCollectionBase);
-            exports_1("default",ReadOnlyCollectionBase);
+            exports_1("default", ReadOnlyCollectionBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=ReadOnlyCollectionBase.js.map

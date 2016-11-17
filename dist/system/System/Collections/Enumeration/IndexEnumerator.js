@@ -1,23 +1,24 @@
-System.register(["./EnumeratorBase", "../../../extends"], function(exports_1, context_1) {
+System.register(["./EnumeratorBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var EnumeratorBase_1, extends_1;
-    var __extends, IndexEnumerator;
+    var EnumeratorBase_1, extends_1, __extends, IndexEnumerator;
     return {
-        setters:[
+        setters: [
             function (EnumeratorBase_1_1) {
                 EnumeratorBase_1 = EnumeratorBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             IndexEnumerator = (function (_super) {
                 __extends(IndexEnumerator, _super);
                 function IndexEnumerator(sourceFactory) {
+                    var _this;
                     var source;
-                    _super.call(this, function () {
+                    _this = _super.call(this, function () {
                         source = sourceFactory();
                         if (source && source.source) {
                             var len = source.length;
@@ -53,14 +54,15 @@ System.register(["./EnumeratorBase", "../../../extends"], function(exports_1, co
                         if (source) {
                             source.source = null;
                         }
-                    });
-                    this._isEndless = false;
+                    }) || this;
+                    _this._isEndless = false;
+                    return _this;
                 }
                 return IndexEnumerator;
             }(EnumeratorBase_1.EnumeratorBase));
             exports_1("IndexEnumerator", IndexEnumerator);
-            exports_1("default",IndexEnumerator);
+            exports_1("default", IndexEnumerator);
         }
-    }
+    };
 });
 //# sourceMappingURL=IndexEnumerator.js.map

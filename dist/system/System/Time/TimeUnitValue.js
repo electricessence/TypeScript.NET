@@ -2,16 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function(exports_1, context_1) {
+System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TimeUnit_1, TimeQuantity_1, extends_1;
-    var __extends, TimeUnitValue;
     function getUnitQuantityFrom(q, units) {
         return TimeUnit_1.TimeUnit.fromMilliseconds(q.getTotalMilliseconds(), units);
     }
+    var TimeUnit_1, TimeQuantity_1, extends_1, __extends, TimeUnitValue;
     return {
-        setters:[
+        setters: [
             function (TimeUnit_1_1) {
                 TimeUnit_1 = TimeUnit_1_1;
             },
@@ -20,17 +19,22 @@ System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function(expo
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             __extends = extends_1.default;
             TimeUnitValue = (function (_super) {
                 __extends(TimeUnitValue, _super);
                 function TimeUnitValue(value, _units) {
-                    _super.call(this, typeof (value) == 'number'
+                    var _this = _super.call(this, typeof (value) == 'number'
                         ? value
-                        : getUnitQuantityFrom(value, _units));
-                    this._units = _units;
+                        : getUnitQuantityFrom(value, _units)) || this;
+                    _this._units = _units;
                     TimeUnit_1.TimeUnit.assertValid(_units);
+                    return _this;
                 }
                 Object.defineProperty(TimeUnitValue.prototype, "value", {
                     get: function () {
@@ -65,6 +69,6 @@ System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function(expo
             }(TimeQuantity_1.TimeQuantity));
             exports_1("default", TimeUnitValue);
         }
-    }
+    };
 });
 //# sourceMappingURL=TimeUnitValue.js.map

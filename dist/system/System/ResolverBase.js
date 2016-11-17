@@ -1,10 +1,9 @@
-System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullException", "../extends"], function(exports_1, context_1) {
+System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullException", "../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var DisposableBase_1, ArgumentNullException_1, extends_1;
-    var __extends, NULL, NAME, ResolverBase;
+    var DisposableBase_1, ArgumentNullException_1, extends_1, __extends, NULL, NAME, ResolverBase;
     return {
-        setters:[
+        setters: [
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
@@ -13,8 +12,9 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             NULL = null;
             NAME = "ResolverBase";
@@ -22,14 +22,15 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
                 __extends(ResolverBase, _super);
                 function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
                     if (_allowReset === void 0) { _allowReset = false; }
-                    _super.call(this);
-                    this._valueFactory = _valueFactory;
-                    this._trapExceptions = _trapExceptions;
-                    this._allowReset = _allowReset;
-                    this._disposableObjectName = NAME;
+                    var _this = _super.call(this) || this;
+                    _this._valueFactory = _valueFactory;
+                    _this._trapExceptions = _trapExceptions;
+                    _this._allowReset = _allowReset;
+                    _this._disposableObjectName = NAME;
                     if (!_valueFactory)
                         throw new ArgumentNullException_1.ArgumentNullException("valueFactory");
-                    this._isValueCreated = false;
+                    _this._isValueCreated = false;
+                    return _this;
                 }
                 ResolverBase.prototype.getError = function () {
                     return this._error;
@@ -97,8 +98,8 @@ System.register(["./Disposable/DisposableBase", "./Exceptions/ArgumentNullExcept
                 return ResolverBase;
             }(DisposableBase_1.DisposableBase));
             exports_1("ResolverBase", ResolverBase);
-            exports_1("default",ResolverBase);
+            exports_1("default", ResolverBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=ResolverBase.js.map

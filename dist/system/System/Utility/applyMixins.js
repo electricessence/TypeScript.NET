@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register([], function(exports_1, context_1) {
+System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function applyMixins(derivedConstructor, baseConstructors) {
@@ -15,9 +15,12 @@ System.register([], function(exports_1, context_1) {
     }
     exports_1("default", applyMixins);
     return {
-        setters:[],
-        execute: function() {
+        setters: [],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
         }
-    }
+    };
 });
 //# sourceMappingURL=applyMixins.js.map

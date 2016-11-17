@@ -1,8 +1,6 @@
-System.register(["../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult", "../../../extends"], function(exports_1, context_1) {
+System.register(["../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, DisposableBase_1, ObjectPool_1, IteratorResult_1, extends_1;
-    var __extends, VOID0, yielderPool, Yielder, NAME, EnumeratorBase;
     function yielder(recycle) {
         if (!yielderPool)
             yielderPool
@@ -11,8 +9,9 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
             return yielderPool.take();
         yielderPool.add(recycle);
     }
+    var Types_1, DisposableBase_1, ObjectPool_1, IteratorResult_1, extends_1, __extends, VOID0, yielderPool, Yielder, NAME, EnumeratorBase;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -27,8 +26,9 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             Yielder = (function () {
@@ -68,17 +68,18 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
             EnumeratorBase = (function (_super) {
                 __extends(EnumeratorBase, _super);
                 function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
-                    _super.call(this);
-                    this._initializer = _initializer;
-                    this._tryGetNext = _tryGetNext;
-                    this._disposableObjectName = NAME;
-                    this.reset();
+                    var _this = _super.call(this) || this;
+                    _this._initializer = _initializer;
+                    _this._tryGetNext = _tryGetNext;
+                    _this._disposableObjectName = NAME;
+                    _this.reset();
                     if (Types_1.Type.isBoolean(isEndless))
-                        this._isEndless = isEndless;
+                        _this._isEndless = isEndless;
                     else if (Types_1.Type.isBoolean(disposer))
-                        this._isEndless = disposer;
+                        _this._isEndless = disposer;
                     if (Types_1.Type.isFunction(disposer))
-                        this._disposer = disposer;
+                        _this._disposer = disposer;
+                    return _this;
                 }
                 Object.defineProperty(EnumeratorBase.prototype, "current", {
                     get: function () {
@@ -224,8 +225,8 @@ System.register(["../../Types", "../../Disposable/DisposableBase", "../../Dispos
                 return EnumeratorBase;
             }(DisposableBase_1.DisposableBase));
             exports_1("EnumeratorBase", EnumeratorBase);
-            exports_1("default",EnumeratorBase);
+            exports_1("default", EnumeratorBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=EnumeratorBase.js.map

@@ -91,7 +91,7 @@ export class CollectionBase extends DisposableBase {
         const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
-        let n;
+        let n = NaN;
         try {
             if (n = _._removeInternal(entry, max))
                 _._modifiedCount++;
@@ -106,7 +106,7 @@ export class CollectionBase extends DisposableBase {
         const _ = this;
         _.assertModifiable();
         _._updateRecursion++;
-        let n;
+        let n = NaN;
         try {
             if (n = _._clearInternal())
                 _._modifiedCount++;
@@ -161,7 +161,7 @@ export class CollectionBase extends DisposableBase {
             _._updateRecursion--;
         }
         _._signalModification();
-        return n;
+        return n = NaN;
     }
     contains(entry) {
         if (!this.getCount())

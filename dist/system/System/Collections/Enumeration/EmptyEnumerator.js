@@ -2,20 +2,23 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-System.register(["./IteratorResult", "../../Functions"], function(exports_1, context_1) {
+System.register(["./IteratorResult", "../../Functions"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var IteratorResult_1, Functions_1;
-    var VOID0, EmptyEnumerator;
+    var IteratorResult_1, Functions_1, VOID0, EmptyEnumerator;
     return {
-        setters:[
+        setters: [
             function (IteratorResult_1_1) {
                 IteratorResult_1 = IteratorResult_1_1;
             },
             function (Functions_1_1) {
                 Functions_1 = Functions_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {/*!
+             * @author electricessence / https://github.com/electricessence/
+             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+             */
             VOID0 = void 0;
             exports_1("EmptyEnumerator", EmptyEnumerator = Object.freeze({
                 current: VOID0,
@@ -29,8 +32,8 @@ System.register(["./IteratorResult", "../../Functions"], function(exports_1, con
                 dispose: Functions_1.Functions.Blank,
                 isEndless: false
             }));
-            exports_1("default",EmptyEnumerator);
+            exports_1("default", EmptyEnumerator);
         }
-    }
+    };
 });
 //# sourceMappingURL=EmptyEnumerator.js.map

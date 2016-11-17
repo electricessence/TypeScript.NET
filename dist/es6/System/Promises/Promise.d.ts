@@ -89,15 +89,16 @@ export declare module Promise {
         Fulfilled = 1,
         Rejected = -1,
     }
-    type Resolution<TResult> = PromiseLike<TResult> | TResult | void;
+    type Resolution<TResult> = TResult | PromiseLike<TResult>;
     interface Fulfill<T, TResult> {
         (value: T): Resolution<TResult>;
     }
     interface Reject<TResult> {
-        (err?: any): Resolution<TResult>;
+        (reason: any): TResult | PromiseLike<TResult>;
     }
     interface Then<T, TResult> {
-        (onFulfilled: Fulfill<T, TResult>, onRejected?: Reject<TResult>): PromiseLike<TResult>;
+        (onfulfilled?: Fulfill<T, TResult>, onrejected?: Reject<TResult>): PromiseLike<TResult>;
+        (onfulfilled?: Fulfill<T, TResult>, onrejected?: Reject<void>): PromiseLike<TResult>;
     }
     interface Executor<T> {
         (resolve: (value?: T | PromiseLike<T>) => void, reject: (reason?: any) => void): void;
@@ -122,6 +123,6 @@ export declare module Promise {
     function map<T, U>(source: T[], transform: (value: T) => U): PromiseCollection<U>;
     function reject<T>(reason: T): PromiseBase<T>;
     function wrap<T>(target: T | PromiseLike<T>): PromiseBase<T>;
-    function createFrom<T, TResult>(then: Then<T, TResult>): PromiseBase<T>;
+    function createFrom<T>(then: Then<T, any>): PromiseBase<T>;
 }
 export default Promise;

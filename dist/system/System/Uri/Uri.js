@@ -1,8 +1,6 @@
-System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function(exports_1, context_1) {
+System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, QueryParams, Scheme, Utility_1, ArgumentException_1, ArgumentOutOfRangeException_1;
-    var VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     function copyUri(from, to) {
         var i = 0, field;
         if (!to)
@@ -148,8 +146,9 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
         out(copyUri(result));
         return null;
     }
+    var Types_1, QueryParams, Scheme, Utility_1, ArgumentException_1, ArgumentOutOfRangeException_1, VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
@@ -167,8 +166,9 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
             },
             function (ArgumentOutOfRangeException_1_1) {
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             VOID0 = void 0;
             Uri = (function () {
                 function Uri(scheme, userInfo, host, port, path, query, fragment) {
@@ -270,8 +270,8 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
             exports_1("Fields", Fields);
             Object.freeze(Fields);
             SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
-            exports_1("default",Uri);
+            exports_1("default", Uri);
         }
-    }
+    };
 });
 //# sourceMappingURL=Uri.js.map

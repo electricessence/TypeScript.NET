@@ -1,17 +1,17 @@
-System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
+System.register(["../Time/TimeSpan"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var TimeSpan_1;
-    var Stopwatch;
     function getTimestampMilliseconds() {
         return (new Date()).getTime();
     }
+    var TimeSpan_1, Stopwatch;
     return {
-        setters:[
+        setters: [
             function (TimeSpan_1_1) {
                 TimeSpan_1 = TimeSpan_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             Stopwatch = (function () {
                 function Stopwatch() {
                     this.reset();
@@ -109,6 +109,6 @@ System.register(["../Time/TimeSpan"], function(exports_1, context_1) {
             }());
             exports_1("default", Stopwatch);
         }
-    }
+    };
 });
 //# sourceMappingURL=Stopwatch.js.map

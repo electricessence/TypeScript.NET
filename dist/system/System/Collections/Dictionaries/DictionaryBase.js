@@ -1,10 +1,9 @@
-System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], function(exports_1, context_1) {
+System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBase", "../Enumeration/EnumeratorBase", "../../Exceptions/ArgumentNullException", "../../Exceptions/InvalidOperationException", "../../KeyValueExtract", "../../../extends", "../KeyNotFoundException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Compare_1, Enumerator_1, CollectionBase_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1, extends_1, KeyNotFoundException_1;
-    var __extends, VOID0, DictionaryBase;
+    var Compare_1, Enumerator_1, CollectionBase_1, EnumeratorBase_1, ArgumentNullException_1, InvalidOperationException_1, KeyValueExtract_1, extends_1, KeyNotFoundException_1, __extends, VOID0, DictionaryBase;
     return {
-        setters:[
+        setters: [
             function (Compare_1_1) {
                 Compare_1 = Compare_1_1;
             },
@@ -31,14 +30,15 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
             },
             function (KeyNotFoundException_1_1) {
                 KeyNotFoundException_1 = KeyNotFoundException_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             VOID0 = void 0;
             DictionaryBase = (function (_super) {
                 __extends(DictionaryBase, _super);
                 function DictionaryBase(source) {
-                    _super.call(this, source);
+                    return _super.call(this, source) || this;
                 }
                 DictionaryBase.prototype._onValueModified = function (key, value, old) {
                 };
@@ -190,8 +190,8 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                 return DictionaryBase;
             }(CollectionBase_1.CollectionBase));
             exports_1("DictionaryBase", DictionaryBase);
-            exports_1("default",DictionaryBase);
+            exports_1("default", DictionaryBase);
         }
-    }
+    };
 });
 //# sourceMappingURL=DictionaryBase.js.map

@@ -28,8 +28,8 @@ export declare module RegexOptions {
     type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky | IgnorePatternWhitespace;
 }
 export declare class Regex {
-    private _re;
-    private _keys;
+    private readonly _re;
+    private readonly _keys;
     constructor(pattern: string | RegExp, options?: RegexOptions.Literal | RegexOptions.Literal[], ...extra: RegexOptions.Literal[]);
     match(input: string, startIndex?: number): Match;
     matches(input: string): Match[];
@@ -41,8 +41,8 @@ export declare class Regex {
     static replace(input: string, pattern: string, evaluator: SelectorWithIndex<Match, Primitive>, options?: RegexOptions.Literal[]): string;
 }
 export declare class Capture {
-    value: string;
-    index: number;
+    readonly value: string;
+    readonly index: number;
     readonly length: number;
     constructor(value?: string, index?: number);
     freeze(): void;

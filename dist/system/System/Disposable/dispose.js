@@ -1,8 +1,6 @@
-System.register(["../Types"], function(exports_1, context_1) {
+System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1;
-    var dispose;
     function dispose() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -10,7 +8,6 @@ System.register(["../Types"], function(exports_1, context_1) {
         }
         disposeTheseInternal(disposables, false);
     }
-    exports_1("dispose", dispose);
     function using(disposable, closure) {
         try {
             return closure(disposable);
@@ -19,7 +16,6 @@ System.register(["../Types"], function(exports_1, context_1) {
             disposeSingle(disposable, false);
         }
     }
-    exports_1("using", using);
     function disposeSingle(disposable, trapExceptions) {
         if (disposable
             && Types_1.Type.of(disposable)
@@ -71,12 +67,16 @@ System.register(["../Types"], function(exports_1, context_1) {
         }
         return exceptions;
     }
+    var Types_1;
+    exports_1("dispose", dispose);
+    exports_1("using", using);
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             (function (dispose) {
                 function deferred() {
                     var disposables = [];
@@ -100,7 +100,6 @@ System.register(["../Types"], function(exports_1, context_1) {
                         : void 0;
                 }
                 dispose.these = these;
-                var these;
                 (function (these) {
                     function deferred(disposables, delay) {
                         if (delay === void 0) { delay = 0; }
@@ -114,8 +113,8 @@ System.register(["../Types"], function(exports_1, context_1) {
                 })(these = dispose.these || (dispose.these = {}));
             })(dispose = dispose || (dispose = {}));
             exports_1("dispose", dispose);
-            exports_1("default",dispose);
+            exports_1("default", dispose);
         }
-    }
+    };
 });
 //# sourceMappingURL=dispose.js.map

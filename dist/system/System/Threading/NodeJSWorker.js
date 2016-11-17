@@ -1,27 +1,27 @@
-System.register(["../Observable/ObservableBase", "../../extends"], function(exports_1, context_1) {
+System.register(["../Observable/ObservableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ObservableBase_1, extends_1;
-    var __extends, ps, NodeJSWorker;
+    var ObservableBase_1, extends_1, __extends, ps, NodeJSWorker;
     return {
-        setters:[
+        setters: [
             function (ObservableBase_1_1) {
                 ObservableBase_1 = ObservableBase_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
             __extends = extends_1.default;
             ps = require("child_process");
             NodeJSWorker = (function (_super) {
                 __extends(NodeJSWorker, _super);
                 function NodeJSWorker(url) {
-                    var _this = this;
-                    _super.call(this);
-                    var process = this._process = ps.fork(url);
+                    var _this = _super.call(this) || this;
+                    var process = _this._process = ps.fork(url);
                     process.on('message', function (msg) { return _this._onNext(JSON.parse(msg)); });
                     process.on('error', function (err) { return _this._onError(err); });
+                    return _this;
                 }
                 NodeJSWorker.prototype._onNext = function (data) {
                     _super.prototype._onNext.call(this, data);
@@ -49,8 +49,8 @@ System.register(["../Observable/ObservableBase", "../../extends"], function(expo
                 return NodeJSWorker;
             }(ObservableBase_1.ObservableBase));
             exports_1("NodeJSWorker", NodeJSWorker);
-            exports_1("default",NodeJSWorker);
+            exports_1("default", NodeJSWorker);
         }
-    }
+    };
 });
 //# sourceMappingURL=NodeJSWorker.js.map

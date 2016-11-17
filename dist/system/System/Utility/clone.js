@@ -1,7 +1,6 @@
-System.register(["../Types"], function(exports_1, context_1) {
+System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1;
     function clone(source, depth) {
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
@@ -26,14 +25,16 @@ System.register(["../Types"], function(exports_1, context_1) {
         }
         return result;
     }
+    var Types_1;
     exports_1("default", clone);
     return {
-        setters:[
+        setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
-            }],
-        execute: function() {
+            }
+        ],
+        execute: function () {
         }
-    }
+    };
 });
 //# sourceMappingURL=clone.js.map
