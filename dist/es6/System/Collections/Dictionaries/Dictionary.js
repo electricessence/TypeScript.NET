@@ -5,8 +5,6 @@ import { LinkedNodeList } from "../LinkedNodeList";
 import { ObjectPool } from "../../Disposable/ObjectPool";
 import { getIdentifier } from "./getIdentifier";
 import DictionaryBase from "./DictionaryBase";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 class HashEntry {
     constructor(key, value, previous, next) {

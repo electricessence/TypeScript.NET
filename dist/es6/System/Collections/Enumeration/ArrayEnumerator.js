@@ -1,7 +1,5 @@
 import { IndexEnumerator } from "./IndexEnumerator";
 import { Type } from "../../Types";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 export class ArrayEnumerator extends IndexEnumerator {
     constructor(arrayOrFactory, start = 0, step = 1) {
         super(() => {

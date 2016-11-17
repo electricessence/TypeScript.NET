@@ -2,38 +2,62 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
+import {IIterator} from "./System/Collections/Enumeration/IIterator";
+import {IMap} from "./System/Collections/Dictionaries/IDictionary";
 
-export function generator(thisArg:any, body:Function)
+const enum IteratorVerb {
+	next,
+	'throw',
+	'return'
+}
+
+export default function<T>(thisArg:any, body:Function):IIterator<T>
 {
-	let f:any, y:any, t:any;
-	let _:any = {
-		label: 0,
+	type Op = [number, any] | [number];
+
+	let f:number, y:IMap<any>&IIterator<any>, t:any;
+	// sent can be applied via thisArgs.
+	// noinspection JSUnusedGlobalSymbols
+	let _ = {
+		label: <any>0,
+		trys: <any[]>[],
+		ops: <Op[]>[],
 		sent: () =>
-		{ //noinspection JSBitwiseOperatorUsage
+		{
+			// noinspection JSBitwiseOperatorUsage
 			if(t[0] & 1) throw t[1];
 			return t[1];
-		}, trys: <any[]>[], ops: <any[]>[]
+		},
 	};
 
-	return {next: verb(0), "throw": verb(1), "return": verb(2)};
+	return {
+		next: verb(IteratorVerb.next),
+		"throw": verb(IteratorVerb.throw),
+		"return": verb(IteratorVerb.return)
+	};
+
 	function verb(n:any) { return (v:any) => step([n, v]); }
 
-	function step(op:any)
+	function step(op:Op)
 	{
 		if(f) throw new TypeError("Generator is already executing.");
 		while(_)
 		{
 			try
 			{
-				//noinspection JSBitwiseOperatorUsage,CommaExpressionJS
-				if(f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t
-						= t.call(y, op[1])).done) return t;
-				//noinspection CommaExpressionJS
-				if(y = 0, t) op = [0, t.value];
+
+				f = 1;
+				//noinspection JSBitwiseOperatorUsage
+				if(y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"])
+					&& !(t = t.call(y, op[1])).done)
+					return t;
+
+				y = <any>0;
+				if(t) op = [0, t.value];
 				switch(op[0])
 				{
-					case 0:
-					case 1:
+					case IteratorVerb.next:
+					case IteratorVerb.throw:
 						t = op;
 						break;
 					case 4:
@@ -45,15 +69,14 @@ export function generator(thisArg:any, body:Function)
 						op = [0];
 						continue;
 					case 7:
-						op = _.ops.pop();
+						op = _.ops.pop()!;
 						_.trys.pop();
 						continue;
 					default:
-						//noinspection CommaExpressionJS
-						if(!(t = _.trys, t
-								= t.length>0 && t[t.length - 1]) && (op[0]===6 || op[0]===2))
+						t = _.trys;
+						if(!(t = t.length>0 && t[t.length - 1]) && (op[0]===6 || op[0]===2))
 						{
-							_ = 0;
+							_ = <any>0;
 							continue;
 						}
 						if(op[0]===3 && (!t || (op[1]>t[0] && op[1]<t[3])))
@@ -73,16 +96,18 @@ export function generator(thisArg:any, body:Function)
 							_.ops.push(op);
 							break;
 						}
+
 						if(t[2]) _.ops.pop();
 						_.trys.pop();
 						continue;
 				}
+
 				op = body.call(thisArg, _);
 			}
 			catch(e)
 			{
 				op = [6, e];
-				y = 0;
+				y = <any>0;
 			}
 			finally
 			{ f = t = 0; }

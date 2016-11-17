@@ -20,8 +20,6 @@ import { KeySortedContext } from "../System/Collections/Sorting/KeySortedContext
 import { ArgumentNullException } from "../System/Exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../System/Exceptions/ArgumentOutOfRangeException";
 import { IndexEnumerator } from "../System/Collections/Enumeration/IndexEnumerator";
-import __extendsImport from "../extends";
-const __extends = __extendsImport;
 const INVALID_DEFAULT = {};
 const VOID0 = void 0;
 const NULL = null;

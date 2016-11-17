@@ -1,6 +1,4 @@
 import { DisposableBase } from "../../Disposable/DisposableBase";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 const NAME = "TaskHandlerBase";
 export class TaskHandlerBase extends DisposableBase {
     constructor() {

@@ -5,9 +5,7 @@ import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../../Exceptions/InvalidOperationException";
 import { extractKeyValue } from "../../KeyValueExtract";
-import __extendsImport from "../../../extends";
 import { KeyNotFoundException } from "../KeyNotFoundException";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 export class DictionaryBase extends CollectionBase {
     constructor(source) {

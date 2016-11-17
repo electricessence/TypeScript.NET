@@ -3,8 +3,6 @@ import { InvalidOperationException } from "../Exceptions/InvalidOperationExcepti
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 export class LinkedNodeList {
     constructor() {
         this._first = null;

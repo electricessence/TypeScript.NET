@@ -1,6 +1,4 @@
 import { ObservableBase } from "../Observable/ObservableBase";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 const ps = require("child_process");
 export class NodeJSWorker extends ObservableBase {
     constructor(url) {

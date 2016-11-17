@@ -1,7 +1,5 @@
 import { TaskHandlerBase } from "./TaskHandlerBase";
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 export class TaskHandler extends TaskHandlerBase {
     constructor(_action) {
         super();

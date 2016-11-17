@@ -2,8 +2,6 @@ import { Type } from "../../Types";
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import { ObjectPool } from "../../Disposable/ObjectPool";
 import { IteratorResult } from "./IteratorResult";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 let yielderPool;
 function yielder(recycle) {

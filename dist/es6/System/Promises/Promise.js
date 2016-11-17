@@ -14,8 +14,6 @@ import { ObjectPool } from "../Disposable/ObjectPool";
 import { Set } from "../Collections/Set";
 import { defer } from "../Threading/defer";
 import { ObjectDisposedException } from "../Disposable/ObjectDisposedException";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0, NULL = null, PROMISE = "Promise", PROMISE_STATE = PROMISE + "State", THEN = "then", TARGET = "target";
 function isPromise(value) {
     return Type.hasMemberOfType(value, THEN, Type.FUNCTION);

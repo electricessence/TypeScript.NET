@@ -1,7 +1,5 @@
 import { DisposableBase } from "./Disposable/DisposableBase";
 import { ArgumentNullException } from "./Exceptions/ArgumentNullException";
-import __extendsImport from "../extends";
-const __extends = __extendsImport;
 const NULL = null;
 const NAME = "ResolverBase";
 export class ResolverBase extends DisposableBase {

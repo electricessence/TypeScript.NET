@@ -5,8 +5,6 @@
  * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
  */
 import ObservableBase from "./ObservableBase";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 export class ObservableNodeBase extends ObservableBase {
     onNext(value) {
         this._onNext(value);

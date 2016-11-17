@@ -1,6 +1,4 @@
 import { ObservableBase } from "../Observable/ObservableBase";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 export default class Timer extends ObservableBase {
     constructor(_interval, _maxCount = Infinity, _initialDelay = _interval) {
         super();

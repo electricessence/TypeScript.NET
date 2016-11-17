@@ -4,8 +4,12 @@ var IteratorResult = (function () {
     function IteratorResult(value, index, done) {
         if (done === void 0) { done = false; }
         this.value = value;
-        this.index = index;
-        this.done = done;
+        if (typeof index == "boolean")
+            done = index;
+        else {
+            this.index = index;
+            this.done = done;
+        }
         Object.freeze(this);
     }
     return IteratorResult;

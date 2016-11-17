@@ -1,8 +1,6 @@
 import * as ArrayUtility from "../Array/Utility";
 import { StringKeyDictionary } from "./StringKeyDictionary";
 import { ArgumentOutOfRangeException } from "../../Exceptions/ArgumentOutOfRangeException";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 export class OrderedStringKeyDictionary extends StringKeyDictionary {
     constructor() {

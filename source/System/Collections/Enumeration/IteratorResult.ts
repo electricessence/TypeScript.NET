@@ -8,11 +8,30 @@ const VOID0:undefined = void 0;
 
 export class IteratorResult<T> implements IIteratorResult<T>
 {
+	public readonly value:T;
+	public readonly index?:number;
+	public readonly done:boolean;
+
 	constructor(
-		public readonly value:T,
-		public readonly index?:number,
-		public readonly done:boolean = false)
+		value:T,
+		done:boolean)
+	constructor(
+		value:T,
+		index?:number,
+		done?:boolean)
+	constructor(
+		value:T,
+		index?:number|boolean,
+		done:boolean = false)
 	{
+		this.value = value;
+		if(typeof index=="boolean")
+			done = index;
+		else
+		{
+			this.index = index;
+			this.done = done;
+		}
 		Object.freeze(this);
 	}
 }

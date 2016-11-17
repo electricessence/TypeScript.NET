@@ -1,5 +1,3 @@
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 export default class EventSimple {
     constructor() {
         this._listeners = [];

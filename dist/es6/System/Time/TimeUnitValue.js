@@ -4,8 +4,6 @@
  */
 import { TimeUnit } from "./TimeUnit";
 import { TimeQuantity } from "./TimeQuantity";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 export default class TimeUnitValue extends TimeQuantity {
     constructor(value, _units) {
         super(typeof (value) == 'number'

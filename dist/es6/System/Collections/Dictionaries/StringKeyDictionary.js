@@ -1,7 +1,5 @@
 import { areEqual } from "../../Compare";
 import { DictionaryBase } from "./DictionaryBase";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 export class StringKeyDictionary extends DictionaryBase {
     constructor() {

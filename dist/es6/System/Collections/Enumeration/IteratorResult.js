@@ -2,8 +2,12 @@ const VOID0 = void 0;
 export class IteratorResult {
     constructor(value, index, done = false) {
         this.value = value;
-        this.index = index;
-        this.done = done;
+        if (typeof index == "boolean")
+            done = index;
+        else {
+            this.index = index;
+            this.done = done;
+        }
         Object.freeze(this);
     }
 }

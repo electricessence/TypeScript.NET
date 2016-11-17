@@ -1,6 +1,4 @@
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 const NAME = 'ObjectDisposedException';
 export class ObjectDisposedException extends InvalidOperationException {
     constructor(objectName, message, innerException) {

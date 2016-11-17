@@ -1,5 +1,3 @@
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 class DeferBase {
     dispose() {
         this.cancel();

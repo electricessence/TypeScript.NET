@@ -5,8 +5,6 @@ import { EmptyEnumerator } from "./Enumeration/EmptyEnumerator";
 import { using } from "../Disposable/dispose";
 import { areEqual } from "../Compare";
 import { CollectionBase } from "./CollectionBase";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 const OTHER = 'other';
 export class SetBase extends CollectionBase {

@@ -3,27 +3,35 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
-function generator(thisArg, body) {
+function default_1(thisArg, body) {
     var f, y, t;
     var _ = {
         label: 0,
+        trys: [],
+        ops: [],
         sent: function () {
             if (t[0] & 1)
                 throw t[1];
             return t[1];
-        }, trys: [], ops: []
+        },
     };
-    return { next: verb(0), "throw": verb(1), "return": verb(2) };
+    return {
+        next: verb(0),
+        "throw": verb(1),
+        "return": verb(2)
+    };
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f)
             throw new TypeError("Generator is already executing.");
         while (_) {
             try {
-                if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t
-                    = t.call(y, op[1])).done)
+                f = 1;
+                if (y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"])
+                    && !(t = t.call(y, op[1])).done)
                     return t;
-                if (y = 0, t)
+                y = 0;
+                if (t)
                     op = [0, t.value];
                 switch (op[0]) {
                     case 0:
@@ -43,8 +51,8 @@ function generator(thisArg, body) {
                         _.trys.pop();
                         continue;
                     default:
-                        if (!(t = _.trys, t
-                            = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        t = _.trys;
+                        if (!(t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
                             _ = 0;
                             continue;
                         }
@@ -82,5 +90,6 @@ function generator(thisArg, body) {
         return { value: op[0] ? op[1] : void 0, done: true };
     }
 }
-exports.generator = generator;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = default_1;
 //# sourceMappingURL=generator.js.map

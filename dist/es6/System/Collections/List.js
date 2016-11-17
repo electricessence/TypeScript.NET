@@ -3,9 +3,7 @@ import { remove, indexOf, contains, copyTo, removeIndex } from "./Array/Utility"
 import { forEach } from "./Enumeration/Enumerator";
 import { Type } from "../Types";
 import { CollectionBase } from "./CollectionBase";
-import __extendsImport from "../../extends";
 import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 export class List extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {

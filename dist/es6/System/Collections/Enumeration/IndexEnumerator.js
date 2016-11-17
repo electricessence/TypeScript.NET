@@ -1,6 +1,4 @@
 import { EnumeratorBase } from "./EnumeratorBase";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 export class IndexEnumerator extends EnumeratorBase {
     constructor(sourceFactory) {
         let source;

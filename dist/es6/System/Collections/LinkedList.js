@@ -3,8 +3,6 @@ import { LinkedNodeList } from "./LinkedNodeList";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { CollectionBase } from "./CollectionBase";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 class InternalNode {
     constructor(value, previous, next) {

@@ -8,11 +8,11 @@ import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {Promise as NETPromise} from "../source/System/Promises/Promise";
 import {awaiter} from "../source/awaiter";
-import {generator} from "../source/generator";
+import generator from "../source/generator";
 // noinspection JSUnusedLocalSymbols
-const
-	__awaiter   = awaiter.factory(NETPromise),
-	__generator = generator;
+const __awaiter = awaiter.factory(NETPromise);
+// noinspection JSUnusedLocalSymbols
+const __generator = generator;
 
 const fields:IMap<boolean> = {
 	"name": true,
@@ -72,6 +72,7 @@ gulp.task(
 	() => builder
 		.init(Module.ES6, Target.ES6, Module.ES6)
 		.clear()
+		.removeExtraneousES6Helpers()
 		.execute()
 		.then(() => savePackage(Module.ES6))
 );

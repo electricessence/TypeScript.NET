@@ -1,8 +1,6 @@
 import { Type } from "../Types";
 import { SetBase } from "./SetBase";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 export class HashSet extends SetBase {
     constructor(source, keyGenerator) {

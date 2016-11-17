@@ -16,7 +16,8 @@
     var Promise_1 = require("../source/System/Promises/Promise");
     var awaiter_1 = require("../source/awaiter");
     var generator_1 = require("../source/generator");
-    var __awaiter = awaiter_1.awaiter.factory(Promise_1.Promise), __generator = generator_1.generator;
+    var __awaiter = awaiter_1.awaiter.factory(Promise_1.Promise);
+    var __generator = generator_1.default;
     var fields = {
         "name": true,
         "version": true,
@@ -83,6 +84,7 @@
     gulp.task(TASK.DIST_ES6, function () { return builder
         .init(gulp_typescript_helper_1.Module.ES6, gulp_typescript_helper_1.Target.ES6, gulp_typescript_helper_1.Module.ES6)
         .clear()
+        .removeExtraneousES6Helpers()
         .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.ES6); }); });
     gulp.task(TASK.DIST_AMD, function () { return builder

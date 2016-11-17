@@ -1,6 +1,4 @@
 import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
-import __extendsImport from "../../../extends";
-const __extends = __extendsImport;
 export class InfiniteEnumerator extends SimpleEnumerableBase {
     constructor(_factory) {
         super();

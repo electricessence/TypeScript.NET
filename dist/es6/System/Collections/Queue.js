@@ -7,8 +7,6 @@ import { NotImplementedException } from "../Exceptions/NotImplementedException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
 import { CollectionBase } from "./CollectionBase";
-import __extendsImport from "../../extends";
-const __extends = __extendsImport;
 const VOID0 = void 0;
 const MINIMUM_GROW = 4;
 const SHRINK_THRESHOLD = 32;
