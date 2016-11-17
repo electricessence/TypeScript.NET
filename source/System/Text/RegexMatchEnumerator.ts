@@ -9,7 +9,7 @@ import {IEnumerator} from "../Collections/Enumeration/IEnumerator";
 
 export class RegexMatchEnumerator
 {
-	private _pattern:Regex;
+	private readonly _pattern:Regex;
 
 	constructor(pattern:string|RegExp|Regex)
 	{

@@ -25,8 +25,8 @@ export abstract class ResolverBase<T> extends DisposableBase
 
 	constructor(
 		protected _valueFactory:Func<T>,
-		private _trapExceptions:boolean,
-		private _allowReset:boolean = false)
+		private readonly _trapExceptions:boolean,
+		private readonly _allowReset:boolean = false)
 	{
 		super();
 		this._disposableObjectName = NAME;

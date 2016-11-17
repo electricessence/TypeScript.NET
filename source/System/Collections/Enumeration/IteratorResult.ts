@@ -9,9 +9,9 @@ const VOID0:undefined = void 0;
 export class IteratorResult<T> implements IIteratorResult<T>
 {
 	constructor(
-		public value:T,
-		public index?:number,
-		public done:boolean = false)
+		public readonly value:T,
+		public readonly index?:number,
+		public readonly done:boolean = false)
 	{
 		Object.freeze(this);
 	}

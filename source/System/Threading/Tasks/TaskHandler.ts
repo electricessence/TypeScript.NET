@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {TaskHandlerBase} from "./TaskHandlerBase";
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {Closure} from "../../FunctionTypes";
@@ -13,7 +12,7 @@ const __extends = __extendsImport;
 export class TaskHandler extends TaskHandlerBase
 {
 
-	constructor(private _action:Closure)
+	constructor(private readonly _action:Closure)
 	{
 		super();
 		if(!_action) throw new ArgumentNullException('action');

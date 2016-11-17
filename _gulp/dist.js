@@ -26,16 +26,14 @@
         "browser": true
     };
     function getPackage(dist) {
-        return File.json.read('./package.json')
-            .then(function (pkg) {
-            for (var _i = 0, _a = Object.keys(pkg); _i < _a.length; _i++) {
-                var key = _a[_i];
-                if (!fields[key])
-                    delete pkg[key];
-            }
-            pkg["name"] += "-" + dist;
-            return pkg;
-        });
+        var pkg = File.json.read('./package.json');
+        for (var _i = 0, _a = Object.keys(pkg); _i < _a.length; _i++) {
+            var key = _a[_i];
+            if (!fields[key])
+                delete pkg[key];
+        }
+        pkg["name"] += "-" + dist;
+        return pkg;
     }
     function savePackage(dist, folder) {
         if (folder === void 0) { folder = dist; }

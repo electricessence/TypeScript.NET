@@ -23,8 +23,6 @@ export class Exception implements Error, IDisposable
 	 * The default is 'Error'.
 	 */
 	readonly name:string;
-
-	readonly message:string;
 	readonly stack:string;
 	readonly data:IMap<any>;
 
@@ -35,14 +33,13 @@ export class Exception implements Error, IDisposable
 	 * @param beforeSealing This delegate is used to allow actions to occur just before this constructor finishes.  Since some compilers do not allow the use of 'this' before super.
 	 */
 	constructor(
-		message:string,
+		readonly message:string,
 		innerException?:Error,
 		beforeSealing?:(ex:any)=>void)
 	{
 		const _ = this;
 
 		this.name = _.getName();
-		this.message = message;
 		this.data = {};
 
 		if(innerException)

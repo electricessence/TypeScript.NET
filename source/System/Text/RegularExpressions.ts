@@ -70,8 +70,8 @@ export module RegexOptions
 
 export class Regex
 {
-	private _re:RegExp;
-	private _keys:string[];
+	private readonly _re:RegExp;
+	private readonly _keys:string[];
 
 	constructor(
 		pattern:string|RegExp,
@@ -260,8 +260,8 @@ export class Capture
 	}
 
 	constructor(
-		public value:string = EMPTY,
-		public index:number = -1)
+		public readonly value:string = EMPTY,
+		public readonly index:number = -1)
 	{
 	}
 
@@ -310,7 +310,7 @@ export class Match extends Group
 	{
 		if(!this.groups) throw new Error("'groups' cannot be null.");
 		if(!this.namedGroups) throw new Error("'groupMap' cannot be null.");
-		Object.freeze(this.groups.slice());
+		Object.freeze(this.groups);
 		Object.freeze(this.namedGroups);
 		super.freeze();
 	}

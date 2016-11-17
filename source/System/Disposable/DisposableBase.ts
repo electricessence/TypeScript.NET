@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {ObjectDisposedException} from "./ObjectDisposedException";
 import {IDisposableAware} from "./IDisposableAware";
 import {Closure} from "../FunctionTypes";
@@ -10,7 +9,7 @@ import {Closure} from "../FunctionTypes";
 export abstract class DisposableBase implements IDisposableAware
 {
 
-	constructor(private __finalizer?:Closure|null)
+	constructor(private readonly __finalizer?:Closure|null)
 	{
 	}
 
@@ -51,7 +50,7 @@ export abstract class DisposableBase implements IDisposableAware
 				if(_.__finalizer) // Private finalizer...
 				{
 					_.__finalizer();
-					_.__finalizer = void 0;
+					(<any>_).__finalizer = void 0;
 				}
 			}
 		}

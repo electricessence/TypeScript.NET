@@ -19,6 +19,9 @@
             this.isValid = isValid;
             this.message = message;
             this.data = data;
+            this.isValid = isValid;
+            this.message = message;
+            this.data = data;
             Object.freeze(this);
         }
         ValidationResult.prototype.equals = function (other) {

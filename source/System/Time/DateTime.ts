@@ -14,17 +14,11 @@ import {ITimeQuantity} from "./ITimeQuantity";
 
 export class DateTime implements ICalendarDate, IDateTime
 {
-	private _value:Date;
+	private readonly _value:Date;
 
 	toJsDate():Date
 	{
 		return new Date(this._value.getTime()); // return a clone.
-	}
-
-	private _setJsDate(value:Date)
-	{
-		this._time = null;
-		this._value = new Date(value.getTime());
 	}
 
 	constructor();
@@ -35,18 +29,18 @@ export class DateTime implements ICalendarDate, IDateTime
 	constructor(value:any = new Date(), kind:DateTime.Kind = DateTime.Kind.Local)
 	{
 		const _ = this;
-		_._kind = kind;
+		this._kind = kind;
 		if(value instanceof DateTime)
-			_._value = value.toJsDate();
+			this._value = value.toJsDate();
 		else if(value instanceof Date)
-			_._setJsDate(value);
+			this._value = new Date(value.getTime());
 		else
-			_._value = value=== void(0)
+			this._value = value=== void(0)
 				? new Date()
 				: new Date(value);
 	}
 
-	private _kind:DateTime.Kind;
+	private readonly _kind:DateTime.Kind;
 	get kind():DateTime.Kind
 	{
 		return this._kind;

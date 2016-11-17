@@ -117,7 +117,7 @@ function areInvalid(v:any, d:any)
 
 export class TypeValidator<T>
 {
-	constructor(private _typeDescriptor:any)
+	constructor(private readonly _typeDescriptor:any)
 	{
 		Object.freeze(this);
 	}

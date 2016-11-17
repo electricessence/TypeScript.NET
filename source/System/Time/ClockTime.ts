@@ -14,12 +14,12 @@ const __extends = __extendsImport;
 export class ClockTime extends TimeQuantity implements IClockTime
 {
 
-	days:number;
-	hour:number;
-	minute:number;
-	second:number;
-	millisecond:number;
-	tick:number;
+	readonly days:number;
+	readonly hour:number;
+	readonly minute:number;
+	readonly second:number;
+	readonly millisecond:number;
+	readonly tick:number;
 
 	constructor(milliseconds:number);
 	constructor(hours:number, minutes:number, seconds?:number, milliseconds?:number);
@@ -36,27 +36,26 @@ export class ClockTime extends TimeQuantity implements IClockTime
 				: (args.length>0 && args[0] || 0)
 		);
 
-		const _ = this;
-		const ms = Math.abs(_.getTotalMilliseconds());
+		const ms = Math.abs(this.getTotalMilliseconds());
 		let msi = Math.floor(ms);
 
-		_.tick = (ms - msi)*Ticks.Per.Millisecond;
+		this.tick = (ms - msi)*Ticks.Per.Millisecond;
 
-		_.days = (msi/Milliseconds.Per.Day) | 0;
-		msi -= _.days*Milliseconds.Per.Day;
+		this.days = (msi/Milliseconds.Per.Day) | 0;
+		msi -= this.days*Milliseconds.Per.Day;
 
-		_.hour = (msi/Milliseconds.Per.Hour) | 0;
-		msi -= _.hour*Milliseconds.Per.Hour;
+		this.hour = (msi/Milliseconds.Per.Hour) | 0;
+		msi -= this.hour*Milliseconds.Per.Hour;
 
-		_.minute = (msi/Milliseconds.Per.Minute) | 0;
-		msi -= _.minute*Milliseconds.Per.Minute;
+		this.minute = (msi/Milliseconds.Per.Minute) | 0;
+		msi -= this.minute*Milliseconds.Per.Minute;
 
-		_.second = (msi/Milliseconds.Per.Second) | 0;
-		msi -= _.second*Milliseconds.Per.Second;
+		this.second = (msi/Milliseconds.Per.Second) | 0;
+		msi -= this.second*Milliseconds.Per.Second;
 
-		_.millisecond = msi;
+		this.millisecond = msi;
 
-		Object.freeze(_);
+		Object.freeze(this);
 	}
 
 

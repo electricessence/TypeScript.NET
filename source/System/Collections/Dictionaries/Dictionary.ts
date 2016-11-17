@@ -63,13 +63,11 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 	// Retains the order...
 	private readonly _entries:LinkedNodeList<IHashEntry<TKey, TValue>>;
 	private readonly _buckets:IMap<LinkedNodeList<IHashEntry<TKey, IHashEntry<TKey, TValue>>>>;
-	private readonly _keyGenerator:Selector<TKey,string|number|symbol>|undefined;
 
 	constructor(
-		keyGenerator?:Selector<TKey,string|number|symbol>)
+		private readonly _keyGenerator?:Selector<TKey,string|number|symbol>)
 	{
 		super();
-		this._keyGenerator = keyGenerator;
 		this._entries = linkedNodeList();
 		this._buckets = {};
 	}

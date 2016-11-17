@@ -14,13 +14,19 @@
     var bump = require('gulp-bump');
     var VERSION_BUMP_MINOR = 'version-bump-minor', VERSION_BUMP_PATCH = 'version-bump-patch';
     function bumpVersion(type) {
-        return file.json
-            .read('./package.json')
-            .then(function (pkg) {
-            var newVer = semver.inc(pkg.version, type);
-            return stream_to_promise_1.streamToPromise.toPromise(gulp.src(['./bower.json', './package.json'])
-                .pipe(bump({ version: newVer }))
-                .pipe(gulp.dest('./')));
+        return __awaiter(this, void 0, void 0, function () {
+            var pkg, newVer;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, file.json.read('./package.json')];
+                    case 1:
+                        pkg = _a.sent();
+                        newVer = semver.inc(pkg['version'], type);
+                        return [2 /*return*/, stream_to_promise_1.streamToPromise.toPromise(gulp.src(['./bower.json', './package.json'])
+                                .pipe(bump({ version: newVer }))
+                                .pipe(gulp.dest('./')))];
+                }
+            });
         });
     }
     gulp.task(VERSION_BUMP_PATCH, function () { return bumpVersion('patch'); });

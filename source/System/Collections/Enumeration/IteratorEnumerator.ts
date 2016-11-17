@@ -20,7 +20,9 @@ export class IteratorEnumerator<T> extends SimpleEnumerableBase<T>
 	 * @param _iterator
 	 * @param _isEndless true and false are explicit where as undefined means 'unknown'.
 	 */
-	constructor(private _iterator:IIterator<T>, private _isEndless?:boolean)
+	constructor(
+		private readonly _iterator:IIterator<T>,
+		private readonly _isEndless?:boolean)
 	{
 		super();
 	}

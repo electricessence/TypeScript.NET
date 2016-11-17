@@ -14,7 +14,7 @@ const __extends = __extendsImport;
  */
 export default class EventSimple<T extends Function> implements IDisposable
 {
-	private _listeners:T[] = [];
+	private readonly _listeners:T[] = [];
 
 	add(listener:T):void
 	{

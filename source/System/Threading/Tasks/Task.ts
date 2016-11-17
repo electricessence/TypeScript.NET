@@ -18,7 +18,7 @@ const __extends = __extendsImport;
  */
 export class Task<T> extends TaskHandlerBase
 {
-	private _result:Lazy<T>;
+	private readonly _result:Lazy<T>;
 
 	constructor(valueFactory:Func<T>)
 	{

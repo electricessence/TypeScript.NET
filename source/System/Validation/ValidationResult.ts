@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {IEquatable} from "../IEquatable";
 import {IValidationResult} from "./IValidationResult"; // For compatibility with (let, const, function, class);
 
@@ -14,17 +13,13 @@ const valid = new ValidationResult(true);
 export default
 class ValidationResult implements IValidationResult, IEquatable<IValidationResult>
 {
-	readonly isValid:boolean;
-	readonly message?:string;
-	readonly data:any;
-
 	/**
 	 * Allows for rare cases that ValidationResult.valid and ValidationResult.invalid() don't cover.
 	 */
 	constructor(
-		isValid:boolean = false,
-		message?:string,
-		data:any = null)
+		readonly isValid:boolean = false,
+		readonly message?:string,
+		readonly data:any = null)
 	{
 		this.isValid = isValid;
 		this.message = message;

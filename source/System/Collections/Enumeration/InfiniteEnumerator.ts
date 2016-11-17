@@ -25,7 +25,7 @@ export class InfiniteEnumerator<T> extends SimpleEnumerableBase<T>
 	 * See InfiniteValueFactory
 	 * @param _factory
 	 */
-	constructor(private _factory:InfiniteValueFactory<T>)
+	constructor(private readonly _factory:InfiniteValueFactory<T>)
 	{
 		super();
 	}

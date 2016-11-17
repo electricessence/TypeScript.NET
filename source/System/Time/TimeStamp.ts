@@ -2,7 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Type} from "../Types";
 import {ITimeStamp} from "./ITimeStamp";
 import {Ticks} from "./HowMany";
@@ -16,14 +15,14 @@ export class TimeStamp implements ITimeStamp, IDateTime
 {
 
 	constructor(
-		public year:number,
-		public month:Gregorian.Month,
-		public day:number = 1,
-		public hour:number = 0,
-		public minute:number = 0,
-		public second:number = 0,
-		public millisecond:number = 0,
-		public tick:number = 0)
+		public readonly year:number,
+		public readonly month:Gregorian.Month,
+		public readonly day:number = 1,
+		public readonly hour:number = 0,
+		public readonly minute:number = 0,
+		public readonly second:number = 0,
+		public readonly millisecond:number = 0,
+		public readonly tick:number = 0)
 	{
 
 		// TODO: Add validation or properly carry out of range values...

@@ -37,9 +37,9 @@
     }
     var Dictionary = (function (_super) {
         __extends(Dictionary, _super);
-        function Dictionary(keyGenerator) {
+        function Dictionary(_keyGenerator) {
             var _this = _super.call(this) || this;
-            _this._keyGenerator = keyGenerator;
+            _this._keyGenerator = _keyGenerator;
             _this._entries = linkedNodeList();
             _this._buckets = {};
             return _this;

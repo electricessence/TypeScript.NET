@@ -39,9 +39,9 @@
                         ticks: ms * 10000,
                         milliseconds: ms,
                         seconds: ms / 1000,
-                        minutes: ms / 60000,
-                        hours: ms / 3600000,
-                        days: ms / 86400000,
+                        minutes: ms / HowMany_1.Milliseconds.Per.Minute,
+                        hours: ms / HowMany_1.Milliseconds.Per.Hour,
+                        days: ms / HowMany_1.Milliseconds.Per.Day,
                     });
                 }
                 return t;

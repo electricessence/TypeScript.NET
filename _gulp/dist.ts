@@ -22,17 +22,14 @@ const fields:IMap<boolean> = {
 
 function getPackage(dist:string):PromiseLike<JsonMap>
 {
-	return File.json.read<JsonMap>('./package.json')
-		.then(pkg=>
-		{
-			for(let key of Object.keys(pkg))
-			{
-				if(!fields[key])
-					delete pkg[key];
-			}
-			pkg["name"] += "-" + dist;
-			return pkg;
-		});
+	let pkg = File.json.read<JsonMap>('./package.json');
+	for(let key of Object.keys(pkg))
+	{
+		if(!fields[key])
+			delete pkg[key];
+	}
+	pkg["name"] += "-" + dist;
+	return pkg;
 
 }
 

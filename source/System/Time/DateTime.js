@@ -15,22 +15,18 @@
             if (value === void 0) { value = new Date(); }
             if (kind === void 0) { kind = 1; }
             var _ = this;
-            _._kind = kind;
+            this._kind = kind;
             if (value instanceof DateTime)
-                _._value = value.toJsDate();
+                this._value = value.toJsDate();
             else if (value instanceof Date)
-                _._setJsDate(value);
+                this._value = new Date(value.getTime());
             else
-                _._value = value === void (0)
+                this._value = value === void (0)
                     ? new Date()
                     : new Date(value);
         }
         DateTime.prototype.toJsDate = function () {
             return new Date(this._value.getTime());
-        };
-        DateTime.prototype._setJsDate = function (value) {
-            this._time = null;
-            this._value = new Date(value.getTime());
         };
         Object.defineProperty(DateTime.prototype, "kind", {
             get: function () {
@@ -102,15 +98,15 @@
         };
         DateTime.prototype.addMinutes = function (minutes) {
             minutes = minutes || 0;
-            return this.addMilliseconds(minutes * 60000);
+            return this.addMilliseconds(minutes * HowMany_1.Milliseconds.Per.Minute);
         };
         DateTime.prototype.addHours = function (hours) {
             hours = hours || 0;
-            return this.addMilliseconds(hours * 3600000);
+            return this.addMilliseconds(hours * HowMany_1.Milliseconds.Per.Hour);
         };
         DateTime.prototype.addDays = function (days) {
             days = days || 0;
-            return this.addMilliseconds(days * 86400000);
+            return this.addMilliseconds(days * HowMany_1.Milliseconds.Per.Day);
         };
         DateTime.prototype.addMonths = function (months) {
             months = months || 0;
