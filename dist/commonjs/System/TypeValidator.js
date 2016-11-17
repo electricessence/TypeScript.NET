@@ -10,8 +10,7 @@ var __extends = extends_1.default;
 var TypeInfoHelper = (function (_super) {
     __extends(TypeInfoHelper, _super);
     function TypeInfoHelper(value) {
-        var _this = this;
-        _super.call(this, value, function () { return _this._value = value; });
+        return _super.call(this, value, function (self) { return self._value = value; }) || this;
     }
     TypeInfoHelper.prototype.contains = function (descriptor) {
         var value = this._value;

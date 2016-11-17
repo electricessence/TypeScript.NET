@@ -5,7 +5,7 @@ var __extends = extends_1.default;
 var ObservableBase = (function (_super) {
     __extends(ObservableBase, _super);
     function ObservableBase() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     ObservableBase.prototype._onNext = function (value) {
         processAction(this._getSubscribers(), function (s) { s.onNext && s.onNext(value); });

@@ -9,15 +9,17 @@ var TimeSpan = (function (_super) {
     __extends(TimeSpan, _super);
     function TimeSpan(value, units) {
         if (units === void 0) { units = TimeUnit_1.TimeUnit.Milliseconds; }
+        var _this;
         var ms = TimeUnit_1.TimeUnit.toMilliseconds(value, units);
-        _super.call(this, ms);
-        var _ = this;
+        _this = _super.call(this, ms) || this;
+        var _ = _this;
         _.ticks = ms * 10000;
         _.milliseconds = ms;
         _.seconds = ms / 1000;
         _.minutes = ms / 60000;
         _.hours = ms / 3600000;
         _.days = ms / 86400000;
+        return _this;
     }
     Object.defineProperty(TimeSpan.prototype, "total", {
         get: function () {

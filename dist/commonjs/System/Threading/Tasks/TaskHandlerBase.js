@@ -6,10 +6,11 @@ var NAME = "TaskHandlerBase";
 var TaskHandlerBase = (function (_super) {
     __extends(TaskHandlerBase, _super);
     function TaskHandlerBase() {
-        _super.call(this);
-        this._disposableObjectName = NAME;
-        this._timeoutId = null;
-        this._status = 0;
+        var _this = _super.call(this) || this;
+        _this._disposableObjectName = NAME;
+        _this._timeoutId = null;
+        _this._status = 0;
+        return _this;
     }
     Object.defineProperty(TaskHandlerBase.prototype, "isScheduled", {
         get: function () {

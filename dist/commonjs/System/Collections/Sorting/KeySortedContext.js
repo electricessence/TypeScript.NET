@@ -9,8 +9,9 @@ var KeySortedContext = (function (_super) {
     function KeySortedContext(next, _keySelector, order, comparer) {
         if (order === void 0) { order = 1; }
         if (comparer === void 0) { comparer = Values.compare; }
-        _super.call(this, next, comparer, order);
-        this._keySelector = _keySelector;
+        var _this = _super.call(this, next, comparer, order) || this;
+        _this._keySelector = _keySelector;
+        return _this;
     }
     KeySortedContext.prototype.compare = function (a, b) {
         var _ = this;

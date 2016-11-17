@@ -11,7 +11,7 @@ var __extends = extends_1.default;
 var ObservableNodeBase = (function (_super) {
     __extends(ObservableNodeBase, _super);
     function ObservableNodeBase() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     ObservableNodeBase.prototype.onNext = function (value) {
         this._onNext(value);

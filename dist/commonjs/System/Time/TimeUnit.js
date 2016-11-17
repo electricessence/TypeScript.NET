@@ -13,7 +13,6 @@
     TimeUnit[TimeUnit["Days"] = 5] = "Days";
 })(exports.TimeUnit || (exports.TimeUnit = {}));
 var TimeUnit = exports.TimeUnit;
-var TimeUnit;
 (function (TimeUnit) {
     function toMilliseconds(value, units) {
         if (units === void 0) { units = TimeUnit.Milliseconds; }

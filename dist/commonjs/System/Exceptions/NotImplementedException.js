@@ -11,7 +11,7 @@ var NAME = 'NotImplementedException';
 var NotImplementedException = (function (_super) {
     __extends(NotImplementedException, _super);
     function NotImplementedException() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     NotImplementedException.prototype.getName = function () {
         return NAME;

@@ -11,9 +11,10 @@ var Lazy = (function (_super) {
     function Lazy(valueFactory, trapExceptions, allowReset) {
         if (trapExceptions === void 0) { trapExceptions = false; }
         if (allowReset === void 0) { allowReset = false; }
-        _super.call(this, valueFactory, trapExceptions, allowReset);
-        this._disposableObjectName = 'Lazy';
-        this._isValueCreated = false;
+        var _this = _super.call(this, valueFactory, trapExceptions, allowReset) || this;
+        _this._disposableObjectName = 'Lazy';
+        _this._isValueCreated = false;
+        return _this;
     }
     Object.defineProperty(Lazy.prototype, "isValueCreated", {
         get: function () {
@@ -42,8 +43,9 @@ var ResettableLazy = (function (_super) {
     __extends(ResettableLazy, _super);
     function ResettableLazy(valueFactory, trapExceptions) {
         if (trapExceptions === void 0) { trapExceptions = false; }
-        _super.call(this, valueFactory, trapExceptions, true);
-        this._disposableObjectName = 'ResettableLazy';
+        var _this = _super.call(this, valueFactory, trapExceptions, true) || this;
+        _this._disposableObjectName = 'ResettableLazy';
+        return _this;
     }
     return ResettableLazy;
 }(Lazy));

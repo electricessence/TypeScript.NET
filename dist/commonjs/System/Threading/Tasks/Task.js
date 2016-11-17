@@ -7,10 +7,11 @@ var __extends = extends_1.default;
 var Task = (function (_super) {
     __extends(Task, _super);
     function Task(valueFactory) {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         if (!valueFactory)
             throw new ArgumentNullException_1.ArgumentNullException('valueFactory');
-        this._result = new Lazy_1.Lazy(valueFactory, false);
+        _this._result = new Lazy_1.Lazy(valueFactory, false);
+        return _this;
     }
     Task.prototype._onExecute = function () {
         this._result.getValue();

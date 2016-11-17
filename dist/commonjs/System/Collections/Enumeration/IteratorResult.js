@@ -11,7 +11,6 @@ var IteratorResult = (function () {
     return IteratorResult;
 }());
 exports.IteratorResult = IteratorResult;
-var IteratorResult;
 (function (IteratorResult) {
     IteratorResult.Done = new IteratorResult(VOID0, VOID0, true);
     function GetDone() { return IteratorResult.Done; }

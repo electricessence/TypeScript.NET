@@ -6,11 +6,11 @@ var ps = require("child_process");
 var NodeJSWorker = (function (_super) {
     __extends(NodeJSWorker, _super);
     function NodeJSWorker(url) {
-        var _this = this;
-        _super.call(this);
-        var process = this._process = ps.fork(url);
+        var _this = _super.call(this) || this;
+        var process = _this._process = ps.fork(url);
         process.on('message', function (msg) { return _this._onNext(JSON.parse(msg)); });
         process.on('error', function (err) { return _this._onError(err); });
+        return _this;
     }
     NodeJSWorker.prototype._onNext = function (data) {
         _super.prototype._onNext.call(this, data);

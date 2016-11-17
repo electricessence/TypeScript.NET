@@ -8,11 +8,12 @@ var VOID0 = void 0;
 var LazyPromise = (function (_super) {
     __extends(LazyPromise, _super);
     function LazyPromise(_resolver) {
-        _super.call(this);
-        this._resolver = _resolver;
+        var _this = _super.call(this) || this;
+        _this._resolver = _resolver;
         if (!_resolver)
             throw new ArgumentNullException_1.ArgumentNullException("resolver");
-        this._resolvedCalled = true;
+        _this._resolvedCalled = true;
+        return _this;
     }
     LazyPromise.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);

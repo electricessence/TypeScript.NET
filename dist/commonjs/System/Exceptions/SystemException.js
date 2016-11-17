@@ -11,7 +11,7 @@ var NAME = 'SystemException';
 var SystemException = (function (_super) {
     __extends(SystemException, _super);
     function SystemException() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     SystemException.prototype.getName = function () {
         return NAME;

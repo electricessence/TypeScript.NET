@@ -16,9 +16,10 @@ var NAME = "EventDispatcherBase";
 var EventDispatcherBase = (function (_super) {
     __extends(EventDispatcherBase, _super);
     function EventDispatcherBase() {
-        _super.call(this);
-        this._isDisposing = false;
-        this._disposableObjectName = NAME;
+        var _this = _super.call(this) || this;
+        _this._isDisposing = false;
+        _this._disposableObjectName = NAME;
+        return _this;
     }
     EventDispatcherBase.prototype.addEventListener = function (type, listener, priority) {
         if (priority === void 0) { priority = 0; }

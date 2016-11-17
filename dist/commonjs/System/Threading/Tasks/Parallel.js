@@ -40,13 +40,13 @@ function interact(w, onMessage, onError, message) {
 var WorkerPromise = (function (_super) {
     __extends(WorkerPromise, _super);
     function WorkerPromise(worker, data) {
-        _super.call(this, function (resolve, reject) {
+        return _super.call(this, function (resolve, reject) {
             interact(worker, function (response) {
                 resolve(response.data);
             }, function (e) {
                 reject(e);
             }, data);
-        }, true);
+        }, true) || this;
     }
     return WorkerPromise;
 }(Promise_1.Promise));
@@ -201,7 +201,7 @@ var Parallel = (function () {
             var taskString = task.toString();
             var maxConcurrency = this.ensureClampedMaxConcurrency(), error_1;
             var i_1 = 0;
-            var _loop_1 = function(w) {
+            var _loop_1 = function (w) {
                 var worker = this_1._spawnWorker(taskString, env);
                 if (!worker) {
                     if (!this_1.options.allowSynchronous)
@@ -243,7 +243,8 @@ var Parallel = (function () {
             var this_1 = this;
             for (var w = 0; !error_1 && i_1 < Math.min(len_1, maxConcurrency); w++) {
                 var state_1 = _loop_1(w);
-                if (typeof state_1 === "object") return state_1.value;
+                if (typeof state_1 === "object")
+                    return state_1.value;
             }
         }
         return new Promise_1.PromiseCollection(result);
@@ -267,7 +268,7 @@ var Parallel = (function () {
             var taskString = task.toString();
             var maxConcurrency = _this.ensureClampedMaxConcurrency(), error;
             var i = 0, resolved = 0;
-            var _loop_2 = function(w) {
+            var _loop_2 = function (w) {
                 var worker = _this._spawnWorker(taskString, env);
                 if (!worker) {
                     if (!_this.options.allowSynchronous)
@@ -313,7 +314,8 @@ var Parallel = (function () {
             };
             for (var w = 0; !error && i < Math.min(len, maxConcurrency); w++) {
                 var state_2 = _loop_2(w);
-                if (typeof state_2 === "object") return state_2.value;
+                if (typeof state_2 === "object")
+                    return state_2.value;
             }
         });
     };

@@ -7,9 +7,10 @@ var VOID0 = void 0;
 var StringKeyDictionary = (function (_super) {
     __extends(StringKeyDictionary, _super);
     function StringKeyDictionary() {
-        _super.apply(this, arguments);
-        this._count = 0;
-        this._map = {};
+        var _this = _super.apply(this, arguments) || this;
+        _this._count = 0;
+        _this._map = {};
+        return _this;
     }
     StringKeyDictionary.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);

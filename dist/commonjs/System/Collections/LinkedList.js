@@ -55,9 +55,10 @@ var LinkedList = (function (_super) {
     __extends(LinkedList, _super);
     function LinkedList(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        _super.call(this, VOID0, equalityComparer);
-        this._listInternal = new LinkedNodeList_1.LinkedNodeList();
-        this._importEntries(source);
+        var _this = _super.call(this, VOID0, equalityComparer) || this;
+        _this._listInternal = new LinkedNodeList_1.LinkedNodeList();
+        _this._importEntries(source);
+        return _this;
     }
     LinkedList.prototype.assertVersion = function (version) {
         if (this._listInternal)

@@ -10,12 +10,13 @@ var __extends = extends_1.default;
 var ReadOnlyCollectionWrapper = (function (_super) {
     __extends(ReadOnlyCollectionWrapper, _super);
     function ReadOnlyCollectionWrapper(c) {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         if (!c)
             throw new ArgumentNullException_1.ArgumentNullException('collection');
-        var _ = this;
+        var _ = _this;
         _._getCount = function () { return c.count; };
         _.getEnumerator = function () { return c.getEnumerator(); };
+        return _this;
     }
     return ReadOnlyCollectionWrapper;
 }(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase));

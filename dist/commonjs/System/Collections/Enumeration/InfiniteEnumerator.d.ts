@@ -3,7 +3,7 @@ export interface InfiniteValueFactory<T> {
     (previous?: T, index?: number): T;
 }
 export declare class InfiniteEnumerator<T> extends SimpleEnumerableBase<T> {
-    private _factory;
+    private readonly _factory;
     constructor(_factory: InfiniteValueFactory<T>);
     protected _canMoveNext(): boolean;
     moveNext(): boolean;

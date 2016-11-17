@@ -8,7 +8,7 @@ var ArrayEnumerator = (function (_super) {
     function ArrayEnumerator(arrayOrFactory, start, step) {
         if (start === void 0) { start = 0; }
         if (step === void 0) { step = 1; }
-        _super.call(this, function () {
+        return _super.call(this, function () {
             var array = Types_1.Type.isFunction(arrayOrFactory) ? arrayOrFactory() : arrayOrFactory;
             return {
                 source: array,
@@ -16,7 +16,7 @@ var ArrayEnumerator = (function (_super) {
                 length: array ? array.length : 0,
                 step: step
             };
-        });
+        }) || this;
     }
     return ArrayEnumerator;
 }(IndexEnumerator_1.IndexEnumerator));

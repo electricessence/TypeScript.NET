@@ -8,7 +8,6 @@ function dispose() {
     disposeTheseInternal(disposables, false);
 }
 exports.dispose = dispose;
-var dispose;
 (function (dispose) {
     function deferred() {
         var disposables = [];
@@ -32,7 +31,6 @@ var dispose;
             : void 0;
     }
     dispose.these = these;
-    var these;
     (function (these) {
         function deferred(disposables, delay) {
             if (delay === void 0) { delay = 0; }

@@ -11,7 +11,7 @@ var NAME = 'NullReferenceException';
 var NullReferenceException = (function (_super) {
     __extends(NullReferenceException, _super);
     function NullReferenceException() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     NullReferenceException.prototype.getName = function () {
         return NAME;

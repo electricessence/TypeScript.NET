@@ -29,11 +29,12 @@ function linkedNodeList(recycle) {
 }
 var Dictionary = (function (_super) {
     __extends(Dictionary, _super);
-    function Dictionary(keyGenerator) {
-        _super.call(this);
-        this._keyGenerator = keyGenerator;
-        this._entries = linkedNodeList();
-        this._buckets = {};
+    function Dictionary(_keyGenerator) {
+        var _this = _super.call(this) || this;
+        _this._keyGenerator = _keyGenerator;
+        _this._entries = linkedNodeList();
+        _this._buckets = {};
+        return _this;
     }
     Dictionary.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);

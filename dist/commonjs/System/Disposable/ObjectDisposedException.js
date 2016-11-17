@@ -6,9 +6,9 @@ var NAME = 'ObjectDisposedException';
 var ObjectDisposedException = (function (_super) {
     __extends(ObjectDisposedException, _super);
     function ObjectDisposedException(objectName, message, innerException) {
-        _super.call(this, message || '', innerException, function (_) {
+        return _super.call(this, message || '', innerException, function (_) {
             _.objectName = objectName;
-        });
+        }) || this;
     }
     ObjectDisposedException.prototype.getName = function () {
         return NAME;

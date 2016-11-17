@@ -9,8 +9,9 @@ var NAME = "SubscribableBase";
 var SubscribableBase = (function (_super) {
     __extends(SubscribableBase, _super);
     function SubscribableBase() {
-        _super.call(this);
-        this._disposableObjectName = NAME;
+        var _this = _super.call(this) || this;
+        _this._disposableObjectName = NAME;
+        return _this;
     }
     SubscribableBase.prototype._getSubscribers = function () {
         var s = this.__subscriptions;

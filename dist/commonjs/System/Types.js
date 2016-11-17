@@ -57,7 +57,7 @@ var TypeInfo = (function () {
                 throw "Fatal type failure.  Unknown type: " + this.type;
         }
         if (onBeforeFreeze)
-            onBeforeFreeze();
+            onBeforeFreeze(this);
         Object.freeze(this);
     }
     TypeInfo.prototype.member = function (name) {

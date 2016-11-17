@@ -52,17 +52,18 @@ var NAME = "EnumeratorBase";
 var EnumeratorBase = (function (_super) {
     __extends(EnumeratorBase, _super);
     function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
-        _super.call(this);
-        this._initializer = _initializer;
-        this._tryGetNext = _tryGetNext;
-        this._disposableObjectName = NAME;
-        this.reset();
+        var _this = _super.call(this) || this;
+        _this._initializer = _initializer;
+        _this._tryGetNext = _tryGetNext;
+        _this._disposableObjectName = NAME;
+        _this.reset();
         if (Types_1.Type.isBoolean(isEndless))
-            this._isEndless = isEndless;
+            _this._isEndless = isEndless;
         else if (Types_1.Type.isBoolean(disposer))
-            this._isEndless = disposer;
+            _this._isEndless = disposer;
         if (Types_1.Type.isFunction(disposer))
-            this._disposer = disposer;
+            _this._disposer = disposer;
+        return _this;
     }
     Object.defineProperty(EnumeratorBase.prototype, "current", {
         get: function () {

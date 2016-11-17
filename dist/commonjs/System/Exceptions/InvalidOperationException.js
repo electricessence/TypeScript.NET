@@ -11,7 +11,7 @@ var NAME = 'InvalidOperationException';
 var InvalidOperationException = (function (_super) {
     __extends(InvalidOperationException, _super);
     function InvalidOperationException() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     InvalidOperationException.prototype.getName = function () {
         return NAME;

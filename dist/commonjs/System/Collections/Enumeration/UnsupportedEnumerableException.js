@@ -11,7 +11,7 @@ var NAME = 'UnsupportedEnumerableException';
 var UnsupportedEnumerableException = (function (_super) {
     __extends(UnsupportedEnumerableException, _super);
     function UnsupportedEnumerableException(message) {
-        _super.call(this, message || "Unsupported enumerable.");
+        return _super.call(this, message || "Unsupported enumerable.") || this;
     }
     UnsupportedEnumerableException.prototype.getName = function () {
         return NAME;

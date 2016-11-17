@@ -9,12 +9,13 @@ var NAME = 'HttpRequestFactory';
 var HttpRequestFactory = (function (_super) {
     __extends(HttpRequestFactory, _super);
     function HttpRequestFactory(_http, uriDefaults) {
-        _super.call(this);
-        this._http = _http;
-        this._disposableObjectName = NAME;
+        var _this = _super.call(this) || this;
+        _this._http = _http;
+        _this._disposableObjectName = NAME;
         if (!_http)
             throw new ArgumentNullException_1.ArgumentNullException('_http');
-        this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+        _this._uriDefaults = Uri_1.Uri.from(uriDefaults);
+        return _this;
     }
     HttpRequestFactory.prototype._onDispose = function () {
         this._http = null;

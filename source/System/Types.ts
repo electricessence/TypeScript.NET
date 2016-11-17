@@ -44,7 +44,7 @@ export class TypeInfo
 	readonly isPrimitive:boolean;
 	readonly isSymbol:boolean;
 
-	constructor(target:any, onBeforeFreeze?:()=>void)
+	constructor(target:any, onBeforeFreeze?:(instance:any)=>void)
 	{
 		this.isBoolean = false;
 		this.isNumber = false;
@@ -104,7 +104,7 @@ export class TypeInfo
 				throw "Fatal type failure.  Unknown type: " + this.type;
 		}
 
-		if(onBeforeFreeze) onBeforeFreeze();
+		if(onBeforeFreeze) onBeforeFreeze(this);
 		Object.freeze(this);
 
 	}

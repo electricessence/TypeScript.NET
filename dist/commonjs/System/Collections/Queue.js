@@ -20,8 +20,8 @@ var Queue = (function (_super) {
     __extends(Queue, _super);
     function Queue(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        _super.call(this, VOID0, equalityComparer);
-        var _ = this;
+        var _this = _super.call(this, VOID0, equalityComparer) || this;
+        var _ = _this;
         _._head = 0;
         _._tail = 0;
         _._size = 0;
@@ -44,6 +44,7 @@ var Queue = (function (_super) {
             }
         }
         _._capacity = _._array.length;
+        return _this;
     }
     Queue.prototype.getCount = function () {
         return this._size;

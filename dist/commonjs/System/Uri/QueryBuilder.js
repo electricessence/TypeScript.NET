@@ -9,8 +9,9 @@ var QueryBuilder = (function (_super) {
     __extends(QueryBuilder, _super);
     function QueryBuilder(query, decodeValues) {
         if (decodeValues === void 0) { decodeValues = true; }
-        _super.call(this);
-        this.importQuery(query, decodeValues);
+        var _this = _super.call(this) || this;
+        _this.importQuery(query, decodeValues);
+        return _this;
     }
     QueryBuilder.init = function (query, decodeValues) {
         if (decodeValues === void 0) { decodeValues = true; }

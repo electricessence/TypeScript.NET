@@ -13,7 +13,7 @@ var VOID0 = void 0;
 var DictionaryBase = (function (_super) {
     __extends(DictionaryBase, _super);
     function DictionaryBase(source) {
-        _super.call(this, source);
+        return _super.call(this, source) || this;
     }
     DictionaryBase.prototype._onValueModified = function (key, value, old) {
     };

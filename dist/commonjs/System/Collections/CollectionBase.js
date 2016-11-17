@@ -13,14 +13,15 @@ var CollectionBase = (function (_super) {
     __extends(CollectionBase, _super);
     function CollectionBase(source, _equalityComparer) {
         if (_equalityComparer === void 0) { _equalityComparer = Compare_1.areEqual; }
-        _super.call(this);
-        this._equalityComparer = _equalityComparer;
-        var _ = this;
+        var _this = _super.call(this) || this;
+        _this._equalityComparer = _equalityComparer;
+        var _ = _this;
         _._disposableObjectName = NAME;
         _._importEntries(source);
         _._updateRecursion = 0;
         _._modifiedCount = 0;
         _._version = 0;
+        return _this;
     }
     Object.defineProperty(CollectionBase.prototype, "count", {
         get: function () {
@@ -107,7 +108,7 @@ var CollectionBase = (function (_super) {
         var _ = this;
         _.assertModifiable();
         _._updateRecursion++;
-        var n;
+        var n = NaN;
         try {
             if (n = _._removeInternal(entry, max))
                 _._modifiedCount++;
@@ -122,7 +123,7 @@ var CollectionBase = (function (_super) {
         var _ = this;
         _.assertModifiable();
         _._updateRecursion++;
-        var n;
+        var n = NaN;
         try {
             if (n = _._clearInternal())
                 _._modifiedCount++;
@@ -179,7 +180,7 @@ var CollectionBase = (function (_super) {
             _._updateRecursion--;
         }
         _._signalModification();
-        return n;
+        return n = NaN;
     };
     CollectionBase.prototype.contains = function (entry) {
         if (!this.getCount())

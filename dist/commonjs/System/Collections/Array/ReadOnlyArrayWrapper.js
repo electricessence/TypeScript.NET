@@ -11,13 +11,14 @@ var __extends = extends_1.default;
 var ReadOnlyArrayWrapper = (function (_super) {
     __extends(ReadOnlyArrayWrapper, _super);
     function ReadOnlyArrayWrapper(array) {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         if (!array)
             throw new ArgumentNullException_1.ArgumentNullException('array');
-        var _ = this;
+        var _ = _this;
         _._getCount = function () { return array.length; };
         _.getEnumerator = function () { return Enumerator_1.from(array); };
         _.getValueAt = function (i) { return array[i]; };
+        return _this;
     }
     return ReadOnlyArrayWrapper;
 }(ReadOnlyCollectionBase_1.ReadOnlyCollectionBase));

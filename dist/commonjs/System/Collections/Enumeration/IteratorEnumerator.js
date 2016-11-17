@@ -5,9 +5,10 @@ var __extends = extends_1.default;
 var IteratorEnumerator = (function (_super) {
     __extends(IteratorEnumerator, _super);
     function IteratorEnumerator(_iterator, _isEndless) {
-        _super.call(this);
-        this._iterator = _iterator;
-        this._isEndless = _isEndless;
+        var _this = _super.call(this) || this;
+        _this._iterator = _iterator;
+        _this._isEndless = _isEndless;
+        return _this;
     }
     IteratorEnumerator.prototype._canMoveNext = function () {
         return this._iterator != null;

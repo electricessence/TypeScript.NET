@@ -10,7 +10,7 @@ function getId(obj) {
 var Set = (function (_super) {
     __extends(Set, _super);
     function Set(source) {
-        _super.call(this, source, getId);
+        return _super.call(this, source, getId) || this;
     }
     return Set;
 }(HashSet_1.HashSet));

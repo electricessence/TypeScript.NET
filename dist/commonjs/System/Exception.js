@@ -2,9 +2,9 @@
 var NAME = 'Exception';
 var Exception = (function () {
     function Exception(message, innerException, beforeSealing) {
+        this.message = message;
         var _ = this;
         this.name = _.getName();
-        this.message = message;
         this.data = {};
         if (innerException)
             _.data['innerException'] = innerException;

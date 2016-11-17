@@ -7,22 +7,18 @@ var DateTime = (function () {
         if (value === void 0) { value = new Date(); }
         if (kind === void 0) { kind = 1; }
         var _ = this;
-        _._kind = kind;
+        this._kind = kind;
         if (value instanceof DateTime)
-            _._value = value.toJsDate();
+            this._value = value.toJsDate();
         else if (value instanceof Date)
-            _._setJsDate(value);
+            this._value = new Date(value.getTime());
         else
-            _._value = value === void (0)
+            this._value = value === void (0)
                 ? new Date()
                 : new Date(value);
     }
     DateTime.prototype.toJsDate = function () {
         return new Date(this._value.getTime());
-    };
-    DateTime.prototype._setJsDate = function (value) {
-        this._time = null;
-        this._value = new Date(value.getTime());
     };
     Object.defineProperty(DateTime.prototype, "kind", {
         get: function () {

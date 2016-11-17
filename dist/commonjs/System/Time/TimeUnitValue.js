@@ -10,11 +10,12 @@ var __extends = extends_1.default;
 var TimeUnitValue = (function (_super) {
     __extends(TimeUnitValue, _super);
     function TimeUnitValue(value, _units) {
-        _super.call(this, typeof (value) == 'number'
+        var _this = _super.call(this, typeof (value) == 'number'
             ? value
-            : getUnitQuantityFrom(value, _units));
-        this._units = _units;
+            : getUnitQuantityFrom(value, _units)) || this;
+        _this._units = _units;
         TimeUnit_1.TimeUnit.assertValid(_units);
+        return _this;
     }
     Object.defineProperty(TimeUnitValue.prototype, "value", {
         get: function () {

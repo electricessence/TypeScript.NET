@@ -1,7 +1,7 @@
 import { Regex, Match } from "./RegularExpressions";
 import { IEnumerator } from "../Collections/Enumeration/IEnumerator";
 export declare class RegexMatchEnumerator {
-    private _pattern;
+    private readonly _pattern;
     constructor(pattern: string | RegExp | Regex);
     matches(input: string): IEnumerator<Match>;
     static matches(input: string, pattern: string | RegExp | Regex): IEnumerator<Match>;

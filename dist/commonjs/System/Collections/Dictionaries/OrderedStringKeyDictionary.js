@@ -8,8 +8,9 @@ var VOID0 = void 0;
 var OrderedStringKeyDictionary = (function (_super) {
     __extends(OrderedStringKeyDictionary, _super);
     function OrderedStringKeyDictionary() {
-        _super.call(this);
-        this._order = [];
+        var _this = _super.call(this) || this;
+        _this._order = [];
+        return _this;
     }
     OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
         var o = this._order;

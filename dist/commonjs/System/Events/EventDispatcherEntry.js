@@ -10,19 +10,20 @@ var NAME = "EventDispatcherEntry";
 var EventDispatcherEntry = (function (_super) {
     __extends(EventDispatcherEntry, _super);
     function EventDispatcherEntry(type, listener, params, finalizer) {
-        _super.call(this, finalizer);
-        this.type = type;
-        this.listener = listener;
-        this.params = params;
+        var _this = _super.call(this, finalizer) || this;
+        _this.type = type;
+        _this.listener = listener;
+        _this.params = params;
         if (!listener)
             throw new ArgumentNullException_1.ArgumentNullException('listener');
         if (Types_1.Type.isObject(listener) && !Types_1.Type.hasMemberOfType(listener, "handleEvent", Types_1.Type.FUNCTION))
             throw new ArgumentException_1.ArgumentException('listener', "is invalid type.  Must be a function or an object with 'handleEvent'.");
-        var _ = this;
+        var _ = _this;
         _.type = type;
         _.listener = listener;
         _.params = params;
         _._disposableObjectName = NAME;
+        return _this;
     }
     EventDispatcherEntry.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);

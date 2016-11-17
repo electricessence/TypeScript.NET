@@ -14,7 +14,6 @@ var Functions = (function () {
 }());
 exports.Functions = Functions;
 var rootFunctions = new Functions();
-var Functions;
 (function (Functions) {
     Functions.Identity = rootFunctions.Identity;
     Functions.True = rootFunctions.True;

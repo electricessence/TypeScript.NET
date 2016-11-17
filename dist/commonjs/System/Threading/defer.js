@@ -12,10 +12,11 @@ var DeferBase = (function () {
 var Defer = (function (_super) {
     __extends(Defer, _super);
     function Defer(task, delay, payload) {
-        _super.call(this);
+        var _this = _super.call(this) || this;
         if (!(delay > 0))
             delay = 0;
-        this._id = setTimeout(Defer.handler, delay, task, this, payload);
+        _this._id = setTimeout(Defer.handler, delay, task, _this, payload);
+        return _this;
     }
     Defer.prototype.cancel = function () {
         var id = this._id;
@@ -36,13 +37,14 @@ var DeferInterval = (function (_super) {
     __extends(DeferInterval, _super);
     function DeferInterval(task, interval, _remaining) {
         if (_remaining === void 0) { _remaining = Infinity; }
-        _super.call(this);
-        this._remaining = _remaining;
+        var _this = _super.call(this) || this;
+        _this._remaining = _remaining;
         if (interval === null || interval === void (0))
             throw "'interval' must be a valid number.";
         if (interval < 0)
             throw "'interval' cannot be negative.";
-        this._id = setInterval(DeferInterval.handler, interval, task, this);
+        _this._id = setInterval(DeferInterval.handler, interval, task, _this);
+        return _this;
     }
     DeferInterval.prototype.cancel = function () {
         var id = this._id;

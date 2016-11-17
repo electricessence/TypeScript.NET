@@ -1,8 +1,8 @@
 import { IIteratorResult } from "./IIterator";
 export declare class IteratorResult<T> implements IIteratorResult<T> {
-    value: T;
-    index: number;
-    done: boolean;
+    readonly value: T;
+    readonly index: number;
+    readonly done: boolean;
     constructor(value: T, index?: number, done?: boolean);
 }
 export declare module IteratorResult {

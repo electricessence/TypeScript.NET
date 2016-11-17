@@ -12,9 +12,9 @@ var ArgumentOutOfRangeException = (function (_super) {
     __extends(ArgumentOutOfRangeException, _super);
     function ArgumentOutOfRangeException(paramName, actualValue, message, innerException) {
         if (message === void 0) { message = ' '; }
-        _super.call(this, paramName, +("(" + actualValue + ") ") + message, innerException, function (_) {
+        return _super.call(this, paramName, +("(" + actualValue + ") ") + message, innerException, function (_) {
             _.actualValue = actualValue;
-        });
+        }) || this;
     }
     ArgumentOutOfRangeException.prototype.getName = function () {
         return NAME;

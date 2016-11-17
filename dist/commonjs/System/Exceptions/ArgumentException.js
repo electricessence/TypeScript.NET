@@ -7,12 +7,14 @@ var NAME = 'ArgumentException';
 var ArgumentException = (function (_super) {
     __extends(ArgumentException, _super);
     function ArgumentException(paramName, message, innerException, beforeSealing) {
+        var _this;
         var pn = paramName ? ('{' + paramName + '} ') : '';
-        _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
+        _this = _super.call(this, Utility_1.trim(pn + (message || '')), innerException, function (_) {
             _.paramName = paramName;
             if (beforeSealing)
                 beforeSealing(_);
-        });
+        }) || this;
+        return _this;
     }
     ArgumentException.prototype.getName = function () {
         return NAME;

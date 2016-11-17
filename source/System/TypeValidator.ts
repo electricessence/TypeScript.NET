@@ -30,8 +30,7 @@ export class TypeInfoHelper extends TypeInfo
 
 	constructor(value:any)
 	{
-		super(value, ()=>this._value = value);
-
+		super(value, self=>self._value = value);
 	}
 
 	contains<TDescriptor>(descriptor:any):this is TDescriptor

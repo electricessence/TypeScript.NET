@@ -23,7 +23,7 @@ function flush() {
 }
 var immediateQueue = new LinkedNodeList_1.LinkedNodeList();
 var laterQueue = new Queue_1.Queue();
-var entryPool = new ObjectPool_1.ObjectPool(40, function () { return {}; }, function (o) {
+var entryPool = new ObjectPool_1.ObjectPool(40, function () { return ({}); }, function (o) {
     o.task = null;
     o.domain = null;
     o.context = null;

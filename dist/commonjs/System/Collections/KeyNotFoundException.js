@@ -11,7 +11,7 @@ var NAME = 'KeyNotFoundException ';
 var KeyNotFoundException = (function (_super) {
     __extends(KeyNotFoundException, _super);
     function KeyNotFoundException() {
-        _super.apply(this, arguments);
+        return _super.apply(this, arguments) || this;
     }
     KeyNotFoundException.prototype.getName = function () {
         return NAME;

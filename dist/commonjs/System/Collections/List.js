@@ -12,14 +12,15 @@ var List = (function (_super) {
     __extends(List, _super);
     function List(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
-        _super.call(this, VOID0, equalityComparer);
+        var _this = _super.call(this, VOID0, equalityComparer) || this;
         if (Array.isArray(source)) {
-            this._source = source.slice();
+            _this._source = source.slice();
         }
         else {
-            this._source = [];
-            this._importEntries(source);
+            _this._source = [];
+            _this._importEntries(source);
         }
+        return _this;
     }
     List.prototype._onDispose = function () {
         _super.prototype._onDispose.call(this);

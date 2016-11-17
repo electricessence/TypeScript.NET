@@ -5,8 +5,9 @@ var __extends = extends_1.default;
 var InfiniteEnumerator = (function (_super) {
     __extends(InfiniteEnumerator, _super);
     function InfiniteEnumerator(_factory) {
-        _super.call(this);
-        this._factory = _factory;
+        var _this = _super.call(this) || this;
+        _this._factory = _factory;
+        return _this;
     }
     InfiniteEnumerator.prototype._canMoveNext = function () {
         return this._factory != null;

@@ -9,23 +9,23 @@ var ClockTime = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i - 0] = arguments[_i];
         }
-        _super.call(this, args.length > 1
+        var _this = _super.call(this, args.length > 1
             ? ClockTime.millisecondsFromTime(args[0] || 0, args[1] || 0, args.length > 2 && args[2] || 0, args.length > 3 && args[3] || 0)
-            : (args.length > 0 && args[0] || 0));
-        var _ = this;
-        var ms = Math.abs(_.getTotalMilliseconds());
+            : (args.length > 0 && args[0] || 0)) || this;
+        var ms = Math.abs(_this.getTotalMilliseconds());
         var msi = Math.floor(ms);
-        _.tick = (ms - msi) * 10000;
-        _.days = (msi / 86400000) | 0;
-        msi -= _.days * 86400000;
-        _.hour = (msi / 3600000) | 0;
-        msi -= _.hour * 3600000;
-        _.minute = (msi / 60000) | 0;
-        msi -= _.minute * 60000;
-        _.second = (msi / 1000) | 0;
-        msi -= _.second * 1000;
-        _.millisecond = msi;
-        Object.freeze(_);
+        _this.tick = (ms - msi) * 10000;
+        _this.days = (msi / 86400000) | 0;
+        msi -= _this.days * 86400000;
+        _this.hour = (msi / 3600000) | 0;
+        msi -= _this.hour * 3600000;
+        _this.minute = (msi / 60000) | 0;
+        msi -= _this.minute * 60000;
+        _this.second = (msi / 1000) | 0;
+        msi -= _this.second * 1000;
+        _this.millisecond = msi;
+        Object.freeze(_this);
+        return _this;
     }
     ClockTime.from = function (hours, minutes, seconds, milliseconds) {
         if (seconds === void 0) { seconds = 0; }

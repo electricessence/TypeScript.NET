@@ -162,7 +162,7 @@ var Group = (function (_super) {
     function Group(value, index) {
         if (value === void 0) { value = EMPTY; }
         if (index === void 0) { index = -1; }
-        _super.call(this, value, index);
+        return _super.call(this, value, index) || this;
     }
     Object.defineProperty(Group.prototype, "success", {
         get: function () {
@@ -190,16 +190,17 @@ var Match = (function (_super) {
         if (index === void 0) { index = -1; }
         if (groups === void 0) { groups = []; }
         if (namedGroups === void 0) { namedGroups = {}; }
-        _super.call(this, value, index);
-        this.groups = groups;
-        this.namedGroups = namedGroups;
+        var _this = _super.call(this, value, index) || this;
+        _this.groups = groups;
+        _this.namedGroups = namedGroups;
+        return _this;
     }
     Match.prototype.freeze = function () {
         if (!this.groups)
             throw new Error("'groups' cannot be null.");
         if (!this.namedGroups)
             throw new Error("'groupMap' cannot be null.");
-        Object.freeze(this.groups.slice());
+        Object.freeze(this.groups);
         Object.freeze(this.namedGroups);
         _super.prototype.freeze.call(this);
     };

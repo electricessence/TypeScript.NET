@@ -13,8 +13,9 @@ var OTHER = 'other';
 var SetBase = (function (_super) {
     __extends(SetBase, _super);
     function SetBase(source) {
-        _super.call(this, VOID0, Compare_1.areEqual);
-        this._importEntries(source);
+        var _this = _super.call(this, VOID0, Compare_1.areEqual) || this;
+        _this._importEntries(source);
+        return _this;
     }
     SetBase.prototype._getSet = function () {
         var s = this._set;

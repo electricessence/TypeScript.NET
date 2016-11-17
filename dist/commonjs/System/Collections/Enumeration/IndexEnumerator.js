@@ -5,8 +5,9 @@ var __extends = extends_1.default;
 var IndexEnumerator = (function (_super) {
     __extends(IndexEnumerator, _super);
     function IndexEnumerator(sourceFactory) {
+        var _this;
         var source;
-        _super.call(this, function () {
+        _this = _super.call(this, function () {
             source = sourceFactory();
             if (source && source.source) {
                 var len = source.length;
@@ -42,8 +43,9 @@ var IndexEnumerator = (function (_super) {
             if (source) {
                 source.source = null;
             }
-        });
-        this._isEndless = false;
+        }) || this;
+        _this._isEndless = false;
+        return _this;
     }
     return IndexEnumerator;
 }(EnumeratorBase_1.EnumeratorBase));
