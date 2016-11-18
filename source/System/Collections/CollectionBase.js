@@ -52,10 +52,12 @@
             this.throwIfDisposed(CMDC);
             if (this.getIsReadOnly())
                 throw new InvalidOperationException_1.InvalidOperationException(CMRO);
+            return true;
         };
         CollectionBase.prototype.assertVersion = function (version) {
             if (version !== this._version)
                 throw new InvalidOperationException_1.InvalidOperationException("Collection was modified.");
+            return true;
         };
         CollectionBase.prototype._onModified = function () { };
         CollectionBase.prototype._signalModification = function (increment) {
@@ -179,7 +181,7 @@
                 return 0;
             _.assertModifiable();
             _._updateRecursion++;
-            var n;
+            var n = NaN;
             try {
                 if (n = _._importEntries(entries))
                     _._modifiedCount++;
@@ -188,15 +190,37 @@
                 _._updateRecursion--;
             }
             _._signalModification();
-            return n = NaN;
+            return n;
+        };
+        CollectionBase.prototype.filter = function (predicate) {
+            if (!predicate)
+                throw new ArgumentNullException_1.ArgumentNullException('predicate');
+            var count = !this.getCount();
+            var result = [];
+            if (count) {
+                this.forEach(function (e, i) {
+                    if (predicate(e, i))
+                        result.push(e);
+                });
+            }
+            return result;
+        };
+        CollectionBase.prototype.any = function (predicate) {
+            var count = this.getCount();
+            if (!count)
+                return false;
+            if (!predicate)
+                return Boolean(count);
+            var found = false;
+            this.forEach(function (e, i) { return !(found = predicate(e, i)); });
+            return found;
+        };
+        CollectionBase.prototype.some = function (predicate) {
+            return this.any(predicate);
         };
         CollectionBase.prototype.contains = function (entry) {
-            if (!this.getCount())
-                return false;
-            var found = false;
             var equals = this._equalityComparer;
-            this.forEach(function (e) { return !(found = equals(entry, e)); });
-            return found;
+            return this.any(function (e) { return equals(entry, e); });
         };
         CollectionBase.prototype.forEach = function (action, useCopy) {
             if (this.wasDisposed)

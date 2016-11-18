@@ -12,7 +12,7 @@ import {IComparable} from "../../IComparable";
 /*  validateSize: Utility for quick validation/invalidation of array equality.
 	Why this way?  Why not pass a closure for the last return?
 	Reason: Performance and avoiding the creation of new functions/closures. */
-function validateSize(a:IArray<any>, b:IArray<any>):any
+function validateSize(a:IArray<any>, b:IArray<any>):boolean|number
 {
 	// Both valid and are same object, or both are null/undefined.
 	if(a && b && a===b || !a && !b)
@@ -36,13 +36,26 @@ function validateSize(a:IArray<any>, b:IArray<any>):any
 
 export function areAllEqual(
 	arrays:any[][],
-	strict?:boolean,
+	equalityComparer?:EqualityComparison<any>):boolean
+export function areAllEqual(
+	arrays:any[][],
+	strict:boolean,
+	equalityComparer?:EqualityComparison<any>):boolean
+export function areAllEqual(
+	arrays:any[][],
+	strict:boolean|EqualityComparison<any> = true,
 	equalityComparer:EqualityComparison<any> = Values.areEqual):boolean
 {
 	if(!arrays)
 		throw new Error("ArgumentNullException: 'arrays' cannot be null.");
 	if(arrays.length<2)
 		throw new Error("Cannot compare a set of arrays less than 2.");
+
+	if(Type.isFunction(strict)) {
+		equalityComparer = strict;
+		strict = true;
+	}
+
 	const first = arrays[0];
 	for(let i = 0, l = arrays.length; i<l; i++)
 	{
@@ -52,13 +65,31 @@ export function areAllEqual(
 	return true;
 }
 
+/**
+ * Compares two arrays for equality.
+ * @param a
+ * @param b
+ * @param equalityComparer
+ */
 export function areEqual<T>(
 	a:IArray<T>, b:IArray<T>,
-	strict?:boolean,
+	equalityComparer?:EqualityComparison<T>):boolean
+export function areEqual<T>(
+	a:IArray<T>, b:IArray<T>,
+	strict:boolean,
+	equalityComparer?:EqualityComparison<T>):boolean
+export function areEqual<T>(
+	a:IArray<T>, b:IArray<T>,
+	strict:boolean|EqualityComparison<T> = true,
 	equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 {
 	const len = validateSize(a, b);
 	if(Type.isBoolean(len)) return <boolean>len;
+
+	if(Type.isFunction(strict)) {
+		equalityComparer = strict;
+		strict = true;
+	}
 
 	for(let i = 0; i<len; i++)
 	{

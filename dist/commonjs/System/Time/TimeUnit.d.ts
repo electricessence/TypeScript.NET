@@ -16,6 +16,6 @@ export declare module TimeUnit {
     function toMilliseconds(value: number, units?: TimeUnit): number;
     function fromMilliseconds(ms: number, units: TimeUnit): number;
     function from(quantity: ITimeQuantity, unit: TimeUnit): number;
-    function assertValid(unit: TimeUnit): boolean;
+    function assertValid(unit: TimeUnit): true | never;
 }
 export default TimeUnit;

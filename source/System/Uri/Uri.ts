@@ -128,14 +128,22 @@ export class Uri implements IUri, IEquatable<IUri>
 	}
 
 
+	/**
+	 * Parses a URL into it's components.
+	 * @param url The url to parse.
+	 * @returns {IUri} Will throw an exception if not able to parse.
+	 */
 	static parse(url:string):IUri
-	static parse(url:string, throwIfInvalid:boolean):IUri|null
+
+	static parse(url:string, throwIfInvalid:true):IUri
+
 	/**
 	 * Parses a URL into it's components.
 	 * @param url The url to parse.
 	 * @param throwIfInvalid Defaults to true.
 	 * @returns {IUri} Returns a map of the values or *null* if invalid and *throwIfInvalid* is <b>false</b>.
 	 */
+	static parse(url:string, throwIfInvalid:boolean):IUri|null
 	static parse(url:string, throwIfInvalid:boolean = true):IUri|null
 	{
 		let result:IUri|null = null;

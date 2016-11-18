@@ -3,7 +3,6 @@
  * Originally based upon .NET source but with many additions and improvements.
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Hours, Minutes, Seconds, Milliseconds, Ticks} from "./HowMany";
 import {ITimeQuantity} from "./ITimeQuantity";
 
@@ -73,7 +72,7 @@ export module TimeUnit
 	}
 
 
-	export function assertValid(unit:TimeUnit):boolean
+	export function assertValid(unit:TimeUnit):true|never
 	{
 		if(isNaN(unit) || unit>TimeUnit.Days || unit<TimeUnit.Ticks || Math.floor(unit)!==unit)
 			throw new Error("Invalid TimeUnit.");

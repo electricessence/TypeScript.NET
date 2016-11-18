@@ -108,15 +108,15 @@
             if (isFinite(max)) {
                 Integer_1.Integer.assertZeroOrGreater(max);
                 if (max !== 0) {
-                    while (max-- && _._size) {
-                        result.push(_._dequeueInternal());
-                    }
+                    while (max-- && _._tryDequeueInternal(function (value) {
+                        result.push(value);
+                    })) { }
                 }
             }
             else {
-                while (_._size) {
-                    result.push(_._dequeueInternal());
-                }
+                while (_._tryDequeueInternal(function (value) {
+                    result.push(value);
+                })) { }
             }
             _.trimExcess();
             _._signalModification();
@@ -158,40 +158,40 @@
         Queue.prototype.enqueue = function (item) {
             this.add(item);
         };
-        Queue.prototype._dequeueInternal = function (throwIfEmpty) {
-            if (throwIfEmpty === void 0) { throwIfEmpty = false; }
+        Queue.prototype._tryDequeueInternal = function (out) {
             var _ = this;
-            if (_._size == 0) {
-                if (throwIfEmpty)
-                    throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
-                return VOID0;
-            }
+            if (!_._size)
+                return false;
             var array = _._array, head = _._head;
             var removed = _._array[head];
             array[head] = null;
             _._head = (head + 1) % _._capacity;
             _._size--;
             _._incrementModified();
-            return removed;
+            out(removed);
+            return true;
         };
         Queue.prototype.dequeue = function (throwIfEmpty) {
             if (throwIfEmpty === void 0) { throwIfEmpty = false; }
             var _ = this;
             _.assertModifiable();
-            var modified = !!_._size;
-            var v = this._dequeueInternal(throwIfEmpty);
-            if (modified && _._size < _._capacity / 2)
-                _.trimExcess(SHRINK_THRESHOLD);
-            _._signalModification();
-            return v;
+            var result = VOID0;
+            if (!this.tryDequeue(function (value) { result = value; }) && throwIfEmpty)
+                throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
+            return result;
         };
         Queue.prototype.tryDequeue = function (out) {
-            if (!this._size)
+            var _ = this;
+            if (!_._size)
                 return false;
-            var d = this.dequeue();
-            if (out)
-                out(d);
-            return true;
+            _.assertModifiable();
+            if (this._tryDequeueInternal(out)) {
+                if (_._size < _._capacity / 2)
+                    _.trimExcess(SHRINK_THRESHOLD);
+                _._signalModification();
+                return true;
+            }
+            return false;
         };
         Queue.prototype._getElement = function (index) {
             assertIntegerZeroOrGreater(index, "index");
@@ -231,10 +231,11 @@
     function assertZeroOrGreater(value, property) {
         if (value < 0)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(property, value, "Must be greater than zero");
+        return true;
     }
     function assertIntegerZeroOrGreater(value, property) {
         Integer_1.Integer.assert(value, property);
-        assertZeroOrGreater(value, property);
+        return assertZeroOrGreater(value, property);
     }
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Queue;

@@ -108,7 +108,7 @@ export module Integer
 	}
 
 
-	export function assert(n:number, argumentName?:string):boolean
+	export function assert(n:number, argumentName?:string):true|never
 	{
 		let i = is(n);
 		if(!i)
@@ -116,7 +116,7 @@ export module Integer
 		return i;
 	}
 
-	export function assertZeroOrGreater(n:number, argumentName?:string):boolean
+	export function assertZeroOrGreater(n:number, argumentName?:string):true|never
 	{
 		let i = assert(n, argumentName) && n>=0;
 		if(!i)
@@ -124,7 +124,7 @@ export module Integer
 		return i;
 	}
 
-	export function assertPositive(n:number, argumentName?:string):boolean
+	export function assertPositive(n:number, argumentName?:string):true|never
 	{
 		let i = assert(n, argumentName) && n>0;
 		if(!i)

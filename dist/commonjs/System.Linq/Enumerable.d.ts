@@ -11,9 +11,8 @@ import {
 	Closure,
 	ActionWithIndex,
 	PredicateWithIndex,
-	SelectorWithIndex
+	SelectorWithIndex, Action
 } from "../System/FunctionTypes";
-import {IEnumerableOrArray} from "../System/Collections/IEnumerableOrArray";
 import {IArray} from "../System/Collections/Array/IArray";
 import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
@@ -21,6 +20,7 @@ import {EnumerableAction} from "./EnumerableAction";
 import {IEnumerable} from "../System/Collections/Enumeration/IEnumerable";
 import {IDisposable} from "../System/Disposable/IDisposable";
 import {Primitive} from "../System/Primitive";
+import {ForEachEnumerable} from "../System/Collections/Enumeration/ForEachEnumerable";
 
 export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 {
@@ -28,7 +28,15 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	asEnumerable():this;
 	doAction(
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
-		initializer?:Closure | null, isEndless?:boolean | null | undefined):this;
+		initializer:Closure|null,
+		isEndless:true,
+		onComplete?:Action<number>):IInfiniteEnumerable<T>
+
+	doAction(
+		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
+		initializer?:Closure|null,
+		isEndless?:boolean|null|undefined,
+		onComplete?:Action<number>):this
 	force():void;
 	skip(count:number):IInfiniteEnumerable<T>;
 	take(count:number):IFiniteEnumerable<T>;
@@ -43,22 +51,22 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 	singleOrDefault(defaultValue:T):T;
 	any():boolean;
 	isEmpty():boolean;
-	traverseDepthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
-	traverseDepthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
+	traverseDepthFirst(childrenSelector:(element:T) => ForEachEnumerable<T> | null | undefined):ILinqEnumerable<T>;
+	traverseDepthFirst<TNode>(childrenSelector:(element:T | TNode) => ForEachEnumerable<TNode> | null | undefined):ILinqEnumerable<TNode>;
 	traverseDepthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
+		childrenSelector:(element:T) => ForEachEnumerable<T> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	traverseDepthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => ForEachEnumerable<TNode> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	flatten<TFlat>():IInfiniteEnumerable<TFlat>
 	flatten():IInfiniteEnumerable<any>
 	pairwise<TSelect>(selector:(prev:T, current:T) => TSelect):IInfiniteEnumerable<TSelect>;
 	scan(func:(a:T, b:T) => T, seed?:T):this;
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):IInfiniteEnumerable<TResult>;
-	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TResult> | null | undefined>):IInfiniteEnumerable<TResult>;
+	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>):IInfiniteEnumerable<TResult>;
 	selectMany<TElement, TResult>(
-		collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TElement> | null | undefined>,
+		collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>,
 		resultSelector:(collection:T, element:TElement) => TResult):IInfiniteEnumerable<TResult>;
 	choose():IInfiniteEnumerable<T>;
 	choose<TResult>(selector?:Selector<T, TResult>):IInfiniteEnumerable<TResult>;
@@ -68,31 +76,31 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		type:{
 			new (...params:any[]):TType;
 		}):IInfiniteEnumerable<TType>;
-	except<TCompare>(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, TCompare>):this;
+	except<TCompare>(second:ForEachEnumerable<T>, compareSelector?:Selector<T, TCompare>):this;
 	distinct(compareSelector?:Selector<T, string|number|symbol>):this
 	distinctUntilChanged(compareSelector?:Selector<T, any>):this
 	defaultIfEmpty(defaultValue?:T):this;
 	zip<TSecond, TResult>(
-		second:IEnumerableOrArray<TSecond>,
+		second:ForEachEnumerable<TSecond>,
 		resultSelector:(first:T, second:TSecond, index:number) => TResult):ILinqEnumerable<TResult>;
 	zipMultiple<TSecond, TResult>(
-		second:IArray<IEnumerableOrArray<TSecond>>,
+		second:IArray<ForEachEnumerable<TSecond>>,
 		resultSelector:(first:T, second:TSecond, index:number) => TResult):ILinqEnumerable<TResult>;
 	join<TInner, TKey, TResult>(
-		inner:IEnumerableOrArray<TInner>,
+		inner:ForEachEnumerable<TInner>,
 		outerKeySelector:Selector<T, TKey>, innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner) => TResult,
 		compareSelector?:Selector<TKey, string|number|symbol>):ILinqEnumerable<TResult>;
 	groupJoin<TInner, TKey, TResult, TCompare>(
-		inner:IEnumerableOrArray<TInner>,
+		inner:ForEachEnumerable<TInner>,
 		outerKeySelector:Selector<T, TKey>, innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[] | null) => TResult,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<TResult>;
-	merge(enumerables:IArray<IEnumerableOrArray<T>>):this;
-	concat(...enumerables:Array<IEnumerableOrArray<T>>):this;
-	union<TCompare>(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, TCompare>):this;
-	insertAt(index:number, other:IEnumerableOrArray<T>):this;
-	alternateMultiple(sequence:IEnumerableOrArray<T>):this;
+	merge(enumerables:IArray<ForEachEnumerable<T>>):this;
+	concat(...enumerables:Array<ForEachEnumerable<T>>):this;
+	union<TCompare>(second:ForEachEnumerable<T>, compareSelector?:Selector<T, TCompare>):this;
+	insertAt(index:number, other:ForEachEnumerable<T>):this;
+	alternateMultiple(sequence:ForEachEnumerable<T>):this;
 	alternateSingle(value:T):this;
 	alternate(...sequence:T[]):this;
 	catchError(handler:(e:any) => void):this;
@@ -125,9 +133,9 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	takeExceptLast(count?:number):this;
 	skipToLast(count:number):this;
 	select<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
-	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TResult> | null | undefined>):ILinqEnumerable<TResult>;
+	selectMany<TResult>(collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>):ILinqEnumerable<TResult>;
 	selectMany<TElement, TResult>(
-		collectionSelector:SelectorWithIndex<T, IEnumerableOrArray<TElement> | null | undefined>,
+		collectionSelector:SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>,
 		resultSelector:(collection:T, element:TElement) => TResult):ILinqEnumerable<TResult>;
 	choose():ILinqEnumerable<T>;
 	choose<TResult>(selector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
@@ -141,19 +149,19 @@ export interface ILinqEnumerable<T> extends IInfiniteEnumerable<T>
 	contains(value:T, compareSelector?:Selector<T, any>):boolean;
 	indexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number;
 	lastIndexOf(value:T, compareSelector?:SelectorWithIndex<T, any>):number;
-	intersect(second:IEnumerableOrArray<T>, compareSelector?:Selector<T, string|number|symbol>):ILinqEnumerable<T>;
-	sequenceEqual(second:IEnumerableOrArray<T>, equalityComparer?:EqualityComparison<T>):boolean;
+	intersect(second:ForEachEnumerable<T>, compareSelector?:Selector<T, string|number|symbol>):ILinqEnumerable<T>;
+	sequenceEqual(second:ForEachEnumerable<T>, equalityComparer?:EqualityComparison<T>):boolean;
 	ofType<TType>(
 		type:{
 			new (...params:any[]):TType;
 		}):ILinqEnumerable<TType>;
-	traverseBreadthFirst(childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined):ILinqEnumerable<T>;
-	traverseBreadthFirst<TNode>(childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined):ILinqEnumerable<TNode>;
+	traverseBreadthFirst(childrenSelector:(element:T) => ForEachEnumerable<T> | null | undefined):ILinqEnumerable<T>;
+	traverseBreadthFirst<TNode>(childrenSelector:(element:T | TNode) => ForEachEnumerable<TNode> | null | undefined):ILinqEnumerable<TNode>;
 	traverseBreadthFirst<TResult>(
-		childrenSelector:(element:T) => IEnumerableOrArray<T> | null | undefined,
+		childrenSelector:(element:T) => ForEachEnumerable<T> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	traverseBreadthFirst<TNode, TResult>(
-		childrenSelector:(element:T | TNode) => IEnumerableOrArray<TNode> | null | undefined,
+		childrenSelector:(element:T | TNode) => ForEachEnumerable<TNode> | null | undefined,
 		resultSelector:SelectorWithIndex<T, TResult>):ILinqEnumerable<TResult>;
 	orderBy<TKey extends Comparable>(keySelector?:Selector<T, TKey>):IOrderedEnumerable<T>;
 	orderUsing(comparison:Comparison<T>):IOrderedEnumerable<T>;

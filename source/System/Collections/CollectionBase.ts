@@ -33,7 +33,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 {
 
 	constructor(
-		source?:IEnumerableOrArray<T>,
+		source?:IEnumerableOrArray<T>|IEnumerator<T>,
 		protected _equalityComparer:EqualityComparison<T|null|undefined> = areEqual)
 	{
 		super();
@@ -64,18 +64,23 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return this.getIsReadOnly();
 	}
 
-	protected assertModifiable():void
+	protected assertModifiable():true|never
 	{
 		this.throwIfDisposed(CMDC);
 		if(this.getIsReadOnly())
 			throw new InvalidOperationException(CMRO);
+		return true;
 	}
 
 	protected _version:number; // Provides an easy means of tracking changes and invalidating enumerables.
-	assertVersion(version:number):void
+
+
+	protected assertVersion(version:number):true|never
 	{
 		if(version!==this._version)
 			throw new InvalidOperationException("Collection was modified.");
+
+		return true;
 	}
 
 	/*
@@ -150,6 +155,10 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	 * Calling handleUpdate is the correct pattern, but if possible avoid creating another function scope.
 	 */
 
+	/**
+	 * Adds an entry to the collection.
+	 * @param entry
+	 */
 	add(entry:T):void
 	{
 		const _ = this;
@@ -166,6 +175,13 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	protected abstract _removeInternal(entry:T, max?:number):number;
 
+	/**
+	 * Removes entries from the collection allowing for a limit.
+	 * For example if the collection not a distinct set, more than one entry could be removed.
+	 * @param entry The entry to remove.
+	 * @param max Limit of entries to remove.  Will remove all matches if no max specified.
+	 * @returns {number} The number of entries removed.
+	 */
 	remove(entry:T, max:number = Infinity):number
 	{
 		const _ = this;
@@ -184,6 +200,10 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 	protected abstract _clearInternal():number;
 
+	/**
+	 * Clears the contents of the collection resulting in a count of zero.
+	 * @returns {number}
+	 */
 	clear():number
 	{
 		const _ = this;
@@ -213,7 +233,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		if(l) l.dispose();
 	}
 
-	protected _importEntries(entries:IEnumerableOrArray<T>|null|undefined):number
+	protected _importEntries(entries:IEnumerableOrArray<T>|IEnumerator<T>|null|undefined):number
 	{
 		let added = 0;
 		if(entries)
@@ -228,7 +248,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 			}
 			else
 			{
-				forEach(entries, e=>
+				forEach(entries, e =>
 				{
 					if(this._addInternal(e)) added++;
 				});
@@ -237,36 +257,101 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return added;
 	}
 
-	importEntries(entries:IEnumerableOrArray<T>|null|undefined):number
+	/**
+	 * Safely imports any array enumerator, or enumerable.
+	 * @param entries
+	 * @returns {number}
+	 */
+	importEntries(entries:IEnumerableOrArray<T>|IEnumerator<T>|null|undefined):number
 	{
 		const _ = this;
 		if(!entries) return 0;
 		_.assertModifiable();
 		_._updateRecursion++;
 
-		let n:number;
+		let n:number = NaN;
 		try
 		{ if(n = _._importEntries(entries)) _._modifiedCount++; }
 		finally
 		{ _._updateRecursion--; }
 
 		_._signalModification();
-		return n = NaN;
+		return n;
 	}
 
 	// Fundamentally the most important part of the collection.
+
+	/**
+	 * Returns a enumerator for this collection.
+	 */
 	abstract getEnumerator():IEnumerator<T>;
 
-	contains(entry:T):boolean
+	/**
+	 * Returns an array filtered by the provided predicate.
+	 * Provided for similarity to JS Array.
+	 * @param predicate
+	 * @returns {T[]}
+	 */
+	filter(predicate:PredicateWithIndex<T>):T[]
 	{
-		if(!this.getCount()) return false;
+		if(!predicate) throw new ArgumentNullException('predicate');
+		let count = !this.getCount();
+		let result:T[] = [];
+		if(count) {
+			this.forEach((e, i) => {
+				if(predicate(e, i))
+					result.push(e);
+			});
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true the first time predicate returns true.  Otherwise false.
+	 * Useful for searching through a collection.
+	 * @param predicate
+	 * @returns {any}
+	 */
+	any(predicate?:PredicateWithIndex<T>):boolean
+	{
+		let count = this.getCount();
+		if(!count) return false;
+		if(!predicate) return Boolean(count);
+
 		let found:boolean = false;
-		const equals = this._equalityComparer;
-		this.forEach(e => !(found = equals(entry, e)));
+		this.forEach((e, i) => !(found = predicate(e, i)));
 		return found;
 	}
 
+	/**
+	 * Returns true the first time predicate returns true.  Otherwise false.
+	 * See '.any(predicate)'.  As this method is just just included to have similarity with a JS Array.
+	 * @param predicate
+	 * @returns {any}
+	 */
+	some(predicate?:PredicateWithIndex<T>):boolean
+	{
+		return this.any(predicate);
+	}
 
+
+	/**
+	 * Returns true if the equality comparer resolves true on any element in the collection.
+	 * @param entry
+	 * @returns {boolean}
+	 */
+	contains(entry:T):boolean
+	{
+		const equals = this._equalityComparer;
+		return this.any(e=>equals(entry, e));
+	}
+
+
+	/**
+	 * Special implementation of 'forEach': If the action returns 'false' the enumeration will stop.
+	 * @param action
+	 * @param useCopy
+	 */
 	forEach(action:ActionWithIndex<T>, useCopy?:boolean):number
 	forEach(action:PredicateWithIndex<T>, useCopy?:boolean):number
 	forEach(action:ActionWithIndex<T> | PredicateWithIndex<T>, useCopy?:boolean):number
@@ -292,6 +377,12 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		}
 	}
 
+	/**
+	 * Copies all values to numerically indexable object.
+	 * @param target
+	 * @param index
+	 * @returns {TTarget}
+	 */
 	copyTo<TTarget extends IArray<T>>(
 		target:TTarget,
 		index:number = 0):TTarget
@@ -313,6 +404,10 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		return target;
 	}
 
+	/**
+	 * Returns an array of the collection contents.
+	 * @returns {any[]|Array}
+	 */
 	toArray():T[]
 	{
 		const count = this.getCount();
@@ -364,7 +459,7 @@ Or use .linqAsync(callback) for AMD/RequireJS.`;
 		{
 			if(isRequireJS)
 			{
-				eval("require")([LINQ_PATH], (linq:any)=>
+				eval("require")([LINQ_PATH], (linq:any) =>
 				{
 					// Could end up being called more than once, be sure to check for ._linq before setting...
 					e = this._linq;

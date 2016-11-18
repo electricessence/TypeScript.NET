@@ -20,6 +20,7 @@
     function throwIfEndless(isEndless) {
         if (isEndless)
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
+        return true;
     }
     exports.throwIfEndless = throwIfEndless;
     function initArrayFrom(source, max) {
@@ -56,6 +57,8 @@
                 return source.getEnumerator();
             if (Types_1.Type.isFunction(source))
                 return new InfiniteEnumerator_1.InfiniteEnumerator(source);
+            if (isEnumerator(source))
+                return source;
             if (isIterator(source))
                 return new IteratorEnumerator_1.IteratorEnumerator(source);
         }
@@ -93,7 +96,7 @@
                 return i;
             }
             if (isEnumerator(e)) {
-                throwIfEndless(!isFinite(max) && !!e.isEndless);
+                throwIfEndless(!isFinite(max) && e.isEndless);
                 var i = 0;
                 while (max > i && e.moveNext()) {
                     if (action(e.current, i++) === false)
@@ -102,7 +105,7 @@
                 return i;
             }
             if (isEnumerable(e)) {
-                throwIfEndless(!isFinite(max) && !!e.isEndless);
+                throwIfEndless(!isFinite(max) && e.isEndless);
                 return dispose_1.using(e.getEnumerator(), function (f) { return forEach(f, action, max); });
             }
             if (isIterator(e)) {

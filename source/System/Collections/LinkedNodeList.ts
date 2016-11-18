@@ -55,10 +55,11 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 
 	private _version:number;
 
-	assertVersion(version:number):void
+	assertVersion(version:number):true|never
 	{
 		if(version!==this._version)
 			throw new InvalidOperationException("Collection was modified.");
+		return true;
 	}
 
 	/**

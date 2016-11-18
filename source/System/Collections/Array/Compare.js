@@ -22,11 +22,16 @@
         return len;
     }
     function areAllEqual(arrays, strict, equalityComparer) {
+        if (strict === void 0) { strict = true; }
         if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
         if (!arrays)
             throw new Error("ArgumentNullException: 'arrays' cannot be null.");
         if (arrays.length < 2)
             throw new Error("Cannot compare a set of arrays less than 2.");
+        if (Types_1.Type.isFunction(strict)) {
+            equalityComparer = strict;
+            strict = true;
+        }
         var first = arrays[0];
         for (var i = 0, l = arrays.length; i < l; i++) {
             if (!areEqual(first, arrays[i], strict, equalityComparer))
@@ -36,10 +41,15 @@
     }
     exports.areAllEqual = areAllEqual;
     function areEqual(a, b, strict, equalityComparer) {
+        if (strict === void 0) { strict = true; }
         if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
         var len = validateSize(a, b);
         if (Types_1.Type.isBoolean(len))
             return len;
+        if (Types_1.Type.isFunction(strict)) {
+            equalityComparer = strict;
+            strict = true;
+        }
         for (var i = 0; i < len; i++) {
             if (!equalityComparer(a[i], b[i], strict))
                 return false;

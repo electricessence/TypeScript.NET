@@ -15,6 +15,7 @@ import {InfiniteValueFactory, InfiniteEnumerator} from "./InfiniteEnumerator";
 import {EmptyEnumerator as Empty} from "./EmptyEnumerator";
 import {IIterator, IIteratorResult} from "./IIterator";
 import {IteratorEnumerator} from "./IteratorEnumerator";
+import {ForEachEnumerable} from "./ForEachEnumerable";
 
 
 const
@@ -23,13 +24,18 @@ const
 		'Cannot call forEach on an endless enumerable. ' +
 		'Would result in an infinite loop that could hang the current process.';
 
-export function throwIfEndless(isEndless:boolean|undefined):void
+export function throwIfEndless(isEndless:false):true
+export function throwIfEndless(isEndless:true):never
+export function throwIfEndless(isEndless:boolean|undefined):true|never
+export function throwIfEndless(isEndless:boolean|undefined):true|never
 {
-	if(isEndless) throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
+	if(isEndless)
+		throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
+	return true;
 }
 
 function initArrayFrom(
-	source:IEnumerableOrArray<any>|IEnumerator<any>,
+	source:ForEachEnumerable<any>,
 	max:number = Infinity):any[]
 {
 	if(Array.isArray(source) || Type.isString(source))
@@ -48,7 +54,14 @@ function initArrayFrom(
 
 
 // Could be array, or IEnumerable...
-export function from<T>(source:IEnumerableOrArray<T>|InfiniteValueFactory<T>|IIterator<T>):IEnumerator<T>
+
+/**
+ * Returns the enumerator for the specified collection, enumerator, or iterator.
+ * If the source is identified as IEnumerator it will return the source as is.
+ * @param source
+ * @returns {any}
+ */
+export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEnumerator<T>
 {
 	// To simplify and prevent null reference exceptions:
 	if(!source)
@@ -80,8 +93,11 @@ export function from<T>(source:IEnumerableOrArray<T>|InfiniteValueFactory<T>|IIt
 		if(Type.isFunction(source))
 			return new InfiniteEnumerator(source);
 
-		if(isIterator(source))
-			return new IteratorEnumerator(source);
+		if(isEnumerator<T>(source))
+			return source;
+
+		if(isIterator<T>(source))
+			return new IteratorEnumerator<T>(source);
 
 	}
 
@@ -109,7 +125,7 @@ export function isIterator<T>(instance:any):instance is IIterator<T>
 }
 
 /**
- * Flexible method for iterating any enumerable, enumerable, array, or array-like object.
+ * Flexible method for iterating any enumerable, enumerable, iterator, array, or array-like object.
  * @param e The enumeration to loop on.
  * @param action The action to take on each.
  * @param max Stops after max is reached.  Allows for forEach to be called on infinite enumerations.
@@ -117,17 +133,17 @@ export function isIterator<T>(instance:any):instance is IIterator<T>
  */
 
 export function forEach<T>(
-	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	e:ForEachEnumerable<T>,
 	action:ActionWithIndex<T>,
 	max?:number):number
 
 export function forEach<T>(
-	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	e:ForEachEnumerable<T>,
 	action:PredicateWithIndex<T>,
 	max?:number):number
 
 export function forEach<T>(
-	e:IEnumerableOrArray<T>|IEnumerator<T>|IIterator<T>,
+	e:ForEachEnumerable<T>,
 	action:ActionWithIndex<T> | PredicateWithIndex<T>,
 	max:number = Infinity):number
 {
@@ -151,7 +167,7 @@ export function forEach<T>(
 
 		if(isEnumerator<T>(e))
 		{
-			throwIfEndless(!isFinite(max) && !!e.isEndless);
+			throwIfEndless(!isFinite(max) && e.isEndless);
 
 			let i = 0;
 			// Return value of action can be anything, but if it is (===) false then the forEach will discontinue.
@@ -165,7 +181,7 @@ export function forEach<T>(
 
 		if(isEnumerable<T>(e))
 		{
-			throwIfEndless(!isFinite(max) && !!e.isEndless);
+			throwIfEndless(!isFinite(max) && e.isEndless);
 
 			// For enumerators that aren't EnumerableBase, ensure dispose is called.
 			return using(
@@ -201,7 +217,7 @@ export function forEach<T>(
  * @returns {any}
  */
 export function toArray<T>(
-	source:IEnumerableOrArray<T>|IEnumerator<T>,
+	source:ForEachEnumerable<T>,
 	max:number = Infinity):T[]
 {
 	if(<any>source===STRING_EMPTY) return [];
@@ -225,7 +241,7 @@ export function toArray<T>(
  */
 
 export function map<T,TResult>(
-	source:IEnumerableOrArray<T>|IEnumerator<T>,
+	source:ForEachEnumerable<T>,
 	selector:SelectorWithIndex<T,TResult>,
 	max:number = Infinity):TResult[]
 {

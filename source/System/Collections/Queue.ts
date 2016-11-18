@@ -158,18 +158,16 @@ extends CollectionBase<T>
 			Integer.assertZeroOrGreater(max);
 			if(max!==0)
 			{
-				while(max-- && _._size)
-				{
-					result.push(_._dequeueInternal());
-				}
+				while(max-- && _._tryDequeueInternal(value=>{
+					result.push(value);
+				})) {}
 			}
 		}
 		else
 		{
-			while(_._size)
-			{
-				result.push(_._dequeueInternal());
-			}
+			while( _._tryDequeueInternal(value=>{
+				result.push(value);
+			})) { }
 		}
 
 		_.trimExcess();
@@ -233,16 +231,10 @@ extends CollectionBase<T>
 		this.add(item);
 	}
 
-
-	protected _dequeueInternal(throwIfEmpty:boolean = false):T
+	protected _tryDequeueInternal(out:Action<T>):boolean
 	{
 		const _ = this;
-		if(_._size==0)
-		{
-			if(throwIfEmpty)
-				throw new InvalidOperationException("Cannot dequeue an empty queue.");
-			return <any>VOID0;
-		}
+		if(!_._size) return false;
 
 		const array = _._array, head = _._head;
 
@@ -254,33 +246,43 @@ extends CollectionBase<T>
 
 		_._incrementModified();
 
-		return removed;
+		out(removed);
+
+		return true;
 	}
 
-	dequeue(throwIfEmpty:boolean = false):T
+	dequeue():T|undefined
+	dequeue(throwIfEmpty:true):T
+	dequeue(throwIfEmpty:boolean):T|undefined
+	dequeue(throwIfEmpty:boolean = false):T|undefined
 	{
 		const _ = this;
 		_.assertModifiable();
 
-		// A single dequeue shouldn't need update recursion tracking...
-		const modified = !!_._size;
-		const v = this._dequeueInternal(throwIfEmpty);
-
-		// This may preemptively trigger the _onModified.
-		if(modified && _._size<_._capacity/2)
-			_.trimExcess(SHRINK_THRESHOLD);
-
-		_._signalModification();
-		return v;
+		let result:T|undefined = VOID0;
+		if(!this.tryDequeue( value => { result = value; }) && throwIfEmpty)
+			throw new InvalidOperationException("Cannot dequeue an empty queue.");
+		return result;
 	}
 
 
 	tryDequeue(out:Action<T>):boolean
 	{
-		if(!this._size) return false;
-		const d = this.dequeue();
-		if(out) out(d);
-		return true;
+		const _ = this;
+		if(!_._size) return false;
+		_.assertModifiable();
+
+		// A single dequeue shouldn't need update recursion tracking...
+		if(this._tryDequeueInternal(out)) {
+			// This may preemptively trigger the _onModified.
+			if(_._size<_._capacity/2)
+				_.trimExcess(SHRINK_THRESHOLD);
+
+			_._signalModification();
+			return true;
+		}
+
+		return false;
 	}
 
 	private _getElement(index:number):T
@@ -320,7 +322,7 @@ extends CollectionBase<T>
 				size = _._size;
 				index = 0;
 			},
-			(yielder)=>
+			(yielder) =>
 			{
 				_.throwIfDisposed();
 				_.assertVersion(version);
@@ -334,17 +336,18 @@ extends CollectionBase<T>
 	}
 }
 
-function assertZeroOrGreater(value:number, property:string):void
+function assertZeroOrGreater(value:number, property:string):true|never
 {
 	if(value<0)
 		throw new ArgumentOutOfRangeException(property, value, "Must be greater than zero");
 
+	return true;
 }
 
-function assertIntegerZeroOrGreater(value:number, property:string):void
+function assertIntegerZeroOrGreater(value:number, property:string):true|never
 {
 	Integer.assert(value, property);
-	assertZeroOrGreater(value, property);
+	return assertZeroOrGreater(value, property);
 }
 
 export default Queue;

@@ -5,7 +5,7 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], function (require, exports) {
+})(["require", "exports", "../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../System/Collections/Enumeration/IteratorEnumerator", "../extends"], function (require, exports) {
     "use strict";
     var Compare_1 = require("../System/Compare");
     var Arrays = require("../System/Collections/Array/Compare");
@@ -29,6 +29,7 @@
     var ArgumentNullException_1 = require("../System/Exceptions/ArgumentNullException");
     var ArgumentOutOfRangeException_1 = require("../System/Exceptions/ArgumentOutOfRangeException");
     var IndexEnumerator_1 = require("../System/Collections/Enumeration/IndexEnumerator");
+    var IteratorEnumerator_1 = require("../System/Collections/Enumeration/IteratorEnumerator");
     var extends_1 = require("../extends");
     var __extends = extends_1.default;
     var INVALID_DEFAULT = {};
@@ -615,9 +616,9 @@
                     queue = new Queue_1.Queue(enumerables);
                 }, function (yielder) {
                     while (true) {
-                        while (!enumerator && queue.count) {
-                            enumerator = enumUtil.from(queue.dequeue());
-                        }
+                        while (!enumerator && queue.tryDequeue(function (value) {
+                            enumerator = enumUtil.from(value);
+                        })) { }
                         if (enumerator && enumerator.moveNext())
                             return yielder.yieldReturn(enumerator.current);
                         if (enumerator) {
@@ -1804,6 +1805,10 @@
                     return new ArrayEnumerable(source);
                 if (Enumerator_1.isEnumerable(source))
                     return new Enumerable(function () { return source.getEnumerator(); }, null, source.isEndless);
+                if (Enumerator_1.isEnumerator(source))
+                    return new Enumerable(function () { return source; }, null, source.isEndless);
+                if (Enumerator_1.isIterator(source))
+                    return fromAny(new IteratorEnumerator_1.IteratorEnumerator(source));
             }
             return defaultEnumerable;
         }
@@ -2145,9 +2150,9 @@
                         if (!e)
                             mainEnumerator = null;
                     }
-                    while (!e && queue.count) {
-                        e = nextEnumerator(queue, queue.dequeue());
-                    }
+                    while (!e && queue.tryDequeue(function (value) {
+                        e = nextEnumerator(queue, enumUtil.from(value));
+                    })) { }
                     return e
                         ? yielder.yieldReturn(e.current)
                         : yielder.yieldBreak();

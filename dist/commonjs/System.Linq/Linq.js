@@ -21,6 +21,7 @@ var KeySortedContext_1 = require("../System/Collections/Sorting/KeySortedContext
 var ArgumentNullException_1 = require("../System/Exceptions/ArgumentNullException");
 var ArgumentOutOfRangeException_1 = require("../System/Exceptions/ArgumentOutOfRangeException");
 var IndexEnumerator_1 = require("../System/Collections/Enumeration/IndexEnumerator");
+var IteratorEnumerator_1 = require("../System/Collections/Enumeration/IteratorEnumerator");
 var extends_1 = require("../extends");
 var __extends = extends_1.default;
 var INVALID_DEFAULT = {};
@@ -607,9 +608,9 @@ var InfiniteEnumerable = (function (_super) {
                 queue = new Queue_1.Queue(enumerables);
             }, function (yielder) {
                 while (true) {
-                    while (!enumerator && queue.count) {
-                        enumerator = enumUtil.from(queue.dequeue());
-                    }
+                    while (!enumerator && queue.tryDequeue(function (value) {
+                        enumerator = enumUtil.from(value);
+                    })) { }
                     if (enumerator && enumerator.moveNext())
                         return yielder.yieldReturn(enumerator.current);
                     if (enumerator) {
@@ -1796,6 +1797,10 @@ function throwIfDisposed(disposed) {
                 return new ArrayEnumerable(source);
             if (Enumerator_1.isEnumerable(source))
                 return new Enumerable(function () { return source.getEnumerator(); }, null, source.isEndless);
+            if (Enumerator_1.isEnumerator(source))
+                return new Enumerable(function () { return source; }, null, source.isEndless);
+            if (Enumerator_1.isIterator(source))
+                return fromAny(new IteratorEnumerator_1.IteratorEnumerator(source));
         }
         return defaultEnumerable;
     }
@@ -2137,9 +2142,9 @@ function throwIfDisposed(disposed) {
                     if (!e)
                         mainEnumerator = null;
                 }
-                while (!e && queue.count) {
-                    e = nextEnumerator(queue, queue.dequeue());
-                }
+                while (!e && queue.tryDequeue(function (value) {
+                    e = nextEnumerator(queue, enumUtil.from(value));
+                })) { }
                 return e
                     ? yielder.yieldReturn(e.current)
                     : yielder.yieldBreak();

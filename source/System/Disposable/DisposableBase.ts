@@ -25,7 +25,7 @@ export abstract class DisposableBase implements IDisposableAware
 
 	protected throwIfDisposed(
 		message?:string,
-		objectName:string = this._disposableObjectName):boolean
+		objectName:string = this._disposableObjectName):true|never
 	{
 		if(this.__wasDisposed)
 			throw new ObjectDisposedException(objectName, message);

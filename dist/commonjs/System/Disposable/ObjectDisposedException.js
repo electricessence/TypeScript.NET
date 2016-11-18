@@ -22,6 +22,7 @@ var ObjectDisposedException = (function (_super) {
     ObjectDisposedException.throwIfDisposed = function (disposable, objectName, message) {
         if (disposable.wasDisposed)
             throw new ObjectDisposedException(objectName, message);
+        return true;
     };
     return ObjectDisposedException;
 }(InvalidOperationException_1.InvalidOperationException));

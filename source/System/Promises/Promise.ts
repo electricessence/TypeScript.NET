@@ -613,7 +613,7 @@ export class Promise<T> extends Resolvable<T>
 
 	resolveUsing(
 		resolver:Promise.Executor<T>,
-		forceSynchronous:boolean = false)
+		forceSynchronous:boolean = false):void
 	{
 		if(!resolver)
 			throw new ArgumentNullException("resolver");

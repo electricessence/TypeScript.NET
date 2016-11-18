@@ -49,10 +49,11 @@ export class ObjectDisposedException extends InvalidOperationException
 	static throwIfDisposed(
 		disposable:IDisposableAware,
 		objectName:string,
-		message?:string):void
+		message?:string):true|never
 	{
 		if(disposable.wasDisposed)
 			throw new ObjectDisposedException(objectName, message);
+		return true;
 	}
 
 }

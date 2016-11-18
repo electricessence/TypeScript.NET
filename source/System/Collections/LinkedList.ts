@@ -44,11 +44,12 @@ implements ILinkedNode<InternalNode<T>>, INodeWithValue<T>
 
 	external?:ILinkedListNode<T>;
 
-	assertDetached():void
+	assertDetached():true|never
 	{
 		if(this.next || this.previous)
 			throw new InvalidOperationException(
 				"Adding a node that is already placed.");
+		return true;
 	}
 
 }
@@ -116,12 +117,12 @@ extends CollectionBase<T> implements ILinkedList<T>
 		this._importEntries(source);
 	}
 
-	assertVersion(version:number):void
+	protected assertVersion(version:number):true|never
 	{
 		if(this._listInternal)
-			this._listInternal.assertVersion(version);
+			return this._listInternal.assertVersion(version);
 		else // In case it's been disposed.
-			super.assertVersion(version);
+			return super.assertVersion(version);
 	}
 
 	protected _onDispose():void

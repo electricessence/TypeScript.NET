@@ -16,6 +16,7 @@ var LinkedNodeList = (function () {
     LinkedNodeList.prototype.assertVersion = function (version) {
         if (version !== this._version)
             throw new InvalidOperationException_1.InvalidOperationException("Collection was modified.");
+        return true;
     };
     Object.defineProperty(LinkedNodeList.prototype, "first", {
         get: function () {

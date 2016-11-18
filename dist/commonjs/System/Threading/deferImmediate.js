@@ -9,16 +9,15 @@ var flushing = false;
 function flush() {
     var entry;
     while (entry = immediateQueue.first) {
-        var task_1 = entry.task, domain = entry.domain, context_1 = entry.context, args = entry.args;
+        var task = entry.task, domain = entry.domain, context_1 = entry.context, args = entry.args;
         entry.canceller();
         if (domain)
             domain.enter();
-        runSingle(task_1, domain, context_1, args);
+        runSingle(task, domain, context_1, args);
     }
-    var task;
-    while (task = laterQueue.dequeue()) {
+    while (laterQueue.tryDequeue(function (task) {
         runSingle(task);
-    }
+    })) { }
     flushing = false;
 }
 var immediateQueue = new LinkedNodeList_1.LinkedNodeList();

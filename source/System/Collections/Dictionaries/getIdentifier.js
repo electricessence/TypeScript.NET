@@ -28,8 +28,12 @@
         if (Types_1.Type.hasMethod(obj, GET_HASH_CODE)) {
             return obj.getHashCode();
         }
-        if (throwIfUnknown)
-            throw "Cannot create known identity.";
+        if (throwIfUnknown) {
+            if (Types_1.Type.isFunction(throwIfUnknown))
+                return throwIfUnknown(obj);
+            else
+                throw "Cannot create known identity.";
+        }
         return (typeof obj.toString == Types_1.Type.FUNCTION)
             ? obj.toString()
             : Object.prototype.toString.call(obj);

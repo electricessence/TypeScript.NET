@@ -77,6 +77,10 @@ extends DisposableBase
 		}
 	}
 
+	protected _unsubscribeAll():null
+	protected _unsubscribeAll(returnSubscribers:false):null
+	protected _unsubscribeAll(returnSubscribers:true):TSubscriber[]|null
+	protected _unsubscribeAll(returnSubscribers:boolean):TSubscriber[]|null
 	protected _unsubscribeAll(returnSubscribers:boolean = false):TSubscriber[]|null
 	{
 		const _ = this;

@@ -88,7 +88,7 @@ export function toPrimitive(
 
 				}
 
-				// TODO: Handle Dates...  Possibly JSON?
+				// Handle Dates...  Possibly JSON?
 
 				// Instead of throwing we allow for handling...
 				if(unknownHandler) value = unknownHandler(value);

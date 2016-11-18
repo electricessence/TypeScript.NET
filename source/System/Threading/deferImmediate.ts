@@ -54,11 +54,10 @@ function flush():void
 		runSingle(task, domain, context, args);
 	}
 
-	let task:Closure;
-	while(task = laterQueue.dequeue())
-	{
+	while(laterQueue.tryDequeue(task=>{
 		runSingle(task);
-	}
+	})){}
+
 
 	flushing = false;
 }

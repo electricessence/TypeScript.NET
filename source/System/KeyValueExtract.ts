@@ -23,7 +23,7 @@ export function isKeyValuePair<TKey,TValue>(kvp:any):kvp is IKeyValuePair<TKey,T
 	return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
 }
 
-export function assertKey<TKey>(key:TKey, name:string = ITEM):TKey
+export function assertKey<TKey>(key:TKey, name:string = ITEM):TKey|never
 {
 	assertNotUndefined(key, name + DOT + KEY);
 	if(key===null)
@@ -33,7 +33,7 @@ export function assertKey<TKey>(key:TKey, name:string = ITEM):TKey
 }
 
 
-export function assertTuple(tuple:IArray<any>, name:string = ITEM):void
+export function assertTuple(tuple:IArray<any>, name:string = ITEM):void|never
 {
 	if(tuple.length!=2)
 		throw new ArgumentException(name, 'KeyValuePair tuples must be of length 2.');
@@ -42,7 +42,7 @@ export function assertTuple(tuple:IArray<any>, name:string = ITEM):void
 }
 
 
-export function assertNotUndefined<T>(value:T, name:string):T
+export function assertNotUndefined<T>(value:T, name:string):T|never
 {
 	if(value===VOID0)
 		throw new ArgumentException(name, CANNOT_BE_UNDEFINED);
