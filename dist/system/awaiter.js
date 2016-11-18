@@ -42,14 +42,15 @@ System.register([], function (exports_1, context_1) {
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
             (function (awaiter) {
-                function factory(Promise) {
+                function factory(UserPromise) {
                     return function (thisArg, _arguments, P, generator) {
-                        awaiter(thisArg, _arguments, P || Promise, generator);
+                        awaiter(thisArg, _arguments, P || UserPromise, generator);
                     };
                 }
                 awaiter.factory = factory;
             })(awaiter = awaiter || (awaiter = {}));
             exports_1("awaiter", awaiter);
+            exports_1("default", awaiter);
         }
     };
 });

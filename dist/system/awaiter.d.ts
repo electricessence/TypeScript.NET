@@ -7,5 +7,6 @@ export interface Awaiter {
 }
 export declare function awaiter(thisArg: any, _arguments: any[], P: PromiseConstructorLike, generator: Function): PromiseLike<{}>;
 export declare module awaiter {
-    function factory(Promise: PromiseConstructorLike): Awaiter;
+    function factory(UserPromise: PromiseConstructorLike): Awaiter;
 }
+export default awaiter;

@@ -47,11 +47,13 @@ export function awaiter(
 
 export module awaiter
 {
-	export function factory(Promise:PromiseConstructorLike):Awaiter
+	export function factory(UserPromise:PromiseConstructorLike):Awaiter
 	{
 		return (thisArg:any, _arguments:any[], P:PromiseConstructorLike, generator:Function) =>
 		{
-			awaiter(thisArg, _arguments, P || Promise, generator);
+			awaiter(thisArg, _arguments, P || UserPromise, generator);
 		};
 	}
 }
+
+export default awaiter;

@@ -42,12 +42,14 @@
     }
     exports.awaiter = awaiter;
     (function (awaiter) {
-        function factory(Promise) {
+        function factory(UserPromise) {
             return function (thisArg, _arguments, P, generator) {
-                awaiter(thisArg, _arguments, P || Promise, generator);
+                awaiter(thisArg, _arguments, P || UserPromise, generator);
             };
         }
         awaiter.factory = factory;
     })(awaiter = exports.awaiter || (exports.awaiter = {}));
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = awaiter;
 });
 //# sourceMappingURL=awaiter.js.map

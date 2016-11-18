@@ -4,12 +4,12 @@ import * as file from "../_utility/file-promise";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {JsonMap} from "../source/JSON";
 import {Promise as NETPromise} from "../source/System/Promises/Promise";
-import {awaiter} from "../source/awaiter";
-import {generator} from "../source/generator";
+import awaiter from "../source/awaiter";
+import generator from "../source/generator";
 // noinspection JSUnusedLocalSymbols
-const
-	__awaiter   = awaiter.factory(NETPromise),
-	__generator = generator;
+const __awaiter = awaiter.factory(NETPromise);
+// noinspection JSUnusedLocalSymbols
+const __generator = generator;
 
 // No tsd yet.
 const bump = require('gulp-bump');
@@ -39,8 +39,8 @@ async function bumpVersion(type:string):PromiseLike<File[]>
 
 gulp.task(
 	VERSION_BUMP_PATCH,
-	()=> bumpVersion('patch'));
+	() => bumpVersion('patch'));
 
 gulp.task(
 	VERSION_BUMP_MINOR,
-	()=> bumpVersion('minor'));
+	() => bumpVersion('minor'));

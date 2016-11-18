@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -95,10 +91,7 @@ System.register([], function (exports_1, context_1) {
     exports_1("default", default_1);
     return {
         setters: [],
-        execute: function () {/*!
-             * @author electricessence / https://github.com/electricessence/
-             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-             */
+        execute: function () {
         }
     };
 });

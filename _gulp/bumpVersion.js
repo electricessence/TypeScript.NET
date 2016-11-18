@@ -14,7 +14,8 @@
     var Promise_1 = require("../source/System/Promises/Promise");
     var awaiter_1 = require("../source/awaiter");
     var generator_1 = require("../source/generator");
-    var __awaiter = awaiter_1.awaiter.factory(Promise_1.Promise), __generator = generator_1.generator;
+    var __awaiter = awaiter_1.default.factory(Promise_1.Promise);
+    var __generator = generator_1.default;
     var bump = require('gulp-bump');
     var VERSION_BUMP_MINOR = 'version-bump-minor', VERSION_BUMP_PATCH = 'version-bump-patch';
     function bumpVersion(type) {
