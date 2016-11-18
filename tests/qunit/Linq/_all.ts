@@ -1,6 +1,5 @@
 ﻿///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-
 import Enumerable from "../../../dist/amd/System.Linq/Linq";
 
 interface TestItem
@@ -13,7 +12,7 @@ interface TestItem
 export default function run()
 {
 
-	var source:{a:number,b:number,c:string}[] = [
+	const source:{a:number,b:number,c:string}[] = [
 		{
 			a: 1,
 			b: 2,
@@ -46,15 +45,15 @@ export default function run()
 		}
 	];
 
-	var sourceEnumerable = Enumerable.from(source);
+	const sourceEnumerable = Enumerable.from(source);
 
 	QUnit.test("Linq.memoize", assert=>
 	{
 
-		var source = sourceEnumerable;
-		var A = source.memoize();
+		const source = sourceEnumerable;
+		const A = source.memoize();
 
-		var sum = A.sum(o=>o.a);
+		let sum = A.sum(o => o.a);
 
 		assert.equal(sum, source.sum(o=>o.a), "Values must be equal after memoize pass 1.");
 
@@ -64,9 +63,9 @@ export default function run()
 
 	QUnit.test("Linq.where.memoize", assert=>
 	{
-		var source = sourceEnumerable.where(i => i.a==1);
+		const source = sourceEnumerable.where(i => i.a==1);
 
-		var sum:number, A = source;
+		let sum:number, A = source;
 
 		sum = A.sum(o=>o.a);
 
@@ -90,9 +89,9 @@ export default function run()
 	QUnit.test("Linq.orderBy", assert=>
 	{
 
-		var source = sourceEnumerable.reverse();
+		const source = sourceEnumerable.reverse();
 
-		var A = source.orderBy(o=>o.a).toArray();
+		const A = source.orderBy(o => o.a).toArray();
 		for(let i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 1, "First three 'a' values should be 1 when ordered by 'a'.");
@@ -102,7 +101,7 @@ export default function run()
 			assert.equal(A[i].a, 2, "Last three 'a' values should be 2 when ordered by 'a'.");
 		}
 
-		var B = source.orderBy(o=> o.b).toArray();
+		const B = source.orderBy(o => o.b).toArray();
 		for(let i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 1, "First two 'b' values should be 1 when ordered by 'b'.");
@@ -122,9 +121,9 @@ export default function run()
 	QUnit.test("Linq.orderByDescending", assert=>
 	{
 
-		var source = sourceEnumerable.reverse();
+		const source = sourceEnumerable.reverse();
 
-		var A = source.orderByDescending((o:TestItem)=> o.a).toArray();
+		const A = source.orderByDescending((o:TestItem) => o.a).toArray();
 		for(let i = 0; i<3; i++)
 		{
 			assert.equal(A[i].a, 2, "First three 'a' values should be 2 when ordered by 'a'.");
@@ -134,7 +133,7 @@ export default function run()
 			assert.equal(A[i].a, 1, "Last three 'a' values should be 1 when ordered by 'a'.");
 		}
 
-		var B = source.orderByDescending((o:TestItem)=> o.b).toArray();
+		const B = source.orderByDescending((o:TestItem) => o.b).toArray();
 		for(let i = 0; i<2; i++)
 		{
 			assert.equal(B[i].b, 3, "First two 'b' values should be 3 when ordered by 'b'.");
@@ -153,7 +152,7 @@ export default function run()
 	QUnit.test("Linq.orderBy.thenBy", assert=>
 	{
 
-		var B = sourceEnumerable
+		const B = sourceEnumerable
 			.orderBy(o => o.b)
 			.thenBy(o => o.c)
 			.toArray();
@@ -186,17 +185,17 @@ export default function run()
 
 	QUnit.test("Linq.groupBy", assert=>
 	{
-		var A_distinct = sourceEnumerable
-			.select(o=>o.a).distinct();
-		var A = sourceEnumerable
-			.groupBy(o=>o.a);
+		const A_distinct = sourceEnumerable
+			.select(o => o.a).distinct();
+		const A = sourceEnumerable
+			.groupBy(o => o.a);
 
 		assert.equal(A_distinct.count(), A.count(), "Number of groups should match distinct values.");
 
-		var B = sourceEnumerable
-			.groupBy(o=>o.b);
-		var B_distinct = sourceEnumerable
-			.select(o=>o.b).distinct();
+		const B = sourceEnumerable
+			.groupBy(o => o.b);
+		const B_distinct = sourceEnumerable
+			.select(o => o.b).distinct();
 
 		assert.equal(B_distinct.count(), B.count(), "Number of groups should match distinct values.");
 

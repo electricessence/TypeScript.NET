@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", "../../../dist/amd/System/Text/Utility", "../../../dist/amd/System/Collections/Array/Utility", "../../../dist/amd/System/Exceptions/NotImplementedException"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "QUnit", "../../../dist/amd/System/Text/Utility", "../../../dist/amd/System/Collections/Array/Utility", "../../../dist/amd/System/Exceptions/NotImplementedException"], function (require, exports) {
     "use strict";
     var Text = require("../../../dist/amd/System/Text/Utility");
     var AU = require("../../../dist/amd/System/Collections/Array/Utility");
@@ -88,11 +88,12 @@
             assertRemoving(assert, collection);
             assert.ok(!collection.contains(null), 'Equality comparison is not strict.');
         });
-        QUnit.asyncTest(name + ".linqAsync()", function (assert) {
+        QUnit.test(name + ".linqAsync()", function (assert) {
+            var accept = assert.async();
             collection.linqAsync(function (linq) {
                 assert.ok(!!linq, "Expects a linq enumerable instance.");
                 assert.ok(!!collection.linq, "Expects a linq enumerable instance.");
-                QUnit.start();
+                accept();
             });
         });
     }

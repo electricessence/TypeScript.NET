@@ -1,20 +1,19 @@
 ///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-
 import * as ArrayProcedure from "../../../dist/amd/System/Collections/Array/Procedure";
 
 export default function run()
 {
 	// Min/Max tests...
-	var minA                   = -10, maxA = 2000,
-	    minB = -Infinity, maxB = Infinity;
+	const minA                   = -10, maxA = 2000,
+	      minB = -Infinity, maxB = Infinity;
 
-	var a       = [5, minA, -1, maxA, -2, NaN, 20],
-	    sum     = 5 + minA + -1 + maxA + -2 + 20,
-	    average = sum/6, // Not including NaN
-	    product = 5*minA* -1*maxA* -2*20;
+	const a   = [5, minA, -1, maxA, -2, NaN, 20],
+	      sum = 5 + minA + -1 + maxA + -2 + 20,
+	      average = sum/6, // Not including NaN
+	      product = 5*minA* -1*maxA* -2*20;
 
-	var b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20];
+	const b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20];
 
 
 	QUnit.test("Array/Procedure.sum", assert=>

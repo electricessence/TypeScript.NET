@@ -1,8 +1,8 @@
-requirejs.config({
+require.config({
     baseUrl: './',
     urlArgs: 't=' + (new Date()).getTime(),
     paths: {
-        "QUnit": "./qunit"
+        "QUnit": "../../node_modules/qunitjs/qunit/qunit"
     },
     shim: {
         'QUnit': {
@@ -13,4 +13,4 @@ requirejs.config({
         }
     }
 });
-//# sourceMappingURL=require.config.js.map
+require(['main']);

@@ -1,6 +1,5 @@
 ﻿///<reference types="qunit"/>
 ///<amd-dependency path='QUnit'/>
-
 import Uri from "../../dist/amd/System/Uri/Uri";
 import {IUri} from "../../dist/amd/System/Uri/IUri";
 
@@ -8,7 +7,7 @@ import {IUri} from "../../dist/amd/System/Uri/IUri";
 export default function run()
 {
 
-	var validUri:IUri = {
+	const validUri:IUri = {
 		scheme: 'http',
 		userInfo: 'username:password',
 		host: 'domain.com',
@@ -17,7 +16,7 @@ export default function run()
 		query: '?param=hello%20there&flag=false&blah',
 		fragment: '#home'
 	};
-	var validUrl:string = ''
+	const validUrl:string = ''
 		+ validUri.scheme + '://'
 		+ validUri.userInfo + '@'
 		+ validUri.host
@@ -26,7 +25,7 @@ export default function run()
 		+ validUri.query
 		+ validUri.fragment;
 
-	QUnit.test('Uri: parse valid', assert=>
+	QUnit.test('Uri: parse valid', assert =>
 	{
 
 		assert.equal(
@@ -36,7 +35,7 @@ export default function run()
 
 	});
 
-	QUnit.test('Uri: parse equality', assert=>
+	QUnit.test('Uri: parse equality', assert =>
 	{
 
 		assert.equal(
@@ -46,7 +45,7 @@ export default function run()
 
 	});
 
-	QUnit.test('Uri: valid', assert=>
+	QUnit.test('Uri: valid', assert =>
 	{
 
 		assert.equal(
@@ -55,7 +54,7 @@ export default function run()
 			'Uri.toString(uri) must match source values.');
 
 
-		var uri = Uri.from(validUri);
+		const uri = Uri.from(validUri);
 		assert.equal(
 			uri.toString(),
 			validUrl,
@@ -89,23 +88,23 @@ export default function run()
 
 	});
 
-	QUnit.test('Uri: invalid scheme', assert=>
+	QUnit.test('Uri: invalid scheme', assert =>
 	{
 
-		assert.throws(()=>
+		assert.throws(() =>
 		{
 			Uri.from({
 				scheme: <any>'x y z'
 			});
 		});
 
-		assert.throws(()=>
+		assert.throws(() =>
 		{
 			Uri.from('http//');
 		});
 
 
-		assert.throws(()=>
+		assert.throws(() =>
 		{
 			Uri.from({
 				scheme: <any>'https:s'
@@ -114,17 +113,17 @@ export default function run()
 
 	});
 
-	QUnit.test('Uri: invalid authority', assert=>
+	QUnit.test('Uri: invalid authority', assert =>
 	{
 
-		assert.throws(()=>
+		assert.throws(() =>
 		{
 			Uri.from({
 				userInfo: validUri.userInfo
 			})
 		});
 
-		assert.throws(()=>
+		assert.throws(() =>
 		{
 			Uri.from({
 				port: validUri.port

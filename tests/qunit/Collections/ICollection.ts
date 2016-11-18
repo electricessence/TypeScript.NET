@@ -1,6 +1,5 @@
 ///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-
 import * as Text from "../../../dist/amd/System/Text/Utility";
 import * as AU from "../../../dist/amd/System/Collections/Array/Utility";
 import NotImplementedException from "../../../dist/amd/System/Exceptions/NotImplementedException";
@@ -30,7 +29,7 @@ function assertIsNumber(assert:Assert, value:any, name:string)
 
 function assertAdding<T>(assert:Assert, c:ICollection<T>, a:T[])
 {
-	var count:number;
+	let count:number;
 	for(let v of a)
 	{
 		assertIsNumber(assert, count = c.count, 'count');
@@ -43,11 +42,11 @@ function assertAdding<T>(assert:Assert, c:ICollection<T>, a:T[])
 
 function assertCopyToClear<T>(assert:Assert, c:ICollection<T>)
 {
-	var count:number;
+	let count:number;
 	assertIsNumber(assert, count = c.count, 'count');
 	if(c.count<2) throw "Can't assert '.copyTo()' or '.clear()' without at least (2) entries.";
 
-	var a:T[] = [];
+	const a:T[] = [];
 
 	c.copyTo(a);
 	assertIsNumber(assert, c.count, 'count');
@@ -58,8 +57,8 @@ function assertCopyToClear<T>(assert:Assert, c:ICollection<T>)
 	// Restore contents.
 	for(let v of a) c.add(v);
 
-	var extraSize = 10;
-	var b = AU.initialize<T>(count + extraSize);
+	const extraSize = 10;
+	const b = AU.initialize<T>(count + extraSize);
 
 	c.copyTo(b, 1);
 	assert.equal(b.length, count + extraSize, "An array's length should be equal to it's original length if the count added does not exceed the length.");
@@ -75,11 +74,11 @@ function assertCopyToClear<T>(assert:Assert, c:ICollection<T>)
 
 function assertRemoving<T>(assert:Assert, c:ICollection<T>)
 {
-	var count:number;
+	let count:number;
 	assertIsNumber(assert, count = c.count, 'count');
 	if(c.count<2) throw "Can't assert '.remove()' without at least (2) entries.";
 
-	var a:T[] = [];
+	const a:T[] = [];
 	c.copyTo(a);
 	assertIsNumber(assert, c.count, 'count');
 
@@ -112,7 +111,7 @@ export function Collection<T>(
 	collection:CollectionBase<T>,
 	sourceValues:T[]):void
 {
-	if(sourceValues.indexOf(null)!= -1)
+	if(sourceValues.indexOf(<any>null)!= -1)
 		throw "Source values should not contain null as checking against null is one of the tests.";
 
 	/* The following tests inherently test:
@@ -124,18 +123,19 @@ export function Collection<T>(
 		assertAdding(assert, collection, sourceValues);
 		assertCopyToClear(assert, collection);
 		assertRemoving(assert, collection);
-		assert.ok(!collection.contains(null), 'Equality comparison is not strict.');
+		assert.ok(!collection.contains(<any>null), 'Equality comparison is not strict.');
 	});
 
-	(<any>QUnit).asyncTest(name + ".linqAsync()", (assert:Assert)=>
+	QUnit.test(name + ".linqAsync()", (assert:Assert)=>
 	{
+		let accept = assert.async();
 		collection.linqAsync(linq=>
 		{
 			assert.ok(!!linq, "Expects a linq enumerable instance.");
 			assert.ok(!!collection.linq, "Expects a linq enumerable instance.");
-			QUnit.start();
+			accept();
 		});
-	})
+	});
 
 }
 
@@ -179,7 +179,7 @@ export function InstanceCollection(
 	name:string,
 	collection:CollectionBase<Object>):void
 {
-	var repeat = {};
+	const repeat = {};
 	//noinspection SpellCheckingInspection
 	Collection(name + '<' + 'Object>', collection, [
 		undefined,

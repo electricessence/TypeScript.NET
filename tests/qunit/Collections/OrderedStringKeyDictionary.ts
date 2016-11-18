@@ -7,7 +7,7 @@ export default function run()
 {
 
 	ICollectionTests.Collection<IKeyValuePair<string,number>>(
-		'OrderedStringKeyDictionary<number>',
+		'OrderedStringKeyDictionary'+'number>',
 		new OrderedStringKeyDictionary<number>(),
 		[
 			{key:'A',value:1},

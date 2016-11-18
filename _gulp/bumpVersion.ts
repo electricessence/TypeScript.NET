@@ -33,7 +33,7 @@ async function bumpVersion(type:string):PromiseLike<File[]>
 		gulp.src(['./bower.json', './package.json'])
 			.pipe(bump({version: newVer}))
 			.pipe(gulp.dest('./'))
-	)
+	);
 }
 
 

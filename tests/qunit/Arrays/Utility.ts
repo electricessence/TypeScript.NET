@@ -1,60 +1,54 @@
 ///<reference types="qunit"/>
 ///<amd-dependency path="QUnit"/>
-
 import * as Arrays from "../../../dist/amd/System/Collections/Array/Compare";
 import * as ArrayUtility from "../../../dist/amd/System/Collections/Array/Utility";
 
 export default function run()
 {
 	// Min/Max tests...
-	var minA = -10, maxA = 2000;
+	const minA = -10, maxA = 2000;
 
-	var a = [5, minA, -1, maxA, -2, NaN, 20];
+	const a = [5, minA, -1, maxA, -2, NaN, 20];
 
-	QUnit.test("Array/Utility.initialize", assert=>
+	QUnit.test("Array/Utility.initialize", assert =>
 	{
-		var len:number;
+		let len:number;
 
 		len = 100;
-		var a = ArrayUtility.initialize(len);
+		const a = ArrayUtility.initialize(len);
 		assert.equal(a.length, len, ".length should be " + len);
 
 		len = 100000;
-		var b = ArrayUtility.initialize(len);
+		const b = ArrayUtility.initialize(len);
 		assert.equal(b.length, len, ".length should be " + len);
 
 	});
 
 
-	QUnit.test("Array/Utility.copy/equals", assert=>
+	QUnit.test("Array/Utility.copy/equals", assert =>
 	{
-		var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
-		var s2 = ArrayUtility.copy(s1);
+		const s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
+		const s2 = ArrayUtility.copy(s1);
 
 		assert.ok(Arrays.areEqual(s1, s2));
 	});
 
-	QUnit.test("Array/Utility.contains", assert=>
+	QUnit.test("Array/Utility.contains", assert =>
 	{
 		assert.ok(ArrayUtility.contains(a, -1));
 		assert.ok(!ArrayUtility.contains(a, -9876));
 	});
 
-	QUnit.test("Array/Utility.findIndex", assert=>
+	QUnit.test("Array/Utility.findIndex", assert =>
 	{
-		assert.equal(ArrayUtility.findIndex(a, (v:number)=>
-		{
-			return v== -1;
-		}), 2);
-		assert.equal(ArrayUtility.findIndex(a, (v:number)=>
-		{
-			return v== -9876;
-		}), -1);
+		assert.equal(ArrayUtility.findIndex(a, (v:number) => v== -1), 2);
+		assert.equal(ArrayUtility.findIndex(a, (v:number) => v== -9876), -1);
 	});
 
-	QUnit.test("Array/Utility.register", assert=>
+	QUnit.test("Array/Utility.register", assert =>
 	{
-		var s = ArrayUtility.copy(a), len = s.length;
+		const s = ArrayUtility.copy(a);
+		let len = s.length;
 		assert.ok(ArrayUtility.register(s, -9876));
 		assert.equal(s.length, len + 1);
 		len = s.length;
@@ -67,10 +61,10 @@ export default function run()
 	/*	Utility.applyTo skipped.
 	 It has too many permutations while being a straight forward function. */
 
-	QUnit.test("Array/Utility.remove", assert=>
+	QUnit.test("Array/Utility.remove", assert =>
 	{
-		var s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
-		var len = s.length;
+		const s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
+		let len = s.length;
 
 		assert.equal(ArrayUtility.remove(s, 9), 1, "Only 9 removed once");
 		assert.equal(s.length, len - 1, ".length should be less by one");
@@ -96,15 +90,15 @@ export default function run()
 	});
 
 
-	QUnit.test("Array/Utility.repeat", assert=>
+	QUnit.test("Array/Utility.repeat", assert =>
 	{
-		var value = 10, count = 3;
-		var r = ArrayUtility.repeat(value, count);
+		const value = 10, count = 3;
+		const r = ArrayUtility.repeat(value, count);
 		assert.ok(r.length==count, ".length should be 3");
-        for(let i = 0; i<count; i++)
-        {
-            assert.equal(r[i], value);
-        }
+		for(let i = 0; i<count; i++)
+		{
+			assert.equal(r[i], value);
+		}
 	});
 
 

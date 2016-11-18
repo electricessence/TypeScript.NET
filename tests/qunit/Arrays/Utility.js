@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Compare", "../../../dist/amd/System/Collections/Array/Utility"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Compare", "../../../dist/amd/System/Collections/Array/Utility"], function (require, exports) {
     "use strict";
     var Arrays = require("../../../dist/amd/System/Collections/Array/Compare");
     var ArrayUtility = require("../../../dist/amd/System/Collections/Array/Utility");
@@ -31,15 +31,12 @@
             assert.ok(!ArrayUtility.contains(a, -9876));
         });
         QUnit.test("Array/Utility.findIndex", function (assert) {
-            assert.equal(ArrayUtility.findIndex(a, function (v) {
-                return v == -1;
-            }), 2);
-            assert.equal(ArrayUtility.findIndex(a, function (v) {
-                return v == -9876;
-            }), -1);
+            assert.equal(ArrayUtility.findIndex(a, function (v) { return v == -1; }), 2);
+            assert.equal(ArrayUtility.findIndex(a, function (v) { return v == -9876; }), -1);
         });
         QUnit.test("Array/Utility.register", function (assert) {
-            var s = ArrayUtility.copy(a), len = s.length;
+            var s = ArrayUtility.copy(a);
+            var len = s.length;
             assert.ok(ArrayUtility.register(s, -9876));
             assert.equal(s.length, len + 1);
             len = s.length;

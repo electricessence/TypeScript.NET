@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./ICollection", "../../../dist/amd/System/Collections/LinkedList"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./ICollection", "../../../dist/amd/System/Collections/LinkedList"], function (require, exports) {
     "use strict";
     var ICollectionTests = require("./ICollection");
     var LinkedList_1 = require("../../../dist/amd/System/Collections/LinkedList");

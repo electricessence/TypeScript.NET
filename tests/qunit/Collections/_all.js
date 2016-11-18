@@ -1,11 +1,11 @@
-(function (factory) {
+(function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "./LinkedList", "./Queue", "./OrderedStringKeyDictionary"], factory);
+        define(dependencies, factory);
     }
-})(function (require, exports) {
+})(["require", "exports", "./LinkedList", "./Queue", "./OrderedStringKeyDictionary"], function (require, exports) {
     "use strict";
     var LinkedList_1 = require("./LinkedList");
     var Queue_1 = require("./Queue");
