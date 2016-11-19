@@ -16,7 +16,7 @@
     var Promise_1 = require("../source/System/Promises/Promise");
     var awaiter_1 = require("../source/awaiter");
     var generator_1 = require("../source/generator");
-    var __awaiter = awaiter_1.awaiter.factory(Promise_1.Promise);
+    var __awaiter = awaiter_1.default;
     var __generator = generator_1.default;
     var fields = {
         "name": true,
@@ -37,6 +37,8 @@
                     case 0: return [4 /*yield*/, File.json.read('./package.json')];
                     case 1:
                         pkg = _b.sent();
+                        if (!pkg)
+                            throw "package.json not found.";
                         for (_i = 0, _a = Object.keys(pkg); _i < _a.length; _i++) {
                             key = _a[_i];
                             if (!fields[key])

@@ -7,7 +7,7 @@ import {Promise as NPromise} from "../source/System/Promises/Promise";
 import awaiter from "../source/awaiter";
 import generator from "../source/generator";
 // noinspection JSUnusedLocalSymbols
-const __awaiter = awaiter.factory(NPromise);
+const __awaiter = awaiter;
 // noinspection JSUnusedLocalSymbols
 const __generator = generator;
 

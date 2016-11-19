@@ -31,13 +31,5 @@ export function awaiter(thisArg, _arguments, P, generator) {
         }
     });
 }
-(function (awaiter) {
-    function factory(UserPromise) {
-        return (thisArg, _arguments, P, generator) => {
-            awaiter(thisArg, _arguments, P || UserPromise, generator);
-        };
-    }
-    awaiter.factory = factory;
-})(awaiter || (awaiter = {}));
 export default awaiter;
 //# sourceMappingURL=awaiter.js.map

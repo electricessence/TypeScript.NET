@@ -41,15 +41,6 @@ System.register([], function (exports_1, context_1) {
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
-            (function (awaiter) {
-                function factory(UserPromise) {
-                    return function (thisArg, _arguments, P, generator) {
-                        awaiter(thisArg, _arguments, P || UserPromise, generator);
-                    };
-                }
-                awaiter.factory = factory;
-            })(awaiter || (awaiter = {}));
-            exports_1("awaiter", awaiter);
             exports_1("default", awaiter);
         }
     };

@@ -5,18 +5,19 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "assert", "mocha", "../../../../dist/commonjs/System/Time/ClockTime", "../../../../dist/commonjs/System/Integer"], function (require, exports) {
+})(["require", "exports", "assert", "mocha", "../../../../dist/commonjs/System/Time/ClockTime", "../../../../dist/commonjs/System/Time/HowMany", "../../../../dist/commonjs/System/Integer"], function (require, exports) {
     "use strict";
     var assert = require("assert");
     require("mocha");
     var ClockTime_1 = require("../../../../dist/commonjs/System/Time/ClockTime");
+    var HowMany_1 = require("../../../../dist/commonjs/System/Time/HowMany");
     var Integer_1 = require("../../../../dist/commonjs/System/Integer");
     var days = Integer_1.default.random(365), hour = Integer_1.default.random(24), minute = Integer_1.default.random(60), second = Integer_1.default.random(60), millisecond = Integer_1.default.random(1000);
     var c1 = new ClockTime_1.default(hour, minute, second, millisecond);
-    var c2 = new ClockTime_1.default(days * 86400000
-        + hour * 3600000
-        + minute * 60000
-        + second * 1000
+    var c2 = new ClockTime_1.default(days * HowMany_1.Milliseconds.Per.Day
+        + hour * HowMany_1.Milliseconds.Per.Hour
+        + minute * HowMany_1.Milliseconds.Per.Minute
+        + second * HowMany_1.Milliseconds.Per.Second
         + millisecond);
     describe(".", function () {
         it('should match constructor values', function () {

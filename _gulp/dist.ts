@@ -7,10 +7,10 @@ import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {Promise as NPromise} from "../source/System/Promises/Promise";
-import {awaiter} from "../source/awaiter";
+import awaiter from "../source/awaiter";
 import generator from "../source/generator";
 // noinspection JSUnusedLocalSymbols
-const __awaiter = awaiter.factory(NPromise);
+const __awaiter = awaiter;
 // noinspection JSUnusedLocalSymbols
 const __generator = generator;
 
@@ -29,6 +29,7 @@ const fields:IMap<boolean> = {
 async function getPackage(dist:string):NPromise<JsonMap>
 {
 	let pkg = await File.json.read<JsonMap>('./package.json');
+	if(!pkg) throw "package.json not found.";
 	for(let key of Object.keys(pkg))
 	{
 		if(!fields[key])

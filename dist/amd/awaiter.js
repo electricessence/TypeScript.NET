@@ -2,5 +2,5 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-define(["require","exports"],function(t,n){"use strict";function e(t,n,e,r){if(!e)throw"Must provide Promise constructor.  Try injecting Promise using awaiter.factory(PromiseConstructorLike).";return new e(function(i,o){function u(t){try{a(f.next(t))}catch(n){o(n)}}function c(t){try{a(f["throw"](t))}catch(n){o(n)}}function a(t){t.done?i(t.value):new e(function(n){n(t.value)}).then(u,c)}var f=r=r.apply(t,n);a(f.next())})}n.awaiter=e,function(t){function n(n){return function(e,r,i,o){t(e,r,i||n,o)}}t.factory=n}(e=n.awaiter||(n.awaiter={})),Object.defineProperty(n,"__esModule",{value:!0}),n["default"]=e});
+define(["require","exports"],function(t,e){"use strict";function n(t,e,n,r){if(!n)throw"Must provide Promise constructor.  Try injecting Promise using awaiter.factory(PromiseConstructorLike).";return new n(function(i,o){function u(t){try{a(f.next(t))}catch(e){o(e)}}function c(t){try{a(f["throw"](t))}catch(e){o(e)}}function a(t){t.done?i(t.value):new n(function(e){e(t.value)}).then(u,c)}var f=r=r.apply(t,e);a(f.next())})}e.awaiter=n,Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=n});
 //# sourceMappingURL=awaiter.js.map

@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
- */
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -13,11 +8,7 @@ System.register([], function (exports_1, context_1) {
     var File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID, All;
     return {
         setters: [],
-        execute: function () {/*!
-             * @author electricessence / https://github.com/electricessence/
-             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-             * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
-             */
+        execute: function () {
             exports_1("File", File = "file");
             exports_1("FTP", FTP = "ftp");
             exports_1("GOPHER", GOPHER = "gopher");
