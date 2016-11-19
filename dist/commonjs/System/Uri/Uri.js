@@ -94,6 +94,7 @@ var Uri = (function () {
     return Uri;
 }());
 exports.Uri = Uri;
+var Fields;
 (function (Fields) {
     Fields[Fields["scheme"] = 0] = "scheme";
     Fields[Fields["userInfo"] = 1] = "userInfo";
@@ -102,8 +103,7 @@ exports.Uri = Uri;
     Fields[Fields["path"] = 4] = "path";
     Fields[Fields["query"] = 5] = "query";
     Fields[Fields["fragment"] = 6] = "fragment";
-})(exports.Fields || (exports.Fields = {}));
-var Fields = exports.Fields;
+})(Fields = exports.Fields || (exports.Fields = {}));
 Object.freeze(Fields);
 function copyUri(from, to) {
     var i = 0, field;

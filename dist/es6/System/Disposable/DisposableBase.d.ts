@@ -6,7 +6,7 @@ export declare abstract class DisposableBase implements IDisposableAware {
     private __wasDisposed;
     readonly wasDisposed: boolean;
     protected _disposableObjectName: string;
-    protected throwIfDisposed(message?: string, objectName?: string): boolean;
+    protected throwIfDisposed(message?: string, objectName?: string): true | never;
     dispose(): void;
     protected _onDispose(): void;
 }

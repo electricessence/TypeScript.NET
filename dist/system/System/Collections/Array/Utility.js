@@ -12,6 +12,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return array;
     }
+    exports_1("initialize", initialize);
     function copy(source, sourceIndex, length) {
         if (sourceIndex === void 0) { sourceIndex = 0; }
         if (length === void 0) { length = Infinity; }
@@ -19,6 +20,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             return source;
         return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
     }
+    exports_1("copy", copy);
     function copyTo(source, destination, sourceIndex, destinationIndex, length) {
         if (sourceIndex === void 0) { sourceIndex = 0; }
         if (destinationIndex === void 0) { destinationIndex = 0; }
@@ -48,6 +50,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return destination;
     }
+    exports_1("copyTo", copyTo);
     function indexOf(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         var len = array && array.length;
@@ -61,10 +64,12 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return -1;
     }
+    exports_1("indexOf", indexOf);
     function contains(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         return indexOf(array, item, equalityComparer) != -1;
     }
+    exports_1("contains", contains);
     function replace(array, old, newValue, max) {
         if (!array || !array.length || max === 0)
             return 0;
@@ -83,6 +88,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return count;
     }
+    exports_1("replace", replace);
     function updateRange(array, value, start, stop) {
         if (start === void 0) { start = 0; }
         if (!array)
@@ -97,10 +103,12 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             array[i] = value;
         }
     }
+    exports_1("updateRange", updateRange);
     function clear(array, start, stop) {
         if (start === void 0) { start = 0; }
         updateRange(array, null, start, stop);
     }
+    exports_1("clear", clear);
     function register(array, item, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (!array)
@@ -111,6 +119,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             array[len] = item;
         return ok;
     }
+    exports_1("register", register);
     function findIndex(array, predicate) {
         if (!array)
             throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
@@ -131,6 +140,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return -1;
     }
+    exports_1("findIndex", findIndex);
     function forEach(source, action) {
         if (source && action) {
             for (var i = 0; i < source.length; i++) {
@@ -139,6 +149,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             }
         }
     }
+    exports_1("forEach", forEach);
     function applyTo(target, fn) {
         if (target && fn) {
             for (var i = 0; i < target.length; i++) {
@@ -146,6 +157,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             }
         }
     }
+    exports_1("applyTo", applyTo);
     function removeIndex(array, index) {
         if (!array)
             throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
@@ -157,6 +169,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             array.splice(index, 1);
         return exists;
     }
+    exports_1("removeIndex", removeIndex);
     function remove(array, value, max, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         if (!array || !array.length || max === 0)
@@ -188,6 +201,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return count;
     }
+    exports_1("remove", remove);
     function repeat(element, count) {
         Integer_1.Integer.assert(count, 'count');
         if (count < 0)
@@ -198,6 +212,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return result;
     }
+    exports_1("repeat", repeat);
     function range(first, count, step) {
         if (step === void 0) { step = 1; }
         if (isNaN(first) || !isFinite(first))
@@ -213,16 +228,19 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return result;
     }
+    exports_1("range", range);
     function rangeUntil(first, until, step) {
         if (step === void 0) { step = 1; }
         if (step == 0)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('step', step, CB0);
         return range(first, (until - first) / step, step);
     }
+    exports_1("rangeUntil", rangeUntil);
     function distinct(source) {
         var seen = {};
         return source.filter(function (e) { return !(e in seen) && (seen[e] = true); });
     }
+    exports_1("distinct", distinct);
     function flatten(a, recurseDepth) {
         if (recurseDepth === void 0) { recurseDepth = 0; }
         var result = [];
@@ -239,26 +257,8 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return result;
     }
-    var Types_1, Integer_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, CBN, CB0, CBL0, VFN;
-    exports_1("initialize", initialize);
-    exports_1("copy", copy);
-    exports_1("copyTo", copyTo);
-    exports_1("indexOf", indexOf);
-    exports_1("contains", contains);
-    exports_1("replace", replace);
-    exports_1("updateRange", updateRange);
-    exports_1("clear", clear);
-    exports_1("register", register);
-    exports_1("findIndex", findIndex);
-    exports_1("forEach", forEach);
-    exports_1("applyTo", applyTo);
-    exports_1("removeIndex", removeIndex);
-    exports_1("remove", remove);
-    exports_1("repeat", repeat);
-    exports_1("range", range);
-    exports_1("rangeUntil", rangeUntil);
-    exports_1("distinct", distinct);
     exports_1("flatten", flatten);
+    var Types_1, Integer_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, CBN, CB0, CBL0, VFN;
     return {
         setters: [
             function (Types_1_1) {

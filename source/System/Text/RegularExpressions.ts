@@ -166,7 +166,7 @@ export class Regex
 		return m;
 	}
 
-	matches(input:string):Match[]
+	matches(input:string):Match[] //Readonly<Match[]>
 	{
 		const matches:Match[] = [];
 		let m:Match, p = 0;
@@ -176,7 +176,8 @@ export class Regex
 			matches.push(m);
 			p = m.index + m.length;
 		}
-		return Object.freeze(matches);
+		Object.freeze(matches);
+		return matches;
 	}
 
 	replace(
@@ -300,8 +301,8 @@ export class Match extends Group
 	constructor(
 		value:string = EMPTY,
 		index:number = -1,
-		public groups:Group[] = [],
-		public namedGroups:IMap<Group> = {})
+		public readonly groups:Group[] = [],
+		public readonly namedGroups:IMap<Group> = {})
 	{
 		super(value, index);
 	}

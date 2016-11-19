@@ -521,12 +521,12 @@ var pools;
     })(PromiseCallbacks = pools.PromiseCallbacks || (pools.PromiseCallbacks = {}));
 })(pools || (pools = {}));
 (function (Promise) {
+    var State;
     (function (State) {
         State[State["Pending"] = 0] = "Pending";
         State[State["Fulfilled"] = 1] = "Fulfilled";
         State[State["Rejected"] = -1] = "Rejected";
-    })(Promise.State || (Promise.State = {}));
-    var State = Promise.State;
+    })(State = Promise.State || (Promise.State = {}));
     Object.freeze(State);
     function factory(e) {
         return new Promise(e);

@@ -6,6 +6,6 @@ export declare class ObjectDisposedException extends InvalidOperationException {
     constructor(objectName: string, message?: string, innerException?: Error);
     protected getName(): string;
     toString(): string;
-    static throwIfDisposed(disposable: IDisposableAware, objectName: string, message?: string): void;
+    static throwIfDisposed(disposable: IDisposableAware, objectName: string, message?: string): true | never;
 }
 export default ObjectDisposedException;

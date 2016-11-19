@@ -4,7 +4,6 @@ System.register(["./Sorting/createComparer", "./Sorting/quickSort"], function (e
     var createComparer_1;
     var exportedNames_1 = {
         "createComparer": true,
-        "default": true,
         "by": true
     };
     function exportStar_1(m) {

@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 (function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -12,6 +7,7 @@
     }
 })(["require", "exports"], function (require, exports) {
     "use strict";
+    var TimeUnit;
     (function (TimeUnit) {
         TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
         TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
@@ -19,8 +15,7 @@
         TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
         TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
         TimeUnit[TimeUnit["Days"] = 5] = "Days";
-    })(exports.TimeUnit || (exports.TimeUnit = {}));
-    var TimeUnit = exports.TimeUnit;
+    })(TimeUnit = exports.TimeUnit || (exports.TimeUnit = {}));
     (function (TimeUnit) {
         function toMilliseconds(value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }

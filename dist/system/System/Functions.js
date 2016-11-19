@@ -28,7 +28,7 @@ System.register([], function (exports_1, context_1) {
                 Functions.True = rootFunctions.True;
                 Functions.False = rootFunctions.False;
                 Functions.Blank = rootFunctions.Blank;
-            })(Functions = Functions || (Functions = {}));
+            })(Functions || (Functions = {}));
             exports_1("Functions", Functions);
             Object.freeze(Functions);
             exports_1("default", Functions);

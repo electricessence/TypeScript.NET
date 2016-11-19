@@ -7,7 +7,10 @@ export declare class SubscribableBase<TSubscriber> extends DisposableBase {
     private _findEntryNode(subscriber);
     subscribe(subscriber: TSubscriber): IDisposable;
     unsubscribe(subscriber: TSubscriber): void;
-    protected _unsubscribeAll(returnSubscribers?: boolean): TSubscriber[] | null;
+    protected _unsubscribeAll(): null;
+    protected _unsubscribeAll(returnSubscribers: false): null;
+    protected _unsubscribeAll(returnSubscribers: true): TSubscriber[] | null;
+    protected _unsubscribeAll(returnSubscribers: boolean): TSubscriber[] | null;
     unsubscribeAll(): void;
     protected _onDispose(): void;
 }

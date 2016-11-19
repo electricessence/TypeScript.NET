@@ -19,8 +19,10 @@ export declare class Queue<T> extends CollectionBase<T> {
     forEach(action: PredicateWithIndex<T>): number;
     setCapacity(capacity: number): void;
     enqueue(item: T): void;
-    protected _dequeueInternal(throwIfEmpty?: boolean): T;
-    dequeue(throwIfEmpty?: boolean): T;
+    protected _tryDequeueInternal(out: Action<T>): boolean;
+    dequeue(): T | undefined;
+    dequeue(throwIfEmpty: true): T;
+    dequeue(throwIfEmpty: boolean): T | undefined;
     tryDequeue(out: Action<T>): boolean;
     private _getElement(index);
     peek(): T;

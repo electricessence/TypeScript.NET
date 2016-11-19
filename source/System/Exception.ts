@@ -47,7 +47,7 @@ export class Exception implements Error, IDisposable
 
 		/* Originally intended to use 'get' accessors for properties,
 		 * But debuggers don't display these readily yet.
-		 * Object.freeze has to be used carefully, but will prevent overriding values.
+		 * Object.freeze has to be used carefully, but will prevent overriding values at runtime.
 		 */
 
 		if(beforeSealing) beforeSealing(_);

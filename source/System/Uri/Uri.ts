@@ -39,7 +39,7 @@ export class Uri implements IUri, IEquatable<IUri>
 	readonly query:string | null;
 	readonly fragment:string | null;
 
-	readonly queryParams:IMap<Primitive|Primitive[]>;
+	readonly queryParams:IMap<Primitive|Primitive[]>;//Readonly<IMap<Primitive|Primitive[]>>;
 
 	/**
 	 * @param scheme The user name, password, or other user-specific information associated with the specified URI.

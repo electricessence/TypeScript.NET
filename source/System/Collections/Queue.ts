@@ -25,7 +25,7 @@ const SHRINK_THRESHOLD:number = 32; // Unused?
 // var GROW_FACTOR: number = 200;  // double each time
 const GROW_FACTOR_HALF:number = 100;
 const DEFAULT_CAPACITY:number = MINIMUM_GROW;
-const emptyArray:any[] = Object.freeze([]);
+const emptyArray:any = Object.freeze([]);
 
 export class Queue<T>
 extends CollectionBase<T>

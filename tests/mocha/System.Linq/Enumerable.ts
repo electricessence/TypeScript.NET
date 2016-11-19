@@ -96,7 +96,7 @@ function compileTest():ILinqEnumerable<TestItem>
 }
 
 
-const sourceMany:Enumerable<string> = Enumerable.from(Object.freeze([
+const sourceMany= Enumerable.from<string>(Object.freeze([
 	"a,b,c,d,e",
 	<any>null,
 	"f,g,h,i,j",
@@ -773,7 +773,7 @@ describe(".fromAny(x,default)", ()=>
 	it("should return an enumerable from an IEnumerable", ()=>
 	{
 		const e = Enumerable.fromAny({getEnumerator: () => { return EmptyEnumerator; }});
-		e.getEnumerator();
+		e!.getEnumerator();
 		assert.ok(e instanceof Enumerable);
 	});
 });

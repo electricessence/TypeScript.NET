@@ -20,6 +20,7 @@ var rootFunctions = new Functions();
     Functions.False = rootFunctions.False;
     Functions.Blank = rootFunctions.Blank;
 })(Functions = exports.Functions || (exports.Functions = {}));
+exports.Functions = Functions;
 Object.freeze(Functions);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Functions;

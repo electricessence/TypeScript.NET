@@ -11,7 +11,8 @@ import {
 	Closure,
 	ActionWithIndex,
 	PredicateWithIndex,
-	SelectorWithIndex, Action
+	SelectorWithIndex,
+	Action
 } from "../System/FunctionTypes";
 import {IArray} from "../System/Collections/Array/IArray";
 import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";

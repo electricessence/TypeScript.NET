@@ -48,7 +48,7 @@ System.register([], function (exports_1, context_1) {
                     };
                 }
                 awaiter.factory = factory;
-            })(awaiter = awaiter || (awaiter = {}));
+            })(awaiter || (awaiter = {}));
             exports_1("awaiter", awaiter);
             exports_1("default", awaiter);
         }

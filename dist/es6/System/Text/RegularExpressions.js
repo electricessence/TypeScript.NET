@@ -93,7 +93,8 @@ export class Regex {
             matches.push(m);
             p = m.index + m.length;
         }
-        return Object.freeze(matches);
+        Object.freeze(matches);
+        return matches;
     }
     replace(input, r, count = Infinity) {
         if (!input || r === null || r === void 0 || !(count > 0))
@@ -139,11 +140,11 @@ export class Capture {
     }
 }
 export class Group extends Capture {
-    constructor(value = EMPTY, index = -1) {
-        super(value, index);
-    }
     get success() {
         return this.index != -1;
+    }
+    constructor(value = EMPTY, index = -1) {
+        super(value, index);
     }
     static get Empty() {
         return EmptyGroup;

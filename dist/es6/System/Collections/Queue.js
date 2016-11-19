@@ -93,15 +93,15 @@ export class Queue extends CollectionBase {
         if (isFinite(max)) {
             Integer.assertZeroOrGreater(max);
             if (max !== 0) {
-                while (max-- && _._size) {
-                    result.push(_._dequeueInternal());
-                }
+                while (max-- && _._tryDequeueInternal(value => {
+                    result.push(value);
+                })) { }
             }
         }
         else {
-            while (_._size) {
-                result.push(_._dequeueInternal());
-            }
+            while (_._tryDequeueInternal(value => {
+                result.push(value);
+            })) { }
         }
         _.trimExcess();
         _._signalModification();
@@ -143,38 +143,39 @@ export class Queue extends CollectionBase {
     enqueue(item) {
         this.add(item);
     }
-    _dequeueInternal(throwIfEmpty = false) {
+    _tryDequeueInternal(out) {
         const _ = this;
-        if (_._size == 0) {
-            if (throwIfEmpty)
-                throw new InvalidOperationException("Cannot dequeue an empty queue.");
-            return VOID0;
-        }
+        if (!_._size)
+            return false;
         const array = _._array, head = _._head;
         const removed = _._array[head];
         array[head] = null;
         _._head = (head + 1) % _._capacity;
         _._size--;
         _._incrementModified();
-        return removed;
+        out(removed);
+        return true;
     }
     dequeue(throwIfEmpty = false) {
         const _ = this;
         _.assertModifiable();
-        const modified = !!_._size;
-        const v = this._dequeueInternal(throwIfEmpty);
-        if (modified && _._size < _._capacity / 2)
-            _.trimExcess(SHRINK_THRESHOLD);
-        _._signalModification();
-        return v;
+        let result = VOID0;
+        if (!this.tryDequeue(value => { result = value; }) && throwIfEmpty)
+            throw new InvalidOperationException("Cannot dequeue an empty queue.");
+        return result;
     }
     tryDequeue(out) {
-        if (!this._size)
+        const _ = this;
+        if (!_._size)
             return false;
-        const d = this.dequeue();
-        if (out)
-            out(d);
-        return true;
+        _.assertModifiable();
+        if (this._tryDequeueInternal(out)) {
+            if (_._size < _._capacity / 2)
+                _.trimExcess(SHRINK_THRESHOLD);
+            _._signalModification();
+            return true;
+        }
+        return false;
     }
     _getElement(index) {
         assertIntegerZeroOrGreater(index, "index");
@@ -212,10 +213,11 @@ export class Queue extends CollectionBase {
 function assertZeroOrGreater(value, property) {
     if (value < 0)
         throw new ArgumentOutOfRangeException(property, value, "Must be greater than zero");
+    return true;
 }
 function assertIntegerZeroOrGreater(value, property) {
     Integer.assert(value, property);
-    assertZeroOrGreater(value, property);
+    return assertZeroOrGreater(value, property);
 }
 export default Queue;
 //# sourceMappingURL=Queue.js.map

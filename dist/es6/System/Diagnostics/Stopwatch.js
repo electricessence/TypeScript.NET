@@ -3,14 +3,14 @@ function getTimestampMilliseconds() {
     return (new Date()).getTime();
 }
 export default class Stopwatch {
-    constructor() {
-        this.reset();
-    }
     static getTimestampMilliseconds() {
         return getTimestampMilliseconds();
     }
     get isRunning() {
         return this._isRunning;
+    }
+    constructor() {
+        this.reset();
     }
     static startNew() {
         const s = new Stopwatch();

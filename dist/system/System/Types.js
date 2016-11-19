@@ -184,7 +184,7 @@ System.register([], function (exports_1, context_1) {
                         || !Type.isFunction(instance) && hasMember(instance, LENGTH);
                 }
                 Type.isArrayLike = isArrayLike;
-            })(Type = Type || (Type = {}));
+            })(Type || (Type = {}));
             exports_1("Type", Type);
             Object.freeze(Type);
             exports_1("default", Type);

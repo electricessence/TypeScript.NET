@@ -34,7 +34,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                 RegexOptions.Y = _Y;
                 RegexOptions.IGNORE_PATTERN_WHITESPACE = _W;
                 RegexOptions.W = _W;
-            })(RegexOptions = RegexOptions || (RegexOptions = {}));
+            })(RegexOptions || (RegexOptions = {}));
             exports_1("RegexOptions", RegexOptions);
             Regex = (function () {
                 function Regex(pattern, options) {
@@ -114,7 +114,8 @@ System.register(["../../extends"], function (exports_1, context_1) {
                         matches.push(m);
                         p = m.index + m.length;
                     }
-                    return Object.freeze(matches);
+                    Object.freeze(matches);
+                    return matches;
                 };
                 Regex.prototype.replace = function (input, r, count) {
                     if (count === void 0) { count = Infinity; }

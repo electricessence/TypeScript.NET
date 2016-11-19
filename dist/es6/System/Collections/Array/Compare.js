@@ -12,11 +12,15 @@ function validateSize(a, b) {
         return true;
     return len;
 }
-export function areAllEqual(arrays, strict, equalityComparer = Values.areEqual) {
+export function areAllEqual(arrays, strict = true, equalityComparer = Values.areEqual) {
     if (!arrays)
         throw new Error("ArgumentNullException: 'arrays' cannot be null.");
     if (arrays.length < 2)
         throw new Error("Cannot compare a set of arrays less than 2.");
+    if (Type.isFunction(strict)) {
+        equalityComparer = strict;
+        strict = true;
+    }
     const first = arrays[0];
     for (let i = 0, l = arrays.length; i < l; i++) {
         if (!areEqual(first, arrays[i], strict, equalityComparer))
@@ -24,10 +28,14 @@ export function areAllEqual(arrays, strict, equalityComparer = Values.areEqual) 
     }
     return true;
 }
-export function areEqual(a, b, strict, equalityComparer = Values.areEqual) {
+export function areEqual(a, b, strict = true, equalityComparer = Values.areEqual) {
     const len = validateSize(a, b);
     if (Type.isBoolean(len))
         return len;
+    if (Type.isFunction(strict)) {
+        equalityComparer = strict;
+        strict = true;
+    }
     for (let i = 0; i < len; i++) {
         if (!equalityComparer(a[i], b[i], strict))
             return false;

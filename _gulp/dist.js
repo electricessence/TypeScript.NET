@@ -30,7 +30,7 @@
         "browser": true
     };
     function getPackage(dist) {
-        return __awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, Promise_1.Promise, function () {
             var pkg, _i, _a, key;
             return __generator(this, function (_b) {
                 switch (_b.label) {
@@ -50,7 +50,7 @@
     }
     function savePackage(dist, folder) {
         if (folder === void 0) { folder = dist; }
-        return __awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, Promise_1.Promise, function () {
             var pkg;
             return __generator(this, function (_a) {
                 switch (_a.label) {

@@ -67,6 +67,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 InternalNode.prototype.assertDetached = function () {
                     if (this.next || this.previous)
                         throw new InvalidOperationException_1.InvalidOperationException("Adding a node that is already placed.");
+                    return true;
                 };
                 return InternalNode;
             }());
@@ -81,9 +82,9 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 }
                 LinkedList.prototype.assertVersion = function (version) {
                     if (this._listInternal)
-                        this._listInternal.assertVersion(version);
+                        return this._listInternal.assertVersion(version);
                     else
-                        _super.prototype.assertVersion.call(this, version);
+                        return _super.prototype.assertVersion.call(this, version);
                 };
                 LinkedList.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);

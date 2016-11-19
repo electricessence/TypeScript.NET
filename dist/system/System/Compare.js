@@ -7,6 +7,7 @@ System.register(["./Types"], function (exports_1, context_1) {
             || !strict && a == b
             || isTrueNaN(a) && isTrueNaN(b);
     }
+    exports_1("areEqual", areEqual);
     function compare(a, b, strict) {
         if (strict === void 0) { strict = true; }
         if (areEqual(a, b, strict))
@@ -21,6 +22,7 @@ System.register(["./Types"], function (exports_1, context_1) {
             return -1;
         return NaN;
     }
+    exports_1("compare", compare);
     function areEquivalent(a, b, nullEquivalency, extraDepth) {
         if (nullEquivalency === void 0) { nullEquivalency = true; }
         if (extraDepth === void 0) { extraDepth = 0; }
@@ -59,10 +61,8 @@ System.register(["./Types"], function (exports_1, context_1) {
         }
         return false;
     }
-    var Types_1, isTrueNaN, VOID0, COMPARE_TO;
-    exports_1("areEqual", areEqual);
-    exports_1("compare", compare);
     exports_1("areEquivalent", areEquivalent);
+    var Types_1, isTrueNaN, VOID0, COMPARE_TO;
     return {
         setters: [
             function (Types_1_1) {

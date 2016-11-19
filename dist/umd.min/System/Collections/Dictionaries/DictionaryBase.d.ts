@@ -26,8 +26,8 @@ export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBas
     containsValue(value: TValue): boolean;
     removeByKey(key: TKey): boolean;
     removeByValue(value: TValue): number;
-    importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | null | undefined): number;
-    protected _importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | null | undefined): number;
+    importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | IEnumerator<KeyValuePair<TKey, TValue>> | null | undefined): number;
+    protected _importEntries(pairs: IEnumerableOrArray<KeyValuePair<TKey, TValue>> | IEnumerator<KeyValuePair<TKey, TValue>> | null | undefined): number;
     getEnumerator(): IEnumerator<IKeyValuePair<TKey, TValue>>;
 }
 export default DictionaryBase;

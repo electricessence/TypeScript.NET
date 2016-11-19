@@ -1,2 +1,2 @@
-define(["require","exports","./Sorting/createComparer","./Sorting/quickSort"],function(r,e,t,a){"use strict";function o(r){for(var t in r)e.hasOwnProperty(t)||(e[t]=r[t])}e.createComparer=t.createComparer,e["default"]=t.createComparer,e.by=t.createComparer,o(a)});
+define(["require","exports","./Sorting/createComparer","./Sorting/quickSort"],function(e,r,t,o){"use strict";function a(e){for(var t in e)r.hasOwnProperty(t)||(r[t]=e[t])}r.createComparer=t.createComparer,Object.defineProperty(r,"__esModule",{value:!0}),r["default"]=t.createComparer,r.by=t.createComparer,a(o)});
 //# sourceMappingURL=Sort.js.map

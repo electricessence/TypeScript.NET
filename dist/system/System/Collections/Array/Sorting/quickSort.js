@@ -7,6 +7,7 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
         var len = target.length;
         return target.length < 2 ? target : sort(target, 0, len - 1);
     }
+    exports_1("quickSort", quickSort);
     function sort(target, low, high) {
         if (low < high) {
             var swap = void 0;
@@ -32,7 +33,6 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
         return target;
     }
     var ArgumentNullException_1;
-    exports_1("quickSort", quickSort);
     return {
         setters: [
             function (ArgumentNullException_1_1) {

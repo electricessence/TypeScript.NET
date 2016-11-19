@@ -14,10 +14,9 @@ function flush() {
             domain.enter();
         runSingle(task, domain, context, args);
     }
-    let task;
-    while (task = laterQueue.dequeue()) {
+    while (laterQueue.tryDequeue(task => {
         runSingle(task);
-    }
+    })) { }
     flushing = false;
 }
 const immediateQueue = new LinkedNodeList();

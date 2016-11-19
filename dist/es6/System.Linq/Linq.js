@@ -3,7 +3,7 @@ import * as Arrays from "../System/Collections/Array/Compare";
 import * as ArrayUtility from "../System/Collections/Array/Utility";
 import { copy } from "../System/Collections/Array/Utility";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
-import { isEnumerable, throwIfEndless } from "../System/Collections/Enumeration/Enumerator";
+import { isEnumerable, throwIfEndless, isIterator, isEnumerator } from "../System/Collections/Enumeration/Enumerator";
 import { EmptyEnumerator } from "../System/Collections/Enumeration/EmptyEnumerator";
 import { Type } from "../System/Types";
 import { Integer } from "../System/Integer";
@@ -20,6 +20,7 @@ import { KeySortedContext } from "../System/Collections/Sorting/KeySortedContext
 import { ArgumentNullException } from "../System/Exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../System/Exceptions/ArgumentOutOfRangeException";
 import { IndexEnumerator } from "../System/Collections/Enumeration/IndexEnumerator";
+import { IteratorEnumerator } from "../System/Collections/Enumeration/IteratorEnumerator";
 const INVALID_DEFAULT = {};
 const VOID0 = void 0;
 const NULL = null;
@@ -40,8 +41,7 @@ class LinqFunctions extends BaseFunctions {
         return a < b ? a : b;
     }
 }
-const Functions = new LinqFunctions();
-Object.freeze(Functions);
+const Functions = Object.freeze(new LinqFunctions());
 function getEmptyEnumerator() {
     return EmptyEnumerator;
 }
@@ -584,9 +584,9 @@ export class InfiniteEnumerable extends DisposableBase {
                 queue = new Queue(enumerables);
             }, (yielder) => {
                 while (true) {
-                    while (!enumerator && queue.count) {
-                        enumerator = enumUtil.from(queue.dequeue());
-                    }
+                    while (!enumerator && queue.tryDequeue(value => {
+                        enumerator = enumUtil.from(value);
+                    })) { }
                     if (enumerator && enumerator.moveNext())
                         return yielder.yieldReturn(enumerator.current);
                     if (enumerator) {
@@ -1696,6 +1696,10 @@ function throwIfDisposed(disposed) {
                 return new ArrayEnumerable(source);
             if (isEnumerable(source))
                 return new Enumerable(() => source.getEnumerator(), null, source.isEndless);
+            if (isEnumerator(source))
+                return new Enumerable(() => source, null, source.isEndless);
+            if (isIterator(source))
+                return fromAny(new IteratorEnumerator(source));
         }
         return defaultEnumerable;
     }
@@ -2015,9 +2019,9 @@ function throwIfDisposed(disposed) {
                     if (!e)
                         mainEnumerator = null;
                 }
-                while (!e && queue.count) {
-                    e = nextEnumerator(queue, queue.dequeue());
-                }
+                while (!e && queue.tryDequeue(value => {
+                    e = nextEnumerator(queue, enumUtil.from(value));
+                })) { }
                 return e
                     ? yielder.yieldReturn(e.current)
                     : yielder.yieldBreak();

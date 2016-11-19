@@ -1,4 +1,4 @@
-System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../extends"], function (exports_1, context_1) {
+System.register(["../System/Compare", "../System/Collections/Array/Compare", "../System/Collections/Array/Utility", "../System/Collections/Enumeration/Enumerator", "../System/Collections/Enumeration/EmptyEnumerator", "../System/Types", "../System/Integer", "../System/Functions", "../System/Collections/Enumeration/ArrayEnumerator", "../System/Collections/Enumeration/EnumeratorBase", "../System/Collections/Dictionaries/Dictionary", "../System/Collections/Queue", "../System/Disposable/dispose", "../System/Disposable/DisposableBase", "../System/Collections/Enumeration/UnsupportedEnumerableException", "../System/Disposable/ObjectDisposedException", "../System/Collections/Sorting/KeySortedContext", "../System/Exceptions/ArgumentNullException", "../System/Exceptions/ArgumentOutOfRangeException", "../System/Collections/Enumeration/IndexEnumerator", "../System/Collections/Enumeration/IteratorEnumerator", "../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function BREAK() {
@@ -37,7 +37,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
         return true;
     }
-    var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, extends_1, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
+    var Compare_1, Arrays, ArrayUtility, Utility_1, enumUtil, Enumerator_1, EmptyEnumerator_1, Types_1, Integer_1, Functions_1, ArrayEnumerator_1, EnumeratorBase_1, Dictionary_1, Queue_1, dispose_1, DisposableBase_1, UnsupportedEnumerableException_1, ObjectDisposedException_1, KeySortedContext_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, IndexEnumerator_1, IteratorEnumerator_1, extends_1, __extends, INVALID_DEFAULT, VOID0, NULL, LinqFunctions, Functions, InfiniteEnumerable, Enumerable, FiniteEnumerable, ArrayEnumerable, Grouping, Lookup, OrderedEnumerable;
     return {
         setters: [
             function (Compare_1_1) {
@@ -102,6 +102,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
             function (IndexEnumerator_1_1) {
                 IndexEnumerator_1 = IndexEnumerator_1_1;
             },
+            function (IteratorEnumerator_1_1) {
+                IteratorEnumerator_1 = IteratorEnumerator_1_1;
+            },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
             }
@@ -124,8 +127,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 };
                 return LinqFunctions;
             }(Functions_1.Functions));
-            Functions = new LinqFunctions();
-            Object.freeze(Functions);
+            Functions = Object.freeze(new LinqFunctions());
             InfiniteEnumerable = (function (_super) {
                 __extends(InfiniteEnumerable, _super);
                 function InfiniteEnumerable(_enumeratorFactory, finalizer) {
@@ -680,9 +682,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                             queue = new Queue_1.Queue(enumerables);
                         }, function (yielder) {
                             while (true) {
-                                while (!enumerator && queue.count) {
-                                    enumerator = enumUtil.from(queue.dequeue());
-                                }
+                                while (!enumerator && queue.tryDequeue(function (value) {
+                                    enumerator = enumUtil.from(value);
+                                })) { }
                                 if (enumerator && enumerator.moveNext())
                                     return yielder.yieldReturn(enumerator.current);
                                 if (enumerator) {
@@ -1845,6 +1847,10 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                             return new ArrayEnumerable(source);
                         if (Enumerator_1.isEnumerable(source))
                             return new Enumerable(function () { return source.getEnumerator(); }, null, source.isEndless);
+                        if (Enumerator_1.isEnumerator(source))
+                            return new Enumerable(function () { return source; }, null, source.isEndless);
+                        if (Enumerator_1.isIterator(source))
+                            return fromAny(new IteratorEnumerator_1.IteratorEnumerator(source));
                     }
                     return defaultEnumerable;
                 }
@@ -2186,9 +2192,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                                 if (!e)
                                     mainEnumerator = null;
                             }
-                            while (!e && queue.count) {
-                                e = nextEnumerator(queue, queue.dequeue());
-                            }
+                            while (!e && queue.tryDequeue(function (value) {
+                                e = nextEnumerator(queue, enumUtil.from(value));
+                            })) { }
                             return e
                                 ? yielder.yieldReturn(e.current)
                                 : yielder.yieldBreak();
@@ -2203,7 +2209,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     });
                 }
                 Enumerable.weave = weave;
-            })(Enumerable = Enumerable || (Enumerable = {}));
+            })(Enumerable || (Enumerable = {}));
             exports_1("Enumerable", Enumerable);
             exports_1("default", Enumerable);
         }

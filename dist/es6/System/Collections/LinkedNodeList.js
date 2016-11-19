@@ -13,6 +13,7 @@ export class LinkedNodeList {
     assertVersion(version) {
         if (version !== this._version)
             throw new InvalidOperationException("Collection was modified.");
+        return true;
     }
     get first() {
         return this._first;

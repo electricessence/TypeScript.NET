@@ -19,6 +19,7 @@ System.register(["../../Types", "./Utility"], function (exports_1, context_1) {
             }
         }
     }
+    exports_1("unsafe", unsafe);
     function mapped(listeners, payload, trap) {
         if (!listeners)
             return listeners;
@@ -42,13 +43,12 @@ System.register(["../../Types", "./Utility"], function (exports_1, context_1) {
         }
         return result;
     }
+    exports_1("mapped", mapped);
     function dispatch(listeners, payload, trap) {
         unsafe(Utility_1.copy(listeners), payload, trap);
     }
-    var Types_1, Utility_1, VOID0;
-    exports_1("unsafe", unsafe);
-    exports_1("mapped", mapped);
     exports_1("dispatch", dispatch);
+    var Types_1, Utility_1, VOID0;
     return {
         setters: [
             function (Types_1_1) {

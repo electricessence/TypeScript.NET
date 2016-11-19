@@ -3,11 +3,11 @@ import * as semver from "semver";
 import * as file from "../_utility/file-promise";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {JsonMap} from "../source/JSON";
-import {Promise as NETPromise} from "../source/System/Promises/Promise";
+import {Promise as NPromise} from "../source/System/Promises/Promise";
 import awaiter from "../source/awaiter";
 import generator from "../source/generator";
 // noinspection JSUnusedLocalSymbols
-const __awaiter = awaiter.factory(NETPromise);
+const __awaiter = awaiter.factory(NPromise);
 // noinspection JSUnusedLocalSymbols
 const __generator = generator;
 
@@ -24,7 +24,7 @@ const
  * @param {string} type
  * @returns {NodeJS.ReadableStream}
  */
-async function bumpVersion(type:string):PromiseLike<File[]>
+async function bumpVersion(type:string):NPromise<File[]>
 {
 	let pkg = await file.json.read<JsonMap>('./package.json');
 

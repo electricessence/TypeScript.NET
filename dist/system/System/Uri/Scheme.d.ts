@@ -18,5 +18,5 @@ export declare const NEWS: Scheme.NNTP;
 export declare const NNTP: Scheme.NNTP;
 export declare const TELNET: Scheme.Telnet;
 export declare const UUID: Scheme.UUID;
-export declare const All: SchemeValue[];
+export declare const All: Readonly<Scheme.SchemeValue[]>;
 export declare function isValid(scheme: string): scheme is SchemeValue;

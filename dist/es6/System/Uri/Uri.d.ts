@@ -17,6 +17,7 @@ export declare class Uri implements IUri, IEquatable<IUri> {
     equals(other: IUri): boolean;
     static from(uri: string | IUri | null | undefined, defaults?: IUri): Uri;
     static parse(url: string): IUri;
+    static parse(url: string, throwIfInvalid: true): IUri;
     static parse(url: string, throwIfInvalid: boolean): IUri | null;
     static tryParse(url: string, out: (result: IUri) => void): boolean;
     static copyOf(map: IUri): IUri;

@@ -104,8 +104,7 @@ class LinqFunctions extends BaseFunctions
 	}
 }
 
-const Functions = new LinqFunctions();
-Object.freeze(Functions);
+const Functions = Object.freeze(new LinqFunctions());
 
 // For re-use as a factory.
 function getEmptyEnumerator():IEnumerator<any>

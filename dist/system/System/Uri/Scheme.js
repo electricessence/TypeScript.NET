@@ -9,8 +9,8 @@ System.register([], function (exports_1, context_1) {
     function isValid(scheme) {
         return All.indexOf(scheme) != -1;
     }
-    var File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID, All;
     exports_1("isValid", isValid);
+    var File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID, All;
     return {
         setters: [],
         execute: function () {/*!

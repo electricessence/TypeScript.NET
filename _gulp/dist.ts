@@ -6,11 +6,11 @@ import * as File from "../_utility/file-promise";
 import {JsonMap} from "../source/JSON";
 import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
-import {Promise as NETPromise} from "../source/System/Promises/Promise";
+import {Promise as NPromise} from "../source/System/Promises/Promise";
 import {awaiter} from "../source/awaiter";
 import generator from "../source/generator";
 // noinspection JSUnusedLocalSymbols
-const __awaiter = awaiter.factory(NETPromise);
+const __awaiter = awaiter.factory(NPromise);
 // noinspection JSUnusedLocalSymbols
 const __generator = generator;
 
@@ -26,7 +26,7 @@ const fields:IMap<boolean> = {
 	"browser": true
 };
 
-async function getPackage(dist:string):PromiseLike<JsonMap>
+async function getPackage(dist:string):NPromise<JsonMap>
 {
 	let pkg = await File.json.read<JsonMap>('./package.json');
 	for(let key of Object.keys(pkg))
@@ -39,7 +39,7 @@ async function getPackage(dist:string):PromiseLike<JsonMap>
 
 }
 
-async function savePackage(dist:string, folder:string = dist):PromiseLike<File[]>
+async function savePackage(dist:string, folder:string = dist):NPromise<File[]>
 {
 	let pkg = await getPackage(dist);
 	await File.json.write(`./dist/${folder}/package.json`, pkg);
@@ -64,7 +64,7 @@ const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 });
 
 const builder = BuildHelper
-	.inject(NETPromise.factory)
+	.inject(NPromise.factory)
 	.fromTo(PATH.SOURCE, "./dist", DEFAULTS);
 
 gulp.task(

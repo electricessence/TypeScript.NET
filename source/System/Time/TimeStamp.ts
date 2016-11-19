@@ -25,7 +25,7 @@ export class TimeStamp implements ITimeStamp, IDateTime
 		public readonly tick:number = 0)
 	{
 
-		// TODO: Add validation or properly carry out of range values...
+		// Add validation or properly carry out of range values?
 
 		Object.freeze(this);
 	}

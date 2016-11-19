@@ -33,8 +33,8 @@ System.register(["../../../Types", "../../../Compare"], function (exports_1, con
             return 0;
         };
     }
-    var Types_1, Compare_1;
     exports_1("createComparer", createComparer);
+    var Types_1, Compare_1;
     return {
         setters: [
             function (Types_1_1) {

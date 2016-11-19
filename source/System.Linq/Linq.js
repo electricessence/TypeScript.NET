@@ -57,8 +57,7 @@
         };
         return LinqFunctions;
     }(Functions_1.Functions));
-    var Functions = new LinqFunctions();
-    Object.freeze(Functions);
+    var Functions = Object.freeze(new LinqFunctions());
     function getEmptyEnumerator() {
         return EmptyEnumerator_1.EmptyEnumerator;
     }
@@ -2168,6 +2167,7 @@
         }
         Enumerable.weave = weave;
     })(Enumerable = exports.Enumerable || (exports.Enumerable = {}));
+    exports.Enumerable = Enumerable;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Enumerable;
 });

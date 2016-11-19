@@ -30,10 +30,12 @@ export class CollectionBase extends DisposableBase {
         this.throwIfDisposed(CMDC);
         if (this.getIsReadOnly())
             throw new InvalidOperationException(CMRO);
+        return true;
     }
     assertVersion(version) {
         if (version !== this._version)
             throw new InvalidOperationException("Collection was modified.");
+        return true;
     }
     _onModified() { }
     _signalModification(increment) {
@@ -150,7 +152,7 @@ export class CollectionBase extends DisposableBase {
             return 0;
         _.assertModifiable();
         _._updateRecursion++;
-        let n;
+        let n = NaN;
         try {
             if (n = _._importEntries(entries))
                 _._modifiedCount++;
@@ -159,15 +161,37 @@ export class CollectionBase extends DisposableBase {
             _._updateRecursion--;
         }
         _._signalModification();
-        return n = NaN;
+        return n;
+    }
+    filter(predicate) {
+        if (!predicate)
+            throw new ArgumentNullException('predicate');
+        let count = !this.getCount();
+        let result = [];
+        if (count) {
+            this.forEach((e, i) => {
+                if (predicate(e, i))
+                    result.push(e);
+            });
+        }
+        return result;
+    }
+    any(predicate) {
+        let count = this.getCount();
+        if (!count)
+            return false;
+        if (!predicate)
+            return Boolean(count);
+        let found = false;
+        this.forEach((e, i) => !(found = predicate(e, i)));
+        return found;
+    }
+    some(predicate) {
+        return this.any(predicate);
     }
     contains(entry) {
-        if (!this.getCount())
-            return false;
-        let found = false;
         const equals = this._equalityComparer;
-        this.forEach(e => !(found = equals(entry, e)));
-        return found;
+        return this.any(e => equals(entry, e));
     }
     forEach(action, useCopy) {
         if (this.wasDisposed)

@@ -15,8 +15,8 @@ export declare module Integer {
     function as32Bit(n: number): number | null;
     function is(n: number): boolean;
     function is32Bit(n: number): boolean;
-    function assert(n: number, argumentName?: string): boolean;
-    function assertZeroOrGreater(n: number, argumentName?: string): boolean;
-    function assertPositive(n: number, argumentName?: string): boolean;
+    function assert(n: number, argumentName?: string): true | never;
+    function assertZeroOrGreater(n: number, argumentName?: string): true | never;
+    function assertPositive(n: number, argumentName?: string): true | never;
 }
 export default Integer;

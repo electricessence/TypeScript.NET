@@ -18,6 +18,7 @@ export class ObjectDisposedException extends InvalidOperationException {
     static throwIfDisposed(disposable, objectName, message) {
         if (disposable.wasDisposed)
             throw new ObjectDisposedException(objectName, message);
+        return true;
     }
 }
 export default ObjectDisposedException;

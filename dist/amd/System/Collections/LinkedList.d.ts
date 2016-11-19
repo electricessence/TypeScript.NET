@@ -7,7 +7,7 @@ import { IEnumerableOrArray } from "./IEnumerableOrArray";
 export declare class LinkedList<T> extends CollectionBase<T> implements ILinkedList<T> {
     private readonly _listInternal;
     constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
-    assertVersion(version: number): void;
+    protected assertVersion(version: number): true | never;
     protected _onDispose(): void;
     protected getCount(): number;
     protected _addInternal(entry: T): boolean;

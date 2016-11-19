@@ -11,6 +11,7 @@ const STRING_EMPTY = "", ENDLESS_EXCEPTION_MESSAGE = 'Cannot call forEach on an 
 export function throwIfEndless(isEndless) {
     if (isEndless)
         throw new UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
+    return true;
 }
 function initArrayFrom(source, max = Infinity) {
     if (Array.isArray(source) || Type.isString(source)) {
@@ -45,6 +46,8 @@ export function from(source) {
             return source.getEnumerator();
         if (Type.isFunction(source))
             return new InfiniteEnumerator(source);
+        if (isEnumerator(source))
+            return source;
         if (isIterator(source))
             return new IteratorEnumerator(source);
     }
@@ -76,7 +79,7 @@ export function forEach(e, action, max = Infinity) {
             return i;
         }
         if (isEnumerator(e)) {
-            throwIfEndless(!isFinite(max) && !!e.isEndless);
+            throwIfEndless(!isFinite(max) && e.isEndless);
             let i = 0;
             while (max > i && e.moveNext()) {
                 if (action(e.current, i++) === false)
@@ -85,7 +88,7 @@ export function forEach(e, action, max = Infinity) {
             return i;
         }
         if (isEnumerable(e)) {
-            throwIfEndless(!isFinite(max) && !!e.isEndless);
+            throwIfEndless(!isFinite(max) && e.isEndless);
             return using(e.getEnumerator(), f => forEach(f, action, max));
         }
         if (isIterator(e)) {

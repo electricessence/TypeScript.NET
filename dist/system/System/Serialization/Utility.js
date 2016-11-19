@@ -23,9 +23,11 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
                 throw ex;
         }
     }
+    exports_1("toString", toString);
     function isSerializable(instance) {
         return Types_1.Type.hasMemberOfType(instance, 'serialize', Types_1.Type.FUNCTION);
     }
+    exports_1("isSerializable", isSerializable);
     function toPrimitive(value, caseInsensitive, unknownHandler) {
         if (value) {
             if (caseInsensitive)
@@ -60,10 +62,8 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
         }
         return value;
     }
-    var Types_1, InvalidOperationException_1, EMPTY, TRUE, FALSE;
-    exports_1("toString", toString);
-    exports_1("isSerializable", isSerializable);
     exports_1("toPrimitive", toPrimitive);
+    var Types_1, InvalidOperationException_1, EMPTY, TRUE, FALSE;
     return {
         setters: [
             function (Types_1_1) {

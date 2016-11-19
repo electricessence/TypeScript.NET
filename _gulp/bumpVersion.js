@@ -19,7 +19,7 @@
     var bump = require('gulp-bump');
     var VERSION_BUMP_MINOR = 'version-bump-minor', VERSION_BUMP_PATCH = 'version-bump-patch';
     function bumpVersion(type) {
-        return __awaiter(this, void 0, void 0, function () {
+        return __awaiter(this, void 0, Promise_1.Promise, function () {
             var pkg, newVer;
             return __generator(this, function (_a) {
                 switch (_a.label) {

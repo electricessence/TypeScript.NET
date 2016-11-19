@@ -8,6 +8,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         disposeTheseInternal(disposables, false);
     }
+    exports_1("dispose", dispose);
     function using(disposable, closure) {
         try {
             return closure(disposable);
@@ -16,6 +17,7 @@ System.register(["../Types"], function (exports_1, context_1) {
             disposeSingle(disposable, false);
         }
     }
+    exports_1("using", using);
     function disposeSingle(disposable, trapExceptions) {
         if (disposable
             && Types_1.Type.of(disposable)
@@ -68,8 +70,6 @@ System.register(["../Types"], function (exports_1, context_1) {
         return exceptions;
     }
     var Types_1;
-    exports_1("dispose", dispose);
-    exports_1("using", using);
     return {
         setters: [
             function (Types_1_1) {
@@ -111,7 +111,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                     }
                     these.deferred = deferred;
                 })(these = dispose.these || (dispose.these = {}));
-            })(dispose = dispose || (dispose = {}));
+            })(dispose || (dispose = {}));
             exports_1("dispose", dispose);
             exports_1("default", dispose);
         }

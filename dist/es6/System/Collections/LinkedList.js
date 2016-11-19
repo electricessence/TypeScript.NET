@@ -13,6 +13,7 @@ class InternalNode {
     assertDetached() {
         if (this.next || this.previous)
             throw new InvalidOperationException("Adding a node that is already placed.");
+        return true;
     }
 }
 function ensureExternal(node, list) {
@@ -55,9 +56,9 @@ export class LinkedList extends CollectionBase {
     }
     assertVersion(version) {
         if (this._listInternal)
-            this._listInternal.assertVersion(version);
+            return this._listInternal.assertVersion(version);
         else
-            super.assertVersion(version);
+            return super.assertVersion(version);
     }
     _onDispose() {
         super._onDispose();

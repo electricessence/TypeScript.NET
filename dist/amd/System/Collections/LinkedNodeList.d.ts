@@ -11,7 +11,7 @@ export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements
     unsafeCount: number;
     constructor();
     private _version;
-    assertVersion(version: number): void;
+    assertVersion(version: number): true | never;
     readonly first: TNode | null;
     readonly last: TNode | null;
     readonly count: number;

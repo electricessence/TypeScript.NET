@@ -3,7 +3,6 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based on: https://msdn.microsoft.com/en-us/library/system.uri.scheme%28v=vs.110%29.aspx
  */
-
 import * as Scheme from "./SchemeValue";
 import {SchemeValue} from "./SchemeValue";
 
@@ -88,7 +87,7 @@ export const UUID:Scheme.UUID = "uuid";
  * An index of possible values to validate against.
  * @type {Array}
  */
-export const All:SchemeValue[] = Object.freeze([
+export const All = Object.freeze([
 	File, FTP, GOPHER, HTTP, HTTPS, LDAP, MAILTO, PIPE, TCP, NEWS, NNTP, TELNET, UUID
 ]);
 

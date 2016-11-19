@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { Type } from "../../Types";
 const VOID0 = void 0;
 const NULL = "null", GET_SYMBOL = "getSymbol", GET_HASH_CODE = "getHashCode";
@@ -18,8 +14,12 @@ export function getIdentifier(obj, throwIfUnknown = false) {
     if (Type.hasMethod(obj, GET_HASH_CODE)) {
         return obj.getHashCode();
     }
-    if (throwIfUnknown)
-        throw "Cannot create known identity.";
+    if (throwIfUnknown) {
+        if (Type.isFunction(throwIfUnknown))
+            return throwIfUnknown(obj);
+        else
+            throw "Cannot create known identity.";
+    }
     return (typeof obj.toString == Type.FUNCTION)
         ? obj.toString()
         : Object.prototype.toString.call(obj);

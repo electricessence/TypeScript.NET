@@ -1,19 +1,10 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Originally based upon .NET source but with many additions and improvements.
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     var TimeUnit;
     return {
         setters: [],
-        execute: function () {/*!
-             * @author electricessence / https://github.com/electricessence/
-             * Originally based upon .NET source but with many additions and improvements.
-             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-             */
+        execute: function () {
             (function (TimeUnit) {
                 TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
                 TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
@@ -73,7 +64,7 @@ System.register([], function (exports_1, context_1) {
                     return true;
                 }
                 TimeUnit.assertValid = assertValid;
-            })(TimeUnit = TimeUnit || (TimeUnit = {}));
+            })(TimeUnit || (TimeUnit = {}));
             exports_1("TimeUnit", TimeUnit);
             Object.freeze(TimeUnit);
             exports_1("default", TimeUnit);

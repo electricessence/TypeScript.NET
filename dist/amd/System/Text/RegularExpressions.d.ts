@@ -53,8 +53,8 @@ export declare class Group extends Capture {
     static readonly Empty: Group;
 }
 export declare class Match extends Group {
-    groups: Group[];
-    namedGroups: IMap<Group>;
+    readonly groups: Group[];
+    readonly namedGroups: IMap<Group>;
     constructor(value?: string, index?: number, groups?: Group[], namedGroups?: IMap<Group>);
     freeze(): void;
     static readonly Empty: Match;

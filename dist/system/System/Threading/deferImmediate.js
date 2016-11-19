@@ -4,16 +4,15 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
     function flush() {
         var entry;
         while (entry = immediateQueue.first) {
-            var task_1 = entry.task, domain = entry.domain, context_2 = entry.context, args = entry.args;
+            var task = entry.task, domain = entry.domain, context_2 = entry.context, args = entry.args;
             entry.canceller();
             if (domain)
                 domain.enter();
-            runSingle(task_1, domain, context_2, args);
+            runSingle(task, domain, context_2, args);
         }
-        var task;
-        while (task = laterQueue.dequeue()) {
+        while (laterQueue.tryDequeue(function (task) {
             runSingle(task);
-        }
+        })) { }
         flushing = false;
     }
     function runSingle(task, domain, context, params) {
@@ -67,13 +66,13 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             dispose: function () { entry && entry.canceller(); }
         };
     }
+    exports_1("deferImmediate", deferImmediate);
     function runAfterDeferred(task) {
         laterQueue.enqueue(task);
         requestFlush();
     }
-    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1, requestTick, flushing, immediateQueue, laterQueue, entryPool;
-    exports_1("deferImmediate", deferImmediate);
     exports_1("runAfterDeferred", runAfterDeferred);
+    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1, requestTick, flushing, immediateQueue, laterQueue, entryPool;
     return {
         setters: [
             function (Types_1_1) {

@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {IReadOnlyCollection} from "./IReadOnlyCollection";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IEnumerator} from "./Enumeration/IEnumerator";

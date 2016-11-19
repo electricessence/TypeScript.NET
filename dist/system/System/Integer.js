@@ -4,8 +4,8 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRa
     function Integer(n) {
         return Math.floor(n);
     }
-    var ArgumentException_1, ArgumentOutOfRangeException_1;
     exports_1("Integer", Integer);
+    var ArgumentException_1, ArgumentOutOfRangeException_1;
     return {
         setters: [
             function (ArgumentException_1_1) {
@@ -104,7 +104,7 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRa
                     return i;
                 }
                 Integer.assertPositive = assertPositive;
-            })(Integer = Integer || (Integer = {}));
+            })(Integer || (Integer = {}));
             exports_1("Integer", Integer);
             exports_1("default", Integer);
         }
