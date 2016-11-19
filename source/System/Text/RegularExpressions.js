@@ -109,7 +109,8 @@
                 matches.push(m);
                 p = m.index + m.length;
             }
-            return Object.freeze(matches);
+            Object.freeze(matches);
+            return matches;
         };
         Regex.prototype.replace = function (input, r, count) {
             if (count === void 0) { count = Infinity; }
