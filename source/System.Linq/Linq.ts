@@ -192,13 +192,13 @@ extends DisposableBase implements IInfiniteEnumerable<T>
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
 		initializer?:Closure|null,
 		isEndless?:boolean|null|undefined,
-		onComplete?:Action<number>):this
+		onComplete?:Action<number>):Enumerable<T>
 
 	doAction(
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
 		initializer?:Closure|null,
 		isEndless:boolean|null|undefined = this.isEndless,
-		onComplete?:Action<number>):this
+		onComplete?:Action<number>):Enumerable<T>
 	{
 
 		const _ = this;
@@ -1694,7 +1694,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 		if(!predicate)
 			throw new ArgumentNullException('predicate');
 
-		return this.doAction(
+		return <any>this.doAction(
 			(element:T, index:number) =>
 				predicate(element, index)
 					? EnumerableAction.Return
@@ -1713,7 +1713,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			throw new ArgumentNullException('predicate');
 
 		if(!includeUntilValue)
-			return this.doAction(
+			return <any>this.doAction(
 				(element:T, index:number) =>
 					predicate(element, index)
 						? EnumerableAction.Break
@@ -1723,7 +1723,7 @@ extends InfiniteEnumerable<T> implements ILinqEnumerable<T>
 			);
 
 		let found:boolean = false;
-		return this.doAction(
+		return <any>this.doAction(
 			(element:T, index:number) =>
 			{
 				if(found)

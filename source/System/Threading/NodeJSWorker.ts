@@ -1,3 +1,4 @@
+///<reference types="node"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -9,7 +10,7 @@ import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
-const ps = (<any>require)("child_process");
+const ps = require("child_process");
 //import {ChildProcess} from "child_process";
 
 /**

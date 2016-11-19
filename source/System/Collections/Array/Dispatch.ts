@@ -74,7 +74,7 @@ export function mapped<T,TResult>(
 	payload:T, trap?:boolean|DispatchErrorHandler):TResult[]
 {
 
-	if(!listeners) return listeners;
+	if(!listeners) return <any>listeners;
 	// Reuse the copy as the array result.
 	const result:any[] = copy(listeners);
 	if(listeners.length)
