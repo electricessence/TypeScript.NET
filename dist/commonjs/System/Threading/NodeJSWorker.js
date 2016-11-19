@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
+ */
 "use strict";
 var ObservableBase_1 = require("../Observable/ObservableBase");
 var extends_1 = require("../../extends");

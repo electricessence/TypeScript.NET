@@ -1,9 +1,9 @@
-///<reference types="node"/>
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
  */
+///<reference types="node"/>
 import {WorkerLike} from "./WorkerType";
 import {ObservableBase} from "../Observable/ObservableBase";
 import __extendsImport from "../../extends";

@@ -4,7 +4,7 @@ System.register(["../Types"], function (exports_1, context_1) {
     function dispose() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         disposeTheseInternal(disposables, false);
     }
@@ -81,7 +81,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                 function deferred() {
                     var disposables = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        disposables[_i - 0] = arguments[_i];
+                        disposables[_i] = arguments[_i];
                     }
                     these.deferred(disposables);
                 }
@@ -89,7 +89,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                 function withoutException() {
                     var disposables = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        disposables[_i - 0] = arguments[_i];
+                        disposables[_i] = arguments[_i];
                     }
                     return disposeTheseInternal(disposables, true);
                 }

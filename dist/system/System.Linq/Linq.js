@@ -702,7 +702,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 InfiniteEnumerable.prototype.concat = function () {
                     var enumerables = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        enumerables[_i - 0] = arguments[_i];
+                        enumerables[_i] = arguments[_i];
                     }
                     return this.merge(enumerables);
                 };
@@ -820,7 +820,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 InfiniteEnumerable.prototype.alternate = function () {
                     var sequence = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        sequence[_i - 0] = arguments[_i];
+                        sequence[_i] = arguments[_i];
                     }
                     return this.alternateMultiple(sequence);
                 };
@@ -1885,7 +1885,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 function chooseFrom() {
                     var args = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i - 0] = arguments[_i];
+                        args[_i] = arguments[_i];
                     }
                     if (!args.length)
                         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
@@ -1918,7 +1918,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 function cycleThrough() {
                     var args = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i - 0] = arguments[_i];
+                        args[_i] = arguments[_i];
                     }
                     if (!args.length)
                         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);

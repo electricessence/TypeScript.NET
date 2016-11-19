@@ -3,7 +3,7 @@ var Types_1 = require("../Types");
 function dispose() {
     var disposables = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        disposables[_i - 0] = arguments[_i];
+        disposables[_i] = arguments[_i];
     }
     disposeTheseInternal(disposables, false);
 }
@@ -12,7 +12,7 @@ exports.dispose = dispose;
     function deferred() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         these.deferred(disposables);
     }
@@ -20,7 +20,7 @@ exports.dispose = dispose;
     function withoutException() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         return disposeTheseInternal(disposables, true);
     }

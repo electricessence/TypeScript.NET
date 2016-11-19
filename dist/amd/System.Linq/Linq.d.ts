@@ -17,7 +17,7 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     protected _onDispose(): void;
     asEnumerable(): this;
     doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer: Closure | null, isEndless: true, onComplete?: Action<number>): InfiniteEnumerable<T>;
-    doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer?: Closure | null, isEndless?: boolean | null | undefined, onComplete?: Action<number>): this;
+    doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer?: Closure | null, isEndless?: boolean | null | undefined, onComplete?: Action<number>): Enumerable<T>;
     force(): void;
     skip(count: number): InfiniteEnumerable<T>;
     take(count: number): FiniteEnumerable<T>;

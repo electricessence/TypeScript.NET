@@ -5,7 +5,7 @@ var StringBuilder = (function () {
     function StringBuilder() {
         var initial = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            initial[_i - 0] = arguments[_i];
+            initial[_i] = arguments[_i];
         }
         var _ = this;
         _._latest = null;
@@ -33,7 +33,7 @@ var StringBuilder = (function () {
     StringBuilder.prototype.append = function () {
         var items = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            items[_i - 0] = arguments[_i];
+            items[_i] = arguments[_i];
         }
         this.appendThese(items);
         return this;
@@ -41,7 +41,7 @@ var StringBuilder = (function () {
     StringBuilder.prototype.appendLine = function () {
         var items = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            items[_i - 0] = arguments[_i];
+            items[_i] = arguments[_i];
         }
         this.appendLines(items);
         return this;

@@ -37,7 +37,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		action:ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>,
 		initializer?:Closure|null,
 		isEndless?:boolean|null|undefined,
-		onComplete?:Action<number>):this
+		onComplete?:Action<number>):ILinqEnumerable<T>
 	force():void;
 	skip(count:number):IInfiniteEnumerable<T>;
 	take(count:number):IFiniteEnumerable<T>;

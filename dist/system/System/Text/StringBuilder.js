@@ -14,7 +14,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                 function StringBuilder() {
                     var initial = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        initial[_i - 0] = arguments[_i];
+                        initial[_i] = arguments[_i];
                     }
                     var _ = this;
                     _._latest = null;
@@ -42,7 +42,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                 StringBuilder.prototype.append = function () {
                     var items = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        items[_i - 0] = arguments[_i];
+                        items[_i] = arguments[_i];
                     }
                     this.appendThese(items);
                     return this;
@@ -50,7 +50,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                 StringBuilder.prototype.appendLine = function () {
                     var items = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        items[_i - 0] = arguments[_i];
+                        items[_i] = arguments[_i];
                     }
                     this.appendLines(items);
                     return this;
