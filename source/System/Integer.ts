@@ -89,6 +89,12 @@ export module Integer
 
 	}
 
+	/**
+	 * Converts any number to its 32bit counterpart.
+	 * Returns null if conversion is not possible.
+	 * @param n
+	 * @returns {number}
+	 */
 	export function as32Bit(n:number):number|null
 	{
 		const result = n | 0;
@@ -97,17 +103,33 @@ export module Integer
 
 	const NUMBER:string = "number";
 
+	/**
+	 * Returns true if the value is an integer.
+	 * @param n
+	 * @returns {boolean}
+	 */
 	export function is(n:number):boolean
 	{
 		return typeof n===NUMBER && isFinite(n) && n===Math.floor(n);
 	}
 
+	/**
+	 * Returns true if the value is within a 32 bit range.
+	 * @param n
+	 * @returns {boolean}
+	 */
 	export function is32Bit(n:number):boolean
 	{
 		return n===(n | 0);
 	}
 
 
+	/**
+	 * Throws if not an integer.
+	 * @param n
+	 * @param argumentName
+	 * @returns {boolean}
+	 */
 	export function assert(n:number, argumentName?:string):true|never
 	{
 		let i = is(n);
@@ -116,6 +138,12 @@ export module Integer
 		return i;
 	}
 
+	/**
+	 * Throws if less than zero.
+	 * @param n
+	 * @param argumentName
+	 * @returns {boolean}
+	 */
 	export function assertZeroOrGreater(n:number, argumentName?:string):true|never
 	{
 		let i = assert(n, argumentName) && n>=0;
@@ -124,6 +152,12 @@ export module Integer
 		return i;
 	}
 
+	/**
+	 * Throws if not greater than zero.
+	 * @param n
+	 * @param argumentName
+	 * @returns {boolean}
+	 */
 	export function assertPositive(n:number, argumentName?:string):true|never
 	{
 		let i = assert(n, argumentName) && n>0;

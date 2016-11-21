@@ -1,9 +1,9 @@
 "use strict";
 /*!
-* @author electricessence / https://github.com/electricessence/
-* Original: http://linqjs.codeplex.com/
-* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-*/
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var Compare_1 = require("../System/Compare");
 var Arrays = require("../System/Collections/Array/Compare");
 var ArrayUtility = require("../System/Collections/Array/Utility");

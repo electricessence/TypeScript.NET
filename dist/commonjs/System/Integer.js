@@ -69,20 +69,42 @@ exports.Integer = Integer;
             select.one = one;
         })(select = random.select || (random.select = {}));
     })(random = Integer.random || (Integer.random = {}));
+    /**
+     * Converts any number to its 32bit counterpart.
+     * Returns null if conversion is not possible.
+     * @param n
+     * @returns {number}
+     */
     function as32Bit(n) {
         var result = n | 0;
         return (n === -1 || result !== -1) ? result : null;
     }
     Integer.as32Bit = as32Bit;
     var NUMBER = "number";
+    /**
+     * Returns true if the value is an integer.
+     * @param n
+     * @returns {boolean}
+     */
     function is(n) {
         return typeof n === NUMBER && isFinite(n) && n === Math.floor(n);
     }
     Integer.is = is;
+    /**
+     * Returns true if the value is within a 32 bit range.
+     * @param n
+     * @returns {boolean}
+     */
     function is32Bit(n) {
         return n === (n | 0);
     }
     Integer.is32Bit = is32Bit;
+    /**
+     * Throws if not an integer.
+     * @param n
+     * @param argumentName
+     * @returns {boolean}
+     */
     function assert(n, argumentName) {
         var i = is(n);
         if (!i)
@@ -90,6 +112,12 @@ exports.Integer = Integer;
         return i;
     }
     Integer.assert = assert;
+    /**
+     * Throws if less than zero.
+     * @param n
+     * @param argumentName
+     * @returns {boolean}
+     */
     function assertZeroOrGreater(n, argumentName) {
         var i = assert(n, argumentName) && n >= 0;
         if (!i)
@@ -97,6 +125,12 @@ exports.Integer = Integer;
         return i;
     }
     Integer.assertZeroOrGreater = assertZeroOrGreater;
+    /**
+     * Throws if not greater than zero.
+     * @param n
+     * @param argumentName
+     * @returns {boolean}
+     */
     function assertPositive(n, argumentName) {
         var i = assert(n, argumentName) && n > 0;
         if (!i)
