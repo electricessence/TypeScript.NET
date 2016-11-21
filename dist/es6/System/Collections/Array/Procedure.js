@@ -2,7 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-export function sum(source, ignoreNaN = false) {
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */ export function sum(source, ignoreNaN = false) {
     if (!source || !source.length)
         return 0;
     let result = 0;
@@ -68,6 +71,12 @@ export function product(source, ignoreNaN = false) {
     }
     return result;
 }
+/**
+ * Takes the first number and divides it by all following.
+ * @param source
+ * @param ignoreNaN Will cause this skip any NaN values.
+ * @returns {number}
+ */
 export function quotient(source, ignoreNaN = false) {
     if (!source || source.length < 2)
         return NaN;

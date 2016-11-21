@@ -12,10 +12,12 @@ System.register(["../Exceptions/InvalidOperationException", "../../extends"], fu
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'ObjectDisposedException';
             ObjectDisposedException = (function (_super) {
                 __extends(ObjectDisposedException, _super);
+                // For simplicity and consistency, lets stick with 1 signature.
                 function ObjectDisposedException(objectName, message, innerException) {
                     return _super.call(this, message || '', innerException, function (_) {
                         _.objectName = objectName;

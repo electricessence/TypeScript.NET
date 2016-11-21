@@ -7,6 +7,8 @@
     }
 })(["require", "exports", "QUnit", "../../dist/amd/System/Uri/Uri"], function (require, exports) {
     "use strict";
+    ///<reference types="qunit"/>
+    ///<amd-dependency path='QUnit'/>
     var Uri_1 = require("../../dist/amd/System/Uri/Uri");
     function run() {
         var validUri = {

@@ -12,6 +12,7 @@ System.register(["./SubscribableBase", "../../extends"], function (exports_1, co
             }
             catch (ex) {
                 observersErrors = observersErrors || [];
+                // Don't let one error prevent others from recieving information.
                 observersErrors.push({ observer: s, ex: ex });
             }
         }
@@ -37,7 +38,9 @@ System.register(["./SubscribableBase", "../../extends"], function (exports_1, co
             }
         ],
         execute: function () {
+            //noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
+            // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
             ObservableBase = (function (_super) {
                 __extends(ObservableBase, _super);
                 function ObservableBase() {

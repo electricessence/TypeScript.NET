@@ -7,23 +7,24 @@ var TimeUnit;
     TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
     TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
     TimeUnit[TimeUnit["Days"] = 5] = "Days";
-})(TimeUnit = exports.TimeUnit || (exports.TimeUnit = {}));
+})(TimeUnit = exports.TimeUnit || (exports.TimeUnit = {})); // Earth Days
 (function (TimeUnit) {
     function toMilliseconds(value, units) {
         if (units === void 0) { units = TimeUnit.Milliseconds; }
+        // noinspection FallThroughInSwitchStatementJS
         switch (units) {
             case TimeUnit.Days:
-                value *= 24;
+                value *= 24 /* Day */;
             case TimeUnit.Hours:
-                value *= 60;
+                value *= 60 /* Hour */;
             case TimeUnit.Minutes:
-                value *= 60;
+                value *= 60 /* Minute */;
             case TimeUnit.Seconds:
-                value *= 1000;
+                value *= 1000 /* Second */;
             case TimeUnit.Milliseconds:
                 return value;
             case TimeUnit.Ticks:
-                return value / 10000;
+                return value / 10000 /* Millisecond */;
             default:
                 throw new Error("Invalid TimeUnit.");
         }
@@ -32,17 +33,17 @@ var TimeUnit;
     function fromMilliseconds(ms, units) {
         switch (units) {
             case TimeUnit.Days:
-                return ms / 86400000;
+                return ms / 86400000 /* Day */;
             case TimeUnit.Hours:
-                return ms / 3600000;
+                return ms / 3600000 /* Hour */;
             case TimeUnit.Minutes:
-                return ms / 60000;
+                return ms / 60000 /* Minute */;
             case TimeUnit.Seconds:
-                return ms / 1000;
+                return ms / 1000 /* Second */;
             case TimeUnit.Milliseconds:
                 return ms;
             case TimeUnit.Ticks:
-                return ms * 10000;
+                return ms * 10000 /* Millisecond */;
             default:
                 throw new Error("Invalid TimeUnit.");
         }

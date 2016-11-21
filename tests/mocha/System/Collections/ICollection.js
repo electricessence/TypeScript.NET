@@ -3,6 +3,10 @@ var assert = require("assert");
 require("mocha");
 var AU = require("../../../../dist/commonjs/System/Collections/Array/Utility");
 var NotImplementedException_1 = require("../../../../dist/commonjs/System/Exceptions/NotImplementedException");
+/*
+ * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
+ */
+//noinspection JSUnusedGlobalSymbols
 function General(collection) {
     var count = collection.count;
     describe(".count", function () {
@@ -39,6 +43,7 @@ function assertCopyToClear(c) {
         assert.equal(a.length, count, "An empty array's length should match the count if copied to.");
         c.clear();
         assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+        // Restore contents.
         for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
             var v = a_2[_i];
             c.add(v);
@@ -51,6 +56,7 @@ function assertCopyToClear(c) {
         assert.equal(b.length, 2 * count + extraSize - 1, "An array's length should be equal to index+count if the count exceeds the length.");
         c.clear();
         assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+        // Restore contents.
         for (var _a = 0, a_3 = a; _a < a_3.length; _a++) {
             var v = a_3[_a];
             c.add(v);
@@ -70,7 +76,7 @@ function assertRemoving(c) {
         try {
             for (var _i = 0, a_4 = a; _i < a_4.length; _i++) {
                 var v = a_4[_i];
-                count -= c.remove(v);
+                count -= c.remove(v); // More than one instance can exist and it should remove both.
                 assertIsNumber(c.count, "after removing");
                 assert.equal(c.count, count, "'count' should increment after removing.");
                 assert.ok(!c.contains(v), "'value' must not exist after removing.");
@@ -88,6 +94,10 @@ function assertRemoving(c) {
 function Collection(name, collection, sourceValues) {
     if (sourceValues.indexOf(null) != -1)
         throw "Source values should not contain null as checking against null is one of the tests.";
+    /* The following tests inherently test:
+     - count
+     - contains
+     */
     describe(name, function () {
         assertAdding(collection, sourceValues);
         assertCopyToClear(collection);
@@ -99,16 +109,18 @@ function Collection(name, collection, sourceValues) {
 }
 exports.Collection = Collection;
 function StringCollection(name, collection) {
+    //noinspection SpellCheckingInspection
     Collection(name + '<' + 'string>', collection, [
         "",
         "lorem",
         "ipsum",
         "dolem",
-        "ipsum"
+        "ipsum" // Have a repeated entry to test removing multiple.
     ]);
 }
 exports.StringCollection = StringCollection;
 function NumberCollection(name, collection) {
+    //noinspection SpellCheckingInspection
     Collection(name + '<' + 'number>', collection, [
         0,
         1,
@@ -117,18 +129,19 @@ function NumberCollection(name, collection) {
         3,
         5,
         8,
-        NaN
+        NaN // Must be able to reconginze NaN
     ]);
 }
 exports.NumberCollection = NumberCollection;
 function InstanceCollection(name, collection) {
     var repeat = {};
+    //noinspection SpellCheckingInspection
     Collection(name + '<' + 'Object>', collection, [
         undefined,
         {},
         repeat,
         {},
-        repeat
+        repeat // Have a repeated entry to test removing multiple.
     ]);
 }
 exports.InstanceCollection = InstanceCollection;

@@ -16,7 +16,7 @@ describe(".daysInMonth(year,month) & .isLeapYear(year)", function () {
         30,
         31,
         30,
-        31
+        31 //December
     ];
     it('should match actual Gregorian values.', function () {
         for (var y = startYear; y < 2004; y++) {

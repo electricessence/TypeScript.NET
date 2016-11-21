@@ -1,7 +1,12 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var TaskHandlerBase_1 = require("./TaskHandlerBase");
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var extends_1 = require("../../../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var TaskHandler = (function (_super) {
     __extends(TaskHandler, _super);

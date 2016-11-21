@@ -1,4 +1,13 @@
 import { IDisposable } from "../Disposable/IDisposable";
+/*****************************
+ * IMPORTANT NOTES ABOUT PERFORMANCE:
+ * http://jsperf.com/string-concatenation-looped
+ * http://jsperf.com/adding-strings-to-an-array
+ * http://jsperf.com/string-concatenation-versus-array-operations-with-join
+ *
+ * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
+ * StringBuilder will really show it's benefit likely somewhere above 1000 items.
+ *****************************/
 export declare class StringBuilder implements IDisposable {
     private _partArray;
     private _latest;
@@ -8,6 +17,17 @@ export declare class StringBuilder implements IDisposable {
     append(...items: any[]): StringBuilder;
     appendLine(...items: any[]): StringBuilder;
     appendLines(items: any[]): StringBuilder;
+    /** /// These methods can only efficiently be added if not using a single array.
+     insert(index: number, value: string, count: number = 1): StringBuilder
+     {
+
+    }
+
+     remove(startIndex:number, length:number): StringBuilder
+     {
+
+    }
+     /**/
     readonly isEmpty: boolean;
     toString(): string | null;
     join(delimiter: string): string;

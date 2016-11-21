@@ -1,3 +1,4 @@
+// noinspection JSUnusedLocalSymbols
 class DeferBase {
     dispose() {
         this.cancel();
@@ -7,7 +8,7 @@ class Defer extends DeferBase {
     constructor(task, delay, payload) {
         super();
         if (!(delay > 0))
-            delay = 0;
+            delay = 0; // covers undefined and null.
         this._id = setTimeout(Defer.handler, delay, task, this, payload);
     }
     cancel() {
@@ -19,6 +20,7 @@ class Defer extends DeferBase {
         }
         return false;
     }
+    // Use a static function here to avoid recreating a new function every time.
     static handler(task, d, payload) {
         d.cancel();
         task(payload);

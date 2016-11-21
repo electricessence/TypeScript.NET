@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { areEqual } from "../../Compare";
 import { forEach } from "../Enumeration/Enumerator";
 import { CollectionBase } from "../CollectionBase";
@@ -6,11 +10,14 @@ import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { InvalidOperationException } from "../../Exceptions/InvalidOperationException";
 import { extractKeyValue } from "../../KeyValueExtract";
 import { KeyNotFoundException } from "../KeyNotFoundException";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
+// Design Note: Should DictionaryAbstractBase be IDisposable?
 export class DictionaryBase extends CollectionBase {
     constructor(source) {
         super(source);
     }
+    //noinspection JSUnusedLocalSymbols
     _onValueModified(key, value, old) {
     }
     _addInternal(item) {
@@ -28,9 +35,11 @@ export class DictionaryBase extends CollectionBase {
         return count;
     }
     contains(item) {
+        // Should never have a null object in the collection.
         if (!item || !this.getCount())
             return false;
         return extractKeyValue(item, (key, value) => {
+            // Leave as variable for debugging...
             let v = this.getValue(key);
             return areEqual(value, v);
         });
@@ -39,6 +48,7 @@ export class DictionaryBase extends CollectionBase {
         if (!item)
             return 0;
         return extractKeyValue(item, (key, value) => {
+            // Leave as variable for debugging...
             let v = this.getValue(key);
             return (areEqual(value, v) && this.removeByKey(key))
                 ? 1 : 0;
@@ -72,11 +82,19 @@ export class DictionaryBase extends CollectionBase {
         }
         return false;
     }
+    /**
+     * Sets the value of an entry.
+     * It's important to know that 'undefined' cannot exist as a value in the dictionary and is used as a flag for removal.
+     * @param key
+     * @param value
+     * @returns {boolean}
+     */
     setValue(key, value) {
+        // setValue shouldn't need to worry about recursion...
         const _ = this;
         _.assertModifiable();
         let changed = false;
-        const old = _.getValue(key);
+        const old = _.getValue(key); // get the old value here and pass to internal.
         if (!areEqual(value, old) && _._setValueInternal(key, value)) {
             changed = true;
             _._onValueModified(key, value, old);
@@ -112,6 +130,7 @@ export class DictionaryBase extends CollectionBase {
         return count;
     }
     importEntries(pairs) {
+        // Allow piping through to trigger onModified properly.
         return super.importEntries(pairs);
     }
     _importEntries(pairs) {
@@ -131,7 +150,7 @@ export class DictionaryBase extends CollectionBase {
         let ver, keys, len, index = 0;
         return new EnumeratorBase(() => {
             _.throwIfDisposed();
-            ver = _._version;
+            ver = _._version; // Track the version since getKeys is a copy.
             keys = _.getKeys();
             len = keys.length;
         }, (yielder) => {

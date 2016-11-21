@@ -7,9 +7,25 @@
     }
 })(["require", "exports", "QUnit", "../../../dist/amd/System/Text/Utility", "../../../dist/amd/System/Collections/Array/Utility", "../../../dist/amd/System/Exceptions/NotImplementedException"], function (require, exports) {
     "use strict";
+    ///<reference types="qunit"/>
+    ///<amd-dependency path="QUnit"/>
     var Text = require("../../../dist/amd/System/Text/Utility");
     var AU = require("../../../dist/amd/System/Collections/Array/Utility");
     var NotImplementedException_1 = require("../../../dist/amd/System/Exceptions/NotImplementedException");
+    /*
+     * This is a reusable set of unit test for use with any ICollection to ensure all features of that ICollection function properly.
+     */
+    // export function General<T>(
+    // 	name:string,
+    // 	collection:CollectionBase<string>):void
+    // {
+    // 	var count = collection.count;
+    //
+    // 	QUnit.test(name + ".count", (assert:QUnitAssert)=>
+    // 	{
+    // 		assert.ok(!isNaN(count), "Count must be a number.");
+    // 	});
+    // }
     function assertIsNumber(assert, value, name) {
         assert.ok(!isNaN(value), Text.format("'{0}' must be a real number.", name));
     }
@@ -35,6 +51,7 @@
         assert.equal(a.length, count, "An empty array's length should match the count if copied to.");
         c.clear();
         assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+        // Restore contents.
         for (var _i = 0, a_2 = a; _i < a_2.length; _i++) {
             var v = a_2[_i];
             c.add(v);
@@ -47,6 +64,7 @@
         assert.equal(b.length, 2 * count + extraSize - 1, "An array's length should be equal to index+count if the count exceeds the length.");
         c.clear();
         assert.equal(c.count, 0, "A collection's count should be zero after calling '.clear()'.");
+        // Restore contents.
         for (var _a = 0, a_3 = a; _a < a_3.length; _a++) {
             var v = a_3[_a];
             c.add(v);
@@ -64,7 +82,7 @@
         try {
             for (var _i = 0, a_4 = a; _i < a_4.length; _i++) {
                 var v = a_4[_i];
-                count -= c.remove(v);
+                count -= c.remove(v); // More than one instance can exist and it should remove both.
                 assertIsNumber(assert, c.count, 'count');
                 assert.equal(c.count, count, "'count' should increment after removing.");
                 assert.ok(!c.contains(v), "'value' must not exist after removing.");
@@ -82,6 +100,10 @@
     function Collection(name, collection, sourceValues) {
         if (sourceValues.indexOf(null) != -1)
             throw "Source values should not contain null as checking against null is one of the tests.";
+        /* The following tests inherently test:
+         - count
+         - contains
+         */
         QUnit.test(name, function (assert) {
             assertAdding(assert, collection, sourceValues);
             assertCopyToClear(assert, collection);
@@ -99,16 +121,18 @@
     }
     exports.Collection = Collection;
     function StringCollection(name, collection) {
+        //noinspection SpellCheckingInspection
         Collection(name + '<' + 'string>', collection, [
             "",
             "lorem",
             "ipsum",
             "dolem",
-            "ipsum"
+            "ipsum" // Have a repeated entry to test removing multiple.
         ]);
     }
     exports.StringCollection = StringCollection;
     function NumberCollection(name, collection) {
+        //noinspection SpellCheckingInspection
         Collection(name + '<' + 'number>', collection, [
             0,
             1,
@@ -117,18 +141,19 @@
             3,
             5,
             8,
-            NaN
+            NaN // Must be able to reconginze NaN
         ]);
     }
     exports.NumberCollection = NumberCollection;
     function InstanceCollection(name, collection) {
         var repeat = {};
+        //noinspection SpellCheckingInspection
         Collection(name + '<' + 'Object>', collection, [
             undefined,
             {},
             repeat,
             {},
-            repeat
+            repeat // Have a repeated entry to test removing multiple.
         ]);
     }
     exports.InstanceCollection = InstanceCollection;

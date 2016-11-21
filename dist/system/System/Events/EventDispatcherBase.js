@@ -29,6 +29,7 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             DISPOSING = 'disposing', DISPOSED = 'disposed';
             NAME = "EventDispatcherBase";
@@ -36,6 +37,7 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                 __extends(EventDispatcherBase, _super);
                 function EventDispatcherBase() {
                     var _this = _super.call(this) || this;
+                    // When dispatching events, we need a way to prevent recursion when disposing.
                     _this._isDisposing = false;
                     _this._disposableObjectName = NAME;
                     return _this;
@@ -45,6 +47,8 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                     var e = this._entries;
                     if (!e)
                         this._entries = e = [];
+                    // flash/vibe.js means of adding is indiscriminate and will double add listeners...
+                    // we can then avoid double adds by including a 'registerEventListener' method.
                     e.push(new EventDispatcherEntry_1.EventDispatcherEntry(type, listener, {
                         priority: priority || 0,
                         dispatcher: this
@@ -53,6 +57,7 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                 EventDispatcherBase.prototype.removeEntry = function (entry) {
                     return !!this._entries && AU.remove(this._entries, entry) != 0;
                 };
+                // Allow for simple add once mechanism.
                 EventDispatcherBase.prototype.registerEventListener = function (type, listener, priority) {
                     if (priority === void 0) { priority = 0; }
                     if (!this.hasEventListener(type, listener))
@@ -86,13 +91,15 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                     else
                         event = e;
                     var type = event.type;
-                    var entries = l.filter(function (e) { return e.type == type; });
+                    // noinspection JSMismatchedCollectionQueryUpdate
+                    var entries = l.filter(function (e) { return e.type == type; }); //, propagate = true, prevent = false;
                     if (!entries.length)
                         return false;
                     entries.sort(function (a, b) {
                         return (b.params ? b.params.priority : 0)
                             - (a.params ? a.params.priority : 0);
                     });
+                    // For now... Just use simple...
                     entries.forEach(function (entry) {
                         var newEvent = Object.create(Event);
                         shallowCopy_1.shallowCopy(event, newEvent);
@@ -118,7 +125,9 @@ System.register(["../Collections/Array/Utility", "../Utility/shallowCopy", "../D
                     enumerable: true,
                     configurable: true
                 });
+                // Override the public method here since EventDispatcher will end up doing things a bit differently from here on.
                 EventDispatcherBase.prototype.dispose = function () {
+                    // Having a disposing event can allow for child objects to automatically release themselves when their parent is disposed.
                     var _ = this;
                     if (!_.wasDisposed && !_._isDisposing) {
                         _._isDisposing = true;

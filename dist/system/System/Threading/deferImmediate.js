@@ -1,7 +1,10 @@
 System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Queue", "../Disposable/ObjectPool", "../Environment"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    // Use the fastest possible means to execute a task in a future turn
+    // of the event loop.
     function flush() {
+        /* jshint loopfunc: true */
         var entry;
         while (entry = immediateQueue.first) {
             var task = entry.task, domain = entry.domain, context_2 = entry.context, args = entry.args;
@@ -21,6 +24,11 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
         }
         catch (e) {
             if (Environment_1.isNodeJS) {
+                // In node, uncaught exceptions are considered fatal errors.
+                // Re-throw them synchronously to interrupt flushing!
+                // Ensure continuation if the uncaught exception is suppressed
+                // listening "uncaughtException" events (as domains does).
+                // Continue in next event to avoid tick recursion.
                 if (domain) {
                     domain.exit();
                 }
@@ -31,6 +39,8 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 throw e;
             }
             else {
+                // In browsers, uncaught exceptions are not fatal.
+                // Re-throw them asynchronously to avoid slow-downs.
                 setTimeout(function () {
                     throw e;
                 }, 0);
@@ -46,6 +56,14 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             requestTick();
         }
     }
+    //noinspection JSValidateJSDoc
+    /**
+     *
+     * @param task
+     * @param context
+     * @param args
+     * @returns {{cancel: (()=>boolean), dispose: (()=>undefined)}}
+     */
     function deferImmediate(task, context, args) {
         var entry = entryPool.take();
         entry.task = task;
@@ -67,6 +85,9 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
         };
     }
     exports_1("deferImmediate", deferImmediate);
+    // runs a task after all other tasks have been run
+    // this is useful for unhandled rejection tracking that needs to happen
+    // after all `then`d tasks have been run.
     function runAfterDeferred(task) {
         laterQueue.enqueue(task);
         requestFlush();
@@ -93,7 +114,9 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
         ],
         execute: function () {
             flushing = false;
+            // linked list of tasks.  Using a real linked list to allow for removal.
             immediateQueue = new LinkedNodeList_1.LinkedNodeList();
+            // queue for late tasks, used by unhandled rejection tracking
             laterQueue = new Queue_1.Queue();
             entryPool = new ObjectPool_1.ObjectPool(40, function () { return ({}); }, function (o) {
                 o.task = null;
@@ -110,6 +133,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 };
             }
             else if (typeof setImmediate === Types_1.Type.FUNCTION) {
+                // In IE10, Node.js 0.9+, or https://github.com/NobleJS/setImmediate
                 if (typeof window !== Types_1.Type.UNDEFINED) {
                     requestTick = setImmediate.bind(window, flush);
                 }
@@ -120,13 +144,19 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 }
             }
             else if (typeof MessageChannel !== Types_1.Type.UNDEFINED) {
+                // modern browsers
+                // http://www.nonblocking.io/2011/06/windownexttick.html
                 var channel_1 = new MessageChannel();
+                // At least Safari Version 6.0.5 (8536.30.1) intermittently cannot create
+                // working message ports the first time a page loads.
                 channel_1.port1.onmessage = function () {
                     requestTick = requestPortTick_1;
                     channel_1.port1.onmessage = flush;
                     flush();
                 };
                 var requestPortTick_1 = function () {
+                    // Opera requires us to provide a message payload, regardless of
+                    // whether we use it.
                     channel_1.port2.postMessage(0);
                 };
                 requestTick = function () {
@@ -135,6 +165,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
                 };
             }
             else {
+                // old browsers
                 requestTick = function () {
                     setTimeout(flush, 0);
                 };

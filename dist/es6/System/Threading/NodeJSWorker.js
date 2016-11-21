@@ -1,10 +1,10 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
- */
 import { ObservableBase } from "../Observable/ObservableBase";
+// noinspection JSUnusedLocalSymbols
 const ps = require("child_process");
+//import {ChildProcess} from "child_process";
+/**
+ * This class takes the place of a WebWorker
+ */
 export class NodeJSWorker extends ObservableBase {
     constructor(url) {
         super();
@@ -24,7 +24,7 @@ export class NodeJSWorker extends ObservableBase {
     }
     _onDispose() {
         super._onDispose();
-        this._process.removeAllListeners();
+        this._process.removeAllListeners(); // just to satisfy paranoia.
         this._process.kill();
         this._process = null;
     }

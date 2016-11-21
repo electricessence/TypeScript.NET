@@ -25,7 +25,11 @@ System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function (exp
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
+            /**
+             * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.
+             */
             TimeUnitValue = (function (_super) {
                 __extends(TimeUnitValue, _super);
                 function TimeUnitValue(value, _units) {
@@ -51,6 +55,7 @@ System.register(["./TimeUnit", "./TimeQuantity", "../../extends"], function (exp
                     return TimeUnit_1.TimeUnit.toMilliseconds(this._quantity, this._units);
                 };
                 Object.defineProperty(TimeUnitValue.prototype, "units", {
+                    // To avoid confusion, the unit type can only be set once at construction.
                     get: function () {
                         return this._units;
                     },

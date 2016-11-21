@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { Regex } from "./RegularExpressions";
 import { EmptyEnumerator } from "../Collections/Enumeration/EmptyEnumerator";
 import { EnumeratorBase } from "../Collections/Enumeration/EnumeratorBase";
@@ -11,7 +15,7 @@ export class RegexMatchEnumerator {
         }
     }
     matches(input) {
-        let p;
+        let p; // pointer
         return new EnumeratorBase(() => {
             p = 0;
         }, yielder => {

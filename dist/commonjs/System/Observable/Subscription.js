@@ -1,4 +1,7 @@
 "use strict";
+/**
+ * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
+ */
 var Subscription = (function () {
     function Subscription(_subscribable, _subscriber) {
         this._subscribable = _subscribable;
@@ -14,6 +17,15 @@ var Subscription = (function () {
         configurable: true
     });
     Object.defineProperty(Subscription.prototype, "wasDisposed", {
+        /*
+         In the case where we could possibly have the following happen:
+         var u = observable.subscribe(observer);
+         ...
+         u.dispose(); // Should only be allowed to unsubscribe once and then it's useless.
+         // Resubscribing creates a new instance.
+         var x = observable.subscribe(observer);
+         u.dispose(); // Calling this again should do nothing and 'x' should still work.
+         */
         get: function () {
             return !this._subscribable || !this._subscriber;
         },
@@ -23,6 +35,7 @@ var Subscription = (function () {
     Subscription.prototype.dispose = function () {
         var subscriber = this.subscriber;
         var subscribable = this._subscribable;
+        // Release this reference.  It will prevent potential unwanted recursion.
         this._subscribable = null;
         try {
             if (subscriber && subscribable) {
@@ -30,6 +43,7 @@ var Subscription = (function () {
             }
         }
         finally {
+            // Keep this reference until the end so it can be identified by the list.
             this._subscriber = null;
         }
     };

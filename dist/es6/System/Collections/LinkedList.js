@@ -1,9 +1,26 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { areEqual } from "../Compare";
 import { LinkedNodeList } from "./LinkedNodeList";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { CollectionBase } from "./CollectionBase";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
+/*****************************
+ * IMPORTANT NOTES ABOUT PERFORMANCE:
+ * http://jsperf.com/simulating-a-queue
+ *
+ * Adding to an array is very fast, but modifying is slow.
+ * LinkedList wins when modifying contents.
+ * http://stackoverflow.com/questions/166884/array-versus-linked-list
+ *****************************/
+/*
+ * An internal node is used to manage the order without exposing underlying link chain to the consumer.
+ */
 class InternalNode {
     constructor(value, previous, next) {
         this.value = value;
@@ -81,7 +98,7 @@ export class LinkedList extends CollectionBase {
             if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                 removedCount++;
             return removedCount < max;
-        }, true);
+        }, true /* override versioning check */);
         return removedCount;
     }
     _clearInternal() {
@@ -95,11 +112,15 @@ export class LinkedList extends CollectionBase {
             ? super.forEach(action, useCopy)
             : this._listInternal.forEach((node, i) => action(node.value, i));
     }
+    // #endregion
+    // #region IEnumerable<T>
     getEnumerator() {
         this.throwIfDisposed();
         return LinkedNodeList.valueEnumeratorFrom(this._listInternal);
     }
+    // #endregion
     _findFirst(entry) {
+        //noinspection UnnecessaryLocalVariableJS
         const _ = this, equals = _._equalityComparer;
         let next = _._listInternal && _._listInternal.first;
         while (next) {
@@ -110,6 +131,7 @@ export class LinkedList extends CollectionBase {
         return null;
     }
     _findLast(entry) {
+        //noinspection UnnecessaryLocalVariableJS
         const _ = this, equals = _._equalityComparer;
         let prev = _._listInternal && _._listInternal.last;
         while (prev) {
@@ -138,6 +160,7 @@ export class LinkedList extends CollectionBase {
         const li = this._listInternal, node = li && li.last;
         return node ? node.value : VOID0;
     }
+    // get methods are available for convenience but is an n*index operation.
     getValueAt(index) {
         const li = this._listInternal, node = li && li.getNodeAt(index);
         return node ? node.value : VOID0;
@@ -186,6 +209,7 @@ export class LinkedList extends CollectionBase {
         _.assertModifiable();
         return _._removeNodeInternal(_._listInternal.getNodeAt(index));
     }
+    // Returns true if successful and false if not found (already removed).
     removeNode(node) {
         const _ = this;
         _.assertModifiable();
@@ -204,6 +228,7 @@ export class LinkedList extends CollectionBase {
         _._signalModification(true);
     }
 }
+// Use an internal node class to prevent mucking up the LinkedList.
 class LinkedListNode {
     constructor(_list, _nodeInternal) {
         this._list = _list;

@@ -15,11 +15,31 @@ export declare class DateTime implements ICalendarDate, IDateTime {
     private readonly _kind;
     readonly kind: DateTime.Kind;
     readonly year: number;
+    /**
+     * Returns the Gregorian Month (zero indexed).
+     * @returns {number}
+     */
     readonly month: Gregorian.Month;
+    /**
+     * Returns the month number (1-12).
+     * @returns {number}
+     */
     readonly calendarMonth: number;
     readonly calendar: ICalendarDate;
+    /**
+     * Returns the day of the month.  An integer between 1 and 31.
+     * @returns {number}
+     */
     readonly day: number;
+    /**
+     * Returns the day of the month indexed starting at zero.
+     * @returns {number}
+     */
     readonly dayIndex: number;
+    /**
+     * Returns the zero indexed day of the week. (Sunday == 0)
+     * @returns {number}
+     */
     readonly dayOfWeek: Gregorian.DayOfWeek;
     addMilliseconds(ms: number): DateTime;
     addSeconds(seconds: number): DateTime;
@@ -28,19 +48,77 @@ export declare class DateTime implements ICalendarDate, IDateTime {
     addDays(days: number): DateTime;
     addMonths(months: number): DateTime;
     addYears(years: number): DateTime;
+    /**
+     * Receives an ITimeQuantity value and adds based on the total milliseconds.
+     * @param {ITimeQuantity} time
+     * @returns {DateTime}
+     */
     add(time: ITimeQuantity): DateTime;
+    /**
+     * Receives an ITimeQuantity value and subtracts based on the total milliseconds.
+     * @param {ITimeQuantity} time
+     * @returns {DateTime}
+     */
     subtract(time: ITimeQuantity): DateTime;
+    /**
+     * Returns a TimeSpan representing the amount of time between two dates.
+     * @param previous
+     * @returns {TimeSpan}
+     */
     timePassedSince(previous: Date | DateTime): TimeSpan;
+    /**
+     * Returns a DateTime object for 00:00 of this date.
+     */
     readonly date: DateTime;
     private _time;
+    /**
+     * Returns the time of day represented by a ClockTime object.
+     * @returns {ClockTime}
+     */
     readonly timeOfDay: ClockTime;
+    /**
+     * Returns a readonly object which contains all the date and time components.
+     */
     toTimeStamp(): ITimeStamp;
+    /**
+     * Returns the now local time.
+     * @returns {DateTime}
+     */
     static readonly now: DateTime;
+    /**
+     * Returns a UTC version of this date if its kind is local.
+     * @returns {DateTime}
+     */
     readonly toUniversalTime: DateTime;
+    /**
+     * The date component for now.
+     * @returns {DateTime}
+     */
     static readonly today: DateTime;
+    /**
+     * Midnight tomorrow.
+     * @returns {DateTime}
+     */
     static readonly tomorrow: DateTime;
+    /**
+     * Measures the difference between two dates as a TimeSpan.
+     * @param first
+     * @param last
+     */
     static between(first: Date | DateTime, last: Date | DateTime): TimeSpan;
+    /**
+     * Calculates if the given year is a leap year using the formula:
+     * ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)
+     * @param year
+     * @returns {boolean}
+     */
     static isLeapYear(year: number): boolean;
+    /**
+     * Returns the number of days for the specific year and month.
+     * @param year
+     * @param month
+     * @returns {any}
+     */
     static daysInMonth(year: number, month: Gregorian.Month): number;
     static from(calendarDate: ICalendarDate): DateTime;
     static from(year: number, month: Gregorian.Month, day: number): DateTime;

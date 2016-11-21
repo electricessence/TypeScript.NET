@@ -6,6 +6,7 @@
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var ReadOnlyCollectionBase_1 = require("./ReadOnlyCollectionBase");
 var extends_1 = require("../../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var ReadOnlyCollectionWrapper = (function (_super) {
     __extends(ReadOnlyCollectionWrapper, _super);

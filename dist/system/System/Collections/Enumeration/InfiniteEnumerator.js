@@ -12,9 +12,18 @@ System.register(["./SimpleEnumerableBase", "../../../extends"], function (export
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
+            /**
+             * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
+             * This is analogous to a 'generator' and has a compatible interface.
+             */
             InfiniteEnumerator = (function (_super) {
                 __extends(InfiniteEnumerator, _super);
+                /**
+                 * See InfiniteValueFactory
+                 * @param _factory
+                 */
                 function InfiniteEnumerator(_factory) {
                     var _this = _super.call(this) || this;
                     _this._factory = _factory;

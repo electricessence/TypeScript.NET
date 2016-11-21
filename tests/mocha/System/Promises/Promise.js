@@ -7,9 +7,13 @@ var defer_1 = require("../../../../dist/commonjs/System/Threading/defer");
 var LazyPromise_1 = require("../../../../dist/commonjs/System/Promises/LazyPromise");
 var ObjectDisposedException_1 = require("../../../../dist/commonjs/System/Disposable/ObjectDisposedException");
 var REASON = "this is not an error, but it might show up in the console";
+// In browsers that support strict mode, it'll be `undefined`; otherwise, the global.
+// let calledAsFunctionThis = (function() { return this; }());
 afterEach(function () {
+    //Q.onerror = null;
 });
 describe("computing sum of integers using promises", function () {
+    // Use triangular numbers...
     var count = 1000;
     var array = AU.range(1, count);
     var swA = Stopwatch_1.default.startNew();
@@ -23,6 +27,8 @@ describe("computing sum of integers using promises", function () {
         }, Promise_1.Promise.resolve(0))
             .thenSynchronous(function (value) {
             sw.stop();
+            // console.log("");
+            // console.log("Synchronous Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
             assert.equal(value, answer);
         });
     });
@@ -33,6 +39,8 @@ describe("computing sum of integers using promises", function () {
             .reduce(function (previousValue, currentValue) { return previousValue + currentValue; }, 0)
             .then(function (value) {
             sw.stop();
+            // console.log("");
+            // console.log("PromiseCollection Compute Milliseconds: ", sw.elapsedMilliseconds);
             assert.equal(value, answer);
         });
     });
@@ -44,9 +52,26 @@ describe("computing sum of integers using promises", function () {
         }, Promise_1.Promise.resolve(0))
             .then(function (value) {
             sw.stop();
+            //console.log("");
+            //console.log("Deferred Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
             assert.equal(value, answer);
         });
     });
+    // it("should compute correct result without blowing stack (All Deferred) (lambda only)", ()=>
+    // {
+    // 	let sw = Stopwatch.startNew();
+    // 	return array
+    // 		.reduce((promise:PromiseBase<number>, nextVal:number) =>
+    // 			promise.then(
+    // 				currentVal=>currentVal + nextVal).deferAll(), Promise.resolve(0).deferAll())
+    // 		.then(value=>
+    // 		{
+    // 			sw.stop();
+    // 			//console.log("");
+    // 			//console.log("All Deferred Promise Compute Milliseconds: ", sw.elapsedMilliseconds);
+    // 			assert.equal(value, answer);
+    // 		});
+    // });
     it("should be deferring fulfillment", function () {
         var wasRun = false;
         var r = Promise_1.Promise.resolve(true).then(function () {
@@ -119,55 +144,56 @@ describe("Resolution and Rejection", function () {
     var BREAK = "break", NO = "NO!";
     function testPromiseFlow(p) {
         return p
-            .then(null)
+            .then(null) // ensure pass through
             .then(function (v) {
-            assert.ok(v);
-            return v;
+            assert.ok(v); // v === true
+            return v; // *
         }, function () {
             assert.ok(false);
             return true;
         })
             .then(function (v) {
             assert.ok(v);
-            return v;
+            return v; // *
         })
             .then(function (v) {
             assert.ok(v);
-            return false;
+            return false; // *
         })
             .then(function (v) {
             assert.ok(!v);
-            return true;
+            return true; // *
         })
             .then(function (v) {
             assert.ok(v);
-            throw BREAK;
+            throw BREAK; // *
         }, function () {
             assert.ok(false);
             return NO;
         })
-            .then(null, null)
+            .then(null, null) // ensure pass through
             .then(function () {
+            // The previous promise threw/rejected so should never go here.
             assert.ok(false);
             return NO;
         }, function (e) {
             assert.equal(e, BREAK);
-            return BREAK;
+            return BREAK; // *
         })
             .then(function (v) {
             assert.equal(v, BREAK);
-            return true;
+            return true; // *
         }, function () {
             assert.ok(false);
             return false;
         })
             .then(function (v) {
             assert.ok(v);
-            throw BREAK;
+            throw BREAK; // *
         })
             .catch(function (e) {
             assert.equal(e, BREAK);
-            return true;
+            return true; // *
         })
             .then(function (v) {
             assert.ok(v);
@@ -178,7 +204,7 @@ describe("Resolution and Rejection", function () {
             throw "force catch";
         })
             .catch(function () {
-            throw BREAK;
+            throw BREAK; // Make sure throws inside reject are captured.
         })
             .catch(function (e) {
             assert.equal(e, BREAK);
@@ -198,6 +224,7 @@ describe("Resolution and Rejection", function () {
     it("should pass through", function () {
         return Promise_1.Promise.resolve(true)
             .thenAllowFatal(function () {
+            // throw "BAM!";
         });
     });
     it("should follow expected promise behavior flow for a pending then resolved promise", function () {

@@ -21,6 +21,7 @@ System.register(["../Exceptions/SystemException", "../../extends"], function (ex
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              * Based upon: https://msdn.microsoft.com/en-us/library/system.collections.generic.KeyNotFoundException(v=vs.110).aspx
              */
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'KeyNotFoundException ';
             KeyNotFoundException = (function (_super) {

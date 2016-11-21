@@ -5,7 +5,9 @@
 "use strict";
 var ResolverBase_1 = require("./ResolverBase");
 var extends_1 = require("../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
+// We need a non-resettable lazy to ensure it can be passed safely around.
 var Lazy = (function (_super) {
     __extends(Lazy, _super);
     function Lazy(valueFactory, trapExceptions, allowReset) {

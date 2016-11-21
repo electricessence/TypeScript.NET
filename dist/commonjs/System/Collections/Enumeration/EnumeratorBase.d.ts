@@ -15,13 +15,31 @@ export declare class EnumeratorBase<T> extends DisposableBase implements IEnumer
     constructor(initializer: Closure | null, tryGetNext: (yielder: IYield<T>) => boolean, disposer?: Closure | null, isEndless?: boolean);
     protected _isEndless: boolean;
     readonly isEndless: boolean | undefined;
+    /**
+     * Added for compatibility but only works if the enumerator is active.
+     */
     reset(): void;
     private _assertBadState();
+    /**
+     * Passes the current value to the out callback if the enumerator is active.
+     * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+     */
     tryGetCurrent(out: Action<T>): boolean;
     readonly canMoveNext: boolean;
+    /**
+     * Safely moves to the next entry and returns true if there is one.
+     * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+     */
     moveNext(): boolean;
+    /**
+     * Moves to the next entry and emits the value through the out callback.
+     * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+     */
     tryMoveNext(out: Action<T>): boolean;
     nextValue(): T | undefined;
+    /**
+     * Exposed for compatibility with generators.
+     */
     next(): IIteratorResult<T>;
     end(): void;
     'return'(): IIteratorResult<void>;

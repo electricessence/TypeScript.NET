@@ -25,7 +25,7 @@
         EventSimple.prototype.dispatch = function () {
             var params = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                params[_i - 0] = arguments[_i];
+                params[_i] = arguments[_i];
             }
             var listeners = this._listeners;
             for (var _a = 0, listeners_1 = listeners; _a < listeners_1.length; _a++) {

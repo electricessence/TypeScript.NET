@@ -33,13 +33,16 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
+            // Design Note: Should DictionaryAbstractBase be IDisposable?
             DictionaryBase = (function (_super) {
                 __extends(DictionaryBase, _super);
                 function DictionaryBase(source) {
                     return _super.call(this, source) || this;
                 }
+                //noinspection JSUnusedLocalSymbols
                 DictionaryBase.prototype._onValueModified = function (key, value, old) {
                 };
                 DictionaryBase.prototype._addInternal = function (item) {
@@ -60,9 +63,11 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                 };
                 DictionaryBase.prototype.contains = function (item) {
                     var _this = this;
+                    // Should never have a null object in the collection.
                     if (!item || !this.getCount())
                         return false;
                     return KeyValueExtract_1.extractKeyValue(item, function (key, value) {
+                        // Leave as variable for debugging...
                         var v = _this.getValue(key);
                         return Compare_1.areEqual(value, v);
                     });
@@ -72,6 +77,7 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                     if (!item)
                         return 0;
                     return KeyValueExtract_1.extractKeyValue(item, function (key, value) {
+                        // Leave as variable for debugging...
                         var v = _this.getValue(key);
                         return (Compare_1.areEqual(value, v) && _this.removeByKey(key))
                             ? 1 : 0;
@@ -113,11 +119,19 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                     }
                     return false;
                 };
+                /**
+                 * Sets the value of an entry.
+                 * It's important to know that 'undefined' cannot exist as a value in the dictionary and is used as a flag for removal.
+                 * @param key
+                 * @param value
+                 * @returns {boolean}
+                 */
                 DictionaryBase.prototype.setValue = function (key, value) {
+                    // setValue shouldn't need to worry about recursion...
                     var _ = this;
                     _.assertModifiable();
                     var changed = false;
-                    var old = _.getValue(key);
+                    var old = _.getValue(key); // get the old value here and pass to internal.
                     if (!Compare_1.areEqual(value, old) && _._setValueInternal(key, value)) {
                         changed = true;
                         _._onValueModified(key, value, old);
@@ -154,6 +168,7 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                     return count;
                 };
                 DictionaryBase.prototype.importEntries = function (pairs) {
+                    // Allow piping through to trigger onModified properly.
                     return _super.prototype.importEntries.call(this, pairs);
                 };
                 DictionaryBase.prototype._importEntries = function (pairs) {
@@ -173,7 +188,7 @@ System.register(["../../Compare", "../Enumeration/Enumerator", "../CollectionBas
                     var ver, keys, len, index = 0;
                     return new EnumeratorBase_1.EnumeratorBase(function () {
                         _.throwIfDisposed();
-                        ver = _._version;
+                        ver = _._version; // Track the version since getKeys is a copy.
                         keys = _.getKeys();
                         len = keys.length;
                     }, function (yielder) {

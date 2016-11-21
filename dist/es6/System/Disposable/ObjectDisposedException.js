@@ -1,6 +1,13 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based upon: https://msdn.microsoft.com/en-us/library/System.Exception%28v=vs.110%29.aspx
+ */
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
+// noinspection JSUnusedLocalSymbols
 const NAME = 'ObjectDisposedException';
 export class ObjectDisposedException extends InvalidOperationException {
+    // For simplicity and consistency, lets stick with 1 signature.
     constructor(objectName, message, innerException) {
         super(message || '', innerException, (_) => {
             _.objectName = objectName;

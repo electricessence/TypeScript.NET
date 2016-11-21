@@ -21,6 +21,7 @@ System.register(["../Types", "./Dictionaries/getIdentifier", "./HashSet", "../..
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             Set = (function (_super) {
                 __extends(Set, _super);

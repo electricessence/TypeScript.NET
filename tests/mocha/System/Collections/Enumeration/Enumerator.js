@@ -49,6 +49,7 @@ describe(".from(source)", function () {
         var q = new Queue_1.default(a);
         var type = new Types_1.TypeInfo(q);
         type.member("getEnumerator");
+        // Creates an enumerable.
         var test = Enumerator.from({ getEnumerator: function () { return Enumerator.from(a); } });
         while (test.moveNext()) {
             count++;

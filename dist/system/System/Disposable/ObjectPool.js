@@ -24,6 +24,7 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = "Must be less than or equal to " + ABSOLUTE_MAX_SIZE + ".";
             ObjectPool = (function (_super) {
@@ -33,6 +34,9 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     _this._maxSize = _maxSize;
                     _this._generator = _generator;
                     _this._recycler = _recycler;
+                    /**
+                     * By default will clear after 5 seconds of non-use.
+                     */
                     _this.autoClearTimeout = 5000;
                     if (isNaN(_maxSize) || _maxSize < 1)
                         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
@@ -49,6 +53,10 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     return _this;
                 }
                 Object.defineProperty(ObjectPool.prototype, "maxSize", {
+                    /**
+                     * Defines the maximum at which trimming should allow.
+                     * @returns {number}
+                     */
                     get: function () {
                         return this._maxSize;
                     },
@@ -56,6 +64,10 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     configurable: true
                 });
                 Object.defineProperty(ObjectPool.prototype, "count", {
+                    /**
+                     * Current number of objects in pool.
+                     * @returns {number}
+                     */
                     get: function () {
                         var p = this._pool;
                         return p ? p.length : 0;
@@ -69,6 +81,10 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                         dispose_1.dispose.withoutException(pool.pop());
                     }
                 };
+                /**
+                 * Will trim ensure the pool is less than the maxSize.
+                 * @param defer A delay before trimming.  Will be overridden by later calls.
+                 */
                 ObjectPool.prototype.trim = function (defer) {
                     this.throwIfDisposed();
                     this._trimmer.start(defer);
@@ -82,6 +98,11 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     dispose_1.dispose.these(p, true);
                     p.length = 0;
                 };
+                /**
+                 * Will clear out the pool.
+                 * Cancels any scheduled trims when executed.
+                 * @param defer A delay before clearing.  Will be overridden by later calls.
+                 */
                 ObjectPool.prototype.clear = function (defer) {
                     this.throwIfDisposed();
                     this._flusher.start(defer);
@@ -95,6 +116,9 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     _._pool = [];
                     return p;
                 };
+                /**
+                 * Shortcut for toArrayAndClear();
+                 */
                 ObjectPool.prototype.dump = function () {
                     return this.toArrayAndClear();
                 };
@@ -121,6 +145,7 @@ System.register(["./dispose", "./DisposableBase", "../Threading/Tasks/TaskHandle
                     var _ = this;
                     _.throwIfDisposed();
                     if (_._pool.length >= _._localAbsMaxSize) {
+                        // Getting too big, dispose immediately...
                         dispose_1.dispose(o);
                     }
                     else {

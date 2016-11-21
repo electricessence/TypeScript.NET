@@ -18,6 +18,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             DeferBase = (function () {
                 function DeferBase() {
@@ -32,7 +33,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                 function Defer(task, delay, payload) {
                     var _this = _super.call(this) || this;
                     if (!(delay > 0))
-                        delay = 0;
+                        delay = 0; // covers undefined and null.
                     _this._id = setTimeout(Defer.handler, delay, task, _this, payload);
                     return _this;
                 }
@@ -45,6 +46,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                     }
                     return false;
                 };
+                // Use a static function here to avoid recreating a new function every time.
                 Defer.handler = function (task, d, payload) {
                     d.cancel();
                     task(payload);

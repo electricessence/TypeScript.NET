@@ -1,5 +1,14 @@
 const NAME = 'Exception';
+/**
+ * Represents errors that occur during application execution.
+ */
 export class Exception {
+    /**
+     * Initializes a new instance of the Exception class with a specified error message and optionally a reference to the inner exception that is the cause of this exception.
+     * @param message
+     * @param innerException
+     * @param beforeSealing This delegate is used to allow actions to occur just before this constructor finishes.  Since some compilers do not allow the use of 'this' before super.
+     */
     constructor(message, innerException, beforeSealing) {
         this.message = message;
         const _ = this;
@@ -7,8 +16,13 @@ export class Exception {
         this.data = {};
         if (innerException)
             _.data['innerException'] = innerException;
+        /* Originally intended to use 'get' accessors for properties,
+         * But debuggers don't display these readily yet.
+         * Object.freeze has to be used carefully, but will prevent overriding values at runtime.
+         */
         if (beforeSealing)
             beforeSealing(_);
+        // Node has a .stack, let's use it...
         try {
             let stack = eval("new Error()").stack;
             stack = stack
@@ -21,7 +35,14 @@ export class Exception {
         catch (ex) { }
         Object.freeze(_);
     }
+    /**
+     * A string representation of the error type.
+     * The default is 'Error'.
+     */
     getName() { return NAME; }
+    /**
+     * The string representation of the Exception instance.
+     */
     toString() {
         return `[${this.toStringWithoutBrackets()}]`;
     }
@@ -30,6 +51,9 @@ export class Exception {
         const m = _.message;
         return _.name + (m ? (': ' + m) : '');
     }
+    /**
+     * Clears the data object.
+     */
     dispose() {
         const data = this.data;
         for (let k in data) {

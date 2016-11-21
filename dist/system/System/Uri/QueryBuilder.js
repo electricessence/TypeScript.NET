@@ -21,7 +21,13 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
+            /**
+             * Provides a means for parsing and building a set of parameters.
+             *
+             * In other languages, dictionaries are not reliable for retaining the order of stored values. So for certainty and flexibility we use an ordered dictionary as a base class.
+             */
             QueryBuilder = (function (_super) {
                 __extends(QueryBuilder, _super);
                 function QueryBuilder(query, decodeValues) {
@@ -47,6 +53,13 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
                     }
                     return this;
                 };
+                /**
+                 * Property parses the components of an URI into their values or array of values.
+                 * @param values
+                 * @param deserialize
+                 * @param decodeValues
+                 * @returns {QueryBuilder}
+                 */
                 QueryBuilder.prototype.importFromString = function (values, deserialize, decodeValues) {
                     if (deserialize === void 0) { deserialize = true; }
                     if (decodeValues === void 0) { decodeValues = true; }
@@ -64,6 +77,9 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
                     }, deserialize, decodeValues);
                     return this;
                 };
+                /**
+                 * Returns the encoded URI string
+                 */
                 QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
                     return QueryParams.encode(this, prefixIfNotEmpty);
                 };

@@ -1,7 +1,8 @@
 "use strict";
 var assert = require("assert");
 var ArrayProcedure = require("../../../../../dist/commonjs/System/Collections/Array/Procedure");
-var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity, a = [5, minA, -1, maxA, -2, NaN, 20], b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20], sum = 5 + minA + (-1) + maxA + (-2) + 20, average = sum / 6, product = 5 * minA * (-1) * maxA * (-2) * 20, quotient = 5 / minA / (-1) / maxA / (-2) / 20;
+var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity, a = [5, minA, -1, maxA, -2, NaN, 20], b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20], sum = 5 + minA + (-1) + maxA + (-2) + 20, average = sum / 6, // Not including NaN
+product = 5 * minA * (-1) * maxA * (-2) * 20, quotient = 5 / minA / (-1) / maxA / (-2) / 20;
 function procedureShouldBe(source, value, p) {
     it('should be NaN', function () {
         assert.ok(isNaN(p(source)));

@@ -56,6 +56,8 @@ System.register(["../Time/TimeSpan"], function (exports_1, context_1) {
                     _._isRunning = false;
                     _._startTimeStamp = NaN;
                 };
+                // Effectively calls a stop start and continues timing...
+                // Can also be called to effectively start a lap before calling it again to get the elapsed lap time.
                 Stopwatch.prototype.lap = function () {
                     var _ = this;
                     if (_._isRunning) {

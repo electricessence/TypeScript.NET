@@ -1,5 +1,11 @@
 import { DisposableBase } from "./Disposable/DisposableBase";
 import { Func } from "./FunctionTypes";
+/**
+ * The ResolverBase class handles resolving a factory method and detects recursion.
+ * Since JS does not have a synchronization mechanism (lock or otherwise)
+ * we have to prevent getValue from double triggering the value factory (optimistic concurrency)
+ * or returning return a value that is intermediate between resolving and resolved.
+ */
 export declare abstract class ResolverBase<T> extends DisposableBase {
     protected _valueFactory: Func<T>;
     private readonly _trapExceptions;

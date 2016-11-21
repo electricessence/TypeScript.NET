@@ -25,6 +25,7 @@ System.register(["../../Exceptions/ArgumentNullException", "../ReadOnlyCollectio
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             ReadOnlyArrayWrapper = (function (_super) {
                 __extends(ReadOnlyArrayWrapper, _super);

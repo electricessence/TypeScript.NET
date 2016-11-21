@@ -21,8 +21,10 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = "SubscribableBase";
+            // This class is very much akin to a registry or 'Set' but uses an intermediary (Subscription) for releasing the registration.
             SubscribableBase = (function (_super) {
                 __extends(SubscribableBase, _super);
                 function SubscribableBase() {
@@ -40,6 +42,7 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
                     var s = this.__subscriptions;
                     return s && s.find(function (n) { return !!n.value && n.value.subscriber === subscriber; });
                 };
+                // It is possible that the same observer could call subscribe more than once and therefore we need to retain a single instance of the subscriber.
                 SubscribableBase.prototype.subscribe = function (subscriber) {
                     var _ = this;
                     _.throwIfDisposed();
@@ -56,12 +59,13 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
                 };
                 SubscribableBase.prototype.unsubscribe = function (subscriber) {
                     var _ = this;
+                    // _.throwIfDisposed(); If it was disposed, then it's still safe to try and unsubscribe.
                     var n = _._findEntryNode(subscriber);
                     if (n) {
                         var s = n.value;
                         _.__subscriptions.removeNode(n);
                         if (s)
-                            s.dispose();
+                            s.dispose(); // Prevent further usage of a dead subscription.
                     }
                 };
                 SubscribableBase.prototype._unsubscribeAll = function (returnSubscribers) {
@@ -72,7 +76,7 @@ System.register(["../Collections/LinkedNodeList", "../Disposable/dispose", "./Su
                         return null;
                     var s = _s.map(function (n) { return n.value; });
                     var u = returnSubscribers ? s.map(function (o) { return o.subscriber; }) : null;
-                    _s.clear();
+                    _s.clear(); // Reset...
                     dispose_1.dispose.these(s);
                     return u;
                 };

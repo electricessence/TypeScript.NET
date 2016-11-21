@@ -1,7 +1,12 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var IndexEnumerator_1 = require("./IndexEnumerator");
 var Types_1 = require("../../Types");
 var extends_1 = require("../../../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var ArrayEnumerator = (function (_super) {
     __extends(ArrayEnumerator, _super);

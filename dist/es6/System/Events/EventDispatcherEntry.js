@@ -1,8 +1,13 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { Type } from "../Types";
 import { DisposableBase } from "../Disposable/DisposableBase";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { areEquivalent } from "../Compare";
+// noinspection JSUnusedLocalSymbols
 const NAME = "EventDispatcherEntry";
 export class EventDispatcherEntry extends DisposableBase {
     constructor(type, listener, params, finalizer) {
@@ -24,6 +29,11 @@ export class EventDispatcherEntry extends DisposableBase {
         super._onDispose();
         this.listener = null;
     }
+    /**
+     * Safely dispatches an event if entry is not disposed and type matches.
+     * @param e
+     * @returns {IEventListener|boolean}
+     */
     dispatch(e) {
         const _ = this;
         if (_.wasDisposed)
@@ -31,17 +41,28 @@ export class EventDispatcherEntry extends DisposableBase {
         const l = _.listener, d = l && e.type == _.type;
         if (d) {
             if (Type.isFunction(l))
-                _.listener(e);
+                _.listener(e); // Use 'this' to ensure call reference.
             else
                 l.handleEvent(e);
         }
         return d;
     }
+    /**
+     * Compares type and listener object only.
+     * @param type
+     * @param listener
+     * @returns {boolean}
+     */
     matches(type, listener) {
         const _ = this;
         return _.type == type
             && _.listener == listener;
     }
+    /**
+     * Compares type, listener, and priority.
+     * @param other
+     * @returns {boolean}
+     */
     equals(other) {
         const _ = this;
         return _.matches(other.type, other.listener)

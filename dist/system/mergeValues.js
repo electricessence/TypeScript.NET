@@ -5,6 +5,12 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    /**
+     * Takes a target object and ensures values exist.
+     * @param target
+     * @param defaults
+     * @returns {any}
+     */
     function mergeValues(target, defaults) {
         var result = target || {};
         for (var key in defaults) {

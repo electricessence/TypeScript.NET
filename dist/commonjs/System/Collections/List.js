@@ -1,4 +1,8 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var Compare_1 = require("../Compare");
 var Utility_1 = require("./Array/Utility");
 var Enumerator_1 = require("./Enumeration/Enumerator");
@@ -6,6 +10,7 @@ var Types_1 = require("../Types");
 var CollectionBase_1 = require("./CollectionBase");
 var extends_1 = require("../../extends");
 var EnumeratorBase_1 = require("./Enumeration/EnumeratorBase");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
 var List = (function (_super) {
@@ -109,6 +114,7 @@ var List = (function (_super) {
             if (index)
                 _.throwIfDisposed();
             else if (_.wasDisposed) {
+                // We never actually started? Then no biggie.
                 return yielder.yieldBreak();
             }
             _.assertVersion(version);

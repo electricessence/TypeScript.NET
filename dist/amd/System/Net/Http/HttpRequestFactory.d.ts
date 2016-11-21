@@ -4,6 +4,9 @@ import { HttpMethodValue } from "./HttpMethodValue";
 import { Uri } from "../../Uri/Uri";
 import { IUri } from "../../Uri/IUri";
 import { IHttpRequestAdapter } from "./IHttpRequestAdapter";
+/**
+ * This class exposes a factory for making requests to prepared uri and params.
+ */
 export default class HttpRequestFactory extends DisposableBase {
     private _http;
     protected _uriDefaults: Uri;

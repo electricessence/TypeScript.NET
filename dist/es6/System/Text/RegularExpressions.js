@@ -1,22 +1,39 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Named groups based on: http://trentrichardson.com/2011/08/02/javascript-regexp-match-named-captures/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
+// noinspection JSUnusedLocalSymbols
 const EMPTY = "";
 const _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
+/**
+ * https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regexoptions%28v=vs.110%29.aspx
+ */
 export var RegexOptions;
 (function (RegexOptions) {
+    /**
+     * Specifies case-insensitive matching. For more information, see the "Case-Insensitive Matching " section in the Regular Expression Options topic.
+     */
     RegexOptions.IGNORE_CASE = _I;
     RegexOptions.I = _I;
+    /**
+     * Specifies global matching instead of single.
+     */
     RegexOptions.GLOBAL = _G;
     RegexOptions.G = _G;
+    /**
+     * treat beginning and end characters (^ and $) as working over multiple lines (i.e., match the beginning or end of each line (delimited by \n or \r), not only the very beginning or end of the whole input string)
+     */
     RegexOptions.MULTI_LINE = _M;
     RegexOptions.M = _M;
+    /**
+     * treat pattern as a sequence of unicode code points
+     */
     RegexOptions.UNICODE = _U;
     RegexOptions.U = _U;
+    /**
+     * matches only from the index indicated by the lastIndex property of this regular expression in the target string (and does not attempt to match from any later indexes).
+     */
     RegexOptions.STICKY = _Y;
     RegexOptions.Y = _Y;
+    /**
+     * Modifies the pattern to ignore standard whitespace characters.
+     */
     RegexOptions.IGNORE_PATTERN_WHITESPACE = _W;
     RegexOptions.W = _W;
 })(RegexOptions || (RegexOptions = {}));
@@ -39,7 +56,9 @@ export class Regex {
             patternString = pattern;
         }
         const ignoreWhiteSpace = flags.indexOf(_W) != -1;
+        // For the majority of expected behavior, we need to eliminate global and whitespace ignore.
         flags = flags.replace(/[gw]/g, EMPTY);
+        // find the keys inside the pattern, and place in mapping array {0:'key1', 1:'key2', ...}
         const keys = [];
         {
             let k = patternString.match(/(?!\(\?<)(\w+)(?=>)/g);
@@ -47,6 +66,7 @@ export class Regex {
                 for (let i = 0, len = k.length; i < len; i++) {
                     keys[i + 1] = k[i];
                 }
+                // remove keys from regexp leaving standard regexp
                 patternString = patternString.replace(/\?<\w+>/g, EMPTY);
                 this._keys = keys;
             }
@@ -72,6 +92,7 @@ export class Regex {
             let text = r[i];
             let g = EmptyGroup;
             if (text !== null || text !== void 0) {
+                // Empty string might mean \b match or similar.
                 g = new Group(text, loc);
                 g.freeze();
             }

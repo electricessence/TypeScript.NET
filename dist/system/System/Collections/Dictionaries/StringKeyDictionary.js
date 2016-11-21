@@ -15,6 +15,7 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
             StringKeyDictionary = (function (_super) {
@@ -76,6 +77,7 @@ System.register(["../../Compare", "./DictionaryBase", "../../../extends"], funct
                     }
                     return false;
                 };
+                // Returns true if any value is updated...
                 StringKeyDictionary.prototype.importMap = function (values) {
                     var _ = this;
                     return _.handleUpdate(function () {

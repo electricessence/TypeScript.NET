@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
- */
 System.register(["../Observable/ObservableBase", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -16,13 +11,14 @@ System.register(["../Observable/ObservableBase", "../../extends"], function (exp
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {/*!
-             * @author electricessence / https://github.com/electricessence/
-             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-             * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
-             */
+        execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             ps = require("child_process");
+            //import {ChildProcess} from "child_process";
+            /**
+             * This class takes the place of a WebWorker
+             */
             NodeJSWorker = (function (_super) {
                 __extends(NodeJSWorker, _super);
                 function NodeJSWorker(url) {
@@ -44,7 +40,7 @@ System.register(["../Observable/ObservableBase", "../../extends"], function (exp
                 };
                 NodeJSWorker.prototype._onDispose = function () {
                     _super.prototype._onDispose.call(this);
-                    this._process.removeAllListeners();
+                    this._process.removeAllListeners(); // just to satisfy paranoia.
                     this._process.kill();
                     this._process = null;
                 };

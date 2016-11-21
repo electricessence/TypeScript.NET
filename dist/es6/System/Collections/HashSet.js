@@ -1,6 +1,11 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { Type } from "../Types";
 import { SetBase } from "./SetBase";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 export class HashSet extends SetBase {
     constructor(source, keyGenerator) {
@@ -25,9 +30,11 @@ export class HashSet extends SetBase {
         const key = _._keyGenerator(item);
         if (!t || t[key] === VOID0) {
             if (!r) {
+                //noinspection JSUnusedAssignment
                 _._registry = r = {};
             }
             if (!t) {
+                //noinspection JSUnusedAssignment
                 r[type] = t = {};
             }
             const node = { value: item };

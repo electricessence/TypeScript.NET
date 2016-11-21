@@ -15,6 +15,7 @@ System.register(["./TaskHandlerBase", "../../Exceptions/ArgumentNullException", 
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             TaskHandler = (function (_super) {
                 __extends(TaskHandler, _super);

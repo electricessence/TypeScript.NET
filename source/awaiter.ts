@@ -1,13 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-
-export interface Awaiter
-{
-	(thisArg:any, _arguments:any[], P:PromiseConstructorLike, generator:Function):void;
-}
-
 export function awaiter(
 	thisArg:any,
 	_arguments:any[],
@@ -44,16 +34,5 @@ export function awaiter(
 		}
 	});
 }
-
-// export module awaiter
-// {
-// 	export function factory(UserPromise:PromiseConstructorLike):Awaiter
-// 	{
-// 		return (thisArg:any, _arguments:any[], P:PromiseConstructorLike, generator:Function) =>
-// 		{
-// 			awaiter(thisArg, _arguments, P || UserPromise, generator);
-// 		};
-// 	}
-// }
 
 export default awaiter;

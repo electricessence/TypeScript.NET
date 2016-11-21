@@ -23,7 +23,7 @@ function nullSort(a:number[]):number[]
 const sourceCount = 4, sourceMax = 200;
 const source:number[][] = [];
 for(let i = 0;i<sourceCount;i++) {
-	source.push(Object.freeze(Integer.random.set(sourceMax,sourceMax/2)));
+	source.push(<any>Object.freeze(Integer.random.set(sourceMax,sourceMax/2)));
 }
 Object.freeze(source);
 

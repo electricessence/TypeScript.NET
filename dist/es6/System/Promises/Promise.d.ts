@@ -25,33 +25,112 @@ export declare class PromiseState<T> extends DisposableBase {
 }
 export declare abstract class PromiseBase<T> extends PromiseState<T> implements PromiseLike<T> {
     constructor();
+    /**
+     * Calls the respective handlers once the promise is resolved.
+     * @param onFulfilled
+     * @param onRejected
+     */
     abstract thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    /**
+     * Same as 'thenSynchronous' but does not return the result.  Returns the current promise instead.
+     * You may not need an additional promise result, and this will not create a new one.
+     * @param onFulfilled
+     * @param onRejected
+     */
     abstract thenThis(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): this;
     abstract thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
+    /**
+     * Standard .then method that defers execution until resolved.
+     * @param onFulfilled
+     * @param onRejected
+     * @returns {Promise}
+     */
     then<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    /**
+     * Same as .then but doesn't trap errors.  Exceptions may end up being fatal.
+     * @param onFulfilled
+     * @param onRejected
+     * @returns {Promise}
+     */
     thenAllowFatal<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
+    /**
+     * .done is provided as a non-standard means that maps to similar functionality in other promise libraries.
+     * As stated by promisejs.org: 'then' is to 'done' as 'map' is to 'forEach'.
+     * @param onFulfilled
+     * @param onRejected
+     */
     done(onFulfilled: Promise.Fulfill<T, any>, onRejected?: Promise.Reject<any>): void;
+    /**
+     * Will yield for a number of milliseconds from the time called before continuing.
+     * @param milliseconds
+     * @returns A promise that yields to the current execution and executes after a delay.
+     */
     delayFromNow(milliseconds?: number): PromiseBase<T>;
+    /**
+     * Will yield for a number of milliseconds from after this promise resolves.
+     * If the promise is already resolved, the delay will start from now.
+     * @param milliseconds
+     * @returns A promise that yields to the current execution and executes after a delay.
+     */
     delayAfterResolve(milliseconds?: number): PromiseBase<T>;
+    /**
+     * Shortcut for trapping a rejection.
+     * @param onRejected
+     * @returns {PromiseBase<TResult>}
+     */
     'catch'<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
+    /**
+     * Shortcut for trapping a rejection but will allow exceptions to propagate within the onRejected handler.
+     * @param onRejected
+     * @returns {PromiseBase<TResult>}
+     */
     catchAllowFatal<TResult>(onRejected: Promise.Reject<TResult>): PromiseBase<TResult>;
+    /**
+     * Shortcut to for handling either resolve or reject.
+     * @param fin
+     * @returns {PromiseBase<TResult>}
+     */
     'finally'<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
+    /**
+     * Shortcut to for handling either resolve or reject but will allow exceptions to propagate within the handler.
+     * @param fin
+     * @returns {PromiseBase<TResult>}
+     */
     finallyAllowFatal<TResult>(fin: () => Promise.Resolution<TResult>): PromiseBase<TResult>;
+    /**
+     * Shortcut to for handling either resolve or reject.  Returns the current promise instead.
+     * You may not need an additional promise result, and this will not create a new one.
+     * @param fin
+     * @param synchronous
+     * @returns {PromiseBase}
+     */
     finallyThis(fin: Closure, synchronous?: boolean): this;
 }
 export declare abstract class Resolvable<T> extends PromiseBase<T> {
     thenSynchronous<TResult>(onFulfilled: Promise.Fulfill<T, TResult>, onRejected?: Promise.Reject<TResult>): PromiseBase<TResult>;
     thenThis(onFulfilled: (v?: T) => any, onRejected?: (v?: any) => any): this;
 }
+/**
+ * The simplest usable version of a promise which returns synchronously the resolved state provided.
+ */
 export declare abstract class Resolved<T> extends Resolvable<T> {
     constructor(state: Promise.State, result: T, error?: any);
 }
+/**
+ * A fulfilled Resolved<T>.  Provided for readability.
+ */
 export declare class Fulfilled<T> extends Resolved<T> {
     constructor(value: T);
 }
+/**
+ * A rejected Resolved<T>.  Provided for readability.
+ */
 export declare class Rejected<T> extends Resolved<T> {
     constructor(error: any);
 }
+/**
+ * This promise class that facilitates pending resolution.
+ */
 export declare class Promise<T> extends Resolvable<T> {
     private _waiting;
     constructor(resolver?: Promise.Executor<T>, forceSynchronous?: boolean);
@@ -66,24 +145,82 @@ export declare class Promise<T> extends Resolvable<T> {
     resolve(result?: T | PromiseLike<T>, throwIfSettled?: boolean): void;
     reject(error: any, throwIfSettled?: boolean): void;
 }
+/**
+ * By providing an ArrayPromise we expose useful methods/shortcuts for dealing with array results.
+ */
 export declare class ArrayPromise<T> extends Promise<T[]> {
+    /**
+     * Simplifies the use of a map function on an array of results when the source is assured to be an array.
+     * @param transform
+     * @returns {PromiseBase<Array<any>>}
+     */
     map<U>(transform: (value: T) => U): ArrayPromise<U>;
+    /**
+     * Simplifies the use of a reduce function on an array of results when the source is assured to be an array.
+     * @param reduction
+     * @param initialValue
+     * @returns {PromiseBase<any>}
+     */
     reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: T[]) => U, initialValue?: U): PromiseBase<U>;
     static fulfilled<T>(value: T[]): ArrayPromise<T>;
 }
+/**
+ * A Promise collection exposes useful methods for handling a collection of promises and their results.
+ */
 export declare class PromiseCollection<T> extends DisposableBase {
     private _source;
     constructor(source: PromiseLike<T>[] | null | undefined);
     protected _onDispose(): void;
+    /**
+     * Returns a copy of the source promises.
+     * @returns {PromiseLike<PromiseLike<any>>[]}
+     */
     readonly promises: PromiseLike<T>[];
+    /**
+     * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
+     * @returns {PromiseBase<any>}
+     */
     all(): ArrayPromise<T>;
+    /**
+     * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
+     * or rejected.
+     * @returns {PromiseBase<any>} A new Promise.
+     */
     race(): PromiseBase<T>;
+    /**
+     * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
+     * Unlike .all this method waits for all rejections as well as fulfillment.
+     * @returns {PromiseBase<PromiseLike<any>[]>}
+     */
     waitAll(): ArrayPromise<PromiseLike<T>>;
+    /**
+     * Waits for all the values to resolve and then applies a transform.
+     * @param transform
+     * @returns {PromiseBase<Array<any>>}
+     */
     map<U>(transform: (value: T) => U): ArrayPromise<U>;
+    /**
+     * Applies a transform to each promise and defers the result.
+     * Unlike map, this doesn't wait for all promises to resolve, ultimately improving the async nature of the request.
+     * @param transform
+     * @returns {PromiseCollection<U>}
+     */
     pipe<U>(transform: (value: T) => U | PromiseLike<U>): PromiseCollection<U>;
+    /**
+     * Behaves like array reduce.
+     * Creates the promise chain necessary to produce the desired result.
+     * @param reduction
+     * @param initialValue
+     * @returns {PromiseBase<PromiseLike<any>>}
+     */
     reduce<U>(reduction: (previousValue: U, currentValue: T, i?: number, array?: PromiseLike<T>[]) => U, initialValue?: U | PromiseLike<U>): PromiseBase<U>;
 }
 export declare module Promise {
+    /**
+     * The state of a promise.
+     * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
+     * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
+     */
     enum State {
         Pending = 0,
         Fulfilled = 1,
@@ -107,22 +244,82 @@ export declare module Promise {
         <T>(executor: Executor<T>): PromiseLike<T>;
     }
     function factory<T>(e: Executor<T>): Promise<T>;
+    /**
+     * Takes a set of promises and returns a PromiseCollection.
+     * @param promises
+     */
     function group<T>(promises: PromiseLike<T>[]): PromiseCollection<T>;
     function group<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseCollection<T>;
+    /**
+     * Returns a promise that is fulfilled with an array containing the fulfillment value of each promise, or is rejected with the same rejection reason as the first promise to be rejected.
+     */
     function all<T>(promises: PromiseLike<T>[]): ArrayPromise<T>;
     function all<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): ArrayPromise<T>;
+    /**
+     * Returns a promise that is fulfilled with array of provided promises when all provided promises have resolved (fulfill or reject).
+     * Unlike .all this method waits for all rejections as well as fulfillment.
+     */
     function waitAll<T>(promises: PromiseLike<T>[]): ArrayPromise<PromiseLike<T>>;
     function waitAll<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): ArrayPromise<PromiseLike<T>>;
+    /**
+     * Creates a Promise that is resolved or rejected when any of the provided Promises are resolved
+     * or rejected.
+     * @param promises An array of Promises.
+     * @returns A new Promise.
+     */
     function race<T>(promises: PromiseLike<T>[]): PromiseBase<T>;
     function race<T>(promise: PromiseLike<T>, ...rest: PromiseLike<T>[]): PromiseBase<T>;
+    /**
+     * Creates a new resolved promise .
+     * @returns A resolved promise.
+     */
     function resolve(): PromiseBase<void>;
+    /**
+     * Creates a new resolved promise for the provided value.
+     * @param value A value or promise.
+     * @returns A promise whose internal state matches the provided promise.
+     */
     function resolve<T>(value: T | PromiseLike<T>): PromiseBase<T>;
+    /**
+     * Syntactic shortcut for avoiding 'new'.
+     * @param resolver
+     * @param forceSynchronous
+     * @returns {Promise}
+     */
     function using<T>(resolver: Promise.Executor<T>, forceSynchronous?: boolean): PromiseBase<T>;
+    /**
+     * Takes a set of values or promises and returns a PromiseCollection.
+     * Similar to 'group' but calls resolve on each entry.
+     * @param resolutions
+     */
     function resolveAll<T>(resolutions: Array<T | PromiseLike<T>>): PromiseCollection<T>;
     function resolveAll<T>(promise: T | PromiseLike<T>, ...rest: Array<T | PromiseLike<T>>): PromiseCollection<T>;
+    /**
+     * Creates a PromiseCollection containing promises that will resolve on the next tick using the transform function.
+     * This utility function does not chain promises together to create the result,
+     * it only uses one promise per transform.
+     * @param source
+     * @param transform
+     * @returns {PromiseCollection<T>}
+     */
     function map<T, U>(source: T[], transform: (value: T) => U): PromiseCollection<U>;
+    /**
+     * Creates a new rejected promise for the provided reason.
+     * @param reason The reason the promise was rejected.
+     * @returns A new rejected Promise.
+     */
     function reject<T>(reason: T): PromiseBase<T>;
+    /**
+     * Takes any Promise-Like object and ensures an extended version of it from this module.
+     * @param target The Promise-Like object
+     * @returns A new target that simply extends the target.
+     */
     function wrap<T>(target: T | PromiseLike<T>): PromiseBase<T>;
+    /**
+     * A function that acts like a 'then' method (aka then-able) can be extended by providing a function that takes an onFulfill and onReject.
+     * @param then
+     * @returns {PromiseWrapper<T>}
+     */
     function createFrom<T>(then: Then<T, any>): PromiseBase<T>;
 }
 export default Promise;

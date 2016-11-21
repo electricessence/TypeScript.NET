@@ -9,6 +9,7 @@ System.register([], function (exports_1, context_1) {
         if (target === void 0) { target = {}; }
         if (target) {
             for (var k in source) {
+                //noinspection JSUnfilteredForInLoop
                 target[k] = source[k];
             }
         }

@@ -1,5 +1,11 @@
 "use strict";
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
+/**
+ * Quick sort O(n log (n))
+ * Warning: Uses recursion.
+ * @param target
+ * @returns {T[]}
+ */
 function quickSort(target) {
     if (!target)
         throw new ArgumentNullException_1.ArgumentNullException("target");
@@ -9,6 +15,7 @@ function quickSort(target) {
 exports.quickSort = quickSort;
 function sort(target, low, high) {
     if (low < high) {
+        // Partition first...
         var swap = void 0;
         var pivotIndex = Math.floor((low + high) / 2);
         swap = target[pivotIndex];

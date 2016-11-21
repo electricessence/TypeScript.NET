@@ -1,4 +1,10 @@
 import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
+/**
+ * Quick sort O(n log (n))
+ * Warning: Uses recursion.
+ * @param target
+ * @returns {T[]}
+ */
 export function quickSort(target) {
     if (!target)
         throw new ArgumentNullException("target");
@@ -7,6 +13,7 @@ export function quickSort(target) {
 }
 function sort(target, low, high) {
     if (low < high) {
+        // Partition first...
         let swap;
         const pivotIndex = Math.floor((low + high) / 2);
         swap = target[pivotIndex];

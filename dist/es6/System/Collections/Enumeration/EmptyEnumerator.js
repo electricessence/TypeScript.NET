@@ -5,6 +5,10 @@
 import { IteratorResult } from "./IteratorResult";
 import { Functions } from "../../Functions";
 const VOID0 = void 0;
+/**
+ * A simplified stripped down enumerable that is always complete and has no results.
+ * Frozen and exported as 'empty' to allow for reuse.
+ */
 export const EmptyEnumerator = Object.freeze({
     current: VOID0,
     moveNext: Functions.False,

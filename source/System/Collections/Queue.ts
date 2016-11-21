@@ -251,8 +251,26 @@ extends CollectionBase<T>
 		return true;
 	}
 
+	/**
+	 * Pulls an entry from the head of the queue and returns it.
+	 * Returns undefined if the queue is already empty.
+	 */
 	dequeue():T|undefined
+
+	/**
+	 * Pulls an entry from the head of the queue and returns it.
+	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
+	 * Throws an InvalidOperationException if the queue is already empty and throwIfEmpty is true.
+	 * @param throwIfEmpty
+	 */
 	dequeue(throwIfEmpty:true):T
+
+	/**
+	 * Pulls an entry from the head of the queue and returns it.
+	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
+	 * Throws an InvalidOperationException if the queue is already empty and throwIfEmpty is true.
+	 * @param throwIfEmpty
+	 */
 	dequeue(throwIfEmpty:boolean):T|undefined
 	dequeue(throwIfEmpty:boolean = false):T|undefined
 	{
@@ -265,7 +283,11 @@ extends CollectionBase<T>
 		return result;
 	}
 
-
+	/**
+	 * Checks to see if the queue has entries an pulls an entry from the head of the queue and passes it to the out handler.
+	 * @param out The 'out' handler that receives the value if it exists.
+	 * @returns {boolean} True if a value was retrieved.  False if not.
+	 */
 	tryDequeue(out:Action<T>):boolean
 	{
 		const _ = this;
@@ -293,10 +315,35 @@ extends CollectionBase<T>
 		return _._array[(_._head + index)%_._capacity];
 	}
 
-	peek():T
+	/**
+	 * Returns the entry at the head of the queue.
+	 * Returns undefined if the queue is already empty.
+	 */
+	peek():T|undefined
+
+	/**
+	 * Returns the entry at the head of the queue.
+	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
+	 * Throws an InvalidOperationException if the queue is already empty and throwIfEmpty is true.
+	 * @param throwIfEmpty
+	 */
+	peek(throwIfEmpty:true):T
+
+	/**
+	 * Returns the entry at the head of the queue.
+	 * Returns undefined if the queue is already empty and throwIfEmpty is false.
+	 * Throws an InvalidOperationException if the queue is already empty and throwIfEmpty is true.
+	 * @param throwIfEmpty
+	 */
+	peek(throwIfEmpty:boolean):T|undefined
+	peek(throwIfEmpty:boolean = false):T|undefined
 	{
-		if(this._size==0)
-			throw new InvalidOperationException("Cannot call peek on an empty queue.");
+		if(this._size==0) {
+			if(throwIfEmpty)
+				throw new InvalidOperationException("Cannot call peek on an empty queue.");
+			return VOID0;
+		}
+
 
 		return this._array[this._head];
 	}

@@ -10,9 +10,11 @@ function getIdentifier(obj, throwIfUnknown) {
         return NULL;
     if (obj === VOID0)
         return Types_1.Type.UNDEFINED;
+    // See ISymbolizable.
     if (Types_1.Type.hasMethod(obj, GET_SYMBOL)) {
         return obj.getSymbol();
     }
+    // See IHashable.
     if (Types_1.Type.hasMethod(obj, GET_HASH_CODE)) {
         return obj.getHashCode();
     }

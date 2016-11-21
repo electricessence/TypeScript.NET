@@ -5,6 +5,9 @@ System.register([], function (exports_1, context_1) {
     return {
         setters: [],
         execute: function () {
+            /**
+             * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
+             */
             Subscription = (function () {
                 function Subscription(_subscribable, _subscriber) {
                     this._subscribable = _subscribable;
@@ -20,6 +23,15 @@ System.register([], function (exports_1, context_1) {
                     configurable: true
                 });
                 Object.defineProperty(Subscription.prototype, "wasDisposed", {
+                    /*
+                     In the case where we could possibly have the following happen:
+                     var u = observable.subscribe(observer);
+                     ...
+                     u.dispose(); // Should only be allowed to unsubscribe once and then it's useless.
+                     // Resubscribing creates a new instance.
+                     var x = observable.subscribe(observer);
+                     u.dispose(); // Calling this again should do nothing and 'x' should still work.
+                     */
                     get: function () {
                         return !this._subscribable || !this._subscriber;
                     },
@@ -29,6 +41,7 @@ System.register([], function (exports_1, context_1) {
                 Subscription.prototype.dispose = function () {
                     var subscriber = this.subscriber;
                     var subscribable = this._subscribable;
+                    // Release this reference.  It will prevent potential unwanted recursion.
                     this._subscribable = null;
                     try {
                         if (subscriber && subscribable) {
@@ -36,6 +49,7 @@ System.register([], function (exports_1, context_1) {
                         }
                     }
                     finally {
+                        // Keep this reference until the end so it can be identified by the list.
                         this._subscriber = null;
                     }
                 };

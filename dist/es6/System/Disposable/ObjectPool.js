@@ -1,8 +1,15 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * Based upon ObjectPool from Parallel Extension Extras and other ObjectPool implementations.
+ * Uses .add(T) and .take():T
+ */
 import { dispose } from "./dispose";
 import { DisposableBase } from "./DisposableBase";
 import { TaskHandler } from "../Threading/Tasks/TaskHandler";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
 import { ArgumentException } from "../Exceptions/ArgumentException";
+// noinspection JSUnusedLocalSymbols
 const OBJECT_POOL = "ObjectPool", _MAX_SIZE = "_maxSize", ABSOLUTE_MAX_SIZE = 65536, MUST_BE_GT1 = "Must be at valid number least 1.", MUST_BE_LTM = `Must be less than or equal to ${ABSOLUTE_MAX_SIZE}.`;
 export class ObjectPool extends DisposableBase {
     constructor(_maxSize, _generator, _recycler) {
@@ -10,6 +17,9 @@ export class ObjectPool extends DisposableBase {
         this._maxSize = _maxSize;
         this._generator = _generator;
         this._recycler = _recycler;
+        /**
+         * By default will clear after 5 seconds of non-use.
+         */
         this.autoClearTimeout = 5000;
         if (isNaN(_maxSize) || _maxSize < 1)
             throw new ArgumentOutOfRangeException(_MAX_SIZE, _maxSize, MUST_BE_GT1);
@@ -24,9 +34,17 @@ export class ObjectPool extends DisposableBase {
         _._flusher = new TaskHandler(clear);
         _._autoFlusher = new TaskHandler(clear);
     }
+    /**
+     * Defines the maximum at which trimming should allow.
+     * @returns {number}
+     */
     get maxSize() {
         return this._maxSize;
     }
+    /**
+     * Current number of objects in pool.
+     * @returns {number}
+     */
     get count() {
         const p = this._pool;
         return p ? p.length : 0;
@@ -37,6 +55,10 @@ export class ObjectPool extends DisposableBase {
             dispose.withoutException(pool.pop());
         }
     }
+    /**
+     * Will trim ensure the pool is less than the maxSize.
+     * @param defer A delay before trimming.  Will be overridden by later calls.
+     */
     trim(defer) {
         this.throwIfDisposed();
         this._trimmer.start(defer);
@@ -50,6 +72,11 @@ export class ObjectPool extends DisposableBase {
         dispose.these(p, true);
         p.length = 0;
     }
+    /**
+     * Will clear out the pool.
+     * Cancels any scheduled trims when executed.
+     * @param defer A delay before clearing.  Will be overridden by later calls.
+     */
     clear(defer) {
         this.throwIfDisposed();
         this._flusher.start(defer);
@@ -63,6 +90,9 @@ export class ObjectPool extends DisposableBase {
         _._pool = [];
         return p;
     }
+    /**
+     * Shortcut for toArrayAndClear();
+     */
     dump() {
         return this.toArrayAndClear();
     }
@@ -89,6 +119,7 @@ export class ObjectPool extends DisposableBase {
         const _ = this;
         _.throwIfDisposed();
         if (_._pool.length >= _._localAbsMaxSize) {
+            // Getting too big, dispose immediately...
             dispose(o);
         }
         else {

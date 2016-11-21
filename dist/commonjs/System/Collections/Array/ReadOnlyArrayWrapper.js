@@ -7,6 +7,7 @@ var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var ReadOnlyCollectionBase_1 = require("../ReadOnlyCollectionBase");
 var Enumerator_1 = require("../Enumeration/Enumerator");
 var extends_1 = require("../../../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var ReadOnlyArrayWrapper = (function (_super) {
     __extends(ReadOnlyArrayWrapper, _super);

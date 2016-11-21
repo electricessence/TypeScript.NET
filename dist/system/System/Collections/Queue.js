@@ -45,10 +45,12 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
             MINIMUM_GROW = 4;
-            SHRINK_THRESHOLD = 32;
+            SHRINK_THRESHOLD = 32; // Unused?
+            // var GROW_FACTOR: number = 200;  // double each time
             GROW_FACTOR_HALF = 100;
             DEFAULT_CAPACITY = MINIMUM_GROW;
             emptyArray = Object.freeze([]);
@@ -102,6 +104,7 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     _._size = size + 1;
                     return true;
                 };
+                //noinspection JSUnusedLocalSymbols
                 Queue.prototype._removeInternal = function (item, max) {
                     throw new NotImplementedException_1.NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                         " since it would require destroying the underlying array to remove the item.");
@@ -129,6 +132,9 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                         _._array = emptyArray;
                     }
                 };
+                /**
+                 * Dequeues entries into an array.
+                 */
                 Queue.prototype.dump = function (max) {
                     if (max === void 0) { max = Infinity; }
                     var _ = this;
@@ -162,11 +168,13 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     if (capacity == len)
                         return;
                     var head = _._head, tail = _._tail, size = _._size;
+                    // Special case where we can simply extend the length of the array. (JavaScript only)
                     if (array != emptyArray && capacity > len && head < tail) {
                         array.length = _._capacity = capacity;
                         _._version++;
                         return;
                     }
+                    // We create a new array because modifying an existing one could be slow.
                     var newArray = AU.initialize(capacity);
                     if (size > 0) {
                         if (head < tail) {
@@ -208,12 +216,19 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                         throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
                     return result;
                 };
+                /**
+                 * Checks to see if the queue has entries an pulls an entry from the head of the queue and passes it to the out handler.
+                 * @param out The 'out' handler that receives the value if it exists.
+                 * @returns {boolean} True if a value was retrieved.  False if not.
+                 */
                 Queue.prototype.tryDequeue = function (out) {
                     var _ = this;
                     if (!_._size)
                         return false;
                     _.assertModifiable();
+                    // A single dequeue shouldn't need update recursion tracking...
                     if (this._tryDequeueInternal(out)) {
+                        // This may preemptively trigger the _onModified.
                         if (_._size < _._capacity / 2)
                             _.trimExcess(SHRINK_THRESHOLD);
                         _._signalModification();
@@ -226,9 +241,13 @@ System.register(["../Compare", "./Array/Utility", "../Types", "../Integer", "./E
                     var _ = this;
                     return _._array[(_._head + index) % _._capacity];
                 };
-                Queue.prototype.peek = function () {
-                    if (this._size == 0)
-                        throw new InvalidOperationException_1.InvalidOperationException("Cannot call peek on an empty queue.");
+                Queue.prototype.peek = function (throwIfEmpty) {
+                    if (throwIfEmpty === void 0) { throwIfEmpty = false; }
+                    if (this._size == 0) {
+                        if (throwIfEmpty)
+                            throw new InvalidOperationException_1.InvalidOperationException("Cannot call peek on an empty queue.");
+                        return VOID0;
+                    }
                     return this._array[this._head];
                 };
                 Queue.prototype.trimExcess = function (threshold) {

@@ -9,7 +9,12 @@ System.register(["../../extends"], function (exports_1, context_1) {
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
+            /**
+             * A simple event dispatcher provided as an alternative to built-in event.
+             * If just dispatching a payload to a uniform set of functions, it may be better to just use the utilities in System/Collections/Array/Dispatch.
+             */
             EventSimple = (function () {
                 function EventSimple() {
                     this._listeners = [];

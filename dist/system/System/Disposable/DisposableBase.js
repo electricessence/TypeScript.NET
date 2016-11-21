@@ -30,9 +30,11 @@ System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
                 DisposableBase.prototype.dispose = function () {
                     var _ = this;
                     if (!_.__wasDisposed) {
+                        // Preemptively set wasDisposed in order to prevent repeated disposing.
+                        // NOTE: in true multi-threaded scenarios, this needs to be synchronized.
                         _.__wasDisposed = true;
                         try {
-                            _._onDispose();
+                            _._onDispose(); // Protected override.
                         }
                         finally {
                             if (_.__finalizer) {
@@ -42,6 +44,7 @@ System.register(["./ObjectDisposedException"], function (exports_1, context_1) {
                         }
                     }
                 };
+                // Placeholder for overrides.
                 DisposableBase.prototype._onDispose = function () { };
                 return DisposableBase;
             }());

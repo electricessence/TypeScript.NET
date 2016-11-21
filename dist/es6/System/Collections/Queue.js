@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { areEqual } from "../Compare";
 import * as AU from "./Array/Utility";
 import { Type } from "../Types";
@@ -7,9 +12,11 @@ import { NotImplementedException } from "../Exceptions/NotImplementedException";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
 import { CollectionBase } from "./CollectionBase";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 const MINIMUM_GROW = 4;
-const SHRINK_THRESHOLD = 32;
+const SHRINK_THRESHOLD = 32; // Unused?
+// var GROW_FACTOR: number = 200;  // double each time
 const GROW_FACTOR_HALF = 100;
 const DEFAULT_CAPACITY = MINIMUM_GROW;
 const emptyArray = Object.freeze([]);
@@ -60,6 +67,7 @@ export class Queue extends CollectionBase {
         _._size = size + 1;
         return true;
     }
+    //noinspection JSUnusedLocalSymbols
     _removeInternal(item, max) {
         throw new NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
             " since it would require destroying the underlying array to remove the item.");
@@ -87,6 +95,9 @@ export class Queue extends CollectionBase {
             _._array = emptyArray;
         }
     }
+    /**
+     * Dequeues entries into an array.
+     */
     dump(max = Infinity) {
         const _ = this;
         const result = [];
@@ -119,11 +130,13 @@ export class Queue extends CollectionBase {
         if (capacity == len)
             return;
         const head = _._head, tail = _._tail, size = _._size;
+        // Special case where we can simply extend the length of the array. (JavaScript only)
         if (array != emptyArray && capacity > len && head < tail) {
             array.length = _._capacity = capacity;
             _._version++;
             return;
         }
+        // We create a new array because modifying an existing one could be slow.
         const newArray = AU.initialize(capacity);
         if (size > 0) {
             if (head < tail) {
@@ -164,12 +177,19 @@ export class Queue extends CollectionBase {
             throw new InvalidOperationException("Cannot dequeue an empty queue.");
         return result;
     }
+    /**
+     * Checks to see if the queue has entries an pulls an entry from the head of the queue and passes it to the out handler.
+     * @param out The 'out' handler that receives the value if it exists.
+     * @returns {boolean} True if a value was retrieved.  False if not.
+     */
     tryDequeue(out) {
         const _ = this;
         if (!_._size)
             return false;
         _.assertModifiable();
+        // A single dequeue shouldn't need update recursion tracking...
         if (this._tryDequeueInternal(out)) {
+            // This may preemptively trigger the _onModified.
             if (_._size < _._capacity / 2)
                 _.trimExcess(SHRINK_THRESHOLD);
             _._signalModification();
@@ -182,9 +202,12 @@ export class Queue extends CollectionBase {
         const _ = this;
         return _._array[(_._head + index) % _._capacity];
     }
-    peek() {
-        if (this._size == 0)
-            throw new InvalidOperationException("Cannot call peek on an empty queue.");
+    peek(throwIfEmpty = false) {
+        if (this._size == 0) {
+            if (throwIfEmpty)
+                throw new InvalidOperationException("Cannot call peek on an empty queue.");
+            return VOID0;
+        }
         return this._array[this._head];
     }
     trimExcess(threshold) {

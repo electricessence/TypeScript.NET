@@ -1,5 +1,16 @@
 import { SimpleEnumerableBase } from "./SimpleEnumerableBase";
+// noinspection JSUnusedLocalSymbols
+/**
+ * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
+ * This is analogous to a 'generator' and has a compatible interface.
+ *
+ *
+ */
 export class IteratorEnumerator extends SimpleEnumerableBase {
+    /**
+     * @param _iterator
+     * @param _isEndless true and false are explicit where as undefined means 'unknown'.
+     */
     constructor(_iterator, _isEndless) {
         super();
         this._iterator = _iterator;

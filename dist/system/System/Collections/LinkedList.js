@@ -56,8 +56,20 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
+            /*****************************
+             * IMPORTANT NOTES ABOUT PERFORMANCE:
+             * http://jsperf.com/simulating-a-queue
+             *
+             * Adding to an array is very fast, but modifying is slow.
+             * LinkedList wins when modifying contents.
+             * http://stackoverflow.com/questions/166884/array-versus-linked-list
+             *****************************/
+            /*
+             * An internal node is used to manage the order without exposing underlying link chain to the consumer.
+             */
             InternalNode = (function () {
                 function InternalNode(value, previous, next) {
                     this.value = value;
@@ -108,7 +120,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                         if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                             removedCount++;
                         return removedCount < max;
-                    }, true);
+                    }, true /* override versioning check */);
                     return removedCount;
                 };
                 LinkedList.prototype._clearInternal = function () {
@@ -123,11 +135,15 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                         ? _super.prototype.forEach.call(this, action, useCopy)
                         : this._listInternal.forEach(function (node, i) { return action(node.value, i); });
                 };
+                // #endregion
+                // #region IEnumerable<T>
                 LinkedList.prototype.getEnumerator = function () {
                     this.throwIfDisposed();
                     return LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(this._listInternal);
                 };
+                // #endregion
                 LinkedList.prototype._findFirst = function (entry) {
+                    //noinspection UnnecessaryLocalVariableJS
                     var _ = this, equals = _._equalityComparer;
                     var next = _._listInternal && _._listInternal.first;
                     while (next) {
@@ -138,6 +154,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     return null;
                 };
                 LinkedList.prototype._findLast = function (entry) {
+                    //noinspection UnnecessaryLocalVariableJS
                     var _ = this, equals = _._equalityComparer;
                     var prev = _._listInternal && _._listInternal.last;
                     while (prev) {
@@ -182,6 +199,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     enumerable: true,
                     configurable: true
                 });
+                // get methods are available for convenience but is an n*index operation.
                 LinkedList.prototype.getValueAt = function (index) {
                     var li = this._listInternal, node = li && li.getNodeAt(index);
                     return node ? node.value : VOID0;
@@ -230,6 +248,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                     _.assertModifiable();
                     return _._removeNodeInternal(_._listInternal.getNodeAt(index));
                 };
+                // Returns true if successful and false if not found (already removed).
                 LinkedList.prototype.removeNode = function (node) {
                     var _ = this;
                     _.assertModifiable();
@@ -250,6 +269,7 @@ System.register(["../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperati
                 return LinkedList;
             }(CollectionBase_1.CollectionBase));
             exports_1("LinkedList", LinkedList);
+            // Use an internal node class to prevent mucking up the LinkedList.
             LinkedListNode = (function () {
                 function LinkedListNode(_list, _nodeInternal) {
                     this._list = _list;

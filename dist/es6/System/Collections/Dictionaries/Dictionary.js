@@ -1,3 +1,8 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Original: http://linqjs.codeplex.com/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { areEqual } from "../../Compare";
 import { Type } from "../../Types";
 import { EnumeratorBase } from "../Enumeration/EnumeratorBase";
@@ -5,7 +10,9 @@ import { LinkedNodeList } from "../LinkedNodeList";
 import { ObjectPool } from "../../Disposable/ObjectPool";
 import { getIdentifier } from "./getIdentifier";
 import DictionaryBase from "./DictionaryBase";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
+// LinkedList for Dictionary
 class HashEntry {
     constructor(key, value, previous, next) {
         this.key = key;
@@ -15,6 +22,7 @@ class HashEntry {
     }
 }
 let linkedListPool;
+//noinspection JSUnusedLocalSymbols
 function linkedNodeList(recycle) {
     if (!linkedListPool)
         linkedListPool
@@ -77,6 +85,7 @@ export class Dictionary extends DictionaryBase {
         const buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier(compareKey);
         let bucket = _._getBucket(hash);
         const bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+        // Entry exits? Delete or update
         if (bucketEntry) {
             const b = bucket;
             if (value === VOID0) {
@@ -92,6 +101,7 @@ export class Dictionary extends DictionaryBase {
                     return true;
             }
             else {
+                // We don't expose the internal hash entries so replacing the value is ok.
                 const old = bucketEntry.value.value;
                 bucketEntry.value.value = value;
                 return !areEqual(value, old);
@@ -112,6 +122,7 @@ export class Dictionary extends DictionaryBase {
     _clearInternal() {
         const _ = this;
         const buckets = _._buckets;
+        // Ensure reset and clean...
         for (let key in buckets) {
             if (buckets.hasOwnProperty(key)) {
                 let bucket = buckets[key];
@@ -121,6 +132,10 @@ export class Dictionary extends DictionaryBase {
         }
         return _._entries.clear();
     }
+    /*
+     * Note: super.getEnumerator() works perfectly well,
+     * but enumerating the internal linked node list is much more efficient.
+     */
     getEnumerator() {
         const _ = this;
         _.throwIfDisposed();

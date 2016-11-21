@@ -8,8 +8,24 @@ export declare class EventDispatcherEntry<TParams> extends DisposableBase implem
     params: TParams;
     constructor(type: string, listener: IEventListener, params?: TParams, finalizer?: Closure);
     protected _onDispose(): void;
+    /**
+     * Safely dispatches an event if entry is not disposed and type matches.
+     * @param e
+     * @returns {IEventListener|boolean}
+     */
     dispatch(e: Event): boolean;
+    /**
+     * Compares type and listener object only.
+     * @param type
+     * @param listener
+     * @returns {boolean}
+     */
     matches(type: string, listener: IEventListener): boolean;
+    /**
+     * Compares type, listener, and priority.
+     * @param other
+     * @returns {boolean}
+     */
     equals(other: EventDispatcherEntry<TParams>): boolean;
 }
 export default EventDispatcherEntry;

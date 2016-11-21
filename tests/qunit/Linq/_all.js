@@ -7,6 +7,8 @@
     }
 })(["require", "exports", "QUnit", "../../../dist/amd/System.Linq/Linq"], function (require, exports) {
     "use strict";
+    ///<reference types="qunit"/>
+    ///<amd-dependency path="QUnit"/>
     var Linq_1 = require("../../../dist/amd/System.Linq/Linq");
     function run() {
         var source = [

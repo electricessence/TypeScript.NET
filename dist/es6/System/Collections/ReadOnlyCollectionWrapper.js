@@ -4,6 +4,7 @@
  */
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { ReadOnlyCollectionBase } from "./ReadOnlyCollectionBase";
+// noinspection JSUnusedLocalSymbols
 export default class ReadOnlyCollectionWrapper extends ReadOnlyCollectionBase {
     constructor(c) {
         super();

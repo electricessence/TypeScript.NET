@@ -1,4 +1,8 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var ObjectDisposedException_1 = require("./ObjectDisposedException");
 var DisposableBase = (function () {
     function DisposableBase(__finalizer) {
@@ -21,9 +25,11 @@ var DisposableBase = (function () {
     DisposableBase.prototype.dispose = function () {
         var _ = this;
         if (!_.__wasDisposed) {
+            // Preemptively set wasDisposed in order to prevent repeated disposing.
+            // NOTE: in true multi-threaded scenarios, this needs to be synchronized.
             _.__wasDisposed = true;
             try {
-                _._onDispose();
+                _._onDispose(); // Protected override.
             }
             finally {
                 if (_.__finalizer) {
@@ -33,6 +39,7 @@ var DisposableBase = (function () {
             }
         }
     };
+    // Placeholder for overrides.
     DisposableBase.prototype._onDispose = function () { };
     return DisposableBase;
 }());

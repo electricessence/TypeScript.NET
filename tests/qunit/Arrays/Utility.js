@@ -7,9 +7,12 @@
     }
 })(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Compare", "../../../dist/amd/System/Collections/Array/Utility"], function (require, exports) {
     "use strict";
+    ///<reference types="qunit"/>
+    ///<amd-dependency path="QUnit"/>
     var Arrays = require("../../../dist/amd/System/Collections/Array/Compare");
     var ArrayUtility = require("../../../dist/amd/System/Collections/Array/Utility");
     function run() {
+        // Min/Max tests...
         var minA = -10, maxA = 2000;
         var a = [5, minA, -1, maxA, -2, NaN, 20];
         QUnit.test("Array/Utility.initialize", function (assert) {
@@ -43,6 +46,8 @@
             assert.ok(!ArrayUtility.register(s, -1));
             assert.equal(s.length, len);
         });
+        /*	Utility.applyTo skipped.
+         It has too many permutations while being a straight forward function. */
         QUnit.test("Array/Utility.remove", function (assert) {
             var s = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
             var len = s.length;

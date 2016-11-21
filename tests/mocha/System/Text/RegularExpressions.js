@@ -4,7 +4,9 @@ var RegexMatchEnumerator_1 = require("../../../../dist/commonjs/System/Text/Rege
 var RegularExpressions_1 = require("../../../../dist/commonjs/System/Text/RegularExpressions");
 var str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 var regex = new RegularExpressions_1.default("(?<" + "first>[A-E]+)", ["i"]);
+//noinspection JSUnusedLocalSymbols
 var regex2 = new RegularExpressions_1.default(/([A-E]+)/im);
+//noinspection JSUnusedLocalSymbols
 var regex3 = new RegularExpressions_1.default(/([A-E]+)/);
 var regex4 = new RegularExpressions_1.default(/A	B C D  E/, "i", "w");
 var pattern = "([A-E]+)";
@@ -51,10 +53,13 @@ describe("Regex", function () {
     });
     describe(".replace(input, x)", function () {
         it("should replace requested instances", function () {
+            //noinspection SpellCheckingInspection
             assert.equal(regex.replace(str, "XXX"), "XXXFGHIJKLMNOPQRSTUVWXYZXXXfghijklmnopqrstuvwxyz");
             assert.equal(RegularExpressions_1.default.replace(str, pattern, "XXX", ['i']), "XXXFGHIJKLMNOPQRSTUVWXYZXXXfghijklmnopqrstuvwxyz");
+            //noinspection SpellCheckingInspection
             assert.equal(regex.replace(str, ""), "FGHIJKLMNOPQRSTUVWXYZfghijklmnopqrstuvwxyz");
             assert.equal(regex.replace(str, null), str);
+            //noinspection SpellCheckingInspection
             assert.equal(regex.replace(str, function () { return "*"; }), "*FGHIJKLMNOPQRSTUVWXYZ*fghijklmnopqrstuvwxyz");
             assert.equal(regex.replace(str, function (x) { return x.value + "*"; }), "ABCDE*FGHIJKLMNOPQRSTUVWXYZabcde*fghijklmnopqrstuvwxyz");
             assert.equal(regex.replace(str, function (x, i) { return i; }), "0FGHIJKLMNOPQRSTUVWXYZ1fghijklmnopqrstuvwxyz");
@@ -68,7 +73,9 @@ describe("RegexMatchEnumerator", function () {
             assert.equal(v.value, value);
             assert.equal(v.index, index);
         }
+        //noinspection SpellCheckingInspection
         check(m.nextValue(), "ABCDE", 0);
+        //noinspection SpellCheckingInspection
         check(m.nextValue(), "abcde", 26);
         assert.ok(!m.moveNext());
     });

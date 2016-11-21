@@ -21,6 +21,13 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentOutOfRa
                 function r(maxExclusive) {
                     return (Math.random() * maxExclusive) | 0;
                 }
+                /**
+                 * Returns a random integer from minInclusive to the maxExclusive.
+                 * Negative numbers are allowed.
+                 *
+                 * @param maxExclusive
+                 * @returns {number}
+                 */
                 function random(maxExclusive) {
                     assert(maxExclusive, 'maxExclusive');
                     return r(maxExclusive);

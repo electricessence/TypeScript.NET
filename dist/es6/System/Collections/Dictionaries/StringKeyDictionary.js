@@ -1,5 +1,10 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { areEqual } from "../../Compare";
 import { DictionaryBase } from "./DictionaryBase";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 export class StringKeyDictionary extends DictionaryBase {
     constructor() {
@@ -58,6 +63,7 @@ export class StringKeyDictionary extends DictionaryBase {
         }
         return false;
     }
+    // Returns true if any value is updated...
     importMap(values) {
         const _ = this;
         return _.handleUpdate(() => {

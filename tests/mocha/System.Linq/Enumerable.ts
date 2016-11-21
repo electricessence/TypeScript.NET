@@ -18,7 +18,7 @@ interface TestItem
 }
 
 
-const source:TestItem[] = Object.freeze([
+const source:TestItem[] = [
 	{
 		a: 1,
 		b: 2,
@@ -84,7 +84,8 @@ const source:TestItem[] = Object.freeze([
 		b: 3,
 		c: "f"
 	}
-]);
+];
+Object.freeze(source);
 
 // Compile test:
 //noinspection JSUnusedLocalSymbols

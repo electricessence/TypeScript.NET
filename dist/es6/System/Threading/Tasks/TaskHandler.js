@@ -1,5 +1,10 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { TaskHandlerBase } from "./TaskHandlerBase";
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
+// noinspection JSUnusedLocalSymbols
 export class TaskHandler extends TaskHandlerBase {
     constructor(_action) {
         super();

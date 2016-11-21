@@ -39,6 +39,7 @@ function importRecursive(path, importFiles, base) {
             var i = function () {
                 require('./' + filePath);
             };
+            // Allows for simple default instead of recursive.
             if (count_1 == 1 && name == path)
                 i();
             else

@@ -21,6 +21,13 @@ export declare abstract class DictionaryBase<TKey, TValue> extends CollectionBas
     getAssuredValue(key: TKey): TValue;
     tryGetValue(key: TKey, out: Action<TValue>): boolean;
     protected abstract _setValueInternal(key: TKey, value: TValue | undefined): boolean;
+    /**
+     * Sets the value of an entry.
+     * It's important to know that 'undefined' cannot exist as a value in the dictionary and is used as a flag for removal.
+     * @param key
+     * @param value
+     * @returns {boolean}
+     */
     setValue(key: TKey, value: TValue | undefined): boolean;
     containsKey(key: TKey): boolean;
     containsValue(value: TValue): boolean;

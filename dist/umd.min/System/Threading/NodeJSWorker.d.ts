@@ -5,6 +5,9 @@
  */
 import { WorkerLike } from "./WorkerType";
 import { ObservableBase } from "../Observable/ObservableBase";
+/**
+ * This class takes the place of a WebWorker
+ */
 export declare class NodeJSWorker extends ObservableBase<any> implements WorkerLike {
     private _process;
     onmessage: (message: {

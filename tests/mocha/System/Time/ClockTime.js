@@ -5,10 +5,10 @@ var ClockTime_1 = require("../../../../dist/commonjs/System/Time/ClockTime");
 var Integer_1 = require("../../../../dist/commonjs/System/Integer");
 var days = Integer_1.default.random(365), hour = Integer_1.default.random(24), minute = Integer_1.default.random(60), second = Integer_1.default.random(60), millisecond = Integer_1.default.random(1000);
 var c1 = new ClockTime_1.default(hour, minute, second, millisecond);
-var c2 = new ClockTime_1.default(days * 86400000
-    + hour * 3600000
-    + minute * 60000
-    + second * 1000
+var c2 = new ClockTime_1.default(days * 86400000 /* Day */
+    + hour * 3600000 /* Hour */
+    + minute * 60000 /* Minute */
+    + second * 1000 /* Second */
     + millisecond);
 describe(".", function () {
     it('should match constructor values', function () {

@@ -1,6 +1,7 @@
 System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    //noinspection JSUnusedLocalSymbols
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
@@ -38,8 +39,10 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
+            // LinkedList for Dictionary
             HashEntry = (function () {
                 function HashEntry(key, value, previous, next) {
                     this.key = key;
@@ -105,6 +108,7 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                     var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier_1.getIdentifier(compareKey);
                     var bucket = _._getBucket(hash);
                     var bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+                    // Entry exits? Delete or update
                     if (bucketEntry) {
                         var b = bucket;
                         if (value === VOID0) {
@@ -120,6 +124,7 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                                 return true;
                         }
                         else {
+                            // We don't expose the internal hash entries so replacing the value is ok.
                             var old = bucketEntry.value.value;
                             bucketEntry.value.value = value;
                             return !Compare_1.areEqual(value, old);
@@ -140,6 +145,7 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                 Dictionary.prototype._clearInternal = function () {
                     var _ = this;
                     var buckets = _._buckets;
+                    // Ensure reset and clean...
                     for (var key in buckets) {
                         if (buckets.hasOwnProperty(key)) {
                             var bucket = buckets[key];
@@ -149,6 +155,10 @@ System.register(["../../Compare", "../../Types", "../Enumeration/EnumeratorBase"
                     }
                     return _._entries.clear();
                 };
+                /*
+                 * Note: super.getEnumerator() works perfectly well,
+                 * but enumerating the internal linked node list is much more efficient.
+                 */
                 Dictionary.prototype.getEnumerator = function () {
                     var _ = this;
                     _.throwIfDisposed();

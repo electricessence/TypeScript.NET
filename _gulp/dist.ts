@@ -44,20 +44,20 @@ async function savePackage(dist:string, folder:string = dist):NPromise<File[]>
 {
 	let pkg = await getPackage(dist);
 	await File.json.write(`./dist/${folder}/package.json`, pkg);
-	return copyReadme(folder);
+	return copyReadmes(folder);
 }
 
-function copyReadme(folder:string):PromiseLike<File[]>
+function copyReadmes(folder:string):PromiseLike<File[]>
 {
 	return stream.toPromise<File[]>(
-		gulp.src("./dist/README.md")
+		gulp.src("./dist/*.md")
 			.pipe(gulp.dest(`./dist/${folder}/`)));
 }
 
 const DEFAULTS:CoreTypeScriptOptions = Object.freeze(<CoreTypeScriptOptions>{
 	noImplicitAny: true,
-	removeComments: true,
 	noEmitHelpers: true,
+	removeComments: false,
 	sourceMap: true,
 	declaration: true,
 	strictNullChecks: true,
@@ -130,13 +130,13 @@ gulp.task(
 		.then(() => savePackage(Module.SYSTEMJS))
 );
 
-gulp.task(TASK.DIST, [
-	TASK.DIST_ES6,
-	TASK.DIST_AMD,
-	TASK.DIST_UMD,
-	TASK.DIST_COMMONJS,
-	TASK.DIST_SYSTEMJS
-]);
+// gulp.task(TASK.DIST, [
+// 	TASK.DIST_ES6,
+// 	TASK.DIST_AMD,
+// 	TASK.DIST_UMD,
+// 	TASK.DIST_COMMONJS,
+// 	TASK.DIST_SYSTEMJS
+// ]);
 
 // gulp.task(
 // 	TASK.SOURCE,

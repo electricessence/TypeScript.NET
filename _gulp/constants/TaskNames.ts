@@ -7,7 +7,7 @@ const
 	TYPESCRIPT = 'typescript';
 
 export const
-	SOURCE           = `source (${Module.UMD})`,
+	//SOURCE           = `source (${Module.UMD})`,
 	DIST             = 'dist',
 	DIST_ES6         = DIST_ + Target.ES6,
 	DIST_AMD         = DIST_ + Module.AMD,
@@ -16,7 +16,6 @@ export const
 	DIST_SYSTEMJS    = DIST_ + Module.SYSTEMJS,
 	TYPESCRIPT_QUNIT = TYPESCRIPT + '.qunit',
 	TYPESCRIPT_MOCHA = TYPESCRIPT + '.mocha',
-	BUILD            = 'build',
 	TYPEDOC          = 'typedoc',
 	NUGET_PACK       = 'nuget-pack',
 	DEFAULT          = 'default';

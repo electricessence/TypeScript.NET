@@ -18,13 +18,15 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
             OrderedStringKeyDictionary = (function (_super) {
                 __extends(OrderedStringKeyDictionary, _super);
                 function OrderedStringKeyDictionary() {
                     var _this = _super.call(this) || this;
-                    _this._order = [];
+                    // noinspection JSMismatchedCollectionQueryUpdate
+                    _this._order = []; // Maintains indexes.
                     return _this;
                 }
                 OrderedStringKeyDictionary.prototype.indexOfKey = function (key) {
@@ -35,7 +37,9 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
                     var o = this._order;
                     return index < o.length ? this.getValue(o[index]) : VOID0;
                 };
+                // adding keepIndex allows for clearing a value while still retaining it's index.
                 OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {
+                    // TODO: This may be inefficient and could be improved.
                     var _ = this;
                     var exists = _.indexOfKey(key) != -1;
                     if (!exists && (value !== VOID0 || keepIndex))
@@ -53,6 +57,7 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
                         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index, 'Is greater than the count.');
                     return _.setValue(order[index], value);
                 };
+                // importValues([x,y,z]);
                 OrderedStringKeyDictionary.prototype.importValues = function (values) {
                     var _ = this;
                     return _.handleUpdate(function () {
@@ -64,6 +69,7 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
                         return changed;
                     });
                 };
+                // setValues(x,y,z);
                 OrderedStringKeyDictionary.prototype.setValues = function () {
                     var values = [];
                     for (var _i = 0; _i < arguments.length; _i++) {

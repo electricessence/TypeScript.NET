@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { ArgumentException } from "./Exceptions/ArgumentException";
 import { ArgumentOutOfRangeException } from "./Exceptions/ArgumentOutOfRangeException";
 export function Integer(n) {
@@ -8,6 +12,13 @@ export function Integer(n) {
     function r(maxExclusive) {
         return (Math.random() * maxExclusive) | 0;
     }
+    /**
+     * Returns a random integer from minInclusive to the maxExclusive.
+     * Negative numbers are allowed.
+     *
+     * @param maxExclusive
+     * @returns {number}
+     */
     function random(maxExclusive) {
         assert(maxExclusive, 'maxExclusive');
         return r(maxExclusive);

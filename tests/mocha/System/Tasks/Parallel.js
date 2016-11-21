@@ -17,6 +17,7 @@ function test(start) {
 var synchronousResult = 0;
 var data = [];
 it("should work synchronously", function () {
+    // console.log("\nSynchronous time (ms):",
     Stopwatch_1.default.measure(function () {
         for (var i = 0; i < 20; i++) {
             data.push(i);
@@ -26,6 +27,8 @@ it("should work synchronously", function () {
 });
 function setupMap(maxCon) {
     it("should return the expected mapped sum (concurrency " + maxCon + ")", function () {
+        //this.timeout(3000);
+        // var sw = Stopwatch.startNew();
         return Parallel_1.Parallel
             .maxConcurrency(maxCon)
             .map(data, test)
@@ -36,6 +39,8 @@ function setupMap(maxCon) {
 }
 function setupPipe(maxCon) {
     it("should return the expected sum (concurrency " + maxCon + ")", function () {
+        //this.timeout(3000);
+        // var sw = Stopwatch.startNew();
         return Parallel_1.Parallel
             .maxConcurrency(maxCon)
             .pipe(data, test)
@@ -45,6 +50,11 @@ function setupPipe(maxCon) {
 }
 setupPipe(1);
 setupPipe(2);
+// setupPipe(3);
+// setup(15);
+// setup(10);
+//setup(7);
 setupMap(1);
 setupMap(2);
+// setupMap(3); 
 //# sourceMappingURL=Parallel.js.map

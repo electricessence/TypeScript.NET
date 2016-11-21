@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { LinkedNodeList } from "./LinkedNodeList";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { forEach } from "./Enumeration/Enumerator";
@@ -5,6 +9,7 @@ import { EmptyEnumerator } from "./Enumeration/EmptyEnumerator";
 import { using } from "../Disposable/dispose";
 import { areEqual } from "../Compare";
 import { CollectionBase } from "./CollectionBase";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 const OTHER = 'other';
 export class SetBase extends CollectionBase {
@@ -66,7 +71,8 @@ export class SetBase extends CollectionBase {
         else {
             count = using(this.newUsing(), o => {
                 forEach(other, v => {
-                    o.add(v);
+                    o.add(v); // We have to add to another set in order to filter out duplicates.
+                    // contains == false will cause this to exit.
                     return result = this.contains(v);
                 });
                 return o.getCount();

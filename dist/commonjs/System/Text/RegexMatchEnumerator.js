@@ -1,4 +1,8 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var RegularExpressions_1 = require("./RegularExpressions");
 var EmptyEnumerator_1 = require("../Collections/Enumeration/EmptyEnumerator");
 var EnumeratorBase_1 = require("../Collections/Enumeration/EnumeratorBase");
@@ -13,7 +17,7 @@ var RegexMatchEnumerator = (function () {
     }
     RegexMatchEnumerator.prototype.matches = function (input) {
         var _this = this;
-        var p;
+        var p; // pointer
         return new EnumeratorBase_1.EnumeratorBase(function () {
             p = 0;
         }, function (yielder) {

@@ -24,6 +24,7 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = "EventDispatcherEntry";
             EventDispatcherEntry = (function (_super) {
@@ -48,6 +49,11 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
                     _super.prototype._onDispose.call(this);
                     this.listener = null;
                 };
+                /**
+                 * Safely dispatches an event if entry is not disposed and type matches.
+                 * @param e
+                 * @returns {IEventListener|boolean}
+                 */
                 EventDispatcherEntry.prototype.dispatch = function (e) {
                     var _ = this;
                     if (_.wasDisposed)
@@ -55,17 +61,28 @@ System.register(["../Types", "../Disposable/DisposableBase", "../Exceptions/Argu
                     var l = _.listener, d = l && e.type == _.type;
                     if (d) {
                         if (Types_1.Type.isFunction(l))
-                            _.listener(e);
+                            _.listener(e); // Use 'this' to ensure call reference.
                         else
                             l.handleEvent(e);
                     }
                     return d;
                 };
+                /**
+                 * Compares type and listener object only.
+                 * @param type
+                 * @param listener
+                 * @returns {boolean}
+                 */
                 EventDispatcherEntry.prototype.matches = function (type, listener) {
                     var _ = this;
                     return _.type == type
                         && _.listener == listener;
                 };
+                /**
+                 * Compares type, listener, and priority.
+                 * @param other
+                 * @returns {boolean}
+                 */
                 EventDispatcherEntry.prototype.equals = function (other) {
                     var _ = this;
                     return _.matches(other.type, other.listener)

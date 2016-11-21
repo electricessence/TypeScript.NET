@@ -196,4 +196,27 @@ describe('KVP versus Tuple', function () {
         assert.equal(uTuples.toString(), uKvp.toString());
     });
 });
+// Disabled for code coverage report
+// describe('es6 > babel > commonjs', ()=>
+// {
+// 	const Uri2 = require('../../../../dist/commonjs/System/Uri/Uri').default;
+//
+// 	var u2 = Uri2.from(path + query);
+//
+// 	describe('.path', ()=>
+// 	{
+// 		it('should equal ' + path, ()=>
+// 		{
+// 			assert.equal(u2.path, path);
+// 		});
+// 	});
+//
+// 	describe('.query', ()=>
+// 	{
+// 		it('should equal ' + query, ()=>
+// 		{
+// 			assert.equal(u2.query, query);
+// 		});
+// 	});
+// });
 //# sourceMappingURL=Uri.js.map

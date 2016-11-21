@@ -7,10 +7,14 @@
     }
 })(["require", "exports", "QUnit", "../../../dist/amd/System/Collections/Array/Procedure"], function (require, exports) {
     "use strict";
+    ///<reference types="qunit"/>
+    ///<amd-dependency path="QUnit"/>
     var ArrayProcedure = require("../../../dist/amd/System/Collections/Array/Procedure");
     function run() {
+        // Min/Max tests...
         var minA = -10, maxA = 2000, minB = -Infinity, maxB = Infinity;
-        var a = [5, minA, -1, maxA, -2, NaN, 20], sum = 5 + minA + -1 + maxA + -2 + 20, average = sum / 6, product = 5 * minA * -1 * maxA * -2 * 20;
+        var a = [5, minA, -1, maxA, -2, NaN, 20], sum = 5 + minA + -1 + maxA + -2 + 20, average = sum / 6, // Not including NaN
+        product = 5 * minA * -1 * maxA * -2 * 20;
         var b = [5, 2000, maxB, -1, NaN, -10, minB, -2, 20];
         QUnit.test("Array/Procedure.sum", function (assert) {
             assert.ok(isNaN(ArrayProcedure.sum(a, false)), "Sum should be NaN");

@@ -2,6 +2,7 @@
 var assert = require("assert");
 var ICollectionTests = require("./ICollection");
 var Set_1 = require("../../../../dist/commonjs/System/Collections/Set");
+//noinspection SpellCheckingInspection
 ICollectionTests.Collection('Set<' + 'string>', new Set_1.default(), [
     "",
     "lorem",

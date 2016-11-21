@@ -27,6 +27,7 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
             List = (function (_super) {
@@ -130,6 +131,7 @@ System.register(["../Compare", "./Array/Utility", "./Enumeration/Enumerator", ".
                         if (index)
                             _.throwIfDisposed();
                         else if (_.wasDisposed) {
+                            // We never actually started? Then no biggie.
                             return yielder.yieldBreak();
                         }
                         _.assertVersion(version);

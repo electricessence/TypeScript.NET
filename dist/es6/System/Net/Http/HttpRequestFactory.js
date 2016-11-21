@@ -2,7 +2,11 @@ import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { DisposableBase } from "../../Disposable/DisposableBase";
 import { GET, PUT, POST, DELETE } from "./HttpMethod";
 import { Uri } from "../../Uri/Uri";
+// noinspection JSUnusedLocalSymbols
 const NAME = 'HttpRequestFactory';
+/**
+ * This class exposes a factory for making requests to prepared uri and params.
+ */
 export default class HttpRequestFactory extends DisposableBase {
     constructor(_http, uriDefaults) {
         super();
@@ -13,6 +17,7 @@ export default class HttpRequestFactory extends DisposableBase {
         this._uriDefaults = Uri.from(uriDefaults);
     }
     _onDispose() {
+        // super._onDispose(); // Not required for first level inheritance.
         this._http = null;
         this._uriDefaults = null;
     }

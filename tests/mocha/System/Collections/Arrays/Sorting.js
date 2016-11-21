@@ -6,7 +6,7 @@ var Integer_1 = require("../../../../../source/System/Integer");
 var quickSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort");
 var mergeSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort");
 var insertionSort_1 = require("../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort");
-var performanceCheck = false;
+var performanceCheck = false; // Change to true to performance test/log
 function arraySort(a) {
     a.sort(Compare_2.compare);
     return a;

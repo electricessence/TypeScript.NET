@@ -18,11 +18,12 @@ System.register(["../../Compare", "./SortContext", "../../Functions", "../../../
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             KeySortedContext = (function (_super) {
                 __extends(KeySortedContext, _super);
                 function KeySortedContext(next, _keySelector, order, comparer) {
-                    if (order === void 0) { order = 1; }
+                    if (order === void 0) { order = 1 /* Ascending */; }
                     if (comparer === void 0) { comparer = Values.compare; }
                     var _this = _super.call(this, next, comparer, order) || this;
                     _this._keySelector = _keySelector;
@@ -33,6 +34,7 @@ System.register(["../../Compare", "./SortContext", "../../Functions", "../../../
                     var ks = _._keySelector;
                     if (!ks || ks == Functions_1.Functions.Identity)
                         return _super.prototype.compare.call(this, a, b);
+                    // We force <any> here since it can be a Primitive or IComparable<any>
                     var d = Values.compare(ks(a), ks(b));
                     if (d == 0 && _._next)
                         return _._next.compare(a, b);

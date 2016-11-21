@@ -1,5 +1,9 @@
 const VOID0 = void (0), _BOOLEAN = typeof true, _NUMBER = typeof 0, _STRING = typeof "", _SYMBOL = "symbol", _OBJECT = typeof {}, _UNDEFINED = typeof VOID0, _FUNCTION = typeof function () { }, LENGTH = "length";
+// Only used for primitives.
 const typeInfoRegistry = {};
+/**
+ * Exposes easy access to type information including inquiring about members.
+ */
 export class TypeInfo {
     constructor(target, onBeforeFreeze) {
         this.isBoolean = false;
@@ -59,12 +63,24 @@ export class TypeInfo {
             onBeforeFreeze(this);
         Object.freeze(this);
     }
+    /**
+     * Returns a TypeInfo for any member or non-member,
+     * where non-members are of type undefined.
+     * @param name
+     * @returns {TypeInfo}
+     */
     member(name) {
         const t = this.target;
         return TypeInfo.getFor(t && (name) in (t)
             ? t[name]
             : VOID0);
     }
+    /**
+     * Returns a TypeInfo for any target object.
+     * If the target object is of a primitive type, it returns the TypeInfo instance assigned to that type.
+     * @param target
+     * @returns {TypeInfo}
+     */
     static getFor(target) {
         const type = typeof target;
         switch (type) {
@@ -80,35 +96,95 @@ export class TypeInfo {
 }
 export var Type;
 (function (Type) {
+    /**
+     * typeof true
+     * @type {string}
+     */
     Type.BOOLEAN = _BOOLEAN;
+    /**
+     * typeof 0
+     * @type {string}
+     */
     Type.NUMBER = _NUMBER;
+    /**
+     * typeof ""
+     * @type {string}
+     */
     Type.STRING = _STRING;
+    /**
+     * typeof {}
+     * @type {string}
+     */
     Type.OBJECT = _OBJECT;
+    /**
+     * typeof Symbol
+     * @type {string}
+     */
     Type.SYMBOL = _SYMBOL;
+    /**
+     * typeof undefined
+     * @type {string}
+     */
     Type.UNDEFINED = _UNDEFINED;
+    /**
+     * typeof function
+     * @type {string}
+     */
     Type.FUNCTION = _FUNCTION;
+    /**
+     * Returns true if the value parameter is null or undefined.
+     * @param value
+     * @returns {boolean}
+     */
     function isNullOrUndefined(value) {
         return value === null || value === VOID0;
     }
     Type.isNullOrUndefined = isNullOrUndefined;
+    /**
+     * Returns true if the value parameter is a boolean.
+     * @param value
+     * @returns {boolean}
+     */
     function isBoolean(value) {
         return typeof value === _BOOLEAN;
     }
     Type.isBoolean = isBoolean;
+    /**
+     * Returns true if the value parameter is a number.
+     * @param value
+     * @param allowNaN Default is true.
+     * @returns {boolean}
+     */
     function isNumber(value, allowNaN) {
         if (allowNaN === VOID0)
             allowNaN = true;
         return typeof value === _NUMBER && (allowNaN || !isNaN(value));
     }
     Type.isNumber = isNumber;
+    /**
+     * Returns true if is a number and is NaN.
+     * @param value
+     * @returns {boolean}
+     */
     function isTrueNaN(value) {
         return typeof value === _NUMBER && isNaN(value);
     }
     Type.isTrueNaN = isTrueNaN;
+    /**
+     * Returns true if the value parameter is a string.
+     * @param value
+     * @returns {boolean}
+     */
     function isString(value) {
         return typeof value === _STRING;
     }
     Type.isString = isString;
+    /**
+     * Returns true if the value is a boolean, string, number, null, or undefined.
+     * @param value
+     * @param allowUndefined if set to true will return true if the value is undefined.
+     * @returns {boolean}
+     */
     function isPrimitive(value, allowUndefined = false) {
         const t = typeof value;
         switch (t) {
@@ -128,6 +204,11 @@ export var Type;
         return typeof value === _SYMBOL ? true : isPrimitive(value, allowUndefined);
     }
     Type.isPrimitiveOrSymbol = isPrimitiveOrSymbol;
+    /**
+     * Returns true if the value is a string, number, or symbol.
+     * @param value
+     * @returns {boolean}
+     */
     function isPropertyKey(value) {
         const t = typeof value;
         switch (t) {
@@ -139,14 +220,30 @@ export var Type;
         return false;
     }
     Type.isPropertyKey = isPropertyKey;
+    /**
+     * Returns true if the value parameter is a function.
+     * @param value
+     * @returns {boolean}
+     */
     function isFunction(value) {
         return typeof value === _FUNCTION;
     }
     Type.isFunction = isFunction;
+    /**
+     * Returns true if the value parameter is an object.
+     * @param value
+     * @param allowNull If false (default) null is not considered an object.
+     * @returns {boolean}
+     */
     function isObject(value, allowNull = false) {
         return typeof value === _OBJECT && (allowNull || value !== null);
     }
     Type.isObject = isObject;
+    /**
+     * Guarantees a number value or NaN instead.
+     * @param value
+     * @returns {number}
+     */
     function numberOrNaN(value) {
         return isNaN(value) ? NaN : value;
     }
@@ -168,6 +265,16 @@ export var Type;
     }
     Type.hasMethod = hasMethod;
     function isArrayLike(instance) {
+        /*
+         * NOTE:
+         *
+         * Functions:
+         * Enumerating a function although it has a .length property will yield nothing or unexpected results.
+         * Effectively, a function is not like an array.
+         *
+         * Strings:
+         * Behave like arrays but don't have the same exact methods.
+         */
         return instance instanceof Array
             || Type.isString(instance)
             || !Type.isFunction(instance) && hasMember(instance, LENGTH);

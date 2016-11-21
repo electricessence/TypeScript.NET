@@ -1,12 +1,23 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var Types_1 = require("../../Types");
 var Integer_1 = require("../../Integer");
 var Compare_1 = require("../../Compare");
 var ArgumentException_1 = require("../../Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
+/**
+ * Initializes an array depending on the requested capacity.
+ * The returned array will have a .length equal to the value provided.
+ * @param length
+ * @returns {T[]}
+ */
 function initialize(length) {
     Integer_1.Integer.assert(length, 'length');
+    // This logic is based upon JS performance tests that show a significant difference at the level of 65536.
     var array;
     if (length > 65536)
         array = new Array(length);
@@ -17,15 +28,31 @@ function initialize(length) {
     return array;
 }
 exports.initialize = initialize;
+/**
+ *
+ * @param source
+ * @param sourceIndex
+ * @param length
+ * @returns {any}
+ */
 function copy(source, sourceIndex, length) {
     if (sourceIndex === void 0) { sourceIndex = 0; }
     if (length === void 0) { length = Infinity; }
     if (!source)
-        return source;
+        return source; // may have passed zero? undefined? or null?
     return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
 }
 exports.copy = copy;
 var CBN = 'Cannot be null.', CB0 = 'Cannot be zero.', CBL0 = 'Cannot be less than zero.', VFN = 'Must be a valid finite number';
+/**
+ * Copies one array to another.
+ * @param source
+ * @param destination
+ * @param sourceIndex
+ * @param destinationIndex
+ * @param length An optional limit to stop copying.
+ * @returns The destination array.
+ */
 function copyTo(source, destination, sourceIndex, destinationIndex, length) {
     if (sourceIndex === void 0) { sourceIndex = 0; }
     if (destinationIndex === void 0) { destinationIndex = 0; }
@@ -56,13 +83,23 @@ function copyTo(source, destination, sourceIndex, destinationIndex, length) {
     return destination;
 }
 exports.copyTo = copyTo;
+/**
+ * Checks to see where the provided array contains an item/value.
+ * If the array value is null, then -1 is returned.
+ * @param array
+ * @param item
+ * @param {function?} equalityComparer
+ * @returns {number}
+ */
 function indexOf(array, item, equalityComparer) {
     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
     var len = array && array.length;
     if (len) {
+        // NaN NEVER evaluates its equality so be careful.
         if (Array.isArray(array) && !Types_1.Type.isTrueNaN(item))
             return array.indexOf(item);
         for (var i = 0; i < len; i++) {
+            // 'areEqual' includes NaN==NaN evaluation.
             if (equalityComparer(array[i], item))
                 return i;
         }
@@ -70,11 +107,27 @@ function indexOf(array, item, equalityComparer) {
     return -1;
 }
 exports.indexOf = indexOf;
+/**
+ * Checks to see if the provided array contains an item.
+ * If the array value is null, then false is returned.
+ * @param array
+ * @param item
+ * @param {function?} equalityComparer
+ * @returns {boolean}
+ */
 function contains(array, item, equalityComparer) {
     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
     return indexOf(array, item, equalityComparer) != -1;
 }
 exports.contains = contains;
+/**
+ * Finds and replaces a value from an array.  Will replaces all instances unless a maximum is specified.
+ * @param array
+ * @param old
+ * @param newValue
+ * @param max
+ * @returns {number}
+ */
 function replace(array, old, newValue, max) {
     if (!array || !array.length || max === 0)
         return 0;
@@ -94,6 +147,13 @@ function replace(array, old, newValue, max) {
     return count;
 }
 exports.replace = replace;
+/**
+ * Replaces values of an array across a range of indexes.
+ * @param array
+ * @param value
+ * @param start
+ * @param stop
+ */
 function updateRange(array, value, start, stop) {
     if (start === void 0) { start = 0; }
     if (!array)
@@ -109,22 +169,42 @@ function updateRange(array, value, start, stop) {
     }
 }
 exports.updateRange = updateRange;
+/**
+ * Clears (sets to null) values of an array across a range of indexes.
+ * @param array
+ * @param start
+ * @param stop
+ */
 function clear(array, start, stop) {
     if (start === void 0) { start = 0; }
     updateRange(array, null, start, stop);
 }
 exports.clear = clear;
+/**
+ * Ensures a value exists within an array.  If not found, adds to the end.
+ * @param array
+ * @param item
+ * @param {function?} equalityComparer
+ * @returns {boolean}
+ */
 function register(array, item, equalityComparer) {
     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
     if (!array)
         throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
-    var len = array.length;
+    var len = array.length; // avoid querying .length more than once. *
     var ok = !len || !contains(array, item, equalityComparer);
     if (ok)
-        array[len] = item;
+        array[len] = item; // * push would query length again.
     return ok;
 }
 exports.register = register;
+/**
+ * Returns the first index of which the provided predicate returns true.
+ * Returns -1 if always false.
+ * @param array
+ * @param predicate
+ * @returns {number}
+ */
 function findIndex(array, predicate) {
     if (!array)
         throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
@@ -148,6 +228,7 @@ function findIndex(array, predicate) {
 exports.findIndex = findIndex;
 function forEach(source, action) {
     if (source && action) {
+        // Don't cache the length since it is possible that the underlying array changed.
         for (var i = 0; i < source.length; i++) {
             if (action(source[i], i) === false)
                 break;
@@ -155,6 +236,12 @@ function forEach(source, action) {
     }
 }
 exports.forEach = forEach;
+/**
+ * Is similar to Array.map() but instead of returning a new array, it updates the existing indexes.
+ * Can also be applied to a structure that indexes like an array, but may not be.
+ * @param target
+ * @param fn
+ */
 function applyTo(target, fn) {
     if (target && fn) {
         for (var i = 0; i < target.length; i++) {
@@ -163,6 +250,12 @@ function applyTo(target, fn) {
     }
 }
 exports.applyTo = applyTo;
+/**
+ * Removes an entry at a specified index.
+ * @param array
+ * @param index
+ * @returns {boolean} True if the value was able to be removed.
+ */
 function removeIndex(array, index) {
     if (!array)
         throw new ArgumentNullException_1.ArgumentNullException('array', CBN);
@@ -175,6 +268,14 @@ function removeIndex(array, index) {
     return exists;
 }
 exports.removeIndex = removeIndex;
+/**
+ * Finds and removes a value from an array.  Will remove all instances unless a maximum is specified.
+ * @param array
+ * @param value
+ * @param max
+ * @param {function?} equalityComparer
+ * @returns {number} The number of times the value was found and removed.
+ */
 function remove(array, value, max, equalityComparer) {
     if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
     if (!array || !array.length || max === 0)
@@ -183,6 +284,7 @@ function remove(array, value, max, equalityComparer) {
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('max', max, CBL0);
     var count = 0;
     if (!max || !isFinite(max)) {
+        // Don't track the indexes and remove in reverse.
         for (var i = (array.length - 1); i >= 0; i--) {
             if (equalityComparer(array[i], value)) {
                 array.splice(i, 1);
@@ -191,7 +293,8 @@ function remove(array, value, max, equalityComparer) {
         }
     }
     else {
-        var found = [];
+        // Since the user will expect it to happen in forward order...
+        var found = []; // indexes;
         for (var i = 0, len = array.length; i < len; i++) {
             if (equalityComparer(array[i], value)) {
                 found.push(i);
@@ -207,6 +310,12 @@ function remove(array, value, max, equalityComparer) {
     return count;
 }
 exports.remove = remove;
+/**
+ * Simply repeats a value the number of times specified.
+ * @param element
+ * @param count
+ * @returns {T[]}
+ */
 function repeat(element, count) {
     Integer_1.Integer.assert(count, 'count');
     if (count < 0)
@@ -218,6 +327,13 @@ function repeat(element, count) {
     return result;
 }
 exports.repeat = repeat;
+/**
+ * Returns a range of numbers based upon the first value and the step value.
+ * @param first
+ * @param count
+ * @param step
+ * @returns {number[]}
+ */
 function range(first, count, step) {
     if (step === void 0) { step = 1; }
     if (isNaN(first) || !isFinite(first))
@@ -234,6 +350,13 @@ function range(first, count, step) {
     return result;
 }
 exports.range = range;
+/**
+ * Returns a range of numbers based upon the first value and the step value excluding any numbers at or beyond the until value.
+ * @param first
+ * @param until
+ * @param step
+ * @returns {number[]}
+ */
 function rangeUntil(first, until, step) {
     if (step === void 0) { step = 1; }
     if (step == 0)
@@ -246,6 +369,13 @@ function distinct(source) {
     return source.filter(function (e) { return !(e in seen) && (seen[e] = true); });
 }
 exports.distinct = distinct;
+/**
+ * Takes any arrays within an array and inserts the values contained within in place of that array.
+ * For every count higher than 0 in recurseDepth it will attempt an additional pass.  Passing Infinity will flatten all arrays contained.
+ * @param a
+ * @param recurseDepth
+ * @returns {any[]}
+ */
 function flatten(a, recurseDepth) {
     if (recurseDepth === void 0) { recurseDepth = 0; }
     var result = [];

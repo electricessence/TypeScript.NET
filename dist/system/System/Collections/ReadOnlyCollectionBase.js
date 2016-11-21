@@ -12,6 +12,7 @@ System.register(["./CollectionBase", "../../extends"], function (exports_1, cont
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             ReadOnlyCollectionBase = (function (_super) {
                 __extends(ReadOnlyCollectionBase, _super);
@@ -24,9 +25,11 @@ System.register(["./CollectionBase", "../../extends"], function (exports_1, cont
                 ReadOnlyCollectionBase.prototype.getIsReadOnly = function () {
                     return true;
                 };
+                //noinspection JSUnusedLocalSymbols
                 ReadOnlyCollectionBase.prototype._addInternal = function (entry) {
                     return false;
                 };
+                //noinspection JSUnusedLocalSymbols
                 ReadOnlyCollectionBase.prototype._removeInternal = function (entry, max) {
                     return 0;
                 };

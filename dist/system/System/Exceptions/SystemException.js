@@ -21,6 +21,7 @@ System.register(["../Exception", "../../extends"], function (exports_1, context_
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              * Based upon: https://msdn.microsoft.com/en-us/library/system.systemexception%28v=vs.110%29.aspx
              */
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'SystemException';
             SystemException = (function (_super) {
@@ -28,6 +29,15 @@ System.register(["../Exception", "../../extends"], function (exports_1, context_
                 function SystemException() {
                     return _super.apply(this, arguments) || this;
                 }
+                /*
+                    constructor(
+                        message:string = null,
+                        innerException:Error = null,
+                        beforeSealing?:(ex:any)=>void)
+                    {
+                        super(message, innerException, beforeSealing);
+                    }
+                */
                 SystemException.prototype.getName = function () {
                     return NAME;
                 };

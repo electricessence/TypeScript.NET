@@ -4,6 +4,10 @@
  */
 import { TimeUnit } from "./TimeUnit";
 import { TimeQuantity } from "./TimeQuantity";
+// noinspection JSUnusedLocalSymbols
+/**
+ * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.
+ */
 export default class TimeUnitValue extends TimeQuantity {
     constructor(value, _units) {
         super(typeof (value) == 'number'
@@ -22,6 +26,7 @@ export default class TimeUnitValue extends TimeQuantity {
     getTotalMilliseconds() {
         return TimeUnit.toMilliseconds(this._quantity, this._units);
     }
+    // To avoid confusion, the unit type can only be set once at construction.
     get units() {
         return this._units;
     }

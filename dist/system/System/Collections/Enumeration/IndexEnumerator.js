@@ -12,6 +12,7 @@ System.register(["./EnumeratorBase", "../../../extends"], function (exports_1, c
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             IndexEnumerator = (function (_super) {
                 __extends(IndexEnumerator, _super);

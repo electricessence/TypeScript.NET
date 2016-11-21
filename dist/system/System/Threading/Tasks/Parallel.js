@@ -45,10 +45,13 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
+            //noinspection JSUnusedAssignment
             MAX_WORKERS = 16, VOID0 = void 0, URL = typeof self !== Types_1.Type.UNDEFINED
                 ? (self.URL ? self.URL : self.webkitURL)
-                : null, _supports = !!(Environment_1.isNodeJS || self.Worker);
+                : null, _supports = !!(Environment_1.isNodeJS || self.Worker); // node always supports parallel
+            //noinspection JSUnusedAssignment
             defaults = {
                 evalPath: Environment_1.isNodeJS ? __dirname + '/eval.js' : VOID0,
                 maxConcurrency: Environment_1.isNodeJS
@@ -72,11 +75,16 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 return WorkerPromise;
             }(Promise_1.Promise));
             (function (workers) {
+                /*
+                 * Note:
+                 * Currently there is nothing preventing excessive numbers of workers from being generated.
+                 * Eventually there will be a master pool count which will regulate these workers.
+                 */
                 function getPool(key) {
                     var pool = workerPools[key];
                     if (!pool) {
                         workerPools[key] = pool = new ObjectPool_1.ObjectPool(8);
-                        pool.autoClearTimeout = 3000;
+                        pool.autoClearTimeout = 3000; // Fast cleanup... 1s.
                     }
                     return pool;
                 }
@@ -214,7 +222,16 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                         });
                     throw new Error('Workers do not exist and synchronous operation not allowed!');
                 };
+                /**
+                 * Returns an array of promises that each resolve after their task completes.
+                 * Provides a potential performance benefit by not waiting for all promises to resolve before proceeding to next step.
+                 * @param data
+                 * @param task
+                 * @param env
+                 * @returns {PromiseCollection}
+                 */
                 Parallel.prototype.pipe = function (data, task, env) {
+                    // The resultant promise collection will make an internal copy...
                     var result;
                     if (data && data.length) {
                         var len_1 = data.length;
@@ -229,6 +246,8 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                                 return { value: Promise_1.Promise.map(data, task) };
                             }
                             if (!result) {
+                                // There is a small risk that the consumer could call .resolve() which would result in a double resolution.
+                                // But it's important to minimize the number of objects created.
                                 result = data.map(function (d) { return new Promise_1.Promise(); });
                             }
                             var next = function () {
@@ -237,6 +256,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                                 }
                                 if (worker) {
                                     if (i_1 < len_1) {
+                                        //noinspection JSReferencingMutableVariableFromClosure
                                         var ii = i_1++, p_1 = result[ii];
                                         var wp_1 = new WorkerPromise(worker, data[ii]);
                                         wp_1.thenSynchronous(function (r) {
@@ -277,11 +297,20 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                     }
                     return (maxConcurrency || maxConcurrency === 0) ? maxConcurrency : MAX_WORKERS;
                 };
+                /**
+                 * Waits for all tasks to resolve and returns a promise with the results.
+                 * @param data
+                 * @param task
+                 * @param env
+                 * @returns {ArrayPromise}
+                 */
                 Parallel.prototype.map = function (data, task, env) {
                     var _this = this;
                     if (!data || !data.length)
                         return Promise_1.ArrayPromise.fulfilled(data && []);
-                    data = data.slice();
+                    // Would return the same result, but has extra overhead.
+                    // return this.pipe(data,task).all();
+                    data = data.slice(); // Never use the original.
                     return new Promise_1.ArrayPromise(function (resolve, reject) {
                         var result = [], len = data.length;
                         result.length = len;
@@ -293,6 +322,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                             if (!worker) {
                                 if (!_this.options.allowSynchronous)
                                     throw new Error('Workers do not exist and synchronous operation not allowed!');
+                                // Concurrency doesn't matter in a single thread... Just queue it all up.
                                 resolve(Promise_1.Promise.map(data, task).all());
                                 return { value: void 0 };
                             }
@@ -360,6 +390,9 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 Parallel.startNew = function (data, task, env) {
                     return (new Parallel()).startNew(data, task, env);
                 };
+                //
+                // forEach<T>(data:T[], task:(data:T) => void, env?:any):PromiseBase<void>
+                // {}
                 Parallel.map = function (data, task, env) {
                     return (new Parallel()).map(data, task, env);
                 };

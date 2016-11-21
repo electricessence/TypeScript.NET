@@ -1,6 +1,12 @@
 System.register(["../../../Exceptions/ArgumentNullException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    /**
+     * Quick sort O(n log (n))
+     * Warning: Uses recursion.
+     * @param target
+     * @returns {T[]}
+     */
     function quickSort(target) {
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");
@@ -10,6 +16,7 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
     exports_1("quickSort", quickSort);
     function sort(target, low, high) {
         if (low < high) {
+            // Partition first...
             var swap = void 0;
             var pivotIndex = Math.floor((low + high) / 2);
             swap = target[pivotIndex];

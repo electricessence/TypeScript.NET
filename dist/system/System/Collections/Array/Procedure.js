@@ -77,6 +77,12 @@ System.register([], function (exports_1, context_1) {
         return result;
     }
     exports_1("product", product);
+    /**
+     * Takes the first number and divides it by all following.
+     * @param source
+     * @param ignoreNaN Will cause this skip any NaN values.
+     * @returns {number}
+     */
     function quotient(source, ignoreNaN) {
         if (ignoreNaN === void 0) { ignoreNaN = false; }
         if (!source || source.length < 2)

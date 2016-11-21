@@ -3,6 +3,12 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 "use strict";
+/**
+ * Takes a target object and ensures values exist.
+ * @param target
+ * @param defaults
+ * @returns {any}
+ */
 function mergeValues(target, defaults) {
     var result = target || {};
     for (var key in defaults) {

@@ -7,6 +7,8 @@
     }
 })(["require", "exports", "QUnit", "./Utility", "./Procedure", "./Compare"], function (require, exports) {
     "use strict";
+    ///<reference types="qunit"/>
+    ///<amd-dependency path="QUnit"/>
     var Utility_1 = require("./Utility");
     var Procedure_1 = require("./Procedure");
     var Compare_1 = require("./Compare");

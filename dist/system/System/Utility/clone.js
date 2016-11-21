@@ -5,6 +5,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         if (depth === void 0) { depth = 0; }
         if (depth < 0)
             return source;
+        // return primitives as is.
         if (!Types_1.Type.isObject(source))
             return source;
         var result;
@@ -20,6 +21,7 @@ System.register(["../Types"], function (exports_1, context_1) {
             result = {};
             if (depth > 0)
                 for (var k in source) {
+                    //noinspection JSUnfilteredForInLoop
                     result[k] = clone(source[k], depth - 1);
                 }
         }

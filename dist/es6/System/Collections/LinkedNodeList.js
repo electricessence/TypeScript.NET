@@ -1,8 +1,30 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import * as TextUtility from "../Text/Utility";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
 import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
+// noinspection JSUnusedLocalSymbols
+/*****************************
+ * IMPORTANT NOTES ABOUT PERFORMANCE:
+ * http://jsperf.com/simulating-a-queue
+ *
+ * Adding to an array is very fast, but modifying is slow.
+ * LinkedList wins when modifying contents.
+ * http://stackoverflow.com/questions/166884/array-versus-linked-list
+ *****************************/
+/**
+ * This class is useful for managing a list of linked nodes, but it does not protect against modifying individual links.
+ * If the consumer modifies a link (sets the previous or next value) it will effectively break the collection.
+ *
+ * It is possible to declare a node type of any kind as long as it contains a previous and next value that can reference another node.
+ * Although not as safe as the included LinkedList, this class has less overhead and is more flexible.
+ *
+ * The count (or length) of this LinkedNodeList is not tracked since it could be corrupted at any time.
+ */
 export class LinkedNodeList {
     constructor() {
         this._first = null;
@@ -15,12 +37,22 @@ export class LinkedNodeList {
             throw new InvalidOperationException("Collection was modified.");
         return true;
     }
+    /**
+     * The first node.  Will be null if the collection is empty.
+     */
     get first() {
         return this._first;
     }
+    /**
+     * The last node.
+     */
     get last() {
         return this._last;
     }
+    /**
+     * Iteratively counts the number of linked nodes and returns the value.
+     * @returns {number}
+     */
     get count() {
         let next = this._first;
         let i = 0;
@@ -32,7 +64,7 @@ export class LinkedNodeList {
     }
     forEach(action, ignoreVersioning) {
         const _ = this;
-        let current = null, next = _.first;
+        let current = null, next = _.first; // Be sure to track the next node so if current node is removed.
         const version = _._version;
         let index = 0;
         do {
@@ -53,9 +85,14 @@ export class LinkedNodeList {
         });
         return result;
     }
+    /**
+     * Erases the linked node's references to each other and returns the number of nodes.
+     * @returns {number}
+     */
     clear() {
         const _ = this;
         let n, cF = 0, cL = 0;
+        // First, clear in the forward direction.
         n = _._first;
         _._first = null;
         while (n) {
@@ -64,6 +101,7 @@ export class LinkedNodeList {
             n = n.next;
             current.next = null;
         }
+        // Last, clear in the reverse direction.
         n = _._last;
         _._last = null;
         while (n) {
@@ -78,12 +116,24 @@ export class LinkedNodeList {
         _.unsafeCount = 0;
         return cF;
     }
+    /**
+     * Clears the list.
+     */
     dispose() {
         this.clear();
     }
+    /**
+     * Iterates the list to see if a node exists.
+     * @param node
+     * @returns {boolean}
+     */
     contains(node) {
         return this.indexOf(node) != -1;
     }
+    /**
+     * Gets the index of a particular node.
+     * @param index
+     */
     getNodeAt(index) {
         if (index < 0)
             return null;
@@ -104,6 +154,11 @@ export class LinkedNodeList {
         });
         return node;
     }
+    /**
+     * Iterates the list to find the specified node and returns its index.
+     * @param node
+     * @returns {boolean}
+     */
     indexOf(node) {
         if (node && (node.previous || node.next)) {
             let index = 0;
@@ -117,12 +172,26 @@ export class LinkedNodeList {
         }
         return -1;
     }
+    /**
+     * Removes the first node and returns true if successful.
+     * @returns {boolean}
+     */
     removeFirst() {
         return !!this._first && this.removeNode(this._first);
     }
+    /**
+     * Removes the last node and returns true if successful.
+     * @returns {boolean}
+     */
     removeLast() {
         return !!this._last && this.removeNode(this._last);
     }
+    /**
+     * Removes the specified node.
+     * Returns true if successful and false if not found (already removed).
+     * @param node
+     * @returns {boolean}
+     */
     removeNode(node) {
         if (node == null)
             throw new ArgumentNullException('node');
@@ -153,9 +222,19 @@ export class LinkedNodeList {
         }
         return removed;
     }
+    /**
+     * Adds a node to the end of the list.
+     * @param node
+     */
     addNode(node) {
         this.addNodeAfter(node);
     }
+    /**
+     * Inserts a node before the specified 'before' node.
+     * If no 'before' node is specified, it inserts it as the first node.
+     * @param node
+     * @param before
+     */
     addNodeBefore(node, before = null) {
         assertValidDetached(node);
         const _ = this;
@@ -178,6 +257,12 @@ export class LinkedNodeList {
         _._version++;
         _.unsafeCount++;
     }
+    /**
+     * Inserts a node after the specified 'after' node.
+     * If no 'after' node is specified, it appends it as the last node.
+     * @param node
+     * @param after
+     */
     addNodeAfter(node, after = null) {
         assertValidDetached(node);
         const _ = this;
@@ -200,6 +285,11 @@ export class LinkedNodeList {
         _._version++;
         _.unsafeCount++;
     }
+    /**
+     * Takes and existing node and replaces it.
+     * @param node
+     * @param replacement
+     */
     replace(node, replacement) {
         if (node == null)
             throw new ArgumentNullException('node');
@@ -224,6 +314,7 @@ export class LinkedNodeList {
             throw new ArgumentNullException('list');
         let current, next, version;
         return new EnumeratorBase(() => {
+            // Initialize anchor...
             current = null;
             next = list.first;
             version = list._version;

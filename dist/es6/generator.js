@@ -1,19 +1,22 @@
 export default function (thisArg, body) {
     let f, y, t;
+    // sent can be applied via thisArgs.
+    // noinspection JSUnusedGlobalSymbols
     let _ = {
         label: 0,
         trys: [],
         ops: [],
         sent: () => {
+            // noinspection JSBitwiseOperatorUsage
             if (t[0] & 1)
                 throw t[1];
             return t[1];
         },
     };
     return {
-        next: verb(0),
-        "throw": verb(1),
-        "return": verb(2)
+        next: verb(0 /* next */),
+        "throw": verb(1 /* throw */),
+        "return": verb(2 /* return */)
     };
     function verb(n) { return (v) => step([n, v]); }
     function step(op) {
@@ -22,6 +25,7 @@ export default function (thisArg, body) {
         while (_) {
             try {
                 f = 1;
+                //noinspection JSBitwiseOperatorUsage
                 if (y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"])
                     && !(t = t.call(y, op[1])).done)
                     return t;
@@ -29,8 +33,8 @@ export default function (thisArg, body) {
                 if (t)
                     op = [0, t.value];
                 switch (op[0]) {
-                    case 0:
-                    case 1:
+                    case 0 /* next */:
+                    case 1 /* throw */:
                         t = op;
                         break;
                     case 4:
@@ -80,6 +84,7 @@ export default function (thisArg, body) {
                 f = t = 0;
             }
         }
+        //noinspection JSBitwiseOperatorUsage
         if (op[0] & 5)
             throw op[1];
         return { value: op[0] ? op[1] : void 0, done: true };

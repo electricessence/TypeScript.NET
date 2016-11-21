@@ -62,19 +62,19 @@
                         return [4 /*yield*/, File.json.write("./dist/" + folder + "/package.json", pkg)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/, copyReadme(folder)];
+                        return [2 /*return*/, copyReadmes(folder)];
                 }
             });
         });
     }
-    function copyReadme(folder) {
-        return stream_to_promise_1.streamToPromise.toPromise(gulp.src("./dist/README.md")
+    function copyReadmes(folder) {
+        return stream_to_promise_1.streamToPromise.toPromise(gulp.src("./dist/*.md")
             .pipe(gulp.dest("./dist/" + folder + "/")));
     }
     var DEFAULTS = Object.freeze({
         noImplicitAny: true,
-        removeComments: true,
         noEmitHelpers: true,
+        removeComments: false,
         sourceMap: true,
         declaration: true,
         strictNullChecks: true,
@@ -120,12 +120,5 @@
         .clear()
         .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.SYSTEMJS); }); });
-    gulp.task(TASK.DIST, [
-        TASK.DIST_ES6,
-        TASK.DIST_AMD,
-        TASK.DIST_UMD,
-        TASK.DIST_COMMONJS,
-        TASK.DIST_SYSTEMJS
-    ]);
 });
 //# sourceMappingURL=dist.js.map

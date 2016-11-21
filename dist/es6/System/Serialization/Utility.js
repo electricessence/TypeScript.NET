@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { Type } from "../Types";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 const EMPTY = '', TRUE = 'true', FALSE = 'false';
@@ -53,6 +57,8 @@ export function toPrimitive(value, caseInsensitive, unknownHandler) {
                             return number;
                     }
                 }
+                // Handle Dates...  Possibly JSON?
+                // Instead of throwing we allow for handling...
                 if (unknownHandler)
                     value = unknownHandler(value);
                 break;

@@ -3,6 +3,9 @@ import { ClockTime } from "./ClockTime";
 import { TimeQuantity } from "./TimeQuantity";
 import { ITimeMeasurement } from "./ITimeMeasurement";
 import { ITimeQuantity } from "./ITimeQuantity";
+/**
+ * TimeSpan expands on TimeQuantity to provide an class that is similar to .NET's TimeSpan including many useful static methods.
+ */
 export declare class TimeSpan extends TimeQuantity implements ITimeMeasurement {
     ticks: number;
     milliseconds: number;
@@ -11,6 +14,10 @@ export declare class TimeSpan extends TimeQuantity implements ITimeMeasurement {
     hours: number;
     days: number;
     constructor(value: number, units?: TimeUnit);
+    /**
+     * Provides an standard interface for acquiring the total time.
+     * @returns {TimeSpan}
+     */
     readonly total: TimeSpan;
     private _time;
     readonly time: ClockTime;

@@ -1,6 +1,11 @@
 System.register(["../../../Exceptions/ArgumentNullException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    /**
+     * https://en.wikipedia.org/wiki/Insertion_sort
+     * @param target
+     * @returns {T[]}
+     */
     function insertionSort(target) {
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");

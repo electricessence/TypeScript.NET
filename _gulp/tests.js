@@ -17,7 +17,6 @@
         target: gulp_typescript_helper_1.Target.ES5,
         module: gulp_typescript_helper_1.Module.UMD,
         noEmitHelpers: false,
-        removeComments: true,
         sourceMap: true,
         moduleResolution: "node"
     });
@@ -34,9 +33,5 @@
         .init()
         .module(gulp_typescript_helper_1.Module.COMMONJS)
         .execute(); });
-    gulp.task(TASK.BUILD + ".tests", [
-        TASK.TYPESCRIPT_QUNIT,
-        TASK.TYPESCRIPT_MOCHA
-    ]);
 });
 //# sourceMappingURL=tests.js.map

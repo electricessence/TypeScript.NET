@@ -15,10 +15,12 @@ System.register(["./SystemException", "../Text/Utility", "../../extends"], funct
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'ArgumentException';
             ArgumentException = (function (_super) {
                 __extends(ArgumentException, _super);
+                // For simplicity and consistency, lets stick with 1 signature.
                 function ArgumentException(paramName, message, innerException, beforeSealing) {
                     var _this;
                     var pn = paramName ? ('{' + paramName + '} ') : '';

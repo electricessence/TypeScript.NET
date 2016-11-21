@@ -1,4 +1,9 @@
 import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
+/**
+ * https://en.wikipedia.org/wiki/Insertion_sort
+ * @param target
+ * @returns {T[]}
+ */
 export function insertionSort(target) {
     if (!target)
         throw new ArgumentNullException("target");

@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { TimeSpan } from "../Time/TimeSpan";
 function getTimestampMilliseconds() {
     return (new Date()).getTime();
@@ -42,6 +46,8 @@ export default class Stopwatch {
         _._isRunning = false;
         _._startTimeStamp = NaN;
     }
+    // Effectively calls a stop start and continues timing...
+    // Can also be called to effectively start a lap before calling it again to get the elapsed lap time.
     lap() {
         const _ = this;
         if (_._isRunning) {

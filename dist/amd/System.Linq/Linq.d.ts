@@ -16,6 +16,17 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     getEnumerator(): IEnumerator<T>;
     protected _onDispose(): void;
     asEnumerable(): this;
+    /**
+     * Similar to forEach, but executes an action for each time a value is enumerated.
+     * If the action explicitly returns false or 0 (EnumerationAction.Break), the enumeration will complete.
+     * If it returns a 2 (EnumerationAction.Skip) it will move on to the next item.
+     * This also automatically handles disposing the enumerator.
+     * @param action
+     * @param initializer
+     * @param isEndless Special case where isEndless can be null in order to negate inheritance.
+     * @param onComplete Executes just before the enumerator releases when there is no more entries.
+     * @returns {any}
+     */
     doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer: Closure | null, isEndless: true, onComplete?: Action<number>): InfiniteEnumerable<T>;
     doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer?: Closure | null, isEndless?: boolean | null | undefined, onComplete?: Action<number>): Enumerable<T>;
     force(): void;
@@ -46,6 +57,9 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector: (collection: T, element: TElement) => TResult): InfiniteEnumerable<TResult>;
     protected _filterSelected(selector?: SelectorWithIndex<T, T>, filter?: PredicateWithIndex<T>): Enumerable<T>;
     protected _filterSelected<TResult>(selector: SelectorWithIndex<T, TResult>, filter?: PredicateWithIndex<TResult>): Enumerable<TResult>;
+    /**
+     * Returns selected values that are not null or undefined.
+     */
     choose(): InfiniteEnumerable<T>;
     choose<TResult>(selector?: Selector<T, TResult>): InfiniteEnumerable<TResult>;
     where(predicate: PredicateWithIndex<T>): this;
@@ -56,6 +70,11 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     except(second: ForEachEnumerable<T>, compareSelector?: Selector<T, string | number | symbol>): this;
     distinct(compareSelector?: Selector<T, string | number | symbol>): this;
     distinctUntilChanged(compareSelector?: Selector<T, any>): this;
+    /**
+     * Returns a single default value if empty.
+     * @param defaultValue
+     * @returns {Enumerable}
+     */
     defaultIfEmpty(defaultValue?: T): this;
     zip<TSecond, TResult>(second: ForEachEnumerable<TSecond>, resultSelector: (first: T, second: TSecond, index: number) => TResult): Enumerable<TResult>;
     zipMultiple<TSecond, TResult>(second: IArray<ForEachEnumerable<TSecond>>, resultSelector: (first: T, second: TSecond, index: number) => TResult): Enumerable<TResult>;
@@ -73,6 +92,12 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     buffer(size: number): InfiniteEnumerable<T[]>;
     share(): this;
 }
+/**
+ * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
+ *
+ * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
+ * In this case, we use Enumerable<T> as the underlying class that is being chained.
+ */
 export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILinqEnumerable<T> {
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure | null, isEndless?: boolean);
     asEnumerable(): this;
@@ -136,6 +161,11 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILin
     minBy(keySelector?: Selector<T, Primitive>): T | undefined;
     sum(selector?: SelectorWithIndex<T, number>): number;
     product(selector?: SelectorWithIndex<T, number>): number;
+    /**
+     * Takes the first number and divides it by all following.
+     * @param selector
+     * @returns {number}
+     */
     quotient(selector?: SelectorWithIndex<T, number>): number;
     last(): T;
     lastOrDefault(): T | undefined;
@@ -147,11 +177,21 @@ export declare class FiniteEnumerable<T> extends Enumerable<T> implements IFinit
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure);
 }
 export declare module Enumerable {
+    /**
+     * Universal method for converting a primitive enumerables into a LINQ enabled ones.
+     *
+     * Is not limited to TypeScript usages.
+     */
     function from<T>(source: ForEachEnumerable<T>): Enumerable<T>;
     function fromAny<T>(source: ForEachEnumerable<T>): Enumerable<T>;
     function fromAny(source: any): Enumerable<any> | undefined;
     function fromAny<T>(source: ForEachEnumerable<T>, defaultEnumerable: Enumerable<T>): Enumerable<T>;
     function fromOrEmpty<T>(source: ForEachEnumerable<T>): Enumerable<T>;
+    /**
+     * Static helper for converting enumerables to an array.
+     * @param source
+     * @returns {any}
+     */
     function toArray<T>(source: ForEachEnumerable<T>): T[];
     function _choice<T>(values: T[]): InfiniteEnumerable<T>;
     function choice<T>(values: IArray<T>): InfiniteEnumerable<T>;
@@ -161,8 +201,19 @@ export declare module Enumerable {
     function empty<T>(): FiniteEnumerable<T>;
     function repeat<T>(element: T): InfiniteEnumerable<T>;
     function repeat<T>(element: T, count: number): FiniteEnumerable<T>;
+    /**
+     * DEPRECATED This method began to not make sense in so many ways.
+     * @deprecated since version 4.2
+     * @param initializer
+     * @param finalizer
+     */
     function repeatWithFinalize<T>(initializer: () => T, finalizer: Closure): InfiniteEnumerable<T>;
     function repeatWithFinalize<T>(initializer: () => T, finalizer?: Action<T>): InfiniteEnumerable<T>;
+    /**
+     * Creates an enumerable of one element.
+     * @param element
+     * @returns {FiniteEnumerable<T>}
+     */
     function make<T>(element: T): FiniteEnumerable<T>;
     function range(start: number, count: number, step?: number): FiniteEnumerable<number>;
     function rangeDown(start: number, count: number, step?: number): FiniteEnumerable<number>;
@@ -178,6 +229,11 @@ export declare module Enumerable {
     function map<T, TResult>(enumerable: ForEachEnumerable<T>, selector: SelectorWithIndex<T, TResult>): TResult[];
     function max(values: FiniteEnumerable<number>): number;
     function min(values: FiniteEnumerable<number>): number;
+    /**
+     * Takes any set of collections of the same type and weaves them together.
+     * @param enumerables
+     * @returns {Enumerable<T>}
+     */
     function weave<T>(enumerables: ForEachEnumerable<ForEachEnumerable<T>>): Enumerable<T>;
 }
 export default Enumerable;

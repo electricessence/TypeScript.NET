@@ -1,8 +1,13 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var Types_1 = require("../Types");
 var SetBase_1 = require("./SetBase");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var extends_1 = require("../../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
 var HashSet = (function (_super) {
@@ -30,9 +35,11 @@ var HashSet = (function (_super) {
         var key = _._keyGenerator(item);
         if (!t || t[key] === VOID0) {
             if (!r) {
+                //noinspection JSUnusedAssignment
                 _._registry = r = {};
             }
             if (!t) {
+                //noinspection JSUnusedAssignment
                 r[type] = t = {};
             }
             var node = { value: item };

@@ -1,9 +1,14 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { areEqual } from "../Compare";
 import { remove, indexOf, contains, copyTo, removeIndex } from "./Array/Utility";
 import { forEach } from "./Enumeration/Enumerator";
 import { Type } from "../Types";
 import { CollectionBase } from "./CollectionBase";
 import { EnumeratorBase } from "./Enumeration/EnumeratorBase";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 export class List extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
@@ -102,6 +107,7 @@ export class List extends CollectionBase {
             if (index)
                 _.throwIfDisposed();
             else if (_.wasDisposed) {
+                // We never actually started? Then no biggie.
                 return yielder.yieldBreak();
             }
             _.assertVersion(version);

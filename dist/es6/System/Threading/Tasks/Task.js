@@ -1,6 +1,15 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { TaskHandlerBase } from "./TaskHandlerBase";
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { Lazy } from "../../Lazy";
+// noinspection JSUnusedLocalSymbols
+/**
+ * A simplified synchronous (but deferrable) version of Task<T>
+ * Asynchronous operations should use Promise<T>.
+ */
 export class Task extends TaskHandlerBase {
     constructor(valueFactory) {
         super();
@@ -12,7 +21,7 @@ export class Task extends TaskHandlerBase {
         this._result.getValue();
     }
     getResult() {
-        return this._result.value;
+        return this._result.value; // This will detect any potential recursion.
     }
     getState() {
         const r = this._result;
@@ -23,12 +32,12 @@ export class Task extends TaskHandlerBase {
         };
     }
     start(defer) {
-        if (this.getStatus() == 0) {
+        if (this.getStatus() == 0 /* Created */) {
             super.start(defer);
         }
     }
     runSynchronously() {
-        if (this.getStatus() == 0) {
+        if (this.getStatus() == 0 /* Created */) {
             super.runSynchronously();
         }
     }

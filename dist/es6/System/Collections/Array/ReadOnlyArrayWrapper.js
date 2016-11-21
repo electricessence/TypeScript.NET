@@ -5,6 +5,7 @@
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { ReadOnlyCollectionBase } from "../ReadOnlyCollectionBase";
 import { from as enumeratorFrom } from "../Enumeration/Enumerator";
+// noinspection JSUnusedLocalSymbols
 export default class ReadOnlyArrayWrapper extends ReadOnlyCollectionBase {
     constructor(array) {
         super();

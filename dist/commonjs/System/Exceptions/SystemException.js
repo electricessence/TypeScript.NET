@@ -6,6 +6,7 @@
 "use strict";
 var Exception_1 = require("../Exception");
 var extends_1 = require("../../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var NAME = 'SystemException';
 var SystemException = (function (_super) {
@@ -13,6 +14,15 @@ var SystemException = (function (_super) {
     function SystemException() {
         return _super.apply(this, arguments) || this;
     }
+    /*
+        constructor(
+            message:string = null,
+            innerException:Error = null,
+            beforeSealing?:(ex:any)=>void)
+        {
+            super(message, innerException, beforeSealing);
+        }
+    */
     SystemException.prototype.getName = function () {
         return NAME;
     };

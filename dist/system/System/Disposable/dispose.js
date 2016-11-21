@@ -1,14 +1,38 @@
 System.register(["../Types"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
+    /**
+     * Takes any number of disposables as arguments and attempts to dispose them.
+     * Any exceptions thrown within a dispose are not trapped.
+     * Use 'disposeWithoutException' to automatically trap exceptions.
+     *
+     * Can accept <any> and will ignore objects that don't have a dispose() method.
+     * @param disposables
+     */
     function dispose() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             disposables[_i] = arguments[_i];
         }
+        // The disposables arguments array is effectively localized so it's safe.
         disposeTheseInternal(disposables, false);
     }
     exports_1("dispose", dispose);
+    /**
+     * Just like in C# this 'using' function will ensure the passed disposable is disposed when the closure has finished.
+     *
+     * Usage:
+     * ```typescript
+     * using(new DisposableObject(),(myObj)=>{
+         *   // do work with myObj
+         * });
+     * // myObj automatically has it's dispose method called.
+     * ```
+     *
+     * @param disposable Object to be disposed.
+     * @param closure Function call to execute.
+     * @returns {TReturn} Returns whatever the closure's return value is.
+     */
     function using(disposable, closure) {
         try {
             return closure(disposable);
@@ -18,6 +42,10 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
     }
     exports_1("using", using);
+    /**
+     * This private function makes disposing more robust for when there's no type checking.
+     * If trapExceptions is 'true' it catches and returns any exception instead of throwing.
+     */
     function disposeSingle(disposable, trapExceptions) {
         if (disposable
             && Types_1.Type.of(disposable)
@@ -36,6 +64,9 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         return null;
     }
+    /**
+     * This dispose method assumes it's working on a local copy and is unsafe for external use.
+     */
     function disposeTheseInternal(disposables, trapExceptions, index) {
         if (index === void 0) { index = 0; }
         var exceptions;
@@ -60,9 +91,12 @@ System.register(["../Types"], function (exports_1, context_1) {
                 }
                 finally {
                     if (!success && index + 1 < len) {
+                        /* If code is 'continued' by the debugger,
+                         * need to ensure the rest of the disposables are cared for. */
                         disposeTheseInternal(disposables, false, index + 1);
                     }
                 }
+                // Just in case...  Should never happen, but asserts the intention.
                 if (!success)
                     break;
             }
@@ -86,14 +120,27 @@ System.register(["../Types"], function (exports_1, context_1) {
                     these.deferred(disposables);
                 }
                 dispose.deferred = deferred;
+                /**
+                 * Takes any number of disposables and traps any errors that occur when disposing.
+                 * Returns an array of the exceptions thrown.
+                 * @param disposables
+                 * @returns {any[]} Returns an array of exceptions that occurred, if there are any.
+                 */
                 function withoutException() {
                     var disposables = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
                         disposables[_i] = arguments[_i];
                     }
+                    // The disposables arguments array is effectively localized so it's safe.
                     return disposeTheseInternal(disposables, true);
                 }
                 dispose.withoutException = withoutException;
+                /**
+                 * Takes an array of disposable objects and ensures they are disposed.
+                 * @param disposables
+                 * @param trapExceptions If true, prevents exceptions from being thrown when disposing.
+                 * @returns {any[]} If 'trapExceptions' is true, returns an array of exceptions that occurred, if there are any.
+                 */
                 function these(disposables, trapExceptions) {
                     return disposables && disposables.length
                         ? disposeTheseInternal(disposables.slice(), trapExceptions)

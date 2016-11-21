@@ -1,3 +1,7 @@
+/**
+ * A registration that an IObservable returns that can be disposed in order to cancel sending data to the observer.
+ */
+// For compatibility with (let, const, function, class);
 export class Subscription {
     constructor(_subscribable, _subscriber) {
         this._subscribable = _subscribable;
@@ -8,12 +12,22 @@ export class Subscription {
     get subscriber() {
         return this._subscriber;
     }
+    /*
+     In the case where we could possibly have the following happen:
+     var u = observable.subscribe(observer);
+     ...
+     u.dispose(); // Should only be allowed to unsubscribe once and then it's useless.
+     // Resubscribing creates a new instance.
+     var x = observable.subscribe(observer);
+     u.dispose(); // Calling this again should do nothing and 'x' should still work.
+     */
     get wasDisposed() {
         return !this._subscribable || !this._subscriber;
     }
     dispose() {
         const subscriber = this.subscriber;
         const subscribable = this._subscribable;
+        // Release this reference.  It will prevent potential unwanted recursion.
         this._subscribable = null;
         try {
             if (subscriber && subscribable) {
@@ -21,6 +35,7 @@ export class Subscription {
             }
         }
         finally {
+            // Keep this reference until the end so it can be identified by the list.
             this._subscriber = null;
         }
     }

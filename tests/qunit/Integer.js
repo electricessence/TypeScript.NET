@@ -1,3 +1,5 @@
+///<reference types='qunit'/>
+///<amd-dependency path='QUnit'/>
 (function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;

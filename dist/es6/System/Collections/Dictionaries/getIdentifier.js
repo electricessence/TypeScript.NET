@@ -8,9 +8,11 @@ export function getIdentifier(obj, throwIfUnknown = false) {
         return NULL;
     if (obj === VOID0)
         return Type.UNDEFINED;
+    // See ISymbolizable.
     if (Type.hasMethod(obj, GET_SYMBOL)) {
         return obj.getSymbol();
     }
+    // See IHashable.
     if (Type.hasMethod(obj, GET_HASH_CODE)) {
         return obj.getHashCode();
     }

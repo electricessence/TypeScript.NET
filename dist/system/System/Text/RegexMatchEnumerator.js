@@ -26,7 +26,7 @@ System.register(["./RegularExpressions", "../Collections/Enumeration/EmptyEnumer
                 }
                 RegexMatchEnumerator.prototype.matches = function (input) {
                     var _this = this;
-                    var p;
+                    var p; // pointer
                     return new EnumeratorBase_1.EnumeratorBase(function () {
                         p = 0;
                     }, function (yielder) {

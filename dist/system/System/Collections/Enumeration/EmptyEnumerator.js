@@ -20,6 +20,10 @@ System.register(["./IteratorResult", "../../Functions"], function (exports_1, co
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
             VOID0 = void 0;
+            /**
+             * A simplified stripped down enumerable that is always complete and has no results.
+             * Frozen and exported as 'empty' to allow for reuse.
+             */
             exports_1("EmptyEnumerator", EmptyEnumerator = Object.freeze({
                 current: VOID0,
                 moveNext: Functions_1.Functions.False,

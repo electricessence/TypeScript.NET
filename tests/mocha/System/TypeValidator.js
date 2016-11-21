@@ -137,6 +137,7 @@ describe('.contains(descriptor)', function () {
 });
 describe("Example", function () {
     return it("should work", function () {
+        // Step 2: Copy the interface as an actual object and <type> the validator
         var MyTypeValidator = new TypeValidator_1.TypeValidator({
             a: Object,
             b: String,
@@ -152,6 +153,7 @@ describe("Example", function () {
                 ]
             }
         });
+        // Step 3: validate as many times as you want:
         var myItem = {
             a: {},
             b: "hello",
@@ -168,6 +170,7 @@ describe("Example", function () {
             },
             i: "noise"
         };
+        // no compile-time type errors!
         if (MyTypeValidator.isSubsetOf(myItem)) {
             assert.equal(myItem.e.h.length, 3);
             assert.equal(myItem.b, "hello");
@@ -214,6 +217,7 @@ describe("Complex test", function () {
             id: Number,
             id_str: String,
         });
+        //noinspection SpellCheckingInspection
         assert.ok(ISystemTypeValidator.isSubsetOf({
             "volume_str": "590653",
             "buy": false,

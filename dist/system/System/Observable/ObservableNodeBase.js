@@ -23,6 +23,7 @@ System.register(["./ObservableBase", "../../extends"], function (exports_1, cont
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              * Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
              */
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             ObservableNodeBase = (function (_super) {
                 __extends(ObservableNodeBase, _super);

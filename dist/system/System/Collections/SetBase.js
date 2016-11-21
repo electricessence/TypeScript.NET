@@ -41,6 +41,7 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
             OTHER = 'other';
@@ -107,7 +108,8 @@ System.register(["./LinkedNodeList", "../Exceptions/ArgumentNullException", "./E
                     else {
                         count = dispose_1.using(this.newUsing(), function (o) {
                             Enumerator_1.forEach(other, function (v) {
-                                o.add(v);
+                                o.add(v); // We have to add to another set in order to filter out duplicates.
+                                // contains == false will cause this to exit.
                                 return result = _this.contains(v);
                             });
                             return o.getCount();

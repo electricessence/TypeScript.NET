@@ -1,6 +1,6 @@
 {
   "name": "typescript-dotnet",
-  "version": "4.5.2",
+  "version": "4.5.4",
   "license": "MIT",
   "author": "electricessence <npm@electrified.net>",
   "description": "A JavaScript-Friendly .NET Based TypeScript Library.",
@@ -44,7 +44,7 @@
     "gulp-bump": "^1.0.0",
     "gulp-nuget-pack": "0.0.6",
     "gulp-typedoc": "^2.0.0",
-    "gulp-typescript-helper": "^1.3.4",
+    "gulp-typescript-helper": "^1.4.3",
     "karma": "^0.13.21",
     "mocha": "^2.4.5",
     "qunitjs": "^2.0.1",

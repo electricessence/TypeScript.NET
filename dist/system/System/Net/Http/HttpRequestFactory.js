@@ -21,8 +21,12 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             NAME = 'HttpRequestFactory';
+            /**
+             * This class exposes a factory for making requests to prepared uri and params.
+             */
             HttpRequestFactory = (function (_super) {
                 __extends(HttpRequestFactory, _super);
                 function HttpRequestFactory(_http, uriDefaults) {
@@ -35,6 +39,7 @@ System.register(["../../Exceptions/ArgumentNullException", "../../Disposable/Dis
                     return _this;
                 }
                 HttpRequestFactory.prototype._onDispose = function () {
+                    // super._onDispose(); // Not required for first level inheritance.
                     this._http = null;
                     this._uriDefaults = null;
                 };

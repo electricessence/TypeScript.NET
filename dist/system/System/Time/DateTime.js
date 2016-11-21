@@ -18,7 +18,7 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
             DateTime = (function () {
                 function DateTime(value, kind) {
                     if (value === void 0) { value = new Date(); }
-                    if (kind === void 0) { kind = 1; }
+                    if (kind === void 0) { kind = 1 /* Local */; }
                     var _ = this;
                     this._kind = kind;
                     if (value instanceof DateTime)
@@ -31,7 +31,7 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                             : new Date(value);
                 }
                 DateTime.prototype.toJsDate = function () {
-                    return new Date(this._value.getTime());
+                    return new Date(this._value.getTime()); // return a clone.
                 };
                 Object.defineProperty(DateTime.prototype, "kind", {
                     get: function () {
@@ -48,6 +48,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime.prototype, "month", {
+                    /**
+                     * Returns the Gregorian Month (zero indexed).
+                     * @returns {number}
+                     */
                     get: function () {
                         return this._value.getMonth();
                     },
@@ -55,6 +59,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime.prototype, "calendarMonth", {
+                    /**
+                     * Returns the month number (1-12).
+                     * @returns {number}
+                     */
                     get: function () {
                         return this._value.getMonth() + 1;
                     },
@@ -73,6 +81,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime.prototype, "day", {
+                    /**
+                     * Returns the day of the month.  An integer between 1 and 31.
+                     * @returns {number}
+                     */
                     get: function () {
                         return this._value.getDate();
                     },
@@ -80,6 +92,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime.prototype, "dayIndex", {
+                    /**
+                     * Returns the day of the month indexed starting at zero.
+                     * @returns {number}
+                     */
                     get: function () {
                         return this._value.getDate() - 1;
                     },
@@ -87,6 +103,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime.prototype, "dayOfWeek", {
+                    /**
+                     * Returns the zero indexed day of the week. (Sunday == 0)
+                     * @returns {number}
+                     */
                     get: function () {
                         return this._value.getDay();
                     },
@@ -99,19 +119,19 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                 };
                 DateTime.prototype.addSeconds = function (seconds) {
                     seconds = seconds || 0;
-                    return this.addMilliseconds(seconds * 1000);
+                    return this.addMilliseconds(seconds * 1000 /* Second */);
                 };
                 DateTime.prototype.addMinutes = function (minutes) {
                     minutes = minutes || 0;
-                    return this.addMilliseconds(minutes * 60000);
+                    return this.addMilliseconds(minutes * 60000 /* Minute */);
                 };
                 DateTime.prototype.addHours = function (hours) {
                     hours = hours || 0;
-                    return this.addMilliseconds(hours * 3600000);
+                    return this.addMilliseconds(hours * 3600000 /* Hour */);
                 };
                 DateTime.prototype.addDays = function (days) {
                     days = days || 0;
-                    return this.addMilliseconds(days * 86400000);
+                    return this.addMilliseconds(days * 86400000 /* Day */);
                 };
                 DateTime.prototype.addMonths = function (months) {
                     months = months || 0;
@@ -125,16 +145,34 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     d.setFullYear(d.getFullYear() + years);
                     return new DateTime(d, this._kind);
                 };
+                /**
+                 * Receives an ITimeQuantity value and adds based on the total milliseconds.
+                 * @param {ITimeQuantity} time
+                 * @returns {DateTime}
+                 */
                 DateTime.prototype.add = function (time) {
                     return this.addMilliseconds(time.getTotalMilliseconds());
                 };
+                /**
+                 * Receives an ITimeQuantity value and subtracts based on the total milliseconds.
+                 * @param {ITimeQuantity} time
+                 * @returns {DateTime}
+                 */
                 DateTime.prototype.subtract = function (time) {
                     return this.addMilliseconds(-time.getTotalMilliseconds());
                 };
+                /**
+                 * Returns a TimeSpan representing the amount of time between two dates.
+                 * @param previous
+                 * @returns {TimeSpan}
+                 */
                 DateTime.prototype.timePassedSince = function (previous) {
                     return DateTime.between(previous, this);
                 };
                 Object.defineProperty(DateTime.prototype, "date", {
+                    /**
+                     * Returns a DateTime object for 00:00 of this date.
+                     */
                     get: function () {
                         var _ = this;
                         return new DateTime(new Date(_.year, _.month, _.day), _._kind);
@@ -143,6 +181,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime.prototype, "timeOfDay", {
+                    /**
+                     * Returns the time of day represented by a ClockTime object.
+                     * @returns {ClockTime}
+                     */
                     get: function () {
                         var _ = this;
                         var t = _._time;
@@ -155,10 +197,17 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     enumerable: true,
                     configurable: true
                 });
+                /**
+                 * Returns a readonly object which contains all the date and time components.
+                 */
                 DateTime.prototype.toTimeStamp = function () {
                     return TimeStamp_1.TimeStamp.from(this);
                 };
                 Object.defineProperty(DateTime, "now", {
+                    /**
+                     * Returns the now local time.
+                     * @returns {DateTime}
+                     */
                     get: function () {
                         return new DateTime();
                     },
@@ -166,17 +215,25 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime.prototype, "toUniversalTime", {
+                    /**
+                     * Returns a UTC version of this date if its kind is local.
+                     * @returns {DateTime}
+                     */
                     get: function () {
                         var _ = this;
-                        if (_._kind != 1)
+                        if (_._kind != 1 /* Local */)
                             return new DateTime(_, _._kind);
                         var d = _._value;
-                        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2);
+                        return new DateTime(new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds()), 2 /* Utc */);
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Object.defineProperty(DateTime, "today", {
+                    /**
+                     * The date component for now.
+                     * @returns {DateTime}
+                     */
                     get: function () {
                         return DateTime.now.date;
                     },
@@ -184,6 +241,10 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     configurable: true
                 });
                 Object.defineProperty(DateTime, "tomorrow", {
+                    /**
+                     * Midnight tomorrow.
+                     * @returns {DateTime}
+                     */
                     get: function () {
                         var today = DateTime.today;
                         return today.addDays(1);
@@ -191,14 +252,32 @@ System.register(["./TimeSpan", "./ClockTime", "./TimeStamp"], function (exports_
                     enumerable: true,
                     configurable: true
                 });
+                /**
+                 * Measures the difference between two dates as a TimeSpan.
+                 * @param first
+                 * @param last
+                 */
                 DateTime.between = function (first, last) {
                     var f = first instanceof DateTime ? first._value : first, l = last instanceof DateTime ? last._value : last;
                     return new TimeSpan_1.TimeSpan(l.getTime() - f.getTime());
                 };
+                /**
+                 * Calculates if the given year is a leap year using the formula:
+                 * ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)
+                 * @param year
+                 * @returns {boolean}
+                 */
                 DateTime.isLeapYear = function (year) {
                     return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
                 };
+                /**
+                 * Returns the number of days for the specific year and month.
+                 * @param year
+                 * @param month
+                 * @returns {any}
+                 */
                 DateTime.daysInMonth = function (year, month) {
+                    // Basically, add 1 month, subtract a day... What's the date?
                     return (new Date(year, month + 1, 0)).getDate();
                 };
                 DateTime.from = function (yearOrDate, month, day) {

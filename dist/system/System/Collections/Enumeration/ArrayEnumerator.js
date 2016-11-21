@@ -15,6 +15,7 @@ System.register(["./IndexEnumerator", "../../Types", "../../../extends"], functi
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             ArrayEnumerator = (function (_super) {
                 __extends(ArrayEnumerator, _super);

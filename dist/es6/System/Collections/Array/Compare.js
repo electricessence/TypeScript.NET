@@ -1,15 +1,26 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import * as Values from "../../Compare";
 import { Type } from "../../Types";
+/*  validateSize: Utility for quick validation/invalidation of array equality.
+    Why this way?  Why not pass a closure for the last return?
+    Reason: Performance and avoiding the creation of new functions/closures. */
 function validateSize(a, b) {
+    // Both valid and are same object, or both are null/undefined.
     if (a && b && a === b || !a && !b)
         return true;
+    // At this point, at least one has to be non-null.
     if (!a || !b)
         return false;
     const len = a.length;
     if (len !== b.length)
         return false;
+    // If both are arrays and have zero length, they are equal.
     if (len === 0)
         return true;
+    // Return the length for downstream processing.
     return len;
 }
 export function areAllEqual(arrays, strict = true, equalityComparer = Values.areEqual) {
@@ -63,6 +74,8 @@ export function areEquivalent(a, b, comparer = Values.compare) {
     const len = validateSize(a, b);
     if (Type.isBoolean(len))
         return len;
+    // There might be a better more performant way to do this, but for the moment, this
+    // works quite well.
     a = sort(a, comparer);
     b = sort(b, comparer);
     for (let i = 0; i < len; i++) {

@@ -1,6 +1,20 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * .NET Reference: http://referencesource.microsoft.com/#mscorlib/system/text/StringBuilder.cs
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var Types_1 = require("../Types");
 var VOID0 = void 0;
+/*****************************
+ * IMPORTANT NOTES ABOUT PERFORMANCE:
+ * http://jsperf.com/string-concatenation-looped
+ * http://jsperf.com/adding-strings-to-an-array
+ * http://jsperf.com/string-concatenation-versus-array-operations-with-join
+ *
+ * It is clearly inefficient to use a StringBuilder or LinkedList to build a string when you have a small set of string portions.
+ * StringBuilder will really show it's benefit likely somewhere above 1000 items.
+ *****************************/
 var StringBuilder = (function () {
     function StringBuilder() {
         var initial = [];
@@ -22,7 +36,7 @@ var StringBuilder = (function () {
                     item = item.toString();
                     break;
             }
-            _._partArray.push(item);
+            _._partArray.push(item); // Other primitive types can keep their format since a number or boolean is a smaller footprint than a string.
         }
     };
     StringBuilder.prototype.appendThese = function (items) {
@@ -57,6 +71,14 @@ var StringBuilder = (function () {
         return _;
     };
     Object.defineProperty(StringBuilder.prototype, "isEmpty", {
+        /** /// These methods can only efficiently be added if not using a single array.
+         insert(index: number, value: string, count: number = 1): StringBuilder
+         {
+        }
+         remove(startIndex:number, length:number): StringBuilder
+         {
+        }
+         /**/
         get: function () {
             return this._partArray.length === 0;
         },

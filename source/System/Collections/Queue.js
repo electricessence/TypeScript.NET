@@ -198,9 +198,13 @@
             var _ = this;
             return _._array[(_._head + index) % _._capacity];
         };
-        Queue.prototype.peek = function () {
-            if (this._size == 0)
-                throw new InvalidOperationException_1.InvalidOperationException("Cannot call peek on an empty queue.");
+        Queue.prototype.peek = function (throwIfEmpty) {
+            if (throwIfEmpty === void 0) { throwIfEmpty = false; }
+            if (this._size == 0) {
+                if (throwIfEmpty)
+                    throw new InvalidOperationException_1.InvalidOperationException("Cannot call peek on an empty queue.");
+                return VOID0;
+            }
             return this._array[this._head];
         };
         Queue.prototype.trimExcess = function (threshold) {

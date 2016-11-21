@@ -1,4 +1,8 @@
 "use strict";
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 var LinkedNodeList_1 = require("./LinkedNodeList");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var Enumerator_1 = require("./Enumeration/Enumerator");
@@ -7,6 +11,7 @@ var dispose_1 = require("../Disposable/dispose");
 var Compare_1 = require("../Compare");
 var CollectionBase_1 = require("./CollectionBase");
 var extends_1 = require("../../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
 var OTHER = 'other';
@@ -73,7 +78,8 @@ var SetBase = (function (_super) {
         else {
             count = dispose_1.using(this.newUsing(), function (o) {
                 Enumerator_1.forEach(other, function (v) {
-                    o.add(v);
+                    o.add(v); // We have to add to another set in order to filter out duplicates.
+                    // contains == false will cause this to exit.
                     return result = _this.contains(v);
                 });
                 return o.getCount();

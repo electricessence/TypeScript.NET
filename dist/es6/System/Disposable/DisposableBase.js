@@ -1,3 +1,7 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import { ObjectDisposedException } from "./ObjectDisposedException";
 export class DisposableBase {
     constructor(__finalizer) {
@@ -15,9 +19,11 @@ export class DisposableBase {
     dispose() {
         const _ = this;
         if (!_.__wasDisposed) {
+            // Preemptively set wasDisposed in order to prevent repeated disposing.
+            // NOTE: in true multi-threaded scenarios, this needs to be synchronized.
             _.__wasDisposed = true;
             try {
-                _._onDispose();
+                _._onDispose(); // Protected override.
             }
             finally {
                 if (_.__finalizer) {
@@ -27,6 +33,7 @@ export class DisposableBase {
             }
         }
     }
+    // Placeholder for overrides.
     _onDispose() { }
 }
 export default DisposableBase;

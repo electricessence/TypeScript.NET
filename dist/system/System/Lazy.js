@@ -19,7 +19,9 @@ System.register(["./ResolverBase", "../extends"], function (exports_1, context_1
              * @author electricessence / https://github.com/electricessence/
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              */
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
+            // We need a non-resettable lazy to ensure it can be passed safely around.
             Lazy = (function (_super) {
                 __extends(Lazy, _super);
                 function Lazy(valueFactory, trapExceptions, allowReset) {

@@ -7,6 +7,8 @@
     }
 })(["require", "exports", "QUnit", "./Arrays/_all", "./Collections/_all", "./Linq/_all", "./Uri", "./Integer"], function (require, exports) {
     "use strict";
+    ///<reference types="qunit"/>
+    ///<amd-dependency path="QUnit"/>
     var _all_1 = require("./Arrays/_all");
     var _all_2 = require("./Collections/_all");
     var _all_3 = require("./Linq/_all");

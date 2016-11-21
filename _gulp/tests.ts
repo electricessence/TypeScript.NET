@@ -9,14 +9,12 @@ const renderer = BuildHelper
 		target: Target.ES5,
 		module: Module.UMD,
 		noEmitHelpers: false,
-		removeComments: true,
 		sourceMap: true,
 		moduleResolution:"node"
 	});
 
 
 gulp.task(
-	// Can't figure out why the TSC doesn't work the same for this folder as it does for the source folder. :(
 	TASK.TYPESCRIPT_QUNIT,
 	[
 		TASK.DIST_AMD
@@ -33,16 +31,9 @@ gulp.task(
 		TASK.DIST_COMMONJS
 	],
 	()=> renderer
+		//.target(Target.ES6)
 		.at('./tests/mocha')
 		.init()
 		.module(Module.COMMONJS)
 		.execute()
-);
-
-
-gulp.task(
-	TASK.BUILD + ".tests", [
-		TASK.TYPESCRIPT_QUNIT,
-		TASK.TYPESCRIPT_MOCHA
-	]
 );

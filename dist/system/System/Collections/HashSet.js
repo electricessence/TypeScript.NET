@@ -29,6 +29,7 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
             }
         ],
         execute: function () {
+            // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             VOID0 = void 0;
             HashSet = (function (_super) {
@@ -56,9 +57,11 @@ System.register(["../Types", "./SetBase", "../Exceptions/ArgumentNullException",
                     var key = _._keyGenerator(item);
                     if (!t || t[key] === VOID0) {
                         if (!r) {
+                            //noinspection JSUnusedAssignment
                             _._registry = r = {};
                         }
                         if (!t) {
+                            //noinspection JSUnusedAssignment
                             r[type] = t = {};
                         }
                         var node = { value: item };

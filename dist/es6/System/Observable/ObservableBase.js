@@ -1,4 +1,12 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Based upon .NET source.
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ * C# Source: http://referencesource.microsoft.com/#mscorlib/system/IObserver.cs
+ */
 import { SubscribableBase } from "./SubscribableBase";
+//noinspection JSUnusedLocalSymbols
+// Can be used as a base class, mixin, or simply reference on how to implement the pattern.
 export class ObservableBase extends SubscribableBase {
     _onNext(value) {
         processAction(this._getSubscribers(), s => { s.onNext && s.onNext(value); });
@@ -38,6 +46,7 @@ function processAction(observers, handler) {
         }
         catch (ex) {
             observersErrors = observersErrors || [];
+            // Don't let one error prevent others from recieving information.
             observersErrors.push({ observer: s, ex: ex });
         }
     }

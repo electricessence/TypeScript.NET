@@ -7,7 +7,7 @@ var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
 var Functions_1 = require("../../../dist/commonjs/System/Functions");
 var EmptyEnumerator_1 = require("../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator");
 var List_1 = require("../../../dist/commonjs/System/Collections/List");
-var source = Object.freeze([
+var source = [
     {
         a: 1,
         b: 2,
@@ -73,7 +73,10 @@ var source = Object.freeze([
         b: 3,
         c: "f"
     }
-]);
+];
+Object.freeze(source);
+// Compile test:
+//noinspection JSUnusedLocalSymbols
 function compileTest() {
     var list = new List_1.List(source);
     return list.linq.orderBy(function (v) { return v.a; })
@@ -112,18 +115,20 @@ describe(".memoize()", function () {
     it("should cache the values as it goes for reuse later", function () {
         var source = sourceEnumerable;
         var A = source.memoize();
-        source.memoize().dispose();
+        source.memoize().dispose(); // Covers else condition.
         var sum = A.sum(function (o) { return o.a; });
         assert.equal(sum, source.sum(function (o) { return o.a; }), "Values must be equal after memoize pass 1.");
         sum = A.sum(function (o) { return o.b; });
         assert.equal(sum, source.sum(function (o) { return o.b; }), "Values must be equal after memoize pass 2.");
-        A.dispose();
+        A.dispose(); // Disposing this memoized source should not affect other tests.
         assert.throws(function () {
+            // Should throw after disposal.
             A.force();
         });
         A = sourceArrayEnumerable.memoize();
         A.dispose();
         assert.throws(function () {
+            // Should throw after disposal.
             A.force();
         });
     });
@@ -349,6 +354,7 @@ describe(".takeExceptLast(count)", function () {
         test(sourceEnumerable);
     });
 });
+// Inverse of takeExceptLast
 describe(".skipToLast(count)", function () {
     it("should take the last items based on the count", function () {
         var test = function (s) {
@@ -704,11 +710,13 @@ describe(".share()", function () {
         assert.equal(e2.current, "b");
     });
 });
-var mathTree = sourceEnumerable.traverseDepthFirst(function (e) { return e.children; }).throwWhenEmpty(), mathTreeArray = mathTree.select(function (e) { return e.b; }).toArray();
+var mathTree = sourceEnumerable.traverseDepthFirst(function (e) { return e.children; }).throwWhenEmpty(), // Add throwWhenEmpty to validate safe case.
+mathTreeArray = mathTree.select(function (e) { return e.b; }).toArray();
 describe(".throwWhenEmpty()", function () {
     assert.throws(function () {
         var e = Linq_1.default.empty().throwWhenEmpty();
-        var c = e.max();
+        //noinspection JSUnusedLocalSymbols
+        var c = e.max(); // Add this for a compile check.
     });
 });
 describe(".sum()", function () {
@@ -751,6 +759,7 @@ describe(".quotient()", function () {
 });
 describe(".average()", function () {
     it("should render the average value", function () {
+        //noinspection JSUnusedLocalSymbols
         var tree = sourceEnumerable
             .traverseDepthFirst(function (e) { return e.children; });
         var v = Procedure.average(mathTreeArray);

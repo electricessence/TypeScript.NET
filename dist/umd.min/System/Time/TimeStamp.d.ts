@@ -1,6 +1,9 @@
 import { ITimeStamp } from "./ITimeStamp";
 import { IDateTime } from "./IDateTime";
 import { Gregorian } from "./Calendars";
+/**
+ * An alternative to Date or DateTime.  Is a model representing the exact date and time.
+ */
 export declare class TimeStamp implements ITimeStamp, IDateTime {
     readonly year: number;
     readonly month: Gregorian.Month;

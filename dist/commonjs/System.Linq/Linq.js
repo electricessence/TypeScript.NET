@@ -1,4 +1,9 @@
 "use strict";
+/*!
+* @author electricessence / https://github.com/electricessence/
+* Original: http://linqjs.codeplex.com/
+* Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+*/
 var Compare_1 = require("../System/Compare");
 var Arrays = require("../System/Collections/Array/Compare");
 var ArrayUtility = require("../System/Collections/Array/Utility");
@@ -23,36 +28,51 @@ var ArgumentOutOfRangeException_1 = require("../System/Exceptions/ArgumentOutOfR
 var IndexEnumerator_1 = require("../System/Collections/Enumeration/IndexEnumerator");
 var IteratorEnumerator_1 = require("../System/Collections/Enumeration/IteratorEnumerator");
 var extends_1 = require("../extends");
+// noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
-var INVALID_DEFAULT = {};
+// #region Local Constants.
+var INVALID_DEFAULT = {}; // create a private unique instance for referencing.
 var VOID0 = void 0;
 var NULL = null;
 function BREAK() {
-    return 0;
+    return 0 /* Break */;
 }
 function RETURN() {
-    return 1;
+    return 1 /* Return */;
 }
 function isNotNullOrUndefined(e) {
     return e !== null && e !== VOID0;
 }
+// Leave internal to avoid accidental overwriting.
 var LinqFunctions = (function (_super) {
     __extends(LinqFunctions, _super);
     function LinqFunctions() {
         return _super.apply(this, arguments) || this;
     }
+    // noinspection JSMethodCanBeStatic
     LinqFunctions.prototype.Greater = function (a, b) {
         return a > b ? a : b;
     };
+    // noinspection JSMethodCanBeStatic
     LinqFunctions.prototype.Lesser = function (a, b) {
         return a < b ? a : b;
     };
     return LinqFunctions;
 }(Functions_1.Functions));
 var Functions = Object.freeze(new LinqFunctions());
+// For re-use as a factory.
 function getEmptyEnumerator() {
     return EmptyEnumerator_1.EmptyEnumerator;
 }
+// #endregion
+/*
+ * NOTE: About InfiniteEnumerable<T> and Enumerable<T>.
+ * There may seem like there's extra overrides here and they may seem unnecessary.
+ * But after closer inspection you'll see the type chain is retained and
+ * infinite enumerables are prevented from having features that finite ones have.
+ *
+ * I'm not sure if it's the best option to just use overrides, but it honors the typing properly.
+ */
 var InfiniteEnumerable = (function (_super) {
     __extends(InfiniteEnumerable, _super);
     function InfiniteEnumerable(_enumeratorFactory, finalizer) {
@@ -69,14 +89,19 @@ var InfiniteEnumerable = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    // #region IEnumerable<T> Implementation...
     InfiniteEnumerable.prototype.getEnumerator = function () {
         this.throwIfDisposed();
         return this._enumeratorFactory();
     };
+    // #endregion
+    // #region IDisposable override...
     InfiniteEnumerable.prototype._onDispose = function () {
-        _super.prototype._onDispose.call(this);
+        _super.prototype._onDispose.call(this); // Just in case.
         this._enumeratorFactory = null;
     };
+    // #endregion
+    // Return a default (unfiltered) enumerable.
     InfiniteEnumerable.prototype.asEnumerable = function () {
         var _ = this;
         _.throwIfDisposed();
@@ -86,7 +111,7 @@ var InfiniteEnumerable = (function (_super) {
         if (isEndless === void 0) { isEndless = this.isEndless; }
         var _ = this;
         _.throwIfDisposed();
-        var isE = isEndless || undefined;
+        var isE = isEndless || undefined; // In case it's null.
         if (!action)
             throw new ArgumentNullException_1.ArgumentNullException("action");
         return new Enumerable(function () {
@@ -98,14 +123,15 @@ var InfiniteEnumerable = (function (_super) {
                     initializer();
                 index = 0;
                 enumerator = _.getEnumerator();
+                // May need a way to propagate isEndless
             }, function (yielder) {
                 throwIfDisposed(!action);
                 while (enumerator.moveNext()) {
                     var c = enumerator.current;
                     var actionResult = action(c, index++);
-                    if (actionResult === false || actionResult === 0)
+                    if (actionResult === false || actionResult === 0 /* Break */)
                         return yielder.yieldBreak();
-                    if (actionResult !== 2)
+                    if (actionResult !== 2 /* Skip */)
                         return yielder.yieldReturn(c);
                 }
                 if (onComplete)
@@ -114,7 +140,10 @@ var InfiniteEnumerable = (function (_super) {
             }, function () {
                 dispose_1.dispose(enumerator);
             }, isE);
-        }, function () {
+        }, 
+        // Using a finalizer value reduces the chance of a circular reference
+        // since we could simply reference the enumeration and check e.wasDisposed.
+        function () {
             action = NULL;
         }, isE);
     };
@@ -124,6 +153,7 @@ var InfiniteEnumerable = (function (_super) {
             .getEnumerator()
             .moveNext();
     };
+    // #region Indexing/Paging methods.
     InfiniteEnumerable.prototype.skip = function (count) {
         var _ = this;
         _.throwIfDisposed();
@@ -140,8 +170,10 @@ var InfiniteEnumerable = (function (_super) {
         if (!isFinite(count))
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, 'Must be finite.');
         Integer_1.Integer.assert(count, "count");
+        // Once action returns false, the enumeration will stop.
         return _.doAction(function (element, index) { return index < count; }, null, false);
     };
+    // #region Single Value Return...
     InfiniteEnumerable.prototype.elementAt = function (index) {
         var v = this.elementAtOrDefault(index, INVALID_DEFAULT);
         if (v === INVALID_DEFAULT)
@@ -163,6 +195,15 @@ var InfiniteEnumerable = (function (_super) {
             return defaultValue;
         });
     };
+    /* Note: Unlike previous implementations, you could pass a predicate into these methods.
+     * But since under the hood it ends up calling .where(predicate) anyway,
+     * it may be better to remove this to allow for a cleaner signature/override.
+     * JavaScript/TypeScript does not easily allow for a strict method interface like C#.
+     * Having to write extra override logic is error prone and confusing to the consumer.
+     * Removing the predicate here may also cause the consumer of this method to think more about how they structure their query.
+     * The end all difference is that the user must declare .where(predicate) before .first(), .single(), or .last().
+     * Otherwise there would need to be much more code to handle these cases (.first(predicate), etc);
+     * */
     InfiniteEnumerable.prototype.first = function () {
         var v = this.firstOrDefault(INVALID_DEFAULT);
         if (v === INVALID_DEFAULT)
@@ -211,11 +252,12 @@ var InfiniteEnumerable = (function (_super) {
         if (resultSelector === void 0) { resultSelector = Functions.Identity; }
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        var isEndless = _._isEndless;
+        var isEndless = _._isEndless; // Is endless is not affirmative if false.
         return new Enumerable(function () {
+            // Dev Note: May want to consider using an actual stack and not an array.
             var enumeratorStack = [];
             var enumerator;
-            var len;
+            var len; // Avoid using push/pop since they query .length every time and can be slower.
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 throwIfDisposed(disposed);
                 enumerator = _.getEnumerator();
@@ -276,15 +318,22 @@ var InfiniteEnumerable = (function (_super) {
             ? this.select(function (value, i) { return seed = i ? func(seed, value, i) : value; })
             : this.select(function (value, i) { return seed = func(seed, value, i); }));
     };
+    // #endregion
     InfiniteEnumerable.prototype.select = function (selector) {
         return this._filterSelected(selector);
     };
+    /*
+    public static IEnumerable<TResult> SelectMany<TSource, TCollection, TResult>(
+        this IEnumerable<TSource> source,
+        Func<TSource, IEnumerable<TCollection>> collectionSelector,
+        Func<TSource, TCollection, TResult> resultSelector)
+     */
     InfiniteEnumerable.prototype._selectMany = function (collectionSelector, resultSelector) {
         var _ = this;
         _.throwIfDisposed();
         if (!collectionSelector)
             throw new ArgumentNullException_1.ArgumentNullException("collectionSelector");
-        var isEndless = _._isEndless;
+        var isEndless = _._isEndless; // Do second enumeration, it will be indeterminate if false.
         if (!resultSelector)
             resultSelector = function (a, b) { return b; };
         return new Enumerable(function () {
@@ -298,17 +347,22 @@ var InfiniteEnumerable = (function (_super) {
                 index = 0;
             }, function (yielder) {
                 throwIfDisposed(!collectionSelector);
+                // Just started, and nothing to enumerate? End.
                 if (middleEnumerator === VOID0 && !enumerator.moveNext())
                     return false;
+                // moveNext has been called at least once...
                 do {
+                    // Initialize middle if there isn't one.
                     if (!middleEnumerator) {
                         var middleSeq = collectionSelector(enumerator.current, index++);
+                        // Collection is null?  Skip it...
                         if (!middleSeq)
                             continue;
                         middleEnumerator = enumUtil.from(middleSeq);
                     }
                     if (middleEnumerator.moveNext())
                         return yielder.yieldReturn(resultSelector(enumerator.current, middleEnumerator.current));
+                    // else no more in this middle?  Then clear and reset for next...
                     middleEnumerator.dispose();
                     middleEnumerator = null;
                 } while (enumerator.moveNext());
@@ -420,6 +474,7 @@ var InfiniteEnumerable = (function (_super) {
     InfiniteEnumerable.prototype.distinct = function (compareSelector) {
         return this.except(NULL, compareSelector);
     };
+    // [0,0,0,1,1,1,2,2,2,0,0,0,1,1] results in [0,1,2,0,1];
     InfiniteEnumerable.prototype.distinctUntilChanged = function (compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
         var _ = this;
@@ -453,6 +508,11 @@ var InfiniteEnumerable = (function (_super) {
             disposed = true;
         }, isEndless);
     };
+    /**
+     * Returns a single default value if empty.
+     * @param defaultValue
+     * @returns {Enumerable}
+     */
     InfiniteEnumerable.prototype.defaultIfEmpty = function (defaultValue) {
         var _ = this;
         var disposed = !_.throwIfDisposed();
@@ -537,6 +597,7 @@ var InfiniteEnumerable = (function (_super) {
             });
         });
     };
+    // #region Join Methods
     InfiniteEnumerable.prototype.join = function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
         var _ = this;
@@ -603,12 +664,13 @@ var InfiniteEnumerable = (function (_super) {
             var enumerator;
             var queue;
             return new EnumeratorBase_1.EnumeratorBase(function () {
+                // 1) First get our values...
                 enumerator = _.getEnumerator();
                 queue = new Queue_1.Queue(enumerables);
             }, function (yielder) {
                 while (true) {
                     while (!enumerator && queue.tryDequeue(function (value) {
-                        enumerator = enumUtil.from(value);
+                        enumerator = enumUtil.from(value); // 4) Keep going and on to step 2.  Else fall through to yieldBreak().
                     })) { }
                     if (enumerator && enumerator.moveNext())
                         return yielder.yieldReturn(enumerator.current);
@@ -620,7 +682,7 @@ var InfiniteEnumerable = (function (_super) {
                     return yielder.yieldBreak();
                 }
             }, function () {
-                dispose_1.dispose(enumerator, queue);
+                dispose_1.dispose(enumerator, queue); // Just in case this gets disposed early.
             }, isEndless);
         }, null, isEndless);
     };
@@ -641,7 +703,7 @@ var InfiniteEnumerable = (function (_super) {
             var keys;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 firstEnumerator = _.getEnumerator();
-                keys = new Dictionary_1.Dictionary(compareSelector);
+                keys = new Dictionary_1.Dictionary(compareSelector); // Acting as a HashSet.
             }, function (yielder) {
                 var current;
                 if (secondEnumerator === VOID0) {
@@ -707,30 +769,33 @@ var InfiniteEnumerable = (function (_super) {
         return new Enumerable(function () {
             var buffer, mode, enumerator, alternateEnumerator;
             return new EnumeratorBase_1.EnumeratorBase(function () {
-                alternateEnumerator = new ArrayEnumerator_1.ArrayEnumerator(Enumerable.toArray(sequence));
+                // Instead of recalling getEnumerator every time, just reset the existing one.
+                alternateEnumerator = new ArrayEnumerator_1.ArrayEnumerator(Enumerable.toArray(sequence)); // Freeze
                 enumerator = _.getEnumerator();
                 var hasAtLeastOne = enumerator.moveNext();
                 mode = hasAtLeastOne
-                    ? 1
-                    : 0;
+                    ? 1 /* Return */
+                    : 0 /* Break */;
                 if (hasAtLeastOne)
                     buffer = enumerator.current;
             }, function (yielder) {
                 switch (mode) {
-                    case 0:
+                    case 0 /* Break */:
                         return yielder.yieldBreak();
-                    case 2:
+                    case 2 /* Skip */:
                         if (alternateEnumerator.moveNext())
                             return yielder.yieldReturn(alternateEnumerator.current);
                         alternateEnumerator.reset();
-                        mode = 1;
+                        mode = 1 /* Return */;
                         break;
                 }
                 var latest = buffer;
+                // Set up the next round...
+                // Is there another one?  Set the buffer and setup instruct for the next one to be the alternate.
                 var another = enumerator.moveNext();
                 mode = another
-                    ? 2
-                    : 0;
+                    ? 2 /* Skip */
+                    : 0 /* Break */;
                 if (another)
                     buffer = enumerator.current;
                 return yielder.yieldReturn(latest);
@@ -749,6 +814,7 @@ var InfiniteEnumerable = (function (_super) {
         }
         return this.alternateMultiple(sequence);
     };
+    // #region Error Handling
     InfiniteEnumerable.prototype.catchError = function (handler) {
         var _ = this;
         var disposed = !_.throwIfDisposed();
@@ -799,6 +865,7 @@ var InfiniteEnumerable = (function (_super) {
             });
         });
     };
+    // #endregion
     InfiniteEnumerable.prototype.buffer = function (size) {
         if (size < 1 || !isFinite(size))
             throw new Error("Invalid buffer size.");
@@ -836,6 +903,12 @@ var InfiniteEnumerable = (function (_super) {
     return InfiniteEnumerable;
 }(DisposableBase_1.DisposableBase));
 exports.InfiniteEnumerable = InfiniteEnumerable;
+/**
+ * Enumerable<T> is a wrapper class that allows more primitive enumerables to exhibit LINQ behavior.
+ *
+ * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
+ * In this case, we use Enumerable<T> as the underlying class that is being chained.
+ */
 var Enumerable = (function (_super) {
     __extends(Enumerable, _super);
     function Enumerable(enumeratorFactory, finalizer, isEndless) {
@@ -844,11 +917,13 @@ var Enumerable = (function (_super) {
         _this._disposableObjectName = "Enumerable";
         return _this;
     }
+    // Return a default (unfiltered) enumerable.
     Enumerable.prototype.asEnumerable = function () {
         var _ = this;
         _.throwIfDisposed();
         return new Enumerable(function () { return _.getEnumerator(); });
     };
+    // #region Indexing/Paging methods.
     Enumerable.prototype.skip = function (count) {
         return _super.prototype.skip.call(this, count);
     };
@@ -856,8 +931,8 @@ var Enumerable = (function (_super) {
         this.throwIfDisposed();
         return this.doAction(function (element, index) {
             return predicate(element, index)
-                ? 2
-                : 1;
+                ? 2 /* Skip */
+                : 1 /* Return */;
         });
     };
     Enumerable.prototype.takeWhile = function (predicate) {
@@ -866,10 +941,12 @@ var Enumerable = (function (_super) {
             throw new ArgumentNullException_1.ArgumentNullException('predicate');
         return this.doAction(function (element, index) {
             return predicate(element, index)
-                ? 1
-                : 0;
-        }, null, null);
+                ? 1 /* Return */
+                : 0 /* Break */;
+        }, null, null // We don't know the state if it is endless or not.
+        );
     };
+    // Is like the inverse of take While with the ability to return the value identified by the predicate.
     Enumerable.prototype.takeUntil = function (predicate, includeUntilValue) {
         this.throwIfDisposed();
         if (!predicate)
@@ -877,24 +954,26 @@ var Enumerable = (function (_super) {
         if (!includeUntilValue)
             return this.doAction(function (element, index) {
                 return predicate(element, index)
-                    ? 0
-                    : 1;
-            }, null, null);
+                    ? 0 /* Break */
+                    : 1 /* Return */;
+            }, null, null // We don't know the state if it is endless or not.
+            );
         var found = false;
         return this.doAction(function (element, index) {
             if (found)
-                return 0;
+                return 0 /* Break */;
             found = predicate(element, index);
-            return 1;
+            return 1 /* Return */;
         }, function () {
             found = false;
-        }, null);
+        }, null // We don't know the state if it is endless or not.
+        );
     };
     Enumerable.prototype.traverseBreadthFirst = function (childrenSelector, resultSelector) {
         if (resultSelector === void 0) { resultSelector = Functions.Identity; }
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        var isEndless = _._isEndless;
+        var isEndless = _._isEndless; // Is endless is not affirmative if false.
         return new Enumerable(function () {
             var enumerator;
             var nestLevel = 0;
@@ -943,9 +1022,16 @@ var Enumerable = (function (_super) {
         if (!action)
             throw new ArgumentNullException_1.ArgumentNullException("action");
         Enumerator_1.throwIfEndless(_.isEndless);
+        /*
+        // It could be just as easy to do the following:
+        return enumUtil.forEach(_, action, max);
+        // But to be more active about checking for disposal, we use this instead:
+        */
+        // Return value of action can be anything, but if it is (===) false then the enumUtil.forEach will discontinue.
         return max > 0 ? dispose_1.using(_.getEnumerator(), function (e) {
             Enumerator_1.throwIfEndless(!isFinite(max) && e.isEndless);
             var i = 0;
+            // It is possible that subsequently 'action' could cause the enumeration to dispose, so we have to check each time.
             while (max > i && _.throwIfDisposed() && e.moveNext()) {
                 if (action(e.current, i++) === false)
                     break;
@@ -953,6 +1039,7 @@ var Enumerable = (function (_super) {
             return i;
         }) : 0;
     };
+    // #region Conversion Methods
     Enumerable.prototype.toArray = function (predicate) {
         return predicate
             ? this.where(predicate).toArray()
@@ -965,6 +1052,7 @@ var Enumerable = (function (_super) {
         if (!target)
             throw new ArgumentNullException_1.ArgumentNullException("target");
         Integer_1.Integer.assertZeroOrGreater(index);
+        // If not exposing an action that could cause dispose, then use enumUtil.forEach utility instead.
         enumUtil.forEach(this, function (x, i) {
             target[i + index] = x;
         }, count);
@@ -1006,6 +1094,7 @@ var Enumerable = (function (_super) {
             .toArray()
             .join(separator);
     };
+    // #endregion
     Enumerable.prototype.takeExceptLast = function (count) {
         if (count === void 0) { count = 1; }
         var _ = this;
@@ -1023,8 +1112,11 @@ var Enumerable = (function (_super) {
                 q = new Queue_1.Queue();
             }, function (yielder) {
                 while (enumerator.moveNext()) {
+                    // Add the next one to the queue.
                     q.enqueue(enumerator.current);
+                    // Did we reach our quota?
                     if (q.count > c)
+                        // Okay then, start returning results.
                         return yielder.yieldReturn(q.dequeue());
                 }
                 return false;
@@ -1040,10 +1132,12 @@ var Enumerable = (function (_super) {
         if (!isFinite(count))
             return _;
         Integer_1.Integer.assert(count, "count");
+        // This sets up the query so nothing is done until move next is called.
         return _.reverse()
             .take(count)
             .reverse();
     };
+    // To help with type guarding.
     Enumerable.prototype.select = function (selector) {
         return _super.prototype.select.call(this, selector);
     };
@@ -1057,7 +1151,7 @@ var Enumerable = (function (_super) {
     Enumerable.prototype.reverse = function () {
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        Enumerator_1.throwIfEndless(_._isEndless);
+        Enumerator_1.throwIfEndless(_._isEndless); // Cannot reverse an endless collection...
         return new Enumerable(function () {
             var buffer;
             var index = 0;
@@ -1076,7 +1170,7 @@ var Enumerable = (function (_super) {
     Enumerable.prototype.shuffle = function () {
         var _ = this;
         var disposed = !_.throwIfDisposed();
-        Enumerator_1.throwIfEndless(_._isEndless);
+        Enumerator_1.throwIfEndless(_._isEndless); // Cannot shuffle an endless collection...
         return new Enumerable(function () {
             var buffer;
             var capacity;
@@ -1086,12 +1180,13 @@ var Enumerable = (function (_super) {
                 buffer = _.toArray();
                 capacity = len = buffer.length;
             }, function (yielder) {
+                // Avoid using major array operations like .slice();
                 if (!len)
                     return yielder.yieldBreak();
                 var selectedIndex = Integer_1.Integer.random(len);
                 var selectedValue = buffer[selectedIndex];
-                buffer[selectedIndex] = buffer[--len];
-                buffer[len] = NULL;
+                buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
+                buffer[len] = NULL; // clear possible reference.
                 if (len % 32 == 0)
                     buffer.length = len;
                 return yielder.yieldReturn(selectedValue);
@@ -1116,6 +1211,7 @@ var Enumerable = (function (_super) {
                 });
         return count;
     };
+    // Akin to '.every' on an array.
     Enumerable.prototype.all = function (predicate) {
         if (!predicate)
             throw new ArgumentNullException_1.ArgumentNullException("predicate");
@@ -1123,24 +1219,29 @@ var Enumerable = (function (_super) {
         this.forEach(function (x, i) {
             if (!predicate(x, i)) {
                 result = false;
-                return false;
+                return false; // break
             }
         });
         return result;
     };
+    // 'every' has been added here for parity/compatibility with an array.
     Enumerable.prototype.every = function (predicate) {
         return this.all(predicate);
     };
+    // Akin to '.some' on an array.
     Enumerable.prototype.any = function (predicate) {
         if (!predicate)
             return _super.prototype.any.call(this);
         var result = false;
+        // Splitting the forEach up this way reduces iterative processing.
+        // forEach handles the generation and disposal of the enumerator.
         this.forEach(function (x, i) {
-            result = predicate(x, i);
+            result = predicate(x, i); // false = not found and therefore it should continue.  true = found and break;
             return !result;
         });
         return result;
     };
+    // 'some' has been added here for parity/compatibility with an array.
     Enumerable.prototype.some = function (predicate) {
         return this.any(predicate);
     };
@@ -1151,6 +1252,9 @@ var Enumerable = (function (_super) {
         }
         return this.any(function (v) { return Compare_1.areEqual(v, value); });
     };
+    // Originally has an overload for a predicate,
+    // but that's a bad idea since this could be an enumeration of functions and therefore fail the intent.
+    // Better to chain a where statement first to be more explicit.
     Enumerable.prototype.indexOf = function (value, compareSelector) {
         var found = -1;
         this.forEach(compareSelector
@@ -1163,6 +1267,7 @@ var Enumerable = (function (_super) {
                 }
             :
                 function (element, i) {
+                    // Why?  Because NaN doesn't equal NaN. :P
                     if (Compare_1.areEqual(element, value, true)) {
                         found = i;
                         return false;
@@ -1224,6 +1329,7 @@ var Enumerable = (function (_super) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         this.throwIfDisposed();
         return dispose_1.using(this.getEnumerator(), function (e1) { return dispose_1.using(enumUtil.from(second), function (e2) {
+            // if both are endless, this will never evaluate.
             Enumerator_1.throwIfEndless(e1.isEndless && e2.isEndless);
             while (e1.moveNext()) {
                 if (!e2.moveNext() || !equalityComparer(e1.current, e2.current))
@@ -1236,31 +1342,73 @@ var Enumerable = (function (_super) {
         this.throwIfDisposed();
         return _super.prototype.ofType.call(this, type);
     };
+    // #region Ordering Methods
     Enumerable.prototype.orderBy = function (keySelector) {
         if (keySelector === void 0) { keySelector = Functions.Identity; }
         this.throwIfDisposed();
-        return new OrderedEnumerable(this, keySelector, 1);
+        return new OrderedEnumerable(this, keySelector, 1 /* Ascending */);
     };
     Enumerable.prototype.orderUsing = function (comparison) {
         this.throwIfDisposed();
-        return new OrderedEnumerable(this, null, 1, null, comparison);
+        return new OrderedEnumerable(this, null, 1 /* Ascending */, null, comparison);
     };
     Enumerable.prototype.orderUsingReversed = function (comparison) {
         this.throwIfDisposed();
-        return new OrderedEnumerable(this, null, -1, null, comparison);
+        return new OrderedEnumerable(this, null, -1 /* Descending */, null, comparison);
     };
     Enumerable.prototype.orderByDescending = function (keySelector) {
         if (keySelector === void 0) { keySelector = Functions.Identity; }
         this.throwIfDisposed();
-        return new OrderedEnumerable(this, keySelector, -1);
+        return new OrderedEnumerable(this, keySelector, -1 /* Descending */);
     };
+    /*
+         weightedSample(weightSelector) {
+         weightSelector = Utils.createLambda(weightSelector);
+         var source = this;
+         return new Enumerable<T>(() => {
+         var sortedByBound;
+         var totalWeight = 0;
+         return new EnumeratorBase<T>(
+         () => {
+         sortedByBound = source
+         .choose(function (x) {
+         var weight = weightSelector(x);
+         if (weight <= 0) return null; // ignore 0
+         totalWeight += weight;
+         return { value: x, bound: totalWeight }
+         })
+         .toArray();
+         },
+         () => {
+         if (sortedByBound.length > 0) {
+         var draw = (Math.random() * totalWeight) + 1;
+         var lower = -1;
+         var upper = sortedByBound.length;
+         while (upper - lower > 1) {
+         var index = ((lower + upper) / 2);
+         if (sortedByBound[index].bound >= draw) {
+         upper = index;
+         }
+         else {
+         lower = index;
+         }
+         }
+         return (<any>this).yieldReturn(sortedByBound[upper].value);
+         }
+         return (<any>this).yieldBreak();
+         },
+         Functions.Blank);
+         });
+         }
+         */
+    // #endregion
     Enumerable.prototype.buffer = function (size) {
         return _super.prototype.buffer.call(this, size);
     };
     Enumerable.prototype.groupBy = function (keySelector, elementSelector, compareSelector) {
         var _this = this;
         if (!elementSelector)
-            elementSelector = Functions.Identity;
+            elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
         return new Enumerable(function () { return _this
             .toLookup(keySelector, elementSelector, compareSelector)
             .getEnumerator(); });
@@ -1270,7 +1418,7 @@ var Enumerable = (function (_super) {
         if (compareSelector === void 0) { compareSelector = Functions.Identity; }
         var _ = this;
         if (!elementSelector)
-            elementSelector = Functions.Identity;
+            elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
         return new Enumerable(function () {
             var enumerator;
             var key;
@@ -1344,6 +1492,7 @@ var Enumerable = (function (_super) {
             ? NaN
             : (sum / count);
     };
+    // If using numbers, it may be useful to call .takeUntil(v=>v==Infinity,true) before calling max. See static versions for numbers.
     Enumerable.prototype.max = function () {
         return this.aggregate(Functions.Greater);
     };
@@ -1358,10 +1507,12 @@ var Enumerable = (function (_super) {
         if (keySelector === void 0) { keySelector = Functions.Identity; }
         return this.aggregate(function (a, b) { return (keySelector(a) < keySelector(b)) ? a : b; });
     };
+    // Addition...  Only works with numerical enumerations.
     Enumerable.prototype.sum = function (selector) {
         if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
         var sum = 0;
-        var sumInfinite = 0;
+        // This allows for infinity math that doesn't destroy the other values.
+        var sumInfinite = 0; // Needs more investigation since we are really trying to retain signs.
         this.forEach(function (x, i) {
             var value = selector(x, i);
             if (isNaN(value)) {
@@ -1378,6 +1529,7 @@ var Enumerable = (function (_super) {
         });
         return isNaN(sum) ? NaN : (sumInfinite ? (sumInfinite * Infinity) : sum);
     };
+    // Multiplication...
     Enumerable.prototype.product = function (selector) {
         if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
         var result = 1, exists = false;
@@ -1389,13 +1541,20 @@ var Enumerable = (function (_super) {
                 return false;
             }
             if (value == 0) {
-                result = 0;
+                result = 0; // Multiplying by zero will always end in zero.
                 return false;
             }
+            // Multiplication can never recover from infinity and simply must retain signs.
+            // You could cancel out infinity with 1/infinity but no available representation exists.
             result *= value;
         });
         return (exists && isNaN(result)) ? NaN : result;
     };
+    /**
+     * Takes the first number and divides it by all following.
+     * @param selector
+     * @returns {number}
+     */
     Enumerable.prototype.quotient = function (selector) {
         if (selector === void 0) { selector = Types_1.Type.numberOrNaN; }
         var count = 0;
@@ -1418,6 +1577,8 @@ var Enumerable = (function (_super) {
             result = NaN;
         return result;
     };
+    // #endregion
+    // #region Single Value Return...
     Enumerable.prototype.last = function () {
         var _ = this;
         _.throwIfDisposed();
@@ -1442,6 +1603,7 @@ var Enumerable = (function (_super) {
         });
         return (!found) ? defaultValue : value;
     };
+    // #endregion
     Enumerable.prototype.memoize = function () {
         var _ = this;
         var disposed = !_.throwIfDisposed();
@@ -1484,6 +1646,7 @@ var Enumerable = (function (_super) {
     return Enumerable;
 }(InfiniteEnumerable));
 exports.Enumerable = Enumerable;
+// Provided for type guarding.
 var FiniteEnumerable = (function (_super) {
     __extends(FiniteEnumerable, _super);
     function FiniteEnumerable(enumeratorFactory, finalizer) {
@@ -1501,7 +1664,7 @@ var ArrayEnumerable = (function (_super) {
             _.throwIfDisposed();
             return new ArrayEnumerator_1.ArrayEnumerator(function () {
                 _.throwIfDisposed("The underlying ArrayEnumerable was disposed.", "ArrayEnumerator");
-                return _._source;
+                return _._source; // Should never be null, but ArrayEnumerable if not disposed simply treats null as empty array.
             });
         }) || this;
         var _ = _this;
@@ -1536,6 +1699,7 @@ var ArrayEnumerable = (function (_super) {
         _.throwIfDisposed();
         return enumUtil.forEach(_._source, action, max);
     };
+    // These methods should ALWAYS check for array length before attempting anything.
     ArrayEnumerable.prototype.any = function (predicate) {
         var _ = this;
         _.throwIfDisposed();
@@ -1709,16 +1873,16 @@ var OrderedEnumerable = (function (_super) {
         return new OrderedEnumerable(this.source, keySelector, order, this);
     };
     OrderedEnumerable.prototype.thenBy = function (keySelector) {
-        return this.createOrderedEnumerable(keySelector, 1);
+        return this.createOrderedEnumerable(keySelector, 1 /* Ascending */);
     };
     OrderedEnumerable.prototype.thenUsing = function (comparison) {
-        return new OrderedEnumerable(this.source, null, 1, this, comparison);
+        return new OrderedEnumerable(this.source, null, 1 /* Ascending */, this, comparison);
     };
     OrderedEnumerable.prototype.thenByDescending = function (keySelector) {
-        return this.createOrderedEnumerable(keySelector, -1);
+        return this.createOrderedEnumerable(keySelector, -1 /* Descending */);
     };
     OrderedEnumerable.prototype.thenUsingReversed = function (comparison) {
-        return new OrderedEnumerable(this.source, null, -1, this, comparison);
+        return new OrderedEnumerable(this.source, null, -1 /* Descending */, this, comparison);
     };
     OrderedEnumerable.prototype.getEnumerator = function () {
         var _ = this;
@@ -1756,6 +1920,7 @@ var OrderedEnumerable = (function (_super) {
     };
     return OrderedEnumerable;
 }(FiniteEnumerable));
+// A private static helper for the weave function.
 function nextEnumerator(queue, e) {
     if (e) {
         if (e.moveNext()) {
@@ -1768,6 +1933,12 @@ function nextEnumerator(queue, e) {
     }
     return e;
 }
+/**
+ * Recursively builds a SortContext chain.
+ * @param orderedEnumerable
+ * @param currentContext
+ * @returns {any}
+ */
 function createSortContext(orderedEnumerable, currentContext) {
     if (currentContext === void 0) { currentContext = null; }
     var context = new KeySortedContext_1.KeySortedContext(currentContext, orderedEnumerable.keySelector, orderedEnumerable.order, orderedEnumerable.comparer);
@@ -1780,7 +1951,13 @@ function throwIfDisposed(disposed) {
         throw new ObjectDisposedException_1.ObjectDisposedException("Enumerable");
     return true;
 }
+// #endregion
 (function (Enumerable) {
+    /**
+     * Universal method for converting a primitive enumerables into a LINQ enabled ones.
+     *
+     * Is not limited to TypeScript usages.
+     */
     function from(source) {
         var e = fromAny(source);
         if (!e)
@@ -1808,6 +1985,11 @@ function throwIfDisposed(disposed) {
         return Enumerable.fromAny(source) || Enumerable.empty();
     }
     Enumerable.fromOrEmpty = fromOrEmpty;
+    /**
+     * Static helper for converting enumerables to an array.
+     * @param source
+     * @returns {any}
+     */
     function toArray(source) {
         if (source instanceof Enumerable)
             return source.toArray();
@@ -1818,7 +2000,8 @@ function throwIfDisposed(disposed) {
         return new InfiniteEnumerable(function () { return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) {
             throwIfDisposed(!values);
             return yielder.yieldReturn(Integer_1.Integer.random.select(values));
-        }, true); }, function () {
+        }, true // Is endless!
+        ); }, function () {
             values.length = 0;
             values = NULL;
         });
@@ -1826,6 +2009,8 @@ function throwIfDisposed(disposed) {
     Enumerable._choice = _choice;
     function choice(values) {
         var len = values && values.length;
+        // We could return empty if no length, but that would break the typing and produce unexpected results.
+        // Enforcing that there must be at least 1 choice is key.
         if (!len || !isFinite(len))
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
         return _choice(Utility_1.copy(values));
@@ -1836,6 +2021,8 @@ function throwIfDisposed(disposed) {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
+        // We could return empty if no length, but that would break the typing and produce unexpected results.
+        // Enforcing that there must be at least 1 choice is key.
         if (!args.length)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
         return _choice(args);
@@ -1846,12 +2033,14 @@ function throwIfDisposed(disposed) {
             var index = 0;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 index = 0;
-            }, function (yielder) {
+            }, // Reinitialize the value just in case the enumerator is restarted.
+            function (yielder) {
                 throwIfDisposed(!values);
                 if (index >= values.length)
                     index = 0;
                 return yielder.yieldReturn(values[index++]);
-            }, true);
+            }, true // Is endless!
+            );
         }, function () {
             values.length = 0;
             values = NULL;
@@ -1859,8 +2048,11 @@ function throwIfDisposed(disposed) {
     }
     function cycle(values) {
         var len = values && values.length;
+        // We could return empty if no length, but that would break the typing and produce unexpected results.
+        // Enforcing that there must be at least 1 choice is key.
         if (!len || !isFinite(len))
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
+        // Make a copy to avoid modifying the collection as we go.
         return _cycle(Utility_1.copy(values));
     }
     Enumerable.cycle = cycle;
@@ -1869,12 +2061,15 @@ function throwIfDisposed(disposed) {
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
+        // We could return empty if no length, but that would break the typing and produce unexpected results.
+        // Enforcing that there must be at least 1 choice is key.
         if (!args.length)
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
         return _cycle(args);
     }
     Enumerable.cycleThrough = cycleThrough;
     function empty() {
+        // Could be single export function instance, but for safety, we'll make a new one.
         return new FiniteEnumerable(getEmptyEnumerator);
     }
     Enumerable.empty = empty;
@@ -1889,7 +2084,8 @@ function throwIfDisposed(disposed) {
                 return new EnumeratorBase_1.EnumeratorBase(function () { index = 0; }, function (yielder) { return (index++ < c) && yielder.yieldReturn(element); }, null, false);
             })
             : new Enumerable(function () {
-                return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) { return yielder.yieldReturn(element); }, true);
+                return new EnumeratorBase_1.EnumeratorBase(null, function (yielder) { return yielder.yieldReturn(element); }, true // Is endless!
+                );
             });
     }
     Enumerable.repeat = repeat;
@@ -1909,17 +2105,24 @@ function throwIfDisposed(disposed) {
                 element = NULL;
                 if (finalizer)
                     finalizer(element);
-            }, true);
+            }, true // Is endless!
+            );
         }, function () {
             initializer = NULL;
             finalizer = VOID0;
         });
     }
     Enumerable.repeatWithFinalize = repeatWithFinalize;
+    /**
+     * Creates an enumerable of one element.
+     * @param element
+     * @returns {FiniteEnumerable<T>}
+     */
     function make(element) {
         return repeat(element, 1);
     }
     Enumerable.make = make;
+    // start and step can be other than integer.
     function range(start, count, step) {
         if (step === void 0) { step = 1; }
         if (!isFinite(start))
@@ -1933,7 +2136,7 @@ function throwIfDisposed(disposed) {
         Integer_1.Integer.assert(count, "count");
         return new FiniteEnumerable(function () {
             var value;
-            var c = count;
+            var c = count; // Force integer evaluation.
             var index = 0;
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 index = 0;
@@ -1954,6 +2157,7 @@ function throwIfDisposed(disposed) {
         return range(start, count, step);
     }
     Enumerable.rangeDown = rangeDown;
+    // step = -1 behaves the same as toNegativeInfinity;
     function toInfinity(start, step) {
         if (start === void 0) { start = 0; }
         if (step === void 0) { step = 1; }
@@ -1971,7 +2175,8 @@ function throwIfDisposed(disposed) {
                 var current = value;
                 value += step;
                 return yielder.yieldReturn(current);
-            }, true);
+            }, true // Is endless!
+            );
         });
     }
     Enumerable.toInfinity = toInfinity;
@@ -1987,6 +2192,7 @@ function throwIfDisposed(disposed) {
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("to", to, "Must be a finite number.");
         if (step && !isFinite(step))
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException("step", step, "Must be a finite non-zero number.");
+        // This way we adjust for the delta from start and to so the user can say +/- step and it will work as expected.
         step = Math.abs(step);
         return new FiniteEnumerable(function () {
             var value;
@@ -2027,6 +2233,7 @@ function throwIfDisposed(disposed) {
             return new EnumeratorBase_1.EnumeratorBase(function () {
                 regex = new RegExp(pattern, flags);
             }, function (yielder) {
+                // Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
                 var match = regex.exec(input);
                 return (match !== null) ? yielder.yieldReturn(match) : false;
             });
@@ -2062,7 +2269,8 @@ function throwIfDisposed(disposed) {
                     }, function (yielder) {
                         throwIfDisposed(!factory);
                         return yielder.yieldReturn(factory(index++));
-                    }, true);
+                    }, true // Is endless!
+                    );
                 }, function () {
                     factory = NULL;
                 });
@@ -2088,7 +2296,8 @@ function throwIfDisposed(disposed) {
                 else
                     value = valueFactory(value, i);
                 return yielder.yieldReturn(value);
-            }, true);
+            }, true // Is endless!
+            );
         }, function () {
             valueFactory = NULL;
         });
@@ -2096,13 +2305,18 @@ function throwIfDisposed(disposed) {
     Enumerable.unfold = unfold;
     function forEach(enumerable, action, max) {
         if (max === void 0) { max = Infinity; }
+        // Will properly dispose created enumerable.
+        // Will throw if enumerable is endless.
         return enumUtil.forEach(enumerable, action, max);
     }
     Enumerable.forEach = forEach;
     function map(enumerable, selector) {
+        // Will properly dispose created enumerable.
+        // Will throw if enumerable is endless.
         return enumUtil.map(enumerable, selector);
     }
     Enumerable.map = map;
+    // Slightly optimized versions for numbers.
     function max(values) {
         var v = values
             .takeUntil(function (v) { return v == +Infinity; }, true)
@@ -2117,6 +2331,11 @@ function throwIfDisposed(disposed) {
         return v === VOID0 ? NaN : v;
     }
     Enumerable.min = min;
+    /**
+     * Takes any set of collections of the same type and weaves them together.
+     * @param enumerables
+     * @returns {Enumerable<T>}
+     */
     function weave(enumerables) {
         if (!enumerables)
             throw new ArgumentNullException_1.ArgumentNullException('enumerables');
@@ -2133,6 +2352,7 @@ function throwIfDisposed(disposed) {
             }, function (yielder) {
                 throwIfDisposed(disposed);
                 var e = null;
+                // First pass...
                 if (mainEnumerator) {
                     while (!e && mainEnumerator.moveNext()) {
                         var c = mainEnumerator.current;

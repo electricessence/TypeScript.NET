@@ -55,6 +55,8 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
                                 return number;
                         }
                     }
+                    // Handle Dates...  Possibly JSON?
+                    // Instead of throwing we allow for handling...
                     if (unknownHandler)
                         value = unknownHandler(value);
                     break;

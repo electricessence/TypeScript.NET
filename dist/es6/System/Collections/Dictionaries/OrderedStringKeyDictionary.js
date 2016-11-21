@@ -1,11 +1,17 @@
+/*!
+ * @author electricessence / https://github.com/electricessence/
+ * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+ */
 import * as ArrayUtility from "../Array/Utility";
 import { StringKeyDictionary } from "./StringKeyDictionary";
 import { ArgumentOutOfRangeException } from "../../Exceptions/ArgumentOutOfRangeException";
+// noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 export class OrderedStringKeyDictionary extends StringKeyDictionary {
     constructor() {
         super();
-        this._order = [];
+        // noinspection JSMismatchedCollectionQueryUpdate
+        this._order = []; // Maintains indexes.
     }
     indexOfKey(key) {
         const o = this._order;
@@ -15,7 +21,9 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
         const o = this._order;
         return index < o.length ? this.getValue(o[index]) : VOID0;
     }
+    // adding keepIndex allows for clearing a value while still retaining it's index.
     setValue(key, value, keepIndex) {
+        // TODO: This may be inefficient and could be improved.
         const _ = this;
         let exists = _.indexOfKey(key) != -1;
         if (!exists && (value !== VOID0 || keepIndex))
@@ -33,6 +41,7 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
             throw new ArgumentOutOfRangeException('index', index, 'Is greater than the count.');
         return _.setValue(order[index], value);
     }
+    // importValues([x,y,z]);
     importValues(values) {
         const _ = this;
         return _.handleUpdate(() => {
@@ -44,6 +53,7 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
             return changed;
         });
     }
+    // setValues(x,y,z);
     setValues(...values) {
         return this.importValues(values);
     }

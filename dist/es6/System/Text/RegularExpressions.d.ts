@@ -6,17 +6,38 @@
 import { IMap } from "../Collections/Dictionaries/IDictionary";
 import { Primitive } from "../Primitive";
 import { SelectorWithIndex } from "../FunctionTypes";
+/**
+ * https://msdn.microsoft.com/en-us/library/system.text.regularexpressions.regexoptions%28v=vs.110%29.aspx
+ */
 export declare module RegexOptions {
+    /**
+     * Specifies case-insensitive matching. For more information, see the "Case-Insensitive Matching " section in the Regular Expression Options topic.
+     */
     const IGNORE_CASE: string;
     const I: string;
+    /**
+     * Specifies global matching instead of single.
+     */
     const GLOBAL: string;
     const G: string;
+    /**
+     * treat beginning and end characters (^ and $) as working over multiple lines (i.e., match the beginning or end of each line (delimited by \n or \r), not only the very beginning or end of the whole input string)
+     */
     const MULTI_LINE: string;
     const M: string;
+    /**
+     * treat pattern as a sequence of unicode code points
+     */
     const UNICODE: string;
     const U: string;
+    /**
+     * matches only from the index indicated by the lastIndex property of this regular expression in the target string (and does not attempt to match from any later indexes).
+     */
     const STICKY: string;
     const Y: string;
+    /**
+     * Modifies the pattern to ignore standard whitespace characters.
+     */
     const IGNORE_PATTERN_WHITESPACE: string;
     const W: string;
     type Global = 'g';

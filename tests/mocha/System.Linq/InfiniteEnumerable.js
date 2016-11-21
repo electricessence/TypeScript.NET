@@ -79,6 +79,8 @@ describe(".take(count)", function () {
             assert.ok(f);
         });
     });
+    // All .take operations should return a finite enumerable.
+    // For other conditional take operations, like takeWhile, the isEndless property is indeterminate.
     it("should throw for Infinity", function () {
         assert.throws(function () {
             source.take(Infinity);
