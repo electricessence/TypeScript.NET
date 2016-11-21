@@ -1,14 +1,16 @@
+//noinspection JSUnresolvedFunction
 require.config({
     baseUrl: './',
     urlArgs: 't=' + (new Date()).getTime(),
     paths: {
-        "QUnit": "../../node_modules/qunitjs/qunit/qunit"
+        "QUnit": "./_lib/qunit"
     },
     shim: {
         'QUnit': {
             exports: 'QUnit',
             init: function () {
-                QUnit.config.autostart = false;
+                //noinspection NodeModulesDependencies
+	            QUnit.config.autostart = false;
             }
         }
     }
