@@ -4,7 +4,7 @@
  */
 
 import {Primitive} from "./System/Primitive";
-import {IMap} from "./System/Collections/Dictionaries/IDictionary";
+import {IMap} from "./IMap";
 
 export type JsonEntry = Primitive | JsonArray | JsonMap;
 
