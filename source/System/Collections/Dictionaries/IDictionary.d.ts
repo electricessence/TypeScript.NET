@@ -2,13 +2,15 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
+import {IMap} from "../../../IMap";
 import {ICollection} from "../ICollection";
 import {IKeyValuePair, IStringKeyValuePair} from "../../KeyValuePair";
 import {Action} from "../../FunctionTypes";
 
+export {IMap};
+
 /**
- * JavaScript hashing can only truly be done with strings.
+ * JavaScript hashing can only truly be done with strings (and potentially symbols).
  * This provides a mechanism to enforce hashable
  */
 export interface IHashable
@@ -19,11 +21,6 @@ export interface IHashable
 export interface ISymbolizable
 {
 	getSymbol():symbol;
-}
-
-export interface IMap<TValue>
-{
-	[key:string]:TValue
 }
 
 export interface IDictionary<TKey, TValue> extends ICollection<IKeyValuePair<TKey, TValue>>

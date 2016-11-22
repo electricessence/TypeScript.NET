@@ -2,9 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {Primitive} from "./System/Primitive";
-import {IMap} from "./System/Collections/Dictionaries/IDictionary";
+import {IMap} from "./IMap";
 
 export type JsonEntry = Primitive | JsonArray | JsonMap;
 

@@ -11,7 +11,17 @@
     }
 })(["require", "exports"], function (require, exports) {
     "use strict";
-    function mergeValues(target, defaults) {
+    function apply(target, source) {
+        var result = target || {};
+        for (var key in source) {
+            if (source.hasOwnProperty(key)) {
+                result[key] = source[key];
+            }
+        }
+        return result;
+    }
+    exports.apply = apply;
+    function ensure(target, defaults) {
         var result = target || {};
         for (var key in defaults) {
             if (defaults.hasOwnProperty(key) && !result.hasOwnProperty(key)) {
@@ -20,7 +30,14 @@
         }
         return result;
     }
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = mergeValues;
+    exports.ensure = ensure;
+    function copy(source) {
+        return apply({}, source);
+    }
+    exports.copy = copy;
+    function merge(a, b) {
+        return apply(copy(a), b);
+    }
+    exports.merge = merge;
 });
-//# sourceMappingURL=mergeValues.js.map
+//# sourceMappingURL=MapUtility.js.map
