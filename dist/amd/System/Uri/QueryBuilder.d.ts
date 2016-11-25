@@ -1,6 +1,6 @@
 import { OrderedStringKeyDictionary } from "../Collections/Dictionaries/OrderedStringKeyDictionary";
-import * as UriComponent from "./UriComponent";
-import * as QueryParam from "./QueryParam";
+import { UriComponent } from "./UriComponent";
+import { QueryParam } from "./QueryParam";
 /**
  * Provides a means for parsing and building a set of parameters.
  *

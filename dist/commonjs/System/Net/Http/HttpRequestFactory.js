@@ -49,19 +49,20 @@ var HttpRequestFactory = (function (_super) {
         });
     };
     HttpRequestFactory.prototype.get = function () {
-        return this.request(HttpMethod_1.GET);
+        return this.request(HttpMethod_1.HttpMethod.GET);
     };
     HttpRequestFactory.prototype.put = function () {
-        return this.request(HttpMethod_1.PUT);
+        return this.request(HttpMethod_1.HttpMethod.PUT);
     };
     HttpRequestFactory.prototype.post = function (data) {
-        return this.request(HttpMethod_1.POST, data);
+        return this.request(HttpMethod_1.HttpMethod.POST, data);
     };
     HttpRequestFactory.prototype['delete'] = function () {
-        return this.request(HttpMethod_1.DELETE);
+        return this.request(HttpMethod_1.HttpMethod.DELETE);
     };
     return HttpRequestFactory;
 }(DisposableBase_1.DisposableBase));
+exports.HttpRequestFactory = HttpRequestFactory;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = HttpRequestFactory;
 //# sourceMappingURL=HttpRequestFactory.js.map

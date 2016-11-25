@@ -8,11 +8,11 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
         if (node.next || node.previous)
             throw new InvalidOperationException_1.InvalidOperationException("Cannot add a node to a LinkedNodeList that is already linked.");
     }
-    var TextUtility, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1, extends_1, __extends, LinkedNodeList;
+    var Utility_1, InvalidOperationException_1, ArgumentException_1, ArgumentNullException_1, EnumeratorBase_1, extends_1, __extends, LinkedNodeList;
     return {
         setters: [
-            function (TextUtility_1) {
-                TextUtility = TextUtility_1;
+            function (Utility_1_1) {
+                Utility_1 = Utility_1_1;
             },
             function (InvalidOperationException_1_1) {
                 InvalidOperationException_1 = InvalidOperationException_1_1;
@@ -248,7 +248,7 @@ System.register(["../Text/Utility", "../Exceptions/InvalidOperationException", "
                     else
                         b = true;
                     if (a !== b) {
-                        throw new ArgumentException_1.ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                        throw new ArgumentException_1.ArgumentException('node', Utility_1.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
                     }
                     var removed = !a && !b;
                     if (removed) {

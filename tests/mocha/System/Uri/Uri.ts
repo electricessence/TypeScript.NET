@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import "mocha";
 import Uri from "../../../../dist/commonjs/System/Uri/Uri";
-import * as Scheme from "../../../../dist/commonjs/System/Uri/Scheme";
+import {Scheme} from "../../../../dist/commonjs/System/Uri/Scheme";
 import Functions from "../../../../dist/commonjs/System/Functions";
 
 

@@ -2,13 +2,13 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import * as Serialization from "../Serialization/Utility";
-import * as UriComponent from "./UriComponent";
-import * as QueryParam from "./QueryParam";
+import * as Serialize from "../Serialization/Utility";
+import {UriComponent} from "./UriComponent";
+import {QueryParam} from "./QueryParam";
 import {Type} from "../Types";
 import {extractKeyValue} from "../KeyValueExtract";
 import {forEach, isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
-import {IMap} from "../Collections/Dictionaries/IDictionary";
+import {IMap} from "../../IMap";
 import {Primitive} from "../Primitive";
 import {IStringKeyValuePair} from "../KeyValuePair";
 import {IEnumerableOrArray} from "../Collections/IEnumerableOrArray";
@@ -97,7 +97,7 @@ export function encodeValue(value:UriComponent.Value):string
 	}
 	else
 	{
-		return encodeURIComponent(Serialization.toString(value));
+		return encodeURIComponent(Serialize.toString(value));
 	}
 }
 
@@ -139,7 +139,7 @@ export function parse(
 				let key = entry.substring(0, si);
 				let value = <any>entry.substring(si + 1);
 				if(decodeValues) value = decodeURIComponent(value);
-				if(deserialize) value = Serialization.toPrimitive(value);
+				if(deserialize) value = Serialize.toPrimitive(value);
 				entryHandler(key, value);
 			}
 		}

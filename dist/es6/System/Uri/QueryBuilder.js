@@ -5,7 +5,7 @@
 import { Type } from "../Types";
 import { OrderedStringKeyDictionary } from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import { isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
-import * as QueryParams from "./QueryParams";
+import { parse, encode } from "./QueryParams";
 // noinspection JSUnusedLocalSymbols
 /**
  * Provides a means for parsing and building a set of parameters.
@@ -41,7 +41,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary {
      */
     importFromString(values, deserialize = true, decodeValues = true) {
         const _ = this;
-        QueryParams.parse(values, (key, value) => {
+        parse(values, (key, value) => {
             if (_.containsKey(key)) {
                 const prev = _.getValue(key);
                 if (Array.isArray(prev))
@@ -58,7 +58,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary {
      * Returns the encoded URI string
      */
     encode(prefixIfNotEmpty) {
-        return QueryParams.encode(this, prefixIfNotEmpty);
+        return encode(this, prefixIfNotEmpty);
     }
     toString() {
         return this.encode();

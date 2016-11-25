@@ -2,9 +2,9 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import * as ArrayUtility from "../Array/Utility";
 import { StringKeyDictionary } from "./StringKeyDictionary";
 import { ArgumentOutOfRangeException } from "../../Exceptions/ArgumentOutOfRangeException";
+import { remove } from "../Array/Utility";
 // noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 export class OrderedStringKeyDictionary extends StringKeyDictionary {
@@ -29,7 +29,7 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
         if (!exists && (value !== VOID0 || keepIndex))
             _._order.push(key);
         else if (exists && value === VOID0 && !keepIndex)
-            ArrayUtility.remove(_._order, key);
+            remove(_._order, key);
         return super.setValue(key, value);
     }
     setByIndex(index, value) {

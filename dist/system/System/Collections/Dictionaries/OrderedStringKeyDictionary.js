@@ -1,17 +1,17 @@
-System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], function (exports_1, context_1) {
+System.register(["./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../Array/Utility", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var ArrayUtility, StringKeyDictionary_1, ArgumentOutOfRangeException_1, extends_1, __extends, VOID0, OrderedStringKeyDictionary;
+    var StringKeyDictionary_1, ArgumentOutOfRangeException_1, Utility_1, extends_1, __extends, VOID0, OrderedStringKeyDictionary;
     return {
         setters: [
-            function (ArrayUtility_1) {
-                ArrayUtility = ArrayUtility_1;
-            },
             function (StringKeyDictionary_1_1) {
                 StringKeyDictionary_1 = StringKeyDictionary_1_1;
             },
             function (ArgumentOutOfRangeException_1_1) {
                 ArgumentOutOfRangeException_1 = ArgumentOutOfRangeException_1_1;
+            },
+            function (Utility_1_1) {
+                Utility_1 = Utility_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
@@ -45,7 +45,7 @@ System.register(["../Array/Utility", "./StringKeyDictionary", "../../Exceptions/
                     if (!exists && (value !== VOID0 || keepIndex))
                         _._order.push(key);
                     else if (exists && value === VOID0 && !keepIndex)
-                        ArrayUtility.remove(_._order, key);
+                        Utility_1.remove(_._order, key);
                     return _super.prototype.setValue.call(this, key, value);
                 };
                 OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {

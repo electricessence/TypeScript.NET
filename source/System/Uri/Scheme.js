@@ -7,25 +7,31 @@
     }
 })(["require", "exports"], function (require, exports) {
     "use strict";
-    exports.File = "file";
-    exports.FTP = "ftp";
-    exports.GOPHER = "gopher";
-    exports.HTTP = "http";
-    exports.HTTPS = "https";
-    exports.LDAP = "ldap";
-    exports.MAILTO = "mailto";
-    exports.PIPE = "net.pipe";
-    exports.TCP = "net.tcp";
-    exports.NEWS = "news";
-    exports.NNTP = "nntp";
-    exports.TELNET = "telnet";
-    exports.UUID = "uuid";
-    exports.All = Object.freeze([
-        exports.File, exports.FTP, exports.GOPHER, exports.HTTP, exports.HTTPS, exports.LDAP, exports.MAILTO, exports.PIPE, exports.TCP, exports.NEWS, exports.NNTP, exports.TELNET, exports.UUID
-    ]);
-    function isValid(scheme) {
-        return exports.All.indexOf(scheme) != -1;
-    }
-    exports.isValid = isValid;
+    var Scheme;
+    (function (Scheme) {
+        Scheme.File = "file";
+        Scheme.FTP = "ftp";
+        Scheme.GOPHER = "gopher";
+        Scheme.HTTP = "http";
+        Scheme.HTTPS = "https";
+        Scheme.LDAP = "ldap";
+        Scheme.MAILTO = "mailto";
+        Scheme.PIPE = "net.pipe";
+        Scheme.TCP = "net.tcp";
+        Scheme.NEWS = "news";
+        Scheme.NNTP = "nntp";
+        Scheme.TELNET = "telnet";
+        Scheme.UUID = "uuid";
+        Scheme.All = Object.freeze([
+            Scheme.File, Scheme.FTP, Scheme.GOPHER, Scheme.HTTP, Scheme.HTTPS, Scheme.LDAP, Scheme.MAILTO, Scheme.PIPE, Scheme.TCP, Scheme.NEWS, Scheme.NNTP, Scheme.TELNET, Scheme.UUID
+        ]);
+        function isValid(scheme) {
+            return Scheme.All.indexOf(scheme) != -1;
+        }
+        Scheme.isValid = isValid;
+    })(Scheme = exports.Scheme || (exports.Scheme = {}));
+    Object.freeze(Scheme);
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.default = Scheme;
 });
 //# sourceMappingURL=Scheme.js.map

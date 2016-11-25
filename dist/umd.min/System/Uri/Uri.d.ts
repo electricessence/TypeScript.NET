@@ -1,7 +1,7 @@
-import * as QueryParam from "./QueryParam";
 import { SchemeValue } from "./SchemeValue";
+import { QueryParam } from "./QueryParam";
 import { IUri } from "./IUri";
-import { IMap } from "../Collections/Dictionaries/IDictionary";
+import { IMap } from "../../IMap";
 import { Primitive } from "../Primitive";
 import { IEquatable } from "../IEquatable";
 /**
@@ -11,7 +11,7 @@ import { IEquatable } from "../IEquatable";
  * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
  */
 export declare class Uri implements IUri, IEquatable<IUri> {
-    readonly scheme: SchemeValue | null;
+    readonly scheme: SchemeValue.Any | null;
     readonly userInfo: string | null;
     readonly host: string | null;
     readonly port: number | null;
@@ -28,7 +28,7 @@ export declare class Uri implements IUri, IEquatable<IUri> {
      * @param query Any query information included in the specified URI.
      * @param fragment The escaped URI fragment.
      */
-    constructor(scheme: SchemeValue | null, userInfo: string | null, host: string | null, port: number | null, path: string | null, query?: QueryParam.Convertible, fragment?: string);
+    constructor(scheme: SchemeValue.Any | null, userInfo: string | null, host: string | null, port: number | null, path: string | null, query?: QueryParam.Convertible, fragment?: string);
     /**
      *  Compares the values of another IUri via toString comparison.
      * @param other

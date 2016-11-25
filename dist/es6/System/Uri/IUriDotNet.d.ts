@@ -17,8 +17,6 @@ import {IEquatable} from "../IEquatable";
 interface IUriDotNet extends IUri, ISerializable, IEquatable<IUri>
 {
 
-
-
 	/**
 	 * Gets the absolute URI.
 	 */

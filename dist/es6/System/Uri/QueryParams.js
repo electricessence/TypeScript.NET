@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import * as Serialization from "../Serialization/Utility";
+import * as Serialize from "../Serialization/Utility";
 import { Type } from "../Types";
 import { extractKeyValue } from "../KeyValueExtract";
 import { forEach, isEnumerableOrArrayLike } from "../Collections/Enumeration/Enumerator";
@@ -55,7 +55,7 @@ export function encodeValue(value) {
         return v;
     }
     else {
-        return encodeURIComponent(Serialization.toString(value));
+        return encodeURIComponent(Serialize.toString(value));
     }
 }
 /**
@@ -88,7 +88,7 @@ export function parse(query, entryHandler, deserialize = true, decodeValues = tr
                 if (decodeValues)
                     value = decodeURIComponent(value);
                 if (deserialize)
-                    value = Serialization.toPrimitive(value);
+                    value = Serialize.toPrimitive(value);
                 entryHandler(key, value);
             }
         }

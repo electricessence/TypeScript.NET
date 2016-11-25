@@ -1,13 +1,13 @@
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { DisposableBase } from "../../Disposable/DisposableBase";
-import { GET, PUT, POST, DELETE } from "./HttpMethod";
+import { HttpMethod } from "./HttpMethod";
 import { Uri } from "../../Uri/Uri";
 // noinspection JSUnusedLocalSymbols
 const NAME = 'HttpRequestFactory';
 /**
  * This class exposes a factory for making requests to prepared uri and params.
  */
-export default class HttpRequestFactory extends DisposableBase {
+export class HttpRequestFactory extends DisposableBase {
     constructor(_http, uriDefaults) {
         super();
         this._http = _http;
@@ -44,16 +44,17 @@ export default class HttpRequestFactory extends DisposableBase {
         });
     }
     get() {
-        return this.request(GET);
+        return this.request(HttpMethod.GET);
     }
     put() {
-        return this.request(PUT);
+        return this.request(HttpMethod.PUT);
     }
     post(data) {
-        return this.request(POST, data);
+        return this.request(HttpMethod.POST, data);
     }
     'delete'() {
-        return this.request(DELETE);
+        return this.request(HttpMethod.DELETE);
     }
 }
+export default HttpRequestFactory;
 //# sourceMappingURL=HttpRequestFactory.js.map

@@ -5,11 +5,11 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "../Array/Utility", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../../../extends"], function (require, exports) {
+})(["require", "exports", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../Array/Utility", "../../../extends"], function (require, exports) {
     "use strict";
-    var ArrayUtility = require("../Array/Utility");
     var StringKeyDictionary_1 = require("./StringKeyDictionary");
     var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
+    var Utility_1 = require("../Array/Utility");
     var extends_1 = require("../../../extends");
     var __extends = extends_1.default;
     var VOID0 = void 0;
@@ -34,7 +34,7 @@
             if (!exists && (value !== VOID0 || keepIndex))
                 _._order.push(key);
             else if (exists && value === VOID0 && !keepIndex)
-                ArrayUtility.remove(_._order, key);
+                Utility_1.remove(_._order, key);
             return _super.prototype.setValue.call(this, key, value);
         };
         OrderedStringKeyDictionary.prototype.setByIndex = function (index, value) {

@@ -5,8 +5,8 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 var Types_1 = require("../Types");
-var QueryParams = require("./QueryParams");
-var Scheme = require("./Scheme");
+var Scheme_1 = require("./Scheme");
+var QueryParams_1 = require("./QueryParams");
 var Utility_1 = require("../Text/Utility");
 var ArgumentException_1 = require("../Exceptions/ArgumentException");
 var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
@@ -36,11 +36,11 @@ var Uri = (function () {
         this.authority = _.getAuthority() || null;
         this.path = path || null;
         if (!Types_1.Type.isString(query))
-            query = QueryParams.encode(query);
+            query = QueryParams_1.encode(query);
         this.query = formatQuery(query) || null;
         Object.freeze(this.queryParams
             = _.query
-                ? QueryParams.parseToMap(_.query)
+                ? QueryParams_1.parseToMap(_.query)
                 : {});
         this.pathAndQuery = _.getPathAndQuery() || null;
         this.fragment = formatFragment(fragment) || null;
@@ -190,7 +190,7 @@ function copyUri(from, to) {
     }
     return to;
 }
-var SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
+var SLASH = '/', SLASH2 = '//', QM = QueryParams_1.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 function getScheme(scheme) {
     var s = scheme;
     if (Types_1.Type.isString(s)) {
@@ -201,7 +201,7 @@ function getScheme(scheme) {
             .replace(/[^a-z0-9+.-]+$/g, EMPTY);
         if (!s)
             return null;
-        if (Scheme.isValid(s))
+        if (Scheme_1.Scheme.isValid(s))
             return s;
     }
     else {

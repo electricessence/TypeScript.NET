@@ -2,7 +2,7 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import * as TextUtility from "../Text/Utility";
+import { format } from "../Text/Utility";
 import { InvalidOperationException } from "../Exceptions/InvalidOperationException";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { ArgumentNullException } from "../Exceptions/ArgumentNullException";
@@ -211,7 +211,7 @@ export class LinkedNodeList {
         else
             b = true;
         if (a !== b) {
-            throw new ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+            throw new ArgumentException('node', format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
         }
         const removed = !a && !b;
         if (removed) {

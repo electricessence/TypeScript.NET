@@ -7,16 +7,21 @@ import {Primitive} from "../Primitive";
 import {ISerializable} from "../Serialization/ISerializable";
 import {IMap} from "../Collections/Dictionaries/IDictionary";
 
-export interface Formattable
-{
-	toUriComponent():string;
+export module UriComponent {
+	export interface Formattable
+	{
+		toUriComponent():string;
+	}
+
+	export type Value
+		= Primitive|ISerializable|Formattable;
+
+	export interface Map extends IMap<Value|Value[]>
+	{
+
+	}
 }
 
-export declare type Value
-	= Primitive|ISerializable|Formattable;
+export default UriComponent;
 
-export interface Map extends IMap<Value|Value[]>
-{
-
-}
 

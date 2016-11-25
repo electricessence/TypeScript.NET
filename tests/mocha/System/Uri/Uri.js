@@ -2,7 +2,7 @@
 var assert = require("assert");
 require("mocha");
 var Uri_1 = require("../../../../dist/commonjs/System/Uri/Uri");
-var Scheme = require("../../../../dist/commonjs/System/Uri/Scheme");
+var Scheme_1 = require("../../../../dist/commonjs/System/Uri/Scheme");
 var Functions_1 = require("../../../../dist/commonjs/System/Functions");
 var pathAfterRoot = 'one/two/three.html';
 var path = '/' + pathAfterRoot;
@@ -13,7 +13,7 @@ describe('.scheme', function () {
     it('should equal', function () {
         assert.equal((new Uri_1.default(null, '', '', null, '')).scheme, null);
         assert.equal((new Uri_1.default("http", '', '', null, '')).scheme, "http");
-        assert.equal((new Uri_1.default(Scheme.HTTP, '', '', null, '')).scheme, "http");
+        assert.equal((new Uri_1.default(Scheme_1.Scheme.HTTP, '', '', null, '')).scheme, "http");
     });
     it('should throw', function () {
         assert.throws(function () { new Uri_1.default(64, '', '', null, '', null); });
@@ -47,7 +47,7 @@ describe('.path', function () {
     });
     it('should allow null', function () {
         assert.equal((new Uri_1.default(null, '', '', null, '')).path, null);
-        assert.equal((new Uri_1.default(Scheme.HTTP, '', '', null, '')).path, null);
+        assert.equal((new Uri_1.default(Scheme_1.Scheme.HTTP, '', '', null, '')).path, null);
         assert.equal((new Uri_1.default('http', '', '', null, '')).path, null);
     });
 });
@@ -57,7 +57,7 @@ describe('.fragment', function () {
     });
     it('should allow null', function () {
         assert.equal((new Uri_1.default(null, '', '', null, '')).path, null);
-        assert.equal((new Uri_1.default(Scheme.HTTP, '', '', null, '')).path, null);
+        assert.equal((new Uri_1.default(Scheme_1.Scheme.HTTP, '', '', null, '')).path, null);
         assert.equal((new Uri_1.default('http', '', '', null, '')).path, null);
     });
 });
@@ -219,4 +219,3 @@ describe('KVP versus Tuple', function () {
 // 		});
 // 	});
 // });
-//# sourceMappingURL=Uri.js.map

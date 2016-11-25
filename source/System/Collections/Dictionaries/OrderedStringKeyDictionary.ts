@@ -2,10 +2,10 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-import * as ArrayUtility from "../Array/Utility";
 import {StringKeyDictionary} from "./StringKeyDictionary";
 import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeException";
 import {IOrderedDictionary} from "./IDictionary";
+import {remove} from "../Array/Utility";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -45,7 +45,7 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 		if(!exists && (value!==VOID0 || keepIndex))
 			_._order.push(key);
 		else if(exists && value===VOID0 && !keepIndex)
-			ArrayUtility.remove(_._order, key);
+			remove(_._order, key);
 
 		return super.setValue(key, value);
 	}

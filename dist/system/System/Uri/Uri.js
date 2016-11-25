@@ -1,4 +1,4 @@
-System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
+System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function copyUri(from, to) {
@@ -22,7 +22,7 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
                 .replace(/[^a-z0-9+.-]+$/g, EMPTY);
             if (!s)
                 return null;
-            if (Scheme.isValid(s))
+            if (Scheme_1.Scheme.isValid(s))
                 return s;
         }
         else {
@@ -161,17 +161,17 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
         // null is good! (here)
         return null;
     }
-    var Types_1, QueryParams, Scheme, Utility_1, ArgumentException_1, ArgumentOutOfRangeException_1, VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
+    var Types_1, Scheme_1, QueryParams_1, Utility_1, ArgumentException_1, ArgumentOutOfRangeException_1, VOID0, Uri, Fields, SLASH, SLASH2, QM, HASH, EMPTY, AT;
     return {
         setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
             },
-            function (QueryParams_1) {
-                QueryParams = QueryParams_1;
+            function (Scheme_1_1) {
+                Scheme_1 = Scheme_1_1;
             },
-            function (Scheme_1) {
-                Scheme = Scheme_1;
+            function (QueryParams_1_1) {
+                QueryParams_1 = QueryParams_1_1;
             },
             function (Utility_1_1) {
                 Utility_1 = Utility_1_1;
@@ -210,11 +210,11 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
                     this.authority = _.getAuthority() || null;
                     this.path = path || null;
                     if (!Types_1.Type.isString(query))
-                        query = QueryParams.encode(query);
+                        query = QueryParams_1.encode(query);
                     this.query = formatQuery(query) || null;
                     Object.freeze(this.queryParams
                         = _.query
-                            ? QueryParams.parseToMap(_.query)
+                            ? QueryParams_1.parseToMap(_.query)
                             : {});
                     this.pathAndQuery = _.getPathAndQuery() || null;
                     this.fragment = formatFragment(fragment) || null;
@@ -353,7 +353,7 @@ System.register(["../Types", "./QueryParams", "./Scheme", "../Text/Utility", "..
             })(Fields || (Fields = {}));
             exports_1("Fields", Fields);
             Object.freeze(Fields);
-            SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
+            SLASH = '/', SLASH2 = '//', QM = QueryParams_1.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
             exports_1("default", Uri);
         }
     };

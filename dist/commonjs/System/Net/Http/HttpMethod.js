@@ -4,5 +4,8 @@
  * Based on: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
  */
 "use strict";
-exports.OPTIONS = 'OPTIONS', exports.HEAD = 'HEAD', exports.GET = 'GET', exports.PUT = 'PUT', exports.POST = 'POST', exports.DELETE = 'DELETE', exports.TRACE = 'TRACE', exports.CONNECT = 'CONNECT';
+var HttpMethod;
+(function (HttpMethod) {
+    HttpMethod.OPTIONS = 'OPTIONS', HttpMethod.HEAD = 'HEAD', HttpMethod.GET = 'GET', HttpMethod.PUT = 'PUT', HttpMethod.POST = 'POST', HttpMethod.DELETE = 'DELETE', HttpMethod.TRACE = 'TRACE', HttpMethod.CONNECT = 'CONNECT';
+})(HttpMethod = exports.HttpMethod || (exports.HttpMethod = {}));
 //# sourceMappingURL=HttpMethod.js.map

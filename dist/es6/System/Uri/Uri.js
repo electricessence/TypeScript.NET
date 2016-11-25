@@ -4,8 +4,8 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 import { Type } from "../Types";
-import * as QueryParams from "./QueryParams";
-import * as Scheme from "./Scheme";
+import { Scheme } from "./Scheme";
+import { parseToMap, encode, Separator } from "./QueryParams";
 import { trim } from "../Text/Utility";
 import { ArgumentException } from "../Exceptions/ArgumentException";
 import { ArgumentOutOfRangeException } from "../Exceptions/ArgumentOutOfRangeException";
@@ -35,11 +35,11 @@ export class Uri {
         this.authority = _.getAuthority() || null;
         this.path = path || null;
         if (!Type.isString(query))
-            query = QueryParams.encode(query);
+            query = encode(query);
         this.query = formatQuery(query) || null;
         Object.freeze(this.queryParams
             = _.query
-                ? QueryParams.parseToMap(_.query)
+                ? parseToMap(_.query)
                 : {});
         this.pathAndQuery = _.getPathAndQuery() || null;
         this.fragment = formatFragment(fragment) || null;
@@ -182,7 +182,7 @@ function copyUri(from, to) {
     }
     return to;
 }
-const SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
+const SLASH = '/', SLASH2 = '//', QM = Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 function getScheme(scheme) {
     let s = scheme;
     if (Type.isString(s)) {

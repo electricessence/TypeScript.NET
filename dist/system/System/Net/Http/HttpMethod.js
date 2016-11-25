@@ -6,7 +6,7 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var OPTIONS, HEAD, GET, PUT, POST, DELETE, TRACE, CONNECT;
+    var HttpMethod;
     return {
         setters: [],
         execute: function () {/*!
@@ -14,7 +14,10 @@ System.register([], function (exports_1, context_1) {
              * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
              * Based on: https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
              */
-            exports_1("OPTIONS", OPTIONS = 'OPTIONS'), exports_1("HEAD", HEAD = 'HEAD'), exports_1("GET", GET = 'GET'), exports_1("PUT", PUT = 'PUT'), exports_1("POST", POST = 'POST'), exports_1("DELETE", DELETE = 'DELETE'), exports_1("TRACE", TRACE = 'TRACE'), exports_1("CONNECT", CONNECT = 'CONNECT');
+            (function (HttpMethod) {
+                HttpMethod.OPTIONS = 'OPTIONS', HttpMethod.HEAD = 'HEAD', HttpMethod.GET = 'GET', HttpMethod.PUT = 'PUT', HttpMethod.POST = 'POST', HttpMethod.DELETE = 'DELETE', HttpMethod.TRACE = 'TRACE', HttpMethod.CONNECT = 'CONNECT';
+            })(HttpMethod || (HttpMethod = {}));
+            exports_1("HttpMethod", HttpMethod);
         }
     };
 });

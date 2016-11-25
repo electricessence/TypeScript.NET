@@ -1,6 +1,6 @@
-import * as UriComponent from "./UriComponent";
-import * as QueryParam from "./QueryParam";
-import { IMap } from "../Collections/Dictionaries/IDictionary";
+import { UriComponent } from "./UriComponent";
+import { QueryParam } from "./QueryParam";
+import { IMap } from "../../IMap";
 import { Primitive } from "../Primitive";
 import { IStringKeyValuePair } from "../KeyValuePair";
 /**

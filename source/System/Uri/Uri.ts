@@ -4,17 +4,17 @@
  * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
  */
 import {Type} from "../Types";
-import * as QueryParams from "./QueryParams";
-import * as QueryParam from "./QueryParam";
-import * as UriComponent from "./UriComponent";
-import * as Scheme from "./Scheme";
+import {UriComponent} from "./UriComponent";
+import {Scheme} from "./Scheme";
 import {SchemeValue} from "./SchemeValue";
+import {QueryParam} from "./QueryParam";
+import {parseToMap, encode, Separator} from "./QueryParams";
 import {trim} from "../Text/Utility";
 import {Exception} from "../Exception";
 import {ArgumentException} from "../Exceptions/ArgumentException";
 import {ArgumentOutOfRangeException} from "../Exceptions/ArgumentOutOfRangeException";
 import {IUri} from "./IUri";
-import {IMap} from "../Collections/Dictionaries/IDictionary";
+import {IMap} from "../../IMap";
 import {Primitive} from "../Primitive";
 import {StringKeyValuePair} from "../KeyValuePair";
 import {IEquatable} from "../IEquatable";
@@ -31,7 +31,7 @@ const VOID0:undefined = void 0;
 export class Uri implements IUri, IEquatable<IUri>
 {
 
-	readonly scheme:SchemeValue | null;
+	readonly scheme:SchemeValue.Any | null;
 	readonly userInfo:string | null;
 	readonly host:string | null;
 	readonly port:number | null;
@@ -51,7 +51,7 @@ export class Uri implements IUri, IEquatable<IUri>
 	 * @param fragment The escaped URI fragment.
 	 */
 	constructor(
-		scheme:SchemeValue|null,
+		scheme:SchemeValue.Any|null,
 		userInfo:string|null,
 		host:string|null,
 		port:number|null,
@@ -72,12 +72,12 @@ export class Uri implements IUri, IEquatable<IUri>
 
 
 		if(!Type.isString(query))
-			query = QueryParams.encode(<UriComponent.Map|StringKeyValuePair<Primitive>[]>query);
+			query = encode(<UriComponent.Map|StringKeyValuePair<Primitive>[]>query);
 
 		this.query = formatQuery(<string>query) || null;
 		Object.freeze(this.queryParams
 			= _.query
-			? QueryParams.parseToMap(_.query)
+			? parseToMap(_.query)
 			: {});
 
 		this.pathAndQuery = _.getPathAndQuery() || null;
@@ -306,9 +306,9 @@ function copyUri(from:IUri, to?:IUri)
 	return to;
 }
 
-const SLASH = '/', SLASH2 = '//', QM = QueryParams.Separator.Query, HASH = '#', EMPTY = '', AT = '@';
+const SLASH = '/', SLASH2 = '//', QM = Separator.Query, HASH = '#', EMPTY = '', AT = '@';
 
-function getScheme(scheme:SchemeValue|string|null|undefined):SchemeValue|null
+function getScheme(scheme:SchemeValue.Any|string|null|undefined):SchemeValue.Any|null
 {
 	let s:any = scheme;
 	if(Type.isString(s))

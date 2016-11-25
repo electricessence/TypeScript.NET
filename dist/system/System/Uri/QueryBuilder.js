@@ -1,7 +1,7 @@
 System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictionary", "../Collections/Enumeration/Enumerator", "./QueryParams", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Types_1, OrderedStringKeyDictionary_1, Enumerator_1, QueryParams, extends_1, __extends, QueryBuilder;
+    var Types_1, OrderedStringKeyDictionary_1, Enumerator_1, QueryParams_1, extends_1, __extends, QueryBuilder;
     return {
         setters: [
             function (Types_1_1) {
@@ -13,8 +13,8 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
             function (Enumerator_1_1) {
                 Enumerator_1 = Enumerator_1_1;
             },
-            function (QueryParams_1) {
-                QueryParams = QueryParams_1;
+            function (QueryParams_1_1) {
+                QueryParams_1 = QueryParams_1_1;
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
@@ -64,7 +64,7 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
                     if (deserialize === void 0) { deserialize = true; }
                     if (decodeValues === void 0) { decodeValues = true; }
                     var _ = this;
-                    QueryParams.parse(values, function (key, value) {
+                    QueryParams_1.parse(values, function (key, value) {
                         if (_.containsKey(key)) {
                             var prev = _.getValue(key);
                             if (Array.isArray(prev))
@@ -81,7 +81,7 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
                  * Returns the encoded URI string
                  */
                 QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
-                    return QueryParams.encode(this, prefixIfNotEmpty);
+                    return QueryParams_1.encode(this, prefixIfNotEmpty);
                 };
                 QueryBuilder.prototype.toString = function () {
                     return this.encode();

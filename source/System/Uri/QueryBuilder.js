@@ -10,7 +10,7 @@
     var Types_1 = require("../Types");
     var OrderedStringKeyDictionary_1 = require("../Collections/Dictionaries/OrderedStringKeyDictionary");
     var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
-    var QueryParams = require("./QueryParams");
+    var QueryParams_1 = require("./QueryParams");
     var extends_1 = require("../../extends");
     var __extends = extends_1.default;
     var QueryBuilder = (function (_super) {
@@ -42,7 +42,7 @@
             if (deserialize === void 0) { deserialize = true; }
             if (decodeValues === void 0) { decodeValues = true; }
             var _ = this;
-            QueryParams.parse(values, function (key, value) {
+            QueryParams_1.parse(values, function (key, value) {
                 if (_.containsKey(key)) {
                     var prev = _.getValue(key);
                     if (Array.isArray(prev))
@@ -56,7 +56,7 @@
             return this;
         };
         QueryBuilder.prototype.encode = function (prefixIfNotEmpty) {
-            return QueryParams.encode(this, prefixIfNotEmpty);
+            return QueryParams_1.encode(this, prefixIfNotEmpty);
         };
         QueryBuilder.prototype.toString = function () {
             return this.encode();

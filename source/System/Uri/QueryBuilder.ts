@@ -5,9 +5,9 @@
 import {Type} from "../Types";
 import {OrderedStringKeyDictionary} from "../Collections/Dictionaries/OrderedStringKeyDictionary";
 import {isEnumerableOrArrayLike} from "../Collections/Enumeration/Enumerator";
-import * as UriComponent from "./UriComponent";
-import * as QueryParam from "./QueryParam";
-import * as QueryParams from "./QueryParams";
+import {UriComponent} from "./UriComponent";
+import {QueryParam} from "./QueryParam";
+import {parse, encode} from "./QueryParams";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -72,7 +72,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|
 		decodeValues:boolean = true):QueryBuilder
 	{
 		const _ = this;
-		QueryParams.parse(values,
+		parse(values,
 			(key, value)=>
 			{
 				if(_.containsKey(key))
@@ -98,7 +98,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary<UriComponent.Value|
 	 */
 	encode(prefixIfNotEmpty?:boolean):string
 	{
-		return QueryParams.encode(this, prefixIfNotEmpty);
+		return encode(this, prefixIfNotEmpty);
 	}
 
 	toString():string

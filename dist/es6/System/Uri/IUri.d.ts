@@ -22,7 +22,7 @@ export interface IUrn
 	/**
 	 * The scheme name for this URI.
 	 */
-	scheme?:SchemeValue|null; // string literal
+	scheme?:SchemeValue.Any|null; // string literal
 
 	/**
 	 * The absolute path of the URI.

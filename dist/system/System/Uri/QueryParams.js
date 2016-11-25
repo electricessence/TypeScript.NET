@@ -48,7 +48,7 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
             return v;
         }
         else {
-            return encodeURIComponent(Serialization.toString(value));
+            return encodeURIComponent(Serialize.toString(value));
         }
     }
     exports_1("encodeValue", encodeValue);
@@ -86,7 +86,7 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
                     if (decodeValues)
                         value = decodeURIComponent(value);
                     if (deserialize)
-                        value = Serialization.toPrimitive(value);
+                        value = Serialize.toPrimitive(value);
                     entryHandler(key, value);
                 }
             }
@@ -132,11 +132,11 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         return result;
     }
     exports_1("parseToArray", parseToArray);
-    var Serialization, Types_1, KeyValueExtract_1, Enumerator_1, EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
+    var Serialize, Types_1, KeyValueExtract_1, Enumerator_1, EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
     return {
         setters: [
-            function (Serialization_1) {
-                Serialization = Serialization_1;
+            function (Serialize_1) {
+                Serialize = Serialize_1;
             },
             function (Types_1_1) {
                 Types_1 = Types_1_1;

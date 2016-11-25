@@ -7,7 +7,7 @@
     }
 })(["require", "exports", "../Serialization/Utility", "../Types", "../KeyValueExtract", "../Collections/Enumeration/Enumerator"], function (require, exports) {
     "use strict";
-    var Serialization = require("../Serialization/Utility");
+    var Serialize = require("../Serialization/Utility");
     var Types_1 = require("../Types");
     var KeyValueExtract_1 = require("../KeyValueExtract");
     var Enumerator_1 = require("../Collections/Enumeration/Enumerator");
@@ -47,7 +47,7 @@
             return v;
         }
         else {
-            return encodeURIComponent(Serialization.toString(value));
+            return encodeURIComponent(Serialize.toString(value));
         }
     }
     exports.encodeValue = encodeValue;
@@ -69,7 +69,7 @@
                     if (decodeValues)
                         value = decodeURIComponent(value);
                     if (deserialize)
-                        value = Serialization.toPrimitive(value);
+                        value = Serialize.toPrimitive(value);
                     entryHandler(key, value);
                 }
             }

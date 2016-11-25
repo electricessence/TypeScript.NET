@@ -7,7 +7,7 @@
     }
 })(["require", "exports", "../Text/Utility", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentException", "../Exceptions/ArgumentNullException", "./Enumeration/EnumeratorBase", "../../extends"], function (require, exports) {
     "use strict";
-    var TextUtility = require("../Text/Utility");
+    var Utility_1 = require("../Text/Utility");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -165,7 +165,7 @@
             else
                 b = true;
             if (a !== b) {
-                throw new ArgumentException_1.ArgumentException('node', TextUtility.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
+                throw new ArgumentException_1.ArgumentException('node', Utility_1.format("Provided node is has no {0} reference but is not the {1} node!", a ? "previous" : "next", a ? "first" : "last"));
             }
             var removed = !a && !b;
             if (removed) {
