@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {UriComponent} from "./UriComponent";
 import {StringKeyValuePair} from "../KeyValuePair";
 import {IArray} from "../Collections/Array/IArray";

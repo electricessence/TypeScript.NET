@@ -1797,7 +1797,7 @@ var ArrayEnumerable = (function (_super) {
         if (separator === void 0) { separator = ""; }
         if (selector === void 0) { selector = Functions.Identity; }
         var s = this._source;
-        return !selector && Array.isArray(s)
+        return !selector && (s) instanceof (Array)
             ? s.join(separator)
             : _super.prototype.toJoinedString.call(this, separator, selector);
     };

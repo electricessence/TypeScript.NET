@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import * as ICollectionTests from "./ICollection";
 import Set from "../../../../dist/commonjs/System/Collections/Set";

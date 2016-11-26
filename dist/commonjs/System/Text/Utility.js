@@ -34,7 +34,7 @@ function repeat(source, count) {
 exports.repeat = repeat;
 function fromChars(chOrChars, count) {
     if (count === void 0) { count = 1; }
-    if (Array.isArray(chOrChars)) {
+    if ((chOrChars) instanceof (Array)) {
         var result = exports.EMPTY;
         for (var _i = 0, chOrChars_1 = chOrChars; _i < chOrChars_1.length; _i++) {
             var char = chOrChars_1[_i];
@@ -68,7 +68,7 @@ function trim(source, chars, ignoreCase) {
     if (chars === exports.EMPTY)
         return source;
     if (chars) {
-        var escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
+        var escaped = escapeRegExp((chars) instanceof (Array) ? chars.join() : chars);
         return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase
             ? 'i'
             : '')), exports.EMPTY);
@@ -101,7 +101,7 @@ exports.format = format;
  * @returns {string}
  */
 function supplant(source, params) {
-    var oIsArray = Array.isArray(params);
+    var oIsArray = (params) instanceof (Array);
     return source.replace(/\{([^{}]*)}/g, function (a, b) {
         var n = b;
         if (oIsArray) {

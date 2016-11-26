@@ -30,7 +30,7 @@ export function repeat(source, count) {
     return result;
 }
 export function fromChars(chOrChars, count = 1) {
-    if (Array.isArray(chOrChars)) {
+    if ((chOrChars) instanceof (Array)) {
         let result = EMPTY;
         for (let char of chOrChars) {
             result += String.fromCharCode(char);
@@ -61,7 +61,7 @@ export function trim(source, chars, ignoreCase) {
     if (chars === EMPTY)
         return source;
     if (chars) {
-        const escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : chars);
+        const escaped = escapeRegExp((chars) instanceof (Array) ? chars.join() : chars);
         return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase
             ? 'i'
             : '')), EMPTY);
@@ -88,7 +88,7 @@ export function format(source, ...args) {
  * @returns {string}
  */
 export function supplant(source, params) {
-    const oIsArray = Array.isArray(params);
+    const oIsArray = (params) instanceof (Array);
     return source.replace(/\{([^{}]*)}/g, (a, b) => {
         let n = b;
         if (oIsArray) {

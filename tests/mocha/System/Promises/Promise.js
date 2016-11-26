@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var Promise_1 = require("../../../../dist/commonjs/System/Promises/Promise");
 var AU = require("../../../../dist/commonjs/System/Collections/Array/Utility");

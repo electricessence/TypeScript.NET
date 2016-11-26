@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var ArrayCompare = require("../../../../../dist/commonjs/System/Collections/Array/Compare");
 var a1 = [1, 2, 3];

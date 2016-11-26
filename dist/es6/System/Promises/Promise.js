@@ -733,14 +733,14 @@ var pools;
     function group(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
-        return new PromiseCollection((Array.isArray(first) ? first : [first])
+        return new PromiseCollection(((first) instanceof (Array) ? first : [first])
             .concat(rest));
     }
     Promise.group = group;
     function all(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
-        let promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+        let promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
         if (!promises.length || promises.every(v => !v))
             return new ArrayPromise(r => r(promises), true); // it's a new empty, reuse it. :|
         // Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
@@ -793,7 +793,7 @@ var pools;
     function waitAll(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("promises");
-        const promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+        const promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
         if (!promises.length || promises.every(v => !v))
             return new ArrayPromise(r => r(promises), true); // it's a new empty, reuse it. :|
         // Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
@@ -831,7 +831,7 @@ var pools;
     }
     Promise.waitAll = waitAll;
     function race(first, ...rest) {
-        let promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
+        let promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy?
         if (!promises || !promises.length || !(promises = promises.filter(v => v != null)).length)
             throw new ArgumentException("Nothing to wait for.");
         const len = promises.length;
@@ -884,7 +884,7 @@ var pools;
     function resolveAll(first, ...rest) {
         if (!first && !rest.length)
             throw new ArgumentNullException("resolutions");
-        return new PromiseCollection((Array.isArray(first) ? first : [first])
+        return new PromiseCollection(((first) instanceof (Array) ? first : [first])
             .concat(rest)
             .map((v) => resolve(v)));
     }

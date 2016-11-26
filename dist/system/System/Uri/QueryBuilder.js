@@ -67,7 +67,7 @@ System.register(["../Types", "../Collections/Dictionaries/OrderedStringKeyDictio
                     QueryParams_1.parse(values, function (key, value) {
                         if (_.containsKey(key)) {
                             var prev = _.getValue(key);
-                            if (Array.isArray(prev))
+                            if ((prev) instanceof (Array))
                                 prev.push(value);
                             else
                                 _.setValue(key, [prev, value]);

@@ -44,7 +44,7 @@ export class TypeInfoHelper extends TypeInfo {
         if (this.type != typeof descriptor || this.isPrimitive && !areEqual(value, descriptor))
             return false;
         // Check array contents and confirm intersections.
-        if (this.isArray && Array.isArray(descriptor)) {
+        if (this.isArray && (descriptor) instanceof (Array)) {
             let max = Math.min(descriptor.length, value.length);
             for (let i = 0; i < max; i++) {
                 if (areInvalid(value[i], descriptor[i]))

@@ -1,4 +1,5 @@
-﻿import * as assert from "assert";
+﻿///<reference types="node"/>
+import * as assert from "assert";
 import "mocha";
 import {contains, repeat} from "../../../dist/commonjs/System/Collections/Array/Utility";
 import * as Procedure from "../../../dist/commonjs/System/Collections/Array/Procedure";

@@ -5,7 +5,7 @@
 import { Type } from "../../../Types";
 import { compare } from "../../../Compare";
 function ensureArray(value) {
-    return Array.isArray(value)
+    return (value) instanceof (Array)
         ? value
         : [value];
 }
@@ -39,7 +39,7 @@ export function createComparer(selector, order = 1 /* Ascending */, equivalentTo
         const aValue = ensureArray(selector(a));
         const bValue = ensureArray(selector(b));
         const len = Math.min(aValue.length, bValue.length);
-        const oArray = Array.isArray(order) ? order : null;
+        const oArray = (order) instanceof (Array) ? order : null;
         for (let i = 0; i < len; i++) {
             let vA = aValue[i], vB = bValue[i];
             const o = oArray

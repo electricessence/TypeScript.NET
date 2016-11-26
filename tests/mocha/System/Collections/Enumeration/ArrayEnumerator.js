@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
 var ArrayEnumerator_1 = require("../../../../../dist/commonjs/System/Collections/Enumeration/ArrayEnumerator");

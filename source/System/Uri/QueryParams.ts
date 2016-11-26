@@ -165,7 +165,7 @@ export function parseToMap(
 			if((key) in (result))
 			{
 				let prev:any = result[key];
-				if(!(Array.isArray(prev)))
+				if(!((prev)instanceof(Array)))
 					result[key] = prev = [prev];
 				prev.push(value);
 			}

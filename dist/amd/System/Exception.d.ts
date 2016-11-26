@@ -1,5 +1,5 @@
 import { IDisposable } from "./Disposable/IDisposable";
-import { IMap } from "./Collections/Dictionaries/IDictionary";
+import { IMap } from "../IMap";
 export interface Error {
     name: string;
     message: string;

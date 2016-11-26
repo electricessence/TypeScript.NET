@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import * as AU from "../../../../dist/commonjs/System/Collections/Array/Utility";

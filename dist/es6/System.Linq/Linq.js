@@ -1715,7 +1715,7 @@ class ArrayEnumerable extends FiniteEnumerable {
     }
     toJoinedString(separator = "", selector = Functions.Identity) {
         const s = this._source;
-        return !selector && Array.isArray(s)
+        return !selector && (s) instanceof (Array)
             ? s.join(separator)
             : super.toJoinedString(separator, selector);
     }

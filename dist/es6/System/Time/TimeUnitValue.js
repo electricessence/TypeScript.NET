@@ -10,7 +10,7 @@ import { TimeQuantity } from "./TimeQuantity";
  */
 export default class TimeUnitValue extends TimeQuantity {
     constructor(value, _units) {
-        super(typeof (value) == 'number'
+        super(typeof value == 'number'
             ? value
             : getUnitQuantityFrom(value, _units));
         this._units = _units;

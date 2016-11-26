@@ -1,5 +1,4 @@
-﻿﻿
-/*!
+﻿/*!
  * @author electricessence / https://github.com/electricessence/
  * Original: http://linqjs.codeplex.com/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
@@ -3091,7 +3090,7 @@ extends FiniteEnumerable<T>
 	toJoinedString(separator:string = "", selector:Selector<T, string> = Functions.Identity)
 	{
 		const s = this._source;
-		return !selector && Array.isArray(s)
+		return !selector && (s)instanceof(Array)
 			? (<Array<T>>s).join(separator)
 			: super.toJoinedString(separator, selector);
 	}

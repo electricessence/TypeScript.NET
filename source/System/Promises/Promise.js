@@ -652,7 +652,7 @@
             }
             if (!first && !rest.length)
                 throw new ArgumentNullException_1.ArgumentNullException("promises");
-            return new PromiseCollection((Array.isArray(first) ? first : [first])
+            return new PromiseCollection(((first) instanceof (Array) ? first : [first])
                 .concat(rest));
         }
         Promise.group = group;
@@ -663,7 +663,7 @@
             }
             if (!first && !rest.length)
                 throw new ArgumentNullException_1.ArgumentNullException("promises");
-            var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+            var promises = ((first) instanceof (Array) ? first : [first]).concat(rest);
             if (!promises.length || promises.every(function (v) { return !v; }))
                 return new ArrayPromise(function (r) { return r(promises); }, true);
             return new ArrayPromise(function (resolve, reject) {
@@ -721,7 +721,7 @@
             }
             if (!first && !rest.length)
                 throw new ArgumentNullException_1.ArgumentNullException("promises");
-            var promises = (Array.isArray(first) ? first : [first]).concat(rest);
+            var promises = ((first) instanceof (Array) ? first : [first]).concat(rest);
             if (!promises.length || promises.every(function (v) { return !v; }))
                 return new ArrayPromise(function (r) { return r(promises); }, true);
             return new ArrayPromise(function (resolve, reject) {
@@ -764,7 +764,7 @@
             for (var _i = 1; _i < arguments.length; _i++) {
                 rest[_i - 1] = arguments[_i];
             }
-            var promises = first && (Array.isArray(first) ? first : [first]).concat(rest);
+            var promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest);
             if (!promises || !promises.length || !(promises = promises.filter(function (v) { return v != null; })).length)
                 throw new ArgumentException_1.ArgumentException("Nothing to wait for.");
             var len = promises.length;
@@ -815,7 +815,7 @@
             }
             if (!first && !rest.length)
                 throw new ArgumentNullException_1.ArgumentNullException("resolutions");
-            return new PromiseCollection((Array.isArray(first) ? first : [first])
+            return new PromiseCollection(((first) instanceof (Array) ? first : [first])
                 .concat(rest)
                 .map(function (v) { return resolve(v); }));
         }

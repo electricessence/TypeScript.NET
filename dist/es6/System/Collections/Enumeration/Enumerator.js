@@ -18,7 +18,7 @@ export function throwIfEndless(isEndless) {
     return true;
 }
 function initArrayFrom(source, max = Infinity) {
-    if (Array.isArray(source) || Type.isString(source)) {
+    if ((source) instanceof (Array) || Type.isString(source)) {
         const len = Math.min(source.length, max);
         if (isFinite(len)) {
             if (len > 65535)
@@ -41,7 +41,7 @@ export function from(source) {
     // To simplify and prevent null reference exceptions:
     if (!source)
         return Empty;
-    if (Array.isArray(source))
+    if ((source) instanceof (Array))
         return new ArrayEnumerator(source);
     if (Type.isArrayLike(source)) {
         return new IndexEnumerator(() => {
@@ -129,7 +129,7 @@ export function forEach(e, action, max = Infinity) {
 export function toArray(source, max = Infinity) {
     if (source === STRING_EMPTY)
         return [];
-    if (!isFinite(max) && Array.isArray(source))
+    if (!isFinite(max) && (source) instanceof (Array))
         return source.slice();
     const result = initArrayFrom(source, max);
     if (-1 === forEach(source, (e, i) => { result[i] = e; }, max))
@@ -146,7 +146,7 @@ export function toArray(source, max = Infinity) {
 export function map(source, selector, max = Infinity) {
     if (source === STRING_EMPTY)
         return [];
-    if (!isFinite(max) && Array.isArray(source))
+    if (!isFinite(max) && (source) instanceof (Array))
         return source.map(selector);
     const result = initArrayFrom(source, max);
     if (-1 === forEach(source, (e, i) => { result[i] = selector(e, i); }, max))

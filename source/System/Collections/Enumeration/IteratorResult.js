@@ -12,8 +12,8 @@
         function IteratorResult(value, index, done) {
             if (done === void 0) { done = false; }
             this.value = value;
-            if (typeof index == "boolean")
-                done = index;
+            if (typeof index == 'boolean')
+                this.done = index;
             else {
                 this.index = index;
                 this.done = done;

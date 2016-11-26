@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import * as Arrays from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import * as ArrayUtility from "../../../../../dist/commonjs/System/Collections/Array/Utility";

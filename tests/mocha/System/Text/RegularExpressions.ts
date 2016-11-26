@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import RegexMatchEnumerator from "../../../../dist/commonjs/System/Text/RegexMatchEnumerator";
 import Regex, {Match} from "../../../../dist/commonjs/System/Text/RegularExpressions";

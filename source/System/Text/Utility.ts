@@ -43,7 +43,7 @@ export function fromChars(ch:number, count:number):string
 export function fromChars(chars:number[]):string
 export function fromChars(chOrChars:any, count:number = 1):string
 {
-	if(Array.isArray(chOrChars))
+	if((chOrChars)instanceof(Array))
 	{
 		let result = EMPTY;
 		for(let char of chOrChars)
@@ -81,7 +81,7 @@ export function trim(source:string, chars?:string|string[], ignoreCase?:boolean)
 	if(chars===EMPTY) return source;
 	if(chars)
 	{
-		const escaped = escapeRegExp(Array.isArray(chars) ? chars.join() : <string>chars);
+		const escaped = escapeRegExp((chars)instanceof(Array) ? chars.join() : <string>chars);
 		return source.replace(new RegExp('^[' + escaped + ']+|[' + escaped + ']+$', 'g' + (ignoreCase
 				? 'i'
 				: '')), EMPTY);
@@ -114,7 +114,7 @@ export function format(source:string, ...args:any[])
  */
 export function supplant(source:string, params:{[key:string]:any}|any[]):string
 {
-	const oIsArray = Array.isArray(params);
+	const oIsArray = (params)instanceof(Array);
 	return source.replace(/\{([^{}]*)}/g,
 		(a:string, b:string):any=>
 		{

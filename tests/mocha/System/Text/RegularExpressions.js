@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var RegexMatchEnumerator_1 = require("../../../../dist/commonjs/System/Text/RegexMatchEnumerator");
 var RegularExpressions_1 = require("../../../../dist/commonjs/System/Text/RegularExpressions");

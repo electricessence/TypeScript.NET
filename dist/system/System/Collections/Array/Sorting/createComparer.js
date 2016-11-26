@@ -2,7 +2,7 @@ System.register(["../../../Types", "../../../Compare"], function (exports_1, con
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function ensureArray(value) {
-        return Array.isArray(value)
+        return (value) instanceof (Array)
             ? value
             : [value];
     }
@@ -38,7 +38,7 @@ System.register(["../../../Types", "../../../Compare"], function (exports_1, con
             var aValue = ensureArray(selector(a));
             var bValue = ensureArray(selector(b));
             var len = Math.min(aValue.length, bValue.length);
-            var oArray = Array.isArray(order) ? order : null;
+            var oArray = (order) instanceof (Array) ? order : null;
             for (var i = 0; i < len; i++) {
                 var vA = aValue[i], vB = bValue[i];
                 var o = oArray

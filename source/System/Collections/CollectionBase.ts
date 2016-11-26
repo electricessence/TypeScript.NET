@@ -14,9 +14,8 @@ import {EqualityComparison, Action, PredicateWithIndex, ActionWithIndex} from ".
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {IArray} from "./Array/IArray";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
-import __extendsImport from "../../extends";
 import {isCommonJS, isRequireJS, isNodeJS} from "../Environment";
-
+import __extendsImport from "../../extends";
 //noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -238,7 +237,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		let added = 0;
 		if(entries)
 		{
-			if(Array.isArray(entries))
+			if((entries)instanceof(Array))
 			{
 				// Optimize for avoiding a new closure.
 				for(let e of entries)

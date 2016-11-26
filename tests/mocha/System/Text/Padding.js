@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var Padding_1 = require("../../../../dist/commonjs/System/Text/Padding");
 describe('.padLeft()', function () {

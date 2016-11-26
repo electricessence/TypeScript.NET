@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var Dispatch_1 = require("../../../../../dist/commonjs/System/Collections/Array/Dispatch");
 it("should apply closures in order", function () {

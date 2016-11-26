@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import Integer from "../../../dist/commonjs/System/Integer";

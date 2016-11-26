@@ -50,7 +50,7 @@ System.register([], function (exports_1, context_1) {
                                 this.isPrimitive = true;
                             }
                             else {
-                                this.isArray = Array.isArray(target);
+                                this.isArray = (target) instanceof (Array);
                                 this.isObject = true;
                             }
                             break;
@@ -164,6 +164,7 @@ System.register([], function (exports_1, context_1) {
                  * @returns {boolean}
                  */
                 function isNumber(value, allowNaN) {
+                    if (allowNaN === void 0) { allowNaN = false; }
                     if (allowNaN === VOID0)
                         allowNaN = true;
                     return typeof value === _NUMBER && (allowNaN || !isNaN(value));
@@ -209,6 +210,12 @@ System.register([], function (exports_1, context_1) {
                     return false;
                 }
                 Type.isPrimitive = isPrimitive;
+                /**
+                 * For detecting if the value can be used as a key.
+                 * @param value
+                 * @param allowUndefined
+                 * @returns {boolean|boolean}
+                 */
                 function isPrimitiveOrSymbol(value, allowUndefined) {
                     if (allowUndefined === void 0) { allowUndefined = false; }
                     return typeof value === _SYMBOL ? true : isPrimitive(value, allowUndefined);
@@ -259,14 +266,35 @@ System.register([], function (exports_1, context_1) {
                     return isNaN(value) ? NaN : value;
                 }
                 Type.numberOrNaN = numberOrNaN;
+                /**
+                 * Returns a TypeInfo object for the target.
+                 * @param target
+                 * @returns {TypeInfo}
+                 */
                 function of(target) {
                     return TypeInfo.getFor(target);
                 }
                 Type.of = of;
-                function hasMember(instance, property) {
-                    return instance && !isPrimitive(instance) && (property) in (instance);
+                /**
+                 * Will detect if a member exists (using 'in').
+                 * Returns true if a property or method exists on the object or its prototype.
+                 * @param instance
+                 * @param property Name of the member.
+                 * @param ignoreUndefined When ignoreUndefined is true, if the member exists but is undefined, it will return false.
+                 * @returns {boolean}
+                 */
+                function hasMember(instance, property, ignoreUndefined) {
+                    if (ignoreUndefined === void 0) { ignoreUndefined = true; }
+                    return instance && !isPrimitive(instance) && (property) in (instance) && (ignoreUndefined || instance[property] !== VOID0);
                 }
                 Type.hasMember = hasMember;
+                /**
+                 * Returns true if the member matches the type.
+                 * @param instance
+                 * @param property
+                 * @param type
+                 * @returns {boolean}
+                 */
                 function hasMemberOfType(instance, property, type) {
                     return hasMember(instance, property) && typeof (instance[property]) === type;
                 }

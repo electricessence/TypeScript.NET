@@ -3,18 +3,20 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import {Primitive} from "./Primitive";
-import {IArray} from "./Collections/Array/IArray"; // For compatibility with (let, const, function, class);
+import {IArray} from "./Collections/Array/IArray";
+import {TypeValue} from "./TypeValue"; // For compatibility with (let, const, function, class);
+
 
 const
-	VOID0:undefined   = void(0),
-	_BOOLEAN:string   = typeof true,
-	_NUMBER:string    = typeof 0,
-	_STRING:string    = typeof "",
-	_SYMBOL:string    = "symbol",
-	_OBJECT:string    = typeof {},
-	_UNDEFINED:string = typeof VOID0,
-	_FUNCTION:string  = typeof function() {},
-	LENGTH:string     = "length";
+	VOID0      = <undefined>void(0),
+	_BOOLEAN   = <TypeValue.Boolean>typeof true,
+	_NUMBER    = <TypeValue.Number>typeof 0,
+	_STRING    = <TypeValue.String>typeof "",
+	_SYMBOL    = <TypeValue.Symbol>"symbol",
+	_OBJECT    = <TypeValue.Object>typeof {},
+	_UNDEFINED = <TypeValue.Undefined>typeof VOID0,
+	_FUNCTION  = <TypeValue.Function>typeof function() {},
+	LENGTH     = <string>"length";
 
 // Only used for primitives.
 const typeInfoRegistry:{[key:string]:TypeInfo} = {};
@@ -87,7 +89,7 @@ export class TypeInfo
 				}
 				else
 				{
-					this.isArray = Array.isArray(target);
+					this.isArray = (target)instanceof(Array);
 					this.isObject = true;
 				}
 				break;
@@ -153,51 +155,52 @@ export module Type
 	 * typeof true
 	 * @type {string}
 	 */
-	export const BOOLEAN:string = _BOOLEAN;
+	export const BOOLEAN:TypeValue.Boolean = _BOOLEAN;
 
 	/**
 	 * typeof 0
 	 * @type {string}
 	 */
-	export const NUMBER:string = _NUMBER;
+	export const NUMBER:TypeValue.Number = _NUMBER;
 
 	/**
 	 * typeof ""
 	 * @type {string}
 	 */
-	export const STRING:string = _STRING;
+	export const STRING:TypeValue.String = _STRING;
 
 	/**
 	 * typeof {}
 	 * @type {string}
 	 */
-	export const OBJECT:string = _OBJECT;
+	export const OBJECT:TypeValue.Object = _OBJECT;
 
 
 	/**
 	 * typeof Symbol
 	 * @type {string}
 	 */
-	export const SYMBOL:string = _SYMBOL;
+	export const SYMBOL:TypeValue.Symbol = _SYMBOL;
 
 	/**
 	 * typeof undefined
 	 * @type {string}
 	 */
-	export const UNDEFINED:string = _UNDEFINED;
+	export const UNDEFINED:TypeValue.Undefined = _UNDEFINED;
 
 	/**
 	 * typeof function
 	 * @type {string}
 	 */
-	export const FUNCTION:string = _FUNCTION;
+	export const FUNCTION:TypeValue.Function = _FUNCTION;
 
 	/**
 	 * Returns true if the value parameter is null or undefined.
 	 * @param value
 	 * @returns {boolean}
 	 */
-	export function isNullOrUndefined(value:any):value is null|undefined {
+	export function isNullOrUndefined(value:any):value is null|undefined
+	{
 		return value===null || value===VOID0;
 	}
 
@@ -217,7 +220,7 @@ export module Type
 	 * @param allowNaN Default is true.
 	 * @returns {boolean}
 	 */
-	export function isNumber(value:any, allowNaN?:boolean):value is number
+	export function isNumber(value:any, allowNaN:boolean = false):value is number
 	{
 		if(allowNaN===VOID0) allowNaN = true;
 		return typeof value===_NUMBER && (allowNaN || !isNaN(value));
@@ -267,9 +270,17 @@ export module Type
 		return false;
 	}
 
-	export function isPrimitiveOrSymbol(value:any, allowUndefined:boolean = false):value is Primitive|symbol
+	/**
+	 * For detecting if the value can be used as a key.
+	 * @param value
+	 * @param allowUndefined
+	 * @returns {boolean|boolean}
+	 */
+	export function isPrimitiveOrSymbol(
+		value:any,
+		allowUndefined:boolean = false):value is Primitive|symbol
 	{
-		return typeof value===_SYMBOL ? true : isPrimitive(value,allowUndefined);
+		return typeof value===_SYMBOL ? true : isPrimitive(value, allowUndefined);
 	}
 
 	/**
@@ -321,17 +332,39 @@ export module Type
 		return isNaN(value) ? NaN : value;
 	}
 
+	/**
+	 * Returns a TypeInfo object for the target.
+	 * @param target
+	 * @returns {TypeInfo}
+	 */
 	export function of(target:any):TypeInfo
 	{
 		return TypeInfo.getFor(target);
 	}
 
-	export function hasMember(instance:any, property:string):boolean
+	/**
+	 * Will detect if a member exists (using 'in').
+	 * Returns true if a property or method exists on the object or its prototype.
+	 * @param instance
+	 * @param property Name of the member.
+	 * @param ignoreUndefined When ignoreUndefined is true, if the member exists but is undefined, it will return false.
+	 * @returns {boolean}
+	 */
+	export function hasMember(instance:any, property:string, ignoreUndefined:boolean = true):boolean
 	{
-		return instance && !isPrimitive(instance) && (property) in (instance);
+		return instance && !isPrimitive(instance) && (property) in (instance) && (ignoreUndefined || instance[property]!==VOID0);
 	}
 
-	export function hasMemberOfType<T>(instance:any, property:string, type:string):instance is T
+	/**
+	 * Returns true if the member matches the type.
+	 * @param instance
+	 * @param property
+	 * @param type
+	 * @returns {boolean}
+	 */
+	export function hasMemberOfType<T>(
+		instance:any, property:string,
+		type:TypeValue.Any):instance is T
 	{
 		return hasMember(instance, property) && typeof(instance[property])===type;
 	}

@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var ObservableNodeBase_1 = require("../../../../dist/commonjs/System/Observable/ObservableNodeBase");
 it("should receive signals only when subscribed", function () {

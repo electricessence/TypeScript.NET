@@ -6,7 +6,6 @@ export class DateTime {
         return new Date(this._value.getTime()); // return a clone.
     }
     constructor(value = new Date(), kind = 1 /* Local */) {
-        const _ = this;
         this._kind = kind;
         if (value instanceof DateTime)
             this._value = value.toJsDate();

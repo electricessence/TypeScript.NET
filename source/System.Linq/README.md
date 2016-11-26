@@ -18,9 +18,9 @@ Source values that work:
 ```typescript
 import Enumerable from 'typescript-dotnet-es6/System.Linq/Linq';
  
-var sourceData = ['a','b','c','c','d'];
+let sourceData = ['a','b','c','c','d'];
  
-var myEnumerable = Enumerable.from(sourceData);
+let myEnumerable = Enumerable.from(sourceData);
 
 console.log(
 	myEnumerable.count(x=>x=='c'), // 2

@@ -48,7 +48,7 @@
                         this.isPrimitive = true;
                     }
                     else {
-                        this.isArray = Array.isArray(target);
+                        this.isArray = (target) instanceof (Array);
                         this.isObject = true;
                     }
                     break;
@@ -107,6 +107,7 @@
         }
         Type.isBoolean = isBoolean;
         function isNumber(value, allowNaN) {
+            if (allowNaN === void 0) { allowNaN = false; }
             if (allowNaN === VOID0)
                 allowNaN = true;
             return typeof value === _NUMBER && (allowNaN || !isNaN(value));
@@ -169,8 +170,9 @@
             return TypeInfo.getFor(target);
         }
         Type.of = of;
-        function hasMember(instance, property) {
-            return instance && !isPrimitive(instance) && (property) in (instance);
+        function hasMember(instance, property, ignoreUndefined) {
+            if (ignoreUndefined === void 0) { ignoreUndefined = true; }
+            return instance && !isPrimitive(instance) && (property) in (instance) && (ignoreUndefined || instance[property] !== VOID0);
         }
         Type.hasMember = hasMember;
         function hasMemberOfType(instance, property, type) {

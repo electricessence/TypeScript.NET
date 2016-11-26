@@ -68,7 +68,7 @@
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         var len = array && array.length;
         if (len) {
-            if (Array.isArray(array) && !Types_1.Type.isTrueNaN(item))
+            if ((array) instanceof (Array) && !Types_1.Type.isTrueNaN(item))
                 return array.indexOf(item);
             for (var i = 0; i < len; i++) {
                 if (equalityComparer(array[i], item))
@@ -139,7 +139,9 @@
         if (!Types_1.Type.isFunction(predicate))
             throw new ArgumentException_1.ArgumentException('predicate', 'Must be a function.');
         var len = array.length;
-        if (Array.isArray(array)) {
+        if (!Types_1.Type.isNumber(len) || len < 0)
+            throw new ArgumentException_1.ArgumentException('array', 'Does not have a valid length.');
+        if ((array) instanceof (Array)) {
             for (var i = 0; i < len; i++) {
                 if (predicate(array[i], i))
                     return i;
@@ -259,7 +261,7 @@
         var result = [];
         for (var i = 0; i < a.length; i++) {
             var x = a[i];
-            if (Array.isArray(x)) {
+            if ((x) instanceof (Array)) {
                 if (recurseDepth > 0)
                     x = flatten(x, recurseDepth - 1);
                 for (var n = 0; n < x.length; n++)

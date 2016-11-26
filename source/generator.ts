@@ -3,7 +3,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import {IIterator} from "./System/Collections/Enumeration/IIterator";
-import {IMap} from "./System/Collections/Dictionaries/IDictionary";
+import {IMap} from "./IMap";
 
 const enum IteratorVerb {
 	next,

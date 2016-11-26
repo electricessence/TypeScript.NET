@@ -54,7 +54,7 @@ export default class EventDispatcherBase extends DisposableBase {
         if (!l || !l.length)
             return false;
         let event;
-        if (typeof e == "string") {
+        if (typeof e == 'string') {
             event = (Event && Object.create(Event) || {});
             if (!params)
                 params = {};

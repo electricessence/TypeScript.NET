@@ -38,7 +38,7 @@ function initArrayFrom(
 	source:ForEachEnumerable<any>,
 	max:number = Infinity):any[]
 {
-	if(Array.isArray(source) || Type.isString(source))
+	if((source)instanceof(Array) || Type.isString(source))
 	{
 		const len = Math.min(source.length, max);
 		if(isFinite(len))
@@ -67,7 +67,7 @@ export function from<T>(source:ForEachEnumerable<T>|InfiniteValueFactory<T>):IEn
 	if(!source)
 		return Empty;
 
-	if(Array.isArray(source))
+	if((source)instanceof(Array))
 		return new ArrayEnumerator<T>(<T[]>source);
 
 	if(Type.isArrayLike<T>(source))
@@ -222,7 +222,7 @@ export function toArray<T>(
 {
 	if(<any>source===STRING_EMPTY) return [];
 
-	if(!isFinite(max) && Array.isArray(source))
+	if(!isFinite(max) && (source)instanceof(Array))
 		return source.slice();
 
 	const result:T[] = initArrayFrom(source, max);
@@ -247,7 +247,7 @@ export function map<T,TResult>(
 {
 	if(<any>source===STRING_EMPTY) return [];
 
-	if(!isFinite(max) && Array.isArray(source))
+	if(!isFinite(max) && (source)instanceof(Array))
 		return source.map(selector);
 
 	const result:TResult[] = initArrayFrom(source, max);

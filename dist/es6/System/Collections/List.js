@@ -13,7 +13,7 @@ const VOID0 = void 0;
 export class List extends CollectionBase {
     constructor(source, equalityComparer = areEqual) {
         super(VOID0, equalityComparer);
-        if (Array.isArray(source)) {
+        if ((source) instanceof (Array)) {
             this._source = source.slice();
         }
         else {

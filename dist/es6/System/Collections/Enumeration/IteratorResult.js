@@ -2,8 +2,8 @@ const VOID0 = void 0;
 export class IteratorResult {
     constructor(value, index, done = false) {
         this.value = value;
-        if (typeof index == "boolean")
-            done = index;
+        if (typeof index == 'boolean')
+            this.done = index;
         else {
             this.index = index;
             this.done = done;

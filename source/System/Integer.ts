@@ -5,6 +5,7 @@
 import {ArgumentException} from "./Exceptions/ArgumentException";
 import {ArgumentOutOfRangeException} from "./Exceptions/ArgumentOutOfRangeException";
 import {IArray} from "./Collections/Array/IArray";
+import {TypeValue} from "./TypeValue";
 
 export function Integer(n:number):number
 {
@@ -101,7 +102,7 @@ export module Integer
 		return (n=== -1 || result!== -1) ? result : null;
 	}
 
-	const NUMBER:string = "number";
+	const NUMBER:TypeValue.Number = "number";
 
 	/**
 	 * Returns true if the value is an integer.

@@ -44,7 +44,7 @@ export class QueryBuilder extends OrderedStringKeyDictionary {
         parse(values, (key, value) => {
             if (_.containsKey(key)) {
                 const prev = _.getValue(key);
-                if (Array.isArray(prev))
+                if ((prev) instanceof (Array))
                     prev.push(value);
                 else
                     _.setValue(key, [prev, value]);

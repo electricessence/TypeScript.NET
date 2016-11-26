@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
 var Uri_1 = require("../../../../dist/commonjs/System/Uri/Uri");
@@ -219,3 +220,4 @@ describe('KVP versus Tuple', function () {
 // 		});
 // 	});
 // });
+//# sourceMappingURL=Uri.js.map

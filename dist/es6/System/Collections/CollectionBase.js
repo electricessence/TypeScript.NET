@@ -165,7 +165,7 @@ export class CollectionBase extends DisposableBase {
     _importEntries(entries) {
         let added = 0;
         if (entries) {
-            if (Array.isArray(entries)) {
+            if ((entries) instanceof (Array)) {
                 // Optimize for avoiding a new closure.
                 for (let e of entries) {
                     if (this._addInternal(e))

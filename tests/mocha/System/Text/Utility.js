@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var TextUtility = require("../../../../dist/commonjs/System/Text/Utility");
 var s1 = "	 HI  ";

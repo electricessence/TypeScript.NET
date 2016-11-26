@@ -14,7 +14,7 @@ var __extends = extends_1.default;
 var TimeUnitValue = (function (_super) {
     __extends(TimeUnitValue, _super);
     function TimeUnitValue(value, _units) {
-        var _this = _super.call(this, typeof (value) == 'number'
+        var _this = _super.call(this, typeof value == 'number'
             ? value
             : getUnitQuantityFrom(value, _units)) || this;
         _this._units = _units;

@@ -6,7 +6,6 @@ var DateTime = (function () {
     function DateTime(value, kind) {
         if (value === void 0) { value = new Date(); }
         if (kind === void 0) { kind = 1 /* Local */; }
-        var _ = this;
         this._kind = kind;
         if (value instanceof DateTime)
             this._value = value.toJsDate();

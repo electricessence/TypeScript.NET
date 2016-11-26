@@ -1127,7 +1127,7 @@ export module Promise
 
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
 		return new PromiseCollection(
-			(Array.isArray(first) ? first : [first])
+			((first)instanceof(Array) ? first : [first])
 				.concat(rest)
 		);
 	}
@@ -1142,7 +1142,7 @@ export module Promise
 		...rest:PromiseLike<any>[]):ArrayPromise<any>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
-		let promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+		let promises = ((first)instanceof(Array) ? first : [first]).concat(rest); // yay a copy!
 		if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
 			r => r(promises), true); // it's a new empty, reuse it. :|
 
@@ -1218,7 +1218,7 @@ export module Promise
 		...rest:PromiseLike<any>[]):ArrayPromise<PromiseLike<any>>
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("promises");
-		const promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+		const promises = ((first)instanceof(Array) ? first : [first]).concat(rest); // yay a copy!
 		if(!promises.length || promises.every(v => !v)) return new ArrayPromise<any>(
 			r => r(promises), true); // it's a new empty, reuse it. :|
 
@@ -1280,7 +1280,7 @@ export module Promise
 		first:PromiseLike<any>|PromiseLike<any>[],
 		...rest:PromiseLike<any>[]):PromiseBase<any>
 	{
-		let promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
+		let promises = first && ((first)instanceof(Array) ? first : [first]).concat(rest); // yay a copy?
 		if(!promises || !promises.length || !(promises = promises.filter(v => v!=null)).length)
 			throw new ArgumentException("Nothing to wait for.");
 
@@ -1374,7 +1374,7 @@ export module Promise
 	{
 		if(!first && !rest.length) throw new ArgumentNullException("resolutions");
 		return new PromiseCollection(
-			(Array.isArray(first) ? first : [first])
+			((first)instanceof(Array) ? first : [first])
 				.concat(rest)
 				.map((v:any) => resolve(v)));
 	}

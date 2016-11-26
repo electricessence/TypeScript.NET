@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import {Selector} from "../../../../../dist/commonjs/System/FunctionTypes";
 import {areEqual} from "../../../../../dist/commonjs/System/Collections/Array/Compare";

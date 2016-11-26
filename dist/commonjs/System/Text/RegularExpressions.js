@@ -48,7 +48,7 @@ var Regex = (function () {
         }
         if (!pattern)
             throw new Error("'pattern' cannot be null or empty.");
-        var patternString, flags = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
+        var patternString, flags = (options && ((options) instanceof (Array) ? options : [options]).concat(extra) || extra)
             .join(EMPTY)
             .toLowerCase();
         if (pattern instanceof RegExp) {

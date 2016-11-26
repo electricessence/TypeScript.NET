@@ -11,7 +11,7 @@ import {Order} from "../../Sorting/Order";
 
 function ensureArray<T>(value:T|T[]):T[]
 {
-	return Array.isArray(value)
+	return (value)instanceof(Array)
 		? <T[]>value
 		: [<T>value];
 }
@@ -53,7 +53,7 @@ export function createComparer<TSource,TSelect extends Primitive>(
 		const bValue = ensureArray(selector(b));
 		const len = Math.min(aValue.length, bValue.length);
 
-		const oArray = Array.isArray(order) ? order : null;
+		const oArray = (order)instanceof(Array) ? order : null;
 		for(let i = 0; i<len; i++)
 		{
 			let vA = aValue[i],

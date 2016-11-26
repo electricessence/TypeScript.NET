@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
 var ICollectionTests = require("./ICollection");

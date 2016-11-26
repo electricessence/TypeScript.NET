@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 require("mocha");
 var AU = require("../../../../dist/commonjs/System/Collections/Array/Utility");

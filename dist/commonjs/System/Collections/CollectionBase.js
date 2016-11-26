@@ -8,8 +8,8 @@ var Compare_1 = require("../Compare");
 var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
 var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
 var DisposableBase_1 = require("../Disposable/DisposableBase");
-var extends_1 = require("../../extends");
 var Environment_1 = require("../Environment");
+var extends_1 = require("../../extends");
 //noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 //noinspection SpellCheckingInspection
@@ -185,7 +185,7 @@ var CollectionBase = (function (_super) {
         var _this = this;
         var added = 0;
         if (entries) {
-            if (Array.isArray(entries)) {
+            if ((entries) instanceof (Array)) {
                 // Optimize for avoiding a new closure.
                 for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
                     var e = entries_1[_i];

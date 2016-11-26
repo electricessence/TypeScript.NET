@@ -1,7 +1,7 @@
-System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function (exports_1, context_1) {
+System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, extends_1, Environment_1, __extends, NAME, CMDC, CMRO, LINQ_PATH, CollectionBase;
+    var Enumerator_1, Compare_1, ArgumentNullException_1, InvalidOperationException_1, DisposableBase_1, Environment_1, extends_1, __extends, NAME, CMDC, CMRO, LINQ_PATH, CollectionBase;
     return {
         setters: [
             function (Enumerator_1_1) {
@@ -19,11 +19,11 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
             function (DisposableBase_1_1) {
                 DisposableBase_1 = DisposableBase_1_1;
             },
-            function (extends_1_1) {
-                extends_1 = extends_1_1;
-            },
             function (Environment_1_1) {
                 Environment_1 = Environment_1_1;
+            },
+            function (extends_1_1) {
+                extends_1 = extends_1_1;
             }
         ],
         execute: function () {
@@ -202,7 +202,7 @@ System.register(["./Enumeration/Enumerator", "../Compare", "../Exceptions/Argume
                     var _this = this;
                     var added = 0;
                     if (entries) {
-                        if (Array.isArray(entries)) {
+                        if ((entries) instanceof (Array)) {
                             // Optimize for avoiding a new closure.
                             for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
                                 var e = entries_1[_i];

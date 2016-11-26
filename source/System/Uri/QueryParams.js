@@ -83,7 +83,7 @@
         parse(query, function (key, value) {
             if ((key) in (result)) {
                 var prev = result[key];
-                if (!(Array.isArray(prev)))
+                if (!((prev) instanceof (Array)))
                     result[key] = prev = [prev];
                 prev.push(value);
             }

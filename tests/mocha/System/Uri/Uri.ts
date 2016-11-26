@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import Uri from "../../../../dist/commonjs/System/Uri/Uri";

@@ -5,15 +5,15 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../../extends", "../Environment"], function (require, exports) {
+})(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], function (require, exports) {
     "use strict";
     var Enumerator_1 = require("./Enumeration/Enumerator");
     var Compare_1 = require("../Compare");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var DisposableBase_1 = require("../Disposable/DisposableBase");
-    var extends_1 = require("../../extends");
     var Environment_1 = require("../Environment");
+    var extends_1 = require("../../extends");
     var __extends = extends_1.default;
     var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
     var LINQ_PATH = "../../System.Linq/Linq";
@@ -159,7 +159,7 @@
             var _this = this;
             var added = 0;
             if (entries) {
-                if (Array.isArray(entries)) {
+                if ((entries) instanceof (Array)) {
                     for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
                         var e = entries_1[_i];
                         if (this._addInternal(e))

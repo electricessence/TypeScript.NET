@@ -28,7 +28,6 @@ export class DateTime implements ICalendarDate, IDateTime
 	constructor(source:DateTime, kind?:DateTime.Kind);
 	constructor(value:any = new Date(), kind:DateTime.Kind = DateTime.Kind.Local)
 	{
-		const _ = this;
 		this._kind = kind;
 		if(value instanceof DateTime)
 			this._value = value.toJsDate();

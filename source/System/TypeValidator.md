@@ -49,7 +49,7 @@ const MyTypeValidator = new TypeValidator<MyType>(
 ```
 #### Step 3: validate as many times as you want:
 ```typescript
-var myItem = {
+const myItem = {
 	a: {},
 	b: "hello",
 	c: 1,

@@ -118,7 +118,7 @@ class EventDispatcherBase extends DisposableBase implements IEventDispatcher
 
 		let event:IEventBase<any>;
 
-		if(typeof e=="string")
+		if(typeof e=='string')
 		{
 			event = <any>(Event && Object.create(Event) || {});
 			if(!params)

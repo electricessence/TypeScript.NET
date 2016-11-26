@@ -12,7 +12,7 @@ import {CollectionBase} from "./CollectionBase";
 import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {ActionWithIndex, PredicateWithIndex} from "../FunctionTypes";
-import {IMap} from "./Dictionaries/IDictionary";
+import {IMap} from "../../IMap";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {ISet} from "./ISet";

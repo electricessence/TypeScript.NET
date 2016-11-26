@@ -901,7 +901,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     }
                     if (!first && !rest.length)
                         throw new ArgumentNullException_1.ArgumentNullException("promises");
-                    return new PromiseCollection((Array.isArray(first) ? first : [first])
+                    return new PromiseCollection(((first) instanceof (Array) ? first : [first])
                         .concat(rest));
                 }
                 Promise.group = group;
@@ -912,7 +912,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     }
                     if (!first && !rest.length)
                         throw new ArgumentNullException_1.ArgumentNullException("promises");
-                    var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+                    var promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
                     if (!promises.length || promises.every(function (v) { return !v; }))
                         return new ArrayPromise(function (r) { return r(promises); }, true); // it's a new empty, reuse it. :|
                     // Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
@@ -972,7 +972,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     }
                     if (!first && !rest.length)
                         throw new ArgumentNullException_1.ArgumentNullException("promises");
-                    var promises = (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy!
+                    var promises = ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy!
                     if (!promises.length || promises.every(function (v) { return !v; }))
                         return new ArrayPromise(function (r) { return r(promises); }, true); // it's a new empty, reuse it. :|
                     // Eliminate deferred and take the parent since all .then calls happen on next cycle anyway.
@@ -1017,7 +1017,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     for (var _i = 1; _i < arguments.length; _i++) {
                         rest[_i - 1] = arguments[_i];
                     }
-                    var promises = first && (Array.isArray(first) ? first : [first]).concat(rest); // yay a copy?
+                    var promises = first && ((first) instanceof (Array) ? first : [first]).concat(rest); // yay a copy?
                     if (!promises || !promises.length || !(promises = promises.filter(function (v) { return v != null; })).length)
                         throw new ArgumentException_1.ArgumentException("Nothing to wait for.");
                     var len = promises.length;
@@ -1076,7 +1076,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     }
                     if (!first && !rest.length)
                         throw new ArgumentNullException_1.ArgumentNullException("resolutions");
-                    return new PromiseCollection((Array.isArray(first) ? first : [first])
+                    return new PromiseCollection(((first) instanceof (Array) ? first : [first])
                         .concat(rest)
                         .map(function (v) { return resolve(v); }));
                 }

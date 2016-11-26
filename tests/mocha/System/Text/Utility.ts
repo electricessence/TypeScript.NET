@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import * as TextUtility from "../../../../dist/commonjs/System/Text/Utility";
 

@@ -61,7 +61,7 @@ export class TypeInfoHelper extends TypeInfo
 			return false;
 
 		// Check array contents and confirm intersections.
-		if(this.isArray && Array.isArray(descriptor))
+		if(this.isArray && (descriptor)instanceof(Array))
 		{
 			let max = Math.min(descriptor.length, value.length);
 

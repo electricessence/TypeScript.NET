@@ -18,7 +18,7 @@ var List = (function (_super) {
     function List(source, equalityComparer) {
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         var _this = _super.call(this, VOID0, equalityComparer) || this;
-        if (Array.isArray(source)) {
+        if ((source) instanceof (Array)) {
             _this._source = source.slice();
         }
         else {

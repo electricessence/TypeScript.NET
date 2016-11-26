@@ -9,7 +9,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         if (!Types_1.Type.isObject(source))
             return source;
         var result;
-        if (Array.isArray(source)) {
+        if ((source) instanceof (Array)) {
             result = source.slice();
             if (depth > 0) {
                 for (var i = 0; i < result.length; i++) {

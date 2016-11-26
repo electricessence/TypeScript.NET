@@ -1,5 +1,6 @@
 import { Primitive } from "./Primitive";
 import { IArray } from "./Collections/Array/IArray";
+import { TypeValue } from "./TypeValue";
 /**
  * Exposes easy access to type information including inquiring about members.
  */
@@ -41,37 +42,37 @@ export declare module Type {
      * typeof true
      * @type {string}
      */
-    const BOOLEAN: string;
+    const BOOLEAN: TypeValue.Boolean;
     /**
      * typeof 0
      * @type {string}
      */
-    const NUMBER: string;
+    const NUMBER: TypeValue.Number;
     /**
      * typeof ""
      * @type {string}
      */
-    const STRING: string;
+    const STRING: TypeValue.String;
     /**
      * typeof {}
      * @type {string}
      */
-    const OBJECT: string;
+    const OBJECT: TypeValue.Object;
     /**
      * typeof Symbol
      * @type {string}
      */
-    const SYMBOL: string;
+    const SYMBOL: TypeValue.Symbol;
     /**
      * typeof undefined
      * @type {string}
      */
-    const UNDEFINED: string;
+    const UNDEFINED: TypeValue.Undefined;
     /**
      * typeof function
      * @type {string}
      */
-    const FUNCTION: string;
+    const FUNCTION: TypeValue.Function;
     /**
      * Returns true if the value parameter is null or undefined.
      * @param value
@@ -110,6 +111,12 @@ export declare module Type {
      * @returns {boolean}
      */
     function isPrimitive(value: any, allowUndefined?: boolean): value is Primitive;
+    /**
+     * For detecting if the value can be used as a key.
+     * @param value
+     * @param allowUndefined
+     * @returns {boolean|boolean}
+     */
     function isPrimitiveOrSymbol(value: any, allowUndefined?: boolean): value is Primitive | symbol;
     /**
      * Returns true if the value is a string, number, or symbol.
@@ -136,9 +143,29 @@ export declare module Type {
      * @returns {number}
      */
     function numberOrNaN(value: any): number;
+    /**
+     * Returns a TypeInfo object for the target.
+     * @param target
+     * @returns {TypeInfo}
+     */
     function of(target: any): TypeInfo;
-    function hasMember(instance: any, property: string): boolean;
-    function hasMemberOfType<T>(instance: any, property: string, type: string): instance is T;
+    /**
+     * Will detect if a member exists (using 'in').
+     * Returns true if a property or method exists on the object or its prototype.
+     * @param instance
+     * @param property Name of the member.
+     * @param ignoreUndefined When ignoreUndefined is true, if the member exists but is undefined, it will return false.
+     * @returns {boolean}
+     */
+    function hasMember(instance: any, property: string, ignoreUndefined?: boolean): boolean;
+    /**
+     * Returns true if the member matches the type.
+     * @param instance
+     * @param property
+     * @param type
+     * @returns {boolean}
+     */
+    function hasMemberOfType<T>(instance: any, property: string, type: TypeValue.Any): instance is T;
     function hasMethod<T>(instance: any, property: string): instance is T;
     function isArrayLike<T>(instance: any): instance is IArray<T>;
 }

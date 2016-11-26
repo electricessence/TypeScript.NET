@@ -25,8 +25,8 @@ export class IteratorResult<T> implements IIteratorResult<T>
 		done:boolean = false)
 	{
 		this.value = value;
-		if(typeof index=="boolean")
-			done = index;
+		if(typeof index=='boolean')
+			this.done = index;
 		else
 		{
 			this.index = index;

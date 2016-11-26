@@ -9,7 +9,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
     exports_1("throwIfEndless", throwIfEndless);
     function initArrayFrom(source, max) {
         if (max === void 0) { max = Infinity; }
-        if (Array.isArray(source) || Types_1.Type.isString(source)) {
+        if ((source) instanceof (Array) || Types_1.Type.isString(source)) {
             var len = Math.min(source.length, max);
             if (isFinite(len)) {
                 if (len > 65535)
@@ -32,7 +32,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         // To simplify and prevent null reference exceptions:
         if (!source)
             return EmptyEnumerator_1.EmptyEnumerator;
-        if (Array.isArray(source))
+        if ((source) instanceof (Array))
             return new ArrayEnumerator_1.ArrayEnumerator(source);
         if (Types_1.Type.isArrayLike(source)) {
             return new IndexEnumerator_1.IndexEnumerator(function () {
@@ -128,7 +128,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         if (max === void 0) { max = Infinity; }
         if (source === STRING_EMPTY)
             return [];
-        if (!isFinite(max) && Array.isArray(source))
+        if (!isFinite(max) && (source) instanceof (Array))
             return source.slice();
         var result = initArrayFrom(source, max);
         if (-1 === forEach(source, function (e, i) { result[i] = e; }, max))
@@ -147,7 +147,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         if (max === void 0) { max = Infinity; }
         if (source === STRING_EMPTY)
             return [];
-        if (!isFinite(max) && Array.isArray(source))
+        if (!isFinite(max) && (source) instanceof (Array))
             return source.map(selector);
         var result = initArrayFrom(source, max);
         if (-1 === forEach(source, function (e, i) { result[i] = selector(e, i); }, max))

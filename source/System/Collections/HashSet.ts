@@ -4,7 +4,7 @@
  */
 import {Type} from "../Types";
 import {SetBase} from "./SetBase";
-import {IMap} from "./Dictionaries/IDictionary";
+import {IMap} from "../../IMap";
 import {ILinkedNodeWithValue} from "./ILinkedListNode";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
 import {Selector} from "../FunctionTypes";

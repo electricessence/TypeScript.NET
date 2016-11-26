@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var Stopwatch_1 = require("../../../../source/System/Diagnostics/Stopwatch");
 var Parallel_1 = require("../../../../source/System/Threading/Tasks/Parallel");

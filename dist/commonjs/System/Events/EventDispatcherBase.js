@@ -64,7 +64,7 @@ var EventDispatcherBase = (function (_super) {
         if (!l || !l.length)
             return false;
         var event;
-        if (typeof e == "string") {
+        if (typeof e == 'string') {
             event = (Event && Object.create(Event) || {});
             if (!params)
                 params = {};

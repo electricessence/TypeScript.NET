@@ -4,7 +4,7 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 // NOTE: Avoid real (types/interfaces only = ok) dependencies so this class can be used cleanly.
-import {IMap} from "../Collections/Dictionaries/IDictionary";
+import {IMap} from "../../IMap";
 import {Primitive} from "../Primitive";
 import {SelectorWithIndex} from "../FunctionTypes";
 import __extendsImport from "../../extends";
@@ -21,42 +21,6 @@ const _I = 'i', _G = 'g', _M = 'm', _U = 'u', _W = 'w', _Y = 'y';
  */
 export module RegexOptions
 {
-	/**
-	 * Specifies case-insensitive matching. For more information, see the "Case-Insensitive Matching " section in the Regular Expression Options topic.
-	 */
-	export const IGNORE_CASE:string = _I;
-	export const I:string = _I;
-
-	/**
-	 * Specifies global matching instead of single.
-	 */
-	export const GLOBAL:string = _G;
-	export const G:string = _G;
-
-	/**
-	 * treat beginning and end characters (^ and $) as working over multiple lines (i.e., match the beginning or end of each line (delimited by \n or \r), not only the very beginning or end of the whole input string)
-	 */
-	export const MULTI_LINE:string = _M;
-	export const M:string = _M;
-
-	/**
-	 * treat pattern as a sequence of unicode code points
-	 */
-	export const UNICODE:string = _U;
-	export const U:string = _U;
-
-	/**
-	 * matches only from the index indicated by the lastIndex property of this regular expression in the target string (and does not attempt to match from any later indexes).
-	 */
-	export const STICKY:string = _Y;
-	export const Y:string = _Y;
-
-	/**
-	 * Modifies the pattern to ignore standard whitespace characters.
-	 */
-	export const IGNORE_PATTERN_WHITESPACE:string = _W;
-	export const W:string = _W;
-
 	export type Global = 'g';
 	export type IgnoreCase = 'i';
 	export type MultiLine = 'm';
@@ -65,6 +29,44 @@ export module RegexOptions
 	export type IgnorePatternWhitespace = "w";
 
 	export type Literal = Global | IgnoreCase | MultiLine | Unicode | Sticky | IgnorePatternWhitespace;
+
+
+	/**
+	 * Specifies case-insensitive matching. For more information, see the "Case-Insensitive Matching " section in the Regular Expression Options topic.
+	 */
+	export const IGNORE_CASE:IgnoreCase = _I;
+	export const I:IgnoreCase = _I;
+
+	/**
+	 * Specifies global matching instead of single.
+	 */
+	export const GLOBAL:Global = _G;
+	export const G:Global = _G;
+
+	/**
+	 * treat beginning and end characters (^ and $) as working over multiple lines (i.e., match the beginning or end of each line (delimited by \n or \r), not only the very beginning or end of the whole input string)
+	 */
+	export const MULTI_LINE:MultiLine = _M;
+	export const M:MultiLine = _M;
+
+	/**
+	 * treat pattern as a sequence of unicode code points
+	 */
+	export const UNICODE:Unicode = _U;
+	export const U:Unicode = _U;
+
+	/**
+	 * matches only from the index indicated by the lastIndex property of this regular expression in the target string (and does not attempt to match from any later indexes).
+	 */
+	export const STICKY:Sticky = _Y;
+	export const Y:Sticky = _Y;
+
+	/**
+	 * Modifies the pattern to ignore standard whitespace characters.
+	 */
+	export const IGNORE_PATTERN_WHITESPACE:IgnorePatternWhitespace = _W;
+	export const W:IgnorePatternWhitespace = _W;
+
 }
 
 
@@ -82,7 +84,7 @@ export class Regex
 
 		let patternString:string,
 		    flags:string
-			    = (options && (Array.isArray(options) ? options : [options]).concat(extra) || extra)
+			    = (options && ((options)instanceof(Array) ? options : [options]).concat(extra) || extra)
 			    .join(EMPTY)
 			    .toLowerCase();
 

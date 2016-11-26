@@ -130,7 +130,7 @@ export function indexOf<T>(
 	if(len)
 	{
 		// NaN NEVER evaluates its equality so be careful.
-		if(Array.isArray(array) && !Type.isTrueNaN(item))
+		if((array)instanceof(Array) && !Type.isTrueNaN(item))
 			return array.indexOf(item);
 
 		for(let i = 0; i<len; i++)
@@ -266,7 +266,10 @@ export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):n
 		throw new ArgumentException('predicate', 'Must be a function.');
 
 	const len = array.length;
-	if(Array.isArray(array))
+	if(!Type.isNumber(len) || len<0)
+		throw new ArgumentException('array','Does not have a valid length.');
+
+	if((array)instanceof(Array))
 	{
 		for(let i = 0; i<len; i++)
 		{
@@ -494,7 +497,7 @@ export function flatten(a:any[], recurseDepth:number = 0):any[]
 	for(let i = 0; i<a.length; i++)
 	{
 		let x = a[i];
-		if(Array.isArray(x))
+		if((x)instanceof(Array))
 		{
 			if(recurseDepth>0) x = flatten(x, recurseDepth - 1);
 			for(let n = 0; n<x.length; n++) result.push(x[n]);

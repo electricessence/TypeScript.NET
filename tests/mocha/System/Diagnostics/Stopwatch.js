@@ -1,4 +1,5 @@
 "use strict";
+///<reference types="node"/>
 var assert = require("assert");
 var Stopwatch_1 = require("../../../../dist/commonjs/System/Diagnostics/Stopwatch");
 it("should measure a closure", function () {

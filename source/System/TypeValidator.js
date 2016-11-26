@@ -40,7 +40,7 @@
             }
             if (this.type != typeof descriptor || this.isPrimitive && !Compare_1.areEqual(value, descriptor))
                 return false;
-            if (this.isArray && Array.isArray(descriptor)) {
+            if (this.isArray && (descriptor) instanceof (Array)) {
                 var max = Math.min(descriptor.length, value.length);
                 for (var i = 0; i < max; i++) {
                     if (areInvalid(value[i], descriptor[i]))

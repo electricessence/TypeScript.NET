@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import Stopwatch from "../../../../source/System/Diagnostics/Stopwatch";
 import {Parallel} from "../../../../source/System/Threading/Tasks/Parallel";

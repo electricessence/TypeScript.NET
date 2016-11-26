@@ -106,7 +106,7 @@ export function parseToMap(query, deserialize = true, decodeValues = true) {
     parse(query, (key, value) => {
         if ((key) in (result)) {
             let prev = result[key];
-            if (!(Array.isArray(prev)))
+            if (!((prev) instanceof (Array)))
                 result[key] = prev = [prev];
             prev.push(value);
         }

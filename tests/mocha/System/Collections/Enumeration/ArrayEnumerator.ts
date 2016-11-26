@@ -1,3 +1,4 @@
+///<reference types="node"/>
 import * as assert from "assert";
 import "mocha";
 import ArrayEnumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/ArrayEnumerator";

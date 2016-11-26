@@ -2,8 +2,6 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
-
 import {TimeUnit} from "./TimeUnit";
 import {TimeQuantity} from "./TimeQuantity";
 import {ITimeQuantity} from "./ITimeQuantity";
@@ -20,8 +18,8 @@ class TimeUnitValue extends TimeQuantity
 
 	constructor(value:number|ITimeQuantity, private _units:TimeUnit)
 	{
-		super(typeof(value)=='number'
-			? <number>value
+		super(typeof value=='number'
+			? value
 			: getUnitQuantityFrom(<ITimeQuantity>value, _units));
 		TimeUnit.assertValid(_units);
 	}
