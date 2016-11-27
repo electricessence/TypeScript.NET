@@ -53,7 +53,7 @@ export function ensure<T extends IMap<any>, U extends IMap<any>>(
  */
 export function copy<T extends IMap<any>>(source:T):T
 {
-	return apply({},source);
+	return apply({}, source);
 }
 
 
@@ -67,5 +67,22 @@ export function merge<A extends IMap<any>, B extends IMap<any>>(
 	a:A,
 	b:B):A & B
 {
-	return apply(copy(a),b);
+	return apply(copy(a), b);
+}
+
+/**
+ * Removes any keys that don't exist on the keyMap.
+ * @param target
+ * @param keyMap
+ */
+export function trim<TResult extends IMap<any>>(target:IMap<any>, keyMap:TResult):void //Partial<TResult>
+{
+	for(const key in target)
+	{
+		if(!keyMap.hasOwnProperty(key))
+		{
+			delete target[key];
+		}
+	}
+	//return <any>target;
 }

@@ -50,4 +50,18 @@ function merge(a, b) {
     return apply(copy(a), b);
 }
 exports.merge = merge;
+/**
+ * Removes any keys that don't exist on the keyMap.
+ * @param target
+ * @param keyMap
+ */
+function trim(target, keyMap) {
+    for (var key in target) {
+        if (!keyMap.hasOwnProperty(key)) {
+            delete target[key];
+        }
+    }
+    //return <any>target;
+}
+exports.trim = trim;
 //# sourceMappingURL=MapUtility.js.map

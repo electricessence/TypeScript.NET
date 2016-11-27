@@ -26,3 +26,9 @@ export declare function copy<T extends IMap<any>>(source: T): T;
  * @param b
  */
 export declare function merge<A extends IMap<any>, B extends IMap<any>>(a: A, b: B): A & B;
+/**
+ * Removes any keys that don't exist on the keyMap.
+ * @param target
+ * @param keyMap
+ */
+export declare function trim<TResult extends IMap<any>>(target: IMap<any>, keyMap: TResult): void;

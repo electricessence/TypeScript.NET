@@ -1,8 +1,8 @@
+"use strict";
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-"use strict";
 var TimeUnit_1 = require("./TimeUnit");
 var TimeQuantity_1 = require("./TimeQuantity");
 var extends_1 = require("../../extends");

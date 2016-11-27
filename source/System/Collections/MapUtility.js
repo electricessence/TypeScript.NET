@@ -35,5 +35,13 @@
         return apply(copy(a), b);
     }
     exports.merge = merge;
+    function trim(target, keyMap) {
+        for (var key in target) {
+            if (!keyMap.hasOwnProperty(key)) {
+                delete target[key];
+            }
+        }
+    }
+    exports.trim = trim;
 });
 //# sourceMappingURL=MapUtility.js.map
