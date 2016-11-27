@@ -57,8 +57,8 @@ System.register(["../../../Types", "../../../Compare"], function (exports_1, con
             return 0;
         };
     }
-    exports_1("createComparer", createComparer);
     var Types_1, Compare_1;
+    exports_1("createComparer", createComparer);
     return {
         setters: [
             function (Types_1_1) {

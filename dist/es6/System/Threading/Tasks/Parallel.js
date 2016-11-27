@@ -27,7 +27,7 @@ function extend(from, to) {
     if (!to)
         to = {};
     for (let i of Object.keys(from)) {
-        if (to[i] === void 0)
+        if (to[i] === VOID0)
             to[i] = from[i];
     }
     return to;

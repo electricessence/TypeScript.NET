@@ -22,5 +22,17 @@ function default_1(d, b) {
         : (__.prototype = b.prototype, new __());
 }
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Used by TypeScript to extend classes before ES6.
+ *
+ * Usage:
+ * ```
+ * import __extendsImport from "../../extends";
+ * //noinspection JSUnusedLocalSymbols
+ * const __extends = __extendsImport;
+ * ```
+ * @param d
+ * @param b
+ */
 exports.default = default_1;
 //# sourceMappingURL=extends.js.map

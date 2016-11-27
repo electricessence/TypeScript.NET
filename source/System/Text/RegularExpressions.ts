@@ -152,7 +152,7 @@ export class Regex
 		{
 			let text = r[i];
 			let g = EmptyGroup;
-			if(text!==null || text!== void 0)
+			if(text!=null)
 			{
 				// Empty string might mean \b match or similar.
 				g = new Group(text, loc);
@@ -197,7 +197,7 @@ export class Regex
 		r:any,
 		count:number = Infinity):string
 	{
-		if(!input || r===null || r=== void 0 || !(count>0)) return input;
+		if(!input || r==null || !(count>0)) return input;
 		const result:string[] = [];
 		let p = 0;
 		const end = input.length, isEvaluator = typeof r=="function";

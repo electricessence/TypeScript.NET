@@ -139,7 +139,7 @@
         if (!Types_1.Type.isFunction(predicate))
             throw new ArgumentException_1.ArgumentException('predicate', 'Must be a function.');
         var len = array.length;
-        if (!Types_1.Type.isNumber(len) || len < 0)
+        if (!Types_1.Type.isNumber(len, true) || len < 0)
             throw new ArgumentException_1.ArgumentException('array', 'Does not have a valid length.');
         if ((array) instanceof (Array)) {
             for (var i = 0; i < len; i++) {

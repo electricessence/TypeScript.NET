@@ -32,7 +32,7 @@
             to = {};
         for (var _i = 0, _a = Object.keys(from); _i < _a.length; _i++) {
             var i = _a[_i];
-            if (to[i] === void 0)
+            if (to[i] === VOID0)
                 to[i] = from[i];
         }
         return to;
@@ -133,7 +133,7 @@
         Parallel.prototype.require = function () {
             var required = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                required[_i] = arguments[_i];
+                required[_i - 0] = arguments[_i];
             }
             return this.requireThese(required);
         };
@@ -338,7 +338,7 @@
         Parallel.require = function () {
             var required = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                required[_i] = arguments[_i];
+                required[_i - 0] = arguments[_i];
             }
             return (new Parallel()).requireThese(required);
         };

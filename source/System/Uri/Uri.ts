@@ -120,7 +120,7 @@ export class Uri implements IUri, IEquatable<IUri>
 			u && u.scheme || defaults && <any>defaults.scheme,
 			u && u.userInfo || defaults && <any>defaults.userInfo,
 			u && u.host || defaults && <any>defaults.host,
-			u && Type.isNumber(u.port) ? u.port : defaults && <any>defaults.port,
+			u && Type.isNumber(u.port,true) ? u.port : defaults && <any>defaults.port,
 			u && u.path || defaults && <any>defaults.path,
 			u && u.query || defaults && <any>defaults.query,
 			u && u.fragment || defaults && <any>defaults.fragment
@@ -322,7 +322,7 @@ function getScheme(scheme:SchemeValue.Any|string|null|undefined):SchemeValue.Any
 	}
 	else
 	{
-		if(s===null || s===undefined) return s;
+		if(s==null) return s;
 	}
 	throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
 }
@@ -333,7 +333,7 @@ function getPort(port:number|string|null|undefined):number|null
 	if(!port) return null;
 	let p:number;
 
-	if(Type.isNumber(port, true))
+	if(Type.isNumber(port))
 	{
 		p = <number>port;
 		if(p>=0 && isFinite(p))
@@ -355,7 +355,7 @@ function getAuthority(uri:IUri):string
 		if(uri.userInfo)
 			throw new ArgumentException('host', 'Cannot include user info when there is no host.');
 
-		if(Type.isNumber(uri.port, false))
+		if(Type.isNumber(uri.port, true))
 			throw new ArgumentException('host', 'Cannot include a port when there is no host.');
 	}
 

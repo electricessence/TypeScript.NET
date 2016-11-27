@@ -41,7 +41,7 @@ function RETURN() {
     return 1 /* Return */;
 }
 function isNotNullOrUndefined(e) {
-    return e !== null && e !== VOID0;
+    return e != null;
 }
 // Leave internal to avoid accidental overwriting.
 var LinqFunctions = (function (_super) {
@@ -689,7 +689,7 @@ var InfiniteEnumerable = (function (_super) {
     InfiniteEnumerable.prototype.concat = function () {
         var enumerables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            enumerables[_i] = arguments[_i];
+            enumerables[_i - 0] = arguments[_i];
         }
         return this.merge(enumerables);
     };
@@ -810,7 +810,7 @@ var InfiniteEnumerable = (function (_super) {
     InfiniteEnumerable.prototype.alternate = function () {
         var sequence = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            sequence[_i] = arguments[_i];
+            sequence[_i - 0] = arguments[_i];
         }
         return this.alternateMultiple(sequence);
     };
@@ -2019,7 +2019,7 @@ function throwIfDisposed(disposed) {
     function chooseFrom() {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
+            args[_i - 0] = arguments[_i];
         }
         // We could return empty if no length, but that would break the typing and produce unexpected results.
         // Enforcing that there must be at least 1 choice is key.
@@ -2059,7 +2059,7 @@ function throwIfDisposed(disposed) {
     function cycleThrough() {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i] = arguments[_i];
+            args[_i - 0] = arguments[_i];
         }
         // We could return empty if no length, but that would break the typing and produce unexpected results.
         // Enforcing that there must be at least 1 choice is key.
@@ -2216,7 +2216,7 @@ function throwIfDisposed(disposed) {
     Enumerable.rangeTo = rangeTo;
     function matches(input, pattern, flags) {
         if (flags === void 0) { flags = ""; }
-        if (input === null || input === VOID0)
+        if (input == null)
             throw new ArgumentNullException_1.ArgumentNullException("input");
         var type = typeof input;
         if (type != Types_1.Type.STRING)
@@ -2235,7 +2235,9 @@ function throwIfDisposed(disposed) {
             }, function (yielder) {
                 // Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
                 var match = regex.exec(input);
-                return (match !== null) ? yielder.yieldReturn(match) : false;
+                return match != null
+                    ? yielder.yieldReturn(match)
+                    : yielder.yieldBreak();
             });
         });
     }
@@ -2379,7 +2381,6 @@ function throwIfDisposed(disposed) {
     }
     Enumerable.weave = weave;
 })(Enumerable = exports.Enumerable || (exports.Enumerable = {}));
-exports.Enumerable = Enumerable;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Enumerable;
 //# sourceMappingURL=Linq.js.map

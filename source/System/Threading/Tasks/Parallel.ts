@@ -64,7 +64,7 @@ function extend<TFrom extends any,TTo extends any>(from:TFrom, to:TTo):TFrom & T
 	if(!to) to = <any>{};
 	for(let i of Object.keys(from))
 	{
-		if(to[i]=== void 0) to[i] = from[i];
+		if(to[i]===VOID0) to[i] = from[i];
 	}
 	return <any>to;
 }

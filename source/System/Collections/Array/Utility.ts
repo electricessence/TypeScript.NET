@@ -266,7 +266,7 @@ export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):n
 		throw new ArgumentException('predicate', 'Must be a function.');
 
 	const len = array.length;
-	if(!Type.isNumber(len) || len<0)
+	if(!Type.isNumber(len, true) || len<0)
 		throw new ArgumentException('array','Does not have a valid length.');
 
 	if((array)instanceof(Array))

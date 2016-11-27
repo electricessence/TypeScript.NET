@@ -20,7 +20,7 @@ export function padStringRight(source:string, minLength:number, pad:string = SPA
 
 export function padNumberLeft(source:number, minLength:number, pad:string|number = ZERO):string
 {
-	if(!Type.isNumber(source))
+	if(!Type.isNumber(source, true))
 		throw new Error("Cannot pad non-number.");
 
 	if(!source) source = 0;
@@ -31,7 +31,7 @@ export function padNumberLeft(source:number, minLength:number, pad:string|number
 
 export function padNumberRight(source:number, minLength:number, pad:string|number = ZERO):string
 {
-	if(!Type.isNumber(source))
+	if(!Type.isNumber(source, true))
 		throw new Error("Cannot pad non-number.");
 
 	if(!source) source = 0;
@@ -44,7 +44,7 @@ export function padLeft(source:number, minLength:number, pad?:string|number):str
 export function padLeft(source:string|number, minLength:number, pad?:any):string
 {
 	if(Type.isString(source)) return padStringLeft(source, minLength, pad);
-	if(Type.isNumber(source)) return padNumberLeft(source, minLength, pad);
+	if(Type.isNumber(source, true)) return padNumberLeft(source, minLength, pad);
 	throw new Error("Invalid source type.");
 }
 
@@ -53,6 +53,6 @@ export function padRight(source:number, minLength:number, pad?:string|number):st
 export function padRight(source:string|number, minLength:number, pad?:any):string
 {
 	if(Type.isString(source)) return padStringRight(source, minLength, pad);
-	if(Type.isNumber(source)) return padNumberRight(source, minLength, pad);
+	if(Type.isNumber(source, true)) return padNumberRight(source, minLength, pad);
 	throw new Error("Invalid source type.");
 }

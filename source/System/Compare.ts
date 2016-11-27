@@ -71,7 +71,7 @@ export function areEquivalent(
 	// Take a step by step approach to ensure efficiency.
 	if(areEqual(a, b, true)) return true;
 
-	if(a===null || a===VOID0 || b==null || b===VOID0)
+	if(a==null || b==null)
 	{
 		if(!nullEquivalency) return false;
 
@@ -85,7 +85,7 @@ export function areEquivalent(
 			return !Object.keys(b).length;
 		}
 
-		return (a===null || a===VOID0) && (b==null || b===VOID0);
+		return a==null && b==null;
 	}
 
 	if(Type.isObject(a) && Type.isObject(b))

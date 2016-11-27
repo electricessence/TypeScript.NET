@@ -38,7 +38,7 @@ function RETURN() {
     return 1 /* Return */;
 }
 function isNotNullOrUndefined(e) {
-    return e !== null && e !== VOID0;
+    return e != null;
 }
 // Leave internal to avoid accidental overwriting.
 class LinqFunctions extends BaseFunctions {
@@ -2097,7 +2097,7 @@ function throwIfDisposed(disposed) {
     }
     Enumerable.rangeTo = rangeTo;
     function matches(input, pattern, flags = "") {
-        if (input === null || input === VOID0)
+        if (input == null)
             throw new ArgumentNullException("input");
         const type = typeof input;
         if (type != Type.STRING)
@@ -2116,7 +2116,9 @@ function throwIfDisposed(disposed) {
             }, (yielder) => {
                 // Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
                 let match = regex.exec(input);
-                return (match !== null) ? yielder.yieldReturn(match) : false;
+                return match != null
+                    ? yielder.yieldReturn(match)
+                    : yielder.yieldBreak();
             });
         });
     }

@@ -16,13 +16,12 @@ export class TimeSpan extends TimeQuantity {
     constructor(value, units = TimeUnit.Milliseconds) {
         const ms = TimeUnit.toMilliseconds(value, units);
         super(ms);
-        const _ = this;
-        _.ticks = ms * 10000 /* Millisecond */;
-        _.milliseconds = ms;
-        _.seconds = ms / 1000 /* Second */;
-        _.minutes = ms / 60000 /* Minute */;
-        _.hours = ms / 3600000 /* Hour */;
-        _.days = ms / 86400000 /* Day */;
+        this.ticks = ms * 10000 /* Millisecond */;
+        this.milliseconds = ms;
+        this.seconds = ms / 1000 /* Second */;
+        this.minutes = ms / 60000 /* Minute */;
+        this.hours = ms / 3600000 /* Hour */;
+        this.days = ms / 86400000 /* Day */;
     }
     /**
      * Provides an standard interface for acquiring the total time.

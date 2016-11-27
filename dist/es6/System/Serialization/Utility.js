@@ -8,7 +8,6 @@ const EMPTY = '', TRUE = 'true', FALSE = 'false';
 export function toString(value, defaultForUnknown) {
     let v = value;
     switch (typeof v) {
-        case Type.UNDEFINED:
         case Type.STRING:
             return v;
         case Type.BOOLEAN:
@@ -16,7 +15,7 @@ export function toString(value, defaultForUnknown) {
         case Type.NUMBER:
             return EMPTY + v;
         default:
-            if (v === null)
+            if (v == null)
                 return v;
             if (isSerializable(v))
                 return v.serialize();

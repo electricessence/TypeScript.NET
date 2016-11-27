@@ -137,7 +137,7 @@ export var Type;
      * @returns {boolean}
      */
     function isNullOrUndefined(value) {
-        return value === null || value === VOID0;
+        return value == null;
     }
     Type.isNullOrUndefined = isNullOrUndefined;
     /**
@@ -152,13 +152,11 @@ export var Type;
     /**
      * Returns true if the value parameter is a number.
      * @param value
-     * @param allowNaN Default is true.
+     * @param ignoreNaN Default is false. When true, NaN is not considered a number and will return false.
      * @returns {boolean}
      */
-    function isNumber(value, allowNaN = false) {
-        if (allowNaN === VOID0)
-            allowNaN = true;
-        return typeof value === _NUMBER && (allowNaN || !isNaN(value));
+    function isNumber(value, ignoreNaN = false) {
+        return typeof value === _NUMBER && (!ignoreNaN || !isNaN(value));
     }
     Type.isNumber = isNumber;
     /**

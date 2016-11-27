@@ -43,7 +43,7 @@
             var u = Types_1.Type.isString(uri)
                 ? Uri.parse(uri)
                 : uri;
-            return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
+            return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port, true) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
         };
         Uri.parse = function (url, throwIfInvalid) {
             if (throwIfInvalid === void 0) { throwIfInvalid = true; }
@@ -102,7 +102,6 @@
         return Uri;
     }());
     exports.Uri = Uri;
-    var Fields;
     (function (Fields) {
         Fields[Fields["scheme"] = 0] = "scheme";
         Fields[Fields["userInfo"] = 1] = "userInfo";
@@ -111,7 +110,8 @@
         Fields[Fields["path"] = 4] = "path";
         Fields[Fields["query"] = 5] = "query";
         Fields[Fields["fragment"] = 6] = "fragment";
-    })(Fields = exports.Fields || (exports.Fields = {}));
+    })(exports.Fields || (exports.Fields = {}));
+    var Fields = exports.Fields;
     Object.freeze(Fields);
     function copyUri(from, to) {
         var i = 0, field;
@@ -139,7 +139,7 @@
                 return s;
         }
         else {
-            if (s === null || s === undefined)
+            if (s == null)
                 return s;
         }
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
@@ -150,7 +150,7 @@
         if (!port)
             return null;
         var p;
-        if (Types_1.Type.isNumber(port, true)) {
+        if (Types_1.Type.isNumber(port)) {
             p = port;
             if (p >= 0 && isFinite(p))
                 return p;
@@ -164,7 +164,7 @@
         if (!uri.host) {
             if (uri.userInfo)
                 throw new ArgumentException_1.ArgumentException('host', 'Cannot include user info when there is no host.');
-            if (Types_1.Type.isNumber(uri.port, false))
+            if (Types_1.Type.isNumber(uri.port, true))
                 throw new ArgumentException_1.ArgumentException('host', 'Cannot include a port when there is no host.');
         }
         var result = uri.host || EMPTY;

@@ -16,7 +16,6 @@ System.register([], function (exports_1, context_1) {
         }
         return result;
     }
-    exports_1("apply", apply);
     /**
      * Takes a target object and ensures values exist.
      * @param target
@@ -32,7 +31,6 @@ System.register([], function (exports_1, context_1) {
         }
         return result;
     }
-    exports_1("ensure", ensure);
     /**
      * Make a copy of the source object.
      * @param source
@@ -41,7 +39,6 @@ System.register([], function (exports_1, context_1) {
     function copy(source) {
         return apply({}, source);
     }
-    exports_1("copy", copy);
     /**
      * Takes two objects and creates another with the values of both.
      * B overwrites A.
@@ -51,7 +48,6 @@ System.register([], function (exports_1, context_1) {
     function merge(a, b) {
         return apply(copy(a), b);
     }
-    exports_1("merge", merge);
     /**
      * Removes any keys that don't exist on the keyMap.
      * @param target
@@ -65,6 +61,10 @@ System.register([], function (exports_1, context_1) {
         }
         //return <any>target;
     }
+    exports_1("apply", apply);
+    exports_1("ensure", ensure);
+    exports_1("copy", copy);
+    exports_1("merge", merge);
     exports_1("trim", trim);
     return {
         setters: [],

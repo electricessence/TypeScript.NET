@@ -40,7 +40,6 @@ System.register(["../../Types", "./Utility"], function (exports_1, context_1) {
             }
         }
     }
-    exports_1("unsafe", unsafe);
     /**
      * Simply takes a payload and passes it to all the listeners.
      * Returns the results in an array that matches the indexes of the listeners.
@@ -74,7 +73,6 @@ System.register(["../../Types", "./Utility"], function (exports_1, context_1) {
         }
         return result;
     }
-    exports_1("mapped", mapped);
     /**
      * Simply takes a payload and passes it to all the listeners.
      * Makes a copy of the listeners before calling dispatchUnsafe.
@@ -86,8 +84,10 @@ System.register(["../../Types", "./Utility"], function (exports_1, context_1) {
     function dispatch(listeners, payload, trap) {
         unsafe(Utility_1.copy(listeners), payload, trap);
     }
-    exports_1("dispatch", dispatch);
     var Types_1, Utility_1, VOID0;
+    exports_1("unsafe", unsafe);
+    exports_1("mapped", mapped);
+    exports_1("dispatch", dispatch);
     return {
         setters: [
             function (Types_1_1) {

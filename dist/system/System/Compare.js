@@ -14,7 +14,6 @@ System.register(["./Types"], function (exports_1, context_1) {
             || !strict && a == b
             || isTrueNaN(a) && isTrueNaN(b);
     }
-    exports_1("areEqual", areEqual);
     function compare(a, b, strict) {
         if (strict === void 0) { strict = true; }
         if (areEqual(a, b, strict))
@@ -30,7 +29,6 @@ System.register(["./Types"], function (exports_1, context_1) {
             return -1 /* Less */;
         return NaN;
     }
-    exports_1("compare", compare);
     /**
      * Determines if two primitives are equal or if two objects have the same key/value combinations.
      * @param a
@@ -45,7 +43,7 @@ System.register(["./Types"], function (exports_1, context_1) {
         // Take a step by step approach to ensure efficiency.
         if (areEqual(a, b, true))
             return true;
-        if (a === null || a === VOID0 || b == null || b === VOID0) {
+        if (a == null || b == null) {
             if (!nullEquivalency)
                 return false;
             if (Types_1.Type.isObject(a)) {
@@ -54,7 +52,7 @@ System.register(["./Types"], function (exports_1, context_1) {
             if (Types_1.Type.isObject(b)) {
                 return !Object.keys(b).length;
             }
-            return (a === null || a === VOID0) && (b == null || b === VOID0);
+            return a == null && b == null;
         }
         if (Types_1.Type.isObject(a) && Types_1.Type.isObject(b)) {
             var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;
@@ -79,8 +77,10 @@ System.register(["./Types"], function (exports_1, context_1) {
         }
         return false;
     }
-    exports_1("areEquivalent", areEquivalent);
     var Types_1, isTrueNaN, VOID0, COMPARE_TO;
+    exports_1("areEqual", areEqual);
+    exports_1("compare", compare);
+    exports_1("areEquivalent", areEquivalent);
     return {
         setters: [
             function (Types_1_1) {

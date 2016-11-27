@@ -12,7 +12,7 @@ var DateTime = (function () {
         else if (value instanceof Date)
             this._value = new Date(value.getTime());
         else
-            this._value = value === void (0)
+            this._value = value === void 0
                 ? new Date()
                 : new Date(value);
     }

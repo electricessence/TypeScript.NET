@@ -20,13 +20,35 @@ const __extends = __extendsImport;
  */
 export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 {
+	/**
+	 * The total number of ticks that represent this amount of time.
+	 */
+	readonly ticks:number;
 
-	ticks:number;
-	milliseconds:number;
-	seconds:number;
-	minutes:number;
-	hours:number;
-	days:number;
+	/**
+	 * The total number of ticks that milliseconds this amount of time.
+	 */
+	readonly milliseconds:number;
+
+	/**
+	 * The total number of ticks that seconds this amount of time.
+	 */
+	readonly seconds:number;
+
+	/**
+	 * The total number of ticks that minutes this amount of time.
+	 */
+	readonly minutes:number;
+
+	/**
+	 * The total number of ticks that hours this amount of time.
+	 */
+	readonly hours:number;
+
+	/**
+	 * The total number of ticks that days this amount of time.
+	 */
+	readonly days:number;
 
 	// In .NET the default type is Ticks, but for JavaScript, we will use Milliseconds.
 	constructor(value:number, units:TimeUnit = TimeUnit.Milliseconds)
@@ -34,13 +56,12 @@ export class TimeSpan extends TimeQuantity implements ITimeMeasurement
 		const ms = TimeUnit.toMilliseconds(value, units);
 		super(ms);
 
-		const _ = this;
-		_.ticks = ms*Ticks.Per.Millisecond;
-		_.milliseconds = ms;
-		_.seconds = ms/Milliseconds.Per.Second;
-		_.minutes = ms/Milliseconds.Per.Minute;
-		_.hours = ms/Milliseconds.Per.Hour;
-		_.days = ms/Milliseconds.Per.Day;
+		this.ticks = ms*Ticks.Per.Millisecond;
+		this.milliseconds = ms;
+		this.seconds = ms/Milliseconds.Per.Second;
+		this.minutes = ms/Milliseconds.Per.Minute;
+		this.hours = ms/Milliseconds.Per.Hour;
+		this.days = ms/Milliseconds.Per.Day;
 	}
 
 	/**

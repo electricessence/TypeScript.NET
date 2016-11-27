@@ -4,7 +4,6 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
     function toString(value, defaultForUnknown) {
         var v = value;
         switch (typeof v) {
-            case Types_1.Type.UNDEFINED:
             case Types_1.Type.STRING:
                 return v;
             case Types_1.Type.BOOLEAN:
@@ -12,7 +11,7 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
             case Types_1.Type.NUMBER:
                 return EMPTY + v;
             default:
-                if (v === null)
+                if (v == null)
                     return v;
                 if (isSerializable(v))
                     return v.serialize();
@@ -23,11 +22,9 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
                 throw ex;
         }
     }
-    exports_1("toString", toString);
     function isSerializable(instance) {
         return Types_1.Type.hasMemberOfType(instance, 'serialize', Types_1.Type.FUNCTION);
     }
-    exports_1("isSerializable", isSerializable);
     function toPrimitive(value, caseInsensitive, unknownHandler) {
         if (value) {
             if (caseInsensitive)
@@ -64,8 +61,10 @@ System.register(["../Types", "../Exceptions/InvalidOperationException"], functio
         }
         return value;
     }
-    exports_1("toPrimitive", toPrimitive);
     var Types_1, InvalidOperationException_1, EMPTY, TRUE, FALSE;
+    exports_1("toString", toString);
+    exports_1("isSerializable", isSerializable);
+    exports_1("toPrimitive", toPrimitive);
     return {
         setters: [
             function (Types_1_1) {

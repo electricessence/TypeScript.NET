@@ -27,7 +27,7 @@ System.register(["../Observable/ObservableBase", "../../extends"], function (exp
                     _this._maxCount = _maxCount;
                     _this._initialDelay = _initialDelay;
                     _this._count = 0;
-                    if (_interval === null || _interval === void (0))
+                    if (_interval == null)
                         throw "'interval' must be a valid number.";
                     if (_interval < 0)
                         throw "'interval' cannot be negative.";

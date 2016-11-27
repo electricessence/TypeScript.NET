@@ -42,7 +42,7 @@
         return 1;
     }
     function isNotNullOrUndefined(e) {
-        return e !== null && e !== VOID0;
+        return e != null;
     }
     var LinqFunctions = (function (_super) {
         __extends(LinqFunctions, _super);
@@ -635,7 +635,7 @@
         InfiniteEnumerable.prototype.concat = function () {
             var enumerables = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                enumerables[_i] = arguments[_i];
+                enumerables[_i - 0] = arguments[_i];
             }
             return this.merge(enumerables);
         };
@@ -753,7 +753,7 @@
         InfiniteEnumerable.prototype.alternate = function () {
             var sequence = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                sequence[_i] = arguments[_i];
+                sequence[_i - 0] = arguments[_i];
             }
             return this.alternateMultiple(sequence);
         };
@@ -1842,7 +1842,7 @@
         function chooseFrom() {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
+                args[_i - 0] = arguments[_i];
             }
             if (!args.length)
                 throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
@@ -1875,7 +1875,7 @@
         function cycleThrough() {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i] = arguments[_i];
+                args[_i - 0] = arguments[_i];
             }
             if (!args.length)
                 throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('length', length);
@@ -2018,7 +2018,7 @@
         Enumerable.rangeTo = rangeTo;
         function matches(input, pattern, flags) {
             if (flags === void 0) { flags = ""; }
-            if (input === null || input === VOID0)
+            if (input == null)
                 throw new ArgumentNullException_1.ArgumentNullException("input");
             var type = typeof input;
             if (type != Types_1.Type.STRING)
@@ -2036,7 +2036,9 @@
                     regex = new RegExp(pattern, flags);
                 }, function (yielder) {
                     var match = regex.exec(input);
-                    return (match !== null) ? yielder.yieldReturn(match) : false;
+                    return match != null
+                        ? yielder.yieldReturn(match)
+                        : yielder.yieldBreak();
                 });
             });
         }
@@ -2167,7 +2169,6 @@
         }
         Enumerable.weave = weave;
     })(Enumerable = exports.Enumerable || (exports.Enumerable = {}));
-    exports.Enumerable = Enumerable;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Enumerable;
 });

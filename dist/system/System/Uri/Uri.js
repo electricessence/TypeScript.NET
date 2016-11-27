@@ -26,7 +26,7 @@ System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "..
                 return s;
         }
         else {
-            if (s === null || s === undefined)
+            if (s == null)
                 return s;
         }
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
@@ -37,7 +37,7 @@ System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "..
         if (!port)
             return null;
         var p;
-        if (Types_1.Type.isNumber(port, true)) {
+        if (Types_1.Type.isNumber(port)) {
             p = port;
             if (p >= 0 && isFinite(p))
                 return p;
@@ -51,7 +51,7 @@ System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "..
         if (!uri.host) {
             if (uri.userInfo)
                 throw new ArgumentException_1.ArgumentException('host', 'Cannot include user info when there is no host.');
-            if (Types_1.Type.isNumber(uri.port, false))
+            if (Types_1.Type.isNumber(uri.port, true))
                 throw new ArgumentException_1.ArgumentException('host', 'Cannot include a port when there is no host.');
         }
         /*
@@ -242,7 +242,7 @@ System.register(["../Types", "./Scheme", "./QueryParams", "../Text/Utility", "..
                     var u = Types_1.Type.isString(uri)
                         ? Uri.parse(uri) // Parsing a string should throw errors.  Null or undefined simply means empty.
                         : uri;
-                    return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
+                    return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port, true) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
                 };
                 Uri.parse = function (url, throwIfInvalid) {
                     if (throwIfInvalid === void 0) { throwIfInvalid = true; }

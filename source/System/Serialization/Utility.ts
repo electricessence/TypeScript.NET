@@ -18,7 +18,6 @@ export function toString(
 	let v = <any>value;
 	switch(typeof v)
 	{
-		case Type.UNDEFINED:
 		case Type.STRING:
 			return v;
 		case Type.BOOLEAN:
@@ -27,7 +26,7 @@ export function toString(
 			return EMPTY + v;
 		default:
 
-			if(v===null)
+			if(v==null)
 				return v;
 
 			if(isSerializable(v))

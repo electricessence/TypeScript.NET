@@ -13,7 +13,6 @@
     function toString(value, defaultForUnknown) {
         var v = value;
         switch (typeof v) {
-            case Types_1.Type.UNDEFINED:
             case Types_1.Type.STRING:
                 return v;
             case Types_1.Type.BOOLEAN:
@@ -21,7 +20,7 @@
             case Types_1.Type.NUMBER:
                 return EMPTY + v;
             default:
-                if (v === null)
+                if (v == null)
                     return v;
                 if (isSerializable(v))
                     return v.serialize();

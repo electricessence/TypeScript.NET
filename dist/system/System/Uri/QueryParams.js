@@ -22,7 +22,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         return (entries.length && prefixIfNotEmpty ? QUERY_SEPARATOR : EMPTY)
             + entries.join(ENTRY_SEPARATOR);
     }
-    exports_1("encode", encode);
     function appendKeyValueSingle(entries, key, value) {
         entries.push(key + KEY_VALUE_SEPARATOR + encodeValue(value));
     }
@@ -51,7 +50,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
             return encodeURIComponent(Serialize.toString(value));
         }
     }
-    exports_1("encodeValue", encodeValue);
     /**
      * A shortcut for identifying an UriComponent.Formattable object.
      * @param instance
@@ -60,7 +58,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
     function isUriComponentFormattable(instance) {
         return Types_1.Type.hasMemberOfType(instance, TO_URI_COMPONENT, Types_1.Type.FUNCTION);
     }
-    exports_1("isUriComponentFormattable", isUriComponentFormattable);
     /**
      * Parses a string for valid query param entries and pipes them through a handler.
      * @param query
@@ -92,7 +89,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
             }
         }
     }
-    exports_1("parse", parse);
     /**
      * Parses a string for valid query params and returns a key-value map of the entries.
      * @param query
@@ -116,7 +112,6 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         }, deserialize, decodeValues);
         return result;
     }
-    exports_1("parseToMap", parseToMap);
     /**
      * Parses a string for valid query params and returns a key-value pair array of the entries.
      * @param query
@@ -131,8 +126,13 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
         parse(query, function (key, value) { result.push({ key: key, value: value }); }, deserialize, decodeValues);
         return result;
     }
-    exports_1("parseToArray", parseToArray);
     var Serialize, Types_1, KeyValueExtract_1, Enumerator_1, EMPTY, QUERY_SEPARATOR, ENTRY_SEPARATOR, KEY_VALUE_SEPARATOR, TO_URI_COMPONENT, Separator;
+    exports_1("encode", encode);
+    exports_1("encodeValue", encodeValue);
+    exports_1("isUriComponentFormattable", isUriComponentFormattable);
+    exports_1("parse", parse);
+    exports_1("parseToMap", parseToMap);
+    exports_1("parseToArray", parseToArray);
     return {
         setters: [
             function (Serialize_1) {
@@ -158,7 +158,7 @@ System.register(["../Serialization/Utility", "../Types", "../KeyValueExtract", "
                 Separator.Query = QUERY_SEPARATOR;
                 Separator.Entry = ENTRY_SEPARATOR;
                 Separator.KeyValue = KEY_VALUE_SEPARATOR;
-            })(Separator || (Separator = {}));
+            })(Separator = Separator || (Separator = {}));
             exports_1("Separator", Separator);
             Object.freeze(Separator);
         }

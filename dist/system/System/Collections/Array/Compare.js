@@ -38,7 +38,6 @@ System.register(["../../Compare", "../../Types"], function (exports_1, context_1
         }
         return true;
     }
-    exports_1("areAllEqual", areAllEqual);
     function areEqual(a, b, strict, equalityComparer) {
         if (strict === void 0) { strict = true; }
         if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
@@ -55,7 +54,6 @@ System.register(["../../Compare", "../../Types"], function (exports_1, context_1
         }
         return true;
     }
-    exports_1("areEqual", areEqual);
     function sort(a, comparer) {
         if (!a || a.length < 2)
             return a;
@@ -88,8 +86,10 @@ System.register(["../../Compare", "../../Types"], function (exports_1, context_1
         }
         return true;
     }
-    exports_1("areEquivalent", areEquivalent);
     var Values, Types_1;
+    exports_1("areAllEqual", areAllEqual);
+    exports_1("areEqual", areEqual);
+    exports_1("areEquivalent", areEquivalent);
     return {
         setters: [
             function (Values_1) {

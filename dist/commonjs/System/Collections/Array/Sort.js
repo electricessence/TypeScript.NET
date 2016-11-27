@@ -4,8 +4,7 @@ function __export(m) {
 }
 var createComparer_1 = require("./Sorting/createComparer");
 exports.createComparer = createComparer_1.createComparer;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = createComparer_1.createComparer;
-exports.by = createComparer_1.createComparer;
+exports.by = createComparer_1.createComparer; // Alias for Sort.by(...) instead of Sort.createComparer
 __export(require("./Sorting/quickSort"));
 //# sourceMappingURL=Sort.js.map

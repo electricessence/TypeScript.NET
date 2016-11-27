@@ -26,7 +26,7 @@ export default class Timer extends ObservableBase<number> implements ITimer, ICa
 	{
 		super();
 
-		if(_interval===null || _interval=== void(0))
+		if(_interval==null)
 			throw "'interval' must be a valid number.";
 		if(_interval<0)
 			throw "'interval' cannot be negative.";

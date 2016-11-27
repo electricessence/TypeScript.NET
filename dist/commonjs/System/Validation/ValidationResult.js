@@ -49,5 +49,8 @@ var ValidationResult = (function () {
     return ValidationResult;
 }());
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * A class for generating responses to validation.
+ */
 exports.default = ValidationResult;
 //# sourceMappingURL=ValidationResult.js.map

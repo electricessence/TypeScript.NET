@@ -99,7 +99,7 @@ var Regex = (function () {
         for (var i = 0, len = r.length; i < len; ++i) {
             var text = r[i];
             var g = EmptyGroup;
-            if (text !== null || text !== void 0) {
+            if (text != null) {
                 // Empty string might mean \b match or similar.
                 g = new Group(text, loc);
                 g.freeze();
@@ -127,7 +127,7 @@ var Regex = (function () {
     };
     Regex.prototype.replace = function (input, r, count) {
         if (count === void 0) { count = Infinity; }
-        if (!input || r === null || r === void 0 || !(count > 0))
+        if (!input || r == null || !(count > 0))
             return input;
         var result = [];
         var p = 0;

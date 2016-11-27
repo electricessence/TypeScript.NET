@@ -16,7 +16,7 @@ var Timer = (function (_super) {
         _this._maxCount = _maxCount;
         _this._initialDelay = _initialDelay;
         _this._count = 0;
-        if (_interval === null || _interval === void (0))
+        if (_interval == null)
             throw "'interval' must be a valid number.";
         if (_interval < 0)
             throw "'interval' cannot be negative.";
@@ -138,5 +138,8 @@ var Timer = (function (_super) {
     return Timer;
 }(ObservableBase_1.ObservableBase));
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * A timer class that uses an Observable pattern to allow for subscribing to ticks.
+ */
 exports.default = Timer;
 //# sourceMappingURL=Timer.js.map

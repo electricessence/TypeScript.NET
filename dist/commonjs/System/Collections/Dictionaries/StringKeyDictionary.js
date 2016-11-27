@@ -29,8 +29,7 @@ var StringKeyDictionary = (function (_super) {
         };
     };
     StringKeyDictionary.prototype.containsKey = function (key) {
-        return key !== null
-            && key !== VOID0
+        return key != null
             && this._count != 0
             && this._map[key] !== VOID0;
     };
@@ -45,7 +44,7 @@ var StringKeyDictionary = (function (_super) {
         return false;
     };
     StringKeyDictionary.prototype.getValue = function (key) {
-        return key === null || key === VOID0 || !this._count
+        return key == null || !this._count
             ? VOID0
             : this._map[key];
     };

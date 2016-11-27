@@ -88,10 +88,10 @@ export declare module Type {
     /**
      * Returns true if the value parameter is a number.
      * @param value
-     * @param allowNaN Default is true.
+     * @param ignoreNaN Default is false. When true, NaN is not considered a number and will return false.
      * @returns {boolean}
      */
-    function isNumber(value: any, allowNaN?: boolean): value is number;
+    function isNumber(value: any, ignoreNaN?: boolean): value is number;
     /**
      * Returns true if is a number and is NaN.
      * @param value

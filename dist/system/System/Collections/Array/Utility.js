@@ -19,7 +19,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return array;
     }
-    exports_1("initialize", initialize);
     /**
      *
      * @param source
@@ -34,7 +33,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             return source; // may have passed zero? undefined? or null?
         return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
     }
-    exports_1("copy", copy);
     /**
      * Copies one array to another.
      * @param source
@@ -73,7 +71,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return destination;
     }
-    exports_1("copyTo", copyTo);
     /**
      * Checks to see where the provided array contains an item/value.
      * If the array value is null, then -1 is returned.
@@ -97,7 +94,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return -1;
     }
-    exports_1("indexOf", indexOf);
     /**
      * Checks to see if the provided array contains an item.
      * If the array value is null, then false is returned.
@@ -110,7 +106,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         if (equalityComparer === void 0) { equalityComparer = Compare_1.areEqual; }
         return indexOf(array, item, equalityComparer) != -1;
     }
-    exports_1("contains", contains);
     /**
      * Finds and replaces a value from an array.  Will replaces all instances unless a maximum is specified.
      * @param array
@@ -137,7 +132,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return count;
     }
-    exports_1("replace", replace);
     /**
      * Replaces values of an array across a range of indexes.
      * @param array
@@ -159,7 +153,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             array[i] = value;
         }
     }
-    exports_1("updateRange", updateRange);
     /**
      * Clears (sets to null) values of an array across a range of indexes.
      * @param array
@@ -170,7 +163,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         if (start === void 0) { start = 0; }
         updateRange(array, null, start, stop);
     }
-    exports_1("clear", clear);
     /**
      * Ensures a value exists within an array.  If not found, adds to the end.
      * @param array
@@ -188,7 +180,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             array[len] = item; // * push would query length again.
         return ok;
     }
-    exports_1("register", register);
     /**
      * Returns the first index of which the provided predicate returns true.
      * Returns -1 if always false.
@@ -202,7 +193,7 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         if (!Types_1.Type.isFunction(predicate))
             throw new ArgumentException_1.ArgumentException('predicate', 'Must be a function.');
         var len = array.length;
-        if (!Types_1.Type.isNumber(len) || len < 0)
+        if (!Types_1.Type.isNumber(len, true) || len < 0)
             throw new ArgumentException_1.ArgumentException('array', 'Does not have a valid length.');
         if ((array) instanceof (Array)) {
             for (var i = 0; i < len; i++) {
@@ -218,7 +209,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return -1;
     }
-    exports_1("findIndex", findIndex);
     function forEach(source, action) {
         if (source && action) {
             // Don't cache the length since it is possible that the underlying array changed.
@@ -228,7 +218,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             }
         }
     }
-    exports_1("forEach", forEach);
     /**
      * Is similar to Array.map() but instead of returning a new array, it updates the existing indexes.
      * Can also be applied to a structure that indexes like an array, but may not be.
@@ -242,7 +231,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             }
         }
     }
-    exports_1("applyTo", applyTo);
     /**
      * Removes an entry at a specified index.
      * @param array
@@ -260,7 +248,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             array.splice(index, 1);
         return exists;
     }
-    exports_1("removeIndex", removeIndex);
     /**
      * Finds and removes a value from an array.  Will remove all instances unless a maximum is specified.
      * @param array
@@ -302,7 +289,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return count;
     }
-    exports_1("remove", remove);
     /**
      * Simply repeats a value the number of times specified.
      * @param element
@@ -319,7 +305,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return result;
     }
-    exports_1("repeat", repeat);
     /**
      * Returns a range of numbers based upon the first value and the step value.
      * @param first
@@ -342,7 +327,6 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return result;
     }
-    exports_1("range", range);
     /**
      * Returns a range of numbers based upon the first value and the step value excluding any numbers at or beyond the until value.
      * @param first
@@ -356,12 +340,10 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
             throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('step', step, CB0);
         return range(first, (until - first) / step, step);
     }
-    exports_1("rangeUntil", rangeUntil);
     function distinct(source) {
         var seen = {};
         return source.filter(function (e) { return !(e in seen) && (seen[e] = true); });
     }
-    exports_1("distinct", distinct);
     /**
      * Takes any arrays within an array and inserts the values contained within in place of that array.
      * For every count higher than 0 in recurseDepth it will attempt an additional pass.  Passing Infinity will flatten all arrays contained.
@@ -385,8 +367,26 @@ System.register(["../../Types", "../../Integer", "../../Compare", "../../Excepti
         }
         return result;
     }
-    exports_1("flatten", flatten);
     var Types_1, Integer_1, Compare_1, ArgumentException_1, ArgumentNullException_1, ArgumentOutOfRangeException_1, CBN, CB0, CBL0, VFN;
+    exports_1("initialize", initialize);
+    exports_1("copy", copy);
+    exports_1("copyTo", copyTo);
+    exports_1("indexOf", indexOf);
+    exports_1("contains", contains);
+    exports_1("replace", replace);
+    exports_1("updateRange", updateRange);
+    exports_1("clear", clear);
+    exports_1("register", register);
+    exports_1("findIndex", findIndex);
+    exports_1("forEach", forEach);
+    exports_1("applyTo", applyTo);
+    exports_1("removeIndex", removeIndex);
+    exports_1("remove", remove);
+    exports_1("repeat", repeat);
+    exports_1("range", range);
+    exports_1("rangeUntil", rangeUntil);
+    exports_1("distinct", distinct);
+    exports_1("flatten", flatten);
     return {
         setters: [
             function (Types_1_1) {

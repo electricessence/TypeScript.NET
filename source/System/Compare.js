@@ -38,7 +38,7 @@
         if (extraDepth === void 0) { extraDepth = 0; }
         if (areEqual(a, b, true))
             return true;
-        if (a === null || a === VOID0 || b == null || b === VOID0) {
+        if (a == null || b == null) {
             if (!nullEquivalency)
                 return false;
             if (Types_1.Type.isObject(a)) {
@@ -47,7 +47,7 @@
             if (Types_1.Type.isObject(b)) {
                 return !Object.keys(b).length;
             }
-            return (a === null || a === VOID0) && (b == null || b === VOID0);
+            return a == null && b == null;
         }
         if (Types_1.Type.isObject(a) && Types_1.Type.isObject(b)) {
             var aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;

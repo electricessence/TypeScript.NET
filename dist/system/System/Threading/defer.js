@@ -4,13 +4,13 @@ System.register(["../../extends"], function (exports_1, context_1) {
     function defer(task, delay, payload) {
         return new Defer(task, delay, payload);
     }
-    exports_1("defer", defer);
     function interval(task, interval, count) {
         if (count === void 0) { count = Infinity; }
         return new DeferInterval(task, interval, count);
     }
-    exports_1("interval", interval);
     var extends_1, __extends, DeferBase, Defer, DeferInterval;
+    exports_1("defer", defer);
+    exports_1("interval", interval);
     return {
         setters: [
             function (extends_1_1) {
@@ -59,7 +59,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                     if (_remaining === void 0) { _remaining = Infinity; }
                     var _this = _super.call(this) || this;
                     _this._remaining = _remaining;
-                    if (interval === null || interval === void (0))
+                    if (interval == null)
                         throw "'interval' must be a valid number.";
                     if (interval < 0)
                         throw "'interval' cannot be negative.";

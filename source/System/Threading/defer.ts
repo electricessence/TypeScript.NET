@@ -63,7 +63,7 @@ class DeferInterval extends DeferBase
 		private _remaining:number = Infinity)
 	{
 		super();
-		if(interval===null || interval=== void(0))
+		if(interval==null)
 			throw "'interval' must be a valid number.";
 		if(interval<0)
 			throw "'interval' cannot be negative.";

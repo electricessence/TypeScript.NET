@@ -4,6 +4,7 @@ System.register(["./Sorting/createComparer", "./Sorting/quickSort"], function (e
     var createComparer_1;
     var exportedNames_1 = {
         "createComparer": true,
+        "default": true,
         "by": true
     };
     function exportStar_1(m) {
@@ -26,7 +27,8 @@ System.register(["./Sorting/createComparer", "./Sorting/quickSort"], function (e
         execute: function () {
             exports_1("createComparer", createComparer_1.createComparer);
             exports_1("default", createComparer_1.createComparer);
-            exports_1("by", createComparer_1.createComparer);
+            exports_1("by", // Allow for default import.
+            createComparer_1.createComparer);
         }
     };
 });

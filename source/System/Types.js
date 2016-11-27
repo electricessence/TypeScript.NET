@@ -99,18 +99,16 @@
         Type.UNDEFINED = _UNDEFINED;
         Type.FUNCTION = _FUNCTION;
         function isNullOrUndefined(value) {
-            return value === null || value === VOID0;
+            return value == null;
         }
         Type.isNullOrUndefined = isNullOrUndefined;
         function isBoolean(value) {
             return typeof value === _BOOLEAN;
         }
         Type.isBoolean = isBoolean;
-        function isNumber(value, allowNaN) {
-            if (allowNaN === void 0) { allowNaN = false; }
-            if (allowNaN === VOID0)
-                allowNaN = true;
-            return typeof value === _NUMBER && (allowNaN || !isNaN(value));
+        function isNumber(value, ignoreNaN) {
+            if (ignoreNaN === void 0) { ignoreNaN = false; }
+            return typeof value === _NUMBER && (!ignoreNaN || !isNaN(value));
         }
         Type.isNumber = isNumber;
         function isTrueNaN(value) {

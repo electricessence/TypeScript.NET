@@ -35,8 +35,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 	containsKey(key:string):boolean
 	{
-		return key!==null
-			&& key!==VOID0
+		return key!=null
 			&& this._count!=0
 			&& this._map[key]!==VOID0;
 	}
@@ -56,7 +55,7 @@ extends DictionaryBase<string, TValue> implements IStringKeyDictionary<TValue>
 
 	getValue(key:string):TValue|undefined
 	{
-		return key===null || key===VOID0 || !this._count
+		return key==null || !this._count
 			? VOID0
 			: this._map[key];
 	}

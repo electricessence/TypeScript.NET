@@ -49,7 +49,7 @@ export class Dictionary extends DictionaryBase {
         return this._entries && this._entries.unsafeCount || 0;
     }
     _getBucket(hash, createIfMissing) {
-        if (hash === null || hash === VOID0 || !createIfMissing && !this.getCount())
+        if (hash == null || !createIfMissing && !this.getCount())
             return null;
         if (!Type.isPrimitiveOrSymbol(hash))
             console.warn("Key type not indexable and could cause Dictionary to be extremely slow.");
@@ -62,7 +62,7 @@ export class Dictionary extends DictionaryBase {
         return bucket || null;
     }
     _getBucketEntry(key, hash, bucket) {
-        if (key === null || key === VOID0 || !this.getCount())
+        if (key == null || !this.getCount())
             return null;
         const _ = this, comparer = _._keyGenerator, compareKey = comparer ? comparer(key) : key;
         if (!bucket)

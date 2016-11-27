@@ -44,7 +44,7 @@ export function areEquivalent(a, b, nullEquivalency = true, extraDepth = 0) {
     // Take a step by step approach to ensure efficiency.
     if (areEqual(a, b, true))
         return true;
-    if (a === null || a === VOID0 || b == null || b === VOID0) {
+    if (a == null || b == null) {
         if (!nullEquivalency)
             return false;
         if (Type.isObject(a)) {
@@ -53,7 +53,7 @@ export function areEquivalent(a, b, nullEquivalency = true, extraDepth = 0) {
         if (Type.isObject(b)) {
             return !Object.keys(b).length;
         }
-        return (a === null || a === VOID0) && (b == null || b === VOID0);
+        return a == null && b == null;
     }
     if (Type.isObject(a) && Type.isObject(b)) {
         const aKeys = Object.keys(a), bKeys = Object.keys(b), len = aKeys.length;

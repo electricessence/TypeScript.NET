@@ -7,7 +7,6 @@
     }
 })(["require", "exports"], function (require, exports) {
     "use strict";
-    var TimeUnit;
     (function (TimeUnit) {
         TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
         TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
@@ -15,7 +14,8 @@
         TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
         TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
         TimeUnit[TimeUnit["Days"] = 5] = "Days";
-    })(TimeUnit = exports.TimeUnit || (exports.TimeUnit = {}));
+    })(exports.TimeUnit || (exports.TimeUnit = {}));
+    var TimeUnit = exports.TimeUnit;
     (function (TimeUnit) {
         function toMilliseconds(value, units) {
             if (units === void 0) { units = TimeUnit.Milliseconds; }

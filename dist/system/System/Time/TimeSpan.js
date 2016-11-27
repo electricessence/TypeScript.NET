@@ -34,13 +34,12 @@ System.register(["../Types", "./TimeUnit", "./ClockTime", "./TimeQuantity", "../
                     var _this;
                     var ms = TimeUnit_1.TimeUnit.toMilliseconds(value, units);
                     _this = _super.call(this, ms) || this;
-                    var _ = _this;
-                    _.ticks = ms * 10000 /* Millisecond */;
-                    _.milliseconds = ms;
-                    _.seconds = ms / 1000 /* Second */;
-                    _.minutes = ms / 60000 /* Minute */;
-                    _.hours = ms / 3600000 /* Hour */;
-                    _.days = ms / 86400000 /* Day */;
+                    _this.ticks = ms * 10000 /* Millisecond */;
+                    _this.milliseconds = ms;
+                    _this.seconds = ms / 1000 /* Second */;
+                    _this.minutes = ms / 60000 /* Minute */;
+                    _this.hours = ms / 3600000 /* Hour */;
+                    _this.days = ms / 86400000 /* Day */;
                     return _this;
                 }
                 Object.defineProperty(TimeSpan.prototype, "total", {

@@ -41,7 +41,7 @@ var DeferInterval = (function (_super) {
         if (_remaining === void 0) { _remaining = Infinity; }
         var _this = _super.call(this) || this;
         _this._remaining = _remaining;
-        if (interval === null || interval === void (0))
+        if (interval == null)
             throw "'interval' must be a valid number.";
         if (interval < 0)
             throw "'interval' cannot be negative.";

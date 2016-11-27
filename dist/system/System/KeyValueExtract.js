@@ -4,7 +4,6 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullExc
     function isKeyValuePair(kvp) {
         return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
     }
-    exports_1("isKeyValuePair", isKeyValuePair);
     function assertKey(key, name) {
         if (name === void 0) { name = ITEM; }
         assertNotUndefined(key, name + DOT + KEY);
@@ -12,20 +11,17 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullExc
             throw new ArgumentNullException_1.ArgumentNullException(name + DOT + KEY);
         return key;
     }
-    exports_1("assertKey", assertKey);
     function assertTuple(tuple, name) {
         if (name === void 0) { name = ITEM; }
         if (tuple.length != 2)
             throw new ArgumentException_1.ArgumentException(name, 'KeyValuePair tuples must be of length 2.');
         assertKey(tuple[0], name);
     }
-    exports_1("assertTuple", assertTuple);
     function assertNotUndefined(value, name) {
         if (value === VOID0)
             throw new ArgumentException_1.ArgumentException(name, CANNOT_BE_UNDEFINED);
         return value;
     }
-    exports_1("assertNotUndefined", assertNotUndefined);
     function extractKeyValue(item, to) {
         var key, value;
         if (item instanceof Array) {
@@ -42,8 +38,12 @@ System.register(["./Exceptions/ArgumentException", "./Exceptions/ArgumentNullExc
         }
         return to(key, value);
     }
-    exports_1("extractKeyValue", extractKeyValue);
     var ArgumentException_1, ArgumentNullException_1, VOID0, DOT, KEY, VALUE, ITEM, ITEM_1, ITEM_VALUE, INVALID_KVP_MESSAGE, CANNOT_BE_UNDEFINED;
+    exports_1("isKeyValuePair", isKeyValuePair);
+    exports_1("assertKey", assertKey);
+    exports_1("assertTuple", assertTuple);
+    exports_1("assertNotUndefined", assertNotUndefined);
+    exports_1("extractKeyValue", extractKeyValue);
     return {
         setters: [
             function (ArgumentException_1_1) {

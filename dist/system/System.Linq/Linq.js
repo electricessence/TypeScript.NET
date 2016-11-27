@@ -8,7 +8,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
         return 1 /* Return */;
     }
     function isNotNullOrUndefined(e) {
-        return e !== null && e !== VOID0;
+        return e != null;
     }
     // For re-use as a factory.
     function getEmptyEnumerator() {
@@ -766,7 +766,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 InfiniteEnumerable.prototype.concat = function () {
                     var enumerables = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        enumerables[_i] = arguments[_i];
+                        enumerables[_i - 0] = arguments[_i];
                     }
                     return this.merge(enumerables);
                 };
@@ -887,7 +887,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 InfiniteEnumerable.prototype.alternate = function () {
                     var sequence = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        sequence[_i] = arguments[_i];
+                        sequence[_i - 0] = arguments[_i];
                     }
                     return this.alternateMultiple(sequence);
                 };
@@ -2065,7 +2065,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 function chooseFrom() {
                     var args = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
+                        args[_i - 0] = arguments[_i];
                     }
                     // We could return empty if no length, but that would break the typing and produce unexpected results.
                     // Enforcing that there must be at least 1 choice is key.
@@ -2105,7 +2105,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 function cycleThrough() {
                     var args = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        args[_i] = arguments[_i];
+                        args[_i - 0] = arguments[_i];
                     }
                     // We could return empty if no length, but that would break the typing and produce unexpected results.
                     // Enforcing that there must be at least 1 choice is key.
@@ -2262,7 +2262,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                 Enumerable.rangeTo = rangeTo;
                 function matches(input, pattern, flags) {
                     if (flags === void 0) { flags = ""; }
-                    if (input === null || input === VOID0)
+                    if (input == null)
                         throw new ArgumentNullException_1.ArgumentNullException("input");
                     var type = typeof input;
                     if (type != Types_1.Type.STRING)
@@ -2281,7 +2281,9 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                         }, function (yielder) {
                             // Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
                             var match = regex.exec(input);
-                            return (match !== null) ? yielder.yieldReturn(match) : false;
+                            return match != null
+                                ? yielder.yieldReturn(match)
+                                : yielder.yieldBreak();
                         });
                     });
                 }
@@ -2424,7 +2426,7 @@ System.register(["../System/Compare", "../System/Collections/Array/Compare", "..
                     });
                 }
                 Enumerable.weave = weave;
-            })(Enumerable || (Enumerable = {}));
+            })(Enumerable = Enumerable || (Enumerable = {}));
             exports_1("Enumerable", Enumerable);
             exports_1("default", Enumerable);
         }

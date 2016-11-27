@@ -27,8 +27,8 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         return result;
     }
-    exports_1("default", clone);
     var Types_1;
+    exports_1("default", clone);
     return {
         setters: [
             function (Types_1_1) {

@@ -13,7 +13,6 @@ System.register(["../../../Exceptions/ArgumentNullException", "../Utility"], fun
         var len = target.length;
         return len < 2 ? target : sort(target, 0, len, Utility_1.initialize(len));
     }
-    exports_1("mergeSort", mergeSort);
     function sort(target, start, end, temp) {
         if (end - start > 1) {
             // Step 1: Sort the left and right parts.
@@ -41,6 +40,7 @@ System.register(["../../../Exceptions/ArgumentNullException", "../Utility"], fun
         return target;
     }
     var ArgumentNullException_1, Utility_1;
+    exports_1("mergeSort", mergeSort);
     return {
         setters: [
             function (ArgumentNullException_1_1) {

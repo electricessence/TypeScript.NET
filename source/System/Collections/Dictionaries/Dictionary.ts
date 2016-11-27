@@ -90,7 +90,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		hash:string|number|symbol,
 		createIfMissing?:boolean):HashEntryLinkedList<TKey,TValue>|null
 	{
-		if(hash===null || hash===VOID0 || !createIfMissing && !this.getCount())
+		if(hash==null || !createIfMissing && !this.getCount())
 			return null;
 
 		if(!Type.isPrimitiveOrSymbol(hash))
@@ -112,7 +112,7 @@ export class Dictionary<TKey, TValue> extends DictionaryBase<TKey, TValue>
 		hash?:string|number|symbol,
 		bucket?:HashEntryLinkedList<TKey,TValue>|null):IHashEntry<TKey,IHashEntry<TKey,TValue>>|null
 	{
-		if(key===null || key===VOID0 || !this.getCount())
+		if(key==null || !this.getCount())
 			return null;
 
 		const _          = this,

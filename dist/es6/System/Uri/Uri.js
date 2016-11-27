@@ -67,7 +67,7 @@ export class Uri {
         const u = Type.isString(uri)
             ? Uri.parse(uri) // Parsing a string should throw errors.  Null or undefined simply means empty.
             : uri;
-        return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Type.isNumber(u.port) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
+        return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Type.isNumber(u.port, true) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
     }
     static parse(url, throwIfInvalid = true) {
         let result = null;
@@ -197,7 +197,7 @@ function getScheme(scheme) {
             return s;
     }
     else {
-        if (s === null || s === undefined)
+        if (s == null)
             return s;
     }
     throw new ArgumentOutOfRangeException('scheme', scheme, 'Invalid scheme.');
@@ -208,7 +208,7 @@ function getPort(port) {
     if (!port)
         return null;
     let p;
-    if (Type.isNumber(port, true)) {
+    if (Type.isNumber(port)) {
         p = port;
         if (p >= 0 && isFinite(p))
             return p;
@@ -222,7 +222,7 @@ function getAuthority(uri) {
     if (!uri.host) {
         if (uri.userInfo)
             throw new ArgumentException('host', 'Cannot include user info when there is no host.');
-        if (Type.isNumber(uri.port, false))
+        if (Type.isNumber(uri.port, true))
             throw new ArgumentException('host', 'Cannot include a port when there is no host.');
     }
     /*

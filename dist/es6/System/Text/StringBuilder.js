@@ -22,7 +22,7 @@ export class StringBuilder {
         _.appendThese(initial);
     }
     appendSingle(item) {
-        if (item !== null && item !== VOID0) {
+        if (item != null) {
             const _ = this;
             _._latest = null;
             switch (typeof item) {
@@ -50,7 +50,7 @@ export class StringBuilder {
     appendLines(items) {
         const _ = this;
         items.forEach(i => {
-            if (i !== null && i !== VOID0) {
+            if (i != null) {
                 _.appendSingle(i);
                 _._partArray.push("\r\n");
             }
@@ -70,7 +70,7 @@ export class StringBuilder {
     }
     toString() {
         let latest = this._latest;
-        if (!latest === null)
+        if (!latest == null)
             this._latest = latest = this._partArray.join();
         return latest;
     }

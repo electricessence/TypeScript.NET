@@ -201,7 +201,7 @@ export module Type
 	 */
 	export function isNullOrUndefined(value:any):value is null|undefined
 	{
-		return value===null || value===VOID0;
+		return value==null;
 	}
 
 	/**
@@ -217,13 +217,12 @@ export module Type
 	/**
 	 * Returns true if the value parameter is a number.
 	 * @param value
-	 * @param allowNaN Default is true.
+	 * @param ignoreNaN Default is false. When true, NaN is not considered a number and will return false.
 	 * @returns {boolean}
 	 */
-	export function isNumber(value:any, allowNaN:boolean = false):value is number
+	export function isNumber(value:any, ignoreNaN:boolean = false):value is number
 	{
-		if(allowNaN===VOID0) allowNaN = true;
-		return typeof value===_NUMBER && (allowNaN || !isNaN(value));
+		return typeof value===_NUMBER && (!ignoreNaN || !isNaN(value));
 	}
 
 	/**

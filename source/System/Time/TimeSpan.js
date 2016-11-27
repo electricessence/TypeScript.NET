@@ -20,13 +20,12 @@
             var _this;
             var ms = TimeUnit_1.TimeUnit.toMilliseconds(value, units);
             _this = _super.call(this, ms) || this;
-            var _ = _this;
-            _.ticks = ms * 10000;
-            _.milliseconds = ms;
-            _.seconds = ms / 1000;
-            _.minutes = ms / 60000;
-            _.hours = ms / 3600000;
-            _.days = ms / 86400000;
+            _this.ticks = ms * 10000;
+            _this.milliseconds = ms;
+            _this.seconds = ms / 1000;
+            _this.minutes = ms / 60000;
+            _this.hours = ms / 3600000;
+            _this.days = ms / 86400000;
             return _this;
         }
         Object.defineProperty(TimeSpan.prototype, "total", {

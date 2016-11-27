@@ -83,7 +83,7 @@ function RETURN():EnumerableAction
 }
 function isNotNullOrUndefined(e:any):boolean
 {
-	return e!==null && e!==VOID0;
+	return e!=null;
 }
 
 
@@ -3746,7 +3746,7 @@ export module Enumerable
 		input:string, pattern:any,
 		flags:string = ""):FiniteEnumerable<RegExpExecArray>
 	{
-		if(input===null || input===VOID0)
+		if(input==null)
 			throw new ArgumentNullException("input");
 		const type = typeof input;
 		if(type!=Type.STRING)
@@ -3775,7 +3775,9 @@ export module Enumerable
 					{
 						// Calling regex.exec consecutively on the same input uses the lastIndex to start the next match.
 						let match = regex.exec(input);
-						return (match!==null) ? yielder.yieldReturn(match) : false;
+						return match!=null
+							? yielder.yieldReturn(match)
+							: yielder.yieldBreak();
 					}
 				);
 			}

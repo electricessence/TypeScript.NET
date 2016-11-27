@@ -10,7 +10,7 @@ export default class Timer extends ObservableBase {
         this._maxCount = _maxCount;
         this._initialDelay = _initialDelay;
         this._count = 0;
-        if (_interval === null || _interval === void (0))
+        if (_interval == null)
             throw "'interval' must be a valid number.";
         if (_interval < 0)
             throw "'interval' cannot be negative.";

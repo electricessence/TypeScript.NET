@@ -91,7 +91,7 @@ export class Regex {
         for (let i = 0, len = r.length; i < len; ++i) {
             let text = r[i];
             let g = EmptyGroup;
-            if (text !== null || text !== void 0) {
+            if (text != null) {
                 // Empty string might mean \b match or similar.
                 g = new Group(text, loc);
                 g.freeze();
@@ -118,7 +118,7 @@ export class Regex {
         return matches;
     }
     replace(input, r, count = Infinity) {
-        if (!input || r === null || r === void 0 || !(count > 0))
+        if (!input || r == null || !(count > 0))
             return input;
         const result = [];
         let p = 0;
@@ -161,11 +161,11 @@ export class Capture {
     }
 }
 export class Group extends Capture {
-    get success() {
-        return this.index != -1;
-    }
     constructor(value = EMPTY, index = -1) {
         super(value, index);
+    }
+    get success() {
+        return this.index != -1;
     }
     static get Empty() {
         return EmptyGroup;

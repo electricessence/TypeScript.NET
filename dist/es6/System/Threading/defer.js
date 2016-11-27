@@ -30,7 +30,7 @@ class DeferInterval extends DeferBase {
     constructor(task, interval, _remaining = Infinity) {
         super();
         this._remaining = _remaining;
-        if (interval === null || interval === void (0))
+        if (interval == null)
             throw "'interval' must be a valid number.";
         if (interval < 0)
             throw "'interval' cannot be negative.";

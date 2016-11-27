@@ -25,7 +25,7 @@ System.register([], function (exports_1, context_1) {
                 IteratorResult.Done = new IteratorResult(VOID0, VOID0, true);
                 function GetDone() { return IteratorResult.Done; }
                 IteratorResult.GetDone = GetDone;
-            })(IteratorResult || (IteratorResult = {}));
+            })(IteratorResult = IteratorResult || (IteratorResult = {}));
             exports_1("IteratorResult", IteratorResult);
             Object.freeze(IteratorResult);
             exports_1("default", IteratorResult);

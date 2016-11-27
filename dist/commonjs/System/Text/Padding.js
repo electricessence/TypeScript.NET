@@ -19,7 +19,7 @@ function padStringRight(source, minLength, pad) {
 exports.padStringRight = padStringRight;
 function padNumberLeft(source, minLength, pad) {
     if (pad === void 0) { pad = ZERO; }
-    if (!Types_1.Type.isNumber(source))
+    if (!Types_1.Type.isNumber(source, true))
         throw new Error("Cannot pad non-number.");
     if (!source)
         source = 0;
@@ -28,7 +28,7 @@ function padNumberLeft(source, minLength, pad) {
 exports.padNumberLeft = padNumberLeft;
 function padNumberRight(source, minLength, pad) {
     if (pad === void 0) { pad = ZERO; }
-    if (!Types_1.Type.isNumber(source))
+    if (!Types_1.Type.isNumber(source, true))
         throw new Error("Cannot pad non-number.");
     if (!source)
         source = 0;
@@ -38,7 +38,7 @@ exports.padNumberRight = padNumberRight;
 function padLeft(source, minLength, pad) {
     if (Types_1.Type.isString(source))
         return padStringLeft(source, minLength, pad);
-    if (Types_1.Type.isNumber(source))
+    if (Types_1.Type.isNumber(source, true))
         return padNumberLeft(source, minLength, pad);
     throw new Error("Invalid source type.");
 }
@@ -46,7 +46,7 @@ exports.padLeft = padLeft;
 function padRight(source, minLength, pad) {
     if (Types_1.Type.isString(source))
         return padStringRight(source, minLength, pad);
-    if (Types_1.Type.isNumber(source))
+    if (Types_1.Type.isNumber(source, true))
         return padNumberRight(source, minLength, pad);
     throw new Error("Invalid source type.");
 }
