@@ -21,8 +21,8 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
         }
         return target;
     }
-    var ArgumentNullException_1;
     exports_1("insertionSort", insertionSort);
+    var ArgumentNullException_1;
     return {
         setters: [
             function (ArgumentNullException_1_1) {

@@ -6,6 +6,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException(ENDLESS_EXCEPTION_MESSAGE);
         return true;
     }
+    exports_1("throwIfEndless", throwIfEndless);
     function initArrayFrom(source, max) {
         if (max === void 0) { max = Infinity; }
         if ((source) instanceof (Array) || Types_1.Type.isString(source)) {
@@ -55,18 +56,23 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         }
         throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
     }
+    exports_1("from", from);
     function isEnumerable(instance) {
         return Types_1.Type.hasMemberOfType(instance, "getEnumerator", Types_1.Type.FUNCTION);
     }
+    exports_1("isEnumerable", isEnumerable);
     function isEnumerableOrArrayLike(instance) {
         return Types_1.Type.isArrayLike(instance) || isEnumerable(instance);
     }
+    exports_1("isEnumerableOrArrayLike", isEnumerableOrArrayLike);
     function isEnumerator(instance) {
         return Types_1.Type.hasMemberOfType(instance, "moveNext", Types_1.Type.FUNCTION);
     }
+    exports_1("isEnumerator", isEnumerator);
     function isIterator(instance) {
         return Types_1.Type.hasMemberOfType(instance, "next", Types_1.Type.FUNCTION);
     }
+    exports_1("isIterator", isIterator);
     function forEach(e, action, max) {
         if (max === void 0) { max = Infinity; }
         if (e === STRING_EMPTY)
@@ -111,6 +117,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
         }
         return -1;
     }
+    exports_1("forEach", forEach);
     /**
      * Converts any enumerable to an array.
      * @param source
@@ -128,6 +135,7 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
         return result;
     }
+    exports_1("toArray", toArray);
     /**
      * Converts any enumerable to an array of selected values.
      * @param source
@@ -146,16 +154,8 @@ System.register(["../../Disposable/dispose", "../../Types", "./ArrayEnumerator",
             throw new UnsupportedEnumerableException_1.UnsupportedEnumerableException();
         return result;
     }
-    var dispose_1, Types_1, ArrayEnumerator_1, IndexEnumerator_1, UnsupportedEnumerableException_1, InfiniteEnumerator_1, EmptyEnumerator_1, IteratorEnumerator_1, STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
-    exports_1("throwIfEndless", throwIfEndless);
-    exports_1("from", from);
-    exports_1("isEnumerable", isEnumerable);
-    exports_1("isEnumerableOrArrayLike", isEnumerableOrArrayLike);
-    exports_1("isEnumerator", isEnumerator);
-    exports_1("isIterator", isIterator);
-    exports_1("forEach", forEach);
-    exports_1("toArray", toArray);
     exports_1("map", map);
+    var dispose_1, Types_1, ArrayEnumerator_1, IndexEnumerator_1, UnsupportedEnumerableException_1, InfiniteEnumerator_1, EmptyEnumerator_1, IteratorEnumerator_1, STRING_EMPTY, ENDLESS_EXCEPTION_MESSAGE;
     return {
         setters: [
             function (dispose_1_1) {

@@ -3,7 +3,6 @@ import * as assert from "assert";
 import * as Arrays from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import * as ArrayUtility from "../../../../../dist/commonjs/System/Collections/Array/Utility";
 import Stopwatch from "../../../../../dist/commonjs/System/Diagnostics/Stopwatch";
-import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArray";
 
 
 // Min/Max tests...
@@ -30,7 +29,7 @@ describe(".initialize(length)", ()=>
 });
 
 
-describe(".copy(source) & .equals(old,new)", ()=>
+describe(".arrayCopy(source) & .equals(old,new)", ()=>
 {
 	it("should equal", ()=>
 	{
@@ -107,7 +106,7 @@ describe(".replace(source,oldValue,newValue)", ()=>
 
 describe(".findIndex(source,of)", ()=>
 {
-	const a = initTestArray(), b:IArray<number> = {0: 3, 1: 1, 2: 2, length: 3};
+	const a = initTestArray(), b:ArrayLike<number> = {0: 3, 1: 1, 2: 2, length: 3};
 	it("should find and return the correct index", ()=>
 	{
 		assert.equal(ArrayUtility.findIndex(a, (v:number)=>v== -1), 2);

@@ -12,11 +12,12 @@ System.register(["../Types"], function (exports_1, context_1) {
     function dispose() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         // The disposables arguments array is effectively localized so it's safe.
         disposeTheseInternal(disposables, false);
     }
+    exports_1("dispose", dispose);
     /**
      * Just like in C# this 'using' function will ensure the passed disposable is disposed when the closure has finished.
      *
@@ -40,6 +41,7 @@ System.register(["../Types"], function (exports_1, context_1) {
             disposeSingle(disposable, false);
         }
     }
+    exports_1("using", using);
     /**
      * This private function makes disposing more robust for when there's no type checking.
      * If trapExceptions is 'true' it catches and returns any exception instead of throwing.
@@ -63,7 +65,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         return null;
     }
     /**
-     * This dispose method assumes it's working on a local copy and is unsafe for external use.
+     * This dispose method assumes it's working on a local arrayCopy and is unsafe for external use.
      */
     function disposeTheseInternal(disposables, trapExceptions, index) {
         if (index === void 0) { index = 0; }
@@ -102,8 +104,6 @@ System.register(["../Types"], function (exports_1, context_1) {
         return exceptions;
     }
     var Types_1;
-    exports_1("dispose", dispose);
-    exports_1("using", using);
     return {
         setters: [
             function (Types_1_1) {
@@ -115,7 +115,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                 function deferred() {
                     var disposables = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        disposables[_i - 0] = arguments[_i];
+                        disposables[_i] = arguments[_i];
                     }
                     these.deferred(disposables);
                 }
@@ -129,7 +129,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                 function withoutException() {
                     var disposables = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        disposables[_i - 0] = arguments[_i];
+                        disposables[_i] = arguments[_i];
                     }
                     // The disposables arguments array is effectively localized so it's safe.
                     return disposeTheseInternal(disposables, true);
@@ -158,7 +158,7 @@ System.register(["../Types"], function (exports_1, context_1) {
                     }
                     these.deferred = deferred;
                 })(these = dispose.these || (dispose.these = {}));
-            })(dispose = dispose || (dispose = {}));
+            })(dispose || (dispose = {}));
             exports_1("dispose", dispose);
             exports_1("default", dispose);
         }

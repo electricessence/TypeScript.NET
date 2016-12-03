@@ -15,10 +15,10 @@ it("should apply closures in order", function () {
     ];
     Dispatch_1.dispatch(a, 10);
     assert.equal(result, 100);
-    assert.equal(Dispatch_1.mapped(null, 20), null);
-    assert.equal(Dispatch_1.mapped([], 20).length, 0);
-    assert.equal(Dispatch_1.mapped(a, 20).length, 3);
-    Dispatch_1.unsafe(null, 10);
+    assert.equal(Dispatch_1.dispatch.mapped(null, 20), null);
+    assert.equal(Dispatch_1.dispatch.mapped([], 20).length, 0);
+    assert.equal(Dispatch_1.dispatch.mapped(a, 20).length, 3);
+    Dispatch_1.dispatch.unsafe(null, 10);
     assert.equal(result, 2400);
 });
 var b = [
@@ -31,7 +31,7 @@ it("should propagate errors", function () {
         Dispatch_1.dispatch(b, 10);
     });
     assert.throws(function () {
-        Dispatch_1.mapped(b, 10);
+        Dispatch_1.dispatch.mapped(b, 10);
     });
 });
 it("should trap errors", function () {
@@ -40,8 +40,8 @@ it("should trap errors", function () {
         Dispatch_1.dispatch(b, 10, function (err) { return assert.equal(err, 'error'); });
     });
     assert.doesNotThrow(function () {
-        Dispatch_1.mapped(b, 10, true);
-        Dispatch_1.mapped(b, 10, function (err) { return assert.equal(err, 'error'); });
+        Dispatch_1.dispatch.mapped(b, 10, true);
+        Dispatch_1.dispatch.mapped(b, 10, function (err) { return assert.equal(err, 'error'); });
     });
 });
 //# sourceMappingURL=Dispatch.js.map

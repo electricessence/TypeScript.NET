@@ -84,6 +84,7 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
             dispose: function () { entry && entry.canceller(); }
         };
     }
+    exports_1("deferImmediate", deferImmediate);
     // runs a task after all other tasks have been run
     // this is useful for unhandled rejection tracking that needs to happen
     // after all `then`d tasks have been run.
@@ -91,9 +92,8 @@ System.register(["../Types", "../Collections/LinkedNodeList", "../Collections/Qu
         laterQueue.enqueue(task);
         requestFlush();
     }
-    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1, requestTick, flushing, immediateQueue, laterQueue, entryPool;
-    exports_1("deferImmediate", deferImmediate);
     exports_1("runAfterDeferred", runAfterDeferred);
+    var Types_1, LinkedNodeList_1, Queue_1, ObjectPool_1, Environment_1, requestTick, flushing, immediateQueue, laterQueue, entryPool;
     return {
         setters: [
             function (Types_1_1) {

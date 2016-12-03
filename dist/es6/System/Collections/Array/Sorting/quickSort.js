@@ -1,6 +1,6 @@
 import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
 /**
- * Quick sort O(n log (n))
+ * Quick internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
  * @returns {T[]}

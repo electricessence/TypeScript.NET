@@ -12,8 +12,12 @@
     var HttpMethod_1 = require("./HttpMethod");
     var Uri_1 = require("../../Uri/Uri");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'HttpRequestFactory';
+    /**
+     * This class exposes a factory for making requests to prepared uri and params.
+     */
     var HttpRequestFactory = (function (_super) {
         __extends(HttpRequestFactory, _super);
         function HttpRequestFactory(_http, uriDefaults) {
@@ -26,6 +30,7 @@
             return _this;
         }
         HttpRequestFactory.prototype._onDispose = function () {
+            // super._onDispose(); // Not required for first level inheritance.
             this._http = null;
             this._uriDefaults = null;
         };

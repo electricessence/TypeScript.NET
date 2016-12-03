@@ -33,7 +33,7 @@ export function areAllEqual(arrays, strict = true, equalityComparer = Values.are
         strict = true;
     }
     const first = arrays[0];
-    for (let i = 0, l = arrays.length; i < l; i++) {
+    for (let i = 1, l = arrays.length; i < l; i++) {
         if (!areEqual(first, arrays[i], strict, equalityComparer))
             return false;
     }
@@ -53,7 +53,7 @@ export function areEqual(a, b, strict = true, equalityComparer = Values.areEqual
     }
     return true;
 }
-function sort(a, comparer) {
+function internalSort(a, comparer) {
     if (!a || a.length < 2)
         return a;
     const len = a.length;
@@ -76,8 +76,8 @@ export function areEquivalent(a, b, comparer = Values.compare) {
         return len;
     // There might be a better more performant way to do this, but for the moment, this
     // works quite well.
-    a = sort(a, comparer);
-    b = sort(b, comparer);
+    a = internalSort(a, comparer);
+    b = internalSort(b, comparer);
     for (let i = 0; i < len; i++) {
         if (comparer(a[i], b[i]) !== 0)
             return false;

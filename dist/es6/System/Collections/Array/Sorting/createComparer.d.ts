@@ -22,6 +22,6 @@ import { Order } from "../../Sorting/Order";
  * @param selector
  * @param order
  * @param equivalentToNaN
- * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
+ * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
-export declare function createComparer<TSource, TSelect extends Primitive>(selector: Selector<TSource | TSource[], TSelect>, order?: Order | Order[], equivalentToNaN?: any): Comparison<TSource | TSource[]>;
+export declare function createComparer<TSource, TSelect extends Primitive>(selector: Selector<TSource, TSelect | TSelect[]>, order?: Order | Order[], equivalentToNaN?: any): Comparison<TSource>;

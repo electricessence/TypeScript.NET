@@ -4,7 +4,7 @@ import { IDisposable } from "../Disposable/IDisposable";
 import { ILinkedNodeList } from "./ILinkedList";
 import { IEnumerator } from "./Enumeration/IEnumerator";
 import { Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex } from "../FunctionTypes";
-import { IArray } from "./Array/IArray";
+import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
 /*****************************
  * IMPORTANT NOTES ABOUT PERFORMANCE:
  * http://jsperf.com/simulating-a-queue
@@ -116,6 +116,6 @@ export declare class LinkedNodeList<TNode extends ILinkedNode<TNode>> implements
      */
     replace(node: TNode, replacement: TNode): void;
     static valueEnumeratorFrom<T>(list: LinkedNodeList<ILinkedNodeWithValue<T>>): IEnumerator<T>;
-    static copyValues<T, TDestination extends IArray<any>>(list: LinkedNodeList<ILinkedNodeWithValue<T>>, array: TDestination, index?: number): TDestination;
+    static copyValues<T, TDestination extends ArrayLikeWritable<any>>(list: LinkedNodeList<ILinkedNodeWithValue<T>>, array: TDestination, index?: number): TDestination;
 }
 export default LinkedNodeList;

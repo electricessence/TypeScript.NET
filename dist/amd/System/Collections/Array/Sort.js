@@ -1,2 +1,2 @@
-define(["require","exports","./Sorting/createComparer","./Sorting/quickSort"],function(r,e,t,a){"use strict";function o(r){for(var t in r)e.hasOwnProperty(t)||(e[t]=r[t])}e.createComparer=t.createComparer,e["default"]=t.createComparer,e.by=t.createComparer,o(a)});
+define(["require","exports","./Sorting/createComparer","./Sorting/quickSort"],function(r,e,t,o){"use strict";e.createComparer=t.createComparer,Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=t.createComparer,e.by=t.createComparer,e.quickSort=o.quickSort;var a;!function(r){function e(r,e,o,a){return void 0===o&&(o=1),void 0===a&&(a=NaN),r.sort(t.createComparer(e,o,a))}r.quick=o.quickSort,r.using=e}(a=e.ArraySort||(e.ArraySort={}))});
 //# sourceMappingURL=Sort.js.map

@@ -1,7 +1,7 @@
 import { ArgumentNullException } from "../../../Exceptions/ArgumentNullException";
 import { initialize } from "../Utility";
 /**
- * Merge sort O(n log (n))
+ * Merge internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
  * @returns {number[]}

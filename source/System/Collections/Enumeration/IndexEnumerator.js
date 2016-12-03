@@ -7,8 +7,13 @@
     }
 })(["require", "exports", "./EnumeratorBase", "../../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var EnumeratorBase_1 = require("./EnumeratorBase");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var IndexEnumerator = (function (_super) {
         __extends(IndexEnumerator, _super);

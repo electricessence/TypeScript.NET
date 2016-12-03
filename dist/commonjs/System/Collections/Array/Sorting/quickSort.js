@@ -1,7 +1,7 @@
 "use strict";
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
 /**
- * Quick sort O(n log (n))
+ * Quick internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
  * @returns {T[]}

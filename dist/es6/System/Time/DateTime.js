@@ -2,6 +2,9 @@ import { TimeSpan } from "./TimeSpan";
 import { ClockTime } from "./ClockTime";
 import { TimeStamp } from "./TimeStamp";
 export class DateTime {
+    toJsDate() {
+        return new Date(this._value.getTime()); // return a clone.
+    }
     constructor(value = new Date(), kind = 1 /* Local */) {
         this._kind = kind;
         if (value instanceof DateTime)
@@ -12,9 +15,6 @@ export class DateTime {
             this._value = value === void 0
                 ? new Date()
                 : new Date(value);
-    }
-    toJsDate() {
-        return new Date(this._value.getTime()); // return a clone.
     }
     get kind() {
         return this._kind;

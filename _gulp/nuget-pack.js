@@ -10,7 +10,11 @@
     var TASK = require("./constants/TaskNames");
     var gulp = require("gulp");
     var fs = require("fs");
-    gulp.task(TASK.NUGET_PACK, function (callback) {
+    gulp.task(TASK.NUGET_PACK, 
+    // [
+    // 	TASK.BUILD
+    // ],
+    function (callback) {
         var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
         require("gulp-nuget-pack")({
             id: "TypeScript.NET.Library",

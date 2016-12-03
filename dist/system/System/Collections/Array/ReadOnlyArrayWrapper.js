@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 System.register(["../../Exceptions/ArgumentNullException", "../ReadOnlyCollectionBase", "../Enumeration/Enumerator", "../../../extends"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
@@ -21,10 +17,7 @@ System.register(["../../Exceptions/ArgumentNullException", "../ReadOnlyCollectio
                 extends_1 = extends_1_1;
             }
         ],
-        execute: function () {/*!
-             * @author electricessence / https://github.com/electricessence/
-             * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
-             */
+        execute: function () {
             // noinspection JSUnusedLocalSymbols
             __extends = extends_1.default;
             ReadOnlyArrayWrapper = (function (_super) {

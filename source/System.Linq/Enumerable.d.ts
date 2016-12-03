@@ -14,7 +14,6 @@ import {
 	SelectorWithIndex,
 	Action
 } from "../System/FunctionTypes";
-import {IArray} from "../System/Collections/Array/IArray";
 import {IMap, IDictionary} from "../System/Collections/Dictionaries/IDictionary";
 import {Comparable} from "../System/IComparable";
 import {EnumerableAction} from "./EnumerableAction";
@@ -85,7 +84,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		second:ForEachEnumerable<TSecond>,
 		resultSelector:(first:T, second:TSecond, index:number) => TResult):ILinqEnumerable<TResult>;
 	zipMultiple<TSecond, TResult>(
-		second:IArray<ForEachEnumerable<TSecond>>,
+		second:ArrayLike<ForEachEnumerable<TSecond>>,
 		resultSelector:(first:T, second:TSecond, index:number) => TResult):ILinqEnumerable<TResult>;
 	join<TInner, TKey, TResult>(
 		inner:ForEachEnumerable<TInner>,
@@ -97,7 +96,7 @@ export interface IInfiniteEnumerable<T> extends IEnumerable<T>, IDisposable
 		outerKeySelector:Selector<T, TKey>, innerKeySelector:Selector<TInner, TKey>,
 		resultSelector:(outer:T, inner:TInner[] | null) => TResult,
 		compareSelector?:Selector<TKey, TCompare>):ILinqEnumerable<TResult>;
-	merge(enumerables:IArray<ForEachEnumerable<T>>):this;
+	merge(enumerables:ArrayLike<ForEachEnumerable<T>>):this;
 	concat(...enumerables:Array<ForEachEnumerable<T>>):this;
 	union<TCompare>(second:ForEachEnumerable<T>, compareSelector?:Selector<T, TCompare>):this;
 	insertAt(index:number, other:ForEachEnumerable<T>):this;

@@ -4,7 +4,7 @@ import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { EqualityComparison, Action, PredicateWithIndex, ActionWithIndex } from "../FunctionTypes";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
-import { IArray } from "./Array/IArray";
+import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
 import { ILinqEnumerable } from "../../System.Linq/Enumerable";
 export declare abstract class CollectionBase<T> extends DisposableBase implements ICollection<T>, IEnumerateEach<T> {
     protected _equalityComparer: EqualityComparison<T | null | undefined>;
@@ -102,7 +102,7 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
      * @param index
      * @returns {TTarget}
      */
-    copyTo<TTarget extends IArray<T>>(target: TTarget, index?: number): TTarget;
+    copyTo<TTarget extends ArrayLikeWritable<T>>(target: TTarget, index?: number): TTarget;
     /**
      * Returns an array of the collection contents.
      * @returns {any[]|Array}

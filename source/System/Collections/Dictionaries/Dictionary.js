@@ -7,6 +7,11 @@
     }
 })(["require", "exports", "../../Compare", "../../Types", "../Enumeration/EnumeratorBase", "../LinkedNodeList", "../../Disposable/ObjectPool", "./getIdentifier", "./DictionaryBase", "../../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Original: http://linqjs.codeplex.com/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Compare_1 = require("../../Compare");
     var Types_1 = require("../../Types");
     var EnumeratorBase_1 = require("../Enumeration/EnumeratorBase");
@@ -15,8 +20,10 @@
     var getIdentifier_1 = require("./getIdentifier");
     var DictionaryBase_1 = require("./DictionaryBase");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
+    // LinkedList for Dictionary
     var HashEntry = (function () {
         function HashEntry(key, value, previous, next) {
             this.key = key;
@@ -27,6 +34,7 @@
         return HashEntry;
     }());
     var linkedListPool;
+    //noinspection JSUnusedLocalSymbols
     function linkedNodeList(recycle) {
         if (!linkedListPool)
             linkedListPool
@@ -91,6 +99,7 @@
             var buckets = _._buckets, entries = _._entries, compareKey = _._keyGenerator ? _._keyGenerator(key) : key, hash = getIdentifier_1.getIdentifier(compareKey);
             var bucket = _._getBucket(hash);
             var bucketEntry = bucket && _._getBucketEntry(key, hash, bucket);
+            // Entry exits? Delete or update
             if (bucketEntry) {
                 var b = bucket;
                 if (value === VOID0) {
@@ -106,6 +115,7 @@
                         return true;
                 }
                 else {
+                    // We don't expose the internal hash entries so replacing the value is ok.
                     var old = bucketEntry.value.value;
                     bucketEntry.value.value = value;
                     return !Compare_1.areEqual(value, old);
@@ -126,6 +136,7 @@
         Dictionary.prototype._clearInternal = function () {
             var _ = this;
             var buckets = _._buckets;
+            // Ensure reset and clean...
             for (var key in buckets) {
                 if (buckets.hasOwnProperty(key)) {
                     var bucket = buckets[key];
@@ -135,6 +146,10 @@
             }
             return _._entries.clear();
         };
+        /*
+         * Note: super.getEnumerator() works perfectly well,
+         * but enumerating the internal linked node list is much more efficient.
+         */
         Dictionary.prototype.getEnumerator = function () {
             var _ = this;
             _.throwIfDisposed();

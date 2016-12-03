@@ -12,7 +12,7 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IList} from "./IList";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
-import {IArray} from "./Array/IArray";
+import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import __extendsImport from "../../extends";
 import {EnumeratorBase} from "./Enumeration/EnumeratorBase";
 // noinspection JSUnusedLocalSymbols
@@ -149,7 +149,7 @@ extends CollectionBase<T> implements IList<T>, IEnumerateEach<T>
 			this._equalityComparer);
 	}
 
-	copyTo<TTarget extends IArray<any>>(target:TTarget, index?:number):TTarget
+	copyTo<TTarget extends ArrayLikeWritable<any>>(target:TTarget, index?:number):TTarget
 	{
 		return copyTo(this._source, target, 0, index);
 	}

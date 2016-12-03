@@ -14,10 +14,18 @@
     var Promise_1 = require("../source/System/Promises/Promise");
     var awaiter_1 = require("../source/awaiter");
     var generator_1 = require("../source/generator");
+    // noinspection JSUnusedLocalSymbols
     var __awaiter = awaiter_1.default;
+    // noinspection JSUnusedLocalSymbols
     var __generator = generator_1.default;
+    // No tsd yet.
     var bump = require('gulp-bump');
     var VERSION_BUMP_MINOR = 'version-bump-minor', VERSION_BUMP_PATCH = 'version-bump-patch';
+    //noinspection JSValidateJSDoc
+    /**
+     * @param {string} type
+     * @returns {NodeJS.ReadableStream}
+     */
     function bumpVersion(type) {
         return __awaiter(this, void 0, Promise_1.Promise, function () {
             var pkg, newVer;

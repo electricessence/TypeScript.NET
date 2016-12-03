@@ -57,6 +57,7 @@ var rootFunctions = new Functions();
      */
     Functions.Blank = rootFunctions.Blank;
 })(Functions = exports.Functions || (exports.Functions = {}));
+exports.Functions = Functions;
 // Make this read only.  Should still allow for sub-classing since extra methods are added to prototype.
 Object.freeze(Functions);
 Object.defineProperty(exports, "__esModule", { value: true });

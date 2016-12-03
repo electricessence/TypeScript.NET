@@ -878,12 +878,17 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                  * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
                  * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
                  */
+                var State;
+                /**
+                 * The state of a promise.
+                 * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
+                 * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
+                 */
                 (function (State) {
                     State[State["Pending"] = 0] = "Pending";
                     State[State["Fulfilled"] = 1] = "Fulfilled";
                     State[State["Rejected"] = -1] = "Rejected";
-                })(Promise.State || (Promise.State = {}));
-                var State = Promise.State;
+                })(State = Promise.State || (Promise.State = {}));
                 Object.freeze(State);
                 function factory(e) {
                     return new Promise(e);
@@ -1128,7 +1133,7 @@ System.register(["../Types", "../Threading/deferImmediate", "../Disposable/Dispo
                     return new PromiseWrapper({ then: then });
                 }
                 Promise.createFrom = createFrom;
-            })(Promise = Promise || (Promise = {}));
+            })(Promise || (Promise = {}));
             exports_1("Promise", Promise);
             exports_1("default", Promise);
         }

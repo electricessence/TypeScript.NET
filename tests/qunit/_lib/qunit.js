@@ -3279,7 +3279,7 @@ if ( notPhantom && document.readyState === "complete" ) {
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * You may obtain a arrayCopy of the License at
  *
  * https://www.apache.org/licenses/LICENSE-2.0
  *
@@ -3448,7 +3448,7 @@ QUnit.diff = ( function() {
 						[ DIFF_DELETE, lastequality ]
 					);
 
-					// Change second copy to insert.
+					// Change second arrayCopy to insert.
 					diffs[ equalities[ equalitiesLength - 1 ] + 1 ][ 0 ] = DIFF_INSERT;
 					equalitiesLength--; // Throw away the equality we just deleted;
 					lastequality = null;
@@ -3635,7 +3635,7 @@ QUnit.diff = ( function() {
 		hm = this.diffHalfMatch( text1, text2 );
 		if ( hm ) {
 
-			// A half-match was found, sort out the return data.
+			// A half-match was found, internalSort out the return data.
 			text1A = hm[ 0 ];
 			text1B = hm[ 1 ];
 			text2A = hm[ 2 ];
@@ -3744,7 +3744,7 @@ QUnit.diff = ( function() {
 			hm = hm1[ 4 ].length > hm2[ 4 ].length ? hm1 : hm2;
 		}
 
-		// A half-match was found, sort out the return data.
+		// A half-match was found, internalSort out the return data.
 		text1A, text1B, text2A, text2B;
 		if ( text1.length > text2.length ) {
 			text1A = hm[ 0 ];
@@ -4052,7 +4052,7 @@ QUnit.diff = ( function() {
 						[ DIFF_DELETE, lastequality ]
 					);
 
-					// Change second copy to insert.
+					// Change second arrayCopy to insert.
 					diffs[ equalities[ equalitiesLength - 1 ] + 1 ][ 0 ] = DIFF_INSERT;
 
 					// Throw away the equality we just deleted.

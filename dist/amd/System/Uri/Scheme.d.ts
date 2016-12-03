@@ -56,7 +56,7 @@ export declare module Scheme {
      * An index of possible values to validate against.
      * @type {Array}
      */
-    const All: SchemeValue.Any[];
+    const All: ReadonlyArray<SchemeValue.Any>;
     function isValid(scheme: string): scheme is SchemeValue.Any;
 }
 export default Scheme;

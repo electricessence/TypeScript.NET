@@ -54,9 +54,6 @@ var TimeUnitValue = (function (_super) {
     return TimeUnitValue;
 }(TimeQuantity_1.TimeQuantity));
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * TimeUnitValue allows for passing around a reference to a changeable measure of time coerced by its unit type.
- */
 exports.default = TimeUnitValue;
 function getUnitQuantityFrom(q, units) {
     return TimeUnit_1.TimeUnit.fromMilliseconds(q.getTotalMilliseconds(), units);

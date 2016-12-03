@@ -14,6 +14,7 @@
     "use strict";
     var ArgumentException_1 = require("./ArgumentException");
     var extends_1 = require("../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'ArgumentOutOfRangeException';
     var ArgumentOutOfRangeException = (function (_super) {

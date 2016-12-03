@@ -5,7 +5,6 @@
 import {ArgumentException} from "./Exceptions/ArgumentException";
 import {ArgumentNullException} from "./Exceptions/ArgumentNullException";
 import {KeyValuePair, IKeyValuePair} from "./KeyValuePair";
-import {IArray} from "./Collections/Array/IArray";
 
 const
 	VOID0:undefined                  = void 0,
@@ -33,7 +32,7 @@ export function assertKey<TKey>(key:TKey, name:string = ITEM):TKey|never
 }
 
 
-export function assertTuple(tuple:IArray<any>, name:string = ITEM):void|never
+export function assertTuple(tuple:ArrayLike<any>, name:string = ITEM):void|never
 {
 	if(tuple.length!=2)
 		throw new ArgumentException(name, 'KeyValuePair tuples must be of length 2.');

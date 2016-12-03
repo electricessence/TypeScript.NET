@@ -14,6 +14,7 @@
     "use strict";
     var SystemException_1 = require("../Exceptions/SystemException");
     var extends_1 = require("../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = 'KeyNotFoundException ';
     var KeyNotFoundException = (function (_super) {

@@ -4,7 +4,6 @@
  */
 import {ArgumentException} from "./Exceptions/ArgumentException";
 import {ArgumentOutOfRangeException} from "./Exceptions/ArgumentOutOfRangeException";
-import {IArray} from "./Collections/Array/IArray";
 import {TypeValue} from "./TypeValue";
 
 export function Integer(n:number):number
@@ -15,94 +14,25 @@ export function Integer(n:number):number
 export module Integer
 {
 	export const MAX_32_BIT:number = 2147483647;
-
-	function r(maxExclusive:number):number
-	{
-		return (Math.random()*maxExclusive) | 0;
-	}
-
-
-	/**
-	 * Returns a random integer from minInclusive to the maxExclusive.
-	 * Negative numbers are allowed.
-	 *
-	 * @param maxExclusive
-	 * @returns {number}
-	 */
-	export function random(maxExclusive:number):number
-	{
-		assert(maxExclusive, 'maxExclusive');
-		return r(maxExclusive);
-	}
-
-	export module random
-	{
-		export function next(
-			boundary:number,
-			inclusive?:boolean):number
-		{
-			assert(boundary, 'max');
-			if(boundary===0) return 0;
-			if(inclusive) boundary += boundary/Math.abs(boundary);
-			return r(boundary);
-		}
-
-		export function set(
-			count:number,
-			boundary:number,
-			inclusive?:boolean):number[]
-		{
-			const s:number[] = [];
-			s.length = count;
-			for(let i=0;i<count;i++) {
-				s[i] = next(boundary,inclusive);
-			}
-			return s;
-		}
-
-		export function nextInRange(
-			min:number,
-			max:number,
-			inclusive?:boolean):number
-		{
-			assert(min, 'min');
-			assert(max, 'max');
-			let range = max - min;
-			if(range===0) return min;
-			if(inclusive) range += range/Math.abs(range);
-			return min + next(range);
-		}
-
-		export function select<T>(source:IArray<T>):T|undefined
-		{
-			return source && source.length
-				? source[r(source.length)]
-				: void(0);
-		}
-
-		export module select
-		{
-			export function one<T>(source:IArray<T>):T|undefined
-			{
-				return random.select(source);
-			}
-		}
-
-	}
+	export const MAX_VALUE:number = 9007199254740991;
+	const NUMBER:TypeValue.Number = "number";
 
 	/**
 	 * Converts any number to its 32bit counterpart.
-	 * Returns null if conversion is not possible.
+	 * Throws if conversion is not possible.
 	 * @param n
 	 * @returns {number}
 	 */
-	export function as32Bit(n:number):number|null
+	export function as32Bit(n:number):number
 	{
 		const result = n | 0;
-		return (n=== -1 || result!== -1) ? result : null;
+		if(isNaN(n))
+			throw "'n' is not a number.";
+		if (n!== -1 && result=== -1)
+			throw "'n' is too large to be a 32 bit integer.";
+		return result;
 	}
 
-	const NUMBER:TypeValue.Number = "number";
 
 	/**
 	 * Returns true if the value is an integer.

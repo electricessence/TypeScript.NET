@@ -1,31 +1,14 @@
-import { IArray } from "./Collections/Array/IArray";
 export declare function Integer(n: number): number;
 export declare module Integer {
     const MAX_32_BIT: number;
-    /**
-     * Returns a random integer from minInclusive to the maxExclusive.
-     * Negative numbers are allowed.
-     *
-     * @param maxExclusive
-     * @returns {number}
-     */
-    function random(maxExclusive: number): number;
-    module random {
-        function next(boundary: number, inclusive?: boolean): number;
-        function set(count: number, boundary: number, inclusive?: boolean): number[];
-        function nextInRange(min: number, max: number, inclusive?: boolean): number;
-        function select<T>(source: IArray<T>): T | undefined;
-        module select {
-            function one<T>(source: IArray<T>): T | undefined;
-        }
-    }
+    const MAX_VALUE: number;
     /**
      * Converts any number to its 32bit counterpart.
-     * Returns null if conversion is not possible.
+     * Throws if conversion is not possible.
      * @param n
      * @returns {number}
      */
-    function as32Bit(n: number): number | null;
+    function as32Bit(n: number): number;
     /**
      * Returns true if the value is an integer.
      * @param n

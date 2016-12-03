@@ -7,18 +7,29 @@
     }
 })(["require", "exports", "../../Compare", "../../Types"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Values = require("../../Compare");
     var Types_1 = require("../../Types");
+    /*  validateSize: Utility for quick validation/invalidation of array equality.
+        Why this way?  Why not pass a closure for the last return?
+        Reason: Performance and avoiding the creation of new functions/closures. */
     function validateSize(a, b) {
+        // Both valid and are same object, or both are null/undefined.
         if (a && b && a === b || !a && !b)
             return true;
+        // At this point, at least one has to be non-null.
         if (!a || !b)
             return false;
         var len = a.length;
         if (len !== b.length)
             return false;
+        // If both are arrays and have zero length, they are equal.
         if (len === 0)
             return true;
+        // Return the length for downstream processing.
         return len;
     }
     function areAllEqual(arrays, strict, equalityComparer) {
@@ -33,7 +44,7 @@
             strict = true;
         }
         var first = arrays[0];
-        for (var i = 0, l = arrays.length; i < l; i++) {
+        for (var i = 1, l = arrays.length; i < l; i++) {
             if (!areEqual(first, arrays[i], strict, equalityComparer))
                 return false;
         }
@@ -57,7 +68,7 @@
         return true;
     }
     exports.areEqual = areEqual;
-    function sort(a, comparer) {
+    function internalSort(a, comparer) {
         if (!a || a.length < 2)
             return a;
         var len = a.length;
@@ -79,8 +90,10 @@
         var len = validateSize(a, b);
         if (Types_1.Type.isBoolean(len))
             return len;
-        a = sort(a, comparer);
-        b = sort(b, comparer);
+        // There might be a better more performant way to do this, but for the moment, this
+        // works quite well.
+        a = internalSort(a, comparer);
+        b = internalSort(b, comparer);
         for (var i = 0; i < len; i++) {
             if (comparer(a[i], b[i]) !== 0)
                 return false;

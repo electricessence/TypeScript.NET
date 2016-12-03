@@ -12,7 +12,7 @@ import {IEnumerator} from "./Enumeration/IEnumerator";
 import {IEnumerateEach} from "./Enumeration/IEnumerateEach";
 import {EqualityComparison, Action, PredicateWithIndex, ActionWithIndex} from "../FunctionTypes";
 import {IEnumerableOrArray} from "./IEnumerableOrArray";
-import {IArray} from "./Array/IArray";
+import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import {ILinqEnumerable} from "../../System.Linq/Enumerable";
 import {isCommonJS, isRequireJS, isNodeJS} from "../Environment";
 import __extendsImport from "../../extends";
@@ -382,7 +382,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	 * @param index
 	 * @returns {TTarget}
 	 */
-	copyTo<TTarget extends IArray<T>>(
+	copyTo<TTarget extends ArrayLikeWritable<T>>(
 		target:TTarget,
 		index:number = 0):TTarget
 	{

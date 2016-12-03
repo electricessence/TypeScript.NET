@@ -2,10 +2,8 @@
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-
 import {ArgumentNullException} from "../../Exceptions/ArgumentNullException";
 import {ReadOnlyCollectionBase} from "../ReadOnlyCollectionBase";
-import {IArray} from "./IArray";
 import {from as enumeratorFrom} from "../Enumeration/Enumerator";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
@@ -14,7 +12,7 @@ const __extends = __extendsImport;
 export default class ReadOnlyArrayWrapper<T> extends ReadOnlyCollectionBase<T>
 {
 
-	constructor(array:IArray<T>)
+	constructor(array:ArrayLike<T>)
 	{
 		super();
 		if(!array)

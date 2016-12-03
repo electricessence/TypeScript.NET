@@ -6,13 +6,12 @@ import * as Values from "../../Compare";
 import {Type} from "../../Types";
 import {Primitive} from "../../Primitive";
 import {EqualityComparison, Comparison} from "../../FunctionTypes";
-import {IArray} from "./IArray";
 import {IComparable} from "../../IComparable";
 
 /*  validateSize: Utility for quick validation/invalidation of array equality.
 	Why this way?  Why not pass a closure for the last return?
 	Reason: Performance and avoiding the creation of new functions/closures. */
-function validateSize(a:IArray<any>, b:IArray<any>):boolean|number
+function validateSize(a:ArrayLike<any>, b:ArrayLike<any>):boolean|number
 {
 	// Both valid and are same object, or both are null/undefined.
 	if(a && b && a===b || !a && !b)
@@ -35,14 +34,14 @@ function validateSize(a:IArray<any>, b:IArray<any>):boolean|number
 }
 
 export function areAllEqual(
-	arrays:any[][],
+	arrays:ArrayLike<ArrayLike<any>>,
 	equalityComparer?:EqualityComparison<any>):boolean
 export function areAllEqual(
-	arrays:any[][],
+	arrays:ArrayLike<ArrayLike<any>>,
 	strict:boolean,
 	equalityComparer?:EqualityComparison<any>):boolean
 export function areAllEqual(
-	arrays:any[][],
+	arrays:ArrayLike<ArrayLike<any>>,
 	strict:boolean|EqualityComparison<any> = true,
 	equalityComparer:EqualityComparison<any> = Values.areEqual):boolean
 {
@@ -57,7 +56,7 @@ export function areAllEqual(
 	}
 
 	const first = arrays[0];
-	for(let i = 0, l = arrays.length; i<l; i++)
+	for(let i = 1, l = arrays.length; i<l; i++)
 	{
 		if(!areEqual(first, arrays[i], strict, equalityComparer))
 			return false;
@@ -72,14 +71,14 @@ export function areAllEqual(
  * @param equalityComparer
  */
 export function areEqual<T>(
-	a:IArray<T>, b:IArray<T>,
+	a:ArrayLike<T>, b:ArrayLike<T>,
 	equalityComparer?:EqualityComparison<T>):boolean
 export function areEqual<T>(
-	a:IArray<T>, b:IArray<T>,
+	a:ArrayLike<T>, b:ArrayLike<T>,
 	strict:boolean,
 	equalityComparer?:EqualityComparison<T>):boolean
 export function areEqual<T>(
-	a:IArray<T>, b:IArray<T>,
+	a:ArrayLike<T>, b:ArrayLike<T>,
 	strict:boolean|EqualityComparison<T> = true,
 	equalityComparer:EqualityComparison<T> = Values.areEqual):boolean
 {
@@ -101,7 +100,7 @@ export function areEqual<T>(
 
 }
 
-function sort<T>(a:IArray<T>, comparer:Comparison<T>):IArray<T>
+function internalSort<T>(a:ArrayLike<T>, comparer:Comparison<T>):ArrayLike<T>
 {
 	if(!a || a.length<2) return a;
 
@@ -123,11 +122,11 @@ function sort<T>(a:IArray<T>, comparer:Comparison<T>):IArray<T>
 	return b;
 }
 
-export function areEquivalent<T extends Primitive>(a:IArray<T>, b:IArray<T>):boolean;
-export function areEquivalent<T>(a:IArray<IComparable<T>>, b:IArray<IComparable<T>>):boolean;
-export function areEquivalent<T>(a:IArray<T>, b:IArray<T>, comparer:Comparison<T>):boolean;
+export function areEquivalent<T extends Primitive>(a:ArrayLike<T>, b:ArrayLike<T>):boolean;
+export function areEquivalent<T>(a:ArrayLike<IComparable<T>>, b:ArrayLike<IComparable<T>>):boolean;
+export function areEquivalent<T>(a:ArrayLike<T>, b:ArrayLike<T>, comparer:Comparison<T>):boolean;
 export function areEquivalent<T>(
-	a:IArray<T>, b:IArray<T>,
+	a:ArrayLike<T>, b:ArrayLike<T>,
 	comparer:Comparison<T> = Values.compare):boolean
 {
 	const len = validateSize(a, b);
@@ -135,8 +134,8 @@ export function areEquivalent<T>(
 
 	// There might be a better more performant way to do this, but for the moment, this
 	// works quite well.
-	a = sort(a, comparer);
-	b = sort(b, comparer);
+	a = internalSort(a, comparer);
+	b = internalSort(b, comparer);
 
 	for(let i = 0; i<len; i++)
 	{
@@ -145,5 +144,4 @@ export function areEquivalent<T>(
 	}
 
 	return true;
-
 }

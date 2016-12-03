@@ -17,6 +17,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         return hash;
     }
+    exports_1("getHashCode", getHashCode);
     function repeat(source, count) {
         var result = EMPTY;
         if (!isNaN(count)) {
@@ -26,6 +27,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         return result;
     }
+    exports_1("repeat", repeat);
     function fromChars(chOrChars, count) {
         if (count === void 0) { count = 1; }
         if ((chOrChars) instanceof (Array)) {
@@ -40,6 +42,7 @@ System.register(["../Types"], function (exports_1, context_1) {
             return repeat(String.fromCharCode(chOrChars), count);
         }
     }
+    exports_1("fromChars", fromChars);
     /**
      * Escapes a RegExp sequence.
      * @param source
@@ -48,6 +51,7 @@ System.register(["../Types"], function (exports_1, context_1) {
     function escapeRegExp(source) {
         return source.replace(/[-[\]\/{}()*+?.\\^$|]/g, "\\$&");
     }
+    exports_1("escapeRegExp", escapeRegExp);
     /**
      * Can trim any character or set of characters from the ends of a string.
      * Uses a Regex escapement to replace them with empty.
@@ -67,6 +71,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         return source.replace(/^\s+|\s+$/g, EMPTY);
     }
+    exports_1("trim", trim);
     /**
      * Takes any arg
      * @param source
@@ -80,6 +85,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         }
         return supplant(source, args);
     }
+    exports_1("format", format);
     //
     /**
      * This takes a string and replaces '{string}' with the respected parameter.
@@ -112,6 +118,7 @@ System.register(["../Types"], function (exports_1, context_1) {
             }
         });
     }
+    exports_1("supplant", supplant);
     function canMatch(source, match) {
         if (!Types_1.Type.isString(source) || !match)
             return false;
@@ -130,6 +137,7 @@ System.register(["../Types"], function (exports_1, context_1) {
         var m = canMatch(source, pattern);
         return Types_1.Type.isBoolean(m) ? m : source.indexOf(pattern) == 0;
     }
+    exports_1("startsWith", startsWith);
     /**
      * Returns true if the pattern matches the end of the source.
      * @param source
@@ -140,16 +148,8 @@ System.register(["../Types"], function (exports_1, context_1) {
         var m = canMatch(source, pattern);
         return Types_1.Type.isBoolean(m) ? m : source.lastIndexOf(pattern) == (source.length - pattern.length);
     }
-    var Types_1, EMPTY;
-    exports_1("getHashCode", getHashCode);
-    exports_1("repeat", repeat);
-    exports_1("fromChars", fromChars);
-    exports_1("escapeRegExp", escapeRegExp);
-    exports_1("trim", trim);
-    exports_1("format", format);
-    exports_1("supplant", supplant);
-    exports_1("startsWith", startsWith);
     exports_1("endsWith", endsWith);
+    var Types_1, EMPTY;
     return {
         setters: [
             function (Types_1_1) {

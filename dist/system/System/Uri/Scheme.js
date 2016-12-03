@@ -69,7 +69,7 @@ System.register([], function (exports_1, context_1) {
                     return Scheme.All.indexOf(scheme) != -1;
                 }
                 Scheme.isValid = isValid;
-            })(Scheme = Scheme || (Scheme = {}));
+            })(Scheme || (Scheme = {}));
             exports_1("Scheme", Scheme);
             Object.freeze(Scheme);
             exports_1("default", Scheme);

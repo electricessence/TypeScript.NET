@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 (function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -11,10 +7,15 @@
     }
 })(["require", "exports", "../../Exceptions/ArgumentNullException", "../ReadOnlyCollectionBase", "../Enumeration/Enumerator", "../../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var ReadOnlyCollectionBase_1 = require("../ReadOnlyCollectionBase");
     var Enumerator_1 = require("../Enumeration/Enumerator");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var ReadOnlyArrayWrapper = (function (_super) {
         __extends(ReadOnlyArrayWrapper, _super);

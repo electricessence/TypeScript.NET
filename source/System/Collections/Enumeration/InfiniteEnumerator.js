@@ -7,11 +7,24 @@
     }
 })(["require", "exports", "./SimpleEnumerableBase", "../../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var SimpleEnumerableBase_1 = require("./SimpleEnumerableBase");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
+    /**
+     * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
+     * This is analogous to a 'generator' and has a compatible interface.
+     */
     var InfiniteEnumerator = (function (_super) {
         __extends(InfiniteEnumerator, _super);
+        /**
+         * See InfiniteValueFactory
+         * @param _factory
+         */
         function InfiniteEnumerator(_factory) {
             var _this = _super.call(this) || this;
             _this._factory = _factory;

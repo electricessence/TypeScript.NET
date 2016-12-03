@@ -13,8 +13,10 @@
     }
 })(["require", "exports", "./ObservableBase", "../../extends"], function (require, exports) {
     "use strict";
+    // Can be used as a base class, mixin, or simply reference on how to implement the pattern.
     var ObservableBase_1 = require("./ObservableBase");
     var extends_1 = require("../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var ObservableNodeBase = (function (_super) {
         __extends(ObservableNodeBase, _super);

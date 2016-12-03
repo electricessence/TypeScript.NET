@@ -8,6 +8,7 @@ var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
 var Functions_1 = require("../../../dist/commonjs/System/Functions");
 var EmptyEnumerator_1 = require("../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator");
 var List_1 = require("../../../dist/commonjs/System/Collections/List");
+var Linq_2 = require("../../../dist/commonjs/System.Linq/Linq");
 var source = [
     {
         a: 1,
@@ -83,7 +84,7 @@ function compileTest() {
     return list.linq.orderBy(function (v) { return v.a; })
         .takeWhile(function (g, i) { return i < 5; });
 }
-var sourceMany = Linq_1.default.from(Object.freeze([
+var sourceMany = Linq_1.Enumerable(Object.freeze([
     "a,b,c,d,e",
     null,
     "f,g,h,i,j",
@@ -92,7 +93,7 @@ var sourceMany = Linq_1.default.from(Object.freeze([
     "u,v,w,x,y",
 ]));
 var sourceManyFlat = "abcdefghijklmnopqrstuvwxy";
-var sourceArrayEnumerable = Linq_1.default.from(source), sourceEnumerable = new Linq_1.default(function () { return sourceArrayEnumerable.getEnumerator(); });
+var sourceArrayEnumerable = Linq_1.Enumerable(source), sourceEnumerable = new Linq_1.LinqEnumerable(function () { return sourceArrayEnumerable.getEnumerator(); });
 describe(".force()", function () {
     it("should not throw", function () {
         assert.doesNotThrow(function () { sourceEnumerable.force(); });
@@ -102,8 +103,8 @@ describe(".count()", function () {
     it("should match count to length", function () {
         assert.equal(sourceArrayEnumerable.count(), source.length);
         assert.equal(sourceEnumerable.count(), source.length);
-        assert.equal(Linq_1.default.from([]).count(), 0);
-        assert.equal(Linq_1.default.empty().count(), 0);
+        assert.equal(Linq_1.Enumerable([]).count(), 0);
+        assert.equal(Linq_1.Enumerable.empty().count(), 0);
         assert.equal(sourceArrayEnumerable.count(function (e) { return e.a === 1; }), 3);
     });
 });
@@ -303,7 +304,7 @@ describe(".groupBy(selector)", function () {
             { Name: "Sandra", Id: 2, Salary: 999.99, Company: COMPANY_A },
             { Name: "Me", Id: 3, Salary: 1000000000.00, Company: COMPANY_B }
         ];
-        var groups = Linq_1.default.from(objArray).groupBy(function (x) { return x.Company; });
+        var groups = Linq_1.Enumerable(objArray).groupBy(function (x) { return x.Company; });
         var companies = groups.select(function (x) { return x.key; }).toArray();
         assert.equal(companies.length, 2, "2 groups expected.");
         assert.ok(Utility_1.contains(companies, COMPANY_A), "Expect " + COMPANY_A);
@@ -443,7 +444,7 @@ describe(".any(predicate)", function () {
     });
 });
 describe(".empty()", function () {
-    var source = Linq_1.default.empty();
+    var source = Linq_1.Enumerable.empty();
     describe(".singleOrDefault()", function () {
         it("should be defaulted", function () {
             assert.equal(source.singleOrDefault(), null);
@@ -489,7 +490,7 @@ describe(".last()", function () {
         assert.equal(sourceArrayEnumerable.last().c, "f");
     });
     it("should throw", function () {
-        assert.throws(function () { return Linq_1.default.from([]).last(); });
+        assert.throws(function () { return Linq_1.Enumerable([]).last(); });
     });
 });
 describe(".lastOrDefault()", function () {
@@ -497,34 +498,34 @@ describe(".lastOrDefault()", function () {
         assert.equal(sourceArrayEnumerable.lastOrDefault().c, "f");
     });
     it("should be defaulted", function () {
-        assert.equal(Linq_1.default.from([]).lastOrDefault("f"), "f");
+        assert.equal(Linq_1.Enumerable([]).lastOrDefault("f"), "f");
     });
 });
 describe(".from(x)", function () {
     it("should throw if not enumerable", function () {
-        assert.throws(function () { return Linq_1.default.from(1); });
+        assert.throws(function () { return Linq_1.Enumerable(1); });
     });
 });
 describe(".fromAny(x,default)", function () {
     it("should return the default if not enumerable", function () {
-        assert.equal(Linq_1.default.fromAny(1), null);
+        assert.equal(Linq_1.Enumerable.fromAny(1), null);
     });
 });
 describe(".fromAny(x,default)", function () {
     it("should return an enumerable from an enumerable", function () {
-        assert.ok(Linq_1.default.fromAny(sourceArrayEnumerable) instanceof Linq_1.default);
+        assert.ok(Linq_1.Enumerable.fromAny(sourceArrayEnumerable) instanceof Linq_2.InfiniteLinqEnumerable);
     });
     it("should return an enumerable from an array", function () {
-        assert.ok(Linq_1.default.fromAny(source) instanceof Linq_1.default);
+        assert.ok(Linq_1.Enumerable.fromAny(source) instanceof Linq_2.InfiniteLinqEnumerable);
     });
     it("should return an enumerable from an IEnumerable", function () {
-        var e = Linq_1.default.fromAny({ getEnumerator: function () { return EmptyEnumerator_1.EmptyEnumerator; } });
+        var e = Linq_1.Enumerable.fromAny({ getEnumerator: function () { return EmptyEnumerator_1.EmptyEnumerator; } });
         e.getEnumerator();
-        assert.ok(e instanceof Linq_1.default);
+        assert.ok(e instanceof Linq_2.InfiniteLinqEnumerable);
     });
 });
 describe(".from([1])", function () {
-    var source = new Linq_1.default(function () { return Linq_1.default.from([1]).getEnumerator(); });
+    var source = new Linq_1.LinqEnumerable(function () { return Linq_1.Enumerable([1]).getEnumerator(); });
     describe(".singleOrDefault()", function () {
         it("should return single value", function () {
             assert.equal(source.single(), 1);
@@ -621,8 +622,8 @@ describe(".selectMany(...)", function () {
         test(a);
         var b = sourceMany.selectMany(split, sm);
         test(b);
-        assert.equal(Linq_1.default.from([]).selectMany(split).count(), 0);
-        var iSource = Linq_1.default.toInfinity().selectMany(function (s) { return Utility_1.repeat("" + s, s); });
+        assert.equal(Linq_1.Enumerable([]).selectMany(split).count(), 0);
+        var iSource = Linq_1.Enumerable.toInfinity().selectMany(function (s) { return Utility_1.repeat("" + s, s); });
         assert.equal(iSource.take(10).toJoinedString(), "1223334444");
         var s = sourceMany.select(function (s) { return s.length; });
         s.dispose();
@@ -636,7 +637,7 @@ describe(".traverseBreadthFirst()", function () {
         assert.equal(c.elementAt(2), "c");
         assert.equal(c.elementAt(6), "a");
         assert.equal(c.count(), 12);
-        assert.equal(Linq_1.default.empty().traverseBreadthFirst(function (e) { return e.children; }, Functions_1.default.Identity).count(), 0);
+        assert.equal(Linq_1.Enumerable.empty().traverseBreadthFirst(function (e) { return e.children; }, Functions_1.default.Identity).count(), 0);
     });
 });
 describe(".traverseDepthFirst()", function () {
@@ -646,7 +647,7 @@ describe(".traverseDepthFirst()", function () {
         assert.equal(c.elementAt(2), "a");
         assert.equal(c.elementAt(6), "c");
         assert.equal(c.count(), 12);
-        assert.equal(Linq_1.default.empty().traverseDepthFirst(function (e) { return e.children; }, Functions_1.default.Identity).count(), 0);
+        assert.equal(Linq_1.Enumerable.empty().traverseDepthFirst(function (e) { return e.children; }, Functions_1.default.Identity).count(), 0);
     });
 });
 describe(".flatten()", function () {
@@ -660,7 +661,7 @@ describe(".flatten()", function () {
     });
 });
 describe(".ofType(type)", function () {
-    var source = Linq_1.default.from([
+    var source = Linq_1.Enumerable([
         1,
         "a",
         true,
@@ -715,7 +716,7 @@ var mathTree = sourceEnumerable.traverseDepthFirst(function (e) { return e.child
 mathTreeArray = mathTree.select(function (e) { return e.b; }).toArray();
 describe(".throwWhenEmpty()", function () {
     assert.throws(function () {
-        var e = Linq_1.default.empty().throwWhenEmpty();
+        var e = Linq_1.Enumerable.empty().throwWhenEmpty();
         //noinspection JSUnusedLocalSymbols
         var c = e.max(); // Add this for a compile check.
     });
@@ -723,7 +724,7 @@ describe(".throwWhenEmpty()", function () {
 describe(".sum()", function () {
     it("should render the sum value", function () {
         var v = Procedure.sum(mathTreeArray);
-        assert.equal(Linq_1.default.empty().sum(), 0);
+        assert.equal(Linq_1.Enumerable.empty().sum(), 0);
         assert.equal(mathTree.select(function (e) { return e.b; }).sum(), v);
         assert.equal(mathTree.select(function (e) { return e.b; }).concat([Infinity, -Infinity]).sum(), v);
         assert.equal(mathTree.select(function (e) { return e.b; }).concat([
@@ -771,24 +772,24 @@ describe(".average()", function () {
 });
 describe(".weave(enumerables)", function () {
     it("should weave in order", function () {
-        var w = Linq_1.default.weave([
+        var w = Linq_1.Enumerable.weave([
             ["a", "d"],
             ["b", "e", "g", "i"],
             ["c", "f", "h"]
         ]);
         assert.equal(w.count(), 9);
         assert.equal(w.toJoinedString(), "abcdefghi");
-        assert.equal(Linq_1.default.weave([
+        assert.equal(Linq_1.Enumerable.weave([
             [1, 2, 3, 4, 5, 6, 7]
         ]).count(), 7);
     });
     it("should throw", function () {
-        assert.throws(function () { return Linq_1.default.weave(null); });
+        assert.throws(function () { return Linq_1.Enumerable.weave(null); });
     });
 });
 describe("xxx", function () {
     it("yyy", function () {
-        var r = Linq_1.default.from([1, 2, 3, 4, 5, 6])
+        var r = Linq_1.Enumerable([1, 2, 3, 4, 5, 6])
             .skip(1)
             .takeExceptLast(2)
             .toArray();

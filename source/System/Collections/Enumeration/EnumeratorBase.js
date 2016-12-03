@@ -7,14 +7,20 @@
     }
 })(["require", "exports", "../../Types", "../../Disposable/DisposableBase", "../../Disposable/ObjectPool", "./IteratorResult", "../../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Types_1 = require("../../Types");
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var ObjectPool_1 = require("../../Disposable/ObjectPool");
     var IteratorResult_1 = require("./IteratorResult");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
     var yielderPool;
+    //noinspection JSUnusedLocalSymbols
     function yielder(recycle) {
         if (!yielderPool)
             yielderPool
@@ -29,7 +35,8 @@
             this._index = NaN;
         }
         Object.defineProperty(Yielder.prototype, "current", {
-            get: function () { return this._current; },
+            get: function () { return this._current; } // this class is not entirely local/private.  Still needs protection.
+            ,
             enumerable: true,
             configurable: true
         });
@@ -57,6 +64,8 @@
         return Yielder;
     }());
     var NAME = "EnumeratorBase";
+    // "Enumerator" is conflict JScript's "Enumerator"
+    // Naming this class EnumeratorBase to avoid collision with IE.
     var EnumeratorBase = (function (_super) {
         __extends(EnumeratorBase, _super);
         function EnumeratorBase(_initializer, _tryGetNext, disposer, isEndless) {
@@ -90,35 +99,48 @@
             configurable: true
         });
         Object.defineProperty(EnumeratorBase.prototype, "isEndless", {
+            /*
+             * Provides a mechanism to indicate if this enumerable never ends.
+             * If set to true, some operations that expect a finite result may throw.
+             * Explicit false means it has an end.
+             * Implicit void means unknown.
+             */
             get: function () {
                 return this._isEndless;
             },
             enumerable: true,
             configurable: true
         });
+        /**
+         * Added for compatibility but only works if the enumerator is active.
+         */
         EnumeratorBase.prototype.reset = function () {
             var _ = this;
             _.throwIfDisposed();
             var y = _._yielder;
             _._yielder = null;
-            _._state = 0;
+            _._state = 0 /* Before */;
             if (y)
-                yielder(y);
+                yielder(y); // recycle until actually needed.
         };
         EnumeratorBase.prototype._assertBadState = function () {
             var _ = this;
             switch (_._state) {
-                case 3:
+                case 3 /* Faulted */:
                     _.throwIfDisposed("This enumerator caused a fault and was disposed.");
                     break;
-                case 5:
+                case 5 /* Disposed */:
                     _.throwIfDisposed("This enumerator was manually disposed.");
                     break;
             }
         };
+        /**
+         * Passes the current value to the out callback if the enumerator is active.
+         * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+         */
         EnumeratorBase.prototype.tryGetCurrent = function (out) {
             this._assertBadState();
-            if (this._state === 1) {
+            if (this._state === 1 /* Active */) {
                 out(this.current);
                 return true;
             }
@@ -126,29 +148,34 @@
         };
         Object.defineProperty(EnumeratorBase.prototype, "canMoveNext", {
             get: function () {
-                return this._state < 2;
+                return this._state < 2 /* Completed */;
             },
             enumerable: true,
             configurable: true
         });
+        /**
+         * Safely moves to the next entry and returns true if there is one.
+         * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+         */
         EnumeratorBase.prototype.moveNext = function () {
             var _ = this;
             _._assertBadState();
             try {
                 switch (_._state) {
-                    case 0:
+                    case 0 /* Before */:
                         _._yielder = _._yielder || yielder();
-                        _._state = 1;
+                        _._state = 1 /* Active */;
                         var initializer = _._initializer;
                         if (initializer)
                             initializer();
-                    case 1:
+                    // fall through
+                    case 1 /* Active */:
                         if (_._tryGetNext(_._yielder)) {
                             return true;
                         }
                         else {
                             this.dispose();
-                            _._state = 2;
+                            _._state = 2 /* Completed */;
                             return false;
                         }
                     default:
@@ -157,10 +184,14 @@
             }
             catch (e) {
                 this.dispose();
-                _._state = 3;
+                _._state = 3 /* Faulted */;
                 throw e;
             }
         };
+        /**
+         * Moves to the next entry and emits the value through the out callback.
+         * Note: Will throw ObjectDisposedException if this has faulted or manually disposed.
+         */
         EnumeratorBase.prototype.tryMoveNext = function (out) {
             if (this.moveNext()) {
                 out(this.current);
@@ -173,19 +204,22 @@
                 ? this.current
                 : VOID0;
         };
+        /**
+         * Exposed for compatibility with generators.
+         */
         EnumeratorBase.prototype.next = function () {
             return this.moveNext()
                 ? new IteratorResult_1.IteratorResult(this.current, this.index)
                 : IteratorResult_1.IteratorResult.Done;
         };
         EnumeratorBase.prototype.end = function () {
-            this._ensureDisposeState(4);
+            this._ensureDisposeState(4 /* Interrupted */);
         };
         EnumeratorBase.prototype['return'] = function (value) {
             var _ = this;
             _._assertBadState();
             try {
-                return value === VOID0 || _._state === 2 || _._state === 4
+                return value === VOID0 || _._state === 2 /* Completed */ || _._state === 4 /* Interrupted */
                     ? IteratorResult_1.IteratorResult.Done
                     : new IteratorResult_1.IteratorResult(value, VOID0, true);
             }
@@ -208,7 +242,7 @@
             _._disposer = null;
             var y = _._yielder;
             _._yielder = null;
-            this._state = 5;
+            this._state = 5 /* Disposed */;
             if (y)
                 yielder(y);
             if (disposer)

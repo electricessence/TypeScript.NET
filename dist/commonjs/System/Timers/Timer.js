@@ -138,8 +138,5 @@ var Timer = (function (_super) {
     return Timer;
 }(ObservableBase_1.ObservableBase));
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * A timer class that uses an Observable pattern to allow for subscribing to ticks.
- */
 exports.default = Timer;
 //# sourceMappingURL=Timer.js.map

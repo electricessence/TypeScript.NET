@@ -9,9 +9,20 @@
     "use strict";
     var SimpleEnumerableBase_1 = require("./SimpleEnumerableBase");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
+    /**
+     * A simplified stripped down enumerator that until disposed will infinitely return the provided factory.
+     * This is analogous to a 'generator' and has a compatible interface.
+     *
+     *
+     */
     var IteratorEnumerator = (function (_super) {
         __extends(IteratorEnumerator, _super);
+        /**
+         * @param _iterator
+         * @param _isEndless true and false are explicit where as undefined means 'unknown'.
+         */
         function IteratorEnumerator(_iterator, _isEndless) {
             var _this = _super.call(this) || this;
             _this._iterator = _iterator;

@@ -2,7 +2,7 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
     "use strict";
     var __moduleName = context_1 && context_1.id;
     /**
-     * Quick sort O(n log (n))
+     * Quick internalSort O(n log (n))
      * Warning: Uses recursion.
      * @param target
      * @returns {T[]}
@@ -13,6 +13,7 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
         var len = target.length;
         return target.length < 2 ? target : sort(target, 0, len - 1);
     }
+    exports_1("quickSort", quickSort);
     function sort(target, low, high) {
         if (low < high) {
             // Partition first...
@@ -39,7 +40,6 @@ System.register(["../../../Exceptions/ArgumentNullException"], function (exports
         return target;
     }
     var ArgumentNullException_1;
-    exports_1("quickSort", quickSort);
     return {
         setters: [
             function (ArgumentNullException_1_1) {

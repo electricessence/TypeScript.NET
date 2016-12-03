@@ -28,6 +28,7 @@
         function GetDone() { return IteratorResult.Done; }
         IteratorResult.GetDone = GetDone;
     })(IteratorResult = exports.IteratorResult || (exports.IteratorResult = {}));
+    exports.IteratorResult = IteratorResult;
     Object.freeze(IteratorResult);
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = IteratorResult;

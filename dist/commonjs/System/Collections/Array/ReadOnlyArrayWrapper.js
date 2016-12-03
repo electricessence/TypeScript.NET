@@ -1,8 +1,8 @@
+"use strict";
 /*!
  * @author electricessence / https://github.com/electricessence/
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
-"use strict";
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var ReadOnlyCollectionBase_1 = require("../ReadOnlyCollectionBase");
 var Enumerator_1 = require("../Enumeration/Enumerator");

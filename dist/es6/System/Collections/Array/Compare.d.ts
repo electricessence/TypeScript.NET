@@ -1,17 +1,16 @@
 import { Primitive } from "../../Primitive";
 import { EqualityComparison, Comparison } from "../../FunctionTypes";
-import { IArray } from "./IArray";
 import { IComparable } from "../../IComparable";
-export declare function areAllEqual(arrays: any[][], equalityComparer?: EqualityComparison<any>): boolean;
-export declare function areAllEqual(arrays: any[][], strict: boolean, equalityComparer?: EqualityComparison<any>): boolean;
+export declare function areAllEqual(arrays: ArrayLike<ArrayLike<any>>, equalityComparer?: EqualityComparison<any>): boolean;
+export declare function areAllEqual(arrays: ArrayLike<ArrayLike<any>>, strict: boolean, equalityComparer?: EqualityComparison<any>): boolean;
 /**
  * Compares two arrays for equality.
  * @param a
  * @param b
  * @param equalityComparer
  */
-export declare function areEqual<T>(a: IArray<T>, b: IArray<T>, equalityComparer?: EqualityComparison<T>): boolean;
-export declare function areEqual<T>(a: IArray<T>, b: IArray<T>, strict: boolean, equalityComparer?: EqualityComparison<T>): boolean;
-export declare function areEquivalent<T extends Primitive>(a: IArray<T>, b: IArray<T>): boolean;
-export declare function areEquivalent<T>(a: IArray<IComparable<T>>, b: IArray<IComparable<T>>): boolean;
-export declare function areEquivalent<T>(a: IArray<T>, b: IArray<T>, comparer: Comparison<T>): boolean;
+export declare function areEqual<T>(a: ArrayLike<T>, b: ArrayLike<T>, equalityComparer?: EqualityComparison<T>): boolean;
+export declare function areEqual<T>(a: ArrayLike<T>, b: ArrayLike<T>, strict: boolean, equalityComparer?: EqualityComparison<T>): boolean;
+export declare function areEquivalent<T extends Primitive>(a: ArrayLike<T>, b: ArrayLike<T>): boolean;
+export declare function areEquivalent<T>(a: ArrayLike<IComparable<T>>, b: ArrayLike<IComparable<T>>): boolean;
+export declare function areEquivalent<T>(a: ArrayLike<T>, b: ArrayLike<T>, comparer: Comparison<T>): boolean;

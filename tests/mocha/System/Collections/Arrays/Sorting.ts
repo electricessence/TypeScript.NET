@@ -3,17 +3,22 @@ import * as assert from "assert";
 import {Selector} from "../../../../../dist/commonjs/System/FunctionTypes";
 import {areEqual} from "../../../../../dist/commonjs/System/Collections/Array/Compare";
 import {compare} from "../../../../../dist/commonjs/System/Compare";
-import {Integer} from "../../../../../source/System/Integer";
 import {quickSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/quickSort";
 import {mergeSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/mergeSort";
 import {insertionSort} from "../../../../../dist/commonjs/System/Collections/Array/Sorting/insertionSort";
+import {Random} from "../../../../../dist/commonjs/System/Random";
+import {ArraySort} from "../../../../../dist/commonjs/System/Collections/Array/Sort";
 
 const performanceCheck = false;  // Change to true to performance test/log
 
+function comparerSort(a:number[]):number[]
+{
+	return ArraySort.using(a, v => v);
+}
+
 function arraySort(a:number[]):number[]
 {
-	a.sort(compare);
-	return a;
+	return a.sort(compare);
 }
 
 function nullSort(a:number[]):number[]
@@ -23,8 +28,9 @@ function nullSort(a:number[]):number[]
 
 const sourceCount = 4, sourceMax = 200;
 const source:number[][] = [];
-for(let i = 0;i<sourceCount;i++) {
-	source.push(<any>Object.freeze(Integer.random.set(sourceMax,sourceMax/2)));
+for(let i = 0; i<sourceCount; i++)
+{
+	source.push(<any>Object.freeze(Random.integers(sourceMax, sourceMax/2)));
 }
 Object.freeze(source);
 
@@ -64,6 +70,12 @@ function insertion()
 	test(insertionResults, insertionSort);
 }
 
+const comparerResults:number[][] = [];
+function comparer()
+{
+	test(comparerResults, comparerSort);
+}
+
 const quickResults:number[][] = [];
 function quick()
 {
@@ -95,7 +107,8 @@ function report(name:string, fn:Function):void
 		console.log(name, measure(fn), "milliseconds");
 }
 
-if(count>1) {
+if(count>1)
+{
 	console.log(count + " iterations running...");
 }
 
@@ -104,30 +117,39 @@ report("Array Sort:", array);
 array();
 
 
-describe("Insertion Sort", ()=>
+describe("ArraySort.using()", () =>
+{
+	it("should match array sort", () =>
+	{
+		comparer();
+		assertResults(comparerResults);
+	});
+});
+
+describe("Insertion Sort", () =>
 {
 	report("Insertion Sort:", insertion);
-	it("should match array sort", ()=>
+	it("should match array sort", () =>
 	{
 		insertion();
 		assertResults(insertionResults);
 	});
 });
 
-describe("Quick Sort", ()=>
+describe("Quick Sort", () =>
 {
 	report("Quick Sort:", quick);
-	it("should match array sort", ()=>
+	it("should match array sort", () =>
 	{
 		quick();
 		assertResults(quickResults);
 	});
 });
 
-describe("Merge Sort", ()=>
+describe("Merge Sort", () =>
 {
 	report("Merge Sort:", merge);
-	it("should match array sort", ()=>
+	it("should match array sort", () =>
 	{
 		merge();
 		assertResults(mergeResults);

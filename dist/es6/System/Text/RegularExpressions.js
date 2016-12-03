@@ -161,11 +161,11 @@ export class Capture {
     }
 }
 export class Group extends Capture {
-    constructor(value = EMPTY, index = -1) {
-        super(value, index);
-    }
     get success() {
         return this.index != -1;
+    }
+    constructor(value = EMPTY, index = -1) {
+        super(value, index);
     }
     static get Empty() {
         return EmptyGroup;

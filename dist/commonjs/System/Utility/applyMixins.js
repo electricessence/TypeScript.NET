@@ -12,9 +12,5 @@ function applyMixins(derivedConstructor, baseConstructors) {
     });
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 exports.default = applyMixins;
 //# sourceMappingURL=applyMixins.js.map

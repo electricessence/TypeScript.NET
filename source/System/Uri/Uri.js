@@ -7,6 +7,11 @@
     }
 })(["require", "exports", "../Types", "./Scheme", "./QueryParams", "../Text/Utility", "../Exceptions/ArgumentException", "../Exceptions/ArgumentOutOfRangeException"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     * Based on: https://en.wikipedia.org/wiki/Uniform_Resource_Identifier
+     */
     var Types_1 = require("../Types");
     var Scheme_1 = require("./Scheme");
     var QueryParams_1 = require("./QueryParams");
@@ -14,7 +19,22 @@
     var ArgumentException_1 = require("../Exceptions/ArgumentException");
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
     var VOID0 = void 0;
+    /**
+     * Provides an read-only model representation of a uniform resource identifier (URI) and easy access to the parts of the URI.
+     *
+     * The read-only model (frozen) is easier for debugging than exposing accessors for each property.
+     * ICloneable&lt;Uri&gt; is not used to prevent unnecessary copying of values that won't change.
+     */
     var Uri = (function () {
+        /**
+         * @param scheme The user name, password, or other user-specific information associated with the specified URI.
+         * @param userInfo The host component of this instance.
+         * @param host The port number of this URI.
+         * @param port The absolute path of the URI.
+         * @param path The absolute path of the URI.
+         * @param query Any query information included in the specified URI.
+         * @param fragment The escaped URI fragment.
+         */
         function Uri(scheme, userInfo, host, port, path, query, fragment) {
             var _ = this;
             this.scheme = getScheme(scheme) || null;
@@ -32,16 +52,29 @@
                     : {});
             this.pathAndQuery = _.getPathAndQuery() || null;
             this.fragment = formatFragment(fragment) || null;
+            // This should validate the uri...
             this.absoluteUri = _.getAbsoluteUri();
             this.baseUri = _.absoluteUri.replace(/[?#].*/, '');
+            // Intended to be read-only.  Call .toMap() to get a writable copy.
             Object.freeze(this);
         }
+        /**
+         *  Compares the values of another IUri via toString comparison.
+         * @param other
+         * @returns {boolean}
+         */
         Uri.prototype.equals = function (other) {
             return this === other || this.absoluteUri == Uri.toString(other);
         };
+        /**
+         * Parses or clones values from existing Uri values.
+         * @param uri
+         * @param defaults
+         * @returns {Uri}
+         */
         Uri.from = function (uri, defaults) {
             var u = Types_1.Type.isString(uri)
-                ? Uri.parse(uri)
+                ? Uri.parse(uri) // Parsing a string should throw errors.  Null or undefined simply means empty.
                 : uri;
             return new Uri(u && u.scheme || defaults && defaults.scheme, u && u.userInfo || defaults && defaults.userInfo, u && u.host || defaults && defaults.host, u && Types_1.Type.isNumber(u.port, true) ? u.port : defaults && defaults.port, u && u.path || defaults && defaults.path, u && u.query || defaults && defaults.query, u && u.fragment || defaults && defaults.fragment);
         };
@@ -53,8 +86,14 @@
                 throw ex;
             return result;
         };
+        /**
+         * Parses a URL into it's components.
+         * @param url The url to parse.
+         * @param out A delegate to capture the value.
+         * @returns {boolean} True if valid.  False if invalid.
+         */
         Uri.tryParse = function (url, out) {
-            return !tryParse(url, out);
+            return !tryParse(url, out); // return type is Exception.
         };
         Uri.copyOf = function (map) {
             return copyUri(map);
@@ -67,16 +106,34 @@
             map.query = query;
             return Uri.from(map);
         };
+        /**
+         * Is provided for sub classes to override this value.
+         */
         Uri.prototype.getAbsoluteUri = function () {
             return uriToString(this);
         };
+        /**
+         * Is provided for sub classes to override this value.
+         */
         Uri.prototype.getAuthority = function () {
             return getAuthority(this);
         };
+        /**
+         * Is provided for sub classes to override this value.
+         */
         Uri.prototype.getPathAndQuery = function () {
             return getPathAndQuery(this);
         };
         Object.defineProperty(Uri.prototype, "pathSegments", {
+            /**
+             * The segments that represent a path.<br/>
+             * https://msdn.microsoft.com/en-us/library/system.uri.segments%28v=vs.110%29.aspx
+             *
+             * <h5><b>Example:</b></h5>
+             * If the path value equals: ```/tree/node/index.html```<br/>
+             * The result will be: ```['/','tree/','node/','index.html']```
+             * @returns {string[]}
+             */
             get: function () {
                 return this.path
                     && this.path.match(/^[/]|[^/]*[/]|[^/]+$/g)
@@ -85,23 +142,41 @@
             enumerable: true,
             configurable: true
         });
+        /**
+         * Creates a writable copy.
+         * @returns {IUri}
+         */
         Uri.prototype.toMap = function () {
             return this.copyTo({});
         };
+        /**
+         * @returns {string} The full absolute uri.
+         */
         Uri.prototype.toString = function () {
             return this.absoluteUri;
         };
+        /**
+         * Properly converts an existing URI to a string.
+         * @param uri
+         * @returns {string}
+         */
         Uri.toString = function (uri) {
             return uri instanceof Uri
                 ? uri.absoluteUri
                 : uriToString(uri);
         };
+        /**
+         * Returns the authority segment of an URI.
+         * @param uri
+         * @returns {string}
+         */
         Uri.getAuthority = function (uri) {
             return getAuthority(uri);
         };
         return Uri;
     }());
     exports.Uri = Uri;
+    var Fields;
     (function (Fields) {
         Fields[Fields["scheme"] = 0] = "scheme";
         Fields[Fields["userInfo"] = 1] = "userInfo";
@@ -110,8 +185,7 @@
         Fields[Fields["path"] = 4] = "path";
         Fields[Fields["query"] = 5] = "query";
         Fields[Fields["fragment"] = 6] = "fragment";
-    })(exports.Fields || (exports.Fields = {}));
-    var Fields = exports.Fields;
+    })(Fields = exports.Fields || (exports.Fields = {}));
     Object.freeze(Fields);
     function copyUri(from, to) {
         var i = 0, field;
@@ -167,6 +241,9 @@
             if (Types_1.Type.isNumber(uri.port, true))
                 throw new ArgumentException_1.ArgumentException('host', 'Cannot include a port when there is no host.');
         }
+        /*
+         * [//[user:password@]host[:port]]
+         */
         var result = uri.host || EMPTY;
         if (result) {
             if (uri.userInfo)
@@ -190,6 +267,8 @@
             + (formatQuery(query) || EMPTY);
     }
     function uriToString(uri) {
+        // scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
+        // {scheme}{authority}{path}{query}{fragment}
         var scheme = getScheme(uri.scheme);
         var authority = getAuthority(uri);
         var pathAndQuery = getPathAndQuery(uri), fragment = formatFragment(uri.fragment);
@@ -208,18 +287,24 @@
     function tryParse(url, out) {
         if (!url)
             return new ArgumentException_1.ArgumentException('url', 'Nothing to parse.');
+        // Could use a regex here, but well follow some rules instead.
+        // The intention is to 'gather' the pieces.  This isn't validation (yet).
+        // scheme:[//[user:password@]domain[:port]][/]path[?query][#fragment]
         var i;
         var result = {};
+        // Anything after the first # is the fragment.
         i = url.indexOf(HASH);
         if (i != -1) {
             result.fragment = url.substring(i + 1) || VOID0;
             url = url.substring(0, i);
         }
+        // Anything after the first ? is the query.
         i = url.indexOf(QM);
         if (i != -1) {
             result.query = url.substring(i + 1) || VOID0;
             url = url.substring(0, i);
         }
+        // Guarantees a separation.
         i = url.indexOf(SLASH2);
         if (i != -1) {
             var scheme = Utility_1.trim(url.substring(0, i));
@@ -235,16 +320,19 @@
             }
             url = url.substring(i + 2);
         }
+        // Find any path information.
         i = url.indexOf(SLASH);
         if (i != -1) {
             result.path = url.substring(i);
             url = url.substring(0, i);
         }
+        // Separate user info.
         i = url.indexOf(AT);
         if (i != -1) {
             result.userInfo = url.substring(0, i) || VOID0;
             url = url.substring(i + 1);
         }
+        // Remaining is host and port.
         i = url.indexOf(':');
         if (i != -1) {
             var port = parseInt(Utility_1.trim(url.substring(i + 1)));
@@ -257,6 +345,7 @@
         if (url)
             result.host = url;
         out(copyUri(result));
+        // null is good! (here)
         return null;
     }
     Object.defineProperty(exports, "__esModule", { value: true });

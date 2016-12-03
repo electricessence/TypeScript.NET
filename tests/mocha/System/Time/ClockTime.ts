@@ -3,15 +3,15 @@ import * as assert from "assert";
 import "mocha";
 import ClockTime from "../../../../dist/commonjs/System/Time/ClockTime";
 import {Milliseconds} from "../../../../dist/commonjs/System/Time/HowMany";
-import Integer from "../../../../dist/commonjs/System/Integer";
+import {Random} from "../../../../dist/commonjs/System/Random";
 
 
 const
-	days        = Integer.random(365),
-	hour        = Integer.random(24),
-	minute      = Integer.random(60),
-	second      = Integer.random(60),
-	millisecond = Integer.random(1000);
+	days        = Random.integer(365),
+	hour        = Random.integer(24),
+	minute      = Random.integer(60),
+	second      = Random.integer(60),
+	millisecond = Random.integer(1000);
 
 const c1 = new ClockTime(hour, minute, second, millisecond);
 const c2 = new ClockTime(

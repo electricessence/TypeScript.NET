@@ -2,7 +2,7 @@
 var ArgumentNullException_1 = require("../../../Exceptions/ArgumentNullException");
 var Utility_1 = require("../Utility");
 /**
- * Merge sort O(n log (n))
+ * Merge internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
  * @returns {number[]}

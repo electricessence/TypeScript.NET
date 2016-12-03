@@ -4,15 +4,14 @@
  */
 import {IndexEnumerator} from "./IndexEnumerator";
 import {Type} from "../../Types";
-import {IArray} from "../Array/IArray";
 import __extendsImport from "../../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
 export class ArrayEnumerator<T> extends IndexEnumerator<T>
 {
-	constructor(arrayFactory:() => IArray<T>, start?:number, step?:number);
-	constructor(array:IArray<T>, start?:number, step?:number);
+	constructor(arrayFactory:() => ArrayLike<T>, start?:number, step?:number);
+	constructor(array:ArrayLike<T>, start?:number, step?:number);
 	constructor(arrayOrFactory:any, start:number = 0, step:number = 1)
 	{
 		super(

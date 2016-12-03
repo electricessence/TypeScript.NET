@@ -15,7 +15,7 @@ var Types_1 = require("../Types");
 function dispose() {
     var disposables = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        disposables[_i - 0] = arguments[_i];
+        disposables[_i] = arguments[_i];
     }
     // The disposables arguments array is effectively localized so it's safe.
     disposeTheseInternal(disposables, false);
@@ -25,7 +25,7 @@ exports.dispose = dispose;
     function deferred() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         these.deferred(disposables);
     }
@@ -39,7 +39,7 @@ exports.dispose = dispose;
     function withoutException() {
         var disposables = [];
         for (var _i = 0; _i < arguments.length; _i++) {
-            disposables[_i - 0] = arguments[_i];
+            disposables[_i] = arguments[_i];
         }
         // The disposables arguments array is effectively localized so it's safe.
         return disposeTheseInternal(disposables, true);
@@ -116,7 +116,7 @@ function disposeSingle(disposable, trapExceptions) {
     return null;
 }
 /**
- * This dispose method assumes it's working on a local copy and is unsafe for external use.
+ * This dispose method assumes it's working on a local arrayCopy and is unsafe for external use.
  */
 function disposeTheseInternal(disposables, trapExceptions, index) {
     if (index === void 0) { index = 0; }

@@ -7,14 +7,31 @@
     }
 })(["require", "exports", "../Compare", "./LinkedNodeList", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentNullException", "./CollectionBase", "../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Based Upon: http://msdn.microsoft.com/en-us/library/he2s3bh7%28v=vs.110%29.aspx
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Compare_1 = require("../Compare");
     var LinkedNodeList_1 = require("./LinkedNodeList");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
     var CollectionBase_1 = require("./CollectionBase");
     var extends_1 = require("../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
+    /*****************************
+     * IMPORTANT NOTES ABOUT PERFORMANCE:
+     * http://jsperf.com/simulating-a-queue
+     *
+     * Adding to an array is very fast, but modifying is slow.
+     * LinkedList wins when modifying contents.
+     * http://stackoverflow.com/questions/166884/array-versus-linked-list
+     *****************************/
+    /*
+     * An internal node is used to manage the order without exposing underlying link chain to the consumer.
+     */
     var InternalNode = (function () {
         function InternalNode(value, previous, next) {
             this.value = value;
@@ -97,7 +114,7 @@
                 if (node && equals(entry, node.value) && _._removeNodeInternal(node))
                     removedCount++;
                 return removedCount < max;
-            }, true);
+            }, true /* override versioning check */);
             return removedCount;
         };
         LinkedList.prototype._clearInternal = function () {
@@ -112,11 +129,15 @@
                 ? _super.prototype.forEach.call(this, action, useCopy)
                 : this._listInternal.forEach(function (node, i) { return action(node.value, i); });
         };
+        // #endregion
+        // #region IEnumerable<T>
         LinkedList.prototype.getEnumerator = function () {
             this.throwIfDisposed();
             return LinkedNodeList_1.LinkedNodeList.valueEnumeratorFrom(this._listInternal);
         };
+        // #endregion
         LinkedList.prototype._findFirst = function (entry) {
+            //noinspection UnnecessaryLocalVariableJS
             var _ = this, equals = _._equalityComparer;
             var next = _._listInternal && _._listInternal.first;
             while (next) {
@@ -127,6 +148,7 @@
             return null;
         };
         LinkedList.prototype._findLast = function (entry) {
+            //noinspection UnnecessaryLocalVariableJS
             var _ = this, equals = _._equalityComparer;
             var prev = _._listInternal && _._listInternal.last;
             while (prev) {
@@ -171,6 +193,7 @@
             enumerable: true,
             configurable: true
         });
+        // get methods are available for convenience but is an n*index operation.
         LinkedList.prototype.getValueAt = function (index) {
             var li = this._listInternal, node = li && li.getNodeAt(index);
             return node ? node.value : VOID0;
@@ -219,6 +242,7 @@
             _.assertModifiable();
             return _._removeNodeInternal(_._listInternal.getNodeAt(index));
         };
+        // Returns true if successful and false if not found (already removed).
         LinkedList.prototype.removeNode = function (node) {
             var _ = this;
             _.assertModifiable();
@@ -239,6 +263,7 @@
         return LinkedList;
     }(CollectionBase_1.CollectionBase));
     exports.LinkedList = LinkedList;
+    // Use an internal node class to prevent mucking up the LinkedList.
     var LinkedListNode = (function () {
         function LinkedListNode(_list, _nodeInternal) {
             this._list = _list;

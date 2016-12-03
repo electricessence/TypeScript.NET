@@ -27,7 +27,7 @@ System.register(["../../../Types", "../../../Compare"], function (exports_1, con
      * @param selector
      * @param order
      * @param equivalentToNaN
-     * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
+     * @returns {(a:TSource, b:TSource)=>CompareResult}
      */
     function createComparer(selector, order, equivalentToNaN) {
         if (order === void 0) { order = 1 /* Ascending */; }
@@ -57,8 +57,8 @@ System.register(["../../../Types", "../../../Compare"], function (exports_1, con
             return 0;
         };
     }
-    var Types_1, Compare_1;
     exports_1("createComparer", createComparer);
+    var Types_1, Compare_1;
     return {
         setters: [
             function (Types_1_1) {

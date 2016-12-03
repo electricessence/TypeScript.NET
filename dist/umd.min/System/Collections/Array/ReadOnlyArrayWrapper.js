@@ -1,6 +1,6 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
-!function(e,t){if("object"==typeof module&&"object"==typeof module.exports){var n=t(require,exports);void 0!==n&&(module.exports=n)}else"function"==typeof define&&define.amd&&define(e,t)}(["require","exports","../../Exceptions/ArgumentNullException","../ReadOnlyCollectionBase","../Enumeration/Enumerator","../../../extends"],function(e,t){"use strict";var n=e("../../Exceptions/ArgumentNullException"),o=e("../ReadOnlyCollectionBase"),r=e("../Enumeration/Enumerator"),u=e("../../../extends"),i=u["default"],l=function(e){function t(t){var o=e.call(this)||this;if(!t)throw new n.ArgumentNullException("array");var u=o;return u._getCount=function(){return t.length},u.getEnumerator=function(){return r.from(t)},u.getValueAt=function(e){return t[e]},o}return i(t,e),t}(o.ReadOnlyCollectionBase);Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=l});
+!function(e,t){if("object"==typeof module&&"object"==typeof module.exports){var n=t(require,exports);void 0!==n&&(module.exports=n)}else"function"==typeof define&&define.amd&&define(e,t)}(["require","exports","../../Exceptions/ArgumentNullException","../ReadOnlyCollectionBase","../Enumeration/Enumerator","../../../extends"],function(e,t){"use strict";/*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
+var n=e("../../Exceptions/ArgumentNullException"),o=e("../ReadOnlyCollectionBase"),r=e("../Enumeration/Enumerator"),u=e("../../../extends"),i=u["default"],l=function(e){function t(t){var o=e.call(this)||this;if(!t)throw new n.ArgumentNullException("array");var u=o;return u._getCount=function(){return t.length},u.getEnumerator=function(){return r.from(t)},u.getValueAt=function(e){return t[e]},o}return i(t,e),t}(o.ReadOnlyCollectionBase);Object.defineProperty(t,"__esModule",{value:!0}),t["default"]=l});
 //# sourceMappingURL=ReadOnlyArrayWrapper.js.map

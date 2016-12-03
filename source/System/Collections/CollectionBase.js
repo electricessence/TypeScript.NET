@@ -7,6 +7,10 @@
     }
 })(["require", "exports", "./Enumeration/Enumerator", "../Compare", "../Exceptions/ArgumentNullException", "../Exceptions/InvalidOperationException", "../Disposable/DisposableBase", "../Environment", "../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Enumerator_1 = require("./Enumeration/Enumerator");
     var Compare_1 = require("../Compare");
     var ArgumentNullException_1 = require("../Exceptions/ArgumentNullException");
@@ -14,7 +18,9 @@
     var DisposableBase_1 = require("../Disposable/DisposableBase");
     var Environment_1 = require("../Environment");
     var extends_1 = require("../../extends");
+    //noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
+    //noinspection SpellCheckingInspection
     var NAME = "CollectionBase", CMDC = "Cannot modify a disposed collection.", CMRO = "Cannot modify a read-only collection.";
     var LINQ_PATH = "../../System.Linq/Linq";
     var CollectionBase = (function (_super) {
@@ -42,6 +48,7 @@
             return false;
         };
         Object.defineProperty(CollectionBase.prototype, "isReadOnly", {
+            //noinspection JSUnusedGlobalSymbols
             get: function () {
                 return this.getIsReadOnly();
             },
@@ -71,6 +78,7 @@
                     _._onModified();
                 }
                 catch (ex) {
+                    // Avoid fatal errors which may have been caused by consumer.
                     console.error(ex);
                 }
                 return true;
@@ -79,10 +87,17 @@
         };
         CollectionBase.prototype._incrementModified = function () { this._modifiedCount++; };
         Object.defineProperty(CollectionBase.prototype, "isUpdating", {
+            //noinspection JSUnusedGlobalSymbols
             get: function () { return this._updateRecursion != 0; },
             enumerable: true,
             configurable: true
         });
+        /**
+         * Takes a closure that if returning true will propagate an update signal.
+         * Multiple update operations can be occurring at once or recursively and the onModified signal will only occur once they're done.
+         * @param closure
+         * @returns {boolean}
+         */
         CollectionBase.prototype.handleUpdate = function (closure) {
             if (!closure)
                 return false;
@@ -100,6 +115,14 @@
             _._signalModification();
             return updated;
         };
+        /*
+         * Note: for a slight amount more code, we avoid creating functions/closures.
+         * Calling handleUpdate is the correct pattern, but if possible avoid creating another function scope.
+         */
+        /**
+         * Adds an entry to the collection.
+         * @param entry
+         */
         CollectionBase.prototype.add = function (entry) {
             var _ = this;
             _.assertModifiable();
@@ -113,6 +136,13 @@
             }
             _._signalModification();
         };
+        /**
+         * Removes entries from the collection allowing for a limit.
+         * For example if the collection not a distinct set, more than one entry could be removed.
+         * @param entry The entry to remove.
+         * @param max Limit of entries to remove.  Will remove all matches if no max specified.
+         * @returns {number} The number of entries removed.
+         */
         CollectionBase.prototype.remove = function (entry, max) {
             if (max === void 0) { max = Infinity; }
             var _ = this;
@@ -129,6 +159,10 @@
             _._signalModification();
             return n;
         };
+        /**
+         * Clears the contents of the collection resulting in a count of zero.
+         * @returns {number}
+         */
         CollectionBase.prototype.clear = function () {
             var _ = this;
             _.assertModifiable();
@@ -160,6 +194,7 @@
             var added = 0;
             if (entries) {
                 if ((entries) instanceof (Array)) {
+                    // Optimize for avoiding a new closure.
                     for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
                         var e = entries_1[_i];
                         if (this._addInternal(e))
@@ -175,6 +210,11 @@
             }
             return added;
         };
+        /**
+         * Safely imports any array enumerator, or enumerable.
+         * @param entries
+         * @returns {number}
+         */
         CollectionBase.prototype.importEntries = function (entries) {
             var _ = this;
             if (!entries)
@@ -192,6 +232,12 @@
             _._signalModification();
             return n;
         };
+        /**
+         * Returns an array filtered by the provided predicate.
+         * Provided for similarity to JS Array.
+         * @param predicate
+         * @returns {T[]}
+         */
         CollectionBase.prototype.filter = function (predicate) {
             if (!predicate)
                 throw new ArgumentNullException_1.ArgumentNullException('predicate');
@@ -205,6 +251,12 @@
             }
             return result;
         };
+        /**
+         * Returns true the first time predicate returns true.  Otherwise false.
+         * Useful for searching through a collection.
+         * @param predicate
+         * @returns {any}
+         */
         CollectionBase.prototype.any = function (predicate) {
             var count = this.getCount();
             if (!count)
@@ -215,9 +267,20 @@
             this.forEach(function (e, i) { return !(found = predicate(e, i)); });
             return found;
         };
+        /**
+         * Returns true the first time predicate returns true.  Otherwise false.
+         * See '.any(predicate)'.  As this method is just just included to have similarity with a JS Array.
+         * @param predicate
+         * @returns {any}
+         */
         CollectionBase.prototype.some = function (predicate) {
             return this.any(predicate);
         };
+        /**
+         * Returns true if the equality comparer resolves true on any element in the collection.
+         * @param entry
+         * @returns {boolean}
+         */
         CollectionBase.prototype.contains = function (entry) {
             var equals = this._equalityComparer;
             return this.any(function (e) { return equals(entry, e); });
@@ -238,6 +301,12 @@
                 return Enumerator_1.forEach(this.getEnumerator(), action);
             }
         };
+        /**
+         * Copies all values to numerically indexable object.
+         * @param target
+         * @param index
+         * @returns {TTarget}
+         */
         CollectionBase.prototype.copyTo = function (target, index) {
             if (index === void 0) { index = 0; }
             if (!target)
@@ -254,6 +323,10 @@
             }
             return target;
         };
+        /**
+         * Returns an array of the collection contents.
+         * @returns {any[]|Array}
+         */
         CollectionBase.prototype.toArray = function () {
             var count = this.getCount();
             return count
@@ -261,6 +334,10 @@
                 : [];
         };
         Object.defineProperty(CollectionBase.prototype, "linq", {
+            /**
+             * .linq will return an ILinqEnumerable if .linqAsync() has completed successfully or the default module loader is NodeJS+CommonJS.
+             * @returns {ILinqEnumerable}
+             */
             get: function () {
                 this.throwIfDisposed();
                 var e = this._linq;
@@ -276,6 +353,15 @@
             enumerable: true,
             configurable: true
         });
+        /**
+         * .linqAsync() is for use with deferred loading.
+         * Ensures an instance of the Linq extensions is available and then passes it to the callback.
+         * Returns an ILinqEnumerable if one is already available, otherwise undefined.
+         * Passing no parameters will still initiate loading and initializing the ILinqEnumerable which can be useful for pre-loading.
+         * Any call to .linqAsync() where an ILinqEnumerable is returned can be assured that any subsequent calls to .linq will return the same instance.
+         * @param callback
+         * @returns {ILinqEnumerable}
+         */
         CollectionBase.prototype.linqAsync = function (callback) {
             var _this = this;
             this.throwIfDisposed();
@@ -283,6 +369,7 @@
             if (!e) {
                 if (Environment_1.isRequireJS) {
                     eval("require")([LINQ_PATH], function (linq) {
+                        // Could end up being called more than once, be sure to check for ._linq before setting...
                         e = _this._linq;
                         if (!e)
                             _this._linq = e = linq.default.from(_this);
@@ -290,7 +377,7 @@
                             throw "There was a problem importing System.Linq/Linq";
                         if (callback)
                             callback(e);
-                        callback = void 0;
+                        callback = void 0; // In case this is return synchronously..
                     });
                 }
                 else if (Environment_1.isNodeJS && Environment_1.isCommonJS) {

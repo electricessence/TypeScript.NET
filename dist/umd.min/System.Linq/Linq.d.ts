@@ -1,14 +1,14 @@
 import { DisposableBase } from "../System/Disposable/DisposableBase";
 import { IEnumerator } from "../System/Collections/Enumeration/IEnumerator";
 import { Action, Selector, EqualityComparison, Comparison, Closure, ActionWithIndex, PredicateWithIndex, SelectorWithIndex } from "../System/FunctionTypes";
-import { IArray } from "../System/Collections/Array/IArray";
 import { IMap, IDictionary } from "../System/Collections/Dictionaries/IDictionary";
 import { Comparable } from "../System/IComparable";
 import { IInfiniteEnumerable, ILinqEnumerable, IFiniteEnumerable, ILookup, IOrderedEnumerable, IGrouping, NotEmptyEnumerable } from "./Enumerable";
 import { EnumerableAction } from "./EnumerableAction";
 import { Primitive } from "../System/Primitive";
 import { ForEachEnumerable } from "../System/Collections/Enumeration/ForEachEnumerable";
-export declare class InfiniteEnumerable<T> extends DisposableBase implements IInfiniteEnumerable<T> {
+import { InfiniteValueFactory } from "../System/Collections/Enumeration/InfiniteEnumerator";
+export declare class InfiniteLinqEnumerable<T> extends DisposableBase implements IInfiniteEnumerable<T> {
     protected _enumeratorFactory: () => IEnumerator<T>;
     constructor(_enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure | null);
     protected _isEndless: boolean | undefined;
@@ -27,10 +27,10 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
      * @param onComplete Executes just before the enumerator releases when there is no more entries.
      * @returns {any}
      */
-    doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer: Closure | null, isEndless: true, onComplete?: Action<number>): InfiniteEnumerable<T>;
-    doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer?: Closure | null, isEndless?: boolean | null | undefined, onComplete?: Action<number>): Enumerable<T>;
+    doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer: Closure | null, isEndless: true, onComplete?: Action<number>): InfiniteLinqEnumerable<T>;
+    doAction(action: ActionWithIndex<T> | PredicateWithIndex<T> | SelectorWithIndex<T, number> | SelectorWithIndex<T, EnumerableAction>, initializer?: Closure | null, isEndless?: boolean | null | undefined, onComplete?: Action<number>): LinqEnumerable<T>;
     force(): void;
-    skip(count: number): InfiniteEnumerable<T>;
+    skip(count: number): InfiniteLinqEnumerable<T>;
     take(count: number): FiniteEnumerable<T>;
     elementAt(index: number): T;
     elementAtOrDefault(index: number): T | undefined;
@@ -43,30 +43,30 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     singleOrDefault(defaultValue: T): T;
     any(): boolean;
     isEmpty(): boolean;
-    traverseDepthFirst(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined): Enumerable<T>;
-    traverseDepthFirst<TNode>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined): Enumerable<TNode>;
-    traverseDepthFirst<TResult>(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): Enumerable<TResult>;
-    traverseDepthFirst<TNode, TResult>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): Enumerable<TResult>;
-    flatten<TFlat>(): InfiniteEnumerable<TFlat>;
-    flatten(): InfiniteEnumerable<any>;
-    pairwise<TSelect>(selector: (previous: T, current: T, index: number) => TSelect): InfiniteEnumerable<TSelect>;
+    traverseDepthFirst(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined): LinqEnumerable<T>;
+    traverseDepthFirst<TNode>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined): LinqEnumerable<TNode>;
+    traverseDepthFirst<TResult>(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
+    traverseDepthFirst<TNode, TResult>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
+    flatten<TFlat>(): InfiniteLinqEnumerable<TFlat>;
+    flatten(): InfiniteLinqEnumerable<any>;
+    pairwise<TSelect>(selector: (previous: T, current: T, index: number) => TSelect): InfiniteLinqEnumerable<TSelect>;
     scan(func: (previous: T, current: T, index: number) => T, seed?: T): this;
-    select<TResult>(selector: SelectorWithIndex<T, TResult>): InfiniteEnumerable<TResult>;
-    protected _selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector?: (collection: T, element: TElement) => TResult): Enumerable<TResult>;
-    selectMany<TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>): InfiniteEnumerable<TResult>;
-    selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector: (collection: T, element: TElement) => TResult): InfiniteEnumerable<TResult>;
-    protected _filterSelected(selector?: SelectorWithIndex<T, T>, filter?: PredicateWithIndex<T>): Enumerable<T>;
-    protected _filterSelected<TResult>(selector: SelectorWithIndex<T, TResult>, filter?: PredicateWithIndex<TResult>): Enumerable<TResult>;
+    select<TResult>(selector: SelectorWithIndex<T, TResult>): InfiniteLinqEnumerable<TResult>;
+    protected _selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector?: (collection: T, element: TElement) => TResult): LinqEnumerable<TResult>;
+    selectMany<TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>): InfiniteLinqEnumerable<TResult>;
+    selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector: (collection: T, element: TElement) => TResult): InfiniteLinqEnumerable<TResult>;
+    protected _filterSelected(selector?: SelectorWithIndex<T, T>, filter?: PredicateWithIndex<T>): LinqEnumerable<T>;
+    protected _filterSelected<TResult>(selector: SelectorWithIndex<T, TResult>, filter?: PredicateWithIndex<TResult>): LinqEnumerable<TResult>;
     /**
      * Returns selected values that are not null or undefined.
      */
-    choose(): InfiniteEnumerable<T>;
-    choose<TResult>(selector?: Selector<T, TResult>): InfiniteEnumerable<TResult>;
+    choose(): InfiniteLinqEnumerable<T>;
+    choose<TResult>(selector?: Selector<T, TResult>): InfiniteLinqEnumerable<TResult>;
     where(predicate: PredicateWithIndex<T>): this;
     nonNull(): this;
     ofType<TType>(type: {
         new (...params: any[]): TType;
-    }): InfiniteEnumerable<TType>;
+    }): InfiniteLinqEnumerable<TType>;
     except(second: ForEachEnumerable<T>, compareSelector?: Selector<T, string | number | symbol>): this;
     distinct(compareSelector?: Selector<T, string | number | symbol>): this;
     distinctUntilChanged(compareSelector?: Selector<T, any>): this;
@@ -76,11 +76,11 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
      * @returns {Enumerable}
      */
     defaultIfEmpty(defaultValue?: T): this;
-    zip<TSecond, TResult>(second: ForEachEnumerable<TSecond>, resultSelector: (first: T, second: TSecond, index: number) => TResult): Enumerable<TResult>;
-    zipMultiple<TSecond, TResult>(second: IArray<ForEachEnumerable<TSecond>>, resultSelector: (first: T, second: TSecond, index: number) => TResult): Enumerable<TResult>;
-    join<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner) => TResult, compareSelector?: Selector<TKey, string | number | symbol>): Enumerable<TResult>;
-    groupJoin<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner[] | null) => TResult, compareSelector?: Selector<TKey, string | number | symbol>): Enumerable<TResult>;
-    merge(enumerables: IArray<ForEachEnumerable<T>>): this;
+    zip<TSecond, TResult>(second: ForEachEnumerable<TSecond>, resultSelector: (first: T, second: TSecond, index: number) => TResult): LinqEnumerable<TResult>;
+    zipMultiple<TSecond, TResult>(second: ArrayLike<ForEachEnumerable<TSecond>>, resultSelector: (first: T, second: TSecond, index: number) => TResult): LinqEnumerable<TResult>;
+    join<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner) => TResult, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<TResult>;
+    groupJoin<TInner, TKey, TResult>(inner: ForEachEnumerable<TInner>, outerKeySelector: Selector<T, TKey>, innerKeySelector: Selector<TInner, TKey>, resultSelector: (outer: T, inner: TInner[] | null) => TResult, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<TResult>;
+    merge(enumerables: ArrayLike<ForEachEnumerable<T>>): this;
     concat(...enumerables: Array<ForEachEnumerable<T>>): this;
     union(second: ForEachEnumerable<T>, compareSelector?: Selector<T, string | number | symbol>): this;
     insertAt(index: number, other: ForEachEnumerable<T>): this;
@@ -89,7 +89,7 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
     alternate(...sequence: T[]): this;
     catchError(handler: (e: any) => void): this;
     finallyAction(action: Closure): this;
-    buffer(size: number): InfiniteEnumerable<T[]>;
+    buffer(size: number): InfiniteLinqEnumerable<T[]>;
     share(): this;
 }
 /**
@@ -98,17 +98,17 @@ export declare class InfiniteEnumerable<T> extends DisposableBase implements IIn
  * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
  * In this case, we use Enumerable<T> as the underlying class that is being chained.
  */
-export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILinqEnumerable<T> {
+export declare class LinqEnumerable<T> extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T> {
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure | null, isEndless?: boolean);
     asEnumerable(): this;
-    skip(count: number): Enumerable<T>;
-    skipWhile(predicate: PredicateWithIndex<T>): Enumerable<T>;
+    skip(count: number): LinqEnumerable<T>;
+    skipWhile(predicate: PredicateWithIndex<T>): LinqEnumerable<T>;
     takeWhile(predicate: PredicateWithIndex<T>): this;
     takeUntil(predicate: PredicateWithIndex<T>, includeUntilValue?: boolean): this;
-    traverseBreadthFirst(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined): Enumerable<T>;
-    traverseBreadthFirst<TNode>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined): Enumerable<TNode>;
-    traverseBreadthFirst<TResult>(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): Enumerable<TResult>;
-    traverseBreadthFirst<TNode, TResult>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): Enumerable<TResult>;
+    traverseBreadthFirst(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined): LinqEnumerable<T>;
+    traverseBreadthFirst<TNode>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined): LinqEnumerable<TNode>;
+    traverseBreadthFirst<TResult>(childrenSelector: (element: T) => ForEachEnumerable<T> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
+    traverseBreadthFirst<TNode, TResult>(childrenSelector: (element: T | TNode) => ForEachEnumerable<TNode> | null | undefined, resultSelector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
     forEach(action: ActionWithIndex<T>, max?: number): number;
     forEach(action: PredicateWithIndex<T>, max?: number): number;
     toArray(predicate?: PredicateWithIndex<T>): T[];
@@ -119,11 +119,11 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILin
     toJoinedString(separator?: string, selector?: Selector<T, string>): string;
     takeExceptLast(count?: number): this;
     skipToLast(count: number): this;
-    select<TResult>(selector: SelectorWithIndex<T, TResult>): Enumerable<TResult>;
-    selectMany<TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>): Enumerable<TResult>;
-    selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector: (collection: T, element: TElement) => TResult): Enumerable<TResult>;
-    choose(): Enumerable<T>;
-    choose<TResult>(selector: SelectorWithIndex<T, TResult>): Enumerable<TResult>;
+    select<TResult>(selector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
+    selectMany<TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TResult> | null | undefined>): LinqEnumerable<TResult>;
+    selectMany<TElement, TResult>(collectionSelector: SelectorWithIndex<T, ForEachEnumerable<TElement> | null | undefined>, resultSelector: (collection: T, element: TElement) => TResult): LinqEnumerable<TResult>;
+    choose(): LinqEnumerable<T>;
+    choose<TResult>(selector: SelectorWithIndex<T, TResult>): LinqEnumerable<TResult>;
     reverse(): this;
     shuffle(): this;
     count(predicate?: PredicateWithIndex<T>): number;
@@ -138,20 +138,20 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILin
     sequenceEqual(second: ForEachEnumerable<T>, equalityComparer?: EqualityComparison<T>): boolean;
     ofType<TType>(type: {
         new (...params: any[]): TType;
-    }): Enumerable<TType>;
+    }): LinqEnumerable<TType>;
     orderBy<TKey extends Comparable>(keySelector?: Selector<T, TKey>): IOrderedEnumerable<T>;
     orderUsing(comparison: Comparison<T>): IOrderedEnumerable<T>;
     orderUsingReversed(comparison: Comparison<T>): IOrderedEnumerable<T>;
     orderByDescending<TKey extends Comparable>(keySelector?: Selector<T, TKey>): IOrderedEnumerable<T>;
-    buffer(size: number): Enumerable<T[]>;
-    groupBy<TKey>(keySelector: SelectorWithIndex<T, TKey>): Enumerable<IGrouping<TKey, T>>;
-    groupBy<TKey>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, T>, compareSelector?: Selector<TKey, string | number | symbol>): Enumerable<IGrouping<TKey, T>>;
-    groupBy<TKey, TElement>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, TElement>, compareSelector?: Selector<TKey, string | number | symbol>): Enumerable<IGrouping<TKey, TElement>>;
-    partitionBy<TKey>(keySelector: Selector<T, TKey>): Enumerable<IGrouping<TKey, T>>;
-    partitionBy<TKey, TElement>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, resultSelector?: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>, compareSelector?: Selector<TKey, any>): Enumerable<IGrouping<TKey, TElement>>;
-    flatten<TFlat>(): Enumerable<TFlat>;
-    flatten(): Enumerable<any>;
-    pairwise<TSelect>(selector: (previous: T, current: T, index: number) => TSelect): Enumerable<TSelect>;
+    buffer(size: number): LinqEnumerable<T[]>;
+    groupBy<TKey>(keySelector: SelectorWithIndex<T, TKey>): LinqEnumerable<IGrouping<TKey, T>>;
+    groupBy<TKey>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, T>, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<IGrouping<TKey, T>>;
+    groupBy<TKey, TElement>(keySelector: SelectorWithIndex<T, TKey>, elementSelector: SelectorWithIndex<T, TElement>, compareSelector?: Selector<TKey, string | number | symbol>): LinqEnumerable<IGrouping<TKey, TElement>>;
+    partitionBy<TKey>(keySelector: Selector<T, TKey>): LinqEnumerable<IGrouping<TKey, T>>;
+    partitionBy<TKey, TElement>(keySelector: Selector<T, TKey>, elementSelector?: Selector<T, TElement>, resultSelector?: (key: TKey, element: TElement[]) => IGrouping<TKey, TElement>, compareSelector?: Selector<TKey, any>): LinqEnumerable<IGrouping<TKey, TElement>>;
+    flatten<TFlat>(): LinqEnumerable<TFlat>;
+    flatten(): LinqEnumerable<any>;
+    pairwise<TSelect>(selector: (previous: T, current: T, index: number) => TSelect): LinqEnumerable<TSelect>;
     aggregate(func: (previous: T, current: T, index: number) => T, seed: T): T;
     aggregate(func: (previous: T, current: T, index: number) => T, seed?: T): T | undefined;
     average(selector?: SelectorWithIndex<T, number>): number;
@@ -173,33 +173,38 @@ export declare class Enumerable<T> extends InfiniteEnumerable<T> implements ILin
     memoize(): this;
     throwWhenEmpty(): NotEmptyEnumerable<T>;
 }
-export declare class FiniteEnumerable<T> extends Enumerable<T> implements IFiniteEnumerable<T> {
+export declare class FiniteEnumerable<T> extends LinqEnumerable<T> implements IFiniteEnumerable<T> {
     constructor(enumeratorFactory: () => IEnumerator<T>, finalizer?: Closure);
 }
+export declare function Enumerable<T>(source: InfiniteValueFactory<T>): InfiniteLinqEnumerable<T>;
+export declare function Enumerable<T>(source: ForEachEnumerable<T>, ...additional: Array<ForEachEnumerable<T>>): LinqEnumerable<T>;
 export declare module Enumerable {
     /**
      * Universal method for converting a primitive enumerables into a LINQ enabled ones.
      *
      * Is not limited to TypeScript usages.
      */
-    function from<T>(source: ForEachEnumerable<T>): Enumerable<T>;
-    function fromAny<T>(source: ForEachEnumerable<T>): Enumerable<T>;
-    function fromAny(source: any): Enumerable<any> | undefined;
-    function fromAny<T>(source: ForEachEnumerable<T>, defaultEnumerable: Enumerable<T>): Enumerable<T>;
-    function fromOrEmpty<T>(source: ForEachEnumerable<T>): Enumerable<T>;
+    function from<T>(source: InfiniteValueFactory<T>): InfiniteLinqEnumerable<T>;
+    function from<T>(source: ForEachEnumerable<T>, ...additional: Array<ForEachEnumerable<T>>): LinqEnumerable<T>;
+    function fromAny<T>(source: InfiniteValueFactory<T>): InfiniteLinqEnumerable<T>;
+    function fromAny<T>(source: ForEachEnumerable<T>): LinqEnumerable<T>;
+    function fromAny(source: any): LinqEnumerable<any> | undefined;
+    function fromAny<T>(source: ForEachEnumerable<T>, defaultEnumerable: LinqEnumerable<T>): LinqEnumerable<T>;
+    function fromThese<T>(sources: ForEachEnumerable<T>[]): LinqEnumerable<T>;
+    function fromOrEmpty<T>(source: ForEachEnumerable<T>): LinqEnumerable<T>;
     /**
      * Static helper for converting enumerables to an array.
      * @param source
      * @returns {any}
      */
     function toArray<T>(source: ForEachEnumerable<T>): T[];
-    function _choice<T>(values: T[]): InfiniteEnumerable<T>;
-    function choice<T>(values: IArray<T>): InfiniteEnumerable<T>;
-    function chooseFrom<T>(arg: T, ...args: T[]): InfiniteEnumerable<T>;
-    function cycle<T>(values: IArray<T>): InfiniteEnumerable<T>;
-    function cycleThrough<T>(arg: T, ...args: T[]): InfiniteEnumerable<T>;
+    function _choice<T>(values: T[]): InfiniteLinqEnumerable<T>;
+    function choice<T>(values: ArrayLike<T>): InfiniteLinqEnumerable<T>;
+    function chooseFrom<T>(arg: T, ...args: T[]): InfiniteLinqEnumerable<T>;
+    function cycle<T>(values: ArrayLike<T>): InfiniteLinqEnumerable<T>;
+    function cycleThrough<T>(arg: T, ...args: T[]): InfiniteLinqEnumerable<T>;
     function empty<T>(): FiniteEnumerable<T>;
-    function repeat<T>(element: T): InfiniteEnumerable<T>;
+    function repeat<T>(element: T): InfiniteLinqEnumerable<T>;
     function repeat<T>(element: T, count: number): FiniteEnumerable<T>;
     /**
      * DEPRECATED This method began to not make sense in so many ways.
@@ -207,8 +212,8 @@ export declare module Enumerable {
      * @param initializer
      * @param finalizer
      */
-    function repeatWithFinalize<T>(initializer: () => T, finalizer: Closure): InfiniteEnumerable<T>;
-    function repeatWithFinalize<T>(initializer: () => T, finalizer?: Action<T>): InfiniteEnumerable<T>;
+    function repeatWithFinalize<T>(initializer: () => T, finalizer: Closure): InfiniteLinqEnumerable<T>;
+    function repeatWithFinalize<T>(initializer: () => T, finalizer?: Action<T>): InfiniteLinqEnumerable<T>;
     /**
      * Creates an enumerable of one element.
      * @param element
@@ -217,13 +222,13 @@ export declare module Enumerable {
     function make<T>(element: T): FiniteEnumerable<T>;
     function range(start: number, count: number, step?: number): FiniteEnumerable<number>;
     function rangeDown(start: number, count: number, step?: number): FiniteEnumerable<number>;
-    function toInfinity(start?: number, step?: number): InfiniteEnumerable<number>;
-    function toNegativeInfinity(start?: number, step?: number): InfiniteEnumerable<number>;
+    function toInfinity(start?: number, step?: number): InfiniteLinqEnumerable<number>;
+    function toNegativeInfinity(start?: number, step?: number): InfiniteLinqEnumerable<number>;
     function rangeTo(start: number, to: number, step?: number): FiniteEnumerable<number>;
     function matches(input: string, pattern: any, flags?: string): FiniteEnumerable<RegExpExecArray>;
-    function generate<T>(factory: (index: number) => T): InfiniteEnumerable<T>;
+    function generate<T>(factory: (index: number) => T): InfiniteLinqEnumerable<T>;
     function generate<T>(factory: (index: number) => T, count: number): FiniteEnumerable<T>;
-    function unfold<T>(seed: T, valueFactory: SelectorWithIndex<T, T>, skipSeed?: Boolean): InfiniteEnumerable<T>;
+    function unfold<T>(seed: T, valueFactory: SelectorWithIndex<T, T>, skipSeed?: Boolean): InfiniteLinqEnumerable<T>;
     function forEach<T>(e: ForEachEnumerable<T>, action: ActionWithIndex<T>, max?: number): number;
     function forEach<T>(e: ForEachEnumerable<T>, action: PredicateWithIndex<T>, max?: number): number;
     function map<T, TResult>(enumerable: ForEachEnumerable<T>, selector: SelectorWithIndex<T, TResult>): TResult[];
@@ -234,6 +239,6 @@ export declare module Enumerable {
      * @param enumerables
      * @returns {Enumerable<T>}
      */
-    function weave<T>(enumerables: ForEachEnumerable<ForEachEnumerable<T>>): Enumerable<T>;
+    function weave<T>(enumerables: ForEachEnumerable<ForEachEnumerable<T>>): LinqEnumerable<T>;
 }
 export default Enumerable;

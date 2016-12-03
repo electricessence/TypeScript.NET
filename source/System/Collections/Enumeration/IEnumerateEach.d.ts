@@ -6,7 +6,7 @@ import {PredicateWithIndex, ActionWithIndex} from "../../FunctionTypes";
 
 export interface IEnumerateEach<T>
 {
-	// Note: Enforcing an interface that allows operating on a copy can prevent changing underlying data while enumerating.
+	// Note: Enforcing an interface that allows operating on a arrayCopy can prevent changing underlying data while enumerating.
 
 	/**
 	 * If the action returns false, the enumeration will stop.

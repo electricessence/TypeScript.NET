@@ -27,8 +27,8 @@ System.register(["../../Types"], function (exports_1, context_1) {
             ? obj.toString()
             : Object.prototype.toString.call(obj);
     }
-    var Types_1, VOID0, NULL, GET_SYMBOL, GET_HASH_CODE;
     exports_1("getIdentifier", getIdentifier);
+    var Types_1, VOID0, NULL, GET_SYMBOL, GET_HASH_CODE;
     return {
         setters: [
             function (Types_1_1) {

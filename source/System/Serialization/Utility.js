@@ -7,6 +7,10 @@
     }
 })(["require", "exports", "../Types", "../Exceptions/InvalidOperationException"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Types_1 = require("../Types");
     var InvalidOperationException_1 = require("../Exceptions/InvalidOperationException");
     var EMPTY = '', TRUE = 'true', FALSE = 'false';
@@ -63,6 +67,8 @@
                                 return number;
                         }
                     }
+                    // Handle Dates...  Possibly JSON?
+                    // Instead of throwing we allow for handling...
                     if (unknownHandler)
                         value = unknownHandler(value);
                     break;

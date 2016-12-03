@@ -8,11 +8,4 @@ export interface ArrayLikeWritable<T> {
 	[n: number]: T;
 }
 
-/*
-  https://github.com/Microsoft/TypeScript/issues/11226
-  Strange decisions around ArrayLike<T>.
- */
-
-export type IArray<T> = T[] | ArrayLikeWritable<T>;
-
-export default IArray;
+export default ArrayLikeWritable;

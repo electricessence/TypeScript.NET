@@ -12,7 +12,7 @@ const __extends = __extendsImport;
  */
 export interface InfiniteValueFactory<T>
 {
-	(previous?:T, index?:number):T;
+	(previous:T|undefined, index:number):T;
 }
 
 /**

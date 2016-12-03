@@ -1,4 +1,5 @@
 "use strict";
+var TimeUnit;
 (function (TimeUnit) {
     TimeUnit[TimeUnit["Ticks"] = 0] = "Ticks";
     TimeUnit[TimeUnit["Milliseconds"] = 1] = "Milliseconds";
@@ -6,8 +7,7 @@
     TimeUnit[TimeUnit["Minutes"] = 3] = "Minutes";
     TimeUnit[TimeUnit["Hours"] = 4] = "Hours";
     TimeUnit[TimeUnit["Days"] = 5] = "Days";
-})(exports.TimeUnit || (exports.TimeUnit = {})); // Earth Days
-var TimeUnit = exports.TimeUnit;
+})(TimeUnit = exports.TimeUnit || (exports.TimeUnit = {})); // Earth Days
 (function (TimeUnit) {
     function toMilliseconds(value, units) {
         if (units === void 0) { units = TimeUnit.Milliseconds; }

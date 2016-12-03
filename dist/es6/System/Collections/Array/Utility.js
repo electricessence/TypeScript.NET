@@ -8,72 +8,10 @@ import { areEqual } from "../../Compare";
 import { ArgumentException } from "../../Exceptions/ArgumentException";
 import { ArgumentNullException } from "../../Exceptions/ArgumentNullException";
 import { ArgumentOutOfRangeException } from "../../Exceptions/ArgumentOutOfRangeException";
-/**
- * Initializes an array depending on the requested capacity.
- * The returned array will have a .length equal to the value provided.
- * @param length
- * @returns {T[]}
- */
-export function initialize(length) {
-    Integer.assert(length, 'length');
-    // This logic is based upon JS performance tests that show a significant difference at the level of 65536.
-    let array;
-    if (length > 65536)
-        array = new Array(length);
-    else {
-        array = [];
-        array.length = length;
-    }
-    return array;
-}
-/**
- *
- * @param source
- * @param sourceIndex
- * @param length
- * @returns {any}
- */
-export function copy(source, sourceIndex = 0, length = Infinity) {
-    if (!source)
-        return source; // may have passed zero? undefined? or null?
-    return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
-}
+import { initialize } from "./initialize";
+import { copy, copyTo } from "./copy";
+export { initialize, copy, copyTo };
 const CBN = 'Cannot be null.', CB0 = 'Cannot be zero.', CBL0 = 'Cannot be less than zero.', VFN = 'Must be a valid finite number';
-/**
- * Copies one array to another.
- * @param source
- * @param destination
- * @param sourceIndex
- * @param destinationIndex
- * @param length An optional limit to stop copying.
- * @returns The destination array.
- */
-export function copyTo(source, destination, sourceIndex = 0, destinationIndex = 0, length = Infinity) {
-    if (!source)
-        throw new ArgumentNullException('source', CBN);
-    if (!destination)
-        throw new ArgumentNullException('destination', CBN);
-    if (sourceIndex < 0)
-        throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
-    let sourceLength = source.length;
-    if (!sourceLength)
-        return destination;
-    if (sourceIndex >= sourceLength)
-        throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
-    if (destination.length < 0)
-        throw new ArgumentOutOfRangeException('destinationIndex', destinationIndex, CBL0);
-    const maxLength = source.length - sourceIndex;
-    if (isFinite(length) && length > maxLength)
-        throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
-    length = Math.min(length, maxLength);
-    const newLength = destinationIndex + length;
-    if (newLength > destination.length)
-        destination.length = newLength;
-    for (let i = 0; i < length; i++) {
-        destination[destinationIndex + i] = source[sourceIndex + i];
-    }
-    return destination;
-}
 /**
  * Checks to see where the provided array contains an item/value.
  * If the array value is null, then -1 is returned.

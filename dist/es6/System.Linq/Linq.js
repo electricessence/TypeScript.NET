@@ -4,9 +4,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import { areEqual as areEqualValues, compare as compareValues } from "../System/Compare";
+import { copy } from "../System/Collections/Array/copy";
 import * as Arrays from "../System/Collections/Array/Compare";
-import * as ArrayUtility from "../System/Collections/Array/Utility";
-import { copy } from "../System/Collections/Array/Utility";
 import * as enumUtil from "../System/Collections/Enumeration/Enumerator";
 import { isEnumerable, throwIfEndless, isIterator, isEnumerator } from "../System/Collections/Enumeration/Enumerator";
 import { EmptyEnumerator } from "../System/Collections/Enumeration/EmptyEnumerator";
@@ -26,6 +25,9 @@ import { ArgumentNullException } from "../System/Exceptions/ArgumentNullExceptio
 import { ArgumentOutOfRangeException } from "../System/Exceptions/ArgumentOutOfRangeException";
 import { IndexEnumerator } from "../System/Collections/Enumeration/IndexEnumerator";
 import { IteratorEnumerator } from "../System/Collections/Enumeration/IteratorEnumerator";
+import { initialize } from "../System/Collections/Array/initialize";
+import { Random } from "../System/Random";
+import { InfiniteEnumerator } from "../System/Collections/Enumeration/InfiniteEnumerator";
 // noinspection JSUnusedLocalSymbols
 // #region Local Constants.
 const INVALID_DEFAULT = {}; // create a private unique instance for referencing.
@@ -65,12 +67,12 @@ function getEmptyEnumerator() {
  *
  * I'm not sure if it's the best option to just use overrides, but it honors the typing properly.
  */
-export class InfiniteEnumerable extends DisposableBase {
+export class InfiniteLinqEnumerable extends DisposableBase {
     constructor(_enumeratorFactory, finalizer) {
         super(finalizer);
         this._enumeratorFactory = _enumeratorFactory;
         this._isEndless = true;
-        this._disposableObjectName = "InfiniteEnumerable";
+        this._disposableObjectName = "InfiniteLinqEnumerable";
     }
     get isEndless() {
         return this._isEndless;
@@ -91,7 +93,7 @@ export class InfiniteEnumerable extends DisposableBase {
     asEnumerable() {
         const _ = this;
         _.throwIfDisposed();
-        return new InfiniteEnumerable(() => _.getEnumerator());
+        return new InfiniteLinqEnumerable(() => _.getEnumerator());
     }
     doAction(action, initializer, isEndless = this.isEndless, onComplete) {
         const _ = this;
@@ -99,7 +101,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const isE = isEndless || undefined; // In case it's null.
         if (!action)
             throw new ArgumentNullException("action");
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let index = 0;
             return new EnumeratorBase(() => {
@@ -143,7 +145,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         _.throwIfDisposed();
         if (!isFinite(count))
-            return new InfiniteEnumerable(getEmptyEnumerator);
+            return new InfiniteLinqEnumerable(getEmptyEnumerator);
         Integer.assert(count, "count");
         return this.where((element, index) => index >= count);
     }
@@ -237,7 +239,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless; // Is endless is not affirmative if false.
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             // Dev Note: May want to consider using an actual stack and not an array.
             let enumeratorStack = [];
             let enumerator;
@@ -320,7 +322,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const isEndless = _._isEndless; // Do second enumeration, it will be indeterminate if false.
         if (!resultSelector)
             resultSelector = (a, b) => b;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let middleEnumerator;
             let index = 0;
@@ -368,7 +370,7 @@ export class InfiniteEnumerable extends DisposableBase {
         let disposed = !_.throwIfDisposed();
         if (!selector)
             throw new ArgumentNullException("selector");
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let index = 0;
             return new EnumeratorBase(() => {
@@ -426,7 +428,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let keys;
             return new EnumeratorBase(() => {
@@ -461,7 +463,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let compareKey;
             let initial = true;
@@ -498,7 +500,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         const disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let isFirst;
             return new EnumeratorBase(() => {
@@ -524,7 +526,7 @@ export class InfiniteEnumerable extends DisposableBase {
     zip(second, resultSelector) {
         const _ = this;
         _.throwIfDisposed();
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let firstEnumerator;
             let secondEnumerator;
             let index = 0;
@@ -544,7 +546,7 @@ export class InfiniteEnumerable extends DisposableBase {
         _.throwIfDisposed();
         if (!second.length)
             return Enumerable.empty();
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let secondTemp;
             let firstEnumerator;
             let secondEnumerator;
@@ -581,7 +583,7 @@ export class InfiniteEnumerable extends DisposableBase {
     // #region Join Methods
     join(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector = Functions.Identity) {
         const _ = this;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let outerEnumerator;
             let lookup;
             let innerElements;
@@ -617,7 +619,7 @@ export class InfiniteEnumerable extends DisposableBase {
     }
     groupJoin(inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector = Functions.Identity) {
         const _ = this;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let lookup;
             return new EnumeratorBase(() => {
@@ -637,7 +639,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const isEndless = _._isEndless;
         if (!enumerables || enumerables.length == 0)
             return _;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let queue;
             return new EnumeratorBase(() => {
@@ -669,7 +671,7 @@ export class InfiniteEnumerable extends DisposableBase {
     union(second, compareSelector = Functions.Identity) {
         const _ = this;
         const isEndless = _._isEndless;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let firstEnumerator;
             let secondEnumerator;
             let keys;
@@ -707,7 +709,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         _.throwIfDisposed();
         const isEndless = _._isEndless;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let firstEnumerator;
             let secondEnumerator;
             let count = 0;
@@ -738,7 +740,7 @@ export class InfiniteEnumerable extends DisposableBase {
     alternateMultiple(sequence) {
         const _ = this;
         const isEndless = _._isEndless;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let buffer, mode, enumerator, alternateEnumerator;
             return new EnumeratorBase(() => {
                 // Instead of recalling getEnumerator every time, just reset the existing one.
@@ -786,7 +788,7 @@ export class InfiniteEnumerable extends DisposableBase {
     catchError(handler) {
         const _ = this;
         const disposed = !_.throwIfDisposed();
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             return new EnumeratorBase(() => {
                 try {
@@ -813,7 +815,7 @@ export class InfiniteEnumerable extends DisposableBase {
     finallyAction(action) {
         const _ = this;
         const disposed = !_.throwIfDisposed();
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             return new EnumeratorBase(() => {
                 throwIfDisposed(disposed);
@@ -841,12 +843,12 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         const isEndless = _._isEndless;
         let len;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             return new EnumeratorBase(() => {
                 enumerator = _.getEnumerator();
             }, (yielder) => {
-                let array = ArrayUtility.initialize(size);
+                let array = initialize(size);
                 len = 0;
                 while (len < size && enumerator.moveNext()) {
                     array[len++] = enumerator.current;
@@ -862,7 +864,7 @@ export class InfiniteEnumerable extends DisposableBase {
         const _ = this;
         _.throwIfDisposed();
         let sharedEnumerator;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             return sharedEnumerator || (sharedEnumerator = _.getEnumerator());
         }, () => {
             dispose(sharedEnumerator);
@@ -875,7 +877,7 @@ export class InfiniteEnumerable extends DisposableBase {
  * In C# Enumerable<T> is not an instance but has extensions for IEnumerable<T>.
  * In this case, we use Enumerable<T> as the underlying class that is being chained.
  */
-export class Enumerable extends InfiniteEnumerable {
+export class LinqEnumerable extends InfiniteLinqEnumerable {
     constructor(enumeratorFactory, finalizer, isEndless) {
         super(enumeratorFactory, finalizer);
         this._isEndless = isEndless;
@@ -885,7 +887,7 @@ export class Enumerable extends InfiniteEnumerable {
     asEnumerable() {
         const _ = this;
         _.throwIfDisposed();
-        return new Enumerable(() => _.getEnumerator());
+        return new LinqEnumerable(() => _.getEnumerator());
     }
     // #region Indexing/Paging methods.
     skip(count) {
@@ -931,7 +933,7 @@ export class Enumerable extends InfiniteEnumerable {
         const _ = this;
         let disposed = !_.throwIfDisposed();
         const isEndless = _._isEndless; // Is endless is not affirmative if false.
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let nestLevel = 0;
             let buffer, len;
@@ -1052,7 +1054,7 @@ export class Enumerable extends InfiniteEnumerable {
             return Enumerable.empty();
         Integer.assert(count, "count");
         const c = count;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let q;
             return new EnumeratorBase(() => {
@@ -1099,7 +1101,7 @@ export class Enumerable extends InfiniteEnumerable {
         const _ = this;
         let disposed = !_.throwIfDisposed();
         throwIfEndless(_._isEndless); // Cannot reverse an endless collection...
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let buffer;
             let index = 0;
             return new EnumeratorBase(() => {
@@ -1118,7 +1120,7 @@ export class Enumerable extends InfiniteEnumerable {
         const _ = this;
         let disposed = !_.throwIfDisposed();
         throwIfEndless(_._isEndless); // Cannot shuffle an endless collection...
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let buffer;
             let capacity;
             let len;
@@ -1130,7 +1132,7 @@ export class Enumerable extends InfiniteEnumerable {
                 // Avoid using major array operations like .slice();
                 if (!len)
                     return yielder.yieldBreak();
-                let selectedIndex = Integer.random(len);
+                let selectedIndex = Random.integer(len);
                 let selectedValue = buffer[selectedIndex];
                 buffer[selectedIndex] = buffer[--len]; // Take the last one and put it here.
                 buffer[len] = NULL; // clear possible reference.
@@ -1244,7 +1246,7 @@ export class Enumerable extends InfiniteEnumerable {
         if (!second)
             throw new ArgumentNullException("second");
         const isEndless = _.isEndless;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let keys;
             let outs;
@@ -1309,7 +1311,7 @@ export class Enumerable extends InfiniteEnumerable {
          weightedSample(weightSelector) {
          weightSelector = Utils.createLambda(weightSelector);
          var source = this;
-         return new Enumerable<T>(() => {
+         return new LinqEnumerable<T>(() => {
          var sortedByBound;
          var totalWeight = 0;
          return new EnumeratorBase<T>(
@@ -1352,7 +1354,7 @@ export class Enumerable extends InfiniteEnumerable {
     groupBy(keySelector, elementSelector, compareSelector) {
         if (!elementSelector)
             elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
-        return new Enumerable(() => this
+        return new LinqEnumerable(() => this
             .toLookup(keySelector, elementSelector, compareSelector)
             .getEnumerator());
     }
@@ -1360,7 +1362,7 @@ export class Enumerable extends InfiniteEnumerable {
         const _ = this;
         if (!elementSelector)
             elementSelector = Functions.Identity; // Allow for 'null' and not just undefined.
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let enumerator;
             let key;
             let compareKey;
@@ -1544,7 +1546,7 @@ export class Enumerable extends InfiniteEnumerable {
         let disposed = !_.throwIfDisposed();
         let cache;
         let enumerator;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let index = 0;
             return new EnumeratorBase(() => {
                 throwIfDisposed(disposed);
@@ -1580,7 +1582,7 @@ export class Enumerable extends InfiniteEnumerable {
     }
 }
 // Provided for type guarding.
-export class FiniteEnumerable extends Enumerable {
+export class FiniteEnumerable extends LinqEnumerable {
     constructor(enumeratorFactory, finalizer) {
         super(enumeratorFactory, finalizer, false);
         this._disposableObjectName = "FiniteEnumerable";
@@ -1665,7 +1667,7 @@ class ArrayEnumerable extends FiniteEnumerable {
         _.throwIfDisposed();
         if (!(count > 0))
             return _;
-        return new Enumerable(() => new ArrayEnumerator(() => _._source, count));
+        return new LinqEnumerable(() => new ArrayEnumerator(() => _._source, count));
     }
     takeExceptLast(count = 1) {
         const _ = this;
@@ -1687,7 +1689,7 @@ class ArrayEnumerable extends FiniteEnumerable {
     reverse() {
         const _ = this;
         let disposed = !_.throwIfDisposed();
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             _.throwIfDisposed();
             return new IndexEnumerator(() => {
                 let s = _._source;
@@ -1851,38 +1853,55 @@ function throwIfDisposed(disposed) {
         throw new ObjectDisposedException("Enumerable");
     return true;
 }
-// #endregion
+export function Enumerable(source, ...additional) {
+    return enumerableFrom(source, additional);
+}
+function enumerableFrom(source, additional) {
+    let e = Enumerable.fromAny(source);
+    if (!e)
+        throw new UnsupportedEnumerableException();
+    return (additional && additional.length)
+        ? e.merge(additional)
+        : e;
+}
 (function (Enumerable) {
-    /**
-     * Universal method for converting a primitive enumerables into a LINQ enabled ones.
-     *
-     * Is not limited to TypeScript usages.
-     */
-    function from(source) {
-        let e = fromAny(source);
-        if (!e)
-            throw new UnsupportedEnumerableException();
-        return e;
+    function from(source, ...additional) {
+        return enumerableFrom(source, additional);
     }
     Enumerable.from = from;
     function fromAny(source, defaultEnumerable) {
         if (Type.isObject(source) || Type.isString(source)) {
-            if (source instanceof Enumerable)
+            if (source instanceof InfiniteLinqEnumerable)
                 return source;
             if (Type.isArrayLike(source))
                 return new ArrayEnumerable(source);
             if (isEnumerable(source))
-                return new Enumerable(() => source.getEnumerator(), null, source.isEndless);
+                return new LinqEnumerable(() => source.getEnumerator(), null, source.isEndless);
             if (isEnumerator(source))
-                return new Enumerable(() => source, null, source.isEndless);
+                return new LinqEnumerable(() => source, null, source.isEndless);
             if (isIterator(source))
                 return fromAny(new IteratorEnumerator(source));
+        }
+        else if (Type.isFunction(source)) {
+            return new InfiniteLinqEnumerable(() => new InfiniteEnumerator(source));
         }
         return defaultEnumerable;
     }
     Enumerable.fromAny = fromAny;
+    function fromThese(sources) {
+        switch (sources ? sources.length : 0) {
+            case 0:
+                return empty();
+            case 1:
+                // Allow for validation and throwing...
+                return enumerableFrom(sources[0]);
+            default:
+                return empty().merge(sources);
+        }
+    }
+    Enumerable.fromThese = fromThese;
     function fromOrEmpty(source) {
-        return Enumerable.fromAny(source) || Enumerable.empty();
+        return fromAny(source) || empty();
     }
     Enumerable.fromOrEmpty = fromOrEmpty;
     /**
@@ -1891,15 +1910,15 @@ function throwIfDisposed(disposed) {
      * @returns {any}
      */
     function toArray(source) {
-        if (source instanceof Enumerable)
+        if (source instanceof LinqEnumerable)
             return source.toArray();
         return enumUtil.toArray(source);
     }
     Enumerable.toArray = toArray;
     function _choice(values) {
-        return new InfiniteEnumerable(() => new EnumeratorBase(null, (yielder) => {
+        return new InfiniteLinqEnumerable(() => new EnumeratorBase(null, (yielder) => {
             throwIfDisposed(!values);
-            return yielder.yieldReturn(Integer.random.select(values));
+            return yielder.yieldReturn(Random.select.one(values));
         }, true // Is endless!
         ), () => {
             values.length = 0;
@@ -1925,7 +1944,7 @@ function throwIfDisposed(disposed) {
     }
     Enumerable.chooseFrom = chooseFrom;
     function _cycle(values) {
-        return new InfiniteEnumerable(() => {
+        return new InfiniteLinqEnumerable(() => {
             let index = 0;
             return new EnumeratorBase(() => {
                 index = 0;
@@ -1974,14 +1993,14 @@ function throwIfDisposed(disposed) {
                 let index = 0;
                 return new EnumeratorBase(() => { index = 0; }, (yielder) => (index++ < c) && yielder.yieldReturn(element), null, false);
             })
-            : new Enumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(element), true // Is endless!
+            : new LinqEnumerable(() => new EnumeratorBase(null, (yielder) => yielder.yieldReturn(element), true // Is endless!
             ));
     }
     Enumerable.repeat = repeat;
     function repeatWithFinalize(initializer, finalizer) {
         if (!initializer)
             throw new ArgumentNullException("initializer");
-        return new InfiniteEnumerable(() => {
+        return new InfiniteLinqEnumerable(() => {
             let element;
             return new EnumeratorBase(() => {
                 if (initializer)
@@ -2052,7 +2071,7 @@ function throwIfDisposed(disposed) {
             throw new ArgumentOutOfRangeException("step", step, "Must be a valid value");
         if (!isFinite(step))
             throw new ArgumentOutOfRangeException("step", step, "Must be a finite number.");
-        return new InfiniteEnumerable(() => {
+        return new InfiniteLinqEnumerable(() => {
             let value;
             return new EnumeratorBase(() => {
                 value = start;
@@ -2144,7 +2163,7 @@ function throwIfDisposed(disposed) {
                     factory = NULL;
                 })
             :
-                new InfiniteEnumerable(() => {
+                new InfiniteLinqEnumerable(() => {
                     let index = 0;
                     return new EnumeratorBase(() => {
                         index = 0;
@@ -2161,7 +2180,7 @@ function throwIfDisposed(disposed) {
     function unfold(seed, valueFactory, skipSeed = false) {
         if (!valueFactory)
             throw new ArgumentNullException("factory");
-        return new InfiniteEnumerable(() => {
+        return new InfiniteLinqEnumerable(() => {
             let index = 0;
             let value;
             let isFirst;
@@ -2220,7 +2239,7 @@ function throwIfDisposed(disposed) {
         if (!enumerables)
             throw new ArgumentNullException('enumerables');
         let disposed = false;
-        return new Enumerable(() => {
+        return new LinqEnumerable(() => {
             let queue;
             let mainEnumerator;
             let index;

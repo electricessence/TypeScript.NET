@@ -19,7 +19,7 @@ describe(".initialize(length)", function () {
     testLength(100);
     testLength(100000);
 });
-describe(".copy(source) & .equals(old,new)", function () {
+describe(".arrayCopy(source) & .equals(old,new)", function () {
     it("should equal", function () {
         var s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3], s2 = ArrayUtility.copy(s1);
         var s3 = ArrayUtility.copy(s1, 1), s4 = ArrayUtility.copy(s1, 1, 3);
@@ -372,4 +372,3 @@ function outputMeasured(suffix, closure) {
 // 	value:number;
 // 	next:LinkedNextNode;
 // } 
-//# sourceMappingURL=Utility.js.map

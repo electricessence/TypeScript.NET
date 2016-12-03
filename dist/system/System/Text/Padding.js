@@ -7,12 +7,14 @@ System.register(["../Types", "./Utility"], function (exports_1, context_1) {
             ? (Utility_1.repeat(pad, minLength - source.length) + source)
             : source;
     }
+    exports_1("padStringLeft", padStringLeft);
     function padStringRight(source, minLength, pad) {
         if (pad === void 0) { pad = SPACE; }
         return pad && minLength > 0
             ? (source + Utility_1.repeat(pad, minLength - source.length))
             : source;
     }
+    exports_1("padStringRight", padStringRight);
     function padNumberLeft(source, minLength, pad) {
         if (pad === void 0) { pad = ZERO; }
         if (!Types_1.Type.isNumber(source, true))
@@ -21,6 +23,7 @@ System.register(["../Types", "./Utility"], function (exports_1, context_1) {
             source = 0;
         return padStringLeft(source + Utility_1.EMPTY, minLength, pad + Utility_1.EMPTY);
     }
+    exports_1("padNumberLeft", padNumberLeft);
     function padNumberRight(source, minLength, pad) {
         if (pad === void 0) { pad = ZERO; }
         if (!Types_1.Type.isNumber(source, true))
@@ -29,6 +32,7 @@ System.register(["../Types", "./Utility"], function (exports_1, context_1) {
             source = 0;
         return padStringRight(source + Utility_1.EMPTY, minLength, pad + Utility_1.EMPTY);
     }
+    exports_1("padNumberRight", padNumberRight);
     function padLeft(source, minLength, pad) {
         if (Types_1.Type.isString(source))
             return padStringLeft(source, minLength, pad);
@@ -36,6 +40,7 @@ System.register(["../Types", "./Utility"], function (exports_1, context_1) {
             return padNumberLeft(source, minLength, pad);
         throw new Error("Invalid source type.");
     }
+    exports_1("padLeft", padLeft);
     function padRight(source, minLength, pad) {
         if (Types_1.Type.isString(source))
             return padStringRight(source, minLength, pad);
@@ -43,13 +48,8 @@ System.register(["../Types", "./Utility"], function (exports_1, context_1) {
             return padNumberRight(source, minLength, pad);
         throw new Error("Invalid source type.");
     }
-    var Types_1, Utility_1, SPACE, ZERO;
-    exports_1("padStringLeft", padStringLeft);
-    exports_1("padStringRight", padStringRight);
-    exports_1("padNumberLeft", padNumberLeft);
-    exports_1("padNumberRight", padNumberRight);
-    exports_1("padLeft", padLeft);
     exports_1("padRight", padRight);
+    var Types_1, Utility_1, SPACE, ZERO;
     return {
         setters: [
             function (Types_1_1) {

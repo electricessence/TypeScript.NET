@@ -153,7 +153,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 Parallel.prototype.require = function () {
                     var required = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        required[_i - 0] = arguments[_i];
+                        required[_i] = arguments[_i];
                     }
                     return this.requireThese(required);
                 };
@@ -380,7 +380,7 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                 Parallel.require = function () {
                     var required = [];
                     for (var _i = 0; _i < arguments.length; _i++) {
-                        required[_i - 0] = arguments[_i];
+                        required[_i] = arguments[_i];
                     }
                     return (new Parallel()).requireThese(required);
                 };

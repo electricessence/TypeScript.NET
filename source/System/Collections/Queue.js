@@ -7,6 +7,11 @@
     }
 })(["require", "exports", "../Compare", "./Array/Utility", "../Types", "../Integer", "./Enumeration/EnumeratorBase", "../Exceptions/NotImplementedException", "../Exceptions/InvalidOperationException", "../Exceptions/ArgumentOutOfRangeException", "./CollectionBase", "../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Based Upon: http://referencesource.microsoft.com/#System/CompMod/system/collections/generic/queue.cs
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Compare_1 = require("../Compare");
     var AU = require("./Array/Utility");
     var Types_1 = require("../Types");
@@ -17,10 +22,12 @@
     var ArgumentOutOfRangeException_1 = require("../Exceptions/ArgumentOutOfRangeException");
     var CollectionBase_1 = require("./CollectionBase");
     var extends_1 = require("../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
     var MINIMUM_GROW = 4;
-    var SHRINK_THRESHOLD = 32;
+    var SHRINK_THRESHOLD = 32; // Unused?
+    // var GROW_FACTOR: number = 200;  // double each time
     var GROW_FACTOR_HALF = 100;
     var DEFAULT_CAPACITY = MINIMUM_GROW;
     var emptyArray = Object.freeze([]);
@@ -74,6 +81,7 @@
             _._size = size + 1;
             return true;
         };
+        //noinspection JSUnusedLocalSymbols
         Queue.prototype._removeInternal = function (item, max) {
             throw new NotImplementedException_1.NotImplementedException("ICollection\<T\>.remove is not implemented in Queue\<T\>" +
                 " since it would require destroying the underlying array to remove the item.");
@@ -101,6 +109,9 @@
                 _._array = emptyArray;
             }
         };
+        /**
+         * Dequeues entries into an array.
+         */
         Queue.prototype.dump = function (max) {
             if (max === void 0) { max = Infinity; }
             var _ = this;
@@ -134,11 +145,13 @@
             if (capacity == len)
                 return;
             var head = _._head, tail = _._tail, size = _._size;
+            // Special case where we can simply extend the length of the array. (JavaScript only)
             if (array != emptyArray && capacity > len && head < tail) {
                 array.length = _._capacity = capacity;
                 _._version++;
                 return;
             }
+            // We create a new array because modifying an existing one could be slow.
             var newArray = AU.initialize(capacity);
             if (size > 0) {
                 if (head < tail) {
@@ -180,12 +193,19 @@
                 throw new InvalidOperationException_1.InvalidOperationException("Cannot dequeue an empty queue.");
             return result;
         };
+        /**
+         * Checks to see if the queue has entries an pulls an entry from the head of the queue and passes it to the out handler.
+         * @param out The 'out' handler that receives the value if it exists.
+         * @returns {boolean} True if a value was retrieved.  False if not.
+         */
         Queue.prototype.tryDequeue = function (out) {
             var _ = this;
             if (!_._size)
                 return false;
             _.assertModifiable();
+            // A single dequeue shouldn't need update recursion tracking...
             if (this._tryDequeueInternal(out)) {
+                // This may preemptively trigger the _onModified.
                 if (_._size < _._capacity / 2)
                     _.trimExcess(SHRINK_THRESHOLD);
                 _._signalModification();

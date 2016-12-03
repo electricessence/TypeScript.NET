@@ -47,7 +47,7 @@ System.register(["../../extends"], function (exports_1, context_1) {
                  */
                 RegexOptions.IGNORE_PATTERN_WHITESPACE = _W;
                 RegexOptions.W = _W;
-            })(RegexOptions = RegexOptions || (RegexOptions = {}));
+            })(RegexOptions || (RegexOptions = {}));
             exports_1("RegexOptions", RegexOptions);
             Regex = (function () {
                 function Regex(pattern, options) {

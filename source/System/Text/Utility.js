@@ -7,8 +7,17 @@
     }
 })(["require", "exports", "../Types"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Types_1 = require("../Types");
     exports.EMPTY = '';
+    /**
+     * Returns a numerical (integer) hash code of the string.  Can be used for identifying inequality of contents, but two different strings in rare cases will have the same hash code.
+     * @param source
+     * @returns {number}
+     */
     function getHashCode(source) {
         var hash = 0 | 0;
         if (source.length == 0)
@@ -16,7 +25,7 @@
         for (var i = 0, l = source.length; i < l; i++) {
             var ch = source.charCodeAt(i);
             hash = ((hash << 5) - hash) + ch;
-            hash |= 0;
+            hash |= 0; // Convert to 32bit integer
         }
         return hash;
     }
@@ -46,10 +55,23 @@
         }
     }
     exports.fromChars = fromChars;
+    /**
+     * Escapes a RegExp sequence.
+     * @param source
+     * @returns {string}
+     */
     function escapeRegExp(source) {
         return source.replace(/[-[\]\/{}()*+?.\\^$|]/g, "\\$&");
     }
     exports.escapeRegExp = escapeRegExp;
+    /**
+     * Can trim any character or set of characters from the ends of a string.
+     * Uses a Regex escapement to replace them with empty.
+     * @param source
+     * @param chars A string or array of characters desired to be trimmed.
+     * @param ignoreCase
+     * @returns {string}
+     */
     function trim(source, chars, ignoreCase) {
         if (chars === exports.EMPTY)
             return source;
@@ -62,6 +84,12 @@
         return source.replace(/^\s+|\s+$/g, exports.EMPTY);
     }
     exports.trim = trim;
+    /**
+     * Takes any arg
+     * @param source
+     * @param args
+     * @returns {string}
+     */
     function format(source) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -70,6 +98,16 @@
         return supplant(source, args);
     }
     exports.format = format;
+    //
+    /**
+     * This takes a string and replaces '{string}' with the respected parameter.
+     * Also allows for passing an array in order to use '{n}' notation.
+     * Not limited to an array's indexes.  For example, {length} is allowed.
+     * Based upon Crockford's supplant function.
+     * @param source
+     * @param params
+     * @returns {string}
+     */
     function supplant(source, params) {
         var oIsArray = (params) instanceof (Array);
         return source.replace(/\{([^{}]*)}/g, function (a, b) {
@@ -101,11 +139,23 @@
         if (match.length < source.length)
             return null;
     }
+    /**
+     * Returns true if the pattern matches the beginning of the source.
+     * @param source
+     * @param pattern
+     * @returns {boolean}
+     */
     function startsWith(source, pattern) {
         var m = canMatch(source, pattern);
         return Types_1.Type.isBoolean(m) ? m : source.indexOf(pattern) == 0;
     }
     exports.startsWith = startsWith;
+    /**
+     * Returns true if the pattern matches the end of the source.
+     * @param source
+     * @param pattern
+     * @returns {boolean}
+     */
     function endsWith(source, pattern) {
         var m = canMatch(source, pattern);
         return Types_1.Type.isBoolean(m) ? m : source.lastIndexOf(pattern) == (source.length - pattern.length);

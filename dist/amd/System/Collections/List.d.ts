@@ -4,7 +4,7 @@ import { IEnumerator } from "./Enumeration/IEnumerator";
 import { IList } from "./IList";
 import { IEnumerateEach } from "./Enumeration/IEnumerateEach";
 import { IEnumerableOrArray } from "./IEnumerableOrArray";
-import { IArray } from "./Array/IArray";
+import { ArrayLikeWritable } from "./Array/ArrayLikeWritable";
 export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnumerateEach<T> {
     protected readonly _source: T[];
     constructor(source?: IEnumerableOrArray<T>, equalityComparer?: EqualityComparison<T>);
@@ -20,7 +20,7 @@ export declare class List<T> extends CollectionBase<T> implements IList<T>, IEnu
     insert(index: number, value: T): void;
     removeAt(index: number): boolean;
     contains(item: T): boolean;
-    copyTo<TTarget extends IArray<any>>(target: TTarget, index?: number): TTarget;
+    copyTo<TTarget extends ArrayLikeWritable<any>>(target: TTarget, index?: number): TTarget;
     getEnumerator(): IEnumerator<T>;
     forEach(action: ActionWithIndex<T>, useCopy?: boolean): number;
     forEach(action: PredicateWithIndex<T>, useCopy?: boolean): number;

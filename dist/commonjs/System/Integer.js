@@ -11,76 +11,23 @@ function Integer(n) {
 exports.Integer = Integer;
 (function (Integer) {
     Integer.MAX_32_BIT = 2147483647;
-    function r(maxExclusive) {
-        return (Math.random() * maxExclusive) | 0;
-    }
-    /**
-     * Returns a random integer from minInclusive to the maxExclusive.
-     * Negative numbers are allowed.
-     *
-     * @param maxExclusive
-     * @returns {number}
-     */
-    function random(maxExclusive) {
-        assert(maxExclusive, 'maxExclusive');
-        return r(maxExclusive);
-    }
-    Integer.random = random;
-    (function (random) {
-        function next(boundary, inclusive) {
-            assert(boundary, 'max');
-            if (boundary === 0)
-                return 0;
-            if (inclusive)
-                boundary += boundary / Math.abs(boundary);
-            return r(boundary);
-        }
-        random.next = next;
-        function set(count, boundary, inclusive) {
-            var s = [];
-            s.length = count;
-            for (var i = 0; i < count; i++) {
-                s[i] = next(boundary, inclusive);
-            }
-            return s;
-        }
-        random.set = set;
-        function nextInRange(min, max, inclusive) {
-            assert(min, 'min');
-            assert(max, 'max');
-            var range = max - min;
-            if (range === 0)
-                return min;
-            if (inclusive)
-                range += range / Math.abs(range);
-            return min + next(range);
-        }
-        random.nextInRange = nextInRange;
-        function select(source) {
-            return source && source.length
-                ? source[r(source.length)]
-                : void (0);
-        }
-        random.select = select;
-        (function (select) {
-            function one(source) {
-                return random.select(source);
-            }
-            select.one = one;
-        })(select = random.select || (random.select = {}));
-    })(random = Integer.random || (Integer.random = {}));
+    Integer.MAX_VALUE = 9007199254740991;
+    var NUMBER = "number";
     /**
      * Converts any number to its 32bit counterpart.
-     * Returns null if conversion is not possible.
+     * Throws if conversion is not possible.
      * @param n
      * @returns {number}
      */
     function as32Bit(n) {
         var result = n | 0;
-        return (n === -1 || result !== -1) ? result : null;
+        if (isNaN(n))
+            throw "'n' is not a number.";
+        if (n !== -1 && result === -1)
+            throw "'n' is too large to be a 32 bit integer.";
+        return result;
     }
     Integer.as32Bit = as32Bit;
-    var NUMBER = "number";
     /**
      * Returns true if the value is an integer.
      * @param n

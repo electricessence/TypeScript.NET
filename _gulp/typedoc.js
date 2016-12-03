@@ -1,3 +1,4 @@
+///<reference types="gulp-typedoc"/>
 (function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -16,6 +17,7 @@
         var typedocOptions = {
             name: 'TypeScript.NET',
             out: PATH.DOCS,
+            //tscPath: PATH.TSC,
             module: gulp_typescript_helper_1.Module.UMD,
             target: gulp_typescript_helper_1.Target.ES5,
             excludeNotExported: true,

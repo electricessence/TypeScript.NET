@@ -7,9 +7,17 @@
     }
 })(["require", "exports", "../Types"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var Types_1 = require("../Types");
+    /**
+     * An alternative to Date or DateTime.  Is a model representing the exact date and time.
+     */
     var TimeStamp = (function () {
         function TimeStamp(year, month, day, hour, minute, second, millisecond, tick) {
+            // Add validation or properly carry out of range values?
             if (day === void 0) { day = 1; }
             if (hour === void 0) { hour = 0; }
             if (minute === void 0) { minute = 0; }
@@ -28,7 +36,7 @@
         }
         TimeStamp.prototype.toJsDate = function () {
             var _ = this;
-            return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000);
+            return new Date(_.year, _.month, _.day, _.hour, _.minute, _.second, _.millisecond + _.tick / 10000 /* Millisecond */);
         };
         TimeStamp.from = function (d) {
             if (!(d instanceof Date) && Types_1.Type.hasMember(d, 'toJsDate'))

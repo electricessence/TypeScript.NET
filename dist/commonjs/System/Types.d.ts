@@ -1,6 +1,6 @@
 import { Primitive } from "./Primitive";
-import { IArray } from "./Collections/Array/IArray";
 import { TypeValue } from "./TypeValue";
+import { ArrayLikeWritable } from "./Collections/Array/ArrayLikeWritable";
 /**
  * Exposes easy access to type information including inquiring about members.
  */
@@ -167,6 +167,6 @@ export declare module Type {
      */
     function hasMemberOfType<T>(instance: any, property: string, type: TypeValue.Any): instance is T;
     function hasMethod<T>(instance: any, property: string): instance is T;
-    function isArrayLike<T>(instance: any): instance is IArray<T>;
+    function isArrayLike<T>(instance: any): instance is ArrayLikeWritable<T>;
 }
 export default Type;

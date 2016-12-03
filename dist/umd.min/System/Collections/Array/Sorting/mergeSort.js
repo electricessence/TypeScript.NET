@@ -1,5 +1,5 @@
 !function(e,t){if("object"==typeof module&&"object"==typeof module.exports){var o=t(require,exports);void 0!==o&&(module.exports=o)}else"function"==typeof define&&define.amd&&define(e,t)}(["require","exports","../../../Exceptions/ArgumentNullException","../Utility"],function(e,t){"use strict";/**
-     * Merge sort O(n log (n))
+     * Merge internalSort O(n log (n))
      * Warning: Uses recursion.
      * @param target
      * @returns {number[]}

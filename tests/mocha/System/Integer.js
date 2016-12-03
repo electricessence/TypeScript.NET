@@ -13,8 +13,8 @@ describe('.as32Bit(value)', function () {
     it('should convert float number to integer without rounding', function () {
         assert.equal(Integer_1.default.as32Bit(TEST_FLOAT), TEST_INT);
     });
-    it('should return null if not 32', function () {
-        assert.equal(Integer_1.default.as32Bit(MAX), null);
+    it('should throw not possible to convert', function () {
+        assert.throws(function () { return Integer_1.default.as32Bit(MAX); });
     });
 });
 describe('.is(value)', function () {

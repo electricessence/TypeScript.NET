@@ -30,7 +30,7 @@ function ensureArray(value) {
  * @param selector
  * @param order
  * @param equivalentToNaN
- * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
+ * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
 export function createComparer(selector, order = 1 /* Ascending */, equivalentToNaN = NaN) {
     const nanHasEquivalent = !Type.isTrueNaN(equivalentToNaN);

@@ -7,11 +7,20 @@
     }
 })(["require", "exports", "./TaskHandlerBase", "../../Exceptions/ArgumentNullException", "../../Lazy", "../../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var TaskHandlerBase_1 = require("./TaskHandlerBase");
     var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
     var Lazy_1 = require("../../Lazy");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
+    /**
+     * A simplified synchronous (but deferrable) version of Task<T>
+     * Asynchronous operations should use Promise<T>.
+     */
     var Task = (function (_super) {
         __extends(Task, _super);
         function Task(valueFactory) {
@@ -25,7 +34,7 @@
             this._result.getValue();
         };
         Task.prototype.getResult = function () {
-            return this._result.value;
+            return this._result.value; // This will detect any potential recursion.
         };
         Task.prototype.getState = function () {
             var r = this._result;
@@ -36,12 +45,12 @@
             };
         };
         Task.prototype.start = function (defer) {
-            if (this.getStatus() == 0) {
+            if (this.getStatus() == 0 /* Created */) {
                 _super.prototype.start.call(this, defer);
             }
         };
         Task.prototype.runSynchronously = function () {
-            if (this.getStatus() == 0) {
+            if (this.getStatus() == 0 /* Created */) {
                 _super.prototype.runSynchronously.call(this);
             }
         };

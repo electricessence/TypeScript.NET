@@ -3,9 +3,8 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import {Primitive} from "./Primitive";
-import {IArray} from "./Collections/Array/IArray";
-import {TypeValue} from "./TypeValue"; // For compatibility with (let, const, function, class);
-
+import {TypeValue} from "./TypeValue";
+import {ArrayLikeWritable} from "./Collections/Array/ArrayLikeWritable";
 
 const
 	VOID0      = <undefined>void(0),
@@ -89,7 +88,7 @@ export class TypeInfo
 				}
 				else
 				{
-					this.isArray = (target)instanceof(Array);
+					this.isArray = (target) instanceof (Array);
 					this.isObject = true;
 				}
 				break;
@@ -373,7 +372,7 @@ export module Type
 		return hasMemberOfType<T>(instance, property, _FUNCTION);
 	}
 
-	export function isArrayLike<T>(instance:any):instance is IArray<T>
+	export function isArrayLike<T>(instance:any):instance is ArrayLikeWritable<T>
 	{
 		/*
 		 * NOTE:

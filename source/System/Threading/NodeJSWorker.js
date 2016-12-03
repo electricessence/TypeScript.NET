@@ -1,8 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- * Based upon Parallel.js: https://github.com/adambom/parallel.js/blob/master/lib/Worker.js
- */
 (function (dependencies, factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
@@ -14,8 +9,13 @@
     "use strict";
     var ObservableBase_1 = require("../Observable/ObservableBase");
     var extends_1 = require("../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var ps = require("child_process");
+    //import {ChildProcess} from "child_process";
+    /**
+     * This class takes the place of a WebWorker
+     */
     var NodeJSWorker = (function (_super) {
         __extends(NodeJSWorker, _super);
         function NodeJSWorker(url) {
@@ -37,7 +37,7 @@
         };
         NodeJSWorker.prototype._onDispose = function () {
             _super.prototype._onDispose.call(this);
-            this._process.removeAllListeners();
+            this._process.removeAllListeners(); // just to satisfy paranoia.
             this._process.kill();
             this._process = null;
         };

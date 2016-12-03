@@ -7,12 +7,23 @@
     }
 })(["require", "exports", "./Disposable/DisposableBase", "./Exceptions/ArgumentNullException", "../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var DisposableBase_1 = require("./Disposable/DisposableBase");
     var ArgumentNullException_1 = require("./Exceptions/ArgumentNullException");
     var extends_1 = require("../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NULL = null;
     var NAME = "ResolverBase";
+    /**
+     * The ResolverBase class handles resolving a factory method and detects recursion.
+     * Since JS does not have a synchronization mechanism (lock or otherwise)
+     * we have to prevent getValue from double triggering the value factory (optimistic concurrency)
+     * or returning return a value that is intermediate between resolving and resolved.
+     */
     var ResolverBase = (function (_super) {
         __extends(ResolverBase, _super);
         function ResolverBase(_valueFactory, _trapExceptions, _allowReset) {
@@ -43,11 +54,11 @@
             if (_._isValueCreated === null)
                 throw new Error("Recursion detected.");
             if (!_._isValueCreated && _._valueFactory) {
-                _._isValueCreated = null;
+                _._isValueCreated = null; // Mark this as 'resolving'.
                 try {
                     var c = void 0;
                     if (!_._isValueCreated && (c = _._valueFactory)) {
-                        _._isValueCreated = null;
+                        _._isValueCreated = null; // Mark this as 'resolving'.
                         if (!this._allowReset)
                             this._valueFactory = NULL;
                         var v = c();

@@ -1,8 +1,9 @@
 import { Primitive } from "../../../Primitive";
+import { ArrayLikeWritable } from "../ArrayLikeWritable";
 /**
- * Merge sort O(n log (n))
+ * Merge internalSort O(n log (n))
  * Warning: Uses recursion.
  * @param target
  * @returns {number[]}
  */
-export declare function mergeSort<T extends Primitive>(target: T[]): T[];
+export declare function mergeSort<T extends Primitive, TArray extends ArrayLikeWritable<T>>(target: TArray): TArray;

@@ -3,8 +3,8 @@
 var assert = require("assert");
 require("mocha");
 var ClockTime_1 = require("../../../../dist/commonjs/System/Time/ClockTime");
-var Integer_1 = require("../../../../dist/commonjs/System/Integer");
-var days = Integer_1.default.random(365), hour = Integer_1.default.random(24), minute = Integer_1.default.random(60), second = Integer_1.default.random(60), millisecond = Integer_1.default.random(1000);
+var Random_1 = require("../../../../dist/commonjs/System/Random");
+var days = Random_1.Random.integer(365), hour = Random_1.Random.integer(24), minute = Random_1.Random.integer(60), second = Random_1.Random.integer(60), millisecond = Random_1.Random.integer(1000);
 var c1 = new ClockTime_1.default(hour, minute, second, millisecond);
 var c2 = new ClockTime_1.default(days * 86400000 /* Day */
     + hour * 3600000 /* Hour */

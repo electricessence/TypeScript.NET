@@ -762,7 +762,7 @@ var requirejs, require, define;
                     });
                 }
 
-                //Do a copy of the dependency array, so that
+                //Do a arrayCopy of the dependency array, so that
                 //source inputs are not modified. For example
                 //"shim" deps are passed in here directly, and
                 //doing a direct modification of the depMaps array

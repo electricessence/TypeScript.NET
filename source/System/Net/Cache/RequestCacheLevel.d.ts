@@ -8,7 +8,7 @@
 export declare const enum RequestCacheLevel {
 
 	/**
-	 * Satisfies a request for a resource either by using the cached copy of the resource or by sending a request for the resource to the server. The action taken is determined by the current cache policy and the age of the content in the cache. This is the cache level that should be used by most applications.
+	 * Satisfies a request for a resource either by using the cached arrayCopy of the resource or by sending a request for the resource to the server. The action taken is determined by the current cache policy and the age of the content in the cache. This is the cache level that should be used by most applications.
 	 */
 	Default,
 
@@ -38,7 +38,7 @@ export declare const enum RequestCacheLevel {
 		Reload,
 
 		/**
-		 * Satisfies a request by using the cached copy of the resource if the timestamp is the same as the timestamp of the resource on the server; otherwise, the resource is downloaded from the server, presented to the caller, and stored in the cache.
+		 * Satisfies a request by using the cached arrayCopy of the resource if the timestamp is the same as the timestamp of the resource on the server; otherwise, the resource is downloaded from the server, presented to the caller, and stored in the cache.
 		 */
 		Revalidate
 

@@ -25,11 +25,9 @@ describe('.as32Bit(value)', ()=>
 			TEST_INT);
 	});
 
-	it('should return null if not 32', ()=>
+	it('should throw not possible to convert', ()=>
 	{
-		assert.equal(
-			Integer.as32Bit(MAX),
-			null);
+		assert.throws(()=>Integer.as32Bit(MAX));
 	});
 });
 

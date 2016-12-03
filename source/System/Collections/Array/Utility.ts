@@ -14,103 +14,16 @@ import {
 	SelectorWithIndex,
 	ActionWithIndex
 } from "../../FunctionTypes";
-import {IArray} from "./IArray";
-
-/**
- * Initializes an array depending on the requested capacity.
- * The returned array will have a .length equal to the value provided.
- * @param length
- * @returns {T[]}
- */
-export function initialize<T>(length:number):T[]
-{
-	Integer.assert(length, 'length');
-	// This logic is based upon JS performance tests that show a significant difference at the level of 65536.
-	let array:T[];
-	if(length>65536)
-		array = new Array(length);
-	else
-	{
-		array = [];
-		array.length = length;
-	}
-	return array;
-}
-
-/**
- *
- * @param source
- * @param sourceIndex
- * @param length
- * @returns {any}
- */
-export function copy<T>(
-	source:IArray<T>,
-	sourceIndex:number = 0,
-	length:number = Infinity):T[]
-{
-	if(!source) return <any>source; // may have passed zero? undefined? or null?
-	return copyTo(
-		source,
-		initialize<T>(Math.min(length, Math.max(source.length - sourceIndex, 0))),
-		sourceIndex, 0, length);
-}
+import {ArrayLikeWritable} from "./ArrayLikeWritable";
+import {initialize} from "./initialize";
+import {copy, copyTo} from "./copy";
+export {initialize, copy, copyTo};
 
 const
 	CBN  = 'Cannot be null.',
 	CB0  = 'Cannot be zero.',
 	CBL0 = 'Cannot be less than zero.',
 	VFN  = 'Must be a valid finite number';
-
-/**
- * Copies one array to another.
- * @param source
- * @param destination
- * @param sourceIndex
- * @param destinationIndex
- * @param length An optional limit to stop copying.
- * @returns The destination array.
- */
-export function copyTo<T,TDestination extends IArray<T>>(
-	source:ArrayLike<T>,
-	destination:TDestination,
-	sourceIndex:number = 0,
-	destinationIndex:number = 0,
-	length:number = Infinity):TDestination
-{
-	if(!source)
-		throw new ArgumentNullException('source', CBN);
-
-	if(!destination)
-		throw new ArgumentNullException('destination', CBN);
-
-	if(sourceIndex<0)
-		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
-
-	let sourceLength = source.length;
-	if(!sourceLength)
-		return destination;
-	if(sourceIndex>=sourceLength)
-		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
-
-	if(destination.length<0)
-		throw new ArgumentOutOfRangeException('destinationIndex', destinationIndex, CBL0);
-
-	const maxLength = source.length - sourceIndex;
-	if(isFinite(length) && length>maxLength)
-		throw new ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
-
-	length = Math.min(length, maxLength);
-	const newLength = destinationIndex + length;
-	if(newLength>destination.length) destination.length = newLength;
-
-	for(let i = 0; i<length; i++)
-	{
-		destination[destinationIndex + i] = source[sourceIndex + i];
-	}
-
-	return destination;
-}
 
 
 /**
@@ -122,7 +35,7 @@ export function copyTo<T,TDestination extends IArray<T>>(
  * @returns {number}
  */
 export function indexOf<T>(
-	array:IArray<T>, item:T,
+	array:ArrayLike<T>, item:T,
 	equalityComparer:EqualityComparison<T> = areEqual):number
 {
 
@@ -130,7 +43,7 @@ export function indexOf<T>(
 	if(len)
 	{
 		// NaN NEVER evaluates its equality so be careful.
-		if((array)instanceof(Array) && !Type.isTrueNaN(item))
+		if((array) instanceof (Array) && !Type.isTrueNaN(item))
 			return array.indexOf(item);
 
 		for(let i = 0; i<len; i++)
@@ -153,7 +66,7 @@ export function indexOf<T>(
  * @returns {boolean}
  */
 export function contains<T>(
-	array:IArray<T>, item:T,
+	array:ArrayLike<T>, item:T,
 	equalityComparer:EqualityComparison<T> = areEqual):boolean
 {
 	return indexOf(array, item, equalityComparer)!= -1;
@@ -168,7 +81,7 @@ export function contains<T>(
  * @returns {number}
  */
 export function replace<T>(
-	array:IArray<T>,
+	array:ArrayLikeWritable<T>,
 	old:T,
 	newValue:T,
 	max?:number):number
@@ -225,7 +138,7 @@ export function updateRange<T>(
  * @param stop
  */
 export function clear(
-	array:IArray<any>,
+	array:ArrayLikeWritable<any>,
 	start:number = 0,
 	stop?:number):void
 {
@@ -240,7 +153,7 @@ export function clear(
  * @returns {boolean}
  */
 export function register<T>(
-	array:IArray<T>, item:T,
+	array:ArrayLikeWritable<T>, item:T,
 	equalityComparer:EqualityComparison<T> = areEqual):boolean
 {
 	if(!array)
@@ -258,7 +171,7 @@ export function register<T>(
  * @param predicate
  * @returns {number}
  */
-export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):number
+export function findIndex<T>(array:ArrayLike<T>, predicate:PredicateWithIndex<T>):number
 {
 	if(!array)
 		throw new ArgumentNullException('array', CBN);
@@ -267,13 +180,13 @@ export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):n
 
 	const len = array.length;
 	if(!Type.isNumber(len, true) || len<0)
-		throw new ArgumentException('array','Does not have a valid length.');
+		throw new ArgumentException('array', 'Does not have a valid length.');
 
-	if((array)instanceof(Array))
+	if((array) instanceof (Array))
 	{
 		for(let i = 0; i<len; i++)
 		{
-			if(predicate(array[i],i))
+			if(predicate(array[i], i))
 				return i;
 		}
 	}
@@ -281,7 +194,7 @@ export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):n
 	{
 		for(let i = 0; i<len; i++)
 		{
-			if((i) in (array) && predicate(array[i],i))
+			if((i) in (array) && predicate(array[i], i))
 				return i;
 		}
 	}
@@ -298,13 +211,13 @@ export function findIndex<T>(array:IArray<T>, predicate:PredicateWithIndex<T>):n
  * @param action
  */
 export function forEach<T>(
-	source:IArray<T>,
+	source:ArrayLike<T>,
 	action:ActionWithIndex<T>):void
 export function forEach<T>(
-	source:IArray<T>,
+	source:ArrayLike<T>,
 	action:PredicateWithIndex<T>):void
 export function forEach<T>(
-	source:IArray<T>,
+	source:ArrayLike<T>,
 	action:ActionWithIndex<T> | PredicateWithIndex<T>):void
 {
 	if(source && action)
@@ -325,13 +238,13 @@ export function forEach<T>(
  * @param target
  * @param fn
  */
-export function applyTo<T>(target:IArray<T>, fn:SelectorWithIndex<T,T>):void
+export function applyTo<T>(target:ArrayLikeWritable<T>, fn:SelectorWithIndex<T,T>):void
 {
 	if(target && fn)
 	{
 		for(let i = 0; i<target.length; i++)
 		{
-			(<any>target)[i] = fn(target[i],i);
+			(<any>target)[i] = fn(target[i], i);
 		}
 	}
 }
@@ -481,7 +394,7 @@ export function distinct(source:number[]):number[];
 export function distinct(source:any[]):any[]
 {
 	const seen:any = {};
-	return source.filter(e=> !(e in seen) && (seen[e] = true));
+	return source.filter(e => !(e in seen) && (seen[e] = true));
 }
 
 /**
@@ -497,7 +410,7 @@ export function flatten(a:any[], recurseDepth:number = 0):any[]
 	for(let i = 0; i<a.length; i++)
 	{
 		let x = a[i];
-		if((x)instanceof(Array))
+		if((x) instanceof (Array))
 		{
 			if(recurseDepth>0) x = flatten(x, recurseDepth - 1);
 			for(let n = 0; n<x.length; n++) result.push(x[n]);

@@ -16,7 +16,9 @@
     var Promise_1 = require("../source/System/Promises/Promise");
     var awaiter_1 = require("../source/awaiter");
     var generator_1 = require("../source/generator");
+    // noinspection JSUnusedLocalSymbols
     var __awaiter = awaiter_1.default;
+    // noinspection JSUnusedLocalSymbols
     var __generator = generator_1.default;
     var fields = {
         "name": true,
@@ -121,4 +123,22 @@
         .execute()
         .then(function () { return savePackage(gulp_typescript_helper_1.Module.SYSTEMJS); }); });
 });
+// gulp.task(TASK.DIST, [
+// 	TASK.DIST_ES6,
+// 	TASK.DIST_AMD,
+// 	TASK.DIST_UMD,
+// 	TASK.DIST_COMMONJS,
+// 	TASK.DIST_SYSTEMJS
+// ]);
+// gulp.task(
+// 	TASK.SOURCE,
+// 	()=>{
+// 		var r = typescript
+// 			.at('./source', Target.ES5, Module.UMD, {noEmitHelpers: true});
+// 		var s = r.sourceMapOptions;
+// 		s.sourceRoot = "";
+// 		s.includeContent = false;
+//
+// 		return r.execute()
+// 	}); 
 //# sourceMappingURL=dist.js.map

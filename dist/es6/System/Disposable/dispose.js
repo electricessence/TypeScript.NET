@@ -100,7 +100,7 @@ function disposeSingle(disposable, trapExceptions) {
     return null;
 }
 /**
- * This dispose method assumes it's working on a local copy and is unsafe for external use.
+ * This dispose method assumes it's working on a local arrayCopy and is unsafe for external use.
  */
 function disposeTheseInternal(disposables, trapExceptions, index = 0) {
     let exceptions;

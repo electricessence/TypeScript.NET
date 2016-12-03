@@ -1,11 +1,7 @@
 ///<reference types="node"/>
 import * as assert from "assert";
-import {
-	dispatch,
-	mapped,
-	unsafe
-} from "../../../../../dist/commonjs/System/Collections/Array/Dispatch";
-import {Action} from "../../../../../source/System/FunctionTypes";
+import {dispatch} from "../../../../../dist/commonjs/System/Collections/Array/Dispatch";
+import {Action} from "../../../../../dist/commonjs/System/FunctionTypes";
 
 it("should apply closures in order", ()=>
 {
@@ -26,10 +22,10 @@ it("should apply closures in order", ()=>
 	dispatch(a, 10);
 	assert.equal(result, 100);
 
-	assert.equal(mapped(<any>null, 20), null);
-	assert.equal(mapped([], 20).length, 0);
-	assert.equal(mapped(a, 20).length, 3);
-	unsafe(<any>null,10);
+	assert.equal(dispatch.mapped(<any>null, 20), null);
+	assert.equal(dispatch.mapped([], 20).length, 0);
+	assert.equal(dispatch.mapped(a, 20).length, 3);
+	dispatch.unsafe(<any>null,10);
 	assert.equal(result, 2400);
 });
 
@@ -48,7 +44,7 @@ it("should propagate errors",()=>{
 
 	assert.throws(()=>
 	{
-		mapped(b, 10);
+		dispatch.mapped(b, 10);
 	});
 });
 
@@ -62,7 +58,7 @@ it("should trap errors",()=>{
 
 	assert.doesNotThrow(()=>
 	{
-		mapped(b, 10, true);
-		mapped(b, 10,err=>assert.equal(err,'error'));
+		dispatch.mapped(b, 10, true);
+		dispatch.mapped(b, 10,err=>assert.equal(err,'error'));
 	});
 });

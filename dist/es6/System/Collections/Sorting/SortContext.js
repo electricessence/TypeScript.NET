@@ -15,7 +15,7 @@ export class SortContext {
      */
     get order() { return this._order; }
     /**
-     * Generates an array of indexes from the source in order of their expected sort without modifying the source.
+     * Generates an array of indexes from the source in order of their expected internalSort without modifying the source.
      * @param source
      * @returns {number[]}
      */

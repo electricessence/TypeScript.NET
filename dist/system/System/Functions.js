@@ -65,7 +65,7 @@ System.register([], function (exports_1, context_1) {
                  * Does nothing.
                  */
                 Functions.Blank = rootFunctions.Blank;
-            })(Functions = Functions || (Functions = {}));
+            })(Functions || (Functions = {}));
             exports_1("Functions", Functions);
             // Make this read only.  Should still allow for sub-classing since extra methods are added to prototype.
             Object.freeze(Functions);

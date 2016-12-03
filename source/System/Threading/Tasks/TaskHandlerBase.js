@@ -7,17 +7,25 @@
     }
 })(["require", "exports", "../../Disposable/DisposableBase", "../../../extends"], function (require, exports) {
     "use strict";
+    /*!
+     * @author electricessence / https://github.com/electricessence/
+     * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
+     */
     var DisposableBase_1 = require("../../Disposable/DisposableBase");
     var extends_1 = require("../../../extends");
+    // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var NAME = "TaskHandlerBase";
+    /**
+     * A simple class for handling potentially repeated executions either deferred or immediate.
+     */
     var TaskHandlerBase = (function (_super) {
         __extends(TaskHandlerBase, _super);
         function TaskHandlerBase() {
             var _this = _super.call(this) || this;
             _this._disposableObjectName = NAME;
             _this._timeoutId = null;
-            _this._status = 0;
+            _this._status = 0 /* Created */;
             return _this;
         }
         Object.defineProperty(TaskHandlerBase.prototype, "isScheduled", {
@@ -27,10 +35,14 @@
             enumerable: true,
             configurable: true
         });
+        /**
+         * Schedules/Reschedules triggering the task.
+         * @param defer Optional time to wait until triggering.
+         */
         TaskHandlerBase.prototype.start = function (defer) {
             this.throwIfDisposed();
             this.cancel();
-            this._status = 1;
+            this._status = 1 /* WaitingToRun */;
             if (!(defer > 0))
                 defer = 0;
             if (isFinite(defer))
@@ -50,15 +62,16 @@
             enumerable: true,
             configurable: true
         });
+        // Use a static function here to avoid recreating a new function every time.
         TaskHandlerBase._handler = function (d) {
             d.cancel();
-            d._status = 2;
+            d._status = 2 /* Running */;
             try {
                 d._onExecute();
-                d._status = 3;
+                d._status = 3 /* RanToCompletion */;
             }
             catch (ex) {
-                d._status = 5;
+                d._status = 5 /* Faulted */;
             }
         };
         TaskHandlerBase.prototype._onDispose = function () {
@@ -70,7 +83,7 @@
             if (id) {
                 clearTimeout(id);
                 this._timeoutId = null;
-                this._status = 4;
+                this._status = 4 /* Cancelled */;
                 return true;
             }
             return false;

@@ -13,7 +13,7 @@ import {IDisposable} from "../Disposable/IDisposable";
 import {ILinkedNodeList} from "./ILinkedList";
 import {IEnumerator} from "./Enumeration/IEnumerator";
 import {Selector, PredicateWithIndex, ActionWithIndex, SelectorWithIndex} from "../FunctionTypes";
-import {IArray} from "./Array/IArray";
+import {ArrayLikeWritable} from "./Array/ArrayLikeWritable";
 import __extendsImport from "../../extends";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
@@ -99,7 +99,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 	}
 
 	// Note, no need for 'useCopy' since this avoids any modification conflict.
-	// If iterating over a copy is necessary, a copy should be made manually.
+	// If iterating over a arrayCopy is necessary, a arrayCopy should be made manually.
 	forEach(
 		action:ActionWithIndex<TNode>, ignoreVersioning?:boolean):number
 	forEach(
@@ -468,7 +468,7 @@ implements ILinkedNodeList<TNode>, IEnumerateEach<TNode>, IDisposable
 		);
 	}
 
-	static copyValues<T,TDestination extends IArray<any>>(
+	static copyValues<T,TDestination extends ArrayLikeWritable<any>>(
 		list:LinkedNodeList<ILinkedNodeWithValue<T>>,
 		array:TDestination,
 		index:number = 0):TDestination

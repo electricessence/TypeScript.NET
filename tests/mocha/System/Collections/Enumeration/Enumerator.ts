@@ -4,7 +4,6 @@ import "mocha";
 import {TypeInfo} from "../../../../../dist/commonjs/System/Types";
 import Queue from "../../../../../dist/commonjs/System/Collections/Queue";
 import * as Enumerator from "../../../../../dist/commonjs/System/Collections/Enumeration/Enumerator";
-import {IArray} from "../../../../../dist/commonjs/System/Collections/Array/IArray";
 import {IEnumerator} from "../../../../../dist/commonjs/System/Collections/Enumeration/IEnumerator";
 
 const VOID0:undefined = void 0;
@@ -93,7 +92,7 @@ describe(".from(source)",()=>{
 	});
 
 	it("array like objects should enumerate",()=>{
-		const a:IArray<number> = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, length: 5};
+		const a:ArrayLike<number> = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, length: 5};
 		const type = new TypeInfo(a);
 		type.member("length");
 		const len = a.length;

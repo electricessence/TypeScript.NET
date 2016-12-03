@@ -27,7 +27,7 @@ System.register(["../../Compare"], function (exports_1, context_1) {
                     configurable: true
                 });
                 /**
-                 * Generates an array of indexes from the source in order of their expected sort without modifying the source.
+                 * Generates an array of indexes from the source in order of their expected internalSort without modifying the source.
                  * @param source
                  * @returns {number[]}
                  */

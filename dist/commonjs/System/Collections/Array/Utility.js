@@ -9,80 +9,12 @@ var Compare_1 = require("../../Compare");
 var ArgumentException_1 = require("../../Exceptions/ArgumentException");
 var ArgumentNullException_1 = require("../../Exceptions/ArgumentNullException");
 var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
-/**
- * Initializes an array depending on the requested capacity.
- * The returned array will have a .length equal to the value provided.
- * @param length
- * @returns {T[]}
- */
-function initialize(length) {
-    Integer_1.Integer.assert(length, 'length');
-    // This logic is based upon JS performance tests that show a significant difference at the level of 65536.
-    var array;
-    if (length > 65536)
-        array = new Array(length);
-    else {
-        array = [];
-        array.length = length;
-    }
-    return array;
-}
-exports.initialize = initialize;
-/**
- *
- * @param source
- * @param sourceIndex
- * @param length
- * @returns {any}
- */
-function copy(source, sourceIndex, length) {
-    if (sourceIndex === void 0) { sourceIndex = 0; }
-    if (length === void 0) { length = Infinity; }
-    if (!source)
-        return source; // may have passed zero? undefined? or null?
-    return copyTo(source, initialize(Math.min(length, Math.max(source.length - sourceIndex, 0))), sourceIndex, 0, length);
-}
-exports.copy = copy;
+var initialize_1 = require("./initialize");
+exports.initialize = initialize_1.initialize;
+var copy_1 = require("./copy");
+exports.copy = copy_1.copy;
+exports.copyTo = copy_1.copyTo;
 var CBN = 'Cannot be null.', CB0 = 'Cannot be zero.', CBL0 = 'Cannot be less than zero.', VFN = 'Must be a valid finite number';
-/**
- * Copies one array to another.
- * @param source
- * @param destination
- * @param sourceIndex
- * @param destinationIndex
- * @param length An optional limit to stop copying.
- * @returns The destination array.
- */
-function copyTo(source, destination, sourceIndex, destinationIndex, length) {
-    if (sourceIndex === void 0) { sourceIndex = 0; }
-    if (destinationIndex === void 0) { destinationIndex = 0; }
-    if (length === void 0) { length = Infinity; }
-    if (!source)
-        throw new ArgumentNullException_1.ArgumentNullException('source', CBN);
-    if (!destination)
-        throw new ArgumentNullException_1.ArgumentNullException('destination', CBN);
-    if (sourceIndex < 0)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, CBL0);
-    var sourceLength = source.length;
-    if (!sourceLength)
-        return destination;
-    if (sourceIndex >= sourceLength)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Must be less than the length of the source array.');
-    if (destination.length < 0)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('destinationIndex', destinationIndex, CBL0);
-    var maxLength = source.length - sourceIndex;
-    if (isFinite(length) && length > maxLength)
-        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('sourceIndex', sourceIndex, 'Source index + length cannot exceed the length of the source array.');
-    length = Math.min(length, maxLength);
-    var newLength = destinationIndex + length;
-    if (newLength > destination.length)
-        destination.length = newLength;
-    for (var i = 0; i < length; i++) {
-        destination[destinationIndex + i] = source[sourceIndex + i];
-    }
-    return destination;
-}
-exports.copyTo = copyTo;
 /**
  * Checks to see where the provided array contains an item/value.
  * If the array value is null, then -1 is returned.
@@ -322,7 +254,7 @@ function repeat(element, count) {
     Integer_1.Integer.assert(count, 'count');
     if (count < 0)
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, CBL0);
-    var result = initialize(count);
+    var result = initialize_1.initialize(count);
     for (var i = 0; i < count; i++) {
         result[i] = element;
     }
@@ -344,7 +276,7 @@ function range(first, count, step) {
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, VFN);
     if (count < 0)
         throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('count', count, CBL0);
-    var result = initialize(count);
+    var result = initialize_1.initialize(count);
     for (var i = 0; i < count; i++) {
         result[i] = first;
         first += step;

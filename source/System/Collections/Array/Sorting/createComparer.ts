@@ -37,16 +37,16 @@ function ensureArray<T>(value:T|T[]):T[]
  * @param selector
  * @param order
  * @param equivalentToNaN
- * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
+ * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
 export function createComparer<TSource,TSelect extends Primitive>(
-	selector:Selector<TSource|TSource[],TSelect>,
+	selector:Selector<TSource,TSelect|TSelect[]>,
 	order:Order | Order[] = Order.Ascending,
-	equivalentToNaN:any = NaN):Comparison<TSource|TSource[]>
+	equivalentToNaN:any = NaN):Comparison<TSource>
 {
 	const nanHasEquivalent = !Type.isTrueNaN(equivalentToNaN);
 
-	return (a:TSource|TSource[], b:TSource|TSource[]):CompareResult=>
+	return (a:TSource, b:TSource):CompareResult=>
 	{
 		// Use an array always to ensure a single code path.
 		const aValue = ensureArray(selector(a));

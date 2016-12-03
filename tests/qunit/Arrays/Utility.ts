@@ -25,7 +25,7 @@ export default function run()
 	});
 
 
-	QUnit.test("Array/Utility.copy/equals", assert =>
+	QUnit.test("Array/Utility.arrayCopy/equals", assert =>
 	{
 		const s1 = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3];
 		const s2 = ArrayUtility.copy(s1);

@@ -824,12 +824,12 @@ var pools;
      * https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
      * If a promise is disposed the value will be undefined which will also evaluate (promise.state)==false.
      */
+    var State;
     (function (State) {
         State[State["Pending"] = 0] = "Pending";
         State[State["Fulfilled"] = 1] = "Fulfilled";
         State[State["Rejected"] = -1] = "Rejected";
-    })(Promise.State || (Promise.State = {}));
-    var State = Promise.State;
+    })(State = Promise.State || (Promise.State = {}));
     Object.freeze(State);
     function factory(e) {
         return new Promise(e);
@@ -1075,6 +1075,7 @@ var pools;
     }
     Promise.createFrom = createFrom;
 })(Promise = exports.Promise || (exports.Promise = {}));
+exports.Promise = Promise;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Promise;
 //# sourceMappingURL=Promise.js.map

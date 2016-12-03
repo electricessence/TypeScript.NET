@@ -32,12 +32,13 @@ System.register(["../../Compare", "../../Types"], function (exports_1, context_1
             strict = true;
         }
         var first = arrays[0];
-        for (var i = 0, l = arrays.length; i < l; i++) {
+        for (var i = 1, l = arrays.length; i < l; i++) {
             if (!areEqual(first, arrays[i], strict, equalityComparer))
                 return false;
         }
         return true;
     }
+    exports_1("areAllEqual", areAllEqual);
     function areEqual(a, b, strict, equalityComparer) {
         if (strict === void 0) { strict = true; }
         if (equalityComparer === void 0) { equalityComparer = Values.areEqual; }
@@ -54,7 +55,8 @@ System.register(["../../Compare", "../../Types"], function (exports_1, context_1
         }
         return true;
     }
-    function sort(a, comparer) {
+    exports_1("areEqual", areEqual);
+    function internalSort(a, comparer) {
         if (!a || a.length < 2)
             return a;
         var len = a.length;
@@ -78,18 +80,16 @@ System.register(["../../Compare", "../../Types"], function (exports_1, context_1
             return len;
         // There might be a better more performant way to do this, but for the moment, this
         // works quite well.
-        a = sort(a, comparer);
-        b = sort(b, comparer);
+        a = internalSort(a, comparer);
+        b = internalSort(b, comparer);
         for (var i = 0; i < len; i++) {
             if (comparer(a[i], b[i]) !== 0)
                 return false;
         }
         return true;
     }
-    var Values, Types_1;
-    exports_1("areAllEqual", areAllEqual);
-    exports_1("areEqual", areEqual);
     exports_1("areEquivalent", areEquivalent);
+    var Values, Types_1;
     return {
         setters: [
             function (Values_1) {

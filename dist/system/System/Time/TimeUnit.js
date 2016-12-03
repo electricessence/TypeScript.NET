@@ -65,7 +65,7 @@ System.register([], function (exports_1, context_1) {
                     return true;
                 }
                 TimeUnit.assertValid = assertValid;
-            })(TimeUnit = TimeUnit || (TimeUnit = {}));
+            })(TimeUnit || (TimeUnit = {}));
             exports_1("TimeUnit", TimeUnit);
             Object.freeze(TimeUnit);
             exports_1("default", TimeUnit);

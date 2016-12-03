@@ -31,7 +31,7 @@ function ensureArray(value) {
  * @param selector
  * @param order
  * @param equivalentToNaN
- * @returns {function((TSource|TSource[]), (TSource|TSource[])): CompareResult}
+ * @returns {(a:TSource, b:TSource)=>CompareResult}
  */
 function createComparer(selector, order, equivalentToNaN) {
     if (order === void 0) { order = 1 /* Ascending */; }
