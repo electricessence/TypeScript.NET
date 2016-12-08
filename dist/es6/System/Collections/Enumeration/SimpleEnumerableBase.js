@@ -1,7 +1,3 @@
-/*!
- * @author electricessence / https://github.com/electricessence/
- * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
- */
 import { IteratorResult } from "./IteratorResult";
 const VOID0 = void 0;
 export class SimpleEnumerableBase {

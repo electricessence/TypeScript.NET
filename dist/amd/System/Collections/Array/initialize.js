@@ -1,0 +1,2 @@
+define(["require","exports","../../Integer"],function(e,n,r){"use strict";function t(e){r.Integer.assert(e,"length");var n;return e>65536?n=new Array(e):(n=[],n.length=e),n}n.initialize=t});
+//# sourceMappingURL=initialize.js.map

@@ -8,7 +8,6 @@ var Linq_1 = require("../../../dist/commonjs/System.Linq/Linq");
 var Functions_1 = require("../../../dist/commonjs/System/Functions");
 var EmptyEnumerator_1 = require("../../../dist/commonjs/System/Collections/Enumeration/EmptyEnumerator");
 var List_1 = require("../../../dist/commonjs/System/Collections/List");
-var Linq_2 = require("../../../dist/commonjs/System.Linq/Linq");
 var source = [
     {
         a: 1,
@@ -513,15 +512,15 @@ describe(".fromAny(x,default)", function () {
 });
 describe(".fromAny(x,default)", function () {
     it("should return an enumerable from an enumerable", function () {
-        assert.ok(Linq_1.Enumerable.fromAny(sourceArrayEnumerable) instanceof Linq_2.InfiniteLinqEnumerable);
+        assert.ok(Linq_1.Enumerable.fromAny(sourceArrayEnumerable) instanceof Linq_1.InfiniteLinqEnumerable);
     });
     it("should return an enumerable from an array", function () {
-        assert.ok(Linq_1.Enumerable.fromAny(source) instanceof Linq_2.InfiniteLinqEnumerable);
+        assert.ok(Linq_1.Enumerable.fromAny(source) instanceof Linq_1.InfiniteLinqEnumerable);
     });
     it("should return an enumerable from an IEnumerable", function () {
         var e = Linq_1.Enumerable.fromAny({ getEnumerator: function () { return EmptyEnumerator_1.EmptyEnumerator; } });
         e.getEnumerator();
-        assert.ok(e instanceof Linq_2.InfiniteLinqEnumerable);
+        assert.ok(e instanceof Linq_1.InfiniteLinqEnumerable);
     });
 });
 describe(".from([1])", function () {
