@@ -770,17 +770,26 @@ describe(".average()", function () {
     });
 });
 describe(".weave(enumerables)", function () {
+    it("should weave in order when only 1", function () {
+        var s = Object.freeze([1, 2, 3, 4, 5, 6, 7]);
+        var r = Linq_1.Enumerable.weave([s]);
+        assert.equal(r.count(), 7);
+        assert.equal(r.toJoinedString(), "1234567");
+    });
+    var source = Object.freeze([
+        ["a", "d"],
+        ["b", "e", "g", "i"],
+        ["c", "f", "h"]
+    ]);
     it("should weave in order", function () {
-        var w = Linq_1.Enumerable.weave([
-            ["a", "d"],
-            ["b", "e", "g", "i"],
-            ["c", "f", "h"]
-        ]);
+        var w = Linq_1.Enumerable.weave(source);
         assert.equal(w.count(), 9);
         assert.equal(w.toJoinedString(), "abcdefghi");
-        assert.equal(Linq_1.Enumerable.weave([
-            [1, 2, 3, 4, 5, 6, 7]
-        ]).count(), 7);
+    });
+    it("should weave enumerable in order", function () {
+        var w = Linq_1.Enumerable.weave(Linq_1.Enumerable.from(source));
+        assert.equal(w.count(), 9);
+        assert.equal(w.toJoinedString(), "abcdefghi");
     });
     it("should throw", function () {
         assert.throws(function () { return Linq_1.Enumerable.weave(null); });
@@ -797,4 +806,3 @@ describe("xxx", function () {
         assert.equal(r[2], 4);
     });
 });
-//# sourceMappingURL=Enumerable.js.map

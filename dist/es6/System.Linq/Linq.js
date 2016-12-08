@@ -881,7 +881,7 @@ export class LinqEnumerable extends InfiniteLinqEnumerable {
     constructor(enumeratorFactory, finalizer, isEndless) {
         super(enumeratorFactory, finalizer);
         this._isEndless = isEndless;
-        this._disposableObjectName = "Enumerable";
+        this._disposableObjectName = "LinqEnumerable";
     }
     // Return a default (unfiltered) enumerable.
     asEnumerable() {

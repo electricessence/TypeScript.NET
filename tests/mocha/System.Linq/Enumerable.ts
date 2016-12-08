@@ -1172,21 +1172,35 @@ describe(".average()", () =>
 describe(".weave(enumerables)", () =>
 {
 
+	it("should weave in order when only 1", () =>
+	{
+		const s = Object.freeze([1, 2, 3, 4, 5, 6, 7]);
+		const r = Enumerable.weave([s]);
+		assert.equal(r.count(), 7);
+		assert.equal(r.toJoinedString(), "1234567");
+	});
+
+	const source = Object.freeze([
+		["a", "d"],
+		["b", "e", "g", "i"],
+		["c", "f", "h"]
+	]);
+
 	it("should weave in order", () =>
 	{
-		let w = Enumerable.weave([
-			["a", "d"],
-			["b", "e", "g", "i"],
-			["c", "f", "h"]
-		]);
+		let w = Enumerable.weave(source);
 
 		assert.equal(w.count(), 9);
 		assert.equal(w.toJoinedString(), "abcdefghi");
+	});
 
-		assert.equal(
-			Enumerable.weave([
-				[1, 2, 3, 4, 5, 6, 7]
-			]).count(), 7);
+
+	it("should weave enumerable in order", () =>
+	{
+		let w = Enumerable.weave(Enumerable.from(source));
+
+		assert.equal(w.count(), 9);
+		assert.equal(w.toJoinedString(), "abcdefghi");
 
 	});
 

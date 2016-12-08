@@ -1015,7 +1015,7 @@ System.register(["../System/Compare", "../System/Collections/Array/copy", "../Sy
                 function LinqEnumerable(enumeratorFactory, finalizer, isEndless) {
                     var _this = _super.call(this, enumeratorFactory, finalizer) || this;
                     _this._isEndless = isEndless;
-                    _this._disposableObjectName = "Enumerable";
+                    _this._disposableObjectName = "LinqEnumerable";
                     return _this;
                 }
                 // Return a default (unfiltered) enumerable.

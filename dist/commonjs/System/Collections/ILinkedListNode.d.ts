@@ -14,7 +14,7 @@ export interface ILinkedNode<TNode extends ILinkedNode<TNode>>
 
 export interface INodeWithValue<TValue>
 {
-	value?:TValue;
+	value:TValue;
 }
 
 export interface ILinkedNodeWithValue<T>

@@ -36,7 +36,7 @@ class InternalNode<T>
 implements ILinkedNode<InternalNode<T>>, INodeWithValue<T>
 {
 	constructor(
-		public value?:T,
+		public value:T,
 		public previous?:InternalNode<T>|null,
 		public next?:InternalNode<T>|null)
 	{
@@ -393,13 +393,13 @@ class LinkedListNode<T> implements ILinkedListNode<T>, IDisposable
 		return ensureExternal(this._nodeInternal.next, this._list);
 	}
 
-	get value():T|undefined
+	get value():T
 	{
 		this.throwIfDetached();
 		return this._nodeInternal.value;
 	}
 
-	set value(v:T|undefined)
+	set value(v:T)
 	{
 		this.throwIfDetached();
 		this._nodeInternal.value = v;

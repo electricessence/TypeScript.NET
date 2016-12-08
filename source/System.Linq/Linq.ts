@@ -1663,7 +1663,7 @@ extends InfiniteLinqEnumerable<T> implements ILinqEnumerable<T>
 	{
 		super(enumeratorFactory, finalizer);
 		this._isEndless = isEndless;
-		this._disposableObjectName = "Enumerable";
+		this._disposableObjectName = "LinqEnumerable";
 	}
 
 	// Return a default (unfiltered) enumerable.
