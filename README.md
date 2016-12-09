@@ -145,6 +145,8 @@ This library has immense potential and quite often a class, or function that is 
 [TypeScript](https://redd.it/3ok0bm)
 
 ## Learn, Connect & Evolve
+[Stepping up to Typescript: Fundamentals](https://www.udemy.com/stepping-up-to-typescript-fundamentals)
+
 #### Code Evolution
 [www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ](https://www.youtube.com/channel/UCG2QyAgVUEKSMBaC0Fkp5GQ)
 
