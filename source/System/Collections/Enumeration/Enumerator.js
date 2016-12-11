@@ -29,7 +29,7 @@
     exports.throwIfEndless = throwIfEndless;
     function initArrayFrom(source, max) {
         if (max === void 0) { max = Infinity; }
-        if ((source) instanceof (Array) || Types_1.Type.isString(source)) {
+        if (Types_1.Type.isArrayLike(source)) {
             var len = Math.min(source.length, max);
             if (isFinite(len)) {
                 if (len > 65535)

@@ -3,37 +3,43 @@
  * Licensing: MIT https://github.com/electricessence/TypeScript.NET/blob/master/LICENSE.md
  */
 import {Type} from "../Types";
+import {Primitive} from "../Primitive";
+import {JsonMap, JsonArray} from "../../JSON";
+import {copy} from "../Collections/Array/copy";
 
-export default function clone(source:any, depth:number = 0):any
+export default function clone(source:Primitive | JsonMap | JsonArray, depth:number = 0):any
 {
 	if(depth<0)
 		return source;
 
 	// return primitives as is.
-	if(!Type.isObject(source)) return source;
+	if(!Type.isObject(source))
+		return source;
 
-	let result:any;
-	if((source)instanceof(Array))
+	if(Type.isArrayLike(source))
 	{
-		result = (<any>source).slice();
+		// Make a copy first just in case there's some weird references.
+		const result = copy(source);
 		if(depth>0)
 		{
-			for(let i = 0; i<result.length; i++)
+			const len = source.length;
+			for(let i = 0; i<len; i++)
 			{
 				result[i] = clone(result[i], depth - 1);
 			}
 		}
+		return result;
 	}
 	else
 	{
-		result = {};
-		if(depth>0) for(let k in source)
+		const result:any = {};
+		if(depth>0) for(let k in <any>source)
 		{
 			//noinspection JSUnfilteredForInLoop
-			result[k] = clone(source[k], depth - 1);
+			result[k] = clone((<any>source)[k], depth - 1);
 		}
+		return result;
 	}
 
-	return result;
 
 }

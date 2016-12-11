@@ -4,6 +4,7 @@
  */
 import { ArgumentException } from "./Exceptions/ArgumentException";
 import { ArgumentNullException } from "./Exceptions/ArgumentNullException";
+import { Type } from "./Types";
 const VOID0 = void 0, DOT = '.', KEY = 'key', VALUE = 'value', ITEM = 'item', ITEM_1 = ITEM + '[1]', ITEM_VALUE = ITEM + DOT + VALUE, INVALID_KVP_MESSAGE = 'Invalid type.  Must be a KeyValuePair or Tuple of length 2.', CANNOT_BE_UNDEFINED = 'Cannot equal undefined.';
 export function isKeyValuePair(kvp) {
     return kvp && kvp.hasOwnProperty(KEY) && kvp.hasOwnProperty(VALUE);
@@ -26,7 +27,7 @@ export function assertNotUndefined(value, name) {
 }
 export function extractKeyValue(item, to) {
     let key, value;
-    if (item instanceof Array) {
+    if (Type.isArrayLike(item)) {
         assertTuple(item);
         key = item[0];
         value = assertNotUndefined(item[1], ITEM_1);

@@ -9,16 +9,19 @@
     if (!source || !source.length)
         return 0;
     let result = 0;
-    if (ignoreNaN)
-        source.forEach(n => {
+    if (ignoreNaN) {
+        for (let n of source) {
             if (!isNaN(n))
                 result += n;
-        });
-    else
-        source.every(n => {
+        }
+    }
+    else {
+        for (let n of source) {
+            if (isNaN(n))
+                return NaN;
             result += n;
-            return !isNaN(result);
-        });
+        }
+    }
     return result;
 }
 export function average(source, ignoreNaN = false) {
@@ -27,19 +30,20 @@ export function average(source, ignoreNaN = false) {
     let result = 0, count;
     if (ignoreNaN) {
         count = 0;
-        source.forEach(n => {
+        for (let n of source) {
             if (!isNaN(n)) {
                 result += n;
                 count++;
             }
-        });
+        }
     }
     else {
         count = source.length;
-        source.every(n => {
+        for (let n of source) {
+            if (isNaN(n))
+                return NaN;
             result += n;
-            return !isNaN(result);
-        });
+        }
     }
     return (!count || isNaN(result)) ? NaN : (result / count);
 }
@@ -48,26 +52,17 @@ export function product(source, ignoreNaN = false) {
         return NaN;
     let result = 1;
     if (ignoreNaN) {
-        let found = false;
-        source.forEach(n => {
-            if (!isNaN(n)) {
+        for (let n of source) {
+            if (!isNaN(n))
                 result *= n;
-                if (!found)
-                    found = true;
-            }
-        });
-        if (!found)
-            result = NaN;
+        }
     }
     else {
-        source.every(n => {
-            if (isNaN(n)) {
-                result = NaN;
-                return false;
-            }
+        for (let n of source) {
+            if (isNaN(n))
+                return NaN;
             result *= n;
-            return true;
-        });
+        }
     }
     return result;
 }
@@ -78,33 +73,28 @@ export function product(source, ignoreNaN = false) {
  * @returns {number}
  */
 export function quotient(source, ignoreNaN = false) {
-    if (!source || source.length < 2)
+    const len = source ? source.length : 0;
+    if (len < 2)
         return NaN;
     let result = source[0];
     let found = false;
-    source.every((n, i) => {
-        if (i) {
-            if (n === 0) {
-                result = NaN;
-                return false;
-            }
-            if (isNaN(n)) {
-                if (!ignoreNaN) {
-                    result = NaN;
-                    return false;
-                }
-            }
-            else {
-                result /= n;
-                if (!found)
-                    found = true;
+    for (let i = 1; i < len; i++) {
+        let n = source[i];
+        if (!n) {
+            return NaN;
+        }
+        if (isNaN(n)) {
+            if (!ignoreNaN) {
+                return NaN;
             }
         }
-        return true;
-    });
-    if (!found)
-        result = NaN;
-    return result;
+        else {
+            result /= n;
+            if (!found)
+                found = true;
+        }
+    }
+    return found ? result : NaN;
 }
 function ifSet(source, start, ignoreNaN, predicate) {
     if (!source || !source.length)
@@ -112,27 +102,24 @@ function ifSet(source, start, ignoreNaN, predicate) {
     let result = start;
     if (ignoreNaN) {
         let found = false;
-        source.forEach(n => {
+        for (let n of source) {
             if (!isNaN(n)) {
                 if (predicate(n, result))
                     result = n;
                 if (!found)
                     found = true;
             }
-        });
+        }
         if (!found)
-            result = NaN;
+            return NaN;
     }
     else {
-        source.every(n => {
-            if (isNaN(n)) {
-                result = NaN;
-                return false;
-            }
+        for (let n of source) {
+            if (isNaN(n))
+                return NaN;
             if (predicate(n, result))
                 result = n;
-            return true;
-        });
+        }
     }
     return result;
 }

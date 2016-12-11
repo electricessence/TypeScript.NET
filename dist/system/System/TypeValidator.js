@@ -51,7 +51,7 @@ System.register(["./Types", "./Compare", "../extends"], function (exports_1, con
                     if (this.type != typeof descriptor || this.isPrimitive && !Compare_1.areEqual(value, descriptor))
                         return false;
                     // Check array contents and confirm intersections.
-                    if (this.isArray && (descriptor) instanceof (Array)) {
+                    if (this.isArray && Types_1.Type.isArrayLike(descriptor)) {
                         var max = Math.min(descriptor.length, value.length);
                         for (var i = 0; i < max; i++) {
                             if (areInvalid(value[i], descriptor[i]))

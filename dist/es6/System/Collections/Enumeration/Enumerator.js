@@ -18,7 +18,7 @@ export function throwIfEndless(isEndless) {
     return true;
 }
 function initArrayFrom(source, max = Infinity) {
-    if ((source) instanceof (Array) || Type.isString(source)) {
+    if (Type.isArrayLike(source)) {
         const len = Math.min(source.length, max);
         if (isFinite(len)) {
             if (len > 65535)

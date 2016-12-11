@@ -38,7 +38,7 @@ function initArrayFrom(
 	source:ForEachEnumerable<any>,
 	max:number = Infinity):any[]
 {
-	if((source)instanceof(Array) || Type.isString(source))
+	if(Type.isArrayLike(source))
 	{
 		const len = Math.min(source.length, max);
 		if(isFinite(len))

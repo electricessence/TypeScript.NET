@@ -16,7 +16,7 @@
  *      g : "literal"
  * }
  */
-import {TypeInfo} from "./Types";
+import {TypeInfo, Type} from "./Types";
 import {areEqual} from "./Compare";
 import __extendsImport from "../extends";
 // noinspection JSUnusedLocalSymbols
@@ -61,7 +61,7 @@ export class TypeInfoHelper extends TypeInfo
 			return false;
 
 		// Check array contents and confirm intersections.
-		if(this.isArray && (descriptor)instanceof(Array))
+		if(this.isArray && Type.isArrayLike(descriptor))
 		{
 			let max = Math.min(descriptor.length, value.length);
 

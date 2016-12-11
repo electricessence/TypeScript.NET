@@ -1,4 +1,4 @@
-System.register(["../Types"], function (exports_1, context_1) {
+System.register(["../Types", "../Collections/Array/copy"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
     function clone(source, depth) {
@@ -8,31 +8,36 @@ System.register(["../Types"], function (exports_1, context_1) {
         // return primitives as is.
         if (!Types_1.Type.isObject(source))
             return source;
-        var result;
-        if ((source) instanceof (Array)) {
-            result = source.slice();
+        if (Types_1.Type.isArrayLike(source)) {
+            // Make a copy first just in case there's some weird references.
+            var result = copy_1.copy(source);
             if (depth > 0) {
-                for (var i = 0; i < result.length; i++) {
+                var len = source.length;
+                for (var i = 0; i < len; i++) {
                     result[i] = clone(result[i], depth - 1);
                 }
             }
+            return result;
         }
         else {
-            result = {};
+            var result = {};
             if (depth > 0)
                 for (var k in source) {
                     //noinspection JSUnfilteredForInLoop
                     result[k] = clone(source[k], depth - 1);
                 }
+            return result;
         }
-        return result;
     }
     exports_1("default", clone);
-    var Types_1;
+    var Types_1, copy_1;
     return {
         setters: [
             function (Types_1_1) {
                 Types_1 = Types_1_1;
+            },
+            function (copy_1_1) {
+                copy_1 = copy_1_1;
             }
         ],
         execute: function () {
