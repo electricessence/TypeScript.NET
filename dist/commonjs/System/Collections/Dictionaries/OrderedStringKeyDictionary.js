@@ -7,6 +7,7 @@ var StringKeyDictionary_1 = require("./StringKeyDictionary");
 var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
 var Utility_1 = require("../Array/Utility");
 var extends_1 = require("../../../extends");
+var Integer_1 = require("../../Integer");
 // noinspection JSUnusedLocalSymbols
 var __extends = extends_1.default;
 var VOID0 = void 0;
@@ -23,8 +24,11 @@ var OrderedStringKeyDictionary = (function (_super) {
         return o.length ? o.indexOf(key, 0) : -1;
     };
     OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
+        Integer_1.Integer.assertZeroOrGreater(index);
         var o = this._order;
-        return index < o.length ? this.getValue(o[index]) : VOID0;
+        if (index < o.length)
+            return this.getAssuredValue(o[index]);
+        throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index);
     };
     // adding keepIndex allows for clearing a value while still retaining it's index.
     OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {

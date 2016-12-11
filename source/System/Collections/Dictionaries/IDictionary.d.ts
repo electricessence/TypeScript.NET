@@ -50,7 +50,7 @@ export interface IStringKeyDictionary<TValue> extends IDictionary<string, TValue
 export interface IOrderedDictionary<TKey, TValue> extends IDictionary<TKey, TValue>
 {
 	indexOfKey(key:TKey):number;
-	getValueByIndex(index:number):TValue|undefined;
+	getValueByIndex(index:number):TValue;
 }
 
 export default IDictionary;

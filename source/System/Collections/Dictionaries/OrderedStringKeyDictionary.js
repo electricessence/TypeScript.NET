@@ -5,7 +5,7 @@
     else if (typeof define === 'function' && define.amd) {
         define(dependencies, factory);
     }
-})(["require", "exports", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../Array/Utility", "../../../extends"], function (require, exports) {
+})(["require", "exports", "./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../Array/Utility", "../../../extends", "../../Integer"], function (require, exports) {
     "use strict";
     /*!
      * @author electricessence / https://github.com/electricessence/
@@ -15,6 +15,7 @@
     var ArgumentOutOfRangeException_1 = require("../../Exceptions/ArgumentOutOfRangeException");
     var Utility_1 = require("../Array/Utility");
     var extends_1 = require("../../../extends");
+    var Integer_1 = require("../../Integer");
     // noinspection JSUnusedLocalSymbols
     var __extends = extends_1.default;
     var VOID0 = void 0;
@@ -31,8 +32,11 @@
             return o.length ? o.indexOf(key, 0) : -1;
         };
         OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
+            Integer_1.Integer.assertZeroOrGreater(index);
             var o = this._order;
-            return index < o.length ? this.getValue(o[index]) : VOID0;
+            if (index < o.length)
+                return this.getAssuredValue(o[index]);
+            throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index);
         };
         // adding keepIndex allows for clearing a value while still retaining it's index.
         OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {

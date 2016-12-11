@@ -1,7 +1,7 @@
-System.register(["./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../Array/Utility", "../../../extends"], function (exports_1, context_1) {
+System.register(["./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeException", "../Array/Utility", "../../../extends", "../../Integer"], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var StringKeyDictionary_1, ArgumentOutOfRangeException_1, Utility_1, extends_1, __extends, VOID0, OrderedStringKeyDictionary;
+    var StringKeyDictionary_1, ArgumentOutOfRangeException_1, Utility_1, extends_1, Integer_1, __extends, VOID0, OrderedStringKeyDictionary;
     return {
         setters: [
             function (StringKeyDictionary_1_1) {
@@ -15,6 +15,9 @@ System.register(["./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeEx
             },
             function (extends_1_1) {
                 extends_1 = extends_1_1;
+            },
+            function (Integer_1_1) {
+                Integer_1 = Integer_1_1;
             }
         ],
         execute: function () {
@@ -34,8 +37,11 @@ System.register(["./StringKeyDictionary", "../../Exceptions/ArgumentOutOfRangeEx
                     return o.length ? o.indexOf(key, 0) : -1;
                 };
                 OrderedStringKeyDictionary.prototype.getValueByIndex = function (index) {
+                    Integer_1.Integer.assertZeroOrGreater(index);
                     var o = this._order;
-                    return index < o.length ? this.getValue(o[index]) : VOID0;
+                    if (index < o.length)
+                        return this.getAssuredValue(o[index]);
+                    throw new ArgumentOutOfRangeException_1.ArgumentOutOfRangeException('index', index);
                 };
                 // adding keepIndex allows for clearing a value while still retaining it's index.
                 OrderedStringKeyDictionary.prototype.setValue = function (key, value, keepIndex) {

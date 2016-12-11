@@ -5,6 +5,7 @@
 import { StringKeyDictionary } from "./StringKeyDictionary";
 import { ArgumentOutOfRangeException } from "../../Exceptions/ArgumentOutOfRangeException";
 import { remove } from "../Array/Utility";
+import { Integer } from "../../Integer";
 // noinspection JSUnusedLocalSymbols
 const VOID0 = void 0;
 export class OrderedStringKeyDictionary extends StringKeyDictionary {
@@ -18,8 +19,11 @@ export class OrderedStringKeyDictionary extends StringKeyDictionary {
         return o.length ? o.indexOf(key, 0) : -1;
     }
     getValueByIndex(index) {
+        Integer.assertZeroOrGreater(index);
         const o = this._order;
-        return index < o.length ? this.getValue(o[index]) : VOID0;
+        if (index < o.length)
+            return this.getAssuredValue(o[index]);
+        throw new ArgumentOutOfRangeException('index', index);
     }
     // adding keepIndex allows for clearing a value while still retaining it's index.
     setValue(key, value, keepIndex) {

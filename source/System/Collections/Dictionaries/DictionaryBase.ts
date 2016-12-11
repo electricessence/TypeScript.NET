@@ -44,7 +44,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 			);
 
 		return extractKeyValue(item,
-			(key, value)=>this.addByKeyValue(key, value));
+			(key, value) => this.addByKeyValue(key, value));
 	}
 
 	protected _clearInternal():number
@@ -66,7 +66,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		if(!item || !this.getCount()) return false;
 
 		return extractKeyValue(item,
-			(key, value)=>
+			(key, value) =>
 			{
 				// Leave as variable for debugging...
 				let v = this.getValue(key);
@@ -80,7 +80,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		if(!item) return 0;
 
 		return extractKeyValue(item,
-			(key, value)=>
+			(key, value) =>
 			{
 				// Leave as variable for debugging...
 				let v = this.getValue(key);
@@ -131,9 +131,11 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		return value;
 	}
 
-	tryGetValue(key:TKey,out:Action<TValue>):boolean {
+	tryGetValue(key:TKey, out:Action<TValue>):boolean
+	{
 		const value = this.getValue(key);
-		if(value!==VOID0) {
+		if(value!==VOID0)
+		{
 			out(value);
 			return true;
 		}
@@ -218,7 +220,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 		if(!pairs) return 0;
 		let changed:number = 0;
 		forEach(pairs,
-			pair=>extractKeyValue(pair, (key, value)=>
+			pair => extractKeyValue(pair, (key, value) =>
 			{
 				if(_._setValueInternal(key, value))
 					changed++;
@@ -242,7 +244,7 @@ extends CollectionBase<IKeyValuePair<TKey,TValue>> implements IDictionary<TKey, 
 				len = keys.length;
 			},
 
-			(yielder)=>
+			(yielder) =>
 			{
 				_.throwIfDisposed();
 				_.assertVersion(ver);

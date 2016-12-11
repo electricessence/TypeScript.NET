@@ -7,6 +7,7 @@ import {ArgumentOutOfRangeException} from "../../Exceptions/ArgumentOutOfRangeEx
 import {IOrderedDictionary} from "./IDictionary";
 import {remove} from "../Array/Utility";
 import __extendsImport from "../../../extends";
+import {Integer} from "../../Integer";
 // noinspection JSUnusedLocalSymbols
 const __extends = __extendsImport;
 
@@ -30,10 +31,14 @@ extends StringKeyDictionary<TValue> implements IOrderedDictionary<string, TValue
 		return o.length ? o.indexOf(key, 0) : -1;
 	}
 
-	getValueByIndex(index:number):TValue|undefined
+	getValueByIndex(index:number):TValue
 	{
+		Integer.assertZeroOrGreater(index);
 		const o = this._order;
-		return index<o.length ? this.getValue(o[index]) : VOID0;
+		if(index<o.length)
+			return this.getAssuredValue(o[index]);
+
+		throw new ArgumentOutOfRangeException('index',index);
 	}
 
 	// adding keepIndex allows for clearing a value while still retaining it's index.
