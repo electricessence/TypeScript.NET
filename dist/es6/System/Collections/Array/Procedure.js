@@ -52,10 +52,15 @@ export function product(source, ignoreNaN = false) {
         return NaN;
     let result = 1;
     if (ignoreNaN) {
+        let found = false;
         for (let n of source) {
-            if (!isNaN(n))
+            if (!isNaN(n)) {
                 result *= n;
+                found = true;
+            }
         }
+        if (!found)
+            return NaN;
     }
     else {
         for (let n of source) {
@@ -80,7 +85,7 @@ export function quotient(source, ignoreNaN = false) {
     let found = false;
     for (let i = 1; i < len; i++) {
         let n = source[i];
-        if (!n) {
+        if (n === 0) {
             return NaN;
         }
         if (isNaN(n)) {

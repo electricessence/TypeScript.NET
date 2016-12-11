@@ -111,7 +111,6 @@ System.register([], function (exports_1, context_1) {
                  */
                 TypeInfo.prototype.is = function (type) {
                     return this.target instanceof type;
-                    f;
                 };
                 /**
                  * Returns null if the target does not match the type (instanceof).

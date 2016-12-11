@@ -100,7 +100,6 @@ export class TypeInfo {
      */
     is(type) {
         return this.target instanceof type;
-        f;
     }
     /**
      * Returns null if the target does not match the type (instanceof).

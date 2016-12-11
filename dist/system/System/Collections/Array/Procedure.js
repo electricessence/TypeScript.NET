@@ -61,11 +61,16 @@ System.register([], function (exports_1, context_1) {
             return NaN;
         var result = 1;
         if (ignoreNaN) {
+            var found = false;
             for (var _i = 0, _a = source; _i < _a.length; _i++) {
                 var n = _a[_i];
-                if (!isNaN(n))
+                if (!isNaN(n)) {
                     result *= n;
+                    found = true;
+                }
             }
+            if (!found)
+                return NaN;
         }
         else {
             for (var _b = 0, _c = source; _b < _c.length; _b++) {
@@ -93,7 +98,7 @@ System.register([], function (exports_1, context_1) {
         var found = false;
         for (var i = 1; i < len; i++) {
             var n = source[i];
-            if (!n) {
+            if (n === 0) {
                 return NaN;
             }
             if (isNaN(n)) {
