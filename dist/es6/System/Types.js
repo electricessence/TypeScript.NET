@@ -93,8 +93,27 @@ export class TypeInfo {
             typeInfoRegistry[type] = info = new TypeInfo(target);
         return info;
     }
+    /**
+     * Returns true if the target matches the type (instanceof).
+     * @param type
+     * @returns {boolean}
+     */
+    is(type) {
+        return this.target instanceof type;
+    }
+    /**
+     * Returns null if the target does not match the type (instanceof).
+     * Otherwise returns the target as the type.
+     * @param type
+     * @returns {T|null}
+     */
+    as(type) {
+        return this.target instanceof type ? this.target : null;
+    }
 }
-export var Type;
+export function Type(target) {
+    return new TypeInfo(target);
+}
 (function (Type) {
     /**
      * typeof true
@@ -131,6 +150,27 @@ export var Type;
      * @type {string}
      */
     Type.FUNCTION = _FUNCTION;
+    /**
+     * Returns true if the target matches the type (instanceof).
+     * @param target
+     * @param type
+     * @returns {T|null}
+     */
+    function is(target, type) {
+        return target instanceof type;
+    }
+    Type.is = is;
+    /**
+     * Returns null if the target does not match the type (instanceof).
+     * Otherwise returns the target as the type.
+     * @param target
+     * @param type
+     * @returns {T|null}
+     */
+    function as(target, type) {
+        return target instanceof type ? target : null;
+    }
+    Type.as = as;
     /**
      * Returns true if the value parameter is null or undefined.
      * @param value

@@ -36,7 +36,25 @@ export declare class TypeInfo {
      * @returns {TypeInfo}
      */
     static getFor(target: any): TypeInfo;
+    /**
+     * Returns true if the target matches the type (instanceof).
+     * @param type
+     * @returns {boolean}
+     */
+    is<T>(type: {
+        new (...params: any[]): T;
+    }): boolean;
+    /**
+     * Returns null if the target does not match the type (instanceof).
+     * Otherwise returns the target as the type.
+     * @param type
+     * @returns {T|null}
+     */
+    as<T>(type: {
+        new (...params: any[]): T;
+    }): T | null;
 }
+export declare function Type(target: any): TypeInfo;
 export declare module Type {
     /**
      * typeof true
@@ -73,6 +91,25 @@ export declare module Type {
      * @type {string}
      */
     const FUNCTION: TypeValue.Function;
+    /**
+     * Returns true if the target matches the type (instanceof).
+     * @param target
+     * @param type
+     * @returns {T|null}
+     */
+    function is<T>(target: Object, type: {
+        new (...params: any[]): T;
+    }): target is T;
+    /**
+     * Returns null if the target does not match the type (instanceof).
+     * Otherwise returns the target as the type.
+     * @param target
+     * @param type
+     * @returns {T|null}
+     */
+    function as<T>(target: Object, type: {
+        new (...params: any[]): T;
+    }): T | null;
     /**
      * Returns true if the value parameter is null or undefined.
      * @param value

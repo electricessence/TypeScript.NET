@@ -1,7 +1,11 @@
 System.register([], function (exports_1, context_1) {
     "use strict";
     var __moduleName = context_1 && context_1.id;
-    var VOID0, _BOOLEAN, _NUMBER, _STRING, _SYMBOL, _OBJECT, _UNDEFINED, _FUNCTION, LENGTH, typeInfoRegistry, TypeInfo, Type;
+    function Type(target) {
+        return new TypeInfo(target);
+    }
+    exports_1("Type", Type);
+    var VOID0, _BOOLEAN, _NUMBER, _STRING, _SYMBOL, _OBJECT, _UNDEFINED, _FUNCTION, LENGTH, typeInfoRegistry, TypeInfo;
     return {
         setters: [],
         execute: function () {
@@ -100,6 +104,23 @@ System.register([], function (exports_1, context_1) {
                         typeInfoRegistry[type] = info = new TypeInfo(target);
                     return info;
                 };
+                /**
+                 * Returns true if the target matches the type (instanceof).
+                 * @param type
+                 * @returns {boolean}
+                 */
+                TypeInfo.prototype.is = function (type) {
+                    return this.target instanceof type;
+                };
+                /**
+                 * Returns null if the target does not match the type (instanceof).
+                 * Otherwise returns the target as the type.
+                 * @param type
+                 * @returns {T|null}
+                 */
+                TypeInfo.prototype.as = function (type) {
+                    return this.target instanceof type ? this.target : null;
+                };
                 return TypeInfo;
             }());
             exports_1("TypeInfo", TypeInfo);
@@ -139,6 +160,27 @@ System.register([], function (exports_1, context_1) {
                  * @type {string}
                  */
                 Type.FUNCTION = _FUNCTION;
+                /**
+                 * Returns true if the target matches the type (instanceof).
+                 * @param target
+                 * @param type
+                 * @returns {T|null}
+                 */
+                function is(target, type) {
+                    return target instanceof type;
+                }
+                Type.is = is;
+                /**
+                 * Returns null if the target does not match the type (instanceof).
+                 * Otherwise returns the target as the type.
+                 * @param target
+                 * @param type
+                 * @returns {T|null}
+                 */
+                function as(target, type) {
+                    return target instanceof type ? target : null;
+                }
+                Type.as = as;
                 /**
                  * Returns true if the value parameter is null or undefined.
                  * @param value

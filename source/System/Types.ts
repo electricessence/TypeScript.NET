@@ -145,7 +145,32 @@ export class TypeInfo
 		return info;
 	}
 
+	/**
+	 * Returns true if the target matches the type (instanceof).
+	 * @param type
+	 * @returns {boolean}
+	 */
+	is<T>(type:{new (...params:any[]):T}):boolean
+	{
+		return this.target instanceof type;
+	}
 
+	/**
+	 * Returns null if the target does not match the type (instanceof).
+	 * Otherwise returns the target as the type.
+	 * @param type
+	 * @returns {T|null}
+	 */
+	as<T>(type:{new (...params:any[]):T}):T|null
+	{
+		return this.target instanceof type ? this.target : null
+	}
+
+}
+
+export function Type(target:any):TypeInfo
+{
+	return new TypeInfo(target);
 }
 
 export module Type
@@ -192,6 +217,29 @@ export module Type
 	 * @type {string}
 	 */
 	export const FUNCTION:TypeValue.Function = _FUNCTION;
+
+	/**
+	 * Returns true if the target matches the type (instanceof).
+	 * @param target
+	 * @param type
+	 * @returns {T|null}
+	 */
+	export function is<T>(target:Object, type:{new (...params:any[]):T}):target is T
+	{
+		return target instanceof type;
+	}
+
+	/**
+	 * Returns null if the target does not match the type (instanceof).
+	 * Otherwise returns the target as the type.
+	 * @param target
+	 * @param type
+	 * @returns {T|null}
+	 */
+	export function as<T>(target:Object, type:{new (...params:any[]):T}):T|null
+	{
+		return target instanceof type ? target : null;
+	}
 
 	/**
 	 * Returns true if the value parameter is null or undefined.
