@@ -261,7 +261,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	 * @param entries
 	 * @returns {number}
 	 */
-	importEntries(entries:IEnumerableOrArray<T>|IEnumerator<T>|null|undefined):number
+	importEntries(entries:IEnumerableOrArray<T>|IEnumerator<T>):number
 	{
 		const _ = this;
 		if(!entries) return 0;

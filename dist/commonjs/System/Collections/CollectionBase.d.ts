@@ -57,7 +57,7 @@ export declare abstract class CollectionBase<T> extends DisposableBase implement
      * @param entries
      * @returns {number}
      */
-    importEntries(entries: IEnumerableOrArray<T> | IEnumerator<T> | null | undefined): number;
+    importEntries(entries: IEnumerableOrArray<T> | IEnumerator<T>): number;
     /**
      * Returns a enumerator for this collection.
      */
