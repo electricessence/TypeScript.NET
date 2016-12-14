@@ -112,10 +112,10 @@ System.register(["../../Promises/Promise", "../../Types", "../Worker", "../defer
                     var worker = new Worker_1.default(url);
                     worker.__key = key;
                     worker.dispose = function () {
+                        worker.terminate();
                         worker.onmessage = null;
                         worker.onerror = null;
                         worker.dispose = null;
-                        worker.terminate();
                     };
                     return worker;
                 }

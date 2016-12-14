@@ -90,10 +90,10 @@ var workers;
         const worker = new Worker(url);
         worker.__key = key;
         worker.dispose = () => {
+            worker.terminate();
             worker.onmessage = null;
             worker.onerror = null;
             worker.dispose = null;
-            worker.terminate();
         };
         return worker;
     }
