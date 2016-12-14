@@ -89,12 +89,14 @@ var workers;
     function getNew(key, url) {
         const worker = new Worker(url);
         worker.__key = key;
-        worker.dispose = () => {
-            worker.terminate();
-            worker.onmessage = null;
-            worker.onerror = null;
-            worker.dispose = null;
-        };
+        if (!worker.dispose) {
+            worker.dispose = () => {
+                worker.onmessage = null;
+                worker.onerror = null;
+                worker.dispose = null;
+                worker.terminate();
+            };
+        }
         return worker;
     }
     workers.getNew = getNew;

@@ -96,12 +96,14 @@ var workers;
     function getNew(key, url) {
         var worker = new Worker_1.default(url);
         worker.__key = key;
-        worker.dispose = function () {
-            worker.terminate();
-            worker.onmessage = null;
-            worker.onerror = null;
-            worker.dispose = null;
-        };
+        if (!worker.dispose) {
+            worker.dispose = function () {
+                worker.onmessage = null;
+                worker.onerror = null;
+                worker.dispose = null;
+                worker.terminate();
+            };
+        }
         return worker;
     }
     workers.getNew = getNew;
