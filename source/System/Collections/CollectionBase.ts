@@ -237,7 +237,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		let added = 0;
 		if(entries)
 		{
-			if((entries)instanceof(Array))
+			if((entries) instanceof (Array))
 			{
 				// Optimize for avoiding a new closure.
 				for(let e of entries)
@@ -296,8 +296,10 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 		if(!predicate) throw new ArgumentNullException('predicate');
 		let count = !this.getCount();
 		let result:T[] = [];
-		if(count) {
-			this.forEach((e, i) => {
+		if(count)
+		{
+			this.forEach((e, i) =>
+			{
 				if(predicate(e, i))
 					result.push(e);
 			});
@@ -342,7 +344,7 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 	contains(entry:T):boolean
 	{
 		const equals = this._equalityComparer;
-		return this.any(e=>equals(entry, e));
+		return this.any(e => equals(entry, e));
 	}
 
 
@@ -428,13 +430,15 @@ extends DisposableBase implements ICollection<T>, IEnumerateEach<T>
 
 		if(!e)
 		{
-			if(!isNodeJS || !isCommonJS)
-				throw `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
-Import System.Linq/Linq and use Enumerable.from(e) instead.
-Or use .linqAsync(callback) for AMD/RequireJS.`;
-
 			this._linq = e = eval("require")(LINQ_PATH).default.from(this);
-			if(!e) throw "There was a problem importing System.Linq/Linq";
+			if(!e)
+			{
+				throw isRequireJS
+					? `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
+Import System.Linq/Linq and use Enumerable.from(e) instead.
+You can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS.`
+					: "There was a problem importing System.Linq/Linq"
+			}
 		}
 
 		return e;

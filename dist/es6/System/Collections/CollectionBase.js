@@ -311,13 +311,14 @@ export class CollectionBase extends DisposableBase {
         this.throwIfDisposed();
         let e = this._linq;
         if (!e) {
-            if (!isNodeJS || !isCommonJS)
-                throw `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
-Import System.Linq/Linq and use Enumerable.from(e) instead.
-Or use .linqAsync(callback) for AMD/RequireJS.`;
             this._linq = e = eval("require")(LINQ_PATH).default.from(this);
-            if (!e)
-                throw "There was a problem importing System.Linq/Linq";
+            if (!e) {
+                throw isRequireJS
+                    ? `using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.
+Import System.Linq/Linq and use Enumerable.from(e) instead.
+You can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS.`
+                    : "There was a problem importing System.Linq/Linq";
+            }
         }
         return e;
     }

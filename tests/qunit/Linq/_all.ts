@@ -45,7 +45,7 @@ export default function run()
 		}
 	];
 
-	const sourceEnumerable = Enumerable.from(source);
+	const sourceEnumerable = Enumerable(source);
 
 	QUnit.test("Linq.memoize", assert=>
 	{

@@ -334,11 +334,12 @@ var CollectionBase = (function (_super) {
             this.throwIfDisposed();
             var e = this._linq;
             if (!e) {
-                if (!Environment_1.isNodeJS || !Environment_1.isCommonJS)
-                    throw "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nOr use .linqAsync(callback) for AMD/RequireJS.";
                 this._linq = e = eval("require")(LINQ_PATH).default.from(this);
-                if (!e)
-                    throw "There was a problem importing System.Linq/Linq";
+                if (!e) {
+                    throw Environment_1.isRequireJS
+                        ? "using .linq to load and initialize a ILinqEnumerable is currently only supported within a NodeJS environment.\nImport System.Linq/Linq and use Enumerable.from(e) instead.\nYou can also preload the Linq module as a dependency or use .linqAsync(callback) for AMD/RequireJS."
+                        : "There was a problem importing System.Linq/Linq";
+                }
             }
             return e;
         },
