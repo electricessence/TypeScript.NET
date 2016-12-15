@@ -215,7 +215,7 @@ export class Parallel
 		return preStr + (
 				isNodeJS
 					? `process.on("message", function(e) {global.${ns} = ${env};process.send(JSON.stringify((${task.toString()})(JSON.parse(e).data)))})`
-					: `self.onmessage = function(e) {var global = {}; global.${ns} = ${env}';self.postMessage((${task.toString()})(e.data))}`
+					: `self.onmessage = function(e) {var global = {}; global.${ns} = ${env};self.postMessage((${task.toString()})(e.data))}`
 			);
 	}
 

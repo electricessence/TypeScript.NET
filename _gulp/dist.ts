@@ -4,7 +4,7 @@ import * as gulp from "gulp";
 import * as TASK from "./constants/TaskNames";
 import * as File from "../_utility/file-promise";
 import {JsonMap} from "../source/JSON";
-import {IMap} from "../source/System/Collections/Dictionaries/IDictionary";
+import {IMap} from "../source/IMap";
 import {streamToPromise as stream} from "../_utility/stream-to-promise";
 import {Promise as NPromise} from "../source/System/Promises/Promise";
 import awaiter from "../source/awaiter";

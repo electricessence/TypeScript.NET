@@ -135,7 +135,7 @@ var Parallel = (function () {
         var ns = this.options.envNamespace;
         return preStr + (Environment_1.isNodeJS
             ? "process.on(\"message\", function(e) {global." + ns + " = " + env + ";process.send(JSON.stringify((" + task.toString() + ")(JSON.parse(e).data)))})"
-            : "self.onmessage = function(e) {var global = {}; global." + ns + " = " + env + "';self.postMessage((" + task.toString() + ")(e.data))}");
+            : "self.onmessage = function(e) {var global = {}; global." + ns + " = " + env + ";self.postMessage((" + task.toString() + ")(e.data))}");
     };
     Parallel.prototype.require = function () {
         var required = [];
