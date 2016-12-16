@@ -262,7 +262,7 @@ export class Parallel
 		if(!evalPath)
 		{
 			if(isNodeJS)
-				throw new Error("Can't use NodeJD without eval.js!");
+				throw new Error("Can't use NodeJS without eval.js!");
 			if(scripts.length)
 				throw new Error("Can't use required scripts without eval.js!");
 			if(!URL)
